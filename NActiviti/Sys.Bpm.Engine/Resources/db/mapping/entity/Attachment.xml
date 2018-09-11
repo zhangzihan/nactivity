@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.AttachmentEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+
+  <!-- ATTACHMENT RESULTMAP -->
+    
+    <ResultMap Id="attachmentResultMap" ResultType="org.activiti.engine.impl.persistence.entity.AttachmentEntityImpl,Sys.Bpm.Engine">
+      <Result Property="id" Column="ID_" />
+      <Result Property="revision" Column="REV_" />
+      <Result Property="name" Column="NAME_" />
+      <Result Property="description" Column="DESCRIPTION_" />
+      <Result Property="type" Column="TYPE_" />
+      <Result Property="taskId" Column="TASK_ID_" />
+      <Result Property="processInstanceId" Column="PROC_INST_ID_" />
+      <Result Property="url" Column="URL_" />
+      <Result Property="contentId" Column="CONTENT_ID_" />
+      <Result Property="userId" Column="USER_ID_" />
+      <Result Property="time" Column="TIME_" />
+    </ResultMap>
+    
+    <!-- ATTACHMENT INSERT -->
+
+    <Insert Id="insertAttachment">
+      insert into ACT_HI_ATTACHMENT (ID_, REV_, USER_ID_, NAME_, DESCRIPTION_, TYPE_, TASK_ID_, PROC_INST_ID_, URL_, CONTENT_ID_, TIME_)
+      values (
+     @id,
+      1,
+     @userId,
+     @name,
+     @description,
+     @type,
+     @taskId,
+     @processInstanceId,
+     @url,
+     @contentId,
+     @time
+      )
+    </Insert>
+
+    <Insert Id="bulkInsertAttachment">
+      insert into ACT_HI_ATTACHMENT (ID_, REV_, USER_ID_, NAME_, DESCRIPTION_, TYPE_, TASK_ID_, PROC_INST_ID_, URL_, CONTENT_ID_, TIME_)
+      values
+      <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
+        (
+        @attachment.id,
+        1,
+       @attachment.userId,
+       @attachment.name,
+       @attachment.description,
+       @attachment.type,
+       @attachment.taskId,
+       @attachment.processInstanceId,
+       @attachment.url,
+       @attachment.contentId,
+       @attachment.time)
+      </For>
+    </Insert>
+
+    <!-- ATTACHMENT UPDATE -->
+
+    <Update Id="updateAttachment">
+      update ACT_HI_ATTACHMENT
+      set
+      REV_ = @revisionNext,
+      NAME_ =@name,
+      DESCRIPTION_ =@description
+      where ID_ = @id
+      and REV_ =@revision
+    </Update>
+
+    <!-- ATTACHMENT DELETE -->
+
+    <Delete Id="deleteAttachment">
+      delete from ACT_HI_ATTACHMENT
+      where ID_ = @id and REV_ = @revision
+    </Delete>
+
+    <!-- ATTACHMENT SELECT -->
+
+    <Select Id="selectAttachment" ResultMap="attachmentResultMap">
+      select *
+      from ACT_HI_ATTACHMENT
+      where ID_ = @id
+    </Select>
+
+    <Select Id="selectAttachmentsByTaskId" ResultMap="attachmentResultMap">
+      select *
+      from ACT_HI_ATTACHMENT
+      where TASK_ID_ = @parameter
+      order by TIME_ desc
+    </Select>
+
+    <Select Id="selectAttachmentsByProcessInstanceId" ResultMap="attachmentResultMap">
+      select *
+      from ACT_HI_ATTACHMENT
+      where PROC_INST_ID_ =@parameter
+      order by TIME_ desc
+    </Select>
+
+</SmartSqlMap>

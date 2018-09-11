@@ -1,0 +1,125 @@
+﻿using System;
+using System.Collections.Generic;
+
+/* Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+namespace org.activiti.engine.impl.bpmn.behavior
+{
+    using Microsoft.Extensions.Logging;
+    using org.activiti.bpmn.model;
+    using org.activiti.engine.@delegate.@event;
+    using org.activiti.engine.@delegate.@event.impl;
+    using org.activiti.engine.impl.bpmn.helper;
+    using org.activiti.engine.impl.context;
+    using org.activiti.engine.impl.persistence.entity;
+    using org.activiti.engine.impl.util.condition;
+    using Sys;
+
+    /// <summary>
+    /// implementation of the Exclusive Gateway/XOR gateway/exclusive data-based gateway as defined in the BPMN specification.
+    /// 
+    /// 
+    /// </summary>
+    [Serializable]
+    public class ExclusiveGatewayActivityBehavior : GatewayActivityBehavior
+    {
+        private static readonly ILogger<ExclusiveGatewayActivityBehavior> log = ProcessEngineServiceProvider.LoggerService<ExclusiveGatewayActivityBehavior>();
+
+        private const long serialVersionUID = 1L;
+
+        // private static Logger log = LoggerFactory.getLogger(typeof(ExclusiveGatewayActivityBehavior));
+
+        /// <summary>
+        /// The default behaviour of BPMN, taking every outgoing sequence flow (where the condition evaluates to true), is not valid for an exclusive gateway.
+        /// 
+        /// Hence, this behaviour is overridden and replaced by the correct behavior: selecting the first sequence flow which condition evaluates to true (or which hasn't got a condition) and leaving the
+        /// activity through that sequence flow.
+        /// 
+        /// If no sequence flow is selected (ie all conditions evaluate to false), then the default sequence flow is taken (if defined).
+        /// </summary>
+        public override void leave(IExecutionEntity execution)
+        {
+            if (log.IsEnabled(LogLevel.Debug))
+            {
+                log.LogDebug($"Leaving exclusive gateway '{execution.CurrentActivityId}'");
+            }
+
+            ExclusiveGateway exclusiveGateway = (ExclusiveGateway)execution.CurrentFlowElement;
+
+            if (Context.ProcessEngineConfiguration != null && Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
+            {
+                Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createActivityEvent(ActivitiEventType.ACTIVITY_COMPLETED, exclusiveGateway.Id, exclusiveGateway.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, exclusiveGateway));
+            }
+
+            SequenceFlow outgoingSequenceFlow = null;
+            SequenceFlow defaultSequenceFlow = null;
+            string defaultSequenceFlowId = exclusiveGateway.DefaultFlow;
+
+            // Determine sequence flow to take
+            foreach (SequenceFlow sequenceFlow in exclusiveGateway.OutgoingFlows)
+            {
+                string skipExpressionString = sequenceFlow.SkipExpression;
+                if (!SkipExpressionUtil.isSkipExpressionEnabled(execution, skipExpressionString))
+                {
+                    bool conditionEvaluatesToTrue = ConditionUtil.hasTrueCondition(sequenceFlow, execution);
+                    if (conditionEvaluatesToTrue && (string.ReferenceEquals(defaultSequenceFlowId, null) || !defaultSequenceFlowId.Equals(sequenceFlow.Id)))
+                    {
+                        if (log.IsEnabled(LogLevel.Debug))
+                        {
+                            log.LogDebug($"Sequence flow '{sequenceFlow.Id}'selected as outgoing sequence flow.");
+                        }
+                        outgoingSequenceFlow = sequenceFlow;
+                        break;
+                    }
+                }
+                else if (SkipExpressionUtil.shouldSkipFlowElement(Context.CommandContext, execution, skipExpressionString))
+                {
+                    outgoingSequenceFlow = sequenceFlow;
+                    break;
+                }
+
+                // Already store it, if we would need it later. Saves one for loop.
+                if (!string.ReferenceEquals(defaultSequenceFlowId, null) && defaultSequenceFlowId.Equals(sequenceFlow.Id))
+                {
+                    defaultSequenceFlow = sequenceFlow;
+                }
+
+            }
+
+            // We have to record the end here, or else we're already past it
+            Context.CommandContext.HistoryManager.recordActivityEnd(execution, null);
+
+            // Leave the gateway
+            if (outgoingSequenceFlow != null)
+            {
+                execution.CurrentFlowElement = outgoingSequenceFlow;
+            }
+            else
+            {
+                if (defaultSequenceFlow != null)
+                {
+                    execution.CurrentFlowElement = defaultSequenceFlow;
+                }
+                else
+                {
+
+                    // No sequence flow could be found, not even a default one
+                    throw new ActivitiException("No outgoing sequence flow of the exclusive gateway '" + exclusiveGateway.Id + "' could be selected for continuing the process");
+                }
+            }
+
+            base.leave(execution);
+        }
+    }
+
+}

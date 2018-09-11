@@ -1,0 +1,31 @@
+{
+  "id": "processEngineConfiguration",
+  "type": "org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration",
+  "databaseSchemaUpdate": "drop-create",
+  "asyncExecutor": {
+    "type": "org.activiti.engine.impl.asyncexecutor.DefaultAsyncJobExecutor",
+    "defaultAsyncJobAcquireWaitTimeInMillis": "1000",
+    "defaultTimerJobAcquireWaitTimeInMillis": "1000"
+  },
+  "asyncExecutorActivate": "false",
+  "asyncFailedJobWaitTime": "1",
+  "mailServerPort": "5025",
+  "mailServers": [
+    {
+      "myEmailTenant": {
+        "type": "org.activiti.engine.cfg.MailServerInfo",
+        "mailServerHost": "localhost",
+        "mailServerPort": "5025",
+        "mailServerUseSSL": "false",
+        "mailServerUseTLS": "false",
+        "mailServerDefaultFrom": "activiti@myTenant.com",
+        "mailServerUsername": "activiti@myTenant.com",
+        "mailServerPassword": "password"
+      }
+    }
+  ],
+  "bpmnExtensionsNamespace": "http://camunda.org/schema/1.0/bpmn",
+  "bpmnExtensionsPrefix": "comunda",
+  "history": "full",
+  "enableProcessDefinitionInfoCache": "true"
+}

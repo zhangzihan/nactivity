@@ -1,0 +1,225 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <RootNamespace>Sys.Bpm</RootNamespace>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="DatabaseSchemaReader" Version="2.6.1" />
+    <PackageReference Include="DryIoc.dll" Version="3.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.1" />
+    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Dapper">
+      <HintPath>C:\Project\Dapper\Dapper\bin\Debug\net451\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Engine\impl\cfg\BeansConfigurationHelper.cs" />
+    <Compile Remove="Engine\impl\cfg\JtaProcessEngineConfiguration.cs" />
+    <Compile Remove="Engine\impl\cfg\multitenant\MultiSchemaMultiTenantProcessEngineConfiguration.cs" />
+    <Compile Remove="Engine\impl\cfg\SpringBeanFactoryProxyMap.cs" />
+    <Compile Remove="Engine\impl\cfg\StandaloneInMemProcessEngineConfiguration.cs" />
+    <Compile Remove="Engine\impl\el\ActivitiFunctionMapper.cs" />
+    <Compile Remove="Engine\impl\el\DynamicBeanPropertyELResolver.cs" />
+    <Compile Remove="Engine\impl\el\ExpressionFactoryResolver.cs" />
+    <Compile Remove="Engine\impl\interceptor\JtaRetryInterceptor.cs" />
+    <Compile Remove="Engine\impl\interceptor\JtaTransactionInterceptor.cs" />
+    <Compile Remove="Engine\impl\persistence\ByteArrayRefTypeHandler.java.cs" />
+    <Compile Remove="Engine\impl\scripting\JuelScriptEngine.cs" />
+    <Compile Remove="Engine\impl\scripting\JuelScriptEngineFactory.cs" />
+    <Compile Remove="Engine\impl\scripting\ScriptBindings.cs" />
+    <Compile Remove="Engine\impl\scripting\ScriptBindingsFactory.cs" />
+    <Compile Remove="Engine\impl\scripting\ScriptingEngines.cs" />
+    <Compile Remove="Image\impl\DefaultProcessDiagramCanvas.cs" />
+    <Compile Remove="Image\impl\DefaultProcessDiagramGenerator.cs" />
+    <Compile Remove="Image\impl\icon\BusinessRuleTaskIconType.cs" />
+    <Compile Remove="Image\impl\icon\CompensateIconType.cs" />
+    <Compile Remove="Image\impl\icon\CompensateThrowIconType.cs" />
+    <Compile Remove="Image\impl\icon\ErrorIconType.cs" />
+    <Compile Remove="Image\impl\icon\ErrorThrowIconType.cs" />
+    <Compile Remove="Image\impl\icon\IconType.cs" />
+    <Compile Remove="Image\impl\icon\ManualTaskIconType.cs" />
+    <Compile Remove="Image\impl\icon\MessageIconType.cs" />
+    <Compile Remove="Image\impl\icon\ReceiveTaskIconType.cs" />
+    <Compile Remove="Image\impl\icon\ScriptTaskIconType.cs" />
+    <Compile Remove="Image\impl\icon\SendTaskIconType.cs" />
+    <Compile Remove="Image\impl\icon\ServiceTaskIconType.cs" />
+    <Compile Remove="Image\impl\icon\SignalIconType.cs" />
+    <Compile Remove="Image\impl\icon\SignalThrowIconType.cs" />
+    <Compile Remove="Image\impl\icon\TaskIconType.cs" />
+    <Compile Remove="Image\impl\icon\TimerIconType.cs" />
+    <Compile Remove="Image\impl\icon\UserTaskIconType.cs" />
+    <Compile Remove="Image\impl\ProcessDiagramDOMGroupManager.cs" />
+    <Compile Remove="Image\impl\ProcessDiagramSVGGraphics2D.cs" />
+    <Compile Remove="JavaDataSource.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\db\mapping\entity\Group.xml" />
+    <None Remove="Resources\db\mapping\entity\IdentityInfo.xml" />
+    <None Remove="Resources\db\mapping\entity\User.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Engine\impl\cfg\BeansConfigurationHelper.cs" />
+    <None Include="Engine\impl\cfg\JtaProcessEngineConfiguration.cs" />
+    <None Include="Engine\impl\cfg\multitenant\MultiSchemaMultiTenantProcessEngineConfiguration.cs" />
+    <None Include="Engine\impl\cfg\SpringBeanFactoryProxyMap.cs" />
+    <None Include="Engine\impl\cfg\StandaloneInMemProcessEngineConfiguration.cs" />
+    <None Include="Engine\impl\el\ActivitiFunctionMapper.cs" />
+    <None Include="Engine\impl\el\DynamicBeanPropertyELResolver.cs" />
+    <None Include="Engine\impl\el\ExpressionFactoryResolver.cs" />
+    <None Include="Engine\impl\interceptor\JtaRetryInterceptor.cs" />
+    <None Include="Engine\impl\interceptor\JtaTransactionInterceptor.cs" />
+    <None Include="Engine\impl\persistence\ByteArrayRefTypeHandler.java.cs" />
+    <None Include="Engine\impl\scripting\JuelScriptEngine.cs" />
+    <None Include="Engine\impl\scripting\JuelScriptEngineFactory.cs" />
+    <None Include="Engine\impl\scripting\ScriptBindings.cs" />
+    <None Include="Engine\impl\scripting\ScriptBindingsFactory.cs" />
+    <None Include="Engine\impl\scripting\ScriptingEngines.cs" />
+    <None Include="Image\impl\DefaultProcessDiagramCanvas.cs" />
+    <None Include="Image\impl\DefaultProcessDiagramGenerator.cs" />
+    <None Include="Image\impl\icon\BusinessRuleTaskIconType.cs" />
+    <None Include="Image\impl\icon\CompensateIconType.cs" />
+    <None Include="Image\impl\icon\CompensateThrowIconType.cs" />
+    <None Include="Image\impl\icon\ErrorIconType.cs" />
+    <None Include="Image\impl\icon\ErrorThrowIconType.cs" />
+    <None Include="Image\impl\icon\IconType.cs" />
+    <None Include="Image\impl\icon\ManualTaskIconType.cs" />
+    <None Include="Image\impl\icon\MessageIconType.cs" />
+    <None Include="Image\impl\icon\ReceiveTaskIconType.cs" />
+    <None Include="Image\impl\icon\ScriptTaskIconType.cs" />
+    <None Include="Image\impl\icon\SendTaskIconType.cs" />
+    <None Include="Image\impl\icon\ServiceTaskIconType.cs" />
+    <None Include="Image\impl\icon\SignalIconType.cs" />
+    <None Include="Image\impl\icon\SignalThrowIconType.cs" />
+    <None Include="Image\impl\icon\TaskIconType.cs" />
+    <None Include="Image\impl\icon\TimerIconType.cs" />
+    <None Include="Image\impl\icon\UserTaskIconType.cs" />
+    <None Include="Image\impl\ProcessDiagramDOMGroupManager.cs" />
+    <None Include="Image\impl\ProcessDiagramSVGGraphics2D.cs" />
+    <None Include="JavaDataSource.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Smart.Sql\SmartSql.DapperDeserializer\SmartSql.DapperDeserializer.csproj" />
+    <ProjectReference Include="..\..\Smart.Sql\SmartSql.DIExtension\SmartSql.DIExtension.csproj" />
+    <ProjectReference Include="..\..\Smart.Sql\SmartSql.DyRepository\SmartSql.DyRepository.csproj" />
+    <ProjectReference Include="..\..\Smart.Sql\SmartSql.TypeHandler\SmartSql.TypeHandler.csproj" />
+    <ProjectReference Include="..\..\Smart.Sql\SmartSql\SmartSql.csproj" />
+    <ProjectReference Include="..\..\Spring.Core\Spring.Core.csproj" />
+    <ProjectReference Include="..\Sys.Bpm.Model\Sys.Bpm.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\activiti.cfg.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\Attachment.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\ByteArray.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\Comment.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\DeadLetterJob.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\Deployment.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\EventLogEntry.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\EventSubscription.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\Execution.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\HistoricActivityInstance.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\HistoricDetail.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\HistoricIdentityLink.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\HistoricProcessInstance.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\HistoricTaskInstance.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\HistoricVariableInstance.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\IdentityLink.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\Job.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\Membership.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\Model.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\ProcessDefinition.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\ProcessDefinitionInfo.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\Property.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\Resource.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\SuspendedJob.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\TableData.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\Task.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\TimerJob.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\entity\VariableInstance.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\mapping\mappings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\db\properties\mssql.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

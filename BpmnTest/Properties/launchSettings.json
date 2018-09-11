@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "BpmnTest": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

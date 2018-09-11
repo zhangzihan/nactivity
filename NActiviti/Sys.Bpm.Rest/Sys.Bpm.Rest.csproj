@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <RootNamespace>Sys.Bpm</RootNamespace>
+    <AssemblyName>Sys.Bpm.Rest</AssemblyName>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="core\SecurityPoliciesApplicationService.cs" />
+    <Compile Remove="core\SecurityPoliciesProcessDefinitionRestrictionApplier.cs" />
+    <Compile Remove="core\SecurityPoliciesProcessInstanceRestrictionApplier.cs" />
+    <Compile Remove="rest\assemblers\ProcessDefinitionMetaResourceAssembler.cs" />
+    <Compile Remove="rest\assemblers\ProcessInstanceResourceAssembler.cs" />
+    <Compile Remove="rest\assemblers\ProcessInstanceVariableResourceAssembler.cs" />
+    <Compile Remove="rest\assemblers\TaskResourceAssembler.cs" />
+    <Compile Remove="rest\assemblers\TaskVariableResourceAssembler.cs" />
+    <Compile Remove="rest\controllers\ProcessDefinitionControllerImpl.cs" />
+    <Compile Remove="rest\controllers\ProcessDefinitionMetaControllerImpl.cs" />
+    <Compile Remove="rest\controllers\ProcessInstanceAdminControllerImpl.cs" />
+    <Compile Remove="rest\controllers\ProcessInstanceControllerImpl.cs" />
+    <Compile Remove="rest\controllers\ProcessInstanceTasksControllerImpl.cs" />
+    <Compile Remove="rest\controllers\ProcessInstanceVariableControllerImpl.cs" />
+    <Compile Remove="rest\controllers\TaskAdminControllerImpl.cs" />
+    <Compile Remove="rest\controllers\TaskControllerImpl.cs" />
+    <Compile Remove="rest\controllers\TaskVariableControllerImpl.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="core\SecurityPoliciesApplicationService.cs" />
+    <None Include="core\SecurityPoliciesProcessDefinitionRestrictionApplier.cs" />
+    <None Include="core\SecurityPoliciesProcessInstanceRestrictionApplier.cs" />
+    <None Include="rest\assemblers\ProcessDefinitionMetaResourceAssembler.cs" />
+    <None Include="rest\assemblers\ProcessInstanceResourceAssembler.cs" />
+    <None Include="rest\assemblers\ProcessInstanceVariableResourceAssembler.cs" />
+    <None Include="rest\assemblers\TaskResourceAssembler.cs" />
+    <None Include="rest\assemblers\TaskVariableResourceAssembler.cs" />
+    <None Include="rest\controllers\ProcessDefinitionControllerImpl.cs" />
+    <None Include="rest\controllers\ProcessDefinitionMetaControllerImpl.cs" />
+    <None Include="rest\controllers\ProcessInstanceAdminControllerImpl.cs" />
+    <None Include="rest\controllers\ProcessInstanceControllerImpl.cs" />
+    <None Include="rest\controllers\ProcessInstanceTasksControllerImpl.cs" />
+    <None Include="rest\controllers\ProcessInstanceVariableControllerImpl.cs" />
+    <None Include="rest\controllers\TaskAdminControllerImpl.cs" />
+    <None Include="rest\controllers\TaskControllerImpl.cs" />
+    <None Include="rest\controllers\TaskVariableControllerImpl.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DryIoc.dll" Version="3.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
+    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Spring.Core\Spring.Core.csproj" />
+    <ProjectReference Include="..\Sys.Bpm.Engine\Sys.Bpm.Engine.csproj" />
+    <ProjectReference Include="..\Sys.Bpm.Model\Sys.Bpm.Model.csproj" />
+  </ItemGroup>
+
+</Project>

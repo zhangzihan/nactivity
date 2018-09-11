@@ -1,0 +1,76 @@
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+
+/* Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+namespace org.activiti.engine.impl.bpmn.behavior
+{
+    /// <summary>
+    /// Parent class for all BPMN 2.0 task types such as ServiceTask, ScriptTask, UserTask, etc.
+    /// 
+    /// When used on its own, it behaves just as a pass-through activity.
+    /// 
+    /// 
+    /// </summary>
+    [Serializable]
+    public class TaskActivityBehavior : AbstractBpmnActivityBehavior
+    {
+
+        private const long serialVersionUID = 1L;
+
+        protected internal virtual string getActiveValue(string originalValue, string propertyName, JToken taskElementProperties)
+        {
+            string activeValue = originalValue;
+            if (taskElementProperties != null)
+            {
+                JToken overrideValueNode = taskElementProperties[propertyName];
+                if (overrideValueNode == null)
+                {
+                    activeValue = null;
+                }
+                else
+                {
+                    activeValue = overrideValueNode.ToString();
+                }
+            }
+            return activeValue;
+        }
+
+        protected internal virtual IList<string> getActiveValueList(IList<string> originalValues, string propertyName, JToken taskElementProperties)
+        {
+            IList<string> activeValues = originalValues;
+            if (taskElementProperties != null)
+            {
+                JToken overrideValuesNode = taskElementProperties[propertyName];
+                if (overrideValuesNode != null)
+                {
+                    if (overrideValuesNode == null || !(overrideValuesNode is JArray))
+                    {
+                        activeValues = null;
+                    }
+                    else
+                    {
+                        activeValues = new List<string>();
+                        foreach (JToken valueNode in overrideValuesNode)
+                        {
+                            activeValues.Add(valueNode.ToString());
+                        }
+                    }
+                }
+            }
+            return activeValues;
+        }
+    }
+
+}

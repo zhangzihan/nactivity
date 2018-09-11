@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+  xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" 
+  xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" 
+  xmlns:camunda="http://camunda.org/schema/1.0/bpmn" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:activiti="http://activiti.org/bpmn" targetNamespace="http://activiti.org/bpmn20">
+  <process id="vacationRequest" name="Vacation request" isExecutable="true">
+    <startEvent id="request" camunda:initiator="employeeName" activiti:initiator="employeeName">
+      <extensionElements>
+        <activiti:formProperty id="numberOfDays" name="Number of days" type="long" required="true" />
+        <activiti:formProperty id="startDate" name="First day of holiday (dd-MM-yyy)" type="date" datePattern="dd-MM-yyyy hh:mm" required="true" />
+        <activiti:formProperty id="vacationMotivation" name="Motivation" type="string" />
+      </extensionElements>
+    </startEvent>
+    <sequenceFlow id="flow1" sourceRef="request" targetRef="handleRequest" />
+    <userTask id="handleRequest" name="Handle vacation request" activiti:candidateGroups="management">
+      <documentation>${employeeName} would like to take ${numberOfDays} day(s) of vacation (Motivation: ${vacationMotivation}).</documentation>
+      <extensionElements>
+        <activiti:formProperty id="vacationApproved" name="Do you approve this vacation" type="enum" required="true">
+          <activiti:value id="true" name="Approve" />
+          <activiti:value id="false" name="Reject" />
+        </activiti:formProperty>
+        <activiti:formProperty id="managerMotivation" name="Motivation" type="string" />
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow2" sourceRef="handleRequest" targetRef="requestApprovedDecision" />
+    <exclusiveGateway id="requestApprovedDecision" name="Request approved?" />
+    <sequenceFlow id="flow3" sourceRef="requestApprovedDecision" targetRef="sendApprovalMail">
+      <conditionExpression xsi:type="tFormalExpression">${vacationApproved == 'true'}</conditionExpression>
+    </sequenceFlow>
+    <manualTask id="sendApprovalMail" name="Send confirmation e-mail" />
+    <sequenceFlow id="flow4" sourceRef="sendApprovalMail" targetRef="theEnd1" />
+    <endEvent id="theEnd1" />
+    <sequenceFlow id="flow5" sourceRef="requestApprovedDecision" targetRef="adjustVacationRequestTask">
+      <conditionExpression xsi:type="tFormalExpression">${vacationApproved == 'false'}</conditionExpression>
+    </sequenceFlow>
+    <userTask id="adjustVacationRequestTask" name="Adjust vacation request" activiti:assignee="${employeeName}">
+      <documentation>Your manager has disapproved your vacation request for ${numberOfDays} days.
+        Reason: ${managerMotivation}</documentation>
+      <extensionElements>
+        <activiti:formProperty id="numberOfDays" name="Number of days" type="long" required="true" />
+        <activiti:formProperty id="startDate" name="First day of holiday (dd-MM-yyy)" type="date" datePattern="dd-MM-yyyy hh:mm" required="true" />
+        <activiti:formProperty id="vacationMotivation" name="Motivation" type="string" />
+        <activiti:formProperty id="resendRequest" name="Resend vacation request to manager?" type="enum" required="true">
+          <activiti:value id="true" name="Yes" />
+          <activiti:value id="false" name="No" />
+        </activiti:formProperty>
+        <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler">false</modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow6" sourceRef="adjustVacationRequestTask" targetRef="resendRequestDecision" />
+    <exclusiveGateway id="resendRequestDecision" name="&#39;Resend request?&#39;" />
+    <sequenceFlow id="flow8" sourceRef="resendRequestDecision" targetRef="theEnd2">
+      <conditionExpression xsi:type="tFormalExpression">${resendRequest == 'false'}</conditionExpression>
+    </sequenceFlow>
+    <endEvent id="theEnd2" />
+    <sequenceFlow id="flow7" sourceRef="resendRequestDecision" targetRef="handleRequest">
+      <conditionExpression xsi:type="tFormalExpression">${resendRequest == 'true'}</conditionExpression>
+    </sequenceFlow>
+  </process>
+</definitions>

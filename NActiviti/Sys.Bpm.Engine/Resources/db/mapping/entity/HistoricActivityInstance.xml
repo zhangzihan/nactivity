@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.HistoricActivityInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  
+  <!-- HISTORIC ACTIVITY INSTANCE RESULT MAP -->
+
+  <ResultMap Id="historicActivityInstanceResultMap" ResultType="org.activiti.engine.impl.persistence.entity.HistoricActivityInstanceEntityImpl,Sys.Bpm.Engine">
+    <Result Property="id" Column="ID_" />
+    <Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
+    <Result Property="processInstanceId" Column="PROC_INST_ID_" />
+    <Result Property="executionId" Column="EXECUTION_ID_" />
+    <Result Property="activityId" Column="ACT_ID_" />
+    <Result Property="taskId" Column="TASK_ID_" />
+    <Result Property="calledProcessInstanceId" Column="CALL_PROC_INST_ID_" />
+    <Result Property="activityName" Column="ACT_NAME_" />
+    <Result Property="activityType" Column="ACT_TYPE_" />
+    <Result Property="assignee" Column="ASSIGNEE_" />
+    <Result Property="startTime" Column="START_TIME_" />
+    <Result Property="endTime" Column="END_TIME_" />
+    <Result Property="durationInMillis" Column="DURATION_" />
+    <Result Property="tenantId" Column="TENANT_ID_" />
+  </ResultMap>
+
+  <!-- HISTORIC ACTIVITY INSTANCE INSERT -->
+  
+  <Insert Id="insertHistoricActivityInstance" ResultType="org.activiti.engine.impl.persistence.entity.HistoricActivityInstanceEntity">
+      insert into ACT_HI_ACTINST (
+        ID_,
+        PROC_DEF_ID_,
+        PROC_INST_ID_,
+        EXECUTION_ID_,
+        ACT_ID_,
+        TASK_ID_,
+        CALL_PROC_INST_ID_,
+        ACT_NAME_,
+        ACT_TYPE_,
+        ASSIGNEE_,
+        START_TIME_,
+        END_TIME_,
+        DURATION_,
+        TENANT_ID_
+      ) values (
+        @id,
+        @processDefinitionId,
+        @processInstanceId,
+        @executionId,
+        @activityId,
+        @taskId,
+        @calledProcessInstanceId,
+        @activityName,
+        @activityType,
+        @assignee,
+        @startTime,
+        @endTime,
+        @durationInMillis,
+        @tenantId
+      )
+  </Insert>
+  
+  <Insert Id="bulkInsertHistoricActivityInstance">
+      insert into ACT_HI_ACTINST (
+        ID_,
+        PROC_DEF_ID_,
+        PROC_INST_ID_,
+        EXECUTION_ID_,
+        ACT_ID_,
+        TASK_ID_,
+        CALL_PROC_INST_ID_,
+        ACT_NAME_,
+        ACT_TYPE_,
+        ASSIGNEE_,
+        START_TIME_,
+        END_TIME_,
+        DURATION_,
+        TENANT_ID_
+      ) values 
+      <For Property="Items" Key="index" Separator=",">
+         (@id,
+          @processDefinitionId,
+          @processInstanceId,
+          @executionId,
+          @activityId,
+          @taskId,
+          @calledProcessInstanceId,
+          @activityName,
+          @activityType,
+          @assignee,
+          @startTime,
+          @endTime,
+          @durationInMillis,
+          @tenantId)
+      </For>
+  </Insert>
+
+  <!-- HISTORIC ACTIVITY INSTANCE UPDATE -->
+  
+  <Update Id="updateHistoricActivityInstance">
+    update ACT_HI_ACTINST set
+      EXECUTION_ID_ = @executionId,
+      ASSIGNEE_ = @assignee,
+      END_TIME_ = @endTime,
+      DURATION_ = @durationInMillis
+    where ID_ = @id
+  </Update>
+
+  <!-- HISTORIC ACTIVITY INSTANCE DELETE -->
+  
+  <Delete Id="deleteHistoricActivityInstancesByProcessInstanceId">
+    delete from ACT_HI_ACTINST where PROC_INST_ID_ = @historicProcessInstanceId
+  </Delete>
+
+  <!-- HISTORIC ACTIVITY INSTANCE SELECT -->
+  
+  <Statement Id="selectHistoricActivityInstancesByQueryCriteriaSql">
+    from ACT_HI_ACTINST RES
+    <Where>
+      <IsNotNull Property="processInstanceId">
+        RES.PROC_INST_ID_ = @processInstanceId
+      </IsNotNull>
+      <IsNotNull Property="activityInstanceId">
+        and RES.ID_ = @activityInstanceId
+      </IsNotNull>
+      <IsNotNull Property="executionId">
+        and RES.EXECUTION_ID_ = @executionId
+      </IsNotNull>
+      <IsNotNull Property="processDefinitionId">
+        and RES.PROC_DEF_ID_ = @processDefinitionId
+      </IsNotNull>
+      <IsNotNull Property="activityId">
+        and RES.ACT_ID_ = @activityId
+      </IsNotNull>
+      <IsNotNull Property="activityName">
+        and RES.ACT_NAME_ = @activityName
+      </IsNotNull>
+      <IsNotNull Property="activityType">
+        and RES.ACT_TYPE_ = @activityType
+      </IsNotNull>
+      <IsNotNull Property="assignee">
+        and RES.ASSIGNEE_ = @assignee
+      </IsNotNull>
+      <IsNotNull Property="tenantId">
+        and RES.TENANT_ID_ = @tenantId
+      </IsNotNull>
+      <IsNotNull Property="tenantIdLike">
+        and RES.TENANT_ID_ like @tenantIdLike${wildcardEscapeClause}
+      </IsNotNull>
+      <IsTrue Property="withoutTenantId">
+        and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
+      </IsTrue>
+      <IsTrue Property="unfinished">
+        and RES.END_TIME_ is null
+      </IsTrue>
+      <IsTrue Property="finished">
+       and RES.END_TIME_ is not null
+      </IsTrue>
+    </Where>
+  </Statement>
+  
+  <Select Id="selectUnfinishedHistoricActivityInstanceExecutionIdAndActivityId"  ResultMap="historicActivityInstanceResultMap">
+    select * from ACT_HI_ACTINST RES
+    where EXECUTION_ID_ = @executionId and ACT_ID_ = @activityId and END_TIME_ is null
+  </Select>
+  
+  <Select Id="selectHistoricActivityInstance" ResultMap="historicActivityInstanceResultMap">
+    select * from ACT_HI_ACTINST where ACT_ID_ = @activityId and PROC_INST_ID_ = @processInstanceId
+  </Select>
+
+  <Select Id="selectHistoricActivityInstancesByQueryCriteria" ResultMap="historicActivityInstanceResultMap">
+    ${limitBefore}
+    select RES.* ${limitBetween}
+    <Include RefId="selectHistoricActivityInstancesByQueryCriteriaSql"/>
+    ${orderBy}
+    ${limitAfter}
+  </Select>
+  
+  <Select Id="selectHistoricActivityInstanceCountByQueryCriteria">
+    select count(RES.ID_)
+    <Include RefId="selectHistoricActivityInstancesByQueryCriteriaSql"/>
+  </Select>
+  
+  <Select Id="selectHistoricActivityInstanceByNativeQuery" ResultMap="historicActivityInstanceResultMap">
+  	<IsEqual Property="resultType" CompareValue="LIST_PAGE">
+    	${limitBefore}
+    </IsEqual>
+    ${sql}
+    <IsEqual Property="resultType" CompareValue="LIST_PAGE">
+    	${limitAfter}
+    </IsEqual>
+  </Select>
+  
+  <Select Id="selectHistoricActivityInstanceByNativeQuery_mssql_or_db2" ResultMap="historicActivityInstanceResultMap">
+  	<IsEqual Property="resultType" CompareValue="LIST_PAGE">
+        ${limitBeforeNativeQuery}
+  	</IsEqual>
+  	${sql} 
+    <IsEqual Property="resultType" CompareValue="LIST_PAGE">
+  		${limitAfter}
+  	</IsEqual>
+  </Select>
+
+  <Select Id="selectHistoricActivityInstanceCountByNativeQuery" resultType="long">
+    ${sql}
+  </Select>
+</SmartSqlMap>

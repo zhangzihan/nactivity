@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.ByteArrayEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+
+  <!-- BYTE ARRAY RESULTMAP -->
+    
+    <ResultMap Id="byteArrayResultMap" ResultType="org.activiti.engine.impl.persistence.entity.ByteArrayEntityImpl,Sys.Bpm.Engine">
+      <Result Property="id" Column="ID_" />
+      <Result Property="revision" Column="REV_" />
+      <Result Property="name" Column="NAME_" />
+      <Result Property="bytes" Column="BYTES_" TypeHandler="文件" />
+    </ResultMap>
+
+  <!-- BYTE ARRAY INSERT -->
+  
+  <Insert Id="insertByteArray">
+    insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
+    values (
+    @id,
+    1,
+    @name,
+    @bytes,
+    @deploymentId
+    )
+  </Insert>
+
+  <Insert Id="bulkInsertByteArray">
+    insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
+    values
+    <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator="," >
+      (@id,
+      1,
+      @name,
+      @bytes,
+      @deploymentId)
+    </For>
+  </Insert>
+
+  <!-- BYTE ARRAY UPDATE -->
+
+  <Update Id="updateByteArray">
+    update ACT_GE_BYTEARRAY
+    set
+    REV_ = @revisionNext,
+    BYTES_ = @bytes
+    where ID_ = @id
+    and REV_ = @revision
+  </Update>
+
+  <!-- BYTE ARRAY DELETE -->
+
+  <Select Id="selectByteArrays" ResultMap="byteArrayResultMap">
+    select * from ACT_GE_BYTEARRAY 
+  </Select>
+  
+  <Select Id="selectBytesOfByteArray" ResultMap="byteArrayResultMap">
+    select BYTES_ from ACT_GE_BYTEARRAY where ID_ = @id and REV_ = @revision
+  </Select>
+
+  <Delete Id="deleteByteArraysForDeployment">
+    delete from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = @id and REV_ = @revision
+  </Delete>
+
+  <Delete Id="deleteByteArray">
+    delete from ACT_GE_BYTEARRAY where ID_ = @id and REV_ = @revision
+  </Delete>
+
+  <Delete Id="deleteByteArrayNoRevisionCheck">
+    delete from ACT_GE_BYTEARRAY where ID_ = @id
+  </Delete>
+
+  <!-- BYTE ARRAY SELECT -->
+
+  <Select Id="selectByteArray" ResultMap="byteArrayResultMap">
+    select * from ACT_GE_BYTEARRAY where ID_ = @id
+  </Select>
+
+  <Update Id="updateByteArray_postgres">
+    update ACT_GE_BYTEARRAY
+    set
+    REV_ = @revisionNext,
+    BYTES_ = @bytes
+    where ID_ = @id
+    and REV_ = @revision
+  </Update>
+
+  <Insert Id="insertByteArray_postgres">
+    insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
+    values (
+    @id,
+    1,
+    @name,
+    @bytes,
+    @deploymentId
+    )
+  </Insert>
+  
+</SmartSqlMap>
