@@ -1,5 +1,4 @@
-﻿using DryIoc;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
@@ -21,6 +20,7 @@ namespace org.activiti.engine.impl.cfg
 {
     using DatabaseSchemaReader;
     using javax.transaction;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.cfg;
     using org.activiti.engine.@delegate.@event;
@@ -74,7 +74,8 @@ namespace org.activiti.engine.impl.cfg
             IDynamicBpmnService dynamicBpmnService,
             IRepositoryService repositoryService,
             IRuntimeService runtimeService,
-            IManagementService managementService) : base()
+            IManagementService managementService,
+            IConfiguration configuration) : base(configuration)
         {
             this.historyService = historyService;
             if (historyService is ServiceImpl)
@@ -874,7 +875,7 @@ namespace org.activiti.engine.impl.cfg
         {
             try
             {
-                IDatabaseReader dbreader = ProcessEngineServiceProvider.ServiceProvider.Resolve<IDatabaseReader>();
+                IDatabaseReader dbreader = ProcessEngineServiceProvider.Resolve<IDatabaseReader>();
 
                 log.LogDebug($"database product name: '{dbreader.DatabaseSchema.Provider}'");
                 // Special care for MSSQL, as it has a hard limit of 2000 params per statement (incl bulk statement).
@@ -955,8 +956,7 @@ namespace org.activiti.engine.impl.cfg
 
         public virtual void initMybatisConfiguration(/*Environment environment, StreamReader reader,*/ Properties properties)
         {
-            var sqlmaper = ProcessEngineServiceProvider.SmartSqlMapper;
-            sqlmaper.Variables = properties;
+            SqlMapper.Variables = properties;
 
             initMybatisTypeHandlers();
             initCustomMybatisMappers();
@@ -1549,7 +1549,7 @@ namespace org.activiti.engine.impl.cfg
 
             if (bpmnParseFactory == null)
             {
-                bpmnParseFactory = ProcessEngineServiceProvider.ServiceProvider.Resolve<IBpmnParseFactory>();
+                bpmnParseFactory = ProcessEngineServiceProvider.Resolve<IBpmnParseFactory>();
             }
 
             bpmnParser.BpmnParseFactory = bpmnParseFactory;
@@ -1666,7 +1666,7 @@ namespace org.activiti.engine.impl.cfg
         {
             if (this.engineAgendaFactory == null)
             {
-                this.engineAgendaFactory = ProcessEngineServiceProvider.ServiceProvider.Resolve<IActivitiEngineAgendaFactory>();
+                this.engineAgendaFactory = ProcessEngineServiceProvider.Resolve<IActivitiEngineAgendaFactory>();
             }
         }
 
@@ -1773,7 +1773,7 @@ namespace org.activiti.engine.impl.cfg
         {
             if (idGenerator == null)
             {
-                idGenerator = ProcessEngineServiceProvider.ServiceProvider.Resolve<IIdGenerator>();
+                idGenerator = ProcessEngineServiceProvider.Resolve<IIdGenerator>();
                 //interceptor.ICommandExecutor idGeneratorCommandExecutor = CommandExecutor;
 
                 //DbIdGenerator dbIdGenerator = new DbIdGenerator();

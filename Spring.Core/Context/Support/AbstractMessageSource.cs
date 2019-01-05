@@ -19,11 +19,10 @@
 #endregion
 
 using Microsoft.Extensions.Logging;
-using Spring.Logging;
+using Spring.Core;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-
 
 namespace Spring.Context.Support
 {
@@ -79,7 +78,7 @@ namespace Spring.Context.Support
         /// </summary>
         protected AbstractMessageSource()
         {
-            log = NoneLoggerFactory.Instance.GetLogger(GetType());
+            log = LogManager.GetLogger<AbstractMessageSource>();
         }
 
         #endregion

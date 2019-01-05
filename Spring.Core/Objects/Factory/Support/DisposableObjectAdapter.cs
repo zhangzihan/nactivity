@@ -1,18 +1,17 @@
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Objects.Factory.Config;
+using Spring.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Extensions.Logging;
-using Spring.Collections;
-using Spring.Logging;
-using Spring.Objects.Factory.Config;
-using Spring.Util;
 
 namespace Spring.Objects.Factory.Support
 {
     public class DisposableObjectAdapter : IDisposable
     {
-        private readonly ILogger logger = NoneLoggerFactory.Instance.CreateLogger<DisposableObjectAdapter>();
+        private readonly ILogger logger = LogManager.GetLogger<DisposableObjectAdapter>();
 
         private object instance;
 
@@ -33,7 +32,7 @@ namespace Spring.Objects.Factory.Support
         /// <param name="objectName">Name of the bean.</param>
         /// <param name="objectDefinition">The merged bean definition.</param>
         /// <param name="postProcessors">the List of BeanPostProcessors (potentially IDestructionAwareBeanPostProcessor), if any.</param>
-        public DisposableObjectAdapter(object instance, string objectName, RootObjectDefinition objectDefinition, ISet postProcessors)
+        public DisposableObjectAdapter(object instance, string objectName, RootObjectDefinition objectDefinition, IReadOnlyCollection<IObjectPostProcessor> postProcessors)
         {
             AssertUtils.ArgumentNotNull(instance, "Disposable object must not be null");
 
@@ -105,7 +104,7 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         /// <param name="postProcessors">The List to search.</param>
         /// <returns>the filtered List of IDestructionAwareObjectPostProcessors.</returns>
-        private List<IDestructionAwareObjectPostProcessor> FilterPostProcessors(ISet postProcessors)
+        private List<IDestructionAwareObjectPostProcessor> FilterPostProcessors(IReadOnlyCollection<IObjectPostProcessor> postProcessors)
         {
             List<IDestructionAwareObjectPostProcessor> filteredPostProcessors = null;
             if (postProcessors != null && postProcessors.Count != 0)
@@ -115,8 +114,6 @@ namespace Spring.Objects.Factory.Support
             }
             return filteredPostProcessors;
         }
-
-
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -134,9 +131,9 @@ namespace Spring.Objects.Factory.Support
 
                     catch (Exception ex)
                     {
-                        logger.LogError(
+                        logger.LogError(ex,
                             string.Format("Error during execution of {0}.PostProcessBeforeDestruction for object {1}",
-                                          processor.GetType().Name, this.objectName), ex);
+                                          processor.GetType().Name, this.objectName));
                     }
                 }
             }

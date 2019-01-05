@@ -27,7 +27,8 @@ namespace org.activiti.engine.impl.cfg
             IDynamicBpmnService dynamicBpmnService,
             IRepositoryService repositoryService,
             IRuntimeService runtimeService,
-            IManagementService managementService) : base(historyService, taskService, dynamicBpmnService, repositoryService, runtimeService, managementService)
+            IManagementService managementService,
+            IConfiguration configuration) : base(historyService, taskService, dynamicBpmnService, repositoryService, runtimeService, managementService, configuration)
         {
         }
 

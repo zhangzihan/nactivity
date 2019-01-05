@@ -18,17 +18,16 @@
 
 #endregion
 
+using Microsoft.Extensions.Logging;
+using Spring.Context;
+using Spring.Context.Support;
+using Spring.Core;
+using Spring.Expressions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Resources;
-
-using Spring.Context;
-using Spring.Context.Support;
-using Spring.Expressions;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
 
 namespace Spring.Globalization.Localizers
 {
@@ -48,7 +47,7 @@ namespace Spring.Globalization.Localizers
     /// <author>Aleksandar Seovic</author>
     public class ResourceSetLocalizer : AbstractLocalizer
     {
-        private static readonly ILogger log = NoneLoggerFactory.Instance. GetLogger(typeof(ResourceSetLocalizer));
+        private static readonly ILogger log = LogManager.GetLogger<ResourceSetLocalizer>();
 
         private static readonly IList ignoreList =
             new string[] {"$this.DefaultModifiers", "$this.TrayAutoArrange", "$this.TrayLargeIcon"};

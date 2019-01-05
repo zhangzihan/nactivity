@@ -7,12 +7,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using System.Data.Common;
+using System.Collections.Concurrent;
 
 namespace Sys.Data
 {
     public class DataSource : IDataSource
     {
         private static ILogger<DataSource> log = ProcessEngineServiceProvider.LoggerService<DataSource>();
+
+        private static ConcurrentDictionary<string, DbProviderFactory> dbTypes = new ConcurrentDictionary<string, DbProviderFactory>(StringComparer.OrdinalIgnoreCase);
+
+        static DataSource()
+        {
+            //Validator.Validate();
+
+            dbTypes["System.Data.SqlClient"] = System.Data.SqlClient.SqlClientFactory.Instance;
+        }
 
         private string connectionString;
         private string provider;
@@ -55,7 +65,7 @@ namespace Sys.Data
             dsb.ConnectionString = connectionString;
             dsb.Remove("Provider");
 
-            var db = DbProviderFactories.GetFactory(provider);
+            var db = dbTypes[provider]; // DbProviderFactories.GetFactory(provider);
             Connection = db.CreateConnection();
             Connection.ConnectionString = dsb.ConnectionString;
 

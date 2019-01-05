@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright Â© 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 #region Imports
 
 using System;
+using System.Runtime.Serialization;
 
 using Spring.Objects.Factory.Config;
 
@@ -61,8 +62,6 @@ namespace Spring.Objects.Factory.Support
     [Serializable]
     public class RootObjectDefinition : AbstractObjectDefinition
     {
-        #region Constructor (s) / Destructor
-
         /// <summary>
         /// Creates a new instance of the
         /// <see cref="Spring.Objects.Factory.Support.RootObjectDefinition"/> class.
@@ -251,9 +250,13 @@ namespace Spring.Objects.Factory.Support
         /// The definition that is to be copied.
         /// </param>
         public RootObjectDefinition(IObjectDefinition other) : base(other)
-        {}
+        {
+        }
 
-        #endregion
+        protected RootObjectDefinition(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
 
         /// <summary>
         /// Is always <c>null</c> for a <see cref="RootObjectDefinition"/>.
@@ -265,10 +268,7 @@ namespace Spring.Objects.Factory.Support
         /// <exception cref="ArgumentException">Raised on any attempt to set a non-null value on this property.</exception>
         public override string ParentName
         {
-            get
-            {
-                return null;
-            }
+            get => null;
             set
             {
                 if (value != null)
@@ -309,7 +309,7 @@ namespace Spring.Objects.Factory.Support
         /// </returns>
         public override string ToString()
         {
-            return String.Format("{0} : {1}", GetType().Name, base.ToString());
+            return $"{GetType().Name} : {base.ToString()}";
         }
     }
 }

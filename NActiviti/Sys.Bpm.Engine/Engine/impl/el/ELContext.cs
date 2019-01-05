@@ -8,7 +8,7 @@ namespace org.activiti.engine.impl.el
 {
     public abstract class ELContext
     {
-        private System.Collections.Generic.KeyedByTypeCollection<object> context;
+        private System.Collections.Generic.Dictionary<Type, object> context;
         //private Locale locale;
         private bool resolved;
 
@@ -57,10 +57,10 @@ namespace org.activiti.engine.impl.el
             {
                 if (this.context == null)
                 {
-                    this.context = new KeyedByTypeCollection<object>();
+                    this.context = new Dictionary<Type, object>();
                 }
 
-                this.context.Add(contextObject);
+                this.context.Add(key, contextObject);
             }
         }
     }

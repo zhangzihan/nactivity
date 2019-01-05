@@ -20,15 +20,15 @@
 
 #region Imports
 
-using System;
-using System.IO;
-using System.Xml;
-using System.Xml.Schema;
 using Microsoft.Extensions.Logging;
 using Spring.Core.IO;
 using Spring.Objects.Factory.Config;
 using Spring.Objects.Factory.Support;
 using Spring.Util;
+using System;
+using System.IO;
+using System.Xml;
+using System.Xml.Schema;
 
 #endregion
 
@@ -252,7 +252,7 @@ namespace Spring.Objects.Factory.Xml
                     {
                         #region Instrumentation
 
-                        if (log.IsEnabled(LogLevel.Debug))
+                        if (log.IsEnabled(LogLevel.Warning))
                         {
                             log.LogWarning("Could not close stream.", ex);
                         }
@@ -375,7 +375,7 @@ namespace Spring.Objects.Factory.Xml
             {
                 #region Instrumentation
 
-                if (log.IsEnabled(LogLevel.Debug))
+                if (log.IsEnabled(LogLevel.Warning))
                 {
                     log.LogWarning(
                         "Ignored XML validation warning: " + args.Message,

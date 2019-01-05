@@ -20,14 +20,12 @@
 
 #region Imports
 
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Core.IO;
 using System;
 using System.Collections.Specialized;
 using System.Globalization;
-
-using Spring.Core;
-using Spring.Core.IO;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
 
 #endregion
 
@@ -109,7 +107,7 @@ namespace Spring.Objects.Factory.Config
         /// </remarks>
         protected PropertyResourceConfigurer()
         {
-            _log = NoneLoggerFactory.Instance.GetLogger(this.GetType());
+            _log = LogManager.GetLogger(this.GetType());
         }
 
         #endregion
@@ -306,7 +304,7 @@ namespace Spring.Objects.Factory.Config
                             {
                                 #region Instrumentation
 
-                                if (_log.IsEnabled(LogLevel.Debug))
+                                if (_log.IsEnabled(LogLevel.Warning))
                                 {
                                     _log.LogWarning(errorMessage);
                                 }

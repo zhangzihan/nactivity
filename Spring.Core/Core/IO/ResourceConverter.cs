@@ -20,54 +20,53 @@
 
 #region Imports
 
+using Microsoft.Extensions.Logging;
+using Spring.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
-using Spring.Util;
 
 #endregion
 
 namespace Spring.Core.IO
 {
-	/// <summary>
-	/// Custom type converter for <see cref="Spring.Core.IO.IResource"/> instances.
-	/// </summary>
-	/// <remarks>
-	/// <p>
-	/// A resource path may contain placeholder variables of the form <c>${...}</c>
-	/// that will be expended to <b>environment variables</b>.
-	/// </p>
-	/// <p>
-	/// Currently only supports conversion from a <see cref="System.String"/>
-	/// instance.
-	/// </p>
-	/// </remarks>
-	/// <example>
-	/// <p>
-	/// On Win9x boxes, this resource path, <c>${userprofile}\objects.xml</c> will
-	/// be expanded at runtime with the value of the <c>'userprofile'</c> environment
-	/// variable substituted for the <c>'${userprofile}'</c> portion of the path.
-	/// </p>
-	/// <code escaped="true">
-	/// // assuming a user called Rick, running on a plain vanilla Windows XP setup...
-	/// // this resource path...
-	/// 
-	/// ${userprofile}\objects.xml
-	/// 
-	/// // will become (after expansion)...
-	/// 
-	/// C:\Documents and Settings\Rick\objects.xml
-	/// </code>
-	/// </example>
-	/// <author>Mark Pollack</author>
-	/// <seealso cref="Spring.Core.IO.IResourceLoader"/>
-	/// <seealso cref="System.ComponentModel.TypeConverter"/>
-	public class ResourceConverter : TypeConverter
+    /// <summary>
+    /// Custom type converter for <see cref="Spring.Core.IO.IResource"/> instances.
+    /// </summary>
+    /// <remarks>
+    /// <p>
+    /// A resource path may contain placeholder variables of the form <c>${...}</c>
+    /// that will be expended to <b>environment variables</b>.
+    /// </p>
+    /// <p>
+    /// Currently only supports conversion from a <see cref="System.String"/>
+    /// instance.
+    /// </p>
+    /// </remarks>
+    /// <example>
+    /// <p>
+    /// On Win9x boxes, this resource path, <c>${userprofile}\objects.xml</c> will
+    /// be expanded at runtime with the value of the <c>'userprofile'</c> environment
+    /// variable substituted for the <c>'${userprofile}'</c> portion of the path.
+    /// </p>
+    /// <code escaped="true">
+    /// // assuming a user called Rick, running on a plain vanilla Windows XP setup...
+    /// // this resource path...
+    /// 
+    /// ${userprofile}\objects.xml
+    /// 
+    /// // will become (after expansion)...
+    /// 
+    /// C:\Documents and Settings\Rick\objects.xml
+    /// </code>
+    /// </example>
+    /// <author>Mark Pollack</author>
+    /// <seealso cref="Spring.Core.IO.IResourceLoader"/>
+    /// <seealso cref="System.ComponentModel.TypeConverter"/>
+    public class ResourceConverter : TypeConverter
 	{
-		private ILogger _log = NoneLoggerFactory.Instance. GetLogger(typeof (ResourceConverter));
+		private static readonly ILogger _log = LogManager.GetLogger<ResourceConverter>();
 		private IResourceLoader _resourceLoader;
 		
 		#region Constructor (s) / Destructor
@@ -185,7 +184,7 @@ namespace Spring.Core.IO
 				{
 					#region Instrumentation
 
-					if (_log.IsEnabled(LogLevel.Debug))
+					if (_log.IsEnabled(LogLevel.Warning))
 					{
 						_log.LogWarning(string.Format(
 							CultureInfo.InvariantCulture,

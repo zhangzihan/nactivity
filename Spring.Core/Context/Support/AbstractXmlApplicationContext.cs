@@ -20,16 +20,15 @@
 
 #region Imports
 
-using System;
-using System.IO;
-
+using Microsoft.Extensions.Logging;
+using Spring.Core.IO;
 using Spring.Objects;
 using Spring.Objects.Factory.Config;
 using Spring.Objects.Factory.Support;
 using Spring.Objects.Factory.Xml;
 using Spring.Util;
-using Spring.Core.IO;
-using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
 
 #endregion
 

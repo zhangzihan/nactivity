@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright ?2002-2011 the original author or authors.
+ * Copyright © 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +14,17 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Reflection;
-
-
-
+using Microsoft.Extensions.Logging;
 using Spring.Collections;
 using Spring.Core.TypeResolution;
 using Spring.Objects.Factory.Config;
 using Spring.Util;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
-
-#endregion
+using System;
+using System.Collections;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Reflection;
 
 namespace Spring.Objects.Factory.Support
 {
@@ -64,7 +53,23 @@ namespace Spring.Objects.Factory.Support
     [Serializable]
     public abstract class AbstractAutowireCapableObjectFactory : AbstractObjectFactory, IAutowireCapableObjectFactory
     {
-        #region Constants
+
+        private IInstantiationStrategy instantiationStrategy = new MethodInjectingInstantiationStrategy();
+
+        /// <summary>
+        /// Cache of filtered PropertyInfos: object Type -> PropertyInfo array 
+        /// </summary>
+        private readonly ConcurrentDictionary<Type, List<PropertyInfo>> filteredPropertyDescriptorsCache = new ConcurrentDictionary<Type, List<PropertyInfo>>();
+
+        /// <summary>
+        /// Dependency interfaces to ignore on dependency check and autowire, as Set of
+        /// Class objects. By default, only the IObjectFactoryAware and IObjectNameAware 
+        /// interfaces are ignored.
+        /// </summary>
+        private readonly HybridSet ignoredDependencyInterfaces = new HybridSet();
+
+        [NonSerialized]
+        private ObjectDefinitionValueResolver cachedValueResolver;
 
         /// <summary>
         /// The <see cref="System.Reflection.BindingFlags"/> used during the invocation and
@@ -72,15 +77,6 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         protected const BindingFlags MethodResolutionFlags =
                 BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase;
-
-        #endregion
-
-        /// <summary>
-        /// The <see cref="Common.Logging.ILog"/> instance for this class.
-        /// </summary>
-        private readonly ILogger log;
-
-        #region Constructor (s) / Destructor
 
         /// <summary>
         /// Creates a new instance of the
@@ -112,15 +108,9 @@ namespace Spring.Objects.Factory.Support
         protected AbstractAutowireCapableObjectFactory(bool caseSensitive, IObjectFactory parentFactory)
             : base(caseSensitive, parentFactory)
         {
-            log = NoneLoggerFactory.Instance.GetLogger(this.GetType());
-
-            this.IgnoreDependencyInterface(typeof(IObjectFactoryAware));
-            this.IgnoreDependencyInterface(typeof(IObjectNameAware));
+            IgnoreDependencyInterface(typeof(IObjectFactoryAware));
+            IgnoreDependencyInterface(typeof(IObjectNameAware));
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         /// The <see cref="Spring.Objects.Factory.Support.IInstantiationStrategy"/>
@@ -128,13 +118,9 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         protected IInstantiationStrategy InstantiationStrategy
         {
-            get { return instantiationStrategy; }
-            set { instantiationStrategy = value; }
+            get => instantiationStrategy;
+            set => instantiationStrategy = value;
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Predict the eventual object type (of the processed object instance) for the
@@ -255,7 +241,7 @@ namespace Spring.Objects.Factory.Support
             RootObjectDefinition definition = GetMergedObjectDefinition(name, true);
             if (definition != null)
             {
-                log.LogDebug(string.Format("configuring object '{0}' using definition '{1}'", instance, name));
+                log.LogDebug($"configuring object '{instance}' using definition '{name}'");
                 ApplyPropertyValues(name, definition, new ObjectWrapper(instance), definition.PropertyValues);
             }
         }
@@ -277,6 +263,7 @@ namespace Spring.Objects.Factory.Support
         /// </param>
         public override void ApplyObjectPropertyValues(object instance, string name, IObjectDefinition definition)
         {
+            MarkObjectAsCreated(name);
             ApplyPropertyValues(name, new RootObjectDefinition(definition), new ObjectWrapper(instance), definition.PropertyValues);
         }
 
@@ -304,27 +291,23 @@ namespace Spring.Objects.Factory.Support
         /// </exception>
         protected object ApplyObjectPostProcessorsBeforeInstantiation(Type objectType, string objectName)
         {
-            #region Instrumentation
-
             if (log.IsEnabled(LogLevel.Debug))
             {
-                log.LogDebug(string.Format("Invoking IInstantiationAwareObjectPostProcessors before " + "the instantiation of '{0}'.", objectName));
+                log.LogDebug("Invoking IInstantiationAwareObjectPostProcessors before " +
+                          $"the instantiation of '{objectName}'.");
             }
 
-            #endregion
-
-            foreach (IObjectPostProcessor processor in ObjectPostProcessors)
+            for (var i = 0; i < ObjectPostProcessors.Count; i++)
             {
+                IObjectPostProcessor processor = ObjectPostProcessors[i];
                 IInstantiationAwareObjectPostProcessor inProc = processor as IInstantiationAwareObjectPostProcessor;
-                if (inProc != null)
+                object theObject = inProc?.PostProcessBeforeInstantiation(objectType, objectName);
+                if (theObject != null)
                 {
-                    object theObject = inProc.PostProcessBeforeInstantiation(objectType, objectName);
-                    if (theObject != null)
-                    {
-                        return theObject;
-                    }
+                    return theObject;
                 }
             }
+
             return null;
         }
 
@@ -343,21 +326,21 @@ namespace Spring.Objects.Factory.Support
         /// <seealso cref="Spring.Objects.Factory.Config.IDestructionAwareObjectPostProcessor.PostProcessBeforeDestruction"/>
         public virtual void ApplyObjectPostProcessBeforeDestruction(object instance, string name)
         {
-            log.LogDebug("Invoking PostProcessBeforeDestruction after IDisposal of object '" + name + "'");
+            log.LogDebug($"Invoking PostProcessBeforeDestruction after IDisposal of object '{name}'");
 
-            foreach (IObjectPostProcessor objectProcessor in ObjectPostProcessors)
+            for (var i = 0; i < ObjectPostProcessors.Count; i++)
             {
-                if (objectProcessor is IDestructionAwareObjectPostProcessor)
+                IObjectPostProcessor objectProcessor = ObjectPostProcessors[i];
+                if (objectProcessor is IDestructionAwareObjectPostProcessor processor)
                 {
                     try
                     {
-                        ((IDestructionAwareObjectPostProcessor)objectProcessor).PostProcessBeforeDestruction(instance, name);
+                        processor.PostProcessBeforeDestruction(instance, name);
                     }
                     catch (Exception ex)
                     {
-                        log.LogError(
-                            string.Format("Error during execution of {0}.PostProcessBeforeDestruction for object {1}",
-                                          objectProcessor.GetType().Name, name), ex);
+                        log.LogError(ex,
+                            $"Error during execution of {processor.GetType().Name}.PostProcessBeforeDestruction for object {name}");
                     }
                 }
             }
@@ -394,7 +377,7 @@ namespace Spring.Objects.Factory.Support
             ObjectDefinitionValueResolver valueResolver = CreateValueResolver();
 
             MutablePropertyValues deepCopy = new MutablePropertyValues(properties);
-            IList<PropertyValue> copiedProperties = deepCopy.PropertyValues;
+            var copiedProperties = deepCopy.PropertyValues;
             for (int i = 0; i < copiedProperties.Count; ++i)
             {
                 PropertyValue copiedProperty = copiedProperties[i];
@@ -422,7 +405,7 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         protected virtual ObjectDefinitionValueResolver CreateValueResolver()
         {
-            return new ObjectDefinitionValueResolver(this);
+            return cachedValueResolver ?? (cachedValueResolver = new ObjectDefinitionValueResolver(this));
         }
 
         /// <summary>
@@ -514,12 +497,12 @@ namespace Spring.Objects.Factory.Support
             // to support styles of field injection.
             bool continueWithPropertyPopulation = true;
 
-            if (HasInstantiationAwareBeanPostProcessors)
+            if (HasInstantiationAwareObjectPostProcessors)
             {
-                foreach (IObjectPostProcessor processor in ObjectPostProcessors)
+                for (var i = 0; i < ObjectPostProcessors.Count; i++)
                 {
-                    IInstantiationAwareObjectPostProcessor inProc = processor as IInstantiationAwareObjectPostProcessor;
-                    if (inProc != null)
+                    IObjectPostProcessor processor = ObjectPostProcessors[i];
+                    if (processor is IInstantiationAwareObjectPostProcessor inProc)
                     {
                         if (!inProc.PostProcessAfterInstantiation(wrapper.WrappedInstance, name))
                         {
@@ -566,24 +549,22 @@ namespace Spring.Objects.Factory.Support
             //DependencyCheck(name, definition, wrapper, properties);
 
 
-            bool hasInstAwareOpps = HasInstantiationAwareBeanPostProcessors;
+            bool hasInstAwareOpps = HasInstantiationAwareObjectPostProcessors;
             bool needsDepCheck = (definition.DependencyCheck != DependencyCheckingMode.None);
-
 
             if (hasInstAwareOpps || needsDepCheck)
             {
-                IList<PropertyInfo> filteredPropInfo = FilterPropertyInfoForDependencyCheck(wrapper);
+                List<PropertyInfo> filteredPropInfo = null;
                 if (hasInstAwareOpps)
                 {
-                    foreach (IObjectPostProcessor processor in ObjectPostProcessors)
+                    for (var i = 0; i < ObjectPostProcessors.Count; i++)
                     {
-                        IInstantiationAwareObjectPostProcessor instantiationAwareObjectPostProcessor =
-                            processor as IInstantiationAwareObjectPostProcessor;
-                        if (instantiationAwareObjectPostProcessor != null)
+                        IObjectPostProcessor processor = ObjectPostProcessors[i];
+                        if (processor is IInstantiationAwareObjectPostProcessor instantiationAwareObjectPostProcessor)
                         {
-                            properties =
-                                instantiationAwareObjectPostProcessor.PostProcessPropertyValues(properties, filteredPropInfo, wrapper.WrappedInstance,
-                                                                 name);
+                            filteredPropInfo = filteredPropInfo ?? FilterPropertyInfoForDependencyCheck(wrapper);
+                            properties = instantiationAwareObjectPostProcessor.PostProcessPropertyValues(properties,
+                                filteredPropInfo, wrapper.WrappedInstance, name);
                             if (properties == null)
                             {
                                 return;
@@ -594,6 +575,7 @@ namespace Spring.Objects.Factory.Support
 
                 if (needsDepCheck)
                 {
+                    filteredPropInfo = filteredPropInfo ?? FilterPropertyInfoForDependencyCheck(wrapper);
                     CheckDependencies(name, definition, filteredPropInfo, properties);
                 }
 
@@ -677,8 +659,6 @@ namespace Spring.Objects.Factory.Support
                     object o = GetObject(propertyName);
                     properties.Add(propertyName, o);
 
-                    #region Instrumentation
-
                     if (log.IsEnabled(LogLevel.Debug))
                     {
                         log.LogDebug(
@@ -686,21 +666,15 @@ namespace Spring.Objects.Factory.Support
                                               "Added autowiring by name from object name '{0}' via " + "property '{1}' to object named '{1}'.", name,
                                               propertyName));
                     }
-
-                    #endregion
                 }
                 else
                 {
-                    #region Instrumentation
-
                     if (log.IsEnabled(LogLevel.Debug))
                     {
                         log.LogDebug(
                                 string.Format(CultureInfo.InvariantCulture,
                                               "Not autowiring property '{0}' of object '{1}' by name: " + "no matching object found.", propertyName, name));
                     }
-
-                    #endregion
                 }
             }
         }
@@ -741,8 +715,6 @@ namespace Spring.Objects.Factory.Support
                 {
                     properties.Add(propertyName, ObjectUtils.EnumerateFirstElement(matchingObjects.Values));
 
-                    #region Instrumentation
-
                     if (log.IsEnabled(LogLevel.Debug))
                     {
                         log.LogDebug(
@@ -750,8 +722,6 @@ namespace Spring.Objects.Factory.Support
                                               "Autowiring by type from object name '{0}' via property " + "'{1}' to object named '{2}'.", name,
                                               propertyName, ObjectUtils.EnumerateFirstElement(matchingObjects.Keys)));
                     }
-
-                    #endregion
                 }
                 else if (matchingObjects != null && matchingObjects.Count > 1)
                 {
@@ -764,16 +734,12 @@ namespace Spring.Objects.Factory.Support
                 }
                 else
                 {
-                    #region Instrumentation
-
                     if (log.IsEnabled(LogLevel.Debug))
                     {
                         log.LogDebug(
                                 string.Format(CultureInfo.InvariantCulture, "Not autowiring property '{0}' of object '{1}': no matching object found.",
                                               propertyName, name));
                     }
-
-                    #endregion
                 }
             }
         }
@@ -880,14 +846,10 @@ namespace Spring.Objects.Factory.Support
                 }
             }
 
-            #region Instrumentation
-
             if (log.IsEnabled(LogLevel.Debug))
             {
                 log.LogDebug(string.Format(CultureInfo.InvariantCulture, "Creating instance of Object '{0}' with merged definition [{1}].", name, definition));
             }
-
-            #endregion
 
             // Make sure object type is actually resolved at this point.
             ResolveObjectType(definition, name);
@@ -993,7 +955,7 @@ namespace Spring.Objects.Factory.Support
         /// </remarks>
         protected virtual void RemoveEagerlyCachedSingleton(string objectName, IObjectDefinition objectDefinition)
         {
-            base.RemoveSingleton(objectName);
+            RemoveSingleton(objectName);
         }
 
         /// <summary>
@@ -1074,11 +1036,13 @@ namespace Spring.Objects.Factory.Support
         /// <seealso cref="SmartInstantiationAwareObjectPostProcessor.DetermineCandidateConstructors"/>
         protected virtual ConstructorInfo[] DetermineConstructorsFromObjectPostProcessors(Type objectType, string objectName)
         {
-            if (HasInstantiationAwareBeanPostProcessors)
+            if (HasInstantiationAwareObjectPostProcessors)
             {
-                foreach (IObjectPostProcessor objectPostProcessor in ObjectPostProcessors)
+                for (var i = 0; i < ObjectPostProcessors.Count; i++)
                 {
-                    if (ObjectUtils.IsAssignable(typeof(SmartInstantiationAwareObjectPostProcessor), objectPostProcessor))
+                    IObjectPostProcessor objectPostProcessor = ObjectPostProcessors[i];
+                    if (ObjectUtils.IsAssignable(typeof(SmartInstantiationAwareObjectPostProcessor),
+                        objectPostProcessor))
                     {
                         SmartInstantiationAwareObjectPostProcessor iop =
                             (SmartInstantiationAwareObjectPostProcessor)objectPostProcessor;
@@ -1194,15 +1158,14 @@ namespace Spring.Objects.Factory.Support
             }
 
             IList<PropertyInfo> filteredPropInfo = FilterPropertyInfoForDependencyCheck(wrapper);
-            if (HasInstantiationAwareBeanPostProcessors)
+            if (HasInstantiationAwareObjectPostProcessors)
             {
-                foreach (IObjectPostProcessor processor in ObjectPostProcessors)
+                for (var i = 0; i < ObjectPostProcessors.Count; i++)
                 {
-                    IInstantiationAwareObjectPostProcessor inProc = processor as IInstantiationAwareObjectPostProcessor;
-                    if (inProc != null)
+                    IObjectPostProcessor processor = ObjectPostProcessors[i];
+                    if (processor is IInstantiationAwareObjectPostProcessor inProc)
                     {
-                        properties =
-                            inProc.PostProcessPropertyValues(properties, filteredPropInfo, wrapper.WrappedInstance, name);
+                        properties = inProc.PostProcessPropertyValues(properties, filteredPropInfo, wrapper.WrappedInstance, name);
                         if (properties == null)
                         {
                             return;
@@ -1233,30 +1196,22 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         /// <param name="wrapper">The object wrapper the object was created with.</param>
         /// <returns>The filtered PropertyInfos</returns>
-        private IList<PropertyInfo> FilterPropertyInfoForDependencyCheck(IObjectWrapper wrapper)
+        private List<PropertyInfo> FilterPropertyInfoForDependencyCheck(IObjectWrapper wrapper)
         {
-            lock (filteredPropertyDescriptorsCache)
+            return filteredPropertyDescriptorsCache.GetOrAdd(wrapper.WrappedType, t =>
             {
-                IList<PropertyInfo> filtered;
-                if (!filteredPropertyDescriptorsCache.TryGetValue(wrapper.WrappedType, out filtered))
+                var list = new List<PropertyInfo>(wrapper.GetPropertyInfos());
+                for (int i = list.Count - 1; i >= 0; i--)
                 {
-
-                    List<PropertyInfo> list = new List<PropertyInfo>(wrapper.GetPropertyInfos());
-                    for (int i = list.Count - 1; i >= 0; i--)
+                    PropertyInfo pi = list[i];
+                    if (IsExcludedFromDependencyCheck(pi))
                     {
-                        PropertyInfo pi = list[i];
-                        if (IsExcludedFromDependencyCheck(pi))
-                        {
-                            list.RemoveAt(i);
-                        }
+                        list.RemoveAt(i);
                     }
-
-                    filtered = list;
-                    filteredPropertyDescriptorsCache.Add(wrapper.WrappedType, filtered);
                 }
-                return filtered;
-            }
 
+                return list;
+            });
         }
 
         /// <summary>
@@ -1309,29 +1264,21 @@ namespace Spring.Objects.Factory.Support
         {
             if (ObjectUtils.IsAssignableAndNotTransparentProxy(typeof(IInitializingObject), target))
             {
-                #region Instrumentation
-
                 if (log.IsEnabled(LogLevel.Debug))
                 {
                     log.LogDebug(string.Format(CultureInfo.InvariantCulture, "Calling AfterPropertiesSet() on object with name '{0}'.", name));
                 }
 
-                #endregion
-
                 ((IInitializingObject)target).AfterPropertiesSet();
             }
             if (StringUtils.HasText(definition.InitMethodName))
             {
-                #region Instrumentation
-
                 if (log.IsEnabled(LogLevel.Debug))
                 {
                     log.LogDebug(
                             string.Format(CultureInfo.InvariantCulture, "Calling custom init method '{0} on object with name '{1}'.",
                                           definition.InitMethodName, name));
                 }
-
-                #endregion
 
                 try
                 {
@@ -1388,11 +1335,7 @@ namespace Spring.Objects.Factory.Support
             }
             if (targetMethod == null)
             {
-                #region Instrumentation
-
                 log.LogError("Couldn't find a method named '" + destroyMethodName + "' on object with name '" + name + "'");
-
-                #endregion
             }
             else
             {
@@ -1403,11 +1346,7 @@ namespace Spring.Objects.Factory.Support
                 }
                 catch (TargetInvocationException ex)
                 {
-                    #region Instrumentation
-
                     log.LogError("Couldn't invoke destroy method '" + destroyMethodName + "' of object with name '" + name + "'", ex.GetBaseException());
-
-                    #endregion
                 }
                 catch (Exception ex)
                 {
@@ -1697,16 +1636,12 @@ namespace Spring.Objects.Factory.Support
         /// <returns>A reference to another object in the factory.</returns>
         protected object ResolveReference(IConfigurableObjectDefinition definition, string name, string argumentName, RuntimeObjectReference reference)
         {
-            #region Instrumentation
-
             if (log.IsEnabled(LogLevel.Debug))
             {
                 log.LogDebug(
                         string.Format(CultureInfo.InvariantCulture, "Resolving reference from property '{0}' in object '{1}' to object '{2}'.",
                                       argumentName, name, reference.ObjectName));
             }
-
-            #endregion
 
             try
             {
@@ -1780,6 +1715,7 @@ namespace Spring.Objects.Factory.Support
         /// <seealso cref="Spring.Objects.Factory.IObjectFactory.ConfigureObject(object, string)"/>
         public override object ConfigureObject(object target, string name)
         {
+            MarkObjectAsCreated(name);
             RootObjectDefinition definition = GetMergedObjectDefinition(name, true);
             if (definition != null)
             {
@@ -1828,44 +1764,32 @@ namespace Spring.Objects.Factory.Support
         {
             object instance = wrapper.WrappedInstance;
 
-            #region Instrumentation
-
             if (log.IsEnabled(LogLevel.Debug))
             {
                 log.LogDebug(string.Format("Configuring object using definition '{1}'", instance, name));
             }
-
-            #endregion
 
             PopulateObject(name, definition, wrapper);
             WireEvents(name, definition, wrapper);
 
             if (ObjectUtils.IsAssignableAndNotTransparentProxy(typeof(IObjectNameAware), instance))
             {
-                #region Instrumentation
-
                 if (log.IsEnabled(LogLevel.Debug))
                 {
                     log.LogDebug(string.Format(CultureInfo.InvariantCulture, "Setting the name property on the IObjectNameAware object '{0}'.", name));
                 }
-
-                #endregion
 
                 ((IObjectNameAware)instance).ObjectName = name;
             }
 
             if (ObjectUtils.IsAssignableAndNotTransparentProxy(typeof(IObjectFactoryAware), instance))
             {
-                #region Instrumentation
-
                 if (log.IsEnabled(LogLevel.Debug))
                 {
                     log.LogDebug(
                             string.Format(CultureInfo.InvariantCulture, "Setting the ObjectFactory property on the IObjectFactoryAware object '{0}'.",
                                           name));
                 }
-
-                #endregion
 
                 ((IObjectFactoryAware)instance).ObjectFactory = this;
             }
@@ -1890,10 +1814,6 @@ namespace Spring.Objects.Factory.Support
         {
             return ApplyObjectPostProcessorsAfterInitialization(instance, objectName);
         }
-
-        #endregion
-
-        #region IAutowireCapableObjectFactory Members
 
         /// <summary>
         /// Create a new object instance of the given class with the specified
@@ -1982,27 +1902,24 @@ namespace Spring.Objects.Factory.Support
         /// <seealso cref="Spring.Objects.Factory.Config.IObjectPostProcessor.PostProcessBeforeInitialization"/>
         public virtual object ApplyObjectPostProcessorsBeforeInitialization(object instance, string name)
         {
-            #region Instrumentation
-
             if (log.IsEnabled(LogLevel.Debug))
             {
                 log.LogDebug("Invoking IObjectPostProcessors before initialization of object '" + name + "'");
             }
 
-            #endregion
-
             object result = instance;
-            foreach (IObjectPostProcessor objectProcessor in ObjectPostProcessors)
+            for (var i = 0; i < ObjectPostProcessors.Count; i++)
             {
+                IObjectPostProcessor objectProcessor = ObjectPostProcessors[i];
                 result = objectProcessor.PostProcessBeforeInitialization(result, name);
                 if (result == null)
                 {
                     throw new ObjectCreationException(name,
-                            string.Format(CultureInfo.InvariantCulture,
-                                          "PostProcessBeforeInitialization method of IObjectPostProcessor [{0}] "
-                                          + " returned null for object [{1}] with name '{2}'.", objectProcessor, instance, name));
+                        $"PostProcessBeforeInitialization method of IObjectPostProcessor [{objectProcessor}] " +
+                        $" returned null for object [{instance}] with name '{name}'.");
                 }
             }
+
             return result;
         }
 
@@ -2027,27 +1944,25 @@ namespace Spring.Objects.Factory.Support
         /// <seealso cref="Spring.Objects.Factory.Config.IObjectPostProcessor.PostProcessAfterInitialization"/>
         public virtual object ApplyObjectPostProcessorsAfterInitialization(object instance, string name)
         {
-            #region Instrumentation
-
             if (log.IsEnabled(LogLevel.Debug))
             {
                 log.LogDebug("Invoking IObjectPostProcessors after initialization of object '" + name + "'");
             }
 
-            #endregion
-
             object result = instance;
-            foreach (IObjectPostProcessor objectProcessor in ObjectPostProcessors)
+            for (var i = 0; i < ObjectPostProcessors.Count; i++)
             {
+                IObjectPostProcessor objectProcessor = ObjectPostProcessors[i];
                 result = objectProcessor.PostProcessAfterInitialization(result, name);
                 if (result == null)
                 {
                     throw new ObjectCreationException(name,
-                            string.Format(CultureInfo.InvariantCulture,
-                                          "PostProcessAfterInitialization method of IObjectPostProcessor [{0}] "
-                                          + " returned null for object [{1}] with name [{2}].", objectProcessor, instance, name));
+                        string.Format(CultureInfo.InvariantCulture,
+                            "PostProcessAfterInitialization method of IObjectPostProcessor [{0}] "
+                            + " returned null for object [{1}] with name [{2}].", objectProcessor, instance, name));
                 }
             }
+
             return result;
         }
 
@@ -2057,61 +1972,30 @@ namespace Spring.Objects.Factory.Support
         /// <param name="descriptor">The descriptor for the dependency.</param>
         /// <param name="objectName">Name of the object which declares the present dependency.</param>
         /// <param name="autowiredObjectNames">A list that all names of autowired object (used for
-        /// resolving the present dependency) are supposed to be added to.</param>
+        ///     resolving the present dependency) are supposed to be added to.</param>
         /// <returns>
         /// the resolved object, or <code>null</code> if none found
         /// </returns>
         /// <exception cref="ObjectsException">if dependency resolution failed</exception>
-        public abstract object ResolveDependency(DependencyDescriptor descriptor, string objectName,
-                                                 IList autowiredObjectNames);
-
-        #endregion
-
-        #region Fields
-
-        private IInstantiationStrategy instantiationStrategy = new MethodInjectingInstantiationStrategy();
-
-        /// <summary>
-        /// Cache of filtered PropertyInfos: object Type -> PropertyInfo array 
-        /// </summary>
-        private IDictionary<Type, IList<PropertyInfo>> filteredPropertyDescriptorsCache = new Dictionary<Type, IList<PropertyInfo>>();
-
-        /// <summary>
-        /// Dependency interfaces to ignore on dependency check and autowire, as Set of
-        /// Class objects. By default, only the IObjectFactoryAware and IObjectNameAware 
-        /// interfaces are ignored.
-        /// </summary>
-        private ISet ignoredDependencyInterfaces = new HybridSet();
-
-        #endregion
+        public abstract object ResolveDependency(
+            DependencyDescriptor descriptor,
+            string objectName,
+            IList<string> autowiredObjectNames);
     }
 
     internal class UnsatisfiedDependencyExceptionData
     {
-        private int parameterIndex;
-        private Type parameterType;
-        private string errorMessage;
-
         public UnsatisfiedDependencyExceptionData(int parameterIndex, Type parameterType, string errorMessage)
         {
-            this.parameterIndex = parameterIndex;
-            this.parameterType = parameterType;
-            this.errorMessage = errorMessage;
+            ParameterIndex = parameterIndex;
+            ParameterType = parameterType;
+            ErrorMessage = errorMessage;
         }
 
-        public int ParameterIndex
-        {
-            get { return parameterIndex; }
-        }
+        public int ParameterIndex { get; }
 
-        public Type ParameterType
-        {
-            get { return parameterType; }
-        }
+        public Type ParameterType { get; }
 
-        public string ErrorMessage
-        {
-            get { return errorMessage; }
-        }
+        public string ErrorMessage { get; }
     }
 }

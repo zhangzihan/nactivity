@@ -1,5 +1,6 @@
 ﻿namespace org.activiti.engine.impl.persistence
 {
+    using MassTransit;
     using org.activiti.engine.impl.cfg;
     using System;
 
@@ -27,7 +28,7 @@
                 {
                     if (timeBasedGenerator == null)
                     {
-                        timeBasedGenerator = Guid.NewGuid();
+                        timeBasedGenerator = NewId.NextGuid();
                     }
                 }
             }

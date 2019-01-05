@@ -246,8 +246,6 @@ namespace org.activiti.cloud.services.core
 
         public virtual Task createNewTask(CreateTaskCmd createTaskCmd)
         {
-            //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-            //ORIGINAL LINE: final org.activiti.engine.task.Task task = taskService.newTask();
             ITask task = taskService.newTask();
             task.Name = createTaskCmd.Name;
             task.Description = createTaskCmd.Description;
@@ -299,8 +297,6 @@ namespace org.activiti.cloud.services.core
 
         public virtual void updateTask(string taskId, UpdateTaskCmd updateTaskCmd)
         {
-            //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-            //ORIGINAL LINE: final org.activiti.engine.task.Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
             ITask task = taskService.createTaskQuery().taskId(taskId).singleResult();
             if (task == null)
             {

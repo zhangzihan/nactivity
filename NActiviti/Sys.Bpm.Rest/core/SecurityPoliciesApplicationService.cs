@@ -3,25 +3,14 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.core
 {
-
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class SecurityPoliciesApplicationService extends org.activiti.cloud.services.security.BaseSecurityPoliciesApplicationService
     public class SecurityPoliciesApplicationService : BaseSecurityPoliciesApplicationService
     {
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired private org.activiti.cloud.services.security.SecurityPoliciesService securityPoliciesService;
         private SecurityPoliciesService securityPoliciesService;
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired private SecurityPoliciesProcessDefinitionRestrictionApplier processDefinitionRestrictionApplier;
+        
         private SecurityPoliciesProcessDefinitionRestrictionApplier processDefinitionRestrictionApplier;
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired private SecurityPoliciesProcessInstanceRestrictionApplier processInstanceRestrictionApplier;
+        
         private SecurityPoliciesProcessInstanceRestrictionApplier processInstanceRestrictionApplier;
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired(required = false) private org.activiti.cloud.services.events.configuration.RuntimeBundleProperties runtimeBundleProperties;
+        
         private RuntimeBundleProperties runtimeBundleProperties;
 
         public virtual ProcessDefinitionQuery restrictProcessDefQuery(ProcessDefinitionQuery query, SecurityPolicy securityPolicy)

@@ -55,8 +55,6 @@ namespace org.activiti.cloud.services.rest.controllers
             this.processEngine = processEngine;
         }
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Override public org.springframework.hateoas.Resources<org.activiti.cloud.services.rest.api.resources.ProcessVariableResource> getVariables(@PathVariable String processInstanceId)
         public virtual Resources<ProcessVariableResource> getVariables(string processInstanceId)
         {
             IList<IVariableInstance> variableInstances = runtimeService.getVariableInstancesByExecutionIds(new HashSet<string> { processInstanceId });
@@ -89,9 +87,6 @@ namespace org.activiti.cloud.services.rest.controllers
             return resources;
         }
 
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Override public org.springframework.http.ResponseEntity<Void> setVariables(@PathVariable String processInstanceId, @RequestBody org.activiti.cloud.services.api.commands.SetProcessVariablesCmd setProcessVariablesCmd)
         public virtual IActionResult setVariables(string processInstanceId, SetProcessVariablesCmd setProcessVariablesCmd)
         {
             processEngine.ProcessVariables = setProcessVariablesCmd;
@@ -99,8 +94,6 @@ namespace org.activiti.cloud.services.rest.controllers
             return Ok();
         }
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Override public org.springframework.http.ResponseEntity<Void> removeVariables(@PathVariable String processInstanceId, @RequestBody org.activiti.cloud.services.api.commands.RemoveProcessVariablesCmd removeProcessVariablesCmd)
         public virtual IActionResult removeVariables(string processInstanceId, RemoveProcessVariablesCmd removeProcessVariablesCmd)
         {
             this.processEngine.removeProcessVariables(removeProcessVariablesCmd);

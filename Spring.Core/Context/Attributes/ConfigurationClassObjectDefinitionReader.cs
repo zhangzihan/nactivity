@@ -20,16 +20,16 @@
 
 #region
 
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Microsoft.Extensions.Logging;
+using Spring.Core;
 using Spring.Core.TypeResolution;
-using Spring.Logging;
 using Spring.Objects.Factory.Config;
 using Spring.Objects.Factory.Parsing;
 using Spring.Objects.Factory.Support;
 using Spring.Stereotype;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 #endregion
 
@@ -40,7 +40,7 @@ namespace Spring.Context.Attributes
     /// </summary>
     public class ConfigurationClassObjectDefinitionReader
     {
-        private static readonly ILogger Logger = NoneLoggerFactory.Instance.GetLogger<ConfigurationClassObjectDefinitionReader>();
+        private static readonly ILogger Logger = LogManager.GetLogger<ConfigurationClassObjectDefinitionReader>();
 
         private IProblemReporter _problemReporter;
 
@@ -102,8 +102,7 @@ namespace Spring.Context.Attributes
                 String configObjectName = ObjectDefinitionReaderUtils.RegisterWithGeneratedName(configObjectDef,
                                                                                                 _registry);
                 configClass.ObjectName = configObjectName;
-                Logger.LogDebug(string.Format("Registered object definition for imported [Configuration] class {0}",
-                                         configObjectName));
+                Logger.LogDebug($"Registered object definition for imported [Configuration] class {configObjectName}");
             }
         }
 
@@ -213,9 +212,7 @@ namespace Spring.Context.Attributes
                 {
                     // no -> then it's an external override, probably XML
                     // overriding is legal, return immediately
-                    Logger.LogDebug(string.Format("Skipping loading Object definition for {0}: a definition for object " +
-                                          "'{1}' already exists. This is likely due to an override in XML.", method,
-                                          objectName));
+                    Logger.LogDebug($"Skipping loading Object definition for {method}: a definition for object '{objectName}' already exists. This is likely due to an override in XML.");
                     return;
                 }
             }
@@ -262,7 +259,7 @@ namespace Spring.Context.Attributes
                     (Attribute.GetCustomAttribute(metadata, typeof(ScopeAttribute)) as ScopeAttribute).ObjectScope.ToString();
             }
 
-            Logger.LogDebug(string.Format("Registering Object definition for [ObjectDef] method {0}.{1}()", configClass.ConfigurationClassType.Name, objectName));
+            Logger.LogDebug($"Registering Object definition for [ObjectDef] method {configClass.ConfigurationClassType.Name}.{objectName}()");
 
             _registry.RegisterObjectDefinition(objectName, objDef);
         }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,19 +14,16 @@
  * limitations under the License.
  */
 
-#endregion
-
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Core.TypeConversion;
+using Spring.Expressions;
+using Spring.Objects.Factory.Config;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Remoting;
-
-using Spring.Core.TypeConversion;
-using Spring.Expressions;
-using Spring.Objects.Factory.Config;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
 
 namespace Spring.Objects.Factory.Support
 {
@@ -54,7 +49,7 @@ namespace Spring.Objects.Factory.Support
         /// <param name="objectFactory">The object factory.</param>
         public ObjectDefinitionValueResolver(AbstractObjectFactory objectFactory)
         {
-            this.log = NoneLoggerFactory.Instance.GetLogger(this.GetType());
+            log = LogManager.GetLogger<ObjectDefinitionValueResolver>();
 
             this.objectFactory = objectFactory;
         }
@@ -328,7 +323,7 @@ namespace Spring.Objects.Factory.Support
             while (this.objectFactory.IsObjectNameInUse(actualInnerObjectName))
             {
                 counter++;
-                actualInnerObjectName = innerObjectName + ObjectFactoryUtils.GENERATED_OBJECT_NAME_SEPARATOR + counter;
+                actualInnerObjectName = innerObjectName + ObjectFactoryUtils.GeneratedObjectNameSeparator + counter;
             }
             return actualInnerObjectName;
         }
@@ -351,14 +346,12 @@ namespace Spring.Objects.Factory.Support
         /// <returns>A reference to another object in the factory.</returns>
         protected virtual object ResolveReference(IObjectDefinition definition, string name, string argumentName, RuntimeObjectReference reference)
         {
-            #region Instrumentation
             if (log.IsEnabled(LogLevel.Debug))
             {
                 log.LogDebug(
                         string.Format(CultureInfo.InvariantCulture, "Resolving reference from property '{0}' in object '{1}' to object '{2}'.",
                                       argumentName, name, reference.ObjectName));
             }
-            #endregion
 
             try
             {
@@ -367,9 +360,8 @@ namespace Spring.Objects.Factory.Support
                     if (null == objectFactory.ParentObjectFactory)
                     {
                         throw new ObjectCreationException(definition.ResourceDescription, name,
-                                                          string.Format(
-                                                              "Can't resolve reference to '{0}' in parent factory: " + "no parent factory available.",
-                                                              reference.ObjectName));
+                            $"Can't resolve reference to '{reference.ObjectName}' in parent factory: " +
+                            "no parent factory available.");
                     }
                     return objectFactory.ParentObjectFactory.GetObject(reference.ObjectName);
                 }

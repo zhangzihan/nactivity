@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright ?2002-2011 the original author or authors.
+ * Copyright © 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,25 +20,23 @@
 
 #region Imports
 
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Util;
 using System;
 using System.Globalization;
 using System.Reflection;
-
-using Spring.Core;
-using Spring.Util;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
 
 #endregion
 
 namespace Spring.Objects.Support
 {
-	/// <summary>
-	/// Describes an <see cref="Spring.Objects.IEventHandlerValue"/> implementation
-	/// that autowires events to handler methods.
-	/// </summary>
-	/// <author>Rick Evans</author>
-	public class AutoWiringEventHandlerValue : AbstractEventHandlerValue
+    /// <summary>
+    /// Describes an <see cref="Spring.Objects.IEventHandlerValue"/> implementation
+    /// that autowires events to handler methods.
+    /// </summary>
+    /// <author>Rick Evans</author>
+    public class AutoWiringEventHandlerValue : AbstractEventHandlerValue
 	{
 		#region Constants
 
@@ -49,7 +47,7 @@ namespace Spring.Objects.Support
 		private const string DefaultMethodName = DefaultMethodPrefix + EventNamePlaceHolder;
 
 		private static readonly ILogger log
-			= NoneLoggerFactory.Instance.GetLogger(typeof (AutoWiringEventHandlerValue));
+			= LogManager.GetLogger<AutoWiringEventHandlerValue>();
 
 		#endregion
 
@@ -224,7 +222,7 @@ namespace Spring.Objects.Support
 					#endregion
 
 					IEventHandlerValue myHandler = method.IsStatic ?
-						(IEventHandlerValue) new StaticEventHandlerValue() :
+						new StaticEventHandlerValue() :
 						(IEventHandlerValue) new InstanceEventHandlerValue();
 					myHandler.EventName = theEvent.Name;
 					myHandler.MethodName = method.Name;

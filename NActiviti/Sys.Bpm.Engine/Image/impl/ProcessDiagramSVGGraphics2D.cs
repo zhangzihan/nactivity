@@ -12,9 +12,7 @@
 			this.DOMGroupManager = new ProcessDiagramDOMGroupManager(this.GraphicContext, this.DOMTreeManager);
 		}
 
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Override public void setRenderingHints(@SuppressWarnings("rawtypes") java.util.Map hints)
-		public override ("rawtypes") System.Collections.IDictionary RenderingHints
+        public override ("rawtypes") System.Collections.IDictionary RenderingHints
 		{
 			set
 			{
@@ -22,9 +20,7 @@
 			}
 		}
 
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Override public void addRenderingHints(@SuppressWarnings("rawtypes") java.util.Map hints)
-		public override void addRenderingHints(("rawtypes") System.Collections.IDictionary hints)
+        public override void addRenderingHints(("rawtypes") System.Collections.IDictionary hints)
 		{
 			base.addRenderingHints(hints);
 		}

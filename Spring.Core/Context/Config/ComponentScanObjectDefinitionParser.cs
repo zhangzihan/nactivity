@@ -18,15 +18,15 @@
 
 #endregion
 
-using System.ComponentModel;
-using System.Xml;
 using Microsoft.Extensions.Logging;
 using Spring.Context.Attributes;
 using Spring.Context.Attributes.TypeFilters;
-using Spring.Logging;
+using Spring.Core;
 using Spring.Objects.Factory.Config;
 using Spring.Objects.Factory.Support;
 using Spring.Objects.Factory.Xml;
+using System.ComponentModel;
+using System.Xml;
 
 namespace Spring.Context.Config
 {
@@ -35,7 +35,7 @@ namespace Spring.Context.Config
     /// </summary>
 	public class ComponentScanObjectDefinitionParser : IObjectDefinitionParser
     {
-        private static readonly ILogger Logger = NoneLoggerFactory.Instance.GetLogger<ComponentScanObjectDefinitionParser>();
+        private static readonly ILogger Logger = LogManager.GetLogger<ComponentScanObjectDefinitionParser>();
 
         private const string ATTRIBUTE_CONFIG_ATTRIBUTE = "attribute-config";
 

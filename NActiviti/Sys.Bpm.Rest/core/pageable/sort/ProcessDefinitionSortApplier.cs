@@ -21,8 +21,6 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.core.pageable.sort
 {
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class ProcessDefinitionSortApplier extends BaseSortApplier<org.activiti.engine.repository.ProcessDefinitionQuery>
     public class ProcessDefinitionSortApplier : BaseSortApplier<IProcessDefinitionQuery, IProcessDefinition>
     {
 

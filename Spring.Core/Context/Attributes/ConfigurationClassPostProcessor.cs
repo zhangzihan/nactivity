@@ -18,19 +18,14 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-
-
-
+using Microsoft.Extensions.Logging;
+using Spring.Collections.Generic;
 using Spring.Core;
 using Spring.Objects.Factory;
+using Spring.Objects.Factory.Config;
 using Spring.Objects.Factory.Parsing;
 using Spring.Objects.Factory.Support;
-using Spring.Objects.Factory.Config;
-using Spring.Collections.Generic;
-using Spring.Logging;
-using Microsoft.Extensions.Logging;
+using System;
 
 namespace Spring.Context.Attributes
 {
@@ -39,11 +34,7 @@ namespace Spring.Context.Attributes
     /// </summary>
     public class ConfigurationClassPostProcessor : IObjectDefinitionRegistryPostProcessor, IOrdered
     {
-        #region Logging
-
-        private static readonly ILogger Logger = NoneLoggerFactory.Instance.GetLogger<ConfigurationClassPostProcessor>();
-
-        #endregion
+        private static readonly ILogger Logger = LogManager.GetLogger<ConfigurationClassPostProcessor>();
 
         private bool _postProcessObjectDefinitionRegistryCalled;
 
@@ -68,10 +59,7 @@ namespace Spring.Context.Attributes
         /// </p>
         /// </remarks>
         /// <returns>The order value.</returns>
-        public int Order
-        {
-            get { return int.MinValue; }
-        }
+        public int Order => int.MinValue;
 
         /// <summary>
         /// Sets the problem reporter.
@@ -126,7 +114,7 @@ namespace Spring.Context.Attributes
         {
             ConfigurationClassEnhancer enhancer = new ConfigurationClassEnhancer(objectFactory);
 
-            IList<string> objectNames = objectFactory.GetObjectDefinitionNames();
+            var objectNames = objectFactory.GetObjectDefinitionNames();
 
             foreach (string name in objectNames)
             {
@@ -141,7 +129,7 @@ namespace Spring.Context.Attributes
                         Type configClass = objDef.ObjectType;
                         Type enhancedClass = enhancer.Enhance(configClass);
 
-                        Logger.LogDebug(string.Format("Replacing object definition '{0}' existing class '{1}' with enhanced class", name, configClass.FullName));
+                        Logger.LogDebug($"Replacing object definition '{name}' existing class '{configClass.FullName}' with enhanced class");
 
                         ((IConfigurableObjectDefinition)objDef).ObjectType = enhancedClass;
                     }

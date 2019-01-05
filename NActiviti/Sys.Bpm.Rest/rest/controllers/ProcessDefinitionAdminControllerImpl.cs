@@ -30,7 +30,7 @@ namespace org.activiti.cloud.services.rest.controllers
 {
     [Route("admin/v1/process-definitions")]
     [ApiController]
-    public class ProcessDefinitionAdminControllerImpl : ControllerBase//, IProcessDefinitionAdminController
+    public class ProcessDefinitionAdminControllerImpl : ControllerBase, IProcessDefinitionAdminController
     {
         private readonly ProcessDefinitionResourceAssembler resourceAssembler;
 

@@ -1,6 +1,6 @@
 ﻿using DatabaseSchemaReader;
-using DryIoc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using org.activiti.engine;
 using org.activiti.engine.impl;
@@ -8,6 +8,8 @@ using org.activiti.engine.impl.agenda;
 using org.activiti.engine.impl.cfg;
 using org.activiti.engine.impl.util;
 using SmartSql;
+using SmartSql.Abstractions;
+using Spring.Core.TypeResolution;
 using Sys.Bpm.Engine.impl;
 using Sys.Data;
 using System;
@@ -18,28 +20,28 @@ namespace Sys
 {
     public static class ProcessEngineServiceProvider
     {
-        public static void AddProcessEngine(this IContainer container)
+        public static IServiceCollection AddProcessEngine(this IServiceCollection services)
         {
-            Spring.Core.TypeResolution.TypeRegistry.RegisterType(typeof(CollectionUtil));
+            TypeRegistry.RegisterType(typeof(CollectionUtil));
 
-            container.RegisterDelegate<IDataSource>(sp =>
+            services.AddTransient<IDataSource>(sp =>
             {
-                var cfg = sp.Resolve<IConfiguration>();
+                var cfg = sp.GetService<IConfiguration>();
 
-                var provider = cfg["Database:Provider"];
-                var connStr = cfg["Database:ConnectionString"];
+                var provider = cfg["SysDataSource:providerName"];
+                var connStr = cfg["SysDataSource:connectionString"];
 
                 return new DataSource(provider, connStr);
-            }, Reuse.Transient);
+            });
 
-            container.RegisterDelegate<IDatabaseReader>(sp =>
-            {
-                var ds = sp.Resolve<IDataSource>();
+            services.AddSingleton<IDatabaseReader>(sp =>
+             {
+                 var ds = sp.GetService<IDataSource>();
 
-                return new DatabaseReader(ds.Connection as DbConnection);
-            }, Reuse.Singleton);
+                 return new DatabaseReader(ds.Connection as DbConnection);
+             });
 
-            container.RegisterDelegate<SmartSqlMapper>(sp =>
+            services.AddSingleton<ISmartSqlMapper>(sp =>
             {
                 var codebase = Path.GetDirectoryName(typeof(ProcessEngineConfiguration).Assembly.Location);
 
@@ -49,81 +51,83 @@ namespace Sys
                     ConfigPath = Path.Combine(codebase, DEFAULT_MYBATIS_MAPPING_FILE),
                     //DataReaderDeserializerFactory = new DapperDataReaderDeserializerFactory()
                 });
-            }, Reuse.Singleton);
+            });
 
-            container.RegisterDelegate<IRepositoryService>(sp => new RepositoryServiceImpl(), Reuse.Transient);
+            services.AddTransient<IRepositoryService>(sp => new RepositoryServiceImpl());
 
-            container.RegisterDelegate<IRuntimeService>(sp => new RuntimeServiceImpl(), Reuse.Transient);
+            services.AddTransient<IRuntimeService>(sp => new RuntimeServiceImpl());
 
-            container.RegisterDelegate<IManagementService>(sp => new ManagementServiceImpl(), Reuse.Transient);
+            services.AddTransient<IManagementService>(sp => new ManagementServiceImpl());
 
-            container.RegisterDelegate<IHistoryService>(sp => new HistoryServiceImpl(), Reuse.Transient);
+            services.AddTransient<IHistoryService>(sp => new HistoryServiceImpl());
 
-            container.RegisterDelegate<ITaskService>(sp => new TaskServiceImpl(), Reuse.Transient);
+            services.AddTransient<ITaskService>(sp => new TaskServiceImpl());
 
-            container.RegisterDelegate<IDynamicBpmnService>(sp => new DynamicBpmnServiceImpl(), Reuse.Transient);
+            services.AddTransient<IDynamicBpmnService>(sp => new DynamicBpmnServiceImpl());
 
-            container.RegisterDelegate<IActivitiEngineAgendaFactory>(sp => new DefaultActivitiEngineAgendaFactory(), Reuse.Transient);
+            services.AddTransient<IActivitiEngineAgendaFactory>(sp => new DefaultActivitiEngineAgendaFactory());
 
-            container.RegisterDelegate<IIdGenerator>(sp => new GuidGenerator(), Reuse.Singleton);
+            services.AddSingleton<IIdGenerator>(sp => new GuidGenerator());
 
-            container.Register<IBpmnParseFactory, DefaultBpmnParseFactory>(Reuse.Singleton);
+            services.AddSingleton<IBpmnParseFactory, DefaultBpmnParseFactory>();
 
-            container.RegisterDelegate<ProcessEngineConfiguration>(sp =>
+            services.AddTransient<ProcessEngineConfiguration>(sp =>
             {
                 ProcessEngineConfigurationImpl config = new StandaloneProcessEngineConfiguration(
-                    sp.Resolve<IHistoryService>(),
-                    sp.Resolve<ITaskService>(),
-                    sp.Resolve<IDynamicBpmnService>(),
-                    sp.Resolve<IRepositoryService>(),
-                    sp.Resolve<IRuntimeService>(),
-                    sp.Resolve<IManagementService>()
+                    sp.GetService<IHistoryService>(),
+                    sp.GetService<ITaskService>(),
+                    sp.GetService<IDynamicBpmnService>(),
+                    sp.GetService<IRepositoryService>(),
+                    sp.GetService<IRuntimeService>(),
+                    sp.GetService<IManagementService>(),
+                    sp.GetService<IConfiguration>()
                 );
 
                 return config;
-            }, Reuse.Transient);
+            });
 
-            container.RegisterDelegate<ProcessEngineFactory>(sp =>
+            services.AddSingleton<ProcessEngineFactory>(sp =>
             {
                 return ProcessEngineFactory.Instance;
-            }, Reuse.Singleton);
+            });
 
-            container.RegisterDelegate<IProcessEngine>(Span => DefaultProcessEngine, Reuse.Singleton);
+            services.AddSingleton<IProcessEngine>(sp =>
+            {
+                return sp.GetService<ProcessEngineFactory>().DefaultProcessEngine;
+            });
 
-            ServiceProvider = container;
-
-            EnsureProcessEngineInit();
+            return services;
         }
 
-        private static void EnsureProcessEngineInit()
+        private static IServiceProvider serviceProvider;
+
+        public static void EnsureProcessEngineInit(this IServiceProvider serviceProvider)
         {
-            if (DefaultProcessEngine == null)
+            ProcessEngineServiceProvider.serviceProvider = serviceProvider;
+
+            var engine = serviceProvider.GetService<IProcessEngine>();
+            if (engine == null)
             {
                 throw new InitProcessEngineFaliedException();
             }
         }
 
-        private static string DEFAULT_MYBATIS_MAPPING_FILE = "resources/db/mapping/mappings.xml";
-
-        public static IContainer ServiceProvider { get; private set; }
-
-        public static IConfiguration Configuration => ServiceProvider.Resolve<IConfiguration>();
-
-        public static SmartSqlMapper SmartSqlMapper => ServiceProvider.Resolve<SmartSqlMapper>();
-
-        public static IProcessEngine DefaultProcessEngine
+        public static T Resolve<T>()
         {
-            get
-            {
-                var pef = ServiceProvider.Resolve<ProcessEngineFactory>();
-
-                return pef.DefaultProcessEngine;
-            }
+            return serviceProvider.GetService<T>();
         }
+
+        private static string DEFAULT_MYBATIS_MAPPING_FILE = "resources/db/mapping/mappings.xml";
 
         public static ILogger<T> LoggerService<T>()
         {
-            return new Logger<T>(new LoggerFactory());// NoneLogger<T>();// ServiceProvider.Resolve<ILogger<T>>();
+            ILoggerFactory logFac = serviceProvider.GetService<ILoggerFactory>();
+            if (logFac != null)
+            {
+                return logFac.CreateLogger<T>();
+            }
+
+            return new NoneLogger<T>();
         }
     }
 
@@ -149,7 +153,7 @@ namespace Sys
         }
     }
 
-    [Serializable]
+    [System.Serializable]
     public sealed class InitProcessEngineFaliedException : Exception
     {
         public InitProcessEngineFaliedException()

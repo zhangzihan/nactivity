@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright ?2002-2011 the original author or authors.
+ * Copyright © 2002-2011 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,13 @@
 
 #region Imports
 
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Spring.Collections;
-using Spring.Logging;
+using Spring.Core;
 using Spring.Util;
+using System;
+using System.Collections.Specialized;
+using System.Globalization;
 
 #endregion
 
@@ -141,157 +140,158 @@ namespace Spring.Objects.Factory.Config
     /// <seealso cref="Spring.Objects.Factory.Config.IObjectDefinition"/>
     [Serializable]
     public class PropertyPlaceholderConfigurer : PropertyResourceConfigurer
-    {
-        /// <summary>
-        /// The default placeholder prefix.
-        /// </summary>
-        public static readonly string DefaultPlaceholderPrefix = "${";
+	{
+		/// <summary>
+		/// The default placeholder prefix.
+		/// </summary>
+		public static readonly string DefaultPlaceholderPrefix = "${";
 
-        /// <summary>
-        /// The default placeholder suffix.
-        /// </summary>
-        public static readonly string DefaultPlaceholderSuffix = "}";
-
-
-        private readonly ILogger logger;
+		/// <summary>
+		/// The default placeholder suffix.
+		/// </summary>
+		public static readonly string DefaultPlaceholderSuffix = "}";
 
 
-        private bool ignoreUnresolvablePlaceholders = false;
-        private string placeholderPrefix = DefaultPlaceholderPrefix;
-        private string placeholderSuffix = DefaultPlaceholderSuffix;
-        private EnvironmentVariableMode environmentVariableMode = EnvironmentVariableMode.Fallback;
-        private bool includeAncestors;
+		private readonly ILogger logger;
+
+
+		private bool ignoreUnresolvablePlaceholders = false;
+		private string placeholderPrefix = DefaultPlaceholderPrefix;
+		private string placeholderSuffix = DefaultPlaceholderSuffix;
+		private EnvironmentVariableMode environmentVariableMode = EnvironmentVariableMode.Fallback;
+	    private bool includeAncestors;
 
         /// <summary>
         /// Initializes the new instance
         /// </summary>
 	    public PropertyPlaceholderConfigurer()
-        {
-            logger = NoneLoggerFactory.Instance.CreateLogger<PropertyPlaceholderConfigurer>();
-        }
+	    {
+            logger = LogManager.GetLogger<PropertyPlaceholderConfigurer>();
+	    }
 
-        #region Properties 
-
-        /// <summary>
-        /// The placeholder prefix (the default is <c>${</c>).
-        /// </summary>
-        /// <seealso cref="DefaultPlaceholderPrefix"/>
-        public string PlaceholderPrefix
-        {
-            set { placeholderPrefix = value; }
-        }
+	    #region Properties 
 
         /// <summary>
-        /// The placeholder suffix (the default is <c>}</c>)
-        /// </summary>
-        /// <seealso cref="DefaultPlaceholderSuffix"/>
-        public string PlaceholderSuffix
-        {
-            set { placeholderSuffix = value; }
-        }
+		/// The placeholder prefix (the default is <c>${</c>).
+		/// </summary>
+		/// <seealso cref="DefaultPlaceholderPrefix"/>
+		public string PlaceholderPrefix
+		{
+			set { placeholderPrefix = value; }
+		}
 
-        /// <summary>
-        /// Indicates whether unresolved placeholders should be ignored.
-        /// </summary>
-        public bool IgnoreUnresolvablePlaceholders
-        {
+		/// <summary>
+		/// The placeholder suffix (the default is <c>}</c>)
+		/// </summary>
+		/// <seealso cref="DefaultPlaceholderSuffix"/>
+		public string PlaceholderSuffix
+		{
+			set { placeholderSuffix = value; }
+		}
+
+		/// <summary>
+		/// Indicates whether unresolved placeholders should be ignored.
+		/// </summary>
+		public bool IgnoreUnresolvablePlaceholders
+		{
             get { return ignoreUnresolvablePlaceholders; }
             set { ignoreUnresolvablePlaceholders = value; }
+		}
+
+		/// <summary>
+		/// Controls how environment variables will be used to 
+		/// replace property placeholders.
+		/// </summary>
+		/// <remarks>
+		/// <p>
+		/// See the overview of the
+		/// <see cref="Spring.Objects.Factory.Config.EnvironmentVariableMode"/>
+		/// enumeration for the available options.
+		/// </p>
+		/// </remarks>
+		public EnvironmentVariableMode EnvironmentVariableMode
+		{
+			set { environmentVariableMode = value; }
         }
 
-        /// <summary>
-        /// Controls how environment variables will be used to 
-        /// replace property placeholders.
-        /// </summary>
-        /// <remarks>
-        /// <p>
-        /// See the overview of the
-        /// <see cref="Spring.Objects.Factory.Config.EnvironmentVariableMode"/>
-        /// enumeration for the available options.
-        /// </p>
-        /// </remarks>
-        public EnvironmentVariableMode EnvironmentVariableMode
-        {
-            set { environmentVariableMode = value; }
-        }
-
-        public bool IncludeAncestors
-        {
+	    public bool IncludeAncestors
+	    {
             set { includeAncestors = value; }
-        }
+	    }
 
         #endregion
 
-        /// <summary>
-        /// Apply the given properties to the supplied
-        /// <see cref="Spring.Objects.Factory.Config.IConfigurableListableObjectFactory"/>.
-        /// </summary>
-        /// <param name="factory">
-        /// The <see cref="Spring.Objects.Factory.Config.IConfigurableListableObjectFactory"/>
-        /// used by the application context.
-        /// </param>
-        /// <param name="props">The properties to apply.</param>
-        /// <exception cref="Spring.Objects.ObjectsException">
-        /// If an error occured.
-        /// </exception>
-        protected override void ProcessProperties(IConfigurableListableObjectFactory factory, NameValueCollection props)
-        {
-            PlaceholderResolveHandlerAdapter resolveAdapter = new PlaceholderResolveHandlerAdapter(this, props);
-            ObjectDefinitionVisitor visitor = new ObjectDefinitionVisitor(resolveAdapter.ParseAndResolveVariables);
+	    /// <summary>
+	    /// Apply the given properties to the supplied
+	    /// <see cref="Spring.Objects.Factory.Config.IConfigurableListableObjectFactory"/>.
+	    /// </summary>
+	    /// <param name="factory">
+	    /// The <see cref="Spring.Objects.Factory.Config.IConfigurableListableObjectFactory"/>
+	    /// used by the application context.
+	    /// </param>
+	    /// <param name="props">The properties to apply.</param>
+	    /// <exception cref="Spring.Objects.ObjectsException">
+	    /// If an error occured.
+	    /// </exception>
+	    protected override void ProcessProperties(IConfigurableListableObjectFactory factory, NameValueCollection props)
+	    {
+	        PlaceholderResolveHandlerAdapter resolveAdapter = new PlaceholderResolveHandlerAdapter(this, props);
+	        ObjectDefinitionVisitor visitor = new ObjectDefinitionVisitor(resolveAdapter.ParseAndResolveVariables);
 
-            IList<string> objectDefinitionNames = factory.GetObjectDefinitionNames(includeAncestors);
-            for (int i = 0; i < objectDefinitionNames.Count; ++i)
-            {
-                string name = objectDefinitionNames[i];
-                IObjectDefinition definition = factory.GetObjectDefinition(name, includeAncestors);
+	        var objectDefinitionNames = factory.GetObjectDefinitionNames(includeAncestors);
+	        for (int i = 0; i < objectDefinitionNames.Count; ++i)
+	        {
+	            string name = objectDefinitionNames[i];
+	            IObjectDefinition definition = factory.GetObjectDefinition(name, includeAncestors);
 
-                if (definition == null)
-                {
-                    logger.LogError(string.Format("'{0}' can't be found in factorys'  '{1}' object definition (includeAncestor {2})", name, factory, includeAncestors));
-                    continue;
-                }
+	            if (definition == null)
+	            {
+	                logger.LogError(string.Format("'{0}' can't be found in factorys'  '{1}' object definition (includeAncestor {2})",
+	                                   name, factory, includeAncestors));
+	                continue;
+	            }
 
-                try
-                {
-                    visitor.VisitObjectDefinition(definition);
-                }
-                catch (ObjectDefinitionStoreException ex)
-                {
-                    throw new ObjectDefinitionStoreException(
-                        definition.ResourceDescription, name, ex.Message);
-                }
-            }
+	            try
+	            {
+	                visitor.VisitObjectDefinition(definition);
+	            }
+	            catch (ObjectDefinitionStoreException ex)
+	            {
+	                throw new ObjectDefinitionStoreException(
+	                    definition.ResourceDescription, name, ex.Message);
+	            }
+	        }
 
-            factory.AddEmbeddedValueResolver(resolveAdapter);
-        }
+	        factory.AddEmbeddedValueResolver(resolveAdapter);
+	    }
 
-        /// <summary>
-        /// Parse values recursively to be able to resolve cross-references between
-        /// placeholder values.
-        /// </summary>
-        /// <param name="properties">
-        /// The map of constructor arguments / property values.
-        /// </param>
-        /// <param name="strVal">The string to be resolved.</param>
+	    /// <summary>
+		/// Parse values recursively to be able to resolve cross-references between
+		/// placeholder values.
+		/// </summary>
+		/// <param name="properties">
+		/// The map of constructor arguments / property values.
+		/// </param>
+		/// <param name="strVal">The string to be resolved.</param>
         /// <param name="visitedPlaceholders">The placeholders that have already been visited
         /// during the current resolution attempt (used to detect circular references
         /// between placeholders). Only non-null if we're parsing a nested placeholder.</param>
-        /// <exception cref="Spring.Objects.ObjectsException">
-        /// If an error occurs.
-        /// </exception>
-        /// <returns>The resolved string.</returns>
-        public virtual string ParseString(
-            NameValueCollection properties, string strVal, ISet visitedPlaceholders)
-        {
-            int startIndex = strVal.IndexOf(placeholderPrefix);
-            while (startIndex != -1)
-            {
-                int endIndex = strVal.IndexOf(
-                    placeholderSuffix, startIndex + placeholderPrefix.Length);
-                if (endIndex != -1)
-                {
-                    int pos = startIndex + placeholderPrefix.Length;
-                    string placeholder = strVal.Substring(pos, endIndex - pos);
+		/// <exception cref="Spring.Objects.ObjectsException">
+		/// If an error occurs.
+		/// </exception>
+		/// <returns>The resolved string.</returns>
+		public virtual string ParseString(
+			NameValueCollection properties, string strVal, ISet visitedPlaceholders)
+		{
+			int startIndex = strVal.IndexOf(placeholderPrefix);
+			while (startIndex != -1)
+			{
+				int endIndex = strVal.IndexOf(
+					placeholderSuffix, startIndex + placeholderPrefix.Length);
+				if (endIndex != -1)
+				{
+					int pos = startIndex + placeholderPrefix.Length;
+					string placeholder = strVal.Substring(pos, endIndex - pos);
                     if (visitedPlaceholders.Contains(placeholder))
                     {
                         throw new ObjectDefinitionStoreException(
@@ -301,114 +301,114 @@ namespace Spring.Objects.Factory.Config
                                             "in property definitions [{1}].",
                                         placeholder, properties));
                     }
-                    visitedPlaceholders.Add(placeholder);
-                    string resolvedValue = ResolvePlaceholder(placeholder, properties, environmentVariableMode);
-                    if (resolvedValue != null)
-                    {
+				    visitedPlaceholders.Add(placeholder);
+					string resolvedValue = ResolvePlaceholder(placeholder, properties, environmentVariableMode);
+					if (resolvedValue != null)
+					{
                         resolvedValue = ParseString(properties, resolvedValue, visitedPlaceholders);
 
-                        #region Instrumentation
+						#region Instrumentation
 
-                        if (logger.IsEnabled(LogLevel.Debug))
-                        {
-                            logger.LogDebug(string.Format(
-                                CultureInfo.InvariantCulture,
-                                "Resolving placeholder '{0}' to '{1}'.", placeholder, resolvedValue));
-                        }
+						if (logger.IsEnabled(LogLevel.Debug))
+						{
+							logger.LogDebug(string.Format(
+								CultureInfo.InvariantCulture,
+								"Resolving placeholder '{0}' to '{1}'.", placeholder, resolvedValue));
+						}
 
-                        #endregion
+						#endregion
 
-                        strVal = strVal.Substring(0, startIndex) + resolvedValue + strVal.Substring(endIndex + 1);
-                        startIndex = strVal.IndexOf(placeholderPrefix, startIndex + resolvedValue.Length);
-                    }
-                    else if (ignoreUnresolvablePlaceholders)
-                    {
-                        // simply return the unprocessed value...
-                        return strVal;
-                    }
-                    else
-                    {
-                        throw new ObjectDefinitionStoreException(string.Format(
-                                CultureInfo.InvariantCulture,
-                                "Could not resolve placeholder '{0}'.", placeholder));
-                    }
-                    visitedPlaceholders.Remove(placeholder);
-                }
-                else
-                {
-                    startIndex = -1;
-                }
-            }
-            return strVal;
-        }
+						strVal = strVal.Substring(0, startIndex) + resolvedValue + strVal.Substring(endIndex + 1);
+						startIndex = strVal.IndexOf(placeholderPrefix, startIndex + resolvedValue.Length);
+					}
+					else if (ignoreUnresolvablePlaceholders)
+					{
+						// simply return the unprocessed value...
+						return strVal;
+					}
+					else
+					{
+						throw new ObjectDefinitionStoreException(string.Format(
+								CultureInfo.InvariantCulture,
+								"Could not resolve placeholder '{0}'.", placeholder));
+					}
+				    visitedPlaceholders.Remove(placeholder);
+				}
+				else
+				{
+					startIndex = -1;
+				}
+			}
+			return strVal;
+		}
 
-        /// <summary>
-        /// Resolve the given placeholder using the given name value collection,
-        /// performing an environment variables check according to the given mode.
-        /// </summary>
-        /// <remarks>
-        /// <p>
-        /// The default implementation delegates to 
-        /// <see cref="ResolvePlaceholder(string, NameValueCollection)"/>
-        /// before/afer the environment variable check. Subclasses can override
-        /// this for custom resolution strategies, including customized points
-        /// for the environment properties check.
-        /// </p>
-        /// </remarks>
-        /// <param name="placeholder">The placeholder to resolve</param>
-        /// <param name="props">
-        /// The merged name value collection of this configurer.
-        /// </param>
-        /// <param name="mode">The environment variable mode.</param>
-        /// <returns>
-        /// The resolved value or <see langword="null"/> if none.
-        /// </returns>
-        /// <seelso cref="Spring.Objects.Factory.Config.EnvironmentVariableMode"/>
-        protected virtual string ResolvePlaceholder(string placeholder,
-                                                    NameValueCollection props,
-                                                    EnvironmentVariableMode mode)
-        {
-            string propertyValue = null;
-            if (mode == Spring.Objects.Factory.Config.EnvironmentVariableMode.Override)
-            {
-                propertyValue = Environment.GetEnvironmentVariable(placeholder);
-            }
-            if (propertyValue == null)
-            {
-                propertyValue = ResolvePlaceholder(placeholder, props);
-            }
-            if (propertyValue == null
-                && mode == Spring.Objects.Factory.Config.EnvironmentVariableMode.Fallback)
-            {
-                propertyValue = Environment.GetEnvironmentVariable(placeholder);
-            }
-            return propertyValue;
-        }
+		/// <summary>
+		/// Resolve the given placeholder using the given name value collection,
+		/// performing an environment variables check according to the given mode.
+		/// </summary>
+		/// <remarks>
+		/// <p>
+		/// The default implementation delegates to 
+		/// <see cref="ResolvePlaceholder(string, NameValueCollection)"/>
+		/// before/afer the environment variable check. Subclasses can override
+		/// this for custom resolution strategies, including customized points
+		/// for the environment properties check.
+		/// </p>
+		/// </remarks>
+		/// <param name="placeholder">The placeholder to resolve</param>
+		/// <param name="props">
+		/// The merged name value collection of this configurer.
+		/// </param>
+		/// <param name="mode">The environment variable mode.</param>
+		/// <returns>
+		/// The resolved value or <see langword="null"/> if none.
+		/// </returns>
+		/// <seelso cref="Spring.Objects.Factory.Config.EnvironmentVariableMode"/>
+		protected virtual string ResolvePlaceholder(string placeholder,
+		                                            NameValueCollection props,
+		                                            EnvironmentVariableMode mode)
+		{
+			string propertyValue = null;
+			if (mode == Spring.Objects.Factory.Config.EnvironmentVariableMode.Override)
+			{
+				propertyValue = Environment.GetEnvironmentVariable(placeholder);
+			}
+			if (propertyValue == null)
+			{
+				propertyValue = ResolvePlaceholder(placeholder, props);
+			}
+			if (propertyValue == null
+				&& mode == Spring.Objects.Factory.Config.EnvironmentVariableMode.Fallback)
+			{
+				propertyValue = Environment.GetEnvironmentVariable(placeholder);
+			}
+			return propertyValue;
+		}
 
-        /// <summary>
-        /// Resolve the given placeholder using the given name value collection.
-        /// </summary>
-        /// <remarks>
-        /// <p>
-        /// This (the default) implementation simply looks up the value of the
-        /// supplied <paramref name="placeholder"/> key.
-        /// </p>
-        /// <p>
-        /// Subclasses can override this for customized placeholder-to-key
-        /// mappings or custom resolution strategies, possibly just using the
-        /// given name value collection as fallback.
-        /// </p>
-        /// </remarks>
-        /// <param name="placeholder">The placeholder to resolve.</param>
-        /// <param name="props">
-        /// The merged name value collection of this configurer.
-        /// </param>
-        /// <returns>The resolved value.</returns>
-        protected virtual string ResolvePlaceholder(
-            string placeholder, NameValueCollection props)
-        {
-            return props[placeholder];
-        }
+		/// <summary>
+		/// Resolve the given placeholder using the given name value collection.
+		/// </summary>
+		/// <remarks>
+		/// <p>
+		/// This (the default) implementation simply looks up the value of the
+		/// supplied <paramref name="placeholder"/> key.
+		/// </p>
+		/// <p>
+		/// Subclasses can override this for customized placeholder-to-key
+		/// mappings or custom resolution strategies, possibly just using the
+		/// given name value collection as fallback.
+		/// </p>
+		/// </remarks>
+		/// <param name="placeholder">The placeholder to resolve.</param>
+		/// <param name="props">
+		/// The merged name value collection of this configurer.
+		/// </param>
+		/// <returns>The resolved value.</returns>
+		protected virtual string ResolvePlaceholder(
+			string placeholder, NameValueCollection props)
+		{
+			return props[placeholder];
+		}
 
         #region Helper class
 

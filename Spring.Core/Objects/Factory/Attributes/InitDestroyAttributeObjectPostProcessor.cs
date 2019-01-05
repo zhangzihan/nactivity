@@ -18,14 +18,13 @@
 
 #endregion
 
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Objects.Factory.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Spring.Objects.Factory.Config;
-using Spring.Core;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
 
 namespace Spring.Objects.Factory.Attributes
 {
@@ -42,7 +41,7 @@ namespace Spring.Objects.Factory.Attributes
     /// </summary>
     public class InitDestroyAttributeObjectPostProcessor : IDestructionAwareObjectPostProcessor, IObjectFactoryAware, IOrdered
     {
-        private static readonly ILogger logger = NoneLoggerFactory.Instance.CreateLogger<InitDestroyAttributeObjectPostProcessor>();
+        private static readonly ILogger logger = LogManager.GetLogger<InitDestroyAttributeObjectPostProcessor>();
 
         private IConfigurableListableObjectFactory objectFactory;
         private readonly IDictionary<string, LifecycleLifecycleMetadata> lifecycleMetadataCache;
@@ -106,8 +105,8 @@ namespace Spring.Objects.Factory.Attributes
         /// </summary>
         public InitDestroyAttributeObjectPostProcessor()
         {
-            initAttributeType = typeof (PostConstructAttribute);
-            destroyAttributeType = typeof (PreDestroyAttribute);
+            initAttributeType = typeof(PostConstructAttribute);
+            destroyAttributeType = typeof(PreDestroyAttribute);
 
             lifecycleMetadataCache = new Dictionary<string, LifecycleLifecycleMetadata>();
         }
@@ -208,7 +207,8 @@ namespace Spring.Objects.Factory.Attributes
                         Attribute.GetCustomAttribute(methodInfo, destroyAttributeType) as PreDestroyAttribute;
                     if (destroyAttribute != null && methodInfo.DeclaringType == instanceType)
                     {
-                        logger.LogDebug(string.Format("Found destroy method on class [{0}]: {1}", instanceType.Name, methodInfo.Name));
+                        logger.LogDebug(
+                            string.Format("Found destroy method on class [{0}]: {1}", instanceType.Name, methodInfo.Name));
                         curDestroyMethods.Add(new LifecycleElement(methodInfo, destroyAttribute.Order));
                     }
                 }
@@ -216,7 +216,7 @@ namespace Spring.Objects.Factory.Attributes
                 initMethods.InsertRange(0, curInitMethods.OrderBy(e => e.Order));
                 destroyMethods.InsertRange(0, curDestroyMethods.OrderBy(e => e.Order));
                 instanceType = instanceType.BaseType;
-            } while (instanceType != null && instanceType != typeof (Object));
+            } while (instanceType != null && instanceType != typeof(Object));
 
             var objectDef = objectFactory.GetObjectDefinition(name);
             var metadata = new LifecycleLifecycleMetadata(initMethods, destroyMethods);
@@ -306,8 +306,8 @@ namespace Spring.Objects.Factory.Attributes
 
             public void Invoke(object instance, string objectName)
             {
-                logger.LogDebug("Invoking init method on object '" + objectName + "': " + method.Name);
-                method.Invoke(instance, new object[] {});
+                logger.LogDebug($"Invoking init method on object '{objectName}': {method.Name}");
+                method.Invoke(instance, new object[] { });
             }
         }
     }

@@ -24,9 +24,6 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.core.pageable
 {
-
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class PageableTaskService
     public class PageableTaskService
     {
 
@@ -34,15 +31,9 @@ namespace org.activiti.cloud.services.core.pageable
         private readonly TaskConverter taskConverter;
         private readonly PageRetriever pageRetriever;
         private readonly TaskSortApplier sortApplier;
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired(required = false) private org.activiti.engine.UserGroupLookupProxy userGroupLookupProxy;
         private IUserGroupLookupProxy userGroupLookupProxy;
-
         private AuthenticationWrapper authenticationWrapper = new AuthenticationWrapper();
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired public PageableTaskService(org.activiti.engine.TaskService taskService, org.activiti.cloud.services.api.model.converter.TaskConverter taskConverter, PageRetriever pageRetriever, org.activiti.cloud.services.core.pageable.sort.TaskSortApplier sortApplier)
         public PageableTaskService(ITaskService taskService, TaskConverter taskConverter, PageRetriever pageRetriever, TaskSortApplier sortApplier)
         {
             this.taskService = taskService;

@@ -24,8 +24,6 @@ using Sys;
 
 namespace org.activiti.cloud.services.core.pageable
 {
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class PageableProcessInstanceService
     public class PageableProcessInstanceService
     {
         private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<PageableProcessInstanceService>();
@@ -40,8 +38,7 @@ namespace org.activiti.cloud.services.core.pageable
 
         //private readonly SecurityPoliciesApplicationService securityService;
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired public PageableProcessInstanceService(PageRetriever pageRetriever, org.activiti.engine.RuntimeService runtimeService, org.activiti.cloud.services.core.pageable.sort.ProcessInstanceSortApplier sortApplier, org.activiti.cloud.services.api.model.converter.ProcessInstanceConverter processInstanceConverter, org.activiti.cloud.services.core.SecurityPoliciesApplicationService securityPolicyApplicationService)
+
         public PageableProcessInstanceService(PageRetriever pageRetriever, IRuntimeService runtimeService, ProcessInstanceSortApplier sortApplier, ProcessInstanceConverter processInstanceConverter)//, SecurityPoliciesApplicationService securityPolicyApplicationService)
         {
             this.pageRetriever = pageRetriever;

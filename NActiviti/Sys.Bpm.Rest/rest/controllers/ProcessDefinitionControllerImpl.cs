@@ -63,7 +63,12 @@ namespace org.activiti.cloud.services.rest.controllers
             return ex.Message;
         }
 
-        public ProcessDefinitionControllerImpl(IRepositoryService repositoryService, ProcessDiagramGeneratorWrapper processDiagramGenerator, ProcessDefinitionConverter processDefinitionConverter, ProcessDefinitionResourceAssembler resourceAssembler, PageableRepositoryService pageableRepositoryService, SecurityPoliciesApplicationService securityPoliciesApplicationService)
+        public ProcessDefinitionControllerImpl(IRepositoryService repositoryService, 
+            ProcessDiagramGeneratorWrapper processDiagramGenerator, 
+            ProcessDefinitionConverter processDefinitionConverter, 
+            ProcessDefinitionResourceAssembler resourceAssembler, 
+            PageableRepositoryService pageableRepositoryService, 
+            SecurityPoliciesApplicationService securityPoliciesApplicationService)
         {
             this.repositoryService = repositoryService;
             this.processDiagramGenerator = processDiagramGenerator;

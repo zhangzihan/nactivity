@@ -18,18 +18,17 @@
 
 #endregion
 
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Expressions;
 using System;
 using System.Collections.Generic;
-
-using Spring.Expressions;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
 
 namespace Spring.Validation.Actions
 {
     public class ExceptionAction : BaseValidationAction
     {
-        private ILogger log = NoneLoggerFactory.Instance. GetLogger(typeof(ExceptionAction));
+        private static readonly ILogger log = LogManager.GetLogger<ExceptionAction>();
         private IExpression throwsExpression;
 
         /// <summary>
@@ -39,13 +38,13 @@ namespace Spring.Validation.Actions
         {
         }
 
-        /// <summary>
+                /// <summary>
         /// Initializes a new instance of the <see cref="ExceptionAction"/> class.
         /// </summary>
         /// <param name="exceptionExpression">Expression that defines the exception to throw when the validator is not valid.</param>        
         public ExceptionAction(string exceptionExpression)
             : this((exceptionExpression != null ? Expression.Parse(exceptionExpression) : null))
-        { }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExceptionAction"/> class with an expression
@@ -83,14 +82,14 @@ namespace Spring.Validation.Actions
                 }
                 catch (Exception e)
                 {
-                    log.LogError("Was not able to evaluate action expression [" + throwsExpression + "]", e);
+                    log.LogError(e, $"Was not able to evaluate action expression [{throwsExpression}]");
                 }
                 Exception exception = o as Exception;
                 if (exception != null)
                 {
                     throw exception;
-                }
-            }
+                }                
+            }          
             throw new ValidationException(errors);
         }
 

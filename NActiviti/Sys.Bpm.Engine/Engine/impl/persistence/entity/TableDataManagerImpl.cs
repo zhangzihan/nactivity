@@ -1,5 +1,4 @@
-﻿using DryIoc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -148,7 +147,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 IList<string> tableNames = new List<string>();
                 try
                 {
-                    var dbreader = ProcessEngineServiceProvider.ServiceProvider.Resolve<IDatabaseReader>();
+                    var dbreader = ProcessEngineServiceProvider.Resolve<IDatabaseReader>();
 
                     //log.debug("retrieving activiti tables from jdbc metadata");
                     string databaseTablePrefix = DbSqlSession.DbSqlSessionFactory.DatabaseTablePrefix;
@@ -277,7 +276,7 @@ namespace org.activiti.engine.impl.persistence.entity
                     }
                 }
 
-                var dbreader = ProcessEngineServiceProvider.ServiceProvider.Resolve<IDatabaseReader>();
+                var dbreader = ProcessEngineServiceProvider.Resolve<IDatabaseReader>();
 
                 DatabaseTable table = dbreader.AllTables().FirstOrDefault(x => string.Compare(tableName, x.Name, true) == 0) ?? new DatabaseTable();
 

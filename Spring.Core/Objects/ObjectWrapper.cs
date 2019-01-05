@@ -18,20 +18,17 @@
 
 #endregion
 
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Expressions;
+using Spring.Expressions.Parser.antlr;
+using Spring.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Text;
-
-
-using Spring.Core;
-using Spring.Expressions;
-using Spring.Expressions.Parser.antlr;
-using Spring.Util;
-using StringUtils=Spring.Util.StringUtils;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
+using StringUtils = Spring.Util.StringUtils;
 
 namespace Spring.Objects
 {
@@ -58,7 +55,7 @@ namespace Spring.Objects
     [Serializable]
     public class ObjectWrapper : IObjectWrapper
     {
-        private ILogger Log = NoneLoggerFactory.Instance. GetLogger(typeof(ObjectWrapper));
+        private static readonly ILogger Log = LogManager.GetLogger<ObjectWrapper>();
 
         #region Fields
 
@@ -69,7 +66,7 @@ namespace Spring.Objects
         /// The ILog instance for this class. We'll create a lot of these objects,
         /// so we don't want a new instance every time.
         /// </summary>
-        private static readonly ILogger log = NoneLoggerFactory.Instance. GetLogger(typeof(ObjectWrapper));
+        private static readonly ILogger log = LogManager.GetLogger<ObjectWrapper>();
 
         #endregion
 
@@ -85,7 +82,7 @@ namespace Spring.Objects
         /// </remarks>
         /// <seealso cref="Spring.Objects.ObjectWrapper.WrappedInstance"/>
         public ObjectWrapper()
-        {}
+        { }
 
         /// <summary>
         /// Creates a new instance of the <see cref="Spring.Objects.ObjectWrapper"/> class.
@@ -128,7 +125,8 @@ namespace Spring.Objects
             try
             {
                 WrappedInstance = ObjectUtils.InstantiateType(type);
-            } catch (FatalReflectionException e)
+            }
+            catch (FatalReflectionException e)
             {
                 throw new FatalObjectException(e.Message, e);
             }
@@ -344,7 +342,7 @@ namespace Spring.Objects
                 {
                     if (!ignoreUnknown)
                     {
-                        Log.LogError(string.Format("Failed setting property '{0}'", pv.Name), ex);
+                        Log.LogError(ex, string.Format("Failed setting property '{0}'", pv.Name));
                         throw;
                     }
                 }
@@ -352,23 +350,23 @@ namespace Spring.Objects
                 {
                     if (!ignoreUnknown)
                     {
-                        Log.LogError(string.Format("Failed setting property '{0}'", pv.Name), ex);
+                        Log.LogError(ex, string.Format("Failed setting property '{0}'", pv.Name));
                         throw;
                     }
                 }
                 catch (TypeMismatchException ex) // otherwise, just ignore it and continue...
                 {
-                    Log.LogError(string.Format("Failed setting property '{0}'", pv.Name), ex);
+                    Log.LogError(ex, string.Format("Failed setting property '{0}'", pv.Name));
                     propertyAccessExceptions.Add(ex);
                 }
                 catch (MethodInvocationException ex)
                 {
-                    Log.LogError(string.Format("Failed setting property '{0}'", pv.Name), ex);
+                    Log.LogError(ex, string.Format("Failed setting property '{0}'", pv.Name));
                     propertyAccessExceptions.Add(ex);
                 }
                 catch (Exception ex)
                 {
-                    Log.LogError(string.Format("Failed setting property '{0}' on instance of type '{1}'", pv.Name, this.WrappedType.FullName), ex);
+                    Log.LogError(ex, string.Format("Failed setting property '{0}' on instance of type '{1}'", pv.Name, this.WrappedType.FullName));
                     throw;
                 }
             }
@@ -388,7 +386,7 @@ namespace Spring.Objects
         /// <exception cref="FatalObjectException">If <see cref="PropertyInfo"/> cannot be determined.</exception>
         public PropertyInfo GetPropertyInfo(string propertyName)
         {
-            return (PropertyInfo) this.GetPropertyOrFieldInfo(propertyName);
+            return (PropertyInfo)this.GetPropertyOrFieldInfo(propertyName);
         }
 
         /// <summary>
@@ -403,12 +401,12 @@ namespace Spring.Objects
         public Type GetPropertyType(string propertyName)
         {
             MemberInfo memberInfo = this.GetPropertyOrFieldInfo(propertyName);
-            switch(memberInfo.MemberType)
+            switch (memberInfo.MemberType)
             {
                 case MemberTypes.Property:
-                    return ((PropertyInfo) memberInfo).PropertyType;
+                    return ((PropertyInfo)memberInfo).PropertyType;
                 case MemberTypes.Field:
-                    return ((FieldInfo) memberInfo).FieldType;
+                    return ((FieldInfo)memberInfo).FieldType;
                 default:
                     throw new FatalObjectException("'" + propertyName + "' is not a valid property expression.");
             }
@@ -422,7 +420,7 @@ namespace Spring.Objects
         /// <exception cref="FatalObjectException">If <paramref name="propertyOrFieldName"/> does not resolve to a property or field.</exception>
         private MemberInfo GetPropertyOrFieldInfo(string propertyOrFieldName)
         {
-            if(StringUtils.IsNullOrEmpty(propertyOrFieldName))
+            if (StringUtils.IsNullOrEmpty(propertyOrFieldName))
             {
                 throw new FatalObjectException("Can't find property or field info for null or zero length property name.");
             }
@@ -430,15 +428,15 @@ namespace Spring.Objects
             try
             {
                 IExpression propertyExpression = GetPropertyExpression(propertyOrFieldName);
-                if(propertyExpression is PropertyOrFieldNode)
+                if (propertyExpression is PropertyOrFieldNode)
                 {
                     return ((PropertyOrFieldNode)propertyExpression).GetMemberInfo(this.wrappedObject);
                 }
-                else if(propertyExpression is IndexerNode)
+                else if (propertyExpression is IndexerNode)
                 {
                     return ((IndexerNode)propertyExpression).GetPropertyInfo(this.wrappedObject, null);
                 }
-                else if(propertyExpression is Expression)
+                else if (propertyExpression is Expression)
                 {
                     return ((Expression)propertyExpression).GetPropertyInfo(this.wrappedObject, null);
                 }
@@ -447,11 +445,11 @@ namespace Spring.Objects
                     throw new FatalObjectException("'" + propertyOrFieldName + "' is not a valid property or field expression.");
                 }
             }
-            catch(RecognitionException e)
+            catch (RecognitionException e)
             {
                 throw new FatalObjectException("Failed to parse property or field name '" + propertyOrFieldName + "'.", e);
             }
-            catch(TokenStreamRecognitionException e)
+            catch (TokenStreamRecognitionException e)
             {
                 throw new FatalObjectException("Failed to parse property or field name '" + propertyOrFieldName + "'.", e);
             }

@@ -1,11 +1,10 @@
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Globalization;
+using Spring.Validation;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-
-using Spring.Globalization;
-using Spring.Validation;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
 
 namespace Spring.DataBinding
 {
@@ -17,7 +16,7 @@ namespace Spring.DataBinding
     {
         #region Fields
 
-        private readonly ILogger log = NoneLoggerFactory.Instance. GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly ILogger log = LogManager.GetLogger<AbstractSimpleBinding>();
         private IFormatter formatter;
 
         #endregion

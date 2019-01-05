@@ -1,5 +1,4 @@
-﻿using DryIoc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -146,7 +145,7 @@ namespace org.activiti.engine
         {
             try
             {
-                ProcessEngineConfiguration engineConfig = ProcessEngineServiceProvider.ServiceProvider.Resolve<ProcessEngineConfiguration>();
+                ProcessEngineConfiguration engineConfig = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>();
 
                 return engineConfig.buildProcessEngine();
             }

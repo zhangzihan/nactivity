@@ -18,15 +18,15 @@
 
 #endregion
 
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Objects.Factory.Config;
+using Spring.Proxy;
+using Spring.Util;
 using System;
 using System.Collections;
 using System.Reflection;
 using System.Reflection.Emit;
-using Spring.Objects.Factory.Config;
-using Spring.Util;
-using Spring.Proxy;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
 
 namespace Spring.Context.Attributes
 {
@@ -87,7 +87,7 @@ namespace Spring.Context.Attributes
         {
             #region Logging
 
-            private static readonly ILogger Logger = NoneLoggerFactory.Instance.GetLogger<ConfigurationClassInterceptor>();
+            private static readonly ILogger Logger = LogManager.GetLogger<ConfigurationClassInterceptor>();
             
             #endregion
 
@@ -117,12 +117,12 @@ namespace Spring.Context.Attributes
 
                 if (this._configurableListableObjectFactory.IsCurrentlyInCreation(objectName))
                 {
-                    Logger.LogDebug(string.Format("Object '{0}' currently in creation, created one", objectName));
+                    Logger.LogDebug($"Object '{objectName}' currently in creation, created one");
 
                     return false;
                 }
 
-                Logger.LogDebug(string.Format("Object '{0}' not in creation, asked the application context for one", objectName)); 
+                Logger.LogDebug($"Object '{objectName}' not in creation, asked the application context for one"); 
 
                 instance = this._configurableListableObjectFactory.GetObject(objectName);
                 return true;
@@ -173,7 +173,7 @@ namespace Spring.Context.Attributes
                     new ConfigurationClassProxyMethodBuilder(typeBuilder, this, false, targetMethods),
                     BaseType, this.DeclaredMembersOnly);
 
-                Type proxyType = typeBuilder.CreateType();
+                Type proxyType = typeBuilder.CreateTypeInfo();
 
                 // set target method references
                 foreach (DictionaryEntry entry in targetMethods)

@@ -28,36 +28,17 @@ namespace org.activiti.cloud.services.core
     /// <summary>
     /// Service logic for generating process diagrams
     /// </summary>
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Service public class ProcessDiagramGeneratorWrapper
     public class ProcessDiagramGeneratorWrapper
     {
         private static readonly ILogger LOGGER = ProcessEngineServiceProvider.LoggerService<ProcessDiagramGeneratorWrapper>();
 
         private readonly IProcessDiagramGenerator processDiagramGenerator;
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Value("${activiti.diagram.activity.font:}") private String activityFontName;
         private string activityFontName;
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Value("${activiti.diagram.label.font:}") private String labelFontName;
         private string labelFontName;
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Value("${activiti.diagram.annotation.font:}") private String annotationFontName;
         private string annotationFontName;
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Value("${activiti.diagram.default.image.file:}") private String defaultDiagramImageFileName;
         private string defaultDiagramImageFileName;
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Value("${activiti.diagram.generate.default:false}") private boolean generateDefaultDiagram;
         private bool generateDefaultDiagram;
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired public ProcessDiagramGeneratorWrapper(org.activiti.image.ProcessDiagramGenerator processDiagramGenerator)
         public ProcessDiagramGeneratorWrapper(IProcessDiagramGenerator processDiagramGenerator)
         {
             this.processDiagramGenerator = processDiagramGenerator;
@@ -80,8 +61,6 @@ namespace org.activiti.cloud.services.core
         /// <returns> the diagram for the given model </returns>
         public virtual byte[] generateDiagram(BpmnModel bpmnModel, IList<string> highLightedActivities, IList<string> highLightedFlows)
         {
-            //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-            //ORIGINAL LINE: try (final java.io.InputStream imageStream = processDiagramGenerator.generateDiagram(bpmnModel, highLightedActivities, highLightedFlows, getActivityFontName(), getLabelFontName(), getAnnotationFontName(), isGenerateDefaultDiagram(), getDiagramImageFileName()))
             try
             {
                 using (Stream imageStream = processDiagramGenerator.generateDiagram(bpmnModel, highLightedActivities, highLightedFlows, ActivityFontName, LabelFontName, AnnotationFontName, GenerateDefaultDiagram, DiagramImageFileName))

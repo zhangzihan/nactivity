@@ -72,11 +72,8 @@ namespace org.activiti.image.impl
 	/// Class to generate an svg based the diagram interchange information in a
 	/// BPMN 2.0 process.
 	/// </summary>
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Component public class DefaultProcessDiagramGenerator implements org.activiti.image.ProcessDiagramGenerator
-	public class DefaultProcessDiagramGenerator : IProcessDiagramGenerator
+    public class DefaultProcessDiagramGenerator : IProcessDiagramGenerator
 	{
-
 		private const string DEFAULT_ACTIVITY_FONT_NAME = "Arial";
 
 		private const string DEFAULT_LABEL_FONT_NAME = "Arial";

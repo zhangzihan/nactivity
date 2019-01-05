@@ -18,18 +18,15 @@
 
 #endregion
 
-using System;
-
-
-
+using Microsoft.Extensions.Logging;
+using Spring.Core;
 using Spring.Objects;
+using Spring.Objects.Factory.Attributes;
 using Spring.Objects.Factory.Config;
 using Spring.Objects.Factory.Support;
 using Spring.Objects.Factory.Xml;
 using Spring.Stereotype;
-using Spring.Objects.Factory.Attributes;
-using Spring.Logging;
-using Microsoft.Extensions.Logging;
+using System;
 
 namespace Spring.Context.Attributes
 {
@@ -39,7 +36,7 @@ namespace Spring.Context.Attributes
     /// </summary>
     public class ScannedGenericObjectDefinition : GenericObjectDefinition
     {
-        private static readonly ILogger Log = NoneLoggerFactory.Instance.GetLogger<ScannedGenericObjectDefinition>();
+        private static readonly ILogger Log = LogManager.GetLogger<ScannedGenericObjectDefinition>();
 
         /// <summary>
         /// Name provided by the Component Attribute
@@ -63,7 +60,7 @@ namespace Spring.Context.Attributes
             ParseScopeAttribute();
             ParseQualifierAttribute();
 
-            Log.LogDebug(string.Format("ComponentName: {0}; {1}", _componentName, ToString()));
+            Log.LogDebug($"ComponentName: {_componentName}; {ToString()}");
         }
 
         private void ParseName()

@@ -22,9 +22,7 @@
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public void drawIcon(final int imageX, final int imageY, final int iconPadding, final org.apache.batik.svggen.SVGGraphics2D svgGenerator)
-		public virtual void drawIcon(int imageX, int imageY, int iconPadding, SVGGraphics2D svgGenerator)
+        public virtual void drawIcon(int imageX, int imageY, int iconPadding, SVGGraphics2D svgGenerator)
 		{
 			Element gTag = svgGenerator.DOMFactory.createElementNS(null, SVGGraphics2D.SVG_G_TAG);
 			gTag.setAttributeNS(null, "transform", "translate(" + (imageX - 4) + "," + (imageY - 4) + ")");

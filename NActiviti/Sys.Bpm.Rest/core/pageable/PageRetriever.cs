@@ -20,8 +20,6 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.core.pageable
 {
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class PageRetriever
     public class PageRetriever
     {
         public virtual Page<TARGET> loadPage<SOURCE, TARGET, T1>(IQuery<T1, SOURCE> query, Pageable pageable, ModelConverter<SOURCE, TARGET> converter)

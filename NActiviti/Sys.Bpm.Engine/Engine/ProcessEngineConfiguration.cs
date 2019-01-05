@@ -1,5 +1,4 @@
-﻿using DryIoc;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +22,7 @@ namespace org.activiti.engine
     using org.activiti.engine.impl.persistence.entity.integration;
     using org.activiti.engine.integration;
     using org.activiti.engine.runtime;
+    using SmartSql.Abstractions;
     using Sys;
     using Sys.Bpm;
     using Sys.Data;
@@ -116,7 +116,7 @@ namespace org.activiti.engine
 
         protected internal bool isDbHistoryUsed = true;
         protected internal HistoryLevel historyLevel;
-        protected internal IDataSource dataSource = ProcessEngineServiceProvider.ServiceProvider.Resolve<IDataSource>();
+        protected internal IDataSource dataSource = ProcessEngineServiceProvider.Resolve<IDataSource>();
         protected internal bool transactionsExternallyManaged;
 
         protected internal IClock clock;
@@ -186,16 +186,19 @@ namespace org.activiti.engine
         protected internal bool enableProcessDefinitionInfoCache = false;
         protected internal IActivitiEngineAgendaFactory engineAgendaFactory;
 
+        protected IConfiguration Configuration { get; set; }
+
         /// <summary>
         /// use one of the static createXxxx methods instead </summary>
-        protected internal ProcessEngineConfiguration()
+        protected internal ProcessEngineConfiguration(IConfiguration configuration)
         {
-            IConfiguration config = ProcessEngineServiceProvider.Configuration;
-            config.Bind(this);
+            this.Configuration = configuration;
+
+            Configuration.Bind(this);
         }
 
         public abstract IProcessEngine buildProcessEngine();
-        
+
         // TODO add later when we have test coverage for this
         // public static ProcessEngineConfiguration
         // createJtaProcessEngineConfiguration() {
@@ -394,7 +397,7 @@ namespace org.activiti.engine
         {
             get
             {
-                return ProcessEngineServiceProvider.ServiceProvider.Resolve<IDataSource>();
+                return ProcessEngineServiceProvider.Resolve<IDataSource>();
             }
         }
 
@@ -517,6 +520,14 @@ namespace org.activiti.engine
             set
             {
                 this.tablePrefixIsSchema = value;
+            }
+        }
+
+        public ISmartSqlMapper SqlMapper
+        {
+            get
+            {
+                return ProcessEngineServiceProvider.Resolve<ISmartSqlMapper>();
             }
         }
 

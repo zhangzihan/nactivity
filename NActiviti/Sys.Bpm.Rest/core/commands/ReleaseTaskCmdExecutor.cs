@@ -6,17 +6,12 @@ using System;
 
 namespace org.activiti.cloud.services.core.commands
 {
-
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class ReleaseTaskCmdExecutor implements CommandExecutor<org.activiti.cloud.services.api.commands.ReleaseTaskCmd>
     public class ReleaseTaskCmdExecutor : CommandExecutor<ReleaseTaskCmd>
     {
 
         private ProcessEngineWrapper processEngine;
         private MessageChannel<ReleaseTaskResults> commandResults;
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired public ReleaseTaskCmdExecutor(org.activiti.cloud.services.core.ProcessEngineWrapper processEngine, org.springframework.messaging.MessageChannel commandResults)
         public ReleaseTaskCmdExecutor(ProcessEngineWrapper processEngine, MessageChannel<ReleaseTaskResults> commandResults)
         {
             this.processEngine = processEngine;

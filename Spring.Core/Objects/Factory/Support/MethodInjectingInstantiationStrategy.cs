@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright ?2002-2011 the original author or authors.
+ * Copyright © 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,32 +20,32 @@
 
 #region Imports
 
+using Microsoft.Extensions.Logging;
+using Spring.Util;
 using System;
 using System.Collections;
 using System.Globalization;
 using System.Reflection;
 using System.Reflection.Emit;
-using Microsoft.Extensions.Logging;
-using Spring.Util;
 
 #endregion
 
 namespace Spring.Objects.Factory.Support
 {
-	/// <summary>
-	/// An <see cref="Spring.Objects.Factory.Support.IInstantiationStrategy"/>
-	/// implementation that supports method injection.
-	/// </summary>
-	/// <remarks>
-	/// <p>
-	/// Classes that want to take advantage of method injection must meet some
-	/// stringent criteria. Every method that is to be method injected
-	/// <b>must</b> be defined as either <see lang="virtual"/> or
-	/// <see lang="abstract"/>. An <see cref="Spring.Objects.ObjectsException"/>
-	/// will be thrown if these criteria are not met.
-	/// </p>
-	/// </remarks>
-	/// <author>Rick Evans</author>
+    /// <summary>
+    /// An <see cref="Spring.Objects.Factory.Support.IInstantiationStrategy"/>
+    /// implementation that supports method injection.
+    /// </summary>
+    /// <remarks>
+    /// <p>
+    /// Classes that want to take advantage of method injection must meet some
+    /// stringent criteria. Every method that is to be method injected
+    /// <b>must</b> be defined as either <see lang="virtual"/> or
+    /// <see lang="abstract"/>. An <see cref="Spring.Objects.ObjectsException"/>
+    /// will be thrown if these criteria are not met.
+    /// </p>
+    /// </remarks>
+    /// <author>Rick Evans</author>
     [Serializable]
     public class MethodInjectingInstantiationStrategy : SimpleInstantiationStrategy
 	{
@@ -293,7 +293,7 @@ namespace Spring.Objects.Factory.Support
 				DefineConstructors(typeBuilder);
 				DefineProperties(typeBuilder);
 				DefineMethods(typeBuilder);
-				return typeBuilder.CreateType();
+				return typeBuilder.CreateTypeInfo();
 			}
 
 			private Type BaseType

@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data;
-using System.Collections;
-using System.Data.Common;
-using System.Threading.Tasks;
-using SmartSql.Abstractions.DbSession;
-using SmartSql.Abstractions.DataSource;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using SmartSql.Abstractions.Cache;
+using SmartSql.Abstractions.Command;
 using SmartSql.Abstractions.Config;
-using SmartSql.Configuration;
+using SmartSql.Abstractions.DataReaderDeserializer;
+using SmartSql.Abstractions.DataSource;
+using SmartSql.Abstractions.DbSession;
+using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace SmartSql.Abstractions
 {
@@ -18,6 +17,24 @@ namespace SmartSql.Abstractions
     /// </summary>
     public interface ISmartSqlMapper : ISmartSqlMapperAsync, IDisposable
     {
+        JToken Variables { get; set; }
+
+        IDbConnectionSessionStore SessionStore { get; }
+
+        IDataSourceFilter DataSourceFilter { get; }
+
+        IConfigLoader ConfigLoader { get; }
+
+        ICommandExecuter CommandExecuter { get; }
+
+        IDataReaderDeserializerFactory DeserializerFactory { get; }
+
+        ILoggerFactory LoggerFactory { get; }
+
+        ICacheManager CacheManager { get; }
+
+        ISqlBuilder SqlBuilder { get; }
+
         int Execute(RequestContext context);
         T ExecuteScalar<T>(RequestContext context);
         IEnumerable<T> Query<T>(RequestContext context);

@@ -22,8 +22,6 @@ using System.Collections.Generic;
 
 namespace org.activiti.services.connectors.model
 {
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @JsonIgnoreProperties(ignoreUnknown = true) public class IntegrationRequestEvent
     public class IntegrationRequestEvent
     {
 

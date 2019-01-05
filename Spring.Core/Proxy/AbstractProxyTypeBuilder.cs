@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright ?2002-2011 the original author or authors.
+ * Copyright © 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,44 +20,43 @@
 
 #region Imports
 
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Core.TypeResolution;
+using Spring.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.Serialization;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
-
-using Spring.Core.TypeResolution;
-using Spring.Util;
 
 #endregion
 
 namespace Spring.Proxy
 {
-	/// <summary>
-	/// Base class for proxy builders that can be used 
+    /// <summary>
+    /// Base class for proxy builders that can be used 
     /// to create a proxy for any class.
-	/// </summary>
-	/// <remarks>
-	/// <p>
-	/// This <see langword="abstract"/> class provides a set of template
-	/// methods that derived classes can override to provide custom behaviour
-	/// appropriate to the type of proxy that is being generated (one of
-	/// inheritance or composition-based proxying).
-	/// </p>
-	/// </remarks>
-	/// <author>Aleksandar Seovic</author>
+    /// </summary>
+    /// <remarks>
+    /// <p>
+    /// This <see langword="abstract"/> class provides a set of template
+    /// methods that derived classes can override to provide custom behaviour
+    /// appropriate to the type of proxy that is being generated (one of
+    /// inheritance or composition-based proxying).
+    /// </p>
+    /// </remarks>
+    /// <author>Aleksandar Seovic</author>
     /// <author>Bruno Baia</author>
-	public abstract class AbstractProxyTypeBuilder : IProxyTypeBuilder, IProxyTypeGenerator
+    public abstract class AbstractProxyTypeBuilder : IProxyTypeBuilder, IProxyTypeGenerator
 	{
         #region Fields
 
         /// <summary>
         /// The shared <see cref="Common.Logging.ILog"/> instance for this class (and derived classes).
         /// </summary>
-        protected static readonly ILogger log = NoneLoggerFactory.Instance. GetLogger(typeof(AbstractProxyTypeBuilder));
+        protected static readonly ILogger log = LogManager.GetLogger<AbstractProxyTypeBuilder>();
 
         private const string DEFAULT_PROXY_TYPE_NAME = "Proxy";
         

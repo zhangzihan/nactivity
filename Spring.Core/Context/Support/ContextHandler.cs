@@ -20,17 +20,16 @@
 
 #region Imports
 
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Core.TypeResolution;
+using Spring.Reflection.Dynamic;
+using Spring.Util;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Reflection;
 using System.Xml;
-using Microsoft.Extensions.Logging;
-using Spring.Core;
-using Spring.Core.TypeResolution;
-using Spring.Logging;
-using Spring.Reflection.Dynamic;
-using Spring.Util;
 
 #endregion
 
@@ -173,7 +172,7 @@ namespace Spring.Context.Support
     /// <seealso cref="ContextRegistry"/>
     public class ContextHandler : IConfigurationSectionHandler
     {
-        private readonly ILogger Log = NoneLoggerFactory.Instance.GetLogger(typeof(ContextHandler));
+        private static readonly ILogger Log = LogManager.GetLogger<ContextHandler>();
 
         /// <summary>
         /// The <see cref="System.Type"/> of <see cref="Spring.Context.IApplicationContext"/>

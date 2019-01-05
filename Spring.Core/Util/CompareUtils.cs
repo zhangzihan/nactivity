@@ -82,12 +82,6 @@ namespace Spring.Util
                 NumberUtils.CoerceTypes(ref right, ref left);
                 return true;
             }
-            else
-            {
-                left = left.ToString().ToLower();
-                right = right.ToString().ToLower();
-                return true;
-            }
             return false;
         }
 

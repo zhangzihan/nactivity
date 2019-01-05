@@ -18,10 +18,10 @@
 
 #endregion
 
-using System;
 using Microsoft.Extensions.Logging;
+using Spring.Core;
 using Spring.Core.TypeResolution;
-using Spring.Logging;
+using System;
 
 namespace Spring.Context.Attributes.TypeFilters
 {
@@ -30,7 +30,7 @@ namespace Spring.Context.Attributes.TypeFilters
     /// </summary>
     public abstract class AbstractLoadTypeFilter : ITypeFilter
     {
-        private static readonly ILogger Logger = NoneLoggerFactory.Instance.GetLogger<AbstractLoadTypeFilter>();
+        private static readonly ILogger Logger = LogManager.GetLogger<AbstractLoadTypeFilter>();
 
 
         /// <summary>

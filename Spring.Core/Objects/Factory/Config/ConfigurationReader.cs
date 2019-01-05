@@ -1,14 +1,14 @@
 #region License
 
 /*
- * Copyright ?2002-2011 the original author or authors.
- * 
+ * Copyright © 2002-2011 the original author or authors.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,11 @@
 
 #region Imports
 
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Core.IO;
+using Spring.Core.TypeResolution;
+using Spring.Util;
 using System;
 using System.Collections.Specialized;
 using System.Configuration;
@@ -27,11 +32,6 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Xml;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
-using Spring.Core.IO;
-using Spring.Core.TypeResolution;
-using Spring.Util;
 using ConfigXmlDocument = Spring.Util.ConfigXmlDocument;
 
 #endregion
@@ -39,11 +39,11 @@ using ConfigXmlDocument = Spring.Util.ConfigXmlDocument;
 namespace Spring.Objects.Factory.Config
 {
     /// <summary>
-    /// Various utility methods for .NET style .config files. 
+    /// Various utility methods for .NET style .config files.
     /// </summary>
     /// <remarks>
     /// <p>
-    /// Currently supports reading custom configuration sections and returning them as 
+    /// Currently supports reading custom configuration sections and returning them as
     /// <see cref="System.Collections.Specialized.NameValueCollection"/> objects.
     /// </p>
     /// </remarks>
@@ -58,13 +58,13 @@ namespace Spring.Objects.Factory.Config
         private const string ConfigSectionElement = "section";
         private const string ConfigSectionNameAttribute = "name";
 
-        private static readonly ILogger _log = NoneLoggerFactory.Instance. GetLogger(typeof(ConfigurationReader));
+        private static readonly ILogger _log = LogManager.GetLogger<ConfigurationReader>();
 
         /// <summary>
         /// Initializes the type members
         /// </summary>
         static ConfigurationReader()
-        {}
+        { }
 
         /// <summary>
         /// Reads the specified configuration section into a
@@ -261,7 +261,7 @@ namespace Spring.Objects.Factory.Config
             {
                 throw new ArgumentException(string.Format("evaluating configuration section {0} does not result in an instance of type {1}", configSectionName, typeof(TResult)));
             }
-            return (TResult) result;
+            return (TResult)result;
         }
 
         /// <summary>
@@ -312,7 +312,7 @@ namespace Spring.Objects.Factory.Config
             if (typeof(IConfigurationSectionHandler).IsAssignableFrom(handlerType))
             {
                 IConfigurationSectionHandler handler = (IConfigurationSectionHandler)ObjectUtils.InstantiateType(handlerType);
-                return ((IConfigurationSectionHandler)handler).Create(null, null, sectionContent);
+                return handler.Create(null, null, sectionContent);
             }
 
             // NET 2.0 ConfigurationSection
@@ -351,16 +351,30 @@ namespace Spring.Objects.Factory.Config
             if (xmlConfig == null)
             {
                 // none specified, use machine inherited
-                XmlDocument machineConfig = new XmlDocument();
-                machineConfig.Load(RuntimeEnvironment.SystemConfigurationFile);
-                xmlConfig = machineConfig.SelectSingleNode(sectionHandlerPath);
-                if (xmlConfig == null)
+                try
                 {
-                    // TOOD: better throw a sensible exception in case of a missing handler configuration?
-                    handlerType = defaultConfigurationSectionHandlerType;
+                    XmlDocument machineConfig = new XmlDocument();
+                    machineConfig.Load(RuntimeEnvironment.SystemConfigurationFile);
+                    xmlConfig = machineConfig.SelectSingleNode(sectionHandlerPath);
+                    if (xmlConfig == null)
+                    {
+                        // TOOD: better throw a sensible exception in case of a missing handler configuration?
+                        handlerType = defaultConfigurationSectionHandlerType;
+                    }
+                }
+                catch (PlatformNotSupportedException)
+                {
+                    if (configSectionName == "connectionStrings")
+                    {
+                        handlerType = typeof(ConnectionStringsSectionHandler);
+                    }
+                    else
+                    {
+                        handlerType = typeof(NameValueSectionHandler);
+                    }
                 }
             }
-            
+
             if (xmlConfig != null)
             {
                 XmlAttribute xmlConfigType = xmlConfig.Attributes[ConfigSectionTypeAttribute];
@@ -372,6 +386,23 @@ namespace Spring.Objects.Factory.Config
                 throw new ConfigurationException(string.Format("missing handler-'type' attribute on configuration section definition for section '{0}'", configSectionName));
             }
             return handlerType;
+        }
+
+        private class ConnectionStringsSectionHandler : IConfigurationSectionHandler
+        {
+            public object Create(object parent, object configContext, XmlNode section)
+            {
+                var data = new ConnectionStringsSection();
+                foreach (XmlNode node in section.ChildNodes)
+                {
+                    var settings = new ConnectionStringSettings(
+                        node.Attributes["name"].Value,
+                        node.Attributes["connectionString"]?.Value,
+                        node.Attributes["providerName"]?.Value);
+                    data.ConnectionStrings.Add(settings);
+                }
+                return data;
+            }
         }
 
 

@@ -27,8 +27,6 @@ namespace org.activiti.cloud.services.events.converter
 
         private readonly ProcessInstanceConverter processInstanceConverter;
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired public ProcessCompletedEventConverter(org.activiti.cloud.services.api.model.converter.ProcessInstanceConverter processInstanceConverter, org.activiti.cloud.services.events.configuration.RuntimeBundleProperties runtimeBundleProperties)
         public ProcessCompletedEventConverter(ProcessInstanceConverter processInstanceConverter, RuntimeBundleProperties runtimeBundleProperties) : base(runtimeBundleProperties)
         {
             this.processInstanceConverter = processInstanceConverter;

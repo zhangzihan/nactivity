@@ -27,19 +27,6 @@ using System.Linq;
 
 namespace org.activiti.cloud.services.events.converter
 {
-    //JAVA TO C# CONVERTER TODO TASK: This Java 'import static' statement cannot be converted to C#:
-    //	import static org.activiti.engine.@delegate.@event.ActivitiEventType.ENTITY_ACTIVATED;
-    //JAVA TO C# CONVERTER TODO TASK: This Java 'import static' statement cannot be converted to C#:
-    //	import static org.activiti.engine.@delegate.@event.ActivitiEventType.ENTITY_CREATED;
-    //JAVA TO C# CONVERTER TODO TASK: This Java 'import static' statement cannot be converted to C#:
-    //	import static org.activiti.engine.@delegate.@event.ActivitiEventType.ENTITY_SUSPENDED;
-    //JAVA TO C# CONVERTER TODO TASK: This Java 'import static' statement cannot be converted to C#:
-    //	import static org.activiti.engine.@delegate.@event.ActivitiEventType.PROCESS_CANCELLED;
-    //JAVA TO C# CONVERTER TODO TASK: This Java 'import static' statement cannot be converted to C#:
-    //	import static org.activiti.engine.task.IdentityLinkType.CANDIDATE;
-
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class EventConverterContext
     public class EventConverterContext
     {
         private static readonly ILogger LOGGER = ProcessEngineServiceProvider.LoggerService<EventConverterContext>();
@@ -81,7 +68,6 @@ namespace org.activiti.cloud.services.events.converter
             }
             else
             {
-                //JAVA TO C# CONVERTER WARNING: The .NET Type.FullName property will not always yield results identical to the Java Class.getCanonicalName method:
                 LOGGER.LogDebug(">> Ommited Event Type: " + activitiEvent.GetType().FullName);
             }
             return newEvent;

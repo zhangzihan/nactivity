@@ -18,14 +18,13 @@
 
 #endregion
 
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
-using Spring.Util;
 
 namespace Spring.Context.Attributes
 {
@@ -38,7 +37,7 @@ namespace Spring.Context.Attributes
         /// <summary>
         /// Logger Instance.
         /// </summary>
-        protected static readonly ILogger Logger = NoneLoggerFactory.Instance.GetLogger<AssemblyTypeSource>();
+        protected static readonly ILogger Logger = LogManager.GetLogger<AssemblyTypeSource>();
 
         private readonly Assembly _assembly;
 
@@ -68,12 +67,12 @@ namespace Spring.Context.Attributes
             catch (ReflectionTypeLoadException ex)
             {
                 //log and swallow everything that might go wrong here...
-                Logger.LogDebug("Failed to get types " +  ex.LoaderExceptions, ex);
+                Logger.LogDebug(ex, $"Failed to get types {ex.LoaderExceptions}");
             }
             catch (Exception ex)
             {
                 //log and swallow everything that might go wrong here...
-                Logger.LogDebug("Failed to get types ", ex);
+                Logger.LogDebug(ex, $"Failed to get types ");
             }
 
 

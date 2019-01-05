@@ -22,9 +22,6 @@ namespace org.activiti.services.connectors.channel
 
     public interface ProcessEngineIntegrationChannels
     {
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Input(ProcessEngineIntegrationChannels_Fields.INTEGRATION_RESULTS_CONSUMER) org.springframework.messaging.SubscribableChannel integrationResultsConsumer();
         SubscribableChannel integrationResultsConsumer();
     }
 

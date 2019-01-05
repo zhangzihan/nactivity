@@ -1,7 +1,7 @@
 #region License
 
 /*
-* Copyright ?2002-2011 the original author or authors.
+* Copyright © 2002-2011 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,13 +20,12 @@
 
 #region Imports
 
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Util;
 using System;
 using System.Collections;
 using System.Globalization;
-using Microsoft.Extensions.Logging;
-using Spring.Core;
-using Spring.Logging;
-using Spring.Util;
 
 #endregion
 
@@ -42,7 +41,7 @@ namespace Spring.Objects.Support
     public class PropertyComparator : IComparer
     {
         private static readonly ILogger logger
-            = NoneLoggerFactory.Instance.GetLogger(typeof(PropertyComparator));
+            = LogManager.GetLogger<PropertyComparator>();
 
         private ISortDefinition sortDefinition;
         private readonly IDictionary cachedObjectWrappers = new Hashtable();
@@ -125,10 +124,9 @@ namespace Spring.Objects.Support
             {
                 #region Instrumentation
 
-                if (logger.IsEnabled(LogLevel.Debug))
+                if (logger.IsEnabled(LogLevel.Warning))
                 {
-                    logger.LogWarning("Could not sort objects [" + o1 + "] and [" + o2 + "]",
-                                ex);
+                    logger.LogWarning(ex, $"Could not sort objects [{o1}] and [{o2}]");
                 }
 
                 #endregion
@@ -169,7 +167,7 @@ namespace Spring.Objects.Support
                     // if a nested property cannot be read, simply return null...
                     if (logger.IsEnabled(LogLevel.Debug))
                     {
-                        logger.LogDebug("Could not access property - treating as null for sorting.", ex);
+                        logger.LogDebug(ex, "Could not access property - treating as null for sorting.");
                     }
                 }
             }

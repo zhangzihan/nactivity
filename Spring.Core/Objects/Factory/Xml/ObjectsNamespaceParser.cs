@@ -20,6 +20,14 @@
 
 #region Imports
 
+using Microsoft.Extensions.Logging;
+using Spring.Collections;
+using Spring.Core;
+using Spring.Core.IO;
+using Spring.Core.TypeResolution;
+using Spring.Objects.Factory.Config;
+using Spring.Objects.Factory.Support;
+using Spring.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,17 +35,6 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Xml;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
-
-
-
-using Spring.Collections;
-using Spring.Core.IO;
-using Spring.Core.TypeResolution;
-using Spring.Objects.Factory.Config;
-using Spring.Objects.Factory.Support;
-using Spring.Util;
 
 #endregion
 
@@ -66,7 +63,7 @@ namespace Spring.Objects.Factory.Xml
             SchemaLocation = "/Spring.Objects.Factory.Xml/spring-objects-2.0.xsd"
         )
     ]
-//    [Obsolete("ObjectsNamespaceParser will be dropped with 2.x, use ObjectDefinitionParserHelper instead", false)]
+    //    [Obsolete("ObjectsNamespaceParser will be dropped with 2.x, use ObjectDefinitionParserHelper instead", false)]
     public class ObjectsNamespaceParser : AbstractObjectDefinitionParser, INamespaceParser
     {
         /// <summary>
@@ -78,7 +75,7 @@ namespace Spring.Objects.Factory.Xml
         /// The shared <see cref="Common.Logging.ILog"/> instance for this class (and derived classes).
         /// </summary>
         protected static readonly ILogger log =
-            NoneLoggerFactory.Instance.GetLogger(typeof(ObjectsNamespaceParser));
+            LogManager.GetLogger<ObjectsNamespaceParser>();
 
         #region IXmlObjectDefinitionParser Members
 
@@ -278,8 +275,8 @@ namespace Spring.Objects.Factory.Xml
                 case ObjectDefinitionConstants.TypeAttribute:
                     // we're wiring up to a static event exposed on a Type (class)
                     myHandler.Source = parserContext.ReaderContext.Reader.Domain == null ?
-                        (object)sourceAtt.Value :
-                        (object)TypeResolutionUtils.ResolveType(sourceAtt.Value);
+                        sourceAtt.Value :
+                        TypeResolutionUtils.ResolveType(sourceAtt.Value) as object;
                     break;
             }
             events.AddHandler(myHandler);
@@ -483,7 +480,7 @@ namespace Spring.Objects.Factory.Xml
                     autowire = childParserContext.ParserHelper.Defaults.Autowire;
                 }
                 od.AutowireMode = GetAutowireMode(autowire);
-                
+
                 string autowireCandidates = GetAttributeValue(element, ObjectDefinitionConstants.AutowireCandidateAttribute);
                 if (string.IsNullOrEmpty(autowireCandidates) || ObjectDefinitionConstants.DefaultValue.Equals(autowireCandidates))
                 {
@@ -697,7 +694,7 @@ namespace Spring.Objects.Factory.Xml
 
                 ObjectMetadataAttribute attribute = new ObjectMetadataAttribute(key, value);
                 attribute.Source = (XmlElement)node;
-                attributeAccessor.AddMetadataAttribute(attribute);                                
+                attributeAccessor.AddMetadataAttribute(attribute);
             }
         }
 
@@ -708,7 +705,7 @@ namespace Spring.Objects.Factory.Xml
         {
             foreach (XmlNode node in this.SelectNodes(element, ObjectDefinitionConstants.QualifierElement))
             {
-                ParseQualifierElement(name, (XmlElement) node, parserContext, od);
+                ParseQualifierElement(name, (XmlElement)node, parserContext, od);
             }
         }
 
@@ -726,7 +723,7 @@ namespace Spring.Objects.Factory.Xml
                                     parserContext.ReaderContext.Resource, name,
                                     "Tag 'qualifier' must have a 'type' attribute");
             }
-            
+
             var qualifier = new AutowireCandidateQualifier(typeName);
             qualifier.Source = element;
 
@@ -843,7 +840,7 @@ namespace Spring.Objects.Factory.Xml
             {
                 if (StringUtils.HasText(typeAttr))
                 {
-                    if (log.IsEnabled(LogLevel.Debug))
+                    if (log.IsEnabled(LogLevel.Warning))
                     {
                         log.LogWarning("The 'type' attribute is redundant when the 'name' attribute has been used on a constructor argument element.");
                     }
@@ -974,7 +971,7 @@ namespace Spring.Objects.Factory.Xml
         {
             if (element.NamespaceURI == Namespace)
             {
-                switch(element.LocalName)
+                switch (element.LocalName)
                 {
                     case ObjectDefinitionConstants.ObjectElement:
                         {
@@ -1017,7 +1014,7 @@ namespace Spring.Objects.Factory.Xml
                             // it's a distinguished null value...
                             return null;
                         }
-                default:
+                    default:
                         throw new ObjectDefinitionStoreException(
                             parserContext.ReaderContext.Resource,
                             name,
@@ -1027,35 +1024,35 @@ namespace Spring.Objects.Factory.Xml
 
             return parserContext.ParserHelper.ParseCustomElement(element, parserContext.ContainingObjectDefinition);
 
-//            parserContext.ParserHelper.parse
-//            // it may match another Parser
-//            INamespaceParser otherParser = parserContext. (element.NamespaceURI);
-//            if (otherParser != null)
-//            {
-//                // The other parser uses nestings tags and thus returns the definition
-//                // of the parsed object.
-//                return otherParser.ParseElement(element, new ParserContext(parserContext.ParserHelper));
-//            }
-//
-//            throw new ObjectDefinitionStoreException(
-//                parserContext.ReaderContext.Resource,
-//                name,
-//                "Unknown subelement of <property>: <" + element.Name + ">");
+            //            parserContext.ParserHelper.parse
+            //            // it may match another Parser
+            //            INamespaceParser otherParser = parserContext. (element.NamespaceURI);
+            //            if (otherParser != null)
+            //            {
+            //                // The other parser uses nestings tags and thus returns the definition
+            //                // of the parsed object.
+            //                return otherParser.ParseElement(element, new ParserContext(parserContext.ParserHelper));
+            //            }
+            //
+            //            throw new ObjectDefinitionStoreException(
+            //                parserContext.ReaderContext.Resource,
+            //                name,
+            //                "Unknown subelement of <property>: <" + element.Name + ">");
         }
 
-//        private static INamespaceParser GetParser(string nspace)
-//        {
-//            // finds the configuration parser for the given namespace
-//            try
-//            {
-//                return NamespaceParserRegistry.GetParser(nspace);
-//            }
-//            catch (Exception)
-//            {
-//                // The parser for the given namespace is not found
-//                return null;
-//            }
-//        }
+        //        private static INamespaceParser GetParser(string nspace)
+        //        {
+        //            // finds the configuration parser for the given namespace
+        //            try
+        //            {
+        //                return NamespaceParserRegistry.GetParser(nspace);
+        //            }
+        //            catch (Exception)
+        //            {
+        //                // The parser for the given namespace is not found
+        //                return null;
+        //            }
+        //        }
 
         private static object ParseIdReference(XmlElement element, ObjectDefinitionParserHelper parserHelper, string name)
         {
@@ -1182,7 +1179,7 @@ namespace Spring.Objects.Factory.Xml
         /// </param>
         /// <returns>The set definition.</returns>
         protected Set ParseSetElement(XmlElement collectionEle, string name, ParserContext parserContext)
-        {           
+        {
             string elementTypeName = GetAttributeValue(collectionEle, "element-type");
             XmlNodeList nl = collectionEle.ChildNodes;
             ManagedSet target = new ManagedSet(nl.Count);
@@ -1516,9 +1513,8 @@ namespace Spring.Objects.Factory.Xml
 
                     if (log.IsEnabled(LogLevel.Debug))
                     {
-                        log.LogDebug(
-                            string.Format("Error while parsing autowire mode : '{0}' is an invalid value.",
-                                          value), ex);
+                        log.LogDebug(ex, string.Format("Error while parsing autowire mode : '{0}' is an invalid value.",
+                                          value));
                     }
 
                     #endregion
@@ -1554,37 +1550,37 @@ namespace Spring.Objects.Factory.Xml
             return StringUtils.HasText(element.Prefix) ? element.Prefix : "spring";
         }
 
-//        /// <summary>
-//        /// Returns the value of the element's attribute or <c>null</c>, if the attribute is not specified.
-//        /// </summary>
-//        /// <remarks>
-//        /// This is a helper for bypassing the behavior of <see cref="XmlElement.GetAttribute(string)"/> 
-//        /// to return <see cref="string.Empty"/> if the attribute does not exist.
-//        /// </remarks>
-//        protected static string GetAttributeValue(XmlElement element, string attributeName)
-//        {
-//            if (element.HasAttribute(attributeName))
-//            {
-//                return element.GetAttribute(attributeName);
-//            }
-//            return null;
-//        }
-//
-//        /// <summary>
-//        /// Returns the value of the element's attribute or <paramref name="defaultValue"/>, 
-//        /// if the attribute is not specified.
-//        /// </summary>
-//        /// <remarks>
-//        /// This is a helper for bypassing the behavior of <see cref="XmlElement.GetAttribute(string)"/> 
-//        /// to return <see cref="string.Empty"/> if the attribute does not exist.
-//        /// </remarks>
-//        protected static string GetAttributeValue(XmlElement element, string attributeName, string defaultValue)
-//        {
-//            if (element.HasAttribute(attributeName))
-//            {
-//                return element.GetAttribute(attributeName);
-//            }
-//            return defaultValue;
-//        }
+        //        /// <summary>
+        //        /// Returns the value of the element's attribute or <c>null</c>, if the attribute is not specified.
+        //        /// </summary>
+        //        /// <remarks>
+        //        /// This is a helper for bypassing the behavior of <see cref="XmlElement.GetAttribute(string)"/>
+        //        /// to return <see cref="string.Empty"/> if the attribute does not exist.
+        //        /// </remarks>
+        //        protected static string GetAttributeValue(XmlElement element, string attributeName)
+        //        {
+        //            if (element.HasAttribute(attributeName))
+        //            {
+        //                return element.GetAttribute(attributeName);
+        //            }
+        //            return null;
+        //        }
+        //
+        //        /// <summary>
+        //        /// Returns the value of the element's attribute or <paramref name="defaultValue"/>,
+        //        /// if the attribute is not specified.
+        //        /// </summary>
+        //        /// <remarks>
+        //        /// This is a helper for bypassing the behavior of <see cref="XmlElement.GetAttribute(string)"/>
+        //        /// to return <see cref="string.Empty"/> if the attribute does not exist.
+        //        /// </remarks>
+        //        protected static string GetAttributeValue(XmlElement element, string attributeName, string defaultValue)
+        //        {
+        //            if (element.HasAttribute(attributeName))
+        //            {
+        //                return element.GetAttribute(attributeName);
+        //            }
+        //            return defaultValue;
+        //        }
     }
 }

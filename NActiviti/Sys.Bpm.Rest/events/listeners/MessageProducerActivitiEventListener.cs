@@ -20,8 +20,6 @@ namespace org.activiti.cloud.services.events.listeners
     using org.activiti.cloud.services.events.converter;
     using org.activiti.engine.@delegate.@event;
 
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class MessageProducerActivitiEventListener implements org.activiti.engine.delegate.event.ActivitiEventListener
     public class MessageProducerActivitiEventListener : IActivitiEventListener
     {
 
@@ -29,8 +27,6 @@ namespace org.activiti.cloud.services.events.listeners
 
         private readonly ProcessEngineEventsAggregator eventsAggregator;
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired public MessageProducerActivitiEventListener(org.activiti.cloud.services.events.converter.EventConverterContext converterContext, ProcessEngineEventsAggregator eventsAggregator)
         public MessageProducerActivitiEventListener(EventConverterContext converterContext, ProcessEngineEventsAggregator eventsAggregator)
         {
             this.converterContext = converterContext;

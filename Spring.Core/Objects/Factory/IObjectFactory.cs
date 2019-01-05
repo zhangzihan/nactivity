@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright Â© 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -210,21 +210,21 @@ namespace Spring.Objects.Factory
 		/// <returns>True if an object with the given name is defined.</returns>
 		bool ContainsObject(string name);
 
-	    /// <summary>
-	    /// Return the aliases for the given object name, if defined.
-	    /// </summary>
-	    /// <remarks>
-	    /// <para>
-	    /// Will ask the parent factory if the object cannot be found in this factory
-	    /// instance.
-	    /// </para>
-	    /// </remarks>
-	    /// <param name="name">The object name to check for aliases.</param>
-	    /// <returns>The aliases, or an empty array if none.</returns>
-	    /// <exception cref="Spring.Objects.Factory.NoSuchObjectDefinitionException">
-	    /// If there's no such object definition.
-	    /// </exception>
-	    IList<string> GetAliases(string name);
+		/// <summary>
+		/// Return the aliases for the given object name, if defined.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Will ask the parent factory if the object cannot be found in this factory
+		/// instance.
+		/// </para>
+		/// </remarks>
+		/// <param name="name">The object name to check for aliases.</param>
+		/// <returns>The aliases, or an empty array if none.</returns>
+		/// <exception cref="Spring.Objects.Factory.NoSuchObjectDefinitionException">
+		/// If there's no such object definition.
+		/// </exception>
+		IReadOnlyList<string> GetAliases(string name);
 
 #if !MONO
 		/// <summary>

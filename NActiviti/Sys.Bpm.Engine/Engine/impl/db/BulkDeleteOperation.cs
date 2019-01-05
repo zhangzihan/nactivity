@@ -39,7 +39,7 @@ namespace org.activiti.engine.impl.db
             this.parameter = parameter;
         }
 
-        public virtual void execute(Type entityClass, SmartSqlMapper sqlMapper)
+        public virtual void execute(Type entityClass, ISmartSqlMapper sqlMapper)
         {
             sqlMapper.Execute(new RequestContext
             {

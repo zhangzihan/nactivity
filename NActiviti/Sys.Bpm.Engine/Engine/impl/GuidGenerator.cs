@@ -1,4 +1,5 @@
-﻿using org.activiti.engine.impl.cfg;
+﻿using MassTransit;
+using org.activiti.engine.impl.cfg;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,12 @@ namespace Sys.Bpm.Engine.impl
 {
     public class GuidGenerator : IIdGenerator
     {
-        public string NextId => Guid.NewGuid().ToString();
+        public string NextId
+        {
+            get
+            {
+                return NewId.NextGuid().ToString();
+            }
+        }
     }
 }

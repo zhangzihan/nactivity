@@ -18,13 +18,12 @@
 
 #endregion
 
-using System;
-
-using Spring.Core.TypeResolution;
-using Spring.Util;
-using Spring.Objects.Factory.Support;
 using Microsoft.Extensions.Logging;
-using Spring.Logging;
+using Spring.Core;
+using Spring.Core.TypeResolution;
+using Spring.Objects.Factory.Support;
+using Spring.Util;
+using System;
 
 namespace Spring.Context.Attributes.TypeFilters
 {
@@ -33,7 +32,7 @@ namespace Spring.Context.Attributes.TypeFilters
     /// </summary>
     public static class CustomTypeFactory
     {
-        private static readonly ILogger Logger = NoneLoggerFactory.Instance.CreateLogger(typeof(CustomTypeFactory).FullName);
+        private static readonly ILogger Logger = LogManager.GetLogger(typeof(CustomTypeFactory));
 
         /// <summary>
         /// Creates a new instance of given type filter type string
@@ -72,7 +71,7 @@ namespace Spring.Context.Attributes.TypeFilters
                 Logger.LogError(string.Format("Can't instatiate {0}. Type needs to have a non arg constructor.", expression));
             }
 
-            return null;
+            return null;            
         }
 
 

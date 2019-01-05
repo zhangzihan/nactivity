@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Ahoo Wang</Authors>
     <Company>Ahoo Wang</Company>
     <Description>SmartSql = MyBatis + Cache(Memory | Redis) + ZooKeeper + R/W Splitting + ......</Description>
@@ -19,10 +19,6 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>bin</OutputPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SmartSql\SmartSql.csproj" />

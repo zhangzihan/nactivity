@@ -24,8 +24,6 @@ namespace org.activiti.cloud.services.events.listeners
 
         private readonly MessageProducerCommandContextCloseListener closeListener;
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired public ProcessEngineEventsAggregator(MessageProducerCommandContextCloseListener closeListener)
         public ProcessEngineEventsAggregator(MessageProducerCommandContextCloseListener closeListener)
         {
             this.closeListener = closeListener;

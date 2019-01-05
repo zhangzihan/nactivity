@@ -1,5 +1,4 @@
-﻿using DryIoc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +24,6 @@ namespace org.activiti.engine.impl.db
     using org.activiti.engine.impl.persistence.cache;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
-    using SmartSql;
     using SmartSql.Abstractions;
     using Sys;
     using System.Data;
@@ -42,7 +40,7 @@ namespace org.activiti.engine.impl.db
 
         protected internal static readonly IList<ActivitiVersion> ACTIVITI_VERSIONS = new List<ActivitiVersion>();
 
-        protected static readonly SmartSqlMapper sqlMapper = ProcessEngineServiceProvider.SmartSqlMapper;
+        public ISmartSqlMapper SqlMapper { get => ProcessEngineServiceProvider.Resolve<ISmartSqlMapper>(); }
 
         private static readonly ILogger<DbSqlSession> log = ProcessEngineServiceProvider.LoggerService<DbSqlSession>();
 
@@ -121,7 +119,7 @@ namespace org.activiti.engine.impl.db
         public virtual int update<TEntityImpl>(string statement, object parameters)
         {
             string updateStatement = dbSqlSessionFactory.mapStatement(statement);
-            return sqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, updateStatement, parameters));//.update(updateStatement, parameters);
+            return SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, updateStatement, parameters));//.update(updateStatement, parameters);
         }
 
         // delete
@@ -218,7 +216,7 @@ namespace org.activiti.engine.impl.db
                 return new List<TOut>();
             }
 
-            var loadedObjects = sqlMapper.Query<TOut>(dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, statement, parameter));
+            var loadedObjects = SqlMapper.Query<TOut>(dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, statement, parameter));
             if (useCache)
             {
                 var objs = loadedObjects.Cast<object>().ToList();
@@ -244,7 +242,7 @@ namespace org.activiti.engine.impl.db
         {
             statement = dbSqlSessionFactory.mapStatement(statement);
 
-            var result = sqlMapper.QuerySingle<TOut>(dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, statement, parameter));
+            var result = SqlMapper.QuerySingle<TOut>(dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, statement, parameter));
 
             if (result is IEntity)
             {
@@ -277,7 +275,7 @@ namespace org.activiti.engine.impl.db
             string selectStatement = dbSqlSessionFactory.getSelectStatement(ref entityClass);
             selectStatement = dbSqlSessionFactory.mapStatement(selectStatement);
 
-            entity = sqlMapper.QuerySingle<TEntityImpl>(dbSqlSessionFactory.CreateRequestContext(entityClass.FullName, selectStatement, id));
+            entity = SqlMapper.QuerySingle<TEntityImpl>(dbSqlSessionFactory.CreateRequestContext(entityClass.FullName, selectStatement, id));
 
             if (entity == null)
             {
@@ -637,7 +635,7 @@ namespace org.activiti.engine.impl.db
             }
 
             log.LogDebug($"inserting: {entity}");
-            sqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, insertStatement, entity));
+            SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, insertStatement, entity));
 
             // See https://activiti.atlassian.net/browse/ACT-1290
             if (entity is IHasRevision)
@@ -675,7 +673,7 @@ namespace org.activiti.engine.impl.db
                     index++;
                 } while (entityIterator.MoveNext() && index < dbSqlSessionFactory.MaxNrOfStatementsInBulkInsert);
 
-                sqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, insertStatement, new { Items = subList }));
+                SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, insertStatement, new { Items = subList }));
             }
 
             if (hasRevision.GetValueOrDefault(false))
@@ -711,7 +709,7 @@ namespace org.activiti.engine.impl.db
                 }
 
                 log.LogDebug($"updating: {updatedObject}");
-                int updatedRecords = sqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, updateStatement, updatedObject));
+                int updatedRecords = SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, updateStatement, updatedObject));
                 if (updatedRecords == 0)
                 {
                     throw new ActivitiOptimisticLockingException(updatedObject + " was updated by another transaction concurrently");
@@ -765,7 +763,7 @@ namespace org.activiti.engine.impl.db
             {
                 foreach (BulkDeleteOperation bulkDeleteOperation in bulkDeleteOperations[entityClass])
                 {
-                    bulkDeleteOperation.execute(entityClass, sqlMapper);
+                    bulkDeleteOperation.execute(entityClass, SqlMapper);
                 }
             }
         }
@@ -785,7 +783,7 @@ namespace org.activiti.engine.impl.db
                 // It only makes sense to check for optimistic locking exceptions
                 // for objects that actually have a revision
 
-                int nrOfRowsDeleted = sqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, deleteStatement, entity));
+                int nrOfRowsDeleted = SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, deleteStatement, entity));
 
                 if (entity is IHasRevision && nrOfRowsDeleted == 0)
                 {
@@ -800,17 +798,17 @@ namespace org.activiti.engine.impl.db
 
         public virtual void commit()
         {
-            if (sqlMapper.SessionStore?.LocalSession != null)
+            if (SqlMapper.SessionStore?.LocalSession != null)
             {
-                sqlMapper.CommitTransaction();
+                SqlMapper.CommitTransaction();
             }
         }
 
         public virtual void rollback()
         {
-            if (sqlMapper.SessionStore?.LocalSession != null)
+            if (SqlMapper.SessionStore?.LocalSession != null)
             {
-                sqlMapper.RollbackTransaction();
+                SqlMapper.RollbackTransaction();
             }
         }
 
@@ -878,7 +876,7 @@ namespace org.activiti.engine.impl.db
             get
             {
                 string selectSchemaVersionStatement = dbSqlSessionFactory.mapStatement("selectDbSchemaVersion");
-                return sqlMapper.QuerySingle<string>(dbSqlSessionFactory.CreateRequestContext(typeof(PropertyEntityImpl).FullName, selectSchemaVersionStatement, null));
+                return SqlMapper.QuerySingle<string>(dbSqlSessionFactory.CreateRequestContext(typeof(PropertyEntityImpl).FullName, selectSchemaVersionStatement, null));
             }
         }
 
@@ -1070,7 +1068,7 @@ namespace org.activiti.engine.impl.db
                     catalog = null;
                 }
 
-                var dbreader = ProcessEngineServiceProvider.ServiceProvider.Resolve<IDatabaseReader>();
+                var dbreader = ProcessEngineServiceProvider.Resolve<IDatabaseReader>();
 
                 return dbreader.TableList().Any(x => string.Compare(x.Name, tableName, true) == 0);
             }
@@ -1491,17 +1489,6 @@ namespace org.activiti.engine.impl.db
         internal object getMapper(Type mapperClass)
         {
             throw new NotImplementedException();
-        }
-
-        // getters and setters
-        // //////////////////////////////////////////////////////
-
-        public virtual ISmartSqlMapper SqlMapper
-        {
-            get
-            {
-                return sqlMapper;
-            }
         }
 
         public virtual DbSqlSessionFactory DbSqlSessionFactory

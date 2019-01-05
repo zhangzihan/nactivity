@@ -28,8 +28,6 @@ namespace org.activiti.cloud.services.events.listeners
 
         private readonly ProcessEngineChannels producer;
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired public MessageProducerCommandContextCloseListener(org.activiti.cloud.services.events.ProcessEngineChannels producer)
         public MessageProducerCommandContextCloseListener(ProcessEngineChannels producer)
         {
             this.producer = producer;

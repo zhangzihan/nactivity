@@ -22,8 +22,6 @@ namespace org.activiti.cloud.services.core
     using ProcessInstanceQuery = org.activiti.engine.runtime.ProcessInstanceQuery;
     using Component = org.springframework.stereotype.Component;
 
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class SecurityPoliciesProcessInstanceRestrictionApplier implements SecurityPoliciesRestrictionApplier<org.activiti.engine.runtime.ProcessInstanceQuery>
     public class SecurityPoliciesProcessInstanceRestrictionApplier : SecurityPoliciesRestrictionApplier<ProcessInstanceQuery>
     {
         public virtual ProcessInstanceQuery restrictToKeys(ProcessInstanceQuery query, ISet<string> keys)

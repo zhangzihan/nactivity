@@ -1,20 +1,11 @@
 ﻿using org.activiti.engine.@delegate;
 using org.activiti.engine.impl.identity;
 using org.activiti.engine.impl.persistence.entity;
-using Spring.Expressions;
-using Spring.Expressions.Parser.antlr;
-using Spring.Expressions.Parser.antlr.collections;
-using Sys;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace org.activiti.engine.impl.el
 {

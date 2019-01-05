@@ -30,9 +30,7 @@
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public void drawIcon(final int imageX, final int imageYo, final int iconPadding, final org.activiti.image.impl.ProcessDiagramSVGGraphics2D svgGenerator)
-		public override void drawIcon(int imageX, int imageYo, int iconPadding, ProcessDiagramSVGGraphics2D svgGenerator)
+        public override void drawIcon(int imageX, int imageYo, int iconPadding, ProcessDiagramSVGGraphics2D svgGenerator)
 		{
 			Element gTag = svgGenerator.DOMFactory.createElementNS(null, SVGGraphics2D.SVG_G_TAG);
 			gTag.setAttributeNS(null, "transform", "translate(" + (imageX) + "," + (imageYo) + ")");

@@ -21,8 +21,6 @@ namespace org.activiti.cloud.services.core
     /// <summary>
     /// Wrap Authentication.java so as to be able to mock static methods. May later want to move this to engine level but not necessary now.
     /// </summary>
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class AuthenticationWrapper extends org.activiti.cloud.services.security.BaseAuthenticationWrapper
     public class AuthenticationWrapper //: BaseAuthenticationWrapper
     {
         public virtual string AuthenticatedUserId

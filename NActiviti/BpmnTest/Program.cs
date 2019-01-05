@@ -1,5 +1,4 @@
-﻿using DryIoc;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,18 +9,24 @@ using org.activiti.engine.impl.util;
 using org.activiti.engine.repository;
 using org.activiti.engine.runtime;
 using org.activiti.engine.task;
+using Spring.Core;
+using Spring.Core.TypeResolution;
 using Sys;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
 namespace Activiti
 {
+
     class Program
     {
         static string file = null;
@@ -58,8 +63,6 @@ namespace Activiti
             testEngine(args);
         }
 
-        private static IContainer Container { get; set; }
-
         static void testXmlElement()
         {
             //自行修改为本地路径
@@ -74,15 +77,17 @@ namespace Activiti
             var elem = XElement.Parse(node.OuterXml, LoadOptions.SetLineInfo);
         }
 
+        static IHost host;
+
         static void testEngine(string[] args)
         {
-            Spring.Core.TypeResolution.TypeRegistry.RegisterType(typeof(CollectionUtil));
+            TypeRegistry.RegisterType(typeof(CollectionUtil));
 
             //test();
 
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
 
-            var host = new HostBuilder()
+            host = new HostBuilder()
                 .ConfigureHostConfiguration(cfg =>
                 {
                     cfg.AddEnvironmentVariables();
@@ -96,6 +101,7 @@ namespace Activiti
                     .AddConsole(opts =>
                     {
                     });
+
                     //cfg.Services.AddSingleton<ILoggerFactory>(lf);
                 })
                 .ConfigureAppConfiguration((hostctx, cfg) =>
@@ -106,16 +112,36 @@ namespace Activiti
                 })
                 .ConfigureServices((hostctx, services) =>
                 {
+                    services.AddSingleton<LogManager>();
+
                     services.AddLogging();
+
+                    services.AddProcessEngine();
                 })
                 .UseConsoleLifetime()
                 .Build();
 
-            Container = new Container();
-            Container.RegisterDelegate<IConfiguration>(sp => host.Services.GetService<IConfiguration>(), Reuse.Singleton);
-            Container.AddProcessEngine();
+            LogManager.Instance = host.Services.GetService<LogManager>();
 
-            var engine = ProcessEngineServiceProvider.DefaultProcessEngine;
+            host.Services.EnsureProcessEngineInit();
+
+            //Container = new Container();
+            //Container.With((rules) =>
+            //{
+            //    return rules.With(FactoryMethod.ConstructorWithResolvableArguments);
+            //}).With((rules) =>
+            //{
+            //    return rules.With(propertiesAndFields: (request) =>
+            //    {
+            //        return (request.ImplementationType ?? request.ServiceType)
+            //        .GetTypeInfo()
+            //        .DeclaredProperties.Where(x => x.IsInjectable(true))
+            //        .Select(PropertyOrFieldServiceInfo.Of);
+            //    });
+            //});
+            //Container.RegisterDelegate<IConfiguration>(sp => host.Services.GetService<IConfiguration>(), Reuse.Singleton);
+
+            var engine = host.Services.GetService<IProcessEngine>();
             Authentication.AuthenticatedUserId = Guid.Empty.ToString();
 
             deploy(engine);
@@ -149,6 +175,7 @@ namespace Activiti
                     break;
                 }
             } while (true);
+
             //host.Run();
         }
 
@@ -206,7 +233,7 @@ namespace Activiti
         static void testSimpleProcess()
         {
 
-            var engine = ProcessEngineServiceProvider.DefaultProcessEngine;
+            var engine = host.Services.GetService<IProcessEngine>();
 
             try
             {
@@ -232,7 +259,7 @@ namespace Activiti
         /// <param name="ts"></param>
         static void testVacationRequest(int ts)
         {
-            var engine = ProcessEngineServiceProvider.DefaultProcessEngine;
+            var engine = host.Services.GetService<IProcessEngine>();
             Authentication.AuthenticatedUserId = Guid.Empty.ToString();
 
             //deploy(engine);
@@ -322,13 +349,13 @@ namespace Activiti
             IRepositoryService rs = engine.RepositoryService;
 
             IDeploymentBuilder depb = rs.createDeployment();
-            var dep = depb.addClasspathResource(@"bpmn-js.bpmn")
+            var dep = depb.addClasspathResource(@"C:\Project\MDD\7.0\nactivity\NActiviti\BpmnTest\bpmn-js.bpmn")
                     .deploy();
         }
 
         static void test()
         {
-            var file = @"bpmn-js.bpmn";
+            var file = @"E:\project\test.xml";
 
             XmlReader reader = XmlReader.Create(file);
 
@@ -343,6 +370,33 @@ namespace Activiti
                     Console.WriteLine(e.Message);
                 }
             }
+        }
+    }
+
+    class Startup : IHostedService
+    {
+        private readonly ILoggerFactory loggerFactory;
+
+        public Startup(ILoggerFactory loggerFactory)
+        {
+            this.loggerFactory = loggerFactory;
+        }
+
+        public IServiceCollection ConfigureServices(IServiceCollection services)
+        {
+            services.AddLogging();
+
+            return services;
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
         }
     }
 

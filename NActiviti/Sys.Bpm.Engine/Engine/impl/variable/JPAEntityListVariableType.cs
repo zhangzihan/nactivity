@@ -157,12 +157,15 @@ namespace org.activiti.engine.impl.variable
                 string[] toStore = ids.ToArray();
                 using (System.IO.MemoryStream baos = new System.IO.MemoryStream())
                 {
-                    var ds = new System.Runtime.Serialization.NetDataContractSerializer();
-                    ds.Serialize(baos, toStore);
-                    baos.Seek(0, SeekOrigin.Begin);
-                    byte[] data = new byte[baos.Length];
-                    baos.Read(data, 0, data.Length);
-                    return data;
+                    using (var ds = new Newtonsoft.Json.Bson.BsonWriter(baos))
+                    {
+                        Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
+                        serializer.Serialize(ds, toStore);
+                        baos.Seek(0, SeekOrigin.Begin);
+                        byte[] data = new byte[baos.Length];
+                        baos.Read(data, 0, data.Length);
+                        return data;
+                    }
                 }
             }
             catch (IOException ioe)
@@ -177,8 +180,11 @@ namespace org.activiti.engine.impl.variable
             {
                 using (System.IO.MemoryStream bais = new System.IO.MemoryStream(bytes))
                 {
-                    var ds = new NetDataContractSerializer();
-                    return ds.ReadObject(bais) as string[];
+                    using (var ds = new Newtonsoft.Json.Bson.BsonReader(bais))
+                    {
+                        Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
+                        return serializer.Deserialize<string[]>(ds);
+                    }
                 }
             }
             catch (IOException ioe)

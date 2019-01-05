@@ -16,9 +16,7 @@
 
 		public abstract string DValue {get;}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public abstract void drawIcon(final int imageX, final int imageY, final int iconPadding, final org.activiti.image.impl.ProcessDiagramSVGGraphics2D svgGenerator);
-		public abstract void drawIcon(int imageX, int imageY, int iconPadding, ProcessDiagramSVGGraphics2D svgGenerator);
+        public abstract void drawIcon(int imageX, int imageY, int iconPadding, ProcessDiagramSVGGraphics2D svgGenerator);
 
 		public abstract string StrokeValue {get;}
 

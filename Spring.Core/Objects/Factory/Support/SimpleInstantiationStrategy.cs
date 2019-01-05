@@ -20,13 +20,13 @@
 
 #region Imports
 
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Core.TypeResolution;
+using Spring.Util;
 using System;
 using System.Globalization;
 using System.Reflection;
-using Microsoft.Extensions.Logging;
-using Spring.Core.TypeResolution;
-using Spring.Logging;
-using Spring.Util;
 
 #endregion
 
@@ -51,7 +51,8 @@ namespace Spring.Objects.Factory.Support
         /// <summary>
         /// The shared <see cref="Common.Logging.ILog"/> instance for this class (and derived classes).
         /// </summary>
-        protected static readonly ILogger log = NoneLoggerFactory.Instance.GetLogger(typeof(SimpleInstantiationStrategy));
+        protected static readonly ILogger log =
+            LogManager.GetLogger<SimpleInstantiationStrategy>();
 
         /// <summary>
         /// Instantiate an instance of the object described by the supplied
@@ -204,9 +205,9 @@ namespace Spring.Objects.Factory.Support
 
                 #region Instrumentation
 
-                if (log.IsEnabled(LogLevel.Debug))
+                if (log.IsEnabled(LogLevel.Warning))
                 {
-                    log.LogWarning(msg, ex.InnerException);
+                    log.LogWarning(ex.InnerException, msg);
                 }
 
                 #endregion

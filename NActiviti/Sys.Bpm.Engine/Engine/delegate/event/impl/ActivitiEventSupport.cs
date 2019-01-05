@@ -32,7 +32,7 @@ namespace org.activiti.engine.@delegate.@event.impl
 
         public ActivitiEventSupport()
         {
-            eventListeners = new SynchronizedCollection<IActivitiEventListener>();
+            eventListeners = new List<IActivitiEventListener>();
             typedListeners = new Dictionary<ActivitiEventType, IList<IActivitiEventListener>>();
         }
 
@@ -146,7 +146,7 @@ namespace org.activiti.engine.@delegate.@event.impl
                 if (listeners == null)
                 {
                     // Add an empty list of listeners for this type
-                    listeners = new SynchronizedCollection<IActivitiEventListener>();
+                    listeners = new List<IActivitiEventListener>(); // SynchronizedCollection<IActivitiEventListener>();
                     typedListeners[type] = listeners;
                 }
 

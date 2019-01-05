@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright ?2002-2011 the original author or authors.
+ * Copyright © 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,11 @@
 
 #region Imports
 
-using System;
-using System.Collections;
 using Microsoft.Extensions.Logging;
-using Spring.Logging;
-
-
 using Spring.Core;
 using Spring.Util;
+using System;
+using System.Collections;
 
 #endregion
 
@@ -39,7 +36,7 @@ namespace Spring.Objects.Factory.Config
     public class SharedStateAwareProcessor : IObjectPostProcessor, IOrdered
     {
         // holds the logger for this processor instance
-        private readonly ILogger Log = NoneLoggerFactory.Instance. GetLogger( typeof( SharedStateAwareProcessor ) );
+        private readonly ILogger Log = LogManager.GetLogger(typeof(SharedStateAwareProcessor));
         // holds a list of ISharedStateProvider instances (if any)
         private ISharedStateFactory[] _sharedStateFactories = new ISharedStateFactory[0];
         // holds prio
@@ -79,7 +76,7 @@ namespace Spring.Objects.Factory.Config
             get { return _sharedStateFactories; }
             set
             {
-                AssertUtils.ArgumentHasElements( value, "SharedStateFactories" );
+                AssertUtils.ArgumentHasElements(value, "SharedStateFactories");
                 _sharedStateFactories = value;
             }
         }
@@ -95,7 +92,7 @@ namespace Spring.Objects.Factory.Config
         /// </summary>
         /// <param name="sharedStateFactories"></param>
         /// <param name="order">priority value affecting order of invocation of this processor. See <see cref="IOrdered"/> interface.</param>
-        public SharedStateAwareProcessor( ISharedStateFactory[] sharedStateFactories, int order )
+        public SharedStateAwareProcessor(ISharedStateFactory[] sharedStateFactories, int order)
         {
             SharedStateFactories = sharedStateFactories;
         }
@@ -106,7 +103,7 @@ namespace Spring.Objects.Factory.Config
         /// a) true == provider.CanProvideState( instance, name )<br/>
         /// b) null != provider.GetSharedState( instance, name )<br/>
         /// </summary>
-        public object PostProcessBeforeInitialization( object instance, string name )
+        public object PostProcessBeforeInitialization(object instance, string name)
         {
             if (SharedStateFactories.Length == 0)
             {
@@ -119,9 +116,9 @@ namespace Spring.Objects.Factory.Config
                 // probe for first factory willing to serve shared state
                 foreach (ISharedStateFactory ssf in _sharedStateFactories)
                 {
-                    if (ssf.CanProvideState( ssa, name ))
+                    if (ssf.CanProvideState(ssa, name))
                     {
-                        IDictionary sharedState = ssf.GetSharedStateFor( ssa, name );
+                        IDictionary sharedState = ssf.GetSharedStateFor(ssa, name);
                         if (sharedState != null)
                         {
                             ssa.SharedState = sharedState;
@@ -145,7 +142,7 @@ namespace Spring.Objects.Factory.Config
         /// <returns>
         /// the original <paramref name="instance"/>.
         /// </returns>
-        public object PostProcessAfterInitialization( object instance, string name )
+        public object PostProcessAfterInitialization(object instance, string name)
         {
             return instance;
         }

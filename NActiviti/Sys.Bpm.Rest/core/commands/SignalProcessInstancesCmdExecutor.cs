@@ -6,16 +6,12 @@ using System;
 
 namespace org.activiti.cloud.services.core.commands
 {
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class SignalProcessInstancesCmdExecutor implements CommandExecutor<org.activiti.cloud.services.api.commands.SignalCmd>
     public class SignalProcessInstancesCmdExecutor : CommandExecutor<SignalCmd>
     {
 
         private ProcessEngineWrapper processEngine;
         private MessageChannel<SignalProcessInstancesResults> commandResults;
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired public SignalProcessInstancesCmdExecutor(org.activiti.cloud.services.core.ProcessEngineWrapper processEngine, org.springframework.messaging.MessageChannel commandResults)
         public SignalProcessInstancesCmdExecutor(ProcessEngineWrapper processEngine, MessageChannel<SignalProcessInstancesResults> commandResults)
         {
             this.processEngine = processEngine;

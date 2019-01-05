@@ -11,8 +11,8 @@
  * limitations under the License.
  */
 
-using DryIoc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using Sys;
 
 namespace org.activiti.engine.impl.interceptor

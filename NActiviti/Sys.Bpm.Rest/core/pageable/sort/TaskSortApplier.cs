@@ -22,8 +22,6 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.core.pageable.sort
 {
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class TaskSortApplier extends BaseSortApplier<org.activiti.engine.task.TaskQuery>
     public class TaskSortApplier : BaseSortApplier<ITaskQuery, ITask>
     {
         private IDictionary<string, IQueryProperty> orderByProperties = new Dictionary<string, IQueryProperty>();

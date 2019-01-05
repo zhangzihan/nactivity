@@ -20,15 +20,8 @@ using org.activiti.engine.@delegate.@event;
 
 namespace org.activiti.cloud.services.events.converter
 {
-    //JAVA TO C# CONVERTER TODO TASK: This Java 'import static' statement cannot be converted to C#:
-    //	import static org.activiti.engine.@delegate.@event.ActivitiEventType.ACTIVITY_CANCELLED;
-
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class ActivityCancelledEventConverter extends AbstractEventConverter
     public class ActivityCancelledEventConverter : AbstractEventConverter
     {
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired public ActivityCancelledEventConverter(org.activiti.cloud.services.events.configuration.RuntimeBundleProperties runtimeBundleProperties)
         public ActivityCancelledEventConverter(RuntimeBundleProperties runtimeBundleProperties) : base(runtimeBundleProperties)
         {
         }

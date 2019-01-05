@@ -8,9 +8,6 @@
     using org.springframework.cloud.stream.binding;
     using org.springframework.messaging.support;
 
-
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class IntegrationRequestSender
     public class IntegrationRequestSender
     {
         protected internal const string CONNECTOR_TYPE = "connectorType";
@@ -25,8 +22,6 @@
             this.resolver = resolver;
         }
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @TransactionalEventListener(phase = org.springframework.transaction.event.TransactionPhase.AFTER_COMMIT) public void sendIntegrationRequest(org.activiti.services.connectors.model.IntegrationRequestEvent event)
         public virtual void sendIntegrationRequest(IntegrationRequestEvent @event)
         {
 

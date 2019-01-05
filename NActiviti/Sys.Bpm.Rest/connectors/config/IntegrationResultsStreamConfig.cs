@@ -16,8 +16,6 @@
 
 namespace org.activiti.services.connectors.config
 {
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Configuration @PropertySource("classpath:config/integration-result-stream.properties") public class IntegrationResultsStreamConfig
     public class IntegrationResultsStreamConfig
     {
 

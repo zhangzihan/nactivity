@@ -196,7 +196,7 @@ namespace SmartSql
             var dbSession = SessionStore.GetOrAddDbSession(dataSource);
             try
             {
-                var result = await execute(dbSession).ConfigureAwait(false);
+                var result = await execute(dbSession);
                 CacheManager.RequestExecuted(dbSession, context);
                 CacheManager.TryAdd<T>(context, result);
                 return result;

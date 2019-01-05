@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" targetNamespace="http://activiti.org/bpmn20">
   <process id="vacationRequest" name="Vacation request" isExecutable="true">
-    <startEvent id="request" camunda:initiator="employeeName" activiti:initiator="employeeName">
+    <startEvent id="request" camunda:initiator="employeeName" camunda:initiator="employeeName">
       <extensionElements>
-        <activiti:formProperty id="numberOfDays" name="Number of days" type="long" required="true" />
-        <activiti:formProperty id="startDate" name="First day of holiday (dd-MM-yyy)" type="date" datePattern="dd-MM-yyyy hh:mm" required="true" />
-        <activiti:formProperty id="vacationMotivation" name="Motivation" type="string" />
+        <camunda:formProperty id="numberOfDays" name="Number of days" type="long" required="true" />
+        <camunda:formProperty id="startDate" name="First day of holiday (dd-MM-yyy)" type="date" datePattern="dd-MM-yyyy hh:mm" required="true" />
+        <camunda:formProperty id="vacationMotivation" name="Motivation" type="string" />
       </extensionElements>
     </startEvent>
     <sequenceFlow id="flow1" sourceRef="request" targetRef="handleRequest" />
-    <userTask id="handleRequest" name="Handle vacation request" activiti:candidateGroups="management">
+    <userTask id="handleRequest" name="Handle vacation request" camunda:candidateGroups="management">
       <documentation>${employeeName} would like to take ${numberOfDays} day(s) of vacation (Motivation: ${vacationMotivation}).</documentation>
       <extensionElements>
-        <activiti:formProperty id="vacationApproved" name="Do you approve this vacation" type="enum" required="true">
-          <activiti:value id="true" name="Approve" />
-          <activiti:value id="false" name="Reject" />
-        </activiti:formProperty>
-        <activiti:formProperty id="managerMotivation" name="Motivation" type="string" />
+        <camunda:formProperty id="vacationApproved" name="Do you approve this vacation" type="enum" required="true">
+          <camunda:value id="true" name="Approve" />
+          <camunda:value id="false" name="Reject" />
+        </camunda:formProperty>
+        <camunda:formProperty id="managerMotivation" name="Motivation" type="string" />
       </extensionElements>
     </userTask>
     <sequenceFlow id="flow2" sourceRef="handleRequest" targetRef="requestApprovedDecision" />
@@ -30,17 +30,17 @@
     <sequenceFlow id="flow5" sourceRef="requestApprovedDecision" targetRef="adjustVacationRequestTask">
       <conditionExpression xsi:type="tFormalExpression">${vacationApproved == 'false'}</conditionExpression>
     </sequenceFlow>
-    <userTask id="adjustVacationRequestTask" name="Adjust vacation request" activiti:assignee="${employeeName}">
+    <userTask id="adjustVacationRequestTask" name="Adjust vacation request" camunda:assignee="${employeeName}">
       <documentation>Your manager has disapproved your vacation request for ${numberOfDays} days.
         Reason: ${managerMotivation}</documentation>
       <extensionElements>
-        <activiti:formProperty id="numberOfDays" name="Number of days" type="long" required="true" />
-        <activiti:formProperty id="startDate" name="First day of holiday (dd-MM-yyy)" type="date" datePattern="dd-MM-yyyy hh:mm" required="true" />
-        <activiti:formProperty id="vacationMotivation" name="Motivation" type="string" />
-        <activiti:formProperty id="resendRequest" name="Resend vacation request to manager?" type="enum" required="true">
-          <activiti:value id="true" name="Yes" />
-          <activiti:value id="false" name="No" />
-        </activiti:formProperty>
+        <camunda:formProperty id="numberOfDays" name="Number of days" type="long" required="true" />
+        <camunda:formProperty id="startDate" name="First day of holiday (dd-MM-yyy)" type="date" datePattern="dd-MM-yyyy hh:mm" required="true" />
+        <camunda:formProperty id="vacationMotivation" name="Motivation" type="string" />
+        <camunda:formProperty id="resendRequest" name="Resend vacation request to manager?" type="enum" required="true">
+          <camunda:value id="true" name="Yes" />
+          <camunda:value id="false" name="No" />
+        </camunda:formProperty>
         <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler">false</modeler:initiator-can-complete>
       </extensionElements>
     </userTask>

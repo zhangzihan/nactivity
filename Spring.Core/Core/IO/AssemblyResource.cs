@@ -20,13 +20,11 @@
 
 #region Imports
 
+using Microsoft.Extensions.Logging;
 using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
-
 
 #endregion
 
@@ -57,7 +55,7 @@ namespace Spring.Core.IO
         private string _fullResourceName;
         private string _resourceNamespace;
         private string _resourceAssemblyName;
-        private static readonly ILogger log = NoneLoggerFactory.Instance. GetLogger(typeof(AssemblyResource));
+        private static readonly ILogger log = LogManager.GetLogger<AssemblyResource>();
 
         #endregion
 

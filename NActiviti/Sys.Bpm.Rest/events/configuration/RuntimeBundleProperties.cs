@@ -16,29 +16,12 @@
 
 namespace org.activiti.cloud.services.events.configuration
 {
-
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Configuration @ConfigurationProperties(prefix = "activiti.cloud.runtime-bundle") public class RuntimeBundleProperties
     public class RuntimeBundleProperties
     {
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Value("${spring.application.name}") private String rbSpringAppName;
         private string rbSpringAppName;
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Value("${activiti.cloud.service.type:}") private String serviceType;
         private string serviceType;
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Value("${activiti.cloud.service.version:}") private String serviceVersion;
         private string serviceVersion;
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Value("${activiti.cloud.application.name:}") private String appName;
         private string appName;
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Value("${activiti.cloud.application.version:}") private String appVersion;
         private string appVersion;
 
         private RuntimeBundleEventsProperties eventsProperties = new RuntimeBundleEventsProperties();

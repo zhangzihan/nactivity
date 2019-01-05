@@ -20,11 +20,11 @@
 
 #region Imports
 
-using System;
 using Microsoft.Extensions.Logging;
+using Spring.Core;
 using Spring.Core.IO;
-using Spring.Logging;
 using Spring.Util;
+using System;
 
 #endregion
 
@@ -41,64 +41,64 @@ namespace Spring.Objects.Factory.Support
     /// <author>Juergen Hoeller</author>
     /// <author>Rick Evans (.NET)</author>
     public abstract class AbstractObjectDefinitionReader : IObjectDefinitionReader
-    {
-        #region Constants
+	{
+		#region Constants
 
-        /// <summary>
-        /// The <see cref="Common.Logging.ILog"/> instance for this class (and derived classes).
-        /// </summary>
-        protected readonly ILogger log;
+		/// <summary>
+		/// The <see cref="Common.Logging.ILog"/> instance for this class (and derived classes).
+		/// </summary>
+		protected readonly ILogger log;
 
-        #endregion
+		#endregion
 
-        #region Constructor (s) / Destructor
+		#region Constructor (s) / Destructor
 
-        /// <summary>
-        /// Creates a new instance of the
-        /// <see cref="Spring.Objects.Factory.Support.AbstractObjectDefinitionReader"/>
-        /// class.
-        /// </summary>
-        /// <param name="registry">
-        /// The <see cref="Spring.Objects.Factory.Support.IObjectDefinitionRegistry"/>
-        /// instance that this reader works on.
-        /// </param>
-        /// <remarks>
-        /// <p>
-        /// This is an <see langword="abstract"/> class, and as such exposes no public constructors.
-        /// </p>
-        /// </remarks>
-        protected AbstractObjectDefinitionReader(IObjectDefinitionRegistry registry)
-            : this(registry, AppDomain.CurrentDomain)
-        {
-        }
+		/// <summary>
+		/// Creates a new instance of the
+		/// <see cref="Spring.Objects.Factory.Support.AbstractObjectDefinitionReader"/>
+		/// class.
+		/// </summary>
+		/// <param name="registry">
+		/// The <see cref="Spring.Objects.Factory.Support.IObjectDefinitionRegistry"/>
+		/// instance that this reader works on.
+		/// </param>
+		/// <remarks>
+		/// <p>
+		/// This is an <see langword="abstract"/> class, and as such exposes no public constructors.
+		/// </p>
+		/// </remarks>
+		protected AbstractObjectDefinitionReader(IObjectDefinitionRegistry registry)
+			: this(registry, AppDomain.CurrentDomain)
+		{
+		}
 
-        /// <summary>
-        /// Creates a new instance of the
-        /// <see cref="Spring.Objects.Factory.Support.AbstractObjectDefinitionReader"/>
-        /// class.
-        /// </summary>
-        /// <param name="registry">
-        /// The <see cref="Spring.Objects.Factory.Support.IObjectDefinitionRegistry"/>
-        /// instance that this reader works on.
-        /// </param>
-        /// <param name="domain">
-        /// The <see cref="System.AppDomain"/> against which any class names
-        /// will be resolved into <see cref="System.Type"/> instances.
-        /// </param>
-        /// <remarks>
-        /// <p>
-        /// This is an <see langword="abstract"/> class, and as such exposes no public constructors.
-        /// </p>
-        /// </remarks>
-        protected AbstractObjectDefinitionReader(
-            IObjectDefinitionRegistry registry,
-            AppDomain domain)
-        {
-            log = NoneLoggerFactory.Instance.GetLogger(this.GetType());
+		/// <summary>
+		/// Creates a new instance of the
+		/// <see cref="Spring.Objects.Factory.Support.AbstractObjectDefinitionReader"/>
+		/// class.
+		/// </summary>
+		/// <param name="registry">
+		/// The <see cref="Spring.Objects.Factory.Support.IObjectDefinitionRegistry"/>
+		/// instance that this reader works on.
+		/// </param>
+		/// <param name="domain">
+		/// The <see cref="System.AppDomain"/> against which any class names
+		/// will be resolved into <see cref="System.Type"/> instances.
+		/// </param>
+		/// <remarks>
+		/// <p>
+		/// This is an <see langword="abstract"/> class, and as such exposes no public constructors.
+		/// </p>
+		/// </remarks>
+		protected AbstractObjectDefinitionReader(
+			IObjectDefinitionRegistry registry,
+			AppDomain domain)
+		{
+		    log = LogManager.GetLogger(this.GetType());
 
-            AssertUtils.ArgumentNotNull(registry, "registry", "IObjectDefinitionRegistry must not be null");
-            _registry = registry;
-            _domain = domain;
+		    AssertUtils.ArgumentNotNull(registry, "registry", "IObjectDefinitionRegistry must not be null");
+			_registry = registry;
+			_domain = domain;
             if (registry is IResourceLoader)
             {
                 _resourceLoader = registry as IResourceLoader;
@@ -107,21 +107,21 @@ namespace Spring.Objects.Factory.Support
             {
                 _resourceLoader = new ConfigurableResourceLoader();
             }
-        }
+		}
 
-        #endregion
+		#endregion
 
-        #region Properties
+		#region Properties
 
-        /// <summary>
-        /// Gets the
-        /// <see cref="Spring.Objects.Factory.Support.IObjectDefinitionRegistry"/>
-        /// instance that this reader works on.
-        /// </summary>
-        public IObjectDefinitionRegistry Registry
-        {
-            get { return _registry; }
-        }
+		/// <summary>
+		/// Gets the
+		/// <see cref="Spring.Objects.Factory.Support.IObjectDefinitionRegistry"/>
+		/// instance that this reader works on.
+		/// </summary>
+		public IObjectDefinitionRegistry Registry
+		{
+			get { return _registry; }
+		}
 
 
         /// <summary>
@@ -130,10 +130,10 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         /// <value></value>
 	    public IObjectNameGenerator ObjectNameGenerator
-        {
-            get { return _objectNameGenerator; }
-            set
-            {
+	    {
+	        get { return _objectNameGenerator; }
+	        set
+	        {
                 if (value != null)
                 {
                     _objectNameGenerator = value;
@@ -142,17 +142,17 @@ namespace Spring.Objects.Factory.Support
                 {
                     _objectNameGenerator = new DefaultObjectNameGenerator();
                 }
-            }
-        }
+	        }
+	    }
 
-        /// <summary>
-        /// The <see cref="System.AppDomain"/> against which any class names
-        /// will be resolved into <see cref="System.Type"/> instances.
-        /// </summary>
-        public AppDomain Domain
-        {
-            get { return _domain; }
-        }
+	    /// <summary>
+		/// The <see cref="System.AppDomain"/> against which any class names
+		/// will be resolved into <see cref="System.Type"/> instances.
+		/// </summary>
+		public AppDomain Domain
+		{
+			get { return _domain; }
+		}
 
 
         /// <summary>
@@ -160,51 +160,51 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         /// <value>The resource loader.</value>
 	    public IResourceLoader ResourceLoader
-        {
-            get { return _resourceLoader; }
-            set { _resourceLoader = value; }
-        }
+	    {
+	        get { return _resourceLoader; }
+	        set { _resourceLoader = value; }
+	    }
 
-        #endregion
+	    #endregion
 
-        #region Methods
+		#region Methods
 
-        /// <summary>
-        /// Load object definitions from the supplied <paramref name="resource"/>.
-        /// </summary>
-        /// <param name="resource">
-        /// The resource for the object definitions that are to be loaded.
-        /// </param>
-        /// <returns>
-        /// The number of object definitions that were loaded.
-        /// </returns>
-        /// <exception cref="Spring.Objects.ObjectsException">
-        /// In the case of loading or parsing errors.
-        /// </exception>
-        public abstract int LoadObjectDefinitions(IResource resource);
+		/// <summary>
+		/// Load object definitions from the supplied <paramref name="resource"/>.
+		/// </summary>
+		/// <param name="resource">
+		/// The resource for the object definitions that are to be loaded.
+		/// </param>
+		/// <returns>
+		/// The number of object definitions that were loaded.
+		/// </returns>
+		/// <exception cref="Spring.Objects.ObjectsException">
+		/// In the case of loading or parsing errors.
+		/// </exception>
+		public abstract int LoadObjectDefinitions(IResource resource);
 
-        /// <summary>
-        /// Load object definitions from the supplied <paramref name="resources"/>.
-        /// </summary>
-        /// <param name="resources">
-        /// The resources for the object definitions that are to be loaded.
-        /// </param>
-        /// <returns>
-        /// The number of object definitions found
-        /// </returns>
-        /// <exception cref="Spring.Objects.ObjectsException">
-        /// In the case of loading or parsing errors.
-        /// </exception>
-        public int LoadObjectDefinitions(IResource[] resources)
-        {
-            AssertUtils.ArgumentNotNull(resources, "resources");
-            int counter = 0;
-            foreach (IResource resource in resources)
-            {
-                counter += LoadObjectDefinitions(resource);
-            }
-            return counter;
-        }
+	    /// <summary>
+	    /// Load object definitions from the supplied <paramref name="resources"/>.
+	    /// </summary>
+	    /// <param name="resources">
+	    /// The resources for the object definitions that are to be loaded.
+	    /// </param>
+	    /// <returns>
+	    /// The number of object definitions found
+	    /// </returns>
+	    /// <exception cref="Spring.Objects.ObjectsException">
+	    /// In the case of loading or parsing errors.
+	    /// </exception>
+	    public int LoadObjectDefinitions(IResource[] resources)
+	    {
+	        AssertUtils.ArgumentNotNull(resources, "resources");
+	        int counter = 0;
+	        foreach (IResource resource in resources)
+	        {
+	            counter += LoadObjectDefinitions(resource);
+	        }
+	        return counter;
+	    }
 
         /// <summary>
         /// Loads the object definitions from the specified resource location.
@@ -215,7 +215,7 @@ namespace Spring.Objects.Factory.Support
         /// The number of object definitions found        
         /// </returns>
         public int LoadObjectDefinitions(string location)
-        {
+	    {
             if (ResourceLoader == null)
             {
                 throw new ObjectDefinitionStoreException("Cannot import object definitions from location [" + location +
@@ -226,10 +226,9 @@ namespace Spring.Objects.Factory.Support
             try
             {
                 resource = ResourceLoader.GetResource(location);
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
-                throw new ObjectDefinitionStoreException("Could not resolve resource location [" + location + "]", e);
+                throw new ObjectDefinitionStoreException("Could not resolve resource location [" + location + "]",e);
             }
             int loadCount = LoadObjectDefinitions(resource);
 
@@ -238,19 +237,19 @@ namespace Spring.Objects.Factory.Support
                 log.LogDebug("Loaded " + loadCount + " object definitions from location [" + location + "]");
             }
             return loadCount;
-        }
+	    }
 
 
-        /// <summary>
-        /// Loads the object definitions from the specified resource locations.
-        /// </summary>
-        /// <param name="locations">The the resource locations to be loaded with the
-        /// IResourceLoader of this object definition reader.</param>
-        /// <returns>
-        /// The number of object definitions found        
-        /// </returns>
-        public int LoadObjectDefinitions(string[] locations)
-        {
+	    /// <summary>
+	    /// Loads the object definitions from the specified resource locations.
+	    /// </summary>
+	    /// <param name="locations">The the resource locations to be loaded with the
+	    /// IResourceLoader of this object definition reader.</param>
+	    /// <returns>
+	    /// The number of object definitions found        
+	    /// </returns>
+	    public int LoadObjectDefinitions(string[] locations)
+	    {
             AssertUtils.ArgumentNotNull(locations, "location");
             int counter = 0;
             foreach (string location in locations)
@@ -258,17 +257,17 @@ namespace Spring.Objects.Factory.Support
                 counter += LoadObjectDefinitions(location);
             }
             return counter;
-        }
+	    }
 
-        #endregion
+	    #endregion
 
-        #region Fields
+		#region Fields
 
-        private IObjectDefinitionRegistry _registry;
-        private AppDomain _domain;
-        private IResourceLoader _resourceLoader;
-        private IObjectNameGenerator _objectNameGenerator = new DefaultObjectNameGenerator();
+		private IObjectDefinitionRegistry _registry;
+		private AppDomain _domain;
+	    private IResourceLoader _resourceLoader;
+	    private IObjectNameGenerator _objectNameGenerator = new DefaultObjectNameGenerator();
 
-        #endregion
-    }
+		#endregion
+	}
 }

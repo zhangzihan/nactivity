@@ -7,15 +7,11 @@ using System;
 
 namespace org.activiti.cloud.services.core.commands
 {
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Component public class StartProcessInstanceCmdExecutor implements CommandExecutor<org.activiti.cloud.services.api.commands.StartProcessInstanceCmd>
     public class StartProcessInstanceCmdExecutor : CommandExecutor<StartProcessInstanceCmd>
     {
         private ProcessEngineWrapper processEngine;
         private MessageChannel<StartProcessInstanceResults> commandResults;
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired public StartProcessInstanceCmdExecutor(org.activiti.cloud.services.core.ProcessEngineWrapper processEngine, org.springframework.messaging.MessageChannel commandResults)
         public StartProcessInstanceCmdExecutor(ProcessEngineWrapper processEngine, MessageChannel<StartProcessInstanceResults> commandResults)
         {
             this.processEngine = processEngine;

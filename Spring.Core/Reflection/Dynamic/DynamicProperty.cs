@@ -20,12 +20,11 @@
 
 #region Imports
 
+using Microsoft.Extensions.Logging;
+using Spring.Core;
+using Spring.Util;
 using System.Collections.Generic;
 using System.Reflection;
-using Microsoft.Extensions.Logging;
-using Spring.Logging;
-
-using Spring.Util;
 
 #endregion
 
@@ -99,7 +98,7 @@ namespace Spring.Reflection.Dynamic
     /// </remarks>
     public class SafeProperty : IDynamicProperty
     {
-        private static readonly ILogger Log = NoneLoggerFactory.Instance. GetLogger(typeof(SafeProperty));
+        private static readonly ILogger Log = LogManager.GetLogger<SafeProperty>();
 
         private readonly PropertyInfo propertyInfo;
 

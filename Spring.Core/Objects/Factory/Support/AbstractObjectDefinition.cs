@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright Â© 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +14,17 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using Spring.Core.TypeResolution;
 using Spring.Objects.Factory.Config;
 using Spring.Util;
 using Spring.Collections.Generic;
-
-#endregion
 
 namespace Spring.Objects.Factory.Support
 {
@@ -45,12 +38,36 @@ namespace Spring.Objects.Factory.Support
     /// <author>Juergen Hoeller</author>
     /// <author>Rick Evans (.NET)</author>
     [Serializable]
-    public abstract class AbstractObjectDefinition : ObjectMetadataAttributeAccessor, IConfigurableObjectDefinition
+    public abstract class AbstractObjectDefinition : ObjectMetadataAttributeAccessor, IConfigurableObjectDefinition, ISerializable
     {
-        private static readonly string SCOPE_SINGLETON = "singleton";
-        private static readonly string SCOPE_PROTOTYPE = "prototype";
+        private const string ScopeSingleton = "singleton";
+        private const string ScopePrototype = "prototype";
 
-        #region Constructor (s) / Destructor
+        private ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
+        private MutablePropertyValues propertyValues = new MutablePropertyValues();
+        private EventValues eventHandlerValues = new EventValues();
+        private MethodOverrides methodOverrides = new MethodOverrides();
+        private string resourceDescription;
+        private bool isSingleton = true;
+        private bool isPrototype;
+        private bool isLazyInit;
+        private bool isAbstract;
+        private string scope = ScopeSingleton;
+        private ObjectRole role = ObjectRole.ROLE_APPLICATION;
+        
+        private string objectTypeName;
+        private Type objectType;
+        
+        private AutoWiringMode autowireMode = AutoWiringMode.No;
+        private DependencyCheckingMode dependencyCheck = DependencyCheckingMode.None;
+        private List<string> dependsOn;
+        private bool autowireCandidate = true;
+        private bool primary;
+        private Dictionary<string, AutowireCandidateQualifier> qualifiers;
+        private string initMethodName;
+        private string destroyMethodName;
+        private string factoryMethodName;
+        private string factoryObjectName;
 
         /// <summary>
         /// Creates a new instance of the
@@ -80,12 +97,8 @@ namespace Spring.Objects.Factory.Support
         /// </remarks>
         protected AbstractObjectDefinition(ConstructorArgumentValues arguments, MutablePropertyValues properties)
         {
-            constructorArgumentValues =
-                (arguments != null) ? arguments : new ConstructorArgumentValues();
-            propertyValues =
-                (properties != null) ? properties : new MutablePropertyValues();
-            eventHandlerValues = new EventValues();
-            DependsOn = StringUtils.EmptyStrings;
+            constructorArgumentValues = arguments ?? constructorArgumentValues ?? new ConstructorArgumentValues();
+            propertyValues = properties ?? propertyValues ?? new MutablePropertyValues();
         }
 
         /// <summary>
@@ -106,7 +119,7 @@ namespace Spring.Objects.Factory.Support
         protected AbstractObjectDefinition(IObjectDefinition other)
         {
             AssertUtils.ArgumentNotNull(other, "other");
-            this.OverrideFrom(other);
+            OverrideFrom(other);
 
             AbstractObjectDefinition aod = other as AbstractObjectDefinition;
             if (aod != null)
@@ -138,16 +151,15 @@ namespace Spring.Objects.Factory.Support
             IsAutowireCandidate = other.IsAutowireCandidate;
             IsPrimary = other.IsPrimary;
             CopyQualifiersFrom(aod);
-            DependsOn = new List<string>(other.DependsOn);
+            if (other.DependsOn.Count > 0)
+            {
+                DependsOn = other.DependsOn;
+            }
             FactoryMethodName = other.FactoryMethodName;
             FactoryObjectName = other.FactoryObjectName;
             AutowireMode = other.AutowireMode;
             ResourceDescription = other.ResourceDescription;
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         /// The name of the parent definition of this object definition, if any.
@@ -173,8 +185,8 @@ namespace Spring.Objects.Factory.Support
         /// </value>
         public MutablePropertyValues PropertyValues
         {
-            get { return propertyValues; }
-            set { propertyValues = value == null ? new MutablePropertyValues() : value; }
+            get => propertyValues;
+            set => propertyValues = value ?? new MutablePropertyValues();
         }
 
         /// <summary>
@@ -185,10 +197,7 @@ namespace Spring.Objects.Factory.Support
         /// <see langword="true"/> if this definition has at least one
         /// <see cref="Spring.Objects.Factory.Support.MethodOverride"/>.
         /// </value>
-        public bool HasMethodOverrides
-        {
-            get { return !MethodOverrides.IsEmpty; }
-        }
+        public bool HasMethodOverrides => !MethodOverrides.IsEmpty;
 
         /// <summary>
         /// The constructor argument values for this object.
@@ -208,8 +217,8 @@ namespace Spring.Objects.Factory.Support
         /// </value>
         public ConstructorArgumentValues ConstructorArgumentValues
         {
-            get { return constructorArgumentValues; }
-            set { constructorArgumentValues = value == null ? new ConstructorArgumentValues() : value; }
+            get => constructorArgumentValues;
+            set => constructorArgumentValues = value ?? new ConstructorArgumentValues();
         }
 
         /// <summary>
@@ -230,8 +239,8 @@ namespace Spring.Objects.Factory.Support
         /// </value>
         public EventValues EventHandlerValues
         {
-            get { return eventHandlerValues; }
-            set { eventHandlerValues = value == null ? new EventValues() : value; }
+            get => eventHandlerValues;
+            set => eventHandlerValues = value ?? new EventValues();
         }
 
         /// <summary>
@@ -252,8 +261,8 @@ namespace Spring.Objects.Factory.Support
         /// </value>
         public MethodOverrides MethodOverrides
         {
-            get { return methodOverrides; }
-            set { methodOverrides = value == null ? new MethodOverrides() : value; }
+            get => methodOverrides;
+            set => methodOverrides = value ?? new MethodOverrides();
         }
 
         /// <summary>
@@ -263,13 +272,13 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public virtual string Scope
         {
-            get { return scope; }
+            get => scope;
             set
             {
                 AssertUtils.ArgumentNotNull(value, "Scope");
-                this.scope = value;
-                this.isPrototype = 0 == string.Compare(SCOPE_PROTOTYPE, value, true);
-                this.isSingleton = !isPrototype; // 0 == string.Compare(SCOPE_SINGLETON, value, true);
+                scope = value;
+                isPrototype = 0 == string.Compare(ScopePrototype, value, StringComparison.OrdinalIgnoreCase);
+                isSingleton = !isPrototype; // 0 == string.Compare(SCOPE_SINGLETON, value, true);
             }
         }
 
@@ -278,8 +287,8 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public virtual ObjectRole Role
         {
-            get { return role; }
-            set { role = value; }
+            get => role;
+            set => role = value;
         }
 
         /// <summary>
@@ -301,10 +310,10 @@ namespace Spring.Objects.Factory.Support
         /// <seealso cref="Spring.Objects.Factory.IObjectFactory"/>
         public virtual bool IsSingleton
         {
-            get { return isSingleton; }
+            get => isSingleton;
             set
             {
-                scope = (value ? SCOPE_SINGLETON : SCOPE_PROTOTYPE);
+                scope = (value ? ScopeSingleton : ScopePrototype);
                 isSingleton = value;
                 isPrototype = !value;
             }
@@ -317,10 +326,7 @@ namespace Spring.Objects.Factory.Support
         /// <value>
         /// 	<c>true</c> if this instance is prototype; otherwise, <c>false</c>.
         /// </value>
-        public virtual bool IsPrototype
-        {
-            get { return isPrototype; }
-        }
+        public virtual bool IsPrototype => isPrototype;
 
         /// <summary>
         /// Is this object lazily initialized?</summary>
@@ -336,8 +342,8 @@ namespace Spring.Objects.Factory.Support
         /// </remarks>
         public bool IsLazyInit
         {
-            get { return isLazyInit; }
-            set { isLazyInit = value; }
+            get => isLazyInit;
+            set => isLazyInit = value;
         }
 
         /// <summary>
@@ -348,16 +354,7 @@ namespace Spring.Objects.Factory.Support
         /// <value>
         /// <see langword="true"/> if this object definition is a "template".
         /// </value>
-        public bool IsTemplate
-        {
-            get
-            {
-                return (
-                           isAbstract ||
-                           (objectType == null && StringUtils.IsNullOrEmpty(factoryObjectName))
-                       );
-            }
-        }
+        public bool IsTemplate => isAbstract || (objectType == null && StringUtils.IsNullOrEmpty(factoryObjectName));
 
         /// <summary>
         /// Is this object definition "abstract", i.e. not meant to be
@@ -369,8 +366,8 @@ namespace Spring.Objects.Factory.Support
         /// </value>
         public bool IsAbstract
         {
-            get { return isAbstract; }
-            set { isAbstract = value; }
+            get => isAbstract;
+            set => isAbstract = value;
         }
 
         /// <summary>
@@ -388,24 +385,26 @@ namespace Spring.Objects.Factory.Support
         {
             get
             {
-                if (!HasObjectType)
+                if (objectType == null)
                 {
-                    throw new ApplicationException(
-                        "Object definition does not carry a resolved System.Type");
+                    ThrowApplicationException("Object definition does not carry a resolved System.Type");
+                    return null;
                 }
-                return (Type) objectType;
+                return objectType;
             }
-            set { objectType = value; }
+            set => objectType = value;
+        }
+
+        private static void ThrowApplicationException(string message)
+        {
+            throw new ApplicationException(message);
         }
 
         /// <summary>
         /// Is the <see cref="System.Type"/> of the object definition a resolved
         /// <see cref="System.Type"/>?
         /// </summary>
-        public bool HasObjectType
-        {
-            get { return objectType is Type; }
-        }
+        public bool HasObjectType => objectType != null;
 
         /// <summary>
         /// Returns the <see cref="System.Type.FullName"/> of the
@@ -413,20 +412,9 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public string ObjectTypeName
         {
-            get
-            {
-                if (objectType is Type)
-                {
-                    return ((Type) objectType).FullName;
-                }
-                else
-                {
-                    return objectType as string;
-                }
-            }
-            set { objectType = StringUtils.GetTextOrNull(value); }
+            get => objectTypeName ?? objectType?.FullName;
+            set => objectTypeName = StringUtils.GetTextOrNull(value);
         }
-
 
         /// <summary>
         /// A description of the resource that this object definition
@@ -434,8 +422,8 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public string ResourceDescription
         {
-            get { return resourceDescription; }
-            set { resourceDescription = StringUtils.GetTextOrNull(value); }
+            get => resourceDescription;
+            set => resourceDescription = StringUtils.GetTextOrNull(value);
         }
 
         /// <summary>
@@ -451,8 +439,8 @@ namespace Spring.Objects.Factory.Support
         /// </remarks>
         public AutoWiringMode AutowireMode
         {
-            get { return autowireMode; }
-            set { autowireMode = value; }
+            get => autowireMode;
+            set => autowireMode = value;
         }
 
         /// <summary>
@@ -506,8 +494,8 @@ namespace Spring.Objects.Factory.Support
         /// </remarks>
         public DependencyCheckingMode DependencyCheck
         {
-            get { return dependencyCheck; }
-            set { dependencyCheck = value; }
+            get => dependencyCheck;
+            set => dependencyCheck = value;
         }
 
         /// <summary>
@@ -525,10 +513,10 @@ namespace Spring.Objects.Factory.Support
         /// preparation on startup.
         /// </note>
         /// </remarks>
-        public IList<string> DependsOn
+        public IReadOnlyList<string> DependsOn
         {
-            get { return dependsOn; }
-            set { dependsOn = value ?? StringUtils.EmptyStrings; }
+            get => dependsOn ?? StringUtils.EmptyStringsList;
+            set => dependsOn = value != null && value.Count > 0 ? new List<string>(value) : null;
         }
 
         /// <summary>
@@ -540,8 +528,8 @@ namespace Spring.Objects.Factory.Support
         /// </value>
         public bool IsAutowireCandidate
         {
-            get { return autowireCandidate; }
-            set { autowireCandidate = value;}
+            get => autowireCandidate;
+            set => autowireCandidate = value;
         }
 
 
@@ -552,8 +540,8 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public bool IsPrimary 
         { 
-            get { return primary; }
-            set { primary = value; }
+            get => primary;
+            set => primary = value;
         }
 
         /// <summary>
@@ -563,6 +551,7 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public void AddQualifier(AutowireCandidateQualifier qualifier)
         {
+            qualifiers = qualifiers ?? new Dictionary<string, AutowireCandidateQualifier>();
             qualifiers.Add(qualifier.TypeName, qualifier);
         }
 
@@ -571,7 +560,7 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public bool HasQualifier(string typeName)
         {
-            return qualifiers.ContainsKey(typeName);
+            return qualifiers != null && qualifiers.ContainsKey(typeName);
         }
 
         /// <summary>
@@ -579,7 +568,12 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public AutowireCandidateQualifier GetQualifier(string typeName)
         {
-            return qualifiers.ContainsKey(typeName) ? qualifiers[typeName] : null;
+            if (qualifiers != null && qualifiers.TryGetValue(typeName, out var qualifier))
+            {
+                return qualifier;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -588,7 +582,9 @@ namespace Spring.Objects.Factory.Support
         /// <returns>the Set of <see cref="AutowireCandidateQualifier"/> objects.</returns>
         public Set<AutowireCandidateQualifier> GetQualifiers()
         {
-            return new OrderedSet<AutowireCandidateQualifier>(qualifiers.Values);
+            return qualifiers != null
+                ? new OrderedSet<AutowireCandidateQualifier>(qualifiers.Values)
+                : new OrderedSet<AutowireCandidateQualifier>();
         }
 
         /// <summary>
@@ -598,10 +594,16 @@ namespace Spring.Objects.Factory.Support
         public void CopyQualifiersFrom(AbstractObjectDefinition source)
         {
             Trace.Assert(source != null, "Source must not be null");
-            foreach (var qualifier in source.qualifiers)
+            if (source.qualifiers != null && source.qualifiers.Count > 0)
             {
-                if (!qualifiers.Contains(qualifier))
-                    qualifiers.Add(qualifier);
+                qualifiers = qualifiers ?? new Dictionary<string, AutowireCandidateQualifier>();
+                foreach (var qualifier in source.qualifiers)
+                {
+                    if (!qualifiers.ContainsKey(qualifier.Key))
+                    {
+                        qualifiers.Add(qualifier.Key, qualifier.Value);
+                    }
+                }
             }
         }
 
@@ -616,8 +618,8 @@ namespace Spring.Objects.Factory.Support
         /// </remarks>
         public string InitMethodName
         {
-            get { return initMethodName; }
-            set { initMethodName = StringUtils.GetTextOrNull(value); }
+            get => initMethodName;
+            set => initMethodName = StringUtils.GetTextOrNull(value);
         }
 
         /// <summary>
@@ -631,8 +633,8 @@ namespace Spring.Objects.Factory.Support
         /// </remarks>
         public string DestroyMethodName
         {
-            get { return destroyMethodName; }
-            set { destroyMethodName = StringUtils.GetTextOrNull(value); }
+            get => destroyMethodName;
+            set => destroyMethodName = StringUtils.GetTextOrNull(value);
         }
 
         /// <summary>
@@ -648,8 +650,8 @@ namespace Spring.Objects.Factory.Support
         /// </remarks>
         public string FactoryMethodName
         {
-            get { return factoryMethodName; }
-            set { factoryMethodName = StringUtils.GetTextOrNull(value); }
+            get => factoryMethodName;
+            set => factoryMethodName = StringUtils.GetTextOrNull(value);
         }
 
         /// <summary>
@@ -657,8 +659,8 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public string FactoryObjectName
         {
-            get { return factoryObjectName; }
-            set { factoryObjectName = StringUtils.GetTextOrNull(value); }
+            get => factoryObjectName;
+            set => factoryObjectName = StringUtils.GetTextOrNull(value);
         }
 
         /// <summary>
@@ -670,18 +672,8 @@ namespace Spring.Objects.Factory.Support
         /// <see cref="Spring.Objects.Factory.Support.AbstractObjectDefinition.ConstructorArgumentValues"/>
         /// property.
         /// </value>
-        public virtual bool HasConstructorArgumentValues
-        {
-            get
-            {
-                return ConstructorArgumentValues != null
-                       && !ConstructorArgumentValues.Empty;
-            }
-        }
-
-        #endregion
-
-        #region Methods
+        public virtual bool HasConstructorArgumentValues => ConstructorArgumentValues != null
+                                                            && !ConstructorArgumentValues.Empty;
 
         /// <summary>
         /// Resolves the type of the object, resolving it from a specified
@@ -701,7 +693,7 @@ namespace Spring.Objects.Factory.Support
                 return null;
             }
             Type resolvedType = TypeResolutionUtils.ResolveType(typeName);
-            this.ObjectType = resolvedType;
+            ObjectType = resolvedType;
             return resolvedType;
         }
 
@@ -736,7 +728,7 @@ namespace Spring.Objects.Factory.Support
         public virtual void PrepareMethodOverrides()
         {
             // ascertain that the various lookup methods exist...
-            foreach (MethodOverride mo in MethodOverrides.Overrides)
+            foreach (MethodOverride mo in MethodOverrides)
             {
                 PrepareMethodOverride(mo);
             }
@@ -803,7 +795,8 @@ namespace Spring.Objects.Factory.Support
             }
             if (other.DependsOn != null && other.DependsOn.Count > 0)
             {
-                List<string> deps = new List<string>(other.DependsOn);
+                var deps = new List<string>(other.DependsOn.Count + (DependsOn?.Count).GetValueOrDefault());
+                deps.AddRange(other.DependsOn);
                 if (DependsOn != null && DependsOn.Count > 0)
                 {
                     deps.AddRange(DependsOn);
@@ -814,10 +807,13 @@ namespace Spring.Objects.Factory.Support
             ResourceDescription = other.ResourceDescription;
             IsPrimary = other.IsPrimary;
             IsAutowireCandidate = other.IsAutowireCandidate;
-            
-            AbstractObjectDefinition aod = other as AbstractObjectDefinition;
-            if (aod != null)
+
+            if (other is AbstractObjectDefinition aod)
             {
+                if (other.ObjectTypeName != null)
+                {
+                    ObjectTypeName = other.ObjectTypeName;
+                }
                 if (aod.HasObjectType)
                 {
                     ObjectType = other.ObjectType;
@@ -859,38 +855,60 @@ namespace Spring.Objects.Factory.Support
             }
             return buffer.ToString();
         }
-
-        #endregion
-
-        #region Fields
-
-        private ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
-        private MutablePropertyValues propertyValues = new MutablePropertyValues();
-        private EventValues eventHandlerValues = new EventValues();
-        private MethodOverrides methodOverrides = new MethodOverrides();
-        private string resourceDescription = null;
-        private bool isSingleton = true;
-        private bool isPrototype = false;
-        private bool isLazyInit = false;
-        private bool isAbstract = false;
-        private string scope = SCOPE_SINGLETON;
-        private ObjectRole role = ObjectRole.ROLE_APPLICATION;
-        private object objectType;
-        private AutoWiringMode autowireMode = AutoWiringMode.No;
-        private DependencyCheckingMode dependencyCheck = DependencyCheckingMode.None;
-        private IList<string> dependsOn;
-        private bool autowireCandidate = true;
-
-        private bool primary;
-
-        private readonly IDictionary<string, AutowireCandidateQualifier> qualifiers =
-            new Dictionary<string, AutowireCandidateQualifier>();
-
-        private string initMethodName = null;
-        private string destroyMethodName = null;
-        private string factoryMethodName = null;
-        private string factoryObjectName = null;
-
-        #endregion
+       
+        protected AbstractObjectDefinition(SerializationInfo info, StreamingContext context)
+        {
+            constructorArgumentValues = (ConstructorArgumentValues) info.GetValue("constructorArgumentValues", typeof(ConstructorArgumentValues));
+            propertyValues = (MutablePropertyValues) info.GetValue("propertyValues", typeof(MutablePropertyValues));
+            eventHandlerValues= (EventValues) info.GetValue("eventHandlerValues", typeof(EventValues));
+            methodOverrides= (MethodOverrides) info.GetValue("methodOverrides", typeof(MethodOverrides));
+            resourceDescription = info.GetString("resourceDescription");
+            isSingleton = info.GetBoolean("isSingleton");
+            isPrototype = info.GetBoolean("isPrototype");
+            isLazyInit = info.GetBoolean("isLazyInit");
+            isAbstract = info.GetBoolean("isAbstract");
+            scope= info.GetString("scope");
+            role = (ObjectRole) info.GetValue("role", typeof(ObjectRole));
+            
+            var objectTypeName = info.GetString("objectTypeName");
+            objectType = objectTypeName != null ? Type.GetType(objectTypeName) : null;
+            
+            autowireMode = (AutoWiringMode) info.GetValue("autowireMode", typeof(AutoWiringMode));
+            dependencyCheck= (DependencyCheckingMode) info.GetValue("dependencyCheck", typeof(DependencyCheckingMode));
+            dependsOn = (List<string>) info.GetValue("dependsOn", typeof(List<string>));
+            autowireCandidate = info.GetBoolean("autowireCandidate");
+            primary = info.GetBoolean("primary");
+            qualifiers = (Dictionary<string, AutowireCandidateQualifier>) info.GetValue("qualifiers", typeof(Dictionary<string, AutowireCandidateQualifier>));
+            initMethodName = info.GetString("initMethodName");
+            destroyMethodName = info.GetString("destroyMethodName");
+            factoryMethodName = info.GetString("factoryMethodName" );
+            factoryObjectName= info.GetString("factoryObjectName");
+        }
+        
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("constructorArgumentValues", constructorArgumentValues);
+            info.AddValue("propertyValues", propertyValues);
+            info.AddValue("eventHandlerValues", eventHandlerValues);
+            info.AddValue("methodOverrides", methodOverrides);
+            info.AddValue("resourceDescription", resourceDescription);
+            info.AddValue("isSingleton", isSingleton);
+            info.AddValue("isPrototype", isPrototype);
+            info.AddValue("isLazyInit", isLazyInit);
+            info.AddValue("isAbstract", isAbstract);
+            info.AddValue("scope", scope);
+            info.AddValue("role", role);
+            info.AddValue("objectTypeName", objectType.AssemblyQualifiedName);
+            info.AddValue("autowireMode", autowireMode);
+            info.AddValue("dependencyCheck", dependencyCheck);
+            info.AddValue("dependsOn", dependsOn);
+            info.AddValue("autowireCandidate", autowireCandidate);
+            info.AddValue("primary", primary);
+            info.AddValue("qualifiers", qualifiers);
+            info.AddValue("initMethodName", initMethodName);
+            info.AddValue("destroyMethodName", destroyMethodName);
+            info.AddValue("factoryMethodName", factoryMethodName);
+            info.AddValue("factoryObjectName", factoryObjectName);
+        }
     }
 }

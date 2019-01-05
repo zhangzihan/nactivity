@@ -23,8 +23,6 @@ namespace org.activiti.cloud.services.events.converter
 {
     public class ActivityStartedEventConverter : AbstractEventConverter
     {
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Autowired public ActivityStartedEventConverter(org.activiti.cloud.services.events.configuration.RuntimeBundleProperties runtimeBundleProperties)
         public ActivityStartedEventConverter(RuntimeBundleProperties runtimeBundleProperties) : base(runtimeBundleProperties)
         {
         }

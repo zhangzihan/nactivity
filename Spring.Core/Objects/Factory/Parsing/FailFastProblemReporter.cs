@@ -19,14 +19,13 @@
 #endregion
 
 using Microsoft.Extensions.Logging;
-using Spring.Logging;
-
+using Spring.Core;
 
 namespace Spring.Objects.Factory.Parsing
 {
     public class FailFastProblemReporter : IProblemReporter
     {
-        private ILogger _logger = NoneLoggerFactory.Instance. GetLogger(typeof(FailFastProblemReporter));
+        private static readonly ILogger _logger = LogManager.GetLogger<FailFastProblemReporter>();
 
         public ILogger Logger
         {
