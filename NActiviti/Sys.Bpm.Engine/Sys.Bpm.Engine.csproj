@@ -20,10 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.ServiceModel" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Engine\impl\cfg\BeansConfigurationHelper.cs" />
     <Compile Remove="Engine\impl\cfg\JtaProcessEngineConfiguration.cs" />
     <Compile Remove="Engine\impl\cfg\multitenant\MultiSchemaMultiTenantProcessEngineConfiguration.cs" />
