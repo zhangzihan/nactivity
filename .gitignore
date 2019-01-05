@@ -241,11 +241,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
-/Sys.WebApp/upload/
-/Sys.WebApp/XlsTemplate/
-/Sys.WebApp/App_Data/Cache
-/Sys.WebApp/books
-/Sys.WebApp/epub_content
-
-#Git Cache
-/Sys.WebApp/gitserver/App_Data/Caches
+!Sys.Bpm.Engine/Engine/debug/*
