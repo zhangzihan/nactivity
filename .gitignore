@@ -243,4 +243,4 @@ ModelManifest.xml
 
 !Sys.Bpm.Engine/Engine/debug/*
 
-NActiviti/BpmnText/appsettings.json
+NActiviti/BpmnTest/appsettings.json
