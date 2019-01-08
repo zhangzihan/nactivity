@@ -1,5 +1,5 @@
 
-项目说明：vs2017 15.7及以上,使用.net core sdk 2.1.
+项目说明：vs2017 15.7及以上,使用.net core sdk 2.2.
 Sys.Bpm.Model:遵循BPMN2.0规范xml模型文件解析.
 Sys.Bpm.Engine:activiti流程引擎,转换了java的主要代码.
 Sys.Bpm.Rest:流程建模及流程管理rest服务,没有完成.
