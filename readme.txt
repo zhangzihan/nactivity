@@ -8,5 +8,5 @@ SmartSql是第三方开源库,主要提供java mybaits的.net实现，activiti的orm使用的是myba
 
 Spring.Core github 官方已经不维护了，主要使用表达式解析那块的相关api做SmartSQL动态条件解析用.
 
-数据库创建脚本：Sys.Bpm.Engine\db\activiti.sql
-BpmnTest是个控制台项目,仅只是写了一些简单的测试.
+流程实例运行数据创建脚本：Sys.Bpm.Engine\Resources\db\create\activiti.mysql55.engine.sql
+流程实例历史数据创建脚本：Sys.Bpm.Engine\Resources\db\create\activiti.mysql55.history.sql
