@@ -4,13 +4,13 @@
 
   <!-- The property passing doesn't seem to work with parameterType='string', so we are forced to use a map here -->
   <Select Id="selectTableCount" >
-    select count(*) from @tableName
+    select count(*) from #{tableName}
   </Select>
 
   <Select Id="selectTableData" >
-    select * from @tableName
+    select * from #{tableName}
     <IsNotNull test="order != null">
-      order by @order
+      order by #{order}
     </IsNotNull>
   </Select>
 

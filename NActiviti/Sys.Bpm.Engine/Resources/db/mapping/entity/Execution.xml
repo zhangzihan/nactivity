@@ -178,34 +178,34 @@
   <Insert Id="insertExecution" >
     insert into ACT_RU_EXECUTION (ID_, REV_, PROC_INST_ID_, BUSINESS_KEY_, PROC_DEF_ID_, ACT_ID_, IS_ACTIVE_, IS_CONCURRENT_, IS_SCOPE_,IS_EVENT_SCOPE_, IS_MI_ROOT_, PARENT_ID_, SUPER_EXEC_, ROOT_PROC_INST_ID_, SUSPENSION_STATE_, TENANT_ID_, NAME_, START_TIME_, START_USER_ID_, IS_COUNT_ENABLED_, EVT_SUBSCR_COUNT_, TASK_COUNT_, JOB_COUNT_, TIMER_JOB_COUNT_, SUSP_JOB_COUNT_, DEADLETTER_JOB_COUNT_, VAR_COUNT_, ID_LINK_COUNT_)
     values (
-    @id,
+    #{id},
     1,
-    @processInstanceId,
-    @businessKey,
-    @processDefinitionId,
-    @activityId,
-    @isActive,
-    @isConcurrent,
-    @isScope,
-    @isEventScope,
-    @isMultiInstanceRoot,
-    @parentId,
-    @superExecutionId,
-    @rootProcessInstanceId,
-    @suspensionState,
-    @tenantId,
-    @name,
-    @startTime,
-    @startUserId,
-    @isCountEnabled,
-    @eventSubscriptionCount,
-    @taskCount,
-    @jobCount,
-    @timerJobCount,
-    @suspendedJobCount,
-    @deadLetterJobCount,
-    @variableCount,
-    @identityLinkCount
+    #{processInstanceId},
+    #{businessKey},
+    #{processDefinitionId},
+    #{activityId},
+    #{isActive},
+    #{isConcurrent},
+    #{isScope},
+    #{isEventScope},
+    #{isMultiInstanceRoot},
+    #{parentId},
+    #{superExecutionId},
+    #{rootProcessInstanceId},
+    #{suspensionState},
+    #{tenantId},
+    #{name},
+    #{startTime},
+    #{startUserId},
+    #{isCountEnabled},
+    #{eventSubscriptionCount},
+    #{taskCount},
+    #{jobCount},
+    #{timerJobCount},
+    #{suspendedJobCount},
+    #{deadLetterJobCount},
+    #{variableCount},
+    #{identityLinkCount}
     )
   </Insert>
 
@@ -213,34 +213,34 @@
     insert into ACT_RU_EXECUTION (ID_, REV_, PROC_INST_ID_, BUSINESS_KEY_, PROC_DEF_ID_, ACT_ID_, IS_ACTIVE_, IS_CONCURRENT_, IS_SCOPE_,IS_EVENT_SCOPE_, IS_MI_ROOT_, PARENT_ID_, SUPER_EXEC_, ROOT_PROC_INST_ID_, SUSPENSION_STATE_, TENANT_ID_, NAME_, START_TIME_, START_USER_ID_, IS_COUNT_ENABLED_, EVT_SUBSCR_COUNT_, TASK_COUNT_, JOB_COUNT_, TIMER_JOB_COUNT_, SUSP_JOB_COUNT_, DEADLETTER_JOB_COUNT_, VAR_COUNT_, ID_LINK_COUNT_)
     values
     <For Property="Items" Key="index" Separator=",">
-      (@id,
+      (#{id},
       1,
-      @processInstanceId,
-      @businessKey,
-      @processDefinitionId,
-      @activityId,
-      @isActive,
-      @isConcurrent,
-      @isScope,
-      @isEventScope,
-      @isMultiInstanceRoot,
-      @parentId,
-      @superExecutionId,
-      @rootProcessInstanceId,
-      @suspensionState,
-      @tenantId,
-      @name,
-      @startTime,
-      @startUserId,
-      @isCountEnabled,
-      @eventSubscriptionCount,
-      @taskCount,
-      @jobCount,
-      @timerJobCount,
-      @suspendedJobCount,
-      @deadLetterJobCount,
-      @variableCount,
-      @identityLinkCount)
+      #{processInstanceId},
+      #{businessKey},
+      #{processDefinitionId},
+      #{activityId},
+      #{isActive},
+      #{isConcurrent},
+      #{isScope},
+      #{isEventScope},
+      #{isMultiInstanceRoot},
+      #{parentId},
+      #{superExecutionId},
+      #{rootProcessInstanceId},
+      #{suspensionState},
+      #{tenantId},
+      #{name},
+      #{startTime},
+      #{startUserId},
+      #{isCountEnabled},
+      #{eventSubscriptionCount},
+      #{taskCount},
+      #{jobCount},
+      #{timerJobCount},
+      #{suspendedJobCount},
+      #{deadLetterJobCount},
+      #{variableCount},
+      #{identityLinkCount})
     </For>
   </Insert>
 
@@ -248,75 +248,75 @@
 
   <Update Id="updateExecution" >
     update ACT_RU_EXECUTION set
-    REV_ = @revisionNext,
-    BUSINESS_KEY_ = @businessKey,
-    PROC_DEF_ID_ = @processDefinitionId,
-    ACT_ID_ = @activityId,
-    IS_ACTIVE_ = @isActive,
-    IS_CONCURRENT_ = @isConcurrent,
-    IS_SCOPE_ = @isScope,
-    IS_EVENT_SCOPE_ = @isEventScope,
-    IS_MI_ROOT_ = @isMultiInstanceRoot,
-    PARENT_ID_ = @parentId,
-    SUPER_EXEC_ = @superExecutionId,
-    ROOT_PROC_INST_ID_ = @rootProcessInstanceId,
-    SUSPENSION_STATE_ = @suspensionState,
-    NAME_ = @name,
-    IS_COUNT_ENABLED_ = @isCountEnabled,
-    EVT_SUBSCR_COUNT_ = @eventSubscriptionCount,
-    TASK_COUNT_ = @taskCount,
-    JOB_COUNT_ = @jobCount,
-    TIMER_JOB_COUNT_ = @timerJobCount,
-    SUSP_JOB_COUNT_ = @suspendedJobCount,
-    DEADLETTER_JOB_COUNT_ = @deadLetterJobCount,
-    VAR_COUNT_ = @variableCount,
-    ID_LINK_COUNT_ = @identityLinkCount
-    where ID_ = @id
-    and REV_ = @revision
+    REV_ = #{revisionNext},
+    BUSINESS_KEY_ = #{businessKey},
+    PROC_DEF_ID_ = #{processDefinitionId},
+    ACT_ID_ = #{activityId},
+    IS_ACTIVE_ = #{isActive},
+    IS_CONCURRENT_ = #{isConcurrent},
+    IS_SCOPE_ = #{isScope},
+    IS_EVENT_SCOPE_ = #{isEventScope},
+    IS_MI_ROOT_ = #{isMultiInstanceRoot},
+    PARENT_ID_ = #{parentId},
+    SUPER_EXEC_ = #{superExecutionId},
+    ROOT_PROC_INST_ID_ = #{rootProcessInstanceId},
+    SUSPENSION_STATE_ = #{suspensionState},
+    NAME_ = #{name},
+    IS_COUNT_ENABLED_ = #{isCountEnabled},
+    EVT_SUBSCR_COUNT_ = #{eventSubscriptionCount},
+    TASK_COUNT_ = #{taskCount},
+    JOB_COUNT_ = #{jobCount},
+    TIMER_JOB_COUNT_ = #{timerJobCount},
+    SUSP_JOB_COUNT_ = #{suspendedJobCount},
+    DEADLETTER_JOB_COUNT_ = #{deadLetterJobCount},
+    VAR_COUNT_ = #{variableCount},
+    ID_LINK_COUNT_ = #{identityLinkCount}
+    where ID_ = #{id}
+    and REV_ = #{revision}
   </Update>
 
   <Update Id="updateExecutionTenantIdForDeployment" >
     update ACT_RU_EXECUTION set
-    TENANT_ID_ = @tenantId
+    TENANT_ID_ = #{tenantId}
     where
     ID_ in (
     SELECT E.ID_ from ACT_RU_EXECUTION E
     inner join ACT_RE_PROCDEF P on E.PROC_DEF_ID_  = P.ID_
     inner join ACT_RE_DEPLOYMENT D on P.DEPLOYMENT_ID_ = D.ID_
-    where D.ID_ = @deploymentId
+    where D.ID_ = #{deploymentId}
     )
   </Update>
 
   <Update Id="updateProcessInstanceLockTime" >
     update ACT_RU_EXECUTION
     set
-    LOCK_TIME_ = @lockTime
-    where ID_ = @id
-    and (LOCK_TIME_ is null OR LOCK_TIME_ &lt; @expirationTime)
+    LOCK_TIME_ = #{lockTime}
+    where ID_ = #{id}
+    and (LOCK_TIME_ is null OR LOCK_TIME_ &lt; #{expirationTime})
   </Update>
 
   <Update Id="clearProcessInstanceLockTime" >
     update ACT_RU_EXECUTION
     set
     LOCK_TIME_ = null
-    where ID_ = @id
+    where ID_ = #{id}
   </Update>
 
   <Update Id="updateExecutionRelatedEntityCountEnabled" >
     update ACT_RU_EXECUTION
-    set IS_COUNT_ENABLED_ = @isCountEnabled
+    set IS_COUNT_ENABLED_ = #{isCountEnabled}
   </Update>
 
   <!-- EXECUTION DELETE -->
 
   <Delete Id="deleteExecution" >
-    delete from ACT_RU_EXECUTION where ID_ = @id and REV_ = @revision
+    delete from ACT_RU_EXECUTION where ID_ = #{id} and REV_ = #{revision}
   </Delete>
 
   <Delete Id="bulkDeleteExecution" >
     delete from ACT_RU_EXECUTION where
     <For Key="p" Property="Items" Separator=" or ">
-      ID_ = @id
+      ID_ = #{id}
     </For>
   </Delete>
 
@@ -378,97 +378,97 @@
         RES.PARENT_ID_ is null
       </IsTrue>
       <IsNotNull Property="processDefinitionId">
-        and P.ID_ = @processDefinitionId
+        and P.ID_ = #{processDefinitionId}
       </IsNotNull>
       <IsNotNull Property="processDefinitionIds">
         <IsNotEmpty Property="processDefinitionIds">
           and P.ID_ in
           <For Key="item" index="index" Property="processDefinitionIds" open="(" Separator="," close=")">
-            @item
+            #{item}
           </For>
         </IsNotEmpty>
       </IsNotNull>
       <IsNotNull Property="processDefinitionKey">
-        and P.KEY_ = @processDefinitionKey
+        and P.KEY_ = #{processDefinitionKey}
       </IsNotNull>
       <IsNotNull Property="processDefinitionKeys">
         <IsNotEmpty Porperty="processDefinitionKeys">
           and P.KEY_ in
           <For Key="item" index="index" Property="processDefinitionKeys" open="(" Separator="," close=")">
-            @item
+            #{item}
           </For>
         </IsNotEmpty>
       </IsNotNull>
       <IsNotNull Property="processDefinitionCategory">
-        and P.CATEGORY_ = @processDefinitionCategory
+        and P.CATEGORY_ = #{processDefinitionCategory}
       </IsNotNull>
       <IsNotNull Property="processDefinitionName">
-        and P.NAME_ = @processDefinitionName
+        and P.NAME_ = #{processDefinitionName}
       </IsNotNull>
       <IsNotNull Property="processDefinitionVersion">
-        and P.VERSION_ = @processDefinitionVersion
+        and P.VERSION_ = #{processDefinitionVersion}
       </IsNotNull>
       <IsNotNull Property="executionId ">
-        and RES.ID_ = @executionId
+        and RES.ID_ = #{executionId}
       </IsNotNull>
       <IsNotNull Property="processInstanceId">
-        and RES.PROC_INST_ID_ = @processInstanceId
+        and RES.PROC_INST_ID_ = #{processInstanceId}
       </IsNotNull>
       <IsNotNull Property="rootProcessInstanceId">
-        and RES.ROOT_PROC_INST_ID_ = @rootProcessInstanceId
+        and RES.ROOT_PROC_INST_ID_ = #{rootProcessInstanceId}
       </IsNotNull>
       <IsNotNull Property="processInstanceIds">
         <IsNotEmpty Propert="processInstanceIds">
           and RES.PROC_INST_ID_ in
           <For Key="item" index="index" Property="processInstanceIds" open="(" Separator="," close=")">
-            @item
+            #{item}
           </For>
         </IsNotEmpty>
       </IsNotNull>
       <IsNotNull Property="businessKey">
         <IsFalse Property="includeChildExecutionsWithBusinessKeyQuery">
-          and RES.BUSINESS_KEY_ = @businessKey
+          and RES.BUSINESS_KEY_ = #{businessKey}
         </IsFalse>
       </IsNotNull>
       <IsNotNull Property="businessKey">
         <IsTrue Property="includeChildExecutionsWithBusinessKeyQuery">
-          and INST.BUSINESS_KEY_ = @businessKey
+          and INST.BUSINESS_KEY_ = #{businessKey}
         </IsTrue>
       </IsNotNull>
       <IsNotNull Property="activityId">
-        and RES.ACT_ID_ = @activityId and RES.IS_ACTIVE_ = @isActive
+        and RES.ACT_ID_ = #{activityId} and RES.IS_ACTIVE_ = #{isActive}
       </IsNotNull>
       <IsNotNull Property="parentId">
-        and RES.PARENT_ID_ = @parentId
+        and RES.PARENT_ID_ = #{parentId}
       </IsNotNull>
       <IsTrue Property="onlyChildExecutions">
         and RES.PARENT_ID_ is not null
       </IsTrue>
       <IsTrue Property="onlySubProcessExecutions">
-        and ((RES.PARENT_ID_ is not null or RES.SUPER_EXEC_ is not null) and RES.IS_SCOPE_ = @onlySubProcessExecutions)
+        and ((RES.PARENT_ID_ is not null or RES.SUPER_EXEC_ is not null) and RES.IS_SCOPE_ = #{onlySubProcessExecutions})
       </IsTrue>
       <IsTrue Property="onlyProcessInstanceExecutions">
         and RES.PARENT_ID_ is null
       </IsTrue>
       <IsNotNull Property="deploymentId">
-        and DEPLOY_P.DEPLOYMENT_ID_ = @deploymentId
+        and DEPLOY_P.DEPLOYMENT_ID_ = #{deploymentId}
       </IsNotNull>
       <IsNotNull Property="deploymentIds">
         <IsNotEmpty Property="deploymentIds">
           and DEPLOY_P.DEPLOYMENT_ID_ IN
           <For Key="deployment" index="index" Property="deploymentIds"
                    open="(" Separator="," close=")">
-            @deployment
+            #{deployment}
           </For>
         </IsNotEmpty>
       </IsNotNull>
       <IsNotNull Property="superProcessInstanceId">
         <!-- A sub process instance is stored under a certain *execution*, potentially nested.
              A sub process instance is NOT stored under the process instanc, hence the following: -->
-        and RES.SUPER_EXEC_ IN (select ID_ from ACT_RU_EXECUTION where PROC_INST_ID_ = @superProcessInstanceId)
+        and RES.SUPER_EXEC_ IN (select ID_ from ACT_RU_EXECUTION where PROC_INST_ID_ = #{superProcessInstanceId})
       </IsNotNull>
       <IsNotNull Property="subProcessInstanceId">
-        and RES.ID_ = (select PROC_INST_ID_ from ACT_RU_EXECUTION where ID_ = (select SUPER_EXEC_ from ACT_RU_EXECUTION where ID_ = @subProcessInstanceId))
+        and RES.ID_ = (select PROC_INST_ID_ from ACT_RU_EXECUTION where ID_ = (select SUPER_EXEC_ from ACT_RU_EXECUTION where ID_ = #{subProcessInstanceId}))
       </IsNotNull>
       <IsNotNull Property="excludeSubprocesses">
         and RES.SUPER_EXEC_ is null
@@ -482,25 +482,25 @@
         </IsEqual>
       </IsNotNull>
       <IsNotNull Property="tenantId">
-        and RES.TENANT_ID_ = @tenantId
+        and RES.TENANT_ID_ = #{tenantId}
       </IsNotNull>
       <IsNotNull Property="tenantIdLike">
-        and RES.TENANT_ID_ like @tenantIdLike
+        and RES.TENANT_ID_ like #{tenantIdLike}
       </IsNotNull>
       <IsTrue Property="withoutTenantId">
         and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
       </IsTrue>
       <IsNotNull Property="name">
-        and RES.NAME_ = @name
+        and RES.NAME_ = #{name}
       </IsNotNull>
       <IsNotNull Property="nameLike">
-        and RES.NAME_ like @nameLike${wildcardEscapeClause}
+        and RES.NAME_ like #{nameLike}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="nameLikeIgnoreCase">
-        and lower(RES.NAME_) like @nameLikeIgnoreCase${wildcardEscapeClause}
+        and lower(RES.NAME_) like #{nameLikeIgnoreCase}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="involvedUser">
-        and EXISTS(select ID_ from ACT_RU_IDENTITYLINK I where I.PROC_INST_ID_ = RES.ID_ and I.USER_ID_ = @involvedUser)
+        and EXISTS(select ID_ from ACT_RU_IDENTITYLINK I where I.PROC_INST_ID_ = RES.ID_ and I.USER_ID_ = #{involvedUser})
       </IsNotNull>
       <!-- PLEASE NOTE: If you change anything have a look into the HistoricVariableInstance & HistoricProcessInstance, the same query object is used there! -->
       <For Property="queryVariableValues" index="index" Key="queryVariableValue">
@@ -510,11 +510,11 @@
         </IsNotNull>
         <IsNotNull Property="queryVariableValue.name != null">
           <!-- Match-all variable-names when name is null -->
-          and A${index}.NAME_= @queryVariableValue.name
+          and A${index}.NAME_= #{queryVariableValue.name}
         </IsNotNull>
         <IsNotNull Property="!queryVariableValue.type.equals('null')">
           <!-- When operator is not-equals or type of value is null, type doesn't matter! -->
-          and A${index}.TYPE_ = @queryVariableValue.type
+          and A${index}.TYPE_ = #{queryVariableValue.type}
         </IsNotNull>
         <IsNotNull Property="queryVariableValue.textValue != null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
           <Switch>
@@ -531,7 +531,7 @@
               <Include RefId="executionVariableOperator" />
             </Default>
           </Switch>
-          @queryVariableValue.textValue
+          #{queryVariableValue.textValue}
           <Switch>
             <Case Property="queryVariableValue.operator.equals('LIKE') or queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
           </Switch>
@@ -544,7 +544,7 @@
               <Include RefId="executionVariableOperator" />
             </Default>
           </Switch>
-          @queryVariableValue.textValue2
+          #{queryVariableValue.textValue2}
           <Switch>
             <Case Property="queryVariableValue.operator.equals('LIKE')">${wildcardEscapeClause}</Case>
           </Switch>
@@ -552,12 +552,12 @@
         <IsNotNull Property="queryVariableValue.longValue != null">
           and A${index}.LONG_
           <Include RefId="executionVariableOperator" />
-          @queryVariableValue.longValue
+          #{queryVariableValue.longValue}
         </IsNotNull>
         <IsNotNull Property="queryVariableValue.doubleValue != null">
           and A${index}.DOUBLE_
           <Include RefId="executionVariableOperator" />
-          @queryVariableValue.doubleValue
+          #{queryVariableValue.doubleValue}
         </IsNotNull>
         <!-- Null variable type -->
         <IsNotNull Property="queryVariableValue.textValue == null and queryVariableValue.textValue2 == null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
@@ -574,76 +574,76 @@
       <!-- event subscriptions -->
       <IsNotNull Property="eventSubscriptions">
         <For Property="eventSubscriptions" index="index" Key="eventSubscriptionValue">
-          and (EVT${index}.EVENT_TYPE_ = @eventSubscriptionValue.eventType and EVT${index}.EVENT_NAME_ = @eventSubscriptionValue.eventName)
+          and (EVT${index}.EVENT_TYPE_ = #{eventSubscriptionValue.eventType} and EVT${index}.EVENT_NAME_ = #{eventSubscriptionValue.eventName})
         </For>
       </IsNotNull>
       <For Key="orQueryObject" index="orIndex" Property="orQueryObjects">
         and
         <If Test="orQueryObject.processDefinitionId != null">
-          P_OR${orIndex}.ID_ = @orQueryObject.processDefinitionId
+          P_OR${orIndex}.ID_ = #{orQueryObject.processDefinitionId}
         </If>
         <If Test="orQueryObject.processDefinitionIds != null and CollectionUtil.IsNotEmpty(orQueryObject.processDefinitionIds)">
           or P_OR${orIndex}.ID_ in
           <For Key="item" index="index" Property="orQueryObject.processDefinitionIds" open="(" Separator="," close=")">
-            @item
+            #{item}
           </For>
         </If>
         <If Test="orQueryObject.processDefinitionKey != null">
-          or P_OR${orIndex}.KEY_ = @orQueryObject.processDefinitionKey
+          or P_OR${orIndex}.KEY_ = #{orQueryObject.processDefinitionKey}
         </If>
         <If Test="orQueryObject.processDefinitionKeys != null and CollectionUtil.IsNotEmpty(orQueryObject.processDefinitionKeys)">
           or P_OR${orIndex}.KEY_ in
           <For Key="item" index="index" Property="orQueryObject.processDefinitionKeys" open="(" Separator="," close=")">
-            @item
+            #{item}
           </For>
         </If>
         <If Test="orQueryObject.processDefinitionCategory != null">
-          or P_OR${orIndex}.CATEGORY_ = @orQueryObject.processDefinitionCategory
+          or P_OR${orIndex}.CATEGORY_ = #{orQueryObject.processDefinitionCategory}
         </If>
         <If Test="orQueryObject.processDefinitionName != null">
-          or P_OR${orIndex}.NAME_ = @orQueryObject.processDefinitionName
+          or P_OR${orIndex}.NAME_ = #{orQueryObject.processDefinitionName}
         </If>
         <If Test="orQueryObject.processDefinitionVersion != null">
-          or P_OR${orIndex}.VERSION_ = @orQueryObject.processDefinitionVersion
+          or P_OR${orIndex}.VERSION_ = #{orQueryObject.processDefinitionVersion}
         </If>
         <If Test="orQueryObject.executionId != null">
-          or RES.ID_ = @orQueryObject.executionId
+          or RES.ID_ = #{orQueryObject.executionId}
         </If>
         <If Test="orQueryObject.processInstanceId != null">
-          or RES.PROC_INST_ID_ = @orQueryObject.processInstanceId
+          or RES.PROC_INST_ID_ = #{orQueryObject.processInstanceId}
         </If>
         <If Test="orQueryObject.processInstanceIds != null and !orQueryObject.processInstanceIds.isEmpty()">
           or RES.PROC_INST_ID_ in
           <For Key="item" index="index" Property="orQueryObject.processInstanceIds" open="(" Separator="," close=")">
-            @item
+            #{item}
           </For>
         </If>
         <If Test="orQueryObject.businessKey != null">
-          or RES.BUSINESS_KEY_ = @orQueryObject.businessKey
+          or RES.BUSINESS_KEY_ = #{orQueryObject.businessKey}
         </If>
         <If Test="orQueryObject.activityId != null">
-          or (RES.ACT_ID_ = @orQueryObject.activityId and RES.IS_ACTIVE_ = @isActive)
+          or (RES.ACT_ID_ = #{orQueryObject.activityId} and RES.IS_ACTIVE_ = #{isActive})
         </If>
         <If Test="orQueryObject.parentId != null">
-          or RES.PARENT_ID_ = @orQueryObject.parentId
+          or RES.PARENT_ID_ = #{orQueryObject.parentId}
         </If>
         <If Test="orQueryObject.deploymentId != null">
-          or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ = @orQueryObject.deploymentId
+          or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ = #{orQueryObject.deploymentId}
         </If>
         <If Test="orQueryObject.deploymentIds != null and CollectionUtil.IsNotEmpty(orQueryObject.deploymentIds)">
           or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ IN
           <For Key="deployment" index="index" Property="orQueryObject.deploymentIds"
                    open="(" Separator="," close=")">
-            @deployment
+            #{deployment}
           </For>
         </If>
         <If Test="orQueryObject.superProcessInstanceId != null">
           <!-- A sub process instance is stored under a certain *execution*, potentially nested.
                  A sub process instance is NOT stored under the process instanc, hence the following: -->
-          or RES.SUPER_EXEC_ IN (select ID_ from ACT_RU_EXECUTION where PROC_INST_ID_ = @orQueryObject.superProcessInstanceId)
+          or RES.SUPER_EXEC_ IN (select ID_ from ACT_RU_EXECUTION where PROC_INST_ID_ = #{orQueryObject.superProcessInstanceId})
         </If>
         <If Test="orQueryObject.subProcessInstanceId != null">
-          or RES.ID_ = (select PROC_INST_ID_ from ACT_RU_EXECUTION where ID_ = (select SUPER_EXEC_ from ACT_RU_EXECUTION where ID_ = @orQueryObject.subProcessInstanceId))
+          or RES.ID_ = (select PROC_INST_ID_ from ACT_RU_EXECUTION where ID_ = (select SUPER_EXEC_ from ACT_RU_EXECUTION where ID_ = #{orQueryObject.subProcessInstanceId}))
         </If>
         <If Test="orQueryObject.excludeSubprocesses">
           or RES.SUPER_EXEC_ is null
@@ -657,25 +657,25 @@
           </If>
         </If>
         <If Test="orQueryObject.tenantId != null">
-          or RES.TENANT_ID_ = @orQueryObject.tenantId
+          or RES.TENANT_ID_ = #{orQueryObject.tenantId}
         </If>
         <If Test="orQueryObject.tenantIdLike != null">
-          or RES.TENANT_ID_ like @orQueryObject.tenantIdLike${wildcardEscapeClause}
+          or RES.TENANT_ID_ like #{orQueryObject.tenantIdLike}${wildcardEscapeClause}
         </If>
         <If Test="orQueryObject.withoutTenantId">
           or (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
         </If>
         <If Test="orQueryObject.name != null">
-          or RES.NAME_ = @orQueryObject.name
+          or RES.NAME_ = #{orQueryObject.name}
         </If>
         <If Test="orQueryObject.nameLike != null">
-          or RES.NAME_ like @orQueryObject.nameLike${wildcardEscapeClause}
+          or RES.NAME_ like #{orQueryObject.nameLike}${wildcardEscapeClause}
         </If>
         <If Test="orQueryObject.nameLikeIgnoreCase != null">
-          or lower(RES.NAME_) like @orQueryObject.nameLikeIgnoreCase${wildcardEscapeClause}
+          or lower(RES.NAME_) like #{orQueryObject.nameLikeIgnoreCase}${wildcardEscapeClause}
         </If>
         <If Test="orQueryObject.involvedUser != null">
-          or EXISTS(select ID_ from ACT_RU_IDENTITYLINK I where I.PROC_INST_ID_ = RES.ID_ and I.USER_ID_ = @orQueryObject.involvedUser)
+          or EXISTS(select ID_ from ACT_RU_IDENTITYLINK I where I.PROC_INST_ID_ = RES.ID_ and I.USER_ID_ = #{orQueryObject.involvedUser})
         </If>
         <!-- PLEASE NOTE: If you change anything have a look into the HistoricVariableInstance & HistoricProcessInstance, the same query object is used there! -->
         <For Property="orQueryObject.queryVariableValues" index="index" Key="queryVariableValue">
@@ -686,11 +686,11 @@
           </IsNotNull>
           <IsNotNull Property="queryVariableValue.name != null">
             <!-- Match-all variable-names when name is null -->
-            and A_OR${orIndex}.NAME_= @queryVariableValue.name
+            and A_OR${orIndex}.NAME_= #{queryVariableValue.name}
           </IsNotNull>
           <IsNotNull Property="!queryVariableValue.type.equals('null')">
             <!-- When operator is not-equals or type of value is null, type doesn't matter! -->
-            and A_OR${orIndex}.TYPE_ = @queryVariableValue.type
+            and A_OR${orIndex}.TYPE_ = #{queryVariableValue.type}
           </IsNotNull>
           <IsNotNull Property="queryVariableValue.textValue != null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
             <Switch>
@@ -707,7 +707,7 @@
                 <Include RefId="executionVariableOperator" />
               </Default>
             </Switch>
-            @queryVariableValue.textValue
+            #{queryVariableValue.textValue}
             <Switch>
               <Case Property="queryVariableValue.operator.equals('LIKE') or queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
             </Switch>
@@ -720,7 +720,7 @@
                 <Include RefId="executionVariableOperator" />
               </Default>
             </Switch>
-            @queryVariableValue.textValue2
+            #{queryVariableValue.textValue2}
             <Switch>
               <Case Property="queryVariableValue.operator.equals('LIKE')">${wildcardEscapeClause}</Case>
             </Switch>
@@ -728,12 +728,12 @@
           <IsNotNull Property="queryVariableValue.longValue != null">
             and A_OR${orIndex}.LONG_
             <Include RefId="executionVariableOperator" />
-            @queryVariableValue.longValue
+            #{queryVariableValue.longValue}
           </IsNotNull>
           <IsNotNull Property="queryVariableValue.doubleValue != null">
             and A_OR${orIndex}.DOUBLE_
             <Include RefId="executionVariableOperator" />
-            @queryVariableValue.doubleValue
+            #{queryVariableValue.doubleValue}
           </IsNotNull>
           <!-- Null variable type -->
           <IsNotNull Property="queryVariableValue.textValue == null and queryVariableValue.textValue2 == null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
@@ -752,13 +752,13 @@
           and (JOB.EXCEPTION_MSG_ is not null or JOB.EXCEPTION_STACK_ID_ is not null)
       </If>
       <IsNotNull Property="startedBefore">
-        and RES.START_TIME_ &lt;= @startedBefore
+        and RES.START_TIME_ &lt;= #{startedBefore}
       </IsNotNull>
       <IsNotNull Property="startedAfter">
-        and RES.START_TIME_ &gt;= @startedAfter
+        and RES.START_TIME_ &gt;= #{startedAfter}
       </IsNotNull>
       <IsNotNull Property="startedBy">
-        and RES.START_USER_ID_ = @startedBy
+        and RES.START_USER_ID_ = #{startedBy}
       </IsNotNull>
     </Where>
   </Statement>
@@ -853,61 +853,61 @@
 
   <Select Id="selectExecutionsWithSameRootProcessInstanceId" ResultMap="executionResultMap" >
     select * from ACT_RU_EXECUTION
-    where ROOT_PROC_INST_ID_ = (select ROOT_PROC_INST_ID_ from ACT_RU_EXECUTION where ID_ = @executionId)
+    where ROOT_PROC_INST_ID_ = (select ROOT_PROC_INST_ID_ from ACT_RU_EXECUTION where ID_ = #{executionId})
   </Select>
 
   <Select Id="selectExecution" ResultMap="executionResultMap" >
-    select * from ACT_RU_EXECUTION where ID_ = @id
+    select * from ACT_RU_EXECUTION where ID_ = #{id}
   </Select>
 
   <Select Id="selectExecutionsByParentExecutionId"  ResultMap="executionResultMap">
     select * from ACT_RU_EXECUTION
-    where PARENT_ID_ = @parentExecutionId
+    where PARENT_ID_ = #{parentExecutionId}
   </Select>
 
   <Select Id="selectExecutionsByRootProcessInstanceId" ResultMap="executionResultMap" >
     select * from ACT_RU_EXECUTION
-    where ROOT_PROC_INST_ID_ = @rootProcessInstanceId
+    where ROOT_PROC_INST_ID_ = #{rootProcessInstanceId}
   </Select>
 
   <Select Id="selectChildExecutionsByProcessInstanceId" ResultMap="executionResultMap" >
     select * from ACT_RU_EXECUTION
-    where PROC_INST_ID_ = @processInstanceId and PARENT_ID_ is not null
+    where PROC_INST_ID_ = #{processInstanceId} and PARENT_ID_ is not null
   </Select>
 
   <Select Id="selectExecutionsByProcessInstanceId" ResultMap="executionResultMap" >
     select * from ACT_RU_EXECUTION
-    where PROC_INST_ID_ = @processInstanceId
+    where PROC_INST_ID_ = #{processInstanceId}
   </Select>
 
   <Select Id="selectProcessInstanceIdsByProcessDefinitionId" >
     select ID_
     from ACT_RU_EXECUTION
-    where PROC_DEF_ID_ = @processDefinitionId and PARENT_ID_ is null
+    where PROC_DEF_ID_ = #{processDefinitionId} and PARENT_ID_ is null
   </Select>
 
   <Select Id="selectInactiveExecutionsForProcessInstance" ResultMap="executionResultMap" >
     select *
     from ACT_RU_EXECUTION
-    where PROC_INST_ID_ = @processInstanceId
-    and IS_ACTIVE_ = @isActive
+    where PROC_INST_ID_ = #{processInstanceId}
+    and IS_ACTIVE_ = #{isActive}
   </Select>
 
   <Select Id="selectInactiveExecutionsInActivityAndProcessInstance" ResultMap="executionResultMap" >
     select *
     from ACT_RU_EXECUTION
-    where ACT_ID_ = @activityId
-    and PROC_INST_ID_ = @processInstanceId
-    and IS_ACTIVE_ = @isActive
+    where ACT_ID_ = #{activityId}
+    and PROC_INST_ID_ = #{processInstanceId}
+    and IS_ACTIVE_ = #{isActive}
   </Select>
 
   <Select Id="selectExecutionsByParentExecutionAndActivityIds" ResultMap="executionResultMap" >
     select *
     from ACT_RU_EXECUTION
-    where PARENT_ID_ = @parentExecutionId
+    where PARENT_ID_ = #{parentExecutionId}
     and ACT_ID_ in
     <For Key="p" Property="activityIds" open="(" Separator="," close=")">
-      @activityId
+      #{activityId}
     </For>
   </Select>
 
@@ -948,7 +948,7 @@
   <Select Id="selectSubProcessInstanceBySuperExecutionId" ResultMap="executionResultMap" >
     select *
     from ACT_RU_EXECUTION
-    where SUPER_EXEC_ = @superExecutionId
+    where SUPER_EXEC_ = #{superExecutionId}
   </Select>
 
 

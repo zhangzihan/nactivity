@@ -25,40 +25,40 @@
 
     <Insert Type="Insert" Id="insertProcessDefinition">
       insert into ACT_RE_PROCDEF(ID_, REV_, CATEGORY_, NAME_, KEY_, VERSION_, DEPLOYMENT_ID_, RESOURCE_NAME_, DGRM_RESOURCE_NAME_, DESCRIPTION_, HAS_START_FORM_KEY_, HAS_GRAPHICAL_NOTATION_ , SUSPENSION_STATE_, TENANT_ID_)
-      values (@id,
+      values (#{id},
       1,
-      @category,
-      @name,
-      @key,
-      @version,
-      @deploymentId,
-      @resourceName,
-      @diagramResourceName,
-      @description,
-      @hasStartFormKey,
-      @isGraphicalNotationDefined,
-      @suspensionState,
-      @tenantId)
+      #{category},
+      #{name},
+      #{key},
+      #{version},
+      #{deploymentId},
+      #{resourceName},
+      #{diagramResourceName},
+      #{description},
+      #{hasStartFormKey},
+      #{isGraphicalNotationDefined},
+      #{suspensionState},
+      #{tenantId})
     </Insert>
 
     <Insert Id="bulkInsertProcessDefinition">
       INSERT INTO ACT_RE_PROCDEF(ID_, REV_, CATEGORY_, NAME_, KEY_, VERSION_, DEPLOYMENT_ID_, RESOURCE_NAME_, DGRM_RESOURCE_NAME_, DESCRIPTION_, HAS_START_FORM_KEY_, HAS_GRAPHICAL_NOTATION_ , SUSPENSION_STATE_, TENANT_ID_)
       VALUES
       <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
-        (@id,
+        (#{id},
         1,
-        @category,
-        @name,
-        @key,
-        @version,
-        @deploymentId,
-        @resourceName,
-        @diagramResourceName,
-        @description,
-        @hasStartFormKey,
-        @isGraphicalNotationDefined,
-        @suspensionState,
-        @tenantId)
+        #{category},
+        #{name},
+        #{key},
+        #{version},
+        #{deploymentId},
+        #{resourceName},
+        #{diagramResourceName},
+        #{description},
+        #{hasStartFormKey},
+        #{isGraphicalNotationDefined},
+        #{suspensionState},
+        #{tenantId})
       </For>
     </Insert>
 
@@ -66,24 +66,24 @@
 
     <Update Id="updateProcessDefinition">
       update ACT_RE_PROCDEF set
-      REV_ = @revisionNext,
-      SUSPENSION_STATE_ = @suspensionState,
-      CATEGORY_ = @category
-      where ID_ = @id
-      and REV_ = @revision
+      REV_ = #{revisionNext},
+      SUSPENSION_STATE_ = #{suspensionState},
+      CATEGORY_ = #{category}
+      where ID_ = #{id}
+      and REV_ = #{revision}
     </Update>
 
     <Update Id="updateProcessDefinitionTenantIdForDeploymentId">
       update ACT_RE_PROCDEF set
-      TENANT_ID_ = @tenantId
+      TENANT_ID_ = #{tenantId}
       where
-      DEPLOYMENT_ID_ = @deploymentId
+      DEPLOYMENT_ID_ = #{deploymentId}
     </Update>
 
     <!-- PROCESSDEFINITION DELETE -->
 
     <Delete Id="deleteProcessDefinitionsByDeploymentId">
-      delete from ACT_RE_PROCDEF where DEPLOYMENT_ID_ = @deploymenId
+      delete from ACT_RE_PROCDEF where DEPLOYMENT_ID_ = #{deploymenId}
     </Delete>
 
 
@@ -96,72 +96,72 @@
       </IsTrue>
       <Where>
         <IsTrue Property="id != null">
-          RES.ID_ = @id
+          RES.ID_ = #{id}
         </IsTrue>
         <IsTrue Property="ids != null and ids">
           and RES.ID_ in
           <For Prepend="" Key="item" Property="ids" Open="(" Separator="," Close=")">
-            @item
+            #{item}
           </For>
         </IsTrue>
         <IsTrue Property="category != null">
-          and RES.CATEGORY_ = @category
+          and RES.CATEGORY_ = #{category}
         </IsTrue>
         <IsTrue Property="categoryLike != null">
-          and RES.CATEGORY_ like @categoryLike}${wildcardEscapeClause
+          and RES.CATEGORY_ like #{categoryLike}}${wildcardEscapeClause
         </IsTrue>
         <IsTrue Property="categoryNotEquals != null">
-          and ( RES.CATEGORY_ &lt;&gt; @categoryNotEquals OR RES.CATEGORY_ is null )
+          and ( RES.CATEGORY_ &lt;&gt; #{categoryNotEquals} OR RES.CATEGORY_ is null )
         </IsTrue>
         <IsTrue Property="name != null">
-          and RES.NAME_ = @name
+          and RES.NAME_ = #{name}
         </IsTrue>
         <IsTrue Property="nameLike != null">
-          and RES.NAME_ like @nameLike}${wildcardEscapeClause
+          and RES.NAME_ like #{nameLike}}${wildcardEscapeClause
         </IsTrue>
         <IsTrue Property="key != null">
-          and RES.KEY_ = @key
+          and RES.KEY_ = #{key}
         </IsTrue>
         <IsTrue Property="keyLike != null">
-          and RES.KEY_ like @keyLike}${wildcardEscapeClause
+          and RES.KEY_ like #{keyLike}}${wildcardEscapeClause
         </IsTrue>
         <IsTrue Property="resourceName != null">
-          and RES.RESOURCE_NAME_ = @resourceName
+          and RES.RESOURCE_NAME_ = #{resourceName}
         </IsTrue>
         <IsTrue Property="resourceNameLike != null">
-          and RES.RESOURCE_NAME_ like @resourceNameLike}${wildcardEscapeClause
+          and RES.RESOURCE_NAME_ like #{resourceNameLike}}${wildcardEscapeClause
         </IsTrue>
         <IsTrue Property="version != null">
-          and RES.VERSION_ = @version
+          and RES.VERSION_ = #{version}
         </IsTrue>
         <IsTrue Property="versionGt != null">
-          and RES.VERSION_ &gt; @versionGt
+          and RES.VERSION_ &gt; #{versionGt}
         </IsTrue>
         <IsTrue Property="versionGte != null">
-          and RES.VERSION_ &gt;= @versionGte
+          and RES.VERSION_ &gt;= #{versionGte}
         </IsTrue>
         <IsTrue Property="versionLt != null">
-          and RES.VERSION_ &lt; @versionLt
+          and RES.VERSION_ &lt; #{versionLt}
         </IsTrue>
         <IsTrue Property="versionLte != null">
-          and RES.VERSION_ &lt;= @versionLte
+          and RES.VERSION_ &lt;= #{versionLte}
         </IsTrue>
         <IsTrue Property="deploymentId != null">
-          and RES.DEPLOYMENT_ID_ = @deploymentId
+          and RES.DEPLOYMENT_ID_ = #{deploymentId}
         </IsTrue>
         <IsTrue Property="deploymentIds != null and !deploymentIds.isEmpty()">
           and RES.DEPLOYMENT_ID_ in
           <For Prepend="" Key="item" Property="deploymentIds" Open="(" Separator="," Close=")">
-            @item
+            #{item}
           </For>
         </IsTrue>
         <IsTrue Property="latest">
           and RES.VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = RES.KEY_
           <IsTrue Property="tenantId != null">
-            and TENANT_ID_ = @tenantId
+            and TENANT_ID_ = #{tenantId}
           </IsTrue>
           <IsTrue Property="tenantIdLike != null">
-            and TENANT_ID_ like @tenantIdLike}${wildcardEscapeClause
+            and TENANT_ID_ like #{tenantIdLike}}${wildcardEscapeClause
           </IsTrue>
           <IsTrue Property="withoutTenantId">
             and (TENANT_ID_ = '' or TENANT_ID_ is null)
@@ -172,27 +172,27 @@
           )
         </IsTrue>
         <IsTrue Property="suspensionState != null">
-          and (RES.SUSPENSION_STATE_ = @suspensionState.stateCode)
+          and (RES.SUSPENSION_STATE_ = #{suspensionState.stateCode})
         </IsTrue>
         <IsTrue Property="tenantId != null">
-          and RES.TENANT_ID_ = @tenantId
+          and RES.TENANT_ID_ = #{tenantId}
         </IsTrue>
         <IsTrue Property="tenantIdLike != null">
-          and RES.TENANT_ID_ like @tenantIdLike}${wildcardEscapeClause
+          and RES.TENANT_ID_ like #{tenantIdLike}}${wildcardEscapeClause
         </IsTrue>
         <IsTrue Property="withoutTenantId">
           and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
         </IsTrue>
         <IsTrue Property="eventSubscriptionType != null">
-          and (EVT.EVENT_TYPE_ = @eventSubscriptionType and EVT.EVENT_NAME_ = @eventSubscriptionName)
+          and (EVT.EVENT_TYPE_ = #{eventSubscriptionType} and EVT.EVENT_NAME_ = #{eventSubscriptionName})
         </IsTrue>
         <IsTrue Property="authorizationUserId != null">
-          AND (exists (select ID_  from ACT_RU_IDENTITYLINK  IDN where IDN.PROC_DEF_ID_ = RES.ID_ and IDN.USER_ID_ = @authorizationUserId)
+          AND (exists (select ID_  from ACT_RU_IDENTITYLINK  IDN where IDN.PROC_DEF_ID_ = RES.ID_ and IDN.USER_ID_ = #{authorizationUserId})
           <IsTrue Property="authorizationGroups != null &amp;&amp; authorizationGroups.size() &gt; 0">
             OR exists (select ID_ from ACT_RU_IDENTITYLINK  IDN where IDN.PROC_DEF_ID_ = RES.ID_ and IDN.GROUP_ID_ IN
             <For item="group" index="index" collection="authorizationGroups"
                      open="(" separator="," close=")">
-              @group
+              #{group}
             </For>
             )
           </IsTrue>
@@ -202,11 +202,11 @@
     </Statement>
 
     <Select Id="selectProcessDefinition" ResultMap="processDefinitionResultMap">
-      select * from ACT_RE_PROCDEF where ID_ = @processDefinitionId
+      select * from ACT_RE_PROCDEF where ID_ = #{processDefinitionId}
     </Select>
 
     <Select Id="selectProcessDefinitionById" ResultMap="processDefinitionResultMap">
-      select * from ACT_RE_PROCDEF where ID_ = @processDefinitionId
+      select * from ACT_RE_PROCDEF where ID_ = #{processDefinitionId}
     </Select>
 
     <Select Id="selectProcessDefinitionsByQueryCriteria" ResultMap="processDefinitionResultMap">
@@ -225,43 +225,43 @@
     <Select Id="selectProcessDefinitionByDeploymentAndKey" ResultMap="processDefinitionResultMap">
       select *
       from ACT_RE_PROCDEF
-      where DEPLOYMENT_ID_ = @deploymentId
-      and KEY_ = @processDefinitionKey
+      where DEPLOYMENT_ID_ = #{deploymentId}
+      and KEY_ = #{processDefinitionKey}
       and (TENANT_ID_ = '' or TENANT_ID_ is null)
     </Select>
 
     <Select Id="selectProcessDefinitionByDeploymentAndKeyAndTenantId" ResultMap="processDefinitionResultMap">
       select *
       from ACT_RE_PROCDEF
-      where DEPLOYMENT_ID_ = @deploymentId
-      and KEY_ = @processDefinitionKey
-      and TENANT_ID_ = @tenantId
+      where DEPLOYMENT_ID_ = #{deploymentId}
+      and KEY_ = #{processDefinitionKey}
+      and TENANT_ID_ = #{tenantId}
     </Select>
 
     <Select Id="selectProcessDefinitionsByKeyAndVersionAndTenantId" ResultMap="processDefinitionResultMap">
       select * from ACT_RE_PROCDEF
-      where KEY_ = @processDefinitionKey and VERSION_ = @processDefinitionVersion and TENANT_ID_ = @tenantId
+      where KEY_ = #{processDefinitionKey} and VERSION_ = #{processDefinitionVersion} and TENANT_ID_ = #{tenantId}
     </Select>
 
     <Select Id="selectProcessDefinitionsByKeyAndVersion" ResultMap="processDefinitionResultMap">
       select * from ACT_RE_PROCDEF
-      where KEY_ = @processDefinitionKey and VERSION_ = @processDefinitionVersion and (TENANT_ID_ = '' or TENANT_ID_ is null)
+      where KEY_ = #{processDefinitionKey} and VERSION_ = #{processDefinitionVersion} and (TENANT_ID_ = '' or TENANT_ID_ is null)
     </Select>
 
     <Select Id="selectLatestProcessDefinitionByKey" ResultMap="processDefinitionResultMap">
       select *
       from ACT_RE_PROCDEF
-      where KEY_ = @processDefinitionKey and
+      where KEY_ = #{processDefinitionKey} and
       (TENANT_ID_ = ''  or TENANT_ID_ is null) and
-      VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = @processDefinitionKey and (TENANT_ID_ = '' or TENANT_ID_ is null))
+      VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = #{processDefinitionKey} and (TENANT_ID_ = '' or TENANT_ID_ is null))
     </Select>
 
     <Select Id="selectLatestProcessDefinitionByKeyAndTenantId" ResultMap="processDefinitionResultMap">
       select *
       from ACT_RE_PROCDEF
-      where KEY_ = @processDefinitionKey and
-      TENANT_ID_ = @tenantId and
-      VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = @processDefinitionKey and TENANT_ID_ = @tenantId)
+      where KEY_ = #{processDefinitionKey} and
+      TENANT_ID_ = #{tenantId} and
+      VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = #{processDefinitionKey} and TENANT_ID_ = #{tenantId})
     </Select>
 
     <!-- mysql specific sql -->

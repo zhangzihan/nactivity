@@ -33,18 +33,18 @@
     TYPE_, NAME_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, BYTEARRAY_ID_,
     DOUBLE_, LONG_ , TEXT_, TEXT2_)
     values (
-    @id,
+    #{id},
     1,
-    @type,
-    @name,
-    @processInstanceId,
-    @executionId,
-    @taskId,
-    @byteArrayRef,
-    @doubleValue,
-    @longValue,
-    @textValue,
-    @textValue2
+    #{type},
+    #{name},
+    #{processInstanceId},
+    #{executionId},
+    #{taskId},
+    #{byteArrayRef},
+    #{doubleValue},
+    #{longValue},
+    #{textValue},
+    #{textValue2}
     )
   </Insert>
 
@@ -53,18 +53,18 @@
     TYPE_, NAME_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, BYTEARRAY_ID_,
     DOUBLE_, LONG_ , TEXT_, TEXT2_) VALUES
     <For Property="Items" Key="p" Separator=",">
-      (@id,
+      (#{id},
       1,
-      @typeName,
-      @name,
-      @processInstanceId,
-      @executionId,
-      @taskId,
-      @byteArrayRef,
-      @doubleValue,
-      @longValue,
-      @textValue,
-      @textValue2)
+      #{typeName},
+      #{name},
+      #{processInstanceId},
+      #{executionId},
+      #{taskId},
+      #{byteArrayRef},
+      #{doubleValue},
+      #{longValue},
+      #{textValue},
+      #{textValue2})
     </For>
   </Insert>
 
@@ -73,40 +73,40 @@
   <Update Id="updateVariableInstance" ParameterMap="insupVariableInstance">
     update ACT_RU_VARIABLE
     set
-    REV_ = @revisionNext,
-    EXECUTION_ID_ = @executionId,
-    BYTEARRAY_ID_ = @byteArrayRef,
-    TYPE_ =  @type,
-    DOUBLE_ = @doubleValue,
-    LONG_ = @longValue,
-    TEXT_ = @textValue,
-    TEXT2_ = @textValue2
-    where ID_ = @id
-    and REV_ = @revision
+    REV_ = #{revisionNext},
+    EXECUTION_ID_ = #{executionId},
+    BYTEARRAY_ID_ = #{byteArrayRef},
+    TYPE_ =  #{type},
+    DOUBLE_ = #{doubleValue},
+    LONG_ = #{longValue},
+    TEXT_ = #{textValue},
+    TEXT2_ = #{textValue2}
+    where ID_ = #{id}
+    and REV_ = #{revision}
   </Update>
 
   <!-- VARIABLE INSTANCE DELETE -->
 
   <Delete Id="deleteVariableInstance">
-    delete from ACT_RU_VARIABLE where ID_ = @id and REV_ = @revision
+    delete from ACT_RU_VARIABLE where ID_ = #{id} and REV_ = #{revision}
   </Delete>
 
   <Delete Id="bulkDeleteVariableInstance">
     delete from ACT_RU_VARIABLE where
     <For Key="variable" Property="Items" Separator=" or ">
-      ID_ = @id
+      ID_ = #{id}
     </For>
   </Delete>
 
   <!-- VARIABLE INSTANCE SELECT -->
 
   <Select Id="selectVariableInstance" ResultMap="variableInstanceResultMap">
-    select * from ACT_RU_VARIABLE where ID_ = @id
+    select * from ACT_RU_VARIABLE where ID_ = #{id}
   </Select>
 
   <Select Id="selectVariablesByExecutionId" ResultMap="variableInstanceResultMap">
     select * from ACT_RU_VARIABLE
-    where EXECUTION_ID_ = @executionId
+    where EXECUTION_ID_ = #{executionId}
     and TASK_ID_ is null
   </Select>
 
@@ -117,22 +117,22 @@
     where TASK_ID_ is null
     and EXECUTION_ID_ in
     <For Key="item" Property="executionIds" Open="(" Separator="," Close=")">
-     @item
+     #{item}
     </For>
   </Select>
 
   <Select Id="selectVariableInstanceByExecutionAndName" ResultMap="variableInstanceResultMap">
     select * from ACT_RU_VARIABLE
-    where EXECUTION_ID_ = @executionId and NAME_= @name and TASK_ID_ is null
+    where EXECUTION_ID_ = #{executionId} and NAME_= #{name} and TASK_ID_ is null
   </Select>
 
   <Select Id="selectVariableInstancesByExecutionAndNames" ResultMap="variableInstanceResultMap">
     select * from ACT_RU_VARIABLE
-    where EXECUTION_ID_ = @executionId and TASK_ID_ is null
+    where EXECUTION_ID_ = #{executionId} and TASK_ID_ is null
     <If Test="parameter.names != null and CollectionUtil.IsNotEmpty(parameter.names)">
       and (
       <For Property="names" Key="name" Separator=" or ">
-        NAME_= @name
+        NAME_= #{name}
       </For>
       )
     </If>
@@ -140,29 +140,29 @@
 
   <Select Id="selectVariablesByTaskId" ResultMap="variableInstanceResultMap">
     select * from ACT_RU_VARIABLE where
-    TASK_ID_ = @taskId
+    TASK_ID_ = #{taskId}
   </Select>
 
   <Select Id="selectVariablesByTaskIds" ResultMap="variableInstanceResultMap">
     select * from ACT_RU_VARIABLE
     where TASK_ID_ in
     <For Key="item" Property="ids" Open="(" Separator="," Close=")">
-      @item
+      #{item}
     </For>
   </Select>
 
   <Select Id="selectVariableInstanceByTaskAndName" ResultMap="variableInstanceResultMap">
     select * from ACT_RU_VARIABLE
-    where TASK_ID_ = @taskId and NAME_= @name
+    where TASK_ID_ = #{taskId} and NAME_= #{name}
   </Select>
 
   <Select Id="selectVariableInstancesByTaskAndNames" ResultMap="variableInstanceResultMap">
     select * from ACT_RU_VARIABLE
-    where TASK_ID_ = @taskId
+    where TASK_ID_ = #{taskId}
     <If Property="names != null and CollectionUtil.IsNotEmpty(names)">
       and (
       <For Property="names" Key="name" Separator=" or ">
-        NAME_= @name
+        NAME_= #{name}
       </For>
       )
     </If>

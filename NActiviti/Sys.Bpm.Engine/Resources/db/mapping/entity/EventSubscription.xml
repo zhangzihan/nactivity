@@ -32,19 +32,19 @@
     <!-- DELETE -->
 
     <Delete  Id="deleteSignalEventSubscription">
-      delete from ACT_RU_EVENT_SUBSCR where ID_ = @id and REV_ = @revision
+      delete from ACT_RU_EVENT_SUBSCR where ID_ = #{id} and REV_ = #{revision}
     </Delete>
 
     <Delete  Id="deleteCompensateEventSubscription">
-      delete from ACT_RU_EVENT_SUBSCR where ID_ = @id and REV_ = @revision
+      delete from ACT_RU_EVENT_SUBSCR where ID_ = #{id} and REV_ = #{revision}
     </Delete>
 
     <Delete  Id="deleteMessageEventSubscription">
-      delete from ACT_RU_EVENT_SUBSCR where ID_ = @id and REV_ = @revision
+      delete from ACT_RU_EVENT_SUBSCR where ID_ = #{id} and REV_ = #{revision}
     </Delete>
 
     <Delete  Id="deleteEventSubscriptionsForProcessDefinition">
-      delete from ACT_RU_EVENT_SUBSCR where PROC_DEF_ID_ = @processDefinitionId
+      delete from ACT_RU_EVENT_SUBSCR where PROC_DEF_ID_ = #{processDefinitionId}
     </Delete>
 
     <!-- SELECT -->
@@ -53,25 +53,25 @@
       from ACT_RU_EVENT_SUBSCR RES
       <Where>
         <IsNotNull Property="eventSubscriptionId">
-          RES.ID_ = @eventSubscriptionId
+          RES.ID_ = #{eventSubscriptionId}
         </IsNotNull>
         <IsNotNull Property="processInstanceId">
-          and RES.PROC_INST_ID_ = @processInstanceId
+          and RES.PROC_INST_ID_ = #{processInstanceId}
         </IsNotNull>
         <IsNotNull Property="executionId">
-          and RES.EXECUTION_ID_ = @executionId
+          and RES.EXECUTION_ID_ = #{executionId}
         </IsNotNull>
         <IsNotNull Property="activityId">
-          and RES.ACTIVITY_ID_ = @activityId
+          and RES.ACTIVITY_ID_ = #{activityId}
         </IsNotNull>
         <IsNotNull Property="eventType">
-          and RES.EVENT_TYPE_ = @eventType
+          and RES.EVENT_TYPE_ = #{eventType}
         </IsNotNull>
         <IsNotNull Property="eventName">
-          and RES.EVENT_NAME_ = @eventName
+          and RES.EVENT_NAME_ = #{eventName}
         </IsNotNull>
         <IsNotNull Property="tenantId">
-          and RES.TENANT_ID_ = @tenantId
+          and RES.TENANT_ID_ = #{tenantId}
         </IsNotNull>
         <IsNull Property="tenantId">
           and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
@@ -83,12 +83,12 @@
     select * 
     from ACT_RU_EVENT_SUBSCR EVT
     where (EVENT_TYPE_ = 'message')
-        and EVENT_NAME_ = @eventName  
-        and PROC_INST_ID_ = @processInstanceId
+        and EVENT_NAME_ = #{eventName}  
+        and PROC_INST_ID_ = #{processInstanceId}
   </Select>
 
     <Select  Id="selectEventSubscription" ResultMap="eventSubscriptionResultMap">
-      select * from ACT_RU_EVENT_SUBSCR where ID_ = @id
+      select * from ACT_RU_EVENT_SUBSCR where ID_ = #{id}
     </Select>
 
     <Select  Id="selectEventSubscriptionByQueryCriteria" ResultMap="eventSubscriptionResultMap">
@@ -109,14 +109,14 @@
       from ACT_RU_EVENT_SUBSCR EVT
       left outer join ACT_RU_EXECUTION EXC on EVT.EXECUTION_ID_ = EXC.ID_
       where EVENT_TYPE_ = 'signal'
-      and EVENT_NAME_ = @eventName
+      and EVENT_NAME_ = #{eventName}
       and (
       (EVT.EXECUTION_ID_ is null)
       or
       (EVT.EXECUTION_ID_ is not null AND EXC.SUSPENSION_STATE_ = 1)
       )
       <IsNotNull Property="tenantId">
-        and EVT.TENANT_ID_ = @tenantId
+        and EVT.TENANT_ID_ = #{tenantId}
       </IsNotNull>
       <IsNull Property="tenantId">
         and (EVT.TENANT_ID_ = '' or EVT.TENANT_ID_ is null)
@@ -127,65 +127,65 @@
       select *
       from ACT_RU_EVENT_SUBSCR EVT
       where (EVENT_TYPE_ = 'signal')
-      and EVENT_NAME_ = @eventName
-      and PROC_INST_ID_ = @processInstanceId
+      and EVENT_NAME_ = #{eventName}
+      and PROC_INST_ID_ = #{processInstanceId}
     </Select>
 
     <Select  Id="selectSignalEventSubscriptionsByExecution" ResultMap="eventSubscriptionResultMap">
       select *
       from ACT_RU_EVENT_SUBSCR
       where (EVENT_TYPE_ = 'signal')
-      and (EXECUTION_ID_ = @executionId)
+      and (EXECUTION_ID_ = #{executionId})
     </Select>
 
     <Select  Id="selectSignalEventSubscriptionsByNameAndExecution" ResultMap="eventSubscriptionResultMap">
       select *
       from ACT_RU_EVENT_SUBSCR
       where (EVENT_TYPE_ = 'signal')
-      and (EXECUTION_ID_ = @executionId)
-      and (EVENT_NAME_ = @eventName)
+      and (EXECUTION_ID_ = #{executionId})
+      and (EVENT_NAME_ = #{eventName})
     </Select>
 
     <Select  Id="selectEventSubscriptionsByExecution" ResultMap="eventSubscriptionResultMap">
       select *
       from ACT_RU_EVENT_SUBSCR
-      where (EXECUTION_ID_ = @executionId)
+      where (EXECUTION_ID_ = #{executionId})
     </Select>
   
   <Select Id="selectEventSubscriptionsByProcessInstanceTypeAndActivity" ResultMap="eventSubscriptionResultMap">
     select * 
     from ACT_RU_EVENT_SUBSCR
-    where (EVENT_TYPE_ = @eventType)
-    	and (PROC_INST_ID_ = @processInstanceId)
-    	and (ACTIVITY_ID_ = @activityId)
+    where (EVENT_TYPE_ = #{eventType})
+    	and (PROC_INST_ID_ = #{processInstanceId})
+    	and (ACTIVITY_ID_ = #{activityId})
   </Select>
 
     <Select  Id="selectEventSubscriptionsByExecutionAndType" ResultMap="eventSubscriptionResultMap">
       select *
       from ACT_RU_EVENT_SUBSCR
-      where (EVENT_TYPE_ = @eventType)
-      and (EXECUTION_ID_ = @executionId)
+      where (EVENT_TYPE_ = #{eventType})
+      and (EXECUTION_ID_ = #{executionId})
     </Select>
 
     <Select  Id="selectEventSubscriptionsByExecutionTypeAndActivity" ResultMap="eventSubscriptionResultMap">
       select *
       from ACT_RU_EVENT_SUBSCR
-      where (EVENT_TYPE_ = @eventType)
-      and (EXECUTION_ID_ = @executionId)
-      and (ACTIVITY_ID_ = @activityId)
+      where (EVENT_TYPE_ = #{eventType})
+      and (EXECUTION_ID_ = #{executionId})
+      and (ACTIVITY_ID_ = #{activityId})
     </Select>
 
     <Select  Id="selectEventSubscriptionsByConfiguration" ResultMap="eventSubscriptionResultMap">
       select *
       from ACT_RU_EVENT_SUBSCR
-      where (EVENT_TYPE_ = @eventType)
+      where (EVENT_TYPE_ = #{eventType})
       and (
-      (CONFIGURATION_ = @configuration)
+      (CONFIGURATION_ = #{configuration})
       or
-      (PROC_DEF_ID_ = @configuration)
+      (PROC_DEF_ID_ = #{configuration})
       )
       <IsNotNull Property="tenantId">
-        and TENANT_ID_ = @tenantId
+        and TENANT_ID_ = #{tenantId}
       </IsNotNull>
       <IsNull Property="tenantId">
         and (TENANT_ID_ = '' or TENANT_ID_ is null)
@@ -197,13 +197,13 @@
       from ACT_RU_EVENT_SUBSCR
       <Where>
         <IsNotNull Property="eventType">
-          (EVENT_TYPE_ = @eventType)
+          (EVENT_TYPE_ = #{eventType})
         </IsNotNull>
-        and PROC_DEF_ID_ = @processDefinitionId
+        and PROC_DEF_ID_ = #{processDefinitionId}
         and EXECUTION_ID_ is null
         and PROC_INST_ID_ is null
         <IsNotNull Property="tenantId">
-          and TENANT_ID_ = @tenantId
+          and TENANT_ID_ = #{tenantId}
         </IsNotNull>
         <IsNull Property="tenantId">
           and (TENANT_ID_ = '' or TENANT_ID_ is null)
@@ -214,10 +214,10 @@
     <Select  Id="selectEventSubscriptionsByName" ResultMap="eventSubscriptionResultMap">
       select *
       from ACT_RU_EVENT_SUBSCR
-      where (EVENT_TYPE_ = @eventType)
-      and (EVENT_NAME_ = @eventName)
+      where (EVENT_TYPE_ = #{eventType})
+      and (EVENT_NAME_ = #{eventName})
       <IsNotNull Property="tenantId">
-        and TENANT_ID_ = @tenantId
+        and TENANT_ID_ = #{tenantId}
       </IsNotNull>
       <IsNull Property="tenantId">
         and (TENANT_ID_ = '' or TENANT_ID_ is null)
@@ -227,19 +227,19 @@
     <Select  Id="selectEventSubscriptionsByNameAndExecution" ResultMap="eventSubscriptionResultMap">
       select *
       from ACT_RU_EVENT_SUBSCR
-      where (EVENT_TYPE_ = @eventType)
-      and (EVENT_NAME_ = @eventName)
-      and (EXECUTION_ID_ = @executionId)
+      where (EVENT_TYPE_ = #{eventType})
+      and (EVENT_NAME_ = #{eventName})
+      and (EXECUTION_ID_ = #{executionId})
     </Select>
 
     <Select  Id="selectMessageStartEventSubscriptionByName" ResultMap="eventSubscriptionResultMap">
       select *
       from ACT_RU_EVENT_SUBSCR
       where (EVENT_TYPE_ = 'message')
-      and (EVENT_NAME_ = @eventName)
+      and (EVENT_NAME_ = #{eventName})
       and EXECUTION_ID_ is null
       <IsTrue Property="tenantId != null">
-        and TENANT_ID_ = @tenantId
+        and TENANT_ID_ = #{tenantId}
       </IsTrue>
       <IsTrue Property="tenantId == null">
         and (TENANT_ID_ = '' or TENANT_ID_ is null)
@@ -262,17 +262,17 @@
       PROC_DEF_ID_,
       TENANT_ID_
       )
-      values (@id,
+      values (#{id},
       1,
       'message',
-      @eventName,
-      @executionId,
-      @processInstanceId,
-      @activityId,
-      @configuration,
-      @created,
-      @processDefinitionId,
-      @tenantId
+      #{eventName},
+      #{executionId},
+      #{processInstanceId},
+      #{activityId},
+      #{configuration},
+      #{created},
+      #{processDefinitionId},
+      #{tenantId}
       )
     </Insert>
 
@@ -292,17 +292,17 @@
       )
       values
       <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
-        (@id,
+        (#{id},
         1,
-        @eventType,
-        @eventName,
-        @executionId,
-        @processInstanceId,
-        @activityId,
-        @configuration,
-        @created,
-        @processDefinitionId,
-        @tenantId)
+        #{eventType},
+        #{eventName},
+        #{executionId},
+        #{processInstanceId},
+        #{activityId},
+        #{configuration},
+        #{created},
+        #{processDefinitionId},
+        #{tenantId})
       </For>
     </Insert>
 
@@ -311,18 +311,18 @@
     <Update  Id="updateMessageEventSubscription">
       update ACT_RU_EVENT_SUBSCR
       <Set>
-        REV_ =  @revisionNext,
-        EVENT_NAME_ = @eventName,
-        EXECUTION_ID_ = @executionId,
-        PROC_INST_ID_ = @processInstanceId,
-        ACTIVITY_ID_ = @activityId,
-        CONFIGURATION_ = @configuration,
-        CREATED_ = @created,
-        PROC_DEF_ID_ = @processDefinitionId,
-        TENANT_ID_ = @tenantId
+        REV_ =  #{revisionNext},
+        EVENT_NAME_ = #{eventName},
+        EXECUTION_ID_ = #{executionId},
+        PROC_INST_ID_ = #{processInstanceId},
+        ACTIVITY_ID_ = #{activityId},
+        CONFIGURATION_ = #{configuration},
+        CREATED_ = #{created},
+        PROC_DEF_ID_ = #{processDefinitionId},
+        TENANT_ID_ = #{tenantId}
       </Set>
-      where ID_= @id
-      and REV_ = @revision
+      where ID_= #{id}
+      and REV_ = #{revision}
     </Update>
 
     <!-- SIGNAL INSERT -->
@@ -341,17 +341,17 @@
       PROC_DEF_ID_,
       TENANT_ID_
       )
-      values (@id,
+      values (#{id},
       1,
       'signal',
-      @eventName,
-      @executionId,
-      @processInstanceId,
-      @activityId,
-      @configuration,
-      @created,
-      @processDefinitionId,
-      @tenantId
+      #{eventName},
+      #{executionId},
+      #{processInstanceId},
+      #{activityId},
+      #{configuration},
+      #{created},
+      #{processDefinitionId},
+      #{tenantId}
       )
     </Insert>
 
@@ -371,17 +371,17 @@
       )
       values
       <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
-        (@signalEventSubscription.id,
+        (#{signalEventSubscription.id},
         1,
-        @eventType,
-        @eventName,
-        @executionId,
-        @processInstanceId,
-        @activityId,
-        @configuration,
-        @created,
-        @processDefinitionId,
-        @tenantId)
+        #{eventType},
+        #{eventName},
+        #{executionId},
+        #{processInstanceId},
+        #{activityId},
+        #{configuration},
+        #{created},
+        #{processDefinitionId},
+        #{tenantId})
       </For>
     </Insert>
 
@@ -390,18 +390,18 @@
     <Update  Id="updateSignalEventSubscription">
       update ACT_RU_EVENT_SUBSCR
       <Set>
-        REV_ =  @revisionNext,
-        EVENT_NAME_ = @eventName,
-        EXECUTION_ID_ = @executionId,
-        PROC_INST_ID_ = @processInstanceId,
-        ACTIVITY_ID_ = @activityId,
-        CONFIGURATION_ = @configuration,
-        CREATED_ = @created,
-        PROC_DEF_ID_ = @processDefinitionId,
-        TENANT_ID_ = @tenantId
+        REV_ =  #{revisionNext},
+        EVENT_NAME_ = #{eventName},
+        EXECUTION_ID_ = #{executionId},
+        PROC_INST_ID_ = #{processInstanceId},
+        ACTIVITY_ID_ = #{activityId},
+        CONFIGURATION_ = #{configuration},
+        CREATED_ = #{created},
+        PROC_DEF_ID_ = #{processDefinitionId},
+        TENANT_ID_ = #{tenantId}
       </Set>
-      where ID_= @id
-      and REV_ = @revision
+      where ID_= #{id}
+      and REV_ = #{revision}
     </Update>
 
     <!-- Compensate INSERT -->
@@ -420,17 +420,17 @@
       PROC_DEF_ID_,
       TENANT_ID_
       )
-      values (@id,
+      values (#{id},
       1,
       'compensate',
-      @eventName,
-      @executionId,
-      @processInstanceId,
-      @activityId,
-      @configuration,
-      @created,
-      @processDefinitionId,
-      @tenantId
+      #{eventName},
+      #{executionId},
+      #{processInstanceId},
+      #{activityId},
+      #{configuration},
+      #{created},
+      #{processDefinitionId},
+      #{tenantId}
       )
     </Insert>
 
@@ -450,17 +450,17 @@
       )
       values
       <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
-        (@id,
+        (#{id},
         1,
-        @eventType,
-        @eventName,
-        @executionId,
-        @processInstanceId,
-        @activityId,
-        @configuration,
-        @created,
-        @processDefinitionId,
-        @tenantId)
+        #{eventType},
+        #{eventName},
+        #{executionId},
+        #{processInstanceId},
+        #{activityId},
+        #{configuration},
+        #{created},
+        #{processDefinitionId},
+        #{tenantId})
       </For>
     </Insert>
 
@@ -469,27 +469,27 @@
     <Update  Id="updateCompensateEventSubscription">
       update ACT_RU_EVENT_SUBSCR
       <Set>
-        REV_ =  @revisionNext,
-        EVENT_NAME_ = @eventName,
-        EXECUTION_ID_ = @executionId,
-        PROC_INST_ID_ = @processInstanceId,
-        ACTIVITY_ID_ = @activityId,
-        CONFIGURATION_ = @configuration,
-        CREATED_ = @created,
-        PROC_DEF_ID_ = @processDefinitionId,
-        TENANT_ID_ = @tenantId
+        REV_ =  #{revisionNext},
+        EVENT_NAME_ = #{eventName},
+        EXECUTION_ID_ = #{executionId},
+        PROC_INST_ID_ = #{processInstanceId},
+        ACTIVITY_ID_ = #{activityId},
+        CONFIGURATION_ = #{configuration},
+        CREATED_ = #{created},
+        PROC_DEF_ID_ = #{processDefinitionId},
+        TENANT_ID_ = #{tenantId}
       </Set>
-      where ID_= @id
-      and REV_ = @revision
+      where ID_= #{id}
+      and REV_ = #{revision}
     </Update>
 
     <!--  tenantId update -->
     <Update  Id="updateTenantIdOfEventSubscriptions">
       update ACT_RU_EVENT_SUBSCR
       <Set>
-        TENANT_ID_ = @newTenantId
+        TENANT_ID_ = #{newTenantId}
       </Set>
-      where TENANT_ID_ = @oldTenantId
+      where TENANT_ID_ = #{oldTenantId}
     </Update>
   
 </SmartSqlMap>

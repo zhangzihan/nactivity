@@ -31,52 +31,52 @@
   
   <Insert Id="insertHistoricIdentityLink" >
     insert into ACT_HI_IDENTITYLINK (ID_, TYPE_, USER_ID_, GROUP_ID_, TASK_ID_, PROC_INST_ID_)
-    values (@id,
-            @type,
-            @userId,
-            @groupId,
-            @taskId,
-            @processInstanceId)
+    values (#{id},
+            #{type},
+            #{userId},
+            #{groupId},
+            #{taskId},
+            #{processInstanceId})
   </Insert>
   
   <Insert Id="bulkInsertHistoricIdentityLink" >
     insert into ACT_HI_IDENTITYLINK (ID_, TYPE_, USER_ID_, GROUP_ID_, TASK_ID_, PROC_INST_ID_)
     values 
       <For Property="Items" Key="p" Separator=",">
-        (@id,
-         @type,
-         @userId,
-         @groupId,
-         @taskId,
-         @processInstanceId)
+        (#{id},
+         #{type},
+         #{userId},
+         #{groupId},
+         #{taskId},
+         #{processInstanceId})
       </For>
   </Insert>
   
   <!-- HISTORIC IDENTITY LINK DELETE -->
   
   <Delete Id="deleteHistoricIdentityLink" >
-    delete from ACT_HI_IDENTITYLINK where ID_ = @id
+    delete from ACT_HI_IDENTITYLINK where ID_ = #{id}
   </Delete>
   
   <Delete Id="bulkDeleteHistoricIdentityLink" >
     delete from ACT_HI_IDENTITYLINK where  
     <For Key="id" Property="Items" Separator=" or ">
-        ID_ = @id
+        ID_ = #{id}
     </For>
   </Delete>
 
   <!-- HISTORIC IDENTITY LINK SELECT -->
 
   <Select Id="selectHistoricIdentityLink"  ResultMap="historicIdentityLinkResultMap">
-    select * from ACT_HI_IDENTITYLINK where ID_ = @id
+    select * from ACT_HI_IDENTITYLINK where ID_ = #{id}
   </Select>
   
   <Select Id="selectHistoricIdentityLinksByTask"  ResultMap="historicIdentityLinkResultMap">
-    select * from ACT_HI_IDENTITYLINK where TASK_ID_ = @taskId
+    select * from ACT_HI_IDENTITYLINK where TASK_ID_ = #{taskId}
   </Select>
   
   <Select Id="selectHistoricIdentityLinksByProcessInstance"  ResultMap="historicIdentityLinkResultMap">
-    select * from ACT_HI_IDENTITYLINK where PROC_INST_ID_ = @processInstanceId
+    select * from ACT_HI_IDENTITYLINK where PROC_INST_ID_ = #{processInstanceId}
   </Select>
   
  <Select Id="selectIdentityLinks" ResultMap="historicIdentityLinkResultMap">
@@ -86,15 +86,15 @@
   <Select Id="selectHistoricIdentityLinkByTaskUserGroupAndType"  ResultMap="historicIdentityLinkResultMap">
     select * 
     from ACT_HI_IDENTITYLINK 
-    where TASK_ID_ = @taskId
+    where TASK_ID_ = #{taskId}
       <IsNotNull Property="userId">
-        and USER_ID_ = @userId
+        and USER_ID_ = #{userId}
       </IsNotNull>
       <IsNotNull Property="groupId">
-        and GROUP_ID_ = @groupId
+        and GROUP_ID_ = #{groupId}
       </IsNotNull>
       <IsNotNull Property="type">
-        and TYPE_ = @type
+        and TYPE_ = #{type}
       </IsNotNull>
   </Select>
 </SmartSqlMap>

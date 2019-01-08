@@ -20,14 +20,14 @@
 
   <Insert Id="insertIdentityLink">
     insert into ACT_RU_IDENTITYLINK (ID_, REV_, TYPE_, USER_ID_, GROUP_ID_, TASK_ID_, PROC_INST_ID_, PROC_DEF_ID_)
-    values (@id,
+    values (#{id},
     1,
-    @type,
-    @userId,
-    @groupId,
-    @taskId,
-    @processInstanceId,
-    @processDefId)
+    #{type},
+    #{userId},
+    #{groupId},
+    #{taskId},
+    #{processInstanceId},
+    #{processDefId})
 
   </Insert>
 
@@ -35,50 +35,50 @@
     insert into ACT_RU_IDENTITYLINK (ID_, REV_, TYPE_, USER_ID_, GROUP_ID_, TASK_ID_, PROC_INST_ID_, PROC_DEF_ID_)
     values
     <For Property="Items" Key="p" Separator="," Open="" Close="">
-      (@id,
+      (#{id},
       1,
-      @type,
-      @userId,
-      @groupId,
-      @taskId,
-      @processInstanceId,
-      @processDefId)
+      #{type},
+      #{userId},
+      #{groupId},
+      #{taskId},
+      #{processInstanceId},
+      #{processDefId})
     </For>
   </Insert>
 
   <!-- IDENTITY LINK DELETE -->
 
   <Delete Id="deleteIdentityLink">
-    delete from ACT_RU_IDENTITYLINK where ID_ = @id
+    delete from ACT_RU_IDENTITYLINK where ID_ = #{id}
   </Delete>
 
   <Delete Id="bulkDeleteIdentityLink">
     delete from ACT_RU_IDENTITYLINK where
     <For Key="identityLink" Property="list" Separator=" or " Open="" Close="">
-      ID_ = @id
+      ID_ = #{id}
     </For>
   </Delete>
 
   <Delete Id="deleteIdentityLinkByProcDef">
-    delete from ACT_RU_IDENTITYLINK where PROC_DEF_ID_ = @processDefId
+    delete from ACT_RU_IDENTITYLINK where PROC_DEF_ID_ = #{processDefId}
   </Delete>
 
   <!-- IDENTITY LINK SELECT -->
 
   <Select Id="selectIdentityLink" ResultMap="identityLinkResultMap">
-    select * from ACT_RU_IDENTITYLINK where ID_ = @id
+    select * from ACT_RU_IDENTITYLINK where ID_ = #{id}
   </Select>
 
   <Select Id="selectIdentityLinksByTask" ResultMap="identityLinkResultMap">
-    select * from ACT_RU_IDENTITYLINK where TASK_ID_ = @taskId
+    select * from ACT_RU_IDENTITYLINK where TASK_ID_ = #{taskId}
   </Select>
 
   <Select Id="selectIdentityLinksByProcessInstance" ResultMap="identityLinkResultMap">
-    select * from ACT_RU_IDENTITYLINK where PROC_INST_ID_ = @processInstanceId
+    select * from ACT_RU_IDENTITYLINK where PROC_INST_ID_ = #{processInstanceId}
   </Select>
 
   <Select Id="selectIdentityLinksByProcessDefinition" ResultMap="identityLinkResultMap">
-    select * from ACT_RU_IDENTITYLINK where PROC_DEF_ID_ = @processDefinitionId
+    select * from ACT_RU_IDENTITYLINK where PROC_DEF_ID_ = #{processDefinitionId}
   </Select>
 
   <Select Id="selectIdentityLinks" ResultMap="identityLinkResultMap">
@@ -88,42 +88,42 @@
   <Select Id="selectIdentityLinkByTaskUserGroupAndType" ResultMap="identityLinkResultMap">
     select *
     from ACT_RU_IDENTITYLINK
-    where TASK_ID_ = @taskId
+    where TASK_ID_ = #{taskId}
     <IsNotNull Property="userId">
-      and USER_ID_ = @userId
+      and USER_ID_ = #{userId}
     </IsNotNull>
     <IsNotNull Property="groupId">
-      and GROUP_ID_ = @groupId
+      and GROUP_ID_ = #{groupId}
     </IsNotNull>
     <IsNotNull Property="type">
-      and TYPE_ = @type
+      and TYPE_ = #{type}
     </IsNotNull>
   </Select>
 
   <Select Id="selectIdentityLinkByProcessInstanceUserGroupAndType" ResultMap="identityLinkResultMap">
     select *
     from ACT_RU_IDENTITYLINK
-    where PROC_INST_ID_ = @processInstanceId
+    where PROC_INST_ID_ = #{processInstanceId}
     <IsNotNull Property="userId">
-      and USER_ID_ = @userId
+      and USER_ID_ = #{userId}
     </IsNotNull>
     <IsNotNull Property="groupId">
-      and GROUP_ID_ = @groupId
+      and GROUP_ID_ = #{groupId}
     </IsNotNull>
     <IsNotNull Property="type">
-      and TYPE_ = @type
+      and TYPE_ = #{type}
     </IsNotNull>
   </Select>
 
   <Select Id="selectIdentityLinkByProcessDefinitionUserAndGroup" ResultMap="identityLinkResultMap">
     select *
     from ACT_RU_IDENTITYLINK
-    where PROC_DEF_ID_ = @processDefinitionId
+    where PROC_DEF_ID_ = #{processDefinitionId}
     <IsNotNull Property="parameter.userId != null">
-      and USER_ID_ = @userId
+      and USER_ID_ = #{userId}
     </IsNotNull>
     <IsNotNull Property="parameter.groupId != null">
-      and GROUP_ID_ = @groupId
+      and GROUP_ID_ = #{groupId}
     </IsNotNull>
   </Select>
 

@@ -59,15 +59,15 @@
   <Insert Id="insertHistoricFormProperty">
     insert into ACT_HI_DETAIL (ID_, TYPE_, PROC_INST_ID_, ACT_INST_ID_, EXECUTION_ID_, TASK_ID_, TIME_, NAME_, TEXT_)
     values (
-    @id,
+    #{id},
     'FormProperty',
-    @processInstanceId,
-    @activityInstanceId,
-    @executionId,
-    @taskId,
-    @time,
-    @propertyId,
-    @propertyValue
+    #{processInstanceId},
+    #{activityInstanceId},
+    #{executionId},
+    #{taskId},
+    #{time},
+    #{propertyId},
+    #{propertyValue}
     )
   </Insert>
 
@@ -75,36 +75,36 @@
     insert into ACT_HI_DETAIL (ID_, TYPE_, PROC_INST_ID_, ACT_INST_ID_, EXECUTION_ID_, TASK_ID_, TIME_, NAME_, TEXT_)
     values
     <For Property="Items" Key="p" Separator=",">
-      (@id,
-      @detailType,
-      @processInstanceId,
-      @activityInstanceId,
-      @executionId,
-      @taskId,
-      @time,
-      @propertyId,
-      @propertyValue)
+      (#{id},
+      #{detailType},
+      #{processInstanceId},
+      #{activityInstanceId},
+      #{executionId},
+      #{taskId},
+      #{time},
+      #{propertyId},
+      #{propertyValue})
     </For>
   </Insert>
 
   <Insert Id="insertHistoricDetailVariableInstanceUpdate" ParameterMap="insupVariableInstance">
     insert into ACT_HI_DETAIL (ID_, TYPE_, PROC_INST_ID_, EXECUTION_ID_, ACT_INST_ID_, TASK_ID_, NAME_, REV_, VAR_TYPE_, TIME_, BYTEARRAY_ID_, DOUBLE_, LONG_ , TEXT_, TEXT2_)
     values (
-    @id,
+    #{id},
     'VariableUpdate',
-    @processInstanceId,
-    @executionId,
-    @activityInstanceId,
-    @taskId,
-    @variableName,
-    @revision,
-    @variableType,
-    @time,
-    @byteArrayRef,
-    @doubleValue,
-    @longValue,
-    @textValue,
-    @textValue2
+    #{processInstanceId},
+    #{executionId},
+    #{activityInstanceId},
+    #{taskId},
+    #{variableName},
+    #{revision},
+    #{variableType},
+    #{time},
+    #{byteArrayRef},
+    #{doubleValue},
+    #{longValue},
+    #{textValue},
+    #{textValue2}
     )
   </Insert>
 
@@ -112,40 +112,40 @@
     insert into ACT_HI_DETAIL (ID_, TYPE_, PROC_INST_ID_, EXECUTION_ID_, ACT_INST_ID_, TASK_ID_, NAME_, REV_, VAR_TYPE_, TIME_, BYTEARRAY_ID_, DOUBLE_, LONG_ , TEXT_, TEXT2_)
     values
     <For Property="Items" Key="p" Separator=",">
-      (@id,
-      @detailType,
-      @processInstanceId,
-      @executionId,
-      @activityInstanceId,
-      @taskId,
-      @variableName,
-      @revision,
-      @variableType,
-      @time,
-      @byteArrayRef,
-      @doubleValue,
-      @longValue,
-      @textValue,
-      @textValue2)
+      (#{id},
+      #{detailType},
+      #{processInstanceId},
+      #{executionId},
+      #{activityInstanceId},
+      #{taskId},
+      #{variableName},
+      #{revision},
+      #{variableType},
+      #{time},
+      #{byteArrayRef},
+      #{doubleValue},
+      #{longValue},
+      #{textValue},
+      #{textValue2})
     </For>
   </Insert>
 
   <!-- HISTORIC DETAILS DELETE -->
 
   <Update Id="deleteHistoricDetailAssignment">
-    delete from ACT_HI_DETAIL where ID_ = @id
+    delete from ACT_HI_DETAIL where ID_ = #{id}
   </Update>
 
   <Update Id="deleteHistoricDetailTransitionInstance">
-    delete from ACT_HI_DETAIL where ID_ = @id
+    delete from ACT_HI_DETAIL where ID_ = #{id}
   </Update>
 
   <Update Id="deleteHistoricDetailVariableInstanceUpdate">
-    delete from ACT_HI_DETAIL where ID_ = @id
+    delete from ACT_HI_DETAIL where ID_ = #{id}
   </Update>
 
   <Update Id="deleteHistoricFormProperty">
-    delete from ACT_HI_DETAIL where ID_ = @id
+    delete from ACT_HI_DETAIL where ID_ = #{id}
   </Update>
 
   <!-- HISTORIC VARIABLE UPDATE SELECT -->
@@ -154,23 +154,23 @@
     from ACT_HI_DETAIL RES
     <Where>
       <IsNotNull Property="id">
-        RES.ID_ = @id
+        RES.ID_ = #{id}
       </IsNotNull>
       <IsNotNull Property="processInstanceId">
-        RES.PROC_INST_ID_ = @processInstanceId
+        RES.PROC_INST_ID_ = #{processInstanceId}
       </IsNotNull>
       <IsNotNull Property="executionId">
-        RES.EXECUTION_ID_ = @executionId
+        RES.EXECUTION_ID_ = #{executionId}
       </IsNotNull>
       <IsNotNull Property="activityId">
-        and RES.ACT_INST_ID_ = @activityId
+        and RES.ACT_INST_ID_ = #{activityId}
       </IsNotNull>
       <IsNotNull Property="activityInstanceId">
-        and RES.ACT_INST_ID_ = @activityInstanceId
+        and RES.ACT_INST_ID_ = #{activityInstanceId}
       </IsNotNull>
       <Switch>
         <Case Property="taskId">
-          and RES.TASK_ID_ = @taskId
+          and RES.TASK_ID_ = #{taskId}
         </Case>
         <Default>
           <IsTrue Property="excludeTaskRelated">
@@ -180,19 +180,19 @@
       </Switch>
 
       <IsNotNull Property="type">
-        and RES.TYPE_ = @type
+        and RES.TYPE_ = #{type}
       </IsNotNull>
     </Where>
   </Statement>
   
   <Select Id="selectHistoricDetailByTaskId" ResultMap="historicDetailResultMap">
     select * from ACT_HI_DETAIL
-    where TASK_ID_ = @taskId
+    where TASK_ID_ = #{taskId}
   </Select>
   
   <Select Id="selectHistoricDetailByProcessInstanceId" ResultMap="historicDetailResultMap">
     select * from ACT_HI_DETAIL
-    where PROC_INST_ID_ = @processInstanceId
+    where PROC_INST_ID_ = #{processInstanceId}
   </Select>
 
   <Select Id="selectHistoricDetailsByQueryCriteria" ResultMap="historicDetailResultMap">

@@ -16,11 +16,11 @@
   <Insert Id="insertByteArray">
     insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
     values (
-    @id,
+    #{id},
     1,
-    @name,
-    @bytes,
-    @deploymentId
+    #{name},
+    #{bytes},
+    #{deploymentId}
     )
   </Insert>
 
@@ -28,11 +28,11 @@
     insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
     values
     <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator="," >
-      (@id,
+      (#{id},
       1,
-      @name,
-      @bytes,
-      @deploymentId)
+      #{name},
+      #{bytes},
+      #{deploymentId})
     </For>
   </Insert>
 
@@ -41,10 +41,10 @@
   <Update Id="updateByteArray">
     update ACT_GE_BYTEARRAY
     set
-    REV_ = @revisionNext,
-    BYTES_ = @bytes
-    where ID_ = @id
-    and REV_ = @revision
+    REV_ = #{revisionNext},
+    BYTES_ = #{bytes}
+    where ID_ = #{id}
+    and REV_ = #{revision}
   </Update>
 
   <!-- BYTE ARRAY DELETE -->
@@ -54,44 +54,44 @@
   </Select>
   
   <Select Id="selectBytesOfByteArray" ResultMap="byteArrayResultMap">
-    select BYTES_ from ACT_GE_BYTEARRAY where ID_ = @id and REV_ = @revision
+    select BYTES_ from ACT_GE_BYTEARRAY where ID_ = #{id} and REV_ = #{revision}
   </Select>
 
   <Delete Id="deleteByteArraysForDeployment">
-    delete from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = @id and REV_ = @revision
+    delete from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = #{id} and REV_ = #{revision}
   </Delete>
 
   <Delete Id="deleteByteArray">
-    delete from ACT_GE_BYTEARRAY where ID_ = @id and REV_ = @revision
+    delete from ACT_GE_BYTEARRAY where ID_ = #{id} and REV_ = #{revision}
   </Delete>
 
   <Delete Id="deleteByteArrayNoRevisionCheck">
-    delete from ACT_GE_BYTEARRAY where ID_ = @id
+    delete from ACT_GE_BYTEARRAY where ID_ = #{id}
   </Delete>
 
   <!-- BYTE ARRAY SELECT -->
 
   <Select Id="selectByteArray" ResultMap="byteArrayResultMap">
-    select * from ACT_GE_BYTEARRAY where ID_ = @id
+    select * from ACT_GE_BYTEARRAY where ID_ = #{id}
   </Select>
 
   <Update Id="updateByteArray_postgres">
     update ACT_GE_BYTEARRAY
     set
-    REV_ = @revisionNext,
-    BYTES_ = @bytes
-    where ID_ = @id
-    and REV_ = @revision
+    REV_ = #{revisionNext},
+    BYTES_ = #{bytes}
+    where ID_ = #{id}
+    and REV_ = #{revision}
   </Update>
 
   <Insert Id="insertByteArray_postgres">
     insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
     values (
-    @id,
+    #{id},
     1,
-    @name,
-    @bytes,
-    @deploymentId
+    #{name},
+    #{bytes},
+    #{deploymentId}
     )
   </Insert>
   

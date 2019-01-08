@@ -36,17 +36,17 @@
     <Insert Id="insertAttachment">
       insert into ACT_HI_ATTACHMENT (ID_, REV_, USER_ID_, NAME_, DESCRIPTION_, TYPE_, TASK_ID_, PROC_INST_ID_, URL_, CONTENT_ID_, TIME_)
       values (
-     @id,
+     #{id},
       1,
-     @userId,
-     @name,
-     @description,
-     @type,
-     @taskId,
-     @processInstanceId,
-     @url,
-     @contentId,
-     @time
+     #{userId},
+     #{name},
+     #{description},
+     #{type},
+     #{taskId},
+     #{processInstanceId},
+     #{url},
+     #{contentId},
+     #{time}
       )
     </Insert>
 
@@ -55,17 +55,17 @@
       values
       <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
         (
-        @attachment.id,
+        #{attachment.id},
         1,
-       @attachment.userId,
-       @attachment.name,
-       @attachment.description,
-       @attachment.type,
-       @attachment.taskId,
-       @attachment.processInstanceId,
-       @attachment.url,
-       @attachment.contentId,
-       @attachment.time)
+       #{attachment.userId},
+       #{attachment.name},
+       #{attachment.description},
+       #{attachment.type},
+       #{attachment.taskId},
+       #{attachment.processInstanceId},
+       #{attachment.url},
+       #{attachment.contentId},
+       #{attachment.time})
       </For>
     </Insert>
 
@@ -74,18 +74,18 @@
     <Update Id="updateAttachment">
       update ACT_HI_ATTACHMENT
       set
-      REV_ = @revisionNext,
-      NAME_ =@name,
-      DESCRIPTION_ =@description
-      where ID_ = @id
-      and REV_ =@revision
+      REV_ = #{revisionNext},
+      NAME_ =#{name},
+      DESCRIPTION_ =#{description}
+      where ID_ = #{id}
+      and REV_ =#{revision}
     </Update>
 
     <!-- ATTACHMENT DELETE -->
 
     <Delete Id="deleteAttachment">
       delete from ACT_HI_ATTACHMENT
-      where ID_ = @id and REV_ = @revision
+      where ID_ = #{id} and REV_ = #{revision}
     </Delete>
 
     <!-- ATTACHMENT SELECT -->
@@ -93,20 +93,20 @@
     <Select Id="selectAttachment" ResultMap="attachmentResultMap">
       select *
       from ACT_HI_ATTACHMENT
-      where ID_ = @id
+      where ID_ = #{id}
     </Select>
 
     <Select Id="selectAttachmentsByTaskId" ResultMap="attachmentResultMap">
       select *
       from ACT_HI_ATTACHMENT
-      where TASK_ID_ = @parameter
+      where TASK_ID_ = #{parameter}
       order by TIME_ desc
     </Select>
 
     <Select Id="selectAttachmentsByProcessInstanceId" ResultMap="attachmentResultMap">
       select *
       from ACT_HI_ATTACHMENT
-      where PROC_INST_ID_ =@parameter
+      where PROC_INST_ID_ =#{parameter}
       order by TIME_ desc
     </Select>
 

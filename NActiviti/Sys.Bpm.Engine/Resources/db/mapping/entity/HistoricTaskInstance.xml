@@ -104,26 +104,26 @@
     CATEGORY_,
     TENANT_ID_
     ) values (
-    @id,
-    @processDefinitionId,
-    @processInstanceId,
-    @executionId,
-    @name,
-    @parentTaskId,
-    @description,
-    @owner,
-    @assignee,
-    @startTime,
-    @claimTime,
-    @endTime,
-    @durationInMillis,
-    @deleteReason,
-    @taskDefinitionKey,
-    @formKey,
-    @priority,
-    @dueDate,
-    @category,
-    @tenantId
+    #{id},
+    #{processDefinitionId},
+    #{processInstanceId},
+    #{executionId},
+    #{name},
+    #{parentTaskId},
+    #{description},
+    #{owner},
+    #{assignee},
+    #{startTime},
+    #{claimTime},
+    #{endTime},
+    #{durationInMillis},
+    #{deleteReason},
+    #{taskDefinitionKey},
+    #{formKey},
+    #{priority},
+    #{dueDate},
+    #{category},
+    #{tenantId}
     )
   </Insert>
 
@@ -151,26 +151,26 @@
     TENANT_ID_
     ) values
     <For Property="Items" Key="p" Separator=",">
-      (@id,
-      @processDefinitionId,
-      @processInstanceId,
-      @executionId,
-      @name,
-      @parentTaskId,
-      @description,
-      @owner,
-      @assignee,
-      @startTime,
-      @claimTime,
-      @endTime,
-      @durationInMillis,
-      @deleteReason,
-      @taskDefinitionKey,
-      @formKey,
-      @priority,
-      @dueDate,
-      @category,
-      @tenantId)
+      (#{id},
+      #{processDefinitionId},
+      #{processInstanceId},
+      #{executionId},
+      #{name},
+      #{parentTaskId},
+      #{description},
+      #{owner},
+      #{assignee},
+      #{startTime},
+      #{claimTime},
+      #{endTime},
+      #{durationInMillis},
+      #{deleteReason},
+      #{taskDefinitionKey},
+      #{formKey},
+      #{priority},
+      #{dueDate},
+      #{category},
+      #{tenantId})
     </For>
   </Insert>
 
@@ -178,35 +178,35 @@
 
   <Update Id="updateHistoricTaskInstance">
     update ACT_HI_TASKINST set
-    PROC_DEF_ID_ = @processDefinitionId,
-    EXECUTION_ID_ = @executionId,
-    NAME_ = @name,
-    PARENT_TASK_ID_ = @parentTaskId,
-    DESCRIPTION_ = @description,
-    OWNER_ = @owner,
-    ASSIGNEE_ = @assignee,
-    CLAIM_TIME_ = @claimTime,
-    END_TIME_ = @endTime,
-    DURATION_ = @durationInMillis,
-    DELETE_REASON_ = @deleteReason,
-    TASK_DEF_KEY_ = @taskDefinitionKey,
-    FORM_KEY_ = @formKey,
-    PRIORITY_ = @priority,
-    DUE_DATE_ = @dueDate,
-    CATEGORY_ = @category
-    where ID_ = @id
+    PROC_DEF_ID_ = #{processDefinitionId},
+    EXECUTION_ID_ = #{executionId},
+    NAME_ = #{name},
+    PARENT_TASK_ID_ = #{parentTaskId},
+    DESCRIPTION_ = #{description},
+    OWNER_ = #{owner},
+    ASSIGNEE_ = #{assignee},
+    CLAIM_TIME_ = #{claimTime},
+    END_TIME_ = #{endTime},
+    DURATION_ = #{durationInMillis},
+    DELETE_REASON_ = #{deleteReason},
+    TASK_DEF_KEY_ = #{taskDefinitionKey},
+    FORM_KEY_ = #{formKey},
+    PRIORITY_ = #{priority},
+    DUE_DATE_ = #{dueDate},
+    CATEGORY_ = #{category}
+    where ID_ = #{id}
   </Update>
 
   <!-- HISTORIC TASK INSTANCE DELETE -->
 
   <Delete Id="deleteHistoricTaskInstance">
-    delete from ACT_HI_TASKINST where ID_ = @id
+    delete from ACT_HI_TASKINST where ID_ = #{id}
   </Delete>
 
   <Delete Id="bulkDeleteHistoricTaskInstance">
     delete from ACT_HI_TASKINST where
     <For Key="p" Property="Items" Separator=" or ">
-      ID_ = @task.id
+      ID_ = #{task.id}
     </For>
   </Delete>
 
@@ -276,146 +276,146 @@
     </For>
     <Where>
       <IsNotNull Property="taskId != null">
-        RES.ID_ = @taskId
+        RES.ID_ = #{taskId}
       </IsNotNull>
       <IsNotNull Property="processDefinitionId != null">
-        and RES.PROC_DEF_ID_ = @processDefinitionId
+        and RES.PROC_DEF_ID_ = #{processDefinitionId}
       </IsNotNull>
       <IsNotNull Property="processDefinitionKey != null">
-        and D.KEY_ = @processDefinitionKey
+        and D.KEY_ = #{processDefinitionKey}
       </IsNotNull>
       <IsNotNull Property="processDefinitionKeyLike != null">
-        and D.KEY_ like @processDefinitionKeyLike${wildcardEscapeClause}
+        and D.KEY_ like #{processDefinitionKeyLike}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="processDefinitionKeyLikeIgnoreCase != null">
-        and lower(D.KEY_) like @processDefinitionKeyLikeIgnoreCase${wildcardEscapeClause}
+        and lower(D.KEY_) like #{processDefinitionKeyLikeIgnoreCase}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="processDefinitionKeys != null &amp;&amp; processDefinitionKeys.size() &gt; 0">
         and D.KEY_ in
         <For Key="item" Property="processDefinitionKeys" Open="(" Separator="," Close=")">
-          @item
+          #{item}
         </For>
       </IsNotNull>
       <IsNotNull Property="processDefinitionName != null">
-        and D.NAME_ = @processDefinitionName
+        and D.NAME_ = #{processDefinitionName}
       </IsNotNull>
       <IsNotNull Property="processDefinitionNameLike != null">
-        and D.NAME_ like @processDefinitionNameLike${wildcardEscapeClause}
+        and D.NAME_ like #{processDefinitionNameLike}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="processCategoryInList != null &amp;&amp; processCategoryInList.size() &gt; 0">
         and D.CATEGORY_ IN
         <For Key="processCategory" Property="processCategoryInList"
                  open="(" separator="," close=")">
-          @processCategory
+          #{processCategory}
         </For>
       </IsNotNull>
       <IsNotNull Property="processCategoryNotInList != null &amp;&amp; processCategoryNotInList.size() &gt; 0">
         and D.CATEGORY_ NOT IN
         <For Key="processCategory" Property="processCategoryNotInList" Open="(" Separator="," Close=")">
-          @processCategory
+          #{processCategory}
         </For>
       </IsNotNull>
       <IsNotNull Property="deploymentId != null">
-        and DEPLOY_P.DEPLOYMENT_ID_ = @deploymentId
+        and DEPLOY_P.DEPLOYMENT_ID_ = #{deploymentId}
       </IsNotNull>
       <IsNotNull Property="deploymentIds != null &amp;&amp; deploymentIds.size() &gt; 0">
         and DEPLOY_P.DEPLOYMENT_ID_ IN
         <For Key="deployment" Property="deploymentIds" Open="(" Separator="," Close=")">
-          @deployment
+          #{deployment}
         </For>
       </IsNotNull>
       <IsNotNull Property="processInstanceId != null">
-        and RES.PROC_INST_ID_ = @processInstanceId
+        and RES.PROC_INST_ID_ = #{processInstanceId}
       </IsNotNull>
       <IsNotNull Property="processInstanceIds != null &amp;&amp; processInstanceIds.size() &gt; 0">
         and RES.PROC_INST_ID_ IN
         <For Key="processInstance" Property="processInstanceIds" Open="(" Separator="," Close=")">
-          @processInstance
+          #{processInstance}
         </For>
       </IsNotNull>
       <IsNotNull Property="processInstanceBusinessKey != null">
-        and HPI.BUSINESS_KEY_ = @processInstanceBusinessKey
+        and HPI.BUSINESS_KEY_ = #{processInstanceBusinessKey}
       </IsNotNull>
       <IsNotNull Property="processInstanceBusinessKeyLike != null">
-        and HPI.BUSINESS_KEY_ like @processInstanceBusinessKeyLike${wildcardEscapeClause}
+        and HPI.BUSINESS_KEY_ like #{processInstanceBusinessKeyLike}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="processInstanceBusinessKeyLikeIgnoreCase != null">
-        and lower(HPI.BUSINESS_KEY_) like @processInstanceBusinessKeyLikeIgnoreCase${wildcardEscapeClause}
+        and lower(HPI.BUSINESS_KEY_) like #{processInstanceBusinessKeyLikeIgnoreCase}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="taskDefinitionKey != null">
-        and RES.TASK_DEF_KEY_ = @taskDefinitionKey
+        and RES.TASK_DEF_KEY_ = #{taskDefinitionKey}
       </IsNotNull>
       <IsNotNull Property="taskDefinitionKeyLike != null">
-        and RES.TASK_DEF_KEY_ like @taskDefinitionKeyLike${wildcardEscapeClause}
+        and RES.TASK_DEF_KEY_ like #{taskDefinitionKeyLike}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="executionId != null">
-        and RES.EXECUTION_ID_ = @executionId
+        and RES.EXECUTION_ID_ = #{executionId}
       </IsNotNull>
       <IsNotNull Property="taskName != null">
-        and RES.NAME_ = @taskName
+        and RES.NAME_ = #{taskName}
       </IsNotNull>
       <IsNotNull Property="taskNameLike != null">
-        and RES.NAME_ like @taskNameLike${wildcardEscapeClause}
+        and RES.NAME_ like #{taskNameLike}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="taskNameLikeIgnoreCase != null">
-        and lower(RES.NAME_) like @taskNameLikeIgnoreCase${wildcardEscapeClause}
+        and lower(RES.NAME_) like #{taskNameLikeIgnoreCase}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="taskNameList != null &amp;&amp; taskNameList.size() &gt; 0">
         and RES.NAME_ IN
         <For Key="taskName" Property="taskNameList" Open="(" Separator="," Close=")">
-          @taskName
+          #{taskName}
         </For>
       </IsNotNull>
       <IsNotNull Property="taskNameListIgnoreCase != null &amp;&amp; taskNameListIgnoreCase.size() &gt; 0">
         and lower(RES.NAME_) IN
         <For Key="taskName" Property="taskNameListIgnoreCase" Open="(" Separator="," Close=")">
-          @taskName
+          #{taskName}
         </For>
       </IsNotNull>
       <IsNotNull Property="taskParentTaskId != null">
-        and RES.PARENT_TASK_ID_ = @taskParentTaskId
+        and RES.PARENT_TASK_ID_ = #{taskParentTaskId}
       </IsNotNull>
       <IsNotNull Property="taskDescription != null">
-        and RES.DESCRIPTION_ = @taskDescription
+        and RES.DESCRIPTION_ = #{taskDescription}
       </IsNotNull>
       <IsNotNull Property="taskDescriptionLike != null">
-        and RES.DESCRIPTION_ like @taskDescriptionLike${wildcardEscapeClause}
+        and RES.DESCRIPTION_ like #{taskDescriptionLike}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="taskDescriptionLikeIgnoreCase != null">
-        and lower(RES.DESCRIPTION_) like @taskDescriptionLikeIgnoreCase${wildcardEscapeClause}
+        and lower(RES.DESCRIPTION_) like #{taskDescriptionLikeIgnoreCase}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="taskDeleteReason != null">
-        and RES.DELETE_REASON_ = @taskDeleteReason
+        and RES.DELETE_REASON_ = #{taskDeleteReason}
       </IsNotNull>
       <IsNotNull Property="taskDeleteReasonLike != null">
-        and RES.DELETE_REASON_ like @taskDeleteReasonLike${wildcardEscapeClause}
+        and RES.DELETE_REASON_ like #{taskDeleteReasonLike}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="taskOwner != null">
-        and RES.OWNER_ = @taskOwner
+        and RES.OWNER_ = #{taskOwner}
       </IsNotNull>
       <IsNotNull Property="taskOwnerLike != null">
-        and RES.OWNER_ like @taskOwnerLike${wildcardEscapeClause}
+        and RES.OWNER_ like #{taskOwnerLike}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="taskOwnerLikeIgnoreCase != null">
-        and lower(RES.OWNER_) like @taskOwnerLikeIgnoreCase${wildcardEscapeClause}
+        and lower(RES.OWNER_) like #{taskOwnerLikeIgnoreCase}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="taskAssignee != null">
-        and RES.ASSIGNEE_ = @taskAssignee
+        and RES.ASSIGNEE_ = #{taskAssignee}
       </IsNotNull>
       <IsNotNull Property="taskAssigneeLike != null">
-        and RES.ASSIGNEE_ like @taskAssigneeLike${wildcardEscapeClause}
+        and RES.ASSIGNEE_ like #{taskAssigneeLike}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="taskAssigneeLikeIgnoreCase != null">
-        and lower(RES.ASSIGNEE_) like @taskAssigneeLikeIgnoreCase${wildcardEscapeClause}
+        and lower(RES.ASSIGNEE_) like #{taskAssigneeLikeIgnoreCase}${wildcardEscapeClause}
       </IsNotNull>
       <IsNotNull Property="taskPriority != null">
-        and RES.PRIORITY_ = @taskPriority
+        and RES.PRIORITY_ = #{taskPriority}
       </IsNotNull>
       <IsNotNull Property="taskMinPriority != null">
-        and RES.PRIORITY_ &gt;= @taskMinPriority
+        and RES.PRIORITY_ &gt;= #{taskMinPriority}
       </IsNotNull>
       <IsNotNull Property="taskMaxPriority != null">
-        and RES.PRIORITY_ &lt;= @taskMaxPriority
+        and RES.PRIORITY_ &lt;= #{taskMaxPriority}
       </IsNotNull>
       <IsNotNull Property="unfinished">
         and RES.END_TIME_ is null
@@ -430,43 +430,43 @@
         and HPI.END_TIME_ is null
       </IsNotNull>
       <IsNotNull Property="dueDate != null">
-        and RES.DUE_DATE_ = @dueDate
+        and RES.DUE_DATE_ = #{dueDate}
       </IsNotNull>
       <IsNotNull Property="dueBefore != null">
-        and RES.DUE_DATE_ &lt; @dueBefore
+        and RES.DUE_DATE_ &lt; #{dueBefore}
       </IsNotNull>
       <IsNotNull Property="dueAfter != null">
-        and RES.DUE_DATE_ &gt; @dueAfter
+        and RES.DUE_DATE_ &gt; #{dueAfter}
       </IsNotNull>
       <IsNotNull Property="withoutDueDate">
         and RES.DUE_DATE_ is null
       </IsNotNull>
       <IsNotNull Property="creationDate != null">
-        and RES.START_TIME_ = @creationDate
+        and RES.START_TIME_ = #{creationDate}
       </IsNotNull>
       <IsNotNull Property="creationBeforeDate != null">
-        and RES.START_TIME_ &lt; @creationBeforeDate
+        and RES.START_TIME_ &lt; #{creationBeforeDate}
       </IsNotNull>
       <IsNotNull Property="creationAfterDate != null">
-        and RES.START_TIME_ &gt; @creationAfterDate
+        and RES.START_TIME_ &gt; #{creationAfterDate}
       </IsNotNull>
       <IsNotNull Property="completedDate != null">
-        and RES.END_TIME_ = @completedDate
+        and RES.END_TIME_ = #{completedDate}
       </IsNotNull>
       <IsNotNull Property="completedBeforeDate != null">
-        and RES.END_TIME_ &lt; @completedBeforeDate
+        and RES.END_TIME_ &lt; #{completedBeforeDate}
       </IsNotNull>
       <IsNotNull Property="completedAfterDate != null">
-        and RES.END_TIME_ &gt; @completedAfterDate
+        and RES.END_TIME_ &gt; #{completedAfterDate}
       </IsNotNull>
       <IsNotNull Property="category != null">
-        and RES.CATEGORY_ = @category
+        and RES.CATEGORY_ = #{category}
       </IsNotNull>
       <IsNotNull Property="tenantId != null">
-        and RES.TENANT_ID_ = @tenantId
+        and RES.TENANT_ID_ = #{tenantId}
       </IsNotNull>
       <IsNotNull Property="tenantIdLike != null">
-        and RES.TENANT_ID_ like @tenantIdLike${wildcardEscapeClause}
+        and RES.TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
       </IsNotNull>
       <IsTrue Property="withoutTenantId">
         and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
@@ -477,7 +477,7 @@
         and
         (
         <IsNotNull Property="candidateUser != null">
-          HI.USER_ID_ = @candidateUser
+          HI.USER_ID_ = #{candidateUser}
         </IsNotNull>
         <IsNotNull Property="candidateUser != null &amp;&amp; candidateGroups != null &amp;&amp; candidateGroups.size() &gt; 0">
           or
@@ -485,7 +485,7 @@
         <IsNotNull Property="candidateGroups != null &amp;&amp; candidateGroups.size() &gt; 0">
           HI.GROUP_ID_ IN
           <For Key="group" Property="candidateGroups" Open="(" Separator="," Close=")">
-            @group
+            #{group}
           </For>
         </IsNotNull>
         )
@@ -493,9 +493,9 @@
       <IsNotNull Property="involvedUser != null">
         and
         (
-        exists(select LINK.USER_ID_ from ACT_HI_IDENTITYLINK LINK where USER_ID_ = @involvedUser and LINK.TASK_ID_ = RES.ID_)
-        or RES.ASSIGNEE_ = @involvedUser
-        or RES.OWNER_ = @involvedUser
+        exists(select LINK.USER_ID_ from ACT_HI_IDENTITYLINK LINK where USER_ID_ = #{involvedUser} and LINK.TASK_ID_ = RES.ID_)
+        or RES.ASSIGNEE_ = #{involvedUser}
+        or RES.OWNER_ = #{involvedUser}
         )
       </IsNotNull>
       <IsNotNull Property="involvedGroups != null &amp;&amp; involvedGroups.size() &gt; 0">
@@ -505,7 +505,7 @@
         and
         HI.GROUP_ID_ IN
         <For Key="group" Property="involvedGroups" Open="(" Separator="," Close=")">
-          @group
+          #{group}
         </For>
         )
       </IsNotNull>
@@ -516,10 +516,10 @@
         </IsTrue>
         <IsNotNull Property="queryVar.name != null">
           <!-- Match-all variable-names when name is null -->
-          and A${index}.NAME_= @queryVar.name
+          and A${index}.NAME_= #{queryVar.name}
         </IsNotNull>
         <IsTrue Property="!queryVar.type.equals('null')">
-          and A${index}.VAR_TYPE_ = @queryVar.type
+          and A${index}.VAR_TYPE_ = #{queryVar.type}
         </IsTrue>
         <!-- Variable value -->
         <IsNotNull Property="queryVar.textValue != null &amp;&amp; queryVar.longValue == null &amp;&amp; queryVar.doubleValue == null">
@@ -537,7 +537,7 @@
               <Include RefId="executionVariableOperator" />
             </Default>
           </Switch>
-          @queryVar.textValue
+          #{queryVar.textValue}
           <Switch>
             <Case Property="queryVar.operator.equals('LIKE') || queryVar.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
           </Switch>
@@ -550,7 +550,7 @@
               <Include RefId="executionVariableOperator" />
             </Default>
           </Switch>
-          @queryVar.textValue2
+          #{queryVar.textValue2}
           <Switch>
             <Case Property="queryVar.operator.equals('LIKE')">${wildcardEscapeClause}</Case>
           </Switch>
@@ -558,12 +558,12 @@
         <IsNotNull Property="queryVar.longValue != null">
           and A${index}.LONG_
           <Include RefId="executionVariableOperator" />
-          @queryVar.longValue
+          #{queryVar.longValue}
         </IsNotNull>
         <IsNotNull Property="queryVar.doubleValue != null">
           and A${index}.DOUBLE_
           <Include RefId="executionVariableOperator" />
-          @queryVar.doubleValue
+          #{queryVar.doubleValue}
         </IsNotNull>
         <!-- Null variable type -->
         <IsNotNull Property="queryVar.textValue == null &amp;&amp; queryVar.textValue2 == null &amp;&amp; queryVar.longValue == null &amp;&amp; queryVar.doubleValue == null">
@@ -580,145 +580,145 @@
       <For Key="orQueryObject" Property="orQueryObjects">
         and
         <IsNotNull Property="orQueryObject.taskId != null">
-          RES.ID_ = @orQueryObject.taskId
+          RES.ID_ = #{orQueryObject.taskId}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processDefinitionId != null">
-          or RES.PROC_DEF_ID_ = @orQueryObject.processDefinitionId
+          or RES.PROC_DEF_ID_ = #{orQueryObject.processDefinitionId}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processDefinitionKey != null">
-          or D_OR${orIndex}.KEY_ = @orQueryObject.processDefinitionKey
+          or D_OR${orIndex}.KEY_ = #{orQueryObject.processDefinitionKey}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processDefinitionKeyLike != null">
-          or D_OR${orIndex}.KEY_ like @orQueryObject.processDefinitionKeyLike${wildcardEscapeClause}
+          or D_OR${orIndex}.KEY_ like #{orQueryObject.processDefinitionKeyLike}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processDefinitionKeyLikeIgnoreCase != null">
-          or lower(D_OR${orIndex}.KEY_) like @orQueryObject.processDefinitionKeyLikeIgnoreCase${wildcardEscapeClause}
+          or lower(D_OR${orIndex}.KEY_) like #{orQueryObject.processDefinitionKeyLikeIgnoreCase}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processDefinitionKeys != null &amp;&amp; orQueryObject.processDefinitionKeys.size() &gt; 0">
           or D_OR${orIndex}.KEY_ in
           <For Key="item" Property="orQueryObject.processDefinitionKeys" Open="(" Separator="," Close=")">
-            @item
+            #{item}
           </For>
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processDefinitionName != null">
-          or D_OR${orIndex}.NAME_ = @orQueryObject.processDefinitionName
+          or D_OR${orIndex}.NAME_ = #{orQueryObject.processDefinitionName}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processDefinitionNameLike != null">
-          or D_OR${orIndex}.NAME_ like @orQueryObject.processDefinitionNameLike${wildcardEscapeClause}
+          or D_OR${orIndex}.NAME_ like #{orQueryObject.processDefinitionNameLike}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processCategoryInList != null &amp;&amp; orQueryObject.processCategoryInList.size() &gt; 0">
           or D_OR${orIndex}.CATEGORY_ IN
           <For Key="processCategory" Property="orQueryObject.processCategoryInList" Open="(" Separator="," Close=")">
-            @processCategory
+            #{processCategory}
           </For>
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processCategoryNotInList != null &amp;&amp; orQueryObject.processCategoryNotInList.size() &gt; 0">
           or D_OR${orIndex}.CATEGORY_ NOT IN
           <For Key="processCategory" Property="orQueryObject.processCategoryNotInList" Open="(" Separator="," Close=")">
-            @processCategory
+            #{processCategory}
           </For>
         </IsNotNull>
         <IsNotNull Property="orQueryObject.deploymentId != null">
-          or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ = @orQueryObject.deploymentId
+          or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ = #{orQueryObject.deploymentId}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.deploymentIds != null &amp;&amp; orQueryObject.deploymentIds.size() &gt; 0">
           or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ IN
           <For Key="deployment" Property="orQueryObject.deploymentIds" Open="(" Separator="," Close=")">
-            @deployment
+            #{deployment}
           </For>
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processInstanceId != null">
-          or RES.PROC_INST_ID_ = @orQueryObject.processInstanceId
+          or RES.PROC_INST_ID_ = #{orQueryObject.processInstanceId}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processInstanceIds != null &amp;&amp; orQueryObject.processInstanceIds.size() &gt; 0">
           or RES.PROC_INST_ID_ IN
           <For Key="processInstance" Property="orQueryObject.processInstanceIds" Open="(" Separator="," Close=")">
-            @processInstance
+            #{processInstance}
           </For>
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processInstanceBusinessKey != null">
-          or HPI_OR${orIndex}.BUSINESS_KEY_ = @orQueryObject.processInstanceBusinessKey
+          or HPI_OR${orIndex}.BUSINESS_KEY_ = #{orQueryObject.processInstanceBusinessKey}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processInstanceBusinessKeyLike != null">
-          or HPI_OR${orIndex}.BUSINESS_KEY_ like @orQueryObject.processInstanceBusinessKeyLike${wildcardEscapeClause}
+          or HPI_OR${orIndex}.BUSINESS_KEY_ like #{orQueryObject.processInstanceBusinessKeyLike}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.processInstanceBusinessKeyLikeIgnoreCase != null">
-          or lower(HPI_OR${orIndex}.BUSINESS_KEY_) like @orQueryObject.processInstanceBusinessKeyLikeIgnoreCase${wildcardEscapeClause}
+          or lower(HPI_OR${orIndex}.BUSINESS_KEY_) like #{orQueryObject.processInstanceBusinessKeyLikeIgnoreCase}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskDefinitionKey != null">
-          or RES.TASK_DEF_KEY_ = @orQueryObject.taskDefinitionKey
+          or RES.TASK_DEF_KEY_ = #{orQueryObject.taskDefinitionKey}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskDefinitionKeyLike != null">
-          or RES.TASK_DEF_KEY_ like @orQueryObject.taskDefinitionKeyLike${wildcardEscapeClause}
+          or RES.TASK_DEF_KEY_ like #{orQueryObject.taskDefinitionKeyLike}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.executionId != null">
-          or RES.EXECUTION_ID_ = @orQueryObject.executionId
+          or RES.EXECUTION_ID_ = #{orQueryObject.executionId}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskName != null">
-          or RES.NAME_ = @orQueryObject.taskName
+          or RES.NAME_ = #{orQueryObject.taskName}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskNameLike != null">
-          or RES.NAME_ like @orQueryObject.taskNameLike${wildcardEscapeClause}
+          or RES.NAME_ like #{orQueryObject.taskNameLike}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskNameLikeIgnoreCase != null">
-          or lower(RES.NAME_) like @orQueryObject.taskNameLikeIgnoreCase${wildcardEscapeClause}
+          or lower(RES.NAME_) like #{orQueryObject.taskNameLikeIgnoreCase}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskNameList != null &amp;&amp; orQueryObject.taskNameList.size() &gt; 0">
           or RES.NAME_ IN
           <For Key="taskName" Property="orQueryObject.taskNameList" Open="(" Separator="," Close=")">
-            @taskName
+            #{taskName}
           </For>
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskNameListIgnoreCase != null &amp;&amp; orQueryObject.taskNameListIgnoreCase.size() &gt; 0">
           or lower(RES.NAME_) IN
           <For Key="taskName" Property="orQueryObject.taskNameListIgnoreCase" Open="(" Separator="," Close=")">
-            @taskName
+            #{taskName}
           </For>
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskParentTaskId != null">
-          or RES.PARENT_TASK_ID_ = @orQueryObject.taskParentTaskId
+          or RES.PARENT_TASK_ID_ = #{orQueryObject.taskParentTaskId}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskDescription != null">
-          or RES.DESCRIPTION_ = @orQueryObject.taskDescription
+          or RES.DESCRIPTION_ = #{orQueryObject.taskDescription}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskDescriptionLike != null">
-          or RES.DESCRIPTION_ like @orQueryObject.taskDescriptionLike${wildcardEscapeClause}
+          or RES.DESCRIPTION_ like #{orQueryObject.taskDescriptionLike}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskDescriptionLikeIgnoreCase != null">
-          or lower(RES.DESCRIPTION_) like @orQueryObject.taskDescriptionLikeIgnoreCase${wildcardEscapeClause}
+          or lower(RES.DESCRIPTION_) like #{orQueryObject.taskDescriptionLikeIgnoreCase}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskDeleteReason != null">
-          or RES.DELETE_REASON_ = @orQueryObject.taskDeleteReason
+          or RES.DELETE_REASON_ = #{orQueryObject.taskDeleteReason}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskDeleteReasonLike != null">
-          or RES.DELETE_REASON_ like @orQueryObject.taskDeleteReasonLike${wildcardEscapeClause}
+          or RES.DELETE_REASON_ like #{orQueryObject.taskDeleteReasonLike}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskOwner != null">
-          or RES.OWNER_ = @orQueryObject.taskOwner
+          or RES.OWNER_ = #{orQueryObject.taskOwner}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskOwnerLike != null">
-          or RES.OWNER_ like @orQueryObject.taskOwnerLike${wildcardEscapeClause}
+          or RES.OWNER_ like #{orQueryObject.taskOwnerLike}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskOwnerLikeIgnoreCase != null">
-          or lower(RES.OWNER_) like @orQueryObject.taskOwnerLikeIgnoreCase${wildcardEscapeClause}
+          or lower(RES.OWNER_) like #{orQueryObject.taskOwnerLikeIgnoreCase}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskAssignee != null">
-          or RES.ASSIGNEE_ = @orQueryObject.taskAssignee
+          or RES.ASSIGNEE_ = #{orQueryObject.taskAssignee}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskAssigneeLike != null">
-          or RES.ASSIGNEE_ like @orQueryObject.taskAssigneeLike${wildcardEscapeClause}
+          or RES.ASSIGNEE_ like #{orQueryObject.taskAssigneeLike}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskAssigneeLikeIgnoreCase != null">
-          or RES.ASSIGNEE_ like @orQueryObject.taskAssigneeLikeIgnoreCase${wildcardEscapeClause}
+          or RES.ASSIGNEE_ like #{orQueryObject.taskAssigneeLikeIgnoreCase}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskPriority != null">
-          or RES.PRIORITY_ = @orQueryObject.taskPriority
+          or RES.PRIORITY_ = #{orQueryObject.taskPriority}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskMinPriority != null">
-          or RES.PRIORITY_ &gt;= @orQueryObject.taskMinPriority
+          or RES.PRIORITY_ &gt;= #{orQueryObject.taskMinPriority}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.taskMaxPriority != null">
-          or RES.PRIORITY_ &lt;= @orQueryObject.taskMaxPriority
+          or RES.PRIORITY_ &lt;= #{orQueryObject.taskMaxPriority}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.unfinished">
           or RES.END_TIME_ is null
@@ -733,43 +733,43 @@
           or HPI_OR${orIndex}.END_TIME_ is null
         </IsNotNull>
         <IsNotNull Property="orQueryObject.dueDate != null">
-          or RES.DUE_DATE_ = @orQueryObject.dueDate
+          or RES.DUE_DATE_ = #{orQueryObject.dueDate}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.dueBefore != null">
-          or RES.DUE_DATE_ &lt; @orQueryObject.dueBefore
+          or RES.DUE_DATE_ &lt; #{orQueryObject.dueBefore}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.dueAfter != null">
-          or RES.DUE_DATE_ &gt; @orQueryObject.dueAfter
+          or RES.DUE_DATE_ &gt; #{orQueryObject.dueAfter}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.withoutDueDate">
           or RES.DUE_DATE_ is null
         </IsNotNull>
         <IsNotNull Property="orQueryObject.creationDate != null">
-          or RES.START_TIME_ = @orQueryObject.creationDate
+          or RES.START_TIME_ = #{orQueryObject.creationDate}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.creationBeforeDate != null">
-          or RES.START_TIME_ &lt; @orQueryObject.creationBeforeDate
+          or RES.START_TIME_ &lt; #{orQueryObject.creationBeforeDate}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.creationAfterDate != null">
-          or RES.START_TIME_ &gt; @orQueryObject.creationAfterDate
+          or RES.START_TIME_ &gt; #{orQueryObject.creationAfterDate}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.completedDate != null">
-          or RES.END_TIME_ = @orQueryObject.completedDate
+          or RES.END_TIME_ = #{orQueryObject.completedDate}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.completedBeforeDate != null">
-          or RES.END_TIME_ &lt; @orQueryObject.completedBeforeDate
+          or RES.END_TIME_ &lt; #{orQueryObject.completedBeforeDate}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.completedAfterDate != null">
-          or RES.END_TIME_ &gt; @orQueryObject.completedAfterDate
+          or RES.END_TIME_ &gt; #{orQueryObject.completedAfterDate}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.category != null">
-          or RES.CATEGORY_ = @orQueryObject.category
+          or RES.CATEGORY_ = #{orQueryObject.category}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.tenantId != null">
-          or RES.TENANT_ID_ = @orQueryObject.tenantId
+          or RES.TENANT_ID_ = #{orQueryObject.tenantId}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.tenantIdLike != null">
-          or RES.TENANT_ID_ like @orQueryObject.tenantIdLike${wildcardEscapeClause}
+          or RES.TENANT_ID_ like #{orQueryObject.tenantIdLike}${wildcardEscapeClause}
         </IsNotNull>
         <IsNotNull Property="orQueryObject.withoutTenantId">
           or (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
@@ -780,7 +780,7 @@
           and
           (
           <IsNotNull Property="orQueryObject.candidateUser != null">
-            HI_OR${orIndex}.USER_ID_ = @orQueryObject.candidateUser
+            HI_OR${orIndex}.USER_ID_ = #{orQueryObject.candidateUser}
           </IsNotNull>
           <IsNotNull Property="orQueryObject.candidateUser != null &amp;&amp; orQueryObject.candidateGroups != null &amp;&amp; orQueryObject.candidateGroups.size() &gt; 0">
             or
@@ -789,7 +789,7 @@
             HI_OR${orIndex}.GROUP_ID_ IN
             <For item="group" index="index" collection="orQueryObject.candidateGroups"
                      open="(" separator="," close=")">
-              @group
+              #{group}
             </For>
           </IsNotNull>
           ))
@@ -797,9 +797,9 @@
         <IsNotNull Property="orQueryObject.involvedUser != null">
           or
           (
-          exists(select LINK.USER_ID_ from ACT_HI_IDENTITYLINK LINK where USER_ID_ = @orQueryObject.involvedUser and LINK.TASK_ID_ = RES.ID_)
-          or RES.ASSIGNEE_ = @orQueryObject.involvedUser
-          or RES.OWNER_ = @orQueryObject.involvedUser
+          exists(select LINK.USER_ID_ from ACT_HI_IDENTITYLINK LINK where USER_ID_ = #{orQueryObject.involvedUser} and LINK.TASK_ID_ = RES.ID_)
+          or RES.ASSIGNEE_ = #{orQueryObject.involvedUser}
+          or RES.OWNER_ = #{orQueryObject.involvedUser}
           )
         </IsNotNull>
         <IsNotNull Property="orQueryObject.involvedGroups != null &amp;&amp; orQueryObject.involvedGroups.size() &gt; 0">
@@ -809,7 +809,7 @@
           and
           HI_OR${orIndex}.GROUP_ID_ IN
           <For Key="group" Property="orQueryObject.involvedGroups" Open="(" Separator="," Close=")">
-            @group
+            #{group}
           </For>
           )
         </IsNotNull>
@@ -827,10 +827,10 @@
           </Switch>
           <IsNotNull Property="queryVar.name != null">
             <!-- Match-all variable-names when name is null -->
-            and A_${orLocal}OR${orIndex}.NAME_= @queryVar.name
+            and A_${orLocal}OR${orIndex}.NAME_= #{queryVar.name}
           </IsNotNull>
           <IsEqual Property="!queryVar.type.equals('null')">
-            and A_${orLocal}OR${orIndex}.VAR_TYPE_ = @queryVar.type
+            and A_${orLocal}OR${orIndex}.VAR_TYPE_ = #{queryVar.type}
           </IsEqual>
           <!-- Variable value -->
           <IsNotNull Property="queryVar.textValue != null &amp;&amp; queryVar.longValue == null &amp;&amp; queryVar.doubleValue == null">
@@ -848,7 +848,7 @@
                 <Include RefId="executionVariableOperator" />
               </Default>
             </Switch>
-            @queryVar.textValue
+            #{queryVar.textValue}
             <Switch>
               <Case Property="queryVar.operator.equals('LIKE') || queryVar.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
             </Switch>
@@ -861,7 +861,7 @@
                 <Include RefId="executionVariableOperator" />
               </Default>
             </Switch>
-            @queryVar.textValue2
+            #{queryVar.textValue2}
             <Switch>
               <Case Property="queryVar.operator.equals('LIKE')">${wildcardEscapeClause}</Case>
             </Switch>
@@ -869,12 +869,12 @@
           <IsNotNull Property="queryVar.longValue != null">
             and A_${orLocal}OR${orIndex}.LONG_
             <Include RefId="executionVariableOperator" />
-            @queryVar.longValue
+            #{queryVar.longValue}
           </IsNotNull>
           <IsNotNull Property="queryVar.doubleValue != null">
             and A_${orLocal}OR${orIndex}.DOUBLE_
             <Include RefId="executionVariableOperator" />
-            @queryVar.doubleValue
+            #{queryVar.doubleValue}
           </IsNotNull>
           <!-- Null variable type -->
           <IsNotNull Property="queryVar.textValue == null &amp;&amp; queryVar.textValue2 == null &amp;&amp; queryVar.longValue == null &amp;&amp; queryVar.doubleValue == null">
@@ -916,24 +916,24 @@
   </Statement>
 
   <Select Id="selectHistoricTaskInstance" ResultMap="historicTaskInstanceResultMap">
-    select * from ACT_HI_TASKINST where ID_ = @historicTaskInstanceId
+    select * from ACT_HI_TASKINST where ID_ = #{historicTaskInstanceId}
   </Select>
 
   
   <Select Id="selectHistoricTaskInstancesByProcessInstanceId"  ResultMap="historicTaskInstanceResultMap" >
     select *
     from ACT_HI_TASKINST 
-    where PROC_INST_ID_ = @processInstanceId
+    where PROC_INST_ID_ = #{processInstanceId}
   </Select>
   
   <Select Id="selectHistoricTasksByParentTaskId" ResultMap="historicTaskInstanceResultMap">
-    select * from ACT_HI_TASKINST where PARENT_TASK_ID_ = @parentTaskId
+    select * from ACT_HI_TASKINST where PARENT_TASK_ID_ = #{parentTaskId}
   </Select>
 
   <Select Id="selectHistoricTaskInstanceIdsByProcessInstanceId">
     select ID_
     from ACT_HI_TASKINST
-    where PROC_INST_ID_ = @processInstanceId
+    where PROC_INST_ID_ = #{processInstanceId}
   </Select>
 
   <Select Id="selectHistoricTaskInstancesByQueryCriteria" ResultMap="historicTaskInstanceResultMap">

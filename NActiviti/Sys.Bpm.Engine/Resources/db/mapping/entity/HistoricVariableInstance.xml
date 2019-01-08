@@ -43,20 +43,20 @@
   <Insert Id="insertHistoricVariableInstance" ParameterMap="insupVariableInstance">
     insert into ACT_HI_VARINST (ID_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, NAME_, REV_, VAR_TYPE_, BYTEARRAY_ID_, DOUBLE_, LONG_ , TEXT_, TEXT2_, CREATE_TIME_, LAST_UPDATED_TIME_)
     values (
-    @id,
-    @processInstanceId,
-    @executionId,
-    @taskId,
-    @variableName,
-    @revision,
-    @variableType,
-    @byteArrayRef,
-    @doubleValue,
-    @longValue,
-    @textValue,
-    @textValue2,
-    @createTime,
-    @lastUpdatedTime
+    #{id},
+    #{processInstanceId},
+    #{executionId},
+    #{taskId},
+    #{variableName},
+    #{revision},
+    #{variableType},
+    #{byteArrayRef},
+    #{doubleValue},
+    #{longValue},
+    #{textValue},
+    #{textValue2},
+    #{createTime},
+    #{lastUpdatedTime}
     )
   </Insert>
 
@@ -64,20 +64,20 @@
     insert into ACT_HI_VARINST (ID_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, NAME_, REV_, VAR_TYPE_, BYTEARRAY_ID_, DOUBLE_, LONG_ , TEXT_, TEXT2_, CREATE_TIME_, LAST_UPDATED_TIME_)
     values
     <For Property="Items" Key="p" Separator=",">
-      (@id,
-      @processInstanceId,
-      @executionId,
-      @taskId,
-      @variableName,
-      @revision,
-      @variableType,
-      @byteArrayRef,
-      @doubleValue,
-      @longValue,
-      @textValue,
-      @textValue2,
-      @createTime,
-      @lastUpdatedTime)
+      (#{id},
+      #{processInstanceId},
+      #{executionId},
+      #{taskId},
+      #{variableName},
+      #{revision},
+      #{variableType},
+      #{byteArrayRef},
+      #{doubleValue},
+      #{longValue},
+      #{textValue},
+      #{textValue2},
+      #{createTime},
+      #{lastUpdatedTime})
     </For>
   </Insert>
 
@@ -85,29 +85,29 @@
 
   <Update Id="updateHistoricVariableInstance" ParameterMap="insupVariableInstance">
     update ACT_HI_VARINST set
-    EXECUTION_ID_ = @executionId,
-    REV_ = @revisionNext,
-    BYTEARRAY_ID_ = @byteArrayRef,
-    DOUBLE_ = @doubleValue,
-    LONG_ = @longValue,
-    TEXT_ = @textValue,
-    TEXT2_ = @textValue2,
-    VAR_TYPE_ = @variableType,
-    LAST_UPDATED_TIME_ = @lastUpdatedTime
-    where ID_ = @id
-    and REV_ = @revision
+    EXECUTION_ID_ = #{executionId},
+    REV_ = #{revisionNext},
+    BYTEARRAY_ID_ = #{byteArrayRef},
+    DOUBLE_ = #{doubleValue},
+    LONG_ = #{longValue},
+    TEXT_ = #{textValue},
+    TEXT2_ = #{textValue2},
+    VAR_TYPE_ = #{variableType},
+    LAST_UPDATED_TIME_ = #{lastUpdatedTime}
+    where ID_ = #{id}
+    and REV_ = #{revision}
   </Update>
 
   <!-- HISTORIC PROCESS VARIABLE DELETE -->
 
   <Delete Id="deleteHistoricVariableInstance">
-    delete from ACT_HI_VARINST where ID_ = @id and REV_ = @revision
+    delete from ACT_HI_VARINST where ID_ = #{id} and REV_ = #{revision}
   </Delete>
 
   <Delete Id="bulkDeleteHistoricVariableInstance">
     delete from ACT_HI_VARINST where
     <For Key="variable" Property="list" Separator=" or ">
-      ID_ = @id
+      ID_ = #{id}
     </For>
   </Delete>
 
@@ -128,44 +128,44 @@
     from ACT_HI_VARINST RES
     <Where>
       <IsNotNull Property="id != null">
-        RES.ID_ = @id
+        RES.ID_ = #{id}
       </IsNotNull>
       <IsNotNull Property="processInstanceId != null">
-        and RES.PROC_INST_ID_ = @processInstanceId
+        and RES.PROC_INST_ID_ = #{processInstanceId}
       </IsNotNull>
       <IsNotNull Property="executionId != null">
-        and RES.EXECUTION_ID_ = @executionId
+        and RES.EXECUTION_ID_ = #{executionId}
       </IsNotNull>
       <IsNotNull Property="executionIds != null and !executionIds.isEmpty()">
         and RES.EXECUTION_ID_ in
         <For Key="item" Property="executionIds" Open="(" Separator="," Close=")">
-          @item
+          #{item}
         </For>
       </IsNotNull>
       <IsNotNull Property="taskId != null">
-        and RES.TASK_ID_ = @taskId
+        and RES.TASK_ID_ = #{taskId}
       </IsNotNull>
       <IsNotNull Property="taskIds != null and !taskIds.isEmpty()">
         and RES.TASK_ID_ in
         <For item="item" index="index" collection="taskIds" open="(" separator="," close=")">
-          @item
+          #{item}
         </For>
       </IsNotNull>
       <IsTrue Property="excludeTaskRelated">
         and RES.TASK_ID_ is NULL
       </IsTrue>
       <IsNotNull Property="variableName != null">
-        and RES.NAME_ = @variableName
+        and RES.NAME_ = #{variableName}
       </IsNotNull>
       <IsNotNull Property="variableNameLike != null">
-        and RES.NAME_ like @variableNameLike${wildcardEscapeClause}
+        and RES.NAME_ like #{variableNameLike}${wildcardEscapeClause}
       </IsNotNull>
 
       <!-- PLEASE NOTE: If you change anything have a look into the Execution, the same query object is used there! -->
       <IsNotNull Property="queryVariableValue != null" >
         <IsNotNull Property="!queryVariableValue.type.equals('null')">
           <!-- When operator is not-equals or type of value is null, type doesn't matter! -->
-          and RES.VAR_TYPE_ = @queryVariableValue.type
+          and RES.VAR_TYPE_ = #{queryVariableValue.type}
         </IsNotNull>
         <IsNotNull Property="queryVariableValue.textValue != null &amp;&amp; queryVariableValue.longValue == null &amp;&amp; queryVariableValue.doubleValue == null">
           and RES.TEXT_
@@ -175,7 +175,7 @@
               <Include RefId="executionVariableOperator" />
             </Default>
           </Switch>
-          @queryVariableValue.textValue
+          #{queryVariableValue.textValue}
           <Switch>
             <Case Property="queryVariableValue.operator.equals('LIKE') || queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
           </Switch>
@@ -188,7 +188,7 @@
               <Include RefId="executionVariableOperator" />
             </Default>
           </Switch>
-          @queryVariableValue.textValue2
+          #{queryVariableValue.textValue2}
           <Switch>
             <Case Property="queryVariableValue.operator.equals('LIKE') || queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
           </Switch>
@@ -196,12 +196,12 @@
         <IsNotNull Property="queryVariableValue.longValue != null">
           and RES.LONG_
           <Include RefId="executionVariableOperator" />
-          @queryVariableValue.longValue
+          #{queryVariableValue.longValue}
         </IsNotNull>
         <IsNotNull Property="queryVariableValue.doubleValue != null">
           and RES.DOUBLE_
           <Include RefId="executionVariableOperator" />
-          @queryVariableValue.doubleValue
+          #{queryVariableValue.doubleValue}
         </IsNotNull>
         <!-- Null variable type -->
         <IsNotNull Property="queryVariableValue.textValue == null &amp;&amp; queryVariableValue.textValue2 == null &amp;&amp; queryVariableValue.longValue == null &amp;&amp; queryVariableValue.doubleValue == null">
@@ -219,11 +219,11 @@
   </Statement>
 
   <select id="selectHistoricVariableInstanceByTaskId" ResultMap="historicProcessVariableResultMap">
-    select * from ACT_HI_VARINST where TASK_ID_ = @taskId
+    select * from ACT_HI_VARINST where TASK_ID_ = #{taskId}
   </select>
 
   <Select Id="selectHistoricVariableInstanceByProcessInstanceId" ResultMap="historicProcessVariableResultMap">
-    select * from ACT_HI_VARINST where PROC_INST_ID_ = @processInstanceId
+    select * from ACT_HI_VARINST where PROC_INST_ID_ = #{processInstanceId}
   </Select>
 
   <Select Id="selectHistoricVariableInstanceByQueryCriteria" ResultMap="historicProcessVariableResultMap">
@@ -240,7 +240,7 @@
   </Select>
 
   <Select Id="selectHistoricVariableInstanceByVariableInstanceId" ResultMap="historicProcessVariableResultMap">
-    select * from ACT_HI_VARINST where ID_ = @variableInstanceId
+    select * from ACT_HI_VARINST where ID_ = #{variableInstanceId}
   </Select>
 
   <Select Id="selectHistoricVariableInstanceByNativeQuery" ResultMap="historicProcessVariableResultMap">

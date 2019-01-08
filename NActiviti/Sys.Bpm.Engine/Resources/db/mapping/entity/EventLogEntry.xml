@@ -39,17 +39,17 @@
     <Insert Id="insertEventLogEntry">
       insert into ACT_EVT_LOG(TYPE_, PROC_DEF_ID_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, TIME_STAMP_, USER_ID_, DATA_, LOCK_OWNER_, LOCK_TIME_, IS_PROCESSED_)
       values (
-      @type,
-      @processDefinitionId,
-      @processInstanceId,
-      @executionId,
-      @taskId,
-      @timeStamp,
-      @userId,
-      @data,
-      @lockOwner,
-      @lockTime,
-      @isProcessed
+      #{type},
+      #{processDefinitionId},
+      #{processInstanceId},
+      #{executionId},
+      #{taskId},
+      #{timeStamp},
+      #{userId},
+      #{data},
+      #{lockOwner},
+      #{lockTime},
+      #{isProcessed}
       )
     </Insert>
     
@@ -57,17 +57,17 @@
       insert into ACT_EVT_LOG(TYPE_, PROC_DEF_ID_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, TIME_STAMP_, USER_ID_, DATA_, LOCK_OWNER_, LOCK_TIME_, IS_PROCESSED_)
       values
       <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
-        (@type,
-        @processDefinitionId,
-        @processInstanceId,
-        @executionId,
-        @taskId,
-        @timeStamp,
-        @userId,
-        @data,
-        @lockOwner,
-        @lockTime,
-        @isProcessed)
+        (#{type},
+        #{processDefinitionId},
+        #{processInstanceId},
+        #{executionId},
+        #{taskId},
+        #{timeStamp},
+        #{userId},
+        #{data},
+        #{lockOwner},
+        #{lockTime},
+        #{isProcessed})
       </For>
     </Insert>
 
@@ -83,33 +83,33 @@
 
     <Select Id="selectEventLogEntries" ResultMap="eventLogEntryResultMap">
       select * from ACT_EVT_LOG
-      WHERE LOG_NR_ &gt; @startLogNr
-      AND LOG_NR_ &lt; @endLogNr
+      WHERE LOG_NR_ &gt; #{startLogNr}
+      AND LOG_NR_ &lt; #{endLogNr}
       ORDER BY LOG_NR_
     </Select>
 
     <Select Id="selectEventLogEntries_postgres" ResultMap="eventLogEntryResultMap_postgres">
       select * from ACT_EVT_LOG
-      WHERE LOG_NR_ &gt; @startLogNr
-      AND LOG_NR_ &lt; @endLogNr
+      WHERE LOG_NR_ &gt; #{startLogNr}
+      AND LOG_NR_ &lt; #{endLogNr}
       ORDER BY LOG_NR_
     </Select>
 
     <Select Id="selectEventLogEntriesByProcessInstanceId" ResultMap="eventLogEntryResultMap">
       select * from ACT_EVT_LOG
-      WHERE PROC_INST_ID_ = @processInstanceId
+      WHERE PROC_INST_ID_ = #{processInstanceId}
       ORDER BY LOG_NR_
     </Select>
 
     <Select Id="selectEventLogEntriesByProcessInstanceId_postgres" ResultMap="eventLogEntryResultMap_postgres">
       select * from ACT_EVT_LOG
-      WHERE PROC_INST_ID_ = @processInstanceId
+      WHERE PROC_INST_ID_ = #{processInstanceId}
       ORDER BY LOG_NR_
     </Select>
 
     <!-- DELETE -->
     <Delete Id="deleteEventLogEntry">
-      delete from ACT_EVT_LOG where LOG_NR_ = @logNr
+      delete from ACT_EVT_LOG where LOG_NR_ = #{logNr}
     </Delete>
   
 </SmartSqlMap>

@@ -33,43 +33,43 @@
       </IsTrue>
       <Where>
         <IsNotNull Property="id">
-          RES.ID_ = @id
+          RES.ID_ = #{id}
         </IsNotNull>
         <IsNotNull Property="processInstanceId">
-          and RES.PROCESS_INSTANCE_ID_ = @processInstanceId
+          and RES.PROCESS_INSTANCE_ID_ = #{processInstanceId}
         </IsNotNull>
         <IsNotNull Property="executionId">
-          and RES.EXECUTION_ID_ = @executionId
+          and RES.EXECUTION_ID_ = #{executionId}
         </IsNotNull>
         <IsNotNull Property="processDefinitionId">
-          and RES.PROC_DEF_ID_ = @processDefinitionId
+          and RES.PROC_DEF_ID_ = #{processDefinitionId}
         </IsNotNull>
         <IsTrue Property="executable">
-          and RES.DUEDATE_ &lt;= @now
+          and RES.DUEDATE_ &lt;= #{now}
         </IsTrue>
         <IsNotNull Property="duedateHigherThan">
-          and RES.DUEDATE_ &gt; @duedateHigherThan
+          and RES.DUEDATE_ &gt; #{duedateHigherThan}
         </IsNotNull>
         <IsNotNull Property="duedateLowerThan">
-          and RES.DUEDATE_ &lt; @duedateLowerThan
+          and RES.DUEDATE_ &lt; #{duedateLowerThan}
         </IsNotNull>
         <IsNotNull Property="duedateHigherThanOrEqual">
-          and RES.DUEDATE_ &gt;= @duedateHigherThanOrEqual
+          and RES.DUEDATE_ &gt;= #{duedateHigherThanOrEqual}
         </IsNotNull>
         <IsNotNull Property="duedateLowerThanOrEqual">
-          and RES.DUEDATE_ &lt;= @duedateLowerThanOrEqual
+          and RES.DUEDATE_ &lt;= #{duedateLowerThanOrEqual}
         </IsNotNull>
         <IsTrue Property="withException">
           and (RES.EXCEPTION_MSG_ is not null or RES.EXCEPTION_STACK_ID_ is not null)
         </IsTrue>
         <IsTrue Property="exceptionMessage">
-          and RES.EXCEPTION_MSG_ = @exceptionMessage
+          and RES.EXCEPTION_MSG_ = #{exceptionMessage}
         </IsTrue>
         <IsNotNull Property="tenantId">
-          and RES.TENANT_ID_ = @tenantId
+          and RES.TENANT_ID_ = #{tenantId}
         </IsNotNull>
         <IsNotNull Property="tenantIdLike">
-          and RES.TENANT_ID_ like @tenantIdLike${wildcardEscapeClause}
+          and RES.TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
         </IsNotNull>
         <IsTrue Property="withoutTenantId">
           and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
@@ -78,7 +78,7 @@
     </Statement>
 
     <Select Id="selectTimerJob" ResultMap="jobResultMap">
-      select * from ACT_RU_TIMER_JOB where ID_ = @id
+      select * from ACT_RU_TIMER_JOB where ID_ = #{id}
     </Select>
 
     <Select Id="selectTimerJobByQueryCriteria" ResultMap="jobResultMap">
@@ -98,7 +98,7 @@
       select
       RES.* 
       from ACT_RU_TIMER_JOB RES
-      where DUEDATE_ &lt;= @duedate
+      where DUEDATE_ &lt;= #{duedate}
       and LOCK_OWNER_ is null
     </Select>
 
@@ -121,21 +121,21 @@
       HANDLER_TYPE_,
       HANDLER_CFG_,
       TENANT_ID_)
-      values (@id,
-      @revision,
-      @jobType,
-      @exclusive,
-      @executionId,
-      @processInstanceId,
-      @processDefinitionId,
-      @retries,
-      @exceptionByteArrayRef,
-      @exceptionMessage,
-      @duedate,
-      @repeat,
-      @jobHandlerType,
-      @jobHandlerConfiguration,
-      @tenantId
+      values (#{id},
+      #{revision},
+      #{jobType},
+      #{exclusive},
+      #{executionId},
+      #{processInstanceId},
+      #{processDefinitionId},
+      #{retries},
+      #{exceptionByteArrayRef},
+      #{exceptionMessage},
+      #{duedate},
+      #{repeat},
+      #{jobHandlerType},
+      #{jobHandlerConfiguration},
+      #{tenantId}
       )
     </Insert>
 
@@ -157,64 +157,64 @@
       HANDLER_CFG_,
       TENANT_ID_) VALUES
       <For Property="list" Key="job" Separator=",">
-        (@id,
-        @revision,
-        @jobType,
-        @exclusive,
-        @executionId,
-        @processInstanceId,
-        @processDefinitionId,
-        @retries,
-        @exceptionByteArrayRef,
-        @exceptionMessage,
-        @duedate,
-        @repeat,
-        @jobHandlerType,
-        @jobHandlerConfiguration,
-        @tenantId)
+        (#{id},
+        #{revision},
+        #{jobType},
+        #{exclusive},
+        #{executionId},
+        #{processInstanceId},
+        #{processDefinitionId},
+        #{retries},
+        #{exceptionByteArrayRef},
+        #{exceptionMessage},
+        #{duedate},
+        #{repeat},
+        #{jobHandlerType},
+        #{jobHandlerConfiguration},
+        #{tenantId})
       </For>
     </Insert>
 
     <Update Id="updateTimerJob">
       update ACT_RU_TIMER_JOB
       <Set>
-        REV_ = @revisionNext,
-        LOCK_EXP_TIME_ = @lockExpirationTime,
-        LOCK_OWNER_ = @lockOwner,
-        RETRIES_ = @retries,
-        DUEDATE_ = @duedate,
-        EXCEPTION_STACK_ID_ = @exceptionByteArrayRef,
-        EXCEPTION_MSG_ = @exceptionMessage
+        REV_ = #{revisionNext},
+        LOCK_EXP_TIME_ = #{lockExpirationTime},
+        LOCK_OWNER_ = #{lockOwner},
+        RETRIES_ = #{retries},
+        DUEDATE_ = #{duedate},
+        EXCEPTION_STACK_ID_ = #{exceptionByteArrayRef},
+        EXCEPTION_MSG_ = #{exceptionMessage}
       </Set>
-      where ID_= @id
-      and REV_ = @revision
+      where ID_= #{id}
+      and REV_ = #{revision}
     </Update>
 
     <Select Id="selectTimerJobByTypeAndProcessDefinitionId" ResultMap="jobResultMap">
       select J.*
       from ACT_RU_TIMER_JOB J
-      where J.HANDLER_TYPE_ = @handlerType
-      and J.PROC_DEF_ID_ = @processDefinitionId
+      where J.HANDLER_TYPE_ = #{handlerType}
+      and J.PROC_DEF_ID_ = #{processDefinitionId}
     </Select>
 
     <Select Id="selectTimerJobsByProcessInstanceId" ResultMap="jobResultMap">
       select *
       from ACT_RU_TIMER_JOB J
-      where J.PROCESS_INSTANCE_ID_ = @processInstanceId
+      where J.PROCESS_INSTANCE_ID_ = #{processInstanceId}
     </Select>
 
     <Select Id="selectTimerJobsByExecutionId" ResultMap="jobResultMap">
       select *
       from ACT_RU_TIMER_JOB J
-      where J.EXECUTION_ID_ = @executionId
+      where J.EXECUTION_ID_ = #{executionId}
     </Select>
 
     <Select Id="selectTimerJobByTypeAndProcessDefinitionKeyNoTenantId" ResultMap="jobResultMap">
       select J.*
       from ACT_RU_TIMER_JOB J
       inner join ACT_RE_PROCDEF P on J.PROC_DEF_ID_ = P.ID_
-      where J.HANDLER_TYPE_ = @handlerType
-      and P.KEY_ = @processDefinitionKey
+      where J.HANDLER_TYPE_ = #{handlerType}
+      and P.KEY_ = #{processDefinitionKey}
       and (P.TENANT_ID_ = '' or P.TENANT_ID_ is null)
     </Select>
 
@@ -222,34 +222,34 @@
       select J.*
       from ACT_RU_TIMER_JOB J
       inner join ACT_RE_PROCDEF P on J.PROC_DEF_ID_ = P.ID_
-      where J.HANDLER_TYPE_ = @handlerType
-      and P.KEY_ = @processDefinitionKey
-      and P.TENANT_ID_ = @tenantId
+      where J.HANDLER_TYPE_ = #{handlerType}
+      and P.KEY_ = #{processDefinitionKey}
+      and P.TENANT_ID_ = #{tenantId}
     </Select>
 
     <!-- JOB DELETE STATEMENTS -->
 
     <Delete Id="deleteTimerJob">
-      delete from ACT_RU_TIMER_JOB where ID_ = @id and REV_ = @revision
+      delete from ACT_RU_TIMER_JOB where ID_ = #{id} and REV_ = #{revision}
     </Delete>
 
     <Delete Id="bulkDeleteTimerJob">
       delete from ACT_RU_TIMER_JOB where
       <For Key="job" Property="list" Separator=" or ">
-        ID_ = @id
+        ID_ = #{id}
       </For>
     </Delete>
 
     <!-- JOB UPDATE STATEMENTS -->
     <Update Id="updateTimerJobTenantIdForDeployment">
       update ACT_RU_TIMER_JOB set
-      TENANT_ID_ = @tenantId
+      TENANT_ID_ = #{tenantId}
       where
       ID_ in (
       SELECT J.ID_ from ACT_RU_TIMER_JOB J
       inner join ACT_RE_PROCDEF P on J.PROC_DEF_ID_ = P.ID_
       inner join ACT_RE_DEPLOYMENT D on P.DEPLOYMENT_ID_ = D.ID_
-      where D.ID_ = @deploymentId
+      where D.ID_ = #{deploymentId}
       )
     </Update>
   

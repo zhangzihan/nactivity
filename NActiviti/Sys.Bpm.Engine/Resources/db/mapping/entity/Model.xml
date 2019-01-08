@@ -24,63 +24,63 @@
     
     <Insert Type="Insert" Id="insertModel">
       insert into ACT_RE_MODEL(ID_, REV_, NAME_, KEY_, CATEGORY_, CREATE_TIME_, LAST_UPDATE_TIME_, VERSION_, META_INFO_, DEPLOYMENT_ID_, EDITOR_SOURCE_VALUE_ID_, EDITOR_SOURCE_EXTRA_VALUE_ID_, TENANT_ID_)
-      values(@id,
+      values(#{id},
       1,
-      @name,
-      @key,
-      @category,
-      @createTime,
-      @lastUpdateTime,
-      @version,
-      @metaInfo,
-      @deploymentId,
-      @editorSourceValueId,
-      @editorSourceExtraValueId,
-      @tenantId)
+      #{name},
+      #{key},
+      #{category},
+      #{createTime},
+      #{lastUpdateTime},
+      #{version},
+      #{metaInfo},
+      #{deploymentId},
+      #{editorSourceValueId},
+      #{editorSourceExtraValueId},
+      #{tenantId})
     </Insert>
 
     <Insert Id="bulkInsertModel">
       INSERT INTO ACT_RE_MODEL(ID_, REV_, NAME_, KEY_, CATEGORY_, CREATE_TIME_, LAST_UPDATE_TIME_, VERSION_, META_INFO_, DEPLOYMENT_ID_, EDITOR_SOURCE_VALUE_ID_, EDITOR_SOURCE_EXTRA_VALUE_ID_, TENANT_ID_)
       VALUES
       <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
-        (@id,
+        (#{id},
         1,
-        @name,
-        @key,
-        @category,
-        @createTime,
-        @lastUpdateTime,
-        @version,
-        @metaInfo,
-        @deploymentId,
-        @editorSourceValueId,
-        @editorSourceExtraValueId,
-        @tenantId)
+        #{name},
+        #{key},
+        #{category},
+        #{createTime},
+        #{lastUpdateTime},
+        #{version},
+        #{metaInfo},
+        #{deploymentId},
+        #{editorSourceValueId},
+        #{editorSourceExtraValueId},
+        #{tenantId})
       </For>
     </Insert>
 
     <!-- MODEL UPDATE -->
     <Update Id="updateModel">
       update ACT_RE_MODEL set
-      REV_ = @revisionNext,
-      NAME_ = @name,
-      KEY_ = @key,
-      CATEGORY_ = @category,
-      LAST_UPDATE_TIME_ = @lastUpdateTime,
-      VERSION_ = @version,
-      META_INFO_ = @metaInfo,
-      DEPLOYMENT_ID_ = @deploymentId,
-      EDITOR_SOURCE_VALUE_ID_ = @editorSourceValueId,
-      EDITOR_SOURCE_EXTRA_VALUE_ID_ = @editorSourceExtraValueId,
-      TENANT_ID_ = @tenantId
-      where ID_ = @id and REV_ = @revision
+      REV_ = #{revisionNext},
+      NAME_ = #{name},
+      KEY_ = #{key},
+      CATEGORY_ = #{category},
+      LAST_UPDATE_TIME_ = #{lastUpdateTime},
+      VERSION_ = #{version},
+      META_INFO_ = #{metaInfo},
+      DEPLOYMENT_ID_ = #{deploymentId},
+      EDITOR_SOURCE_VALUE_ID_ = #{editorSourceValueId},
+      EDITOR_SOURCE_EXTRA_VALUE_ID_ = #{editorSourceExtraValueId},
+      TENANT_ID_ = #{tenantId}
+      where ID_ = #{id} and REV_ = #{revision}
     </Update>
 
 
     <!-- MODEL DELETE -->
 
     <Delete Id="deleteModel">
-      delete from ACT_RE_MODEL where ID_ = @id and REV_ = @revision
+      delete from ACT_RE_MODEL where ID_ = #{id} and REV_ = #{revision}
     </Delete>
 
 
@@ -90,31 +90,31 @@
       from ACT_RE_MODEL RES
       <Where>
         <IsTrue Property="id != null">
-          RES.ID_ = @id
+          RES.ID_ = #{id}
         </IsTrue>
         <IsTrue Property="name != null">
-          and RES.NAME_ = @name
+          and RES.NAME_ = #{name}
         </IsTrue>
         <IsTrue Property="nameLike != null">
-          and RES.NAME_ like @nameLike${wildcardEscapeClause}
+          and RES.NAME_ like #{nameLike}${wildcardEscapeClause}
         </IsTrue>
         <IsTrue Property="key != null">
-          and RES.KEY_ = @key
+          and RES.KEY_ = #{key}
         </IsTrue>
         <IsTrue Property="category != null">
-          and RES.CATEGORY_ = @category
+          and RES.CATEGORY_ = #{category}
         </IsTrue>
         <IsTrue Property="categoryLike != null">
-          and RES.CATEGORY_ like @categoryLike${wildcardEscapeClause}
+          and RES.CATEGORY_ like #{categoryLike}${wildcardEscapeClause}
         </IsTrue>
         <IsTrue Property="categoryNotEquals != null">
-          and ( RES.CATEGORY_ &lt;&gt; @categoryNotEquals OR RES.CATEGORY_ is null )
+          and ( RES.CATEGORY_ &lt;&gt; #{categoryNotEquals} OR RES.CATEGORY_ is null )
         </IsTrue>
         <IsTrue Property="version != null">
-          and RES.VERSION_ = @version
+          and RES.VERSION_ = #{version}
         </IsTrue>
         <IsTrue Property="deploymentId != null">
-          and RES.DEPLOYMENT_ID_ = @deploymentId
+          and RES.DEPLOYMENT_ID_ = #{deploymentId}
         </IsTrue>
         <IsTrue Property="notDeployed">
           and RES.DEPLOYMENT_ID_ is null
@@ -126,10 +126,10 @@
           and RES.VERSION_ = (select max(VERSION_) from ACT_RE_MODEL where KEY_ = RES.KEY_)
         </IsTrue>
         <IsTrue Property="tenantId != null">
-          and RES.TENANT_ID_ = @tenantId
+          and RES.TENANT_ID_ = #{tenantId}
         </IsTrue>
         <IsTrue Property="tenantIdLike != null">
-          and RES.TENANT_ID_ like @tenantIdLike${wildcardEscapeClause}
+          and RES.TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
         </IsTrue>
         <IsTrue Property="withoutTenantId">
           and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
@@ -151,7 +151,7 @@
     </Select>
 
     <Select Id="selectModel" ResultMap="modelResultMap">
-      select * from ACT_RE_MODEL where ID_ = @id
+      select * from ACT_RE_MODEL where ID_ = #{id}
     </Select>
 
     <!-- mysql specific -->

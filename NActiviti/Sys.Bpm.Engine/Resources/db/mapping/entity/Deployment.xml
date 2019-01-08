@@ -16,18 +16,18 @@
     
   <Insert Id="insertDeployment">
     insert into ACT_RE_DEPLOYMENT(ID_, NAME_, CATEGORY_, TENANT_ID_, DEPLOY_TIME_)
-    values(@id, @name, @category, @tenantId, @deploymentTime)
+    values(#{id}, #{name}, #{category}, #{tenantId}, #{deploymentTime})
   </Insert>
 
   <Insert Id="bulkInsertDeployment">
     insert into ACT_RE_DEPLOYMENT(ID_, NAME_, CATEGORY_, TENANT_ID_, DEPLOY_TIME_)
     values
       <For  Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
-        (@id,
-         @name,
-         @category,
-         @tenantId,
-         @deploymentTime)
+        (#{id},
+         #{name},
+         #{category},
+         #{tenantId},
+         #{deploymentTime})
       </For>
   </Insert>
 
@@ -35,15 +35,15 @@
   
   <Update Id="updateDeployment">
     update ACT_RE_DEPLOYMENT set
-      CATEGORY_ = @category,
-      TENANT_ID_ = @tenantId
-    where ID_ = @id
+      CATEGORY_ = #{category},
+      TENANT_ID_ = #{tenantId}
+    where ID_ = #{id}
   </Update>
   
   <!-- DEPLOYMENT DELETE -->
   
   <Delete Id="deleteDeployment">
-    delete from ACT_RE_DEPLOYMENT where ID_ = @id
+    delete from ACT_RE_DEPLOYMENT where ID_ = #{id}
   </Delete>
 
   <!-- DEPLOYMENT SELECT -->
@@ -55,40 +55,40 @@
     </IsTrue>
     <Where>
       <IsTrue Property="deploymentId != null">
-        RES.ID_ = @deploymentId
+        RES.ID_ = #{deploymentId}
       </IsTrue>
       <IsTrue Property="name != null">
-        and RES.NAME_ = @name
+        and RES.NAME_ = #{name}
       </IsTrue>
       <IsTrue Property="nameLike != null">
-        and RES.NAME_ like @nameLike
+        and RES.NAME_ like #{nameLike}
       </IsTrue>
       <IsTrue Property="category != null">
-        and RES.CATEGORY_ = @category
+        and RES.CATEGORY_ = #{category}
       </IsTrue>
       <IsTrue Property="categoryNotEquals != null">
-        and ( RES.CATEGORY_ &lt;&gt; @categoryNotEquals OR RES.CATEGORY_ is null )  
+        and ( RES.CATEGORY_ &lt;&gt; #{categoryNotEquals} OR RES.CATEGORY_ is null )  
       </IsTrue>
       <IsTrue Property="tenantId != null">
-        and RES.TENANT_ID_ = @tenantId
+        and RES.TENANT_ID_ = #{tenantId}
       </IsTrue>
       <IsTrue Property="tenantIdLike != null">
-        and RES.TENANT_ID_ like @tenantIdLike
+        and RES.TENANT_ID_ like #{tenantIdLike}
       </IsTrue>
       <IsTrue Property="withoutTenantId">
         and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
       </IsTrue>
       <IsTrue Property="processDefinitionKey != null">
-        and PROCDEF.KEY_ = @processDefinitionKey
+        and PROCDEF.KEY_ = #{processDefinitionKey}
       </IsTrue>
       <IsTrue Property="processDefinitionKeyLike != null">
-        and PROCDEF.KEY_ like @processDefinitionKeyLike
+        and PROCDEF.KEY_ like #{processDefinitionKeyLike}
       </IsTrue>
     </Where>
   </Statement>
   
   <Select Id="selectDeployment" ResultMap="deploymentResultMap">
-    select * from ACT_RE_DEPLOYMENT where ID_ = @id
+    select * from ACT_RE_DEPLOYMENT where ID_ = #{id}
   </Select>
 
   <Select Id="selectDeploymentsByQueryCriteria" ResultMap="deploymentResultMap">
@@ -102,11 +102,11 @@
   </Select>
     
   <Select Id="selectDeploymentsByName" ResultMap="deploymentResultMap">
-    select * from ACT_RE_DEPLOYMENT D where NAME_=@deploymentName order by D.DEPLOY_TIME_ desc
+    select * from ACT_RE_DEPLOYMENT D where NAME_=#{deploymentName} order by D.DEPLOY_TIME_ desc
   </Select>
   
   <Select Id="selectDeploymentById" ResultMap="deploymentResultMap">
-    select * from ACT_RE_DEPLOYMENT where ID_ = @id
+    select * from ACT_RE_DEPLOYMENT where ID_ = #{id}
   </Select>
 
   <!-- mysql specific -->

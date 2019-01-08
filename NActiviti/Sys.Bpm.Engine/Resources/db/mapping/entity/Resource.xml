@@ -20,18 +20,18 @@
 
     <Insert Id="insertResource" ParameterMap="bytesMap">
       insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_, GENERATED_)
-      values (@id, 1, @name, @bytes, @deploymentId, @generated)
+      values (#{id}, 1, #{name}, #{bytes}, #{deploymentId}, #{generated})
     </Insert>
 
     <Insert Id="bulkInsertResource" ParameterMap="bytesMap">
       INSERT INTO ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_, GENERATED_) VALUES
       <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
-        (@byteArr.id,
+        (#{byteArr.id},
         1,
-        @byteArr.name,
-        @byteArr.bytes,
-        @byteArr.deploymentId,
-        @byteArr.generated)
+        #{byteArr.name},
+        #{byteArr.bytes},
+        #{byteArr.deploymentId},
+        #{byteArr.generated})
       </For>
     </Insert>
 
@@ -40,23 +40,23 @@
     <!-- RESOURCE DELETE -->
 
     <Delete Id="deleteResourcesByDeploymentId">
-      delete from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = @deploymentId
+      delete from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = #{deploymentId}
     </Delete>
 
     <!-- RESOURCE SELECT -->
 
     <Select Id="selectResourceNamesByDeploymentId">
-      select NAME_ from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = @deploymentId order by NAME_ asc
+      select NAME_ from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = #{deploymentId} order by NAME_ asc
     </Select>
 
     <Select Id="selectResourceByDeploymentIdAndResourceName" ResultMap="resourceResultMap">
       select * from ACT_GE_BYTEARRAY
-      where DEPLOYMENT_ID_ = @deploymentId
-      AND NAME_ = @resourceName
+      where DEPLOYMENT_ID_ = #{deploymentId}
+      AND NAME_ = #{resourceName}
     </Select>
 
     <Select Id="selectResourcesByDeploymentId" ResultMap="resourceResultMap">
-      select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = @deploymentId order by NAME_ asc
+      select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = #{deploymentId} order by NAME_ asc
     </Select>
     
 </SmartSqlMap>
