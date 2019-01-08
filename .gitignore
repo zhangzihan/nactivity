@@ -242,3 +242,5 @@ ModelManifest.xml
 .fake/
 
 !Sys.Bpm.Engine/Engine/debug/*
+
+NActiviti/BpmnText/appsettings.json

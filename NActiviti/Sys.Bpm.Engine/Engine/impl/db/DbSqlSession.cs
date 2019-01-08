@@ -1161,7 +1161,8 @@ namespace org.activiti.engine.impl.db
         public virtual string getResourceForDbOperation(string directory, string operation, string component)
         {
             string databaseType = dbSqlSessionFactory.DatabaseType;
-            return "org/activiti/db/" + directory + "/activiti." + databaseType + "." + operation + "." + component + ".sql";
+            return $"Resources/db/{directory}/activiti.{databaseType}.{operation}.{component}.sql";
+                //"org/activiti/db/" + directory + "/activiti." + databaseType + "." + operation + "." + component + ".sql";
         }
 
         public virtual void executeSchemaResource(string operation, string component, string resourceName, bool isOptional)

@@ -24,19 +24,21 @@ namespace SmartSql.Command
 
         public event OnPreparedHandler OnPrepared;
 
+        ///private readonly string dbPrefixs = "";
+
         public PreparedCommand(
             ILogger<PreparedCommand> logger
             , SmartSqlContext smartSqlContext)
         {
             _logger = logger;
             _smartSqlContext = smartSqlContext;
-            string dbPrefixs = $"{smartSqlContext.DbPrefix}{smartSqlContext.SmartDbPrefix}";
+            //dbPrefixs = $"{smartSqlContext.DbPrefix}{smartSqlContext.SmartDbPrefix}";
             var regOptions = RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.Compiled;
             if (smartSqlContext.IgnoreParameterCase)
             {
                 regOptions = regOptions | RegexOptions.IgnoreCase;
             }
-            _sqlParamsTokens = new Regex(@"[" + dbPrefixs + @"]([\p{L}\p{N}_]+)", regOptions);
+            _sqlParamsTokens = new Regex(@"(#\{)([\p{L}\p{N}_]+)(\})", regOptions);
         }
         public IDbCommand Prepare(IDbConnectionSession dbSession, RequestContext context)
         {
@@ -52,7 +54,7 @@ namespace SmartSql.Command
                         {
                             sql = _sqlParamsTokens.Replace(sql, match =>
                               {
-                                  string paramName = match.Groups[1].Value;
+                                  string paramName = match.Groups[2].Value;
                                   var paramMap = context.Statement?.ParameterMap?.Parameters?.FirstOrDefault(p => p.Name == paramName);
                                   var propertyName = paramMap != null ? paramMap.Property : paramName;
 
@@ -90,7 +92,7 @@ namespace SmartSql.Command
                                   else
                                   {
                                       AddParameterIfNotExists(context, dbCommand, paramName, paramVal);
-                                      return match.Value;
+                                      return $"{_smartSqlContext.DbPrefix}{paramName}";
                                   }
                               });
                         }

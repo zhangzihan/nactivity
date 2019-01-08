@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.Common;
 using System.Collections.Concurrent;
+using SmartSql.Configuration;
 
 namespace Sys.Data
 {
@@ -15,13 +16,14 @@ namespace Sys.Data
     {
         private static ILogger<DataSource> log = ProcessEngineServiceProvider.LoggerService<DataSource>();
 
-        private static ConcurrentDictionary<string, DbProviderFactory> dbTypes = new ConcurrentDictionary<string, DbProviderFactory>(StringComparer.OrdinalIgnoreCase);
+        private static ConcurrentDictionary<string, string> dbTypes = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         static DataSource()
         {
             //Validator.Validate();
 
-            dbTypes["System.Data.SqlClient"] = System.Data.SqlClient.SqlClientFactory.Instance;
+            dbTypes["System.Data.SqlClient"] = "System.Data.SqlClient.SqlClientFactory,System.Data.SqlClient";
+            dbTypes["MySql"] = "MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data";
         }
 
         private string connectionString;
@@ -65,8 +67,8 @@ namespace Sys.Data
             dsb.ConnectionString = connectionString;
             dsb.Remove("Provider");
 
-            var db = dbTypes[provider]; // DbProviderFactories.GetFactory(provider);
-            Connection = db.CreateConnection();
+            var db = dbTypes[provider]; //DbProviderFactories.GetFactory(provider);
+            Connection = DbProviderFactoryFactory.Create(db).CreateConnection(); //db.CreateConnection();
             Connection.ConnectionString = dsb.ConnectionString;
 
             return Connection;

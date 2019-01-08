@@ -349,7 +349,7 @@ namespace Activiti
             IRepositoryService rs = engine.RepositoryService;
 
             IDeploymentBuilder depb = rs.createDeployment();
-            var dep = depb.addClasspathResource(@"C:\Project\MDD\7.0\nactivity\NActiviti\BpmnTest\bpmn-js.bpmn")
+            var dep = depb.addClasspathResource(Path.Combine(Directory.GetCurrentDirectory(), "bpmn-js.bpmn"))
                     .deploy();
         }
 

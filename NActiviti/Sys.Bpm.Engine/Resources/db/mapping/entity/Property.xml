@@ -16,8 +16,8 @@
         VALUE_,
         REV_
       ) values (
-        @name,
-        @value,
+        #{name},
+        #{value},
         1
       )
   </Insert>
@@ -25,8 +25,8 @@
   <Insert Id="bulkInsertProperty">
       INSERT INTO ACT_GE_PROPERTY (NAME_, VALUE_, REV_) VALUES 
       <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=","> 
-        (@property.name,
-         @property.value,
+        (#{property.name},
+         #{property.value},
          1)
       </For>
   </Insert>
@@ -34,15 +34,15 @@
   <!-- PROPERTY UPDATE -->
   
   <Update Id="updateProperty">
-    update ACT_GE_PROPERTY REV_ = @revisionNext, VALUE_ = @value 
-    where NAME_ = @name
-      and REV_ = @revision
+    update ACT_GE_PROPERTY REV_ = #{revisionNext}, VALUE_ = #{value} 
+    where NAME_ = #{name}
+      and REV_ = #{revision}
   </Update>
 
   <!-- PROPERTY DELETE -->
   
   <Delete Id="deleteProperty">
-    delete from ACT_GE_PROPERTY where NAME_ = @name and REV_ = @revision
+    delete from ACT_GE_PROPERTY where NAME_ = #{name} and REV_ = #{revision}
   </Delete>
   
   <Select Id="selectDbSchemaVersion">
@@ -50,7 +50,7 @@
   </Select>
 
   <Select Id="selectProperty" ResultMap="propertyResultMap">
-    select * from ACT_GE_PROPERTY where NAME_ = @name
+    select * from ACT_GE_PROPERTY where NAME_ = #{name}
   </Select>
   
   <Select Id="selectProperties" ResultMap="propertyResultMap">
