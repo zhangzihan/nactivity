@@ -28,7 +28,7 @@ using System.Runtime.InteropServices;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("admin/v1/process-definitions")]
+    [Route("workflow/admin/process-definitions")]
     [ApiController]
     public class ProcessDefinitionAdminControllerImpl : ControllerBase, IProcessDefinitionAdminController
     {

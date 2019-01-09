@@ -34,7 +34,7 @@ using System.Text;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("v1/process-definitions")]
+    [Route("workflow/process-definitions")]
     [ApiController]
     public class ProcessDefinitionControllerImpl : ControllerBase, IProcessDefinitionController
     {

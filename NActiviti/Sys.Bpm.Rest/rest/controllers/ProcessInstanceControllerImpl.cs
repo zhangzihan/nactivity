@@ -30,7 +30,7 @@ using System.Text;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("/v1/process-instances")]
+    [Route("/workflow/process-instances")]
     [ApiController]
     public class ProcessInstanceControllerImpl : ControllerBase, IProcessInstanceController
     {

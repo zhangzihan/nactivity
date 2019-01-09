@@ -14,6 +14,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="core\SecurityPoliciesApplicationService.cs" />
+    <Compile Remove="core\SecurityPoliciesProcessDefinitionRestrictionApplier.cs" />
+    <Compile Remove="core\SecurityPoliciesProcessInstanceRestrictionApplier.cs" />
+    <Compile Remove="core\SecurityPoliciesRestrictionApplier.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="core\SecurityPoliciesApplicationService.cs" />
+    <None Include="core\SecurityPoliciesProcessDefinitionRestrictionApplier.cs" />
+    <None Include="core\SecurityPoliciesProcessInstanceRestrictionApplier.cs" />
+    <None Include="core\SecurityPoliciesRestrictionApplier.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />

@@ -25,7 +25,7 @@ using org.springframework.hateoas;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("/v1/process-instances/{processInstanceId}")]
+    [Route("/workflow/process-instances/{processInstanceId}")]
     [ApiController]
     public class ProcessInstanceTasksControllerImpl : ControllerBase, IProcessInstanceTasksController
     {

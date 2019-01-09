@@ -146,35 +146,39 @@ namespace Activiti
 
             deploy(engine);
 
-            do
-            {
-                System.Console.WriteLine("输入任务数:");
+            start(engine);
 
-                string tasks = System.Console.ReadLine();
+            complet(engine);
 
-                System.Console.WriteLine($"准备运行任务:{tasks}");
+            //do
+            //{
+            //    System.Console.WriteLine("输入任务数:");
 
-                var sw = new Stopwatch();
-                sw.Start();
-                try
-                {
-                    //testSimpleProcess();
-                    testVacationRequest(int.Parse(tasks));
-                }
-                catch (Exception ex)
-                {
+            //    string tasks = System.Console.ReadLine();
 
-                }
-                sw.Stop();
-                System.Console.WriteLine($"执行时间{sw.ElapsedMilliseconds}");
-                System.Console.WriteLine("退出运行按N键,继续?");
+            //    System.Console.WriteLine($"准备运行任务:{tasks}");
 
-                var keyInfo = System.Console.ReadKey();
-                if (keyInfo.Key == ConsoleKey.N)
-                {
-                    break;
-                }
-            } while (true);
+            //    var sw = new Stopwatch();
+            //    sw.Start();
+            //    try
+            //    {
+            //        //testSimpleProcess();
+            //        testVacationRequest(int.Parse(tasks));
+            //    }
+            //    catch (Exception ex)
+            //    {
+
+            //    }
+            //    sw.Stop();
+            //    System.Console.WriteLine($"执行时间{sw.ElapsedMilliseconds}");
+            //    System.Console.WriteLine("退出运行按N键,继续?");
+
+            //    var keyInfo = System.Console.ReadKey();
+            //    if (keyInfo.Key == ConsoleKey.N)
+            //    {
+            //        break;
+            //    }
+            //} while (true);
 
             //host.Run();
         }
@@ -344,12 +348,52 @@ namespace Activiti
             //Console.WriteLine(cnt);
         }
 
+        static void start(IProcessEngine processEngine)
+        {
+            Dictionary<String, Object> variables = new Dictionary<String, Object>();
+            variables.Add("employeeName", "Kermit");
+            variables.Add("numberOfDays",4);
+            variables.Add("vacationMotivation", "I'm really tired!");
+
+            IRuntimeService runtime = processEngine.RuntimeService;
+            IProcessInstance pi = runtime.startProcessInstanceByKey("vacationRequest", variables);
+
+            long cnt = runtime.createProcessInstanceQuery().count();
+            Console.WriteLine(cnt);
+        }
+
+        static void complet(IProcessEngine processEngine)
+        {
+            ITaskService taskService = processEngine.TaskService;
+            IList<ITask> tasks = taskService.createTaskQuery()
+                    .taskCandidateGroup("management")
+                    .list();
+
+            foreach (ITask task in tasks)
+            {
+                Console.WriteLine("Task available: " + task.Name);
+            }
+
+            ITask t = tasks[0];
+
+            Dictionary<String, Object> taskV = new Dictionary<String, Object>();
+            taskV.Add("vacationApproved", false);
+            taskV.Add("managerMotivation", "We have a tight deadline!");
+            taskService.complete(t.Id, taskV);
+
+            tasks = taskService.createTaskQuery().list();
+            foreach (ITask task in tasks)
+            {
+                Console.WriteLine("Task available: " + task.Name);
+            }
+        }
+
         static void deploy(IProcessEngine engine)
         {
             IRepositoryService rs = engine.RepositoryService;
 
             IDeploymentBuilder depb = rs.createDeployment();
-            var dep = depb.addClasspathResource(Path.Combine(Directory.GetCurrentDirectory(), "bpmn-js.bpmn"))
+            var dep = depb.addClasspathResource(Path.Combine(Directory.GetCurrentDirectory(), "VacationRequest.bpmn20.bpmn"))
                     .deploy();
         }
 

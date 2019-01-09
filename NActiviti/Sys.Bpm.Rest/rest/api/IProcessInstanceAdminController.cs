@@ -7,6 +7,5 @@ namespace org.activiti.cloud.services.rest.api
     public interface IProcessInstanceAdminController
     {
         PagedResources<ProcessInstanceResource> getAllProcessInstances(Pageable pageable);
-
     }
 }
