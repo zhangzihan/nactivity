@@ -67,7 +67,7 @@ namespace SmartSql.Configuration.Tags
         private void BuildItemSql_DirectValue(string itemSqlStr, RequestContext context)
         {
             string dbPrefix = GetDbProviderPrefix(context);
-            string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}";
+            string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}#";
 
             var reqVal = GetPropertyValue(context) as IEnumerable;
             int item_index = 0;
@@ -77,7 +77,7 @@ namespace SmartSql.Configuration.Tags
                 {
                     context.Sql.AppendFormat(" {0} ", Separator);
                 }
-                string patternStr = $"([{dbPrefixs}]{Regex.Escape(Key)}\\b)";
+                string patternStr = $"([{dbPrefixs}]{{{Regex.Escape(Key)}}})";
                 string key_name = $"{KeyPrepend(Property)}_{Key}{item_index}";
                 context.RequestParameters.Add(key_name, itemVal);
                 string key_name_dbPrefix = $"{dbPrefix}{key_name}";
@@ -93,7 +93,7 @@ namespace SmartSql.Configuration.Tags
         private void BuildItemSql_NotDirectValue(string itemSqlStr, RequestContext context)
         {
             string dbPrefix = GetDbProviderPrefix(context);
-            string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}";
+            string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}#";
             var reqVal = GetPropertyValue(context) as IEnumerable;
             int item_index = 0;
             foreach (var itemVal in reqVal)
@@ -107,7 +107,7 @@ namespace SmartSql.Configuration.Tags
                 var properties = itemVal.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 foreach (var property in properties)
                 {
-                    string patternStr = $"([{dbPrefixs}]{Regex.Escape(property.Name)}\\b)";
+                    string patternStr = $"([{dbPrefixs}]{{{Regex.Escape(property.Name)}}})";
                     bool isHasParam = Regex.IsMatch(item_sql, patternStr, RegexOptions.IgnoreCase);
                     if (!isHasParam) { continue; }
 
