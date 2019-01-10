@@ -24,7 +24,7 @@ namespace org.activiti.cloud.services.api.commands
         private string taskId;
         private string assignee;
 
-        [JsonConstructor]
+        ////[JsonConstructor]
         public ClaimTaskCmd([JsonProperty("TaskId")]string taskId, [JsonProperty("Assignee")]string assignee)
         {
             this.id = System.Guid.NewGuid().ToString();

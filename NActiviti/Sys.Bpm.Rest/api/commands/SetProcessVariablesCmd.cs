@@ -10,7 +10,7 @@ namespace org.activiti.cloud.services.api.commands
         private string processId;
         private IDictionary<string, object> variables;
 
-        [JsonConstructor]
+        ////[JsonConstructor]
         public SetProcessVariablesCmd([JsonProperty("ProcessId")] string processId,
             [JsonProperty("Variables")] IDictionary<string, object> variables)
         {

@@ -12,7 +12,7 @@ namespace org.activiti.cloud.services.api.model
         {
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public ProcessDefinitionUserTask([JsonProperty("Name")]string name,
             [JsonProperty("Description")]string documentation)
         {

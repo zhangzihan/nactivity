@@ -13,7 +13,7 @@ namespace org.activiti.cloud.services.api.commands.results
             this.id = System.Guid.NewGuid().ToString();
         }
 
-        [JsonConstructor]
+        ////[JsonConstructor]
         public SignalProcessInstancesResults([JsonProperty("CommandId")]string commandId) : this()
         {
             this.commandId = commandId;

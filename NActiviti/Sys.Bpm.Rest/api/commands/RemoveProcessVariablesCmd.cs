@@ -10,7 +10,7 @@ namespace org.activiti.cloud.services.api.commands
         private string processId;
         private IList<string> variableNames;
 
-        [JsonConstructor]
+        ////[JsonConstructor]
         public RemoveProcessVariablesCmd([JsonProperty("ProcessId")] string processId,
             [JsonProperty("Variables")]IList<string> variableNames)
         {

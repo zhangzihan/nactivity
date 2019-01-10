@@ -24,7 +24,7 @@ using org.springframework.hateoas;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("/admin/v1/process-instances")]
+    [Route("/workflow/admin/process-instances")]
     public class ProcessInstanceAdminControllerImpl : ControllerBase, IProcessInstanceAdminController
     {
 
@@ -32,15 +32,15 @@ namespace org.activiti.cloud.services.rest.controllers
 
         private readonly ProcessInstanceResourceAssembler resourceAssembler;
 
-        public virtual string handleAppException(ActivitiForbiddenException ex)
-        {
-            return ex.Message;
-        }
+        //public virtual string handleAppException(ActivitiForbiddenException ex)
+        //{
+        //    return ex.Message;
+        //}
 
-        public virtual string handleAppException(ActivitiObjectNotFoundException ex)
-        {
-            return ex.Message;
-        }
+        //public virtual string handleAppException(ActivitiObjectNotFoundException ex)
+        //{
+        //    return ex.Message;
+        //}
 
         public ProcessInstanceAdminControllerImpl(ProcessEngineWrapper processEngine, ProcessInstanceResourceAssembler resourceAssembler)
         {

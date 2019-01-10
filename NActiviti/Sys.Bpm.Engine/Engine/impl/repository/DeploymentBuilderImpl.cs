@@ -102,10 +102,10 @@ namespace org.activiti.engine.impl.repository
             {
                 throw new ActivitiIllegalArgumentException("bytes is null");
             }
+
             IResourceEntity resource = resourceEntityManager.create();
             resource.Name = resourceName;
             resource.Bytes = bytes;
-
             deployment.addResource(resource);
             return this;
         }

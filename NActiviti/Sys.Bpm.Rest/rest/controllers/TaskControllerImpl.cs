@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("/v1/tasks")]
+    [Route("/workflow/tasks")]
     [ApiController]
     public class TaskControllerImpl : ControllerBase, ITaskController
     {
@@ -51,10 +51,10 @@ namespace org.activiti.cloud.services.rest.controllers
             this.taskConverter = taskConverter;
         }
 
-        public virtual string handleAppException(ActivitiObjectNotFoundException ex)
-        {
-            return ex.Message;
-        }
+        //public virtual string handleAppException(ActivitiObjectNotFoundException ex)
+        //{
+        //    return ex.Message;
+        //}
 
         [HttpGet]
         public virtual PagedResources<TaskResource> getTasks(Pageable pageable)

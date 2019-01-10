@@ -12,7 +12,7 @@ namespace org.activiti.cloud.services.api.model
 
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public TaskCandidateGroup([JsonProperty("GroupId")]string groupId, [JsonProperty("TaskId")]string taskId)
         {
             this.groupId = groupId;

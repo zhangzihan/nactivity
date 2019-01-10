@@ -52,16 +52,16 @@ namespace org.activiti.cloud.services.rest.controllers
 
         //private readonly AlfrescoPagedResourcesAssembler<ProcessDefinition> pagedResourcesAssembler;
 
-        public virtual string handleAppException(ActivitiObjectNotFoundException ex)
-        {
-            return ex.Message;
-        }
+        //public virtual string handleAppException(ActivitiObjectNotFoundException ex)
+        //{
+        //    return ex.Message;
+        //}
 
 
-        public virtual string handleDiagramInterchangeInfoNotFoundException(ActivitiInterchangeInfoNotFoundException ex)
-        {
-            return ex.Message;
-        }
+        //public virtual string handleDiagramInterchangeInfoNotFoundException(ActivitiInterchangeInfoNotFoundException ex)
+        //{
+        //    return ex.Message;
+        //}
 
         public ProcessDefinitionControllerImpl(IRepositoryService repositoryService, 
             ProcessDiagramGeneratorWrapper processDiagramGenerator, 

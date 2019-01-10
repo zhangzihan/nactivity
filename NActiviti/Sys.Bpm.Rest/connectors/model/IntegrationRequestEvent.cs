@@ -54,7 +54,7 @@ namespace org.activiti.services.connectors.model
             this.id = System.Guid.NewGuid().ToString();
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public IntegrationRequestEvent([JsonProperty("Execution")]IExecutionEntity execution,
             [JsonProperty("IntegrationContext")]IIntegrationContextEntity integrationContext,
             [JsonProperty("AppName")]string appName,

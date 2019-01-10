@@ -27,7 +27,7 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("/v1/process-instances/{processInstanceId}/variables")]
+    [Route("/workflow/process-instances/{processInstanceId}/variables")]
     [ApiController]
     public class ProcessInstanceVariableControllerImpl : ControllerBase, IProcessInstanceVariableController
     {
@@ -37,15 +37,15 @@ namespace org.activiti.cloud.services.rest.controllers
         private readonly SecurityPoliciesApplicationService securityPoliciesApplicationService;
         private readonly ProcessEngineWrapper processEngine;
 
-        public virtual string handleAppException(ActivitiForbiddenException ex)
-        {
-            return ex.Message;
-        }
+        //public virtual string handleAppException(ActivitiForbiddenException ex)
+        //{
+        //    return ex.Message;
+        //}
 
-        public virtual string handleAppException(ActivitiObjectNotFoundException ex)
-        {
-            return ex.Message;
-        }
+        //public virtual string handleAppException(ActivitiObjectNotFoundException ex)
+        //{
+        //    return ex.Message;
+        //}
 
         public ProcessInstanceVariableControllerImpl(IRuntimeService runtimeService, ProcessInstanceVariableResourceAssembler variableResourceBuilder, SecurityPoliciesApplicationService securityPoliciesApplicationService, ProcessEngineWrapper processEngine)
         {
@@ -55,6 +55,7 @@ namespace org.activiti.cloud.services.rest.controllers
             this.processEngine = processEngine;
         }
 
+        [HttpGet]
         public virtual Resources<ProcessVariableResource> getVariables(string processInstanceId)
         {
             IList<IVariableInstance> variableInstances = runtimeService.getVariableInstancesByExecutionIds(new HashSet<string> { processInstanceId });
@@ -69,6 +70,7 @@ namespace org.activiti.cloud.services.rest.controllers
             return resources;
         }
 
+        [HttpGet("local")]
         public virtual Resources<ProcessVariableResource> getVariablesLocal(string processInstanceId)
         {
             IDictionary<string, IVariableInstance> variableInstancesMap = runtimeService.getVariableInstancesLocal(processInstanceId);
@@ -87,6 +89,7 @@ namespace org.activiti.cloud.services.rest.controllers
             return resources;
         }
 
+        [HttpPost]
         public virtual IActionResult setVariables(string processInstanceId, SetProcessVariablesCmd setProcessVariablesCmd)
         {
             processEngine.ProcessVariables = setProcessVariablesCmd;
@@ -94,6 +97,7 @@ namespace org.activiti.cloud.services.rest.controllers
             return Ok();
         }
 
+        [HttpPost("remove")]
         public virtual IActionResult removeVariables(string processInstanceId, RemoveProcessVariablesCmd removeProcessVariablesCmd)
         {
             this.processEngine.removeProcessVariables(removeProcessVariablesCmd);

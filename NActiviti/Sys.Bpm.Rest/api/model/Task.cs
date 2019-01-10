@@ -46,7 +46,7 @@ namespace org.activiti.cloud.services.api.model
         {
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public Task([JsonProperty("Id")]string id,
             [JsonProperty("Owner")]string owner,
             [JsonProperty("Assignee")]string assignee,

@@ -12,7 +12,7 @@
 
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public TaskCandidateUser([JsonProperty("UserId")]string userId, [JsonProperty("TaskId")]string taskId)
         {
             this.userId = userId;

@@ -33,7 +33,18 @@ namespace org.activiti.cloud.services.api.model.converter
             ProcessInstance processInstance = null;
             if (source != null)
             {
-                processInstance = new ProcessInstance(source.Id, source.Name, source.Description, source.ProcessDefinitionId, source.StartUserId, source.StartTime, source.BusinessKey, calculateStatus(source), source.ProcessDefinitionKey);
+                processInstance = new ProcessInstance()
+                {
+                    Id = source.Id,
+                    Name = source.Name,
+                    Description = source.Description,
+                    ProcessDefinitionId = source.ProcessDefinitionId,
+                    Initiator = source.StartUserId,
+                    StartDate = source.StartTime,
+                    BusinessKey = source.BusinessKey,
+                    Status = calculateStatus(source),
+                    ProcessDefinitionKey = source.ProcessDefinitionKey
+                };
             }
             return processInstance;
         }

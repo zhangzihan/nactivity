@@ -12,7 +12,7 @@ namespace org.activiti.cloud.services.api.model
         {
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public ProcessDefinitionVariable([JsonProperty("VariableName")]string variableName,
             [JsonProperty("VariableType")]string variableType)
         {

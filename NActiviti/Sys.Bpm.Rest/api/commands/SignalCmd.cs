@@ -30,7 +30,7 @@ namespace org.activiti.cloud.services.api.commands
             this.id = System.Guid.NewGuid().ToString();
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public SignalCmd([JsonProperty("Name")]string name,
             [JsonProperty("InputVariables")]IDictionary<string, object> inputVariables) : this()
         {
@@ -38,7 +38,7 @@ namespace org.activiti.cloud.services.api.commands
             this.inputVariables = inputVariables;
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public SignalCmd([JsonProperty("Name")]string name) : this()
         {
             this.name = name;

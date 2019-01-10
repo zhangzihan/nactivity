@@ -27,7 +27,7 @@ namespace org.activiti.cloud.services.api.model
 
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public TaskVariable([JsonProperty("TaskId")]string taskId,
             [JsonProperty("Name")]string name,
             [JsonProperty("Type")]string type,

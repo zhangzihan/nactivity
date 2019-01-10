@@ -4,26 +4,27 @@ using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.rest.api.resources;
 using org.springframework.data.domain;
 using org.springframework.hateoas;
+using System.Threading.Tasks;
 
 namespace org.activiti.cloud.services.rest.api
 {
     public interface IProcessInstanceController
     {
-        PagedResources<ProcessInstanceResource> getProcessInstances(Pageable pageable);
+        Task<PagedResources<ProcessInstanceResource>> GetProcessInstances(Pageable pageable);
 
-        Resource<ProcessInstance> startProcess(StartProcessInstanceCmd cmd);
+        Task<ProcessInstance> Start(StartProcessInstanceCmd cmd);
 
-        Resource<ProcessInstance> getProcessInstanceById(string processInstanceId);
+        Task<Resource<ProcessInstance>> GetProcessInstanceById(string processInstanceId);
 
-        string getProcessDiagram(string processInstanceId);
+        Task<string> GetProcessDiagram(string processInstanceId);
 
-        IActionResult sendSignal(SignalCmd cmd);
+        Task<IActionResult> SendSignal(SignalCmd cmd);
 
-        IActionResult suspend(string processInstanceId);
+        Task<IActionResult> Suspend(string processInstanceId);
 
-        IActionResult activate(string processInstanceId);
+        Task<IActionResult> Activate(string processInstanceId);
 
-        void deleteProcessInstance(string processInstanceId);
+        System.Threading.Tasks.Task DeleteProcessInstance(string processInstanceId);
     }
 
 }

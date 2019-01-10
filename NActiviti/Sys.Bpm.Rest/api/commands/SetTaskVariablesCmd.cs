@@ -25,7 +25,7 @@ namespace org.activiti.cloud.services.api.commands
         private string taskId;
         private IDictionary<string, object> variables;
 
-        [JsonConstructor]
+        ////[JsonConstructor]
         public SetTaskVariablesCmd([JsonProperty("TaskId")] string taskId, [JsonProperty("Variables")] IDictionary<string, object> variables)
         {
             this.id = System.Guid.NewGuid().ToString();

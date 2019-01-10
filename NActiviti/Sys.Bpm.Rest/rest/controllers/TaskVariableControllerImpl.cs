@@ -27,7 +27,7 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("/v1/tasks/{taskId}/variables")]
+    [Route("/workflow/tasks/{taskId}/variables")]
     [ApiController]
     public class TaskVariableControllerImpl : ControllerBase, ITaskVariableController
     {
@@ -85,7 +85,7 @@ namespace org.activiti.cloud.services.rest.controllers
             return resources;
         }
 
-        [HttpPost]
+        [HttpPut]
         public virtual IActionResult setVariables([FromQuery]string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
         {
 
@@ -94,7 +94,7 @@ namespace org.activiti.cloud.services.rest.controllers
             return Ok();
         }
 
-        [HttpPost("local")]
+        [HttpPut("local")]
         public virtual IActionResult setVariablesLocal([FromQuery]string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
         {
             processEngine.TaskVariablesLocal = setTaskVariablesCmd;

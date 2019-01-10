@@ -31,7 +31,17 @@ namespace org.activiti.cloud.services.core
         private PageableProcessInstanceService pageableProcessInstanceService;
         private readonly ApplicationEventPublisher eventPublisher;
 
-        public ProcessEngineWrapper(ProcessInstanceConverter processInstanceConverter, IRuntimeService runtimeService, PageableProcessInstanceService pageableProcessInstanceService, ITaskService taskService, TaskConverter taskConverter, PageableTaskService pageableTaskService, MessageProducerActivitiEventListener listener, SecurityPoliciesApplicationService securityService, IRepositoryService repositoryService, AuthenticationWrapper authenticationWrapper, ApplicationEventPublisher eventPublisher)
+        public ProcessEngineWrapper(ProcessInstanceConverter processInstanceConverter, 
+            IRuntimeService runtimeService, 
+            PageableProcessInstanceService pageableProcessInstanceService, 
+            ITaskService taskService, 
+            TaskConverter taskConverter, 
+            PageableTaskService pageableTaskService, 
+            MessageProducerActivitiEventListener listener, 
+            SecurityPoliciesApplicationService securityService, 
+            IRepositoryService repositoryService, 
+            AuthenticationWrapper authenticationWrapper, 
+            ApplicationEventPublisher eventPublisher)
         {
             this.processInstanceConverter = processInstanceConverter;
             this.runtimeService = runtimeService;
@@ -39,7 +49,8 @@ namespace org.activiti.cloud.services.core
             this.taskService = taskService;
             this.taskConverter = taskConverter;
             this.pageableTaskService = pageableTaskService;
-            this.runtimeService.addEventListener(listener);
+#warning 暂时不处理事件侦听
+            //this.runtimeService.addEventListener(listener);
             this.securityService = securityService;
             this.repositoryService = repositoryService;
             this.authenticationWrapper = authenticationWrapper;

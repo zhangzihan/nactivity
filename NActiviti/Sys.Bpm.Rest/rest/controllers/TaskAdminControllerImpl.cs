@@ -24,7 +24,7 @@ using org.springframework.hateoas;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("/admin/v1/tasks")]
+    [Route("/workflow/admin/tasks")]
     [ApiController]
     public class TaskAdminControllerImpl : ControllerBase, ITaskAdminController
     {

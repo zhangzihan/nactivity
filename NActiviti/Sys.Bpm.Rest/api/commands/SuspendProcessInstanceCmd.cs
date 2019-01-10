@@ -8,7 +8,7 @@
         private readonly string id;
         private string processInstanceId;
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public SuspendProcessInstanceCmd([JsonProperty("ProcessInstanceId")]string processInstanceId)
         {
             this.id = System.Guid.NewGuid().ToString();

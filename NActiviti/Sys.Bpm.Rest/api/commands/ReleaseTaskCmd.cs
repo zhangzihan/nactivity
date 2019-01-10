@@ -24,7 +24,7 @@ namespace org.activiti.cloud.services.api.commands
         private readonly string id;
         private string taskId;
 
-        [JsonConstructor]
+        ////[JsonConstructor]
         public ReleaseTaskCmd([JsonProperty("TaskId")] string taskId)
         {
             this.id = System.Guid.NewGuid().ToString();

@@ -80,7 +80,7 @@ namespace org.springframework.data.domain
 
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public Pageable([JsonProperty("Offset")]int offset, [JsonProperty("PageSize")]int pageSize, [JsonProperty("Sort")]Sort sort)
         {
             Offset = offset;
@@ -106,7 +106,7 @@ namespace org.springframework.data.domain
 
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public Sort([JsonProperty("Sort")]IEnumerable<Order> sorts)
         {
             orders = sorts?.ToList();

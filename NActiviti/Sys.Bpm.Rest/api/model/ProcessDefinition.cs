@@ -28,7 +28,7 @@ namespace org.activiti.cloud.services.api.model
         {
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public ProcessDefinition([JsonProperty("Id")]string id,
             [JsonProperty("Name")]string name,
             [JsonProperty("Description")]string description,

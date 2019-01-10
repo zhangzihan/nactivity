@@ -27,112 +27,53 @@ namespace org.activiti.cloud.services.api.model
             COMPLETED
         }
 
-        private string id;
-        private string name;
-        private string description;
-        private string processDefinitionId;
-        private string processDefinitionKey;
-        private string initiator;
-        private DateTime? startDate;
-        private string businessKey;
-        private string status;
-
         public ProcessInstance()
         {
         }
 
-        [JsonConstructor]
-        public ProcessInstance([JsonProperty("Id")]string id,
-            [JsonProperty("Name")]string name,
-            [JsonProperty("Description")]string description,
-            [JsonProperty("ProcessDefinitionId")]string processDefinitionId,
-            [JsonProperty("Initiator")]string initiator,
-            [JsonProperty("StartDate")]DateTime? startDate,
-            [JsonProperty("BusinessKey")]string businessKey,
-            [JsonProperty("Status")]string status,
-            [JsonProperty("ProcessDefinitionKey")]string processDefinitionKey)
-        {
-            this.id = id;
-            this.name = name;
-            this.description = description;
-            this.startDate = startDate;
-            this.initiator = initiator;
-            this.businessKey = businessKey;
-            this.status = status;
-            this.processDefinitionId = processDefinitionId;
-            this.processDefinitionKey = processDefinitionKey;
-        }
-
         public virtual string Id
         {
-            get
-            {
-                return id;
-            }
+            get;set;
         }
 
         public virtual string Name
         {
-            get
-            {
-                return name;
-            }
+            get;set;
         }
 
         public virtual string Description
         {
-            get
-            {
-                return description;
-            }
+            get;set;
         }
 
         public virtual DateTime? StartDate
         {
-            get
-            {
-                return startDate;
-            }
+            get;set;
         }
 
         public virtual string Initiator
         {
-            get
-            {
-                return initiator;
-            }
+            get;set;
         }
 
         public virtual string BusinessKey
         {
-            get
-            {
-                return businessKey;
-            }
+            get;set;
         }
 
         public virtual string Status
         {
-            get
-            {
-                return status;
-            }
+            get;set;
         }
 
         public virtual string ProcessDefinitionId
         {
-            get
-            {
-                return processDefinitionId;
-            }
+            get;set;
         }
 
         public virtual string ProcessDefinitionKey
         {
-            get
-            {
-                return processDefinitionKey;
-            }
+            get;set;
         }
     }
 }

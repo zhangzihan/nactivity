@@ -14,7 +14,7 @@ namespace org.activiti.cloud.services.api.commands.results
             this.id = System.Guid.NewGuid().ToString();
         }
 
-        [JsonConstructor]
+        ////[JsonConstructor]
         public SetProcessVariablesResults([JsonProperty("CommandId")]string commandId) : this()
         {
             this.commandId = commandId;

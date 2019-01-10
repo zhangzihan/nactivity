@@ -20,7 +20,7 @@ namespace org.activiti.cloud.services.api.model
 
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public ProcessInstanceVariable([JsonProperty("ProcessInstanceId")]string processInstanceId,
             [JsonProperty("Name")]string name,
             [JsonProperty("Type")]string type,

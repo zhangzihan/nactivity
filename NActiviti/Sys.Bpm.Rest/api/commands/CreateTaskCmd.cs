@@ -34,7 +34,7 @@ namespace org.activiti.cloud.services.api.commands
             this.id = System.Guid.NewGuid().ToString();
         }
 
-        [JsonConstructor]
+        ////[JsonConstructor]
         public CreateTaskCmd([JsonProperty("Name")] string name,
             [JsonProperty("Description")]string description,
             [JsonProperty("DueDate")] DateTime? dueDate,

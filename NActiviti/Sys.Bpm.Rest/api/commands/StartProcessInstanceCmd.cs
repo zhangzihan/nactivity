@@ -31,19 +31,19 @@ namespace org.activiti.cloud.services.api.commands
             this.id = System.Guid.NewGuid().ToString();
         }
 
-        [JsonConstructor]
-        public StartProcessInstanceCmd([JsonProperty("ProcessDefinitionKey")]string processDefinitionKey,
-            [JsonProperty("ProcessDefinitionId")]string processDefinitionId,
-            [JsonProperty("Variables")]IDictionary<string, object> variables,
-            [JsonProperty("BusinessKey")]string businessKey) : this()
-        {
-            this.processDefinitionKey = processDefinitionKey;
-            this.processDefinitionId = processDefinitionId;
-            this.variables = variables;
-            this.businessKey = businessKey;
-        }
+        //[JsonConstructor]
+        //public StartProcessInstanceCmd([JsonProperty("ProcessDefinitionKey")]string processDefinitionKey,
+        //    [JsonProperty("ProcessDefinitionId")]string processDefinitionId,
+        //    [JsonProperty("Variables")]IDictionary<string, object> variables,
+        //    [JsonProperty("BusinessKey")]string businessKey) : this()
+        //{
+        //    this.processDefinitionKey = processDefinitionKey;
+        //    this.processDefinitionId = processDefinitionId;
+        //    this.variables = variables;
+        //    this.businessKey = businessKey;
+        //}
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public StartProcessInstanceCmd([JsonProperty("ProcessDefinitionId")]string processDefinitionId,
             [JsonProperty("Variables")]IDictionary<string, object> variables) : this()
         {
@@ -52,7 +52,7 @@ namespace org.activiti.cloud.services.api.commands
             this.variables = variables;
         }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public StartProcessInstanceCmd([JsonProperty("ProcessDefinitionId")] string processDefinitionId) : this()
         {
             this.processDefinitionId = processDefinitionId;
@@ -60,42 +60,27 @@ namespace org.activiti.cloud.services.api.commands
 
         public virtual string Id
         {
-            get
-            {
-                return id;
-            }
+            get;set;
         }
 
         public virtual string ProcessDefinitionKey
         {
-            get
-            {
-                return processDefinitionKey;
-            }
+            get;set;
         }
 
         public virtual string ProcessDefinitionId
         {
-            get
-            {
-                return processDefinitionId;
-            }
+            get;set;
         }
 
         public virtual IDictionary<string, object> Variables
         {
-            get
-            {
-                return variables;
-            }
+            get;set;
         }
 
         public virtual string BusinessKey
         {
-            get
-            {
-                return businessKey;
-            }
+            get;set;
         }
     }
 

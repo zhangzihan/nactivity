@@ -9,7 +9,7 @@ namespace org.activiti.cloud.services.api.commands
 
         private string processInstanceId;
 
-        [JsonConstructor]
+        ////[JsonConstructor]
         public ActivateProcessInstanceCmd([JsonProperty("ProcessInstanceId")]string processInstanceId)
         {
             this.id = System.Guid.NewGuid().ToString();
