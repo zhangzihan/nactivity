@@ -34,7 +34,7 @@ namespace org.activiti.engine.impl.interceptor
             // This will produce operations that will be put on the agenda.
             commandContext.Agenda.planOperation(new RunableOperation(() =>
             {
-                commandContext.Result = command.execute(commandContext);
+                commandContext.SetResult(command.execute(commandContext));
             }));
 
             // Run loop for agenda
@@ -48,7 +48,7 @@ namespace org.activiti.engine.impl.interceptor
                 executeOperations(commandContext);
             }
 
-            var value = (T)commandContext.Result;
+            var value = (T)commandContext.GetResult();
 
             return value;
         }
@@ -57,7 +57,7 @@ namespace org.activiti.engine.impl.interceptor
         {
             while (!commandContext.Agenda.Empty)
             {
-                AbstractOperation runnable = commandContext.Agenda.NextOperation;
+                AbstractOperation runnable = commandContext.Agenda.NextOperation();
                 if (runnable != null)
                 {
                     executeOperation(runnable);

@@ -167,7 +167,7 @@ namespace org.activiti.engine.impl.asyncexecutor
             public virtual object execute(ICommandContext commandContext)
             {
                 commandContext.JobManager.unacquire(job);
-                return commandContext.Result;
+                return commandContext.GetResult();
             }
         }
 

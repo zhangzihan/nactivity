@@ -63,7 +63,7 @@ namespace org.activiti.engine.impl.cfg.multitenant
                 commandContext.DbSqlSession.dbSchemaUpdate();
             }
 
-            return commandContext.Result;
+            return commandContext.GetResult();
         }
     }
 

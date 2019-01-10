@@ -55,7 +55,7 @@ namespace org.activiti.engine.impl.bpmn.listener
             public virtual object execute(ICommandContext commandContext)
             {
                 outerInstance.listener.notify(outerInstance.scope.ProcessInstanceId, outerInstance.scope.ExecutionId, outerInstance.scope.Task, outerInstance.scope.ExecutionVariables, outerInstance.scope.CustomPropertiesMap);
-                return commandContext.Result;
+                return commandContext.GetResult();
             }
         }
 

@@ -145,7 +145,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                 {
                     outerInstance.jobManager.moveTimerJobToExecutableJob(job);
                 }
-                return commandContext.Result;
+                return commandContext.GetResult();
             }
         }
 

@@ -84,7 +84,7 @@ namespace org.activiti.engine.impl.cmd
 
             }
 
-            return commandContext.Result;
+            return commandContext.GetResult();
         }
     }
 }

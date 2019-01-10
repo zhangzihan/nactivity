@@ -31,7 +31,7 @@ namespace org.activiti.engine
 
         bool Empty { get; }
 
-        AbstractOperation NextOperation { get; }
+        AbstractOperation NextOperation();
 
         /// <summary>
         /// Generic method to plan a <seealso cref="Runnable"/>.

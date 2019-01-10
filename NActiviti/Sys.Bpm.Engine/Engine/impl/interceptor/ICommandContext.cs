@@ -48,7 +48,12 @@ namespace org.activiti.engine.impl.interceptor
         ProcessEngineConfigurationImpl ProcessEngineConfiguration { get; }
         IPropertyEntityManager PropertyEntityManager { get; }
         IResourceEntityManager ResourceEntityManager { get; }
-        object Result { get; set; }
+
+        object GetResult();
+
+        void SetResult(object value);
+
+
         bool Reused { get; set; }
         IDictionary<Type, ISessionFactory> SessionFactories { get; }
         IDictionary<Type, ISession> Sessions { get; }

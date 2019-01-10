@@ -684,25 +684,23 @@ namespace org.activiti.engine.impl.interceptor
             }
         }
 
-        public virtual object Result
+        public virtual object GetResult()
         {
-            get
+            if (resultStack.Count == 0)
             {
-                if (resultStack.Count == 0)
-                {
-                    return null;
-                }
-
-                var value = resultStack.Last.Value;
-
-                resultStack.RemoveLast();
-
-                return value;
+                return null;
             }
-            set
-            {
-                resultStack.AddLast(value);
-            }
+
+            var value = resultStack.Last.Value;
+
+            resultStack.RemoveLast();
+
+            return value;
+        }
+
+        public virtual void SetResult(object value)
+        {
+            resultStack.AddLast(value);
         }
 
 

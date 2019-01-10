@@ -28,7 +28,7 @@ namespace org.activiti.engine.impl
                 dbSqlSession.performSchemaOperationsProcessEngineBuild();
             }
 
-            return commandContext.Result;
+            return commandContext.GetResult();
         }
     }
 }

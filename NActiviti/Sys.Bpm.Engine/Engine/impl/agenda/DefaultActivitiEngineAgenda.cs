@@ -42,21 +42,18 @@ namespace org.activiti.engine.impl.agenda
             }
         }
 
-        public virtual AbstractOperation NextOperation
+        public virtual AbstractOperation NextOperation()
         {
-            get
+            if (operations.First != null)
             {
-                if (operations.First != null)
-                {
-                    var operation = operations.First.Value;
+                var operation = operations.First.Value;
 
-                    operations.RemoveFirst();
+                operations.RemoveFirst();
 
-                    return operation;
-                }
-
-                return null;
+                return operation;
             }
+
+            return null;
         }
 
         //public void planOperation(Action operation)

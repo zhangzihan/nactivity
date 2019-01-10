@@ -97,7 +97,7 @@ namespace org.activiti.engine.impl.asyncexecutor
 
             public virtual bool execute(ICommandContext commandContext)
             {
-                bool.TryParse(commandContext.Result?.ToString(), out var res);
+                bool.TryParse(commandContext.GetResult()?.ToString(), out var res);
 
                 return res;
             }
@@ -215,7 +215,7 @@ namespace org.activiti.engine.impl.asyncexecutor
             {
                 commandContext.JobManager.unacquire(outerInstance.job);
 
-                return commandContext.Result;
+                return commandContext.GetResult();
             }
         }
 
@@ -260,7 +260,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                     }
                 }
 
-                return commandContext.Result;
+                return commandContext.GetResult();
             }
 
         }

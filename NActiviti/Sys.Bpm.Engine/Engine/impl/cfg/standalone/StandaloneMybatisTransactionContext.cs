@@ -109,7 +109,7 @@ namespace org.activiti.engine.impl.cfg.standalone
             public virtual object execute(ICommandContext commandContext)
             {
                 outerInstance.executeTransactionListeners(transactionListeners, commandContext);
-                return commandContext.Result;
+                return commandContext.GetResult();
             }
         }
 
