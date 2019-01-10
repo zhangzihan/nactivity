@@ -123,8 +123,6 @@ namespace Activiti
 
             LogManager.Instance = host.Services.GetService<LogManager>();
 
-            host.Services.EnsureProcessEngineInit();
-
             //Container = new Container();
             //Container.With((rules) =>
             //{

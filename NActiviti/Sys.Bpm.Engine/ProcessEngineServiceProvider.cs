@@ -96,12 +96,14 @@ namespace Sys
                 return sp.GetService<ProcessEngineFactory>().DefaultProcessEngine;
             });
 
+            services.BuildServiceProvider().EnsureProcessEngineInit();
+
             return services;
         }
 
         private static IServiceProvider serviceProvider;
 
-        public static void EnsureProcessEngineInit(this IServiceProvider serviceProvider)
+        private static void EnsureProcessEngineInit(this IServiceProvider serviceProvider)
         {
             ProcessEngineServiceProvider.serviceProvider = serviceProvider;
 
