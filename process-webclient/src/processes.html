@@ -1,0 +1,22 @@
+<template>
+  <style>
+    .proc-define {
+      clear: both;
+      width: 100%;
+      font-size: 14px;
+      cursor: default;
+    }
+
+    .proc-define:hover {
+      background: lightblue;
+      color: white;
+    }
+
+  </style>
+
+  <div repeat.for="def of defines">
+    <div class="proc-define" click.trigger="selected(def.id)">
+      <strong>${def.name}</strong>
+    </div>
+  </div>
+</template>

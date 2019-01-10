@@ -1,0 +1,18 @@
+<template>
+  <div class="container form-container">
+    <div class="row">
+      <div class="col-sm-4">姓名</div>
+      <div class="col-sm-8">
+        <input value.bind="name" style="width:100%" />
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div class="col-sm-12" style="text-align:right">
+        <label>
+          <input type="checkbox" checked.bind="isTecher">是否教师
+        </label>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-info btn-submit" click.trigger="submit()">提交</button>
+</template>

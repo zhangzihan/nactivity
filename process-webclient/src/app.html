@@ -1,0 +1,74 @@
+<template>
+
+  <style>
+    .workspace {
+      width: 100%;
+      height: 100%;
+      position: relative
+    }
+
+    .left {
+      position: absolute;
+      left: 0;
+      height: 100%;
+      width: 230px;
+      border-right: 1px solid lightgray;
+    }
+
+    .left .header {
+      border-bottom: 1px solid lightgray;
+    }
+
+    .right {
+      position: absolute;
+      left: 232px;
+      right: 0;
+      height: 100%;
+      border-left: 1px solid lightgray;
+    }
+
+    .right .top {
+      position: absolute;
+      height: 198px;
+      width: 100%;
+      border-bottom: 1px solid lightgray;
+    }
+
+    .right .has-top {
+      position: absolute;
+      top: 202px;
+      bottom: 0;
+      width: 100%;
+      border-top: 1px solid lightgray;
+    }
+
+    .container.form-container {
+      padding: 4px 4px;
+      height: 122px
+    }
+
+    .form-list .content .btn-submit {
+      margin-left: 40%
+    }
+
+  </style>
+
+  <div class="workspace">
+    <div class="left">
+      <div class="header">
+        <span>流程定义列表</span>
+      </div>
+      <div class="process-list">
+        <compose view-model="processes"></compose>
+      </div>
+    </div>
+    <div class="right">
+      <div class="top">
+        <compose view-model="formlist"></compose>
+      </div>
+      <div class="has-top">
+        <compose view-model="bpmnio"></compose>
+      </div>
+    </div>
+  </div>
+</template>
