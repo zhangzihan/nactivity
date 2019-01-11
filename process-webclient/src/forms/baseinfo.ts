@@ -21,6 +21,8 @@ export class BaseInfo extends BaseForm {
     }
 
     submit() {
+        this.user.name = this.name;
+
         Axios.post(`${constants.serverUrl}/workflow/process-instances/start`, {
             processDefinitionKey: this.workflow.key,
             businessKey: this.workflow.businessKey,
@@ -33,7 +35,7 @@ export class BaseInfo extends BaseForm {
             this.es.publish("reloadMyTasks");
             this.es.publish("started", res.data);
         }).catch((res) => {
-            debugger;
+            alert("是不是没有启动服务或是没有选择流程!那么就是未知错误喽.");
         });
     }
 }
