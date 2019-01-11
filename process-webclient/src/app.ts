@@ -5,6 +5,10 @@ import {PLATFORM} from 'aurelia-pal';
 export class App {
   router: Router;
 
+  processes = PLATFORM.moduleName('./processes');
+
+  tasks = PLATFORM.moduleName('./tasks/mytasks');
+  
   configureRouter(config: RouterConfiguration, router: Router) {
     config.title = 'Aurelia';
     config.map([

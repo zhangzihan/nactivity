@@ -1,0 +1,36 @@
+<template>
+  <style>
+    .tasks {
+      list-style: none;
+      width: 100%;
+      height: 100%;
+      overflow: auto
+    }
+
+    
+    .my-task {
+        clear: both;
+        width: 100%;
+        font-size: 14px;
+        cursor: default;
+      }
+  
+      .my-task:hover {
+        background: lightblue;
+        color: white;
+      }
+
+  </style>
+
+  <div class="tasks">
+    <div class="header">
+      <span>我的任务</span>
+      <span style="float:right" click.trigger="loadMyTasks()">
+        <i class="fa fa-refresh"></i>
+      </span>
+    </div>
+    <div class="my-task" repeat.for="task of tasks" click.trigger="next(task)">
+      <strong>${task.name}</strong>
+    </div>
+    </ul>
+</template>

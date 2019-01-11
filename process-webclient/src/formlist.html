@@ -38,13 +38,13 @@
   </style>
 
   <ul class='form-list'>
-    <li repeat.for="form of forms">
-      <div class="form-header">
+    <li repeat.for="form of forms" show.bind="nextForm==form.id||form.id==1">
+      <div class="form-header" style.bind="form.headerStyle">
         <span>${form.id}</span>
         <span style="float:right">${form.name}</span>
       </div>
       <div class="content">
-        <compose view-model.bind="form.type"></compose>
+        <compose view-model.bind="form.type" model.bind="form"></compose>
       </div>
     </li>
   </ul>

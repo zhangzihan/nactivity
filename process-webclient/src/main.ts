@@ -9,6 +9,7 @@ import '../dist/css/app.css'
 import { Aurelia } from 'aurelia-framework';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
+import { LoginUser } from 'loginuser';
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
 Bluebird.config({ warnings: { wForgottenReturn: false } });
@@ -17,6 +18,9 @@ export async function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
     .developmentLogging();
+
+
+    aurelia.container.registerSingleton("loginUser", LoginUser);
 
   // Uncomment the line below to enable animation.
   // aurelia.use.plugin(PLATFORM.moduleName('aurelia-animator-css'));

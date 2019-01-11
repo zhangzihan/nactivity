@@ -51,6 +51,23 @@
       margin-left: 40%
     }
 
+    .process-list {
+      position: absolute;
+      top: 24px;
+      bottom: 400px;
+      width: 100%;
+      overflow: auto
+    }
+
+    .tasks-list {
+      position: absolute;
+      border-top: 1px solid lightgray;
+      top: 404px;
+      bottom: 0;
+      width: 100%;
+      overflow: auto;
+    }
+
   </style>
 
   <div class="workspace">
@@ -59,7 +76,10 @@
         <span>流程定义列表</span>
       </div>
       <div class="process-list">
-        <compose view-model="processes"></compose>
+        <compose view-model.bind="processes"></compose>
+      </div>
+      <div class="tasks-list">
+        <compose view-model.bind="tasks"></compose>
       </div>
     </div>
     <div class="right">

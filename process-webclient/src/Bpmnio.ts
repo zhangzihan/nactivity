@@ -138,26 +138,26 @@ export class BpmnIO {
     //this.createNewDiagram();
   }
 
-  deploy(xml) {
-    debugger;
-    Axios.post(`${constants.serverUrl}/workflow/process-deployer`, {
-      "disableSchemaValidation": true,
-      "disableBpmnValidation": true,
-      "name": this.workflow.name,
-      "key": this.workflow.id,
-      "enableDuplicateFiltering": true,
-      "bpmnXML": xml
-    }).then(() => {
-      debugger;
-    }).catch(() => {
-      debugger;
+  deploy($event) {
+    this.saveDiagram((err, xml) => {
+      Axios.post(`${constants.serverUrl}/workflow/process-deployer`, {
+        "disableSchemaValidation": true,
+        "disableBpmnValidation": true,
+        "name": this.workflow.name,
+        "key": this.workflow.id,
+        "enableDuplicateFiltering": true,
+        "bpmnXML": xml
+      }).then(() => {
+        alert('已部署');
+      }).catch(() => {
+        alert('未知错误');
+      });
     });
   }
 
   saveBpmn($event) {
     this.saveDiagram((err, xml) => {
       this.setEncoded('diagram.bpmn', err ? null : xml);
-      this.deploy(xml);
     });
   }
 
