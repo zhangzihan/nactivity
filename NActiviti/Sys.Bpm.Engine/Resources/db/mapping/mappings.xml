@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <SmartSqlMapConfig xmlns="http://SmartSql.net/schemas/SmartSqlMapConfig.xsd">
-  <Settings
-    IsWatchConfigFile="true" IgnoreParameterCase="true" IsCacheEnabled="true" />
+  <Settings IsWatchConfigFile="true" IgnoreParameterCase="true" IsCacheEnabled="true" />
   <Database>
     <DbProvider Name="MySqlClientFactory" ParameterPrefix="?" Type="MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data"/>
     <!--<DbProvider Name="OracleClientFactory" ParameterPrefix=":" Type="Oracle.ManagedDataAccess.Client.OracleClientFactory,Oracle.ManagedDataAccess"/>
     <DbProvider Name="SqlClientFactory" ParameterPrefix="@" Type="System.Data.SqlClient.SqlClientFactory,System.Data.SqlClient"/>-->
-    <Write Name="WriteDB" ConnectionString="server=106.75.100.106;database=activiti;uid=root;pwd=_sys31UC;charset='gbk'"/>
-    <Read Name="ReadDB-0" ConnectionString="server=106.75.100.106;database=activiti;uid=root;pwd=_sys31UC;charset='gbk'"/>
+    <Write Name="WriteDB" ConnectionString="server=localhost;database=activiti;uid=31huiyi;pwd=31huiyi;charset='gbk'"/>
+    <Read Name="ReadDB-0" ConnectionString="server=localhost;database=activiti;uid=31huiyi;pwd=31huiyi;charset='gbk'"/>
   </Database>
   <TypeHandlers>    
     <TypeHandler Name="文件"

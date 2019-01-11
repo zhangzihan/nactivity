@@ -9,6 +9,9 @@ using org.activiti.engine.impl.cfg;
 using org.activiti.engine.impl.util;
 using SmartSql;
 using SmartSql.Abstractions;
+using SmartSql.Configuration;
+using SmartSql.DbSession;
+using Spring.Core;
 using Spring.Core.TypeResolution;
 using Sys.Bpm.Engine.impl;
 using Sys.Data;
@@ -31,7 +34,7 @@ namespace Sys
                 var provider = cfg["SysDataSource:providerName"];
                 var connStr = cfg["SysDataSource:connectionString"];
 
-                return new DataSource(provider, connStr);
+                return new Data.DataSource(provider, connStr);
             });
 
             services.AddSingleton<IDatabaseReader>(sp =>
@@ -45,12 +48,27 @@ namespace Sys
             {
                 var codebase = Path.GetDirectoryName(typeof(ProcessEngineConfiguration).Assembly.Location);
 
-                return new SmartSqlMapper(new SmartSqlOptions
+                IDataSource dataSource = sp.GetService<IDataSource>();
+
+                var dbSessionStore = new DbConnectionSessionStore(sp.GetService<ILoggerFactory>(), dataSource.DbProviderFactory);
+
+                SmartSqlOptions options = new SmartSqlOptions
                 {
                     //LoggerFactory = sp.GetService<ILoggerFactory>(),
                     ConfigPath = Path.Combine(codebase, DEFAULT_MYBATIS_MAPPING_FILE),
+                    DbSessionStore = dbSessionStore
                     //DataReaderDeserializerFactory = new DapperDataReaderDeserializerFactory()
-                });
+                };
+
+                SmartSqlMapper ssm = new SmartSqlMapper(options);
+
+                options.SmartSqlContext.Database.WriteDataSource.ConnectionString = dataSource.ConnectionString;
+                foreach (var ds in options.SmartSqlContext.Database.ReadDataSources)
+                {
+                    ds.ConnectionString = dataSource.ConnectionString;
+                }
+
+                return ssm;
             });
 
             services.AddTransient<IRepositoryService>(sp => new RepositoryServiceImpl());
@@ -96,7 +114,10 @@ namespace Sys
                 return sp.GetService<ProcessEngineFactory>().DefaultProcessEngine;
             });
 
-            services.BuildServiceProvider().EnsureProcessEngineInit();
+            ServiceProvider servicePprovider = services.BuildServiceProvider();
+            servicePprovider.EnsureProcessEngineInit();
+
+            services.AddSpringCoreService(servicePprovider.GetService<ILoggerFactory>());
 
             return services;
         }

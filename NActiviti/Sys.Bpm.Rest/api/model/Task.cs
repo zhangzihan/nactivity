@@ -41,6 +41,7 @@ namespace org.activiti.cloud.services.api.model
         private string processInstanceId;
         private string parentTaskId;
         private TaskStatus status;
+        private string formKey;
 
         public Task()
         {
@@ -59,6 +60,7 @@ namespace org.activiti.cloud.services.api.model
             [JsonProperty("ProcessDefinitionId")]string processDefinitionId,
             [JsonProperty("ProcessInstanceId")]string processInstanceId,
             [JsonProperty("ParentTaskId")]string parentTaskId,
+            [JsonProperty("FormKey")]string formKey,
             [JsonProperty("Status")]TaskStatus status)
         {
             this.id = id;
@@ -73,122 +75,94 @@ namespace org.activiti.cloud.services.api.model
             this.processDefinitionId = processDefinitionId;
             this.processInstanceId = processInstanceId;
             this.parentTaskId = parentTaskId;
+            this.formKey = formKey;
             this.status = status;
         }
 
         public virtual string Id
         {
-            get
-            {
-                return id;
-            }
-            set
-            {
-                this.id = value;
-            }
+            get => id;
+            set => id = value;
         }
 
 
         public virtual string Owner
         {
-            get
-            {
-                return owner;
-            }
+            get => owner;
+            set => owner = value;
         }
 
         public virtual string Assignee
         {
-            get
-            {
-                return assignee;
-            }
+            get => assignee;
+            set => assignee = value;
         }
 
         public virtual string Name
         {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                this.name = value;
-            }
+            get => name;
+            set => name = value;
         }
 
 
         public virtual string Description
         {
-            get
-            {
-                return description;
-            }
+            get => description;
+            set => description = value;
         }
 
         public virtual DateTime? CreatedDate
         {
-            get
-            {
-                return createdDate;
-            }
+            get => createdDate;
+            set => createdDate = value;
         }
 
         public virtual DateTime? ClaimedDate
         {
-            get
-            {
-                return claimedDate;
-            }
+            get => claimedDate;
+            set => claimedDate = value;
         }
 
         public virtual DateTime? DueDate
         {
-            get
-            {
-                return dueDate;
-            }
+            get => dueDate;
+            set => dueDate = value;
         }
 
         public virtual int? Priority
         {
-            get
-            {
-                return priority;
-            }
+            get => priority;
+            set => priority = value;
         }
 
         public virtual string ProcessDefinitionId
         {
-            get
-            {
-                return processDefinitionId;
-            }
+            get => processDefinitionId;
+            set => processDefinitionId = value;
         }
 
         public virtual string ProcessInstanceId
         {
-            get
-            {
-                return processInstanceId;
-            }
+            get => processInstanceId;
+            set => processInstanceId = value;
         }
 
         public virtual TaskStatus Status
         {
-            get
-            {
-                return status;
-            }
+            get => status;
+            set => status = value;
         }
 
         public virtual string ParentTaskId
         {
-            get
-            {
-                return parentTaskId;
-            }
+            get => parentTaskId;
+            set => parentTaskId = value;
         }
 
+        public virtual string FormKey
+        {
+            get => formKey;
+            set => formKey = value;
+        }
     }
 }

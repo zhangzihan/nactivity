@@ -58,6 +58,18 @@ namespace Sys.Data
             catch { }
         }
 
+        public DbProviderFactory DbProviderFactory
+        {
+            get
+            {
+                var db = dbTypes[provider]; //DbProviderFactories.GetFactory(provider);
+
+                return DbProviderFactoryFactory.Create(db);
+            }
+        }
+
+        public string ConnectionString { get => connectionString; }
+
         public virtual IDbConnection getConnection(string provider, string connectionString)
         {
             this.provider = provider;
@@ -67,8 +79,7 @@ namespace Sys.Data
             dsb.ConnectionString = connectionString;
             dsb.Remove("Provider");
 
-            var db = dbTypes[provider]; //DbProviderFactories.GetFactory(provider);
-            Connection = DbProviderFactoryFactory.Create(db).CreateConnection(); //db.CreateConnection();
+            Connection = DbProviderFactory.CreateConnection(); //db.CreateConnection();
             Connection.ConnectionString = dsb.ConnectionString;
 
             return Connection;

@@ -10,6 +10,11 @@ namespace SmartSql.Configuration
     [XmlRoot(Namespace = "http://SmartSql.net/schemas/SmartSqlMapConfig.xsd")]
     public class SmartSqlMapConfig
     {
+        public SmartSqlMapConfig()
+        {
+
+        }
+
         [XmlIgnore]
         public String Path { get; set; }
         public Settings Settings { get; set; }

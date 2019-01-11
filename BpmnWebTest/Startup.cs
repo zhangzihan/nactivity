@@ -49,10 +49,10 @@ namespace BpmnWebTest
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(cors => cors.AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowAnyOrigin()
-                .AllowCredentials());
+            app.UseCors(cors => 
+                cors.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin());
 
             app.UseMvc();
 

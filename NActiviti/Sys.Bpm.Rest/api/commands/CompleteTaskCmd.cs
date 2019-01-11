@@ -21,7 +21,7 @@ namespace org.activiti.cloud.services.api.commands
 {
     public class CompleteTaskCmd : Command
     {
-        private readonly string id;
+        private string id;
         private string taskId;
         private IDictionary<string, object> outputVariables;
 
@@ -35,26 +35,20 @@ namespace org.activiti.cloud.services.api.commands
 
         public virtual string Id
         {
-            get
-            {
-                return id;
-            }
+            get => id;
+            set => id = value;
         }
 
         public virtual IDictionary<string, object> OutputVariables
         {
-            get
-            {
-                return outputVariables;
-            }
+            get => outputVariables;
+            set => outputVariables = value;
         }
 
         public virtual string TaskId
         {
-            get
-            {
-                return taskId;
-            }
+            get => taskId;
+            set => taskId = value;
         }
     }
 

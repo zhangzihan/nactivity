@@ -31,7 +31,6 @@ namespace org.activiti.cloud.services.rest.assemblers
 
         public override TaskResource toResource(Task task)
         {
-            throw new NotImplementedException();
             //IList<Link> links = new List<Link>();
             //links.Add(linkTo(methodOn(typeof(TaskControllerImpl)).getTaskById(task.Id)).withSelfRel());
             //if (ASSIGNED != task.Status)
@@ -53,7 +52,7 @@ namespace org.activiti.cloud.services.rest.assemblers
             //	links.Add(linkTo(methodOn(typeof(TaskControllerImpl)).getTaskById(task.ParentTaskId)).withRel("parent"));
             //}
             //links.Add(linkTo(typeof(HomeControllerImpl)).withRel("home"));
-            //return new TaskResource(task, links);
+            return new TaskResource(task, null);//, links);
         }
 
         public override IList<TaskResource> toResources(IEnumerable<Task> entities)

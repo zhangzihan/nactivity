@@ -91,6 +91,10 @@ namespace Sys.Bpm.Services.Rest
                         new SecurityPoliciesApplicationService());
                 });
 
+            mvcBuilder.Services.AddTransient<TaskResourceAssembler>();
+
+            mvcBuilder.Services.AddTransient<AuthenticationWrapper>();
+
             mvcBuilder.AddApplicationPart(typeof(IHomeController).Assembly);
 
             return mvcBuilder;
