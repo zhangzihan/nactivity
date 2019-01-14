@@ -19,7 +19,8 @@ Bluebird.config({ warnings: { wForgottenReturn: false } });
 export async function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
-    .developmentLogging();
+    .developmentLogging()
+    .plugin(PLATFORM.moduleName('aurelia-dialog'));
 
 
     aurelia.container.registerSingleton("loginUser", LoginUser);

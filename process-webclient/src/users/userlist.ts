@@ -1,6 +1,6 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { LoginUser } from 'loginuser';
-import { inject } from "aurelia-framework";
+import { inject, observable } from "aurelia-framework";
 
 @inject('loginUser', EventAggregator)
 export class UserList {
@@ -41,7 +41,11 @@ export class UserList {
         this.es.publish('registerUser', user);
     }
 
+    @observable select;
+
     selectedUser(user) {
+        this.select = user;
+        
         this.loginUser.name = user.name;
 
         this.es.publish("userLogined", user);

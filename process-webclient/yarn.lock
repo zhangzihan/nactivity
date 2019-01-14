@@ -420,6 +420,17 @@ aurelia-dependency-injection@^1.0.0, aurelia-dependency-injection@^1.2.0:
     aurelia-metadata "^1.0.0"
     aurelia-pal "^1.0.0"
 
+aurelia-dialog@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/aurelia-dialog/-/aurelia-dialog-1.1.0.tgz#f2071135abaadffb0c167624bb60d5373b136870"
+  integrity sha512-OlvvX8oqATk6hWqtf9SGEMtjvSpPxqDlMETJg9LR6X3RYmuCkyH9AP9ZaaPzYimJp/T+ICoimRt3bfIzF7y0UA==
+  dependencies:
+    aurelia-dependency-injection "^1.0.0"
+    aurelia-framework "^1.0.0"
+    aurelia-metadata "^1.0.0"
+    aurelia-pal "^1.0.0"
+    aurelia-templating "^1.0.0"
+
 aurelia-event-aggregator@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/aurelia-event-aggregator/-/aurelia-event-aggregator-1.0.1.tgz#9d7c7c1e1efe1ef3a78785e76abe80601e2d34c8"

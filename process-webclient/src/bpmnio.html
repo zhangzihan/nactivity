@@ -19,13 +19,19 @@
       left: 10px;
     }
 
+    .btn-code {
+      position: absolute;
+      bottom: 10px;
+      left: 170px;
+    }
+
     .btn-deploy {
       position: absolute;
       bottom: 10px;
       left: 90px;
     }
 
-    #js-properties-panel{
+    #js-properties-panel {
       background: white;
     }
 
@@ -34,11 +40,14 @@
     <div class="canvas" id="js-canvas"></div>
     <div class="properties-panel-parent" id="js-properties-panel"></div>
 
-    <button class="btn btn-primary btn-deploy" title="download BPMN diagram" click.trigger="deploy($event)">
+    <button class="btn btn-primary btn-deploy" title="deploy BPMN" click.trigger="deploy($event)">
       部署
     </button>
     <button class="btn btn-primary btn-save" title="download BPMN diagram" click.trigger="saveBpmn($event)">
       保存
+    </button>
+    <button class="btn btn-primary btn-code" title="show BPMN XML" click.trigger="showBpmnXml($event)">
+      CODE
     </button>
   </div>
 </template>

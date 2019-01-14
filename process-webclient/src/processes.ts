@@ -1,4 +1,4 @@
-import { inject } from "aurelia-framework";
+import { inject, observable } from "aurelia-framework";
 import { EventAggregator } from "aurelia-event-aggregator";
 
 let shortid = require('shortid');
@@ -360,11 +360,13 @@ export class Processes {
   }
 
   createProcess() {
+    let name = window.prompt('新的流程');
+    
     let model = this.defaultBmpnModel();
 
     let def = {
       id: uuid.v4(),
-      name: "新的流程",
+      name: name,
       businessKey: "",
       key: model.key,
       xml: model.xml
@@ -381,8 +383,8 @@ export class Processes {
 
     return { key: key, xml: xml };
   }
-
-  select;
+  
+  @observable select;
 
   selected(id) {
     this.processDefineService.getProcessModel(id).then(data => {

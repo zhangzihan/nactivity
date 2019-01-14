@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { inject } from "aurelia-framework";
+import { inject, observable } from "aurelia-framework";
 import { LoginUser } from 'loginuser';
 import contants from 'contants';
 
@@ -27,7 +27,11 @@ export class MyTasks {
         this.tasks = tasks;
     }
 
+    @observable select;
+
     next(task){
+        this.select = task;
+
         this.es.publish("next", task);
     }
 

@@ -1,3 +1,4 @@
+import { BpmnCode } from './bpmncode';
 import { HttpClient } from 'aurelia-fetch-client';
 import { PLATFORM } from 'aurelia-pal';
 import { useView, inject } from "aurelia-framework";
@@ -15,10 +16,11 @@ import {
 } from 'lodash';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import constants from './contants';
+import { DialogService, DialogController } from 'aurelia-dialog';
 
 //import diagramXML from '../resources/newDiagram.bpmn';
 
-@inject(EventAggregator)
+@inject(EventAggregator, DialogService)
 @useView(PLATFORM.moduleName('./bpmnio.html'))
 export class BpmnIO {
 
@@ -30,7 +32,7 @@ export class BpmnIO {
 
   workflow;
 
-  constructor(private es: EventAggregator) {
+  constructor(private es: EventAggregator, private ds: DialogService) {
     this.es.subscribe("openWorkflow", (wf) => {
       this.workflow = wf;
       this.openDiagram(wf.xml);
@@ -160,6 +162,19 @@ export class BpmnIO {
   saveBpmn($event) {
     this.saveDiagram((err, xml) => {
       this.setEncoded('diagram.bpmn', err ? null : xml);
+    });
+  }
+
+  showBpmnXml($event) {
+    this.saveDiagram((err, xml) => {
+      this.ds.open({
+        viewModel: BpmnCode,
+        model: xml
+      }).whenClosed(res => {
+        if (res.wasCancelled == false && res.output && res.output.trim() != "") {
+          this.openDiagram(res.output);
+        }
+      });
     });
   }
 
