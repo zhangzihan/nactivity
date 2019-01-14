@@ -16,11 +16,8 @@ export class Techer extends BaseForm {
         super(args[0], args[1]);
     }
 
-    activate(model, ncxt) {
-
-        this.es.subscribe("openWorkflow", (wf) => {
-            this.workflow = wf;
-        });
+    activate(model, nctx) {
+        super.activate(model, nctx);
 
         this.es.subscribe("next", (task) => {
             this.task = task;

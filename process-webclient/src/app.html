@@ -15,16 +15,13 @@
       border-right: 1px solid lightgray;
     }
 
-    .left .header {
-      border-bottom: 1px solid lightgray;
-    }
-
     .right {
       position: absolute;
       left: 232px;
       right: 0;
       height: 100%;
       border-left: 1px solid lightgray;
+      background: white;
     }
 
     .right .top {
@@ -44,7 +41,7 @@
 
     .container.form-container {
       padding: 4px 4px;
-      height: 122px
+      height: 102px
     }
 
     .form-list .content .btn-submit {
@@ -53,7 +50,7 @@
 
     .process-list {
       position: absolute;
-      top: 24px;
+      top: 0;
       bottom: 400px;
       width: 100%;
       overflow: auto
@@ -68,13 +65,36 @@
       overflow: auto;
     }
 
+    .arrows-alt {
+      position: absolute;
+      left: 5px;
+      top: 5px;
+      font-size: 16px;
+    }
+
+    .hide-top {
+      display: none;
+    }
+
+    .max-bpmn-io {}
+
+    .max-bpmn-io.right {
+      left: 0;
+    }
+
+    .max-bpmn-io>.has-top {
+      top: 0
+    }
+
+    .activate {
+      background: lightblue;
+      color: white;
+    }
+
   </style>
 
   <div class="workspace">
     <div class="left">
-      <div class="header">
-        <span>流程定义列表</span>
-      </div>
       <div class="process-list">
         <compose view-model.bind="processes"></compose>
       </div>
@@ -82,11 +102,12 @@
         <compose view-model.bind="tasks"></compose>
       </div>
     </div>
-    <div class="right">
-      <div class="top">
+    <div class="right" class.bind="maxBpmnIo">
+      <div class="top" class.bind="hideTop">
         <compose view-model="formlist"></compose>
       </div>
       <div class="has-top">
+        <a class="arrows-alt" click.trigger="maximize()" style="z-index:100"><i class="fa fa-arrows-alt"></i></a>
         <compose view-model="bpmnio"></compose>
       </div>
     </div>

@@ -140,14 +140,16 @@ export class BpmnIO {
 
   deploy($event) {
     this.saveDiagram((err, xml) => {
+      this.workflow.xml = xml;
       Axios.post(`${constants.serverUrl}/workflow/process-deployer`, {
         "disableSchemaValidation": true,
         "disableBpmnValidation": true,
         "name": this.workflow.name,
         "key": this.workflow.id,
         "enableDuplicateFiltering": true,
-        "bpmnXML": xml
+        "bpmnXML": this.workflow.xml
       }).then(() => {
+        this.es.publish("deploied", this.workflow);
         alert('已部署');
       }).catch(() => {
         alert('未知错误');

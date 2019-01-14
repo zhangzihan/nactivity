@@ -1,24 +1,19 @@
+import { BaseForm } from './../forms/baseform';
+import { EssayModel } from './essaymodel';
 import Axios from 'axios';
-import { BaseForm } from './baseform';
-import { EventAggregator } from "aurelia-event-aggregator";
-import { inject } from "aurelia-framework";
 import contants from 'contants';
+import { inject } from 'aurelia-framework';
 
-export class Student extends BaseForm {
+@inject('essayModel')
+export class Second extends BaseForm {
 
-    className;
-
-    workflow;
-
-    task;
-
-    constructor(...args) {
+    constructor(public model: EssayModel, ...args) {
         super(args[0], args[1]);
     }
 
-    activate(model, nctx) {
-        super.activate(model, nctx);
+    task;
 
+    activate(m, nctx) {
         this.es.subscribe("next", (task) => {
             this.task = task;
         });
@@ -28,7 +23,7 @@ export class Student extends BaseForm {
         Axios.post(`${contants.serverUrl}/${this.task.id}/complete`, {
             taskId: this.task.id,
             outputVariables: {
-                className: this.className
+                approvaled: this.model.approvaled
             }
         }).then((res) => {
             this.es.publish("reloadMyTasks");

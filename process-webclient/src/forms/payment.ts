@@ -1,19 +1,15 @@
-import Axios from 'axios';
 import { BaseForm } from './baseform';
-import { EventAggregator } from "aurelia-event-aggregator";
-import { inject } from "aurelia-framework";
 import contants from 'contants';
+import Axios from 'axios';
 
-export class Student extends BaseForm {
+export class Payment extends BaseForm {
 
-    className;
-
-    workflow;
+    money;
 
     task;
 
     constructor(...args) {
-        super(args[0], args[1]);
+        super(args[0], args[1])
     }
 
     activate(model, nctx) {
@@ -28,7 +24,7 @@ export class Student extends BaseForm {
         Axios.post(`${contants.serverUrl}/${this.task.id}/complete`, {
             taskId: this.task.id,
             outputVariables: {
-                className: this.className
+                money: this.money
             }
         }).then((res) => {
             this.es.publish("reloadMyTasks");

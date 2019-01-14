@@ -11,11 +11,16 @@ export class MyTasks {
     tasks = [];
 
     constructor(private user: LoginUser, private es: EventAggregator) {
+    }
+
+    activate(model, nctx){
         this.es.subscribe("reloadMyTasks", () => {
             this.loadMyTasks();
         });
 
-        this.loadMyTasks();
+        this.es.subscribe('userLogined', (user) =>{
+            this.loadMyTasks();
+        })
     }
 
     receivedMyTasks(tasks) {
@@ -27,7 +32,7 @@ export class MyTasks {
     }
 
     loadMyTasks() {
-        Axios.get(`${contants.serverUrl}/mytasks/${this.user.name}`)
+        Axios.get(`${contants.serverUrl}/${this.user.name}/mytasks`)
             .then((tasks) => {
                 this.tasks = (tasks.data || []).map(x => x.content);
 

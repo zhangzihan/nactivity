@@ -1,5 +1,6 @@
 
 
 export class LoginUser {
-    name = "test";
+    id = 1;
+    name = "新用户1";
 }

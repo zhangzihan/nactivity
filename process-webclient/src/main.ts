@@ -10,6 +10,8 @@ import { Aurelia } from 'aurelia-framework';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 import { LoginUser } from 'loginuser';
+import { ProcessDefineService } from 'services/processdefineservice';
+import { EssayModel } from 'essaies/essaymodel';
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
 Bluebird.config({ warnings: { wForgottenReturn: false } });
@@ -21,7 +23,9 @@ export async function configure(aurelia: Aurelia) {
 
 
     aurelia.container.registerSingleton("loginUser", LoginUser);
-
+    aurelia.container.registerSingleton('processDefineService', ProcessDefineService);
+    aurelia.container.registerSingleton('essayModel', EssayModel);
+    
   // Uncomment the line below to enable animation.
   // aurelia.use.plugin(PLATFORM.moduleName('aurelia-animator-css'));
   // if the css animator is enabled, add swap-order="after" to all router-view elements

@@ -19,4 +19,21 @@ export class App {
 
     this.router = router;
   }
+
+  maximized = false;
+
+  hideTop = "";
+
+  maxBpmnIo = "";
+
+  maximize(){
+    this.maximized = !this.maximized;  
+    if (this.maximized){
+      this.hideTop = "hide-top";
+      this.maxBpmnIo = "max-bpmn-io";
+    }else{
+      this.hideTop = '';
+      this.maxBpmnIo = "";
+    }
+  }
 }

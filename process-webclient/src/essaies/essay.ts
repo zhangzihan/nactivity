@@ -1,39 +1,36 @@
-import Axios from 'axios';
-import { EventAggregator } from "aurelia-event-aggregator";
+import { BaseForm } from './../forms/baseform';
+import { EssayModel } from './essaymodel';
 import { inject } from 'aurelia-framework';
-import { BaseForm } from './baseform';
-import contants from '../contants';
+import contants from 'contants';
+import Axios from 'axios';
 
-export class BaseInfo extends BaseForm {
+@inject('essayModel')
+export class Essay extends BaseForm {
 
-    isTecher = false;
-
-    constructor(...args) {
-        super(args[0], args[1]);
+    constructor(public model: EssayModel, ...args) {
+        super(args[0], args[1])
     }
 
     submit() {
-
-        if (this.workflow == null){
+        if (this.workflow == null) {
             alert('先选择流程');
             return;
         }
-
-        this.es.publish("registeredUser", this.user);
 
         Axios.post(`${contants.serverUrl}/workflow/process-instances/start`, {
             processDefinitionKey: this.workflow.key,
             businessKey: this.workflow.businessKey,
             variables: {
-                "name": this.user.name,
-                "initiator": this.user.name,
-                "isTecher": this.isTecher
+                "name": this.user.name
             }
         }).then((res) => {
+            alert('论文已提交');
+            this.model.submitted = true;
             this.es.publish("reloadMyTasks");
             this.es.publish("started", res.data);
         }).catch((res) => {
             alert("是不是没有启动服务或是没有选择流程!那么就是未知错误喽.");
         });
+
     }
 }

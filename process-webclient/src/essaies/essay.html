@@ -1,0 +1,15 @@
+<template>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">论文主体</div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+          <textarea value.bind="model.text" disabled.bind="model.submitted" style="width:170px;height:78px"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-info btn-submit" disabled.bind="model.submitted" hidden.bind="model.submitted" click.trigger="submit()">提交征文</button>
+</template>
