@@ -3,6 +3,7 @@ using SmartSql.Abstractions;
 using SmartSql.Configuration.Statements;
 using Sys.Expressions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -89,7 +90,7 @@ namespace SmartSql.Configuration.Tags
                 return null;
             }
 
-            if (string.IsNullOrWhiteSpace(Property) && Property.Split('.').Length > 1 && context.Request != null)
+            if (!string.IsNullOrWhiteSpace(Property) && context.Request != null)
             {
                 return ExpressionManager.GetValue(context.Request, Property, context.RequestParameters);
             }

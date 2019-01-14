@@ -41,13 +41,13 @@ namespace Sys.Bpm.rest.controllers
                 deployment.enableDuplicateFiltering();
             }
 
-            string name = deployer.Name.EndsWith("bpmn", StringComparison.OrdinalIgnoreCase) ? deployer.Name : $"{deployer.Name}.bpmn";
+            string resourceName = deployer.Name.EndsWith("bpmn", StringComparison.OrdinalIgnoreCase) ? deployer.Name : $"{deployer.Name}.bpmn";
 
-            deployment.name(name)
+            deployment.name(deployer.Name)
                 .category(deployer.Category)
                 .key(deployer.Key)
                 .tenantId(deployer.TenantId)
-                .addString(name, deployer.BpmnXML)
+                .addString(resourceName, deployer.BpmnXML)                
                 .deploy();
 
             return Task.FromResult<IActionResult>(Ok());

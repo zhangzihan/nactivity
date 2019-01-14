@@ -33,6 +33,7 @@ using Spring.Core.TypeConversion;
 using Spring.Core.TypeResolution;
 using Spring.Util;
 using Spring.Reflection.Dynamic;
+using System.Linq;
 
 #endregion
 
@@ -51,6 +52,8 @@ namespace Spring.Expressions
 
         private string memberName;
         private IValueAccessor accessor;
+
+        private object syncObject = new object();
 
         /// <summary>
         /// Create a new instance
@@ -127,7 +130,14 @@ namespace Spring.Expressions
                 {
                     try
                     {
-                        accessor = new TypeValueAccessor(TypeResolutionUtils.ResolveType(memberName));
+                        if (context is IDictionary)
+                        {
+                            accessor = new IDictionaryValueAccessor(memberName);
+                        }
+                        else
+                        {
+                            accessor = new TypeValueAccessor(TypeResolutionUtils.ResolveType(memberName));
+                        }
                     }
                     catch (TypeLoadException)
                     {
@@ -218,7 +228,7 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            lock (this)
+            lock (syncObject)
             {
                 InitializeNode(context);
 
@@ -696,6 +706,40 @@ namespace Spring.Expressions
             public override void Set(object context, object value)
             {
                 throw new NotSupportedException("Cannot set the value of an enum.");
+            }
+        }
+
+        #endregion
+
+        #region IDictionaryValueAccessor implementation
+
+        private class IDictionaryValueAccessor : BaseValueAccessor
+        {
+            private string memberName;
+
+            public IDictionaryValueAccessor(string memberName)
+            {
+                this.memberName = memberName;
+            }
+
+            public override object Get(object context)
+            {
+                var dictionary = context as IDictionary;
+
+                foreach (var key in dictionary.Keys)
+                {
+                    if (memberName.Equals(key.ToString(), StringComparison.OrdinalIgnoreCase))
+                    {
+                        return dictionary[key];
+                    }
+                }
+
+                return null;
+            }
+
+            public override void Set(object context, object value)
+            {
+                throw new NotSupportedException("Cannot set the value of an expando object.");
             }
         }
 

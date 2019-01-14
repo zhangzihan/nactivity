@@ -80,16 +80,13 @@ namespace Sys.Bpm.Services.Rest
                     null);
             });
 
-            mvcBuilder.Services.AddTransient<ProcessDefinitionResourceAssembler>()
-                .AddTransient<PageableRepositoryService>(sp =>
-                {
-                    var pe = sp.GetService<IProcessEngine>();
-                    return new PageableRepositoryService(pe.RepositoryService,
-                        new PageRetriever(),
-                        new ProcessDefinitionConverter(new ListConverter()),
-                        new ProcessDefinitionSortApplier(),
-                        new SecurityPoliciesApplicationService());
-                });
+            mvcBuilder.Services
+                .AddTransient<PageRetriever>()
+                .AddTransient<ProcessDefinitionConverter>()
+                .AddTransient<ProcessDefinitionSortApplier>()
+                .AddTransient<SecurityPoliciesApplicationService>()
+                .AddTransient<ProcessDefinitionResourceAssembler>()
+                .AddTransient<PageableRepositoryService>();
 
             mvcBuilder.Services.AddTransient<TaskResourceAssembler>();
 

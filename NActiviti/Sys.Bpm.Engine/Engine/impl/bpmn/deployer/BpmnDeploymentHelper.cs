@@ -82,16 +82,16 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// <summary>
         /// Updates all the process definition entities to have the correct resource names.
         /// </summary>
-        public virtual ParsedDeployment ResourceNamesOnProcessDefinitions
+        public virtual ParsedDeployment ResourceNamesOnProcessDefinitions(ParsedDeployment value)
         {
-            set
+            foreach (IProcessDefinitionEntity processDefinition in value.AllProcessDefinitions)
             {
-                foreach (IProcessDefinitionEntity processDefinition in value.AllProcessDefinitions)
-                {
-                    string resourceName = value.getResourceForProcessDefinition(processDefinition).Name;
-                    processDefinition.ResourceName = resourceName;
-                }
+                string resourceName = value.getResourceForProcessDefinition(processDefinition).Name;
+                processDefinition.ResourceName = resourceName;
+                processDefinition.Name = value.Deployment.Name;
             }
+
+            return value;
         }
 
         /// <summary>

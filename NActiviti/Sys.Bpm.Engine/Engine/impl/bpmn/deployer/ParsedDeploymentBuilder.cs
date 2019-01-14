@@ -38,7 +38,8 @@ namespace org.activiti.engine.impl.bpmn.deployer
             IDictionary<IProcessDefinitionEntity, BpmnParse> processDefinitionsToBpmnParseMap = new Dictionary<IProcessDefinitionEntity, BpmnParse>();
             IDictionary<IProcessDefinitionEntity, IResourceEntity> processDefinitionsToResourceMap = new Dictionary<IProcessDefinitionEntity, IResourceEntity>();
 
-            foreach (IResourceEntity resource in deployment.Resources.Values)
+            var resources = deployment.GetResources().Values;
+            foreach (IResourceEntity resource in resources)
             {
                 if (isBpmnResource(resource.Name))
                 {

@@ -60,26 +60,24 @@ namespace org.activiti.engine.impl.persistence.entity
 
         // lazy loading ///////////////////////////////////////////////////////////////
 
-        public virtual IDictionary<string, IResourceEntity> Resources
+        public virtual IDictionary<string, IResourceEntity> GetResources()
         {
-            get
+            var ctx = Context.CommandContext;
+            if (resources == null && id != null && ctx != null)
             {
-                var ctx = Context.CommandContext;
-                if (resources == null && id != null && ctx != null)
+                IList<IResourceEntity> resourcesList = ctx.ResourceEntityManager.findResourcesByDeploymentId(id);
+                resources = new Dictionary<string, IResourceEntity>();
+                foreach (IResourceEntity resource in resourcesList)
                 {
-                    IList<IResourceEntity> resourcesList = ctx.ResourceEntityManager.findResourcesByDeploymentId(id);
-                    resources = new Dictionary<string, IResourceEntity>();
-                    foreach (IResourceEntity resource in resourcesList)
-                    {
-                        resources[resource.Name] = resource;
-                    }
+                    resources[resource.Name] = resource;
                 }
-                return resources;
             }
-            set
-            {
-                this.resources = value;
-            }
+            return resources;
+        }
+
+        public virtual void SetResources(IDictionary<string, IResourceEntity> value)
+        {
+            this.resources = value;
         }
 
         public override PersistentState PersistentState

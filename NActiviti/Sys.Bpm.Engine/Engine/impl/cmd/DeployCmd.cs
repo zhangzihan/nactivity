@@ -23,6 +23,7 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.repository;
     using org.activiti.engine.repository;
+    using System.Collections;
 
     /// 
     /// 
@@ -119,13 +120,13 @@ namespace org.activiti.engine.impl.cmd
         protected internal virtual bool deploymentsDiffer(IDeploymentEntity deployment, IDeploymentEntity saved)
         {
 
-            if (deployment.Resources == null || saved.Resources == null)
+            if (deployment.GetResources() == null || saved.GetResources() == null)
             {
                 return true;
             }
 
-            IDictionary<string, IResourceEntity> resources = deployment.Resources;
-            IDictionary<string, IResourceEntity> savedResources = saved.Resources;
+            IDictionary<string, IResourceEntity> resources = deployment.GetResources();
+            IDictionary<string, IResourceEntity> savedResources = saved.GetResources();
 
             foreach (string resourceName in resources.Keys)
             {
@@ -142,7 +143,7 @@ namespace org.activiti.engine.impl.cmd
 
                     byte[] bytes = resource.Bytes;
                     byte[] savedBytes = savedResource.Bytes;
-                    if (!Array.Equals(bytes, savedBytes))
+                    if (!StructuralComparisons.StructuralEqualityComparer.Equals(bytes, savedBytes))
                     {
                         return true;
                     }

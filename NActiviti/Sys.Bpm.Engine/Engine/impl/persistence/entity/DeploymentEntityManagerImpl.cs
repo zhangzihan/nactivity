@@ -49,7 +49,8 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             insert(deployment, false);
 
-            foreach (IResourceEntity resource in deployment.Resources.Values)
+            var resources = deployment.GetResources().Values;
+            foreach (IResourceEntity resource in resources)
             {
                 resource.DeploymentId = deployment.Id;
                 ResourceEntityManager.insert(resource);

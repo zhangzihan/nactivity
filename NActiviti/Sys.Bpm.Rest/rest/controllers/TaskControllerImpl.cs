@@ -72,7 +72,7 @@ namespace org.activiti.cloud.services.rest.controllers
             return null;
         }
 
-        [HttpGet("/mytasks/{userId}")]
+        [HttpGet("/{userId}/mytasks")]
         public System.Threading.Tasks.Task<IList<TaskResource>> MyTasks(string userId)
         {
             IList<ITask> tasks = this.taskService.createTaskQuery().taskAssignee(userId).list();

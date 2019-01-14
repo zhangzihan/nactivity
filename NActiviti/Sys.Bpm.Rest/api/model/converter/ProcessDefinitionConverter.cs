@@ -37,7 +37,13 @@ namespace org.activiti.cloud.services.api.model.converter
             ProcessDefinition processDefinition = null;
             if (source != null)
             {
-                processDefinition = new ProcessDefinition(source.Id, source.Name, source.Description, source.Version);
+                processDefinition = new ProcessDefinition(source.Id, 
+                    source.Name, 
+                    source.Description, 
+                    source.Version,
+                    source.Category,
+                    source.Key,
+                    source.DeploymentId);
             }
             return processDefinition;
         }
