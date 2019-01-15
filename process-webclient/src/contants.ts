@@ -1,5 +1,5 @@
 
 
 export default {
-    serverUrl: "http://localhost:5000"
+    serverUrl: window["serverUrl"]
 }

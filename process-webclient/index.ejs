@@ -7,6 +7,9 @@
     <base href="<%- htmlWebpackPlugin.options.metadata.baseUrl %>">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- imported CSS are concatenated and added automatically -->
+    <script>
+      window.serverUrl = "http://localhost:5000"
+    </script>
   </head>
   <body aurelia-app="main">
     <div class="splash">

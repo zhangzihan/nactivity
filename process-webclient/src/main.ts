@@ -3,9 +3,9 @@
 import '../static/styles.css';
 import 'font-awesome/css/font-awesome.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import '../dist/vendor/diagram-js.css';
-import '../dist/vendor/bpmn-font/css/bpmn-embedded.css';
-import '../dist/css/app.css'
+import '../lib/vendor/diagram-js.css';
+import '../lib/vendor/bpmn-font/css/bpmn-embedded.css';
+import '../lib/css/app.css'
 import { Aurelia } from 'aurelia-framework';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
