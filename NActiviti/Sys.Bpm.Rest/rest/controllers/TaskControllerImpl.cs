@@ -11,6 +11,7 @@ using org.activiti.engine.task;
 using org.springframework.data.domain;
 using org.springframework.hateoas;
 using System.Collections.Generic;
+using System.Linq;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -75,7 +76,9 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpGet("/{userId}/mytasks")]
         public System.Threading.Tasks.Task<IList<TaskResource>> MyTasks(string userId)
         {
-            IList<ITask> tasks = this.taskService.createTaskQuery().taskAssignee(userId).list();
+            List<ITask> tasks = this.taskService.createTaskQuery().taskAssignee(userId).list().ToList();
+
+            tasks.AddRange(this.taskService.createTaskQuery().taskCandidateUser(userId).list());
 
             IList<TaskResource> resources = this.taskResourceAssembler.toResources(taskConverter.from(tasks));
 
@@ -116,13 +119,7 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpPost("/{taskId}/complete")]
         public virtual System.Threading.Tasks.Task<IActionResult> completeTask(string taskId, [FromBody]CompleteTaskCmd completeTaskCmd)
         {
-            IDictionary<string, object> outputVariables = null;
-            if (completeTaskCmd != null)
-            {
-                outputVariables = completeTaskCmd.OutputVariables;
-            }
-
-            processEngine.completeTask(new CompleteTaskCmd(taskId, outputVariables));
+            processEngine.completeTask(completeTaskCmd ?? new CompleteTaskCmd(taskId, null));
 
             return System.Threading.Tasks.Task.FromResult<IActionResult>(Ok());
         }

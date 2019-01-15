@@ -88,7 +88,11 @@ namespace Sys.Bpm.Services.Rest
                 .AddTransient<ProcessDefinitionResourceAssembler>()
                 .AddTransient<PageableRepositoryService>();
 
+            mvcBuilder.Services.AddTransient<TaskVariableResourceAssembler>();
+
             mvcBuilder.Services.AddTransient<TaskResourceAssembler>();
+
+            mvcBuilder.Services.AddTransient<ProcessInstanceVariableResourceAssembler>();
 
             mvcBuilder.Services.AddTransient<AuthenticationWrapper>();
 

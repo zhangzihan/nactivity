@@ -281,12 +281,12 @@ namespace org.springframework.hateoas
 
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return resourcesList.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return resourcesList.GetEnumerator();
         }
     }
     public interface ResourceAssembler<T, D> where D : ResourceSupport

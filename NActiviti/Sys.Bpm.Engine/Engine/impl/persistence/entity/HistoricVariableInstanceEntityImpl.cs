@@ -299,6 +299,10 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 return byteArrayRef;
             }
+            set
+            {
+                byteArrayRef = value;
+            }
         }
 
         // common methods //////////////////////////////////////////////////////////

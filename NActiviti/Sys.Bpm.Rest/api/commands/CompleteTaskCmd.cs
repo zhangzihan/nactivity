@@ -41,7 +41,11 @@ namespace org.activiti.cloud.services.api.commands
 
         public virtual IDictionary<string, object> OutputVariables
         {
-            get => outputVariables;
+            get
+            {
+                outputVariables = outputVariables ?? new Dictionary<string, object>();
+                return outputVariables;
+            }
             set => outputVariables = value;
         }
 

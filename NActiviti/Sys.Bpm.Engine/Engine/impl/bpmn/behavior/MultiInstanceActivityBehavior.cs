@@ -25,6 +25,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
     using Sys;
+    using System.Linq;
 
     /// <summary>
     /// Implementation of the multi-instance functionality as described in the BPMN 2.0 spec.
@@ -213,6 +214,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 while (it.MoveNext())
                 {
                     value = it.Current;
+                    if (loopCounter == index)
+                    {
+                        break;
+                    }
                     index++;
                 }
                 setLoopVariable(execution, collectionElementVariable, value);

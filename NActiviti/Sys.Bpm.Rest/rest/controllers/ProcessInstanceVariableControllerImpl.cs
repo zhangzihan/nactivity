@@ -47,9 +47,12 @@ namespace org.activiti.cloud.services.rest.controllers
         //    return ex.Message;
         //}
 
-        public ProcessInstanceVariableControllerImpl(IRuntimeService runtimeService, ProcessInstanceVariableResourceAssembler variableResourceBuilder, SecurityPoliciesApplicationService securityPoliciesApplicationService, ProcessEngineWrapper processEngine)
+        public ProcessInstanceVariableControllerImpl(IProcessEngine engine,
+            ProcessInstanceVariableResourceAssembler variableResourceBuilder, 
+            SecurityPoliciesApplicationService securityPoliciesApplicationService, 
+            ProcessEngineWrapper processEngine)
         {
-            this.runtimeService = runtimeService;
+            this.runtimeService = engine.RuntimeService;
             this.variableResourceBuilder = variableResourceBuilder;
             this.securityPoliciesApplicationService = securityPoliciesApplicationService;
             this.processEngine = processEngine;

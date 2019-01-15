@@ -25,7 +25,7 @@
     <Result Property="name" Column="NAME_" />
     <Result Property="revision" Column="REV_" />
     <Result Property="variableType" Column="VAR_TYPE_" TypeHandler="变量类型" />
-    <Result Property="byteArrayRef" Column="BYTEARRAY_ID_" />
+    <Result Property="byteArrayRef" Column="BYTEARRAY_ID_" TypeHandler="二进制引用" />
     <Result Property="doubleValue" Column="DOUBLE_" />
     <Result Property="textValue" Column="TEXT_" />
     <Result Property="textValue2" Column="TEXT2_" />

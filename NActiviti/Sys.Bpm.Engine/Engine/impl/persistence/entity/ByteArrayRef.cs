@@ -115,7 +115,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        private void ensureInitialized()
+        public void ensureInitialized()
         {
             var ctx = Context.CommandContext;
             if (id != null && entity == null && ctx != null)
