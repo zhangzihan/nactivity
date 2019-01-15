@@ -26,7 +26,7 @@ export class BaseInfo extends BaseForm {
             businessKey: this.workflow.businessKey,
             variables: {
                 "name": this.user.name,
-                "initiator": this.user.name,
+                "users": [this.user.name],
                 "isTecher": this.isTecher
             }
         }).then((res) => {

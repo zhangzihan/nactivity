@@ -24,7 +24,7 @@ export class Essay extends BaseForm {
                 "name": this.user.name
             }
         }).then((res) => {
-            alert('论文已提交');
+            alert('征文已提交');
             this.model.submitted = true;
             this.es.publish("reloadMyTasks");
             this.es.publish("started", res.data);

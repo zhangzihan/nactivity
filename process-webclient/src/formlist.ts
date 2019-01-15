@@ -38,7 +38,7 @@ export class FormList {
         },
         {
             id: 5,
-            name: '编辑论文',
+            name: '编辑征文',
             formType: 'essay',
             type: PLATFORM.moduleName('./essaies/essay')
         },
