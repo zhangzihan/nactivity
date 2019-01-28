@@ -31,7 +31,6 @@
     <Compile Remove="Engine\impl\el\ExpressionFactoryResolver.cs" />
     <Compile Remove="Engine\impl\interceptor\JtaRetryInterceptor.cs" />
     <Compile Remove="Engine\impl\interceptor\JtaTransactionInterceptor.cs" />
-    <Compile Remove="Engine\impl\persistence\ByteArrayRefTypeHandler.java.cs" />
     <Compile Remove="Engine\impl\scripting\JuelScriptEngine.cs" />
     <Compile Remove="Engine\impl\scripting\JuelScriptEngineFactory.cs" />
     <Compile Remove="Engine\impl\scripting\ScriptBindings.cs" />
@@ -78,7 +77,6 @@
     <None Include="Engine\impl\el\ExpressionFactoryResolver.cs" />
     <None Include="Engine\impl\interceptor\JtaRetryInterceptor.cs" />
     <None Include="Engine\impl\interceptor\JtaTransactionInterceptor.cs" />
-    <None Include="Engine\impl\persistence\ByteArrayRefTypeHandler.java.cs" />
     <None Include="Engine\impl\scripting\JuelScriptEngine.cs" />
     <None Include="Engine\impl\scripting\JuelScriptEngineFactory.cs" />
     <None Include="Engine\impl\scripting\ScriptBindings.cs" />

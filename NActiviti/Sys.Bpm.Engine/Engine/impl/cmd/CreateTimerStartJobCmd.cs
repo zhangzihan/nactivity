@@ -4,6 +4,7 @@ using org.activiti.engine.impl.agenda;
 using org.activiti.engine.impl.interceptor;
 using org.activiti.engine.impl.jobexecutor;
 using org.activiti.engine.impl.persistence.entity;
+using org.activiti.engine.runtime;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -37,10 +38,10 @@ namespace org.activiti.engine.impl.cmd
             IJobEntity timer = commandContext.JobEntityManager.create();
             timer.Id = commandContext.ProcessEngineConfiguration.IdGenerator.NextId;
             timer.Duedate = this.startDate;
-            timer.Exclusive = true;
+            timer.Exclusive = Job_Fields.DEFAULT_EXCLUSIVE;
             timer.JobHandlerConfiguration = startActivityId;
             timer.JobHandlerType = TimerStartEventJobHandler.TYPE;
-            timer.JobType = "timer";
+            timer.JobType = Job_Fields.JOB_TYPE_TIMER;
 
             IProcessDefinitionEntity pd = commandContext.ProcessDefinitionEntityManager.findLatestProcessDefinitionByKey(processDefinitionId);
             if (pd == null)

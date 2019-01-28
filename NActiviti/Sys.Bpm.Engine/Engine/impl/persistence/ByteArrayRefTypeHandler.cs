@@ -23,8 +23,6 @@ namespace org.activiti.engine.impl.persistence
             {
                 ByteArrayRef byteArrayRef = new ByteArrayRef(id);
 
-                //byteArrayRef.ensureInitialized();
-
                 return byteArrayRef;
             }
 
@@ -34,30 +32,6 @@ namespace org.activiti.engine.impl.persistence
         public virtual object GetValue(IDataReader dataReader, int columnIndex, Type targetType)
         {
             return initialized(dataReader, columnIndex);
-
-            //using (var ms = new MemoryStream())
-            //{
-            //    byte[] buffer = new byte[8040];
-            //    long offset = 0;
-            //    long byteLen = dataReader.GetBytes(columnIndex, 0, null, 0, 0);
-            //    long read = dataReader.GetBytes(columnIndex, offset, buffer, 0, buffer.Length);
-            //    while (read > 0)
-            //    {
-            //        offset += read;
-            //        ms.Write(buffer, 0, (int)read); // push downstream
-            //        if (read < byteLen)
-            //        {
-            //            read = dataReader.GetBytes(columnIndex, offset, buffer, 0, buffer.Length);
-            //        }
-            //        else
-            //        {
-            //            break;
-            //        }
-            //    }
-
-            //    ms.Seek(0, SeekOrigin.Begin);
-            //    return ms.ToArray();
-            //}
         }
 
         public virtual void SetParameter(IDataParameter dataParameter, object parameterValue)
