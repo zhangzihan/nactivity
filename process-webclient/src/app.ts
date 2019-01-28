@@ -5,6 +5,10 @@ import {PLATFORM} from 'aurelia-pal';
 export class App {
   router: Router;
 
+  processes = PLATFORM.moduleName('./processes');
+
+  tasks = PLATFORM.moduleName('./tasks/mytasks');
+  
   configureRouter(config: RouterConfiguration, router: Router) {
     config.title = 'Aurelia';
     config.map([
@@ -14,5 +18,22 @@ export class App {
     ]);
 
     this.router = router;
+  }
+
+  maximized = false;
+
+  hideTop = "";
+
+  maxBpmnIo = "";
+
+  maximize(){
+    this.maximized = !this.maximized;  
+    if (this.maximized){
+      this.hideTop = "hide-top";
+      this.maxBpmnIo = "max-bpmn-io";
+    }else{
+      this.hideTop = '';
+      this.maxBpmnIo = "";
+    }
   }
 }

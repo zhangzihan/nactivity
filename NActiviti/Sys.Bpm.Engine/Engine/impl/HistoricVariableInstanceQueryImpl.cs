@@ -63,7 +63,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricVariableInstanceQuery processInstanceId(string processInstanceId)
         {
-            if (string.ReferenceEquals(processInstanceId, null))
+            if (ReferenceEquals(processInstanceId, null))
             {
                 throw new ActivitiIllegalArgumentException("processInstanceId is null");
             }
@@ -73,7 +73,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricVariableInstanceQuery executionId(string executionId)
         {
-            if (string.ReferenceEquals(executionId, null))
+            if (ReferenceEquals(executionId, null))
             {
                 throw new ActivitiIllegalArgumentException("Execution id is null");
             }
@@ -103,7 +103,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricVariableInstanceQuery taskId(string taskId)
         {
-            if (string.ReferenceEquals(taskId, null))
+            if (ReferenceEquals(taskId, null))
             {
                 throw new ActivitiIllegalArgumentException("taskId is null");
             }
@@ -135,7 +135,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricVariableInstanceQuery excludeTaskVariables()
         {
-            if (!string.ReferenceEquals(taskId_Renamed, null))
+            if (!ReferenceEquals(taskId_Renamed, null))
             {
                 throw new ActivitiIllegalArgumentException("Cannot use taskId together with excludeTaskVariables");
             }
@@ -155,7 +155,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricVariableInstanceQuery variableName(string variableName)
         {
-            if (string.ReferenceEquals(variableName, null))
+            if (ReferenceEquals(variableName, null))
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
@@ -165,7 +165,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricVariableInstanceQuery variableValueEquals(string variableName, object variableValue)
         {
-            if (string.ReferenceEquals(variableName, null))
+            if (ReferenceEquals(variableName, null))
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
@@ -180,7 +180,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricVariableInstanceQuery variableValueNotEquals(string variableName, object variableValue)
         {
-            if (string.ReferenceEquals(variableName, null))
+            if (ReferenceEquals(variableName, null))
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
@@ -195,11 +195,11 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricVariableInstanceQuery variableValueLike(string variableName, string variableValue)
         {
-            if (string.ReferenceEquals(variableName, null))
+            if (ReferenceEquals(variableName, null))
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
-            if (string.ReferenceEquals(variableValue, null))
+            if (ReferenceEquals(variableValue, null))
             {
                 throw new ActivitiIllegalArgumentException("variableValue is null");
             }
@@ -210,11 +210,11 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricVariableInstanceQuery variableValueLikeIgnoreCase(string variableName, string variableValue)
         {
-            if (string.ReferenceEquals(variableName, null))
+            if (ReferenceEquals(variableName, null))
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
-            if (string.ReferenceEquals(variableValue, null))
+            if (ReferenceEquals(variableValue, null))
             {
                 throw new ActivitiIllegalArgumentException("variableValue is null");
             }
@@ -225,7 +225,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricVariableInstanceQuery variableNameLike(string variableNameLike)
         {
-            if (string.ReferenceEquals(variableNameLike, null))
+            if (ReferenceEquals(variableNameLike, null))
             {
                 throw new ActivitiIllegalArgumentException("variableNameLike is null");
             }

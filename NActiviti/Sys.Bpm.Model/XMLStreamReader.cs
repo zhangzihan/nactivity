@@ -11,7 +11,7 @@ namespace org.activiti.bpmn.converter
         protected XmlReader reader = null;
         protected internal XElement element = null;
         private XDocument document = null;
-        private bool isEmpty;
+        internal bool isEmpty;
 
         public XMLStreamReader(Stream input)
         {
@@ -50,7 +50,18 @@ namespace org.activiti.bpmn.converter
         public override ReadState ReadState => reader.ReadState;
 
         public bool EndElement => reader.NodeType == XmlNodeType.EndElement || reader.IsEmptyElement;
-        public bool StartElement => reader.IsStartElement();
+        public bool IsStartElement() { return reader.IsStartElement(); }
+
+        public bool IsStartElement(string name)
+        {
+            return reader.IsStartElement(name);
+        }
+
+        public bool IsStartElement(string localname, string ns)
+        {
+            return reader.IsStartElement(localname, ns);
+        }
+
         public string ElementText => element.Value;
 
         public int NamespaceCount => element.Attributes().Where(x => x.IsNamespaceDeclaration).Count();

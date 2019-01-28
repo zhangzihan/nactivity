@@ -44,17 +44,17 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IIdentityLinkEntity> findIdentityLinksByTaskId(string taskId)
         {
-            return DbSqlSession.selectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinksByTask", new KeyValuePair<string, object>("taskId", taskId));
+            return DbSqlSession.selectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinksByTask", new { taskId });
         }
 
         public virtual IList<IIdentityLinkEntity> findIdentityLinksByProcessInstanceId(string processInstanceId)
         {
-            return (IList<IIdentityLinkEntity>)getList("selectIdentityLinksByProcessInstance", new KeyValuePair<string, object>("processInstanceId", processInstanceId), identityLinkByProcessInstanceMatcher, true);
+            return (IList<IIdentityLinkEntity>)getList("selectIdentityLinksByProcessInstance", new { processInstanceId }, identityLinkByProcessInstanceMatcher, true);
         }
 
         public virtual IList<IIdentityLinkEntity> findIdentityLinksByProcessDefinitionId(string processDefinitionId)
         {
-            return DbSqlSession.selectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinksByProcessDefinition", new KeyValuePair<string, object>("processDefinitionId", processDefinitionId));
+            return DbSqlSession.selectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinksByProcessDefinition", new { processDefinitionId });
         }
 
         public virtual IList<IIdentityLinkEntity> findIdentityLinkByTaskUserGroupAndType(string taskId, string userId, string groupId, string type)
@@ -88,7 +88,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual void deleteIdentityLinksByProcDef(string processDefId)
         {
-            DbSqlSession.delete("deleteIdentityLinkByProcDef", new KeyValuePair<string, object>("processDefId", processDefId), typeof(IdentityLinkEntityImpl));
+            DbSqlSession.delete("deleteIdentityLinkByProcDef", new { processDefId }, typeof(IdentityLinkEntityImpl));
         }
 
     }

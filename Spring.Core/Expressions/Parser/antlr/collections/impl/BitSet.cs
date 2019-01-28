@@ -176,7 +176,7 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 			{
 				BitSet bset = (BitSet) obj;
 				
-				int n = (int) (System.Math.Min(dataBits.Length, bset.dataBits.Length));
+				int n = (int) (Math.Min(dataBits.Length, bset.dataBits.Length));
 				 for (int i = n; i-- > 0; )
 				{
 					if (dataBits[i] != bset.dataBits[i])
@@ -215,7 +215,7 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 		*/
 		public virtual void  growToInclude(int bit)
 		{
-			int newSize = (int) (System.Math.Max(dataBits.Length << 1, numWordsToHold(bit)));
+			int newSize = (int) (Math.Max(dataBits.Length << 1, numWordsToHold(bit)));
 			long[] newbits = new long[newSize];
 			Array.Copy(dataBits, 0, newbits, 0, dataBits.Length);
 			dataBits = newbits;
@@ -299,7 +299,7 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 			{
 				setSize((int) (a.dataBits.Length));
 			}
-			int min = (int) (System.Math.Min(dataBits.Length, a.dataBits.Length));
+			int min = (int) (Math.Min(dataBits.Length, a.dataBits.Length));
 			 for (int i = min - 1; i >= 0; i--)
 			{
 				dataBits[i] |= a.dataBits[i];
@@ -324,7 +324,7 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 		private void  setSize(int nwords)
 		{
 			long[] newbits = new long[nwords];
-			int n = (int) (System.Math.Min(nwords, dataBits.Length));
+			int n = (int) (Math.Min(nwords, dataBits.Length));
 			Array.Copy(dataBits, 0, newbits, 0, n);
 			dataBits = newbits;
 		}

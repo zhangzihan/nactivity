@@ -53,11 +53,11 @@ namespace org.activiti.engine.impl.cmd
 
         public virtual IDataObject execute(ICommandContext commandContext)
         {
-            if (string.ReferenceEquals(executionId, null))
+            if (ReferenceEquals(executionId, null))
             {
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }
-            if (string.ReferenceEquals(dataObjectName, null))
+            if (ReferenceEquals(dataObjectName, null))
             {
                 throw new ActivitiIllegalArgumentException("dataObjectName is null");
             }
@@ -94,7 +94,7 @@ namespace org.activiti.engine.impl.cmd
 
                 BpmnModel bpmnModel = ProcessDefinitionUtil.getBpmnModel(executionEntity.ProcessDefinitionId);
                 ValuedDataObject foundDataObject = null;
-                if (string.ReferenceEquals(executionEntity.ParentId, null))
+                if (ReferenceEquals(executionEntity.ParentId, null))
                 {
                     foreach (ValuedDataObject dataObjectDefinition in bpmnModel.MainProcess.DataObjects)
                     {
@@ -119,7 +119,7 @@ namespace org.activiti.engine.impl.cmd
                     }
                 }
 
-                if (!string.ReferenceEquals(locale, null) && foundDataObject != null)
+                if (!ReferenceEquals(locale, null) && foundDataObject != null)
                 {
                     JToken languageNode = Context.getLocalizationElementProperties(locale, foundDataObject.Id, execution.ProcessDefinitionId, withLocalizationFallback);
 

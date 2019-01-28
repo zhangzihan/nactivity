@@ -121,8 +121,8 @@ namespace Spring.Core.IO
             if (!(obj is EncodedResource)) return false;
 
             EncodedResource other = (EncodedResource) obj;
-            return object.Equals(this.resource, other.resource) 
-                && object.Equals(this.encoding, other.encoding);
+            return Equals(this.resource, other.resource) 
+                && Equals(this.encoding, other.encoding);
         }
 
         /// <summary>

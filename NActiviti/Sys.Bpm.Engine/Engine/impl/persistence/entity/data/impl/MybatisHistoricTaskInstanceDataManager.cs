@@ -47,12 +47,12 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IHistoricTaskInstanceEntity> findHistoricTasksByParentTaskId(string parentTaskId)
         {
-            return DbSqlSession.selectList<HistoricTaskInstanceEntityImpl, IHistoricTaskInstanceEntity>("selectHistoricTasksByParentTaskId", new KeyValuePair<string, object>("parentTaskId", parentTaskId));
+            return DbSqlSession.selectList<HistoricTaskInstanceEntityImpl, IHistoricTaskInstanceEntity>("selectHistoricTasksByParentTaskId", new { parentTaskId });
         }
 
         public virtual IList<IHistoricTaskInstanceEntity> findHistoricTaskInstanceByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<HistoricTaskInstanceEntityImpl, IHistoricTaskInstanceEntity>("selectHistoricTaskInstancesByProcessInstanceId", new KeyValuePair<string, object>("processInstanceId", processInstanceId));
+            return DbSqlSession.selectList<HistoricTaskInstanceEntityImpl, IHistoricTaskInstanceEntity>("selectHistoricTaskInstancesByProcessInstanceId", new { processInstanceId });
         }
 
         public virtual long findHistoricTaskInstanceCountByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery)

@@ -1,5 +1,10 @@
 <template>
   <style>
+    
+    .header {
+      border-bottom: 1px solid lightgray;
+    }
+
     .proc-define {
       clear: both;
       width: 100%;
@@ -13,8 +18,15 @@
     }
 
   </style>
+  
+  <div class="header">
+    <span>流程定义列表</span>
+    <div click.trigger="createProcess()" style="float:right;display:block">
+      <i class="fa fa-plus"></i>
+    </div>
+  </div>
 
-  <div repeat.for="def of defines">
+  <div class="process-defines" repeat.for="def of defines" class.bind="select&&select==def?'activate':''">
     <div class="proc-define" click.trigger="selected(def.id)">
       <strong>${def.name}</strong>
     </div>

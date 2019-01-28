@@ -420,6 +420,17 @@ aurelia-dependency-injection@^1.0.0, aurelia-dependency-injection@^1.2.0:
     aurelia-metadata "^1.0.0"
     aurelia-pal "^1.0.0"
 
+aurelia-dialog@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/aurelia-dialog/-/aurelia-dialog-1.1.0.tgz#f2071135abaadffb0c167624bb60d5373b136870"
+  integrity sha512-OlvvX8oqATk6hWqtf9SGEMtjvSpPxqDlMETJg9LR6X3RYmuCkyH9AP9ZaaPzYimJp/T+ICoimRt3bfIzF7y0UA==
+  dependencies:
+    aurelia-dependency-injection "^1.0.0"
+    aurelia-framework "^1.0.0"
+    aurelia-metadata "^1.0.0"
+    aurelia-pal "^1.0.0"
+    aurelia-templating "^1.0.0"
+
 aurelia-event-aggregator@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/aurelia-event-aggregator/-/aurelia-event-aggregator-1.0.1.tgz#9d7c7c1e1efe1ef3a78785e76abe80601e2d34c8"
@@ -4530,6 +4541,11 @@ nan@^2.3.0:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.6.1.tgz#8c84f7b14c96b89f57fbc838012180ec8ca39a01"
 
+nanoid@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-2.0.0.tgz#e1ab4a4b024a38d15531ba34a712a201540de639"
+  integrity sha512-SG2qscLE3iM4C0CNzGrsAojJHSVHMS1J8NnvJ31P1lH8P0hGHOiafmniNJz6w6q7vuoDlV7RdySlJgtqkFEVtQ==
+
 nanomatch@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/nanomatch/-/nanomatch-1.2.0.tgz#76fdb3d4ae7617e37719e7a4047b840857c0cb1c"
@@ -5993,6 +6009,13 @@ shellwords@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.0.tgz#66afd47b6a12932d9071cbfd98a52e785cd0ba14"
 
+shortid@2.2.14:
+  version "2.2.14"
+  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.14.tgz#80db6aafcbc3e3a46850b3c88d39e051b84c8d18"
+  integrity sha512-4UnZgr9gDdA1kaKj/38IiudfC3KHKhDc1zi/HSxd9FQDR0VLwH3/y79tZJLsVYPsJgIjeHjqIWaWVRJUj9qZOQ==
+  dependencies:
+    nanoid "^2.0.0"
+
 signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
@@ -6619,10 +6642,10 @@ type-is@~1.6.14:
     media-typer "0.3.0"
     mime-types "~2.1.15"
 
-typescript@2.7.2:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.7.2.tgz#2d615a1ef4aee4f574425cdff7026edf81919836"
-  integrity sha512-p5TCYZDAO0m4G344hD+wx/LATebLWZNkkh2asWUFqSsD2OrDNhbAHuSjobrmsUmdzjJjEeZVU9g1h3O6vpstnw==
+typescript@3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.2.2.tgz#fe8101c46aa123f8353523ebdcf5730c2ae493e5"
+  integrity sha512-VCj5UiSyHBjwfYacmDuc/NOk4QQixbE+Wn7MFJuS0nRuPQbof132Pw4u53dm264O8LPc2MVsc7RJNml5szurkg==
 
 uglify-js@2.8.x, uglify-js@^2.6:
   version "2.8.21"
@@ -6786,6 +6809,11 @@ utila@~0.4:
 utils-merge@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.0.tgz#0294fb922bb9375153541c4f7096231f287c8af8"
+
+uuid@3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
+  integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
 
 uuid@^2.0.1, uuid@^2.0.2:
   version "2.0.3"

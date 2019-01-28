@@ -117,7 +117,7 @@ namespace org.activiti.engine.impl.history
 
         public static HistoryLevel valueOf(string name)
         {
-            foreach (HistoryLevel enumInstance in HistoryLevel.valueList)
+            foreach (HistoryLevel enumInstance in valueList)
             {
                 if (enumInstance.nameValue == name)
                 {

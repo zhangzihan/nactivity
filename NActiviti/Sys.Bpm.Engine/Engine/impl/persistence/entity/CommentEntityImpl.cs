@@ -54,7 +54,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return (!string.ReferenceEquals(fullMessage, null) ? fullMessage.GetBytes() : null);
+                return (!ReferenceEquals(fullMessage, null) ? fullMessage.GetBytes() : null);
             }
             set
             {
@@ -82,7 +82,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                if (string.ReferenceEquals(message, null))
+                if (ReferenceEquals(message, null))
                 {
                     return null;
                 }
@@ -107,7 +107,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 StringBuilder stringBuilder = new StringBuilder();
                 foreach (string part in value)
                 {
-                    if (!string.ReferenceEquals(part, null))
+                    if (!ReferenceEquals(part, null))
                     {
                         stringBuilder.Append(part.Replace(MESSAGE_PARTS_MARKER, " | "));
                         stringBuilder.Append(MESSAGE_PARTS_MARKER);

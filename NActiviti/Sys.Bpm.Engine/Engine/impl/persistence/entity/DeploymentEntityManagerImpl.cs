@@ -49,7 +49,8 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             insert(deployment, false);
 
-            foreach (IResourceEntity resource in deployment.Resources.Values)
+            var resources = deployment.GetResources().Values;
+            foreach (IResourceEntity resource in resources)
             {
                 resource.DeploymentId = deployment.Id;
                 ResourceEntityManager.insert(resource);
@@ -241,7 +242,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
                 timerJob.ProcessDefinitionId = previousProcessDefinition.Id;
 
-                if (!string.ReferenceEquals(previousProcessDefinition.TenantId, null))
+                if (!ReferenceEquals(previousProcessDefinition.TenantId, null))
                 {
                     timerJob.TenantId = previousProcessDefinition.TenantId;
                 }
@@ -265,7 +266,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             subscriptionEntity.ActivityId = startEvent.Id;
             subscriptionEntity.ProcessDefinitionId = previousProcessDefinition.Id;
-            if (!string.ReferenceEquals(previousProcessDefinition.TenantId, null))
+            if (!ReferenceEquals(previousProcessDefinition.TenantId, null))
             {
                 subscriptionEntity.TenantId = previousProcessDefinition.TenantId;
             }
@@ -288,7 +289,7 @@ namespace org.activiti.engine.impl.persistence.entity
             newSubscription.Configuration = previousProcessDefinition.Id;
             newSubscription.ProcessDefinitionId = previousProcessDefinition.Id;
 
-            if (!string.ReferenceEquals(previousProcessDefinition.TenantId, null))
+            if (!ReferenceEquals(previousProcessDefinition.TenantId, null))
             {
                 newSubscription.TenantId = previousProcessDefinition.TenantId;
             }
@@ -299,7 +300,7 @@ namespace org.activiti.engine.impl.persistence.entity
         protected internal virtual IProcessDefinitionEntity findLatestProcessDefinition(IProcessDefinition processDefinition)
         {
             IProcessDefinitionEntity latestProcessDefinition = null;
-            if (!string.ReferenceEquals(processDefinition.TenantId, null) && !ProcessEngineConfigurationImpl.NO_TENANT_ID.Equals(processDefinition.TenantId))
+            if (!ReferenceEquals(processDefinition.TenantId, null) && !engine.ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
             {
                 latestProcessDefinition = ProcessDefinitionEntityManager.findLatestProcessDefinitionByKeyAndTenantId(processDefinition.Key, processDefinition.TenantId);
             }
@@ -319,7 +320,7 @@ namespace org.activiti.engine.impl.persistence.entity
             ProcessDefinitionQueryImpl query = new ProcessDefinitionQueryImpl();
             query.processDefinitionKey(processDefinitionToBeRemoved.Key);
 
-            if (!string.ReferenceEquals(processDefinitionToBeRemoved.TenantId, null) && !ProcessEngineConfigurationImpl.NO_TENANT_ID.Equals(processDefinitionToBeRemoved.TenantId))
+            if (!ReferenceEquals(processDefinitionToBeRemoved.TenantId, null) && !engine.ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinitionToBeRemoved.TenantId))
             {
                 query.processDefinitionTenantId(processDefinitionToBeRemoved.TenantId);
             }

@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -109,13 +109,13 @@ namespace Spring.Expressions
                         }
                     }
                 }
-                Typename2Creator[BASENODE_TYPE.FullName] = SpringAST.Creator;
+                Typename2Creator[BASENODE_TYPE.FullName] = Creator;
             }
 
             public SpringASTFactory() : base(BASENODE_TYPE)
             {
-                base.defaultASTNodeTypeObject_ = BASENODE_TYPE;
-                base.typename2creator_ = Typename2Creator;
+                defaultASTNodeTypeObject_ = BASENODE_TYPE;
+                typename2creator_ = Typename2Creator;
             }
         }
 
@@ -124,8 +124,8 @@ namespace Spring.Expressions
             public SpringExpressionParser( TokenStream lexer )
                 : base( lexer )
             {
-                base.astFactory = new SpringASTFactory();
-                base.initialize();
+                astFactory = new SpringASTFactory();
+                initialize();
             }
         }
 

@@ -35,7 +35,7 @@ namespace org.activiti.cloud.services.api.model.converter
             org.activiti.cloud.services.api.model.Task task = null;
             if (source != null)
             {
-                task = new Task(source.Id, source.Owner, source.Assignee, source.Name, source.Description, source.CreateTime, source.ClaimTime, source.DueDate, source.Priority, source.ProcessDefinitionId, source.ProcessInstanceId, source.ParentTaskId, calculateStatus(source));
+                task = new Task(source.Id, source.Owner, source.Assignee, source.Name, source.Description, source.CreateTime, source.ClaimTime, source.DueDate, source.Priority, source.ProcessDefinitionId, source.ProcessInstanceId, source.ParentTaskId, source.FormKey, calculateStatus(source));
             }
             return task;
         }

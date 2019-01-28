@@ -34,7 +34,7 @@ namespace org.activiti.validation.validator.impl
 
                 if (eventDefinition != null && !(eventDefinition is SignalEventDefinition) && !(eventDefinition is CompensateEventDefinition))
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.THROW_EVENT_INVALID_EVENTDEFINITION, process, throwEvent, "Unsupported intermediate throw event type");
+                    addError(errors, Problems_Fields.THROW_EVENT_INVALID_EVENTDEFINITION, process, throwEvent, "Unsupported intermediate throw event type");
                 }
             }
         }

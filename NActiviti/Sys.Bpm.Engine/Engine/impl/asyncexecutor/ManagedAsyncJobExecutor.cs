@@ -1,4 +1,6 @@
 ﻿using javax.enterprise.concurrent;
+using Microsoft.Extensions.Logging;
+using Sys;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -26,6 +28,8 @@ namespace org.activiti.engine.impl.asyncexecutor
     /// </summary>
     public class ManagedAsyncJobExecutor : DefaultAsyncJobExecutor
     {
+        private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<ManagedAsyncJobExecutor>();
+
         protected internal ManagedThreadFactory threadFactory;
 
         public virtual ManagedThreadFactory ThreadFactory
@@ -45,25 +49,24 @@ namespace org.activiti.engine.impl.asyncexecutor
         {
             if (threadFactory == null)
             {
-                //log.warn("A managed thread factory was not found, falling back to self-managed threads");
+                log.LogWarning("A managed thread factory was not found, falling back to self-managed threads");
                 base.initAsyncJobExecutionThreadPool();
             }
             else
             {
                 if (threadPoolQueue == null)
                 {
-                    //log.info("Creating thread pool queue of size {}", queueSize);
+                    log.LogInformation($"Creating thread pool queue of size {queueSize}");
                     threadPoolQueue = new ConcurrentQueue<ThreadStart>();
                 }
 
                 if (executorService == null)
                 {
-                    throw new NotImplementedException();
-                    //log.info("Creating executor service with corePoolSize {}, maxPoolSize {} and keepAliveTime {}", corePoolSize, maxPoolSize, keepAliveTime);
+                    log.LogInformation($"Creating executor service with corePoolSize {corePoolSize}, maxPoolSize {maxPoolSize} and keepAliveTime {keepAliveTime}");
 
-                    //ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, threadPoolQueue, threadFactory);
+                    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, threadPoolQueue);
                     //threadPoolExecutor.RejectedExecutionHandler = new ThreadPoolExecutor.CallerRunsPolicy();
-                    //executorService = threadPoolExecutor;
+                    executorService = threadPoolExecutor;
 
                 }
 

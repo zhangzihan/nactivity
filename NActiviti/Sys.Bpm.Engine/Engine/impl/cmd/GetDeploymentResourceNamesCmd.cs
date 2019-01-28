@@ -33,7 +33,7 @@ namespace org.activiti.engine.impl.cmd
 
         public virtual IList<string> execute(ICommandContext commandContext)
         {
-            if (string.ReferenceEquals(deploymentId, null))
+            if (ReferenceEquals(deploymentId, null))
             {
                 throw new ActivitiIllegalArgumentException("deploymentId is null");
             }

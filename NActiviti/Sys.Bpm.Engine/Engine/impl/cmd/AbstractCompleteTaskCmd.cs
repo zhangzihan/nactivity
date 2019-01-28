@@ -45,7 +45,7 @@ namespace org.activiti.engine.impl.cmd
             }
 
             commandContext.ProcessEngineConfiguration.ListenerNotificationHelper.executeTaskListeners(taskEntity, BaseTaskListener_Fields.EVENTNAME_COMPLETE);
-            if (!string.ReferenceEquals(Authentication.AuthenticatedUserId, null) && !string.ReferenceEquals(taskEntity.ProcessInstanceId, null))
+            if (!ReferenceEquals(Authentication.AuthenticatedUserId, null) && !ReferenceEquals(taskEntity.ProcessInstanceId, null))
             {
                 IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", taskEntity.ProcessInstanceId));
                 commandContext.IdentityLinkEntityManager.involveUser(processInstanceEntity, Authentication.AuthenticatedUserId, IdentityLinkType.PARTICIPANT);
@@ -67,7 +67,7 @@ namespace org.activiti.engine.impl.cmd
             commandContext.TaskEntityManager.deleteTask(taskEntity, null, false, false);
 
             // Continue process (if not a standalone task)
-            if (!string.ReferenceEquals(taskEntity.ExecutionId, null))
+            if (!ReferenceEquals(taskEntity.ExecutionId, null))
             {
                 IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", taskEntity.ExecutionId));
                 Context.Agenda.planTriggerExecutionOperation(executionEntity);

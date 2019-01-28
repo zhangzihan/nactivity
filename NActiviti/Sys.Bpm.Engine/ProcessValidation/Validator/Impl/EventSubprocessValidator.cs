@@ -35,7 +35,7 @@ namespace org.activiti.validation.validator.impl
                         EventDefinition eventDefinition = startEvent.EventDefinitions[0];
                         if (!(eventDefinition is org.activiti.bpmn.model.ErrorEventDefinition) && !(eventDefinition is MessageEventDefinition) && !(eventDefinition is SignalEventDefinition))
                         {
-                            addError(errors, org.activiti.validation.validator.Problems_Fields.EVENT_SUBPROCESS_INVALID_START_EVENT_DEFINITION, process, eventSubprocess, "start event of event subprocess must be of type 'error', 'message' or 'signal'");
+                            addError(errors, Problems_Fields.EVENT_SUBPROCESS_INVALID_START_EVENT_DEFINITION, process, eventSubprocess, "start event of event subprocess must be of type 'error', 'message' or 'signal'");
                         }
                     }
                 }

@@ -93,7 +93,7 @@ namespace org.activiti.engine.impl.variable
 
         public override object getValue(IValueFields valueFields)
         {
-            if (!string.ReferenceEquals(valueFields.TextValue, null) && !string.ReferenceEquals(valueFields.TextValue2, null))
+            if (!ReferenceEquals(valueFields.TextValue, null) && !ReferenceEquals(valueFields.TextValue2, null))
             {
                 return mappings.getJPAEntity(valueFields.TextValue, valueFields.TextValue2);
             }

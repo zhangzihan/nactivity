@@ -14,6 +14,11 @@
         protected internal CommandConfig defaultConfig;
         protected internal ICommandInterceptor first;
 
+        /// <summary>
+        /// 构造一个命令执行器
+        /// </summary>
+        /// <param name="defaultConfig"></param>
+        /// <param name="first"></param>
         public CommandExecutorImpl(CommandConfig defaultConfig, ICommandInterceptor first)
         {
             this.defaultConfig = defaultConfig;
@@ -41,11 +46,25 @@
             }
         }
 
+        /// <summary>
+        /// 执行器执行一个命令
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="command"></param>
+        /// <returns></returns>
         public virtual T execute<T>(ICommand<T> command)
         {
             return execute(defaultConfig, command);
         }
 
+
+        /// <summary>
+        /// 开始拦截器的链式调用
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="config"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
         public virtual T execute<T>(CommandConfig config, ICommand<T> command)
         {
             return first.execute(config, command);

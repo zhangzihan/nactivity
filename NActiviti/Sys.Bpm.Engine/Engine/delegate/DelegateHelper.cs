@@ -205,7 +205,7 @@ namespace org.activiti.engine.@delegate
             }
             foreach (FieldExtension fieldExtension in fieldExtensions)
             {
-                if (!string.ReferenceEquals(fieldExtension.FieldName, null) && fieldExtension.FieldName.Equals(fieldName))
+                if (!ReferenceEquals(fieldExtension.FieldName, null) && fieldExtension.FieldName.Equals(fieldName))
                 {
                     return fieldExtension;
                 }
@@ -222,7 +222,7 @@ namespace org.activiti.engine.@delegate
             }
             foreach (FieldExtension fieldExtension in fieldExtensions)
             {
-                if (!string.ReferenceEquals(fieldExtension.FieldName, null) && fieldExtension.FieldName.Equals(fieldName))
+                if (!ReferenceEquals(fieldExtension.FieldName, null) && fieldExtension.FieldName.Equals(fieldName))
                 {
                     return fieldExtension;
                 }

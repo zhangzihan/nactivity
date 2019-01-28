@@ -1,0 +1,19 @@
+<template>
+  <compose view-model="./essay"></compose>
+
+  <div class="container-fluid" style="margin-top:4px">
+    <div class="row">
+      <div class="col-6">
+        <select name="approvale" id="approvla" value.bind="model.approvaled" style="height:100%">
+          <option value="通过" selected="selected">通过</option>拒绝
+          <option value="重新修改">重新修改</option>
+          <option value="拒绝">拒绝</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <button class="btn btn-info btn-submit" style="width:100%" click.trigger="submit()">审批</button>
+      </div>
+    </div>
+  </div>
+
+</template>

@@ -39,7 +39,7 @@ namespace org.activiti.engine.impl.cmd
 
         public virtual string execute(ICommandContext commandContext)
         {
-            if (string.ReferenceEquals(jobId, null))
+            if (ReferenceEquals(jobId, null))
             {
                 throw new ActivitiIllegalArgumentException("jobId is null");
             }
@@ -47,16 +47,16 @@ namespace org.activiti.engine.impl.cmd
             IAbstractJobEntity job = null;
             switch (jobType)
             {
-                case org.activiti.engine.impl.cmd.JobType.ASYNC:
+                case JobType.ASYNC:
                     job = commandContext.JobEntityManager.findById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
                     break;
-                case org.activiti.engine.impl.cmd.JobType.TIMER:
+                case JobType.TIMER:
                     job = commandContext.TimerJobEntityManager.findById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
                     break;
-                case org.activiti.engine.impl.cmd.JobType.SUSPENDED:
+                case JobType.SUSPENDED:
                     job = commandContext.SuspendedJobEntityManager.findById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
                     break;
-                case org.activiti.engine.impl.cmd.JobType.DEADLETTER:
+                case JobType.DEADLETTER:
                     job = commandContext.DeadLetterJobEntityManager.findById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
                     break;
             }

@@ -28,46 +28,45 @@ namespace org.activiti.engine.impl.bpmn.helper
     /// 
     /// </summary>
     public class MessageThrowingEventListener : BaseDelegateEventListener
-	{
+    {
 
-	  protected internal string messageName;
-	  protected internal new Type entityClass;
+        protected internal string messageName;
+        protected internal new Type entityClass;
 
-	  public override void onEvent(IActivitiEvent @event)
-	  {
-		if (isValidEvent(@event))
-		{
+        public override void onEvent(IActivitiEvent @event)
+        {
+            if (isValidEvent(@event))
+            {
+                if (ReferenceEquals(@event.ProcessInstanceId, null))
+                {
+                    throw new ActivitiIllegalArgumentException("Cannot throw process-instance scoped message, since the dispatched event is not part of an ongoing process instance");
+                }
 
-		  if (string.ReferenceEquals(@event.ProcessInstanceId, null))
-		  {
-			throw new ActivitiIllegalArgumentException("Cannot throw process-instance scoped message, since the dispatched event is not part of an ongoing process instance");
-		  }
+                IEventSubscriptionEntityManager eventSubscriptionEntityManager = Context.CommandContext.EventSubscriptionEntityManager;
+                IList<IMessageEventSubscriptionEntity> subscriptionEntities = eventSubscriptionEntityManager.findMessageEventSubscriptionsByProcessInstanceAndEventName(@event.ProcessInstanceId, messageName);
 
-		  IEventSubscriptionEntityManager eventSubscriptionEntityManager = Context.CommandContext.EventSubscriptionEntityManager;
-		  IList<IMessageEventSubscriptionEntity> subscriptionEntities = eventSubscriptionEntityManager.findMessageEventSubscriptionsByProcessInstanceAndEventName(@event.ProcessInstanceId, messageName);
+                foreach (IEventSubscriptionEntity messageEventSubscriptionEntity in subscriptionEntities)
+                {
+                    eventSubscriptionEntityManager.eventReceived(messageEventSubscriptionEntity, null, false);
+                }
+            }
+        }
 
-		  foreach (IEventSubscriptionEntity messageEventSubscriptionEntity in subscriptionEntities)
-		  {
-			eventSubscriptionEntityManager.eventReceived(messageEventSubscriptionEntity, null, false);
-		  }
-		}
-	  }
+        public virtual string MessageName
+        {
+            set
+            {
+                this.messageName = value;
+            }
+        }
 
-	  public virtual string MessageName
-	  {
-		  set
-		  {
-			this.messageName = value;
-		  }
-	  }
-
-	  public override bool FailOnException
-	  {
-		  get
-		  {
-			return true;
-		  }
-	  }
-	}
+        public override bool FailOnException
+        {
+            get
+            {
+                return true;
+            }
+        }
+    }
 
 }

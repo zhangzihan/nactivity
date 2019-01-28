@@ -61,7 +61,7 @@ namespace org.activiti.engine.impl.agenda
             {
                 return execution.CurrentFlowElement;
             }
-            else if (!string.ReferenceEquals(execution.CurrentActivityId, null))
+            else if (!ReferenceEquals(execution.CurrentActivityId, null))
             {
                 string processDefinitionId = execution.ProcessDefinitionId;
                 org.activiti.bpmn.model.Process process = ProcessDefinitionUtil.getProcess(processDefinitionId);
@@ -148,19 +148,6 @@ namespace org.activiti.engine.impl.agenda
         }
 
 
-    }
-
-    public sealed class RunableOperation : AbstractOperation
-    {
-        public RunableOperation(Action run)
-        {
-            this.Run = run;
-        }
-
-        protected override void run()
-        {
-
-        }
     }
 
 }

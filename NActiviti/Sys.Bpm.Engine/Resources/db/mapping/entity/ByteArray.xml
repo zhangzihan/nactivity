@@ -11,9 +11,13 @@
       <Result Property="bytes" Column="BYTES_" TypeHandler="文件" />
     </ResultMap>
 
+  <ParameterMap Id="byteArrayParameterMap">
+    <Parameter Property="bytes" TypeHandler="文件" />
+  </ParameterMap>
+
   <!-- BYTE ARRAY INSERT -->
   
-  <Insert Id="insertByteArray">
+  <Insert Id="insertByteArray" ParameterMap="byteArrayParameterMap">
     insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
     values (
     #{id},
@@ -24,7 +28,12 @@
     )
   </Insert>
 
-  <Insert Id="bulkInsertByteArray">
+
+  <ParameterMap Id="bulkByteArrayParameterMap">
+    <Parameter Property="(Items_)?bytes(_p\d)" TypeHandler="文件" />
+  </ParameterMap>
+  
+  <Insert Id="bulkInsertByteArray" ParameterMap="bulkByteArrayParameterMap">
     insert into ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_)
     values
     <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator="," >
@@ -38,7 +47,7 @@
 
   <!-- BYTE ARRAY UPDATE -->
 
-  <Update Id="updateByteArray">
+  <Update Id="updateByteArray" ParameterMap="byteArrayParameterMap">
     update ACT_GE_BYTEARRAY
     set
     REV_ = #{revisionNext},

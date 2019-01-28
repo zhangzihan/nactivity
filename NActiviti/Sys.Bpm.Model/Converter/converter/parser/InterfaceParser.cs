@@ -38,7 +38,7 @@ namespace org.activiti.bpmn.converter.parser
                 {
                     //xtr.next();
 
-                    if (xtr.StartElement && BpmnXMLConstants.ELEMENT_OPERATION.Equals(xtr.LocalName))
+                    if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_OPERATION.Equals(xtr.LocalName))
                     {
                         operation = new Operation();
                         BpmnXMLUtil.addXMLLocation(operation, xtr);
@@ -47,7 +47,7 @@ namespace org.activiti.bpmn.converter.parser
                         operation.ImplementationRef = parseMessageRef(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_IMPLEMENTATION_REF), model);
 
                     }
-                    else if (xtr.StartElement && BpmnXMLConstants.ELEMENT_IN_MESSAGE.Equals(xtr.LocalName))
+                    else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_IN_MESSAGE.Equals(xtr.LocalName))
                     {
                         string inMessageRef = xtr.ElementText;
                         if (operation != null && !string.IsNullOrWhiteSpace(inMessageRef))
@@ -56,7 +56,7 @@ namespace org.activiti.bpmn.converter.parser
                         }
 
                     }
-                    else if (xtr.StartElement && BpmnXMLConstants.ELEMENT_OUT_MESSAGE.Equals(xtr.LocalName))
+                    else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_OUT_MESSAGE.Equals(xtr.LocalName))
                     {
                         string outMessageRef = xtr.ElementText;
                         if (operation != null && !string.IsNullOrWhiteSpace(outMessageRef))

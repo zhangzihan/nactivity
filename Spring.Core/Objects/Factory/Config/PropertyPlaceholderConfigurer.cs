@@ -369,7 +369,7 @@ namespace Spring.Objects.Factory.Config
 		                                            EnvironmentVariableMode mode)
 		{
 			string propertyValue = null;
-			if (mode == Spring.Objects.Factory.Config.EnvironmentVariableMode.Override)
+			if (mode == EnvironmentVariableMode.Override)
 			{
 				propertyValue = Environment.GetEnvironmentVariable(placeholder);
 			}
@@ -378,7 +378,7 @@ namespace Spring.Objects.Factory.Config
 				propertyValue = ResolvePlaceholder(placeholder, props);
 			}
 			if (propertyValue == null
-				&& mode == Spring.Objects.Factory.Config.EnvironmentVariableMode.Fallback)
+				&& mode == EnvironmentVariableMode.Fallback)
 			{
 				propertyValue = Environment.GetEnvironmentVariable(placeholder);
 			}

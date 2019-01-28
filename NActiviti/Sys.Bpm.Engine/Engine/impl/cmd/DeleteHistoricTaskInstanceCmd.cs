@@ -35,7 +35,7 @@ namespace org.activiti.engine.impl.cmd
         public virtual object execute(ICommandContext commandContext)
         {
 
-            if (string.ReferenceEquals(taskId, null))
+            if (ReferenceEquals(taskId, null))
             {
                 throw new ActivitiIllegalArgumentException("taskId is null");
             }

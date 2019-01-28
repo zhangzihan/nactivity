@@ -36,13 +36,13 @@ namespace org.activiti.validation.validator.impl
                             // check if it's a Pool or Lane, then DI is ok
                             if (bpmnModel.getPool(bpmnReference) == null && bpmnModel.getLane(bpmnReference) == null)
                             {
-                                addWarning(errors, org.activiti.validation.validator.Problems_Fields.DI_INVALID_REFERENCE, null, bpmnModel.getFlowElement(bpmnReference), "Invalid reference in diagram interchange definition: could not find " + bpmnReference);
+                                addWarning(errors, Problems_Fields.DI_INVALID_REFERENCE, null, bpmnModel.getFlowElement(bpmnReference), "Invalid reference in diagram interchange definition: could not find " + bpmnReference);
                             }
                         }
                     }
                     else if (!(bpmnModel.getFlowElement(bpmnReference) is FlowNode))
                     {
-                        addWarning(errors, org.activiti.validation.validator.Problems_Fields.DI_DOES_NOT_REFERENCE_FLOWNODE, null, bpmnModel.getFlowElement(bpmnReference), "Invalid reference in diagram interchange definition: " + bpmnReference + " does not reference a flow node");
+                        addWarning(errors, Problems_Fields.DI_DOES_NOT_REFERENCE_FLOWNODE, null, bpmnModel.getFlowElement(bpmnReference), "Invalid reference in diagram interchange definition: " + bpmnReference + " does not reference a flow node");
                     }
                 }
 
@@ -59,12 +59,12 @@ namespace org.activiti.validation.validator.impl
                         // DI
                         if (bpmnModel.getArtifact(bpmnReference) == null)
                         {
-                            addWarning(errors, org.activiti.validation.validator.Problems_Fields.DI_INVALID_REFERENCE, null, bpmnModel.getFlowElement(bpmnReference), "Invalid reference in diagram interchange definition: could not find " + bpmnReference);
+                            addWarning(errors, Problems_Fields.DI_INVALID_REFERENCE, null, bpmnModel.getFlowElement(bpmnReference), "Invalid reference in diagram interchange definition: could not find " + bpmnReference);
                         }
                     }
                     else if (!(bpmnModel.getFlowElement(bpmnReference) is SequenceFlow))
                     {
-                        addWarning(errors, org.activiti.validation.validator.Problems_Fields.DI_DOES_NOT_REFERENCE_SEQ_FLOW, null, bpmnModel.getFlowElement(bpmnReference), "Invalid reference in diagram interchange definition: " + bpmnReference + " does not reference a sequence flow");
+                        addWarning(errors, Problems_Fields.DI_DOES_NOT_REFERENCE_SEQ_FLOW, null, bpmnModel.getFlowElement(bpmnReference), "Invalid reference in diagram interchange definition: " + bpmnReference + " does not reference a sequence flow");
                     }
                 }
             }

@@ -434,7 +434,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricProcessInstanceQuery processInstanceTenantId(string tenantId)
         {
-            if (string.ReferenceEquals(tenantId, null))
+            if (ReferenceEquals(tenantId, null))
             {
                 throw new ActivitiIllegalArgumentException("process instance tenant id is null");
             }
@@ -451,7 +451,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricProcessInstanceQuery processInstanceTenantIdLike(string tenantIdLike)
         {
-            if (string.ReferenceEquals(tenantIdLike, null))
+            if (ReferenceEquals(tenantIdLike, null))
             {
                 throw new ActivitiIllegalArgumentException("process instance tenant id is null");
             }
@@ -738,7 +738,7 @@ namespace org.activiti.engine.impl
             get
             {
                 string specialOrderBy = base.OrderBy;
-                if (!string.ReferenceEquals(specialOrderBy, null) && specialOrderBy.Length > 0)
+                if (!ReferenceEquals(specialOrderBy, null) && specialOrderBy.Length > 0)
                 {
                     specialOrderBy = specialOrderBy.Replace("RES.", "TEMPRES_");
                     specialOrderBy = specialOrderBy.Replace("VAR.", "TEMPVAR_");
@@ -785,7 +785,7 @@ namespace org.activiti.engine.impl
             processInstanceEntity.LocalizedName = null;
             processInstanceEntity.LocalizedDescription = null;
 
-            if (!string.ReferenceEquals(locale_Renamed, null) && !string.ReferenceEquals(processInstance.ProcessDefinitionId, null))
+            if (!ReferenceEquals(locale_Renamed, null) && !ReferenceEquals(processInstance.ProcessDefinitionId, null))
             {
                 IProcessDefinition processDefinition = commandContext.ProcessEngineConfiguration.DeploymentManager.findDeployedProcessDefinitionById(processInstanceEntity.ProcessDefinitionId);
                 JToken languageNode = Context.getLocalizationElementProperties(locale_Renamed, processDefinition.Key, processInstanceEntity.ProcessDefinitionId, withLocalizationFallback_Renamed);

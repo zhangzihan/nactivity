@@ -240,6 +240,12 @@ namespace org.springframework.hateoas
 
             return this;
         }
+
+        public IList<Link> Links
+        {
+            get => links;
+            set => links = value;
+        }
     }
 
     public class Resource<T> : ResourceSupport
@@ -256,6 +262,12 @@ namespace org.springframework.hateoas
             this.content = content;
             this.links = (links ?? new List<Link>()).ToList();
         }
+
+        public T Content
+        {
+            get => content;
+            set => content = value;
+        }
     }
 
     public class Resources<T> : ResourceSupport, IEnumerable<T>
@@ -269,12 +281,12 @@ namespace org.springframework.hateoas
 
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return resourcesList.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return resourcesList.GetEnumerator();
         }
     }
     public interface ResourceAssembler<T, D> where D : ResourceSupport

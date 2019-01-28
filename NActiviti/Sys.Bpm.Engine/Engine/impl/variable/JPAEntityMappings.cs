@@ -203,7 +203,7 @@ namespace org.activiti.engine.impl.variable
             }
             else if (type == typeof(System.Guid))
             {
-                return System.Guid.Parse(@string);
+                return Guid.Parse(@string);
             }
             else
             {

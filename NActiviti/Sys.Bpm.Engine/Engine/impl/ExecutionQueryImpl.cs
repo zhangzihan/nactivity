@@ -166,7 +166,7 @@ namespace org.activiti.engine.impl
 
         public virtual IExecutionQuery processInstanceId(string processInstanceId)
         {
-            if (string.ReferenceEquals(processInstanceId, null))
+            if (ReferenceEquals(processInstanceId, null))
             {
                 throw new ActivitiIllegalArgumentException("Process instance id is null");
             }
@@ -459,7 +459,7 @@ namespace org.activiti.engine.impl
                     string activityId = null;
                     if (execution.Id.Equals(execution.ProcessInstanceId))
                     {
-                        if (!string.ReferenceEquals(execution.ProcessDefinitionId, null))
+                        if (!ReferenceEquals(execution.ProcessDefinitionId, null))
                         {
                             IProcessDefinition processDefinition = commandContext.ProcessEngineConfiguration.DeploymentManager.findDeployedProcessDefinitionById(execution.ProcessDefinitionId);
                             activityId = processDefinition.Key;
@@ -471,7 +471,7 @@ namespace org.activiti.engine.impl
                         activityId = execution.ActivityId;
                     }
 
-                    if (!string.ReferenceEquals(activityId, null))
+                    if (!ReferenceEquals(activityId, null))
                     {
                         localize(execution, activityId);
                     }

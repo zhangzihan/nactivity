@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <SmartSqlMapConfig xmlns="http://SmartSql.net/schemas/SmartSqlMapConfig.xsd">
-  <Settings
-    IsWatchConfigFile="true" IgnoreParameterCase="true" IsCacheEnabled="true" />
+  <Settings IsWatchConfigFile="true" IgnoreParameterCase="true" IsCacheEnabled="true" />
   <Database>
     <DbProvider Name="MySqlClientFactory" ParameterPrefix="?" Type="MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data"/>
     <!--<DbProvider Name="OracleClientFactory" ParameterPrefix=":" Type="Oracle.ManagedDataAccess.Client.OracleClientFactory,Oracle.ManagedDataAccess"/>

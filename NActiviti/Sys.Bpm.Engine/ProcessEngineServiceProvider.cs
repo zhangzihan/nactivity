@@ -5,10 +5,14 @@ using Microsoft.Extensions.Logging;
 using org.activiti.engine;
 using org.activiti.engine.impl;
 using org.activiti.engine.impl.agenda;
+using org.activiti.engine.impl.asyncexecutor;
 using org.activiti.engine.impl.cfg;
 using org.activiti.engine.impl.util;
 using SmartSql;
 using SmartSql.Abstractions;
+using SmartSql.Configuration;
+using SmartSql.DbSession;
+using Spring.Core;
 using Spring.Core.TypeResolution;
 using Sys.Bpm.Engine.impl;
 using Sys.Data;
@@ -31,7 +35,7 @@ namespace Sys
                 var provider = cfg["SysDataSource:providerName"];
                 var connStr = cfg["SysDataSource:connectionString"];
 
-                return new DataSource(provider, connStr);
+                return new Data.DataSource(provider, connStr);
             });
 
             services.AddSingleton<IDatabaseReader>(sp =>
@@ -45,25 +49,28 @@ namespace Sys
             {
                 var codebase = Path.GetDirectoryName(typeof(ProcessEngineConfiguration).Assembly.Location);
 
-                return new SmartSqlMapper(new SmartSqlOptions
+                IDataSource dataSource = sp.GetService<IDataSource>();
+
+                var dbSessionStore = new DbConnectionSessionStore(sp.GetService<ILoggerFactory>(), dataSource.DbProviderFactory);
+
+                SmartSqlOptions options = new SmartSqlOptions
                 {
                     //LoggerFactory = sp.GetService<ILoggerFactory>(),
                     ConfigPath = Path.Combine(codebase, DEFAULT_MYBATIS_MAPPING_FILE),
+                    DbSessionStore = dbSessionStore
                     //DataReaderDeserializerFactory = new DapperDataReaderDeserializerFactory()
-                });
+                };
+
+                SmartSqlMapper ssm = new SmartSqlMapper(options);
+
+                options.SmartSqlContext.Database.WriteDataSource.ConnectionString = dataSource.ConnectionString;
+                foreach (var ds in options.SmartSqlContext.Database.ReadDataSources)
+                {
+                    ds.ConnectionString = dataSource.ConnectionString;
+                }
+
+                return ssm;
             });
-
-            services.AddTransient<IRepositoryService>(sp => new RepositoryServiceImpl());
-
-            services.AddTransient<IRuntimeService>(sp => new RuntimeServiceImpl());
-
-            services.AddTransient<IManagementService>(sp => new ManagementServiceImpl());
-
-            services.AddTransient<IHistoryService>(sp => new HistoryServiceImpl());
-
-            services.AddTransient<ITaskService>(sp => new TaskServiceImpl());
-
-            services.AddTransient<IDynamicBpmnService>(sp => new DynamicBpmnServiceImpl());
 
             services.AddTransient<IActivitiEngineAgendaFactory>(sp => new DefaultActivitiEngineAgendaFactory());
 
@@ -71,15 +78,37 @@ namespace Sys
 
             services.AddSingleton<IBpmnParseFactory, DefaultBpmnParseFactory>();
 
-            services.AddTransient<ProcessEngineConfiguration>(sp =>
+            services.AddTransient<IAsyncExecutor>(sp =>
+            {
+                IConfigurationSection dajw = sp.GetService<IConfiguration>().GetSection("defaultAsyncJobAcquireWaitTimeInMillis");
+                IConfigurationSection dtjw = sp.GetService<IConfiguration>().GetSection("defaultTimerJobAcquireWaitTimeInMillis");
+
+                if (int.TryParse(dajw?.Value, out int iDajw) == false)
+                {
+                    iDajw = 1000;
+                }
+                if (int.TryParse(dtjw?.Value, out int iDtjw) == false)
+                {
+                    iDtjw = 1000;
+                }
+
+                return new DefaultAsyncJobExecutor()
+                {
+                    DefaultAsyncJobAcquireWaitTimeInMillis = iDajw,
+                    DefaultTimerJobAcquireWaitTimeInMillis = iDtjw,
+                };
+            });
+
+            services.AddTransient<ProcessEngineConfigurationImpl>(sp =>
             {
                 ProcessEngineConfigurationImpl config = new StandaloneProcessEngineConfiguration(
-                    sp.GetService<IHistoryService>(),
-                    sp.GetService<ITaskService>(),
-                    sp.GetService<IDynamicBpmnService>(),
-                    sp.GetService<IRepositoryService>(),
-                    sp.GetService<IRuntimeService>(),
-                    sp.GetService<IManagementService>(),
+                    new HistoryServiceImpl(),
+                    new TaskServiceImpl(),
+                    new DynamicBpmnServiceImpl(),
+                    new RepositoryServiceImpl(),
+                    new RuntimeServiceImpl(),
+                    new ManagementServiceImpl(),
+                    sp.GetService<IAsyncExecutor>(),
                     sp.GetService<IConfiguration>()
                 );
 
@@ -91,12 +120,27 @@ namespace Sys
                 return ProcessEngineFactory.Instance;
             });
 
+            services.AddTransient<IRepositoryService>(sp => sp.GetRequiredService<IProcessEngine>().RepositoryService);
+
+            services.AddTransient<IRuntimeService>(sp => sp.GetRequiredService<IProcessEngine>().RuntimeService);
+
+            services.AddTransient<IManagementService>(sp => sp.GetRequiredService<IProcessEngine>().ManagementService);
+
+            services.AddTransient<IHistoryService>(sp => sp.GetRequiredService<IProcessEngine>().HistoryService);
+
+            services.AddTransient<ITaskService>(sp => sp.GetRequiredService<IProcessEngine>().TaskService);
+
+            services.AddTransient<IDynamicBpmnService>(sp => sp.GetRequiredService<IProcessEngine>().DynamicBpmnService);
+
             services.AddSingleton<IProcessEngine>(sp =>
             {
                 return sp.GetService<ProcessEngineFactory>().DefaultProcessEngine;
             });
 
-            services.BuildServiceProvider().EnsureProcessEngineInit();
+            ServiceProvider servicePprovider = services.BuildServiceProvider();
+            servicePprovider.EnsureProcessEngineInit();
+
+            services.AddSpringCoreService(servicePprovider.GetService<ILoggerFactory>());
 
             return services;
         }

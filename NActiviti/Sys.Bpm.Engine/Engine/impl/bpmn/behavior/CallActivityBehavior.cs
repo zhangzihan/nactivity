@@ -189,7 +189,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
         // Allow subclass to determine which version of a process to start.
         protected internal virtual IProcessDefinition findProcessDefinition(string processDefinitionKey, string tenantId)
         {
-            if (string.ReferenceEquals(tenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
+            if (ReferenceEquals(tenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
             {
                 return Context.ProcessEngineConfiguration.DeploymentManager.findDeployedLatestProcessDefinitionByKey(processDefinitionKey);
             }

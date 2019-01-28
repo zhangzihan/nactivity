@@ -32,7 +32,7 @@ namespace org.activiti.validation.validator.impl
                         {
                             if (bpmnModel.getMessage(operation.InMessageRef) == null)
                             {
-                                addError(errors, org.activiti.validation.validator.Problems_Fields.OPERATION_INVALID_IN_MESSAGE_REFERENCE, null, operation, "Invalid inMessageRef for operation");
+                                addError(errors, Problems_Fields.OPERATION_INVALID_IN_MESSAGE_REFERENCE, null, operation, "Invalid inMessageRef for operation");
                             }
                         }
                     }

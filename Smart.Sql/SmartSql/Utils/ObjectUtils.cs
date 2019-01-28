@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -13,6 +14,15 @@ namespace SmartSql.Utils
 
         public static Dictionary<string, object> ToDictionary(object sourceObj, bool ignorePropNameCase)
         {
+            if (sourceObj is IDictionary s)
+            {
+                Dictionary<string, object> dict = ignorePropNameCase ? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) : new Dictionary<string, object>();
+                foreach(var key in s.Keys)
+                {
+                    dict.Add(key.ToString(), s[key]);
+                }
+                return dict;
+            }
             var dicConvert = GetDictionaryConvert(sourceObj.GetType(), ignorePropNameCase);
             return dicConvert(sourceObj);
         }

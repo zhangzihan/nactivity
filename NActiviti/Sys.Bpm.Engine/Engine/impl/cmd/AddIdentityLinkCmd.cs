@@ -47,17 +47,17 @@ namespace org.activiti.engine.impl.cmd
 
         protected internal virtual void validateParams(string taskId, string identityId, int identityIdType, string identityType)
         {
-            if (string.ReferenceEquals(taskId, null))
+            if (ReferenceEquals(taskId, null))
             {
                 throw new ActivitiIllegalArgumentException("taskId is null");
             }
 
-            if (string.ReferenceEquals(identityType, null))
+            if (ReferenceEquals(identityType, null))
             {
                 throw new ActivitiIllegalArgumentException("type is required when adding a new task identity link");
             }
 
-            if (string.ReferenceEquals(identityId, null) && (identityIdType == IDENTITY_GROUP || (!IdentityLinkType.ASSIGNEE.Equals(identityType) && !IdentityLinkType.OWNER.Equals(identityType))))
+            if (ReferenceEquals(identityId, null) && (identityIdType == IDENTITY_GROUP || (!IdentityLinkType.ASSIGNEE.Equals(identityType) && !IdentityLinkType.OWNER.Equals(identityType))))
             {
 
                 throw new ActivitiIllegalArgumentException("identityId is null");
@@ -75,7 +75,7 @@ namespace org.activiti.engine.impl.cmd
             if (IdentityLinkType.ASSIGNEE.Equals(identityType))
             {
                 commandContext.TaskEntityManager.changeTaskAssignee(task, identityId);
-                assignedToNoOne = string.ReferenceEquals(identityId, null);
+                assignedToNoOne = ReferenceEquals(identityId, null);
             }
             else if (IdentityLinkType.OWNER.Equals(identityType))
             {

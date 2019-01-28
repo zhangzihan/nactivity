@@ -38,10 +38,12 @@ namespace org.activiti.cloud.services.rest.controllers
 
         private readonly TaskVariableResourceAssembler variableResourceBuilder;
 
-        public TaskVariableControllerImpl(ProcessEngineWrapper processEngine, ITaskService taskService, TaskVariableResourceAssembler variableResourceBuilder)
+        public TaskVariableControllerImpl(ProcessEngineWrapper processEngine,
+            IProcessEngine engine, 
+            TaskVariableResourceAssembler variableResourceBuilder)
         {
             this.processEngine = processEngine;
-            this.taskService = taskService;
+            this.taskService = engine.TaskService;
             this.variableResourceBuilder = variableResourceBuilder;
         }
 

@@ -16,9 +16,10 @@ using System.Threading;
  */
 namespace org.activiti.engine.impl.asyncexecutor
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
+    using Sys;
 
     /// <summary>
     /// Runnable that checks the <seealso cref="IJob"/> entities periodically for 'expired' jobs.
@@ -33,7 +34,7 @@ namespace org.activiti.engine.impl.asyncexecutor
     /// </summary>
     public class ResetExpiredJobsRunnable
     {
-        //private static Logger log = LoggerFactory.getLogger(typeof(ResetExpiredJobsRunnable));
+        private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<ResetExpiredJobsRunnable>();
 
         protected internal readonly IAsyncExecutor asyncExecutor;
 
@@ -53,8 +54,8 @@ namespace org.activiti.engine.impl.asyncexecutor
         {
             lock (this)
             {
-                //log.info("{} starting to reset expired jobs");
                 Thread.CurrentThread.Name = "activiti-reset-expired-jobs";
+                log.LogInformation($"{Thread.CurrentThread.Name} starting to reset expired jobs");
 
                 while (!isInterrupted)
                 {
@@ -72,24 +73,22 @@ namespace org.activiti.engine.impl.asyncexecutor
                         {
                             asyncExecutor.ProcessEngineConfiguration.CommandExecutor.execute(new ResetExpiredJobsCmd(expiredJobIds));
                         }
-
                     }
                     catch (Exception e)
                     {
-                        //if (e is ActivitiOptimisticLockingException)
-                        //{
-                        //    log.debug("Optmistic lock exception while resetting locked jobs", e);
-                        //}
-                        //else
-                        //{
-                        //    log.error("exception during resetting expired jobs", e.Message, e);
-                        //}
+                        if (e is ActivitiOptimisticLockingException)
+                        {
+                            log.LogDebug($"Optmistic lock exception while resetting locked jobs {e.Message}");
+                        }
+                        else
+                        {
+                            log.LogError($"exception during resetting expired jobs {e.Message}");
+                        }
                     }
 
                     // Sleep
                     try
                     {
-
                         lock (MONITOR)
                         {
                             if (!isInterrupted)
@@ -98,14 +97,13 @@ namespace org.activiti.engine.impl.asyncexecutor
                                 Monitor.Wait(MONITOR, TimeSpan.FromMilliseconds(asyncExecutor.ResetExpiredJobsInterval));
                             }
                         }
-
                     }
                     catch (ThreadInterruptedException)
                     {
-                        //if (log.DebugEnabled)
-                        //{
-                        //    log.debug("async reset expired jobs wait interrupted");
-                        //}
+                        if (log.IsEnabled(LogLevel.Debug))
+                        {
+                            log.LogDebug("async reset expired jobs wait interrupted");
+                        }
                     }
                     finally
                     {
@@ -114,7 +112,7 @@ namespace org.activiti.engine.impl.asyncexecutor
 
                 }
 
-                //log.info("{} stopped resetting expired jobs");
+                log.LogInformation("stopped resetting expired jobs");
             }
         }
 

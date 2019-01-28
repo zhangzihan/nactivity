@@ -18,6 +18,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -60,7 +61,92 @@ namespace Activiti
 
             //testModel();
 
-            testEngine(args);
+            //testEngine(args);
+
+            host = new HostBuilder()
+                .ConfigureHostConfiguration(cfg =>
+                {
+                    cfg.AddEnvironmentVariables();
+                    cfg.AddJsonFile("appsettings.json", optional: true);
+                    cfg.AddCommandLine(args);
+                })
+                .ConfigureLogging((hostctx, cfg) =>
+                {
+                    cfg.Services.AddLogging();
+                    DebugLoggerFactoryExtensions.AddDebug(cfg)
+                        .AddConsole(opts =>
+                        {
+                        });
+
+                    //cfg.Services.AddSingleton<ILoggerFactory>(lf);
+                })
+                .ConfigureAppConfiguration((hostctx, cfg) =>
+                {
+                    cfg.AddJsonFile($"appsettings.{hostctx.HostingEnvironment.EnvironmentName}.json");
+                    cfg.AddJsonFile("activiti.cfg.json");
+                    cfg.AddCommandLine(args);
+                })
+                .ConfigureServices((hostctx, services) =>
+                {
+                    services.AddSingleton<LogManager>();
+
+                    services.AddLogging();
+
+                    services.AddProcessEngine();
+                })
+                .UseConsoleLifetime()
+                .Build();
+            var dic = new Dictionary<string, object>();
+
+            dic.Add("name", "http://event.31huiyi.com/manage/test3");
+            var dics=new Dictionary<string, object>();
+
+            dics.Add("name", dic);
+
+
+            string json = "{name:${name.name},isTecher:${isTecher}}";
+
+            json = GetValue(json);
+
+            var ss = Sys.Expressions.ExpressionManager.GetValue(dics, json, dics).ToString();
+        }
+
+        public static string GetValue(string expstr)
+        {
+            Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
+            List<string> sb = new List<string>();
+            if (EXPR_PATTERN.IsMatch(expstr))
+            {
+                EXPR_PATTERN.Replace(expstr, (m) =>
+                {
+                    if (sb.Count == 0 && m.Index > 0)
+                    {
+                        sb.Add($"'{expstr.Substring(0, m.Index)}'");
+                    }
+                    var r = m.Result("$1");
+                    sb.Add(r);
+                    var nm = m.NextMatch();
+                    if (nm.Success)
+                    {
+                        sb.Add($"'{expstr.Substring(m.Index + m.Length, nm.Index - (m.Index + m.Length))}'");
+                    }
+                    else
+                    {
+                        if (expstr.Length > (m.Index + m.Length))
+                        {
+                            sb.Add($"'{expstr.Substring(m.Index + m.Length, expstr.Length - m.Index - m.Length)}'");
+                        }
+                    }
+                    return r;
+                });
+                return string.Join("+", sb); ;
+            }
+            else
+            {
+                return expstr;
+            }
+
+            return null;
         }
 
         static void testXmlElement()
@@ -272,7 +358,7 @@ namespace Activiti
 
             for (var idx = 0; idx < ts; idx++)
             {
-                tss.Add(System.Threading.Tasks.Task.Factory.StartNew((i) =>
+                tss.Add(Task.Factory.StartNew((i) =>
                 {
                     try
                     {
@@ -284,10 +370,10 @@ namespace Activiti
                         //.taskAssignee("Kermit").list();
                         if (tasks.Count == 0)
                         {
-                            System.Console.WriteLine($"任务没有开始{i}");
+                            Console.WriteLine($"任务没有开始{i}");
                             return;
                         }
-                        System.Console.WriteLine($"任务开始{i}");
+                        Console.WriteLine($"任务开始{i}");
                         //foreach (ITaskEntity task in tasks)
                         //{
                         //    Console.WriteLine("Task available: " + task.Name);
@@ -315,11 +401,11 @@ namespace Activiti
                 }, idx));
             }
 
-            System.Threading.Tasks.Task.WaitAll(tss.ToArray());
+            Task.WaitAll(tss.ToArray());
 
             if (failed > 0)
             {
-                System.Console.Write($"Failed {failed}");
+                Console.Write($"Failed {failed}");
             }
         }
 

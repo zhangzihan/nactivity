@@ -165,7 +165,7 @@ namespace org.activiti.engine.impl.@event.logger
         {
             try
             {
-                IEventLoggerEventHandler eventHandler = System.Activator.CreateInstance(eventHandlerClass) as IEventLoggerEventHandler;
+                IEventLoggerEventHandler eventHandler = Activator.CreateInstance(eventHandlerClass) as IEventLoggerEventHandler;
                 eventHandler.TimeStamp = clock.CurrentTime;
                 eventHandler.Event = @event;
                 eventHandler.ObjectMapper = objectMapper;

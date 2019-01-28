@@ -130,8 +130,8 @@ namespace Spring.Expressions
         /// </summary>
         protected SpringAST(SerializationInfo info, StreamingContext context)
         {
-            base.down = (BaseAST)info.GetValue("down", typeof(BaseAST));
-            base.right = (BaseAST)info.GetValue("right", typeof(BaseAST));
+            down = (BaseAST)info.GetValue("down", typeof(BaseAST));
+            right = (BaseAST)info.GetValue("right", typeof(BaseAST));
             this.ttype = info.GetInt32("ttype");
             this.text = info.GetString("text");
         }
@@ -141,8 +141,8 @@ namespace Spring.Expressions
         /// </summary>
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("down", base.down, typeof(SpringAST));
-            info.AddValue("right", base.right, typeof(SpringAST));
+            info.AddValue("down", down, typeof(SpringAST));
+            info.AddValue("right", right, typeof(SpringAST));
             info.AddValue("ttype", this.Type, typeof(int));
             info.AddValue("text", this.Text, typeof(string));
         }

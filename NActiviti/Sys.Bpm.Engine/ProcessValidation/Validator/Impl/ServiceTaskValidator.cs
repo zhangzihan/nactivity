@@ -39,7 +39,7 @@ namespace org.activiti.validation.validator.impl
         {
             if (!ImplementationType.IMPLEMENTATION_TYPE_CLASS.Equals(serviceTask.ImplementationType, StringComparison.CurrentCultureIgnoreCase) && !ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(serviceTask.ImplementationType, StringComparison.CurrentCultureIgnoreCase) && !ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION.Equals(serviceTask.ImplementationType, StringComparison.CurrentCultureIgnoreCase) && !ImplementationType.IMPLEMENTATION_TYPE_WEBSERVICE.Equals(serviceTask.ImplementationType, StringComparison.CurrentCultureIgnoreCase) && string.IsNullOrWhiteSpace(serviceTask.Type) && string.IsNullOrWhiteSpace(serviceTask.Implementation))
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.SERVICE_TASK_MISSING_IMPLEMENTATION, process, serviceTask, "One of the attributes 'implementation', 'class', 'delegateExpression', 'type', 'operation', or 'expression' is mandatory on serviceTask.");
+                addError(errors, Problems_Fields.SERVICE_TASK_MISSING_IMPLEMENTATION, process, serviceTask, "One of the attributes 'implementation', 'class', 'delegateExpression', 'type', 'operation', or 'expression' is mandatory on serviceTask.");
             }
         }
 
@@ -51,7 +51,7 @@ namespace org.activiti.validation.validator.impl
                 if (!serviceTask.Type.Equals("mail", StringComparison.CurrentCultureIgnoreCase) && !serviceTask.Type.Equals("mule", StringComparison.CurrentCultureIgnoreCase) && !serviceTask.Type.Equals("camel", StringComparison.CurrentCultureIgnoreCase) && !serviceTask.Type.Equals("shell", StringComparison.CurrentCultureIgnoreCase) && !serviceTask.Type.Equals("dmn", StringComparison.CurrentCultureIgnoreCase))
                 {
 
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.SERVICE_TASK_INVALID_TYPE, process, serviceTask, "Invalid or unsupported service task type");
+                    addError(errors, Problems_Fields.SERVICE_TASK_INVALID_TYPE, process, serviceTask, "Invalid or unsupported service task type");
                 }
 
                 if (serviceTask.Type.Equals("mail", StringComparison.CurrentCultureIgnoreCase))
@@ -74,7 +74,7 @@ namespace org.activiti.validation.validator.impl
         {
             if (!string.IsNullOrWhiteSpace(serviceTask.ResultVariableName) && (ImplementationType.IMPLEMENTATION_TYPE_CLASS.Equals(serviceTask.ImplementationType) || ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(serviceTask.ImplementationType)))
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.SERVICE_TASK_RESULT_VAR_NAME_WITH_DELEGATE, process, serviceTask, "'resultVariableName' not supported for service tasks using 'class' or 'delegateExpression");
+                addError(errors, Problems_Fields.SERVICE_TASK_RESULT_VAR_NAME_WITH_DELEGATE, process, serviceTask, "'resultVariableName' not supported for service tasks using 'class' or 'delegateExpression");
             }
         }
 
@@ -92,7 +92,7 @@ namespace org.activiti.validation.validator.impl
                         {
                             foreach (Operation operation in bpmnInterface.Operations)
                             {
-                                if (!string.ReferenceEquals(operation.Id, null) && operation.Id.Equals(serviceTask.OperationRef))
+                                if (!ReferenceEquals(operation.Id, null) && operation.Id.Equals(serviceTask.OperationRef))
                                 {
                                     operationFound = true;
                                 }
@@ -103,7 +103,7 @@ namespace org.activiti.validation.validator.impl
 
                 if (!operationFound)
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.SERVICE_TASK_WEBSERVICE_INVALID_OPERATION_REF, process, serviceTask, "Invalid operation reference");
+                    addError(errors, Problems_Fields.SERVICE_TASK_WEBSERVICE_INVALID_OPERATION_REF, process, serviceTask, "Invalid operation reference");
                 }
 
             }

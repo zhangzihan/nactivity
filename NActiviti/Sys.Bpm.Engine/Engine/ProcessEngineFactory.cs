@@ -17,6 +17,7 @@ namespace org.activiti.engine
 {
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl;
+    using org.activiti.engine.impl.cfg;
     using Sys;
     using System.Collections.Concurrent;
 
@@ -145,7 +146,7 @@ namespace org.activiti.engine
         {
             try
             {
-                ProcessEngineConfiguration engineConfig = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>();
+                ProcessEngineConfigurationImpl engineConfig = ProcessEngineServiceProvider.Resolve<ProcessEngineConfigurationImpl>();
 
                 return engineConfig.buildProcessEngine();
             }
@@ -250,7 +251,7 @@ namespace org.activiti.engine
                         }
                         catch (Exception e)
                         {
-                            log.LogError(e, $"exception while closing {(string.ReferenceEquals(processEngineName, null) ? "the default process engine" : "process engine " + processEngineName)}");
+                            log.LogError(e, $"exception while closing {(ReferenceEquals(processEngineName, null) ? "the default process engine" : "process engine " + processEngineName)}");
                         }
                     }
 

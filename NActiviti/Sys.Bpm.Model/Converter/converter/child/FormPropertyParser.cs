@@ -69,7 +69,7 @@ namespace org.activiti.bpmn.converter.child
                 {
                     //xtr.next();
 
-                    if (xtr.StartElement && BpmnXMLConstants.ELEMENT_VALUE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                    if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_VALUE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         FormValue value = new FormValue();
                         BpmnXMLUtil.addXMLLocation(value, xtr);

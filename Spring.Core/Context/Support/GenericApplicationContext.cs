@@ -133,7 +133,7 @@ namespace Spring.Context.Support
         {
             AssertUtils.ArgumentNotNull(objectFactory, "objectFactory", "ObjectFactory must not be null");
             this.objectFactory = objectFactory;
-            this.objectFactory.ParentObjectFactory = base.GetInternalParentObjectFactory();
+            this.objectFactory.ParentObjectFactory = GetInternalParentObjectFactory();
         }
 
         /// <summary>

@@ -33,7 +33,7 @@ namespace org.activiti.engine.impl.@event
         {
             get
             {
-                return org.activiti.engine.impl.persistence.entity.CompensateEventSubscriptionEntity_Fields.EVENT_TYPE;
+                return CompensateEventSubscriptionEntity_Fields.EVENT_TYPE;
             }
         }
 
@@ -41,7 +41,7 @@ namespace org.activiti.engine.impl.@event
         {
 
             string configuration = eventSubscription.Configuration;
-            if (string.ReferenceEquals(configuration, null))
+            if (ReferenceEquals(configuration, null))
             {
                 throw new ActivitiException("Compensating execution not set for compensate event subscription with id " + eventSubscription.Id);
             }

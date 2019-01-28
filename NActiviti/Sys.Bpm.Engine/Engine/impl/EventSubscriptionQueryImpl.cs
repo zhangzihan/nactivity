@@ -44,7 +44,7 @@ namespace org.activiti.engine.impl
 
         public virtual EventSubscriptionQueryImpl eventSubscriptionId(string eventSubscriptionId)
         {
-            if (string.ReferenceEquals(eventSubscriptionId, null))
+            if (ReferenceEquals(eventSubscriptionId, null))
             {
                 throw new ActivitiIllegalArgumentException("Provided event subscription id is null");
             }
@@ -54,7 +54,7 @@ namespace org.activiti.engine.impl
 
         public virtual EventSubscriptionQueryImpl eventName(string eventName)
         {
-            if (string.ReferenceEquals(eventName, null))
+            if (ReferenceEquals(eventName, null))
             {
                 throw new ActivitiIllegalArgumentException("Provided event name is null");
             }
@@ -64,7 +64,7 @@ namespace org.activiti.engine.impl
 
         public virtual EventSubscriptionQueryImpl executionId(string executionId)
         {
-            if (string.ReferenceEquals(executionId, null))
+            if (ReferenceEquals(executionId, null))
             {
                 throw new ActivitiIllegalArgumentException("Provided execution id is null");
             }
@@ -74,7 +74,7 @@ namespace org.activiti.engine.impl
 
         public virtual EventSubscriptionQueryImpl processInstanceId(string processInstanceId)
         {
-            if (string.ReferenceEquals(processInstanceId, null))
+            if (ReferenceEquals(processInstanceId, null))
             {
                 throw new ActivitiIllegalArgumentException("Provided process instance id is null");
             }
@@ -84,7 +84,7 @@ namespace org.activiti.engine.impl
 
         public virtual EventSubscriptionQueryImpl activityId(string activityId)
         {
-            if (string.ReferenceEquals(activityId, null))
+            if (ReferenceEquals(activityId, null))
             {
                 throw new ActivitiIllegalArgumentException("Provided activity id is null");
             }
@@ -94,7 +94,7 @@ namespace org.activiti.engine.impl
 
         public virtual EventSubscriptionQueryImpl eventType(string eventType)
         {
-            if (string.ReferenceEquals(eventType, null))
+            if (ReferenceEquals(eventType, null))
             {
                 throw new ActivitiIllegalArgumentException("Provided event type is null");
             }

@@ -27,6 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="hosting.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="activiti.cfg.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

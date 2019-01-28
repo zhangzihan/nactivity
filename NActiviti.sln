@@ -33,7 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "说明", "说明", "{4E99C3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BpmnTest", "NActiviti\BpmnTest\BpmnTest.csproj", "{D9769C7A-D75F-49A9-9A78-999A60DBDE24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BpmnWebApiTest", "BpmnWebTest\BpmnWebApiTest.csproj", "{2A0BFD7B-4737-4932-B937-83F7958703F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BpmnWebApiTest", "BpmnWebTest\BpmnWebApiTest.csproj", "{2A0BFD7B-4737-4932-B937-83F7958703F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

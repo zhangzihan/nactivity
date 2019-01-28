@@ -36,7 +36,7 @@ namespace org.activiti.engine.impl.cmd
 
         public  virtual T  execute(ICommandContext  commandContext)
         {
-            if (string.ReferenceEquals(executionId, null))
+            if (ReferenceEquals(executionId, null))
             {
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }

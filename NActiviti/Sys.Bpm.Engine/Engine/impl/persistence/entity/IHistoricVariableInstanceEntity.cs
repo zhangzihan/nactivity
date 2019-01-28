@@ -43,7 +43,6 @@ namespace org.activiti.engine.impl.persistence.entity
 
 
         ByteArrayRef ByteArrayRef { get; }
-
     }
 
 }

@@ -37,7 +37,7 @@ namespace org.activiti.engine.impl.cmd
 
         public virtual IList<string> execute(ICommandContext commandContext)
         {
-            if (string.ReferenceEquals(executionId, null))
+            if (ReferenceEquals(executionId, null))
             {
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }
@@ -62,7 +62,7 @@ namespace org.activiti.engine.impl.cmd
 
         protected internal virtual void collectActiveActivityIds(IExecutionEntity executionEntity, IList<string> activeActivityIds)
         {
-            if (executionEntity.IsActive && !string.ReferenceEquals(executionEntity.ActivityId, null))
+            if (executionEntity.IsActive && !ReferenceEquals(executionEntity.ActivityId, null))
             {
                 activeActivityIds.Add(executionEntity.ActivityId);
             }

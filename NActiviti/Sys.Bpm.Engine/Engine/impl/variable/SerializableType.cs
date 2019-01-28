@@ -14,13 +14,15 @@
  */
 namespace org.activiti.engine.impl.variable
 {
-
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Bson;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
     using System.IO;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
+    using System.Text;
 
     /// 
     /// 
@@ -94,13 +96,26 @@ namespace org.activiti.engine.impl.variable
             {
                 return null;
             }
-            System.IO.MemoryStream baos = new System.IO.MemoryStream();
-            BinaryFormatter oos = null;
+
+            //MemoryStream ms = new MemoryStream();
+            //BsonDataWriter bson = createObjectOutputStream(ms);
+
+            //byte[] bytes = null;
+
             try
             {
-                oos = createObjectOutputStream();
 
-                oos.Serialize(baos, value);
+                //JsonSerializer serializer = JsonSerializer.Create();
+
+                string json = JsonConvert.SerializeObject(value, new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    TypeNameHandling = TypeNameHandling.All
+                });
+
+                return Encoding.UTF8.GetBytes(json);
+                //serializer.Serialize(bson, value);
+                //ms.Seek(0, SeekOrigin.Begin);
             }
             catch (Exception e)
             {
@@ -108,18 +123,25 @@ namespace org.activiti.engine.impl.variable
             }
             finally
             {
-                IoUtil.closeSilently(baos);
+               // bson.Close();
+                //IoUtil.closeSilently(ms);
             }
-            return baos.ToArray();
+            //return ms.ToArray();
         }
 
         public virtual object deserialize(byte[] bytes, IValueFields valueFields)
         {
-            System.IO.MemoryStream bais = new System.IO.MemoryStream(bytes);
+            //MemoryStream bais = new MemoryStream(bytes);
+            //BsonDataReader bson = createObjectInputStream(bais);
+
             try
             {
-                BinaryFormatter ois = new BinaryFormatter();
-                object deserializedObject = ois.Deserialize(new MemoryStream(bytes));
+                string value = Encoding.UTF8.GetString(bytes);
+                object deserializedObject = JsonConvert.DeserializeObject(value, new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    TypeNameHandling = TypeNameHandling.All
+                });
 
                 return deserializedObject;
             }
@@ -129,7 +151,7 @@ namespace org.activiti.engine.impl.variable
             }
             finally
             {
-                IoUtil.closeSilently(bais);
+                //IoUtil.closeSilently(bais);
             }
         }
 
@@ -140,10 +162,9 @@ namespace org.activiti.engine.impl.variable
             return true;
         }
 
-        protected internal virtual Stream createObjectInputStream(System.IO.Stream @is)
+        protected internal virtual BsonDataReader createObjectInputStream(Stream stream)
         {
-            throw new NotImplementedException();
-            //return new ObjectInputStreamAnonymousInnerClass(this, @is);
+            return new BsonDataReader(stream);
         }
 
         //private class ObjectInputStreamAnonymousInnerClass
@@ -164,9 +185,9 @@ namespace org.activiti.engine.impl.variable
         //    }
         //}
 
-        protected internal virtual BinaryFormatter createObjectOutputStream()
+        protected internal virtual BsonDataWriter createObjectOutputStream(MemoryStream ms)
         {
-            return new BinaryFormatter();
+            return new BsonDataWriter(ms);
         }
     }
 

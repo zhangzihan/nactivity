@@ -54,7 +54,7 @@ namespace org.activiti.engine.impl.cmd
                 if (commandContext.EventDispatcher.Enabled)
                 {
                     commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TASK_CREATED, task));
-                    if (!string.ReferenceEquals(task.Assignee, null))
+                    if (!ReferenceEquals(task.Assignee, null))
                     {
                         commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TASK_ASSIGNED, task));
                     }
@@ -127,7 +127,7 @@ namespace org.activiti.engine.impl.cmd
 
                 if (originalOwner != task.Owner)
                 {
-                    if (!string.ReferenceEquals(task.ProcessInstanceId, null))
+                    if (!ReferenceEquals(task.ProcessInstanceId, null))
                     {
                         commandContext.IdentityLinkEntityManager.involveUser(task.ProcessInstance, task.Owner, IdentityLinkType.PARTICIPANT);
                     }
@@ -135,7 +135,7 @@ namespace org.activiti.engine.impl.cmd
                 }
                 if (originalAssignee != task.Assignee)
                 {
-                    if (!string.ReferenceEquals(task.ProcessInstanceId, null))
+                    if (!ReferenceEquals(task.ProcessInstanceId, null))
                     {
                         commandContext.IdentityLinkEntityManager.involveUser(task.ProcessInstance, task.Assignee, IdentityLinkType.PARTICIPANT);
                     }

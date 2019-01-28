@@ -15,6 +15,7 @@ namespace org.activiti.engine.impl.variable
 
     using org.activiti.engine.impl.persistence.entity;
     using System;
+    using System.Collections;
 
     /// 
     /// 
@@ -40,14 +41,14 @@ namespace org.activiti.engine.impl.variable
             if (deserializedObject == variableInstanceEntity.CachedValue && !variableInstanceEntity.Deleted)
             {
                 byte[] bytes = type.serialize(deserializedObject, variableInstanceEntity);
-                if (!Array.Equals(originalBytes, bytes))
+                if (!StructuralComparisons.StructuralEqualityComparer.Equals(originalBytes, bytes))
                 {
 
                     // Add an additional check to prevent byte differences due to JDK changes etc
                     object originalObject = type.deserialize(originalBytes, variableInstanceEntity);
                     byte[] refreshedOriginalBytes = type.serialize(originalObject, variableInstanceEntity);
 
-                    if (!Array.Equals(refreshedOriginalBytes, bytes))
+                    if (!StructuralComparisons.StructuralEqualityComparer.Equals(refreshedOriginalBytes, bytes))
                     {
                         variableInstanceEntity.Bytes = bytes;
                     }

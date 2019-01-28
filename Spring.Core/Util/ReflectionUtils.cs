@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -150,7 +150,7 @@ namespace Spring.Util
             
             MethodInfo retMethod = null;
 
-            MethodInfo[] methods = targetType.GetMethods(ReflectionUtils.AllMembersCaseInsensitiveFlags);
+            MethodInfo[] methods = targetType.GetMethods(AllMembersCaseInsensitiveFlags);
 
             foreach (MethodInfo candidate in methods)
             {
@@ -198,7 +198,7 @@ namespace Spring.Util
                 if (idx > -1)
                 {
                     method = method.Substring(idx + 1);
-                    retMethod = ReflectionUtils.GetMethod(targetType, method, argumentTypes);
+                    retMethod = GetMethod(targetType, method, argumentTypes);
                 }
             }
             return retMethod;
@@ -742,7 +742,7 @@ namespace Spring.Util
             #endregion
 
             Type[] candidatesParameterTypes
-                = ReflectionUtils.GetParameterTypes(candidate);
+                = GetParameterTypes(candidate);
             if (candidatesParameterTypes.Length != parameterTypes.Length)
             {
                 return false;
@@ -862,8 +862,8 @@ namespace Spring.Util
             AssertUtils.ArgumentNotNull(name, "name", "Method name must not be null");
             MemberInfo[] methods = type.FindMembers(
                 MemberTypes.Method,
-                ReflectionUtils.AllMembersCaseInsensitiveFlags,
-                new MemberFilter(ReflectionUtils.MethodNameFilter),
+                AllMembersCaseInsensitiveFlags,
+                new MemberFilter(MethodNameFilter),
                 name);
             return methods.Length;
         }
@@ -922,7 +922,7 @@ namespace Spring.Util
 
             #endregion
 
-            ConstructorInfo ci = type.GetConstructor(ReflectionUtils.GetTypes(ctorArgs));
+            ConstructorInfo ci = type.GetConstructor(GetTypes(ctorArgs));
             if (ci == null && ctorArgs.Length == 0)
             {
                 ci = type.GetConstructors()[0];
@@ -1302,7 +1302,7 @@ namespace Spring.Util
             for (int i = 0; i < methods.Length; i++)
             {
                 MethodInfo method = methods[i];
-                MethodInfo match = type.GetMethod(method.Name, flags, null, ReflectionUtils.GetParameterTypes(method), null);
+                MethodInfo match = type.GetMethod(method.Name, flags, null, GetParameterTypes(method), null);
                 if ((match == null || match.ReturnType != method.ReturnType) && strict)
                 {
                     throw new Exception(
@@ -1763,11 +1763,11 @@ namespace Spring.Util
             public CustomAttributeBuilder Build()
             {
                 object[] caArray = (object[])this.constructorArgs.ToArray(typeof(object));
-                ConstructorInfo ci = this.type.GetConstructor(ReflectionUtils.GetTypes(caArray));
+                ConstructorInfo ci = this.type.GetConstructor(GetTypes(caArray));
                 if (ci == null && caArray.Length == 0)
                 {
                     ci = this.type.GetConstructors()[0];
-                    caArray = ReflectionUtils.GetDefaultValues(ReflectionUtils.GetParameterTypes(ci.GetParameters()));
+                    caArray = GetDefaultValues(GetParameterTypes(ci.GetParameters()));
                 }
 
                 if (namedProperties.Count > 0)

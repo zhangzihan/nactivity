@@ -37,7 +37,7 @@ namespace org.activiti.engine.impl.persistence.entity
         protected internal string processInstanceId;
         protected internal string processDefinitionId;
 
-        protected internal bool isExclusive = org.activiti.engine.runtime.Job_Fields.DEFAULT_EXCLUSIVE;
+        protected internal bool isExclusive = engine.runtime.Job_Fields.DEFAULT_EXCLUSIVE;
 
         protected internal int retries;
 
@@ -312,7 +312,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         protected internal virtual byte[] getUtf8Bytes(string str)
         {
-            if (string.ReferenceEquals(str, null))
+            if (ReferenceEquals(str, null))
             {
                 return null;
             }

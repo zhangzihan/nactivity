@@ -60,7 +60,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual void deleteHistoricActivityInstancesByProcessInstanceId(string historicProcessInstanceId)
         {
-            DbSqlSession.delete("deleteHistoricActivityInstancesByProcessInstanceId", new KeyValuePair<string, object>("historicProcessInstanceId", historicProcessInstanceId), typeof(HistoricActivityInstanceEntityImpl));
+            DbSqlSession.delete("deleteHistoricActivityInstancesByProcessInstanceId", new { historicProcessInstanceId }, typeof(HistoricActivityInstanceEntityImpl));
         }
 
         public virtual long findHistoricActivityInstanceCountByQueryCriteria(IHistoricActivityInstanceQuery historicActivityInstanceQuery)

@@ -13,10 +13,26 @@
       height: 100%;
     }
 
-    #js-download-diagram {
+    .btn-save {
       position: absolute;
       bottom: 10px;
       left: 10px;
+    }
+
+    .btn-code {
+      position: absolute;
+      bottom: 10px;
+      left: 170px;
+    }
+
+    .btn-deploy {
+      position: absolute;
+      bottom: 10px;
+      left: 90px;
+    }
+
+    #js-properties-panel {
+      background: white;
     }
 
   </style>
@@ -24,8 +40,14 @@
     <div class="canvas" id="js-canvas"></div>
     <div class="properties-panel-parent" id="js-properties-panel"></div>
 
-    <button id="js-download-diagram" class="btn btn-primary" title="download BPMN diagram" click.trigger="saveBpmn($event)">
+    <button class="btn btn-primary btn-deploy" title="deploy BPMN" click.trigger="deploy($event)">
       部署
+    </button>
+    <button class="btn btn-primary btn-save" title="download BPMN diagram" click.trigger="saveBpmn($event)">
+      保存
+    </button>
+    <button class="btn btn-primary btn-code" title="show BPMN XML" click.trigger="showBpmnXml($event)">
+      CODE
     </button>
   </div>
 </template>

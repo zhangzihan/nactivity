@@ -123,14 +123,14 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
                             // end all executions in the scope of the transaction
                             executionsToDelete.Add(multiInstanceExecution);
-                            deleteChildExecutions(multiInstanceExecution, executionEntity, commandContext, org.activiti.engine.history.DeleteReason_Fields.TRANSACTION_CANCELED);
+                            deleteChildExecutions(multiInstanceExecution, executionEntity, commandContext, engine.history.DeleteReason_Fields.TRANSACTION_CANCELED);
 
                         }
                     }
 
                     foreach (IExecutionEntity executionEntityToDelete in executionsToDelete)
                     {
-                        deleteChildExecutions(executionEntityToDelete, executionEntity, commandContext, org.activiti.engine.history.DeleteReason_Fields.TRANSACTION_CANCELED);
+                        deleteChildExecutions(executionEntityToDelete, executionEntity, commandContext, engine.history.DeleteReason_Fields.TRANSACTION_CANCELED);
                     }
                 }
 
@@ -142,8 +142,8 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 executionEntity.CurrentFlowElement = cancelBoundaryEvent;
 
                 // end all executions in the scope of the transaction
-                deleteChildExecutions(parentScopeExecution, executionEntity, commandContext, org.activiti.engine.history.DeleteReason_Fields.TRANSACTION_CANCELED);
-                commandContext.HistoryManager.recordActivityEnd(parentScopeExecution, org.activiti.engine.history.DeleteReason_Fields.TRANSACTION_CANCELED);
+                deleteChildExecutions(parentScopeExecution, executionEntity, commandContext, engine.history.DeleteReason_Fields.TRANSACTION_CANCELED);
+                commandContext.HistoryManager.recordActivityEnd(parentScopeExecution, engine.history.DeleteReason_Fields.TRANSACTION_CANCELED);
 
                 Context.Agenda.planTriggerExecutionOperation(executionEntity);
             }

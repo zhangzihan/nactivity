@@ -55,7 +55,7 @@ namespace org.activiti.engine.impl.cmd
         public  virtual IProcessInstance  execute(ICommandContext  commandContext)
         {
 
-            if (string.ReferenceEquals(messageName, null))
+            if (ReferenceEquals(messageName, null))
             {
                 throw new ActivitiIllegalArgumentException("Cannot start process instance by message: message name is null");
             }

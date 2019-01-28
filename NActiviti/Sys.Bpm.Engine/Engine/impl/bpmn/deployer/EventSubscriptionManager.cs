@@ -96,9 +96,10 @@ namespace org.activiti.engine.impl.bpmn.deployer
             foreach (IEventSubscriptionEntity eventSubscriptionEntity in subscriptionsForSameMessageName)
             {
                 // throw exception only if there's already a subscription as start event
-                if (string.ReferenceEquals(eventSubscriptionEntity.ProcessInstanceId, null) || eventSubscriptionEntity.ProcessInstanceId.Length == 0)
-                { // processInstanceId != null or not empty -> it's a message related to an execution
-                  // the event subscription has no instance-id, so it's a message start event
+                if (ReferenceEquals(eventSubscriptionEntity.ProcessInstanceId, null) || eventSubscriptionEntity.ProcessInstanceId.Length == 0)
+                { 
+                    // processInstanceId != null or not empty -> it's a message related to an execution
+                    // the event subscription has no instance-id, so it's a message start event
                     throw new ActivitiException("Cannot deploy process definition '" + processDefinition.ResourceName + "': there already is a message event subscription for the message with name '" + messageEventDefinition.MessageRef + "'.");
                 }
             }
@@ -109,7 +110,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
             newSubscription.Configuration = processDefinition.Id;
             newSubscription.ProcessDefinitionId = processDefinition.Id;
 
-            if (!string.ReferenceEquals(processDefinition.TenantId, null))
+            if (!ReferenceEquals(processDefinition.TenantId, null))
             {
                 newSubscription.TenantId = processDefinition.TenantId;
             }
@@ -144,7 +145,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
                                 }
                                 subscriptionEntity.ActivityId = startEvent.Id;
                                 subscriptionEntity.ProcessDefinitionId = processDefinition.Id;
-                                if (!string.ReferenceEquals(processDefinition.TenantId, null))
+                                if (!ReferenceEquals(processDefinition.TenantId, null))
                                 {
                                     subscriptionEntity.TenantId = processDefinition.TenantId;
                                 }

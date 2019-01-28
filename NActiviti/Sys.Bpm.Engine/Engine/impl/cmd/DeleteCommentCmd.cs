@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.cmd
         {
             ICommentEntityManager commentManager = commandContext.CommentEntityManager;
 
-            if (!string.ReferenceEquals(commentId, null))
+            if (!ReferenceEquals(commentId, null))
             {
                 // Delete for an individual comment
                 IComment comment = commentManager.findComment(commentId);
@@ -49,12 +49,12 @@ namespace org.activiti.engine.impl.cmd
                     throw new ActivitiObjectNotFoundException("Comment with id '" + commentId + "' doesn't exists.", typeof(IComment));
                 }
 
-                if (!string.ReferenceEquals(comment.ProcessInstanceId, null))
+                if (!ReferenceEquals(comment.ProcessInstanceId, null))
                 {
                     IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", comment.ProcessInstanceId));
 
                 }
-                else if (!string.ReferenceEquals(comment.TaskId, null))
+                else if (!ReferenceEquals(comment.TaskId, null))
                 {
                     ITask task = commandContext.TaskEntityManager.findById<ITask>(new KeyValuePair<string, object>("id", comment.TaskId));
                 }
@@ -66,14 +66,14 @@ namespace org.activiti.engine.impl.cmd
             {
                 // Delete all comments on a task of process
                 List<IComment> comments = new List<IComment>();
-                if (!string.ReferenceEquals(processInstanceId, null))
+                if (!ReferenceEquals(processInstanceId, null))
                 {
 
                     IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
 
                     comments.AddRange(commentManager.findCommentsByProcessInstanceId(processInstanceId));
                 }
-                if (!string.ReferenceEquals(taskId, null))
+                if (!ReferenceEquals(taskId, null))
                 {
 
                     ITask task = commandContext.TaskEntityManager.findById<ITask>(new KeyValuePair<string, object>("id", taskId));

@@ -39,7 +39,7 @@ namespace org.activiti.bpmn.converter.parser
             {
                 //xtr.next();
 
-                if (xtr.StartElement && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_BOUNDS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                if (xtr.IsStartElement() && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_BOUNDS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     graphicInfo.X = Convert.ToDouble(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_X));
                     graphicInfo.Y = Convert.ToDouble(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_Y));

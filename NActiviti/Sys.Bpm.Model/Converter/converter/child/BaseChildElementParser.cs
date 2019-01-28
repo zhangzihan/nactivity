@@ -30,7 +30,7 @@ namespace org.activiti.bpmn.converter.child
             while (!readyWithChildElements && xtr.hasNext())
             {
                 //xtr.next();
-                if (xtr.StartElement)
+                if (xtr.IsStartElement())
                 {
                     if (parser.ElementName.Equals(xtr.LocalName))
                     {

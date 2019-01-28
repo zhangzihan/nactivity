@@ -74,7 +74,7 @@ namespace Sys
         {
             propertiesFile.Seek(0, SeekOrigin.Begin);
             var sr = new StreamReader(propertiesFile);
-            JObject props = JObject.Parse(sr.ReadToEnd());
+            JObject props = Parse(sr.ReadToEnd());
             foreach (var prop in props.Properties())
             {
                 this[prop.Path] = prop.Value;

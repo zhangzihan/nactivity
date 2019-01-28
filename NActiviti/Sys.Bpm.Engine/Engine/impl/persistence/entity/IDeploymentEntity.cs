@@ -27,7 +27,9 @@ namespace org.activiti.engine.impl.persistence.entity
 
         void addResource(IResourceEntity resource);
 
-        IDictionary<string, IResourceEntity> Resources { get; set; }
+        IDictionary<string, IResourceEntity> GetResources();
+        
+        void SetResources(IDictionary<string, IResourceEntity> value);
 
         void addDeployedArtifact(object deployedArtifact);
 

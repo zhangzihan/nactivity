@@ -38,11 +38,11 @@ namespace org.activiti.engine.impl.cmd
 
         public  virtual System.IO.Stream  execute(ICommandContext  commandContext)
         {
-            if (string.ReferenceEquals(deploymentId, null))
+            if (ReferenceEquals(deploymentId, null))
             {
                 throw new ActivitiIllegalArgumentException("deploymentId is null");
             }
-            if (string.ReferenceEquals(resourceName, null))
+            if (ReferenceEquals(resourceName, null))
             {
                 throw new ActivitiIllegalArgumentException("resourceName is null");
             }

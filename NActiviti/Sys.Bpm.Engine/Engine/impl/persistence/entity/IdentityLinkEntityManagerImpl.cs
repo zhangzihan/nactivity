@@ -49,7 +49,7 @@ namespace org.activiti.engine.impl.persistence.entity
             base.insert(entity, fireCreateEvent);
             HistoryManager.recordIdentityLinkCreated(entity);
 
-            if (!string.ReferenceEquals(entity.ProcessInstanceId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!ReferenceEquals(entity.ProcessInstanceId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(new KeyValuePair<string, object>("id", entity.ProcessInstanceId));
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))
@@ -67,7 +67,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 HistoryManager.deleteHistoricIdentityLink(identityLink.Id);
             }
 
-            if (!string.ReferenceEquals(identityLink.ProcessInstanceId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!ReferenceEquals(identityLink.ProcessInstanceId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(new KeyValuePair<string, object>("id", identityLink.ProcessInstanceId));
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))
@@ -133,7 +133,7 @@ namespace org.activiti.engine.impl.persistence.entity
             identityLinkEntity.GroupId = groupId;
             identityLinkEntity.Type = type;
             insert(identityLinkEntity);
-            if (!string.ReferenceEquals(userId, null) && !string.ReferenceEquals(taskEntity.ProcessInstanceId, null))
+            if (!ReferenceEquals(userId, null) && !ReferenceEquals(taskEntity.ProcessInstanceId, null))
             {
                 involveUser(taskEntity.ProcessInstance, userId, IdentityLinkType.PARTICIPANT);
             }
@@ -207,7 +207,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public virtual void deleteIdentityLink(IExecutionEntity executionEntity, string userId, string groupId, string type)
         {
-            string id = !string.ReferenceEquals(executionEntity.ProcessInstanceId, null) ? executionEntity.ProcessInstanceId : executionEntity.Id;
+            string id = !ReferenceEquals(executionEntity.ProcessInstanceId, null) ? executionEntity.ProcessInstanceId : executionEntity.Id;
             IList<IIdentityLinkEntity> identityLinks = findIdentityLinkByProcessInstanceUserGroupAndType(id, userId, groupId, type);
 
             foreach (IIdentityLinkEntity identityLink in identityLinks)
@@ -243,7 +243,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 if (IdentityLinkType.CANDIDATE.Equals(identityLinkEntity.Type) && identityLinkIds.Contains(identityLinkEntity.Id) == false)
                 {
 
-                    if ((!string.ReferenceEquals(userId, null) && userId.Equals(identityLinkEntity.UserId)) || (!string.ReferenceEquals(groupId, null) && groupId.Equals(identityLinkEntity.GroupId)))
+                    if ((!ReferenceEquals(userId, null) && userId.Equals(identityLinkEntity.UserId)) || (!ReferenceEquals(groupId, null) && groupId.Equals(identityLinkEntity.GroupId)))
                     {
 
                         deleteIdentityLink(identityLinkEntity, true);

@@ -28,7 +28,7 @@ namespace org.activiti.validation.validator.impl
             {
                 if (string.IsNullOrWhiteSpace(scriptTask.Script))
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.SCRIPT_TASK_MISSING_SCRIPT, process, scriptTask, "No script provided for script task");
+                    addError(errors, Problems_Fields.SCRIPT_TASK_MISSING_SCRIPT, process, scriptTask, "No script provided for script task");
                 }
             }
         }

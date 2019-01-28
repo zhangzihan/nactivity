@@ -226,7 +226,7 @@ namespace org.activiti.engine.impl
         protected internal virtual void addOrder(string column, string sortOrder, NullHandlingOnOrder? nullHandlingOnOrder)
         {
 
-            if (string.ReferenceEquals(orderBy_Renamed, null))
+            if (ReferenceEquals(orderBy_Renamed, null))
             {
                 orderBy_Renamed = "";
             }
@@ -287,7 +287,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                if (string.ReferenceEquals(orderBy_Renamed, null))
+                if (ReferenceEquals(orderBy_Renamed, null))
                 {
                     return base.OrderBy;
                 }

@@ -52,12 +52,12 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IHistoricVariableInstanceEntity> findHistoricVariableInstancesByProcessInstanceId(string processInstanceId)
         {
-            return getList("selectHistoricVariableInstanceByProcessInstanceId", new KeyValuePair<string, object>("processInstanceId", processInstanceId), historicVariableInstanceByProcInstMatcher, true) as IList<IHistoricVariableInstanceEntity>;
+            return getList("selectHistoricVariableInstanceByProcessInstanceId", new { processInstanceId }, historicVariableInstanceByProcInstMatcher, true) as IList<IHistoricVariableInstanceEntity>;
         }
 
         public virtual IList<IHistoricVariableInstanceEntity> findHistoricVariableInstancesByTaskId(string taskId)
         {
-            return getList("selectHistoricVariableInstanceByTaskId", new KeyValuePair<string, object>("taskId", taskId), historicVariableInstanceByTaskIdMatcher, true) as IList<IHistoricVariableInstanceEntity>;
+            return getList("selectHistoricVariableInstanceByTaskId", new { taskId }, historicVariableInstanceByTaskIdMatcher, true) as IList<IHistoricVariableInstanceEntity>;
         }
 
         public virtual long findHistoricVariableInstanceCountByQueryCriteria(IHistoricVariableInstanceQuery historicProcessVariableQuery)
@@ -72,7 +72,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IHistoricVariableInstanceEntity findHistoricVariableInstanceByVariableInstanceId(string variableInstanceId)
         {
-            return (IHistoricVariableInstanceEntity)DbSqlSession.selectOne<HistoricVariableInstanceEntityImpl, IHistoricVariableInstanceEntity>("selectHistoricVariableInstanceByVariableInstanceId", new KeyValuePair<string, object>("variableInstanceId", variableInstanceId));
+            return (IHistoricVariableInstanceEntity)DbSqlSession.selectOne<HistoricVariableInstanceEntityImpl, IHistoricVariableInstanceEntity>("selectHistoricVariableInstanceByVariableInstanceId", new { variableInstanceId });
         }
 
         public virtual IList<IHistoricVariableInstance> findHistoricVariableInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)

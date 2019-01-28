@@ -16,6 +16,7 @@ namespace SmartSql.Configuration.Tags
             {
                 return (bool)reqVal == true;
             }
+
             return false;
         }
     }

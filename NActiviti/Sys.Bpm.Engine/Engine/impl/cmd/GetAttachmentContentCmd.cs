@@ -39,7 +39,7 @@ namespace org.activiti.engine.impl.cmd
             IAttachmentEntity attachment = commandContext.AttachmentEntityManager.findById<IAttachmentEntity>(new KeyValuePair<string, object>("id", attachmentId));
 
             string contentId = attachment.ContentId;
-            if (string.ReferenceEquals(contentId, null))
+            if (ReferenceEquals(contentId, null))
             {
                 return null;
             }

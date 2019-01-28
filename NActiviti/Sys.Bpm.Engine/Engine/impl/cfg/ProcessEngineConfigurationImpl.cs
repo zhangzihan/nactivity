@@ -75,6 +75,7 @@ namespace org.activiti.engine.impl.cfg
             IRepositoryService repositoryService,
             IRuntimeService runtimeService,
             IManagementService managementService,
+            IAsyncExecutor asyncExecutor,
             IConfiguration configuration) : base(configuration)
         {
             this.historyService = historyService;
@@ -632,9 +633,10 @@ namespace org.activiti.engine.impl.cfg
             return processEngine;
         }
 
-        // init
-        // /////////////////////////////////////////////////////////////////////
-
+        
+        /// <summary>
+        /// 初始化
+        /// </summary>
         public virtual void init()
         {
             initConfigurators();
@@ -656,7 +658,9 @@ namespace org.activiti.engine.impl.cfg
             initBusinessCalendarManager();
             initCommandContextFactory();
             initTransactionContextFactory();
+            //初始化命令执行器
             initCommandExecutors();
+            //服务初始化
             initServices();
             initIdGenerator();
             initBehaviorFactory();
@@ -708,8 +712,11 @@ namespace org.activiti.engine.impl.cfg
         {
             initDefaultCommandConfig();
             initSchemaCommandConfig();
+            //命令调用器
             initCommandInvoker();
+            //初始化命令拦截器
             initCommandInterceptors();
+            //初始化命令执行器
             initCommandExecutor();
         }
 
@@ -729,6 +736,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+
+        /// <summary>
+        /// 命令调用器
+        /// </summary>
         public virtual void initCommandInvoker()
         {
             if (commandInvoker == null)
@@ -744,6 +755,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 初始化命令拦截器
+        /// </summary>
         public virtual void initCommandInterceptors()
         {
             if (commandInterceptors == null)
@@ -751,13 +765,18 @@ namespace org.activiti.engine.impl.cfg
                 commandInterceptors = new List<ICommandInterceptor>();
                 if (customPreCommandInterceptors != null)
                 {
+                    //客户自定义前置拦截器 
                     ((List<ICommandInterceptor>)commandInterceptors).AddRange(customPreCommandInterceptors);
                 }
-              ((List<ICommandInterceptor>)commandInterceptors).AddRange(DefaultCommandInterceptors);
+                //默认拦截器
+                ((List<ICommandInterceptor>)commandInterceptors).AddRange(DefaultCommandInterceptors);
                 if (customPostCommandInterceptors != null)
                 {
+                    //后置拦截器
                     ((List<ICommandInterceptor>)commandInterceptors).AddRange(customPostCommandInterceptors);
                 }
+
+                //命令调用器，拦截器最后的一个，为调用具体的命令
                 commandInterceptors.Add(commandInvoker);
             }
         }
@@ -767,16 +786,19 @@ namespace org.activiti.engine.impl.cfg
             get
             {
                 IList<ICommandInterceptor> interceptors = new List<ICommandInterceptor>();
+                //添加一个日志拦截器
                 interceptors.Add(new LogInterceptor());
 
                 ICommandInterceptor transactionInterceptor = createTransactionInterceptor();
                 if (transactionInterceptor != null)
                 {
+                    //添加一个事务控制拦截器
                     interceptors.Add(transactionInterceptor);
                 }
 
                 if (commandContextFactory != null)
                 {
+                    //CommandContext拦截器，进行命令的保存
                     interceptors.Add(new CommandContextInterceptor(commandContextFactory, this));
                 }
 
@@ -789,15 +811,24 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 初始化命令执行器
+        /// </summary>
         public virtual void initCommandExecutor()
         {
             if (commandExecutor == null)
             {
+                //初始化命令拦截器链，并返回第一个拦截器
                 ICommandInterceptor first = initInterceptorChain(commandInterceptors);
                 commandExecutor = new CommandExecutorImpl(DefaultCommandConfig, first);
             }
         }
 
+        /// <summary>
+        /// //构建拦截器链，即上一个拦截器中存放着下一个拦截器
+        /// </summary>
+        /// <param name="chain"></param>
+        /// <returns></returns>
         public virtual ICommandInterceptor initInterceptorChain(IList<ICommandInterceptor> chain)
         {
             if (chain == null || chain.Count == 0)
@@ -813,9 +844,9 @@ namespace org.activiti.engine.impl.cfg
 
         public abstract ICommandInterceptor createTransactionInterceptor();
 
-        // services
-        // /////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 服务初始化
+        /// </summary>
         public virtual void initServices()
         {
             initService(repositoryService);
@@ -830,6 +861,7 @@ namespace org.activiti.engine.impl.cfg
         {
             if (service is ServiceImpl)
             {
+                //将命令执行器set进runtimeService中
                 ((ServiceImpl)service).CommandExecutor = commandExecutor;
             }
         }
@@ -930,7 +962,7 @@ namespace org.activiti.engine.impl.cfg
         public virtual void initSqlSessionFactory()
         {
             string wildcardEscapeClause = "";
-            if ((!string.ReferenceEquals(databaseWildcardEscapeCharacter, null)) && (databaseWildcardEscapeCharacter.Length != 0))
+            if ((!ReferenceEquals(databaseWildcardEscapeCharacter, null)) && (databaseWildcardEscapeCharacter.Length != 0))
             {
                 wildcardEscapeClause = " escape '" + databaseWildcardEscapeCharacter + "'";
             }
@@ -1736,7 +1768,7 @@ namespace org.activiti.engine.impl.cfg
                 // Job locking
                 defaultAsyncExecutor.TimerLockTimeInMillis = asyncExecutorTimerLockTimeInMillis;
                 defaultAsyncExecutor.AsyncJobLockTimeInMillis = asyncExecutorAsyncJobLockTimeInMillis;
-                if (!string.ReferenceEquals(asyncExecutorLockOwner, null))
+                if (!ReferenceEquals(asyncExecutorLockOwner, null))
                 {
                     defaultAsyncExecutor.LockOwner = asyncExecutorLockOwner;
                 }

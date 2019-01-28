@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl.cmd
 
             if (job.Exclusive)
             {
-                if (!string.ReferenceEquals(job.ExecutionId, null))
+                if (!ReferenceEquals(job.ExecutionId, null))
                 {
                     IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", job.ExecutionId));
                     if (execution != null)

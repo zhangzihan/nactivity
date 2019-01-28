@@ -37,7 +37,7 @@ namespace org.activiti.engine.impl.bpmn.helper
             if (isValidEvent(@event))
             {
 
-                if (string.ReferenceEquals(@event.ProcessInstanceId, null) && processInstanceScope)
+                if (ReferenceEquals(@event.ProcessInstanceId, null) && processInstanceScope)
                 {
                     throw new ActivitiIllegalArgumentException("Cannot throw process-instance scoped signal, since the dispatched event is not part of an ongoing process instance");
                 }
@@ -52,7 +52,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                 else
                 {
                     string tenantId = null;
-                    if (!string.ReferenceEquals(@event.ProcessDefinitionId, null))
+                    if (!ReferenceEquals(@event.ProcessDefinitionId, null))
                     {
                         IProcessDefinition processDefinition = commandContext.ProcessEngineConfiguration.DeploymentManager.findDeployedProcessDefinitionById(@event.ProcessDefinitionId);
                         tenantId = processDefinition.TenantId;

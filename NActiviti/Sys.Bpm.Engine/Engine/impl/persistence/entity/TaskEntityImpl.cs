@@ -117,7 +117,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     persistentState["dueDate"] = this.dueDate;
                 }
-                if (!string.ReferenceEquals(parentTaskId, null))
+                if (!ReferenceEquals(parentTaskId, null))
                 {
                     persistentState["parentTaskId"] = this.parentTaskId;
                 }
@@ -279,7 +279,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public virtual void deleteGroupIdentityLink(string groupId, string identityLinkType)
         {
-            if (!string.ReferenceEquals(groupId, null))
+            if (!ReferenceEquals(groupId, null))
             {
                 Context.CommandContext.IdentityLinkEntityManager.deleteIdentityLink(this, null, groupId, identityLinkType);
             }
@@ -287,7 +287,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public virtual void deleteUserIdentityLink(string userId, string identityLinkType)
         {
-            if (!string.ReferenceEquals(userId, null))
+            if (!ReferenceEquals(userId, null))
             {
                 Context.CommandContext.IdentityLinkEntityManager.deleteIdentityLink(this, userId, null, identityLinkType);
             }
@@ -327,7 +327,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             get
             {
-                if (!string.ReferenceEquals(localizedName, null) && localizedName.Length > 0)
+                if (!ReferenceEquals(localizedName, null) && localizedName.Length > 0)
                 {
                     return localizedName;
                 }
@@ -346,7 +346,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             get
             {
-                if (!string.ReferenceEquals(localizedDescription, null) && localizedDescription.Length > 0)
+                if (!ReferenceEquals(localizedDescription, null) && localizedDescription.Length > 0)
                 {
                     return localizedDescription;
                 }
@@ -760,7 +760,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (IVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!string.ReferenceEquals(variableInstance.Id, null) && !string.ReferenceEquals(variableInstance.TaskId, null))
+                        if (!ReferenceEquals(variableInstance.Id, null) && !ReferenceEquals(variableInstance.TaskId, null))
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }
@@ -779,7 +779,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (IVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!string.ReferenceEquals(variableInstance.Id, null) && string.ReferenceEquals(variableInstance.TaskId, null))
+                        if (!ReferenceEquals(variableInstance.Id, null) && ReferenceEquals(variableInstance.TaskId, null))
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }

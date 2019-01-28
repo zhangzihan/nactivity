@@ -1,51 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <title>bpmn-js modeler demo</title>
-
-  <link rel="stylesheet" href="css/diagram-js.css" />
-  <link rel="stylesheet" href="vendor/bpmn-font/css/bpmn-embedded.css" />
-  <link rel="stylesheet" href="css/app.css" />
+    <meta charset="utf-8">
+    <title>工作流演示</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <base href="/">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>window.serverUrl = "http://rest.31huiyi.com"</script>
+    <link href="/8fdf3903fe995f79e82b802cdd84c67c.css" rel="stylesheet">
 </head>
-<body>
-  <div class="content with-diagram" id="js-drop-zone">
 
-    <div class="message intro">
-      <div class="note">
-        Drop BPMN diagram from your desktop or <a id="js-create-diagram" href>create a new diagram</a> to get started.
-      </div>
+<body aurelia-app="main">
+    <div class="splash">
+        <div class="message">工作流演示</div><i class="fa fa-spinner fa-spin"></i>
     </div>
+    <script type="text/javascript" src="/common.8d3f7077c5761592af81.bundle.js"></script>
+    <script type="text/javascript" src="/app.9e660da9c08a0ff1955e.bundle.js"></script>
+    <script type="text/javascript" src="/vendor.95f33c2702bb390cbe15.bundle.js"></script>
+</body>
 
-    <div class="message error">
-      <div class="note">
-        <p>Ooops, we could not display the BPMN 2.0 diagram.</p>
-
-        <div class="details">
-          <span>Import Error Details</span>
-          <pre></pre>
-        </div>
-      </div>
-    </div>
-
-    <div class="canvas" id="js-canvas"></div>
-    <div class="properties-panel-parent" id="js-properties-panel"></div>
-  </div>
-
-  <ul class="buttons">
-    <li>
-      download
-    </li>
-    <li>
-      <a id="js-download-diagram" href title="download BPMN diagram">
-        BPMN diagram
-      </a>
-    </li>
-    <li>
-      <a id="js-download-svg" href title="download as SVG image">
-        SVG image
-      </a>
-    </li>
-  </ul>
-
-  <script src="index.js"></script>
 </html>

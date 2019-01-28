@@ -41,20 +41,21 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual void deleteResourcesByDeploymentId(string deploymentId)
         {
-            DbSqlSession.delete("deleteResourcesByDeploymentId", new KeyValuePair<string, object>("deploymentId", deploymentId), typeof(ResourceEntityImpl));
+            DbSqlSession.delete("deleteResourcesByDeploymentId", new { deploymentId }, typeof(ResourceEntityImpl));
         }
 
         public virtual IResourceEntity findResourceByDeploymentIdAndResourceName(string deploymentId, string resourceName)
         {
-            IDictionary<string, object> @params = new Dictionary<string, object>();
-            @params["deploymentId"] = deploymentId;
-            @params["resourceName"] = resourceName;
-            return (IResourceEntity)DbSqlSession.selectOne<ResourceEntityImpl, IResourceEntity>("selectResourceByDeploymentIdAndResourceName", @params);
+            return (IResourceEntity)DbSqlSession.selectOne<ResourceEntityImpl, IResourceEntity>("selectResourceByDeploymentIdAndResourceName", new
+            {
+                deploymentId,
+                resourceName
+            });
         }
 
         public virtual IList<IResourceEntity> findResourcesByDeploymentId(string deploymentId)
         {
-            return DbSqlSession.selectList<ResourceEntityImpl, IResourceEntity>("selectResourcesByDeploymentId", new KeyValuePair<string, object>("deploymentId", deploymentId));
+            return DbSqlSession.selectList<ResourceEntityImpl, IResourceEntity>("selectResourcesByDeploymentId", new { deploymentId });
         }
 
     }

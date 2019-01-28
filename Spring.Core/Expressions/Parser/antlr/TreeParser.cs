@@ -120,7 +120,7 @@ namespace Spring.Expressions.Parser.antlr
 		public static void panic()
 		{
 			Console.Error.WriteLine("TreeWalker: panic");
-			System.Environment.Exit(1);
+            Environment.Exit(1);
 		}
 		/*Parser error-reporting function can be overridden in subclass */
 		public virtual void  reportError(RecognitionException ex)

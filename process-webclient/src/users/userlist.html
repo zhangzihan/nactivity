@@ -1,0 +1,30 @@
+<template>
+  <style>
+    .user-list {
+      list-style: none;
+      width: 100%;
+      padding: 4px 4px;
+      cursor: pointer;
+    }
+
+    .user-list li:hover {
+      background: lightblue;
+      color: white;
+      width: 100%;
+    }
+
+  </style>
+
+  <div class="header">
+    用户注册
+    <a style="float:right;" click.trigger="register()">
+      <i class="fa fa-plus"></i>
+    </a>
+  </div>
+
+  <ul class="user-list">
+    <li repeat.for="user of users" click.trigger="selectedUser(user)" class.bind="select&&select==user?'activate':''">
+      <span>${user.name}</span>
+    </li>
+  </ul>
+</template>

@@ -55,8 +55,8 @@ namespace SmartSql.Command
                             sql = _sqlParamsTokens.Replace(sql, match =>
                               {
                                   string paramName = match.Groups[1].Value;
-                                  var paramMap = context.Statement?.ParameterMap?.Parameters?.FirstOrDefault(p => p.Name == paramName);
-                                  var propertyName = paramMap != null ? paramMap.Property : paramName;
+                                  var paramMap = context.Statement?.ParameterMap?.Parameters?.FirstOrDefault(p => new Regex(p.Property, RegexOptions.IgnoreCase).IsMatch(paramName));
+                                  var propertyName = paramName; //paramMap != null ? paramMap.Property : paramName;
 
                                   if (context.RequestParameters == null
                                     ||

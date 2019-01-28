@@ -38,7 +38,7 @@ namespace org.activiti.validation.validator.impl
             {
                 if (string.IsNullOrWhiteSpace(dataObject.Name))
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.DATA_OBJECT_MISSING_NAME, process, dataObject, "Name is mandatory for a data object");
+                    addError(errors, Problems_Fields.DATA_OBJECT_MISSING_NAME, process, dataObject, "Name is mandatory for a data object");
                 }
             }
         }

@@ -42,7 +42,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IProcessDefinitionEntity findLatestProcessDefinitionByKey(string processDefinitionKey)
         {
-            return DbSqlSession.selectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectLatestProcessDefinitionByKey", new KeyValuePair<string, object>("processDefinitionKey", processDefinitionKey));
+            return DbSqlSession.selectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectLatestProcessDefinitionByKey", new { processDefinitionKey });
         }
 
         public virtual IProcessDefinitionEntity findLatestProcessDefinitionByKeyAndTenantId(string processDefinitionKey, string tenantId)
@@ -55,7 +55,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual void deleteProcessDefinitionsByDeploymentId(string deploymentId)
         {
-            DbSqlSession.delete("deleteProcessDefinitionsByDeploymentId", new KeyValuePair<string, object>("deploymentId", deploymentId), typeof(ProcessDefinitionEntityImpl));
+            DbSqlSession.delete("deleteProcessDefinitionsByDeploymentId", new { deploymentId }, typeof(ProcessDefinitionEntityImpl));
         }
 
         public virtual IList<IProcessDefinition> findProcessDefinitionsByQueryCriteria(ProcessDefinitionQueryImpl processDefinitionQuery, Page page)
@@ -86,27 +86,22 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IProcessDefinitionEntity findProcessDefinitionByDeploymentAndKey(string deploymentId, string processDefinitionKey)
         {
-            IDictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters["deploymentId"] = deploymentId;
-            parameters["processDefinitionKey"] = processDefinitionKey;
-            return DbSqlSession.selectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionByDeploymentAndKey", parameters);
+            return DbSqlSession.selectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionByDeploymentAndKey", new { deploymentId, processDefinitionKey });
         }
 
         public virtual IProcessDefinitionEntity findProcessDefinitionByDeploymentAndKeyAndTenantId(string deploymentId, string processDefinitionKey, string tenantId)
         {
-            IDictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters["deploymentId"] = deploymentId;
-            parameters["processDefinitionKey"] = processDefinitionKey;
-            parameters["tenantId"] = tenantId;
-            return DbSqlSession.selectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionByDeploymentAndKeyAndTenantId", parameters);
+            return DbSqlSession.selectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionByDeploymentAndKeyAndTenantId", new
+            {
+                deploymentId,
+                processDefinitionKey,
+                tenantId
+            });
         }
 
         public virtual IProcessDefinitionEntity findProcessDefinitionByKeyAndVersion(string processDefinitionKey, int? processDefinitionVersion)
         {
-            IDictionary<string, object> @params = new Dictionary<string, object>();
-            @params["processDefinitionKey"] = processDefinitionKey;
-            @params["processDefinitionVersion"] = processDefinitionVersion;
-            IList<IProcessDefinitionEntity> results = DbSqlSession.selectList<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionsByKeyAndVersion", @params);
+            IList<IProcessDefinitionEntity> results = DbSqlSession.selectList<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionsByKeyAndVersion", new { processDefinitionKey, processDefinitionVersion });
             if (results.Count == 1)
             {
                 return results[0];
@@ -120,11 +115,8 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IProcessDefinitionEntity findProcessDefinitionByKeyAndVersionAndTenantId(string processDefinitionKey, int? processDefinitionVersion, string tenantId)
         {
-            IDictionary<string, object> @params = new Dictionary<string, object>();
-            @params["processDefinitionKey"] = processDefinitionKey;
-            @params["processDefinitionVersion"] = processDefinitionVersion;
-            @params["tenantId"] = tenantId;
-            IList<IProcessDefinitionEntity> results = DbSqlSession.selectList<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionsByKeyAndVersionAndTenantId", @params);
+            IList<IProcessDefinitionEntity> results = DbSqlSession.selectList<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionsByKeyAndVersionAndTenantId", new
+            { processDefinitionKey, processDefinitionVersion, tenantId });
             if (results.Count == 1)
             {
                 return results[0];

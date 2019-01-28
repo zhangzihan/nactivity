@@ -15,6 +15,7 @@ namespace org.activiti.engine.impl.cfg
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using org.activiti.engine.impl.asyncexecutor;
     using org.activiti.engine.impl.interceptor;
     using Sys;
     using System;
@@ -28,7 +29,15 @@ namespace org.activiti.engine.impl.cfg
             IRepositoryService repositoryService,
             IRuntimeService runtimeService,
             IManagementService managementService,
-            IConfiguration configuration) : base(historyService, taskService, dynamicBpmnService, repositoryService, runtimeService, managementService, configuration)
+            IAsyncExecutor asyncExecutor,
+            IConfiguration configuration) : base(historyService, 
+                taskService, 
+                dynamicBpmnService, 
+                repositoryService, 
+                runtimeService, 
+                managementService, 
+                asyncExecutor, 
+                configuration)
         {
         }
 

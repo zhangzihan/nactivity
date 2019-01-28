@@ -163,7 +163,7 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
         ///           when the given entity name </exception>
         protected internal virtual Type getEntityType(string entityType)
         {
-            if (!string.ReferenceEquals(entityType, null))
+            if (!ReferenceEquals(entityType, null))
             {
                 Type entityClass = ENTITY_MAPPING[entityType.Trim()];
                 if (entityClass == null)

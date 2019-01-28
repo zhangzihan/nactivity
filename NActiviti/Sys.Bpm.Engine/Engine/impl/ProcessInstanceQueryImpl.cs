@@ -112,7 +112,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessInstanceQuery processInstanceId(string processInstanceId)
         {
-            if (string.ReferenceEquals(processInstanceId, null))
+            if (ReferenceEquals(processInstanceId, null))
             {
                 throw new ActivitiIllegalArgumentException("Process instance id is null");
             }
@@ -325,7 +325,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessInstanceQuery processDefinitionKey(string processDefinitionKey)
         {
-            if (string.ReferenceEquals(processDefinitionKey, null))
+            if (ReferenceEquals(processDefinitionKey, null))
             {
                 throw new ActivitiIllegalArgumentException("Process definition key is null");
             }
@@ -430,7 +430,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessInstanceQuery involvedUser(string involvedUser)
         {
-            if (string.ReferenceEquals(involvedUser, null))
+            if (ReferenceEquals(involvedUser, null))
             {
                 throw new ActivitiIllegalArgumentException("Involved user is null");
             }
@@ -450,11 +450,11 @@ namespace org.activiti.engine.impl
         {
             if (inOrStatement)
             {
-                this.currentOrQueryObject.suspensionState = org.activiti.engine.impl.persistence.entity.SuspensionState_Fields.ACTIVE;
+                this.currentOrQueryObject.suspensionState = SuspensionState_Fields.ACTIVE;
             }
             else
             {
-                this.suspensionState = org.activiti.engine.impl.persistence.entity.SuspensionState_Fields.ACTIVE;
+                this.suspensionState = SuspensionState_Fields.ACTIVE;
             }
             return this;
         }
@@ -463,11 +463,11 @@ namespace org.activiti.engine.impl
         {
             if (inOrStatement)
             {
-                this.currentOrQueryObject.suspensionState = org.activiti.engine.impl.persistence.entity.SuspensionState_Fields.SUSPENDED;
+                this.currentOrQueryObject.suspensionState = SuspensionState_Fields.SUSPENDED;
             }
             else
             {
-                this.suspensionState = org.activiti.engine.impl.persistence.entity.SuspensionState_Fields.SUSPENDED;
+                this.suspensionState = SuspensionState_Fields.SUSPENDED;
             }
             return this;
         }
@@ -785,7 +785,7 @@ namespace org.activiti.engine.impl
             get
             {
                 string specialOrderBy = base.OrderBy;
-                if (!string.ReferenceEquals(specialOrderBy, null) && specialOrderBy.Length > 0)
+                if (!ReferenceEquals(specialOrderBy, null) && specialOrderBy.Length > 0)
                 {
                     specialOrderBy = specialOrderBy.Replace("RES.", "TEMPRES_");
                     specialOrderBy = specialOrderBy.Replace("ProcessDefinitionKey", "TEMPP_KEY_");

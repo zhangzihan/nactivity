@@ -15,11 +15,11 @@ namespace org.activiti.cloud.services.rest.assemblers
 
         public override ProcessVariableResource toResource(ProcessInstanceVariable processInstanceVariable)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             //Link processVariables = linkTo(methodOn(typeof(ProcessInstanceVariableControllerImpl)).getVariables(processInstanceVariable.ProcessInstanceId)).withRel("processVariables");
             //Link processInstance = linkTo(methodOn(typeof(ProcessInstanceControllerImpl)).getProcessInstanceById(processInstanceVariable.ProcessInstanceId)).withRel("processInstance");
             //Link homeLink = linkTo(typeof(HomeControllerImpl)).withRel("home");
-            //return new ProcessVariableResource(processInstanceVariable,processVariables,processInstance,homeLink);
+            return new ProcessVariableResource(processInstanceVariable);//,processVariables,processInstance,homeLink);
         }
     }
 

@@ -29,8 +29,10 @@ using org.activiti.engine.repository;
 using org.activiti.image.exception;
 using org.springframework.data.domain;
 using org.springframework.hateoas;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
@@ -63,28 +65,60 @@ namespace org.activiti.cloud.services.rest.controllers
         //    return ex.Message;
         //}
 
-        public ProcessDefinitionControllerImpl(IRepositoryService repositoryService, 
-            ProcessDiagramGeneratorWrapper processDiagramGenerator, 
-            ProcessDefinitionConverter processDefinitionConverter, 
-            ProcessDefinitionResourceAssembler resourceAssembler, 
-            PageableRepositoryService pageableRepositoryService, 
+        public ProcessDefinitionControllerImpl(IProcessEngine processEngine,
+            ProcessDefinitionConverter processDefinitionConverter,
+            ProcessDefinitionResourceAssembler resourceAssembler,
+            PageableRepositoryService pageableRepositoryService,
             SecurityPoliciesApplicationService securityPoliciesApplicationService)
         {
-            this.repositoryService = repositoryService;
-            this.processDiagramGenerator = processDiagramGenerator;
+            this.repositoryService = processEngine.RepositoryService;
             this.processDefinitionConverter = processDefinitionConverter;
             this.resourceAssembler = resourceAssembler;
             this.pageableRepositoryService = pageableRepositoryService;
             this.securityService = securityPoliciesApplicationService;
         }
 
-        [HttpGet]
-        public virtual ProcessDefinitionResource GetProcessDefinitions(Pageable pageable)
-        {
-            Page<ProcessDefinition> page = pageableRepositoryService.getProcessDefinitions(pageable);
+        //public ProcessDefinitionControllerImpl(IRepositoryService repositoryService, 
+        //    ProcessDiagramGeneratorWrapper processDiagramGenerator, 
+        //    ProcessDefinitionConverter processDefinitionConverter, 
+        //    ProcessDefinitionResourceAssembler resourceAssembler, 
+        //    PageableRepositoryService pageableRepositoryService, 
+        //    SecurityPoliciesApplicationService securityPoliciesApplicationService)
+        //{
+        //    this.repositoryService = repositoryService;
+        //    this.processDiagramGenerator = processDiagramGenerator;
+        //    this.processDefinitionConverter = processDefinitionConverter;
+        //    this.resourceAssembler = resourceAssembler;
+        //    this.pageableRepositoryService = pageableRepositoryService;
+        //    this.securityService = securityPoliciesApplicationService;
+        //}
 
-            return null;
-            ;// pagedResourcesAssembler.toResource(pageable, page, resourceAssembler);
+        [HttpGet("latest")]
+        public virtual Task<IList<ProcessDefinitionResource>> GetLatestProcessDefinitions([FromQuery]Pageable pageable)
+        {
+            IList<IProcessDefinition> defs = repositoryService.createProcessDefinitionQuery().latestVersion().list();
+
+            IList<ProcessDefinitionResource> resources = resourceAssembler.toResources(processDefinitionConverter.from(defs));
+
+            //Page<ProcessDefinition> page = pageableRepositoryService.getProcessDefinitions(pageable);
+
+            //pagedResourcesAssembler.toResource(pageable, page, resourceAssembler);
+
+            return System.Threading.Tasks.Task.FromResult<IList<ProcessDefinitionResource>>(resources);
+        }
+
+        [HttpGet]
+        public virtual Task<IList<ProcessDefinitionResource>> GetProcessDefinitions([FromQuery]Pageable pageable = null)
+        {
+            IList<IProcessDefinition> defs = repositoryService.createProcessDefinitionQuery().list();
+
+            IList<ProcessDefinitionResource> resources = resourceAssembler.toResources(processDefinitionConverter.from(defs));
+
+            //Page<ProcessDefinition> page = pageableRepositoryService.getProcessDefinitions(pageable);
+
+            //pagedResourcesAssembler.toResource(pageable, page, resourceAssembler);
+
+            return System.Threading.Tasks.Task.FromResult<IList<ProcessDefinitionResource>>(resources);
         }
 
         [HttpGet("{id}")]
@@ -107,21 +141,39 @@ namespace org.activiti.cloud.services.rest.controllers
         }
 
         [HttpGet("{id}/processmodel")]
-        [Produces("application/xml")]
-        public virtual string GetProcessModel(string id)
+        public virtual Task<ContentResult> GetProcessModel(string id)
         {
-            // first check the user can see the process definition (which has same ID as process model in engine)
-            retrieveProcessDefinition(id);
             try
             {
+                // first check the user can see the process definition (which has same ID as process model in engine)
+                retrieveProcessDefinition(id);
+
                 using (System.IO.Stream resourceStream = repositoryService.getProcessModel(id))
                 {
                     resourceStream.Seek(0, SeekOrigin.Begin);
                     byte[] data = new byte[resourceStream.Length];
                     resourceStream.Read(data, 0, data.Length);
 
-                    return Encoding.UTF8.GetString(data);
+                    string xml = Encoding.UTF8.GetString(data);
+
+                    return System.Threading.Tasks.Task.FromResult<ContentResult>(
+                        new ContentResult
+                        {
+                            ContentType = "application/xml",
+                            StatusCode = 200,
+                            Content = xml,
+                        });
                 }
+            }
+            catch(ActivitiObjectNotFoundException e)
+            {
+                return System.Threading.Tasks.Task.FromResult<ContentResult>(
+                           new ContentResult
+                           {
+                               ContentType = "application/xml",
+                               StatusCode = 200,
+                               Content = null,
+                           });
             }
             catch (IOException e)
             {

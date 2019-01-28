@@ -27,9 +27,9 @@ namespace org.activiti.engine.debug
 
             // Find highest parent
             IExecutionEntity parentExecution = executionEntity;
-            while (!string.ReferenceEquals(parentExecution.ParentId, null) || !string.ReferenceEquals(((IExecution)parentExecution).SuperExecutionId, null))
+            while (!ReferenceEquals(parentExecution.ParentId, null) || !ReferenceEquals(((IExecution)parentExecution).SuperExecutionId, null))
             {
-                if (!string.ReferenceEquals(parentExecution.ParentId, null))
+                if (!ReferenceEquals(parentExecution.ParentId, null))
                 {
                     parentExecution = parentExecution.Parent;
                 }
@@ -72,12 +72,12 @@ namespace org.activiti.engine.debug
                 string parentId = executionEntity.ParentId;
 
                 // Support for call activity
-                if (string.ReferenceEquals(parentId, null))
+                if (ReferenceEquals(parentId, null))
                 {
                     parentId = ((IExecution)executionEntity).SuperExecutionId;
                 }
 
-                if (!string.ReferenceEquals(parentId, null))
+                if (!ReferenceEquals(parentId, null))
                 {
                     if (!parentMapping.ContainsKey(parentId))
                     {
@@ -85,7 +85,7 @@ namespace org.activiti.engine.debug
                     }
                     parentMapping[parentId].Add(executionEntity);
                 }
-                else if (string.ReferenceEquals(((IExecution)executionEntity).SuperExecutionId, null))
+                else if (ReferenceEquals(((IExecution)executionEntity).SuperExecutionId, null))
                 {
                     executionTree.Root = new ExecutionTreeNode(executionEntity);
                 }
@@ -109,7 +109,7 @@ namespace org.activiti.engine.debug
             {
                 string parentId = executionEntity.ParentId;
 
-                if (!string.ReferenceEquals(parentId, null))
+                if (!ReferenceEquals(parentId, null))
                 {
                     if (!parentMapping.ContainsKey(parentId))
                     {

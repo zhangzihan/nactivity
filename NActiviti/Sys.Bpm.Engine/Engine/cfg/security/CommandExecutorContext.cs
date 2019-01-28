@@ -21,7 +21,7 @@ namespace org.activiti.engine.cfg.security
 		{
 			set
 			{
-				CommandExecutorContext.shellCommandExecutorFactory = value;
+                shellCommandExecutorFactory = value;
 			}
 		}
 

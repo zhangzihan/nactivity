@@ -34,13 +34,13 @@ namespace org.activiti.validation.validator.impl
 
                 if (eventDefinition == null)
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.INTERMEDIATE_CATCH_EVENT_NO_EVENTDEFINITION, process, intermediateCatchEvent, "No event definition for intermediate catch event ");
+                    addError(errors, Problems_Fields.INTERMEDIATE_CATCH_EVENT_NO_EVENTDEFINITION, process, intermediateCatchEvent, "No event definition for intermediate catch event ");
                 }
                 else
                 {
                     if (!(eventDefinition is TimerEventDefinition) && !(eventDefinition is SignalEventDefinition) && !(eventDefinition is MessageEventDefinition))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.INTERMEDIATE_CATCH_EVENT_INVALID_EVENTDEFINITION, process, intermediateCatchEvent, "Unsupported intermediate catch event type");
+                        addError(errors, Problems_Fields.INTERMEDIATE_CATCH_EVENT_INVALID_EVENTDEFINITION, process, intermediateCatchEvent, "Unsupported intermediate catch event type");
                     }
                 }
             }

@@ -31,7 +31,7 @@ namespace org.activiti.validation.validator.impl
                 // Verify implementation
                 if (string.IsNullOrWhiteSpace(sendTask.Type) && !ImplementationType.IMPLEMENTATION_TYPE_WEBSERVICE.Equals(sendTask.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.SEND_TASK_INVALID_IMPLEMENTATION, process, sendTask, "One of the attributes 'type' or 'operation' is mandatory on sendTask");
+                    addError(errors, Problems_Fields.SEND_TASK_INVALID_IMPLEMENTATION, process, sendTask, "One of the attributes 'type' or 'operation' is mandatory on sendTask");
                 }
 
                 // Verify type
@@ -40,7 +40,7 @@ namespace org.activiti.validation.validator.impl
 
                     if (!sendTask.Type.Equals("mail", StringComparison.CurrentCultureIgnoreCase) && !sendTask.Type.Equals("mule", StringComparison.CurrentCultureIgnoreCase) && !sendTask.Type.Equals("camel", StringComparison.CurrentCultureIgnoreCase))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.SEND_TASK_INVALID_TYPE, process, sendTask, "Invalid or unsupported type for send task");
+                        addError(errors, Problems_Fields.SEND_TASK_INVALID_TYPE, process, sendTask, "Invalid or unsupported type for send task");
                     }
 
                     if (sendTask.Type.Equals("mail", StringComparison.CurrentCultureIgnoreCase))
@@ -69,7 +69,7 @@ namespace org.activiti.validation.validator.impl
                         {
                             foreach (Operation operation in bpmnInterface.Operations)
                             {
-                                if (!string.ReferenceEquals(operation.Id, null) && operation.Id.Equals(sendTask.OperationRef))
+                                if (!ReferenceEquals(operation.Id, null) && operation.Id.Equals(sendTask.OperationRef))
                                 {
                                     operationFound = true;
                                 }
@@ -80,7 +80,7 @@ namespace org.activiti.validation.validator.impl
 
                 if (!operationFound)
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.SEND_TASK_WEBSERVICE_INVALID_OPERATION_REF, process, sendTask, "Invalid operation reference for send task");
+                    addError(errors, Problems_Fields.SEND_TASK_WEBSERVICE_INVALID_OPERATION_REF, process, sendTask, "Invalid operation reference for send task");
                 }
 
             }

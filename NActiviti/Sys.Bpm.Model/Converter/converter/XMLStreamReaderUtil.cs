@@ -26,7 +26,7 @@ namespace org.activiti.bpmn.converter
                 {
                     //xtr.next();
 
-                    if (xtr.StartElement)
+                    if (xtr.IsStartElement())
                     {
                         return xtr.LocalName;
                     }

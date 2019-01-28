@@ -17,8 +17,19 @@ namespace BpmnWebTest
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            string root = Path.GetDirectoryName(new Uri(typeof(Program).Assembly.CodeBase).AbsolutePath);
+
+            IConfiguration cr = new ConfigurationBuilder()
+                    .SetBasePath(root)
+                    .AddJsonFile("hosting.json", optional: true)
+                    .AddJsonFile("Resources\\activiti.cfg.json", true, true)
+                    .Build();
+
+            return WebHost.CreateDefaultBuilder(args)
+                .UseConfiguration(cr)
                 .UseStartup<Startup>();
+        }
     }
 }

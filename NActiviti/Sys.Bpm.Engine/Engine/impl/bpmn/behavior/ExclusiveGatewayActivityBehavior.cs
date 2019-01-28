@@ -72,7 +72,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 if (!SkipExpressionUtil.isSkipExpressionEnabled(execution, skipExpressionString))
                 {
                     bool conditionEvaluatesToTrue = ConditionUtil.hasTrueCondition(sequenceFlow, execution);
-                    if (conditionEvaluatesToTrue && (string.ReferenceEquals(defaultSequenceFlowId, null) || !defaultSequenceFlowId.Equals(sequenceFlow.Id)))
+                    if (conditionEvaluatesToTrue && (ReferenceEquals(defaultSequenceFlowId, null) || !defaultSequenceFlowId.Equals(sequenceFlow.Id)))
                     {
                         if (log.IsEnabled(LogLevel.Debug))
                         {
@@ -89,7 +89,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
 
                 // Already store it, if we would need it later. Saves one for loop.
-                if (!string.ReferenceEquals(defaultSequenceFlowId, null) && defaultSequenceFlowId.Equals(sequenceFlow.Id))
+                if (!ReferenceEquals(defaultSequenceFlowId, null) && defaultSequenceFlowId.Equals(sequenceFlow.Id))
                 {
                     defaultSequenceFlow = sequenceFlow;
                 }

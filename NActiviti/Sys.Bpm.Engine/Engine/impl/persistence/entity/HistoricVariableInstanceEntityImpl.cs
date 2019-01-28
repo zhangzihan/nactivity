@@ -299,6 +299,10 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 return byteArrayRef;
             }
+            set
+            {
+                byteArrayRef = value;
+            }
         }
 
         // common methods //////////////////////////////////////////////////////////
@@ -319,15 +323,15 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 sb.Append(", doubleValue=").Append(doubleValue);
             }
-            if (!string.ReferenceEquals(textValue, null))
+            if (!ReferenceEquals(textValue, null))
             {
                 sb.Append(", textValue=").Append(textValue.PadLeft(40, ' '));
             }
-            if (!string.ReferenceEquals(textValue2, null))
+            if (!ReferenceEquals(textValue2, null))
             {
                 sb.Append(", textValue2=").Append(textValue2.PadLeft(40, ' '));
             }
-            if (byteArrayRef != null && !string.ReferenceEquals(byteArrayRef.Id, null))
+            if (byteArrayRef != null && !ReferenceEquals(byteArrayRef.Id, null))
             {
                 sb.Append(", byteArrayValueId=").Append(byteArrayRef.Id);
             }

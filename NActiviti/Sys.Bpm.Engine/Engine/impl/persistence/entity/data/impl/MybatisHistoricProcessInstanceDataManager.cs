@@ -48,12 +48,12 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<string> findHistoricProcessInstanceIdsByProcessDefinitionId(string processDefinitionId)
         {
-            return DbSqlSession.selectList<HistoricProcessInstanceEntityImpl, string>("selectHistoricProcessInstanceIdsByProcessDefinitionId", new KeyValuePair<string, object>("processDefinitionId", processDefinitionId));
+            return DbSqlSession.selectList<HistoricProcessInstanceEntityImpl, string>("selectHistoricProcessInstanceIdsByProcessDefinitionId", new { processDefinitionId });
         }
 
         public virtual IList<IHistoricProcessInstanceEntity> findHistoricProcessInstancesBySuperProcessInstanceId(string superProcessInstanceId)
         {
-            return DbSqlSession.selectList<HistoricProcessInstanceEntityImpl, IHistoricProcessInstanceEntity>("selectHistoricProcessInstanceIdsBySuperProcessInstanceId", new KeyValuePair<string, object>("superProcessInstanceId", superProcessInstanceId));
+            return DbSqlSession.selectList<HistoricProcessInstanceEntityImpl, IHistoricProcessInstanceEntity>("selectHistoricProcessInstanceIdsBySuperProcessInstanceId", new { superProcessInstanceId });
         }
 
         public virtual long findHistoricProcessInstanceCountByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery)

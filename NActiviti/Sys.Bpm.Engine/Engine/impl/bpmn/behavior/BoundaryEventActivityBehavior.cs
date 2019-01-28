@@ -164,7 +164,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
             }
 
-            string deleteReason = org.activiti.engine.history.DeleteReason_Fields.BOUNDARY_EVENT_INTERRUPTING + " (" + notToDeleteExecution.CurrentActivityId + ")";
+            string deleteReason = engine.history.DeleteReason_Fields.BOUNDARY_EVENT_INTERRUPTING + " (" + notToDeleteExecution.CurrentActivityId + ")";
             if (parentExecution.CurrentFlowElement is CallActivity)
             {
                 IExecutionEntity subProcessExecution = executionEntityManager.findSubProcessInstanceBySuperExecutionId(parentExecution.Id);

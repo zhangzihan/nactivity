@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl.cmd
             // since the task.delete cascaded to all associated identityLinks
             // and of course this leads to exception while trying to delete a
             // non-existing identityLink
-            if (!string.ReferenceEquals(task.Assignee, null))
+            if (!ReferenceEquals(task.Assignee, null))
             {
                 IIdentityLinkEntity identityLink = commandContext.IdentityLinkEntityManager.create();
                 identityLink.UserId = task.Assignee;
@@ -59,7 +59,7 @@ namespace org.activiti.engine.impl.cmd
                 identityLink.TaskId = task.Id;
                 identityLinks.Add(identityLink);
             }
-            if (!string.ReferenceEquals(task.Owner, null))
+            if (!ReferenceEquals(task.Owner, null))
             {
                 IIdentityLinkEntity identityLink = commandContext.IdentityLinkEntityManager.create();
                 identityLink.UserId = task.Owner;

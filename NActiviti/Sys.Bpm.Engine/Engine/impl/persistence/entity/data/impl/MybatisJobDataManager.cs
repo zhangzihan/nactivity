@@ -52,7 +52,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IJobEntity> findJobsByExecutionId(string executionId)
         {
-            return (IList<IJobEntity>)getList("selectJobsByExecutionId", new KeyValuePair<string, object>("executionId", executionId), jobsByExecutionIdMatcher, true);
+            return (IList<IJobEntity>)getList("selectJobsByExecutionId", new { executionId }, jobsByExecutionIdMatcher, true);
         }
 
         public virtual IList<IJobEntity> findJobsByProcessDefinitionId(string processDefinitionId)
@@ -72,13 +72,13 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IJobEntity> findJobsByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<JobEntityImpl, IJobEntity>("selectJobsByProcessInstanceId", new KeyValuePair<string, object>("processInstanceId", processInstanceId));
+            return DbSqlSession.selectList<JobEntityImpl, IJobEntity>("selectJobsByProcessInstanceId", new { processInstanceId });
         }
 
         public virtual IList<IJobEntity> findExpiredJobs(Page page)
         {
             DateTime now = Clock.CurrentTime;
-            return DbSqlSession.selectList<JobEntityImpl, IJobEntity>("selectExpiredJobs", new KeyValuePair<string, object>("lockExpTime", now), page);
+            return DbSqlSession.selectList<JobEntityImpl, IJobEntity>("selectExpiredJobs", new { lockExpTime = now }, page);
         }
 
         public virtual IList<IJob> findJobsByQueryCriteria(JobQueryImpl jobQuery, Page page)

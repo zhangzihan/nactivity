@@ -116,7 +116,6 @@ namespace org.activiti.engine.impl.persistence.entity
             IDictionary<string, object> requestedVariables = new Dictionary<string, object>();
             ISet<string> variableNamesToFetch = new HashSet<string>(variableNames);
 
-
             // Transient variables 'shadow' any existing variables.
             // The values in the fetch-cache will be more recent, so they can override any existing ones
             foreach (string variableName in variableNames)
@@ -135,7 +134,6 @@ namespace org.activiti.engine.impl.persistence.entity
 
             if (fetchAllVariables)
             {
-
                 // getVariables() will go up the execution hierarchy, no need to do
                 // it here also, the cached values will already be applied too
                 IDictionary<string, object> allVariables = Variables;
@@ -148,7 +146,6 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             else
             {
-
                 // Go up if needed
                 IVariableScope parent = ParentVariableScope;
                 if (parent != null)
@@ -164,14 +161,11 @@ namespace org.activiti.engine.impl.persistence.entity
                 }
 
                 return requestedVariables;
-
             }
-
         }
 
         public virtual IDictionary<string, IVariableInstance> getVariableInstances(ICollection<string> variableNames, bool fetchAllVariables)
         {
-
             IDictionary<string, IVariableInstance> requestedVariables = new Dictionary<string, IVariableInstance>();
             ISet<string> variableNamesToFetch = new HashSet<string>(variableNames);
 
@@ -192,7 +186,6 @@ namespace org.activiti.engine.impl.persistence.entity
 
             if (fetchAllVariables)
             {
-
                 // getVariables() will go up the execution hierarchy, no need to do it here
                 // also, the cached values will already be applied too
                 IDictionary<string, IVariableInstance> allVariables = VariableInstances;
@@ -317,7 +310,6 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public virtual IVariableInstance getVariableInstance(string variableName, bool fetchAllVariables)
         {
-
             // Transient variable
             if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
             {
@@ -347,7 +339,6 @@ namespace org.activiti.engine.impl.persistence.entity
                 }
 
                 return null;
-
             }
             else
             {
@@ -372,7 +363,6 @@ namespace org.activiti.engine.impl.persistence.entity
                 }
 
                 return null;
-
             }
         }
 
@@ -417,7 +407,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
                 ensureVariableInstancesInitialized();
 
-                IVariableInstanceEntity variableInstance = variableInstances[variableName];
+                variableInstances.TryGetValue(variableName, out IVariableInstanceEntity variableInstance);
                 if (variableInstance != null)
                 {
                     return variableInstance;
@@ -678,7 +668,6 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     requestedVariables[variableName] = allVariables[variableName];
                 }
-
             }
             else
             {
@@ -688,7 +677,6 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     requestedVariables[variable.Name] = variable;
                 }
-
             }
 
             return requestedVariables;
@@ -728,7 +716,6 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-
         public virtual IDictionary<string, IVariableInstanceEntity> UsedVariablesCache
         {
             get
@@ -747,8 +734,6 @@ namespace org.activiti.engine.impl.persistence.entity
                 }
             }
         }
-
-
 
         public virtual void removeVariables()
         {
@@ -816,7 +801,6 @@ namespace org.activiti.engine.impl.persistence.entity
         ///  <param name="fetchAllVariables"> If true, all existing variables will be fetched when setting the variable. </param>
         protected internal virtual void setVariable(string variableName, object value, IExecutionEntity sourceExecution, bool fetchAllVariables)
         {
-
             if (fetchAllVariables == true)
             {
 
@@ -878,7 +862,6 @@ namespace org.activiti.engine.impl.persistence.entity
                 }
                 else
                 {
-
                     // Not in local cache, check if defined on this scope
                     // Create it if it doesn't exist yet
                     IVariableInstanceEntity variable = getSpecificVariable(variableName);
@@ -946,10 +929,10 @@ namespace org.activiti.engine.impl.persistence.entity
 
                 ensureVariableInstancesInitialized();
 
-                IVariableInstanceEntity variableInstance = variableInstances[variableName];
+                variableInstances.TryGetValue(variableName, out IVariableInstanceEntity variableInstance);
                 if (variableInstance == null)
                 {
-                    variableInstance = usedVariablesCache[variableName];
+                    usedVariablesCache.TryGetValue(variableName, out variableInstance);
                 }
 
                 if (variableInstance == null)
@@ -1059,7 +1042,7 @@ namespace org.activiti.engine.impl.persistence.entity
         protected internal virtual void removeVariableLocal(string variableName, IExecutionEntity sourceActivityExecution)
         {
             ensureVariableInstancesInitialized();
-            IVariableInstanceEntity variableInstance = variableInstances[variableName];
+            variableInstances.TryGetValue(variableName, out IVariableInstanceEntity variableInstance);
             variableInstances.Remove(variableName);
             if (variableInstance != null)
             {

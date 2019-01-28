@@ -175,7 +175,7 @@ namespace Spring.Context.Attributes
 
             objDef.FactoryObjectName = configClass.ObjectName;
             objDef.FactoryMethodName = metadata.Name;
-            objDef.AutowireMode = Objects.Factory.Config.AutoWiringMode.Constructor;
+            objDef.AutowireMode = AutoWiringMode.Constructor;
 
             // consider name and any aliases
             //Dictionary<String, Object> ObjectAttributes = metadata.getAnnotationAttributes(Object.class.getName());

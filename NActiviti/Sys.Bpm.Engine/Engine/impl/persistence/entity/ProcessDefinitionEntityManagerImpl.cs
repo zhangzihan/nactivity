@@ -79,7 +79,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
 	  public virtual IProcessDefinition findProcessDefinitionByKeyAndVersionAndTenantId(string processDefinitionKey, int? processDefinitionVersion, string tenantId)
 	  {
-		if (string.ReferenceEquals(tenantId, null) || ProcessEngineConfigurationImpl.NO_TENANT_ID.Equals(tenantId))
+		if (ReferenceEquals(tenantId, null) || engine.ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
 		{
 		  return processDefinitionDataManager.findProcessDefinitionByKeyAndVersion(processDefinitionKey, processDefinitionVersion);
 		}

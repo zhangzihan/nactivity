@@ -67,14 +67,14 @@ namespace org.activiti.validation.validator.impl
                 if (string.IsNullOrWhiteSpace(messageEventDefinition.MessageExpression))
                 {
                     // message ref should be filled in
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.MESSAGE_EVENT_MISSING_MESSAGE_REF, process, @event, "attribute 'messageRef' is required");
+                    addError(errors, Problems_Fields.MESSAGE_EVENT_MISSING_MESSAGE_REF, process, @event, "attribute 'messageRef' is required");
                 }
 
             }
             else if (!bpmnModel.containsMessageId(messageEventDefinition.MessageRef))
             {
                 // message ref should exist
-                addError(errors, org.activiti.validation.validator.Problems_Fields.MESSAGE_EVENT_INVALID_MESSAGE_REF, process, @event, "Invalid 'messageRef': no message with that id can be found in the model");
+                addError(errors, Problems_Fields.MESSAGE_EVENT_INVALID_MESSAGE_REF, process, @event, "Invalid 'messageRef': no message with that id can be found in the model");
             }
         }
 
@@ -87,13 +87,13 @@ namespace org.activiti.validation.validator.impl
 
                 if (string.IsNullOrWhiteSpace(signalEventDefinition.SignalExpression))
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.SIGNAL_EVENT_MISSING_SIGNAL_REF, process, @event, "signalEventDefinition does not have mandatory property 'signalRef'");
+                    addError(errors, Problems_Fields.SIGNAL_EVENT_MISSING_SIGNAL_REF, process, @event, "signalEventDefinition does not have mandatory property 'signalRef'");
                 }
 
             }
             else if (!bpmnModel.containsSignalId(signalEventDefinition.SignalRef))
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.SIGNAL_EVENT_INVALID_SIGNAL_REF, process, @event, "Invalid 'signalRef': no signal with that id can be found in the model");
+                addError(errors, Problems_Fields.SIGNAL_EVENT_INVALID_SIGNAL_REF, process, @event, "Invalid 'signalRef': no signal with that id can be found in the model");
             }
         }
 
@@ -103,7 +103,7 @@ namespace org.activiti.validation.validator.impl
             if (string.IsNullOrWhiteSpace(timerEventDefinition.TimeDate) && string.IsNullOrWhiteSpace(timerEventDefinition.TimeCycle) && string.IsNullOrWhiteSpace(timerEventDefinition.TimeDuration))
             {
                 // neither date, cycle or duration configured
-                addError(errors, org.activiti.validation.validator.Problems_Fields.EVENT_TIMER_MISSING_CONFIGURATION, process, @event, "Timer needs configuration (either timeDate, timeCycle or timeDuration is needed)");
+                addError(errors, Problems_Fields.EVENT_TIMER_MISSING_CONFIGURATION, process, @event, "Timer needs configuration (either timeDate, timeCycle or timeDuration is needed)");
             }
         }
 
@@ -114,7 +114,7 @@ namespace org.activiti.validation.validator.impl
             // Check activityRef
             if ((!string.IsNullOrWhiteSpace(compensateEventDefinition.ActivityRef) && process.getFlowElement(compensateEventDefinition.ActivityRef, true) == null))
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.COMPENSATE_EVENT_INVALID_ACTIVITY_REF, process, @event, "Invalid attribute value for 'activityRef': no activity with the given id");
+                addError(errors, Problems_Fields.COMPENSATE_EVENT_INVALID_ACTIVITY_REF, process, @event, "Invalid attribute value for 'activityRef': no activity with the given id");
             }
         }
 

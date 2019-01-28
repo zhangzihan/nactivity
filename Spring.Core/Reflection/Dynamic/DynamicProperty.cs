@@ -104,7 +104,7 @@ namespace Spring.Reflection.Dynamic
 
         #region Cache
 
-        private static readonly IDictionary<PropertyInfo, DynamicPropertyCacheEntry> propertyCache = new Dictionary<PropertyInfo, DynamicPropertyCacheEntry>();
+        private readonly static IDictionary<PropertyInfo, DynamicPropertyCacheEntry> propertyCache =  propertyCache = new Dictionary<PropertyInfo, DynamicPropertyCacheEntry>();
 
         /// <summary>
         /// Holds cached Getter/Setter delegates for a Property

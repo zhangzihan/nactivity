@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.cmd
         public  virtual IJobEntity  execute(ICommandContext  commandContext)
         {
 
-            if (string.ReferenceEquals(jobId, null))
+            if (ReferenceEquals(jobId, null))
             {
                 throw new ActivitiIllegalArgumentException("jobId and job is null");
             }

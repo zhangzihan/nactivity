@@ -43,30 +43,27 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IComment> findCommentsByTaskId(string taskId)
         {
-            return DbSqlSession.selectList<CommentEntityImpl, IComment>("selectCommentsByTaskId", new KeyValuePair<string, object>("taskId", taskId));
+            return DbSqlSession.selectList<CommentEntityImpl, IComment>("selectCommentsByTaskId", new { taskId });
         }
 
         public virtual IList<IComment> findCommentsByTaskIdAndType(string taskId, string type)
         {
-            IDictionary<string, object> @params = new Dictionary<string, object>();
-            @params["taskId"] = taskId;
-            @params["type"] = type;
-            return DbSqlSession.selectListWithRawParameter<CommentEntityImpl, IComment>("selectCommentsByTaskIdAndType", @params, 0, int.MaxValue);
+            return DbSqlSession.selectListWithRawParameter<CommentEntityImpl, IComment>("selectCommentsByTaskIdAndType", new { taskId, type }, 0, int.MaxValue);
         }
 
         public virtual IList<IComment> findCommentsByType(string type)
         {
-            return DbSqlSession.selectList<CommentEntityImpl, IComment>("selectCommentsByType", new KeyValuePair<string, object>("type", type));
+            return DbSqlSession.selectList<CommentEntityImpl, IComment>("selectCommentsByType", new { type });
         }
 
         public virtual IList<IEvent> findEventsByTaskId(string taskId)
         {
-            return DbSqlSession.selectList<CommentEntityImpl, IEvent>("selectEventsByTaskId", new KeyValuePair<string, object>("taskId", taskId));
+            return DbSqlSession.selectList<CommentEntityImpl, IEvent>("selectEventsByTaskId", new { taskId });
         }
 
         public virtual IList<IEvent> findEventsByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<CommentEntityImpl, IEvent>("selectEventsByProcessInstanceId", new KeyValuePair<string, object>("processInstanceId", processInstanceId));
+            return DbSqlSession.selectList<CommentEntityImpl, IEvent>("selectEventsByProcessInstanceId", new { processInstanceId });
         }
 
         public virtual void deleteCommentsByTaskId(string taskId)
@@ -81,15 +78,12 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IComment> findCommentsByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<CommentEntityImpl, IComment>("selectCommentsByProcessInstanceId", new KeyValuePair<string, object>("processInstanceId", processInstanceId));
+            return DbSqlSession.selectList<CommentEntityImpl, IComment>("selectCommentsByProcessInstanceId", new { processInstanceId });
         }
 
         public virtual IList<IComment> findCommentsByProcessInstanceId(string processInstanceId, string type)
         {
-            IDictionary<string, object> @params = new Dictionary<string, object>();
-            @params["processInstanceId"] = processInstanceId;
-            @params["type"] = type;
-            return DbSqlSession.selectListWithRawParameter<CommentEntityImpl, IComment>("selectCommentsByProcessInstanceIdAndType", @params, 0, int.MaxValue);
+            return DbSqlSession.selectListWithRawParameter<CommentEntityImpl, IComment>("selectCommentsByProcessInstanceIdAndType", new { processInstanceId, type }, 0, int.MaxValue);
         }
 
         public virtual IComment findComment(string commentId)

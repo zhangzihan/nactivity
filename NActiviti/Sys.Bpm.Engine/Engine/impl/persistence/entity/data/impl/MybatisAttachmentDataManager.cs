@@ -43,12 +43,12 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IAttachmentEntity> findAttachmentsByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<AttachmentEntityImpl, IAttachmentEntity>("selectAttachmentsByProcessInstanceId", new KeyValuePair<string, object>("processInstanceId", processInstanceId));
+            return DbSqlSession.selectList<AttachmentEntityImpl, IAttachmentEntity>("selectAttachmentsByProcessInstanceId", new { processInstanceId });
         }
 
         public virtual IList<IAttachmentEntity> findAttachmentsByTaskId(string taskId)
         {
-            return DbSqlSession.selectList<AttachmentEntityImpl, IAttachmentEntity>("selectAttachmentsByTaskId", new KeyValuePair<string, object>("taskId", taskId));
+            return DbSqlSession.selectList<AttachmentEntityImpl, IAttachmentEntity>("selectAttachmentsByTaskId", new { taskId });
         }
     }
 }

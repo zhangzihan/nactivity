@@ -162,13 +162,13 @@ namespace org.activiti.engine.impl.persistence.entity
                     //}
 
                     string catalog = null;
-                    if (!string.ReferenceEquals(ProcessEngineConfiguration.DatabaseCatalog, null) && ProcessEngineConfiguration.DatabaseCatalog.Length > 0)
+                    if (!ReferenceEquals(ProcessEngineConfiguration.DatabaseCatalog, null) && ProcessEngineConfiguration.DatabaseCatalog.Length > 0)
                     {
                         catalog = ProcessEngineConfiguration.DatabaseCatalog;
                     }
 
                     string schema = null;
-                    if (!string.ReferenceEquals(ProcessEngineConfiguration.DatabaseSchema, null) && ProcessEngineConfiguration.DatabaseSchema.Length > 0)
+                    if (!ReferenceEquals(ProcessEngineConfiguration.DatabaseSchema, null) && ProcessEngineConfiguration.DatabaseSchema.Length > 0)
                     {
                         if ("oracle".Equals(DbSqlSession.DbSqlSessionFactory.DatabaseType))
                         {
@@ -258,13 +258,13 @@ namespace org.activiti.engine.impl.persistence.entity
                 }
 
                 string catalog = null;
-                if (!string.ReferenceEquals(ProcessEngineConfiguration.DatabaseCatalog, null) && ProcessEngineConfiguration.DatabaseCatalog.Length > 0)
+                if (!ReferenceEquals(ProcessEngineConfiguration.DatabaseCatalog, null) && ProcessEngineConfiguration.DatabaseCatalog.Length > 0)
                 {
                     catalog = ProcessEngineConfiguration.DatabaseCatalog;
                 }
 
                 string schema = null;
-                if (!string.ReferenceEquals(ProcessEngineConfiguration.DatabaseSchema, null) && ProcessEngineConfiguration.DatabaseSchema.Length > 0)
+                if (!ReferenceEquals(ProcessEngineConfiguration.DatabaseSchema, null) && ProcessEngineConfiguration.DatabaseSchema.Length > 0)
                 {
                     if ("oracle".Equals(DbSqlSession.DbSqlSessionFactory.DatabaseType))
                     {

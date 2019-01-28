@@ -39,13 +39,13 @@ namespace org.activiti.engine.impl.@event
 
         public override void handleEvent(IEventSubscriptionEntity eventSubscription, object payload, ICommandContext commandContext)
         {
-            if (!string.ReferenceEquals(eventSubscription.ExecutionId, null))
+            if (!ReferenceEquals(eventSubscription.ExecutionId, null))
             {
 
                 base.handleEvent(eventSubscription, payload, commandContext);
 
             }
-            else if (!string.ReferenceEquals(eventSubscription.ProcessDefinitionId, null))
+            else if (!ReferenceEquals(eventSubscription.ProcessDefinitionId, null))
             {
 
                 // Find initial flow element matching the signal start event

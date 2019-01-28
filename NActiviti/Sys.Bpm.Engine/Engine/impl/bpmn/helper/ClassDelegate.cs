@@ -354,7 +354,7 @@ namespace org.activiti.engine.impl.bpmn.helper
 
         protected internal virtual object instantiateDelegate(string className, IList<FieldDeclaration> fieldDeclarations)
         {
-            return ClassDelegate.defaultInstantiateDelegate(className, fieldDeclarations);
+            return defaultInstantiateDelegate(className, fieldDeclarations);
         }
 
         // --HELPER METHODS (also usable by external classes)

@@ -140,7 +140,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskId(string taskId)
         {
-            if (string.ReferenceEquals(taskId, null))
+            if (ReferenceEquals(taskId, null))
             {
                 throw new ActivitiIllegalArgumentException("Task id is null");
             }
@@ -340,7 +340,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskDescriptionLikeIgnoreCase(string descriptionLikeIgnoreCase)
         {
-            if (string.ReferenceEquals(descriptionLikeIgnoreCase, null))
+            if (ReferenceEquals(descriptionLikeIgnoreCase, null))
             {
                 throw new ActivitiIllegalArgumentException("Task descriptionLikeIgnoreCase is null");
             }
@@ -408,7 +408,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskAssignee(string assignee)
         {
-            if (string.ReferenceEquals(assignee, null))
+            if (ReferenceEquals(assignee, null))
             {
                 throw new ActivitiIllegalArgumentException("Assignee is null");
             }
@@ -425,7 +425,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskAssigneeLike(string assigneeLike)
         {
-            if (string.ReferenceEquals(assigneeLike, null))
+            if (ReferenceEquals(assigneeLike, null))
             {
                 throw new ActivitiIllegalArgumentException("AssigneeLike is null");
             }
@@ -442,7 +442,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskAssigneeLikeIgnoreCase(string assigneeLikeIgnoreCase)
         {
-            if (string.ReferenceEquals(assigneeLikeIgnoreCase, null))
+            if (ReferenceEquals(assigneeLikeIgnoreCase, null))
             {
                 throw new ActivitiIllegalArgumentException("assigneeLikeIgnoreCase is null");
             }
@@ -469,21 +469,21 @@ namespace org.activiti.engine.impl
             }
             foreach (string assignee in assigneeIds)
             {
-                if (string.ReferenceEquals(assignee, null))
+                if (ReferenceEquals(assignee, null))
                 {
                     throw new ActivitiIllegalArgumentException("None of the given task assignees can be null");
                 }
             }
 
-            if (!string.ReferenceEquals(assignee, null))
+            if (!ReferenceEquals(assignee, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssignee");
             }
-            if (!string.ReferenceEquals(assigneeLike, null))
+            if (!ReferenceEquals(assigneeLike, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssigneeLike");
             }
-            if (!string.ReferenceEquals(assigneeLikeIgnoreCase, null))
+            if (!ReferenceEquals(assigneeLikeIgnoreCase, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssigneeLikeIgnoreCase");
             }
@@ -501,7 +501,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskOwner(string owner)
         {
-            if (string.ReferenceEquals(owner, null))
+            if (ReferenceEquals(owner, null))
             {
                 throw new ActivitiIllegalArgumentException("Owner is null");
             }
@@ -518,7 +518,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskOwnerLike(string ownerLike)
         {
-            if (string.ReferenceEquals(ownerLike, null))
+            if (ReferenceEquals(ownerLike, null))
             {
                 throw new ActivitiIllegalArgumentException("Owner is null");
             }
@@ -535,7 +535,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskOwnerLikeIgnoreCase(string ownerLikeIgnoreCase)
         {
-            if (string.ReferenceEquals(ownerLikeIgnoreCase, null))
+            if (ReferenceEquals(ownerLikeIgnoreCase, null))
             {
                 throw new ActivitiIllegalArgumentException("OwnerLikeIgnoreCase");
             }
@@ -592,7 +592,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskCandidateUser(string candidateUser)
         {
-            if (string.ReferenceEquals(candidateUser, null))
+            if (ReferenceEquals(candidateUser, null))
             {
                 throw new ActivitiIllegalArgumentException("Candidate user is null");
             }
@@ -611,7 +611,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskCandidateUser(string candidateUser, IList<string> usersGroups)
         {
-            if (string.ReferenceEquals(candidateUser, null))
+            if (ReferenceEquals(candidateUser, null))
             {
                 throw new ActivitiIllegalArgumentException("Candidate user is null");
             }
@@ -632,7 +632,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskInvolvedUser(string involvedUser)
         {
-            if (string.ReferenceEquals(involvedUser, null))
+            if (ReferenceEquals(involvedUser, null))
             {
                 throw new ActivitiIllegalArgumentException("Involved user is null");
             }
@@ -668,7 +668,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskCandidateGroup(string candidateGroup)
         {
-            if (string.ReferenceEquals(candidateGroup, null))
+            if (ReferenceEquals(candidateGroup, null))
             {
                 throw new ActivitiIllegalArgumentException("Candidate group is null");
             }
@@ -691,11 +691,11 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskCandidateOrAssigned(string userIdForCandidateAndAssignee)
         {
-            if (!string.ReferenceEquals(candidateGroup, null))
+            if (!ReferenceEquals(candidateGroup, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set candidateGroup");
             }
-            if (!string.ReferenceEquals(candidateUser, null))
+            if (!ReferenceEquals(candidateUser, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both candidateGroup and candidateUser");
             }
@@ -717,11 +717,11 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskCandidateOrAssigned(string userIdForCandidateAndAssignee, IList<string> usersGroups)
         {
-            if (!string.ReferenceEquals(candidateGroup, null))
+            if (!ReferenceEquals(candidateGroup, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set candidateGroup");
             }
-            if (!string.ReferenceEquals(candidateUser, null))
+            if (!ReferenceEquals(candidateUser, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both candidateGroup and candidateUser");
             }
@@ -754,7 +754,7 @@ namespace org.activiti.engine.impl
                 throw new ActivitiIllegalArgumentException("Candidate group list is empty");
             }
 
-            if (!string.ReferenceEquals(candidateGroup, null))
+            if (!ReferenceEquals(candidateGroup, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both candidateGroupIn and candidateGroup");
             }
@@ -772,7 +772,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskTenantId(string tenantId)
         {
-            if (string.ReferenceEquals(tenantId, null))
+            if (ReferenceEquals(tenantId, null))
             {
                 throw new ActivitiIllegalArgumentException("task tenant id is null");
             }
@@ -789,7 +789,7 @@ namespace org.activiti.engine.impl
 
         public virtual ITaskQuery taskTenantIdLike(string tenantIdLike)
         {
-            if (string.ReferenceEquals(tenantIdLike, null))
+            if (ReferenceEquals(tenantIdLike, null))
             {
                 throw new ActivitiIllegalArgumentException("task tenant id is null");
             }
@@ -842,7 +842,7 @@ namespace org.activiti.engine.impl
             }
             foreach (string processInstanceId in processInstanceIds)
             {
-                if (string.ReferenceEquals(processInstanceId, null))
+                if (ReferenceEquals(processInstanceId, null))
                 {
                     throw new ActivitiIllegalArgumentException("None of the given process instance ids can be null");
                 }
@@ -1378,7 +1378,7 @@ namespace org.activiti.engine.impl
             }
             foreach (string processCategory in processCategoryInList)
             {
-                if (string.ReferenceEquals(processCategory, null))
+                if (ReferenceEquals(processCategory, null))
                 {
                     throw new ActivitiIllegalArgumentException("None of the given process categories can be null");
                 }
@@ -1407,7 +1407,7 @@ namespace org.activiti.engine.impl
             }
             foreach (string processCategory in processCategoryNotInList)
             {
-                if (string.ReferenceEquals(processCategory, null))
+                if (ReferenceEquals(processCategory, null))
                 {
                     throw new ActivitiIllegalArgumentException("None of the given process categories can be null");
                 }
@@ -1545,11 +1545,11 @@ namespace org.activiti.engine.impl
         {
             if (orActive)
             {
-                currentOrQueryObject.suspensionState = org.activiti.engine.impl.persistence.entity.SuspensionState_Fields.SUSPENDED;
+                currentOrQueryObject.suspensionState = SuspensionState_Fields.SUSPENDED;
             }
             else
             {
-                this.suspensionState = org.activiti.engine.impl.persistence.entity.SuspensionState_Fields.SUSPENDED;
+                this.suspensionState = SuspensionState_Fields.SUSPENDED;
             }
             return this;
         }
@@ -1558,11 +1558,11 @@ namespace org.activiti.engine.impl
         {
             if (orActive)
             {
-                currentOrQueryObject.suspensionState = org.activiti.engine.impl.persistence.entity.SuspensionState_Fields.ACTIVE;
+                currentOrQueryObject.suspensionState = SuspensionState_Fields.ACTIVE;
             }
             else
             {
-                this.suspensionState = org.activiti.engine.impl.persistence.entity.SuspensionState_Fields.ACTIVE;
+                this.suspensionState = SuspensionState_Fields.ACTIVE;
             }
             return this;
         }
@@ -1609,7 +1609,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                if (!string.ReferenceEquals(candidateGroup, null))
+                if (!ReferenceEquals(candidateGroup, null))
                 {
                     IList<string> candidateGroupList = new List<string>(1);
                     candidateGroupList.Add(candidateGroup);
@@ -1621,12 +1621,12 @@ namespace org.activiti.engine.impl
                     return candidateGroups;
 
                 }
-                else if (!string.ReferenceEquals(candidateUser, null))
+                else if (!ReferenceEquals(candidateUser, null))
                 {
                     return getGroupsForCandidateUser(candidateUser);
 
                 }
-                else if (!string.ReferenceEquals(userIdForCandidateAndAssignee, null))
+                else if (!ReferenceEquals(userIdForCandidateAndAssignee, null))
                 {
                     return getGroupsForCandidateUser(userIdForCandidateAndAssignee);
                 }
@@ -1777,7 +1777,7 @@ namespace org.activiti.engine.impl
             get
             {
                 string specialOrderBy = base.OrderBy;
-                if (!string.ReferenceEquals(specialOrderBy, null) && specialOrderBy.Length > 0)
+                if (!ReferenceEquals(specialOrderBy, null) && specialOrderBy.Length > 0)
                 {
                     specialOrderBy = specialOrderBy.Replace("RES.", "TEMPRES_");
                 }

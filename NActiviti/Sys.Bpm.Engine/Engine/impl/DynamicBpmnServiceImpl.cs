@@ -41,7 +41,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeServiceTaskClassName(string id, string className, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.SERVICE_TASK_CLASS_NAME, className, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.SERVICE_TASK_CLASS_NAME, className, infoNode);
         }
 
         public virtual JToken changeServiceTaskExpression(string id, string expression)
@@ -53,7 +53,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeServiceTaskExpression(string id, string expression, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.SERVICE_TASK_EXPRESSION, expression, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.SERVICE_TASK_EXPRESSION, expression, infoNode);
         }
 
         public virtual JToken changeServiceTaskDelegateExpression(string id, string expression)
@@ -65,7 +65,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeServiceTaskDelegateExpression(string id, string expression, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.SERVICE_TASK_DELEGATE_EXPRESSION, expression, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.SERVICE_TASK_DELEGATE_EXPRESSION, expression, infoNode);
         }
 
         public virtual JToken changeScriptTaskScript(string id, string script)
@@ -77,7 +77,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeScriptTaskScript(string id, string script, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.SCRIPT_TASK_SCRIPT, script, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.SCRIPT_TASK_SCRIPT, script, infoNode);
         }
 
         public virtual JToken changeUserTaskName(string id, string name)
@@ -89,7 +89,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeUserTaskName(string id, string name, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_NAME, name, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.USER_TASK_NAME, name, infoNode);
         }
 
         public virtual JToken changeUserTaskDescription(string id, string description)
@@ -101,7 +101,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeUserTaskDescription(string id, string description, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_DESCRIPTION, description, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.USER_TASK_DESCRIPTION, description, infoNode);
         }
 
         public virtual JToken changeUserTaskDueDate(string id, string dueDate)
@@ -113,7 +113,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeUserTaskDueDate(string id, string dueDate, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_DUEDATE, dueDate, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.USER_TASK_DUEDATE, dueDate, infoNode);
         }
 
         public virtual JToken changeUserTaskPriority(string id, string priority)
@@ -125,7 +125,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeUserTaskPriority(string id, string priority, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_PRIORITY, priority, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.USER_TASK_PRIORITY, priority, infoNode);
         }
 
         public virtual JToken changeUserTaskCategory(string id, string category)
@@ -137,7 +137,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeUserTaskCategory(string id, string category, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_CATEGORY, category, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.USER_TASK_CATEGORY, category, infoNode);
         }
 
         public virtual JToken changeUserTaskFormKey(string id, string formKey)
@@ -149,7 +149,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeUserTaskFormKey(string id, string formKey, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_FORM_KEY, formKey, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.USER_TASK_FORM_KEY, formKey, infoNode);
         }
 
         public virtual JToken changeUserTaskAssignee(string id, string assignee)
@@ -161,7 +161,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeUserTaskAssignee(string id, string assignee, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_ASSIGNEE, assignee, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.USER_TASK_ASSIGNEE, assignee, infoNode);
         }
 
         public virtual JToken changeUserTaskOwner(string id, string owner)
@@ -173,7 +173,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeUserTaskOwner(string id, string owner, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_OWNER, owner, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.USER_TASK_OWNER, owner, infoNode);
         }
 
         public virtual JToken changeUserTaskCandidateUser(string id, string candidateUser, bool overwriteOtherChangedEntries)
@@ -192,7 +192,7 @@ namespace org.activiti.engine.impl
             }
             else
             {
-                if (doesElementPropertyExist(id, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_USERS, infoNode))
+                if (doesElementPropertyExist(id, DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_USERS, infoNode))
                 {
                     valuesNode = (JArray)infoNode[DynamicBpmnConstants_Fields.BPMN_NODE][id][DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_USERS];
                 }
@@ -204,7 +204,7 @@ namespace org.activiti.engine.impl
             }
 
             valuesNode.Add(candidateUser);
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_USERS, valuesNode.ToString(), infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_USERS, valuesNode.ToString(), infoNode);
         }
 
         public virtual JToken changeUserTaskCandidateGroup(string id, string candidateGroup, bool overwriteOtherChangedEntries)
@@ -223,7 +223,7 @@ namespace org.activiti.engine.impl
             }
             else
             {
-                if (doesElementPropertyExist(id, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_GROUPS, infoNode))
+                if (doesElementPropertyExist(id, DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_GROUPS, infoNode))
                 {
                     valuesNode = (JArray)infoNode[DynamicBpmnConstants_Fields.BPMN_NODE][id][DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_GROUPS];
                 }
@@ -247,7 +247,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeDmnTaskDecisionTableKey(string id, string decisionTableKey, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.DMN_TASK_DECISION_TABLE_KEY, decisionTableKey, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.DMN_TASK_DECISION_TABLE_KEY, decisionTableKey, infoNode);
         }
 
         public virtual JToken changeSequenceFlowCondition(string id, string condition)
@@ -259,7 +259,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeSequenceFlowCondition(string id, string condition, JToken infoNode)
         {
-            setElementProperty(id, org.activiti.engine.DynamicBpmnConstants_Fields.SEQUENCE_FLOW_CONDITION, condition, infoNode);
+            setElementProperty(id, DynamicBpmnConstants_Fields.SEQUENCE_FLOW_CONDITION, condition, infoNode);
         }
 
         public virtual JToken getBpmnElementProperties(string id, JToken infoNode)
@@ -282,7 +282,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeLocalizationName(string language, string id, string value, JToken infoNode)
         {
-            setLocalizationProperty(language, id, org.activiti.engine.DynamicBpmnConstants_Fields.LOCALIZATION_NAME, value, infoNode);
+            setLocalizationProperty(language, id, DynamicBpmnConstants_Fields.LOCALIZATION_NAME, value, infoNode);
         }
 
         public virtual JToken changeLocalizationDescription(string language, string id, string value)
@@ -294,7 +294,7 @@ namespace org.activiti.engine.impl
 
         public virtual void changeLocalizationDescription(string language, string id, string value, JToken infoNode)
         {
-            setLocalizationProperty(language, id, org.activiti.engine.DynamicBpmnConstants_Fields.LOCALIZATION_DESCRIPTION, value, infoNode);
+            setLocalizationProperty(language, id, DynamicBpmnConstants_Fields.LOCALIZATION_DESCRIPTION, value, infoNode);
         }
 
         public virtual JToken getLocalizationElementProperties(string language, string id, JToken infoNode)
@@ -315,7 +315,7 @@ namespace org.activiti.engine.impl
         protected internal virtual bool doesElementPropertyExist(string id, string propertyName, JToken infoNode)
         {
             bool exists = false;
-            if (infoNode[org.activiti.engine.DynamicBpmnConstants_Fields.BPMN_NODE] != null && infoNode[org.activiti.engine.DynamicBpmnConstants_Fields.BPMN_NODE][id] != null && infoNode[org.activiti.engine.DynamicBpmnConstants_Fields.BPMN_NODE][id][propertyName] != null)
+            if (infoNode[DynamicBpmnConstants_Fields.BPMN_NODE] != null && infoNode[DynamicBpmnConstants_Fields.BPMN_NODE][id] != null && infoNode[DynamicBpmnConstants_Fields.BPMN_NODE][id][propertyName] != null)
             {
                 JToken propNode = infoNode.SelectToken($"{DynamicBpmnConstants_Fields.BPMN_NODE}.{id}.{propertyName}");
                 if (propNode != null)
@@ -359,7 +359,7 @@ namespace org.activiti.engine.impl
 
         protected internal virtual JToken getBpmnNode(JToken infoNode)
         {
-            return infoNode[org.activiti.engine.DynamicBpmnConstants_Fields.BPMN_NODE];
+            return infoNode[DynamicBpmnConstants_Fields.BPMN_NODE];
         }
 
         protected internal virtual void setLocalizationProperty(string language, string id, string propertyName, string propertyValue, JToken infoNode)
@@ -390,7 +390,7 @@ namespace org.activiti.engine.impl
 
         protected internal virtual JToken getLocalizationNode(JToken infoNode)
         {
-            return (JToken)infoNode[org.activiti.engine.DynamicBpmnConstants_Fields.LOCALIZATION_NODE];
+            return (JToken)infoNode[DynamicBpmnConstants_Fields.LOCALIZATION_NODE];
         }
 
     }

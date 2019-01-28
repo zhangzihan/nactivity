@@ -27,7 +27,7 @@ namespace org.activiti.engine.impl.persistence
                 {
                     offset += read;
                     ms.Write(buffer, 0, (int)read); // push downstream
-                    if (read < byteLen)
+                    if (offset < byteLen)
                     {
                         read = dataReader.GetBytes(columnIndex, offset, buffer, 0, buffer.Length);
                     }

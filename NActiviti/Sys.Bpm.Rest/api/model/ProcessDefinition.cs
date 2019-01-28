@@ -23,6 +23,9 @@ namespace org.activiti.cloud.services.api.model
         private string name;
         private string description;
         private int version;
+        private string category;
+        private string key;
+        private string deploymentId;
 
         public ProcessDefinition()
         {
@@ -32,44 +35,57 @@ namespace org.activiti.cloud.services.api.model
         public ProcessDefinition([JsonProperty("Id")]string id,
             [JsonProperty("Name")]string name,
             [JsonProperty("Description")]string description,
-            [JsonProperty("Version")]int version)
+            [JsonProperty("Version")]int version,
+            [JsonProperty("Category")]string category,
+            [JsonProperty("Key")]string key,
+            [JsonProperty("Name")]string deploymentId)
         {
             this.id = id;
             this.name = name;
             this.version = version;
             this.description = description;
+            this.category = category;
+            this.deploymentId = deploymentId;
+            this.key = key;
         }
 
         public virtual string Id
         {
-            get
-            {
-                return id;
-            }
+            get => id;
+            set => id = value;
         }
 
         public virtual string Name
         {
-            get
-            {
-                return name;
-            }
+            get => name;
+            set => name = value;
         }
 
         public virtual string Description
         {
-            get
-            {
-                return description;
-            }
+            get => description;
+            set => description = value;
+        }
+
+        public virtual string Category
+        {
+            get => category; set => category = value;
+        }
+
+        public virtual string Key
+        {
+            get => key; set => key = value;
+        }
+
+        public virtual string DeploymentId
+        {
+            get => deploymentId; set => deploymentId = value;
         }
 
         public virtual int Version
         {
-            get
-            {
-                return version;
-            }
+            get => version;
+            set => version = value;
         }
     }
 }

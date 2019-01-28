@@ -54,7 +54,7 @@ namespace org.activiti.engine.impl.cmd
                 {
                     task.VariablesLocal = variables;
                 }
-                else if (!string.ReferenceEquals(task.ExecutionId, null))
+                else if (!ReferenceEquals(task.ExecutionId, null))
                 {
                     task.ExecutionVariables = variables;
                 }

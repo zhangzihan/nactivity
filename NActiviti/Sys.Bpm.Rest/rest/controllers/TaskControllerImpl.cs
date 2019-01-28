@@ -7,9 +7,11 @@ using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.api.resources;
 using org.activiti.cloud.services.rest.assemblers;
 using org.activiti.engine;
+using org.activiti.engine.task;
 using org.springframework.data.domain;
 using org.springframework.hateoas;
 using System.Collections.Generic;
+using System.Linq;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,8 +45,15 @@ namespace org.activiti.cloud.services.rest.controllers
 
         private readonly TaskConverter taskConverter;
 
-        public TaskControllerImpl(ProcessEngineWrapper processEngine, TaskResourceAssembler taskResourceAssembler, AuthenticationWrapper authenticationWrapper, TaskConverter taskConverter)
+        private readonly ITaskService taskService;
+
+        public TaskControllerImpl(ProcessEngineWrapper processEngine,
+            IProcessEngine engine,
+            TaskResourceAssembler taskResourceAssembler,
+            AuthenticationWrapper authenticationWrapper,
+            TaskConverter taskConverter)
         {
+            this.taskService = engine.TaskService;
             this.authenticationWrapper = authenticationWrapper;
             this.processEngine = processEngine;
             this.taskResourceAssembler = taskResourceAssembler;
@@ -62,6 +71,18 @@ namespace org.activiti.cloud.services.rest.controllers
             Page<Task> page = processEngine.getTasks(pageable);
             //return pagedResourcesAssembler.toResource(pageable, page, taskResourceAssembler);
             return null;
+        }
+
+        [HttpGet("/{userId}/mytasks")]
+        public System.Threading.Tasks.Task<IList<TaskResource>> MyTasks(string userId)
+        {
+            List<ITask> tasks = this.taskService.createTaskQuery().taskAssignee(userId).list().ToList();
+
+            tasks.AddRange(this.taskService.createTaskQuery().taskCandidateUser(userId).list());
+
+            IList<TaskResource> resources = this.taskResourceAssembler.toResources(taskConverter.from(tasks));
+
+            return System.Threading.Tasks.Task.FromResult(resources);
         }
 
         [HttpGet("{taskId}")]
@@ -96,17 +117,11 @@ namespace org.activiti.cloud.services.rest.controllers
         }
 
         [HttpPost("/{taskId}/complete")]
-        public virtual IActionResult completeTask(string taskId, [FromBody]CompleteTaskCmd completeTaskCmd)
+        public virtual System.Threading.Tasks.Task<IActionResult> completeTask(string taskId, [FromBody]CompleteTaskCmd completeTaskCmd)
         {
+            processEngine.completeTask(completeTaskCmd ?? new CompleteTaskCmd(taskId, null));
 
-            IDictionary<string, object> outputVariables = null;
-            if (completeTaskCmd != null)
-            {
-                outputVariables = completeTaskCmd.OutputVariables;
-            }
-            processEngine.completeTask(new CompleteTaskCmd(taskId, outputVariables));
-
-            return Ok();
+            return System.Threading.Tasks.Task.FromResult<IActionResult>(Ok());
         }
 
         [HttpDelete("{taskId}")]

@@ -96,7 +96,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             ICollection<BoundaryEvent> boundaryEvents = process.findFlowElementsOfType<BoundaryEvent>(true);
             foreach (BoundaryEvent boundaryEvent in boundaryEvents)
             {
-                if (!string.ReferenceEquals(boundaryEvent.AttachedToRefId, null) && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
+                if (!ReferenceEquals(boundaryEvent.AttachedToRefId, null) && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
                 {
                     results.Add(boundaryEvent);
                 }

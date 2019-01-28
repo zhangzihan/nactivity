@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
         public static string getProcessDiagramResourceName(string bpmnFileResource, string processKey, string diagramSuffix)
         {
-            string bpmnFileResourceBase = ResourceNameUtil.stripBpmnFileSuffix(bpmnFileResource);
+            string bpmnFileResourceBase = stripBpmnFileSuffix(bpmnFileResource);
             return bpmnFileResourceBase + processKey + "." + diagramSuffix;
         }
 

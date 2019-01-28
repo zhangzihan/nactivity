@@ -122,7 +122,7 @@ namespace org.activiti.engine.impl.persistence.entity
         protected internal virtual bool doInsert(ITimerJobEntity jobEntity, bool fireCreateEvent)
         {
             // add link to execution
-            if (!string.ReferenceEquals(jobEntity.ExecutionId, null))
+            if (!ReferenceEquals(jobEntity.ExecutionId, null))
             {
                 IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", jobEntity.ExecutionId));
                 if (execution != null)
@@ -130,7 +130,7 @@ namespace org.activiti.engine.impl.persistence.entity
                     execution.TimerJobs.Add(jobEntity);
 
                     // Inherit tenant if (if applicable)
-                    if (!string.ReferenceEquals(execution.TenantId, null))
+                    if (!ReferenceEquals(execution.TenantId, null))
                     {
                         jobEntity.TenantId = execution.TenantId;
                     }
@@ -161,7 +161,7 @@ namespace org.activiti.engine.impl.persistence.entity
             deleteExceptionByteArrayRef(jobEntity);
             removeExecutionLink(jobEntity);
 
-            if (!string.ReferenceEquals(jobEntity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!ReferenceEquals(jobEntity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(new KeyValuePair<string, object>("id", jobEntity.ExecutionId));
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))
@@ -183,7 +183,7 @@ namespace org.activiti.engine.impl.persistence.entity
         /// </summary>
         protected internal virtual void removeExecutionLink(ITimerJobEntity jobEntity)
         {
-            if (!string.ReferenceEquals(jobEntity.ExecutionId, null))
+            if (!ReferenceEquals(jobEntity.ExecutionId, null))
             {
                 IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", jobEntity.ExecutionId));
                 if (execution != null)

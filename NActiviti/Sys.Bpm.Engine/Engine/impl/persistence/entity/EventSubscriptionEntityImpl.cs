@@ -204,7 +204,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             const int prime = 31;
             int result = 1;
-            result = prime * result + ((string.ReferenceEquals(id, null)) ? 0 : id.GetHashCode());
+            result = prime * result + ((ReferenceEquals(id, null)) ? 0 : id.GetHashCode());
             return result;
         }
 
@@ -223,9 +223,9 @@ namespace org.activiti.engine.impl.persistence.entity
                 return false;
             }
             EventSubscriptionEntityImpl other = (EventSubscriptionEntityImpl)obj;
-            if (string.ReferenceEquals(id, null))
+            if (ReferenceEquals(id, null))
             {
-                if (!string.ReferenceEquals(other.id, null))
+                if (!ReferenceEquals(other.id, null))
                 {
                     return false;
                 }

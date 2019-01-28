@@ -37,7 +37,7 @@ namespace org.activiti.validation.validator.impl
                     EventDefinition eventDefinition = startEvent.EventDefinitions[0];
                     if (!(eventDefinition is MessageEventDefinition) && !(eventDefinition is TimerEventDefinition) && !(eventDefinition is SignalEventDefinition))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.START_EVENT_INVALID_EVENT_DEFINITION, process, startEvent, "Unsupported event definition on start event");
+                        addError(errors, Problems_Fields.START_EVENT_INVALID_EVENT_DEFINITION, process, startEvent, "Unsupported event definition on start event");
                     }
                 }
 
@@ -61,7 +61,7 @@ namespace org.activiti.validation.validator.impl
             {
                 foreach (StartEvent startEvent in noneStartEvents)
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.START_EVENT_MULTIPLE_FOUND, process, startEvent, "Multiple none start events are not supported");
+                    addError(errors, Problems_Fields.START_EVENT_MULTIPLE_FOUND, process, startEvent, "Multiple none start events are not supported");
                 }
             }
 

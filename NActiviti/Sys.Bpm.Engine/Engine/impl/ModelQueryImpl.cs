@@ -63,7 +63,7 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelCategory(string category)
         {
-            if (string.ReferenceEquals(category, null))
+            if (ReferenceEquals(category, null))
             {
                 throw new ActivitiIllegalArgumentException("category is null");
             }
@@ -73,7 +73,7 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelCategoryLike(string categoryLike)
         {
-            if (string.ReferenceEquals(categoryLike, null))
+            if (ReferenceEquals(categoryLike, null))
             {
                 throw new ActivitiIllegalArgumentException("categoryLike is null");
             }
@@ -83,7 +83,7 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelCategoryNotEquals(string categoryNotEquals)
         {
-            if (string.ReferenceEquals(categoryNotEquals, null))
+            if (ReferenceEquals(categoryNotEquals, null))
             {
                 throw new ActivitiIllegalArgumentException("categoryNotEquals is null");
             }
@@ -93,7 +93,7 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelName(string name)
         {
-            if (string.ReferenceEquals(name, null))
+            if (ReferenceEquals(name, null))
             {
                 throw new ActivitiIllegalArgumentException("name is null");
             }
@@ -103,7 +103,7 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelNameLike(string nameLike)
         {
-            if (string.ReferenceEquals(nameLike, null))
+            if (ReferenceEquals(nameLike, null))
             {
                 throw new ActivitiIllegalArgumentException("nameLike is null");
             }
@@ -113,7 +113,7 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelKey(string key)
         {
-            if (string.ReferenceEquals(key, null))
+            if (ReferenceEquals(key, null))
             {
                 throw new ActivitiIllegalArgumentException("key is null");
             }
@@ -143,7 +143,7 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery deploymentId(string deploymentId)
         {
-            if (string.ReferenceEquals(deploymentId, null))
+            if (ReferenceEquals(deploymentId, null))
             {
                 throw new ActivitiIllegalArgumentException("DeploymentId is null");
             }
@@ -173,7 +173,7 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelTenantId(string tenantId)
         {
-            if (string.ReferenceEquals(tenantId, null))
+            if (ReferenceEquals(tenantId, null))
             {
                 throw new ActivitiIllegalArgumentException("Model tenant id is null");
             }
@@ -183,7 +183,7 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelTenantIdLike(string tenantIdLike)
         {
-            if (string.ReferenceEquals(tenantIdLike, null))
+            if (ReferenceEquals(tenantIdLike, null))
             {
                 throw new ActivitiIllegalArgumentException("Model tenant id is null");
             }

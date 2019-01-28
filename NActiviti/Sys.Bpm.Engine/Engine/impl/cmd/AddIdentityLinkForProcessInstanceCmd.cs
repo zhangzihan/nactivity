@@ -50,17 +50,17 @@ namespace org.activiti.engine.impl.cmd
         protected internal virtual void validateParams(string processInstanceId, string userId, string groupId, string type)
         {
 
-            if (string.ReferenceEquals(processInstanceId, null))
+            if (ReferenceEquals(processInstanceId, null))
             {
                 throw new ActivitiIllegalArgumentException("processInstanceId is null");
             }
 
-            if (string.ReferenceEquals(type, null))
+            if (ReferenceEquals(type, null))
             {
                 throw new ActivitiIllegalArgumentException("type is required when adding a new process instance identity link");
             }
 
-            if (string.ReferenceEquals(userId, null) && string.ReferenceEquals(groupId, null))
+            if (ReferenceEquals(userId, null) && ReferenceEquals(groupId, null))
             {
                 throw new ActivitiIllegalArgumentException("userId and groupId cannot both be null");
             }

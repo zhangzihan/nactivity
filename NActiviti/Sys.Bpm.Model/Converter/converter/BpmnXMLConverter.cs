@@ -206,7 +206,7 @@ namespace org.activiti.bpmn.converter
                         activeSubProcessList.RemoveAt(activeSubProcessList.Count - 1);
                     }
 
-                    if (!xtr.StartElement)
+                    if (!xtr.IsStartElement())
                     {
                         if (constants.BpmnXMLConstants.ELEMENT_DI_DIAGRAM == xtr.LocalName)
                         {

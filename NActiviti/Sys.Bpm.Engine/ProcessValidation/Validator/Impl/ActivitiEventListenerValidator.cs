@@ -29,24 +29,24 @@ namespace org.activiti.validation.validator.impl
                 foreach (EventListener eventListener in eventListeners)
                 {
 
-                    if (!string.ReferenceEquals(eventListener.ImplementationType, null) && eventListener.ImplementationType.Equals(ImplementationType.IMPLEMENTATION_TYPE_INVALID_THROW_EVENT))
+                    if (!ReferenceEquals(eventListener.ImplementationType, null) && eventListener.ImplementationType.Equals(ImplementationType.IMPLEMENTATION_TYPE_INVALID_THROW_EVENT))
                     {
 
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.EVENT_LISTENER_INVALID_THROW_EVENT_TYPE, process, eventListener, "Invalid or unsupported throw event type on event listener");
+                        addError(errors, Problems_Fields.EVENT_LISTENER_INVALID_THROW_EVENT_TYPE, process, eventListener, "Invalid or unsupported throw event type on event listener");
 
                     }
-                    else if (string.ReferenceEquals(eventListener.ImplementationType, null) || eventListener.ImplementationType.Length == 0)
+                    else if (ReferenceEquals(eventListener.ImplementationType, null) || eventListener.ImplementationType.Length == 0)
                     {
 
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.EVENT_LISTENER_IMPLEMENTATION_MISSING, process, eventListener, "Element 'class', 'delegateExpression' or 'throwEvent' is mandatory on eventListener");
+                        addError(errors, Problems_Fields.EVENT_LISTENER_IMPLEMENTATION_MISSING, process, eventListener, "Element 'class', 'delegateExpression' or 'throwEvent' is mandatory on eventListener");
 
                     }
-                    else if (!string.ReferenceEquals(eventListener.ImplementationType, null))
+                    else if (!ReferenceEquals(eventListener.ImplementationType, null))
                     {
 
                         if (!ImplementationType.IMPLEMENTATION_TYPE_CLASS.Equals(eventListener.ImplementationType) && !ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(eventListener.ImplementationType) && !ImplementationType.IMPLEMENTATION_TYPE_THROW_SIGNAL_EVENT.Equals(eventListener.ImplementationType) && !ImplementationType.IMPLEMENTATION_TYPE_THROW_GLOBAL_SIGNAL_EVENT.Equals(eventListener.ImplementationType) && !ImplementationType.IMPLEMENTATION_TYPE_THROW_MESSAGE_EVENT.Equals(eventListener.ImplementationType) && !ImplementationType.IMPLEMENTATION_TYPE_THROW_ERROR_EVENT.Equals(eventListener.ImplementationType))
                         {
-                            addError(errors, org.activiti.validation.validator.Problems_Fields.EVENT_LISTENER_INVALID_IMPLEMENTATION, process, eventListener, "Unsupported implementation type for event listener");
+                            addError(errors, Problems_Fields.EVENT_LISTENER_INVALID_IMPLEMENTATION, process, eventListener, "Unsupported implementation type for event listener");
                         }
 
                     }

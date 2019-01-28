@@ -40,11 +40,11 @@ namespace org.activiti.engine.impl.cmd
 
         public  virtual bool  execute(ICommandContext  commandContext)
         {
-            if (string.ReferenceEquals(taskId, null))
+            if (ReferenceEquals(taskId, null))
             {
                 throw new ActivitiIllegalArgumentException("taskId is null");
             }
-            if (string.ReferenceEquals(variableName, null))
+            if (ReferenceEquals(variableName, null))
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }

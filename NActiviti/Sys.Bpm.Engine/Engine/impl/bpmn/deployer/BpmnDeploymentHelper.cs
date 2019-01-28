@@ -64,13 +64,13 @@ namespace org.activiti.engine.impl.bpmn.deployer
             {
 
                 // Backwards compatibility
-                if (!string.ReferenceEquals(engineVersion, null))
+                if (!ReferenceEquals(engineVersion, null))
                 {
                     processDefinition.EngineVersion = engineVersion;
                 }
 
                 // process definition inherits the tenant id
-                if (!string.ReferenceEquals(tenantId, null))
+                if (!ReferenceEquals(tenantId, null))
                 {
                     processDefinition.TenantId = tenantId;
                 }
@@ -82,16 +82,16 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// <summary>
         /// Updates all the process definition entities to have the correct resource names.
         /// </summary>
-        public virtual ParsedDeployment ResourceNamesOnProcessDefinitions
+        public virtual ParsedDeployment ResourceNamesOnProcessDefinitions(ParsedDeployment value)
         {
-            set
+            foreach (IProcessDefinitionEntity processDefinition in value.AllProcessDefinitions)
             {
-                foreach (IProcessDefinitionEntity processDefinition in value.AllProcessDefinitions)
-                {
-                    string resourceName = value.getResourceForProcessDefinition(processDefinition).Name;
-                    processDefinition.ResourceName = resourceName;
-                }
+                string resourceName = value.getResourceForProcessDefinition(processDefinition).Name;
+                processDefinition.ResourceName = resourceName;
+                processDefinition.Name = value.Deployment.Name;
             }
+
+            return value;
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
             IProcessDefinitionEntity existingDefinition = null;
 
-            if (!string.ReferenceEquals(tenantId, null) && !tenantId.Equals(ProcessEngineConfiguration.NO_TENANT_ID))
+            if (!ReferenceEquals(tenantId, null) && !tenantId.Equals(ProcessEngineConfiguration.NO_TENANT_ID))
             {
                 existingDefinition = processDefinitionManager.findLatestProcessDefinitionByKeyAndTenantId(key, tenantId);
             }
@@ -135,7 +135,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
             IProcessDefinitionEntityManager processDefinitionManager = Context.CommandContext.ProcessEngineConfiguration.ProcessDefinitionEntityManager;
             IProcessDefinitionEntity persistedProcessDefinition = null;
-            if (string.ReferenceEquals(processDefinition.TenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
+            if (ReferenceEquals(processDefinition.TenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
             {
                 persistedProcessDefinition = processDefinitionManager.findProcessDefinitionByDeploymentAndKey(deploymentId, processDefinition.Key);
             }

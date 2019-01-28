@@ -30,11 +30,11 @@ namespace org.activiti.cloud.services.rest.assemblers
 
         public override ProcessDefinitionResource toResource(ProcessDefinition processDefinition)
         {
-            throw new NotImplementedException();
+
             //         Link selfRel = linkTo(methodOn(typeof(ProcessDefinitionControllerImpl)).getProcessDefinition(processDefinition.Id)).withSelfRel();
             //Link startProcessLink = linkTo(methodOn(typeof(ProcessInstanceControllerImpl)).startProcess(null)).withRel("startProcess");
             //Link homeLink = linkTo(typeof(HomeControllerImpl)).withRel("home");
-            //return new ProcessDefinitionResource(processDefinition, selfRel, startProcessLink, homeLink);
+            return new ProcessDefinitionResource(processDefinition);//, selfRel, startProcessLink, homeLink);
         }
     }
 

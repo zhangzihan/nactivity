@@ -38,7 +38,7 @@ namespace org.activiti.engine.impl.variable
         public override object getValue(IValueFields valueFields)
         {
             string textValue = valueFields.TextValue;
-            if (string.ReferenceEquals(textValue, null))
+            if (ReferenceEquals(textValue, null))
             {
                 return null;
             }

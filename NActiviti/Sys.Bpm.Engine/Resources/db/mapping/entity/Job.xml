@@ -16,10 +16,15 @@
     <Result Property="Repeat" Column="REPEAT_" />
   </ResultMap>
   -->
+
+  <ParameterMap Id="jobParameterMap">
+    <Parameter Property="(Items_)?exceptionByteArrayRef(_p\d)?" TypeHandler="二进制引用" />
+  </ParameterMap>
   
   <ResultMap Id="jobResultMap" ResultType="org.activiti.engine.impl.persistence.entity.JobEntityImpl,Sys.Bpm.Engine">
     <Result Property="Id" Column="ID_" />
     <Result Property="Revision" Column="REV_" />
+    <result Property="JobType" Column="TYPE_" />
     <Result Property="LockOwner" Column="LOCK_OWNER_" />
     <Result Property="LockExpirationTime" Column="LOCK_EXP_TIME_" />
     <Result Property="Exclusive" Column="EXCLUSIVE_" />
@@ -27,11 +32,13 @@
     <Result Property="ProcessInstanceId" Column="PROCESS_INSTANCE_ID_" />
     <Result Property="ProcessDefinitionId" Column="PROC_DEF_ID_" />
     <Result Property="Retries" Column="RETRIES_" />
-    <Result Property="ExceptionByteArrayRef" Column="EXCEPTION_STACK_ID_" />
+    <Result Property="ExceptionByteArrayRef" Column="EXCEPTION_STACK_ID_" TypeHandler="二进制引用" />
     <Result Property="ExceptionMessage" Column="EXCEPTION_MSG_" />
     <Result Property="JobHandlerType" Column="HANDLER_TYPE_" />
     <Result Property="JobHandlerConfiguration" Column="HANDLER_CFG_" />
     <Result Property="TenantId" Column="TENANT_ID_" />
+    <result Property="DueDate" Column="DUEDATE_" />
+    <result Property="Repeat" Column="REPEAT_" />
   </ResultMap>
 
   <!-- JOB DELETE STATEMENTS-->
@@ -68,6 +75,107 @@
       ID_ = #{id}
     </For>
   </Delete>
+
+  <!-- JOB INSERT -->
+
+  <Insert Id="insertJob" ParameterMap="jobParameterMap">
+    insert into ACT_RU_JOB (
+    ID_,
+    REV_,
+    TYPE_,
+    LOCK_OWNER_,
+    LOCK_EXP_TIME_,
+    EXCLUSIVE_,
+    EXECUTION_ID_,
+    PROCESS_INSTANCE_ID_,
+    PROC_DEF_ID_,
+    RETRIES_,
+    EXCEPTION_STACK_ID_,
+    EXCEPTION_MSG_,
+    DUEDATE_,
+    REPEAT_,
+    HANDLER_TYPE_,
+    HANDLER_CFG_,
+    TENANT_ID_)
+    values (#{id},
+    #{revision},
+    #{jobType},
+    #{lockOwner},
+    #{lockExpirationTime},
+    #{exclusive},
+    #{executionId},
+    #{processInstanceId},
+    #{processDefinitionId},
+    #{retries},
+    #{exceptionByteArrayRef},
+    #{exceptionMessage},
+    #{duedate},
+    #{repeat},
+    #{jobHandlerType},
+    #{jobHandlerConfiguration},
+    #{tenantId}
+    )
+  </Insert>
+
+  <Insert Id="bulkInsertJob" ParameterMap="jobParameterMap">
+    INSERT INTO ACT_RU_JOB (
+    ID_,
+    REV_,
+    TYPE_,
+    LOCK_OWNER_,
+    LOCK_EXP_TIME_,
+    EXCLUSIVE_,
+    EXECUTION_ID_,
+    PROCESS_INSTANCE_ID_,
+    PROC_DEF_ID_,
+    RETRIES_,
+    EXCEPTION_STACK_ID_,
+    EXCEPTION_MSG_,
+    DUEDATE_,
+    REPEAT_,
+    HANDLER_TYPE_,
+    HANDLER_CFG_,
+    TENANT_ID_) VALUES
+    <For Property="Items" Key="p" Separator=",">
+      (#{id},
+      #{revision},
+      #{jobType},
+      #{lockOwner},
+      #{lockExpirationTime},
+      #{exclusive},
+      #{executionId},
+      #{processInstanceId},
+      #{processDefinitionId},
+      #{retries},
+      #{exceptionByteArrayRef},
+      #{exceptionMessage},
+      #{duedate},
+      #{repeat},
+      #{jobHandlerType},
+      #{jobHandlerConfiguration},
+      #{tenantId})
+    </For>
+  </Insert>
+
+  <!-- JOB UPDATE -->
+
+  <Update Id="updateJob" ParameterMap="jobParameterMap">
+    update ACT_RU_JOB
+    set  REV_ = #{revisionNext},
+      LOCK_EXP_TIME_ = #{lockExpirationTime},
+      LOCK_OWNER_ = #{lockOwner},
+      RETRIES_ = #{retries},
+      EXCEPTION_STACK_ID_ = #{exceptionByteArrayRef},
+      EXCEPTION_MSG_ = #{exceptionMessage}
+    where ID_= #{id}
+    and REV_ = #{revision}
+  </Update>
+
+  <Update Id="resetExpiredJob" parameterType="org.activiti.engine.impl.db.ListQueryParameterObject">
+    update ${prefix}ACT_RU_JOB
+    set LOCK_OWNER_ = null, LOCK_EXP_TIME_ = null
+    where ID_ = #{id,jdbcType=VARCHAR}
+  </Update>
 
   <!-- JOB UPDATE STATEMENTS -->
   <Update Id="updateJobTenantIdForDeployment">
@@ -285,11 +393,11 @@
     ${limitAfter}
   </Select>
 
-	<select id="selectJobsByProcessInstanceId" ResultMap="jobResultMap">
+	<Select Id="selectJobsByProcessInstanceId" ResultMap="jobResultMap">
 		select *
 		from ACT_RU_JOB J
 		where J.PROCESS_INSTANCE_ID_ = #{processInstanceId}
-	</select>
+	</Select>
 
   <Select Id="selectJobsByConfiguration" ResultMap="jobResultMap">
     select * from ACT_RU_JOB
@@ -297,14 +405,20 @@
     and HANDLER_CFG_ like  #{handlerConfiguration}
   </Select>
 
-	<select id="selectExpiredJobs" ResultMap="jobResultMap">
+  <Select Id="selectExpiredJobs" ResultMap="jobResultMap">
 	  	${limitBefore}
       	select
       	RES.* ${limitBetween} 
       	from ACT_RU_JOB RES
     	where RES.LOCK_EXP_TIME_ is not null and RES.LOCK_EXP_TIME_ &lt; #{lockExpTime}
     	${limitAfter}
-  </select>
+  </Select>
+
+  <Select Id="selectJobsByTypeAndProcessDefinitionId" ResultMap="jobResultMap">
+    select * from ACT_RU_JOB
+    where HANDLER_TYPE_ = #{parameter.handlerType}
+    and PROC_DEF_ID_ = #{parameter.processDefinitionId}
+  </Select>
 
   <Select Id="selectJobsByExecutionId" ResultMap="jobResultMap">
     select *
@@ -337,6 +451,12 @@
     and J.PROC_DEF_ID_ = #{processDefinitionId}
   </Select>
 
+  <Select Id="selectJobByProcessDefinitionId" ResultMap="jobResultMap">
+    select J.*
+    from ACT_RU_JOB J
+    where J.PROC_DEF_ID_ = #{processDefinitionId}
+  </Select>
+
   <Select Id="selectJobByQueryCriteria" ResultMap="jobResultMap">
     ${limitBefore}
     select RES.* ${limitBetween}
@@ -345,332 +465,18 @@
     ${limitAfter}
   </Select>
 
-  <Select Id="selectJobCountByQueryCriteria" resultType="long">
+  <Select Id="selectJobCountByQueryCriteria" ResultType="long">
     select count(distinct RES.ID_)
     <Include RefId="selectJobByQueryCriteriaSql"/>
   </Select>
 
-  <!-- TIMER INSERT -->
-
-  <Insert Id="insertTimer">
-    insert into ACT_RU_JOB (
-    ID_,
-    REV_,
-    TYPE_,
-    LOCK_OWNER_,
-    LOCK_EXP_TIME_,
-    EXCLUSIVE_,
-    EXECUTION_ID_,
-    PROCESS_INSTANCE_ID_,
-    PROC_DEF_ID_,
-    RETRIES_,
-    EXCEPTION_STACK_ID_,
-    EXCEPTION_MSG_,
-    DUEDATE_,
-    REPEAT_,
-    HANDLER_TYPE_,
-    HANDLER_CFG_,
-    TENANT_ID_)
-    values (#{id},
-    1,
-    'timer',
-    #{lockOwner},
-    #{lockExpirationTime},
-    #{exclusive},
-    #{executionId},
-    #{processInstanceId},
-    #{processDefinitionId},
-    #{retries},
-    #{exceptionByteArrayRef},
-    #{exceptionMessage},
-    #{duedate},
-    #{repeat},
-    #{jobHandlerType},
-    #{jobHandlerConfiguration},
-    #{tenantId}
-    )
-  </Insert>
-
-  <Insert Id="bulkInsertTimer">
-    INSERT INTO ACT_RU_JOB (
-    ID_,
-    REV_,
-    TYPE_,
-    LOCK_OWNER_,
-    LOCK_EXP_TIME_,
-    EXCLUSIVE_,
-    EXECUTION_ID_,
-    PROCESS_INSTANCE_ID_,
-    PROC_DEF_ID_,
-    RETRIES_,
-    EXCEPTION_STACK_ID_,
-    EXCEPTION_MSG_,
-    DUEDATE_,
-    REPEAT_,
-    HANDLER_TYPE_,
-    HANDLER_CFG_,
-    TENANT_ID_) VALUES
-    <For collection="list" item="job" index="index" separator=",">
-      (#{id},
-      1,
-      #{jobType},
-      #{lockOwner},
-      #{lockExpirationTime},
-      #{exclusive},
-      #{executionId},
-      #{processInstanceId},
-      #{processDefinitionId},
-      #{retries},
-      #{exceptionByteArrayRef},
-      #{exceptionMessage},
-      #{duedate},
-      #{repeat},
-      #{jobHandlerType},
-      #{jobHandlerConfiguration},
-      #{tenantId})
-    </For>
-  </Insert>
-
-  <Insert Id="bulkInsertTimer_oracle">
-    INSERT ALL
-    <For collection="list" item="job" index="index">
-      INTO ACT_RU_JOB (
-      ID_,
-      REV_,
-      TYPE_,
-      LOCK_OWNER_,
-      LOCK_EXP_TIME_,
-      EXCLUSIVE_,
-      EXECUTION_ID_,
-      PROCESS_INSTANCE_ID_,
-      PROC_DEF_ID_,
-      RETRIES_,
-      EXCEPTION_STACK_ID_,
-      EXCEPTION_MSG_,
-      DUEDATE_,
-      REPEAT_,
-      HANDLER_TYPE_,
-      HANDLER_CFG_,
-      TENANT_ID_) VALUES
-      (#{id},
-      1,
-      #{jobType},
-      #{lockOwner},
-      #{lockExpirationTime},
-      #{exclusive},
-      #{executionId},
-      #{processInstanceId},
-      #{processDefinitionId},
-      #{retries},
-      #{exceptionByteArrayRef},
-      #{exceptionMessage},
-      #{duedate},
-      #{repeat},
-      #{jobHandlerType},
-      #{jobHandlerConfiguration},
-      #{tenantId})
-    </For>
-    SELECT * FROM dual
-  </Insert>
-
-  <!-- TIMER UPDATE -->
-
-  <Update Id="updateTimer">
-    update ACT_RU_JOB
-    <Set>
-      REV_ =  #{revisionNext},
-      LOCK_EXP_TIME_ = #{lockExpirationTime},
-      LOCK_OWNER_ = #{lockOwner},
-      RETRIES_ = #{retries},
-      EXCEPTION_STACK_ID_ = #{exceptionByteArrayRef},
-      EXCEPTION_MSG_ = #{exceptionMessage},
-      DUEDATE_ = #{duedate}
-    </Set>
-    where ID_= #{id}
-    and REV_ = #{revision}
-  </Update>
-
-  <!-- TIMER SELECT -->
-
-  <Select Id="selectUnlockedTimersByDuedate" ResultMap="jobResultMap">
-    select RES.*
+  <Select Id="selectJobsToExecute" ResultMap="jobResultMap">
+    ${limitBefore}
+    select
+    RES.* ${limitBetween}
     from ACT_RU_JOB RES
-    LEFT OUTER JOIN ACT_RU_EXECUTION PI ON PI.ID_ = RES.PROCESS_INSTANCE_ID_
-    where (RES.TYPE_ = 'timer')
-    and (RES.DUEDATE_ &lt; #{parameter})
-    and (RES.LOCK_OWNER_ is null or RES.LOCK_EXP_TIME_ &lt; #{parameter})
-    and (RES.RETRIES_  &gt; 0)
-    and (
-    (RES.EXECUTION_ID_ is null)
-    or
-    (PI.SUSPENSION_STATE_ = 1)
-    )
-    order by DUEDATE_
+    where LOCK_EXP_TIME_ is null
+    ${limitAfter}
   </Select>
-
-  <Select Id="selectUnlockedTimersByDuedate_oracle"
-          ResultMap="jobResultMap">
-    select RES.*
-    from ACT_RU_JOB RES
-    LEFT OUTER JOIN ACT_RU_EXECUTION PI ON PI.ID_ = RES.PROCESS_INSTANCE_ID_
-    where (RES.TYPE_ = 'timer')
-    and (RES.DUEDATE_ &lt; #{parameter})
-    and (NVL(RES.LOCK_OWNER_, 'UNDEF')='UNDEF' OR RES.LOCK_EXP_TIME_ &lt; #{parameter})
-    and (RES.RETRIES_ &gt; 0)
-    and (NVL(RES.EXECUTION_ID_ , 'UNDEF')='UNDEF' OR
-    exists (select 1 from ACT_RU_EXECUTION PI where PI.ID_ =
-    RES.PROCESS_INSTANCE_ID_ and PI.SUSPENSION_STATE_ = 1)
-    )
-    order by DUEDATE_
-  </Select>
-
-  <Select Id="selectTimersByExecutionId" ResultMap="jobResultMap">
-    select *
-    from ACT_RU_JOB
-    where (RETRIES_ &gt; 0)
-    and (TYPE_ = 'timer')
-    and (EXECUTION_ID_ = #{parameter})
-  </Select>
-
-
-  <!-- MESSAGE INSERT -->
-
-  <Insert Id="bulkInsertMessage">
-    INSERT INTO ACT_RU_JOB (
-    ID_,
-    REV_,
-    TYPE_,
-    LOCK_OWNER_,
-    LOCK_EXP_TIME_,
-    EXCLUSIVE_,
-    EXECUTION_ID_,
-    PROCESS_INSTANCE_ID_,
-    PROC_DEF_ID_,
-    DUEDATE_,
-    RETRIES_,
-    EXCEPTION_STACK_ID_,
-    EXCEPTION_MSG_,
-    HANDLER_TYPE_,
-    HANDLER_CFG_,
-    TENANT_ID_) VALUES
-    <For collection="list" item="job" index="index" separator=",">
-      (#{id},
-      1,
-      #{jobType},
-      #{lockOwner},
-      #{lockExpirationTime},
-      #{exclusive},
-      #{executionId},
-      #{processInstanceId},
-      #{processDefinitionId},
-      #{duedate},
-      #{retries},
-      #{exceptionByteArrayRef},
-      #{exceptionMessage},
-      #{jobHandlerType},
-      #{jobHandlerConfiguration},
-      #{tenantId})
-    </For>
-  </Insert>
-
-  <Insert Id="bulkInsertMessage_oracle">
-    INSERT ALL
-    <For collection="list" item="job" index="index">
-      INTO ACT_RU_JOB (
-      ID_,
-      REV_,
-      TYPE_,
-      LOCK_OWNER_,
-      LOCK_EXP_TIME_,
-      EXCLUSIVE_,
-      EXECUTION_ID_,
-      PROCESS_INSTANCE_ID_,
-      PROC_DEF_ID_,
-      DUEDATE_,
-      RETRIES_,
-      EXCEPTION_STACK_ID_,
-      EXCEPTION_MSG_,
-      HANDLER_TYPE_,
-      HANDLER_CFG_,
-      TENANT_ID_) VALUES
-      (#{id},
-      1,
-      #{jobType},
-      #{lockOwner},
-      #{lockExpirationTime},
-      #{exclusive},
-      #{executionId},
-      #{processInstanceId},
-      #{processDefinitionId},
-      #{duedate},
-      #{retries},
-      #{exceptionByteArrayRef},
-      #{exceptionMessage},
-      #{jobHandlerType},
-      #{jobHandlerConfiguration},
-      #{tenantId})
-    </For>
-    SELECT * FROM dual
-  </Insert>
-
-  <Insert Id="insertMessage">
-    insert into ACT_RU_JOB (
-    ID_,
-    REV_,
-    TYPE_,
-    LOCK_OWNER_,
-    LOCK_EXP_TIME_,
-    EXCLUSIVE_,
-    EXECUTION_ID_,
-    PROCESS_INSTANCE_ID_,
-    PROC_DEF_ID_,
-    DUEDATE_,
-    RETRIES_,
-    EXCEPTION_STACK_ID_,
-    EXCEPTION_MSG_,
-    HANDLER_TYPE_,
-    HANDLER_CFG_,
-    TENANT_ID_)
-    values (#{id},
-    1,
-    'message',
-    #{lockOwner},
-    #{lockExpirationTime},
-    #{exclusive},
-    #{executionId},
-    #{processInstanceId},
-    #{processDefinitionId},
-    #{duedate},
-    #{retries},
-    #{exceptionByteArrayRef},
-    #{exceptionMessage},
-    #{jobHandlerType},
-    #{jobHandlerConfiguration},
-    #{tenantId}
-    )
-  </Insert>
-
-  <!-- MESSAGE UPDATE -->
-
-  <Update Id="updateMessage">
-    update ACT_RU_JOB
-    <Set>
-      REV_ =  #{revisionNext},
-      LOCK_EXP_TIME_ = #{lockExpirationTime},
-      LOCK_OWNER_ = #{lockOwner},
-      RETRIES_ = #{retries},
-      EXCEPTION_STACK_ID_ = #{exceptionByteArrayRef},
-      EXCEPTION_MSG_ = #{exceptionMessage},
-      DUEDATE_ = #{duedate}
-    </Set>
-    where ID_= #{id}
-    and REV_ = #{revision}
-  </Update>
-
-  <Update Id="unacquireJob">
-    update ACT_RU_JOB
-    set DUEDATE_ = #{dueDate}, LOCK_OWNER_ = null, LOCK_EXP_TIME_ = null
-    where ID_ = #{id}
-  </Update>
 
 </SmartSqlMap>

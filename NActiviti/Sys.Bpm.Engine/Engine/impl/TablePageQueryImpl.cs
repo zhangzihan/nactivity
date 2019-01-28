@@ -70,7 +70,7 @@ namespace org.activiti.engine.impl
 
         protected internal virtual void addOrder(string column, string sortOrder)
         {
-            if (string.ReferenceEquals(order, null))
+            if (ReferenceEquals(order, null))
             {
                 order = "";
             }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -136,6 +137,10 @@ namespace org.activiti.engine.impl.cfg.multitenant
                 this.dataSources = value;
             }
         }
+
+        public DbProviderFactory DbProviderFactory => CurrentDataSource.DbProviderFactory;
+
+        public string ConnectionString => CurrentDataSource.ConnectionString;
 
 
         // Unsupported //////////////////////////////////////////////////////////

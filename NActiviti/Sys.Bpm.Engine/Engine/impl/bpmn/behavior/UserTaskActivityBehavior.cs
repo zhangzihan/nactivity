@@ -72,17 +72,17 @@ namespace org.activiti.engine.impl.bpmn.behavior
             if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
             {
                 JToken taskElementProperties = Context.getBpmnOverrideElementProperties(userTask.Id, execution.ProcessDefinitionId);
-                activeTaskName = getActiveValue(userTask.Name, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_NAME, taskElementProperties);
-                activeTaskDescription = getActiveValue(userTask.Documentation, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_DESCRIPTION, taskElementProperties);
-                activeTaskDueDate = getActiveValue(userTask.DueDate, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_DUEDATE, taskElementProperties);
-                activeTaskPriority = getActiveValue(userTask.Priority, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_PRIORITY, taskElementProperties);
-                activeTaskCategory = getActiveValue(userTask.Category, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_CATEGORY, taskElementProperties);
-                activeTaskFormKey = getActiveValue(userTask.FormKey, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_FORM_KEY, taskElementProperties);
-                activeTaskSkipExpression = getActiveValue(userTask.SkipExpression, org.activiti.engine.DynamicBpmnConstants_Fields.TASK_SKIP_EXPRESSION, taskElementProperties);
-                activeTaskAssignee = getActiveValue(userTask.Assignee, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_ASSIGNEE, taskElementProperties);
-                activeTaskOwner = getActiveValue(userTask.Owner, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_OWNER, taskElementProperties);
-                activeTaskCandidateUsers = getActiveValueList(userTask.CandidateUsers, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_USERS, taskElementProperties);
-                activeTaskCandidateGroups = getActiveValueList(userTask.CandidateGroups, org.activiti.engine.DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_GROUPS, taskElementProperties);
+                activeTaskName = getActiveValue(userTask.Name, DynamicBpmnConstants_Fields.USER_TASK_NAME, taskElementProperties);
+                activeTaskDescription = getActiveValue(userTask.Documentation, DynamicBpmnConstants_Fields.USER_TASK_DESCRIPTION, taskElementProperties);
+                activeTaskDueDate = getActiveValue(userTask.DueDate, DynamicBpmnConstants_Fields.USER_TASK_DUEDATE, taskElementProperties);
+                activeTaskPriority = getActiveValue(userTask.Priority, DynamicBpmnConstants_Fields.USER_TASK_PRIORITY, taskElementProperties);
+                activeTaskCategory = getActiveValue(userTask.Category, DynamicBpmnConstants_Fields.USER_TASK_CATEGORY, taskElementProperties);
+                activeTaskFormKey = getActiveValue(userTask.FormKey, DynamicBpmnConstants_Fields.USER_TASK_FORM_KEY, taskElementProperties);
+                activeTaskSkipExpression = getActiveValue(userTask.SkipExpression, DynamicBpmnConstants_Fields.TASK_SKIP_EXPRESSION, taskElementProperties);
+                activeTaskAssignee = getActiveValue(userTask.Assignee, DynamicBpmnConstants_Fields.USER_TASK_ASSIGNEE, taskElementProperties);
+                activeTaskOwner = getActiveValue(userTask.Owner, DynamicBpmnConstants_Fields.USER_TASK_OWNER, taskElementProperties);
+                activeTaskCandidateUsers = getActiveValueList(userTask.CandidateUsers, DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_USERS, taskElementProperties);
+                activeTaskCandidateGroups = getActiveValueList(userTask.CandidateGroups, DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_GROUPS, taskElementProperties);
 
             }
             else
@@ -243,7 +243,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             {
                 IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
                 eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TASK_CREATED, task));
-                if (!string.ReferenceEquals(((task.ITask)task).Assignee, null))
+                if (!ReferenceEquals(((task.ITask)task).Assignee, null))
                 {
                     eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TASK_ASSIGNED, task));
                 }

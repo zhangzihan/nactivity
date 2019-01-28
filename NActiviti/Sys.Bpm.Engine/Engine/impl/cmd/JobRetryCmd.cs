@@ -58,7 +58,7 @@ namespace org.activiti.engine.impl.cmd
             }
 
             IAbstractJobEntity newJobEntity = null;
-            if (currentFlowElement == null || string.ReferenceEquals(failedJobRetryTimeCycleValue, null))
+            if (currentFlowElement == null || ReferenceEquals(failedJobRetryTimeCycleValue, null))
             {
 
                 //log.debug("activity or FailedJobRetryTimerCycleValue is null in job " + jobId + ". only decrementing retries.");
@@ -91,7 +91,7 @@ namespace org.activiti.engine.impl.cmd
                 {
                     DurationHelper durationHelper = new DurationHelper(failedJobRetryTimeCycleValue, processEngineConfig.Clock);
                     int jobRetries = job.Retries;
-                    if (string.ReferenceEquals(job.ExceptionMessage, null))
+                    if (ReferenceEquals(job.ExceptionMessage, null))
                     {
                         // change default retries to the ones configured
                         jobRetries = durationHelper.Times;
@@ -108,7 +108,7 @@ namespace org.activiti.engine.impl.cmd
 
                     newJobEntity.Duedate = durationHelper.DateAfter;
 
-                    if (string.ReferenceEquals(job.ExceptionMessage, null))
+                    if (ReferenceEquals(job.ExceptionMessage, null))
                     { // is it the first exception
                         //log.debug("Applying JobRetryStrategy '" + failedJobRetryTimeCycleValue + "' the first time for job " + job.Id + " with " + durationHelper.Times + " retries");
 
@@ -174,7 +174,7 @@ namespace org.activiti.engine.impl.cmd
 
         protected internal virtual IExecutionEntity fetchExecutionEntity(ICommandContext commandContext, string executionId)
         {
-            if (string.ReferenceEquals(executionId, null))
+            if (ReferenceEquals(executionId, null))
             {
                 return null;
             }

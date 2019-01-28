@@ -38,11 +38,11 @@ namespace org.activiti.engine.impl.cmd
 
         public SetProcessInstanceBusinessKeyCmd(string processInstanceId, string businessKey)
         {
-            if (string.ReferenceEquals(processInstanceId, null) || processInstanceId.Length < 1)
+            if (ReferenceEquals(processInstanceId, null) || processInstanceId.Length < 1)
             {
                 throw new ActivitiIllegalArgumentException("The process instance id is mandatory, but '" + processInstanceId + "' has been provided.");
             }
-            if (string.ReferenceEquals(businessKey, null))
+            if (ReferenceEquals(businessKey, null))
             {
                 throw new ActivitiIllegalArgumentException("The business key is mandatory, but 'null' has been provided.");
             }

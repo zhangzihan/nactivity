@@ -47,10 +47,10 @@ namespace org.activiti.engine.impl.bpmn.deployer
             bpmnDeploymentHelper.verifyProcessDefinitionsDoNotShareKeys(parsedDeployment.AllProcessDefinitions);
 
             bpmnDeploymentHelper.copyDeploymentValuesToProcessDefinitions(parsedDeployment.Deployment, parsedDeployment.AllProcessDefinitions);
-            bpmnDeploymentHelper.ResourceNamesOnProcessDefinitions = parsedDeployment;
+            bpmnDeploymentHelper.ResourceNamesOnProcessDefinitions(parsedDeployment);
 
             //    createAndPersistNewDiagramsIfNeeded(parsedDeployment);
-            ProcessDefinitionDiagramNames = parsedDeployment;
+            ProcessDefinitionDiagramNames(parsedDeployment);
 
             if (deployment.New)
             {
@@ -105,18 +105,17 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// be called after createAndPersistNewDiagramsAsNeeded to ensure that any newly-created diagrams
         /// already have their resources attached to the deployment.
         /// </summary>
-        protected internal virtual ParsedDeployment ProcessDefinitionDiagramNames
+        protected internal virtual ParsedDeployment ProcessDefinitionDiagramNames(ParsedDeployment value)
         {
-            set
-            {
-                IDictionary<string, IResourceEntity> resources = value.Deployment.Resources;
+            IDictionary<string, IResourceEntity> resources = value.Deployment.GetResources();
 
-                foreach (IProcessDefinitionEntity processDefinition in value.AllProcessDefinitions)
-                {
-                    string diagramResourceName = ResourceNameUtil.getProcessDiagramResourceNameFromDeployment(processDefinition, resources);
-                    processDefinition.DiagramResourceName = diagramResourceName;
-                }
+            foreach (IProcessDefinitionEntity processDefinition in value.AllProcessDefinitions)
+            {
+                string diagramResourceName = ResourceNameUtil.getProcessDiagramResourceNameFromDeployment(processDefinition, resources);
+                processDefinition.DiagramResourceName = diagramResourceName;
             }
+
+            return value;
         }
 
         /// <summary>
@@ -125,7 +124,6 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// </summary>
         protected internal virtual IDictionary<IProcessDefinitionEntity, IProcessDefinitionEntity> getPreviousVersionsOfProcessDefinitions(ParsedDeployment parsedDeployment)
         {
-
             IDictionary<IProcessDefinitionEntity, IProcessDefinitionEntity> result = new Dictionary<IProcessDefinitionEntity, IProcessDefinitionEntity>();
 
             foreach (IProcessDefinitionEntity newDefinition in parsedDeployment.AllProcessDefinitions)
@@ -188,7 +186,6 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
         protected internal virtual void updateTimersAndEvents(ParsedDeployment parsedDeployment, IDictionary<IProcessDefinitionEntity, IProcessDefinitionEntity> mapNewToOldProcessDefinitions)
         {
-
             foreach (IProcessDefinitionEntity processDefinition in parsedDeployment.AllProcessDefinitions)
             {
                 if (mapNewToOldProcessDefinitions.TryGetValue(processDefinition, out var item))
@@ -289,7 +286,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
                             localizationValuesChanged = true;
                         }
 
-                        if (!string.ReferenceEquals(documentation, null) && !isEqualToCurrentLocalizationValue(locale, processId, "description", documentation, infoNode))
+                        if (!ReferenceEquals(documentation, null) && !isEqualToCurrentLocalizationValue(locale, processId, "description", documentation, infoNode))
                         {
                             dynamicBpmnService.changeLocalizationDescription(locale, processId, documentation, infoNode);
                             localizationValuesChanged = true;
@@ -356,7 +353,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
                                     localizationValuesChanged = true;
                                 }
 
-                                if (!string.ReferenceEquals(documentation, null) && isEqualToCurrentLocalizationValue(locale, flowElementId, "description", documentation, infoNode) == false)
+                                if (!ReferenceEquals(documentation, null) && isEqualToCurrentLocalizationValue(locale, flowElementId, "description", documentation, infoNode) == false)
                                 {
                                     dynamicBpmnService.changeLocalizationDescription(locale, flowElementId, documentation, infoNode);
                                     localizationValuesChanged = true;
@@ -407,7 +404,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
                 {
                     foreach (ExtensionElement localizationElement in localizationElements)
                     {
-                        if (org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX.Equals(localizationElement.NamespacePrefix))
+                        if (BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX.Equals(localizationElement.NamespacePrefix))
                         {
                             string locale = localizationElement.getAttributeValue(null, "locale");
                             string name = localizationElement.getAttributeValue(null, "name");
@@ -423,13 +420,13 @@ namespace org.activiti.engine.impl.bpmn.deployer
                                 }
                             }
 
-                            if (!string.ReferenceEquals(name, null) && isEqualToCurrentLocalizationValue(locale, dataObject.Id, org.activiti.engine.DynamicBpmnConstants_Fields.LOCALIZATION_NAME, name, infoNode) == false)
+                            if (!ReferenceEquals(name, null) && isEqualToCurrentLocalizationValue(locale, dataObject.Id, DynamicBpmnConstants_Fields.LOCALIZATION_NAME, name, infoNode) == false)
                             {
                                 dynamicBpmnService.changeLocalizationName(locale, dataObject.Id, name, infoNode);
                                 localizationValuesChanged = true;
                             }
 
-                            if (!string.ReferenceEquals(documentation, null) && isEqualToCurrentLocalizationValue(locale, dataObject.Id, org.activiti.engine.DynamicBpmnConstants_Fields.LOCALIZATION_DESCRIPTION, documentation, infoNode) == false)
+                            if (!ReferenceEquals(documentation, null) && isEqualToCurrentLocalizationValue(locale, dataObject.Id, DynamicBpmnConstants_Fields.LOCALIZATION_DESCRIPTION, documentation, infoNode) == false)
                             {
 
                                 dynamicBpmnService.changeLocalizationDescription(locale, dataObject.Id, documentation, infoNode);

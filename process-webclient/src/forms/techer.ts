@@ -1,17 +1,40 @@
+import Axios from 'axios';
+import { BaseForm } from './baseform';
 import { EventAggregator } from "aurelia-event-aggregator";
 import { inject } from "aurelia-framework";
+import contants from 'contants';
 
-@inject(EventAggregator)
-export class Techer {
+export class Techer extends BaseForm {
 
     cityName;
 
     workflow;
 
-    constructor(private es: EventAggregator) {
-        this.es.subscribe("openWorkflow", (wf) => {
-            this.workflow = wf;
+    task;
+
+    constructor(...args) {
+        super(args[0], args[1]);
+    }
+
+    activate(model, nctx) {
+        super.activate(model, nctx);
+
+        this.es.subscribe("next", (task) => {
+            this.task = task;
         });
     }
 
+    submit() {
+        Axios.post(`${contants.serverUrl}/${this.task.id}/complete`, {
+            taskId: this.task.id,
+            outputVariables: {
+                cityName: this.cityName
+            }
+        }).then((res) => {
+            this.es.publish("reloadMyTasks");
+            this.es.publish("completed");
+        }).catch((res) => {
+
+        });
+    }
 }

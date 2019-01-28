@@ -98,7 +98,7 @@ namespace org.activiti.engine
         protected internal string processEngineName = ProcessEngineFactory.NAME_DEFAULT;
         protected internal int idBlockSize = 2500;
         protected internal string history = HistoryLevel.AUDIT.Key;
-        protected internal bool asyncExecutorActivate;
+        protected internal bool asyncExecutorActivate = false;
 
         protected internal string mailServerHost = "localhost";
         protected internal string mailServerUsername; // by default no name and password are provided, which

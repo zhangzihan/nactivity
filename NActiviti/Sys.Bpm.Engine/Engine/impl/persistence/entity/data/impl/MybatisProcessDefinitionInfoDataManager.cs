@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IProcessDefinitionInfoEntity findProcessDefinitionInfoByProcessDefinitionId(string processDefinitionId)
         {
-            return DbSqlSession.selectOne<ProcessDefinitionInfoEntityImpl, IProcessDefinitionInfoEntity>("selectProcessDefinitionInfoByProcessDefinitionId", new KeyValuePair<string, object>("processDefinitionId", processDefinitionId));
+            return DbSqlSession.selectOne<ProcessDefinitionInfoEntityImpl, IProcessDefinitionInfoEntity>("selectProcessDefinitionInfoByProcessDefinitionId", new { processDefinitionId });
         }
     }
 

@@ -50,7 +50,7 @@ namespace org.activiti.engine.impl.cmd
 
         protected internal virtual IJobEntity getJobToDelete(ICommandContext commandContext)
         {
-            if (string.ReferenceEquals(jobId, null))
+            if (ReferenceEquals(jobId, null))
             {
                 throw new ActivitiIllegalArgumentException("jobId is null");
             }
@@ -68,7 +68,7 @@ namespace org.activiti.engine.impl.cmd
             // We need to check if the job was locked, ie acquired by the job acquisition thread
             // This happens if the the job was already acquired, but not yet executed.
             // In that case, we can't allow to delete the job.
-            if (!string.ReferenceEquals(job.LockOwner, null))
+            if (!ReferenceEquals(job.LockOwner, null))
             {
                 throw new ActivitiException("Cannot delete job when the job is being executed. Try again later.");
             }

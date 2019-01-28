@@ -18,9 +18,9 @@ namespace org.activiti.engine.impl.jobexecutor
 {
     public sealed class TimerDeclarationType
 	{
-	  public static readonly TimerDeclarationType DATE = new TimerDeclarationType("DATE", InnerEnum.DATE, org.activiti.engine.impl.calendar.DueDateBusinessCalendar.NAME);
-	  public static readonly TimerDeclarationType DURATION = new TimerDeclarationType("DURATION", InnerEnum.DURATION, org.activiti.engine.impl.calendar.DurationBusinessCalendar.NAME);
-	  public static readonly TimerDeclarationType CYCLE = new TimerDeclarationType("CYCLE", InnerEnum.CYCLE, org.activiti.engine.impl.calendar.CycleBusinessCalendar.NAME);
+	  public static readonly TimerDeclarationType DATE = new TimerDeclarationType("DATE", InnerEnum.DATE, calendar.DueDateBusinessCalendar.NAME);
+	  public static readonly TimerDeclarationType DURATION = new TimerDeclarationType("DURATION", InnerEnum.DURATION, calendar.DurationBusinessCalendar.NAME);
+	  public static readonly TimerDeclarationType CYCLE = new TimerDeclarationType("CYCLE", InnerEnum.CYCLE, calendar.CycleBusinessCalendar.NAME);
 
 	  private static readonly IList<TimerDeclarationType> valueList = new List<TimerDeclarationType>();
 
@@ -71,7 +71,7 @@ namespace org.activiti.engine.impl.jobexecutor
 
 		public static TimerDeclarationType valueOf(string name)
 		{
-			foreach (TimerDeclarationType enumInstance in TimerDeclarationType.valueList)
+			foreach (TimerDeclarationType enumInstance in valueList)
 			{
 				if (enumInstance.nameValue == name)
 				{

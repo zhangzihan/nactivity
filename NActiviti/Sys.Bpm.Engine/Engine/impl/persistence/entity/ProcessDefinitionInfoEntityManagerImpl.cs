@@ -66,7 +66,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 ByteArrayRef @ref = new ByteArrayRef(processDefinitionInfo.InfoJsonId);
                 @ref.setValue("json", json);
 
-                if (string.ReferenceEquals(processDefinitionInfo.InfoJsonId, null))
+                if (ReferenceEquals(processDefinitionInfo.InfoJsonId, null))
                 {
                     processDefinitionInfo.InfoJsonId = @ref.Id;
                     updateProcessDefinitionInfo(processDefinitionInfo);
@@ -76,7 +76,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public virtual void deleteInfoJson(IProcessDefinitionInfoEntity processDefinitionInfo)
         {
-            if (!string.ReferenceEquals(processDefinitionInfo.InfoJsonId, null))
+            if (!ReferenceEquals(processDefinitionInfo.InfoJsonId, null))
             {
                 ByteArrayRef @ref = new ByteArrayRef(processDefinitionInfo.InfoJsonId);
                 @ref.delete();

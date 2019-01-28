@@ -58,12 +58,12 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IHistoricDetailEntity> findHistoricDetailsByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<HistoricDetailEntityImpl, IHistoricDetailEntity>("selectHistoricDetailByProcessInstanceId", new KeyValuePair<string, object>("processInstanceId", processInstanceId));
+            return DbSqlSession.selectList<HistoricDetailEntityImpl, IHistoricDetailEntity>("selectHistoricDetailByProcessInstanceId", new { processInstanceId });
         }
 
         public virtual IList<IHistoricDetailEntity> findHistoricDetailsByTaskId(string taskId)
         {
-            return DbSqlSession.selectList<HistoricDetailEntityImpl, IHistoricDetailEntity>("selectHistoricDetailByTaskId", new KeyValuePair<string, object>("taskId", taskId));
+            return DbSqlSession.selectList<HistoricDetailEntityImpl, IHistoricDetailEntity>("selectHistoricDetailByTaskId", new { taskId });
         }
 
         public virtual long findHistoricDetailCountByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery)

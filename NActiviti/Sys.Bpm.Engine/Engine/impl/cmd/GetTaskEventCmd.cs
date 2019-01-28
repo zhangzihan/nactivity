@@ -31,7 +31,7 @@ namespace org.activiti.engine.impl.cmd
         {
             this.eventId = eventId;
 
-            if (string.ReferenceEquals(eventId, null))
+            if (ReferenceEquals(eventId, null))
             {
                 throw new ActivitiIllegalArgumentException("eventId is null");
             }

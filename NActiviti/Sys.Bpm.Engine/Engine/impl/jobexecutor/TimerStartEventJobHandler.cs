@@ -14,6 +14,7 @@
  */
 namespace org.activiti.engine.impl.jobexecutor
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
@@ -21,10 +22,13 @@ namespace org.activiti.engine.impl.jobexecutor
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
+    using Sys;
 
     public class TimerStartEventJobHandler : TimerEventHandler, IJobHandler
     {
         public const string TYPE = "timer-start-event";
+
+        private readonly ILogger log = ProcessEngineServiceProvider.LoggerService<TimerStartEventJobHandler>();
 
         public virtual string Type
         {
@@ -36,7 +40,6 @@ namespace org.activiti.engine.impl.jobexecutor
 
         public virtual void execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
         {
-
             IProcessDefinitionEntity processDefinitionEntity = ProcessDefinitionUtil.getProcessDefinitionFromDatabase(job.ProcessDefinitionId); // From DB -> need to get latest suspended state
             if (processDefinitionEntity == null)
             {
@@ -47,16 +50,15 @@ namespace org.activiti.engine.impl.jobexecutor
             {
                 if (!processDefinitionEntity.Suspended)
                 {
-
                     if (commandContext.EventDispatcher.Enabled)
                     {
                         commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TIMER_FIRED, job));
                     }
 
                     // Find initial flow element matching the signal start event
-                    org.activiti.bpmn.model.Process process = ProcessDefinitionUtil.getProcess(job.ProcessDefinitionId);
-                    string activityId = TimerEventHandler.getActivityIdFromConfiguration(configuration);
-                    if (!string.ReferenceEquals(activityId, null))
+                    Process process = ProcessDefinitionUtil.getProcess(job.ProcessDefinitionId);
+                    string activityId = getActivityIdFromConfiguration(configuration);
+                    if (string.IsNullOrWhiteSpace(activityId) == false)
                     {
                         FlowElement flowElement = process.getFlowElement(activityId, true);
                         if (flowElement == null)
@@ -68,26 +70,20 @@ namespace org.activiti.engine.impl.jobexecutor
                     }
                     else
                     {
-                        (new StartProcessInstanceCmd<IProcessEngine>(processDefinitionEntity.Key, null, null, null, job.TenantId)).execute(null);
+                        (new StartProcessInstanceCmd<IProcessEngine>(processDefinitionEntity.Key, null, null, null, job.TenantId)).execute(commandContext);
                     }
-
                 }
                 else
                 {
-                    //log.debug("ignoring timer of suspended process definition {}", processDefinitionEntity.Name);
+                    log.LogDebug($"ignoring timer of suspended process definition {processDefinitionEntity.Name}");
                 }
             }
             catch (Exception e)
             {
-                //    //log.error("exception during timer execution", e);
-                //    throw e;
-                //}
-                //catch (Exception e)
-                //{
-                //    log.error("exception during timer execution", e);
+                log.LogError($"exception during timer execution: {e.Message}");
+
                 throw new ActivitiException("exception during timer execution: " + e.Message, e);
             }
         }
     }
-
 }

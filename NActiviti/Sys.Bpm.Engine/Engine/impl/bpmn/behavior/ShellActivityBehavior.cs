@@ -57,7 +57,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             string redirectErrorStr = getStringFromField(redirectError, execution);
             string cleanEnvStr = getStringFromField(cleanEnv, execution);
 
-            waitFlag = string.ReferenceEquals(waitStr, null) || waitStr.Equals("true");
+            waitFlag = ReferenceEquals(waitStr, null) || waitStr.Equals("true");
             redirectErrorFlag = "true".Equals(redirectErrorStr);
             cleanEnvBoolean = "true".Equals(cleanEnvStr);
             directoryStr = getStringFromField(directory, execution);
@@ -72,23 +72,23 @@ namespace org.activiti.engine.impl.bpmn.behavior
             IList<string> argList = new List<string>();
             argList.Add(commandStr);
 
-            if (!string.ReferenceEquals(arg1Str, null))
+            if (!ReferenceEquals(arg1Str, null))
             {
                 argList.Add(arg1Str);
             }
-            if (!string.ReferenceEquals(arg2Str, null))
+            if (!ReferenceEquals(arg2Str, null))
             {
                 argList.Add(arg2Str);
             }
-            if (!string.ReferenceEquals(arg3Str, null))
+            if (!ReferenceEquals(arg3Str, null))
             {
                 argList.Add(arg3Str);
             }
-            if (!string.ReferenceEquals(arg4Str, null))
+            if (!ReferenceEquals(arg4Str, null))
             {
                 argList.Add(arg4Str);
             }
-            if (!string.ReferenceEquals(arg5Str, null))
+            if (!ReferenceEquals(arg5Str, null))
             {
                 argList.Add(arg5Str);
             }

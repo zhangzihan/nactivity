@@ -21,9 +21,9 @@
     <Result Property="textValue2" Column="TEXT2_" />
     <Result Property="longValue" Column="LONG_" />
   </ResultMap>
-  
+
   <ParameterMap Id="insupVariableInstance">
-      <Parameter Property="byteArrayRef" TypeHandler="二进制引用" />
+    <Parameter Property="(Items_)?byteArrayRef(_p\d)?" TypeHandler="二进制引用" />
   </ParameterMap>
 
   <!-- VARIABLE INSTANCE INSERT -->
@@ -93,7 +93,7 @@
 
   <Delete Id="bulkDeleteVariableInstance">
     delete from ACT_RU_VARIABLE where
-    <For Key="variable" Property="Items" Separator=" or ">
+    <For Key="p" Property="Items" Separator=" or ">
       ID_ = #{id}
     </For>
   </Delete>
@@ -110,9 +110,7 @@
     and TASK_ID_ is null
   </Select>
 
-  <Select Id="selectVariablesByExecutionIds"
-   
-    ResultMap="variableInstanceResultMap">
+  <Select Id="selectVariablesByExecutionIds" ResultMap="variableInstanceResultMap">
     select * from ACT_RU_VARIABLE
     where TASK_ID_ is null
     and EXECUTION_ID_ in

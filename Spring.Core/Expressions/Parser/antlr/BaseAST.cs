@@ -113,7 +113,7 @@ namespace Spring.Expressions.Parser.antlr
 			if (t == null)
 				return false;
 
-			return	(Object.Equals(this.getText(), t.getText())) && 
+			return	(object.Equals(this.getText(), t.getText())) && 
 					(this.Type == t.Type);
 		}
 		

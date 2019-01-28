@@ -42,7 +42,7 @@ namespace org.activiti.bpmn.converter.parser
             {
                 //xtr.next();
 
-                if (xtr.StartElement)
+                if (xtr.IsStartElement())
                 {
                     if (org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EXECUTION_LISTENER.Equals(xtr.LocalName))
                     {

@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl.cmd
 
             ITaskEntity task = null;
             // Validate task
-            if (!string.ReferenceEquals(taskId, null))
+            if (!ReferenceEquals(taskId, null))
             {
                 task = commandContext.TaskEntityManager.findById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
 
@@ -67,7 +67,7 @@ namespace org.activiti.engine.impl.cmd
             }
 
             IExecutionEntity execution = null;
-            if (!string.ReferenceEquals(processInstanceId, null))
+            if (!ReferenceEquals(processInstanceId, null))
             {
                 execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
 
@@ -95,7 +95,7 @@ namespace org.activiti.engine.impl.cmd
             string userId = Authentication.AuthenticatedUserId;
             ICommentEntity comment = commandContext.CommentEntityManager.create();
             comment.UserId = userId;
-            comment.Type = (string.ReferenceEquals(type, null)) ? CommentEntity_Fields.TYPE_COMMENT : type;
+            comment.Type = (ReferenceEquals(type, null)) ? CommentEntity_Fields.TYPE_COMMENT : type;
             comment.Time = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
             comment.TaskId = taskId;
             comment.ProcessInstanceId = processInstanceId;

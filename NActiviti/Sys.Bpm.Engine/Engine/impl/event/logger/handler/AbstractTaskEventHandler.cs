@@ -28,7 +28,7 @@ namespace org.activiti.engine.impl.@event.logger.handler
             putInMapIfNotNull(data, Fields_Fields.PROCESS_INSTANCE_ID, task.ProcessInstanceId);
             putInMapIfNotNull(data, Fields_Fields.EXECUTION_ID, task.ExecutionId);
 
-            if (!string.ReferenceEquals(task.TenantId, null) && !ProcessEngineConfigurationImpl.NO_TENANT_ID.Equals(task.TenantId))
+            if (!ReferenceEquals(task.TenantId, null) && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(task.TenantId))
             {
                 putInMapIfNotNull(data, Fields_Fields.TENANT_ID, task.TenantId); // Important for standalone tasks
             }

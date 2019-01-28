@@ -15,12 +15,14 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.bpmn.behavior
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.@delegate;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.@delegate;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
+    using Sys;
 
 
     /// <summary>
@@ -33,6 +35,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
     [Serializable]
     public class InclusiveGatewayActivityBehavior : GatewayActivityBehavior, IInactiveActivityBehavior
     {
+        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<InclusiveGatewayActivityBehavior>();
 
         private const long serialVersionUID = 1L;
 
@@ -86,8 +89,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             // If no execution can reach the gateway, the gateway activates and executes fork behavior
             if (!oneExecutionCanReachGateway)
             {
-
-                //logger.debug("Inclusive gateway cannot be reached by any execution and is activated");
+                logger.LogDebug("Inclusive gateway cannot be reached by any execution and is activated");
 
                 // Kill all executions here (except the incoming)
                 ICollection<IExecutionEntity> executionsInGateway = executionEntityManager.findInactiveExecutionsByActivityIdAndProcessInstanceId(execution.CurrentActivityId, execution.ProcessInstanceId);
@@ -105,5 +107,4 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
         }
     }
-
 }

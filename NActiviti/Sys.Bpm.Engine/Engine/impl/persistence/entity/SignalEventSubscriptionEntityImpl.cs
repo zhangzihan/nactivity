@@ -38,7 +38,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             set
             {
-                if (!string.ReferenceEquals(value, null) && value.Contains("{\"scope\":"))
+                if (!ReferenceEquals(value, null) && value.Contains("{\"scope\":"))
                 {
                     this.configuration = value;
                 }
@@ -54,7 +54,7 @@ namespace org.activiti.engine.impl.persistence.entity
             get
             {
                 string scope = extractScopeFormConfiguration();
-                return (!string.ReferenceEquals(scope, null)) && (Signal.SCOPE_PROCESS_INSTANCE.Equals(scope));
+                return (!ReferenceEquals(scope, null)) && (Signal.SCOPE_PROCESS_INSTANCE.Equals(scope));
             }
         }
 
@@ -63,13 +63,13 @@ namespace org.activiti.engine.impl.persistence.entity
             get
             {
                 string scope = extractScopeFormConfiguration();
-                return (string.ReferenceEquals(scope, null)) || (Signal.SCOPE_GLOBAL.Equals(scope));
+                return (ReferenceEquals(scope, null)) || (Signal.SCOPE_GLOBAL.Equals(scope));
             }
         }
 
         protected internal virtual string extractScopeFormConfiguration()
         {
-            if (string.ReferenceEquals(this.configuration, null))
+            if (ReferenceEquals(this.configuration, null))
             {
                 return null;
             }

@@ -72,7 +72,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                     }
 
                     value = expression.getValue(execution);
-                    if (!string.ReferenceEquals(resultVariable, null))
+                    if (!ReferenceEquals(resultVariable, null))
                     {
                         execution.setVariable(resultVariable, value);
                     }

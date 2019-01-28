@@ -357,13 +357,13 @@
         left outer join ACT_RE_PROCDEF DEPLOY_P_OR${orIndex} ON RES.PROC_DEF_ID_ = DEPLOY_P_OR${orIndex}.ID_
       </IsNotNull>
     </For>
-    <IsNotNull Property="eventSubscriptions">
+    <IsNotNull Property="eventSubscriptions != null">
       <For Property="eventSubscriptions" Index="index" Key="eventSubscriptionValue">
         inner join ACT_RU_EVENT_SUBSCR EVT${index} on RES.ID_ = EVT${index}.EXECUTION_ID_
       </For>
     </IsNotNull>
-    <IsNotNull Property="businessKey">
-      <IsNotNull Property="includeChildExecutionsWithBusinessKeyQuery">
+    <IsNotNull Property="businessKey != null">
+      <IsNotNull Property="includeChildExecutionsWithBusinessKeyQuery != null">
         inner join ACT_RU_EXECUTION INST on RES.PROC_INST_ID_ = INST.ID_
       </IsNotNull>
     </IsNotNull>
@@ -377,10 +377,10 @@
       <IsTrue Property="onlyProcessInstances">
         RES.PARENT_ID_ is null
       </IsTrue>
-      <IsNotNull Property="processDefinitionId">
+      <IsNotNull Property="processDefinitionId != null">
         and P.ID_ = #{processDefinitionId}
       </IsNotNull>
-      <IsNotNull Property="processDefinitionIds">
+      <IsNotNull Property="processDefinitionIds != null">
         <IsNotEmpty Property="processDefinitionIds">
           and P.ID_ in
           <For Key="item" index="index" Property="processDefinitionIds" open="(" Separator="," close=")">
@@ -388,10 +388,10 @@
           </For>
         </IsNotEmpty>
       </IsNotNull>
-      <IsNotNull Property="processDefinitionKey">
+      <IsNotNull Property="processDefinitionKey != null">
         and P.KEY_ = #{processDefinitionKey}
       </IsNotNull>
-      <IsNotNull Property="processDefinitionKeys">
+      <IsNotNull Property="processDefinitionKeys != null">
         <IsNotEmpty Porperty="processDefinitionKeys">
           and P.KEY_ in
           <For Key="item" index="index" Property="processDefinitionKeys" open="(" Separator="," close=")">
@@ -851,33 +851,39 @@
     </If>
   </Statement>
 
+  <Statement Id="selectExecutionsFromSql">
+    select E.*, S.PROC_INST_ID_ AS PARENT_PROC_INST_ID_
+    from ACT_RU_EXECUTION E LEFT OUTER JOIN ACT_RU_EXECUTION S ON E.SUPER_EXEC_ = S.ID_
+  </Statement>
+
   <Select Id="selectExecutionsWithSameRootProcessInstanceId" ResultMap="executionResultMap" >
-    select * from ACT_RU_EXECUTION
-    where ROOT_PROC_INST_ID_ = (select ROOT_PROC_INST_ID_ from ACT_RU_EXECUTION where ID_ = #{executionId})
+    <Include RefId="selectExecutionsFromSql"/>
+    where E.ROOT_PROC_INST_ID_ = (select ROOT_PROC_INST_ID_ from ACT_RU_EXECUTION where ID_ = #{parameter})
   </Select>
 
   <Select Id="selectExecution" ResultMap="executionResultMap" >
-    select * from ACT_RU_EXECUTION where ID_ = #{id}
+    <Include RefId="selectExecutionsFromSql"/>
+    where E.ID_ = #{id}
   </Select>
 
   <Select Id="selectExecutionsByParentExecutionId"  ResultMap="executionResultMap">
-    select * from ACT_RU_EXECUTION
-    where PARENT_ID_ = #{parentExecutionId}
+    <Include RefId="selectExecutionsFromSql"/>
+    where E.PARENT_ID_ = #{parentExecutionId}
   </Select>
 
   <Select Id="selectExecutionsByRootProcessInstanceId" ResultMap="executionResultMap" >
-    select * from ACT_RU_EXECUTION
-    where ROOT_PROC_INST_ID_ = #{rootProcessInstanceId}
+    <Include RefId="selectExecutionsFromSql"/>
+    where E.ROOT_PROC_INST_ID_ = #{rootProcessInstanceId}
   </Select>
 
   <Select Id="selectChildExecutionsByProcessInstanceId" ResultMap="executionResultMap" >
-    select * from ACT_RU_EXECUTION
-    where PROC_INST_ID_ = #{processInstanceId} and PARENT_ID_ is not null
+    <Include RefId="selectExecutionsFromSql"/>
+    where E.PROC_INST_ID_ = #{processInstanceId} and E.PARENT_ID_ is not null
   </Select>
 
   <Select Id="selectExecutionsByProcessInstanceId" ResultMap="executionResultMap" >
-    select * from ACT_RU_EXECUTION
-    where PROC_INST_ID_ = #{processInstanceId}
+    <Include RefId="selectExecutionsFromSql"/>
+    where E.PROC_INST_ID_ = #{processInstanceId}
   </Select>
 
   <Select Id="selectProcessInstanceIdsByProcessDefinitionId" >
@@ -887,25 +893,22 @@
   </Select>
 
   <Select Id="selectInactiveExecutionsForProcessInstance" ResultMap="executionResultMap" >
-    select *
-    from ACT_RU_EXECUTION
-    where PROC_INST_ID_ = #{processInstanceId}
-    and IS_ACTIVE_ = #{isActive}
+    <Include RefId="selectExecutionsFromSql"/>
+    where E.PROC_INST_ID_ = #{processInstanceId}
+    and E.IS_ACTIVE_ = #{isActive}
   </Select>
 
   <Select Id="selectInactiveExecutionsInActivityAndProcessInstance" ResultMap="executionResultMap" >
-    select *
-    from ACT_RU_EXECUTION
-    where ACT_ID_ = #{activityId}
-    and PROC_INST_ID_ = #{processInstanceId}
-    and IS_ACTIVE_ = #{isActive}
+    <Include RefId="selectExecutionsFromSql"/>
+    where E.ACT_ID_ = #{activityId}
+    and E.PROC_INST_ID_ = #{processInstanceId}
+    and E.IS_ACTIVE_ = #{isActive}
   </Select>
 
   <Select Id="selectExecutionsByParentExecutionAndActivityIds" ResultMap="executionResultMap" >
-    select *
-    from ACT_RU_EXECUTION
-    where PARENT_ID_ = #{parentExecutionId}
-    and ACT_ID_ in
+    <Include RefId="selectExecutionsFromSql"/>
+    where E.PARENT_ID_ = #{parentExecutionId}
+    and E.ACT_ID_ in
     <For Key="p" Property="activityIds" open="(" Separator="," close=")">
       #{activityId}
     </For>

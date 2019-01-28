@@ -18,6 +18,7 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
     using org.activiti.engine.impl.interceptor;
+    using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
     using Sys;
     using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace org.activiti.engine.impl.cmd
         public virtual object execute(ICommandContext commandContext)
         {
 
-            if (string.ReferenceEquals(jobId, null))
+            if (ReferenceEquals(jobId, null))
             {
                 throw new ActivitiIllegalArgumentException("jobId is null");
             }
@@ -52,7 +53,7 @@ namespace org.activiti.engine.impl.cmd
             // However, the async task jobs could already have been fetched and put in the queue.... while in reality they have been deleted. 
             // A refetch is thus needed here to be sure that it exists for this transaction.
 
-            IJob job = commandContext.JobEntityManager.findById<IJob>(new KeyValuePair<string, object>("id", jobId));
+            IJob job = commandContext.JobEntityManager.findById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
             if (job == null)
             {
                 log.LogDebug("Job does not exist anymore and will not be executed. It has most likely been deleted as part of another concurrent part of the process instance.");

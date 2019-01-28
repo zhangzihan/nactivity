@@ -15,10 +15,11 @@
 
 namespace org.activiti.engine.impl.asyncexecutor.multitenant
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.cfg.multitenant;
     using org.activiti.engine.runtime;
+    using Sys;
 
     /// <summary>
     /// An <seealso cref="IAsyncExecutor"/> that has one <seealso cref="IAsyncExecutor"/> per tenant.
@@ -28,8 +29,7 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
     /// </summary>
     public class ExecutorPerTenantAsyncExecutor : ITenantAwareAsyncExecutor
     {
-
-        //private static readonly Logger logger = LoggerFactory.getLogger(typeof(ExecutorPerTenantAsyncExecutor));
+        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<ExecutorPerTenantAsyncExecutor>();
 
         protected internal ITenantInfoHolder tenantInfoHolder;
         protected internal ITenantAwareAsyncExecutorFactory tenantAwareAyncExecutorFactory;
@@ -176,7 +176,7 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
 
         protected internal virtual void shutdownTenantExecutor(string tenantId)
         {
-            //logger.info("Shutting down async executor for tenant " + tenantId);
+            logger.LogInformation("Shutting down async executor for tenant " + tenantId);
             tenantExecutors[tenantId].shutdown();
         }
 

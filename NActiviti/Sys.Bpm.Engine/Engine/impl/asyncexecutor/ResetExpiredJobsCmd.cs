@@ -16,6 +16,7 @@ namespace org.activiti.engine.impl.asyncexecutor
 {
 
     using org.activiti.engine.impl.interceptor;
+    using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
 
     /// 
@@ -36,7 +37,7 @@ namespace org.activiti.engine.impl.asyncexecutor
 		{
 		  if (!messageQueueMode)
 		  {
-			IJob job = commandContext.JobEntityManager.findById<IJob>(new KeyValuePair<string, object>("id", jobId));
+			IJob job = commandContext.JobEntityManager.findById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
 			commandContext.JobManager.unacquire(job);
 		  }
 		  else

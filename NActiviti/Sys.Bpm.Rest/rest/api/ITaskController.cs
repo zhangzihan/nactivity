@@ -14,11 +14,18 @@ namespace org.activiti.cloud.services.rest.api
 
         Resource<Task> getTaskById(string taskId);
 
+        /// <summary>
+        /// 我的待办项
+        /// </summary>
+        /// <param name="userId">用户id</param>
+        /// <returns>待办项列表</returns>
+        System.Threading.Tasks.Task<IList<TaskResource>> MyTasks(string userId);
+
         Resource<Task> claimTask(string taskId);
 
         Resource<Task> releaseTask(string taskId);
 
-        IActionResult completeTask(string taskId, CompleteTaskCmd completeTaskCmd);
+        System.Threading.Tasks.Task<IActionResult> completeTask(string taskId, CompleteTaskCmd completeTaskCmd);
 
         void deleteTask(string taskId);
 

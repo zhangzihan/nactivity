@@ -1,18 +1,34 @@
 <template>
   <style>
+    .panel {
+      float: left;
+      width: 150px;
+      height: 100%;
+      display: block;
+      border-right: 1px solid lightgray;
+    }
+
+    .forms-panel {
+      position: absolute;
+      left: 150px;
+      right: 0;
+      overflow: auto;
+    }
+
     .form-list {
       list-style: none;
-      width: 100%;
+      width: 2048px;
       height: 100%;
       margin: 0 0;
       padding: 4px 4px 4px 16px;
+      overflow: auto;
     }
 
     .form-list>li {
       float: left;
       margin-left: 4px;
       width: 200px;
-      height: 189px;
+      height: 170px;
       border: 1px solid lightgray;
       position: relative;
     }
@@ -26,6 +42,7 @@
     .form-list>li>.content {
       width: 100%;
       height: 152px;
+      overflow: auto;
     }
 
     .form-header {
@@ -37,15 +54,21 @@
 
   </style>
 
-  <ul class='form-list'>
-    <li repeat.for="form of forms">
-      <div class="form-header">
-        <span>${form.id}</span>
-        <span style="float:right">${form.name}</span>
-      </div>
-      <div class="content">
-        <compose view-model.bind="form.type"></compose>
-      </div>
-    </li>
-  </ul>
+  <div class="panel">
+    <compose view-model="./users/userlist"></compose>
+  </div>
+
+  <div class="forms-panel">
+    <ul class='form-list'>
+      <li repeat.for="form of forms" show.bind="nextForm==null||nextForm==form.id">
+        <div class="form-header" style.bind="form.headerStyle">
+          <span>${form.id}</span>
+          <span style="float:right">${form.name}</span>
+        </div>
+        <div class="content">
+          <compose view-model.bind="form.type" model.bind="form"></compose>
+        </div>
+      </li>
+    </ul>
+  </div>
 </template>

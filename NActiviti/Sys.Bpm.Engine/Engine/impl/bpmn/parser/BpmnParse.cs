@@ -15,6 +15,7 @@ using System.Text;
  */
 namespace org.activiti.engine.impl.bpmn.parser
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter;
     using org.activiti.bpmn.exceptions;
@@ -37,6 +38,8 @@ namespace org.activiti.engine.impl.bpmn.parser
     /// </summary>
     public class BpmnParse : IBpmnXMLConstants
     {
+        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<BpmnParse>();
+
         public const string PROPERTYNAME_INITIAL = "initial";
         public const string PROPERTYNAME_INITIATOR_VARIABLE_NAME = "initiatorVariableName";
         public const string PROPERTYNAME_CONDITION = "condition";
@@ -108,7 +111,6 @@ namespace org.activiti.engine.impl.bpmn.parser
         {
             try
             {
-
                 ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
                 BpmnXMLConverter converter = new BpmnXMLConverter();
 
@@ -120,7 +122,7 @@ namespace org.activiti.engine.impl.bpmn.parser
                     encoding = processEngineConfiguration.XmlEncoding;
                 }
 
-                if (!string.ReferenceEquals(encoding, null))
+                if (!ReferenceEquals(encoding, null))
                 {
                     bpmnModel = converter.convertToBpmnModel(streamSource, validateSchema, enableSafeBpmnXml, encoding);
                 }
@@ -135,7 +137,7 @@ namespace org.activiti.engine.impl.bpmn.parser
                     IProcessValidator processValidator = processEngineConfiguration.ProcessValidator;
                     if (processValidator == null)
                     {
-                        //LOGGER.warn("Process should be validated, but no process validator is configured on the process engine configuration!");
+                        logger.LogWarning("Process should be validated, but no process validator is configured on the process engine configuration!");
                     }
                     else
                     {
@@ -169,7 +171,7 @@ namespace org.activiti.engine.impl.bpmn.parser
                             // Write out warnings (if any)
                             if (warningBuilder.Length > 0)
                             {
-                                //LOGGER.warn("Following warnings encountered during process validation: " + warningBuilder.ToString());
+                                logger.LogWarning($"Following warnings encountered during process validation: {warningBuilder}");
                             }
 
                         }
@@ -215,7 +217,7 @@ namespace org.activiti.engine.impl.bpmn.parser
 
         public virtual BpmnParse sourceInputStream(System.IO.Stream inputStream)
         {
-            if (string.ReferenceEquals(name, null))
+            if (ReferenceEquals(name, null))
             {
                 SetName("inputStream");
             }
@@ -230,7 +232,7 @@ namespace org.activiti.engine.impl.bpmn.parser
 
         public virtual BpmnParse sourceUrl(Uri url)
         {
-            if (string.ReferenceEquals(name, null))
+            if (ReferenceEquals(name, null))
             {
                 SetName(url.ToString());
             }
@@ -252,7 +254,7 @@ namespace org.activiti.engine.impl.bpmn.parser
 
         public virtual BpmnParse sourceResource(string resource, ClassLoader classLoader)
         {
-            if (string.ReferenceEquals(name, null))
+            if (ReferenceEquals(name, null))
             {
                 SetName(resource);
             }
@@ -262,7 +264,7 @@ namespace org.activiti.engine.impl.bpmn.parser
 
         public virtual BpmnParse sourceString(string @string)
         {
-            if (string.ReferenceEquals(name, null))
+            if (ReferenceEquals(name, null))
             {
                 SetName("string");
             }
@@ -306,7 +308,6 @@ namespace org.activiti.engine.impl.bpmn.parser
 
         public virtual void processFlowElements(ICollection<FlowElement> flowElements)
         {
-
             // Parsing the elements is done in a strict order of types,
             // as otherwise certain information might not be available when parsing
             // a certain type.
@@ -321,7 +322,6 @@ namespace org.activiti.engine.impl.bpmn.parser
             // Activities are parsed first
             foreach (FlowElement flowElement in flowElements)
             {
-
                 // Sequence flow are also flow elements, but are only parsed once every activity is found
                 if (flowElement is SequenceFlow)
                 {
@@ -339,7 +339,6 @@ namespace org.activiti.engine.impl.bpmn.parser
                 {
                     bpmnParserHandlers.parseElement(this, flowElement);
                 }
-
             }
 
             // Deferred elements
@@ -359,7 +358,6 @@ namespace org.activiti.engine.impl.bpmn.parser
             {
                 bpmnParserHandlers.parseElement(this, sequenceFlow);
             }
-
         }
 
         // Diagram interchange
@@ -367,7 +365,6 @@ namespace org.activiti.engine.impl.bpmn.parser
 
         public virtual void processDI()
         {
-
             if (processDefinitions.Count == 0)
             {
                 return;
@@ -375,7 +372,6 @@ namespace org.activiti.engine.impl.bpmn.parser
 
             if (bpmnModel.LocationMap.Count > 0)
             {
-
                 // Verify if all referenced elements exist
                 foreach (string bpmnReference in bpmnModel.LocationMap.Keys)
                 {
@@ -387,13 +383,13 @@ namespace org.activiti.engine.impl.bpmn.parser
                             // Check if it's a Pool or Lane, then DI is ok
                             if (bpmnModel.getPool(bpmnReference) == null && bpmnModel.getLane(bpmnReference) == null)
                             {
-                                //LOGGER.warn("Invalid reference in diagram interchange definition: could not find " + bpmnReference);
+                                logger.LogWarning($"Invalid reference in diagram interchange definition: could not find {bpmnReference}");
                             }
                         }
                     }
                     else if (!(bpmnModel.getFlowElement(bpmnReference) is FlowNode))
                     {
-                        //LOGGER.warn("Invalid reference in diagram interchange definition: " + bpmnReference + " does not reference a flow node");
+                        logger.LogWarning($"Invalid reference in diagram interchange definition: {bpmnReference} does not reference a flow node");
                     }
                 }
 
@@ -404,12 +400,12 @@ namespace org.activiti.engine.impl.bpmn.parser
                         // ACT-1625: don't warn when artifacts are referenced from DI
                         if (bpmnModel.getArtifact(bpmnReference) == null)
                         {
-                            //LOGGER.warn("Invalid reference in diagram interchange definition: could not find " + bpmnReference);
+                            logger.LogWarning($"Invalid reference in diagram interchange definition: could not find {bpmnReference}");
                         }
                     }
                     else if (!(bpmnModel.getFlowElement(bpmnReference) is SequenceFlow))
                     {
-                        //LOGGER.warn("Invalid reference in diagram interchange definition: " + bpmnReference + " does not reference a sequence flow");
+                        logger.LogWarning($"Invalid reference in diagram interchange definition: {bpmnReference} does not reference a sequence flow");
                     }
                 }
 
@@ -451,7 +447,6 @@ namespace org.activiti.engine.impl.bpmn.parser
                     waypoints.Add((int)waypointInfo.Y);
                 }
                 sequenceFlow.Waypoints = waypoints;
-
             }
             else if (bpmnModel.getArtifact(key) != null)
             {
@@ -459,7 +454,7 @@ namespace org.activiti.engine.impl.bpmn.parser
             }
             else
             {
-                //LOGGER.warn("Invalid reference in 'bpmnElement' attribute, sequenceFlow " + key + " not found");
+                logger.LogWarning($"Invalid reference in 'bpmnElement' attribute, sequenceFlow {key} not found");
             }
         }
 
@@ -478,7 +473,6 @@ namespace org.activiti.engine.impl.bpmn.parser
         /*
          * ------------------- GETTERS AND SETTERS -------------------
          */
-
         public virtual bool ValidateSchema
         {
             get
@@ -637,8 +631,7 @@ namespace org.activiti.engine.impl.bpmn.parser
         {
             set
             {
-                throw new System.NotImplementedException();
-                //currentSubprocessStack.push(value);
+                currentSubprocessStack.AddLast(value);
             }
             get
             {
@@ -649,9 +642,7 @@ namespace org.activiti.engine.impl.bpmn.parser
 
         public virtual void removeCurrentSubProcess()
         {
-            throw new System.NotImplementedException();
-            //currentSubprocessStack.pop();
+            currentSubprocessStack.Remove(CurrentSubProcess);
         }
     }
-
 }

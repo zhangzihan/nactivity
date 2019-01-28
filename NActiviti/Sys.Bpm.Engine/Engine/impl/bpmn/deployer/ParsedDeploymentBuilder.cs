@@ -38,7 +38,8 @@ namespace org.activiti.engine.impl.bpmn.deployer
             IDictionary<IProcessDefinitionEntity, BpmnParse> processDefinitionsToBpmnParseMap = new Dictionary<IProcessDefinitionEntity, BpmnParse>();
             IDictionary<IProcessDefinitionEntity, IResourceEntity> processDefinitionsToResourceMap = new Dictionary<IProcessDefinitionEntity, IResourceEntity>();
 
-            foreach (IResourceEntity resource in deployment.Resources.Values)
+            var resources = deployment.GetResources().Values;
+            foreach (IResourceEntity resource in resources)
             {
                 if (isBpmnResource(resource.Name))
                 {
@@ -68,15 +69,15 @@ namespace org.activiti.engine.impl.bpmn.deployer
             {
 
                 // Schema validation if needed
-                if (deploymentSettings.ContainsKey(org.activiti.engine.impl.cmd.DeploymentSettings_Fields.IS_BPMN20_XSD_VALIDATION_ENABLED))
+                if (deploymentSettings.ContainsKey(cmd.DeploymentSettings_Fields.IS_BPMN20_XSD_VALIDATION_ENABLED))
                 {
-                    bpmnParse.ValidateSchema = Convert.ToBoolean(deploymentSettings[org.activiti.engine.impl.cmd.DeploymentSettings_Fields.IS_BPMN20_XSD_VALIDATION_ENABLED]);
+                    bpmnParse.ValidateSchema = Convert.ToBoolean(deploymentSettings[cmd.DeploymentSettings_Fields.IS_BPMN20_XSD_VALIDATION_ENABLED]);
                 }
 
                 // Process validation if needed
-                if (deploymentSettings.ContainsKey(org.activiti.engine.impl.cmd.DeploymentSettings_Fields.IS_PROCESS_VALIDATION_ENABLED))
+                if (deploymentSettings.ContainsKey(cmd.DeploymentSettings_Fields.IS_PROCESS_VALIDATION_ENABLED))
                 {
-                    bpmnParse.ValidateProcess = Convert.ToBoolean(deploymentSettings[org.activiti.engine.impl.cmd.DeploymentSettings_Fields.IS_PROCESS_VALIDATION_ENABLED]);
+                    bpmnParse.ValidateProcess = Convert.ToBoolean(deploymentSettings[cmd.DeploymentSettings_Fields.IS_PROCESS_VALIDATION_ENABLED]);
                 }
 
             }

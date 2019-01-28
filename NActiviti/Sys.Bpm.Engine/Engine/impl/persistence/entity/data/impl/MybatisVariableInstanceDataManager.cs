@@ -46,7 +46,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IVariableInstanceEntity> findVariableInstancesByTaskId(string taskId)
         {
-            return DbSqlSession.selectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariablesByTaskId", new KeyValuePair<string, object>("taskId", taskId));
+            return DbSqlSession.selectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariablesByTaskId", new { taskId });
         }
 
         public virtual IList<IVariableInstanceEntity> findVariableInstancesByTaskIds(ISet<string> taskIds)
@@ -56,7 +56,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IVariableInstanceEntity> findVariableInstancesByExecutionId(string executionId)
         {
-            return (IList<IVariableInstanceEntity>)getList("selectVariablesByExecutionId", new KeyValuePair<string, object>("executionId", executionId), variableInstanceEntity, true);
+            return (IList<IVariableInstanceEntity>)getList("selectVariablesByExecutionId", new { executionId }, variableInstanceEntity, true);
         }
 
         public virtual IList<IVariableInstanceEntity> findVariableInstancesByExecutionIds(ISet<string> executionIds)
@@ -74,10 +74,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IVariableInstanceEntity> findVariableInstancesByExecutionAndNames(string executionId, ICollection<string> names)
         {
-            IDictionary<string, object> @params = new Dictionary<string, object>(2);
-            @params["executionId"] = executionId;
-            @params["names"] = names;
-            return DbSqlSession.selectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariableInstancesByExecutionAndNames", @params);
+            return DbSqlSession.selectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariableInstancesByExecutionAndNames", new { executionId, names });
         }
 
         public virtual IVariableInstanceEntity findVariableInstanceByTaskAndName(string taskId, string variableName)

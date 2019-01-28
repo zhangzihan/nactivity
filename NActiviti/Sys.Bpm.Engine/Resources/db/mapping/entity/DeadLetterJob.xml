@@ -10,7 +10,7 @@
         <Result Property="executionId" Column="EXECUTION_ID_" />
         <Result Property="processInstanceId" Column="PROCESS_INSTANCE_ID_" />
         <Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
-        <Result Property="exceptionByteArrayRef" Column="EXCEPTION_STACK_ID_" />
+        <Result Property="exceptionByteArrayRef" Column="EXCEPTION_STACK_ID_" TypeHandler="二进制引用" />
         <Result Property="exceptionMessage" Column="EXCEPTION_MSG_" />
         <Result Property="jobHandlerType" Column="HANDLER_TYPE_" />
         <Result Property="jobHandlerConfiguration" Column="HANDLER_CFG_" />
@@ -19,6 +19,10 @@
         <Result Property="repeat" Column="REPEAT_" />
     </ResultMap>
 
+  <ParameterMap Id="insupJobMap">
+    <Parameter Property="(Items_)?exceptionByteArrayRef(_p\d)?" TypeHandler="二进制引用" />
+  </ParameterMap>
+
     <Delete Id="deleteDeadLetterJob" >
         delete from ACT_RU_DEADLETTER_JOB where ID_ = #{id} and REV_ = #{revision}
     </Delete>
@@ -26,16 +30,16 @@
     <Statement Id="selectDeadLetterJobByQueryCriteriaSql">
         from ACT_RU_DEADLETTER_JOB RES
         <Where>
-            <IsNotNull Property="id != null">
+            <IsNotNull Property="id">
                 RES.ID_ = #{id}
             </IsNotNull>
-            <IsNotNull Property="processInstanceId != null">
+            <IsNotNull Property="processInstanceId">
                 and RES.PROCESS_INSTANCE_ID_ = #{processInstanceId}
             </IsNotNull>
-            <IsNotNull Property="executionId != null">
+            <IsNotNull Property="executionId">
                 and RES.EXECUTION_ID_ = #{executionId}
             </IsNotNull>
-            <IsNotNull Property="processDefinitionId != null">
+            <IsNotNull Property="processDefinitionId">
                 and RES.PROC_DEF_ID_ = #{processDefinitionId}
             </IsNotNull>
             <IsNotNull Property="executable">
@@ -47,16 +51,16 @@
             <IsNotNull Property="onlyMessages">
                 and RES.TYPE_ = 'message'
             </IsNotNull>
-            <IsNotNull Property="duedateHigherThan != null">
+            <IsNotNull Property="duedateHigherThan">
                 and RES.DUEDATE_ &gt; #{duedateHigherThan}
             </IsNotNull>
-            <IsNotNull Property="duedateLowerThan != null">
+            <IsNotNull Property="duedateLowerThan">
                 and RES.DUEDATE_ &lt; #{duedateLowerThan}
             </IsNotNull>
-            <IsNotNull Property="duedateHigherThanOrEqual != null">
+            <IsNotNull Property="duedateHigherThanOrEqual">
                 and RES.DUEDATE_ &gt;= #{duedateHigherThanOrEqual}
             </IsNotNull>
-            <IsNotNull Property="duedateLowerThanOrEqual != null">
+            <IsNotNull Property="duedateLowerThanOrEqual">
                 and RES.DUEDATE_ &lt;= #{duedateLowerThanOrEqual}
             </IsNotNull>
             <IsNotNull Property="withException">
@@ -65,10 +69,10 @@
             <IsNotNull Property="exceptionMessage">
                 and RES.EXCEPTION_MSG_ = #{exceptionMessage}
             </IsNotNull>
-            <IsNotNull Property="tenantId != null">
+            <IsNotNull Property="tenantId">
                 and RES.TENANT_ID_ = #{tenantId}
             </IsNotNull>
-            <IsNotNull Property="tenantIdLike != null">
+            <IsNotNull Property="tenantIdLike">
                 and RES.TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
             </IsNotNull>
             <IsNotNull Property="withoutTenantId">
@@ -95,7 +99,7 @@
 
     <!-- TIMER INSERT -->
   
-  	<Insert Id="insertDeadLetterJob" >
+  	<Insert Id="insertDeadLetterJob" ParameterMap="insupJobMap" >
     insert into ACT_RU_DEADLETTER_JOB (
             ID_, 
             REV_,
@@ -128,7 +132,7 @@
     )
   	</Insert>
 
-  	<Insert Id="bulkInsertDeadLetterJob" >
+  	<Insert Id="bulkInsertDeadLetterJob" ParameterMap="insupJobMap" >
     INSERT INTO ACT_RU_DEADLETTER_JOB (
             ID_,
             REV_,

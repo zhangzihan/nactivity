@@ -60,7 +60,7 @@ namespace org.activiti.engine.impl.cmd
 
         protected internal override object execute(ICommandContext commandContext, IExecutionEntity execution)
         {
-            if (string.ReferenceEquals(messageName, null))
+            if (ReferenceEquals(messageName, null))
             {
                 throw new ActivitiIllegalArgumentException("messageName cannot be null");
             }

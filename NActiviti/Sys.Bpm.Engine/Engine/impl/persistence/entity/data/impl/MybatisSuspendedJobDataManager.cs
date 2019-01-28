@@ -56,12 +56,12 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<ISuspendedJobEntity> findJobsByExecutionId(string executionId)
         {
-            return (IList<ISuspendedJobEntity>)getList("selectSuspendedJobsByExecutionId", new KeyValuePair<string, object>("executionId", executionId), suspendedJobsByExecutionIdMatcher, true);
+            return (IList<ISuspendedJobEntity>)getList("selectSuspendedJobsByExecutionId", new { executionId }, suspendedJobsByExecutionIdMatcher, true);
         }
 
         public virtual IList<ISuspendedJobEntity> findJobsByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<SuspendedJobEntityImpl, ISuspendedJobEntity>("selectSuspendedJobsByProcessInstanceId", new KeyValuePair<string, object>("processInstanceId", processInstanceId));
+            return DbSqlSession.selectList<SuspendedJobEntityImpl, ISuspendedJobEntity>("selectSuspendedJobsByProcessInstanceId", new { processInstanceId });
         }
 
         public virtual void updateJobTenantIdForDeployment(string deploymentId, string newTenantId)
