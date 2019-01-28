@@ -44,7 +44,7 @@ namespace org.activiti.engine.impl.cmd
 
             string processInstanceId = attachment.ProcessInstanceId;
             string processDefinitionId = null;
-            if (!string.ReferenceEquals(attachment.ProcessInstanceId, null))
+            if (!ReferenceEquals(attachment.ProcessInstanceId, null))
             {
                 IExecutionEntity process = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
                 if (process != null)
@@ -55,12 +55,12 @@ namespace org.activiti.engine.impl.cmd
 
             commandContext.AttachmentEntityManager.delete(attachment, false);
 
-            if (!string.ReferenceEquals(attachment.ContentId, null))
+            if (!ReferenceEquals(attachment.ContentId, null))
             {
                 commandContext.ByteArrayEntityManager.deleteByteArrayById(attachment.ContentId);
             }
 
-            if (!string.ReferenceEquals(attachment.TaskId, null))
+            if (!ReferenceEquals(attachment.TaskId, null))
             {
                 commandContext.HistoryManager.createAttachmentComment(attachment.TaskId, attachment.ProcessInstanceId, attachment.Name, false);
             }

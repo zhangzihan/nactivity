@@ -132,7 +132,7 @@ namespace org.activiti.engine.impl.variable
         public override object getValue(IValueFields valueFields)
         {
             byte[] bytes = valueFields.Bytes;
-            if (!string.ReferenceEquals(valueFields.TextValue, null) && bytes != null)
+            if (!ReferenceEquals(valueFields.TextValue, null) && bytes != null)
             {
                 string entityClass = valueFields.TextValue;
 

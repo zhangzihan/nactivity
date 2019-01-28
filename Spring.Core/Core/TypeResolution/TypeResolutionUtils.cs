@@ -194,7 +194,7 @@ namespace Spring.Core.TypeResolution
                 // Match parameter types
                 for (int i = 0; i < paramInfos.Length; i++)
                 {
-                    if (paramInfos[i].ParameterType != TypeResolutionUtils.ResolveType(paramTypes[i]))
+                    if (paramInfos[i].ParameterType != ResolveType(paramTypes[i]))
                         return false;
                 }
             }

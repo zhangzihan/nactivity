@@ -61,7 +61,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IDeadLetterJobEntity> findJobsByExecutionId(string executionId)
         {
-            return (IList<IDeadLetterJobEntity>)getList("selectDeadLetterJobsByExecutionId", new KeyValuePair<string, object>("executionId", executionId), deadLetterByExecutionIdMatcher, true);
+            return (IList<IDeadLetterJobEntity>)getList("selectDeadLetterJobsByExecutionId", new { executionId }, deadLetterByExecutionIdMatcher, true);
         }
 
         public virtual void updateJobTenantIdForDeployment(string deploymentId, string newTenantId)

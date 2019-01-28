@@ -58,43 +58,33 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
         public virtual IList<ITimerJobEntity> findTimerJobsToExecute(Page page)
         {
             DateTime now = Clock.CurrentTime;
-            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobsToExecute", new KeyValuePair<string, object>("duedate", now), page);
+            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobsToExecute", new { duedate = now }, page);
         }
 
-        public virtual IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionId(string jobHandlerType, string processDefinitionId)
+        public virtual IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionId(string handlerType, string processDefinitionId)
         {
-            IDictionary<string, string> @params = new Dictionary<string, string>(2);
-            @params["handlerType"] = jobHandlerType;
-            @params["processDefinitionId"] = processDefinitionId;
-            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobByTypeAndProcessDefinitionId", @params);
+            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobByTypeAndProcessDefinitionId", new { handlerType, processDefinitionId });
 
         }
 
         public virtual IList<ITimerJobEntity> findJobsByExecutionId(string executionId)
         {
-            return (IList<ITimerJobEntity>)getList("selectTimerJobsByExecutionId", new KeyValuePair<string, object>("executionId", executionId), timerJobsByExecutionIdMatcher, true);
+            return (IList<ITimerJobEntity>)getList("selectTimerJobsByExecutionId", new { executionId }, timerJobsByExecutionIdMatcher, true);
         }
 
         public virtual IList<ITimerJobEntity> findJobsByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobsByProcessInstanceId", new KeyValuePair<string, object>("processInstanceId", processInstanceId));
+            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobsByProcessInstanceId", new { processInstanceId });
         }
 
-        public virtual IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionKeyNoTenantId(string jobHandlerType, string processDefinitionKey)
+        public virtual IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionKeyNoTenantId(string handlerType, string processDefinitionKey)
         {
-            IDictionary<string, string> @params = new Dictionary<string, string>(2);
-            @params["handlerType"] = jobHandlerType;
-            @params["processDefinitionKey"] = processDefinitionKey;
-            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobByTypeAndProcessDefinitionKeyNoTenantId", @params);
+            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobByTypeAndProcessDefinitionKeyNoTenantId", new { handlerType, processDefinitionKey });
         }
 
-        public virtual IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionKeyAndTenantId(string jobHandlerType, string processDefinitionKey, string tenantId)
+        public virtual IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionKeyAndTenantId(string handlerType, string processDefinitionKey, string tenantId)
         {
-            IDictionary<string, string> @params = new Dictionary<string, string>(3);
-            @params["handlerType"] = jobHandlerType;
-            @params["processDefinitionKey"] = processDefinitionKey;
-            @params["tenantId"] = tenantId;
-            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobByTypeAndProcessDefinitionKeyAndTenantId", @params);
+            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobByTypeAndProcessDefinitionKeyAndTenantId", new { handlerType, processDefinitionKey, tenantId });
         }
 
         public virtual void updateJobTenantIdForDeployment(string deploymentId, string newTenantId)

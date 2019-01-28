@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl.cmd
 
         public SetProcessDefinitionVersionCmd(string processInstanceId, int? processDefinitionVersion)
         {
-            if (string.ReferenceEquals(processInstanceId, null) || processInstanceId.Length < 1)
+            if (ReferenceEquals(processInstanceId, null) || processInstanceId.Length < 1)
             {
                 throw new ActivitiIllegalArgumentException("The process instance id is mandatory, but '" + processInstanceId + "' has been provided.");
             }
@@ -106,7 +106,7 @@ namespace org.activiti.engine.impl.cmd
         {
             // check that the new process definition version contains the current activity
             org.activiti.bpmn.model.Process process = ProcessDefinitionUtil.getProcess(newProcessDefinition.Id);
-            if (!string.ReferenceEquals(execution.ActivityId, null) && process.getFlowElement(execution.ActivityId, true) == null)
+            if (!ReferenceEquals(execution.ActivityId, null) && process.getFlowElement(execution.ActivityId, true) == null)
             {
                 throw new ActivitiException("The new process definition " + "(key = '" + newProcessDefinition.Key + "') " + "does not contain the current activity " + "(id = '" + execution.ActivityId + "') " + "of the process instance " + "(id = '" + processInstanceId + "').");
             }

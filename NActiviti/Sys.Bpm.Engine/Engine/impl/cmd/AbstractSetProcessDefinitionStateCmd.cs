@@ -105,7 +105,7 @@ namespace org.activiti.engine.impl.cmd
 
                 IProcessDefinitionQuery query = new ProcessDefinitionQueryImpl(commandContext).processDefinitionKey(processDefinitionKey);
 
-                if (string.ReferenceEquals(tenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
+                if (ReferenceEquals(tenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
                 {
                     query.processDefinitionWithoutTenantId();
                 }
@@ -185,7 +185,7 @@ namespace org.activiti.engine.impl.cmd
         protected internal virtual IList<IProcessInstance> fetchProcessInstancesPage(ICommandContext commandContext, IProcessDefinition processDefinition, int currentPageStartIndex)
         {
 
-            if (org.activiti.engine.impl.persistence.entity.SuspensionState_Fields.ACTIVE.Equals(ProcessDefinitionSuspensionState))
+            if (SuspensionState_Fields.ACTIVE.Equals(ProcessDefinitionSuspensionState))
             {
                 return (new ProcessInstanceQueryImpl(commandContext)).processDefinitionId(processDefinition.Id).suspended().listPage(currentPageStartIndex, commandContext.ProcessEngineConfiguration.BatchSizeProcessInstances);
             }

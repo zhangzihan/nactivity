@@ -33,7 +33,7 @@ namespace org.activiti.bpmn.converter.child
                 {
                     //xtr.next();
 
-                    if (xtr.StartElement && BpmnXMLConstants.ELEMENT_SOURCE_REF.Equals(xtr.LocalName))
+                    if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_SOURCE_REF.Equals(xtr.LocalName))
                     {
                         string sourceRef = xtr.ElementText;
                         if (!string.IsNullOrWhiteSpace(sourceRef))
@@ -42,7 +42,7 @@ namespace org.activiti.bpmn.converter.child
                         }
 
                     }
-                    else if (xtr.StartElement && BpmnXMLConstants.ELEMENT_TARGET_REF.Equals(xtr.LocalName))
+                    else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_TARGET_REF.Equals(xtr.LocalName))
                     {
                         string targetRef = xtr.ElementText;
                         if (!string.IsNullOrWhiteSpace(targetRef))
@@ -51,7 +51,7 @@ namespace org.activiti.bpmn.converter.child
                         }
 
                     }
-                    else if (xtr.StartElement && BpmnXMLConstants.ELEMENT_TRANSFORMATION.Equals(xtr.LocalName))
+                    else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_TRANSFORMATION.Equals(xtr.LocalName))
                     {
                         string transformation = xtr.ElementText;
                         if (!string.IsNullOrWhiteSpace(transformation))
@@ -60,13 +60,13 @@ namespace org.activiti.bpmn.converter.child
                         }
 
                     }
-                    else if (xtr.StartElement && BpmnXMLConstants.ELEMENT_ASSIGNMENT.Equals(xtr.LocalName))
+                    else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_ASSIGNMENT.Equals(xtr.LocalName))
                     {
                         assignment = new Assignment();
                         BpmnXMLUtil.addXMLLocation(assignment, xtr);
 
                     }
-                    else if (xtr.StartElement && BpmnXMLConstants.ELEMENT_FROM.Equals(xtr.LocalName))
+                    else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_FROM.Equals(xtr.LocalName))
                     {
                         string from = xtr.ElementText;
                         if (assignment != null && !string.IsNullOrWhiteSpace(from))
@@ -75,7 +75,7 @@ namespace org.activiti.bpmn.converter.child
                         }
 
                     }
-                    else if (xtr.StartElement && BpmnXMLConstants.ELEMENT_TO.Equals(xtr.LocalName))
+                    else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_TO.Equals(xtr.LocalName))
                     {
                         string to = xtr.ElementText;
                         if (assignment != null && !string.IsNullOrWhiteSpace(to))

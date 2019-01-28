@@ -1,4 +1,5 @@
 ﻿using org.activiti.engine.@delegate;
+using org.activiti.engine.impl.persistence.entity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,9 +11,10 @@ namespace org.activiti.engine.impl.bpmn.listener
         public void notify(IDelegateTask delegateTask)
         {
             List<string> assigneeList = new List<string>();
-            assigneeList.Add("会签1");
+            assigneeList.Add("新用户1");
             assigneeList.Add("会签2");
-            delegateTask.setVariable("userList", assigneeList);
+            delegateTask.addCandidateUsers(assigneeList);
+            //delegateTask.setVariable("userList", assigneeList);
         }
     }
 }

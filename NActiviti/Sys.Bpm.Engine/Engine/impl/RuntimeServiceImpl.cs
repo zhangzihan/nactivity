@@ -199,7 +199,7 @@ namespace org.activiti.engine.impl
 
         public virtual void setVariable(string executionId, string variableName, object value)
         {
-            if (string.ReferenceEquals(variableName, null))
+            if (ReferenceEquals(variableName, null))
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
@@ -210,7 +210,7 @@ namespace org.activiti.engine.impl
 
         public virtual void setVariableLocal(string executionId, string variableName, object value)
         {
-            if (string.ReferenceEquals(variableName, null))
+            if (ReferenceEquals(variableName, null))
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
@@ -555,11 +555,11 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessInstance startProcessInstance(ProcessInstanceBuilderImpl processInstanceBuilder)
         {
-            if (!string.ReferenceEquals(processInstanceBuilder.ProcessDefinitionId, null) || !string.ReferenceEquals(processInstanceBuilder.ProcessDefinitionKey, null))
+            if (!ReferenceEquals(processInstanceBuilder.ProcessDefinitionId, null) || !ReferenceEquals(processInstanceBuilder.ProcessDefinitionKey, null))
             {
                 return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(processInstanceBuilder));
             }
-            else if (!string.ReferenceEquals(processInstanceBuilder.MessageName, null))
+            else if (!ReferenceEquals(processInstanceBuilder.MessageName, null))
             {
                 return commandExecutor.execute(new StartProcessInstanceByMessageCmd(processInstanceBuilder));
             }

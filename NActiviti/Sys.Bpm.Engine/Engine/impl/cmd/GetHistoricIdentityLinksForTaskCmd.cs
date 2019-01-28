@@ -32,7 +32,7 @@ namespace org.activiti.engine.impl.cmd
 
         public GetHistoricIdentityLinksForTaskCmd(string taskId, string processInstanceId)
         {
-            if (string.ReferenceEquals(taskId, null) && string.ReferenceEquals(processInstanceId, null))
+            if (ReferenceEquals(taskId, null) && ReferenceEquals(processInstanceId, null))
             {
                 throw new ActivitiIllegalArgumentException("taskId or processInstanceId is required");
             }
@@ -42,7 +42,7 @@ namespace org.activiti.engine.impl.cmd
 
         public virtual IList<IHistoricIdentityLink> execute(ICommandContext commandContext)
         {
-            if (!string.ReferenceEquals(taskId, null))
+            if (!ReferenceEquals(taskId, null))
             {
                 return getLinksForTask(commandContext);
             }
@@ -65,7 +65,7 @@ namespace org.activiti.engine.impl.cmd
 
             // Similar to GetIdentityLinksForTask, return assignee and owner as
             // identity link
-            if (!string.ReferenceEquals(task.Assignee, null))
+            if (!ReferenceEquals(task.Assignee, null))
             {
                 IHistoricIdentityLinkEntity identityLink = commandContext.HistoricIdentityLinkEntityManager.create();
                 identityLink.UserId = task.Assignee;
@@ -73,7 +73,7 @@ namespace org.activiti.engine.impl.cmd
                 identityLink.Type = IdentityLinkType.ASSIGNEE;
                 identityLinks.Add(identityLink);
             }
-            if (!string.ReferenceEquals(task.Owner, null))
+            if (!ReferenceEquals(task.Owner, null))
             {
                 IHistoricIdentityLinkEntity identityLink = commandContext.HistoricIdentityLinkEntityManager.create();
                 identityLink.TaskId = task.Id;

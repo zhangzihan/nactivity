@@ -263,7 +263,7 @@ namespace org.activiti.engine.impl
 
         public virtual void setVariable(string taskId, string variableName, object value)
         {
-            if (string.ReferenceEquals(variableName, null))
+            if (ReferenceEquals(variableName, null))
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
@@ -274,7 +274,7 @@ namespace org.activiti.engine.impl
 
         public virtual void setVariableLocal(string taskId, string variableName, object value)
         {
-            if (string.ReferenceEquals(variableName, null))
+            if (ReferenceEquals(variableName, null))
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }

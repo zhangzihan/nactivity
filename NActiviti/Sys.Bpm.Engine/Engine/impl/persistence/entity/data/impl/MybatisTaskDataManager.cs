@@ -46,12 +46,12 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<ITaskEntity> findTasksByExecutionId(string executionId)
         {
-            return (IList<ITaskEntity>)getList("selectTasksByExecutionId", new KeyValuePair<string, object>("executionId", executionId), tasksByExecutionIdMatcher, true);
+            return (IList<ITaskEntity>)getList("selectTasksByExecutionId", new { executionId }, tasksByExecutionIdMatcher, true);
         }
 
         public virtual IList<ITaskEntity> findTasksByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<TaskEntityImpl, ITaskEntity>("selectTasksByProcessInstanceId", new KeyValuePair<string, object>("processInstanceId", processInstanceId));
+            return DbSqlSession.selectList<TaskEntityImpl, ITaskEntity>("selectTasksByProcessInstanceId", new { processInstanceId });
         }
 
         public virtual IList<ITask> findTasksByQueryCriteria(TaskQueryImpl taskQuery)
@@ -126,15 +126,12 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<ITask> findTasksByParentTaskId(string parentTaskId)
         {
-            return DbSqlSession.selectList<TaskEntityImpl, ITask>("selectTasksByParentTaskId", new KeyValuePair<string, object>("parentTaskId", parentTaskId));
+            return DbSqlSession.selectList<TaskEntityImpl, ITask>("selectTasksByParentTaskId", new { parentTaskId });
         }
 
-        public virtual void updateTaskTenantIdForDeployment(string deploymentId, string newTenantId)
+        public virtual void updateTaskTenantIdForDeployment(string deploymentId, string tenantId)
         {
-            Dictionary<string, object> @params = new Dictionary<string, object>();
-            @params["deploymentId"] = deploymentId;
-            @params["tenantId"] = newTenantId;
-            DbSqlSession.update<TaskEntityImpl>("updateTaskTenantIdForDeployment", @params);
+            DbSqlSession.update<TaskEntityImpl>("updateTaskTenantIdForDeployment", new { deploymentId, tenantId });
         }
 
     }

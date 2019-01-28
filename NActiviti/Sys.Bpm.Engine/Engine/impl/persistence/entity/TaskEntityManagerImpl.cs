@@ -52,11 +52,11 @@ namespace org.activiti.engine.impl.persistence.entity
         public override void insert(ITaskEntity taskEntity, bool fireCreateEvent)
         {
 
-            if (!string.ReferenceEquals(taskEntity.Owner, null))
+            if (!ReferenceEquals(taskEntity.Owner, null))
             {
                 addOwnerIdentityLink(taskEntity, taskEntity.Owner);
             }
-            if (!string.ReferenceEquals(taskEntity.Assignee, null))
+            if (!ReferenceEquals(taskEntity.Assignee, null))
             {
                 addAssigneeIdentityLinks(taskEntity);
             }
@@ -69,7 +69,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
 
             // Inherit tenant id (if applicable)
-            if (execution != null && !string.ReferenceEquals(execution.TenantId, null))
+            if (execution != null && !ReferenceEquals(execution.TenantId, null))
             {
                 taskEntity.TenantId = execution.TenantId;
             }
@@ -94,7 +94,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
             HistoryManager.recordTaskCreated(taskEntity, execution);
             HistoryManager.recordTaskId(taskEntity);
-            if (!string.ReferenceEquals(taskEntity.FormKey, null))
+            if (!ReferenceEquals(taskEntity.FormKey, null))
             {
                 HistoryManager.recordTaskFormKeyChange(taskEntity.Id, taskEntity.FormKey);
             }
@@ -113,7 +113,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         private void changeTaskAssignee(ITaskEntity taskEntity, string assignee, bool fireEvents)
         {
-            if ((!string.ReferenceEquals(taskEntity.Assignee, null) && !taskEntity.Assignee.Equals(assignee)) || (string.ReferenceEquals(taskEntity.Assignee, null) && !string.ReferenceEquals(assignee, null)))
+            if ((!ReferenceEquals(taskEntity.Assignee, null) && !taskEntity.Assignee.Equals(assignee)) || (ReferenceEquals(taskEntity.Assignee, null) && !ReferenceEquals(assignee, null)))
             {
                 taskEntity.Assignee = assignee;
                 if (fireEvents)
@@ -125,7 +125,7 @@ namespace org.activiti.engine.impl.persistence.entity
                     recordTaskAssignment(taskEntity);
                 }
 
-                if (!string.ReferenceEquals(taskEntity.Id, null))
+                if (!ReferenceEquals(taskEntity.Id, null))
                 {
                     HistoryManager.recordTaskAssigneeChange(taskEntity.Id, taskEntity.Assignee);
                     addAssigneeIdentityLinks(taskEntity);
@@ -136,11 +136,11 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public virtual void changeTaskOwner(ITaskEntity taskEntity, string owner)
         {
-            if ((!string.ReferenceEquals(taskEntity.Owner, null) && !taskEntity.Owner.Equals(owner)) || (string.ReferenceEquals(taskEntity.Owner, null) && !string.ReferenceEquals(owner, null)))
+            if ((!ReferenceEquals(taskEntity.Owner, null) && !taskEntity.Owner.Equals(owner)) || (ReferenceEquals(taskEntity.Owner, null) && !ReferenceEquals(owner, null)))
             {
                 taskEntity.Owner = owner;
 
-                if (!string.ReferenceEquals(taskEntity.Id, null))
+                if (!ReferenceEquals(taskEntity.Id, null))
                 {
                     HistoryManager.recordTaskOwnerChange(taskEntity.Id, taskEntity.Owner);
                     addOwnerIdentityLink(taskEntity, taskEntity.Owner);
@@ -168,7 +168,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         private void addAssigneeIdentityLinks(ITaskEntity taskEntity)
         {
-            if (!string.ReferenceEquals(taskEntity.Assignee, null) && taskEntity.ProcessInstance != null)
+            if (!ReferenceEquals(taskEntity.Assignee, null) && taskEntity.ProcessInstance != null)
             {
                 IdentityLinkEntityManager.involveUser(taskEntity.ProcessInstance, taskEntity.Assignee, IdentityLinkType.PARTICIPANT);
             }
@@ -176,12 +176,12 @@ namespace org.activiti.engine.impl.persistence.entity
 
         protected internal virtual void addOwnerIdentityLink(ITaskEntity taskEntity, string owner)
         {
-            if (string.ReferenceEquals(owner, null) && string.ReferenceEquals(taskEntity.Owner, null))
+            if (ReferenceEquals(owner, null) && ReferenceEquals(taskEntity.Owner, null))
             {
                 return;
             }
 
-            if (!string.ReferenceEquals(owner, null) && !string.ReferenceEquals(taskEntity.ProcessInstanceId, null))
+            if (!ReferenceEquals(owner, null) && !ReferenceEquals(taskEntity.ProcessInstanceId, null))
             {
                 IdentityLinkEntityManager.involveUser(taskEntity.ProcessInstance, owner, IdentityLinkType.PARTICIPANT);
             }
@@ -249,7 +249,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             base.delete(entity, fireDeleteEvent);
 
-            if (!string.ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity countingExecutionEntity = (ICountingExecutionEntity)entity.Execution;
                 if (isExecutionRelatedEntityCountEnabled(countingExecutionEntity))
@@ -306,7 +306,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
             if (task != null)
             {
-                if (!string.ReferenceEquals(task.ExecutionId, null))
+                if (!ReferenceEquals(task.ExecutionId, null))
                 {
                     throw new ActivitiException("The task cannot be deleted because is part of a running process");
                 }

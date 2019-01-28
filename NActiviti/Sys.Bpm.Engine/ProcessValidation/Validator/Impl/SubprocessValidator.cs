@@ -34,14 +34,14 @@ namespace org.activiti.validation.validator.impl
                     IList<StartEvent> startEvents = process.findFlowElementsInSubProcessOfType<StartEvent>(subProcess, false);
                     if (startEvents.Count > 1)
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.SUBPROCESS_MULTIPLE_START_EVENTS, process, subProcess, "Multiple start events not supported for subprocess");
+                        addError(errors, Problems_Fields.SUBPROCESS_MULTIPLE_START_EVENTS, process, subProcess, "Multiple start events not supported for subprocess");
                     }
 
                     foreach (StartEvent startEvent in startEvents)
                     {
                         if (startEvent.EventDefinitions.Count > 0)
                         {
-                            addError(errors, org.activiti.validation.validator.Problems_Fields.SUBPROCESS_START_EVENT_EVENT_DEFINITION_NOT_ALLOWED, process, startEvent, "event definitions only allowed on start event if subprocess is an event subprocess");
+                            addError(errors, Problems_Fields.SUBPROCESS_START_EVENT_EVENT_DEFINITION_NOT_ALLOWED, process, startEvent, "event definitions only allowed on start event if subprocess is an event subprocess");
                         }
                     }
 

@@ -75,7 +75,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceValueId);
                 @ref.setValue("source", modelSource);
 
-                if (string.ReferenceEquals(model.EditorSourceValueId, null))
+                if (ReferenceEquals(model.EditorSourceValueId, null))
                 {
                     model.EditorSourceValueId = @ref.Id;
                     updateModel(model);
@@ -85,7 +85,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public virtual void deleteEditorSource(IModelEntity model)
         {
-            if (!string.ReferenceEquals(model.EditorSourceValueId, null))
+            if (!ReferenceEquals(model.EditorSourceValueId, null))
             {
                 ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceValueId);
                 @ref.delete();
@@ -94,7 +94,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public virtual void deleteEditorSourceExtra(IModelEntity model)
         {
-            if (!string.ReferenceEquals(model.EditorSourceExtraValueId, null))
+            if (!ReferenceEquals(model.EditorSourceExtraValueId, null))
             {
                 ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceExtraValueId);
                 @ref.delete();
@@ -109,7 +109,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceExtraValueId);
                 @ref.setValue("source-extra", modelSource);
 
-                if (string.ReferenceEquals(model.EditorSourceExtraValueId, null))
+                if (ReferenceEquals(model.EditorSourceExtraValueId, null))
                 {
                     model.EditorSourceExtraValueId = @ref.Id;
                     updateModel(model);
@@ -130,7 +130,7 @@ namespace org.activiti.engine.impl.persistence.entity
         public virtual byte[] findEditorSourceByModelId(string modelId)
         {
             IModelEntity model = findById<IModelEntity>(new KeyValuePair<string, object>("id", modelId));
-            if (model == null || string.ReferenceEquals(model.EditorSourceValueId, null))
+            if (model == null || ReferenceEquals(model.EditorSourceValueId, null))
             {
                 return null;
             }
@@ -142,7 +142,7 @@ namespace org.activiti.engine.impl.persistence.entity
         public virtual byte[] findEditorSourceExtraByModelId(string modelId)
         {
             IModelEntity model = findById<IModelEntity>(new KeyValuePair<string, object>("id", modelId));
-            if (model == null || string.ReferenceEquals(model.EditorSourceExtraValueId, null))
+            if (model == null || ReferenceEquals(model.EditorSourceExtraValueId, null))
             {
                 return null;
             }

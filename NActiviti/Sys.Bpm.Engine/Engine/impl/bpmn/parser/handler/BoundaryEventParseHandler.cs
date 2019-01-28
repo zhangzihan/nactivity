@@ -14,6 +14,7 @@
  */
 namespace org.activiti.engine.impl.bpmn.parser.handler
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
 
     /// 
@@ -31,10 +32,9 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
 
         protected internal override void executeParse(BpmnParse bpmnParse, BoundaryEvent boundaryEvent)
         {
-
             if (boundaryEvent.AttachedToRef == null)
             {
-                //logger.warn("Invalid reference in boundary event. Make sure that the referenced activity " + "is defined in the same scope as the boundary event " + boundaryEvent.Id);
+                logger.LogWarning("Invalid reference in boundary event. Make sure that the referenced activity " + "is defined in the same scope as the boundary event " + boundaryEvent.Id);
                 return;
             }
 
@@ -53,11 +53,8 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             else
             {
                 // Should already be picked up by process validator on deploy, so this is just to be sure
-                //logger.warn("Unsupported boundary event type for boundary event " + boundaryEvent.Id);
+                logger.LogWarning("Unsupported boundary event type for boundary event " + boundaryEvent.Id);
             }
-
         }
-
     }
-
 }

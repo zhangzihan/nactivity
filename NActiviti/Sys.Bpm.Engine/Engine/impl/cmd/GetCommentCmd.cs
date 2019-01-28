@@ -31,7 +31,7 @@ namespace org.activiti.engine.impl.cmd
         {
             this.commentId = commentId;
 
-            if (string.ReferenceEquals(commentId, null))
+            if (ReferenceEquals(commentId, null))
             {
                 throw new ActivitiIllegalArgumentException("commentId is null");
             }

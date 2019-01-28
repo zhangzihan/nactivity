@@ -52,7 +52,7 @@ namespace org.activiti.engine.impl.variable
         public override object getValue(IValueFields valueFields)
         {
             JToken jsonValue = null;
-            if (!string.ReferenceEquals(valueFields.TextValue, null) && valueFields.TextValue.Length > 0)
+            if (!ReferenceEquals(valueFields.TextValue, null) && valueFields.TextValue.Length > 0)
             {
                 try
                 {

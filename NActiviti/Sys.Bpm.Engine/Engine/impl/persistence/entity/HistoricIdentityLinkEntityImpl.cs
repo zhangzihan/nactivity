@@ -44,22 +44,22 @@ namespace org.activiti.engine.impl.persistence.entity
                 persistentState["id"] = this.id;
                 persistentState["type"] = this.type;
 
-                if (!string.ReferenceEquals(this.userId, null))
+                if (!ReferenceEquals(this.userId, null))
                 {
                     persistentState["userId"] = this.userId;
                 }
 
-                if (!string.ReferenceEquals(this.groupId, null))
+                if (!ReferenceEquals(this.groupId, null))
                 {
                     persistentState["groupId"] = this.groupId;
                 }
 
-                if (!string.ReferenceEquals(this.taskId, null))
+                if (!ReferenceEquals(this.taskId, null))
                 {
                     persistentState["taskId"] = this.taskId;
                 }
 
-                if (!string.ReferenceEquals(this.processInstanceId, null))
+                if (!ReferenceEquals(this.processInstanceId, null))
                 {
                     persistentState["processInstanceId"] = this.processInstanceId;
                 }
@@ -72,7 +72,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return !string.ReferenceEquals(userId, null);
+                return !ReferenceEquals(userId, null);
             }
         }
 
@@ -80,7 +80,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return !string.ReferenceEquals(groupId, null);
+                return !ReferenceEquals(groupId, null);
             }
         }
 
@@ -105,7 +105,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             set
             {
-                if (!string.ReferenceEquals(this.groupId, null) && !string.ReferenceEquals(value, null))
+                if (!ReferenceEquals(this.groupId, null) && !ReferenceEquals(value, null))
                 {
                     throw new ActivitiException("Cannot assign a userId to a task assignment that already has a groupId");
                 }
@@ -122,7 +122,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             set
             {
-                if (!string.ReferenceEquals(this.userId, null) && !string.ReferenceEquals(value, null))
+                if (!ReferenceEquals(this.userId, null) && !ReferenceEquals(value, null))
                 {
                     throw new ActivitiException("Cannot assign a groupId to a task assignment that already has a userId");
                 }

@@ -15,14 +15,16 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.bpmn.parser.handler
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate;
     using org.activiti.engine.parse;
+    using Sys;
 
     public abstract class AbstractBpmnParseHandler<T> : IBpmnParseHandler where T : org.activiti.bpmn.model.BaseElement
     {
-
+        protected readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<T>();
+        
         public virtual ICollection<Type> HandledTypes
         {
             get

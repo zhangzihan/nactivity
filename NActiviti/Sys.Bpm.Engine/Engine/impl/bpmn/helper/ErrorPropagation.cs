@@ -122,7 +122,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                 matchingEvent = eventMap[currentExecution.ActivityId][0];
 
                 // Check for multi instance
-                if (!string.ReferenceEquals(currentExecution.ParentId, null) && currentExecution.Parent.IsMultiInstanceRoot)
+                if (!ReferenceEquals(currentExecution.ParentId, null) && currentExecution.Parent.IsMultiInstanceRoot)
                 {
                     parentExecution = currentExecution.Parent;
                 }
@@ -168,7 +168,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                             matchingEvent = eventMap[parentExecution.ActivityId][0];
 
                             // Check for multi instance
-                            if (!string.ReferenceEquals(parentExecution.ParentId, null) && parentExecution.Parent.IsMultiInstanceRoot)
+                            if (!ReferenceEquals(parentExecution.ParentId, null) && parentExecution.Parent.IsMultiInstanceRoot)
                             {
                                 parentExecution = parentExecution.Parent;
                             }
@@ -205,7 +205,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                 {
 
                     string errorCode = bpmnModel.Errors[errorId];
-                    if (string.ReferenceEquals(errorCode, null))
+                    if (ReferenceEquals(errorCode, null))
                     {
                         errorCode = errorId;
                     }
@@ -269,7 +269,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                             ErrorEventDefinition errorEventDef = (ErrorEventDefinition)startEvent.EventDefinitions[0];
                             string eventErrorCode = retrieveErrorCode(bpmnModel, errorEventDef.ErrorCode);
 
-                            if (string.ReferenceEquals(eventErrorCode, null) || string.ReferenceEquals(compareErrorCode, null) || eventErrorCode.Equals(compareErrorCode))
+                            if (ReferenceEquals(eventErrorCode, null) || ReferenceEquals(compareErrorCode, null) || eventErrorCode.Equals(compareErrorCode))
                             {
                                 IList<Event> startEvents = new List<Event>();
                                 startEvents.Add(startEvent);
@@ -283,13 +283,13 @@ namespace org.activiti.engine.impl.bpmn.helper
             IList<BoundaryEvent> boundaryEvents = process.findFlowElementsOfType<BoundaryEvent>(true);
             foreach (BoundaryEvent boundaryEvent in boundaryEvents)
             {
-                if (!string.ReferenceEquals(boundaryEvent.AttachedToRefId, null) && CollectionUtil.IsNotEmpty(boundaryEvent.EventDefinitions) && boundaryEvent.EventDefinitions[0] is ErrorEventDefinition)
+                if (!ReferenceEquals(boundaryEvent.AttachedToRefId, null) && CollectionUtil.IsNotEmpty(boundaryEvent.EventDefinitions) && boundaryEvent.EventDefinitions[0] is ErrorEventDefinition)
                 {
 
                     ErrorEventDefinition errorEventDef = (ErrorEventDefinition)boundaryEvent.EventDefinitions[0];
                     string eventErrorCode = retrieveErrorCode(bpmnModel, errorEventDef.ErrorCode);
 
-                    if (string.ReferenceEquals(eventErrorCode, null) || string.ReferenceEquals(compareErrorCode, null) || eventErrorCode.Equals(compareErrorCode))
+                    if (ReferenceEquals(eventErrorCode, null) || ReferenceEquals(compareErrorCode, null) || eventErrorCode.Equals(compareErrorCode))
                     {
                         IList<Event> elementBoundaryEvents = null;
                         if (!eventMap.ContainsKey(boundaryEvent.AttachedToRefId))
@@ -311,7 +311,7 @@ namespace org.activiti.engine.impl.bpmn.helper
         public static bool mapException(Exception e, IExecutionEntity execution, IList<MapExceptionEntry> exceptionMap)
         {
             string errorCode = findMatchingExceptionMapping(e, exceptionMap);
-            if (!string.ReferenceEquals(errorCode, null))
+            if (!ReferenceEquals(errorCode, null))
             {
                 propagateError(errorCode, execution);
                 return true;
@@ -345,7 +345,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                     if (CollectionUtil.IsNotEmpty(callActivity.MapExceptions))
                     {
                         errorCode = findMatchingExceptionMapping(e, callActivity.MapExceptions);
-                        if (!string.ReferenceEquals(errorCode, null))
+                        if (!ReferenceEquals(errorCode, null))
                         {
                             propagateError(errorCode, callActivityExecution);
                             return true;
@@ -367,7 +367,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                 string errorCode = me.ErrorCode;
 
                 // save the first mapping with no exception class as default map
-                if (!string.IsNullOrWhiteSpace(errorCode) && string.IsNullOrWhiteSpace(exceptionClass) && string.ReferenceEquals(defaultExceptionMapping, null))
+                if (!string.IsNullOrWhiteSpace(errorCode) && string.IsNullOrWhiteSpace(exceptionClass) && ReferenceEquals(defaultExceptionMapping, null))
                 {
                     defaultExceptionMapping = errorCode;
                     continue;
@@ -399,7 +399,7 @@ namespace org.activiti.engine.impl.bpmn.helper
         protected internal static string retrieveErrorCode(BpmnModel bpmnModel, string errorCode)
         {
             string finalErrorCode = null;
-            if (!string.ReferenceEquals(errorCode, null) && bpmnModel.containsErrorRef(errorCode))
+            if (!ReferenceEquals(errorCode, null) && bpmnModel.containsErrorRef(errorCode))
             {
                 finalErrorCode = bpmnModel.Errors[errorCode];
             }

@@ -71,7 +71,7 @@ namespace Spring.Validation.Config
         public ValidationNamespaceParser()
         {
             // generate unique key for instance field to be stored in LogicalThreadContext
-            string FIELDPREFIX = typeof(ValidationNamespaceParser).FullName + base.GetHashCode();
+            string FIELDPREFIX = typeof(ValidationNamespaceParser).FullName + GetHashCode();
         }
 
 
@@ -157,7 +157,7 @@ namespace Spring.Validation.Config
                     {
                         case ValidatorDefinitionConstants.PropertyElement:
                             string propertyName = GetAttributeValue(child, ValidatorDefinitionConstants.PropertyNameAttribute);
-                            properties.Add(propertyName, base.ParsePropertyValue(child, name, childParserContext));
+                            properties.Add(propertyName, ParsePropertyValue(child, name, childParserContext));
                             break;
                         case ValidatorDefinitionConstants.MessageElement:
                             actions.Add(ParseErrorMessageAction(child, childParserContext));
@@ -315,7 +315,7 @@ namespace Spring.Validation.Config
         {
             string typeName = GetAttributeValue(element, ObjectDefinitionConstants.TypeAttribute);
             string when = GetAttributeValue(element, ValidatorDefinitionConstants.WhenAttribute);
-            MutablePropertyValues properties = base.ParsePropertyElements("validator:action", element, parserContext);
+            MutablePropertyValues properties = ParsePropertyElements("validator:action", element, parserContext);
             if (StringUtils.HasText(when))
             {
                 properties.Add("When", when);

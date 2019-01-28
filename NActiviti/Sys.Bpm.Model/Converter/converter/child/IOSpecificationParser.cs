@@ -47,7 +47,7 @@ namespace org.activiti.bpmn.converter.child
                 {
                     //xtr.next();
 
-                    if (xtr.StartElement && BpmnXMLConstants.ELEMENT_DATA_INPUT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                    if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DATA_INPUT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         DataSpec dataSpec = new DataSpec();
                         BpmnXMLUtil.addXMLLocation(dataSpec, xtr);
@@ -57,7 +57,7 @@ namespace org.activiti.bpmn.converter.child
                         ioSpecification.DataInputs.Add(dataSpec);
 
                     }
-                    else if (xtr.StartElement && BpmnXMLConstants.ELEMENT_DATA_OUTPUT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                    else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DATA_OUTPUT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         DataSpec dataSpec = new DataSpec();
                         BpmnXMLUtil.addXMLLocation(dataSpec, xtr);
@@ -67,7 +67,7 @@ namespace org.activiti.bpmn.converter.child
                         ioSpecification.DataOutputs.Add(dataSpec);
 
                     }
-                    else if (xtr.StartElement && BpmnXMLConstants.ELEMENT_DATA_INPUT_REFS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                    else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DATA_INPUT_REFS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         string dataInputRefs = xtr.ElementText;
                         if (!string.IsNullOrWhiteSpace(dataInputRefs))
@@ -76,7 +76,7 @@ namespace org.activiti.bpmn.converter.child
                         }
 
                     }
-                    else if (xtr.StartElement && BpmnXMLConstants.ELEMENT_DATA_OUTPUT_REFS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                    else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DATA_OUTPUT_REFS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         string dataOutputRefs = xtr.ElementText;
                         if (!string.IsNullOrWhiteSpace(dataOutputRefs))

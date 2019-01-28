@@ -65,7 +65,7 @@ namespace org.activiti.engine.impl.cmd
             IList<ISignalEventSubscriptionEntity> signalEvents = null;
 
             IEventSubscriptionEntityManager eventSubscriptionEntityManager = commandContext.EventSubscriptionEntityManager;
-            if (string.ReferenceEquals(executionId, null))
+            if (ReferenceEquals(executionId, null))
             {
                 signalEvents = eventSubscriptionEntityManager.findSignalEventSubscriptionsByEventName(eventName, tenantId);
             }

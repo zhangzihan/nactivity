@@ -24,10 +24,6 @@ namespace org.activiti.engine.impl.persistence.entity
 
     public interface IExecutionEntity : IVariableScope, IExecution, IProcessInstance, IEntity, IHasRevision
     {
-
-
-
-
         /// <summary>
         /// Unique id of this path of execution that can be used as a handle to provide external signals back into the engine after wait states.
         /// </summary>
@@ -125,7 +121,6 @@ namespace org.activiti.engine.impl.persistence.entity
         /// </summary>
         bool IsConcurrent { set; get; }
 
-
         /// <summary>
         /// returns whether this execution is a process instance or not.
         /// </summary>
@@ -140,7 +135,6 @@ namespace org.activiti.engine.impl.persistence.entity
         /// Returns whether this execution is a scope.
         /// </summary>
         bool IsScope { get; set; }
-
 
         /// <summary>
         /// Returns whather this execution is the root of a multi instance execution.
@@ -159,14 +153,11 @@ namespace org.activiti.engine.impl.persistence.entity
 
         IExecutionEntity ProcessInstance { get; set; }
 
-
         IExecutionEntity SuperExecution { get; set; }
-
 
         IExecutionEntity SubProcessInstance { get; set; }
 
         IExecutionEntity RootProcessInstance { get; set; }
-
 
         void addChildExecution(IExecutionEntity executionEntity);
 

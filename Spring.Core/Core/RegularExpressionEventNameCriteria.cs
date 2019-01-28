@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ namespace Spring.Core
         /// <see cref="RegularExpressionEventNameCriteria"/> class.
         /// </summary>
         public RegularExpressionEventNameCriteria()
-            : this(RegularExpressionEventNameCriteria.MatchAnyEventNamePattern)
+            : this(MatchAnyEventNamePattern)
         {
             Options = RegexOptions.IgnoreCase;
         }
@@ -70,7 +70,7 @@ namespace Spring.Core
         {
             Options = RegexOptions.IgnoreCase;
             Pattern = StringUtils.HasText(eventNamePattern) ?
-                      eventNamePattern : RegularExpressionEventNameCriteria.MatchAnyEventNamePattern;
+                      eventNamePattern : MatchAnyEventNamePattern;
         }
 
         #endregion

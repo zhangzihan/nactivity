@@ -51,11 +51,11 @@ namespace org.activiti.validation.validator.impl
 
             if (!toDefined)
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.MAIL_TASK_NO_RECIPIENT, process, task, "No recipient is defined on the mail activity");
+                addError(errors, Problems_Fields.MAIL_TASK_NO_RECIPIENT, process, task, "No recipient is defined on the mail activity");
             }
             if (!textOrHtmlDefined)
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.MAIL_TASK_NO_CONTENT, process, task, "Text, html, textVar or htmlVar field should be provided");
+                addError(errors, Problems_Fields.MAIL_TASK_NO_CONTENT, process, task, "Text, html, textVar or htmlVar field should be provided");
             }
         }
 
@@ -75,14 +75,14 @@ namespace org.activiti.validation.validator.impl
 
                 if ((fieldName.Equals("wait") || fieldName.Equals("redirectError") || fieldName.Equals("cleanEnv")) && !fieldValue.ToLower().Equals("true") && !fieldValue.ToLower().Equals("false"))
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.SHELL_TASK_INVALID_PARAM, process, task, "Undefined parameter value for shell field");
+                    addError(errors, Problems_Fields.SHELL_TASK_INVALID_PARAM, process, task, "Undefined parameter value for shell field");
                 }
 
             }
 
             if (!shellCommandDefined)
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.SHELL_TASK_NO_COMMAND, process, task, "No shell command is defined on the shell activity");
+                addError(errors, Problems_Fields.SHELL_TASK_NO_COMMAND, process, task, "No shell command is defined on the shell activity");
             }
         }
 
@@ -95,7 +95,7 @@ namespace org.activiti.validation.validator.impl
                 string fieldName = fieldExtension.FieldName;
                 string fieldValue = fieldExtension.StringValue;
 
-                if (fieldName.Equals("decisionTableReferenceKey") && !string.ReferenceEquals(fieldValue, null) && fieldValue.Length > 0)
+                if (fieldName.Equals("decisionTableReferenceKey") && !ReferenceEquals(fieldValue, null) && fieldValue.Length > 0)
                 {
                     keyDefined = true;
                 }
@@ -103,7 +103,7 @@ namespace org.activiti.validation.validator.impl
 
             if (!keyDefined)
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.DMN_TASK_NO_KEY, process, task, "No decision table reference key is defined on the dmn activity");
+                addError(errors, Problems_Fields.DMN_TASK_NO_KEY, process, task, "No decision table reference key is defined on the dmn activity");
             }
         }
 

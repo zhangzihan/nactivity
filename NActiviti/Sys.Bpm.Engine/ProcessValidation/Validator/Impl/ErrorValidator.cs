@@ -30,7 +30,7 @@ namespace org.activiti.validation.validator.impl
                     string errorCode = bpmnModel.Errors[errorRef];
                     if ("".Equals(errorCode))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.ERROR_MISSING_ERROR_CODE, null, errorRef, "Invalid error code: empty errorCode");
+                        addError(errors, Problems_Fields.ERROR_MISSING_ERROR_CODE, null, errorRef, "Invalid error code: empty errorCode");
                     }
                 }
             }

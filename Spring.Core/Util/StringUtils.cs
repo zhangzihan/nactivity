@@ -503,7 +503,7 @@ namespace Spring.Util
         public static IList<string> GetAntExpressions(string text)
         {
             List<string> expressions = new List<string>();
-            if (StringUtils.HasText(text))
+            if (HasText(text))
             {
                 int start = text.IndexOf(AntExpressionPrefix);
                 while (start >= 0)
@@ -517,7 +517,7 @@ namespace Spring.Util
                     else
                     {
                         string exp = text.Substring(start + 2, end - start - 2);
-                        if (StringUtils.IsNullOrEmpty(exp))
+                        if (IsNullOrEmpty(exp))
                         {
                             throw new FormatException(
                                 string.Format("Empty {0}{1} value found in text : '{2}'.",
@@ -556,7 +556,7 @@ namespace Spring.Util
         /// </returns>
         public static string SetAntExpression(string text, string expression, object expValue)
         {
-            if (StringUtils.IsNullOrEmpty(text))
+            if (IsNullOrEmpty(text))
             {
                 return String.Empty;
             }
@@ -565,7 +565,7 @@ namespace Spring.Util
                 expValue = String.Empty;
             }
             return text.Replace(
-                StringUtils.Surround(AntExpressionPrefix, expression, AntExpressionSuffix), expValue.ToString());
+                Surround(AntExpressionPrefix, expression, AntExpressionSuffix), expValue.ToString());
         }
 
         /// <summary>
@@ -593,7 +593,7 @@ namespace Spring.Util
         /// <returns>The surrounded string.</returns>
         public static string Surround(object fix, object target)
         {
-            return StringUtils.Surround(fix, target, fix);
+            return Surround(fix, target, fix);
         }
 
         /// <summary>

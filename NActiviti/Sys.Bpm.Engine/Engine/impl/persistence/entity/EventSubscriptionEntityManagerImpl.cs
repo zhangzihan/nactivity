@@ -65,7 +65,7 @@ namespace org.activiti.engine.impl.persistence.entity
             if (signal != null)
             {
                 subscriptionEntity.EventName = signal.Name;
-                if (!string.ReferenceEquals(signal.Scope, null))
+                if (!ReferenceEquals(signal.Scope, null))
                 {
                     subscriptionEntity.Configuration = signal.Scope;
                 }
@@ -77,7 +77,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
             subscriptionEntity.ActivityId = execution.CurrentActivityId;
             subscriptionEntity.ProcessDefinitionId = execution.ProcessDefinitionId;
-            if (!string.ReferenceEquals(execution.TenantId, null))
+            if (!ReferenceEquals(execution.TenantId, null))
             {
                 subscriptionEntity.TenantId = execution.TenantId;
             }
@@ -94,7 +94,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
             subscriptionEntity.ActivityId = execution.CurrentActivityId;
             subscriptionEntity.ProcessDefinitionId = execution.ProcessDefinitionId;
-            if (!string.ReferenceEquals(execution.TenantId, null))
+            if (!ReferenceEquals(execution.TenantId, null))
             {
                 subscriptionEntity.TenantId = execution.TenantId;
             }
@@ -108,7 +108,7 @@ namespace org.activiti.engine.impl.persistence.entity
             ICompensateEventSubscriptionEntity eventSubscription = createCompensateEventSubscription();
             eventSubscription.Execution = execution;
             eventSubscription.ActivityId = activityId;
-            if (!string.ReferenceEquals(execution.TenantId, null))
+            if (!ReferenceEquals(execution.TenantId, null))
             {
                 eventSubscription.TenantId = execution.TenantId;
             }
@@ -120,7 +120,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             base.insert(entity, fireCreateEvent);
 
-            if (!string.ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)entity.Execution;
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))
@@ -132,7 +132,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public override void delete(IEventSubscriptionEntity entity, bool fireDeleteEvent)
         {
-            if (!string.ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)entity.Execution;
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))
@@ -156,7 +156,7 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 if (eventSubscriptionEntity is ICompensateEventSubscriptionEntity)
                 {
-                    if (string.ReferenceEquals(activityId, null) || activityId.Equals(eventSubscriptionEntity.ActivityId))
+                    if (ReferenceEquals(activityId, null) || activityId.Equals(eventSubscriptionEntity.ActivityId))
                     {
                         result.Add((ICompensateEventSubscriptionEntity)eventSubscriptionEntity);
                     }

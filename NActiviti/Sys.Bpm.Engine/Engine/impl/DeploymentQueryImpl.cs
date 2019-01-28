@@ -56,7 +56,7 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentId(string deploymentId)
         {
-            if (string.ReferenceEquals(deploymentId, null))
+            if (ReferenceEquals(deploymentId, null))
             {
                 throw new ActivitiIllegalArgumentException("Deployment id is null");
             }
@@ -66,7 +66,7 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentName(string deploymentName)
         {
-            if (string.ReferenceEquals(deploymentName, null))
+            if (ReferenceEquals(deploymentName, null))
             {
                 throw new ActivitiIllegalArgumentException("deploymentName is null");
             }
@@ -76,7 +76,7 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentNameLike(string nameLike)
         {
-            if (string.ReferenceEquals(nameLike, null))
+            if (ReferenceEquals(nameLike, null))
             {
                 throw new ActivitiIllegalArgumentException("deploymentNameLike is null");
             }
@@ -86,7 +86,7 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentCategory(string deploymentCategory)
         {
-            if (string.ReferenceEquals(deploymentCategory, null))
+            if (ReferenceEquals(deploymentCategory, null))
             {
                 throw new ActivitiIllegalArgumentException("deploymentCategory is null");
             }
@@ -96,7 +96,7 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentCategoryLike(string categoryLike)
         {
-            if (string.ReferenceEquals(categoryLike, null))
+            if (ReferenceEquals(categoryLike, null))
             {
                 throw new ActivitiIllegalArgumentException("deploymentCategoryLike is null");
             }
@@ -106,7 +106,7 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentCategoryNotEquals(string deploymentCategoryNotEquals)
         {
-            if (string.ReferenceEquals(deploymentCategoryNotEquals, null))
+            if (ReferenceEquals(deploymentCategoryNotEquals, null))
             {
                 throw new ActivitiIllegalArgumentException("deploymentCategoryExclude is null");
             }
@@ -116,7 +116,7 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentKey(string deploymentKey)
         {
-            if (string.ReferenceEquals(deploymentKey, null))
+            if (ReferenceEquals(deploymentKey, null))
             {
                 throw new ActivitiIllegalArgumentException("deploymentKey is null");
             }
@@ -126,7 +126,7 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentKeyLike(string deploymentKeyLike)
         {
-            if (string.ReferenceEquals(deploymentKeyLike, null))
+            if (ReferenceEquals(deploymentKeyLike, null))
             {
                 throw new ActivitiIllegalArgumentException("deploymentKeyLike is null");
             }
@@ -136,7 +136,7 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentTenantId(string tenantId)
         {
-            if (string.ReferenceEquals(tenantId, null))
+            if (ReferenceEquals(tenantId, null))
             {
                 throw new ActivitiIllegalArgumentException("deploymentTenantId is null");
             }
@@ -146,7 +146,7 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentTenantIdLike(string tenantIdLike)
         {
-            if (string.ReferenceEquals(tenantIdLike, null))
+            if (ReferenceEquals(tenantIdLike, null))
             {
                 throw new ActivitiIllegalArgumentException("deploymentTenantIdLike is null");
             }
@@ -162,7 +162,7 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery processDefinitionKey(string key)
         {
-            if (string.ReferenceEquals(key, null))
+            if (ReferenceEquals(key, null))
             {
                 throw new ActivitiIllegalArgumentException("key is null");
             }
@@ -172,7 +172,7 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery processDefinitionKeyLike(string keyLike)
         {
-            if (string.ReferenceEquals(keyLike, null))
+            if (ReferenceEquals(keyLike, null))
             {
                 throw new ActivitiIllegalArgumentException("keyLike is null");
             }
@@ -182,7 +182,7 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery latest()
         {
-            if (string.ReferenceEquals(key, null))
+            if (ReferenceEquals(key, null))
             {
                 throw new ActivitiIllegalArgumentException("latest can only be used together with a deployment key");
             }

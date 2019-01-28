@@ -65,8 +65,8 @@ namespace Spring.Validation
         /// <remarks>This is just an alias for <see cref="BaseValidatorGroup.FastValidate"/> property</remarks>
         public bool ValidateAll
         {
-            get { return !base.FastValidate; }
-            set { base.FastValidate = !value; }
+            get { return !FastValidate; }
+            set { FastValidate = !value; }
         }
         
         /// <summary>

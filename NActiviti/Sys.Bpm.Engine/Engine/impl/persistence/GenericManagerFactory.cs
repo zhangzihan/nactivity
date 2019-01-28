@@ -47,7 +47,7 @@ namespace org.activiti.engine.impl.persistence
         {
             try
             {
-                return System.Activator.CreateInstance(implementationClass) as ISession;
+                return Activator.CreateInstance(implementationClass) as ISession;
             }
             catch (Exception e)
             {

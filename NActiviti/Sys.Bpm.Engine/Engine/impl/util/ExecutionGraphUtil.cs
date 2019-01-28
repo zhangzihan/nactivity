@@ -33,7 +33,7 @@ namespace org.activiti.engine.impl.util
 		HashSet<string> previousIds = new HashSet<string>();
 		foreach (IExecutionEntity execution in executions)
 		{
-		  if (string.ReferenceEquals(execution.ParentId, null))
+		  if (ReferenceEquals(execution.ParentId, null))
 		  {
 			orderedList.Add(execution);
 			previousIds.Add(execution.Id);

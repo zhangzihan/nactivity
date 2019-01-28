@@ -57,7 +57,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             base.insert(entity, fireCreateEvent);
 
-            if (!string.ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(new KeyValuePair<string, object>("id", entity.ExecutionId));
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))
@@ -117,7 +117,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             entity.Deleted = true;
 
-            if (!string.ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(new KeyValuePair<string, object>("id", entity.ExecutionId));
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))
@@ -140,7 +140,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
 
             string processDefinitionId = null;
-            if (!string.ReferenceEquals(variableInstance.ProcessInstanceId, null))
+            if (!ReferenceEquals(variableInstance.ProcessInstanceId, null))
             {
                 IExecutionEntity executionEntity = ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", variableInstance.ProcessInstanceId));
                 if (executionEntity != null)

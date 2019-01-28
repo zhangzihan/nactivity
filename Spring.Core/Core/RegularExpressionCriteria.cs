@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ namespace Spring.Core
         /// Creates a new instance of the
         /// <see cref="RegularExpressionCriteria"/> class.
         /// </summary>
-        protected RegularExpressionCriteria() : this(RegularExpressionCriteria.MatchAnyThingPattern)
+        protected RegularExpressionCriteria() : this(MatchAnyThingPattern)
         {
         }
 
@@ -79,7 +79,7 @@ namespace Spring.Core
             set
             {
                 _pattern = StringUtils.HasText(value) ?
-                           value : RegularExpressionCriteria.MatchAnyThingPattern;
+                           value : MatchAnyThingPattern;
                 Expression = new Regex(Pattern, Options);
             }
         }

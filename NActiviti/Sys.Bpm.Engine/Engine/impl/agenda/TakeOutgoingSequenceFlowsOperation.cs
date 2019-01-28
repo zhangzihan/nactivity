@@ -123,7 +123,7 @@ namespace org.activiti.engine.impl.agenda
                 if (!SkipExpressionUtil.isSkipExpressionEnabled(execution, skipExpressionString))
                 {
 
-                    if (!evaluateConditions || (evaluateConditions && ConditionUtil.hasTrueCondition(sequenceFlow, execution) && (string.ReferenceEquals(defaultSequenceFlowId, null) || !defaultSequenceFlowId.Equals(sequenceFlow.Id))))
+                    if (!evaluateConditions || (evaluateConditions && ConditionUtil.hasTrueCondition(sequenceFlow, execution) && (ReferenceEquals(defaultSequenceFlowId, null) || !defaultSequenceFlowId.Equals(sequenceFlow.Id))))
                     {
                         outgoingSequenceFlows.Add(sequenceFlow);
                     }
@@ -138,7 +138,7 @@ namespace org.activiti.engine.impl.agenda
             // Check if there is a default sequence flow
             if (outgoingSequenceFlows.Count == 0 && evaluateConditions)
             { // The elements that set this to false also have no support for default sequence flow
-                if (!string.ReferenceEquals(defaultSequenceFlowId, null))
+                if (!ReferenceEquals(defaultSequenceFlowId, null))
                 {
                     foreach (SequenceFlow sequenceFlow in flowNode.OutgoingFlows)
                     {
@@ -185,7 +185,7 @@ namespace org.activiti.engine.impl.agenda
                     for (int i = 1; i < outgoingSequenceFlows.Count; i++)
                     {
 
-                        IExecutionEntity parent = !string.ReferenceEquals(execution.ParentId, null) ? execution.Parent : execution;
+                        IExecutionEntity parent = !ReferenceEquals(execution.ParentId, null) ? execution.Parent : execution;
                         IExecutionEntity outgoingExecutionEntity = commandContext.ExecutionEntityManager.createChildExecution(parent);
 
                         SequenceFlow outgoingSequenceFlow = outgoingSequenceFlows[i];
@@ -208,7 +208,7 @@ namespace org.activiti.engine.impl.agenda
         {
             bool completeAdhocSubProcess = false;
             AdhocSubProcess adhocSubProcess = (AdhocSubProcess)flowNode.ParentContainer;
-            if (!string.ReferenceEquals(adhocSubProcess.CompletionCondition, null))
+            if (!ReferenceEquals(adhocSubProcess.CompletionCondition, null))
             {
                 IExpression expression = Context.ProcessEngineConfiguration.ExpressionManager.createExpression(adhocSubProcess.CompletionCondition);
                 //ICondition condition = new UelExpressionCondition(expression);
@@ -297,7 +297,7 @@ namespace org.activiti.engine.impl.agenda
 
         protected internal virtual void cleanupExecutions(FlowElement currentFlowElement)
         {
-            if (!string.ReferenceEquals(execution.ParentId, null) && execution.IsScope)
+            if (!ReferenceEquals(execution.ParentId, null) && execution.IsScope)
             {
 
                 // If the execution is a scope (and not a process instance), the scope must first be
@@ -343,7 +343,7 @@ namespace org.activiti.engine.impl.agenda
         /// as it's the execution currently being handled in this operation. </param>
         protected internal virtual IExecutionEntity findNextParentScopeExecutionWithAllEndedChildExecutions(IExecutionEntity executionEntity, IExecutionEntity executionEntityToIgnore)
         {
-            if (!string.ReferenceEquals(executionEntity.ParentId, null))
+            if (!ReferenceEquals(executionEntity.ParentId, null))
             {
                 IExecutionEntity scopeExecutionEntity = executionEntity.Parent;
 

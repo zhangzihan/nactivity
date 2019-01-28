@@ -33,12 +33,11 @@ namespace org.activiti.engine.impl.bpmn.helper
         {
             if (isValidEvent(@event))
             {
-
                 ICommandContext commandContext = Context.CommandContext;
 
                 IExecutionEntity execution = null;
 
-                if (!string.ReferenceEquals(@event.ExecutionId, null))
+                if (!ReferenceEquals(@event.ExecutionId, null))
                 {
                     // Get the execution based on the event's execution ID instead execution = Context.CommandContext.ExecutionEntityManager.findById<instead>(new KeyValuePair<string, object>("id", @event.ExecutionId));
                 }

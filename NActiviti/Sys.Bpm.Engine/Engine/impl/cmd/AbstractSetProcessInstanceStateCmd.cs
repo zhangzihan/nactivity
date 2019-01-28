@@ -35,7 +35,7 @@ namespace org.activiti.engine.impl.cmd
         public virtual object execute(ICommandContext commandContext)
         {
 
-            if (string.ReferenceEquals(processInstanceId, null))
+            if (ReferenceEquals(processInstanceId, null))
             {
                 throw new ActivitiIllegalArgumentException("ProcessInstanceId cannot be null.");
             }
@@ -74,7 +74,7 @@ namespace org.activiti.engine.impl.cmd
             }
 
             // All jobs are suspended
-            if (NewState == org.activiti.engine.impl.persistence.entity.SuspensionState_Fields.ACTIVE)
+            if (NewState == SuspensionState_Fields.ACTIVE)
             {
                 IList<ISuspendedJobEntity> suspendedJobs = commandContext.SuspendedJobEntityManager.findJobsByProcessInstanceId(processInstanceId);
                 foreach (ISuspendedJobEntity suspendedJob in suspendedJobs)

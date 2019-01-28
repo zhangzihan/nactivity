@@ -251,7 +251,7 @@ namespace org.activiti.engine.impl.calendar
         ///           if the string expression cannot be parsed into a valid <CODE>CronExpression</CODE> </exception>
         public CronExpression(string cronExpression, IClockReader clockReader)
         {
-            if (string.ReferenceEquals(cronExpression, null))
+            if (ReferenceEquals(cronExpression, null))
             {
                 throw new System.ArgumentException("cronExpression cannot be null");
             }

@@ -155,7 +155,7 @@ namespace org.activiti.engine.impl.persistence.deploy
             if (infoEntity != null && infoEntity.Revision != cacheObject.Revision)
             {
                 cacheObject.Revision = infoEntity.Revision;
-                if (!string.ReferenceEquals(infoEntity.InfoJsonId, null))
+                if (!ReferenceEquals(infoEntity.InfoJsonId, null))
                 {
                     byte[] infoBytes = infoEntityManager.findInfoJsonById(infoEntity.InfoJsonId);
                     try

@@ -72,13 +72,13 @@ namespace org.activiti.engine.impl.util
 
                     process.WaitForExit();
 
-                    if (!string.ReferenceEquals(ResultVariableStr, null))
+                    if (!ReferenceEquals(ResultVariableStr, null))
                     {
                         string result = process.StandardOutput.ReadToEnd(); //convertStreamToStr(process.StandardOutput);
                         execution.setVariable(ResultVariableStr, result);
                     }
 
-                    if (!string.ReferenceEquals(ErrorCodeVariableStr, null))
+                    if (!ReferenceEquals(ErrorCodeVariableStr, null))
                     {
                         execution.setVariable(ErrorCodeVariableStr, Convert.ToString(errorCode));
 

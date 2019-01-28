@@ -93,7 +93,7 @@ namespace Spring.Objects.Factory.Config
         /// </exception>
         public static NameValueCollection Read(IResource resource, string configSection)
         {
-            return ConfigurationReader.Read(resource, configSection, new NameValueCollection());
+            return Read(resource, configSection, new NameValueCollection());
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Spring.Objects.Factory.Config
         public static NameValueCollection Read(
             IResource resource, string configSection, NameValueCollection properties)
         {
-            return ConfigurationReader.Read(resource, configSection, properties, true);
+            return Read(resource, configSection, properties, true);
         }
 
         /// <summary>

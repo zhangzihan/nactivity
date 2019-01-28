@@ -109,13 +109,13 @@ namespace Spring.Expressions
                         }
                     }
                 }
-                Typename2Creator[BASENODE_TYPE.FullName] = SpringAST.Creator;
+                Typename2Creator[BASENODE_TYPE.FullName] = Creator;
             }
 
             public SpringASTFactory() : base(BASENODE_TYPE)
             {
-                base.defaultASTNodeTypeObject_ = BASENODE_TYPE;
-                base.typename2creator_ = Typename2Creator;
+                defaultASTNodeTypeObject_ = BASENODE_TYPE;
+                typename2creator_ = Typename2Creator;
             }
         }
 
@@ -124,8 +124,8 @@ namespace Spring.Expressions
             public SpringExpressionParser( TokenStream lexer )
                 : base( lexer )
             {
-                base.astFactory = new SpringASTFactory();
-                base.initialize();
+                astFactory = new SpringASTFactory();
+                initialize();
             }
         }
 

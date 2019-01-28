@@ -33,7 +33,7 @@ namespace org.activiti.validation.validator.impl
                     {
                         if (!bpmnModel.ItemDefinitions.ContainsKey(message.ItemRef))
                         {
-                            addError(errors, org.activiti.validation.validator.Problems_Fields.MESSAGE_INVALID_ITEM_REF, null, message, "Item reference is invalid: not found");
+                            addError(errors, Problems_Fields.MESSAGE_INVALID_ITEM_REF, null, message, "Item reference is invalid: not found");
                         }
                     }
 

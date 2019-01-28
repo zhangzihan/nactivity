@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace org.activiti.engine.impl.asyncexecutor
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate;
     using org.activiti.engine.@delegate.@event;
@@ -17,11 +17,14 @@ namespace org.activiti.engine.impl.asyncexecutor
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
     using org.activiti.engine.runtime;
+    using Sys;
     using System.Globalization;
 
     public class DefaultJobManager : IJobManager
     {
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
+
+        private readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<DefaultJobManager>();
 
         public DefaultJobManager()
         {
@@ -147,7 +150,7 @@ namespace org.activiti.engine.impl.asyncexecutor
         public virtual IAbstractJobEntity activateSuspendedJob(ISuspendedJobEntity job)
         {
             IAbstractJobEntity activatedJob = null;
-            if (org.activiti.engine.runtime.Job_Fields.JOB_TYPE_TIMER.Equals(job.JobType))
+            if (Job_Fields.JOB_TYPE_TIMER.Equals(job.JobType))
             {
                 activatedJob = createTimerJobFromOtherJob(job);
                 processEngineConfiguration.TimerJobEntityManager.insert((ITimerJobEntity)activatedJob);
@@ -205,11 +208,11 @@ namespace org.activiti.engine.impl.asyncexecutor
         {
             if (job is IJobEntity)
             {
-                if (org.activiti.engine.runtime.Job_Fields.JOB_TYPE_MESSAGE.Equals(job.JobType))
+                if (Job_Fields.JOB_TYPE_MESSAGE.Equals(job.JobType))
                 {
                     executeMessageJob((IJobEntity)job);
                 }
-                else if (org.activiti.engine.runtime.Job_Fields.JOB_TYPE_TIMER.Equals(job.JobType))
+                else if (Job_Fields.JOB_TYPE_TIMER.Equals(job.JobType))
                 {
                     executeTimerJob((IJobEntity)job);
                 }
@@ -223,6 +226,10 @@ namespace org.activiti.engine.impl.asyncexecutor
 
         public virtual void unacquire(IJob job)
         {
+            if (job == null)
+            {
+                return;
+            }
 
             // Deleting the old job and inserting it again with another id,
             // will avoid that the job is immediately is picked up again (for example
@@ -255,7 +262,7 @@ namespace org.activiti.engine.impl.asyncexecutor
         protected internal virtual void executeMessageJob(IJobEntity jobEntity)
         {
             executeJobHandler(jobEntity);
-            if (!string.ReferenceEquals(jobEntity.Id, null))
+            if (!ReferenceEquals(jobEntity.Id, null))
             {
                 Context.CommandContext.JobEntityManager.delete(jobEntity);
             }
@@ -266,14 +273,14 @@ namespace org.activiti.engine.impl.asyncexecutor
             ITimerJobEntityManager timerJobEntityManager = processEngineConfiguration.TimerJobEntityManager;
 
             IVariableScope variableScope = null;
-            if (!string.ReferenceEquals(timerEntity.ExecutionId, null))
+            if (!ReferenceEquals(timerEntity.ExecutionId, null))
             {
                 variableScope = ExecutionEntityManager.findById<VariableScopeImpl>(new KeyValuePair<string, object>("id", timerEntity.ExecutionId));
             }
 
             if (variableScope == null)
             {
-                //variableScope = NoExecutionVariableScope.SharedInstance;
+                variableScope = NoExecutionVariableScope.SharedInstance;
             }
 
             // set endDate if it was set to the definition
@@ -281,10 +288,10 @@ namespace org.activiti.engine.impl.asyncexecutor
 
             if (timerEntity.Duedate != null && !isValidTime(timerEntity, timerEntity.Duedate.GetValueOrDefault(DateTime.Now), variableScope))
             {
-                //if (logger.DebugEnabled)
-                //{
-                //    logger.debug("Timer {} fired. but the dueDate is after the endDate.  Deleting timer.", timerEntity.Id);
-                //}
+                if (logger.IsEnabled(LogLevel.Debug))
+                {
+                    logger.LogDebug($"Timer {timerEntity.Id} fired. but the dueDate is after the endDate.  Deleting timer.");
+                }
                 processEngineConfiguration.JobEntityManager.delete(timerEntity);
                 return;
             }
@@ -292,12 +299,12 @@ namespace org.activiti.engine.impl.asyncexecutor
             executeJobHandler(timerEntity);
             processEngineConfiguration.JobEntityManager.delete(timerEntity);
 
-            //if (logger.DebugEnabled)
-            //{
-            //    logger.debug("Timer {} fired. Deleting timer.", timerEntity.Id);
-            //}
+            if (logger.IsEnabled(LogLevel.Debug))
+            {
+                logger.LogDebug($"Timer {timerEntity.Id} fired. Deleting timer.");
+            }
 
-            if (!string.ReferenceEquals(timerEntity.Repeat, null))
+            if (!ReferenceEquals(timerEntity.Repeat, null))
             {
                 ITimerJobEntity newTimerJobEntity = timerJobEntityManager.createAndCalculateNextTimer(timerEntity, variableScope);
                 if (newTimerJobEntity != null)
@@ -310,7 +317,7 @@ namespace org.activiti.engine.impl.asyncexecutor
         protected internal virtual void executeJobHandler(IJobEntity jobEntity)
         {
             IExecutionEntity execution = null;
-            if (!string.ReferenceEquals(jobEntity.ExecutionId, null))
+            if (!ReferenceEquals(jobEntity.ExecutionId, null))
             {
                 execution = ExecutionEntityManager.findById<ExecutionEntityImpl>(new KeyValuePair<string, object>("id", jobEntity.ExecutionId));
             }
@@ -330,7 +337,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                 activityId = TimerEventHandler.getActivityIdFromConfiguration(timerEntity.JobHandlerConfiguration);
                 string endDateExpressionString = TimerEventHandler.getEndDateFromConfiguration(timerEntity.JobHandlerConfiguration);
 
-                if (!string.ReferenceEquals(endDateExpressionString, null))
+                if (!ReferenceEquals(endDateExpressionString, null))
                 {
                     IExpression endDateExpression = processEngineConfiguration.ExpressionManager.createExpression(endDateExpressionString);
 
@@ -363,9 +370,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
 
             int maxIterations = 1;
-            if (!string.ReferenceEquals(timerEntity.ProcessDefinitionId, null))
+            if (!ReferenceEquals(timerEntity.ProcessDefinitionId, null))
             {
-                org.activiti.bpmn.model.Process process = ProcessDefinitionUtil.getProcess(timerEntity.ProcessDefinitionId);
+                Process process = ProcessDefinitionUtil.getProcess(timerEntity.ProcessDefinitionId);
                 maxIterations = getMaxIterations(process, activityId);
                 if (maxIterations <= 1)
                 {
@@ -375,7 +382,7 @@ namespace org.activiti.engine.impl.asyncexecutor
             timerEntity.MaxIterations = maxIterations;
         }
 
-        protected internal virtual int getMaxIterations(org.activiti.bpmn.model.Process process, string activityId)
+        protected internal virtual int getMaxIterations(Process process, string activityId)
         {
             FlowElement flowElement = process.getFlowElement(activityId, true);
             if (flowElement != null)
@@ -394,7 +401,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                             if (eventDefinition is TimerEventDefinition)
                             {
                                 TimerEventDefinition timerEventDefinition = (TimerEventDefinition)eventDefinition;
-                                if (!string.ReferenceEquals(timerEventDefinition.TimeCycle, null))
+                                if (!ReferenceEquals(timerEventDefinition.TimeCycle, null))
                                 {
                                     return calculateMaxIterationsValue(timerEventDefinition.TimeCycle);
                                 }
@@ -478,7 +485,7 @@ namespace org.activiti.engine.impl.asyncexecutor
             jobEntity.JobHandlerType = AsyncContinuationJobHandler.TYPE;
 
             // Inherit tenant id (if applicable)
-            if (!string.ReferenceEquals(execution.TenantId, null))
+            if (!ReferenceEquals(execution.TenantId, null))
             {
                 jobEntity.TenantId = execution.TenantId;
             }

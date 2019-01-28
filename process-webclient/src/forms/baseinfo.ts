@@ -25,6 +25,8 @@ export class BaseInfo extends BaseForm {
             processDefinitionKey: this.workflow.key,
             businessKey: this.workflow.businessKey,
             variables: {
+                "url": "http://event.31huiyi.com/manage/test3",
+                "postdata": {name:this.user.name,isTecher:this.isTecher},
                 "name": this.user.name,
                 "users": [this.user.name],
                 "isTecher": this.isTecher

@@ -54,7 +54,7 @@ namespace org.activiti.engine.impl.cmd
             {
 
                 IList<IDeployment> existingDeployments = new List<IDeployment>();
-                if (string.ReferenceEquals(deployment.TenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(deployment.TenantId))
+                if (ReferenceEquals(deployment.TenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(deployment.TenantId))
                 {
                     IDeploymentEntity existingDeployment = commandContext.DeploymentEntityManager.findLatestDeploymentByName(deployment.Name);
                     if (existingDeployment != null)

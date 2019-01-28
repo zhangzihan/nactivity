@@ -43,7 +43,7 @@ namespace org.activiti.engine.impl.bpmn.helper
 
                 // check whether compensating execution is already created (which is the case when compensating an embedded subprocess,
                 // where the compensating execution is created when leaving the subprocess and holds snapshot data).
-                if (!string.ReferenceEquals(eventSubscription.Configuration, null))
+                if (!ReferenceEquals(eventSubscription.Configuration, null))
                 {
                     compensatingExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", eventSubscription.Configuration));
                     compensatingExecution.Parent = compensatingExecution.ProcessInstance;

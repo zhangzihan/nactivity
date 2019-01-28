@@ -50,12 +50,12 @@ namespace org.activiti.engine.impl.cmd
 
 	  protected internal virtual void validateParams(string userId, string groupId, string type, string taskId)
 	  {
-		if (string.ReferenceEquals(taskId, null))
+		if (ReferenceEquals(taskId, null))
 		{
 		  throw new ActivitiIllegalArgumentException("taskId is null");
 		}
 
-		if (string.ReferenceEquals(type, null))
+		if (ReferenceEquals(type, null))
 		{
 		  throw new ActivitiIllegalArgumentException("type is required when adding a new task identity link");
 		}
@@ -64,14 +64,14 @@ namespace org.activiti.engine.impl.cmd
 		// userId may be null
 		if (IdentityLinkType.ASSIGNEE.Equals(type) || IdentityLinkType.OWNER.Equals(type))
 		{
-		  if (!string.ReferenceEquals(groupId, null))
+		  if (!ReferenceEquals(groupId, null))
 		  {
 			throw new ActivitiIllegalArgumentException("Incompatible usage: cannot use type '" + type + "' together with a groupId");
 		  }
 		}
 		else
 		{
-		  if (string.ReferenceEquals(userId, null) && string.ReferenceEquals(groupId, null))
+		  if (ReferenceEquals(userId, null) && ReferenceEquals(groupId, null))
 		  {
 			throw new ActivitiIllegalArgumentException("userId and groupId cannot both be null");
 		  }

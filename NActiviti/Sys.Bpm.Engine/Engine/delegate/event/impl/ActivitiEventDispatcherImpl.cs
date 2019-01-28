@@ -105,7 +105,7 @@ namespace org.activiti.engine.@delegate.@event.impl
         {
             BpmnModel result = null;
 
-            if (result == null && !string.ReferenceEquals(@event.ProcessDefinitionId, null))
+            if (result == null && !ReferenceEquals(@event.ProcessDefinitionId, null))
             {
                 IProcessDefinition processDefinition = ProcessDefinitionUtil.getProcessDefinition(@event.ProcessDefinitionId, true);
                 if (processDefinition != null)

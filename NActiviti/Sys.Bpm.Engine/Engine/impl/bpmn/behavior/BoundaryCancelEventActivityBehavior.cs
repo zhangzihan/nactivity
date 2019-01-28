@@ -65,7 +65,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             else
             {
 
-                string deleteReason = org.activiti.engine.history.DeleteReason_Fields.BOUNDARY_EVENT_INTERRUPTING + "(" + boundaryEvent.Id + ")";
+                string deleteReason = engine.history.DeleteReason_Fields.BOUNDARY_EVENT_INTERRUPTING + "(" + boundaryEvent.Id + ")";
 
                 // cancel boundary is always sync
                 ScopeUtil.throwCompensationEvent(eventSubscriptions, execution, false);

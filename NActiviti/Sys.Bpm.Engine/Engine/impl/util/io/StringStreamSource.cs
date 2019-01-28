@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.util.io
             {
                 try
                 {
-                    return new System.IO.MemoryStream(string.ReferenceEquals(byteArrayEncoding, null) ? @string.GetBytes() : @string.GetBytes(byteArrayEncoding));
+                    return new System.IO.MemoryStream(ReferenceEquals(byteArrayEncoding, null) ? @string.GetBytes() : @string.GetBytes(byteArrayEncoding));
                 }
                 catch (Exception e)
                 {

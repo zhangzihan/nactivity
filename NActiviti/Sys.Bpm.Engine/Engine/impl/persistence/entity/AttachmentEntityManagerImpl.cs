@@ -80,7 +80,7 @@ namespace org.activiti.engine.impl.persistence.entity
             foreach (IAttachment attachment in attachments)
             {
                 string contentId = attachment.ContentId;
-                if (!string.ReferenceEquals(contentId, null))
+                if (!ReferenceEquals(contentId, null))
                 {
                     ByteArrayEntityManager.deleteByteArrayById(contentId);
                 }

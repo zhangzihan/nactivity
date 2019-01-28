@@ -106,7 +106,7 @@ namespace Spring.Util
             }
             foreach (object item in collection)
             {
-                if (object.Equals(item, element))
+                if (Equals(item, element))
                 {
                     return true;
                 }

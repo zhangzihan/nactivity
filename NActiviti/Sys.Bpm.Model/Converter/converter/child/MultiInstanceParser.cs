@@ -52,22 +52,22 @@ namespace org.activiti.bpmn.converter.child
                 {
                     //xtr.next();
 
-                    if (xtr.StartElement && BpmnXMLConstants.ELEMENT_MULTIINSTANCE_CARDINALITY.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                    if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_MULTIINSTANCE_CARDINALITY.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         multiInstanceDef.LoopCardinality = xtr.ElementText;
                     }
-                    else if (xtr.StartElement && BpmnXMLConstants.ELEMENT_MULTIINSTANCE_DATAINPUT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                    else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_MULTIINSTANCE_DATAINPUT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         multiInstanceDef.InputDataItem = xtr.ElementText;
                     }
-                    else if (xtr.StartElement && BpmnXMLConstants.ELEMENT_MULTIINSTANCE_DATAITEM.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                    else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_MULTIINSTANCE_DATAITEM.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         if (xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME) != null)
                         {
                             multiInstanceDef.ElementVariable = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
                         }
                     }
-                    else if (xtr.StartElement && BpmnXMLConstants.ELEMENT_MULTIINSTANCE_CONDITION.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                    else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_MULTIINSTANCE_CONDITION.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         multiInstanceDef.CompletionCondition = xtr.ElementText;
                     }

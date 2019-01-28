@@ -30,9 +30,9 @@ namespace org.activiti.validation.validator.impl
                 {
                     foreach (ActivitiListener listener in userTask.TaskListeners)
                     {
-                        if (string.ReferenceEquals(listener.Implementation, null) || string.ReferenceEquals(listener.ImplementationType, null))
+                        if (ReferenceEquals(listener.Implementation, null) || ReferenceEquals(listener.ImplementationType, null))
                         {
-                            addError(errors, org.activiti.validation.validator.Problems_Fields.USER_TASK_LISTENER_IMPLEMENTATION_MISSING, process, userTask, "Element 'class' or 'expression' is mandatory on executionListener");
+                            addError(errors, Problems_Fields.USER_TASK_LISTENER_IMPLEMENTATION_MISSING, process, userTask, "Element 'class' or 'expression' is mandatory on executionListener");
                         }
                     }
                 }

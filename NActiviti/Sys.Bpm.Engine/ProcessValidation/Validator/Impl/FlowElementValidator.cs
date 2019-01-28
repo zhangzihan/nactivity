@@ -46,9 +46,9 @@ namespace org.activiti.validation.validator.impl
 
         protected internal virtual void handleConstraints(Process process, Activity activity, IList<ValidationError> errors)
         {
-            if (!string.ReferenceEquals(activity.Id, null) && activity.Id.Length > ID_MAX_LENGTH)
+            if (!ReferenceEquals(activity.Id, null) && activity.Id.Length > ID_MAX_LENGTH)
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.FLOW_ELEMENT_ID_TOO_LONG, process, activity, "The id of a flow element must not contain more than " + ID_MAX_LENGTH + " characters");
+                addError(errors, Problems_Fields.FLOW_ELEMENT_ID_TOO_LONG, process, activity, "The id of a flow element must not contain more than " + ID_MAX_LENGTH + " characters");
             }
         }
 
@@ -61,7 +61,7 @@ namespace org.activiti.validation.validator.impl
                 if (string.IsNullOrWhiteSpace(multiInstanceLoopCharacteristics.LoopCardinality) && string.IsNullOrWhiteSpace(multiInstanceLoopCharacteristics.InputDataItem))
                 {
 
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.MULTI_INSTANCE_MISSING_COLLECTION, process, activity, "Either loopCardinality or loopDataInputRef/activiti:collection must been set");
+                    addError(errors, Problems_Fields.MULTI_INSTANCE_MISSING_COLLECTION, process, activity, "Either loopCardinality or loopDataInputRef/activiti:collection must been set");
                 }
 
             }
@@ -75,7 +75,7 @@ namespace org.activiti.validation.validator.impl
                 {
                     if (string.IsNullOrWhiteSpace(dataAssociation.TargetRef))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.DATA_ASSOCIATION_MISSING_TARGETREF, process, activity, "Targetref is required on a data association");
+                        addError(errors, Problems_Fields.DATA_ASSOCIATION_MISSING_TARGETREF, process, activity, "Targetref is required on a data association");
                     }
                 }
             }
@@ -85,7 +85,7 @@ namespace org.activiti.validation.validator.impl
                 {
                     if (string.IsNullOrWhiteSpace(dataAssociation.TargetRef))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.DATA_ASSOCIATION_MISSING_TARGETREF, process, activity, "Targetref is required on a data association");
+                        addError(errors, Problems_Fields.DATA_ASSOCIATION_MISSING_TARGETREF, process, activity, "Targetref is required on a data association");
                     }
                 }
             }

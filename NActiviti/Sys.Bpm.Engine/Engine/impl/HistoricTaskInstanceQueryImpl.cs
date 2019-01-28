@@ -172,7 +172,7 @@ namespace org.activiti.engine.impl
             }
             foreach (string processInstanceId in processInstanceIds)
             {
-                if (string.ReferenceEquals(processInstanceId, null))
+                if (ReferenceEquals(processInstanceId, null))
                 {
                     throw new ActivitiIllegalArgumentException("None of the given process instance ids can be null");
                 }
@@ -344,7 +344,7 @@ namespace org.activiti.engine.impl
             }
             foreach (string processCategory in processCategoryInList)
             {
-                if (string.ReferenceEquals(processCategory, null))
+                if (ReferenceEquals(processCategory, null))
                 {
                     throw new ActivitiIllegalArgumentException("None of the given process categories can be null");
                 }
@@ -373,7 +373,7 @@ namespace org.activiti.engine.impl
             }
             foreach (string processCategory in processCategoryNotInList)
             {
-                if (string.ReferenceEquals(processCategory, null))
+                if (ReferenceEquals(processCategory, null))
                 {
                     throw new ActivitiIllegalArgumentException("None of the given process categories can be null");
                 }
@@ -453,15 +453,15 @@ namespace org.activiti.engine.impl
                 throw new ActivitiIllegalArgumentException("Task name list is empty");
             }
 
-            if (!string.ReferenceEquals(taskName_Renamed, null))
+            if (!ReferenceEquals(taskName_Renamed, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameIn and taskName");
             }
-            if (!string.ReferenceEquals(taskNameLike_Renamed, null))
+            if (!ReferenceEquals(taskNameLike_Renamed, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameIn and taskNameLike");
             }
-            if (!string.ReferenceEquals(taskNameLikeIgnoreCase_Renamed, null))
+            if (!ReferenceEquals(taskNameLikeIgnoreCase_Renamed, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameIn and taskNameLikeIgnoreCase");
             }
@@ -489,21 +489,21 @@ namespace org.activiti.engine.impl
             }
             foreach (string taskName in taskNameList)
             {
-                if (string.ReferenceEquals(taskName, null))
+                if (ReferenceEquals(taskName, null))
                 {
                     throw new ActivitiIllegalArgumentException("None of the given task names can be null");
                 }
             }
 
-            if (!string.ReferenceEquals(taskName_Renamed, null))
+            if (!ReferenceEquals(taskName_Renamed, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and name");
             }
-            if (!string.ReferenceEquals(taskNameLike_Renamed, null))
+            if (!ReferenceEquals(taskNameLike_Renamed, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and nameLike");
             }
-            if (!string.ReferenceEquals(taskNameLikeIgnoreCase_Renamed, null))
+            if (!ReferenceEquals(taskNameLikeIgnoreCase_Renamed, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and nameLikeIgnoreCase");
             }
@@ -681,21 +681,21 @@ namespace org.activiti.engine.impl
             }
             foreach (string assignee in assigneeIds)
             {
-                if (string.ReferenceEquals(assignee, null))
+                if (ReferenceEquals(assignee, null))
                 {
                     throw new ActivitiIllegalArgumentException("None of the given task assignees can be null");
                 }
             }
 
-            if (!string.ReferenceEquals(taskAssignee_Renamed, null))
+            if (!ReferenceEquals(taskAssignee_Renamed, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssignee");
             }
-            if (!string.ReferenceEquals(taskAssigneeLike_Renamed, null))
+            if (!ReferenceEquals(taskAssigneeLike_Renamed, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssigneeLike");
             }
-            if (!string.ReferenceEquals(taskAssigneeLikeIgnoreCase_Renamed, null))
+            if (!ReferenceEquals(taskAssigneeLikeIgnoreCase_Renamed, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssigneeLikeIgnoreCase");
             }
@@ -1313,7 +1313,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricTaskInstanceQuery taskCandidateUser(string candidateUser)
         {
-            if (string.ReferenceEquals(candidateUser, null))
+            if (ReferenceEquals(candidateUser, null))
             {
                 throw new ActivitiIllegalArgumentException("Candidate user is null");
             }
@@ -1331,7 +1331,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricTaskInstanceQuery taskCandidateUser(string candidateUser, IList<string> usersGroups)
         {
-            if (string.ReferenceEquals(candidateUser, null))
+            if (ReferenceEquals(candidateUser, null))
             {
                 throw new ActivitiIllegalArgumentException("Candidate user is null");
             }
@@ -1351,7 +1351,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricTaskInstanceQuery taskCandidateGroup(string candidateGroup)
         {
-            if (string.ReferenceEquals(candidateGroup, null))
+            if (ReferenceEquals(candidateGroup, null))
             {
                 throw new ActivitiIllegalArgumentException("Candidate group is null");
             }
@@ -1384,7 +1384,7 @@ namespace org.activiti.engine.impl
                 throw new ActivitiIllegalArgumentException("Candidate group list is empty");
             }
 
-            if (!string.ReferenceEquals(candidateGroup, null))
+            if (!ReferenceEquals(candidateGroup, null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both candidateGroupIn and candidateGroup");
             }
@@ -1433,7 +1433,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricTaskInstanceQuery taskTenantId(string tenantId)
         {
-            if (string.ReferenceEquals(tenantId, null))
+            if (ReferenceEquals(tenantId, null))
             {
                 throw new ActivitiIllegalArgumentException("task tenant id is null");
             }
@@ -1450,7 +1450,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricTaskInstanceQuery taskTenantIdLike(string tenantIdLike)
         {
-            if (string.ReferenceEquals(tenantIdLike, null))
+            if (ReferenceEquals(tenantIdLike, null))
             {
                 throw new ActivitiIllegalArgumentException("task tenant id is null");
             }
@@ -1547,7 +1547,7 @@ namespace org.activiti.engine.impl
             taskEntity.LocalizedName = null;
             taskEntity.LocalizedDescription = null;
 
-            if (!string.ReferenceEquals(locale_Renamed, null))
+            if (!ReferenceEquals(locale_Renamed, null))
             {
                 string processDefinitionId = task.ProcessDefinitionId;
                 if (!string.IsNullOrWhiteSpace(processDefinitionId))
@@ -1714,7 +1714,7 @@ namespace org.activiti.engine.impl
             get
             {
                 string specialOrderBy = base.OrderBy;
-                if (!string.ReferenceEquals(specialOrderBy, null) && specialOrderBy.Length > 0)
+                if (!ReferenceEquals(specialOrderBy, null) && specialOrderBy.Length > 0)
                 {
                     specialOrderBy = specialOrderBy.Replace("RES.", "TEMPRES_");
                     specialOrderBy = specialOrderBy.Replace("VAR.", "TEMPVAR_");
@@ -1727,7 +1727,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                if (!string.ReferenceEquals(candidateGroup, null))
+                if (!ReferenceEquals(candidateGroup, null))
                 {
                     IList<string> candidateGroupList = new List<string>(1);
                     candidateGroupList.Add(candidateGroup);
@@ -1739,7 +1739,7 @@ namespace org.activiti.engine.impl
                     return candidateGroups;
 
                 }
-                else if (!string.ReferenceEquals(candidateUser, null))
+                else if (!ReferenceEquals(candidateUser, null))
                 {
                     return getGroupsForCandidateUser(candidateUser);
                 }

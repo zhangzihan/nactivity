@@ -53,7 +53,7 @@ namespace org.activiti.engine.impl.bpmn.listener
                         }
                         else if (ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
                         {
-                            if (!string.ReferenceEquals(activitiListener.OnTransaction, null))
+                            if (!ReferenceEquals(activitiListener.OnTransaction, null))
                             {
                                 executionListener = listenerFactory.createTransactionDependentDelegateExpressionExecutionListener(activitiListener);
                             }
@@ -69,7 +69,7 @@ namespace org.activiti.engine.impl.bpmn.listener
 
                         if (executionListener != null)
                         {
-                            if (!string.ReferenceEquals(activitiListener.OnTransaction, null))
+                            if (!ReferenceEquals(activitiListener.OnTransaction, null))
                             {
                                 planTransactionDependentExecutionListener(listenerFactory, execution, (ITransactionDependentExecutionListener)executionListener, activitiListener);
                             }
@@ -100,7 +100,7 @@ namespace org.activiti.engine.impl.bpmn.listener
 
         public virtual void executeTaskListeners(ITaskEntity taskEntity, string eventType)
         {
-            if (!string.ReferenceEquals(taskEntity.ProcessDefinitionId, null))
+            if (!ReferenceEquals(taskEntity.ProcessDefinitionId, null))
             {
                 org.activiti.bpmn.model.Process process = ProcessDefinitionUtil.getProcess(taskEntity.ProcessDefinitionId);
                 FlowElement flowElement = process.getFlowElement(taskEntity.TaskDefinitionKey, true);
@@ -121,7 +121,7 @@ namespace org.activiti.engine.impl.bpmn.listener
                 {
                     IBaseTaskListener taskListener = createTaskListener(activitiListener);
 
-                    if (!string.ReferenceEquals(activitiListener.OnTransaction, null))
+                    if (!ReferenceEquals(activitiListener.OnTransaction, null))
                     {
                         planTransactionDependentTaskListener(taskEntity.Execution, (ITransactionDependentTaskListener)taskListener, activitiListener);
                     }
@@ -162,7 +162,7 @@ namespace org.activiti.engine.impl.bpmn.listener
             }
             else if (ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
             {
-                if (!string.ReferenceEquals(activitiListener.OnTransaction, null))
+                if (!ReferenceEquals(activitiListener.OnTransaction, null))
                 {
                     taskListener = listenerFactory.createTransactionDependentDelegateExpressionTaskListener(activitiListener);
                 }
@@ -220,17 +220,17 @@ namespace org.activiti.engine.impl.bpmn.listener
         protected internal virtual void addTransactionListener(ActivitiListener activitiListener, ITransactionListener transactionListener)
         {
             ITransactionContext transactionContext = Context.TransactionContext;
-            if (org.activiti.engine.@delegate.TransactionDependentExecutionListener_Fields.ON_TRANSACTION_BEFORE_COMMIT.Equals(activitiListener.OnTransaction))
+            if (TransactionDependentExecutionListener_Fields.ON_TRANSACTION_BEFORE_COMMIT.Equals(activitiListener.OnTransaction))
             {
                 transactionContext.addTransactionListener(TransactionState.COMMITTING, transactionListener);
 
             }
-            else if (org.activiti.engine.@delegate.TransactionDependentExecutionListener_Fields.ON_TRANSACTION_COMMITTED.Equals(activitiListener.OnTransaction))
+            else if (TransactionDependentExecutionListener_Fields.ON_TRANSACTION_COMMITTED.Equals(activitiListener.OnTransaction))
             {
                 transactionContext.addTransactionListener(TransactionState.COMMITTED, transactionListener);
 
             }
-            else if (org.activiti.engine.@delegate.TransactionDependentExecutionListener_Fields.ON_TRANSACTION_ROLLED_BACK.Equals(activitiListener.OnTransaction))
+            else if (TransactionDependentExecutionListener_Fields.ON_TRANSACTION_ROLLED_BACK.Equals(activitiListener.OnTransaction))
             {
                 transactionContext.addTransactionListener(TransactionState.ROLLED_BACK, transactionListener);
 

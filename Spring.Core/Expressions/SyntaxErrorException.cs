@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,8 +86,8 @@ namespace Spring.Expressions
         /// </summary>
 		protected SyntaxErrorException(SerializationInfo info, StreamingContext context) : base(info.GetString("Message"))
         {
-            base.line = info.GetInt32("Line");
-            base.column = info.GetInt32("Column");
+            line = info.GetInt32("Line");
+            column = info.GetInt32("Column");
             this._expression = info.GetString("Expression");
         }
 
@@ -99,10 +99,10 @@ namespace Spring.Expressions
         public override void GetObjectData( SerializationInfo info, StreamingContext context )
         {
             // since RecognitionException does not implement .ctor(SerializationInfo info, StreamingContext context)
-            // we need to do the serialization on our own... #§$%
+            // we need to do the serialization on our own... #?%
             //base.GetObjectData( info, context );
-            info.AddValue("Line", base.line);
-            info.AddValue("Column", base.column);
+            info.AddValue("Line", line);
+            info.AddValue("Column", column);
             info.AddValue("Message", base.Message);
             info.AddValue("Expression", this._expression);
         }

@@ -10,7 +10,7 @@
         <Result Property="executionId" Column="EXECUTION_ID_" />
         <Result Property="processInstanceId" Column="PROCESS_INSTANCE_ID_" />
         <Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
-        <Result Property="exceptionByteArrayRef" Column="EXCEPTION_STACK_ID_" />
+        <Result Property="exceptionByteArrayRef" Column="EXCEPTION_STACK_ID_" TypeHandler="二进制引用" />
         <Result Property="exceptionMessage" Column="EXCEPTION_MSG_" />
         <Result Property="jobHandlerType" Column="HANDLER_TYPE_" />
         <Result Property="jobHandlerConfiguration" Column="HANDLER_CFG_" />
@@ -18,6 +18,10 @@
         <Result Property="duedate" Column="DUEDATE_" />
         <Result Property="repeat" Column="REPEAT_" />
     </ResultMap>
+
+  <ParameterMap Id="insupJobMap">
+    <Parameter Property="(Items_)?exceptionByteArrayRef(_p\d)?" TypeHandler="二进制引用" />
+  </ParameterMap>
 
     <Delete Id="deleteDeadLetterJob" >
         delete from ACT_RU_DEADLETTER_JOB where ID_ = #{id} and REV_ = #{revision}
@@ -95,7 +99,7 @@
 
     <!-- TIMER INSERT -->
   
-  	<Insert Id="insertDeadLetterJob" >
+  	<Insert Id="insertDeadLetterJob" ParameterMap="insupJobMap" >
     insert into ACT_RU_DEADLETTER_JOB (
             ID_, 
             REV_,
@@ -128,7 +132,7 @@
     )
   	</Insert>
 
-  	<Insert Id="bulkInsertDeadLetterJob" >
+  	<Insert Id="bulkInsertDeadLetterJob" ParameterMap="insupJobMap" >
     INSERT INTO ACT_RU_DEADLETTER_JOB (
             ID_,
             REV_,

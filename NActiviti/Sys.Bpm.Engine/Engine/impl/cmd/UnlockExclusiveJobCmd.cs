@@ -52,7 +52,7 @@ namespace org.activiti.engine.impl.cmd
 
             if (job.Exclusive)
             {
-                if (!string.ReferenceEquals(job.ProcessInstanceId, null))
+                if (!ReferenceEquals(job.ProcessInstanceId, null))
                 {
                     IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", job.ProcessInstanceId));
                     if (execution != null)

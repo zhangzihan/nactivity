@@ -38,7 +38,7 @@ namespace org.activiti.validation.validator.impl
                         IFlowElementsContainer parent = process.findParent(endEvent);
                         if (!(parent is Transaction))
                         {
-                            addError(errors, org.activiti.validation.validator.Problems_Fields.END_EVENT_CANCEL_ONLY_INSIDE_TRANSACTION, process, endEvent, "end event with cancelEventDefinition only supported inside transaction subprocess");
+                            addError(errors, Problems_Fields.END_EVENT_CANCEL_ONLY_INSIDE_TRANSACTION, process, endEvent, "end event with cancelEventDefinition only supported inside transaction subprocess");
                         }
                     }
                 }

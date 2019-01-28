@@ -79,7 +79,7 @@ namespace org.activiti.bpmn.converter.util
             {
                 //xtr.next();
 
-                if (xtr.StartElement)
+                if (xtr.IsStartElement())
                 {
                     if (BpmnXMLConstants.ELEMENT_EXTENSIONS.Equals(xtr.LocalName))
                     {
@@ -139,12 +139,13 @@ namespace org.activiti.bpmn.converter.util
                         extensionElement.ElementText = xtr.Value?.Trim();
                     }
                 }
-                else if (xtr.StartElement)
+                else if (xtr.IsStartElement())
                 {
                     if (xtr.IsEmptyElement)
                     {
                         ExtensionElement childExtensionElement = CreateExtensionElement(xtr);
                         extensionElement.addChildElement(childExtensionElement);
+                        xtr.isEmpty = xtr.IsStartElement() && xtr.EndElement;
                         xtr.next();
                         return childExtensionElement;
                     }

@@ -46,7 +46,7 @@ namespace org.activiti.engine.@delegate
         {
             set
             {
-                if (string.ReferenceEquals(value, null))
+                if (ReferenceEquals(value, null))
                 {
                     throw new ActivitiIllegalArgumentException("Error Code must not be null.");
                 }

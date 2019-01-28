@@ -351,8 +351,8 @@ namespace Spring.Expressions.Parser.antlr
 		[Obsolete("De-activated since version 2.7.2.6 as it cannot be overidden.", true)]
 		public static void  panic()
 		{
-			System.Console.Error.WriteLine("Parser: panic");
-			System.Environment.Exit(1);
+            Console.Error.WriteLine("Parser: panic");
+            Environment.Exit(1);
 		}
 
 		public virtual void  removeMessageListener(MessageListener l)

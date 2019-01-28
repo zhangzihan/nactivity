@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace org.activiti.engine.impl.agenda
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate;
     using org.activiti.engine.@delegate.@event;
@@ -15,6 +15,7 @@ namespace org.activiti.engine.impl.agenda
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
+    using Sys;
 
     /// <summary>
     /// This operations ends an execution and follows the typical BPMN rules to continue the process (if possible).
@@ -26,6 +27,8 @@ namespace org.activiti.engine.impl.agenda
     /// </summary>
     public class EndExecutionOperation : AbstractOperation
     {
+        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<EndExecutionOperation>();
+
         public EndExecutionOperation(ICommandContext commandContext, IExecutionEntity execution) : base(commandContext, execution)
         {
         }
@@ -46,8 +49,9 @@ namespace org.activiti.engine.impl.agenda
         {
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
 
-            string processInstanceId = processInstanceExecution.Id; // No parent execution == process instance id
-                                                                    //logger.debug("No parent execution found. Verifying if process instance {} can be stopped.", processInstanceId);
+            string processInstanceId = processInstanceExecution.Id; 
+            // No parent execution == process instance id
+            logger.LogDebug($"No parent execution found. Verifying if process instance {processInstanceId} can be stopped.");
 
             IExecutionEntity superExecution = processInstanceExecution.SuperExecution;
             @delegate.ISubProcessActivityBehavior subProcessActivityBehavior = null;
@@ -68,7 +72,7 @@ namespace org.activiti.engine.impl.agenda
                 //}
                 catch (Exception e)
                 {
-                    //logger.error("Error while completing sub process of execution {}", processInstanceExecution, e);
+                    logger.LogError($"Error while completing sub process of execution {processInstanceExecution}.Exception Message: {e.Message}");
                     throw new ActivitiException("Error while completing sub process of execution " + processInstanceExecution, e);
                 }
             }
@@ -76,14 +80,14 @@ namespace org.activiti.engine.impl.agenda
             int activeExecutions = getNumberOfActiveChildExecutionsForProcessInstance(executionEntityManager, processInstanceId);
             if (activeExecutions == 0)
             {
-                //logger.debug("No active executions found. Ending process instance {} ", processInstanceId);
+                logger.LogDebug($"No active executions found. Ending process instance {processInstanceId} ");
 
                 // note the use of execution here vs processinstance execution for getting the flowelement
                 executionEntityManager.deleteProcessInstanceExecutionEntity(processInstanceId, execution.CurrentFlowElement != null ? execution.CurrentFlowElement.Id : null, null, false, false);
             }
             else
             {
-                //logger.debug("Active executions found. Process instance {} will not be ended.", processInstanceId);
+                logger.LogDebug($"Active executions found. Process instance {processInstanceId} will not be ended.");
             }
 
             Process process = ProcessDefinitionUtil.getProcess(processInstanceExecution.ProcessDefinitionId);
@@ -109,7 +113,7 @@ namespace org.activiti.engine.impl.agenda
                 //}
                 catch (Exception e)
                 {
-                    //logger.error("Error while completing sub process of execution {}", processInstanceExecution, e);
+                    logger.LogError($"Error while completing sub process of execution {processInstanceExecution}. Exception Messgae: {e.Message}.");
                     throw new ActivitiException("Error while completing sub process of execution " + processInstanceExecution, e);
                 }
             }
@@ -130,10 +134,10 @@ namespace org.activiti.engine.impl.agenda
             }
 
             // Delete current execution
-            //logger.debug("Ending execution {}", execution.Id);
+            logger.LogDebug($"Ending execution {execution.Id}");
             executionEntityManager.deleteExecutionAndRelatedData(execution, null, false);
 
-            //logger.debug("Parent execution found. Continuing process using execution {}", parentExecution.Id);
+            logger.LogDebug($"Parent execution found. Continuing process using execution {parentExecution.Id}");
 
             // When ending an execution in a multi instance subprocess , special care is needed
             if (isEndEventInMultiInstanceSubprocess(execution))

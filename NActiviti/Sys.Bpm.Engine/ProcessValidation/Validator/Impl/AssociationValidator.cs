@@ -56,11 +56,11 @@ namespace org.activiti.validation.validator.impl
         {
             if (string.IsNullOrWhiteSpace(association.SourceRef))
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.ASSOCIATION_INVALID_SOURCE_REFERENCE, process, association, "association element missing attribute 'sourceRef'");
+                addError(errors, Problems_Fields.ASSOCIATION_INVALID_SOURCE_REFERENCE, process, association, "association element missing attribute 'sourceRef'");
             }
             if (string.IsNullOrWhiteSpace(association.TargetRef))
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.ASSOCIATION_INVALID_TARGET_REFERENCE, process, association, "association element missing attribute 'targetRef'");
+                addError(errors, Problems_Fields.ASSOCIATION_INVALID_TARGET_REFERENCE, process, association, "association element missing attribute 'targetRef'");
             }
         }
 

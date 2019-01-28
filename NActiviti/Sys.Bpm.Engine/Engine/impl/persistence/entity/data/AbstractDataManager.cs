@@ -177,17 +177,14 @@ namespace org.activiti.engine.impl.persistence.entity.data
         /// <param name="checkCache"> If false, no cache check will be done, and the returned list will simply be the list from the database. </param>
         protected internal virtual ICollection<EntityImpl> getList(string dbQueryName, object parameter, ICachedEntityMatcher<EntityImpl> cachedEntityMatcher, bool checkCache)
         {
-
             ICollection<EntityImpl> result = selectList(DbSqlSession, ManagedEntityClass, typeof(EntityImpl), dbQueryName, parameter);
 
             if (checkCache)
             {
-
                 ICollection<CachedEntity> cachedObjects = EntityCache.findInCacheAsCachedObjects(ManagedEntityClass);
 
                 if ((cachedObjects != null && cachedObjects.Count > 0) || ManagedEntitySubClasses != null)
                 {
-
                     Dictionary<string, EntityImpl> entityMap = new Dictionary<string, EntityImpl>(result.Count);
 
                     // Database entities

@@ -73,7 +73,7 @@ namespace org.activiti.engine.impl.bpmn.parser
             get
             {
                 // handlers with error code take precedence over catchall-handlers
-                return precedence + (!string.ReferenceEquals(errorCode, null) ? 1 : 0);
+                return precedence + (!ReferenceEquals(errorCode, null) ? 1 : 0);
             }
             set
             {
@@ -84,7 +84,7 @@ namespace org.activiti.engine.impl.bpmn.parser
 
         public virtual bool catches(string errorCode)
         {
-            return string.ReferenceEquals(errorCode, null) || string.ReferenceEquals(this.errorCode, null) || this.errorCode.Equals(errorCode);
+            return ReferenceEquals(errorCode, null) || ReferenceEquals(this.errorCode, null) || this.errorCode.Equals(errorCode);
         }
 
     }

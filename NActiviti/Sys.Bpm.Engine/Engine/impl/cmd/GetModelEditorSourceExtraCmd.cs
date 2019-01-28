@@ -32,7 +32,7 @@ namespace org.activiti.engine.impl.cmd
 
         public virtual byte[] execute(ICommandContext commandContext)
         {
-            if (string.ReferenceEquals(modelId, null))
+            if (ReferenceEquals(modelId, null))
             {
                 throw new ActivitiIllegalArgumentException("modelId is null");
             }

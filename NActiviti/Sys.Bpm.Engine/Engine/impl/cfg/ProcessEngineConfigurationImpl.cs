@@ -75,6 +75,7 @@ namespace org.activiti.engine.impl.cfg
             IRepositoryService repositoryService,
             IRuntimeService runtimeService,
             IManagementService managementService,
+            IAsyncExecutor asyncExecutor,
             IConfiguration configuration) : base(configuration)
         {
             this.historyService = historyService;
@@ -961,7 +962,7 @@ namespace org.activiti.engine.impl.cfg
         public virtual void initSqlSessionFactory()
         {
             string wildcardEscapeClause = "";
-            if ((!string.ReferenceEquals(databaseWildcardEscapeCharacter, null)) && (databaseWildcardEscapeCharacter.Length != 0))
+            if ((!ReferenceEquals(databaseWildcardEscapeCharacter, null)) && (databaseWildcardEscapeCharacter.Length != 0))
             {
                 wildcardEscapeClause = " escape '" + databaseWildcardEscapeCharacter + "'";
             }
@@ -1767,7 +1768,7 @@ namespace org.activiti.engine.impl.cfg
                 // Job locking
                 defaultAsyncExecutor.TimerLockTimeInMillis = asyncExecutorTimerLockTimeInMillis;
                 defaultAsyncExecutor.AsyncJobLockTimeInMillis = asyncExecutorAsyncJobLockTimeInMillis;
-                if (!string.ReferenceEquals(asyncExecutorLockOwner, null))
+                if (!ReferenceEquals(asyncExecutorLockOwner, null))
                 {
                     defaultAsyncExecutor.LockOwner = asyncExecutorLockOwner;
                 }

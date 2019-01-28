@@ -44,12 +44,12 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<IHistoricIdentityLinkEntity> findHistoricIdentityLinksByTaskId(string taskId)
         {
-            return DbSqlSession.selectList<HistoricIdentityLinkEntityImpl, IHistoricIdentityLinkEntity>("selectHistoricIdentityLinksByTask", new KeyValuePair<string, object>("taskId", taskId));
+            return DbSqlSession.selectList<HistoricIdentityLinkEntityImpl, IHistoricIdentityLinkEntity>("selectHistoricIdentityLinksByTask", new { taskId });
         }
 
         public virtual IList<IHistoricIdentityLinkEntity> findHistoricIdentityLinksByProcessInstanceId(string processInstanceId)
         {
-            return (IList<IHistoricIdentityLinkEntity>)getList("selectHistoricIdentityLinksByProcessInstance", new KeyValuePair<string, object>("processInstanceId", processInstanceId), historicIdentityLinksByProcInstMatcher, true);
+            return (IList<IHistoricIdentityLinkEntity>)getList("selectHistoricIdentityLinksByProcessInstance", new { processInstanceId }, historicIdentityLinksByProcInstMatcher, true);
         }
 
     }

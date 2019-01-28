@@ -136,7 +136,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricActivityInstanceQuery activityTenantId(string tenantId)
         {
-            if (string.ReferenceEquals(tenantId, null))
+            if (ReferenceEquals(tenantId, null))
             {
                 throw new ActivitiIllegalArgumentException("activity tenant id is null");
             }
@@ -154,7 +154,7 @@ namespace org.activiti.engine.impl
 
         public virtual IHistoricActivityInstanceQuery activityTenantIdLike(string tenantIdLike)
         {
-            if (string.ReferenceEquals(tenantIdLike, null))
+            if (ReferenceEquals(tenantIdLike, null))
             {
                 throw new ActivitiIllegalArgumentException("activity tenant id is null");
             }

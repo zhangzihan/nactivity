@@ -143,7 +143,7 @@ namespace org.activiti.engine.impl.util
             try
             {
                 Type clazz = loadClass(className);
-                return System.Activator.CreateInstance(clazz);
+                return Activator.CreateInstance(clazz);
             }
             catch (Exception e)
             {

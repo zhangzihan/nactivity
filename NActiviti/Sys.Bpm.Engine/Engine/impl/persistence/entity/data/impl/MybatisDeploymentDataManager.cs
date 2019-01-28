@@ -42,7 +42,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IDeploymentEntity findLatestDeploymentByName(string deploymentName)
         {
-            IList<IDeploymentEntity> list = DbSqlSession.selectList<DeploymentEntityImpl, IDeploymentEntity>("selectDeploymentsByName", new KeyValuePair<string, object>("deploymentName", deploymentName), 0, 1);
+            IList<IDeploymentEntity> list = DbSqlSession.selectList<DeploymentEntityImpl, IDeploymentEntity>("selectDeploymentsByName", new { deploymentName }, 0, 1);
             if (list != null && list.Count > 0)
             {
                 return list[0];
@@ -63,7 +63,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<string> getDeploymentResourceNames(string deploymentId)
         {
-            return DbSqlSession.selectList<ResourceEntityImpl, string>("selectResourceNamesByDeploymentId", new KeyValuePair<string, object>("deploymentId", deploymentId));
+            return DbSqlSession.selectList<ResourceEntityImpl, string>("selectResourceNamesByDeploymentId", new { deploymentId });
         }
 
         public virtual IList<IDeployment> findDeploymentsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)

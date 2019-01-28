@@ -98,6 +98,15 @@ namespace SmartSql.Abstractions
                 requestParameters.Add(req.Key, ToParameterValue(req.Key, req.Value));
                 return;
             }
+            //if (request is JToken)
+            //{
+            //    JObject obj = JObject.FromObject(request);
+            //    foreach (var prop in obj.Properties())
+            //    {
+            //        requestParameters.Add(prop.Name, ToParameterValue(prop.Name, prop.Value.ToObject<object>()));
+            //    }
+            //    return;
+            //}
             if (request is IEnumerable)
             {
                 var @enum = (Request as IEnumerable).GetEnumerator();

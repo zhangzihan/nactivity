@@ -238,7 +238,7 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
                 try
                 {
                     Type clazz = Type.GetType(businessRuleTask.ClassName);
-                    ruleActivity = (IBusinessRuleTaskDelegate)System.Activator.CreateInstance(clazz);
+                    ruleActivity = (IBusinessRuleTaskDelegate)Activator.CreateInstance(clazz);
                 }
                 catch (Exception e)
                 {
@@ -262,7 +262,7 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
 
             ruleActivity.Exclude = businessRuleTask.Exclude;
 
-            if (!string.ReferenceEquals(businessRuleTask.ResultVariableName, null) && businessRuleTask.ResultVariableName.Length > 0)
+            if (!ReferenceEquals(businessRuleTask.ResultVariableName, null) && businessRuleTask.ResultVariableName.Length > 0)
             {
                 ruleActivity.ResultVariable = businessRuleTask.ResultVariableName;
             }
@@ -279,7 +279,7 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
         public virtual ScriptTaskActivityBehavior createScriptTaskActivityBehavior(ScriptTask scriptTask)
         {
             string language = scriptTask.ScriptFormat;
-            if (string.ReferenceEquals(language, null))
+            if (ReferenceEquals(language, null))
             {
                 //language = ScriptingEngines.DEFAULT_SCRIPTING_LANGUAGE;
             }

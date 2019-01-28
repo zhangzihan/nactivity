@@ -90,7 +90,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
 
             // Fetches execution tree. This will store them in the cache.
-            IList<IExecutionEntity> executionEntities = (IList<IExecutionEntity>)getList("selectExecutionsWithSameRootProcessInstanceId", new KeyValuePair<string, object>("executionId", executionId), executionsWithSameRootProcessInstanceIdMatcher, true);
+            IList<IExecutionEntity> executionEntities = (IList<IExecutionEntity>)getList("selectExecutionsWithSameRootProcessInstanceId", new { executionId }, executionsWithSameRootProcessInstanceIdMatcher, true);
 
             foreach (IExecutionEntity executionEntity in executionEntities)
             {
@@ -109,7 +109,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
                 findByIdAndFetchExecutionTree(superExecutionId);
             }
 
-            return getEntity("selectSubProcessInstanceBySuperExecutionId", new KeyValuePair<string, object>("superExecutionId", superExecutionId), subProcessInstanceBySuperExecutionIdMatcher, !performanceSettings.EnableEagerExecutionTreeFetching);
+            return getEntity("selectSubProcessInstanceBySuperExecutionId", new { superExecutionId }, subProcessInstanceBySuperExecutionIdMatcher, !performanceSettings.EnableEagerExecutionTreeFetching);
         }
 
         public virtual IList<IExecutionEntity> findChildExecutionsByParentExecutionId(string parentExecutionId)
@@ -121,7 +121,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
             else
             {
-                return (IList<IExecutionEntity>)getList("selectExecutionsByParentExecutionId", new KeyValuePair<string, object>("parentExecutionId", parentExecutionId), executionsByParentIdMatcher, true);
+                return (IList<IExecutionEntity>)getList("selectExecutionsByParentExecutionId", new { parentExecutionId }, executionsByParentIdMatcher, true);
             }
         }
 
@@ -134,7 +134,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
             else
             {
-                return (IList<IExecutionEntity>)getList("selectChildExecutionsByProcessInstanceId", new KeyValuePair<string, object>("processInstanceId", processInstanceId), executionsByProcessInstanceIdMatcher, true);
+                return (IList<IExecutionEntity>)getList("selectChildExecutionsByProcessInstanceId", new { processInstanceId }, executionsByProcessInstanceIdMatcher, true);
             }
         }
 
@@ -164,7 +164,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
             else
             {
-                return (IList<IExecutionEntity>)getList("selectExecutionsByRootProcessInstanceId", new KeyValuePair<string, object>("rootProcessInstanceId", rootProcessInstanceId), executionsByRootProcessInstanceMatcher, true);
+                return (IList<IExecutionEntity>)getList("selectExecutionsByRootProcessInstanceId", new { rootProcessInstanceId }, executionsByRootProcessInstanceMatcher, true);
             }
         }
 
@@ -177,7 +177,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
             else
             {
-                return (IList<IExecutionEntity>)getList("selectExecutionsByProcessInstanceId", new KeyValuePair<string, object>("processInstanceId", processInstanceId), executionByProcessInstanceMatcher, true);
+                return (IList<IExecutionEntity>)getList("selectExecutionsByProcessInstanceId", new { processInstanceId }, executionByProcessInstanceMatcher, true);
             }
         }
 
@@ -218,7 +218,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
         public virtual IList<string> findProcessInstanceIdsByProcessDefinitionId(string processDefinitionId)
         {
-            return DbSqlSession.selectList<ExecutionEntityImpl, string>("selectProcessInstanceIdsByProcessDefinitionId", new KeyValuePair<string, object>("processDefinitionId", processDefinitionId), false);
+            return DbSqlSession.selectList<ExecutionEntityImpl, string>("selectProcessInstanceIdsByProcessDefinitionId", new { processDefinitionId }, false);
         }
 
         public virtual long findExecutionCountByQueryCriteria(ExecutionQueryImpl executionQuery)

@@ -78,7 +78,7 @@ namespace org.activiti.engine.impl.repository
 
         public virtual IDeploymentBuilder addString(string resourceName, string text)
         {
-            if (string.ReferenceEquals(text, null))
+            if (ReferenceEquals(text, null))
             {
                 throw new ActivitiIllegalArgumentException("text is null");
             }

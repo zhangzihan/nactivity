@@ -50,7 +50,7 @@ namespace org.activiti.engine.impl
 
         public virtual void executeJob(string jobId)
         {
-            if (string.ReferenceEquals(jobId, null))
+            if (ReferenceEquals(jobId, null))
             {
                 throw new ActivitiIllegalArgumentException("JobId is null");
             }

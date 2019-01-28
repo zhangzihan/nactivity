@@ -33,14 +33,14 @@ namespace org.activiti.validation.validator.impl
         {
             if (exclusiveGateway.OutgoingFlows.Count == 0)
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.EXCLUSIVE_GATEWAY_NO_OUTGOING_SEQ_FLOW, process, exclusiveGateway, "Exclusive gateway has no outgoing sequence flow");
+                addError(errors, Problems_Fields.EXCLUSIVE_GATEWAY_NO_OUTGOING_SEQ_FLOW, process, exclusiveGateway, "Exclusive gateway has no outgoing sequence flow");
             }
             else if (exclusiveGateway.OutgoingFlows.Count == 1)
             {
                 SequenceFlow sequenceFlow = exclusiveGateway.OutgoingFlows[0];
                 if (!string.IsNullOrWhiteSpace(sequenceFlow.ConditionExpression))
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.EXCLUSIVE_GATEWAY_CONDITION_NOT_ALLOWED_ON_SINGLE_SEQ_FLOW, process, exclusiveGateway, "Exclusive gateway has only one outgoing sequence flow. This is not allowed to have a condition.");
+                    addError(errors, Problems_Fields.EXCLUSIVE_GATEWAY_CONDITION_NOT_ALLOWED_ON_SINGLE_SEQ_FLOW, process, exclusiveGateway, "Exclusive gateway has only one outgoing sequence flow. This is not allowed to have a condition.");
                 }
             }
             else
@@ -51,7 +51,7 @@ namespace org.activiti.validation.validator.impl
                 foreach (SequenceFlow flow in exclusiveGateway.OutgoingFlows)
                 {
                     string condition = flow.ConditionExpression;
-                    bool isDefaultFlow = !string.ReferenceEquals(flow.Id, null) && flow.Id.Equals(defaultSequenceFlow);
+                    bool isDefaultFlow = !ReferenceEquals(flow.Id, null) && flow.Id.Equals(defaultSequenceFlow);
                     bool hasConditon = !string.IsNullOrWhiteSpace(condition);
 
                     if (!hasConditon && !isDefaultFlow)
@@ -60,13 +60,13 @@ namespace org.activiti.validation.validator.impl
                     }
                     if (hasConditon && isDefaultFlow)
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.EXCLUSIVE_GATEWAY_CONDITION_ON_DEFAULT_SEQ_FLOW, process, exclusiveGateway, "Default sequenceflow has a condition, which is not allowed");
+                        addError(errors, Problems_Fields.EXCLUSIVE_GATEWAY_CONDITION_ON_DEFAULT_SEQ_FLOW, process, exclusiveGateway, "Default sequenceflow has a condition, which is not allowed");
                     }
                 }
 
                 if (flowsWithoutCondition.Count > 0)
                 {
-                    addWarning(errors, org.activiti.validation.validator.Problems_Fields.EXCLUSIVE_GATEWAY_SEQ_FLOW_WITHOUT_CONDITIONS, process, exclusiveGateway, "Exclusive gateway has at least one outgoing sequence flow without a condition (which isn't the default one)");
+                    addWarning(errors, Problems_Fields.EXCLUSIVE_GATEWAY_SEQ_FLOW_WITHOUT_CONDITIONS, process, exclusiveGateway, "Exclusive gateway has at least one outgoing sequence flow without a condition (which isn't the default one)");
                 }
 
             }

@@ -35,7 +35,7 @@ namespace org.activiti.engine.impl.cmd
 
 	  public SetTimerJobRetriesCmd(string jobId, int retries)
 	  {
-		if (string.ReferenceEquals(jobId, null) || jobId.Length < 1)
+		if (ReferenceEquals(jobId, null) || jobId.Length < 1)
 		{
 		  throw new ActivitiIllegalArgumentException("The job id is mandatory, but '" + jobId + "' has been provided.");
 		}

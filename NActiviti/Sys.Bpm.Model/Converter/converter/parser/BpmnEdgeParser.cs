@@ -32,13 +32,13 @@ namespace org.activiti.bpmn.converter.parser
             {
                 //xtr.next();
 
-                if (xtr.StartElement && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                if (xtr.IsStartElement() && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     while (xtr.hasNext())
                     {
                         //xtr.next();
 
-                        if (xtr.StartElement && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_BOUNDS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                        if (xtr.IsStartElement() && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_BOUNDS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                         {
                             GraphicInfo graphicInfo = new GraphicInfo();
                             BpmnXMLUtil.addXMLLocation(graphicInfo, xtr);
@@ -61,7 +61,7 @@ namespace org.activiti.bpmn.converter.parser
                     }
 
                 }
-                else if (xtr.StartElement && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_WAYPOINT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                else if (xtr.IsStartElement() && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_WAYPOINT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     GraphicInfo graphicInfo = new GraphicInfo();
                     BpmnXMLUtil.addXMLLocation(graphicInfo, xtr);

@@ -2,6 +2,7 @@
 
 namespace org.activiti.engine.impl.agenda
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate;
     using org.activiti.engine.@delegate.@event;
@@ -13,6 +14,7 @@ namespace org.activiti.engine.impl.agenda
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
     using org.activiti.engine.logging;
+    using Sys;
 
     /// <summary>
     /// Special operation when executing an instance of a multi-instance.
@@ -24,6 +26,8 @@ namespace org.activiti.engine.impl.agenda
     /// </summary>
     public class ContinueMultiInstanceOperation : AbstractOperation
     {
+        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<ContinueMultiInstanceOperation>();
+
         public ContinueMultiInstanceOperation(ICommandContext commandContext, IExecutionEntity execution) : base(commandContext, execution)
         {
         }
@@ -68,7 +72,7 @@ namespace org.activiti.engine.impl.agenda
             IActivityBehavior activityBehavior = (IActivityBehavior)flowNode.Behavior;
             if (activityBehavior != null)
             {
-                //logger.debug("Executing activityBehavior {} on activity '{}' with execution {}", activityBehavior.GetType(), flowNode.Id, execution.Id);
+                logger.LogDebug($"Executing activityBehavior {activityBehavior.GetType()} on activity '{flowNode.Id}' with execution {execution.Id}");
 
                 if (Context.ProcessEngineConfiguration != null && Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
                 {
@@ -95,7 +99,7 @@ namespace org.activiti.engine.impl.agenda
             }
             else
             {
-                //logger.debug("No activityBehavior on activity '{}' with execution {}", flowNode.Id, execution.Id);
+                logger.LogDebug($"No activityBehavior on activity '{flowNode.Id}' with execution {execution.Id}");
             }
         }
 
@@ -105,5 +109,4 @@ namespace org.activiti.engine.impl.agenda
             commandContext.JobManager.scheduleAsyncJob(job);
         }
     }
-
 }

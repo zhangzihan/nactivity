@@ -286,7 +286,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
                             localizationValuesChanged = true;
                         }
 
-                        if (!string.ReferenceEquals(documentation, null) && !isEqualToCurrentLocalizationValue(locale, processId, "description", documentation, infoNode))
+                        if (!ReferenceEquals(documentation, null) && !isEqualToCurrentLocalizationValue(locale, processId, "description", documentation, infoNode))
                         {
                             dynamicBpmnService.changeLocalizationDescription(locale, processId, documentation, infoNode);
                             localizationValuesChanged = true;
@@ -353,7 +353,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
                                     localizationValuesChanged = true;
                                 }
 
-                                if (!string.ReferenceEquals(documentation, null) && isEqualToCurrentLocalizationValue(locale, flowElementId, "description", documentation, infoNode) == false)
+                                if (!ReferenceEquals(documentation, null) && isEqualToCurrentLocalizationValue(locale, flowElementId, "description", documentation, infoNode) == false)
                                 {
                                     dynamicBpmnService.changeLocalizationDescription(locale, flowElementId, documentation, infoNode);
                                     localizationValuesChanged = true;
@@ -404,7 +404,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
                 {
                     foreach (ExtensionElement localizationElement in localizationElements)
                     {
-                        if (org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX.Equals(localizationElement.NamespacePrefix))
+                        if (BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX.Equals(localizationElement.NamespacePrefix))
                         {
                             string locale = localizationElement.getAttributeValue(null, "locale");
                             string name = localizationElement.getAttributeValue(null, "name");
@@ -420,13 +420,13 @@ namespace org.activiti.engine.impl.bpmn.deployer
                                 }
                             }
 
-                            if (!string.ReferenceEquals(name, null) && isEqualToCurrentLocalizationValue(locale, dataObject.Id, org.activiti.engine.DynamicBpmnConstants_Fields.LOCALIZATION_NAME, name, infoNode) == false)
+                            if (!ReferenceEquals(name, null) && isEqualToCurrentLocalizationValue(locale, dataObject.Id, DynamicBpmnConstants_Fields.LOCALIZATION_NAME, name, infoNode) == false)
                             {
                                 dynamicBpmnService.changeLocalizationName(locale, dataObject.Id, name, infoNode);
                                 localizationValuesChanged = true;
                             }
 
-                            if (!string.ReferenceEquals(documentation, null) && isEqualToCurrentLocalizationValue(locale, dataObject.Id, org.activiti.engine.DynamicBpmnConstants_Fields.LOCALIZATION_DESCRIPTION, documentation, infoNode) == false)
+                            if (!ReferenceEquals(documentation, null) && isEqualToCurrentLocalizationValue(locale, dataObject.Id, DynamicBpmnConstants_Fields.LOCALIZATION_DESCRIPTION, documentation, infoNode) == false)
                             {
 
                                 dynamicBpmnService.changeLocalizationDescription(locale, dataObject.Id, documentation, infoNode);

@@ -129,7 +129,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 if (ioSpecification != null && ioSpecification.DataOutputRefs.Count > 0)
                 {
                     string firstDataOutputName = ioSpecification.DataOutputRefs[0];
-                    if (!string.ReferenceEquals(firstDataOutputName, null))
+                    if (!ReferenceEquals(firstDataOutputName, null))
                     {
                         ItemInstance outputItem = (ItemInstance)execution.getVariable(firstDataOutputName);
                         outputItem.StructureInstance.loadFrom(receivedMessage.StructureInstance.toArray());
@@ -292,7 +292,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                     try
                     {
                         wsdlImporterClass = Type.GetType("org.activiti.engine.impl.webservice.CxfWSDLImporter", true);
-                        IXMLImporter importerInstance = (IXMLImporter)System.Activator.CreateInstance(wsdlImporterClass);
+                        IXMLImporter importerInstance = (IXMLImporter)Activator.CreateInstance(wsdlImporterClass);
                         xmlImporterMap[theImport.ImportType] = importerInstance;
                         importerInstance.importFrom(theImport, sourceSystemId);
 

@@ -306,7 +306,7 @@ namespace org.activiti.engine.@delegate.@event.impl
                 else if (persistedObject is IIdentityLinkEntity il)
                 {
                     IIdentityLinkEntity idLink = il;
-                    if (!string.ReferenceEquals(idLink.ProcessDefinitionId, null))
+                    if (!ReferenceEquals(idLink.ProcessDefinitionId, null))
                     {
                         @event.ProcessDefinitionId = idLink.ProcessDefId;
                     }

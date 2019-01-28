@@ -147,7 +147,7 @@ namespace org.activiti.engine.impl.util
             }
 
             // Set processInstance name
-            if (!string.ReferenceEquals(processInstanceName, null))
+            if (!ReferenceEquals(processInstanceName, null))
             {
                 processInstance.Name = processInstanceName;
                 commandContext.HistoryManager.recordProcessInstanceNameChange(processInstance.Id, processInstanceName);

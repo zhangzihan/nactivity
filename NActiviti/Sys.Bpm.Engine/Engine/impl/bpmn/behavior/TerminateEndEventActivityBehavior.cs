@@ -81,7 +81,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             string deleteReason = createDeleteReason(execution.CurrentActivityId);
 
-            if (scopeExecutionEntity.ProcessInstanceType && string.ReferenceEquals(scopeExecutionEntity.SuperExecutionId, null))
+            if (scopeExecutionEntity.ProcessInstanceType && ReferenceEquals(scopeExecutionEntity.SuperExecutionId, null))
             {
 
                 endAllHistoricActivities(scopeExecutionEntity.Id, deleteReason);
@@ -112,7 +112,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
 
             }
-            else if (string.ReferenceEquals(scopeExecutionEntity.ParentId, null) && !string.ReferenceEquals(scopeExecutionEntity.SuperExecutionId, null))
+            else if (ReferenceEquals(scopeExecutionEntity.ParentId, null) && !ReferenceEquals(scopeExecutionEntity.SuperExecutionId, null))
             { // CallActivity
 
                 IExecutionEntity callActivityExecution = scopeExecutionEntity.SuperExecution;
@@ -198,7 +198,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
         {
             if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                if ((execution.ProcessInstanceType && string.ReferenceEquals(execution.SuperExecutionId, null)) || (string.ReferenceEquals(execution.ParentId, null) && !string.ReferenceEquals(execution.SuperExecutionId, null)))
+                if ((execution.ProcessInstanceType && ReferenceEquals(execution.SuperExecutionId, null)) || (ReferenceEquals(execution.ParentId, null) && !ReferenceEquals(execution.SuperExecutionId, null)))
                 {
 
                     Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createCancelledEvent(execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, execution.CurrentFlowElement));
@@ -241,7 +241,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         protected internal virtual string createDeleteReason(string activityId)
         {
-            return org.activiti.engine.history.DeleteReason_Fields.TERMINATE_END_EVENT + " (" + activityId + ")";
+            return engine.history.DeleteReason_Fields.TERMINATE_END_EVENT + " (" + activityId + ")";
         }
 
         public virtual bool TerminateAll

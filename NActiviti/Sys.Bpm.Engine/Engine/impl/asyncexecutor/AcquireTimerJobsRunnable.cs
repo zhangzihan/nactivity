@@ -15,17 +15,15 @@ using System.Threading;
  */
 namespace org.activiti.engine.impl.asyncexecutor
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.cmd;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
+    using Sys;
 
-    /// 
-    /// 
     public class AcquireTimerJobsRunnable
     {
-
-        //private static Logger log = LoggerFactory.getLogger(typeof(AcquireTimerJobsRunnable));
+        private static ILogger log = ProcessEngineServiceProvider.LoggerService<AcquireTimerJobsRunnable>();
 
         protected internal readonly IAsyncExecutor asyncExecutor;
         protected internal readonly IJobManager jobManager;
@@ -50,14 +48,13 @@ namespace org.activiti.engine.impl.asyncexecutor
         {
             lock (this)
             {
-                //log.info("{} starting to acquire async jobs due");
+                log.LogInformation("starting to acquire async jobs due");
                 Thread.CurrentThread.Name = "activiti-acquire-timer-jobs";
 
                 ICommandExecutor commandExecutor = asyncExecutor.ProcessEngineConfiguration.CommandExecutor;
 
                 while (!isInterrupted)
                 {
-
                     try
                     {
                         AcquiredTimerJobEntities acquiredJobs = commandExecutor.execute(new AcquireTimerJobsCmd(asyncExecutor));
@@ -75,14 +72,20 @@ namespace org.activiti.engine.impl.asyncexecutor
                     }
                     catch (ActivitiOptimisticLockingException optimisticLockingException)
                     {
-                        //if (log.DebugEnabled)
-                        //{
-                        //    log.debug("Optimistic locking exception during timer job acquisition. If you have multiple timer executors running against the same database, " + "this exception means that this thread tried to acquire a timer job, which already was acquired by another timer executor acquisition thread." + "This is expected behavior in a clustered environment. " + "You can ignore this message if you indeed have multiple timer executor acquisition threads running against the same database. " + "Exception message: {}", optimisticLockingException.Message);
-                        //}
+                        if (log.IsEnabled(LogLevel.Debug))
+                        {
+                            log.LogDebug($@"Optimistic locking exception during timer job acquisition. 
+If you have multiple timer executors running against the same database, 
+this exception means that this thread tried to acquire a timer job, 
+which already was acquired by another timer executor acquisition thread. 
+This is expected behavior in a clustered environment. 
+You can ignore this message if you indeed have multiple timer executor acquisition threads running against the same database. 
+Exception message: {optimisticLockingException.Message}");
+                        }
                     }
                     catch (Exception e)
                     {
-                        //log.error("exception during timer job acquisition: {}", e.Message, e);
+                        log.LogError($"exception during timer job acquisition: {e.Message}");
                         millisToWait = asyncExecutor.DefaultTimerJobAcquireWaitTimeInMillis;
                     }
 
@@ -90,10 +93,10 @@ namespace org.activiti.engine.impl.asyncexecutor
                     {
                         try
                         {
-                            //if (log.DebugEnabled)
-                            //{
-                            //    log.debug("timer job acquisition thread sleeping for {} millis", millisToWait);
-                            //}
+                            if (log.IsEnabled(LogLevel.Debug))
+                            {
+                                log.LogDebug($"timer job acquisition thread sleeping for {millisToWait} millis");
+                            }
                             lock (MONITOR)
                             {
                                 if (!isInterrupted)
@@ -103,26 +106,26 @@ namespace org.activiti.engine.impl.asyncexecutor
                                 }
                             }
 
-                            //if (log.DebugEnabled)
-                            //{
-                            //    log.debug("timer job acquisition thread woke up");
-                            //}
+                            if (log.IsEnabled(LogLevel.Debug))
+                            {
+                                log.LogDebug("timer job acquisition thread woke up");
+                            }
                         }
                         catch (Exception e)
                         {
-                            //if (log.DebugEnabled)
-                            //{
-                            //    log.debug("timer job acquisition wait interrupted");
-                            //}
+                            if (log.IsEnabled(LogLevel.Debug))
+                            {
+                                log.LogDebug("timer job acquisition wait interrupted");
+                            }
                         }
                         finally
                         {
-                            isWaiting = false;//.set(false);
+                            isWaiting = false;
                         }
                     }
                 }
 
-                //log.info("{} stopped async job due acquisition");
+                log.LogInformation("stopped async job due acquisition");
             }
         }
 

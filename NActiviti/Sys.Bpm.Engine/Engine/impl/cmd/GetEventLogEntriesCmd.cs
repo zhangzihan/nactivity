@@ -32,7 +32,7 @@ namespace org.activiti.engine.impl.cmd
 
         public virtual IList<IEventLogEntry> execute(ICommandContext commandContext)
         {
-            if (!string.ReferenceEquals(processInstanceId, null))
+            if (!ReferenceEquals(processInstanceId, null))
             {
                 return commandContext.EventLogEntryEntityManager.findEventLogEntriesByProcessInstanceId(processInstanceId);
 

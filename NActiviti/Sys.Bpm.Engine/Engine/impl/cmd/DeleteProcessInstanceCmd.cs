@@ -39,7 +39,7 @@ namespace org.activiti.engine.impl.cmd
 
         public virtual object execute(ICommandContext commandContext)
         {
-            if (string.ReferenceEquals(processInstanceId, null))
+            if (ReferenceEquals(processInstanceId, null))
             {
                 throw new ActivitiIllegalArgumentException("processInstanceId is null");
             }

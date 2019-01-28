@@ -135,19 +135,19 @@ namespace org.activiti.engine.impl.persistence.entity
             {
 
                 // Root process instance relationship
-                if (!string.ReferenceEquals(executionEntity.RootProcessInstanceId, null))
+                if (!ReferenceEquals(executionEntity.RootProcessInstanceId, null))
                 {
                     executionEntity.RootProcessInstance = executionMap[executionEntity.RootProcessInstanceId];
                 }
 
                 // Process instance relationship
-                if (!string.ReferenceEquals(executionEntity.ProcessInstanceId, null))
+                if (!ReferenceEquals(executionEntity.ProcessInstanceId, null))
                 {
                     executionEntity.ProcessInstance = executionMap[executionEntity.ProcessInstanceId];
                 }
 
                 // Parent - child relationship
-                if (!string.ReferenceEquals(executionEntity.ParentId, null))
+                if (!ReferenceEquals(executionEntity.ParentId, null))
                 {
                     IExecutionEntity parentExecutionEntity = executionMap[executionEntity.ParentId];
                     executionEntity.Parent = parentExecutionEntity;
@@ -215,7 +215,7 @@ namespace org.activiti.engine.impl.persistence.entity
             processInstanceExecution.IsScope = true; // process instance is always a scope for all child executions
 
             // Inherit tenant id (if any)
-            if (!string.ReferenceEquals(tenantId, null))
+            if (!ReferenceEquals(tenantId, null))
             {
                 processInstanceExecution.TenantId = tenantId;
             }
@@ -228,7 +228,7 @@ namespace org.activiti.engine.impl.persistence.entity
             // Store in database
             insert(processInstanceExecution, false);
 
-            if (!string.ReferenceEquals(initiatorVariableName, null))
+            if (!ReferenceEquals(initiatorVariableName, null))
             {
                 processInstanceExecution.setVariable(initiatorVariableName, authenticatedUserId);
             }
@@ -236,7 +236,7 @@ namespace org.activiti.engine.impl.persistence.entity
             // Need to be after insert, cause we need the id
             processInstanceExecution.ProcessInstanceId = processInstanceExecution.Id;
             processInstanceExecution.RootProcessInstanceId = processInstanceExecution.Id;
-            if (!string.ReferenceEquals(authenticatedUserId, null))
+            if (!ReferenceEquals(authenticatedUserId, null))
             {
                 IdentityLinkEntityManager.addIdentityLink(processInstanceExecution, authenticatedUserId, null, IdentityLinkType.STARTER);
             }
@@ -260,7 +260,7 @@ namespace org.activiti.engine.impl.persistence.entity
             childExecution.Parent = parentExecutionEntity;
             childExecution.ProcessDefinitionId = parentExecutionEntity.ProcessDefinitionId;
             childExecution.ProcessDefinitionKey = parentExecutionEntity.ProcessDefinitionKey;
-            childExecution.ProcessInstanceId = !string.ReferenceEquals(parentExecutionEntity.ProcessInstanceId, null) ? parentExecutionEntity.ProcessInstanceId : parentExecutionEntity.Id;
+            childExecution.ProcessInstanceId = !ReferenceEquals(parentExecutionEntity.ProcessInstanceId, null) ? parentExecutionEntity.ProcessInstanceId : parentExecutionEntity.Id;
             childExecution.IsScope = false;
 
             // manage the bidirectional parent-child relation
@@ -329,7 +329,7 @@ namespace org.activiti.engine.impl.persistence.entity
             childExecution.IsActive = true;
             childExecution.StartTime = processEngineConfiguration.Clock.CurrentTime;
 
-            if (!string.ReferenceEquals(parentExecutionEntity.TenantId, null))
+            if (!ReferenceEquals(parentExecutionEntity.TenantId, null))
             {
                 childExecution.TenantId = parentExecutionEntity.TenantId;
             }
@@ -376,9 +376,9 @@ namespace org.activiti.engine.impl.persistence.entity
         {
 
             // fill default reason if none provided
-            if (string.ReferenceEquals(deleteReason, null))
+            if (ReferenceEquals(deleteReason, null))
             {
-                deleteReason = org.activiti.engine.history.DeleteReason_Fields.PROCESS_INSTANCE_DELETED;
+                deleteReason = engine.history.DeleteReason_Fields.PROCESS_INSTANCE_DELETED;
             }
 
             foreach (IExecutionEntity subExecutionEntity in execution.Executions)
@@ -612,7 +612,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
                         IVariableInstanceEntityManager variableInstanceEntityManager = VariableInstanceEntityManager;
                         variableInstanceEntityManager.delete(variableInstanceEntity);
-                        if (variableInstanceEntity.ByteArrayRef != null && !string.ReferenceEquals(variableInstanceEntity.ByteArrayRef.Id, null))
+                        if (variableInstanceEntity.ByteArrayRef != null && !ReferenceEquals(variableInstanceEntity.ByteArrayRef.Id, null))
                         {
                             ByteArrayEntityManager.deleteByteArrayById(variableInstanceEntity.ByteArrayRef.Id);
                         }
@@ -722,7 +722,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public virtual string updateProcessInstanceBusinessKey(IExecutionEntity executionEntity, string businessKey)
         {
-            if (executionEntity.ProcessInstanceType && !string.ReferenceEquals(businessKey, null))
+            if (executionEntity.ProcessInstanceType && !ReferenceEquals(businessKey, null))
             {
                 executionEntity.BusinessKey = businessKey;
                 HistoryManager.updateProcessBusinessKeyInHistory(executionEntity);

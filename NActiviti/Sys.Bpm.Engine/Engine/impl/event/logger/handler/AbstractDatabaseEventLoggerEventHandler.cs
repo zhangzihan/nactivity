@@ -52,7 +52,7 @@ namespace org.activiti.engine.impl.@event.logger.handler
 
             // Current user
             string userId = Authentication.AuthenticatedUserId;
-            if (!string.ReferenceEquals(userId, null))
+            if (!ReferenceEquals(userId, null))
             {
                 eventLogEntry.UserId = userId;
                 putInMapIfNotNull(data, "userId", userId);
@@ -62,7 +62,7 @@ namespace org.activiti.engine.impl.@event.logger.handler
             if (!data.ContainsKey(Fields_Fields.TENANT_ID) && !string.IsNullOrWhiteSpace(processDefinitionId))
             {
                 IProcessDefinition processDefinition = ProcessDefinitionUtil.getProcessDefinition(processDefinitionId);
-                if (processDefinition != null && !ProcessEngineConfigurationImpl.NO_TENANT_ID.Equals(processDefinition.TenantId))
+                if (processDefinition != null && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
                 {
                     putInMapIfNotNull(data, Fields_Fields.TENANT_ID, processDefinition.TenantId);
                 }

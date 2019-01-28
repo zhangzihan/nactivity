@@ -28,12 +28,11 @@ namespace org.activiti.engine.impl.bpmn.deployer
     /// </summary>
     public class TimerManager
     {
-
         protected internal virtual void removeObsoleteTimers(IProcessDefinitionEntity processDefinition)
         {
             IList<ITimerJobEntity> jobsToDelete = null;
 
-            if (!string.ReferenceEquals(processDefinition.TenantId, null) && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
+            if (!ReferenceEquals(processDefinition.TenantId, null) && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
             {
                 jobsToDelete = Context.CommandContext.TimerJobEntityManager.findJobsByTypeAndProcessDefinitionKeyAndTenantId(TimerStartEventJobHandler.TYPE, processDefinition.Key, processDefinition.TenantId);
             }
@@ -84,7 +83,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
                                 {
                                     timerJob.ProcessDefinitionId = processDefinition.Id;
 
-                                    if (!string.ReferenceEquals(processDefinition.TenantId, null))
+                                    if (!ReferenceEquals(processDefinition.TenantId, null))
                                     {
                                         timerJob.TenantId = processDefinition.TenantId;
                                     }

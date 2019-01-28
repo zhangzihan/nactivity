@@ -68,7 +68,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 {
                     if (!childExecution.Id.Equals(execution.Id))
                     {
-                        executionEntityManager.deleteExecutionAndRelatedData(childExecution, org.activiti.engine.history.DeleteReason_Fields.EVENT_SUBPROCESS_INTERRUPTING + "(" + startEvent.Id + ")", false);
+                        executionEntityManager.deleteExecutionAndRelatedData(childExecution, engine.history.DeleteReason_Fields.EVENT_SUBPROCESS_INTERRUPTING + "(" + startEvent.Id + ")", false);
                     }
                 }
             }

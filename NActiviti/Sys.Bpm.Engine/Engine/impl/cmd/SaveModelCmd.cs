@@ -37,7 +37,7 @@ namespace org.activiti.engine.impl.cmd
             {
                 throw new ActivitiIllegalArgumentException("model is null");
             }
-            if (string.ReferenceEquals(model.Id, null))
+            if (ReferenceEquals(model.Id, null))
             {
                 commandContext.ModelEntityManager.insert(model);
             }

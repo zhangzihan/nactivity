@@ -144,7 +144,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             ICollection<BoundaryEvent> boundaryEvents = process.findFlowElementsOfType<BoundaryEvent>(true);
             foreach (BoundaryEvent boundaryEvent in boundaryEvents)
             {
-                if (!string.ReferenceEquals(boundaryEvent.AttachedToRefId, null) && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
+                if (!ReferenceEquals(boundaryEvent.AttachedToRefId, null) && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
                 {
                     results.Add(boundaryEvent);
                 }
@@ -204,7 +204,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         protected internal virtual void executeOriginalBehavior(IExecutionEntity execution, int loopCounter)
         {
-            if (usesCollection() && !string.ReferenceEquals(collectionElementVariable, null))
+            if (usesCollection() && !ReferenceEquals(collectionElementVariable, null))
             {
                 System.Collections.ICollection collection = (System.Collections.ICollection)resolveCollection(execution);
 
@@ -238,7 +238,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
 
             }
-            else if (!string.ReferenceEquals(collectionVariable, null))
+            else if (!ReferenceEquals(collectionVariable, null))
             {
                 if (obj == null)
                 {
@@ -266,7 +266,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 collection = collectionExpression.getValue(execution);
 
             }
-            else if (!string.ReferenceEquals(collectionVariable, null))
+            else if (!ReferenceEquals(collectionVariable, null))
             {
                 collection = execution.getVariable(collectionVariable);
             }
@@ -275,7 +275,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         protected internal virtual bool usesCollection()
         {
-            return collectionExpression != null || !string.ReferenceEquals(collectionVariable, null);
+            return collectionExpression != null || !ReferenceEquals(collectionVariable, null);
         }
 
         protected internal virtual bool isExtraScopeNeeded(FlowNode flowNode)

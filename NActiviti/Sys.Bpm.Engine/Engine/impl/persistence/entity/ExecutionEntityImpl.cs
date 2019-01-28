@@ -453,7 +453,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return string.ReferenceEquals(parentId, null);
+                return ReferenceEquals(parentId, null);
             }
         }
 
@@ -640,7 +640,7 @@ namespace org.activiti.engine.impl.persistence.entity
         // TODO: this should ideally move to another place  
         protected internal override void initializeVariableInstanceBackPointer(IVariableInstanceEntity variableInstance)
         {
-            if (!string.ReferenceEquals(processInstanceId, null))
+            if (!ReferenceEquals(processInstanceId, null))
             {
                 variableInstance.ProcessInstanceId = processInstanceId;
             }
@@ -1004,7 +1004,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                if (!string.ReferenceEquals(localizedName, null) && localizedName.Length > 0)
+                if (!ReferenceEquals(localizedName, null) && localizedName.Length > 0)
                 {
                     return localizedName;
                 }
@@ -1024,7 +1024,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                if (!string.ReferenceEquals(localizedDescription, null) && localizedDescription.Length > 0)
+                if (!ReferenceEquals(localizedDescription, null) && localizedDescription.Length > 0)
                 {
                     return localizedDescription;
                 }
@@ -1101,7 +1101,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (IVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!string.ReferenceEquals(variableInstance.Id, null) && string.ReferenceEquals(variableInstance.TaskId, null))
+                        if (!ReferenceEquals(variableInstance.Id, null) && ReferenceEquals(variableInstance.TaskId, null))
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }
@@ -1308,11 +1308,11 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     strb.Append("Execution[ id '" + Id + "' ]");
                 }
-                if (!string.ReferenceEquals(activityId, null))
+                if (!ReferenceEquals(activityId, null))
                 {
                     strb.Append(" - activity '" + activityId);
                 }
-                if (!string.ReferenceEquals(parentId, null))
+                if (!ReferenceEquals(parentId, null))
                 {
                     strb.Append(" - parent '" + parentId + "'");
                 }

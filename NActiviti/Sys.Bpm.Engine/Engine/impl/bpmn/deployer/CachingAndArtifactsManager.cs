@@ -69,7 +69,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
             IProcessDefinitionInfoEntity definitionInfoEntity = definitionInfoEntityManager.findProcessDefinitionInfoByProcessDefinitionId(processDefinition.Id);
 
             JToken infoNode = null;
-            if (definitionInfoEntity != null && !string.ReferenceEquals(definitionInfoEntity.InfoJsonId, null))
+            if (definitionInfoEntity != null && !ReferenceEquals(definitionInfoEntity.InfoJsonId, null))
             {
                 byte[] infoBytes = definitionInfoEntityManager.findInfoJsonById(definitionInfoEntity.InfoJsonId);
                 if (infoBytes != null)

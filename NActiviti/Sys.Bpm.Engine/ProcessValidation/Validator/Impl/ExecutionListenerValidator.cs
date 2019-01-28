@@ -36,13 +36,13 @@ namespace org.activiti.validation.validator.impl
             {
                 foreach (ActivitiListener listener in listeners)
                 {
-                    if (string.ReferenceEquals(listener.Implementation, null) || string.ReferenceEquals(listener.ImplementationType, null))
+                    if (ReferenceEquals(listener.Implementation, null) || ReferenceEquals(listener.ImplementationType, null))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.EXECUTION_LISTENER_IMPLEMENTATION_MISSING, process, baseElement, "Element 'class' or 'expression' is mandatory on executionListener");
+                        addError(errors, Problems_Fields.EXECUTION_LISTENER_IMPLEMENTATION_MISSING, process, baseElement, "Element 'class' or 'expression' is mandatory on executionListener");
                     }
-                    if (!string.ReferenceEquals(listener.OnTransaction, null) && ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION.Equals(listener.ImplementationType))
+                    if (!ReferenceEquals(listener.OnTransaction, null) && ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION.Equals(listener.ImplementationType))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.EXECUTION_LISTENER_INVALID_IMPLEMENTATION_TYPE, process, baseElement, "Expression cannot be used when using 'onTransaction'");
+                        addError(errors, Problems_Fields.EXECUTION_LISTENER_INVALID_IMPLEMENTATION_TYPE, process, baseElement, "Expression cannot be used when using 'onTransaction'");
                     }
                 }
             }

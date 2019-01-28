@@ -33,7 +33,7 @@ namespace org.activiti.engine.impl.cmd
 
         public  virtual TableMetaData  execute(ICommandContext  commandContext)
         {
-            if (string.ReferenceEquals(tableName, null))
+            if (ReferenceEquals(tableName, null))
             {
                 throw new ActivitiIllegalArgumentException("tableName is null");
             }

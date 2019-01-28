@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ namespace Spring.Util
 			get { return _delegateType; }
 			set
 			{
-				if (!DelegateInfo.IsDelegate(value))
+				if (!IsDelegate(value))
 				{
 					throw new ArgumentException("Not a delegate Type");
 				}
@@ -190,7 +190,7 @@ namespace Spring.Util
 		/// </returns>
 		public MethodInfo GetMethod()
 		{
-			return DelegateType.GetMethod(DelegateInfo.InvocationMethod);
+			return DelegateType.GetMethod(InvocationMethod);
 		}
 
 		/// <summary>
@@ -235,7 +235,7 @@ namespace Spring.Util
 		{
 			bool compatible = false;
 			if (eventMeta != null
-				&& DelegateInfo.IsDelegate(eventMeta.EventHandlerType))
+				&& IsDelegate(eventMeta.EventHandlerType))
 			{
 				compatible = new DelegateInfo(eventMeta.EventHandlerType)
 					.IsSignatureCompatible(handlerMethod);

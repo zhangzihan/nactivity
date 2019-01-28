@@ -36,7 +36,7 @@ namespace org.activiti.engine.impl.cmd
         {
             get
             {
-                return org.activiti.engine.impl.persistence.entity.SuspensionState_Fields.SUSPENDED;
+                return SuspensionState_Fields.SUSPENDED;
             }
         }
 

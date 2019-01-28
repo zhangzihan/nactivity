@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using org.activiti.engine;
 using org.activiti.engine.impl;
 using org.activiti.engine.impl.agenda;
+using org.activiti.engine.impl.asyncexecutor;
 using org.activiti.engine.impl.cfg;
 using org.activiti.engine.impl.util;
 using SmartSql;
@@ -71,33 +72,43 @@ namespace Sys
                 return ssm;
             });
 
-            services.AddTransient<IRepositoryService>(sp => new RepositoryServiceImpl());
-
-            services.AddTransient<IRuntimeService>(sp => new RuntimeServiceImpl());
-
-            services.AddTransient<IManagementService>(sp => new ManagementServiceImpl());
-
-            services.AddTransient<IHistoryService>(sp => new HistoryServiceImpl());
-
-            services.AddTransient<ITaskService>(sp => new TaskServiceImpl());
-
-            services.AddTransient<IDynamicBpmnService>(sp => new DynamicBpmnServiceImpl());
-
             services.AddTransient<IActivitiEngineAgendaFactory>(sp => new DefaultActivitiEngineAgendaFactory());
 
             services.AddSingleton<IIdGenerator>(sp => new GuidGenerator());
 
             services.AddSingleton<IBpmnParseFactory, DefaultBpmnParseFactory>();
 
-            services.AddTransient<ProcessEngineConfiguration>(sp =>
+            services.AddTransient<IAsyncExecutor>(sp =>
+            {
+                IConfigurationSection dajw = sp.GetService<IConfiguration>().GetSection("defaultAsyncJobAcquireWaitTimeInMillis");
+                IConfigurationSection dtjw = sp.GetService<IConfiguration>().GetSection("defaultTimerJobAcquireWaitTimeInMillis");
+
+                if (int.TryParse(dajw?.Value, out int iDajw) == false)
+                {
+                    iDajw = 1000;
+                }
+                if (int.TryParse(dtjw?.Value, out int iDtjw) == false)
+                {
+                    iDtjw = 1000;
+                }
+
+                return new DefaultAsyncJobExecutor()
+                {
+                    DefaultAsyncJobAcquireWaitTimeInMillis = iDajw,
+                    DefaultTimerJobAcquireWaitTimeInMillis = iDtjw,
+                };
+            });
+
+            services.AddTransient<ProcessEngineConfigurationImpl>(sp =>
             {
                 ProcessEngineConfigurationImpl config = new StandaloneProcessEngineConfiguration(
-                    sp.GetService<IHistoryService>(),
-                    sp.GetService<ITaskService>(),
-                    sp.GetService<IDynamicBpmnService>(),
-                    sp.GetService<IRepositoryService>(),
-                    sp.GetService<IRuntimeService>(),
-                    sp.GetService<IManagementService>(),
+                    new HistoryServiceImpl(),
+                    new TaskServiceImpl(),
+                    new DynamicBpmnServiceImpl(),
+                    new RepositoryServiceImpl(),
+                    new RuntimeServiceImpl(),
+                    new ManagementServiceImpl(),
+                    sp.GetService<IAsyncExecutor>(),
                     sp.GetService<IConfiguration>()
                 );
 
@@ -108,6 +119,18 @@ namespace Sys
             {
                 return ProcessEngineFactory.Instance;
             });
+
+            services.AddTransient<IRepositoryService>(sp => sp.GetRequiredService<IProcessEngine>().RepositoryService);
+
+            services.AddTransient<IRuntimeService>(sp => sp.GetRequiredService<IProcessEngine>().RuntimeService);
+
+            services.AddTransient<IManagementService>(sp => sp.GetRequiredService<IProcessEngine>().ManagementService);
+
+            services.AddTransient<IHistoryService>(sp => sp.GetRequiredService<IProcessEngine>().HistoryService);
+
+            services.AddTransient<ITaskService>(sp => sp.GetRequiredService<IProcessEngine>().TaskService);
+
+            services.AddTransient<IDynamicBpmnService>(sp => sp.GetRequiredService<IProcessEngine>().DynamicBpmnService);
 
             services.AddSingleton<IProcessEngine>(sp =>
             {

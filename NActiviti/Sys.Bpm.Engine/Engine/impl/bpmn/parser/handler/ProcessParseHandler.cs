@@ -61,7 +61,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             currentProcessDefinition.Description = process.Documentation;
             currentProcessDefinition.DeploymentId = bpmnParse.Deployment.Id;
 
-            if (!string.ReferenceEquals(bpmnParse.Deployment.EngineVersion, null))
+            if (!ReferenceEquals(bpmnParse.Deployment.EngineVersion, null))
             {
                 currentProcessDefinition.EngineVersion = bpmnParse.Deployment.EngineVersion;
             }

@@ -27,11 +27,11 @@ namespace org.activiti.engine.impl.json
             IProcessDefinitionEntity processDefinitionEntity = (IProcessDefinitionEntity)processDefinition;
             JToken jsonObject = new JObject();
             jsonObject["id"] = processDefinitionEntity.Id;
-            if (!string.ReferenceEquals(processDefinitionEntity.Key, null))
+            if (!ReferenceEquals(processDefinitionEntity.Key, null))
             {
                 jsonObject["key"] = processDefinitionEntity.Key;
             }
-            if (!string.ReferenceEquals(processDefinitionEntity.DeploymentId, null))
+            if (!ReferenceEquals(processDefinitionEntity.DeploymentId, null))
             {
                 jsonObject["deploymentId"] = processDefinitionEntity.DeploymentId;
             }

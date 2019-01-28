@@ -32,11 +32,11 @@ namespace org.activiti.validation.validator.impl
 
                 if (string.IsNullOrWhiteSpace(sourceRef))
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.SEQ_FLOW_INVALID_SRC, process, sequenceFlow, "Invalid source for sequenceflow");
+                    addError(errors, Problems_Fields.SEQ_FLOW_INVALID_SRC, process, sequenceFlow, "Invalid source for sequenceflow");
                 }
                 if (string.IsNullOrWhiteSpace(targetRef))
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.SEQ_FLOW_INVALID_TARGET, process, sequenceFlow, "Invalid target for sequenceflow");
+                    addError(errors, Problems_Fields.SEQ_FLOW_INVALID_TARGET, process, sequenceFlow, "Invalid target for sequenceflow");
                 }
 
                 // Implicit check: sequence flow cannot cross (sub) process
@@ -48,11 +48,11 @@ namespace org.activiti.validation.validator.impl
                 // Src and target validation
                 if (source == null)
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.SEQ_FLOW_INVALID_SRC, process, sequenceFlow, "Invalid source for sequenceflow");
+                    addError(errors, Problems_Fields.SEQ_FLOW_INVALID_SRC, process, sequenceFlow, "Invalid source for sequenceflow");
                 }
                 if (target == null)
                 {
-                    addError(errors, org.activiti.validation.validator.Problems_Fields.SEQ_FLOW_INVALID_TARGET, process, sequenceFlow, "Invalid target for sequenceflow");
+                    addError(errors, Problems_Fields.SEQ_FLOW_INVALID_TARGET, process, sequenceFlow, "Invalid target for sequenceflow");
                 }
 
                 if (source != null && target != null)
@@ -62,15 +62,15 @@ namespace org.activiti.validation.validator.impl
 
                     if (sourceContainer == null)
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.SEQ_FLOW_INVALID_SRC, process, sequenceFlow, "Invalid source for sequenceflow");
+                        addError(errors, Problems_Fields.SEQ_FLOW_INVALID_SRC, process, sequenceFlow, "Invalid source for sequenceflow");
                     }
                     if (targetContainer == null)
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.SEQ_FLOW_INVALID_TARGET, process, sequenceFlow, "Invalid target for sequenceflow");
+                        addError(errors, Problems_Fields.SEQ_FLOW_INVALID_TARGET, process, sequenceFlow, "Invalid target for sequenceflow");
                     }
                     if (sourceContainer != null && targetContainer != null && !sourceContainer.Equals(targetContainer))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.SEQ_FLOW_INVALID_TARGET, process, sequenceFlow, "Invalid target for sequenceflow, the target isn't defined in the same scope as the source");
+                        addError(errors, Problems_Fields.SEQ_FLOW_INVALID_TARGET, process, sequenceFlow, "Invalid target for sequenceflow, the target isn't defined in the same scope as the source");
                     }
                 }
             }

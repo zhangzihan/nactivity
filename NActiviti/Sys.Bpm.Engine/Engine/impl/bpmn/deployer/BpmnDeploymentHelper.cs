@@ -64,13 +64,13 @@ namespace org.activiti.engine.impl.bpmn.deployer
             {
 
                 // Backwards compatibility
-                if (!string.ReferenceEquals(engineVersion, null))
+                if (!ReferenceEquals(engineVersion, null))
                 {
                     processDefinition.EngineVersion = engineVersion;
                 }
 
                 // process definition inherits the tenant id
-                if (!string.ReferenceEquals(tenantId, null))
+                if (!ReferenceEquals(tenantId, null))
                 {
                     processDefinition.TenantId = tenantId;
                 }
@@ -107,7 +107,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
             IProcessDefinitionEntity existingDefinition = null;
 
-            if (!string.ReferenceEquals(tenantId, null) && !tenantId.Equals(ProcessEngineConfiguration.NO_TENANT_ID))
+            if (!ReferenceEquals(tenantId, null) && !tenantId.Equals(ProcessEngineConfiguration.NO_TENANT_ID))
             {
                 existingDefinition = processDefinitionManager.findLatestProcessDefinitionByKeyAndTenantId(key, tenantId);
             }
@@ -135,7 +135,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
             IProcessDefinitionEntityManager processDefinitionManager = Context.CommandContext.ProcessEngineConfiguration.ProcessDefinitionEntityManager;
             IProcessDefinitionEntity persistedProcessDefinition = null;
-            if (string.ReferenceEquals(processDefinition.TenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
+            if (ReferenceEquals(processDefinition.TenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
             {
                 persistedProcessDefinition = processDefinitionManager.findProcessDefinitionByDeploymentAndKey(deploymentId, processDefinition.Key);
             }

@@ -31,7 +31,7 @@ namespace org.activiti.validation.validator.impl
                     FlowElement flowElement = process.getFlowElement(sequenceFlow.TargetRef, true);
                     if (flowElement != null && !(flowElement is IntermediateCatchEvent))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.EVENT_GATEWAY_ONLY_CONNECTED_TO_INTERMEDIATE_EVENTS, process, eventGateway, "Event based gateway can only be connected to elements of type intermediateCatchEvent");
+                        addError(errors, Problems_Fields.EVENT_GATEWAY_ONLY_CONNECTED_TO_INTERMEDIATE_EVENTS, process, eventGateway, "Event based gateway can only be connected to elements of type intermediateCatchEvent");
                     }
                 }
             }

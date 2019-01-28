@@ -56,12 +56,12 @@ namespace org.activiti.engine.impl
             this.sessionFactories = processEngineConfiguration.SessionFactories;
             this.transactionContextFactory = processEngineConfiguration.TransactionContextFactory;
 
-            if (processEngineConfiguration.UsingRelationalDatabase && !string.ReferenceEquals(processEngineConfiguration.DatabaseSchemaUpdate, null))
+            if (processEngineConfiguration.UsingRelationalDatabase && !ReferenceEquals(processEngineConfiguration.DatabaseSchemaUpdate, null))
             {
                 commandExecutor.execute(processEngineConfiguration.SchemaCommandConfig, new SchemaOperationsProcessEngineBuild());
             }
 
-            if (string.ReferenceEquals(name, null))
+            if (ReferenceEquals(name, null))
             {
                 log.LogInformation("default activiti ProcessEngine created");
             }

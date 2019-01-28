@@ -45,7 +45,7 @@ namespace org.activiti.engine.impl.cmd
 
         protected internal virtual IDeadLetterJobEntity getJobToDelete(ICommandContext commandContext)
         {
-            if (string.ReferenceEquals(timerJobId, null))
+            if (ReferenceEquals(timerJobId, null))
             {
                 throw new ActivitiIllegalArgumentException("jobId is null");
             }

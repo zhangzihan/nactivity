@@ -15,16 +15,17 @@ using System.Threading;
  */
 namespace org.activiti.engine.impl.agenda
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
+    using Sys;
     using System;
 
     /// 
     /// 
     public class DefaultActivitiEngineAgenda : IActivitiEngineAgenda
     {
-        //private static readonly Logger logger = LoggerFactory.getLogger(typeof(DefaultActivitiEngineAgenda));
+        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<DefaultActivitiEngineAgenda>();
 
         protected internal LinkedList<AbstractOperation> operations = new LinkedList<AbstractOperation>();
         protected internal ICommandContext commandContext;
@@ -77,7 +78,7 @@ namespace org.activiti.engine.impl.agenda
                 }
             }
 
-            //logger.debug("Operation {} added to agenda", operation.GetType());
+            logger.LogDebug($"Operation {operation.GetType()} added to agenda");
         }
 
         public virtual void planContinueProcessOperation(IExecutionEntity execution)

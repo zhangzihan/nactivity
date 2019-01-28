@@ -56,12 +56,12 @@ namespace org.activiti.engine.impl.persistence.entity
         {
 
             // add link to execution
-            if (!string.ReferenceEquals(jobEntity.ExecutionId, null))
+            if (!ReferenceEquals(jobEntity.ExecutionId, null))
             {
                 IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", jobEntity.ExecutionId));
 
                 // Inherit tenant if (if applicable)
-                if (!string.ReferenceEquals(execution.TenantId, null))
+                if (!ReferenceEquals(execution.TenantId, null))
                 {
                     jobEntity.TenantId = execution.TenantId;
                 }
@@ -90,7 +90,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
             deleteExceptionByteArrayRef(jobEntity);
 
-            if (!string.ReferenceEquals(jobEntity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!ReferenceEquals(jobEntity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(new KeyValuePair<string, object>("id", jobEntity.ExecutionId));
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))

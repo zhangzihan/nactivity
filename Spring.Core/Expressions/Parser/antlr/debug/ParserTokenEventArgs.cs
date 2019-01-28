@@ -33,7 +33,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		/// </summary>
 		internal void  setValues(int type, int amount, int val)
 		{
-			base.setValues(type);
+            setValues(type);
 			this.Amount = amount;
 			this.Value  = val;
 		}

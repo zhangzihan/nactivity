@@ -54,7 +54,7 @@ namespace org.activiti.engine.impl
 	  {
 		  get
 		  {
-			if (!string.ReferenceEquals(localizedName, null) && localizedName.Length > 0)
+			if (!ReferenceEquals(localizedName, null) && localizedName.Length > 0)
 			{
 			  return localizedName;
 			}
@@ -74,7 +74,7 @@ namespace org.activiti.engine.impl
 	  {
 		  get
 		  {
-			if (!string.ReferenceEquals(localizedDescription, null) && localizedDescription.Length > 0)
+			if (!ReferenceEquals(localizedDescription, null) && localizedDescription.Length > 0)
 			{
 			  return localizedDescription;
 			}

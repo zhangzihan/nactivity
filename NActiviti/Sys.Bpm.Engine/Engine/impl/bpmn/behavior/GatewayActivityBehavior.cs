@@ -37,7 +37,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             bool found = false;
             IExecutionEntity parentScopeExecution = null;
-            while (!found && execution != null && !string.ReferenceEquals(execution.ParentId, null))
+            while (!found && execution != null && !ReferenceEquals(execution.ParentId, null))
             {
                 parentScopeExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", execution.ParentId));
                 if (parentScopeExecution != null && parentScopeExecution.IsScope)

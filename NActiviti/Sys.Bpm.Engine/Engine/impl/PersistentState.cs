@@ -28,7 +28,7 @@ namespace org.activiti.engine.impl.persistence
 
         public override bool Equals(object obj)
         {
-            if (object.ReferenceEquals(obj, null))
+            if (ReferenceEquals(obj, null))
             {
                 return false;
             }

@@ -35,11 +35,11 @@ namespace org.activiti.engine.impl.cmd
 
         protected internal override object execute(ICommandContext commandContext, ITaskEntity task)
         {
-            if (!string.ReferenceEquals(userId, null))
+            if (!ReferenceEquals(userId, null))
             {
                 task.ClaimTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
 
-                if (!string.ReferenceEquals(task.Assignee, null))
+                if (!ReferenceEquals(task.Assignee, null))
                 {
                     if (!task.Assignee.Equals(userId))
                     {

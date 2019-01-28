@@ -92,11 +92,11 @@ namespace org.activiti.engine.debug
         {
             StringBuilder strb = new StringBuilder();
             strb.Append(ExecutionEntity.Id);
-            if (!string.ReferenceEquals(ExecutionEntity.ActivityId, null))
+            if (!ReferenceEquals(ExecutionEntity.ActivityId, null))
             {
                 strb.Append(" : " + ExecutionEntity.ActivityId);
             }
-            if (!string.ReferenceEquals(ExecutionEntity.ParentId, null))
+            if (!ReferenceEquals(ExecutionEntity.ParentId, null))
             {
                 strb.Append(", parent id " + ExecutionEntity.ParentId);
             }

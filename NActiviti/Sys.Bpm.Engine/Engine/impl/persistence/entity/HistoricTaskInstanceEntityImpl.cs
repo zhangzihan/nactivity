@@ -73,7 +73,7 @@ namespace org.activiti.engine.impl.persistence.entity
             this.Category = task.Category;
 
             // Inherit tenant id (if applicable)
-            if (!string.ReferenceEquals(task.TenantId, null))
+            if (!ReferenceEquals(task.TenantId, null))
             {
                 tenantId = task.TenantId;
             }
@@ -98,7 +98,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 persistentState["priority"] = priority;
                 persistentState["category"] = category;
                 persistentState["processDefinitionId"] = processDefinitionId;
-                if (!string.ReferenceEquals(parentTaskId, null))
+                if (!ReferenceEquals(parentTaskId, null))
                 {
                     persistentState["parentTaskId"] = parentTaskId;
                 }
@@ -133,7 +133,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                if (!string.ReferenceEquals(localizedName, null) && localizedName.Length > 0)
+                if (!ReferenceEquals(localizedName, null) && localizedName.Length > 0)
                 {
                     return localizedName;
                 }
@@ -164,7 +164,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                if (!string.ReferenceEquals(localizedDescription, null) && localizedDescription.Length > 0)
+                if (!ReferenceEquals(localizedDescription, null) && localizedDescription.Length > 0)
                 {
                     return localizedDescription;
                 }
@@ -359,7 +359,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (IHistoricVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!string.ReferenceEquals(variableInstance.Id, null) && !string.ReferenceEquals(variableInstance.TaskId, null))
+                        if (!ReferenceEquals(variableInstance.Id, null) && !ReferenceEquals(variableInstance.TaskId, null))
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }
@@ -378,7 +378,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (IHistoricVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!string.ReferenceEquals(variableInstance.Id, null) && string.ReferenceEquals(variableInstance.TaskId, null))
+                        if (!ReferenceEquals(variableInstance.Id, null) && ReferenceEquals(variableInstance.TaskId, null))
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }

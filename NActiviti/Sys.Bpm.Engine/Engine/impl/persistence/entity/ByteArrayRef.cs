@@ -59,7 +59,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             set
             {
-                if (string.ReferenceEquals(id, null))
+                if (ReferenceEquals(id, null))
                 {
                     if (value != null)
                     {
@@ -97,7 +97,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public virtual void delete()
         {
-            if (!deleted && !string.ReferenceEquals(id, null))
+            if (!deleted && !ReferenceEquals(id, null))
             {
                 if (entity != null)
                 {

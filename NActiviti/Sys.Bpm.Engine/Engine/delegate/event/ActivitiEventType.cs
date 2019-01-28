@@ -380,7 +380,7 @@ namespace org.activiti.engine.@delegate.@event
         public static ActivitiEventType[] getTypesFromString(string @string)
         {
             IList<ActivitiEventType> result = new List<ActivitiEventType>();
-            if (!string.ReferenceEquals(@string, null) && @string.Length > 0)
+            if (!ReferenceEquals(@string, null) && @string.Length > 0)
             {
                 string[] split = @string.Split(',');
                 foreach (string typeName in split)
@@ -422,7 +422,7 @@ namespace org.activiti.engine.@delegate.@event
 
         public static ActivitiEventType valueOf(string name)
         {
-            foreach (ActivitiEventType enumInstance in ActivitiEventType.valueList)
+            foreach (ActivitiEventType enumInstance in valueList)
             {
                 if (enumInstance.nameValue == name)
                 {

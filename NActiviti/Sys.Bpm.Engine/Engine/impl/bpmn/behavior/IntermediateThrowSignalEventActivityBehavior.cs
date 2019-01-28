@@ -63,7 +63,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             ICommandContext commandContext = Context.CommandContext;
 
             string eventSubscriptionName = null;
-            if (!string.ReferenceEquals(signalEventName, null))
+            if (!ReferenceEquals(signalEventName, null))
             {
                 eventSubscriptionName = signalEventName;
             }

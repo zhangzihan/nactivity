@@ -68,7 +68,7 @@ namespace org.activiti.engine.impl
 
         public virtual ISuspendedJobQuery jobId(string jobId)
         {
-            if (string.ReferenceEquals(jobId, null))
+            if (ReferenceEquals(jobId, null))
             {
                 throw new ActivitiIllegalArgumentException("Provided job id is null");
             }
@@ -78,7 +78,7 @@ namespace org.activiti.engine.impl
 
         public virtual ISuspendedJobQuery processInstanceId(string processInstanceId)
         {
-            if (string.ReferenceEquals(processInstanceId, null))
+            if (ReferenceEquals(processInstanceId, null))
             {
                 throw new ActivitiIllegalArgumentException("Provided process instance id is null");
             }
@@ -202,7 +202,7 @@ namespace org.activiti.engine.impl
 
         public virtual ISuspendedJobQuery exceptionMessage(string exceptionMessage)
         {
-            if (string.ReferenceEquals(exceptionMessage, null))
+            if (ReferenceEquals(exceptionMessage, null))
             {
                 throw new ActivitiIllegalArgumentException("Provided exception message is null");
             }
@@ -212,7 +212,7 @@ namespace org.activiti.engine.impl
 
         public virtual ISuspendedJobQuery jobTenantId(string tenantId)
         {
-            if (string.ReferenceEquals(tenantId, null))
+            if (ReferenceEquals(tenantId, null))
             {
                 throw new ActivitiIllegalArgumentException("job is null");
             }
@@ -222,7 +222,7 @@ namespace org.activiti.engine.impl
 
         public virtual ISuspendedJobQuery jobTenantIdLike(string tenantIdLike)
         {
-            if (string.ReferenceEquals(tenantIdLike, null))
+            if (ReferenceEquals(tenantIdLike, null))
             {
                 throw new ActivitiIllegalArgumentException("job is null");
             }

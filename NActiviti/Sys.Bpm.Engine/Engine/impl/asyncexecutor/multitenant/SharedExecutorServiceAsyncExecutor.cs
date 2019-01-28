@@ -15,10 +15,11 @@ using System.Threading;
  */
 namespace org.activiti.engine.impl.asyncexecutor.multitenant
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.cfg.multitenant;
     using org.activiti.engine.runtime;
+    using Sys;
     using System;
 
     /// <summary>
@@ -31,6 +32,8 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
     /// </summary>
     public class SharedExecutorServiceAsyncExecutor : DefaultAsyncJobExecutor, ITenantAwareAsyncExecutor
     {
+        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<SharedExecutorServiceAsyncExecutor>();
+
         protected internal ITenantInfoHolder tenantInfoHolder;
 
         protected internal IDictionary<string, Thread> timerJobAcquisitionThreads = new Dictionary<string, Thread>();
@@ -152,7 +155,7 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
             catch (Exception e)
             {
-                //logger.warn("Interrupted while waiting for the timer job acquisition thread to terminate", e);
+                logger.LogWarning($"Interrupted while waiting for the timer job acquisition thread to terminate {e.Message}");
             }
 
             try
@@ -161,7 +164,7 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
             catch (Exception e)
             {
-                //logger.warn("Interrupted while waiting for the timer job acquisition thread to terminate", e);
+                logger.LogWarning($"Interrupted while waiting for the timer job acquisition thread to terminate {e.Message}");
             }
 
             try
@@ -170,7 +173,7 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
             catch (Exception e)
             {
-                //logger.warn("Interrupted while waiting for the reset expired jobs thread to terminate", e);
+                logger.LogWarning($"Interrupted while waiting for the reset expired jobs thread to terminate {e.Message}");
             }
         }
 

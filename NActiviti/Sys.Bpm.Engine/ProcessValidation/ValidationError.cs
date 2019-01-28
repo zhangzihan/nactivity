@@ -177,12 +177,12 @@ namespace org.activiti.validation
 		strb.Append(defaultDescription);
 		strb.Append(" - [Extra info : ");
 		bool extraInfoAlreadyPresent = false;
-		if (!string.ReferenceEquals(processDefinitionId, null))
+		if (!ReferenceEquals(processDefinitionId, null))
 		{
 		  strb.Append("processDefinitionId = " + processDefinitionId);
 		  extraInfoAlreadyPresent = true;
 		}
-		if (!string.ReferenceEquals(processDefinitionName, null))
+		if (!ReferenceEquals(processDefinitionName, null))
 		{
 		  if (extraInfoAlreadyPresent)
 		  {
@@ -191,7 +191,7 @@ namespace org.activiti.validation
 		  strb.Append("processDefinitionName = " + processDefinitionName + " | ");
 		  extraInfoAlreadyPresent = true;
 		}
-		if (!string.ReferenceEquals(activityId, null))
+		if (!ReferenceEquals(activityId, null))
 		{
 		  if (extraInfoAlreadyPresent)
 		  {
@@ -200,7 +200,7 @@ namespace org.activiti.validation
 		  strb.Append("id = " + activityId + " | ");
 		  extraInfoAlreadyPresent = true;
 		}
-		if (!string.ReferenceEquals(activityName, null))
+		if (!ReferenceEquals(activityName, null))
 		{
 		  if (extraInfoAlreadyPresent)
 		  {

@@ -208,12 +208,12 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public virtual bool hasEditorSource()
         {
-            return !string.ReferenceEquals(this.editorSourceValueId, null);
+            return !ReferenceEquals(this.editorSourceValueId, null);
         }
 
         public virtual bool hasEditorSourceExtra()
         {
-            return !string.ReferenceEquals(this.editorSourceExtraValueId, null);
+            return !ReferenceEquals(this.editorSourceExtraValueId, null);
         }
 
     }

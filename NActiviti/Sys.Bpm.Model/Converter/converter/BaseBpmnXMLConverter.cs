@@ -266,7 +266,7 @@ namespace org.activiti.bpmn.converter
                         extensionElement.ElementText = xtr.Value?.Trim();
                     }
                 }
-                else if (xtr.StartElement)
+                else if (xtr.IsStartElement())
                 {
                     ExtensionElement childExtensionElement = parseExtensionElement(xtr);
                     extensionElement.addChildElement(childExtensionElement);

@@ -31,22 +31,22 @@ namespace org.activiti.validation.validator.impl
                 {
                     if (string.IsNullOrWhiteSpace(signal.Id))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.SIGNAL_MISSING_ID, signal, "Signal must have an id");
+                        addError(errors, Problems_Fields.SIGNAL_MISSING_ID, signal, "Signal must have an id");
                     }
 
                     if (string.IsNullOrWhiteSpace(signal.Name))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.SIGNAL_MISSING_NAME, signal, "Signal must have a name");
+                        addError(errors, Problems_Fields.SIGNAL_MISSING_NAME, signal, "Signal must have a name");
                     }
 
                     if (!string.IsNullOrWhiteSpace(signal.Name) && duplicateName(signals, signal.Id, signal.Name))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.SIGNAL_DUPLICATE_NAME, signal, "Duplicate signal name found");
+                        addError(errors, Problems_Fields.SIGNAL_DUPLICATE_NAME, signal, "Duplicate signal name found");
                     }
 
-                    if (!string.ReferenceEquals(signal.Scope, null) && !signal.Scope.Equals(Signal.SCOPE_GLOBAL) && !signal.Scope.Equals(Signal.SCOPE_PROCESS_INSTANCE))
+                    if (!ReferenceEquals(signal.Scope, null) && !signal.Scope.Equals(Signal.SCOPE_GLOBAL) && !signal.Scope.Equals(Signal.SCOPE_PROCESS_INSTANCE))
                     {
-                        addError(errors, org.activiti.validation.validator.Problems_Fields.SIGNAL_INVALID_SCOPE, signal, "Invalid value for 'scope'. Only values 'global' and 'processInstance' are supported");
+                        addError(errors, Problems_Fields.SIGNAL_INVALID_SCOPE, signal, "Invalid value for 'scope'. Only values 'global' and 'processInstance' are supported");
                     }
                 }
 
@@ -57,7 +57,7 @@ namespace org.activiti.validation.validator.impl
         {
             foreach (Signal signal in signals)
             {
-                if (!string.ReferenceEquals(id, null) && !string.ReferenceEquals(signal.Id, null))
+                if (!ReferenceEquals(id, null) && !ReferenceEquals(signal.Id, null))
                 {
                     if (name.Equals(signal.Name) && !id.Equals(signal.Id))
                     {

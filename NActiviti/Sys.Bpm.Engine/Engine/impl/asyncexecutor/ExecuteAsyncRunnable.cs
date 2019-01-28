@@ -47,11 +47,10 @@ namespace org.activiti.engine.impl.asyncexecutor
             this.Runable += new ThreadStart(run);
         }
 
-        public ExecuteAsyncRunnable(IJob job, ProcessEngineConfigurationImpl processEngineConfiguration)
+        public ExecuteAsyncRunnable(IJob job, ProcessEngineConfigurationImpl processEngineConfiguration) 
+            : this(job.Id, processEngineConfiguration)
         {
             this.job = job;
-            this.jobId = job.Id;
-            this.processEngineConfiguration = processEngineConfiguration;
         }
 
 
@@ -82,7 +81,7 @@ namespace org.activiti.engine.impl.asyncexecutor
 
             public virtual IJobEntity execute(ICommandContext commandContext)
             {
-                return commandContext.JobEntityManager.findById<JobEntityImpl>(new KeyValuePair<string, object>("id", outerInstance.jobId));
+                return commandContext.JobEntityManager.findById<IJobEntity>(new KeyValuePair<string, object>("id", outerInstance.jobId));
             }
         }
 

@@ -83,7 +83,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionCategory(string category)
         {
-            if (string.ReferenceEquals(category, null))
+            if (ReferenceEquals(category, null))
             {
                 throw new ActivitiIllegalArgumentException("category is null");
             }
@@ -93,7 +93,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionCategoryLike(string categoryLike)
         {
-            if (string.ReferenceEquals(categoryLike, null))
+            if (ReferenceEquals(categoryLike, null))
             {
                 throw new ActivitiIllegalArgumentException("categoryLike is null");
             }
@@ -103,7 +103,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionCategoryNotEquals(string categoryNotEquals)
         {
-            if (string.ReferenceEquals(categoryNotEquals, null))
+            if (ReferenceEquals(categoryNotEquals, null))
             {
                 throw new ActivitiIllegalArgumentException("categoryNotEquals is null");
             }
@@ -113,7 +113,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionName(string name)
         {
-            if (string.ReferenceEquals(name, null))
+            if (ReferenceEquals(name, null))
             {
                 throw new ActivitiIllegalArgumentException("name is null");
             }
@@ -123,7 +123,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionNameLike(string nameLike)
         {
-            if (string.ReferenceEquals(nameLike, null))
+            if (ReferenceEquals(nameLike, null))
             {
                 throw new ActivitiIllegalArgumentException("nameLike is null");
             }
@@ -133,7 +133,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery deploymentId(string deploymentId)
         {
-            if (string.ReferenceEquals(deploymentId, null))
+            if (ReferenceEquals(deploymentId, null))
             {
                 throw new ActivitiIllegalArgumentException("id is null");
             }
@@ -153,7 +153,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionKey(string key)
         {
-            if (string.ReferenceEquals(key, null))
+            if (ReferenceEquals(key, null))
             {
                 throw new ActivitiIllegalArgumentException("key is null");
             }
@@ -173,7 +173,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionKeyLike(string keyLike)
         {
-            if (string.ReferenceEquals(keyLike, null))
+            if (ReferenceEquals(keyLike, null))
             {
                 throw new ActivitiIllegalArgumentException("keyLike is null");
             }
@@ -183,7 +183,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionResourceName(string resourceName)
         {
-            if (string.ReferenceEquals(resourceName, null))
+            if (ReferenceEquals(resourceName, null))
             {
                 throw new ActivitiIllegalArgumentException("resourceName is null");
             }
@@ -193,7 +193,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionResourceNameLike(string resourceNameLike)
         {
-            if (string.ReferenceEquals(resourceNameLike, null))
+            if (ReferenceEquals(resourceNameLike, null))
             {
                 throw new ActivitiIllegalArgumentException("resourceNameLike is null");
             }
@@ -256,19 +256,19 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery active()
         {
-            this.suspensionState = org.activiti.engine.impl.persistence.entity.SuspensionState_Fields.ACTIVE;
+            this.suspensionState = SuspensionState_Fields.ACTIVE;
             return this;
         }
 
         public virtual IProcessDefinitionQuery suspended()
         {
-            this.suspensionState = org.activiti.engine.impl.persistence.entity.SuspensionState_Fields.SUSPENDED;
+            this.suspensionState = SuspensionState_Fields.SUSPENDED;
             return this;
         }
 
         public virtual IProcessDefinitionQuery processDefinitionTenantId(string tenantId)
         {
-            if (string.ReferenceEquals(tenantId, null))
+            if (ReferenceEquals(tenantId, null))
             {
                 throw new ActivitiIllegalArgumentException("processDefinition tenantId is null");
             }
@@ -278,7 +278,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionTenantIdLike(string tenantIdLike)
         {
-            if (string.ReferenceEquals(tenantIdLike, null))
+            if (ReferenceEquals(tenantIdLike, null))
             {
                 throw new ActivitiIllegalArgumentException("process definition tenantId is null");
             }
@@ -310,11 +310,11 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery eventSubscription(string eventType, string eventName)
         {
-            if (string.ReferenceEquals(eventName, null))
+            if (ReferenceEquals(eventName, null))
             {
                 throw new ActivitiIllegalArgumentException("event name is null");
             }
-            if (string.ReferenceEquals(eventType, null))
+            if (ReferenceEquals(eventType, null))
             {
                 throw new ActivitiException("event type is null");
             }
@@ -330,7 +330,7 @@ namespace org.activiti.engine.impl
                 // Similar behaviour as the TaskQuery.taskCandidateUser() which
                 // includes the groups the candidate
                 // user is part of
-                if (!string.ReferenceEquals(authorizationUserId, null))
+                if (!ReferenceEquals(authorizationUserId, null))
                 {
                     IUserGroupLookupProxy userGroupLookupProxy = Context.ProcessEngineConfiguration.UserGroupLookupProxy;
                     if (userGroupLookupProxy != null)
@@ -638,7 +638,7 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery startableByUser(string userId)
         {
-            if (string.ReferenceEquals(userId, null))
+            if (ReferenceEquals(userId, null))
             {
                 throw new ActivitiIllegalArgumentException("userId is null");
             }

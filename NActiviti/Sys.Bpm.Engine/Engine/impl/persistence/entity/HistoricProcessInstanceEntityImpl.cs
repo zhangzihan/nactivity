@@ -67,7 +67,7 @@ namespace org.activiti.engine.impl.persistence.entity
             superProcessInstanceId = processInstance.SuperExecution != null ? processInstance.SuperExecution.ProcessInstanceId : null;
 
             // Inherit tenant id (if applicable)
-            if (!string.ReferenceEquals(processInstance.TenantId, null))
+            if (!ReferenceEquals(processInstance.TenantId, null))
             {
                 tenantId = processInstance.TenantId;
             }
@@ -178,7 +178,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                if (!string.ReferenceEquals(localizedName, null) && localizedName.Length > 0)
+                if (!ReferenceEquals(localizedName, null) && localizedName.Length > 0)
                 {
                     return localizedName;
                 }
@@ -211,7 +211,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                if (!string.ReferenceEquals(localizedDescription, null) && localizedDescription.Length > 0)
+                if (!ReferenceEquals(localizedDescription, null) && localizedDescription.Length > 0)
                 {
                     return localizedDescription;
                 }
@@ -301,7 +301,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (IHistoricVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!string.ReferenceEquals(variableInstance.Id, null) && string.ReferenceEquals(variableInstance.TaskId, null))
+                        if (!ReferenceEquals(variableInstance.Id, null) && ReferenceEquals(variableInstance.TaskId, null))
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }

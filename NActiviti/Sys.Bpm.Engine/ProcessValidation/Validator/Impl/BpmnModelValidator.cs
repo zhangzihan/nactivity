@@ -34,7 +34,7 @@ namespace org.activiti.validation.validator.impl
                 {
                     if (!process.Executable)
                     {
-                        addWarning(errors, org.activiti.validation.validator.Problems_Fields.PROCESS_DEFINITION_NOT_EXECUTABLE, process, process, "Process definition is not executable. Please verify that this is intentional.");
+                        addWarning(errors, Problems_Fields.PROCESS_DEFINITION_NOT_EXECUTABLE, process, process, "Process definition is not executable. Please verify that this is intentional.");
                     }
                     handleProcessConstraints(bpmnModel, process, errors);
                 }
@@ -44,25 +44,25 @@ namespace org.activiti.validation.validator.impl
 
         protected internal virtual void handleProcessConstraints(BpmnModel bpmnModel, Process process, IList<ValidationError> errors)
         {
-            if (!string.ReferenceEquals(process.Id, null) && process.Id.Length > Constraints.PROCESS_DEFINITION_ID_MAX_LENGTH)
+            if (!ReferenceEquals(process.Id, null) && process.Id.Length > Constraints.PROCESS_DEFINITION_ID_MAX_LENGTH)
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.PROCESS_DEFINITION_ID_TOO_LONG, process, "The id of the process definition must not contain more than " + Constraints.PROCESS_DEFINITION_ID_MAX_LENGTH + " characters");
+                addError(errors, Problems_Fields.PROCESS_DEFINITION_ID_TOO_LONG, process, "The id of the process definition must not contain more than " + Constraints.PROCESS_DEFINITION_ID_MAX_LENGTH + " characters");
             }
-            if (!string.ReferenceEquals(process.Name, null) && process.Name.Length > Constraints.PROCESS_DEFINITION_NAME_MAX_LENGTH)
+            if (!ReferenceEquals(process.Name, null) && process.Name.Length > Constraints.PROCESS_DEFINITION_NAME_MAX_LENGTH)
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.PROCESS_DEFINITION_NAME_TOO_LONG, process, "The name of the process definition must not contain more than " + Constraints.PROCESS_DEFINITION_NAME_MAX_LENGTH + " characters");
+                addError(errors, Problems_Fields.PROCESS_DEFINITION_NAME_TOO_LONG, process, "The name of the process definition must not contain more than " + Constraints.PROCESS_DEFINITION_NAME_MAX_LENGTH + " characters");
             }
-            if (!string.ReferenceEquals(process.Documentation, null) && process.Documentation.Length > Constraints.PROCESS_DEFINITION_DOCUMENTATION_MAX_LENGTH)
+            if (!ReferenceEquals(process.Documentation, null) && process.Documentation.Length > Constraints.PROCESS_DEFINITION_DOCUMENTATION_MAX_LENGTH)
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.PROCESS_DEFINITION_DOCUMENTATION_TOO_LONG, process, "The documentation of the process definition must not contain more than " + Constraints.PROCESS_DEFINITION_DOCUMENTATION_MAX_LENGTH + " characters");
+                addError(errors, Problems_Fields.PROCESS_DEFINITION_DOCUMENTATION_TOO_LONG, process, "The documentation of the process definition must not contain more than " + Constraints.PROCESS_DEFINITION_DOCUMENTATION_MAX_LENGTH + " characters");
             }
         }
 
         protected internal virtual void handleBPMNModelConstraints(BpmnModel bpmnModel, IList<ValidationError> errors)
         {
-            if (!string.ReferenceEquals(bpmnModel.TargetNamespace, null) && bpmnModel.TargetNamespace.Length > Constraints.BPMN_MODEL_TARGET_NAMESPACE_MAX_LENGTH)
+            if (!ReferenceEquals(bpmnModel.TargetNamespace, null) && bpmnModel.TargetNamespace.Length > Constraints.BPMN_MODEL_TARGET_NAMESPACE_MAX_LENGTH)
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.BPMN_MODEL_TARGET_NAMESPACE_TOO_LONG, "The targetNamespace of the bpmn model must not contain more than " + Constraints.BPMN_MODEL_TARGET_NAMESPACE_MAX_LENGTH + " characters");
+                addError(errors, Problems_Fields.BPMN_MODEL_TARGET_NAMESPACE_TOO_LONG, "The targetNamespace of the bpmn model must not contain more than " + Constraints.BPMN_MODEL_TARGET_NAMESPACE_MAX_LENGTH + " characters");
             }
         }
 
@@ -82,7 +82,7 @@ namespace org.activiti.validation.validator.impl
 
             if (nrOfExecutableDefinitions == 0)
             {
-                addError(errors, org.activiti.validation.validator.Problems_Fields.ALL_PROCESS_DEFINITIONS_NOT_EXECUTABLE, "All process definition are set to be non-executable (property 'isExecutable' on process). This is not allowed.");
+                addError(errors, Problems_Fields.ALL_PROCESS_DEFINITIONS_NOT_EXECUTABLE, "All process definition are set to be non-executable (property 'isExecutable' on process). This is not allowed.");
             }
 
             return nrOfExecutableDefinitions > 0;

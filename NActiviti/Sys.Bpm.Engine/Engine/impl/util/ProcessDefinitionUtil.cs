@@ -92,7 +92,7 @@ namespace org.activiti.engine.impl.util
         public static IProcessDefinitionEntity getProcessDefinitionFromDatabase(string processDefinitionId)
         {
             IProcessDefinitionEntityManager processDefinitionEntityManager = Context.ProcessEngineConfiguration.ProcessDefinitionEntityManager;
-            IProcessDefinitionEntity processDefinition = processDefinitionEntityManager.findById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("id", processDefinitionId));
+            IProcessDefinitionEntity processDefinition = processDefinitionEntityManager.findById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("processDefinitionId", processDefinitionId));
             if (processDefinition == null)
             {
                 throw new ActivitiException("No process definition found with id " + processDefinitionId);

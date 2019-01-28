@@ -158,7 +158,7 @@ namespace org.activiti.engine.impl.history
                 IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.create(subProcessInstance);
 
                 // Fix for ACT-1728: startActivityId not initialized with subprocess instance
-                if (string.ReferenceEquals(historicProcessInstance.StartActivityId, null))
+                if (ReferenceEquals(historicProcessInstance.StartActivityId, null))
                 {
                     historicProcessInstance.StartActivityId = initialElement.Id;
                 }
@@ -254,7 +254,7 @@ namespace org.activiti.engine.impl.history
                 activityId = ((SequenceFlow)(execution.CurrentFlowElement)).SourceFlowElement.Id;
             }
 
-            if (!string.ReferenceEquals(activityId, null))
+            if (!ReferenceEquals(activityId, null))
             {
                 return findActivityInstance(execution, activityId, createOnNotFound, endTimeMustBeNull);
             }
@@ -267,7 +267,7 @@ namespace org.activiti.engine.impl.history
         {
 
             // No use looking for the HistoricActivityInstance when no activityId is provided.
-            if (string.ReferenceEquals(activityId, null))
+            if (ReferenceEquals(activityId, null))
             {
                 return null;
             }
@@ -296,7 +296,7 @@ namespace org.activiti.engine.impl.history
 
             }
 
-            if (!string.ReferenceEquals(execution.ParentId, null))
+            if (!ReferenceEquals(execution.ParentId, null))
             {
                 IHistoricActivityInstanceEntity historicActivityInstanceFromParent = findActivityInstance(execution.Parent, activityId, false, endTimeMustBeNull); // always false for create, we only check if it can be found
                 if (historicActivityInstanceFromParent != null)
@@ -305,7 +305,7 @@ namespace org.activiti.engine.impl.history
                 }
             }
 
-            if (createOnNotFound && !string.ReferenceEquals(activityId, null) && ((execution.CurrentFlowElement != null && execution.CurrentFlowElement is FlowNode) || execution.CurrentFlowElement == null))
+            if (createOnNotFound && !ReferenceEquals(activityId, null) && ((execution.CurrentFlowElement != null && execution.CurrentFlowElement is FlowNode) || execution.CurrentFlowElement == null))
             {
                 return createHistoricActivityInstanceEntity(execution);
             }
@@ -318,7 +318,7 @@ namespace org.activiti.engine.impl.history
             IList<IHistoricActivityInstanceEntity> cachedHistoricActivityInstances = EntityCache.findInCache(typeof(HistoricActivityInstanceEntityImpl)) as IList<IHistoricActivityInstanceEntity>;
             foreach (IHistoricActivityInstanceEntity cachedHistoricActivityInstance in cachedHistoricActivityInstances ?? new List<IHistoricActivityInstanceEntity>())
             {
-                if (!string.ReferenceEquals(activityId, null) && activityId.Equals(cachedHistoricActivityInstance.ActivityId) && (!endTimeMustBeNull || cachedHistoricActivityInstance.EndTime == null))
+                if (!ReferenceEquals(activityId, null) && activityId.Equals(cachedHistoricActivityInstance.ActivityId) && (!endTimeMustBeNull || cachedHistoricActivityInstance.EndTime == null))
                 {
                     if (executionId.Equals(cachedHistoricActivityInstance.ExecutionId))
                     {
@@ -352,7 +352,7 @@ namespace org.activiti.engine.impl.history
             historicActivityInstance.StartTime = now;
 
             // Inherit tenant id (if applicable)
-            if (!string.ReferenceEquals(execution.TenantId, null))
+            if (!ReferenceEquals(execution.TenantId, null))
             {
                 historicActivityInstance.TenantId = execution.TenantId;
             }
@@ -781,15 +781,15 @@ namespace org.activiti.engine.impl.history
                 comment.Type = CommentEntity_Fields.TYPE_EVENT;
                 comment.Time = Clock.CurrentTime;
                 comment.TaskId = taskId;
-                if (!string.ReferenceEquals(userId, null) || forceNullUserId)
+                if (!ReferenceEquals(userId, null) || forceNullUserId)
                 {
                     if (create)
                     {
-                        comment.Action = org.activiti.engine.task.Event_Fields.ACTION_ADD_USER_LINK;
+                        comment.Action = Event_Fields.ACTION_ADD_USER_LINK;
                     }
                     else
                     {
-                        comment.Action = org.activiti.engine.task.Event_Fields.ACTION_DELETE_USER_LINK;
+                        comment.Action = Event_Fields.ACTION_DELETE_USER_LINK;
                     }
                     comment.MessageParts = new string[] { userId, type };
                 }
@@ -797,11 +797,11 @@ namespace org.activiti.engine.impl.history
                 {
                     if (create)
                     {
-                        comment.Action = org.activiti.engine.task.Event_Fields.ACTION_ADD_GROUP_LINK;
+                        comment.Action = Event_Fields.ACTION_ADD_GROUP_LINK;
                     }
                     else
                     {
-                        comment.Action = org.activiti.engine.task.Event_Fields.ACTION_DELETE_GROUP_LINK;
+                        comment.Action = Event_Fields.ACTION_DELETE_GROUP_LINK;
                     }
                     comment.MessageParts = new string[] { groupId, type };
                 }
@@ -825,7 +825,7 @@ namespace org.activiti.engine.impl.history
                 comment.Type = CommentEntity_Fields.TYPE_EVENT;
                 comment.Time = Clock.CurrentTime;
                 comment.ProcessInstanceId = processInstanceId;
-                if (!string.ReferenceEquals(userId, null) || forceNullUserId)
+                if (!ReferenceEquals(userId, null) || forceNullUserId)
                 {
                     if (create)
                     {
@@ -893,7 +893,7 @@ namespace org.activiti.engine.impl.history
             // It makes no sense storing historic counterpart for an identity-link
             // that is related
             // to a process-definition only as this is never kept in history
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT) && (!string.ReferenceEquals(identityLink.ProcessInstanceId, null) || !string.ReferenceEquals(identityLink.TaskId, null)))
+            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT) && (!ReferenceEquals(identityLink.ProcessInstanceId, null) || !ReferenceEquals(identityLink.TaskId, null)))
             {
                 IHistoricIdentityLinkEntity historicIdentityLinkEntity = HistoricIdentityLinkEntityManager.create();
                 historicIdentityLinkEntity.Id = identityLink.Id;

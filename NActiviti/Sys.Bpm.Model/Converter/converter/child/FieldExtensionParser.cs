@@ -65,12 +65,12 @@ namespace org.activiti.bpmn.converter.child
                     {
                         //xtr.next();
 
-                        if (xtr.StartElement && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_FIELD_STRING.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                        if (xtr.IsStartElement() && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_FIELD_STRING.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                         {
                             extension.StringValue = xtr.ElementText.Trim();
 
                         }
-                        else if (xtr.StartElement && org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FIELD_EXPRESSION.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                        else if (xtr.IsStartElement() && org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FIELD_EXPRESSION.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                         {
                             extension.Expression = xtr.ElementText.Trim();
 

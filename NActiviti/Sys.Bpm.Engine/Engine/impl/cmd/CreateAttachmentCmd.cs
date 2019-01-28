@@ -52,7 +52,7 @@ namespace org.activiti.engine.impl.cmd
 
         public virtual IAttachment execute(ICommandContext commandContext)
         {
-            if (!string.ReferenceEquals(processInstanceId, null))
+            if (!ReferenceEquals(processInstanceId, null))
             {
                 IExecutionEntity execution = verifyExecutionParameters(commandContext);
             }
@@ -86,7 +86,7 @@ namespace org.activiti.engine.impl.cmd
                 // Forced to fetch the process-instance to associate the right
                 // process definition
                 string processDefinitionId = null;
-                if (!string.ReferenceEquals(attachment.ProcessInstanceId, null))
+                if (!ReferenceEquals(attachment.ProcessInstanceId, null))
                 {
                     IExecutionEntity process = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
                     if (process != null)

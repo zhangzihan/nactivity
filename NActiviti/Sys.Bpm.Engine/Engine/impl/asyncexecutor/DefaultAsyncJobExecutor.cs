@@ -15,11 +15,13 @@ using System.Threading;
  */
 namespace org.activiti.engine.impl.asyncexecutor
 {
-    using java.util.concurrent;
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.runtime;
+    using Sys;
+    using Sys.Concurrent;
     using System;
     using System.Collections.Concurrent;
 
@@ -53,7 +55,7 @@ namespace org.activiti.engine.impl.asyncexecutor
 
         /// <summary>
         /// The executor service used for job execution </summary>
-        protected internal ExecutorService executorService;
+        protected internal IExecutorService executorService;
 
         /// <summary>
         /// The time (in seconds) that is waited to gracefully shut down the threadpool used for job execution
@@ -94,6 +96,8 @@ namespace org.activiti.engine.impl.asyncexecutor
 
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
 
+        private readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<DefaultAsyncJobExecutor>();
+
         public virtual bool executeAsyncJob(IJob job)
         {
 
@@ -115,7 +119,6 @@ namespace org.activiti.engine.impl.asyncexecutor
                 }
                 catch (Exception e)
                 {
-
                     // When a RejectedExecutionException is caught, this means that the queue for holding the jobs 
                     // that are to be executed is full and can't store more.
                     // The job is now 'unlocked', meaning that the lock owner/time is set to null,
@@ -154,8 +157,8 @@ namespace org.activiti.engine.impl.asyncexecutor
         {
             private readonly DefaultAsyncJobExecutor outerInstance;
 
-            private IJob job;
-            private ICommandContext commandContext;
+            private readonly IJob job;
+            private readonly ICommandContext commandContext;
 
             public CommandAnonymousInnerClass(DefaultAsyncJobExecutor outerInstance, IJob job, ICommandContext commandContext)
             {
@@ -194,7 +197,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                 return;
             }
 
-            //log.info("Starting up the default async job executor [{}].", this.GetType().FullName);
+            logger.LogInformation($"Starting up the default async job executor [{this.GetType().FullName}].");
 
             if (timerJobRunnable == null)
             {
@@ -245,7 +248,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                     return;
                 }
 
-                //log.info("Shutting down the default async job executor [{}].", this.GetType().FullName);
+                logger.LogInformation($"Shutting down the default async job executor [{this.GetType().FullName}].");
 
                 if (timerJobRunnable != null)
                 {
@@ -277,16 +280,16 @@ namespace org.activiti.engine.impl.asyncexecutor
         {
             if (threadPoolQueue == null)
             {
-                //log.info("Creating thread pool queue of size {}", queueSize);
+                logger.LogInformation($"Creating thread pool queue of size {queueSize}");
                 threadPoolQueue = new ConcurrentQueue<ThreadStart>();
             }
 
             if (executorService == null)
             {
-                //log.info("Creating executor service with corePoolSize {}, maxPoolSize {} and keepAliveTime {}", corePoolSize, maxPoolSize, keepAliveTime);
-                throw new NotImplementedException();
+                logger.LogInformation($"Creating executor service with corePoolSize {corePoolSize}, maxPoolSize {maxPoolSize} and keepAliveTime {keepAliveTime}");
+                //throw new NotImplementedException();
                 //BasicThreadFactory threadFactory = (new BasicThreadFactory.Builder()).namingPattern("activiti-async-job-executor-thread-%d").build();
-                //executorService = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, threadPoolQueue, threadFactory);
+                executorService = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, threadPoolQueue);
             }
         }
 
@@ -294,7 +297,6 @@ namespace org.activiti.engine.impl.asyncexecutor
         {
             if (executorService != null)
             {
-
                 // Ask the thread pool to finish and exit
                 executorService.shutdown();
 
@@ -303,12 +305,12 @@ namespace org.activiti.engine.impl.asyncexecutor
                 {
                     if (!executorService.awaitTermination(secondsToWaitOnShutdown, TimeSpan.FromSeconds(3000)))
                     {
-                        //log.warn("Timeout during shutdown of async job executor. " + "The current running jobs could not end within " + secondsToWaitOnShutdown + " seconds after shutdown operation.");
+                        logger.LogWarning($"Timeout during shutdown of async job executor. The current running jobs could not end within {secondsToWaitOnShutdown} seconds after shutdown operation.");
                     }
                 }
                 catch (ThreadInterruptedException e)
                 {
-                    //log.warn("Interrupted while shutting down the async job executor. ", e);
+                    logger.LogWarning($"Interrupted while shutting down the async job executor. {e}");
                 }
 
                 executorService = null;
@@ -347,7 +349,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                 }
                 catch (ThreadInterruptedException e)
                 {
-                    //log.warn("Interrupted while waiting for the async job acquisition thread to terminate", e);
+                    logger.LogWarning($"Interrupted while waiting for the async job acquisition thread to terminate {e}");
                 }
                 asyncJobAcquisitionThread = null;
             }
@@ -363,7 +365,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                 }
                 catch (ThreadInterruptedException e)
                 {
-                    //log.warn("Interrupted while waiting for the timer job acquisition thread to terminate", e);
+                    logger.LogWarning($"Interrupted while waiting for the timer job acquisition thread to terminate {e}");
                 }
                 timerJobAcquisitionThread = null;
             }
@@ -392,7 +394,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                 }
                 catch (ThreadInterruptedException e)
                 {
-                    //log.warn("Interrupted while waiting for the reset expired jobs thread to terminate", e);
+                    logger.LogWarning($"Interrupted while waiting for the reset expired jobs thread to terminate {e}");
                 }
 
                 resetExpiredJobThread = null;
@@ -566,7 +568,7 @@ namespace org.activiti.engine.impl.asyncexecutor
         }
 
 
-        public virtual ExecutorService ExecutorService
+        public virtual IExecutorService ExecutorService
         {
             get
             {

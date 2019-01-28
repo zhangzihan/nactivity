@@ -21,7 +21,7 @@ namespace org.activiti.engine.impl.bpmn.helper
 
 	  public static bool isSkipExpressionEnabled(IExecutionEntity execution, string skipExpression)
 	  {
-		if (string.ReferenceEquals(skipExpression, null))
+		if (ReferenceEquals(skipExpression, null))
 		{
 		  return false;
 		}

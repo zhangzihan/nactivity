@@ -77,7 +77,7 @@ namespace org.activiti.engine.impl
 
         protected internal virtual T variableValueEqualsIgnoreCase(string name, string value, bool localScope)
         {
-            if (string.ReferenceEquals(value, null))
+            if (ReferenceEquals(value, null))
             {
                 throw new ActivitiIllegalArgumentException("value is null");
             }
@@ -92,7 +92,7 @@ namespace org.activiti.engine.impl
 
         protected internal virtual T variableValueNotEqualsIgnoreCase(string name, string value, bool localScope)
         {
-            if (string.ReferenceEquals(value, null))
+            if (ReferenceEquals(value, null))
             {
                 throw new ActivitiIllegalArgumentException("value is null");
             }
@@ -179,7 +179,7 @@ namespace org.activiti.engine.impl
 
         protected internal virtual void addVariable(string name, object value, QueryOperator @operator, bool localScope)
         {
-            if (string.ReferenceEquals(name, null))
+            if (ReferenceEquals(name, null))
             {
                 throw new ActivitiIllegalArgumentException("name is null");
             }
@@ -189,13 +189,13 @@ namespace org.activiti.engine.impl
                 // NOT_EQUALS
                 switch (@operator)
                 {
-                    case org.activiti.engine.impl.QueryOperator.GREATER_THAN:
+                    case QueryOperator.GREATER_THAN:
                         throw new ActivitiIllegalArgumentException("Booleans and null cannot be used in 'greater than' condition");
-                    case org.activiti.engine.impl.QueryOperator.LESS_THAN:
+                    case QueryOperator.LESS_THAN:
                         throw new ActivitiIllegalArgumentException("Booleans and null cannot be used in 'less than' condition");
-                    case org.activiti.engine.impl.QueryOperator.GREATER_THAN_OR_EQUAL:
+                    case QueryOperator.GREATER_THAN_OR_EQUAL:
                         throw new ActivitiIllegalArgumentException("Booleans and null cannot be used in 'greater than or equal' condition");
-                    case org.activiti.engine.impl.QueryOperator.LESS_THAN_OR_EQUAL:
+                    case QueryOperator.LESS_THAN_OR_EQUAL:
                         throw new ActivitiIllegalArgumentException("Booleans and null cannot be used in 'less than or equal' condition");
                 }
 

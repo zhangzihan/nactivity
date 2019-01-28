@@ -42,11 +42,11 @@ namespace org.activiti.engine.impl.cmd
 
         public virtual object execute(ICommandContext commandContext)
         {
-            if (string.ReferenceEquals(executionId, null))
+            if (ReferenceEquals(executionId, null))
             {
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }
-            if (string.ReferenceEquals(variableName, null))
+            if (ReferenceEquals(variableName, null))
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }

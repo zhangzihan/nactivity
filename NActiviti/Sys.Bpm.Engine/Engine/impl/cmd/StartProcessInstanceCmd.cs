@@ -76,7 +76,7 @@ namespace org.activiti.engine.impl.cmd
                 }
 
             }
-            else if (!string.ReferenceEquals(processDefinitionKey, null) && (string.ReferenceEquals(tenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId)))
+            else if (!ReferenceEquals(processDefinitionKey, null) && (ReferenceEquals(tenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId)))
             {
 
                 processDefinition = deploymentCache.findDeployedLatestProcessDefinitionByKey(processDefinitionKey);
@@ -86,7 +86,7 @@ namespace org.activiti.engine.impl.cmd
                 }
 
             }
-            else if (!string.ReferenceEquals(processDefinitionKey, null) && !string.ReferenceEquals(tenantId, null) && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
+            else if (!ReferenceEquals(processDefinitionKey, null) && !ReferenceEquals(tenantId, null) && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
             {
 
                 processDefinition = deploymentCache.findDeployedLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);

@@ -36,7 +36,7 @@ namespace org.activiti.engine.impl.cmd
         protected internal override object execute(ICommandContext commandContext, ITaskEntity task)
         {
             task.DelegationState = DelegationState.PENDING;
-            if (string.ReferenceEquals(task.Owner, null))
+            if (ReferenceEquals(task.Owner, null))
             {
                 task.Owner = task.Assignee;
             }
