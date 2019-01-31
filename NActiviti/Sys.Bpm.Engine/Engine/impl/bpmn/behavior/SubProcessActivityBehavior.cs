@@ -30,7 +30,6 @@ namespace org.activiti.engine.impl.bpmn.behavior
     [Serializable]
     public class SubProcessActivityBehavior : AbstractBpmnActivityBehavior
     {
-
         private const long serialVersionUID = 1L;
 
         public override void execute(IExecutionEntity execution)

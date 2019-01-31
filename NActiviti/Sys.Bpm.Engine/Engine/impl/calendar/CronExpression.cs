@@ -193,7 +193,7 @@ namespace org.activiti.engine.impl.calendar
         }
 
         private string cronExpression;
-        private TimeZone timeZone;
+        private TimeZoneInfo timeZone;
         [NonSerialized]
         protected internal SortedSet<int> seconds;
         [NonSerialized]
@@ -237,7 +237,7 @@ namespace org.activiti.engine.impl.calendar
         ///          The time zone that will be used for calculations
         /// </param>
         /// <exception cref="java.text.Exception">
-        public CronExpression(string cronExpression, IClockReader clockReader, TimeZone timeZone) : this(cronExpression, clockReader)
+        public CronExpression(string cronExpression, IClockReader clockReader, TimeZoneInfo timeZone) : this(cronExpression, clockReader)
         {
             this.timeZone = timeZone;
         }
@@ -265,7 +265,7 @@ namespace org.activiti.engine.impl.calendar
         /// <summary>
         /// Returns the time zone for which this <code>CronExpression</code> will be resolved.
         /// </summary>
-        public virtual TimeZone TimeZone
+        public virtual TimeZoneInfo TimeZone
         {
             get
             {

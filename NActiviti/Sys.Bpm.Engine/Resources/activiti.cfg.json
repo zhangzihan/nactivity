@@ -7,6 +7,8 @@
   "asyncExecutorThreadKeepAliveTime": 5000,
   "asyncExecutorActivate": true,
   "asyncFailedJobWaitTime": 1,
+  "userServiceProxyBaseUrl": "http://localhost:5005",
+  "enableVerboseExecutionTreeLogging": true,
   "mailServerPort": "5025",
   "mailServers": [
     {

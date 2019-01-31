@@ -21,6 +21,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
     using org.activiti.engine.@delegate.@event.impl;
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.context;
+    using org.activiti.engine.impl.@delegate;
     using org.activiti.engine.impl.el;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
@@ -34,9 +35,8 @@ namespace org.activiti.engine.impl.bpmn.behavior
     /// 
     /// </summary>
     [Serializable]
-    public class CallActivityBehavior : SubProcessActivityBehavior
+    public class CallActivityBehavior : SubProcessActivityBehavior, ISubProcessActivityBehavior
     {
-
         private const long serialVersionUID = 1L;
 
         protected internal string processDefinitonKey;
@@ -132,7 +132,6 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 {
                     IExpression expression = expressionManager.createExpression(ioParameter.SourceExpression.Trim());
                     value = expression.getValue(execution);
-
                 }
                 else
                 {
@@ -153,6 +152,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             Context.Agenda.planContinueProcessOperation(subProcessInitialExecution);
 
             Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createProcessStartedEvent(subProcessInitialExecution, variables, false));
+
         }
 
         public virtual void completing(IExecutionEntity execution, IExecutionEntity subProcessInstance)
@@ -170,7 +170,6 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 {
                     IExpression expression = expressionManager.createExpression(ioParameter.SourceExpression.Trim());
                     value = expression.getValue(subProcessInstance);
-
                 }
                 else
                 {

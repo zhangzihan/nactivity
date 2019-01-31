@@ -9,7 +9,9 @@ namespace java.util.concurrent
 
         public void execute(ThreadStart runnable)
         {
-            runnable();
+            this.runnable = runnable;
+
+            this.runnable.Invoke();
         }
 
         internal void shutdown()

@@ -14,7 +14,14 @@
  */
 namespace org.activiti.engine.impl.bpmn.behavior
 {
+    using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json.Linq;
+    using org.activiti.engine.@delegate;
+    using org.activiti.engine.impl.bpmn.helper;
+    using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.persistence.entity;
+    using org.activiti.engine.impl.scripting;
+    using Sys;
 
     /// <summary>
     /// activity implementation of the BPMN 2.0 script task.
@@ -26,6 +33,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
     [Serializable]
     public class ScriptTaskActivityBehavior : TaskActivityBehavior
     {
+        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<ScriptTaskActivityBehavior>();
 
         private const long serialVersionUID = 1L;
 
@@ -50,55 +58,50 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         public override void execute(IExecutionEntity execution)
         {
-            throw new System.NotImplementedException();
-            //ScriptingEngines scriptingEngines = Context.ProcessEngineConfiguration.ScriptingEngines;
+            ScriptingEngines scriptingEngines = Context.ProcessEngineConfiguration.ScriptingEngines;
 
-            //if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
-            //{
-            //    ObjectNode taskElementProperties = Context.getBpmnOverrideElementProperties(scriptTaskId, execution.ProcessDefinitionId);
-            //    if (taskElementProperties != null && taskElementProperties.has(org.activiti.engine.DynamicBpmnConstants_Fields.SCRIPT_TASK_SCRIPT))
-            //    {
-            //        string overrideScript = taskElementProperties[org.activiti.engine.DynamicBpmnConstants_Fields.SCRIPT_TASK_SCRIPT].ToString();
-            //        if (!string.IsNullOrWhiteSpace(overrideScript) && !overrideScript.Equals(script))
-            //        {
-            //            script = overrideScript;
-            //        }
-            //    }
-            //}
+            if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
+            {
+                JToken taskElementProperties = Context.getBpmnOverrideElementProperties(scriptTaskId, execution.ProcessDefinitionId);
+                if (taskElementProperties != null && taskElementProperties[DynamicBpmnConstants_Fields.SCRIPT_TASK_SCRIPT] != null)
+                {
+                    string overrideScript = taskElementProperties[DynamicBpmnConstants_Fields.SCRIPT_TASK_SCRIPT].ToString();
+                    if (!string.IsNullOrWhiteSpace(overrideScript) && !overrideScript.Equals(script))
+                    {
+                        script = overrideScript;
+                    }
+                }
+            }
 
-            //bool noErrors = true;
-            //try
-            //{
-            //    object result = scriptingEngines.evaluate(script, language, execution, storeScriptVariables);
+            bool noErrors = true;
+            try
+            {
+                object result = scriptingEngines.evaluate(script, execution);
 
-            //    if (!string.ReferenceEquals(resultVariable, null))
-            //    {
-            //        execution.setVariable(resultVariable, result);
-            //    }
+                if (!string.ReferenceEquals(resultVariable, null))
+                {
+                    execution.setVariable(resultVariable, result);
+                }
 
-            //}
-            //catch (ActivitiException e)
-            //{
+            }
+            catch (ActivitiException e)
+            {
+                logger.LogWarning("Exception while executing " + execution.CurrentFlowElement.Id + " : " + e.Message);
 
-            //    //LOGGER.warn("Exception while executing " + execution.CurrentFlowElement.Id + " : " + e.Message);
-
-            //    noErrors = false;
-            //    Exception rootCause = e;//ExceptionUtils.getRootCause(e);
-            //    if (rootCause is BpmnError)
-            //    {
-            //        ErrorPropagation.propagateError((BpmnError)rootCause, execution);
-            //    }
-            //    else
-            //    {
-            //        throw e;
-            //    }
-            //}
-            //if (noErrors)
-            //{
-            //    leave(execution);
-            //}
+                noErrors = false;
+                if (e is BpmnError)
+                {
+                    ErrorPropagation.propagateError((BpmnError)e, execution);
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+            if (noErrors)
+            {
+                leave(execution);
+            }
         }
-
     }
-
 }

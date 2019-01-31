@@ -61,12 +61,12 @@ namespace org.activiti.engine.impl.util
 
 
 
-        public virtual DateTime getCurrentCalendar(TimeZone timeZone)
+        public virtual DateTime getCurrentCalendar(TimeZoneInfo timeZone)
         {
             return TimeZoneUtil.convertToTimeZone(CurrentCalendar, timeZone);
         }
 
-        public virtual TimeZone CurrentTimeZone
+        public virtual TimeZoneInfo CurrentTimeZone
         {
             get
             {

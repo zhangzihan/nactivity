@@ -16,7 +16,6 @@
 namespace org.activiti.engine.impl.el
 {
     using org.activiti.engine.@delegate;
-    using org.activiti.engine.@delegate;
     using org.activiti.engine.impl.persistence.entity;
 
     /// <summary>

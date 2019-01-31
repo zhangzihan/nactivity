@@ -17,6 +17,7 @@ namespace org.activiti.engine.debug
     using org.activiti.engine.@delegate;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
+    using System;
 
     /// 
     public class ExecutionTreeUtil
@@ -24,7 +25,6 @@ namespace org.activiti.engine.debug
 
         public static ExecutionTree buildExecutionTree(IExecutionEntity executionEntity)
         {
-
             // Find highest parent
             IExecutionEntity parentExecution = executionEntity;
             while (!ReferenceEquals(parentExecution.ParentId, null) || !ReferenceEquals(((IExecution)parentExecution).SuperExecutionId, null))
@@ -127,6 +127,27 @@ namespace org.activiti.engine.debug
             return executionTree;
         }
 
+        private static void fillExecutionTree(ExecutionTreeNode parentNode, IDictionary<string, IList<IExecutionEntity>> parentMapping)
+        {
+            string parentId = parentNode.ExecutionEntity.Id;
+            if (parentMapping.ContainsKey(parentId))
+            {
+                IList<IExecutionEntity> childExecutions = parentMapping[parentId];
+                IList<ExecutionTreeNode> childNodes = new List<ExecutionTreeNode>(childExecutions.Count);
+
+                foreach (IExecutionEntity childExecutionEntity in childExecutions)
+                {
+                    ExecutionTreeNode childNode = new ExecutionTreeNode(childExecutionEntity);
+                    childNode.Parent = parentNode;
+                    childNodes.Add(childNode);
+
+                    fillExecutionTree(childNode, parentMapping);
+                }
+
+                parentNode.Children = childNodes;
+            }
+        }
+
         protected internal static void fillExecutionTree(ExecutionTree executionTree, IDictionary<string, IList<IExecutionEntity>> parentMapping)
         {
             if (executionTree.Root == null)
@@ -134,34 +155,7 @@ namespace org.activiti.engine.debug
                 throw new ActivitiException("Programmatic error: the list of passed executions in the argument of the method should contain the process instance execution");
             }
 
-            // Now build the tree, top-down
-            LinkedList<ExecutionTreeNode> executionsToHandle = new LinkedList<ExecutionTreeNode>();
-            executionsToHandle.AddLast(executionTree.Root);
-            var @iterator = executionsToHandle.GetEnumerator();
-            while (@iterator.MoveNext())
-            {
-                ExecutionTreeNode parentNode = @iterator.Current;
-                string parentId = parentNode.ExecutionEntity.Id;
-                if (parentMapping.ContainsKey(parentId))
-                {
-                    IList<IExecutionEntity> childExecutions = parentMapping[parentId];
-                    IList<ExecutionTreeNode> childNodes = new List<ExecutionTreeNode>(childExecutions.Count);
-
-                    foreach (IExecutionEntity childExecutionEntity in childExecutions)
-                    {
-
-                        ExecutionTreeNode childNode = new ExecutionTreeNode(childExecutionEntity);
-                        childNode.Parent = parentNode;
-                        childNodes.Add(childNode);
-
-                        executionsToHandle.AddLast(childNode);
-                    }
-
-                    parentNode.Children = childNodes;
-
-                }
-            }
+            fillExecutionTree(executionTree.Root, parentMapping);
         }
-
     }
 }

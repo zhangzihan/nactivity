@@ -39,7 +39,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
     /// 
     /// </summary>
     [Serializable]
-    public abstract class MultiInstanceActivityBehavior : SubProcessActivityBehavior
+    public abstract class MultiInstanceActivityBehavior : SubProcessActivityBehavior, ISubProcessActivityBehavior
     {
         private static readonly ILogger<MultiInstanceActivityBehavior> log = ProcessEngineServiceProvider.LoggerService<MultiInstanceActivityBehavior>();
 

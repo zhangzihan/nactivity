@@ -26,9 +26,9 @@ namespace org.activiti.engine.runtime
 
 	  DateTime CurrentCalendar {get;}
 
-	  DateTime getCurrentCalendar(TimeZone timeZone);
+	  DateTime getCurrentCalendar(TimeZoneInfo timeZone);
 
-	  TimeZone CurrentTimeZone {get;}
+        TimeZoneInfo CurrentTimeZone {get;}
 
 	}
 

@@ -9,8 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CS-Script.Core" Version="1.0.6" />
     <PackageReference Include="DatabaseSchemaReader" Version="2.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="2.10.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.2.0" />
@@ -35,7 +37,6 @@
     <Compile Remove="Engine\impl\scripting\JuelScriptEngineFactory.cs" />
     <Compile Remove="Engine\impl\scripting\ScriptBindings.cs" />
     <Compile Remove="Engine\impl\scripting\ScriptBindingsFactory.cs" />
-    <Compile Remove="Engine\impl\scripting\ScriptingEngines.cs" />
     <Compile Remove="Image\impl\DefaultProcessDiagramCanvas.cs" />
     <Compile Remove="Image\impl\DefaultProcessDiagramGenerator.cs" />
     <Compile Remove="Image\impl\icon\BusinessRuleTaskIconType.cs" />
@@ -81,7 +82,6 @@
     <None Include="Engine\impl\scripting\JuelScriptEngineFactory.cs" />
     <None Include="Engine\impl\scripting\ScriptBindings.cs" />
     <None Include="Engine\impl\scripting\ScriptBindingsFactory.cs" />
-    <None Include="Engine\impl\scripting\ScriptingEngines.cs" />
     <None Include="Image\impl\DefaultProcessDiagramCanvas.cs" />
     <None Include="Image\impl\DefaultProcessDiagramGenerator.cs" />
     <None Include="Image\impl\icon\BusinessRuleTaskIconType.cs" />

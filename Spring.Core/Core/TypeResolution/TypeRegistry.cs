@@ -425,6 +425,8 @@ namespace Spring.Core.TypeResolution
         /// </summary>
         public const string NullableBoolArrayAlias = "bool?[]";
 
+        public const string NumberUtils = "NumberUtils";
+
         #endregion
 
         #region Fields
@@ -547,6 +549,8 @@ namespace Spring.Core.TypeResolution
 
                 types[NullableBoolAlias] = typeof(bool?);
                 types[NullableBoolArrayAlias] = typeof(bool?[]);
+
+                types[NumberUtils] = typeof(NumberUtils);
 
                 // register user-configured type aliases
                 ConfigurationUtils.GetSection(TypeAliasesSectionName);

@@ -14,64 +14,31 @@
  */
 namespace org.activiti.engine.impl.scripting
 {
-
-
     using org.activiti.engine.@delegate;
+    using org.activiti.engine.impl.persistence.entity;
+    using System.Collections.Concurrent;
 
     /// 
     /// 
     /// 
     public class ScriptingEngines
     {
+        public const string DEFAULT_SCRIPTING_LANGUAGE = "C#";
 
-        public const string DEFAULT_SCRIPTING_LANGUAGE = "juel";
-        public const string GROOVY_SCRIPTING_LANGUAGE = "groovy";
-
-        private readonly ScriptEngineManager scriptEngineManager;
-        protected internal ScriptBindingsFactory scriptBindingsFactory;
+        //private readonly ScriptEngineManager scriptEngineManager;
+        //protected internal ScriptBindingsFactory scriptBindingsFactory;
 
         protected internal bool cacheScriptingEngines = true;
-        protected internal IDictionary<string, ScriptEngine> cachedEngines;
+        protected static internal ConcurrentDictionary<string, dynamic> cachedEngines;
 
-        public ScriptingEngines(ScriptBindingsFactory scriptBindingsFactory) : this(new ScriptEngineManager())
+        public ScriptingEngines()
         {
-            this.scriptBindingsFactory = scriptBindingsFactory;
+            cachedEngines = new ConcurrentDictionary<string, dynamic>();
         }
 
-        public ScriptingEngines(ScriptEngineManager scriptEngineManager)
-        {
-            this.scriptEngineManager = scriptEngineManager;
-            cachedEngines = new Dictionary<string, ScriptEngine>();
-        }
-
-        public virtual ScriptingEngines addScriptEngineFactory(ScriptEngineFactory scriptEngineFactory)
-        {
-            scriptEngineManager.registerEngineName(scriptEngineFactory.EngineName, scriptEngineFactory);
-            return this;
-        }
-
-        public virtual IList<ScriptEngineFactory> ScriptEngineFactories
-        {
-            set
-            {
-                if (value != null)
-                {
-                    foreach (ScriptEngineFactory scriptEngineFactory in value)
-                    {
-                        scriptEngineManager.registerEngineName(scriptEngineFactory.EngineName, scriptEngineFactory);
-                    }
-                }
-            }
-        }
-
-        public virtual object evaluate(string script, string language, IVariableScope variableScope)
-        {
-            return evaluate(script, language, createBindings(variableScope));
-        }
-
-        public virtual object evaluate(string script, string language, IVariableScope variableScope, bool storeScriptVariables)
-        {
-            return evaluate(script, language, createBindings(variableScope, storeScriptVariables));
+        public virtual object evaluate(string script, IExecutionEntity execution)
+        {   
+            return evaluate(script, execution, createBindings(execution));
         }
 
         public virtual bool CacheScriptingEngines
@@ -86,97 +53,20 @@ namespace org.activiti.engine.impl.scripting
             }
         }
 
-
-        protected internal virtual object evaluate(string script, string language, Bindings bindings)
+        protected virtual object evaluate(string script, IExecutionEntity execution, IDictionary<string, object> bindings)
         {
-            ScriptEngine scriptEngine = getEngineByName(language);
-            try
-            {
-                return scriptEngine.eval(script, bindings);
-            }
-            catch (ScriptException e)
-            {
-                throw new ActivitiException("problem evaluating script: " + e.Message, e);
-            }
+            //CSScriptLib.CSScript.RoslynEvaluator.
+            return null;
         }
 
-        protected internal virtual ScriptEngine getEngineByName(string language)
+        protected internal virtual IDictionary<string, object> createBindings(IVariableScope variableScope)
         {
-            ScriptEngine scriptEngine = null;
-
-            if (cacheScriptingEngines)
+            if (variableScope == null)
             {
-                scriptEngine = cachedEngines[language];
-                if (scriptEngine == null)
-                {
-                    scriptEngine = scriptEngineManager.getEngineByName(language);
-
-                    if (scriptEngine != null)
-                    {
-                        // ACT-1858: Special handling for groovy engine regarding GC
-                        if (GROOVY_SCRIPTING_LANGUAGE.Equals(language))
-                        {
-                            try
-                            {
-                                scriptEngine.Context.setAttribute("#jsr223.groovy.engine.keep.globals", "weak", ScriptContext.ENGINE_SCOPE);
-                            }
-                            catch (Exception)
-                            {
-                                // ignore this, in case engine doesn't support the
-                                // passed attribute
-                            }
-                        }
-
-                        // Check if script-engine allows caching, using "THREADING"
-                        // parameter as defined in spec
-                        object threadingParameter = scriptEngine.Factory.getParameter("THREADING");
-                        if (threadingParameter != null)
-                        {
-                            // Add engine to cache as any non-null result from the
-                            // threading-parameter indicates at least MT-access
-                            cachedEngines[language] = scriptEngine;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                scriptEngine = scriptEngineManager.getEngineByName(language);
+                return null;
             }
 
-            if (scriptEngine == null)
-            {
-                throw new ActivitiException("Can't find scripting engine for '" + language + "'");
-            }
-            return scriptEngine;
+            return variableScope.Variables;
         }
-
-        /// <summary>
-        /// override to build a spring aware ScriptingEngines </summary>
-        protected internal virtual Bindings createBindings(IVariableScope variableScope)
-        {
-            return scriptBindingsFactory.createBindings(variableScope);
-        }
-
-        /// <summary>
-        /// override to build a spring aware ScriptingEngines </summary>
-        protected internal virtual Bindings createBindings(IVariableScope variableScope, bool storeScriptVariables)
-        {
-            return scriptBindingsFactory.createBindings(variableScope, storeScriptVariables);
-        }
-
-        public virtual ScriptBindingsFactory ScriptBindingsFactory
-        {
-            get
-            {
-                return scriptBindingsFactory;
-            }
-            set
-            {
-                this.scriptBindingsFactory = value;
-            }
-        }
-
     }
-
 }

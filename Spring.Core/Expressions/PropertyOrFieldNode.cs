@@ -94,7 +94,15 @@ namespace Spring.Expressions
                     // try to initialize node as ExpandoObject value
                     if (contextType == typeof(System.Dynamic.ExpandoObject))
                     {
-                        accessor = new ExpandoObjectValueAccessor(memberName);
+                        Type type = TypeRegistry.ResolveType(memberName);
+                        if (type != null)
+                        {
+                            accessor = new TypeValueAccessor(TypeResolutionUtils.ResolveType(memberName));
+                        }
+                        else
+                        {
+                            accessor = new ExpandoObjectValueAccessor(memberName);
+                        }
                     }
                     // try to initialize node as enum value first
                     else if (contextType.IsEnum)

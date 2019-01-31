@@ -107,7 +107,7 @@ namespace org.activiti.engine.impl.calendar
                 var key = string.IsNullOrWhiteSpace(version) ? DefaultScheduleVersion.Value : Convert.ToInt32(version);
                 if (resolvers.TryGetValue(key, out var rev))
                 {
-                    DateTime? date = rev.resolve(duedateDescription, clockReader, ReferenceEquals(timeZone, null) ? clockReader.CurrentTimeZone : TimeZone.CurrentTimeZone);//.FindSystemTimeZoneById(timeZone));
+                    DateTime? date = rev.resolve(duedateDescription, clockReader, ReferenceEquals(timeZone, null) ? clockReader.CurrentTimeZone : TimeZoneInfo.Local);
 
                     log.LogInformation($"Calculated Date: {(!date.HasValue ? "Will Not Run Again" : date.Value.ToString("yyyy-MM-dd HH:mm:ss"))}");
 

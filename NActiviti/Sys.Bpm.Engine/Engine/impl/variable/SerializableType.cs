@@ -97,61 +97,49 @@ namespace org.activiti.engine.impl.variable
                 return null;
             }
 
-            //MemoryStream ms = new MemoryStream();
-            //BsonDataWriter bson = createObjectOutputStream(ms);
-
-            //byte[] bytes = null;
-
             try
             {
-
-                //JsonSerializer serializer = JsonSerializer.Create();
-
-                string json = JsonConvert.SerializeObject(value, new JsonSerializerSettings
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    TypeNameHandling = TypeNameHandling.All
-                });
-
-                return Encoding.UTF8.GetBytes(json);
-                //serializer.Serialize(bson, value);
-                //ms.Seek(0, SeekOrigin.Begin);
+                    using (BsonDataWriter datawriter = new BsonDataWriter(ms))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        serializer.Serialize(datawriter, value);
+                        return ms.ToArray();
+                    }
+                }
             }
             catch (Exception e)
             {
                 throw new ActivitiException("Couldn't serialize value '" + value + "' in variable '" + valueFields.Name + "'", e);
             }
-            finally
-            {
-               // bson.Close();
-                //IoUtil.closeSilently(ms);
-            }
-            //return ms.ToArray();
         }
 
         public virtual object deserialize(byte[] bytes, IValueFields valueFields)
         {
-            //MemoryStream bais = new MemoryStream(bytes);
-            //BsonDataReader bson = createObjectInputStream(bais);
-
             try
             {
-                string value = Encoding.UTF8.GetString(bytes);
-                object deserializedObject = JsonConvert.DeserializeObject(value, new JsonSerializerSettings
+                using (MemoryStream ms = new MemoryStream(bytes))
                 {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    TypeNameHandling = TypeNameHandling.All
-                });
+                    using (BsonDataReader reader = new BsonDataReader(ms))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        return serializer.Deserialize(reader);
+                    }
+                }
 
-                return deserializedObject;
+                //    string value = Encoding.UTF8.GetString(bytes);
+                //    object deserializedObject = JsonConvert.DeserializeObject(value, new JsonSerializerSettings
+                //    {
+                //        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                //        TypeNameHandling = TypeNameHandling.All
+                //    });
+
+                //    return deserializedObject;
             }
             catch (Exception e)
             {
                 throw new ActivitiException("Couldn't deserialize object in variable '" + valueFields.Name + "'", e);
-            }
-            finally
-            {
-                //IoUtil.closeSilently(bais);
             }
         }
 
@@ -160,34 +148,6 @@ namespace org.activiti.engine.impl.variable
             // TODO don't we need null support here?
             //return value is Serializable;
             return true;
-        }
-
-        protected internal virtual BsonDataReader createObjectInputStream(Stream stream)
-        {
-            return new BsonDataReader(stream);
-        }
-
-        //private class ObjectInputStreamAnonymousInnerClass
-        //{
-        //    private readonly SerializableType outerInstance;
-
-        //    private DataContractSerializer serializer;
-
-        //    public ObjectInputStreamAnonymousInnerClass(SerializableType outerInstance, System.IO.Stream @is)
-        //    {
-        //        this.outerInstance = outerInstance;
-        //        serializer = new DataContractSerializer()
-        //    }
-
-        //    protected internal virtual Type resolveClass(ObjectStreamClass desc)
-        //    {
-        //        return ReflectUtil.loadClass(desc.Name);
-        //    }
-        //}
-
-        protected internal virtual BsonDataWriter createObjectOutputStream(MemoryStream ms)
-        {
-            return new BsonDataWriter(ms);
         }
     }
 

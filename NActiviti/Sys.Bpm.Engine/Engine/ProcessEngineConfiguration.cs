@@ -26,6 +26,7 @@ namespace org.activiti.engine
     using Sys;
     using Sys.Bpm;
     using Sys.Data;
+    using Sys.Workflow.Engine.Bpmn.Rules;
 
 
     /// <summary>
@@ -210,6 +211,8 @@ namespace org.activiti.engine
         public abstract IRuntimeService RuntimeService { get; protected set; }
 
         public abstract ITaskService TaskService { get; protected set; }
+
+        public IGetBookmarkRuleProvider GetBookmarkRuleProvider { get; protected set; }
 
         public abstract IHistoryService HistoryService { get; protected set; }
 

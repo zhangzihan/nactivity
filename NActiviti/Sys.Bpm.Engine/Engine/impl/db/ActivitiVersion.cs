@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace org.activiti.engine.impl.db
 {
@@ -52,6 +53,11 @@ namespace org.activiti.engine.impl.db
             {
                 return false;
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return alternativeVersionStrings.Sum(x => x.GetHashCode()) >> 2;
         }
 
         public override bool Equals(object obj)

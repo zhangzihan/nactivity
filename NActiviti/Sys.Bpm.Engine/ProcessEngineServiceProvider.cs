@@ -16,6 +16,7 @@ using Spring.Core;
 using Spring.Core.TypeResolution;
 using Sys.Bpm.Engine.impl;
 using Sys.Data;
+using Sys.Workflow.Engine.Bpmn.Rules;
 using System;
 using System.Data.Common;
 using System.IO;
@@ -118,6 +119,13 @@ namespace Sys
             services.AddSingleton<ProcessEngineFactory>(sp =>
             {
                 return ProcessEngineFactory.Instance;
+            });
+
+            services.AddSingleton<IUserServiceProxy>(sp =>
+            {
+                var cfg = sp.GetService<IConfiguration>();
+
+                return new UserServiceProxy(cfg["userServiceProxyBaseUrl"]);
             });
 
             services.AddTransient<IRepositoryService>(sp => sp.GetRequiredService<IProcessEngine>().RepositoryService);

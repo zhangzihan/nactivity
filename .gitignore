@@ -248,3 +248,5 @@ NActiviti/BpmnTest/appsettings.json
 BpmnWebTest/Test/**
 NActiviti/BpmnTest/Test/**
 NActiviti/Sys.Bpm.Rest/Test/**
+
+gloable.json

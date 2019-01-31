@@ -298,12 +298,12 @@ namespace Spring.Util
             {
                 if (SystemUtils.MonoRuntime)
                 {
-                    SByte x = (sbyte) n;
-                    SByte y = (sbyte) m;
-                    int result = (int) x | (int) y;
+                    SByte x = (sbyte)n;
+                    SByte y = (sbyte)m;
+                    int result = (int)x | (int)y;
                     return SByte.Parse(result.ToString());
                 }
-                return (SByte) ((SByte) m | (SByte) n);
+                return (SByte)((SByte)m | (SByte)n);
             }
             throw new ArgumentException(string.Format("'{0}' and/or '{1}' are not one of the supported integral types.", m, n));
         }
@@ -460,9 +460,15 @@ namespace Spring.Util
         /// </summary>
         /// <param name="m">The first number.</param>
         /// <param name="n">The second number.</param>
-        public static object Divide(object m, object n)
+        /// <param name="forceDecimal">强制使用小数计算</param>
+        public static object Divide(object m, object n, bool forceDecimal = false)
         {
             CoerceTypes(ref m, ref n);
+
+            if (forceDecimal)
+            {
+                return Convert.ToDecimal(m) / Convert.ToDecimal(n);
+            }
 
             if (n is Int32)
                 return (Int32)m / (Int32)n;

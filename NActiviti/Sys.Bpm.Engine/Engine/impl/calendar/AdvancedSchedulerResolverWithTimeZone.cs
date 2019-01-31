@@ -13,7 +13,7 @@ namespace org.activiti.engine.impl.calendar
     public class AdvancedSchedulerResolverWithTimeZone : IAdvancedSchedulerResolver
     {
 
-        public virtual DateTime? resolve(string duedateDescription, IClockReader clockReader, TimeZone timeZone)
+        public virtual DateTime? resolve(string duedateDescription, IClockReader clockReader, TimeZoneInfo timeZone)
         {
             DateTime? nextRun = null;
 

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace org.activiti.engine.impl.variable
 {
-
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Bson;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.interceptor;
     using System.IO;
@@ -154,17 +155,13 @@ namespace org.activiti.engine.impl.variable
         {
             try
             {
-                string[] toStore = ids.ToArray();
-                using (System.IO.MemoryStream baos = new System.IO.MemoryStream())
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    using (var ds = new Newtonsoft.Json.Bson.BsonWriter(baos))
+                    using (BsonDataWriter datawriter = new BsonDataWriter(ms))
                     {
-                        Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
-                        serializer.Serialize(ds, toStore);
-                        baos.Seek(0, SeekOrigin.Begin);
-                        byte[] data = new byte[baos.Length];
-                        baos.Read(data, 0, data.Length);
-                        return data;
+                        JsonSerializer serializer = new JsonSerializer();
+                        serializer.Serialize(datawriter, ids.ToArray());
+                        return ms.ToArray();
                     }
                 }
             }
@@ -178,12 +175,12 @@ namespace org.activiti.engine.impl.variable
         {
             try
             {
-                using (System.IO.MemoryStream bais = new System.IO.MemoryStream(bytes))
+                using (MemoryStream ms = new MemoryStream(bytes))
                 {
-                    using (var ds = new Newtonsoft.Json.Bson.BsonReader(bais))
+                    using (BsonDataReader reader = new BsonDataReader(ms))
                     {
-                        Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
-                        return serializer.Deserialize<string[]>(ds);
+                        JsonSerializer serializer = new JsonSerializer();
+                        return serializer.Deserialize<string[]>(reader);
                     }
                 }
             }
@@ -196,7 +193,5 @@ namespace org.activiti.engine.impl.variable
                 throw new ActivitiException("Unexpected exception when deserializing JPA id's", e);
             }
         }
-
     }
-
 }

@@ -34,21 +34,18 @@ namespace org.activiti.engine.impl.scripting
 
         public virtual bool evaluate(string sequenceFlowId, IExecutionEntity execution)
         {
-            //ScriptingEngines scriptingEngines = Context.ProcessEngineConfiguration.ScriptingEngines;
+            ScriptingEngines scriptingEngines = Context.ProcessEngineConfiguration.ScriptingEngines;
 
-            //object result = scriptingEngines.evaluate(expression, language, execution);
-            //if (result == null)
-            //{
-            //    throw new ActivitiException("condition script returns null: " + expression);
-            //}
-            //if (!(result is bool?))
-            //{
-            //    throw new ActivitiException("condition script returns non-Boolean: " + result + " (" + result.GetType().FullName + ")");
-            //}
-            //return bool.Parse(result?.ToString());
-            return true;
+            object result = scriptingEngines.evaluate(expression, execution);
+            if (result == null)
+            {
+                throw new ActivitiException("condition script returns null: " + expression);
+            }
+            if (!(result is bool?))
+            {
+                throw new ActivitiException("condition script returns non-Boolean: " + result + " (" + result.GetType().FullName + ")");
+            }
+            return bool.Parse(result?.ToString());
         }
-
     }
-
 }

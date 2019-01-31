@@ -15,12 +15,17 @@ using System.Threading;
  */
 namespace org.activiti.engine.impl.interceptor
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.debug;
     using org.activiti.engine.impl.agenda;
+    using Sys;
+    using System.IO;
 
     /// 
     public class DebugCommandInvoker : CommandInvoker
     {
+        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<DebugCommandInvoker>();
+
         public override void executeOperation(AbstractOperation runnable)
         {
             if (runnable is AbstractOperation)
@@ -29,15 +34,19 @@ namespace org.activiti.engine.impl.interceptor
 
                 if (operation.Execution != null)
                 {
-                    //logger.info("Execution tree while executing operation {} :", operation.GetType());
-                    //logger.info("{}", Environment.NewLine + ExecutionTreeUtil.buildExecutionTree(operation.Execution));
-                }
+                    logger.LogInformation($"Execution tree while executing operation {operation.GetType()} :");
+                    ExecutionTree eTree = ExecutionTreeUtil.buildExecutionTree(operation.Execution);
+                    logger.LogInformation($"\r\n{eTree.ToString()}");
 
+                    string root = Path.GetDirectoryName(new Uri(typeof(DebugCommandInvoker).Assembly.CodeBase).LocalPath);
+                    string file = Path.Combine(root, $"task_trees\\{DateTime.Now.ToString("yyyyMMdd")}.txt");
+                    Directory.CreateDirectory(Path.GetDirectoryName(file));
+
+                    File.AppendAllText(file, $"{(File.Exists(file) ? "\r\n" : "")}{eTree.ToString()}");
+                }
             }
 
             base.executeOperation(runnable);
         }
-
     }
-
 }

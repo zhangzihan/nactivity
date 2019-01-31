@@ -24,11 +24,12 @@ namespace org.activiti.engine.impl.interceptor
 
         public override T execute<T>(CommandConfig config, ICommand<T> command)
         {
-            //if (!log.IsEnabled(LogLevel.Debug))
-            //{
-            //    // do nothing here if we cannot log
-            //    return next.execute(config, command);
-            //}
+            if (!log.IsEnabled(LogLevel.Debug))
+            {
+                // do nothing here if we cannot log
+                return next.execute(config, command);
+            }
+
             log.LogDebug("\n");
             log.LogDebug($"--- starting {command.GetType().Name} --------------------------------------------------------");
             try

@@ -62,6 +62,7 @@ namespace org.activiti.engine.impl.cfg
     using Sys;
     using Sys.Bpm;
     using Sys.Data;
+    using Sys.Workflow.Engine.Bpmn.Rules;
     using System.IO;
     using System.Linq;
 
@@ -509,7 +510,7 @@ namespace org.activiti.engine.impl.cfg
 
         protected internal ExpressionManager expressionManager;
         protected internal IList<string> customScriptingEngineClasses;
-        //protected internal ScriptingEngines scriptingEngines;
+        protected internal ScriptingEngines scriptingEngines;
         protected internal IList<IResolverFactory> resolverFactories;
 
         protected internal IBusinessCalendarManager businessCalendarManager;
@@ -633,7 +634,7 @@ namespace org.activiti.engine.impl.cfg
             return processEngine;
         }
 
-        
+
         /// <summary>
         /// 初始化
         /// </summary>
@@ -691,7 +692,13 @@ namespace org.activiti.engine.impl.cfg
             initEventDispatcher();
             initProcessValidator();
             initDatabaseEventLogging();
+            initGetBookmarkRuleProvider();
             configuratorsAfterInit();
+        }
+
+        private void initGetBookmarkRuleProvider()
+        {
+            GetBookmarkRuleProvider = new GetBookmarkRuleProvider();
         }
 
         // failedJobCommandFactory
@@ -1918,10 +1925,10 @@ namespace org.activiti.engine.impl.cfg
                 resolverFactories.Add(new VariableScopeResolverFactory());
                 resolverFactories.Add(new BeansResolverFactory());
             }
-            //if (scriptingEngines == null)
-            //{
-            //    scriptingEngines = new ScriptingEngines(new ScriptBindingsFactory(this, resolverFactories));
-            //}
+            if (scriptingEngines == null)
+            {
+                scriptingEngines = new ScriptingEngines();
+            }
         }
 
         public virtual void initExpressionManager()
@@ -2481,19 +2488,17 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        //public virtual ScriptingEngines ScriptingEngines
-        //{
-        //    get
-        //    {
-        //        return scriptingEngines;
-        //    }
-        //}
-
-        //public virtual ProcessEngineConfigurationImpl setScriptingEngines(ScriptingEngines scriptingEngines)
-        //{
-        //    this.scriptingEngines = scriptingEngines;
-        //    return this;
-        //}
+        public virtual ScriptingEngines ScriptingEngines
+        {
+            get
+            {
+                return scriptingEngines;
+            }
+            set
+            {
+                this.scriptingEngines = value;
+            }
+        }
 
         public virtual IVariableTypes VariableTypes
         {

@@ -16,18 +16,15 @@
 namespace org.activiti.engine.impl.interceptor
 {
     /// <summary>
-    /// A session factory produces a <seealso cref="ISession"/> instance that has the lifespane of one <seealso cref="Command"/>.
+    /// A session factory produces a <seealso cref="ISession"/> instance that has the lifespane of one <seealso cref="ICommandContext"/>.
     /// 
     /// 
     /// 
     /// </summary>
     public interface ISessionFactory
     {
-
         Type SessionType { get; }
 
         ISession openSession(ICommandContext commandContext);
-
     }
-
 }
