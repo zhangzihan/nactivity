@@ -362,11 +362,11 @@
         inner join ACT_RU_EVENT_SUBSCR EVT${index} on RES.ID_ = EVT${index}.EXECUTION_ID_
       </For>
     </IsNotNull>
-    <IsNotNull Property="businessKey != null">
+    <IsNotEmpty Property="businessKey">
       <IsNotNull Property="includeChildExecutionsWithBusinessKeyQuery != null">
         inner join ACT_RU_EXECUTION INST on RES.PROC_INST_ID_ = INST.ID_
       </IsNotNull>
-    </IsNotNull>
+    </IsNotEmpty>
     <If Test="DeploymentId != null or (DeploymentIds != null and CollectionUtil.IsNotEmpty(DeploymentIds))">
       left outer join ACT_RE_PROCDEF DEPLOY_P ON RES.PROC_DEF_ID_ = DEPLOY_P.ID_
     </If>
@@ -377,24 +377,24 @@
       <IsTrue Property="onlyProcessInstances">
         RES.PARENT_ID_ is null
       </IsTrue>
-      <IsNotNull Property="processDefinitionId != null">
+      <IsNotEmpty Property="processDefinitionId">
         and P.ID_ = #{processDefinitionId}
-      </IsNotNull>
+      </IsNotEmpty>
       <IsNotNull Property="processDefinitionIds != null">
         <IsNotEmpty Property="processDefinitionIds">
           and P.ID_ in
-          <For Key="item" index="index" Property="processDefinitionIds" open="(" Separator="," close=")">
+          <For Key="item" Index="index" Property="processDefinitionIds" Open="(" Separator="," Close=")">
             #{item}
           </For>
         </IsNotEmpty>
       </IsNotNull>
-      <IsNotNull Property="processDefinitionKey != null">
+      <IsNotEmpty Property="processDefinitionKey">
         and P.KEY_ = #{processDefinitionKey}
-      </IsNotNull>
+      </IsNotEmpty>
       <IsNotNull Property="processDefinitionKeys != null">
-        <IsNotEmpty Porperty="processDefinitionKeys">
+        <IsNotEmpty Property="processDefinitionKeys">
           and P.KEY_ in
-          <For Key="item" index="index" Property="processDefinitionKeys" open="(" Separator="," close=")">
+          <For Key="item" Index="index" Property="processDefinitionKeys" Open="(" Separator="," Close=")">
             #{item}
           </For>
         </IsNotEmpty>
@@ -420,7 +420,7 @@
       <IsNotNull Property="processInstanceIds">
         <IsNotEmpty Propert="processInstanceIds">
           and RES.PROC_INST_ID_ in
-          <For Key="item" index="index" Property="processInstanceIds" open="(" Separator="," close=")">
+          <For Key="item" Index="index" Property="processInstanceIds" Open="(" Separator="," Close=")">
             #{item}
           </For>
         </IsNotEmpty>
@@ -456,8 +456,7 @@
       <IsNotNull Property="deploymentIds">
         <IsNotEmpty Property="deploymentIds">
           and DEPLOY_P.DEPLOYMENT_ID_ IN
-          <For Key="deployment" index="index" Property="deploymentIds"
-                   open="(" Separator="," close=")">
+          <For Key="deployment" Index="index" Property="deploymentIds" Open="(" Separator="," Close=")">
             #{deployment}
           </For>
         </IsNotEmpty>
@@ -503,7 +502,7 @@
         and EXISTS(select ID_ from ACT_RU_IDENTITYLINK I where I.PROC_INST_ID_ = RES.ID_ and I.USER_ID_ = #{involvedUser})
       </IsNotNull>
       <!-- PLEASE NOTE: If you change anything have a look into the HistoricVariableInstance & HistoricProcessInstance, the same query object is used there! -->
-      <For Property="queryVariableValues" index="index" Key="queryVariableValue">
+      <For Property="queryVariableValues" Index="index" Key="queryVariableValue">
         <IsNotNull Property="!queryVariableValue.local">
           <!-- When process instance variable is queried for, only process variables are taken into account -->
           and A${index}.EXECUTION_ID_ = A${index}.PROC_INST_ID_
@@ -573,18 +572,18 @@
       </For>
       <!-- event subscriptions -->
       <IsNotNull Property="eventSubscriptions">
-        <For Property="eventSubscriptions" index="index" Key="eventSubscriptionValue">
+        <For Property="eventSubscriptions" Index="index" Key="eventSubscriptionValue">
           and (EVT${index}.EVENT_TYPE_ = #{eventSubscriptionValue.eventType} and EVT${index}.EVENT_NAME_ = #{eventSubscriptionValue.eventName})
         </For>
       </IsNotNull>
-      <For Key="orQueryObject" index="orIndex" Property="orQueryObjects">
+      <For Key="orQueryObject" Index="orIndex" Property="orQueryObjects">
         and
         <If Test="orQueryObject.processDefinitionId != null">
           P_OR${orIndex}.ID_ = #{orQueryObject.processDefinitionId}
         </If>
         <If Test="orQueryObject.processDefinitionIds != null and CollectionUtil.IsNotEmpty(orQueryObject.processDefinitionIds)">
           or P_OR${orIndex}.ID_ in
-          <For Key="item" index="index" Property="orQueryObject.processDefinitionIds" open="(" Separator="," close=")">
+          <For Key="item" Index="index" Property="orQueryObject.processDefinitionIds" Open="(" Separator="," Close=")">
             #{item}
           </For>
         </If>
@@ -593,7 +592,7 @@
         </If>
         <If Test="orQueryObject.processDefinitionKeys != null and CollectionUtil.IsNotEmpty(orQueryObject.processDefinitionKeys)">
           or P_OR${orIndex}.KEY_ in
-          <For Key="item" index="index" Property="orQueryObject.processDefinitionKeys" open="(" Separator="," close=")">
+          <For Key="item" Index="index" Property="orQueryObject.processDefinitionKeys" Open="(" Separator="," Close=")">
             #{item}
           </For>
         </If>
@@ -614,7 +613,7 @@
         </If>
         <If Test="orQueryObject.processInstanceIds != null and !orQueryObject.processInstanceIds.isEmpty()">
           or RES.PROC_INST_ID_ in
-          <For Key="item" index="index" Property="orQueryObject.processInstanceIds" open="(" Separator="," close=")">
+          <For Key="item" Index="index" Property="orQueryObject.processInstanceIds" Open="(" Separator="," Close=")">
             #{item}
           </For>
         </If>
@@ -632,8 +631,7 @@
         </If>
         <If Test="orQueryObject.deploymentIds != null and CollectionUtil.IsNotEmpty(orQueryObject.deploymentIds)">
           or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ IN
-          <For Key="deployment" index="index" Property="orQueryObject.deploymentIds"
-                   open="(" Separator="," close=")">
+          <For Key="deployment" Index="index" Property="orQueryObject.deploymentIds" Open="(" Separator="," Close=")">
             #{deployment}
           </For>
         </If>
@@ -678,7 +676,7 @@
           or EXISTS(select ID_ from ACT_RU_IDENTITYLINK I where I.PROC_INST_ID_ = RES.ID_ and I.USER_ID_ = #{orQueryObject.involvedUser})
         </If>
         <!-- PLEASE NOTE: If you change anything have a look into the HistoricVariableInstance & HistoricProcessInstance, the same query object is used there! -->
-        <For Property="orQueryObject.queryVariableValues" index="index" Key="queryVariableValue">
+        <For Property="orQueryObject.queryVariableValues" Index="index" Key="queryVariableValue">
           or
           <IsNotNull Property="!queryVariableValue.local">
             <!-- When process instance variable is queried for, only process variables are taken into account -->
@@ -909,7 +907,7 @@
     <Include RefId="selectExecutionsFromSql"/>
     where E.PARENT_ID_ = #{parentExecutionId}
     and E.ACT_ID_ in
-    <For Key="p" Property="activityIds" open="(" Separator="," close=")">
+    <For Key="p" Property="activityIds" Open="(" Separator="," Close=")">
       #{activityId}
     </For>
   </Select>
