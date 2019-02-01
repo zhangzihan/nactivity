@@ -46,20 +46,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
         {
             try
             {
-                string doc = execution.CurrentFlowElement.Documentation;
-
-                if (string.IsNullOrWhiteSpace(doc) == false && Context.ProcessEngineConfiguration.EnableVerboseExecutionTreeLogging)
-                {
-                    string root = Path.GetDirectoryName(new Uri(typeof(ServiceTaskLoggerActivityBehavior).Assembly.CodeBase).LocalPath);
-                    string file = Path.Combine(root, $"task_logs\\{DateTime.Now.ToString("yyyyMMdd")}.txt");
-                    Directory.CreateDirectory(Path.GetDirectoryName(file));
-
-                    IExpression expression = Context.ProcessEngineConfiguration.ExpressionManager.createExpression(doc);
-
-                    doc = expression.getValue(execution)?.ToString();
-
-                    File.AppendAllText(file, $"{(File.Exists(file) ? "\r\n" : "")}Task '{execution.ActivityId}' debug_logger {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}:{doc}");
-                }
+                execution.WriteDebugLog();
 
                 leave(execution);
             }

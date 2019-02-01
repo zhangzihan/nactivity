@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using org.activiti.cloud.services.api.commands;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.api.model.converter;
@@ -12,6 +13,7 @@ using org.springframework.data.domain;
 using org.springframework.hateoas;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -145,8 +147,13 @@ namespace org.activiti.cloud.services.rest.controllers
         }
 
         [HttpPost("{taskId}/subtask")]
-        public virtual Resource<Task> createSubtask([FromQuery]string taskId, [FromBody]CreateTaskCmd createSubtaskCmd)
+        public virtual Resource<Task> createSubtask(string taskId, [FromBody]CreateTaskCmd createSubtaskCmd)
         {
+            this.Request.Body.Position = 0;
+
+            var reader = new HttpRequestStreamReader(this.Request.Body, Encoding.UTF8);
+            string str = reader.ReadToEnd();
+
             return taskResourceAssembler.toResource(processEngine.createNewSubtask(taskId, createSubtaskCmd));
         }
 

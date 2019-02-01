@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using org.activiti.engine.impl.cfg;
+using Sys;
 using System;
 
 /*
@@ -22,17 +24,6 @@ namespace org.activiti.cloud.services.api.commands
     public class CreateTaskCmd : Command
     {
         private readonly string id;
-        private string name;
-        private string description;
-        private DateTime? dueDate;
-        private int? priority;
-        private string assignee;
-        private string parentTaskId;
-
-        public CreateTaskCmd()
-        {
-            this.id = System.Guid.NewGuid().ToString();
-        }
 
         ////[JsonConstructor]
         public CreateTaskCmd([JsonProperty("Name")] string name,
@@ -40,15 +31,15 @@ namespace org.activiti.cloud.services.api.commands
             [JsonProperty("DueDate")] DateTime? dueDate,
             [JsonProperty("Priority")]int? priority,
             [JsonProperty("Assignee")]string assignee,
-            [JsonProperty("ParentTaskId")]string parentTaskId) : this()
+            [JsonProperty("ParentTaskId")]string parentTaskId)
         {
-
-            this.name = name;
-            this.description = description;
-            this.dueDate = dueDate;
-            this.priority = priority;
-            this.assignee = assignee;
-            this.parentTaskId = parentTaskId;
+            this.id = ProcessEngineServiceProvider.Resolve<IIdGenerator>().NextId;
+            this.Name = name;
+            this.Description = description;
+            this.DueDate = dueDate;
+            this.Priority = priority;
+            this.Assignee = assignee;
+            this.ParentTaskId = parentTaskId;
         }
 
         public virtual string Id
@@ -61,50 +52,38 @@ namespace org.activiti.cloud.services.api.commands
 
         public virtual string Name
         {
-            get
-            {
-                return name;
-            }
+            get;
+            set;
         }
 
         public virtual string Description
         {
-            get
-            {
-                return description;
-            }
+            get;
+            set;
         }
 
         public virtual DateTime? DueDate
         {
-            get
-            {
-                return dueDate;
-            }
+            get;
+            set;
         }
 
         public virtual int? Priority
         {
-            get
-            {
-                return priority;
-            }
+            get;
+            set;
         }
 
         public virtual string Assignee
         {
-            get
-            {
-                return assignee;
-            }
+            get;
+            set;
         }
 
         public virtual string ParentTaskId
         {
-            get
-            {
-                return parentTaskId;
-            }
+            get;
+            set;
         }
     }
 
