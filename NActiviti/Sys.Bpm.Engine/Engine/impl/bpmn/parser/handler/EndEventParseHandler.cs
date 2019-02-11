@@ -14,12 +14,15 @@
  */
 namespace org.activiti.engine.impl.bpmn.parser.handler
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
+    using Sys;
 
     /// 
     /// 
     public class EndEventParseHandler : AbstractActivityBpmnParseHandler<EndEvent>
     {
+        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<EndEventParseHandler>();
 
         protected internal override Type HandledType
         {
@@ -45,7 +48,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
                         string errorCode = bpmnParse.BpmnModel.Errors[errorDefinition.ErrorCode];
                         if (string.IsNullOrWhiteSpace(errorCode))
                         {
-                            //logger.warn("errorCode is required for an error event " + endEvent.Id);
+                            logger.LogWarning("errorCode is required for an error event " + endEvent.Id);
                         }
                     }
                     endEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createErrorEndEventActivityBehavior(endEvent, errorDefinition);

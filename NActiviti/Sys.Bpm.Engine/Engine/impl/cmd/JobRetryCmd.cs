@@ -14,7 +14,7 @@
  */
 namespace org.activiti.engine.impl.cmd
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
@@ -22,6 +22,7 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
+    using Sys;
     using System.Collections.Generic;
 
     /// 
@@ -31,6 +32,8 @@ namespace org.activiti.engine.impl.cmd
     {
         protected internal string jobId;
         protected internal Exception exception;
+
+        private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<JobRetryCmd>();
 
         public JobRetryCmd(string jobId, Exception exception)
         {
@@ -61,7 +64,7 @@ namespace org.activiti.engine.impl.cmd
             if (currentFlowElement == null || ReferenceEquals(failedJobRetryTimeCycleValue, null))
             {
 
-                //log.debug("activity or FailedJobRetryTimerCycleValue is null in job " + jobId + ". only decrementing retries.");
+                log.LogDebug("activity or FailedJobRetryTimerCycleValue is null in job " + jobId + ". only decrementing retries.");
 
                 if (job.Retries <= 1)
                 {
@@ -109,13 +112,14 @@ namespace org.activiti.engine.impl.cmd
                     newJobEntity.Duedate = durationHelper.DateAfter;
 
                     if (ReferenceEquals(job.ExceptionMessage, null))
-                    { // is it the first exception
-                        //log.debug("Applying JobRetryStrategy '" + failedJobRetryTimeCycleValue + "' the first time for job " + job.Id + " with " + durationHelper.Times + " retries");
+                    { 
+                        // is it the first exception
+                        log.LogDebug("Applying JobRetryStrategy '" + failedJobRetryTimeCycleValue + "' the first time for job " + job.Id + " with " + durationHelper.Times + " retries");
 
                     }
                     else
                     {
-                        //log.debug("Decrementing retries of JobRetryStrategy '" + failedJobRetryTimeCycleValue + "' for job " + job.Id);
+                        log.LogDebug("Decrementing retries of JobRetryStrategy '" + failedJobRetryTimeCycleValue + "' for job " + job.Id);
                     }
 
                     newJobEntity.Retries = jobRetries - 1;

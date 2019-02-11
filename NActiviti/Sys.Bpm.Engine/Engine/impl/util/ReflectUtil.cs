@@ -22,10 +22,13 @@ namespace org.activiti.engine.impl.util
     using System.Linq;
     using System.Text.RegularExpressions;
     using org.activiti.engine;
+    using Microsoft.Extensions.Logging;
+    using System.IO;
 
     /// 
     public abstract class ReflectUtil
     {
+        private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<ReflectUtil>();
 
         private static readonly Regex GETTER_PATTERN = new Regex("(get|is)[A-Z].*");
         private static readonly Regex SETTER_PATTERN = new Regex("set[A-Z].*");
@@ -56,7 +59,7 @@ namespace org.activiti.engine.impl.util
             {
                 try
                 {
-                    //LOG.trace("Trying to load class with custom classloader: {}", className);
+                    log.LogTrace($"Trying to load class with custom classloader: {className}");
                     clazz = loadClass(classLoader, className);
                 }
                 catch (Exception t)
@@ -68,7 +71,7 @@ namespace org.activiti.engine.impl.util
             {
                 try
                 {
-                    //LOG.trace("Trying to load class with current thread context classloader: {}", className);
+                    log.LogTrace($"Trying to load class with current thread context classloader: {className}");
                     //clazz = loadClass(Thread.CurrentThread.ContextClassLoader, className);
                 }
                 catch (Exception t)
@@ -82,7 +85,7 @@ namespace org.activiti.engine.impl.util
                 {
                     try
                     {
-                        //LOG.trace("Trying to load class with local classloader: {}", className);
+                        log.LogTrace($"Trying to load class with local classloader: {className}");
                         //clazz = loadClass(typeof(ReflectUtil).ClassLoader, className);
                     }
                     catch (Exception t)
@@ -102,7 +105,7 @@ namespace org.activiti.engine.impl.util
             return clazz;
         }
 
-        public static System.IO.Stream getResourceAsStream(string name)
+        public static Stream getResourceAsStream(string name)
         {
             System.IO.Stream resourceStream = null;
             ClassLoader classLoader = CustomClassLoader;
@@ -182,41 +185,39 @@ namespace org.activiti.engine.impl.util
             FieldInfo field = null;
             try
             {
-                //field = clazz.getDeclaredField(fieldName);
+                field = clazz.GetField(fieldName);
+            }
+            catch (NotSupportedException)
+            {
+                // for some reason getDeclaredFields doesn't search superclasses
+                // (which getFields() does ... but that gives only public fields)
+                Type superClass = clazz.BaseType;
+                if (superClass != null)
+                {
+                    return getField(fieldName, superClass);
+                }
             }
             catch (Exception)
             {
                 throw new ActivitiException("not allowed to access field " + field + " on class " + clazz.FullName);
             }
-            //catch (NoSuchFieldException)
-            //{
-            //    // for some reason getDeclaredFields doesn't search superclasses
-            //    // (which getFields() does ... but that gives only public fields)
-            //    Type superClass = clazz.BaseType;
-            //    if (superClass != null)
-            //    {
-            //        return getField(fieldName, superClass);
-            //    }
-            //}
             return field;
         }
 
         public static void setField(FieldInfo field, object @object, object value)
         {
-            field.SetValue(@object, value);
-            //try
-            //{
-            //    //field.Accessible = true;
-            //    field.set(@object, value);
-            //}
-            //catch (System.ArgumentException e)
-            //{
-            //    throw new ActivitiException("Could not set field " + field.ToString(), e);
-            //}
-            //catch (IllegalAccessException e)
-            //{
-            //    throw new ActivitiException("Could not set field " + field.ToString(), e);
-            //}
+            try
+            {
+                field.SetValue(@object, value);
+            }
+            catch (ArgumentException e)
+            {
+                throw new ActivitiException("Could not set field " + field.ToString(), e);
+            }
+            catch (FieldAccessException e)
+            {
+                throw new ActivitiException("Could not set field " + field.ToString(), e);
+            }
         }
 
         /// <summary>
@@ -432,5 +433,4 @@ namespace org.activiti.engine.impl.util
             return name;
         }
     }
-
 }

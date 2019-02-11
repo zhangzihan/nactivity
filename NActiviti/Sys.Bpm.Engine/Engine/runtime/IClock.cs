@@ -22,7 +22,7 @@ namespace org.activiti.engine.runtime
     public interface IClock : IClockReader
     {
 
-        new DateTime CurrentTime { get; set; }
+        new DateTime CurrentTime { get; }
 
         new DateTime CurrentCalendar { get; set; }
 

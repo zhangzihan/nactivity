@@ -20,6 +20,7 @@ using Sys.Workflow.Engine.Bpmn.Rules;
 using System;
 using System.Data.Common;
 using System.IO;
+using Sys.Bpm;
 
 namespace Sys
 {
@@ -29,7 +30,11 @@ namespace Sys
         {
             TypeRegistry.RegisterType(typeof(CollectionUtil));
 
-            services.AddTransient<IDataSource>(sp =>
+            IGetBookmarkRuleProvider getBookmarkRuleProvider = new GetBookmarkRuleProvider();
+
+            services.AddSingleton<IGetBookmarkRuleProvider>(getBookmarkRuleProvider);
+
+            services.AddSingleton<IDataSource>(sp =>
             {
                 var cfg = sp.GetService<IConfiguration>();
 
@@ -56,7 +61,6 @@ namespace Sys
 
                 SmartSqlOptions options = new SmartSqlOptions
                 {
-                    //LoggerFactory = sp.GetService<ILoggerFactory>(),
                     ConfigPath = Path.Combine(codebase, DEFAULT_MYBATIS_MAPPING_FILE),
                     DbSessionStore = dbSessionStore
                     //DataReaderDeserializerFactory = new DapperDataReaderDeserializerFactory()
@@ -149,6 +153,7 @@ namespace Sys
             servicePprovider.EnsureProcessEngineInit();
 
             services.AddSpringCoreService(servicePprovider.GetService<ILoggerFactory>());
+            services.AddBpmModelServiceProvider();
 
             return services;
         }

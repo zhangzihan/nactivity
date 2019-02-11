@@ -3,14 +3,15 @@ using System.Collections.Generic;
 
 namespace org.activiti.engine.impl.@event.logger.handler
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.impl.variable;
+    using Sys;
     using Sys.Bpm;
 
     /// 
     public abstract class VariableEventHandler : AbstractDatabaseEventLoggerEventHandler
     {
-
         public const string TYPE_BOOLEAN = "boolean";
         public const string TYPE_STRING = "string";
         public const string TYPE_SHORT = "short";
@@ -20,6 +21,8 @@ namespace org.activiti.engine.impl.@event.logger.handler
         public const string TYPE_DATE = "date";
         public const string TYPE_UUID = "uuid";
         public const string TYPE_JSON = "json";
+
+        private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<VariableEventHandler>();
 
         protected internal virtual IDictionary<string, object> createData(IActivitiVariableEvent variableEvent)
         {
@@ -142,16 +145,12 @@ namespace org.activiti.engine.impl.@event.logger.handler
                 }
                 catch (Exception)
                 {
-                    throw;
                     // Nothing to do about it
-                    //logger.debug("Could not serialize variable value " + variableEvent.VariableValue);
+                    log.LogDebug("Could not serialize variable value " + variableEvent.VariableValue);
                 }
-
             }
 
             return data;
         }
-
     }
-
 }

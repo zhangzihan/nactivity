@@ -14,6 +14,7 @@
  */
 namespace org.activiti.engine.impl.bpmn.parser.handler
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
 
     /// 
@@ -51,7 +52,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
                 }
                 else
                 {
-                    //logger.warn("Unsupported intermediate catch event type for event " + @event.Id);
+                    logger.LogWarning("Unsupported intermediate catch event type for event " + @event.Id);
                 }
             }
         }

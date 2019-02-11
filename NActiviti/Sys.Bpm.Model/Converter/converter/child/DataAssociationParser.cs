@@ -12,14 +12,17 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
+    using Sys.Bpm;
     using System;
 
     public class DataAssociationParser : IBpmnXMLConstants
     {
+        private static readonly ILogger log = BpmnModelLoggerFactory.LoggerService<DataAssociationParser>();
+
         public static void parseDataAssociation(DataAssociation dataAssociation, string elementName, XMLStreamReader xtr)
         {
             bool readyWithDataAssociation = false;
@@ -105,8 +108,7 @@ namespace org.activiti.bpmn.converter.child
             }
             catch (Exception e)
             {
-                throw;
-                //LOGGER.warn("Error parsing data association child elements", e);
+                log.LogWarning(e, "Error parsing data association child elements");
             }
         }
     }

@@ -15,7 +15,7 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.bpmn.parser.handler
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
@@ -39,7 +39,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
         {
             if (process.Executable == false)
             {
-                //LOGGER.info("Ignoring non-executable process with id='" + process.Id + "'. Set the attribute isExecutable=\"true\" to deploy this process.");
+                logger.LogInformation("Ignoring non-executable process with id='" + process.Id + "'. Set the attribute isExecutable=\"true\" to deploy this process.");
             }
             else
             {
@@ -68,10 +68,10 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
 
             createEventListeners(bpmnParse, process.EventListeners);
 
-            //if (LOGGER.DebugEnabled)
-            //{
-            //    LOGGER.debug("Parsing process {}", currentProcessDefinition.Key);
-            //}
+            if (logger.IsEnabled(LogLevel.Debug))
+            {
+                logger.LogDebug($"Parsing process {currentProcessDefinition.Key}");
+            }
 
             bpmnParse.processFlowElements(process.FlowElements);
             processArtifacts(bpmnParse, process.Artifacts);
@@ -107,7 +107,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
                     }
                     else
                     {
-                        //LOGGER.warn("Unsupported implementation type for EventListener: " + eventListener.ImplementationType + " for element " + bpmnParse.CurrentFlowElement.Id);
+                        logger.LogWarning("Unsupported implementation type for EventListener: " + eventListener.ImplementationType + " for element " + bpmnParse.CurrentFlowElement.Id);
                     }
                 }
             }

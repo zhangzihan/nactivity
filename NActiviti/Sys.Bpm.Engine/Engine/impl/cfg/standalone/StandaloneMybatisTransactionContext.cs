@@ -15,15 +15,18 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.cfg.standalone
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.db;
     using org.activiti.engine.impl.interceptor;
+    using Sys;
 
     /// 
     public class StandaloneMybatisTransactionContext : ITransactionContext
     {
         protected internal ICommandContext commandContext;
         protected internal IDictionary<TransactionState, IList<ITransactionListener>> stateTransactionListeners;
+        private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<StandaloneMybatisTransactionContext>();
+
 
         public StandaloneMybatisTransactionContext(ICommandContext commandContext)
         {
@@ -47,13 +50,12 @@ namespace org.activiti.engine.impl.cfg.standalone
 
         public virtual void commit()
         {
-
-            //log.debug("firing event committing...");
+            log.LogDebug("firing event committing...");
             fireTransactionEvent(TransactionState.COMMITTING, false);
 
-            //log.debug("committing the ibatis sql session...");
+            log.LogDebug("committing the ibatis sql session...");
             DbSqlSession.commit();
-            //log.debug("firing event committed...");
+            log.LogDebug("firing event committed...");
             fireTransactionEvent(TransactionState.COMMITTED, true);
 
         }
@@ -135,31 +137,31 @@ namespace org.activiti.engine.impl.cfg.standalone
             {
                 try
                 {
-                    //log.debug("firing event rolling back...");
+                    log.LogDebug("firing event rolling back...");
                     fireTransactionEvent(TransactionState.ROLLINGBACK, false);
 
                 }
                 catch (Exception exception)
                 {
-                    //log.info("Exception during transaction: {}", exception.Message);
+                    log.LogInformation("Exception during transaction: {}", exception.Message);
                     commandContext.exception(exception);
                 }
                 finally
                 {
-                    //log.debug("rolling back ibatis sql session...");
+                    log.LogDebug("rolling back ibatis sql session...");
                     DbSqlSession.rollback();
                 }
 
             }
             catch (Exception exception)
             {
-                //log.info("Exception during transaction: {}", exception.Message);
+                log.LogInformation("Exception during transaction: {}", exception.Message);
                 commandContext.exception(exception);
 
             }
             finally
             {
-                //log.debug("firing event rolled back...");
+                log.LogDebug("firing event rolled back...");
                 fireTransactionEvent(TransactionState.ROLLED_BACK, true);
             }
         }

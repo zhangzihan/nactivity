@@ -134,7 +134,7 @@ namespace org.activiti.engine.impl.interceptor
             if (exception_Renamed is JobNotFoundException || exception_Renamed is ActivitiTaskAlreadyClaimedException)
             {
                 // reduce log level, because this may have been caused because of job deletion due to cancelActiviti="true"
-                //log.info("Error while closing command context", exception_Renamed);
+                log.LogInformation("Error while closing command context", exception_Renamed);
             }
             else if (exception_Renamed is ActivitiOptimisticLockingException)
             {

@@ -10,6 +10,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using Microsoft.Extensions.Logging;
+using Sys.Bpm;
 using System;
 
 namespace org.activiti.bpmn.converter
@@ -17,6 +19,7 @@ namespace org.activiti.bpmn.converter
     /// 
     public class XMLStreamReaderUtil
     {
+        private static readonly ILogger logger = BpmnModelLoggerFactory.LoggerService<XMLStreamReaderUtil>();
 
         public static string moveDown(XMLStreamReader xtr)
         {
@@ -34,7 +37,7 @@ namespace org.activiti.bpmn.converter
             }
             catch (Exception e)
             {
-                //LOGGER.warn("Error while moving down in XML document", e);
+                logger.LogWarning(e, "Error while moving down in XML document");
             }
 
             return null;
@@ -59,10 +62,9 @@ namespace org.activiti.bpmn.converter
             }
             catch (Exception e)
             {
-                // LOGGER.warn("Error while moving to end of element {}", elementName, e);
+                logger.LogWarning(e, $"Error while moving to end of element {elementName}");
             }
             return false;
         }
     }
-
 }

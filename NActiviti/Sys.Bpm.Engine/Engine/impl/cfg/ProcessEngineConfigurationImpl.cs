@@ -1394,7 +1394,7 @@ namespace org.activiti.engine.impl.cfg
         {
             foreach (IProcessEngineConfigurator configurator in allConfigurators)
             {
-                //log.info("Executing beforeInit() of {} (priority:{})", configurator.GetType(), configurator.Priority);
+                log.LogInformation($"Executing beforeInit() of {configurator.GetType()} (priority:{configurator.Priority})");
                 configurator.beforeInit(this);
             }
         }
@@ -1403,7 +1403,7 @@ namespace org.activiti.engine.impl.cfg
         {
             foreach (IProcessEngineConfigurator configurator in allConfigurators)
             {
-                //log.info("Executing configure() of {} (priority:{})", configurator.GetType(), configurator.Priority);
+                log.LogInformation($"Executing configure() of {configurator.GetType()} (priority:{configurator.Priority})");
                 configurator.configure(this);
             }
         }
@@ -1615,7 +1615,6 @@ namespace org.activiti.engine.impl.cfg
         {
             get
             {
-
                 // Alphabetic list of default parse handler classes
                 IList<IBpmnParseHandler> bpmnParserHandlers = new List<IBpmnParseHandler>();
                 bpmnParserHandlers.Add(new BoundaryEventParseHandler());
@@ -1652,7 +1651,6 @@ namespace org.activiti.engine.impl.cfg
                 // Replace any default handler if the user wants to replace them
                 if (customDefaultBpmnParseHandlers != null)
                 {
-
                     IDictionary<Type, IBpmnParseHandler> customParseHandlerMap = new Dictionary<Type, IBpmnParseHandler>();
                     foreach (IBpmnParseHandler bpmnParseHandler in customDefaultBpmnParseHandlers)
                     {
@@ -1681,7 +1679,7 @@ namespace org.activiti.engine.impl.cfg
                             if (customParseHandlerMap.ContainsKey(handledType))
                             {
                                 IBpmnParseHandler newBpmnParseHandler = customParseHandlerMap[handledType];
-                                //log.info("Replacing default BpmnParseHandler " + defaultBpmnParseHandler.GetType().FullName + " with " + newBpmnParseHandler.GetType().FullName);
+                                log.LogInformation("Replacing default BpmnParseHandler " + defaultBpmnParseHandler.GetType().FullName + " with " + newBpmnParseHandler.GetType().FullName);
                                 bpmnParserHandlers[i] = newBpmnParseHandler;
                             }
                         }
@@ -1699,7 +1697,6 @@ namespace org.activiti.engine.impl.cfg
                 clock = new DefaultClockImpl();
             }
         }
-
 
         public virtual void initAgendaFactory()
         {

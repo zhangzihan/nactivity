@@ -1185,7 +1185,7 @@ namespace org.activiti.engine.impl.db
 
         public virtual void executeSchemaResource(string operation, string component, string resourceName, bool isOptional)
         {
-            System.IO.Stream inputStream = null;
+            Stream inputStream = null;
             try
             {
                 inputStream = ReflectUtil.getResourceAsStream(resourceName);
@@ -1211,7 +1211,7 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        private void executeSchemaResource(string operation, string component, string resourceName, System.IO.Stream inputStream)
+        private void executeSchemaResource(string operation, string component, string resourceName, Stream inputStream)
         {
             log.LogInformation($"performing {operation} on {component} with resource {resourceName}");
             //string sqlStatement = null;

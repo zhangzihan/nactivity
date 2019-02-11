@@ -14,6 +14,7 @@
  */
 namespace org.activiti.engine.impl.bpmn.parser.handler
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
 
     /// 
@@ -32,7 +33,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
 
             if (string.IsNullOrWhiteSpace(scriptTask.Script))
             {
-                //logger.warn("No script provided for scriptTask " + scriptTask.Id);
+                logger.LogWarning("No script provided for scriptTask " + scriptTask.Id);
             }
 
             scriptTask.Behavior = bpmnParse.ActivityBehaviorFactory.createScriptTaskActivityBehavior(scriptTask);

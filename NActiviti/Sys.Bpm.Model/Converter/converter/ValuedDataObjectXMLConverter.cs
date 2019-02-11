@@ -3,10 +3,11 @@ using System.Collections.Generic;
 
 namespace org.activiti.bpmn.converter
 {
-
-
+    using Microsoft.Extensions.Logging;
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
+    using Sys.Bpm;
     using System.Globalization;
     using System.Text.RegularExpressions;
 
@@ -14,6 +15,7 @@ namespace org.activiti.bpmn.converter
     /// 
     public class ValuedDataObjectXMLConverter : BaseBpmnXMLConverter
     {
+        private static readonly ILogger logger = BpmnModelLoggerFactory.LoggerService<ValuedDataObjectXMLConverter>();
 
         private readonly Regex xmlChars = new Regex("[<>&]");
         private string sdf = "yyyy-MM-dd'T'HH:mm:ss";
@@ -31,7 +33,7 @@ namespace org.activiti.bpmn.converter
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DATA_OBJECT;
+                return BpmnXMLConstants.ELEMENT_DATA_OBJECT;
             }
         }
         protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
@@ -39,7 +41,7 @@ namespace org.activiti.bpmn.converter
             ValuedDataObject dataObject = null;
             ItemDefinition itemSubjectRef = new ItemDefinition();
 
-            string structureRef = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DATA_ITEM_REF);
+            string structureRef = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_ITEM_REF);
             if (!string.IsNullOrWhiteSpace(structureRef) && structureRef.Contains(":"))
             {
                 string dataType = structureRef.Substring(structureRef.IndexOf(':') + 1);
@@ -70,9 +72,8 @@ namespace org.activiti.bpmn.converter
                 }
                 else
                 {
-                    //LOGGER.error("Error converting {}, invalid data type: " + dataType, xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants_Fields.ATTRIBUTE_DATA_NAME));
+                    logger.LogError($"Error converting {xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_NAME)}, invalid data type: {dataType}");
                 }
-
             }
             else
             {
@@ -83,8 +84,8 @@ namespace org.activiti.bpmn.converter
 
             if (dataObject != null)
             {
-                dataObject.Id = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DATA_ID);
-                dataObject.Name = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DATA_NAME);
+                dataObject.Id = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_ID);
+                dataObject.Name = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_NAME);
 
                 BpmnXMLUtil.addXMLLocation(dataObject, xtr);
 
@@ -110,7 +111,7 @@ namespace org.activiti.bpmn.converter
                             }
                             catch (Exception e)
                             {
-                                //LOGGER.error("Error converting {}", dataObject.Name, e.Message);
+                                logger.LogError(e, $"Error converting {dataObject.Name} \r\n {e.Message}");
                             }
                         }
                         else
@@ -131,7 +132,7 @@ namespace org.activiti.bpmn.converter
             ValuedDataObject dataObject = (ValuedDataObject)element;
             if (dataObject.ItemSubjectRef != null && !string.IsNullOrWhiteSpace(dataObject.ItemSubjectRef.StructureRef))
             {
-                writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DATA_ITEM_REF, dataObject.ItemSubjectRef.StructureRef, xtw);
+                writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_DATA_ITEM_REF, dataObject.ItemSubjectRef.StructureRef, xtw);
             }
         }
         protected internal override bool writeExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
@@ -143,11 +144,11 @@ namespace org.activiti.bpmn.converter
 
                 if (!didWriteExtensionStartElement)
                 {
-                    xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EXTENSIONS);
+                    xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EXTENSIONS);
                     didWriteExtensionStartElement = true;
                 }
 
-                xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DATA_VALUE, org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                xtw.writeStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_DATA_VALUE, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
                 if (dataObject.Value != null)
                 {
                     string value = null;
