@@ -14,8 +14,7 @@
  */
 namespace org.activiti.bpmn.converter
 {
-
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.converter.export;
     using org.activiti.bpmn.exceptions;
     using org.activiti.bpmn.model;
@@ -27,6 +26,8 @@ namespace org.activiti.bpmn.converter
     /// 
     public class SubprocessXMLConverter : BpmnXMLConverter
     {
+        private static readonly ILogger logger = BpmnModelLoggerFactory.LoggerService<SubprocessXMLConverter>();
+     
         public override byte[] convertToXML(BpmnModel model, string encoding)
         {
             try
@@ -95,7 +96,7 @@ namespace org.activiti.bpmn.converter
             }
             catch (Exception e)
             {
-                //LOGGER.error("Error writing BPMN XML", e);
+                logger.LogError(e, "Error writing BPMN XML");
                 throw new XMLException("Error writing BPMN XML", e);
             }
         }

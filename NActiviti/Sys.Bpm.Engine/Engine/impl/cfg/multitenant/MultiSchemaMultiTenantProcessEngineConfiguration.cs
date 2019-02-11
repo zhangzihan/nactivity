@@ -142,7 +142,7 @@ namespace org.activiti.engine.impl.cfg.multitenant
 
         protected internal virtual void createTenantSchema(string tenantId)
         {
-            //logger.info("creating/validating database schema for tenant " + tenantId);
+            logger.LogInformation("creating/validating database schema for tenant " + tenantId);
             tenantInfoHolder.CurrentTenantId = tenantId;
             CommandExecutor.execute(SchemaCommandConfig, new ExecuteSchemaOperationCommand(databaseSchemaUpdate));
             tenantInfoHolder.clearCurrentTenantId();

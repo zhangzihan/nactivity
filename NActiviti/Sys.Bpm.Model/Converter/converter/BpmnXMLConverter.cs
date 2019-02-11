@@ -1,4 +1,5 @@
-﻿using org.activiti.bpmn.constants;
+﻿using Microsoft.Extensions.Logging;
+using org.activiti.bpmn.constants;
 using org.activiti.bpmn.converter.alfresco;
 using org.activiti.bpmn.converter.child;
 using org.activiti.bpmn.converter.export;
@@ -6,6 +7,7 @@ using org.activiti.bpmn.converter.parser;
 using org.activiti.bpmn.converter.util;
 using org.activiti.bpmn.exceptions;
 using org.activiti.bpmn.model;
+using Sys.Bpm;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,6 +31,8 @@ namespace org.activiti.bpmn.converter
     /// 
     public class BpmnXMLConverter : IBpmnXMLConstants
     {
+        private static readonly ILogger log = BpmnModelLoggerFactory.LoggerService<BpmnXMLConverter>();
+
         protected internal const string BPMN_XSD = "org/activiti/impl/bpmn/parser/BPMN20.xsd";
         protected internal const string DEFAULT_ENCODING = "UTF-8";
 
@@ -406,16 +410,10 @@ namespace org.activiti.bpmn.converter
                     }
                     processFlowElements(process.FlowElements, process);
                 }
-
-            }
-            catch (XMLException e)
-            {
-                throw e;
-
             }
             catch (Exception e)
             {
-                //LOGGER.error("Error processing BPMN document", e);
+                log.LogError(e, "Error processing BPMN document");
                 throw new XMLException("Error processing BPMN document", e);
             }
             return model;

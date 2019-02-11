@@ -14,6 +14,7 @@
  */
 namespace org.activiti.engine.impl.bpmn.parser.handler
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
     using org.activiti.engine.impl.bpmn.behavior;
 
@@ -57,7 +58,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
             else
             {
-                //logger.warn("One of the attributes 'type' or 'operation' is mandatory on sendTask " + sendTask.Id);
+                logger.LogWarning("One of the attributes 'type' or 'operation' is mandatory on sendTask " + sendTask.Id);
             }
         }
 

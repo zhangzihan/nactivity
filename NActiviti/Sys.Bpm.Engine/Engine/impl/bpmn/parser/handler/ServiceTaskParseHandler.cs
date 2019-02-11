@@ -14,6 +14,7 @@
  */
 namespace org.activiti.engine.impl.bpmn.parser.handler
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
 
     public class ServiceTaskParseHandler : AbstractActivityBpmnParseHandler<ServiceTask>
@@ -102,7 +103,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
 
         protected internal virtual void createActivityBehaviorForCustomServiceTaskType(BpmnParse bpmnParse, ServiceTask serviceTask)
         {
-            //logger.warn("Invalid service task type: '" + serviceTask.Type + "' " + " for service task " + serviceTask.Id);
+            logger.LogWarning("Invalid service task type: '" + serviceTask.Type + "' " + " for service task " + serviceTask.Id);
         }
 
         protected internal virtual void createClassDelegateServiceTask(BpmnParse bpmnParse, ServiceTask serviceTask)

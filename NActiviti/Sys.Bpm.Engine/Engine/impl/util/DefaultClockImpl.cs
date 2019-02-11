@@ -23,7 +23,7 @@ namespace org.activiti.engine.impl.util
 
         public virtual DateTime CurrentTime
         {
-            set
+            private set
             {
                 DateTime? time = null;
 

@@ -14,6 +14,7 @@
  */
 namespace org.activiti.engine.impl.bpmn.parser.handler
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
 
     /// 
@@ -56,7 +57,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
             else
             {
-                //logger.warn("Unsupported intermediate throw event type for throw event " + intermediateEvent.Id);
+                logger.LogWarning("Unsupported intermediate throw event type for throw event " + intermediateEvent.Id);
             }
         }
 

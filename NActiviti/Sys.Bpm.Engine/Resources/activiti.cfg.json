@@ -5,7 +5,7 @@
   "asyncExecutorDefaultAsyncJobAcquireWaitTime": 1000000,
   "asyncExecutorDefaultTimerJobAcquireWaitTime": 1000000,
   "asyncExecutorThreadKeepAliveTime": 5000,
-  "asyncExecutorActivate": true,
+  "asyncExecutorActivate": false,
   "asyncFailedJobWaitTime": 1,
   "userServiceProxyBaseUrl": "http://localhost:5005",
   "enableVerboseExecutionTreeLogging": true,

@@ -90,10 +90,16 @@ namespace SmartSql.Configuration.Tags
                 return null;
             }
 
+            if (Property == null)
+            {
+                throw new PropertyArgumentNullException($"Tag property null {ToString()}");
+            }
+
             if (!string.IsNullOrWhiteSpace(Property) && context.Request != null)
             {
                 return ExpressionManager.GetValue(context.Request, Property, context.RequestParameters);
             }
+
             reqParams.TryGetValue(Property, out object propVal);
 
             return propVal;

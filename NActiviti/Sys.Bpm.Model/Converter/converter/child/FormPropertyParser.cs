@@ -14,12 +14,15 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
+    using Sys.Bpm;
 
     public class FormPropertyParser : BaseChildElementParser
     {
+        private static readonly ILogger log = BpmnModelLoggerFactory.LoggerService<FormPropertyParser>();
 
         public override string ElementName
         {
@@ -90,8 +93,7 @@ namespace org.activiti.bpmn.converter.child
             }
             catch (Exception e)
             {
-                throw e;
-                //LOGGER.warn("Error parsing form properties child elements", e);
+                log.LogWarning(e, "Error parsing form properties child elements");
             }
 
             if (parentElement is UserTask)

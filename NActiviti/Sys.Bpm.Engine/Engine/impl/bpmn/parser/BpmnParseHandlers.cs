@@ -15,14 +15,16 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.bpmn.parser
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
     using org.activiti.engine.parse;
+    using Sys;
 
     /// 
     public class BpmnParseHandlers
     {
         protected internal IDictionary<Type, IList<IBpmnParseHandler>> parseHandlers;
+        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<BpmnParseHandlers>();
 
         public BpmnParseHandlers()
         {
@@ -75,7 +77,7 @@ namespace org.activiti.engine.impl.bpmn.parser
 
             if (handlers == null)
             {
-                //LOGGER.warn("Could not find matching parse handler for + " + element.Id + " this is likely a bug.");
+                logger.LogWarning("Could not find matching parse handler for + " + element.Id + " this is likely a bug.");
             }
             else
             {

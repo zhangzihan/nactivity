@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using Microsoft.Extensions.Logging;
+using Sys;
+using System.Threading;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +23,11 @@ namespace org.activiti.engine.impl.interceptor
     /// </summary>
     public class RetryInterceptor : AbstractCommandInterceptor
     {
+        private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<RetryInterceptor>();
+
         protected internal int numOfRetries = 3;
         protected internal int waitTimeInMs = 50;
-        protected internal int waitIncreaseFactor = 5;
+        protected internal int waitIncreaseFactor = 5;       
 
         public override T execute<T>(CommandConfig config, ICommand<T> command)
         {
@@ -34,22 +38,19 @@ namespace org.activiti.engine.impl.interceptor
             {
                 if (failedAttempts > 0)
                 {
-                    //log.info("Waiting for {}ms before retrying the command.", waitTime);
+                    log.LogInformation($"Waiting for {waitTime}ms before retrying the command.");
                     waitBeforeRetry(waitTime);
                     waitTime *= waitIncreaseFactor;
                 }
 
                 try
                 {
-
                     // try to execute the command
                     return next.execute(config, command);
-
                 }
                 catch (ActivitiOptimisticLockingException e)
                 {
-                    //throw e;
-                    //log.info("Caught optimistic locking exception: " + e);
+                    log.LogInformation("Caught optimistic locking exception: " + e);
                 }
 
                 failedAttempts++;
@@ -66,8 +67,7 @@ namespace org.activiti.engine.impl.interceptor
             }
             catch (ThreadInterruptedException e)
             {
-                throw;
-                //log.debug("I am interrupted while waiting for a retry.");
+                log.LogDebug("I am interrupted while waiting for a retry.");
             }
         }
 
@@ -106,9 +106,5 @@ namespace org.activiti.engine.impl.interceptor
                 return waitTimeInMs;
             }
         }
-
-
-
     }
-
 }

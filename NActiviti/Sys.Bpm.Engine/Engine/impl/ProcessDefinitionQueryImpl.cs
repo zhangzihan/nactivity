@@ -16,15 +16,17 @@ using System.Collections.Generic;
 
 namespace org.activiti.engine.impl
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.repository;
+    using Sys;
 
     [Serializable]
     public class ProcessDefinitionQueryImpl : AbstractQuery<IProcessDefinitionQuery, IProcessDefinition>, IProcessDefinitionQuery
     {
+        private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<ProcessDefinitionQueryImpl>();
 
         private const long serialVersionUID = 1L;
 
@@ -339,7 +341,7 @@ namespace org.activiti.engine.impl
                     }
                     else
                     {
-                        //log.warn("No UserGroupLookupProxy set on ProcessEngineConfiguration. Tasks queried only where user is directly related, not through groups.");
+                        log.LogWarning("No UserGroupLookupProxy set on ProcessEngineConfiguration. Tasks queried only where user is directly related, not through groups.");
                     }
                 }
 

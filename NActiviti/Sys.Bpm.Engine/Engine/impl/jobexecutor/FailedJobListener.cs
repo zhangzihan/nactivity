@@ -13,16 +13,20 @@
 
 namespace org.activiti.engine.impl.jobexecutor
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.runtime;
+    using Sys;
 
     /// 
     /// 
     /// 
     public class FailedJobListener : ICommandContextCloseListener
     {
+        private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<FailedJobListener>();
+
         protected internal ICommandExecutor commandExecutor;
         protected internal IJob job;
 
@@ -59,7 +63,7 @@ namespace org.activiti.engine.impl.jobexecutor
             IFailedJobCommandFactory failedJobCommandFactory = commandContext.FailedJobCommandFactory;
             ICommand<object> cmd = failedJobCommandFactory.getCommand(job.Id, commandContext.Exception);
 
-            //log.trace("Using FailedJobCommandFactory '" + failedJobCommandFactory.GetType() + "' and command of type '" + cmd.GetType() + "'");
+            log.LogTrace("Using FailedJobCommandFactory '" + failedJobCommandFactory.GetType() + "' and command of type '" + cmd.GetType() + "'");
             commandExecutor.execute(commandConfig, cmd);
         }
 

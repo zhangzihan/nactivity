@@ -14,12 +14,15 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
+    using Sys.Bpm;
 
     public class MultiInstanceParser : BaseChildElementParser
     {
+        private static readonly ILogger log = BpmnModelLoggerFactory.LoggerService<MultiInstanceParser>();
 
         public override string ElementName
         {
@@ -84,8 +87,7 @@ namespace org.activiti.bpmn.converter.child
             }
             catch (Exception e)
             {
-                throw;
-                //LOGGER.warn("Error parsing multi instance definition", e);
+                log.LogWarning(e, "Error parsing multi instance definition");
             }
             ((Activity)parentElement).LoopCharacteristics = multiInstanceDef;
         }

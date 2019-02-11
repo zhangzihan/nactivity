@@ -15,15 +15,18 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.bpmn.deployer
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.bpmn.parser;
     using org.activiti.engine.impl.persistence.entity;
+    using Sys;
 
     public class ParsedDeploymentBuilder
     {
         protected internal IDeploymentEntity deployment;
         protected internal BpmnParser bpmnParser;
         protected internal IDictionary<string, object> deploymentSettings;
+
+        private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<ParsedDeploymentBuilder>();
 
         public ParsedDeploymentBuilder(IDeploymentEntity deployment, BpmnParser bpmnParser, IDictionary<string, object> deploymentSettings)
         {
@@ -43,7 +46,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
             {
                 if (isBpmnResource(resource.Name))
                 {
-                    //log.debug("Processing BPMN resource {}", resource.Name);
+                    log.LogDebug($"Processing BPMN resource {resource.Name}");
                     BpmnParse parse = createBpmnParseFromResource(resource);
                     foreach (IProcessDefinitionEntity processDefinition in parse.ProcessDefinitions)
                     {

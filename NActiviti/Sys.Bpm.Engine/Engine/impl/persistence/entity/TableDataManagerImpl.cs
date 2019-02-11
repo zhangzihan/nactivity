@@ -18,6 +18,7 @@ namespace org.activiti.engine.impl.persistence.entity
 {
     using DatabaseSchemaReader;
     using DatabaseSchemaReader.DataSchema;
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.history;
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.db;
@@ -33,6 +34,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
     public class TableDataManagerImpl : AbstractManager, ITableDataManager
     {
+        private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<TableDataManagerImpl>();
 
         public TableDataManagerImpl(ProcessEngineConfigurationImpl processEngineConfiguration) : base(processEngineConfiguration)
         {
@@ -130,7 +132,8 @@ namespace org.activiti.engine.impl.persistence.entity
                     {
                         tableCount[tableName] = getTableCount(tableName);
                     }
-                    //log.debug("Number of rows per activiti table: {}", tableCount);
+
+                    log.LogDebug($"Number of rows per activiti table: {tableCount}");
                 }
                 catch (Exception e)
                 {
@@ -149,7 +152,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     var dbreader = ProcessEngineServiceProvider.Resolve<IDatabaseReader>();
 
-                    //log.debug("retrieving activiti tables from jdbc metadata");
+                    log.LogDebug("retrieving activiti tables from jdbc metadata");
                     string databaseTablePrefix = DbSqlSession.DbSqlSessionFactory.DatabaseTablePrefix;
                     string tableNameFilter = databaseTablePrefix + "ACT_%";
                     if ("postgres".Equals(DbSqlSession.DbSqlSessionFactory.DatabaseType))
@@ -201,7 +204,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         protected internal virtual long getTableCount(string tableName)
         {
-            //log.debug("selecting table count for {}", tableName);
+            log.LogDebug($"selecting table count for {tableName}");
             long? count = (long?)DbSqlSession.selectOne<TableDataManagerImpl, long?>("selectTableCount", tableName);
             return count.Value;
         }

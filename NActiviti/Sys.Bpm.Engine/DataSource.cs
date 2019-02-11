@@ -14,14 +14,12 @@ namespace Sys.Data
 {
     public class DataSource : IDataSource
     {
-        private static ILogger<DataSource> log = ProcessEngineServiceProvider.LoggerService<DataSource>();
+        private static readonly ILogger<DataSource> log = ProcessEngineServiceProvider.LoggerService<DataSource>();
 
-        private static ConcurrentDictionary<string, string> dbTypes = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, string> dbTypes = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         static DataSource()
         {
-            //Validator.Validate();
-
             dbTypes["System.Data.SqlClient"] = "System.Data.SqlClient.SqlClientFactory,System.Data.SqlClient";
             dbTypes["MySql"] = "MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data";
         }

@@ -49,12 +49,15 @@ namespace org.activiti.cloud.services.rest.controllers
 
         private readonly ITaskService taskService;
 
+        private readonly IProcessEngine engine;
+
         public TaskControllerImpl(ProcessEngineWrapper processEngine,
             IProcessEngine engine,
             TaskResourceAssembler taskResourceAssembler,
             AuthenticationWrapper authenticationWrapper,
             TaskConverter taskConverter)
         {
+            this.engine = engine;
             this.taskService = engine.TaskService;
             this.authenticationWrapper = authenticationWrapper;
             this.processEngine = processEngine;
@@ -149,11 +152,10 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpPost("{taskId}/subtask")]
         public virtual Resource<Task> createSubtask(string taskId, [FromBody]CreateTaskCmd createSubtaskCmd)
         {
-            this.Request.Body.Position = 0;
+            ITask task = taskService.createTaskQuery().taskId(taskId).singleResult();
 
-            var reader = new HttpRequestStreamReader(this.Request.Body, Encoding.UTF8);
-            string str = reader.ReadToEnd();
-
+            engine.ProcessEngineConfiguration.ManagementService.executeCommand(new engine.impl.cmd.AddCountersignCmd(task.ExecutionId, createSubtaskCmd.Assignee));
+            
             return taskResourceAssembler.toResource(processEngine.createNewSubtask(taskId, createSubtaskCmd));
         }
 

@@ -17,11 +17,12 @@ namespace org.activiti.engine.impl.cmd
 
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
+    using org.activiti.engine.runtime;
     using org.activiti.engine.task;
 
     /// 
     [Serializable]
-    public class NewTaskCmd : ICommand<ITask>
+    public class NewTaskCmd : ICommand<ITaskEntity>
     {
 
         private const long serialVersionUID = 1L;
@@ -33,10 +34,11 @@ namespace org.activiti.engine.impl.cmd
             this.taskId = taskId;
         }
 
-        public  virtual ITask  execute(ICommandContext  commandContext)
+        public  virtual ITaskEntity  execute(ICommandContext  commandContext)
         {
             ITaskEntity task = commandContext.TaskEntityManager.create();
             task.Id = taskId;
+            task.CreateTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
             task.Revision = 0;
             return task;
         }

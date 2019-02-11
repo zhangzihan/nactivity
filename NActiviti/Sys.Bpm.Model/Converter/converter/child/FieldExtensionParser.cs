@@ -14,13 +14,15 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
+    using Sys.Bpm;
 
     /// 
     public class FieldExtensionParser : BaseChildElementParser
     {
+        private static readonly ILogger log = BpmnModelLoggerFactory.LoggerService<FieldExtensionParser>();
 
         public override string ElementName
         {
@@ -88,8 +90,7 @@ namespace org.activiti.bpmn.converter.child
                 }
                 catch (Exception e)
                 {
-                    throw;
-                    //LOGGER.warn("Error parsing field extension child elements", e);
+                    log.LogWarning(e, "Error parsing field extension child elements");
                 }
             }
 

@@ -14,14 +14,17 @@
  */
 namespace org.activiti.bpmn.converter.parser
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
+    using Sys.Bpm;
 
     /// 
     public class InterfaceParser : IBpmnXMLConstants
     {
+        private static readonly ILogger log = BpmnModelLoggerFactory.LoggerService<InterfaceParser>();
+
         public virtual void parse(XMLStreamReader xtr, BpmnModel model)
         {
             Interface interfaceObject = new Interface();
@@ -86,8 +89,7 @@ namespace org.activiti.bpmn.converter.parser
             }
             catch (Exception e)
             {
-                throw e;
-                //LOGGER.warn("Error parsing interface child elements", e);
+                log.LogWarning(e, "Error parsing interface child elements");
             }
 
             model.Interfaces.Add(interfaceObject);

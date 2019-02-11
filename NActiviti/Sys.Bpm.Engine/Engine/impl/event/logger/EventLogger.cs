@@ -3,18 +3,22 @@ using System.Collections.Generic;
 
 namespace org.activiti.engine.impl.@event.logger
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.@event.logger.handler;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
+    using Sys;
     using Sys.Bpm;
 
     /// 
     public class EventLogger : IActivitiEventListener
     {
         private const string EVENT_FLUSHER_KEY = "eventFlusher";
+
+        private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<EventLogger>();
 
         protected internal IClock clock;
         protected internal ObjectMapper objectMapper;
@@ -173,7 +177,7 @@ namespace org.activiti.engine.impl.@event.logger
             }
             catch (Exception)
             {
-                //logger.warn("Could not instantiate " + eventHandlerClass + ", this is most likely a programmatic error");
+                log.LogWarning("Could not instantiate " + eventHandlerClass + ", this is most likely a programmatic error");
             }
             return null;
         }
@@ -245,8 +249,5 @@ namespace org.activiti.engine.impl.@event.logger
                 this.listeners = value;
             }
         }
-
-
     }
-
 }
