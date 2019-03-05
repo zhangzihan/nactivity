@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.TablePageMapImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+
+  <!-- The property passing doesn't seem to work with parameterType='string', so we are forced to use a map here -->
+  <Select Id="selectTableCount" >
+    select count(*) from #{tableName}
+  </Select>
+
+  <Select Id="selectTableData" >
+    select * from #{tableName}
+    <IsNotNull test="order != null">
+      order by #{order}
+    </IsNotNull>
+  </Select>
+
+</SmartSqlMap>
