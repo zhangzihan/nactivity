@@ -16,10 +16,12 @@ namespace org.activiti.engine
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
     using org.activiti.engine.cfg;
     using org.activiti.engine.impl.asyncexecutor;
     using org.activiti.engine.impl.history;
     using org.activiti.engine.impl.persistence.entity.integration;
+    using org.activiti.engine.impl.util;
     using org.activiti.engine.integration;
     using org.activiti.engine.runtime;
     using SmartSql.Abstractions;
@@ -27,6 +29,9 @@ namespace org.activiti.engine
     using Sys.Bpm;
     using Sys.Data;
     using Sys.Workflow.Engine.Bpmn.Rules;
+    using System.IO;
+    using System.Linq;
+    using System.Security.Cryptography;
 
 
     /// <summary>
@@ -187,7 +192,11 @@ namespace org.activiti.engine
         protected internal bool enableProcessDefinitionInfoCache = false;
         protected internal IActivitiEngineAgendaFactory engineAgendaFactory;
 
+        protected internal string webapiErrorCode = "-1000";
+
         protected IConfiguration Configuration { get; set; }
+
+        public abstract Properties GetProperties();
 
         /// <summary>
         /// use one of the static createXxxx methods instead </summary>
@@ -526,12 +535,9 @@ namespace org.activiti.engine
             }
         }
 
-        public ISmartSqlMapper SqlMapper
+        public string WebApiErrorCode
         {
-            get
-            {
-                return ProcessEngineServiceProvider.Resolve<ISmartSqlMapper>();
-            }
+            get; set;
         }
 
         public virtual string DatabaseWildcardEscapeCharacter
@@ -593,7 +599,6 @@ namespace org.activiti.engine
                 this.clock = value;
             }
         }
-
 
         public virtual IAsyncExecutor AsyncExecutor
         {
@@ -666,8 +671,49 @@ namespace org.activiti.engine
                 return engineAgendaFactory;
             }
         }
-
-
     }
 
+    internal class ProcessEngineOption
+    {
+        private static string s_configFileName;
+        private static byte[] hashByte;
+
+        internal static string ConfigFileName
+        {
+            get => s_configFileName;
+            set
+            {
+                s_configFileName = value;
+
+                hashByte = ComputeHash();
+            }
+        }
+
+        private static byte[] ComputeHash()
+        {
+            using (var fs = File.OpenRead(s_configFileName))
+            {
+                return SHA1.Create().ComputeHash(fs);
+            }
+        }
+
+        public static bool HasChanged()
+        {
+            var curr = ComputeHash();
+
+            bool changed = !hashByte.SequenceEqual(curr);
+
+            if (changed)
+            {
+                hashByte = curr;
+            }
+
+            return changed;
+        }
+
+        public ProcessEngineOption()
+        {
+
+        }
+    }
 }

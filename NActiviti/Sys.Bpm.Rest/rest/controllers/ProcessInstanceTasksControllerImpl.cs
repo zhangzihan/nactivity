@@ -15,13 +15,15 @@
  */
 
 using Microsoft.AspNetCore.Mvc;
+using org.activiti.api.runtime.shared.query;
+using org.activiti.bpmn.model;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.api.resources;
 using org.activiti.cloud.services.rest.assemblers;
-using org.springframework.data.domain;
 using org.springframework.hateoas;
+using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
@@ -30,20 +32,20 @@ namespace org.activiti.cloud.services.rest.controllers
     public class ProcessInstanceTasksControllerImpl : ControllerBase, IProcessInstanceTasksController
     {
 
-        private readonly PageableTaskService pageableTaskService;
+        private readonly PageableTaskRepositoryService pageableTaskService;
 
         private readonly TaskResourceAssembler taskResourceAssembler;
 
-        public ProcessInstanceTasksControllerImpl(PageableTaskService pageableTaskService, TaskResourceAssembler taskResourceAssembler)
+        public ProcessInstanceTasksControllerImpl(PageableTaskRepositoryService pageableTaskService, TaskResourceAssembler taskResourceAssembler)
         {
             this.pageableTaskService = pageableTaskService;
             this.taskResourceAssembler = taskResourceAssembler;
         }
 
         [HttpGet("tasks")]
-        public virtual PagedResources<TaskResource> getTasks(string processInstanceId, Pageable pageable)
+        public virtual System.Threading.Tasks.Task<Resources<TaskModel>> getTasks(string processInstanceId, Pageable pageable)
         {
-            Page<Task> page = pageableTaskService.getTasks(processInstanceId, pageable);
+            IPage<TaskModel> page = pageableTaskService.getTasks(processInstanceId, pageable);
             //return pagedResourcesAssembler.toResource(pageable, page, taskResourceAssembler);
             return null;
         }

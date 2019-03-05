@@ -27,6 +27,7 @@ create table ACT_GE_BYTEARRAY (
 create table ACT_RE_DEPLOYMENT (
     ID_ varchar(64),
     NAME_ varchar(255),
+	BUSINESS_KEY_ VARCHAR(255),
     CATEGORY_ varchar(255),
     KEY_ varchar(255),
     TENANT_ID_ varchar(255) default '',
@@ -171,6 +172,9 @@ create table ACT_RE_PROCDEF (
     CATEGORY_ varchar(255),
     NAME_ varchar(255),
     KEY_ varchar(255) NOT NULL,
+	BUSINESS_KEY_ varchar(255),
+	BUSINESS_PATH_ varchar(255),
+	START_FORM_ varchar(255),
     VERSION_ integer NOT NULL,
     DEPLOYMENT_ID_ varchar(64),
     RESOURCE_NAME_ varchar(4000),

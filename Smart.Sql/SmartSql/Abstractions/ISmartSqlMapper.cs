@@ -23,6 +23,8 @@ namespace SmartSql.Abstractions
 
         IDataSourceFilter DataSourceFilter { get; }
 
+        SmartSqlOptions SmartSqlOptions { get; }
+
         IConfigLoader ConfigLoader { get; }
 
         ICommandExecuter CommandExecuter { get; }

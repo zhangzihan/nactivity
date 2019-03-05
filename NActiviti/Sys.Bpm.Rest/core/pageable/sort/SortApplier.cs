@@ -13,7 +13,7 @@
  *
  */
 
-using org.springframework.data.domain;
+using org.activiti.api.runtime.shared.query;
 
 namespace org.activiti.cloud.services.core.pageable.sort
 {

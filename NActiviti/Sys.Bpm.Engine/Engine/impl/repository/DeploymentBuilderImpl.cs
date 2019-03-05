@@ -16,6 +16,7 @@ using System.Collections.Generic;
 namespace org.activiti.engine.impl.repository
 {
     using java.util.zip;
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter;
     using org.activiti.bpmn.model;
     using org.activiti.engine.impl.context;
@@ -23,6 +24,8 @@ namespace org.activiti.engine.impl.repository
     using org.activiti.engine.impl.util;
     using org.activiti.engine.repository;
     using System.IO;
+    using System.Linq;
+    using System.Xml.Linq;
 
     /// 
     /// 
@@ -44,6 +47,8 @@ namespace org.activiti.engine.impl.repository
         protected internal bool isDuplicateFilterEnabled;
         protected internal DateTime? processDefinitionsActivationDate;
         protected internal IDictionary<string, object> deploymentProperties = new Dictionary<string, object>();
+
+        private object syncRoot = new object();
 
         public DeploymentBuilderImpl(RepositoryServiceImpl repositoryService)
         {
@@ -164,6 +169,82 @@ namespace org.activiti.engine.impl.repository
             return this;
         }
 
+        public virtual IDeploymentBuilder businessKey(string businessKey)
+        {
+            deployment.BusinessKey = businessKey;
+            return this;
+        }
+
+        public virtual IDeploymentBuilder businessPath(string businessPath)
+        {
+            deployment.BusinessPath = businessPath;
+            return this;
+        }
+
+
+        private string VerifyStartForm(string name, string startForm)
+        {
+            IList<IProcessDefinition> processes = repositoryService.createProcessDefinitionQuery()
+                .processDefinitionStartForm(startForm)
+                .latestVersion()
+                .list();
+
+            return processes.FirstOrDefault(x => string.IsNullOrWhiteSpace(x.StartForm) == false &&
+                x.StartForm.Trim().ToLower() == startForm.Trim().ToLower() &&
+                x.Name.Trim() != name.Trim().ToLower())?.Name;
+        }
+
+        public virtual IDeploymentBuilder startForm(string startForm, string bpmnXML)
+        {
+            lock (syncRoot)
+            {
+                if (string.IsNullOrWhiteSpace(startForm) == false)
+                {
+                    deployment.StartForm = startForm;
+                }
+                else
+                {
+                    BpmnXMLConverter bpm = new BpmnXMLConverter();
+
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        StreamWriter sw = new StreamWriter(ms);
+                        sw.Write(bpmnXML);
+                        sw.Flush();
+                        ms.Seek(0, SeekOrigin.Begin);
+                        XDocument doc = XDocument.Load(ms, LoadOptions.PreserveWhitespace);
+
+                        XElement start = doc.Descendants(XName.Get("process", BpmnXMLConstants.BPMN2_NAMESPACE))
+                             .Descendants(XName.Get("startEvent", BpmnXMLConstants.BPMN2_NAMESPACE))
+                             .FirstOrDefault();
+
+                        if (start != null)
+                        {
+                            string formKey = start.Attribute(XName.Get("formKey", BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE))?.Value;
+
+                            deployment.StartForm = formKey;
+                        }
+                    }
+                }
+
+                if (string.IsNullOrWhiteSpace(deployment.StartForm) == false)
+                {
+                    string procName = VerifyStartForm(deployment.Name, deployment.StartForm);
+
+                    if (string.IsNullOrWhiteSpace(procName) == false)
+                    {
+                        throw new StartFormUniqueException(procName, deployment.StartForm);
+                    }
+                }
+
+                //if (string.IsNullOrWhiteSpace(deployment.StartForm))
+                //{
+                //    throw new StartFormNullException(deployment.Name);
+                //}
+                return this;
+            }
+        }
+
         public virtual IDeploymentBuilder key(string key)
         {
             deployment.Key = key;
@@ -209,6 +290,11 @@ namespace org.activiti.engine.impl.repository
         public virtual IDeployment deploy()
         {
             return repositoryService.deploy(this);
+        }
+
+        public virtual IDeployment save()
+        {
+            return repositoryService.save(this);
         }
 
         // getters and setters

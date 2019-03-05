@@ -6,17 +6,12 @@
 //  Original author: 张楠
 ///////////////////////////////////////////////////////////
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
-
-
-
-using Sys.Workflow.Engine.Bpmn.Rules;
 using System.Net.Http;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
@@ -39,6 +34,8 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
             {
                 BaseAddress = new Uri(userServiceProxyBaseUrl)
             };
+            handler.UseDefaultCredentials = UserServiceProxyBaseUrl.StartsWith("https");
+            httpClient.DefaultRequestHeaders.Connection.Add("keep-alive");
         }
 
         /// 
@@ -48,7 +45,14 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         {
             HttpResponseMessage response = httpClient.PostAsync(apiUrl, new StringContent(JsonConvert.SerializeObject(parameter), Encoding.UTF8, "application/json")).GetAwaiter().GetResult();
 
-            return JsonConvert.DeserializeObject<IList<IUserInfo>>(response.Content.ReadAsStringAsync().Result);
+            JArray users = JsonConvert.DeserializeObject<JArray>(response.Content.ReadAsStringAsync().Result);
+
+            return new List<IUserInfo>(users.ToObject<UserInfo[]>());
+        }
+
+        public IList<IUserInfo> GetUsers(object parameter)
+        {
+            return GetUsers("api/workflowusers", parameter);
         }
     }
 }

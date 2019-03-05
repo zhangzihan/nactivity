@@ -31,31 +31,31 @@ namespace org.activiti.engine.impl
 
         private const long serialVersionUID = 1L;
 
-        protected internal string processDefinitionId_Renamed;
+        protected internal string processDefinitionId_;
 
-        protected internal string processDefinitionKey_Renamed;
+        protected internal string processDefinitionKey_;
 
-        protected internal string processDefinitionCategory_Renamed;
+        protected internal string processDefinitionCategory_;
 
-        protected internal string processDefinitionName_Renamed;
+        protected internal string processDefinitionName_;
 
-        protected internal int? processDefinitionVersion_Renamed;
+        protected internal int? processDefinitionVersion_;
 
-        protected internal string activityId_Renamed;
+        protected internal string activityId_;
 
-        protected internal string executionId_Renamed;
+        protected internal string executionId_;
 
-        protected internal string parentId_Renamed;
+        protected internal string parentId_;
 
-        protected internal bool onlyChildExecutions_Renamed;
+        protected internal bool onlyChildExecutions_;
 
-        protected internal bool onlySubProcessExecutions_Renamed;
+        protected internal bool onlySubProcessExecutions_;
 
-        protected internal bool onlyProcessInstanceExecutions_Renamed;
+        protected internal bool onlyProcessInstanceExecutions_;
 
-        protected internal string processInstanceId_Renamed;
+        protected internal string processInstanceId_;
 
-        protected internal string rootProcessInstanceId_Renamed;
+        protected internal string rootProcessInstanceId_;
         protected internal IList<EventSubscriptionQueryValue> eventSubscriptions;
 
         protected internal string tenantId;
@@ -64,12 +64,12 @@ namespace org.activiti.engine.impl
 
         protected internal string locale_Renamed;
 
-        protected internal bool withLocalizationFallback_Renamed;
+        protected internal bool withLocalizationFallback_;
 
-        protected internal DateTime? startedBefore_Renamed;
-        protected internal DateTime? startedAfter_Renamed;
+        protected internal DateTime? startedBefore_;
+        protected internal DateTime? startedAfter_;
 
-        protected internal string startedBy_Renamed;
+        protected internal string startedBy_;
 
         // Not used by end-users, but needed for dynamic ibatis query
         protected internal string superProcessInstanceId;
@@ -81,8 +81,8 @@ namespace org.activiti.engine.impl
         protected internal bool isActive;
         protected internal string involvedUser;
 
-        protected internal ISet<string> processDefinitionKeys_Renamed;
-        protected internal ISet<string> processDefinitionIds;
+        protected internal string[] processDefinitionKeys_;
+        protected internal string[] processDefinitionIds;
 
         // Not exposed in API, but here for the ProcessInstanceQuery support, since
         // the name lives on the
@@ -120,7 +120,17 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("Process definition id is null");
             }
-            this.processDefinitionId_Renamed = processDefinitionId;
+            this.processDefinitionId_ = processDefinitionId;
+            return this;
+        }
+
+        public virtual IExecutionQuery processDeploymentId(string deploymentId)
+        {
+            if (string.IsNullOrWhiteSpace(deploymentId))
+            {
+                throw new ActivitiIllegalArgumentException("Process definition id is null");
+            }
+            this.deploymentId = deploymentId;
             return this;
         }
 
@@ -130,7 +140,7 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("Process definition key is null");
             }
-            this.processDefinitionKey_Renamed = processDefinitionKey;
+            this.processDefinitionKey_ = processDefinitionKey;
             return this;
         }
 
@@ -140,7 +150,7 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("Process definition category is null");
             }
-            this.processDefinitionCategory_Renamed = processDefinitionCategory;
+            this.processDefinitionCategory_ = processDefinitionCategory;
             return this;
         }
 
@@ -150,7 +160,7 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("Process definition name is null");
             }
-            this.processDefinitionName_Renamed = processDefinitionName;
+            this.processDefinitionName_ = processDefinitionName;
             return this;
         }
 
@@ -160,7 +170,7 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("Process definition version is null");
             }
-            this.processDefinitionVersion_Renamed = processDefinitionVersion;
+            this.processDefinitionVersion_ = processDefinitionVersion;
             return this;
         }
 
@@ -170,7 +180,7 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("Process instance id is null");
             }
-            this.processInstanceId_Renamed = processInstanceId;
+            this.processInstanceId_ = processInstanceId;
             return this;
         }
 
@@ -180,7 +190,7 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("Root process instance id is null");
             }
-            this.rootProcessInstanceId_Renamed = rootProcessInstanceId;
+            this.rootProcessInstanceId_ = rootProcessInstanceId;
             return this;
         }
 
@@ -212,13 +222,13 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public virtual IExecutionQuery processDefinitionKeys(ISet<string> processDefinitionKeys)
+        public virtual IExecutionQuery processDefinitionKeys(string[] processDefinitionKeys)
         {
             if (processDefinitionKeys == null)
             {
                 throw new ActivitiIllegalArgumentException("Process definition keys is null");
             }
-            this.processDefinitionKeys_Renamed = processDefinitionKeys;
+            this.processDefinitionKeys_ = processDefinitionKeys;
             return this;
         }
 
@@ -228,13 +238,13 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("Execution id is null");
             }
-            this.executionId_Renamed = executionId;
+            this.executionId_ = executionId;
             return this;
         }
 
         public virtual IExecutionQuery activityId(string activityId)
         {
-            this.activityId_Renamed = activityId;
+            this.activityId_ = activityId;
 
             if (!string.IsNullOrWhiteSpace(activityId))
             {
@@ -249,25 +259,25 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("Parent id is null");
             }
-            this.parentId_Renamed = parentId;
+            this.parentId_ = parentId;
             return this;
         }
 
         public virtual IExecutionQuery onlyChildExecutions()
         {
-            this.onlyChildExecutions_Renamed = true;
+            this.onlyChildExecutions_ = true;
             return this;
         }
 
         public virtual IExecutionQuery onlySubProcessExecutions()
         {
-            this.onlySubProcessExecutions_Renamed = true;
+            this.onlySubProcessExecutions_ = true;
             return this;
         }
 
         public virtual IExecutionQuery onlyProcessInstanceExecutions()
         {
-            this.onlyProcessInstanceExecutions_Renamed = true;
+            this.onlyProcessInstanceExecutions_ = true;
             return this;
         }
 
@@ -373,7 +383,7 @@ namespace org.activiti.engine.impl
 
         public virtual IExecutionQuery withLocalizationFallback()
         {
-            withLocalizationFallback_Renamed = true;
+            withLocalizationFallback_ = true;
             return this;
         }
 
@@ -383,7 +393,7 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("before time is null");
             }
-            this.startedBefore_Renamed = beforeTime;
+            this.startedBefore_ = beforeTime;
 
             return this;
         }
@@ -394,7 +404,7 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("after time is null");
             }
-            this.startedAfter_Renamed = afterTime;
+            this.startedAfter_ = afterTime;
 
             return this;
         }
@@ -405,7 +415,7 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("user id is null");
             }
-            this.startedBy_Renamed = userId;
+            this.startedBy_ = userId;
 
             return this;
         }
@@ -490,7 +500,7 @@ namespace org.activiti.engine.impl
             string processDefinitionId = executionEntity.ProcessDefinitionId;
             if (!string.IsNullOrWhiteSpace(locale_Renamed) && !string.IsNullOrWhiteSpace(processDefinitionId))
             {
-                JToken languageNode = Context.getLocalizationElementProperties(locale_Renamed, activityId, processDefinitionId, withLocalizationFallback_Renamed);
+                JToken languageNode = Context.getLocalizationElementProperties(locale_Renamed, activityId, processDefinitionId, withLocalizationFallback_);
                 if (languageNode != null)
                 {
                     JToken languageNameNode = languageNode[DynamicBpmnConstants_Fields.LOCALIZATION_NAME];
@@ -522,7 +532,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processDefinitionKey_Renamed;
+                return processDefinitionKey_;
             }
         }
 
@@ -530,7 +540,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processDefinitionId_Renamed;
+                return processDefinitionId_;
             }
         }
 
@@ -538,7 +548,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processDefinitionCategory_Renamed;
+                return processDefinitionCategory_;
             }
         }
 
@@ -546,7 +556,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processDefinitionName_Renamed;
+                return processDefinitionName_;
             }
         }
 
@@ -554,7 +564,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processDefinitionVersion_Renamed;
+                return processDefinitionVersion_;
             }
         }
 
@@ -562,7 +572,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return activityId_Renamed;
+                return activityId_;
             }
         }
 
@@ -570,7 +580,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processInstanceId_Renamed;
+                return processInstanceId_;
             }
         }
 
@@ -578,7 +588,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return rootProcessInstanceId_Renamed;
+                return rootProcessInstanceId_;
             }
         }
 
@@ -602,7 +612,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return executionId_Renamed;
+                return executionId_;
             }
         }
 
@@ -685,19 +695,20 @@ namespace org.activiti.engine.impl
         }
 
 
-        public virtual ISet<string> ProcessDefinitionIds
+        public virtual string[] ProcessDefinitionIds
         {
             get
             {
                 return processDefinitionIds;
             }
+            set => processDefinitionIds = value;
         }
 
-        public virtual ISet<string> ProcessDefinitionKeys
+        public virtual string[] ProcessDefinitionKeys
         {
             get
             {
-                return processDefinitionKeys_Renamed;
+                return processDefinitionKeys_;
             }
         }
 
@@ -705,7 +716,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return parentId_Renamed;
+                return parentId_;
             }
         }
 
@@ -713,7 +724,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return onlyChildExecutions_Renamed;
+                return onlyChildExecutions_;
             }
         }
 
@@ -721,7 +732,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return onlySubProcessExecutions_Renamed;
+                return onlySubProcessExecutions_;
             }
         }
 
@@ -729,7 +740,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return onlyProcessInstanceExecutions_Renamed;
+                return onlyProcessInstanceExecutions_;
             }
         }
 
@@ -800,11 +811,11 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return startedBefore_Renamed;
+                return startedBefore_;
             }
             set
             {
-                this.startedBefore_Renamed = value;
+                this.startedBefore_ = value;
             }
         }
 
@@ -813,11 +824,11 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return startedAfter_Renamed;
+                return startedAfter_;
             }
             set
             {
-                this.startedAfter_Renamed = value;
+                this.startedAfter_ = value;
             }
         }
 
@@ -826,14 +837,18 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return startedBy_Renamed;
+                return startedBy_;
             }
             set
             {
-                this.startedBy_Renamed = value;
+                this.startedBy_ = value;
             }
         }
 
+        public virtual string DeploymentId
+        {
+            get => deploymentId;
+            set => processDeploymentId(value);
+        }
     }
-
 }

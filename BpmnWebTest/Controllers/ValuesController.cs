@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 
 namespace BpmnWebTest.Controllers
 {
@@ -10,6 +12,13 @@ namespace BpmnWebTest.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly IConfiguration configuration;
+
+        public ValuesController(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
@@ -19,15 +28,16 @@ namespace BpmnWebTest.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<string> Get(string id)
         {
-            return "value";
+            return configuration.GetValue<string>(id);
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<JToken> Post([FromBody] JToken value)
         {
+            return value;
         }
 
         // PUT api/values/5

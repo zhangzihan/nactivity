@@ -94,7 +94,7 @@ namespace org.activiti.bpmn.converter
 
                 parseChildElements(XMLElementName, dataObject, model, xtr);
 
-                IList<ExtensionElement> valuesElement = dataObject.ExtensionElements["value"];
+                 dataObject.ExtensionElements.TryGetValue("value", out IList<ExtensionElement> valuesElement);
                 if (valuesElement != null && valuesElement.Count > 0)
                 {
                     ExtensionElement valueElement = valuesElement[0];

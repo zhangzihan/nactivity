@@ -146,7 +146,7 @@ namespace org.activiti.engine
         {
             try
             {
-                ProcessEngineConfigurationImpl engineConfig = ProcessEngineServiceProvider.Resolve<ProcessEngineConfigurationImpl>();
+                ProcessEngineConfiguration engineConfig = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>();
 
                 return engineConfig.buildProcessEngine();
             }

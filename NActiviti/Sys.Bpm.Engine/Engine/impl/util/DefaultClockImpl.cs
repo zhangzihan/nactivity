@@ -70,7 +70,7 @@ namespace org.activiti.engine.impl.util
         {
             get
             {
-                return null;
+                return TimeZoneInfo.Local;
             }
         }
 

@@ -26,19 +26,19 @@ namespace org.activiti.cloud.services.events.listeners
 
         public const string PROCESS_ENGINE_EVENTS = "processEngineEvents";
 
-        private readonly ProcessEngineChannels producer;
+        private readonly IProcessEngineChannels producer;
 
-        public MessageProducerCommandContextCloseListener(ProcessEngineChannels producer)
+        public MessageProducerCommandContextCloseListener(IProcessEngineChannels producer)
         {
             this.producer = producer;
         }
 
         public virtual void closed(ICommandContext commandContext)
         {
-            IList<ProcessEngineEvent> events = commandContext.getGenericAttribute<IList<ProcessEngineEvent>>(PROCESS_ENGINE_EVENTS);
+            IList<IProcessEngineEvent> events = commandContext.getGenericAttribute<IList<IProcessEngineEvent>>(PROCESS_ENGINE_EVENTS);
             if (events != null && events.Count > 0)
             {
-                producer.auditProducer().send(MessageBuilder<IList<ProcessEngineEvent>>.withPayload(events).build());
+                producer.auditProducer().send(MessageBuilder<IList<IProcessEngineEvent>>.withPayload(events).build());
             }
         }
 

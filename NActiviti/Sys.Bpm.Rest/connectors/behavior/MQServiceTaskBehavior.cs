@@ -35,9 +35,9 @@ namespace org.activiti.services.connectors.behavior
 
         private readonly IIntegrationContextManager integrationContextManager;
         private readonly RuntimeBundleProperties runtimeBundleProperties;
-        private readonly ApplicationEventPublisher eventPublisher;
+        private readonly IApplicationEventPublisher eventPublisher;
 
-        public MQServiceTaskBehavior(IIntegrationContextManager integrationContextManager, RuntimeBundleProperties runtimeBundleProperties, ApplicationEventPublisher eventPublisher)
+        public MQServiceTaskBehavior(IIntegrationContextManager integrationContextManager, RuntimeBundleProperties runtimeBundleProperties, IApplicationEventPublisher eventPublisher)
         {
             this.integrationContextManager = integrationContextManager;
             this.runtimeBundleProperties = runtimeBundleProperties;
@@ -52,7 +52,7 @@ namespace org.activiti.services.connectors.behavior
         }
 
         /// <summary>
-        /// Publishes an custom event using the Spring <seealso cref="ApplicationEventPublisher"/>. This event will be caught by
+        /// Publishes an custom event using the Spring <seealso cref="IApplicationEventPublisher"/>. This event will be caught by
         /// <seealso cref="IntegrationRequestSender#sendIntegrationRequest(IntegrationRequestEvent)"/> which is annotated with
         /// <seealso cref="TransactionalEventListener"/> on phase <seealso cref="TransactionPhase#AFTER_COMMIT"/>. </summary>
         /// <param name="execution"> the related execution </param>

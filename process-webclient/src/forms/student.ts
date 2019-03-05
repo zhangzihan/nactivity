@@ -6,35 +6,65 @@ import contants from 'contants';
 
 export class Student extends BaseForm {
 
-    className;
+  className;
 
-    workflow;
+  workflow;
 
-    task;
+  task;
 
-    constructor(...args) {
-        super(args[0], args[1]);
-    }
+  approvaled = false;
 
-    activate(model, nctx) {
-        super.activate(model, nctx);
+  toUser;
 
-        this.es.subscribe("next", (task) => {
-            this.task = task;
-        });
-    }
+  constructor(...args) {
+    super(args[0], args[1]);
+  }
 
-    submit() {
-        Axios.post(`${contants.serverUrl}/${this.task.id}/complete`, {
-            taskId: this.task.id,
-            outputVariables: {
-                className: this.className
-            }
-        }).then((res) => {
-            this.es.publish("reloadMyTasks");
-            this.es.publish("completed");
-        }).catch((res) => {
+  activate(model, nctx) {
+    super.activate(model, nctx);
 
-        });
-    }
+    this.es.subscribe("next", (task) => {
+      this.task = task;
+    });
+  }
+
+  toUsers() {
+    Axios.post(`${contants.serverUrl}/workflow/tasks/${this.task.id}/subtask`, {
+      taskId: this.task.id,
+      name: this.task.name,
+      assignee: this.toUser,
+      parentTaskId: this.task.id
+    }).then((res) => {
+      this.es.publish("reloadMyTasks");
+      this.es.publish("completed");
+    }).catch((res) => {
+
+    });
+  }
+
+  submit() {
+    Axios.post(`${contants.serverUrl}/workflow/tasks/${this.task.id}/complete`, {
+      taskId: this.task.id,
+      outputVariables: {
+        approvaled: this.approvaled,
+        className: this.className
+      }
+    }).then((res) => {
+      this.es.publish("reloadMyTasks");
+      this.es.publish("completed");
+    }).catch((res) => {
+
+    });
+  }
+
+  terminate() {
+    Axios.post(`${contants.serverUrl}/workflow/process-instances/${this.task.processInstanceId}/terminate`, {
+      reason: "终止流程" 
+    }).then((res) => {
+      this.es.publish("reloadMyTasks");
+      this.es.publish("completed");
+    }).catch((res) => {
+
+    });
+  }
 }

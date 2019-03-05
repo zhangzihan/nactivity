@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using org.activiti.api.runtime.shared.query;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core;
 using org.activiti.cloud.services.core.pageable;
@@ -22,15 +23,19 @@ namespace Sys.Bpm.Services.Rest
     {
         public static IMvcBuilder AddProcessEngineRestServices(this IMvcBuilder mvcBuilder, IConfiguration config)
         {
+            mvcBuilder.AddMvcOptions(opts =>
+            {
+                opts.ModelBinderProviders.Insert(0, new PageableModelBinderProvider());
+            });
             mvcBuilder.Services.AddTransient<ProcessInstanceSortApplier>();
 
             mvcBuilder.Services.AddSingleton<PageRetriever>();
 
-            mvcBuilder.Services.AddTransient<PageableProcessInstanceService>(sp =>
+            mvcBuilder.Services.AddTransient<PageableProcessInstanceRepositoryService>(sp =>
             {
                 IProcessEngine engine = sp.GetService<IProcessEngine>();
 
-                return new PageableProcessInstanceService(sp.GetService<PageRetriever>(),
+                return new PageableProcessInstanceRepositoryService(sp.GetService<PageRetriever>(),
                     engine.RuntimeService,
                     sp.GetService<ProcessInstanceSortApplier>(),
                     sp.GetService<ProcessInstanceConverter>());
@@ -44,11 +49,11 @@ namespace Sys.Bpm.Services.Rest
 
             //mvcBuilder.Services.AddTransient<MessageProducerActivitiEventListener>();
 
-            mvcBuilder.Services.AddTransient<PageableTaskService>(sp =>
+            mvcBuilder.Services.AddTransient<PageableTaskRepositoryService>(sp =>
             {
                 IProcessEngine engine = sp.GetService<IProcessEngine>();
 
-                return new PageableTaskService(engine.TaskService, sp.GetService<TaskConverter>(), sp.GetService<PageRetriever>(), sp.GetService<TaskSortApplier>());
+                return new PageableTaskRepositoryService(engine.TaskService, sp.GetService<TaskConverter>(), sp.GetService<PageRetriever>(), sp.GetService<TaskSortApplier>());
             });
 
             mvcBuilder.Services.AddTransient<ProcessInstanceConverter>(sp =>
@@ -69,10 +74,10 @@ namespace Sys.Bpm.Services.Rest
 
                 return new ProcessEngineWrapper(sp.GetService<ProcessInstanceConverter>(),
                     engine.RuntimeService,
-                    sp.GetService<PageableProcessInstanceService>(),
+                    sp.GetService<PageableProcessInstanceRepositoryService>(),
                     engine.TaskService,
                     sp.GetService<TaskConverter>(),
-                    sp.GetService<PageableTaskService>(),
+                    sp.GetService<PageableTaskRepositoryService>(),
                     null,
                     null,
                     engine.RepositoryService,
@@ -86,7 +91,10 @@ namespace Sys.Bpm.Services.Rest
                 .AddTransient<ProcessDefinitionSortApplier>()
                 .AddTransient<SecurityPoliciesApplicationService>()
                 .AddTransient<ProcessDefinitionResourceAssembler>()
-                .AddTransient<PageableRepositoryService>();
+                .AddTransient<DeploymentConverter>()
+                .AddTransient<DeploymentSortApplier>()
+                .AddTransient<PageableProcessDefinitionRepositoryService>()
+                .AddTransient<PageableDeploymentRespositoryService>();
 
             mvcBuilder.Services.AddTransient<TaskVariableResourceAssembler>();
 

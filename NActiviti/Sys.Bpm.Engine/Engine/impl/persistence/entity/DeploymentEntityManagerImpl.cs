@@ -92,7 +92,10 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             // Remove the deployment link from any model.
             // The model will still exists, as a model is a source for a deployment model and has a different lifecycle
-            IList<IModel> models = (new ModelQueryImpl()).deploymentId(deploymentId).list();
+            IList<IModel> models =  this.CommandContext.ProcessEngineConfiguration.repositoryService.createModelQuery().deploymentId(deploymentId).list();
+            //IList<IModel> models = new ModelQueryImpl(this.CommandContext)
+            //    .deploymentId(deploymentId).list();
+
             foreach (IModel model in models)
             {
                 IModelEntity modelEntity = (IModelEntity)model;

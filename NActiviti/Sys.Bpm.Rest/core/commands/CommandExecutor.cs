@@ -3,7 +3,7 @@ using System;
 
 namespace org.activiti.cloud.services.core.commands
 {
-    public interface CommandExecutor<T> where T : Command
+    public interface CommandExecutor<T> where T : ICommand
     {
         Type HandledType { get; }
 

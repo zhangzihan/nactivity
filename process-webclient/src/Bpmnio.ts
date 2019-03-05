@@ -149,7 +149,8 @@ export class BpmnIO {
         "name": this.workflow.name,
         "key": this.workflow.id,
         "enableDuplicateFiltering": true,
-        "bpmnXML": this.workflow.xml
+        "bpmnXML": this.workflow.xml,
+        "businessKey": "关联会议"
       }).then(() => {
         this.es.publish("deploied", this.workflow);
         alert('已部署');
@@ -161,7 +162,22 @@ export class BpmnIO {
 
   saveBpmn($event) {
     this.saveDiagram((err, xml) => {
-      this.setEncoded('diagram.bpmn', err ? null : xml);
+      //this.setEncoded('diagram.bpmn', err ? null : xml);      
+      this.workflow.xml = xml;
+      Axios.post(`${constants.serverUrl}/workflow/process-deployer/save`, {
+        "disableSchemaValidation": true,
+        "disableBpmnValidation": true,
+        "name": this.workflow.name,
+        "key": this.workflow.id,
+        "enableDuplicateFiltering": false,
+        "bpmnXML": this.workflow.xml,
+        "businessKey": "关联会议"
+      }).then(() => {
+        this.es.publish("deploied", this.workflow);
+        alert('已部署');
+      }).catch(() => {
+        alert('未知错误');
+      });
     });
   }
 

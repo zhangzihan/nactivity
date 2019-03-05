@@ -14,9 +14,9 @@ namespace org.activiti.services.subscriptions.behavior
     {
         private const long serialVersionUID = 1L;
 
-        private readonly ApplicationEventPublisher eventPublisher;
+        private readonly IApplicationEventPublisher eventPublisher;
 
-        public BroadcastSignalEventActivityBehavior(ApplicationEventPublisher eventPublisher, SignalEventDefinition signalEventDefinition, Signal signal) : base(signalEventDefinition, signal)
+        public BroadcastSignalEventActivityBehavior(IApplicationEventPublisher eventPublisher, SignalEventDefinition signalEventDefinition, Signal signal) : base(signalEventDefinition, signal)
         {
             this.eventPublisher = eventPublisher;
         }

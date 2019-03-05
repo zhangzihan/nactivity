@@ -15,14 +15,13 @@
  */
 
 using org.activiti.services.connectors.model;
+using org.springframework.messaging;
 
 namespace org.activiti.services.connectors.channel
 {
-    using SubscribableChannel = org.springframework.messaging.SubscribableChannel;
-
-    public interface ProcessEngineIntegrationChannels
+    public interface IProcessEngineIntegrationChannels
     {
-        SubscribableChannel integrationResultsConsumer();
+        ISubscribableChannel integrationResultsConsumer();
     }
 
     public static class ProcessEngineIntegrationChannels_Fields

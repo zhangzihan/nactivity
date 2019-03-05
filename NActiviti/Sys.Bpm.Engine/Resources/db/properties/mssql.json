@@ -4,7 +4,8 @@
   "limitBetween": "', row_number() over (ORDER BY ' + orderByColumns + ') rnk FROM ( select distinct RES.* '",
   "limitOuterJoinBetween": "', row_number() over (ORDER BY ' + mssqlOrDB2OrderBy + ') rnk FROM ( select distinct '",
   "limitBeforeNativeQuery": "'SELECT SUB.* FROM ( select RES.* , row_number() over (ORDER BY ' + orderByColumns + ') rnk FROM ('",
-  "orderBy": "",
+  "orderBy": "'order by ' + orderByColumns ",
   "boolValue": "1",
-  "blobType": "byte[]"
+  "blobType": "byte[]",
+  "isNull":  "isnull"
 }

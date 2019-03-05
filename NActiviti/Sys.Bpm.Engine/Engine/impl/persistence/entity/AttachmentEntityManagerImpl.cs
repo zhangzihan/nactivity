@@ -42,22 +42,22 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual IList<IAttachment> findAttachmentsByProcessInstanceId(string processInstanceId)
+        public virtual IList<IAttachmentEntity> findAttachmentsByProcessInstanceId(string processInstanceId)
         {
             checkHistoryEnabled();
-            return (IList<IAttachment>)attachmentDataManager.findAttachmentsByProcessInstanceId(processInstanceId);
+            return attachmentDataManager.findAttachmentsByProcessInstanceId(processInstanceId);
         }
 
-        public virtual IList<IAttachment> findAttachmentsByTaskId(string taskId)
+        public virtual IList<IAttachmentEntity> findAttachmentsByTaskId(string taskId)
         {
             checkHistoryEnabled();
-            return (IList<IAttachment>)attachmentDataManager.findAttachmentsByTaskId(taskId);
+            return attachmentDataManager.findAttachmentsByTaskId(taskId);
         }
 
         public virtual void deleteAttachmentsByTaskId(string taskId)
         {
             checkHistoryEnabled();
-            IList<IAttachmentEntity> attachments = (IList<IAttachmentEntity>)findAttachmentsByTaskId(taskId);
+            IList<IAttachmentEntity> attachments = findAttachmentsByTaskId(taskId);
             bool dispatchEvents = EventDispatcher.Enabled;
 
             string processInstanceId = null;

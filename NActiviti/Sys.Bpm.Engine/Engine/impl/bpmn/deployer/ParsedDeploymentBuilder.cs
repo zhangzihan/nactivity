@@ -50,6 +50,9 @@ namespace org.activiti.engine.impl.bpmn.deployer
                     BpmnParse parse = createBpmnParseFromResource(resource);
                     foreach (IProcessDefinitionEntity processDefinition in parse.ProcessDefinitions)
                     {
+                        processDefinition.BusinessKey = parse.Deployment.BusinessKey;
+                        processDefinition.StartForm = parse.Deployment.StartForm;
+                        processDefinition.BusinessPath = parse.Deployment.BusinessPath;
                         processDefinitions.Add(processDefinition);
                         processDefinitionsToBpmnParseMap[processDefinition] = parse;
                         processDefinitionsToResourceMap[processDefinition] = resource;

@@ -17,14 +17,23 @@ using System.Data.Common;
 using SmartSql.Utils;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace SmartSql
 {
     public class SmartSqlMapper : ISmartSqlMapper
     {
         private readonly SmartSqlOptions _smartSqlOptions;
+        public SmartSqlOptions SmartSqlOptions { get => _smartSqlOptions; }
+
         private readonly ILogger _logger;
-        public IDbConnectionSessionStore SessionStore { get { return _smartSqlOptions.DbSessionStore; } }
+        public IDbConnectionSessionStore SessionStore
+        {
+            get
+            {
+                return _smartSqlOptions.DbSessionStore;
+            }
+        }
         public IDataSourceFilter DataSourceFilter { get { return _smartSqlOptions.DataSourceFilter; } }
         public IConfigLoader ConfigLoader { get { return _smartSqlOptions.ConfigLoader; } }
         public ICommandExecuter CommandExecuter { get { return _smartSqlOptions.CommandExecuter; } }
@@ -32,7 +41,13 @@ namespace SmartSql
         public ILoggerFactory LoggerFactory { get { return _smartSqlOptions.LoggerFactory; } }
         public ICacheManager CacheManager { get { return _smartSqlOptions.CacheManager; } }
         public ISqlBuilder SqlBuilder { get { return _smartSqlOptions.SqlBuilder; } }
-        public JToken Variables { get; set; }
+
+        private JToken variables;
+        public JToken Variables
+        {
+            get => variables;
+            set => variables = value ?? throw new ArgumentNullException("variables");
+        }
 
         public SmartSqlMapper(String sqlMapConfigFilePath = "SmartSqlMapConfig.xml") : this(NoneLoggerFactory.Instance, sqlMapConfigFilePath)
         {
@@ -81,7 +96,7 @@ namespace SmartSql
             catch (Exception ex)
             {
                 _logger.LogError(ex.HelpLink, ex, $"Statement:{context.FullSqlId} Message:{ex.Message}");
-                throw new SmartSqlException($"Statement:{context.FullSqlId} Message:{ex.Message}", ex);
+                throw new SmartSqlException($"Statement:{context.FullSqlId} Message:{ex.Message}{context.RealSql}", ex);
             }
             finally
             {

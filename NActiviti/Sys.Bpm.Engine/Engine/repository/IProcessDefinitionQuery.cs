@@ -76,6 +76,27 @@ namespace org.activiti.engine.repository
         IProcessDefinitionQuery processDefinitionKey(string processDefinitionKey);
 
         /// <summary>
+        /// 业务键值
+        /// </summary>
+        /// <param name="businessKey"></param>
+        /// <returns></returns>
+        IProcessDefinitionQuery processDefinitionBusinessKey(string businessKey);
+
+        /// <summary>
+        /// 业务路径
+        /// </summary>
+        /// <param name="businessPath"></param>
+        /// <returns></returns>
+        IProcessDefinitionQuery processDefinitionBusinessPath(string businessPath);
+
+        /// <summary>
+        /// 开始表单
+        /// </summary>
+        /// <param name="startForm"></param>
+        /// <returns></returns>
+        IProcessDefinitionQuery processDefinitionStartForm(string startForm);
+
+        /// <summary>
         /// Only select process definition with the given keys.
         /// </summary>
         IProcessDefinitionQuery processDefinitionKeys(ISet<string> processDefinitionKeys);
@@ -130,6 +151,13 @@ namespace org.activiti.engine.repository
         /// Only select process definition with a resource name like the given .
         /// </summary>
         IProcessDefinitionQuery processDefinitionResourceNameLike(string resourceNameLike);
+
+        /// <summary>
+        /// select process definition with procDefId
+        /// </summary>
+        /// <param name="procDefId"></param>
+        /// <returns></returns>
+        IProcessDefinitionQuery processDefinitionStarter(string procDefId);
 
         /// <summary>
         /// Only selects process definitions which given userId is authoriezed to start

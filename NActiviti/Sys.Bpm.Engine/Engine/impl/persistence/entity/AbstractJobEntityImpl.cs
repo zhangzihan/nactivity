@@ -302,7 +302,7 @@ namespace org.activiti.engine.impl.persistence.entity
         }
 
 
-        public virtual ByteArrayRef ExceptionByteArrayRef
+        public virtual IByteArrayRef ExceptionByteArrayRef
         {
             get
             {

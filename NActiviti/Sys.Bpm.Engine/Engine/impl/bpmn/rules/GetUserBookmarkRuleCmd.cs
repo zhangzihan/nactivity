@@ -27,17 +27,10 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
 
         public QueryBookmark Condition { get; set; }
 
-        /// 
-        /// <param name="userIds"></param>
-        private IList<IUserInfo> 获取用户信息(string[] userIds)
-        {
-
-            return null;
-        }
-
         public IList<IUserInfo> execute(ICommandContext commandContext)
         {
-            throw new NotImplementedException();
+            IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
+            return proxy.GetUsers(Condition);
         }
     }
 }

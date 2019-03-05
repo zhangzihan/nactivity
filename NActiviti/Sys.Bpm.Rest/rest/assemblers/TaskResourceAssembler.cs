@@ -22,14 +22,14 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.rest.assemblers
 {
-    public class TaskResourceAssembler : ResourceAssemblerSupport<Task, TaskResource>
+    public class TaskResourceAssembler : ResourceAssemblerSupport<TaskModel, TaskResource>
     {
 
         public TaskResourceAssembler() : base(typeof(TaskControllerImpl), typeof(TaskResource))
         {
         }
 
-        public override TaskResource toResource(Task task)
+        public override TaskResource toResource(TaskModel task)
         {
             //IList<Link> links = new List<Link>();
             //links.Add(linkTo(methodOn(typeof(TaskControllerImpl)).getTaskById(task.Id)).withSelfRel());
@@ -55,7 +55,7 @@ namespace org.activiti.cloud.services.rest.assemblers
             return new TaskResource(task, null);//, links);
         }
 
-        public override IList<TaskResource> toResources(IEnumerable<Task> entities)
+        public override IList<TaskResource> toResources(IEnumerable<TaskModel> entities)
         {
             return base.toResources(entities);
         }

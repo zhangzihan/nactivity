@@ -27,7 +27,7 @@ namespace org.activiti.engine.impl
     {
 
         private const long serialVersionUID = 1L;
-        protected internal string deploymentId_Renamed;
+        protected internal string deploymentId_;
         protected internal string name;
         protected internal string nameLike;
         protected internal string category;
@@ -35,18 +35,20 @@ namespace org.activiti.engine.impl
         protected internal string categoryNotEquals;
         protected internal string key;
         protected internal string keyLike;
+        protected internal string businessKey;
         protected internal string tenantId;
         protected internal string tenantIdLike;
         protected internal bool withoutTenantId;
-        protected internal string processDefinitionKey_Renamed;
-        protected internal string processDefinitionKeyLike_Renamed;
+        protected internal string processDefinitionKey_;
+        protected internal string processDefinitionKeyLike_;
         protected internal bool latest_Renamed;
+        protected internal bool latestDeployment_;
 
         public DeploymentQueryImpl()
         {
         }
 
-        public  DeploymentQueryImpl(ICommandContext  commandContext) : base(commandContext)
+        public DeploymentQueryImpl(ICommandContext commandContext) : base(commandContext)
         {
         }
 
@@ -56,19 +58,21 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentId(string deploymentId)
         {
-            if (ReferenceEquals(deploymentId, null))
+            if (string.IsNullOrWhiteSpace(deploymentId))
             {
-                throw new ActivitiIllegalArgumentException("Deployment id is null");
+                this.deploymentId_ = null;
+                return this;
             }
-            this.deploymentId_Renamed = deploymentId;
+            this.deploymentId_ = deploymentId;
             return this;
         }
 
         public virtual IDeploymentQuery deploymentName(string deploymentName)
         {
-            if (ReferenceEquals(deploymentName, null))
+            if (string.IsNullOrWhiteSpace(deploymentName))
             {
-                throw new ActivitiIllegalArgumentException("deploymentName is null");
+                this.name = null;
+                return this;
             }
             this.name = deploymentName;
             return this;
@@ -76,9 +80,10 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentNameLike(string nameLike)
         {
-            if (ReferenceEquals(nameLike, null))
+            if (string.IsNullOrWhiteSpace(nameLike))
             {
-                throw new ActivitiIllegalArgumentException("deploymentNameLike is null");
+                this.nameLike = null;
+                return this;
             }
             this.nameLike = nameLike;
             return this;
@@ -86,9 +91,10 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentCategory(string deploymentCategory)
         {
-            if (ReferenceEquals(deploymentCategory, null))
+            if (string.IsNullOrWhiteSpace(deploymentCategory))
             {
-                throw new ActivitiIllegalArgumentException("deploymentCategory is null");
+                this.category = null;
+                return this;
             }
             this.category = deploymentCategory;
             return this;
@@ -96,9 +102,10 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentCategoryLike(string categoryLike)
         {
-            if (ReferenceEquals(categoryLike, null))
+            if (string.IsNullOrWhiteSpace(categoryLike))
             {
-                throw new ActivitiIllegalArgumentException("deploymentCategoryLike is null");
+                this.categoryLike = null;
+                return this;
             }
             this.categoryLike = categoryLike;
             return this;
@@ -106,9 +113,10 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentCategoryNotEquals(string deploymentCategoryNotEquals)
         {
-            if (ReferenceEquals(deploymentCategoryNotEquals, null))
+            if (string.IsNullOrWhiteSpace(deploymentCategoryNotEquals))
             {
-                throw new ActivitiIllegalArgumentException("deploymentCategoryExclude is null");
+                this.categoryNotEquals = null;
+                return this;
             }
             this.categoryNotEquals = deploymentCategoryNotEquals;
             return this;
@@ -116,9 +124,10 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentKey(string deploymentKey)
         {
-            if (ReferenceEquals(deploymentKey, null))
+            if (string.IsNullOrWhiteSpace(deploymentKey))
             {
-                throw new ActivitiIllegalArgumentException("deploymentKey is null");
+                this.key = null;
+                return this;
             }
             this.key = deploymentKey;
             return this;
@@ -126,19 +135,32 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentKeyLike(string deploymentKeyLike)
         {
-            if (ReferenceEquals(deploymentKeyLike, null))
+            if (string.IsNullOrWhiteSpace(deploymentKeyLike))
             {
-                throw new ActivitiIllegalArgumentException("deploymentKeyLike is null");
+                this.keyLike = null;
+                return this;
             }
             this.keyLike = deploymentKeyLike;
             return this;
         }
 
+        public virtual IDeploymentQuery deploymentBusinessKey(string businessKey)
+        {
+            if (string.IsNullOrWhiteSpace(businessKey))
+            {
+                this.businessKey = null;
+                return this;
+            }
+            this.businessKey = businessKey;
+            return this;
+        }
+
         public virtual IDeploymentQuery deploymentTenantId(string tenantId)
         {
-            if (ReferenceEquals(tenantId, null))
+            if (string.IsNullOrWhiteSpace(tenantId))
             {
-                throw new ActivitiIllegalArgumentException("deploymentTenantId is null");
+                this.tenantId = null;
+                return this;
             }
             this.tenantId = tenantId;
             return this;
@@ -146,9 +168,10 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery deploymentTenantIdLike(string tenantIdLike)
         {
-            if (ReferenceEquals(tenantIdLike, null))
+            if (string.IsNullOrWhiteSpace(tenantIdLike))
             {
-                throw new ActivitiIllegalArgumentException("deploymentTenantIdLike is null");
+                this.tenantIdLike = null;
+                return this;
             }
             this.tenantIdLike = tenantIdLike;
             return this;
@@ -162,30 +185,37 @@ namespace org.activiti.engine.impl
 
         public virtual IDeploymentQuery processDefinitionKey(string key)
         {
-            if (ReferenceEquals(key, null))
+            if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ActivitiIllegalArgumentException("key is null");
+                this.processDefinitionKey_ = null;
+                return this;
             }
-            this.processDefinitionKey_Renamed = key;
+            this.processDefinitionKey_ = key;
             return this;
         }
 
         public virtual IDeploymentQuery processDefinitionKeyLike(string keyLike)
         {
-            if (ReferenceEquals(keyLike, null))
+            if (string.IsNullOrWhiteSpace(keyLike))
             {
-                throw new ActivitiIllegalArgumentException("keyLike is null");
+                this.processDefinitionKeyLike_ = null;
+                return this;
             }
-            this.processDefinitionKeyLike_Renamed = keyLike;
+            this.processDefinitionKeyLike_ = keyLike;
             return this;
         }
 
         public virtual IDeploymentQuery latest()
         {
-            if (ReferenceEquals(key, null))
+            if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ActivitiIllegalArgumentException("latest can only be used together with a deployment key");
+                this.latest_Renamed = false;
+                return this;
             }
+            //if (ReferenceEquals(key, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("latest can only be used together with a deployment key");
+            //}
 
             this.latest_Renamed = true;
             return this;
@@ -215,13 +245,13 @@ namespace org.activiti.engine.impl
 
         // results ////////////////////////////////////////////////////////
 
-        public  override long executeCount(ICommandContext  commandContext)
+        public override long executeCount(ICommandContext commandContext)
         {
             checkQueryOk();
             return commandContext.DeploymentEntityManager.findDeploymentCountByQueryCriteria(this);
         }
 
-        public  override IList<IDeployment> executeList(ICommandContext  commandContext, Page page)
+        public override IList<IDeployment> executeList(ICommandContext commandContext, Page page)
         {
             checkQueryOk();
             return commandContext.DeploymentEntityManager.findDeploymentsByQueryCriteria(this, page);
@@ -233,8 +263,9 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return deploymentId_Renamed;
+                return deploymentId_;
             }
+            set => deploymentId(value);
         }
 
         public virtual string Name
@@ -243,6 +274,7 @@ namespace org.activiti.engine.impl
             {
                 return name;
             }
+            set => deploymentName(value);
         }
 
         public virtual string NameLike
@@ -251,6 +283,7 @@ namespace org.activiti.engine.impl
             {
                 return nameLike;
             }
+            set => deploymentNameLike(value);
         }
 
         public virtual string Category
@@ -259,6 +292,7 @@ namespace org.activiti.engine.impl
             {
                 return category;
             }
+            set => deploymentCategory(value);
         }
 
         public virtual string CategoryNotEquals
@@ -267,6 +301,7 @@ namespace org.activiti.engine.impl
             {
                 return categoryNotEquals;
             }
+            set => deploymentCategoryNotEquals(value);
         }
 
         public virtual string TenantId
@@ -275,6 +310,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantId;
             }
+            set => deploymentTenantId(value);
         }
 
         public virtual string TenantIdLike
@@ -283,6 +319,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantIdLike;
             }
+            set => deploymentTenantIdLike(value);
         }
 
         public virtual bool WithoutTenantId
@@ -291,23 +328,48 @@ namespace org.activiti.engine.impl
             {
                 return withoutTenantId;
             }
+            set => withoutTenantId = value;
         }
 
         public virtual string ProcessDefinitionKey
         {
             get
             {
-                return processDefinitionKey_Renamed;
+                return processDefinitionKey_;
             }
+            set => processDefinitionKey(value);
         }
 
         public virtual string ProcessDefinitionKeyLike
         {
             get
             {
-                return processDefinitionKeyLike_Renamed;
+                return processDefinitionKeyLike_;
+            }
+            set => processDefinitionKeyLike(value);
+        }
+
+
+        public virtual IDeploymentQuery latestDeployment()
+        {
+            latestDeployment_ = true;
+            return this;
+        }
+
+        public bool LatestDeployment
+        {
+            get => latestDeployment_;
+            set
+            {
+                if (value)
+                {
+                    latestDeployment();
+                }
+                else
+                {
+                    latestDeployment_ = value;
+                }
             }
         }
     }
-
 }

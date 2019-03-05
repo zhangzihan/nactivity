@@ -10,9 +10,9 @@ namespace org.activiti.cloud.services.core.commands
     {
 
         private ProcessEngineWrapper processEngine;
-        private MessageChannel<SuspendProcessInstanceResults> commandResults;
+        private IMessageChannel<SuspendProcessInstanceResults> commandResults;
 
-        public SuspendProcessInstanceCmdExecutor(ProcessEngineWrapper processEngine, MessageChannel<SuspendProcessInstanceResults> commandResults)
+        public SuspendProcessInstanceCmdExecutor(ProcessEngineWrapper processEngine, IMessageChannel<SuspendProcessInstanceResults> commandResults)
         {
             this.processEngine = processEngine;
             this.commandResults = commandResults;

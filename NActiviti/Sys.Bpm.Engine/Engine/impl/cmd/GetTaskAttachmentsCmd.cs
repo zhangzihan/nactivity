@@ -18,11 +18,12 @@ namespace org.activiti.engine.impl.cmd
 {
 
     using org.activiti.engine.impl.interceptor;
+    using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.task;
 
     /// 
     [Serializable]
-    public class GetTaskAttachmentsCmd : ICommand<IList<IAttachment>>
+    public class GetTaskAttachmentsCmd : ICommand<IList<IAttachmentEntity>>
     {
 
         private const long serialVersionUID = 1L;
@@ -33,7 +34,7 @@ namespace org.activiti.engine.impl.cmd
             this.taskId = taskId;
         }
 
-        public virtual IList<IAttachment> execute(ICommandContext commandContext)
+        public virtual IList<IAttachmentEntity> execute(ICommandContext commandContext)
         {
             return commandContext.AttachmentEntityManager.findAttachmentsByTaskId(taskId);
         }

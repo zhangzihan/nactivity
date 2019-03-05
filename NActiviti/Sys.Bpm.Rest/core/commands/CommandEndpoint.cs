@@ -15,21 +15,21 @@ namespace org.activiti.cloud.services.core.commands
     {
         private static readonly ILogger LOGGER = ProcessEngineServiceProvider.LoggerService<CommandEndpoint>();
 
-        private IDictionary<Type, CommandExecutor<Command>> commandExecutors;
+        private IDictionary<Type, CommandExecutor<ICommand>> commandExecutors;
 
-        public CommandEndpoint(ISet<CommandExecutor<Command>> cmdExecutors)
+        public CommandEndpoint(ISet<CommandExecutor<ICommand>> cmdExecutors)
         {
             this.commandExecutors = cmdExecutors.ToDictionary(x => x.GetType());//.ToDictionary(CommandExecutor::getHandledType, System.Func.identity());
         }
 
-        public virtual void consumeActivateProcessInstanceCmd(Command cmd)
+        public virtual void consumeActivateProcessInstanceCmd(ICommand cmd)
         {
             processCommand(cmd);
         }
 
-        private void processCommand(Command cmd)
+        private void processCommand(ICommand cmd)
         {
-            CommandExecutor<Command> cmdExecutor = commandExecutors[cmd.GetType()];
+            CommandExecutor<ICommand> cmdExecutor = commandExecutors[cmd.GetType()];
             if (cmdExecutor != null)
             {
                 cmdExecutor.execute(cmd);

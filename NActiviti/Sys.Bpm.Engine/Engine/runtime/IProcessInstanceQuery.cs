@@ -35,7 +35,7 @@ namespace org.activiti.engine.runtime
 
 	  /// <summary>
 	  /// Select process instances whose id is in the given set of ids </summary>
-	  IProcessInstanceQuery processInstanceIds(ISet<string> processInstanceIds);
+	  IProcessInstanceQuery processInstanceIds(string[] processInstanceIds);
 
 	  /// <summary>
 	  /// Select process instances with the given business key </summary>
@@ -85,7 +85,7 @@ namespace org.activiti.engine.runtime
 	  /// <summary>
 	  /// Select the process instances which are defined by process definitions with the given keys.
 	  /// </summary>
-	  IProcessInstanceQuery processDefinitionKeys(ISet<string> processDefinitionKeys);
+	  IProcessInstanceQuery processDefinitionKeys(string[] processDefinitionKeys);
 
 	  /// <summary>
 	  /// Select the process instances which are defined by a process definition with the given id.
@@ -95,7 +95,7 @@ namespace org.activiti.engine.runtime
 	  /// <summary>
 	  /// Select the process instances which are defined by process definitions with the given ids.
 	  /// </summary>
-	  IProcessInstanceQuery processDefinitionIds(ISet<string> processDefinitionIds);
+	  IProcessInstanceQuery processDefinitionIds(string[] processDefinitionIds);
 
 	  /// <summary>
 	  /// Select the process instances which are defined by a deployment with the given id.

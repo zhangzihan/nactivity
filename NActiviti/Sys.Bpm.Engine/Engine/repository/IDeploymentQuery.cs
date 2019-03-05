@@ -72,6 +72,13 @@ namespace org.activiti.engine.repository
         IDeploymentQuery deploymentKeyLike(string keyLike);
 
         /// <summary>
+        /// Only select deployments with the given business key.
+        /// </summary>
+        /// <param name="businessKey"></param>
+        /// <returns></returns>
+        IDeploymentQuery deploymentBusinessKey(string businessKey);
+
+        /// <summary>
         /// Only select deployment that have the given tenant id.
         /// </summary>
         IDeploymentQuery deploymentTenantId(string tenantId);
@@ -100,6 +107,8 @@ namespace org.activiti.engine.repository
         /// Can only be used together with the deployment key.
         /// </summary>
         IDeploymentQuery latest();
+
+        IDeploymentQuery latestDeployment();
 
         // sorting ////////////////////////////////////////////////////////
 

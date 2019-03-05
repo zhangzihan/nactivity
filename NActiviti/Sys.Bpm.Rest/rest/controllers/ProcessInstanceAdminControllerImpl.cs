@@ -14,23 +14,33 @@
  */
 
 using Microsoft.AspNetCore.Mvc;
+using org.activiti.api.runtime.shared.query;
+using org.activiti.cloud.services.api.commands;
+using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.core;
+using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.api.resources;
 using org.activiti.cloud.services.rest.assemblers;
 using org.activiti.engine;
-using org.springframework.data.domain;
 using org.springframework.hateoas;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
     [Route("/workflow/admin/process-instances")]
+    [ApiController]
     public class ProcessInstanceAdminControllerImpl : ControllerBase, IProcessInstanceAdminController
     {
 
         private ProcessEngineWrapper processEngine;
-
+        private readonly IRepositoryService repositoryService;
+        private readonly IRuntimeService runtimeService;
         private readonly ProcessInstanceResourceAssembler resourceAssembler;
+        private readonly SecurityPoliciesApplicationService securityService;
+        private readonly PageableProcessInstanceRepositoryService pageableProcessInstanceService;
 
         //public virtual string handleAppException(ActivitiForbiddenException ex)
         //{
@@ -42,19 +52,28 @@ namespace org.activiti.cloud.services.rest.controllers
         //    return ex.Message;
         //}
 
-        public ProcessInstanceAdminControllerImpl(ProcessEngineWrapper processEngine, ProcessInstanceResourceAssembler resourceAssembler)
+        public ProcessInstanceAdminControllerImpl(ProcessEngineWrapper processEngine,
+            ProcessInstanceResourceAssembler resourceAssembler,
+            PageableProcessInstanceRepositoryService pageableProcessInstanceService,
+            IProcessEngine engine,
+            SecurityPoliciesApplicationService securityPoliciesApplicationService)
         {
             this.processEngine = processEngine;
+            this.repositoryService = engine.RepositoryService;
+            this.runtimeService = engine.RuntimeService;
             this.resourceAssembler = resourceAssembler;
+            this.securityService = securityPoliciesApplicationService;
+            this.pageableProcessInstanceService = pageableProcessInstanceService;
         }
 
-        [HttpGet]
-        public virtual PagedResources<ProcessInstanceResource> getAllProcessInstances(Pageable pageable)
+        [HttpPost]
+        public virtual Task<Resources<ProcessInstance>> GetAllProcessInstances(ProcessInstanceQuery query)
         {
-            var res = processEngine.getAllProcessInstances(pageable);
+            IPage<ProcessInstance> instances = new QueryProcessInstanceCmd().loadPage(this.runtimeService, this.pageableProcessInstanceService, query);
 
-            //return pagedResourcesAssembler.toResource(pageable, res, resourceAssembler);
-            return null;
+            IList<ProcessInstanceResource> resources = resourceAssembler.toResources(instances.getContent());
+
+            return System.Threading.Tasks.Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.getTotalItems(), query.Pageable.Offset, query.Pageable.PageSize));
         }
     }
 }

@@ -154,7 +154,7 @@ namespace org.activiti.engine.impl.cmd
         {
             foreach (IProcessDefinitionEntity processDefinition in processDefinitions)
             {
-                SuspensionState_SuspensionStateUtil.setSuspensionState(processDefinition, ProcessDefinitionSuspensionState);
+                SuspensionStateUtil.setSuspensionState(processDefinition, ProcessDefinitionSuspensionState);
 
                 // Evict cache
                 commandContext.ProcessEngineConfiguration.DeploymentManager.ProcessDefinitionCache.remove(processDefinition.Id);
@@ -185,7 +185,7 @@ namespace org.activiti.engine.impl.cmd
         protected internal virtual IList<IProcessInstance> fetchProcessInstancesPage(ICommandContext commandContext, IProcessDefinition processDefinition, int currentPageStartIndex)
         {
 
-            if (SuspensionState_Fields.ACTIVE.Equals(ProcessDefinitionSuspensionState))
+            if (SuspensionStateProvider.ACTIVE.Equals(ProcessDefinitionSuspensionState))
             {
                 return (new ProcessInstanceQueryImpl(commandContext)).processDefinitionId(processDefinition.Id).suspended().listPage(currentPageStartIndex, commandContext.ProcessEngineConfiguration.BatchSizeProcessInstances);
             }

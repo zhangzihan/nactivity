@@ -9,6 +9,7 @@ using org.activiti.engine;
 using org.activiti.engine.impl.persistence.entity;
 using org.springframework.hateoas;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -59,7 +60,7 @@ namespace org.activiti.cloud.services.rest.controllers
         }
 
         [HttpGet]
-        public virtual Resources<ProcessVariableResource> getVariables(string processInstanceId)
+        public virtual Task<Resources<ProcessVariableResource>> getVariables(string processInstanceId)
         {
             IList<IVariableInstance> variableInstances = runtimeService.getVariableInstancesByExecutionIds(new HashSet<string> { processInstanceId });
 
@@ -70,11 +71,12 @@ namespace org.activiti.cloud.services.rest.controllers
             }
 
             Resources<ProcessVariableResource> resources = new Resources<ProcessVariableResource>(resourcesList);
-            return resources;
+
+            return Task.FromResult(resources);
         }
 
         [HttpGet("local")]
-        public virtual Resources<ProcessVariableResource> getVariablesLocal(string processInstanceId)
+        public virtual Task<Resources<ProcessVariableResource>> getVariablesLocal(string processInstanceId)
         {
             IDictionary<string, IVariableInstance> variableInstancesMap = runtimeService.getVariableInstancesLocal(processInstanceId);
             IList<IVariableInstance> variableInstances = new List<IVariableInstance>();
@@ -89,23 +91,24 @@ namespace org.activiti.cloud.services.rest.controllers
             }
 
             Resources<ProcessVariableResource> resources = new Resources<ProcessVariableResource>(resourcesList);
-            return resources;
+
+            return Task.FromResult(resources);
         }
 
         [HttpPost]
-        public virtual IActionResult setVariables(string processInstanceId, SetProcessVariablesCmd setProcessVariablesCmd)
+        public virtual Task<IActionResult> setVariables(string processInstanceId, SetProcessVariablesCmd setProcessVariablesCmd)
         {
             processEngine.ProcessVariables = setProcessVariablesCmd;
 
-            return Ok();
+            return Task.FromResult<IActionResult>(Ok());
         }
 
         [HttpPost("remove")]
-        public virtual IActionResult removeVariables(string processInstanceId, RemoveProcessVariablesCmd removeProcessVariablesCmd)
+        public virtual Task<IActionResult> removeVariables(string processInstanceId, RemoveProcessVariablesCmd removeProcessVariablesCmd)
         {
             this.processEngine.removeProcessVariables(removeProcessVariablesCmd);
 
-            return Ok();
+            return Task.FromResult<IActionResult>(Ok());
         }
     }
 

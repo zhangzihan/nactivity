@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiException("Cannot set suspension state for execution '" + processInstanceId + "': not a process instance.");
             }
 
-            SuspensionState_SuspensionStateUtil.setSuspensionState(executionEntity, NewState);
+            SuspensionStateUtil.setSuspensionState(executionEntity, NewState);
             commandContext.ExecutionEntityManager.update(executionEntity, false);
 
             // All child executions are suspended
@@ -60,7 +60,7 @@ namespace org.activiti.engine.impl.cmd
             {
                 if (!childExecution.Id.Equals(processInstanceId))
                 {
-                    SuspensionState_SuspensionStateUtil.setSuspensionState(childExecution, NewState);
+                    SuspensionStateUtil.setSuspensionState(childExecution, NewState);
                     commandContext.ExecutionEntityManager.update(childExecution, false);
                 }
             }
@@ -69,12 +69,12 @@ namespace org.activiti.engine.impl.cmd
             IList<ITaskEntity> tasks = commandContext.TaskEntityManager.findTasksByProcessInstanceId(processInstanceId);
             foreach (ITaskEntity taskEntity in tasks)
             {
-                SuspensionState_SuspensionStateUtil.setSuspensionState(taskEntity, NewState);
+                SuspensionStateUtil.setSuspensionState(taskEntity, NewState);
                 commandContext.TaskEntityManager.update(taskEntity, false);
             }
 
             // All jobs are suspended
-            if (NewState == SuspensionState_Fields.ACTIVE)
+            if (NewState == SuspensionStateProvider.ACTIVE)
             {
                 IList<ISuspendedJobEntity> suspendedJobs = commandContext.SuspendedJobEntityManager.findJobsByProcessInstanceId(processInstanceId);
                 foreach (ISuspendedJobEntity suspendedJob in suspendedJobs)

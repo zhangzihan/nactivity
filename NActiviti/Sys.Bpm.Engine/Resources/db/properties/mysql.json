@@ -1,1 +1,7 @@
-{ "limitAfter": "'LIMIT #{maxResults} OFFSET #{firstResult}'" }
+{
+  "limitAfter": "'LIMIT #{maxResults} OFFSET #{firstResult}'",
+  "limitBefore": "",
+  "limitBetween": "",
+  "orderBy": "'order by  #{orderByColumns} '",
+  "isNull": "ifnull"
+}

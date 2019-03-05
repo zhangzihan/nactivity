@@ -103,7 +103,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         protected internal string deleteReason;
 
-        protected internal int suspensionState = SuspensionState_Fields.ACTIVE.StateCode;
+        protected internal int suspensionState = SuspensionStateProvider.ACTIVE.StateCode;
 
         protected internal string startUserId;
         protected internal DateTime startTime;
@@ -949,7 +949,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return suspensionState == SuspensionState_Fields.SUSPENDED.StateCode;
+                return suspensionState == SuspensionStateProvider.SUSPENDED.StateCode;
             }
         }
 

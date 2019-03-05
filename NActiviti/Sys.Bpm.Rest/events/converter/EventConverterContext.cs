@@ -37,19 +37,19 @@ namespace org.activiti.cloud.services.events.converter
         public const string TASK_CANDIDATE_GROUP_EVENT_PREFIX = "TaskCandidateGroup:";
         public const string EVENT_PREFIX = "";
 
-        private IDictionary<string, EventConverter> convertersMap;
+        private IDictionary<string, IEventConverter> convertersMap;
 
-        public EventConverterContext(IDictionary<string, EventConverter> convertersMap)
+        public EventConverterContext(IDictionary<string, IEventConverter> convertersMap)
         {
             this.convertersMap = convertersMap;
         }
 
-        public EventConverterContext(ISet<EventConverter> converters)
+        public EventConverterContext(ISet<IEventConverter> converters)
         {
             this.convertersMap = converters.ToDictionary(x => x.GetType().FullName);
         }
 
-        internal virtual IDictionary<string, EventConverter> ConvertersMap
+        internal virtual IDictionary<string, IEventConverter> ConvertersMap
         {
             get
             {
@@ -57,11 +57,11 @@ namespace org.activiti.cloud.services.events.converter
             }
         }
 
-        public virtual ProcessEngineEvent from(IActivitiEvent activitiEvent)
+        public virtual IProcessEngineEvent from(IActivitiEvent activitiEvent)
         {
-            EventConverter converter = convertersMap[getPrefix(activitiEvent) + activitiEvent.Type];
+            IEventConverter converter = convertersMap[getPrefix(activitiEvent) + activitiEvent.Type];
 
-            ProcessEngineEvent newEvent = null;
+            IProcessEngineEvent newEvent = null;
             if (converter != null)
             {
                 newEvent = converter.from(activitiEvent);
@@ -125,7 +125,7 @@ namespace org.activiti.cloud.services.events.converter
 
         private static bool isTaskEvent(IActivitiEvent activitiEvent)
         {
-            return activitiEvent is IActivitiEntityEvent && ((IActivitiEntityEvent)activitiEvent).Entity is Task;
+            return activitiEvent is IActivitiEntityEvent && ((IActivitiEntityEvent)activitiEvent).Entity is TaskModel;
         }
 
         private static bool isIdentityLinkEntityEvent(IActivitiEvent activitiEvent)

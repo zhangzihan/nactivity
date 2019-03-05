@@ -17,6 +17,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
     /// <summary>
     /// 获取当前执行人的用户信息
     /// </summary>
+    [GetBookmarkDescriptor("GetExecutor")]
 	public class GetExecutorBookmarkRuleCmd : IGetBookmarkRule
     {
 
@@ -27,17 +28,10 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
 
         public QueryBookmark Condition { get; set; }
 
-        /// 
-        /// <param name="executorId"></param>
-        private IUserInfo 获取用户信息(string executorId)
-        {
-
-            return null;
-        }
-
         public IList<IUserInfo> execute(ICommandContext commandContext)
         {
-            throw new NotImplementedException();
+            IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
+            return proxy.GetUsers(Condition);
         }
     }
 }

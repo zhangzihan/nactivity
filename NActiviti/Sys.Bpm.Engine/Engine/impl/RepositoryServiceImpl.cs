@@ -57,6 +57,11 @@ namespace org.activiti.engine.impl
             return commandExecutor.execute(new DeployCmd<IDeployment>(deploymentBuilder));
         }
 
+        public virtual IDeployment save(DeploymentBuilderImpl deploymentBuilder)
+        {
+            return commandExecutor.execute(new DeploySaveCmd<IDeployment>(deploymentBuilder));
+        }
+
         public virtual void deleteDeployment(string deploymentId)
         {
             commandExecutor.execute(new DeleteDeploymentCmd(deploymentId, false));

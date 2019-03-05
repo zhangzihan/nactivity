@@ -88,7 +88,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             if (HistoryManager.HistoryEnabled)
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = findById<IHistoricTaskInstanceEntity>(id);
+                IHistoricTaskInstanceEntity historicTaskInstance = findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", id.Value));
                 if (historicTaskInstance != null)
                 {
                     IList<IHistoricTaskInstanceEntity> subTasks = historicTaskInstanceDataManager.findHistoricTasksByParentTaskId(historicTaskInstance.Id);

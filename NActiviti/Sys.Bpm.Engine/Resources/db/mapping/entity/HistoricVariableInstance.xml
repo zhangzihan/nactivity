@@ -218,9 +218,9 @@
     </Where>
   </Statement>
 
-  <select id="selectHistoricVariableInstanceByTaskId" ResultMap="historicProcessVariableResultMap">
+  <Select Id="selectHistoricVariableInstanceByTaskId" ResultMap="historicProcessVariableResultMap">
     select * from ACT_HI_VARINST where TASK_ID_ = #{taskId}
-  </select>
+  </Select>
 
   <Select Id="selectHistoricVariableInstanceByProcessInstanceId" ResultMap="historicProcessVariableResultMap">
     select * from ACT_HI_VARINST where PROC_INST_ID_ = #{processInstanceId}
@@ -266,5 +266,5 @@
   <Select Id="selectHistoricVariableInstanceCountByNativeQuery">
     ${sql}
   </Select>
-
+  
 </SmartSqlMap>

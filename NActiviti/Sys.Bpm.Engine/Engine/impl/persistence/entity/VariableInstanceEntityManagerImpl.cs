@@ -110,7 +110,7 @@ namespace org.activiti.engine.impl.persistence.entity
         public override void delete(IVariableInstanceEntity entity, bool fireDeleteEvent)
         {
             base.delete(entity, false);
-            ByteArrayRef byteArrayRef = entity.ByteArrayRef;
+            IByteArrayRef byteArrayRef = entity.ByteArrayRef;
             if (byteArrayRef != null)
             {
                 byteArrayRef.delete();

@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
 using SmartSql.Configuration;
 using Sys.Expressions;
+using System.IO;
 
 namespace SmartSql.Abstractions
 {
@@ -40,17 +41,23 @@ namespace SmartSql.Abstractions
             get => _requestParameters;
             internal set => _requestParameters = value;
         }
-        public JToken Variables { get; set; }
+
+        private JToken variables;
+        public JToken Variables
+        {
+            get => variables;
+            set => variables = value ?? throw new ArgumentNullException("variables");
+        }
 
         public object Request
         {
-            get => _request; set
+            get => _request;
+            set
             {
                 _request = value;
             }
         }
 
-        [Obsolete("Internal call")]
         public void Setup(SmartSqlContext smartSqlContext, ISqlBuilder sqlBuilder)
         {
             SmartSqlContext = smartSqlContext;
@@ -150,30 +157,71 @@ namespace SmartSql.Abstractions
                 return;
             }
 
-            if (Variables is JObject vars && new Regex(@"\$", RegexOptions.Multiline).IsMatch(sql))
+            if (Variables is JObject vars && sql.Contains("$"))
             {
                 foreach (var prop in vars.Properties())
                 {
                     var path = prop.Path;
-                    var regex = new Regex($@"\$\{{{path}\}}", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                    var regex = new Regex($@"\$\{{{path}(.*?)\}}", RegexOptions.Multiline | RegexOptions.IgnoreCase);
                     if (regex.IsMatch(sql) == false)
                     {
                         continue;
                     }
 
                     string exp = prop.Value?.ToString();
-                    if (string.IsNullOrWhiteSpace(exp))
+                    sql = regex.Replace(sql, m =>
                     {
-                        exp = "";
-                    }
-                    else
-                    {
-                        exp = (ExpressionManager.GetValue(Request, exp, RequestParameters) ?? "").ToString();
-                    }
-                    sql = regex.Replace(sql, exp);
+                        if (string.IsNullOrWhiteSpace(exp))
+                        {
+                            return "";
+                        }
+
+                        if (path.ToLower() == "isnull")
+                        {  
+                            string[] isnull = m.Groups[1].Value.Split(new char[] { ',' });
+                            return $"{exp}({isnull[1]}, {isnull[2]})";
+                        }
+                        else
+                        {
+                            if (this.SmartSqlContext.Database.DbProvider.Name == "MySqlClientFactory" && path.ToLower() == "orderby")
+                            {
+                                FixedMySqlOrderBy();
+                            }
+
+                            return (ExpressionManager.GetValue(Request, exp, RequestParameters) ?? "").ToString();
+                        }
+                    });
                 }
 
                 RealSql = sql;
+            }
+        }
+
+        /// <summary>
+        /// 修复MySql中文排序问题
+        /// </summary>
+        private void FixedMySqlOrderBy()
+        {
+            if (RequestParameters.TryGetValue("orderbycolumns", out object ob))
+            {
+                string orderBy = ob?.ToString();
+
+                if (string.IsNullOrWhiteSpace(orderBy))
+                {
+                    return;
+                }
+
+                StringBuilder sqlOrderBy = new StringBuilder();
+                string[] orders = orderBy.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string order in orders)
+                {
+                    int index = order.IndexOf(' ');
+                    string field = order.Substring(0, index);
+                    string dir = index >= order.Length ? "" : order.Substring(index);
+                    sqlOrderBy.Append($"CONVERT({field} using gbk) {dir}");
+                }
+
+                RequestParameters["orderByColumns"] = sqlOrderBy.ToString();
             }
         }
 
