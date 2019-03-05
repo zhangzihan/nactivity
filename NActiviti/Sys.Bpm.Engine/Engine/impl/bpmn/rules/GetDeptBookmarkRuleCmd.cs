@@ -27,17 +27,10 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
 
         public QueryBookmark Condition { get; set; }
 
-        /// 
-        /// <param name="deptId"></param>
-        private IList<IUserInfo> 获取部门下所有用户(string deptId)
-        {
-
-            return null;
-        }
-
         public IList<IUserInfo> execute(ICommandContext commandContext)
         {
-            throw new NotImplementedException();
+            IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
+            return proxy.GetUsers(Condition);
         }
     }
 }

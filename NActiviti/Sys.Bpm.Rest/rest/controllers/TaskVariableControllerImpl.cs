@@ -9,6 +9,7 @@ using org.activiti.engine;
 using org.activiti.engine.impl.persistence.entity;
 using org.springframework.hateoas;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +40,7 @@ namespace org.activiti.cloud.services.rest.controllers
         private readonly TaskVariableResourceAssembler variableResourceBuilder;
 
         public TaskVariableControllerImpl(ProcessEngineWrapper processEngine,
-            IProcessEngine engine, 
+            IProcessEngine engine,
             TaskVariableResourceAssembler variableResourceBuilder)
         {
             this.processEngine = processEngine;
@@ -47,8 +48,8 @@ namespace org.activiti.cloud.services.rest.controllers
             this.variableResourceBuilder = variableResourceBuilder;
         }
 
-        [HttpPost]
-        public virtual Resources<TaskVariableResource> getVariables([FromQuery]string taskId)
+        [HttpGet]
+        public virtual Task<Resources<TaskVariableResource>> getVariables([FromQuery]string taskId)
         {
             IDictionary<string, object> variables = taskService.getVariables(taskId);
             IDictionary<string, IVariableInstance> variableInstancesMap = taskService.getVariableInstances(taskId);
@@ -64,11 +65,12 @@ namespace org.activiti.cloud.services.rest.controllers
             }
 
             Resources<TaskVariableResource> resources = new Resources<TaskVariableResource>(resourcesList);
-            return resources;
+
+            return Task.FromResult(resources);
         }
 
-        [HttpGet("/local")]
-        public virtual Resources<TaskVariableResource> getVariablesLocal([FromQuery]string taskId)
+        [HttpGet("local")]
+        public virtual Task<Resources<TaskVariableResource>> getVariablesLocal([FromQuery]string taskId)
         {
             IDictionary<string, object> variables = taskService.getVariablesLocal(taskId);
             IDictionary<string, IVariableInstance> variableInstancesMap = taskService.getVariableInstancesLocal(taskId);
@@ -84,24 +86,25 @@ namespace org.activiti.cloud.services.rest.controllers
             }
 
             Resources<TaskVariableResource> resources = new Resources<TaskVariableResource>(resourcesList);
-            return resources;
+
+            return Task.FromResult(resources);
         }
 
-        [HttpPut]
-        public virtual IActionResult setVariables([FromQuery]string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
+        [HttpPost]
+        public virtual Task<IActionResult> setVariables(string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
         {
 
             processEngine.TaskVariables = setTaskVariablesCmd;
 
-            return Ok();
+            return Task.FromResult<IActionResult>(Ok());
         }
 
-        [HttpPut("local")]
-        public virtual IActionResult setVariablesLocal([FromQuery]string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
+        [HttpPost("local")]
+        public virtual Task<IActionResult> setVariablesLocal(string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
         {
             processEngine.TaskVariablesLocal = setTaskVariablesCmd;
 
-            return Ok();
+            return Task.FromResult<IActionResult>(Ok());
         }
     }
 

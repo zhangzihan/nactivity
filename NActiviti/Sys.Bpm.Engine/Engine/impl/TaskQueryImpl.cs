@@ -1548,11 +1548,11 @@ namespace org.activiti.engine.impl
         {
             if (orActive)
             {
-                currentOrQueryObject.suspensionState = SuspensionState_Fields.SUSPENDED;
+                currentOrQueryObject.suspensionState = SuspensionStateProvider.SUSPENDED;
             }
             else
             {
-                this.suspensionState = SuspensionState_Fields.SUSPENDED;
+                this.suspensionState = SuspensionStateProvider.SUSPENDED;
             }
             return this;
         }
@@ -1561,11 +1561,11 @@ namespace org.activiti.engine.impl
         {
             if (orActive)
             {
-                currentOrQueryObject.suspensionState = SuspensionState_Fields.ACTIVE;
+                currentOrQueryObject.suspensionState = SuspensionStateProvider.ACTIVE;
             }
             else
             {
-                this.suspensionState = SuspensionState_Fields.ACTIVE;
+                this.suspensionState = SuspensionStateProvider.ACTIVE;
             }
             return this;
         }

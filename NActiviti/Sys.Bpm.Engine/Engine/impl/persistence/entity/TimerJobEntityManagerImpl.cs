@@ -199,7 +199,7 @@ namespace org.activiti.engine.impl.persistence.entity
         /// </summary>
         protected internal virtual void deleteExceptionByteArrayRef(ITimerJobEntity jobEntity)
         {
-            ByteArrayRef exceptionByteArrayRef = jobEntity.ExceptionByteArrayRef;
+            ByteArrayRef exceptionByteArrayRef = jobEntity.ExceptionByteArrayRef as ByteArrayRef;
             if (exceptionByteArrayRef != null)
             {
                 exceptionByteArrayRef.delete();

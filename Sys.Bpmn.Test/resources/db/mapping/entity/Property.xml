@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+  
+<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.PropertyEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  
+  <ResultMap Id="propertyResultMap" ResultType="org.activiti.engine.impl.persistence.entity.PropertyEntityImpl,Sys.Bpm.Engine">
+    <Result Property="Name" Column="NAME_" />
+    <Result Property="Value" Column="VALUE_" />
+    <Result Property="Revision" Column="REV_" />
+  </ResultMap>
+  
+  <!-- PROPERTY INSERT -->
+    
+  <Insert Id="insertProperty">
+      insert into ACT_GE_PROPERTY (
+        NAME_,
+        VALUE_,
+        REV_
+      ) values (
+        #{name},
+        #{value},
+        1
+      )
+  </Insert>
+
+  <Insert Id="bulkInsertProperty">
+      INSERT INTO ACT_GE_PROPERTY (NAME_, VALUE_, REV_) VALUES 
+      <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=","> 
+        (#{property.name},
+         #{property.value},
+         1)
+      </For>
+  </Insert>
+
+  <!-- PROPERTY UPDATE -->
+  
+  <Update Id="updateProperty">
+    update ACT_GE_PROPERTY REV_ = #{revisionNext}, VALUE_ = #{value} 
+    where NAME_ = #{name}
+      and REV_ = #{revision}
+  </Update>
+
+  <!-- PROPERTY DELETE -->
+  
+  <Delete Id="deleteProperty">
+    delete from ACT_GE_PROPERTY where NAME_ = #{name} and REV_ = #{revision}
+  </Delete>
+  
+  <Select Id="selectDbSchemaVersion">
+    select VALUE_ from ACT_GE_PROPERTY where NAME_ = 'schema.version'
+  </Select>
+
+  <Select Id="selectProperty" ResultMap="propertyResultMap">
+    select * from ACT_GE_PROPERTY where NAME_ = #{name}
+  </Select>
+  
+  <Select Id="selectProperties" ResultMap="propertyResultMap">
+    select * from ACT_GE_PROPERTY 
+  </Select>
+  
+</SmartSqlMap>

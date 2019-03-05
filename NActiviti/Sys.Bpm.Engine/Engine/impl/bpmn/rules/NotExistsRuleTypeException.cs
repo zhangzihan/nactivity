@@ -11,6 +11,9 @@ using System.Runtime.Serialization;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
+    /// <summary>
+    /// 不存在的会签角色规则
+    /// </summary>
     [Serializable]
     public class NotExistsRuleTypeException : Exception
     {

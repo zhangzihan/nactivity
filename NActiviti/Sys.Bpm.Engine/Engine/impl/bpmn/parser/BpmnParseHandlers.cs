@@ -73,7 +73,7 @@ namespace org.activiti.engine.impl.bpmn.parser
             }
 
             // Execute parse handlers
-            IList<IBpmnParseHandler> handlers = parseHandlers[element.GetType()];
+            parseHandlers.TryGetValue(element.GetType(), out IList<IBpmnParseHandler> handlers);
 
             if (handlers == null)
             {

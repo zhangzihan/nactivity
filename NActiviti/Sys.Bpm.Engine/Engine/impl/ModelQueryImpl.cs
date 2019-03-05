@@ -26,7 +26,7 @@ namespace org.activiti.engine.impl
     public class ModelQueryImpl : AbstractQuery<IModelQuery, IModel>, IModelQuery
     {
 
-        private const long serialVersionUID = 1L;
+        private static long serialVersionUID = 1L;
         protected internal string id;
         protected internal string category;
         protected internal string categoryLike;
@@ -36,9 +36,9 @@ namespace org.activiti.engine.impl
         protected internal string key;
         protected internal int? version;
         protected internal bool latest;
-        protected internal string deploymentId_Renamed;
-        protected internal bool notDeployed_Renamed;
-        protected internal bool deployed_Renamed;
+        protected internal string deploymentId_;
+        protected internal bool notDeployed_;
+        protected internal bool deployed_;
         protected internal string tenantId;
         protected internal string tenantIdLike;
         protected internal bool withoutTenantId;
@@ -63,9 +63,10 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelCategory(string category)
         {
-            if (ReferenceEquals(category, null))
+            if (string.IsNullOrWhiteSpace(category))
             {
-                throw new ActivitiIllegalArgumentException("category is null");
+                this.category = null;
+                return this;
             }
             this.category = category;
             return this;
@@ -73,9 +74,10 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelCategoryLike(string categoryLike)
         {
-            if (ReferenceEquals(categoryLike, null))
+            if (string.IsNullOrWhiteSpace(categoryLike))
             {
-                throw new ActivitiIllegalArgumentException("categoryLike is null");
+                this.categoryLike = null;
+                return this;
             }
             this.categoryLike = categoryLike;
             return this;
@@ -83,9 +85,10 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelCategoryNotEquals(string categoryNotEquals)
         {
-            if (ReferenceEquals(categoryNotEquals, null))
+            if (string.IsNullOrWhiteSpace(categoryNotEquals))
             {
-                throw new ActivitiIllegalArgumentException("categoryNotEquals is null");
+                this.categoryNotEquals = null;
+                return this;
             }
             this.categoryNotEquals = categoryNotEquals;
             return this;
@@ -93,9 +96,10 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelName(string name)
         {
-            if (ReferenceEquals(name, null))
+            if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ActivitiIllegalArgumentException("name is null");
+                this.name = null;
+                return this;
             }
             this.name = name;
             return this;
@@ -103,9 +107,10 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelNameLike(string nameLike)
         {
-            if (ReferenceEquals(nameLike, null))
+            if (string.IsNullOrWhiteSpace(nameLike))
             {
-                throw new ActivitiIllegalArgumentException("nameLike is null");
+                this.nameLike = null;
+                return this;
             }
             this.nameLike = nameLike;
             return this;
@@ -113,9 +118,10 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelKey(string key)
         {
-            if (ReferenceEquals(key, null))
+            if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ActivitiIllegalArgumentException("key is null");
+                this.key = null;
+                return this;
             }
             this.key = key;
             return this;
@@ -125,7 +131,7 @@ namespace org.activiti.engine.impl
         {
             if (version == null)
             {
-                throw new ActivitiIllegalArgumentException("version is null");
+                this.version = null;
             }
             else if (version <= 0)
             {
@@ -143,39 +149,41 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery deploymentId(string deploymentId)
         {
-            if (ReferenceEquals(deploymentId, null))
+            if (string.IsNullOrWhiteSpace(deploymentId))
             {
-                throw new ActivitiIllegalArgumentException("DeploymentId is null");
+                this.deploymentId_ = null;
+                return this;
             }
-            this.deploymentId_Renamed = deploymentId;
+            this.deploymentId_ = deploymentId;
             return this;
         }
 
         public virtual IModelQuery notDeployed()
         {
-            if (deployed_Renamed)
+            if (deployed_)
             {
                 throw new ActivitiIllegalArgumentException("Invalid usage: cannot use deployed() and notDeployed() in the same query");
             }
-            this.notDeployed_Renamed = true;
+            this.notDeployed_ = true;
             return this;
         }
 
         public virtual IModelQuery deployed()
         {
-            if (notDeployed_Renamed)
+            if (notDeployed_)
             {
                 throw new ActivitiIllegalArgumentException("Invalid usage: cannot use deployed() and notDeployed() in the same query");
             }
-            this.deployed_Renamed = true;
+            this.deployed_ = true;
             return this;
         }
 
         public virtual IModelQuery modelTenantId(string tenantId)
         {
-            if (ReferenceEquals(tenantId, null))
+            if (string.IsNullOrWhiteSpace(tenantId))
             {
-                throw new ActivitiIllegalArgumentException("Model tenant id is null");
+                this.tenantId = null;
+                return this;
             }
             this.tenantId = tenantId;
             return this;
@@ -183,9 +191,10 @@ namespace org.activiti.engine.impl
 
         public virtual IModelQuery modelTenantIdLike(string tenantIdLike)
         {
-            if (ReferenceEquals(tenantIdLike, null))
+            if (string.IsNullOrWhiteSpace(tenantIdLike))
             {
-                throw new ActivitiIllegalArgumentException("Model tenant id is null");
+                this.tenantIdLike = null;
+                return this;
             }
             this.tenantIdLike = tenantIdLike;
             return this;
@@ -261,6 +270,7 @@ namespace org.activiti.engine.impl
             {
                 return id;
             }
+            set => modelId(value);
         }
 
         public virtual string Name
@@ -269,6 +279,7 @@ namespace org.activiti.engine.impl
             {
                 return name;
             }
+            set => modelName(value);
         }
 
         public virtual string NameLike
@@ -277,6 +288,7 @@ namespace org.activiti.engine.impl
             {
                 return nameLike;
             }
+            set => modelNameLike(value);
         }
 
         public virtual int? Version
@@ -285,6 +297,7 @@ namespace org.activiti.engine.impl
             {
                 return version;
             }
+            set => modelVersion(value);
         }
 
         public virtual string Category
@@ -293,6 +306,7 @@ namespace org.activiti.engine.impl
             {
                 return category;
             }
+            set => modelCategory(value);
         }
 
         public virtual string CategoryLike
@@ -301,6 +315,7 @@ namespace org.activiti.engine.impl
             {
                 return categoryLike;
             }
+            set => modelCategoryLike(value);
         }
 
         public virtual string CategoryNotEquals
@@ -309,15 +324,16 @@ namespace org.activiti.engine.impl
             {
                 return categoryNotEquals;
             }
+            set => modelCategoryNotEquals(value);
         }
 
-        public static long Serialversionuid
-        {
-            get
-            {
-                return serialVersionUID;
-            }
-        }
+        //public static long Serialversionuid
+        //{
+        //    get
+        //    {
+        //        return serialVersionUID;
+        //    }
+        //}
 
         public virtual string Key
         {
@@ -325,6 +341,7 @@ namespace org.activiti.engine.impl
             {
                 return key;
             }
+            set => modelKey(value);
         }
 
         public virtual bool Latest
@@ -333,30 +350,34 @@ namespace org.activiti.engine.impl
             {
                 return latest;
             }
+            set => latestVersion();
         }
 
         public virtual string DeploymentId
         {
             get
             {
-                return deploymentId_Renamed;
+                return deploymentId_;
             }
+            set => deploymentId(value);
         }
 
         public virtual bool NotDeployed
         {
             get
             {
-                return notDeployed_Renamed;
+                return notDeployed_;
             }
+            set => notDeployed();
         }
 
         public virtual bool Deployed
         {
             get
             {
-                return deployed_Renamed;
+                return deployed_;
             }
+            set => deployed();
         }
 
         public virtual string TenantId
@@ -365,6 +386,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantId;
             }
+            set => modelTenantId(value);
         }
 
         public virtual string TenantIdLike
@@ -373,6 +395,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantIdLike;
             }
+            set => modelTenantIdLike(value);
         }
 
         public virtual bool WithoutTenantId
@@ -381,6 +404,7 @@ namespace org.activiti.engine.impl
             {
                 return withoutTenantId;
             }
+            set => modelWithoutTenantId();
         }
 
     }

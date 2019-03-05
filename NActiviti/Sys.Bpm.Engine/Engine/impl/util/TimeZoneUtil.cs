@@ -7,12 +7,13 @@ namespace org.activiti.engine.impl.util
     {
 
         public static DateTime convertToTimeZone(DateTime time, TimeZoneInfo timeZone)
-        {   
+        {
+            return TimeZoneInfo.ConvertTime(time, timeZone ?? TimeZoneInfo.Local);
             //DateTime foreignTime = new GregorianCalendar(timeZone);
             //foreignTime.TimeInMillis = time.Ticks;
 
             //return foreignTime;
-            return DateTime.Now;
+            //return DateTime.Now;
         }
 
     }

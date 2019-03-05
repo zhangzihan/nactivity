@@ -14,13 +14,15 @@
  */
 
 using Microsoft.AspNetCore.Mvc;
+using org.activiti.api.runtime.shared.query;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.core;
 using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.api.resources;
 using org.activiti.cloud.services.rest.assemblers;
-using org.springframework.data.domain;
 using org.springframework.hateoas;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
@@ -39,9 +41,9 @@ namespace org.activiti.cloud.services.rest.controllers
         }
 
         [HttpGet]
-        public virtual PagedResources<TaskResource> getAllTasks(Pageable pageable)
+        public virtual Task<Resources<TaskModel>> getAllTasks(Pageable pageable)
         {
-            Page<Task> page = processEngine.getAllTasks(pageable);
+            IPage<TaskModel> page = processEngine.getAllTasks(pageable);
 
             //return pagedResourcesAssembler.toResource(pageable, page, taskResourceAssembler);
 

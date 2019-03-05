@@ -13,9 +13,9 @@
  *
  */
 
+using org.activiti.api.runtime.shared.query;
 using org.activiti.engine;
 using org.activiti.engine.query;
-using org.springframework.data.domain;
 
 namespace org.activiti.cloud.services.core.pageable.sort
 {

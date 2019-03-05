@@ -26,5 +26,11 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         /// <param name="apiUrl">服务地址</param>
         /// <param name="parameter">请求参数</param>
         IList<IUserInfo> GetUsers(string apiUrl, object parameter);
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="apiUrl">服务地址</param>
+        /// <param name="parameter">请求参数</param>
+        IList<IUserInfo> GetUsers(object parameter);
     }
 }

@@ -204,7 +204,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                 if (bpmnModel != null)
                 {
 
-                    string errorCode = bpmnModel.Errors[errorId];
+                    bpmnModel.Errors.TryGetValue(errorId, out string errorCode);
                     if (ReferenceEquals(errorCode, null))
                     {
                         errorCode = errorId;

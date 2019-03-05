@@ -48,6 +48,8 @@ namespace org.activiti.engine.impl.cmd
         {
             IDeploymentEntity deployment = deploymentBuilder.Deployment;
 
+            deployment.runable();
+
             deployment.DeploymentTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
 
             if (deploymentBuilder.DuplicateFilterEnabled)

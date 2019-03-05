@@ -9,9 +9,42 @@ using System.Data;
 using System.Data.Common;
 using System.Collections.Concurrent;
 using SmartSql.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Sys.Data
 {
+    public sealed class DataSourceOption
+    {
+        public string ProviderName { get; set; }
+
+        public string ConnectionString { get; set; }
+
+        public static bool operator ==(DataSourceOption a, DataSourceOption b)
+        {
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            {
+                return false;
+            }
+
+            return a.ProviderName?.Trim() == b.ProviderName?.Trim() && a.ConnectionString.Trim() == b.ConnectionString.Trim();
+        }
+
+        public static bool operator !=(DataSourceOption a, DataSourceOption b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this == obj as DataSourceOption;
+        }
+
+        public override int GetHashCode()
+        {
+            return ConnectionString.GetHashCode() ^ 2;
+        }
+    }
+
     public class DataSource : IDataSource
     {
         private static readonly ILogger<DataSource> log = ProcessEngineServiceProvider.LoggerService<DataSource>();
@@ -24,12 +57,28 @@ namespace Sys.Data
             dbTypes["MySql"] = "MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data";
         }
 
-        private string connectionString;
-        private string provider;
+        //private string connectionString;
+        //private string provider;
 
-        public DataSource(string provider, string connectionString)
+        private IOptionsMonitor<DataSourceOption> options;
+        private Action<DataSource> changed;
+        private DataSourceOption oldOption;
+
+        public DataSource(IOptionsMonitor<DataSourceOption> options, Action<IDataSource> changed)
         {
-            Connection = getConnection(provider, connectionString);
+            this.options = options;
+            this.changed = changed;
+            this.oldOption = options.CurrentValue;
+            this.options.OnChange((opts) =>
+            {
+                if (opts != this.oldOption && this.changed != null)
+                {
+                    this.oldOption = opts;
+                    this.changed(this);
+                }
+            });
+            //this.provider = provider;
+            //this.connectionString = connectionString;
         }
 
         public int PoolMaximumActiveConnections { get; set; }
@@ -41,7 +90,10 @@ namespace Sys.Data
         public int PoolPingConnectionsNotUsedFor { get; set; }
         public int DefaultTransactionIsolationLevel { get; set; }
 
-        public virtual IDbConnection Connection { get; set; }
+        public virtual IDbConnection Connection
+        {
+            get => getConnection();
+        }
 
         public virtual void forceCloseAll()
         {
@@ -60,27 +112,34 @@ namespace Sys.Data
         {
             get
             {
-                var db = dbTypes[provider]; //DbProviderFactories.GetFactory(provider);
+                string provider = options.CurrentValue.ProviderName;
+
+                var db = dbTypes[provider];
 
                 return DbProviderFactoryFactory.Create(db);
             }
         }
 
-        public string ConnectionString { get => connectionString; }
-
-        public virtual IDbConnection getConnection(string provider, string connectionString)
+        public string ConnectionString
         {
-            this.provider = provider;
-            this.connectionString = connectionString;
+            get
+            {
+                string connectionString = options.CurrentValue.ConnectionString;
 
-            DbConnectionStringBuilder dsb = new DbConnectionStringBuilder();
-            dsb.ConnectionString = connectionString;
-            dsb.Remove("Provider");
+                DbConnectionStringBuilder dsb = new DbConnectionStringBuilder();
+                dsb.ConnectionString = connectionString;
+                dsb.Remove("Provider");
 
-            Connection = DbProviderFactory.CreateConnection(); //db.CreateConnection();
-            Connection.ConnectionString = dsb.ConnectionString;
+                return dsb.ConnectionString;
+            }
+        }
 
-            return Connection;
+        public virtual IDbConnection getConnection()
+        {
+            IDbConnection _conn = DbProviderFactory.CreateConnection();
+            _conn.ConnectionString = ConnectionString;
+
+            return _conn;
         }
     }
 

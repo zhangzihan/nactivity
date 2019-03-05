@@ -31,7 +31,7 @@ namespace org.activiti.engine.impl.calendar
             {
                 if (!string.IsNullOrWhiteSpace(duedateDescription) && duedateDescription.StartsWith("R", StringComparison.Ordinal))
                 {
-                    return DateTime.Now; /*(new DurationHelper(duedateDescription, maxIterations, clockReader)).DateAfter;*/
+                    return new DurationHelper(duedateDescription, maxIterations, clockReader).DateAfter;
                 }
                 else
                 {

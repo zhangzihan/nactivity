@@ -21,6 +21,9 @@ using System;
 using System.Data.Common;
 using System.IO;
 using Sys.Bpm;
+using SmartSql.Abstractions.DbSession;
+using Microsoft.Extensions.Options;
+using org.activiti.engine.impl.db;
 
 namespace Sys
 {
@@ -30,25 +33,52 @@ namespace Sys
         {
             TypeRegistry.RegisterType(typeof(CollectionUtil));
 
+            services.AddHttpClient();
+
             IGetBookmarkRuleProvider getBookmarkRuleProvider = new GetBookmarkRuleProvider();
 
             services.AddSingleton<IGetBookmarkRuleProvider>(getBookmarkRuleProvider);
 
+            IConfiguration configuration = services.BuildServiceProvider().GetService<IConfiguration>();
+
+            DbSqlSessionVersion.InitVersion(configuration);
+
+            services.Configure<ProcessEngineOption>(configuration);
+
+            services.Configure<DataSourceOption>(configuration.GetSection("SysDataSource"));
+
+            Action<IDataSource> updateSmartSqlDbSession = (dataSource) =>
+            {
+                ISmartSqlMapper ssm = serviceProvider.GetService<ISmartSqlMapper>();
+
+                ssm.SmartSqlOptions.DbSessionStore = new DbConnectionSessionStore(serviceProvider.GetService<ILoggerFactory>(), dataSource.DbProviderFactory);
+
+                ssm.SmartSqlOptions.SmartSqlContext.Database.WriteDataSource.ConnectionString = dataSource.ConnectionString;
+                foreach (var ds in ssm.SmartSqlOptions.SmartSqlContext.Database.ReadDataSources)
+                {
+                    ds.ConnectionString = dataSource.ConnectionString;
+                }
+            };
+
             services.AddSingleton<IDataSource>(sp =>
             {
-                var cfg = sp.GetService<IConfiguration>();
-
-                var provider = cfg["SysDataSource:providerName"];
-                var connStr = cfg["SysDataSource:connectionString"];
-
-                return new Data.DataSource(provider, connStr);
+                return new Data.DataSource(sp.GetService<IOptionsMonitor<DataSourceOption>>(), updateSmartSqlDbSession);
             });
 
-            services.AddSingleton<IDatabaseReader>(sp =>
+            services.AddTransient<IDatabaseReader>(sp =>
              {
                  var ds = sp.GetService<IDataSource>();
 
-                 return new DatabaseReader(ds.Connection as DbConnection);
+                 DatabaseReader reader = new DatabaseReader(ds.Connection as DbConnection);
+
+                 switch (reader.DatabaseSchema.Provider)
+                 {
+                     case "MySql.Data.MySqlClient":
+                         reader.Owner = ds.Connection.Database;
+                         break;
+                 }
+
+                 return reader;
              });
 
             services.AddSingleton<ISmartSqlMapper>(sp =>
@@ -63,7 +93,6 @@ namespace Sys
                 {
                     ConfigPath = Path.Combine(codebase, DEFAULT_MYBATIS_MAPPING_FILE),
                     DbSessionStore = dbSessionStore
-                    //DataReaderDeserializerFactory = new DapperDataReaderDeserializerFactory()
                 };
 
                 SmartSqlMapper ssm = new SmartSqlMapper(options);
@@ -90,11 +119,11 @@ namespace Sys
 
                 if (int.TryParse(dajw?.Value, out int iDajw) == false)
                 {
-                    iDajw = 1000;
+                    iDajw = 10000;
                 }
                 if (int.TryParse(dtjw?.Value, out int iDtjw) == false)
                 {
-                    iDtjw = 1000;
+                    iDtjw = 10000;
                 }
 
                 return new DefaultAsyncJobExecutor()
@@ -104,9 +133,9 @@ namespace Sys
                 };
             });
 
-            services.AddTransient<ProcessEngineConfigurationImpl>(sp =>
+            services.AddSingleton<ProcessEngineConfiguration>(sp =>
             {
-                ProcessEngineConfigurationImpl config = new StandaloneProcessEngineConfiguration(
+                return new StandaloneProcessEngineConfiguration(
                     new HistoryServiceImpl(),
                     new TaskServiceImpl(),
                     new DynamicBpmnServiceImpl(),
@@ -116,8 +145,6 @@ namespace Sys
                     sp.GetService<IAsyncExecutor>(),
                     sp.GetService<IConfiguration>()
                 );
-
-                return config;
             });
 
             services.AddSingleton<ProcessEngineFactory>(sp =>
@@ -144,7 +171,7 @@ namespace Sys
 
             services.AddTransient<IDynamicBpmnService>(sp => sp.GetRequiredService<IProcessEngine>().DynamicBpmnService);
 
-            services.AddSingleton<IProcessEngine>(sp =>
+            services.AddTransient<IProcessEngine>(sp =>
             {
                 return sp.GetService<ProcessEngineFactory>().DefaultProcessEngine;
             });
@@ -155,6 +182,15 @@ namespace Sys
             services.AddSpringCoreService(servicePprovider.GetService<ILoggerFactory>());
             services.AddBpmModelServiceProvider();
 
+            servicePprovider.GetService<IOptionsMonitor<ProcessEngineOption>>()
+                .OnChange((opts, prop) =>
+                {
+                    if (ProcessEngineOption.HasChanged())
+                    {
+                        ProcessEngineFactory.Instance.destroy();
+                        servicePprovider.EnsureProcessEngineInit();
+                    }
+                });
             return services;
         }
 

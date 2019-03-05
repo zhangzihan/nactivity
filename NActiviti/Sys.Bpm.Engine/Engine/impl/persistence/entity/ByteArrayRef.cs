@@ -14,7 +14,7 @@ namespace org.activiti.engine.impl.persistence.entity
     /// 
     /// </summary>
     [Serializable]
-    public class ByteArrayRef
+    public class ByteArrayRef : IByteArrayRef
     {
 
         private const long serialVersionUID = 1L;

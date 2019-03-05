@@ -35,7 +35,7 @@ namespace org.activiti.cloud.services.events.listeners
 
         public virtual void onEvent(IActivitiEvent @event)
         {
-            ProcessEngineEvent newEvent = converterContext.from(@event);
+            IProcessEngineEvent newEvent = converterContext.from(@event);
             if (newEvent != null)
             {
                 eventsAggregator.add(newEvent);

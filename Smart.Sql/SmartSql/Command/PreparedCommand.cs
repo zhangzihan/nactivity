@@ -91,6 +91,11 @@ namespace SmartSql.Command
                                   }
                                   else
                                   {
+                                      if (new Regex("\\#{" + paramName + "}\\s*\\${wildcardEscapeClause}").IsMatch(context.Sql.ToString()))
+                                      {
+                                          paramVal = $"%{paramVal}%";
+                                      }
+
                                       AddParameterIfNotExists(context, dbCommand, paramName, paramVal);
                                       return $"{_smartSqlContext.DbPrefix}{paramName}";
                                   }

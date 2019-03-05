@@ -5,9 +5,9 @@ namespace org.activiti.services.subscription.channel
 {
     public interface ProcessEngineSignalChannels
     {
-        SubscribableChannel signalConsumer();
+        ISubscribableChannel signalConsumer();
 
-        MessageChannel<SignalCmd> signalProducer();
+        IMessageChannel<SignalCmd> signalProducer();
     }
 
     public static class ProcessEngineSignalChannels_Fields

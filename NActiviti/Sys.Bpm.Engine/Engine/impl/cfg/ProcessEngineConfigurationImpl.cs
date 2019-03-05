@@ -22,6 +22,7 @@ namespace org.activiti.engine.impl.cfg
     using javax.transaction;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using org.activiti.engine.cfg;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
@@ -59,6 +60,7 @@ namespace org.activiti.engine.impl.cfg
     using org.activiti.engine.parse;
     using org.activiti.engine.runtime;
     using org.activiti.validation;
+    using SmartSql.Abstractions;
     using Sys;
     using Sys.Bpm;
     using Sys.Data;
@@ -618,6 +620,7 @@ namespace org.activiti.engine.impl.cfg
 
         protected internal PerformanceSettings performanceSettings = new PerformanceSettings();
 
+        private object syncRoot = new object();
         #endregion
 
         // buildProcessEngine
@@ -884,7 +887,7 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        protected internal static Properties databaseTypeMappings = DefaultDatabaseTypeMappings;
+        protected internal static Properties databaseTypeMappings;
 
         public const string DATABASE_TYPE_H2 = "h2";
         public const string DATABASE_TYPE_HSQL = "hsql";
@@ -893,21 +896,16 @@ namespace org.activiti.engine.impl.cfg
         public const string DATABASE_TYPE_POSTGRES = "postgres";
         public const string DATABASE_TYPE_MSSQL = "mssql";
 
-        public static Properties DefaultDatabaseTypeMappings
+        static ProcessEngineConfigurationImpl()
         {
-            get
-            {
-                databaseTypeMappings = new Properties();
+            databaseTypeMappings = new Properties();
 
-                databaseTypeMappings["H2"] = DATABASE_TYPE_H2;
-                databaseTypeMappings["HSQL Database Engine"] = DATABASE_TYPE_HSQL;
-                databaseTypeMappings["MySQL"] = DATABASE_TYPE_MYSQL;
-                databaseTypeMappings["Oracle"] = DATABASE_TYPE_ORACLE;
-                databaseTypeMappings["PostgreSQL"] = DATABASE_TYPE_POSTGRES;
-                databaseTypeMappings["Microsoft SQL Server"] = DATABASE_TYPE_MSSQL;
-
-                return databaseTypeMappings;
-            }
+            databaseTypeMappings["H2"] = DATABASE_TYPE_H2;
+            databaseTypeMappings["HSQL Database Engine"] = DATABASE_TYPE_HSQL;
+            databaseTypeMappings["MySQL"] = DATABASE_TYPE_MYSQL;
+            databaseTypeMappings["Oracle"] = DATABASE_TYPE_ORACLE;
+            databaseTypeMappings["PostgreSQL"] = DATABASE_TYPE_POSTGRES;
+            databaseTypeMappings["Microsoft SQL Server"] = DATABASE_TYPE_MSSQL;
         }
 
         public virtual void initDatabaseType()
@@ -966,37 +964,53 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initSqlSessionFactory()
+
+        private Properties properties;
+        public override Properties GetProperties()
         {
-            string wildcardEscapeClause = "";
-            if ((!ReferenceEquals(databaseWildcardEscapeCharacter, null)) && (databaseWildcardEscapeCharacter.Length != 0))
+            if (properties == null)
             {
-                wildcardEscapeClause = " escape '" + databaseWildcardEscapeCharacter + "'";
+                initProperties();
             }
 
-            Properties properties = new Properties();
-            properties["wildcardEscapeClause"] = wildcardEscapeClause;
-            //set default properties
-            properties["limitBefore"] = "";
-            properties["limitAfter"] = "";
-            properties["limitBetween"] = "";
-            properties["limitOuterJoinBetween"] = "";
-            properties["limitBeforeNativeQuery"] = "";
-            properties["orderBy"] = "";
-            properties["blobType"] = "";
-            properties["boolValue"] = "TRUE";
-
-            string codebase = new Uri(this.GetType().Assembly.CodeBase).LocalPath;
-
-            properties.load(Path.Combine(Path.GetDirectoryName(codebase), $@"resources\db\properties\{databaseType}.json"));
-
-            initMybatisConfiguration(properties);
+            return properties;
         }
 
-        public virtual void initMybatisConfiguration(/*Environment environment, StreamReader reader,*/ Properties properties)
+        private void initProperties()
         {
-            SqlMapper.Variables = properties;
+            lock (syncRoot)
+            {
+                string wildcardEscapeClause = "";
+                if ((!ReferenceEquals(databaseWildcardEscapeCharacter, null)) && (databaseWildcardEscapeCharacter.Length != 0))
+                {
+                    wildcardEscapeClause = " escape '" + databaseWildcardEscapeCharacter + "'";
+                }
 
+                properties = new Properties();
+                properties["wildcardEscapeClause"] = wildcardEscapeClause;
+                //set default properties
+                properties["limitBefore"] = "";
+                properties["limitAfter"] = "";
+                properties["limitBetween"] = "";
+                properties["limitOuterJoinBetween"] = "";
+                properties["limitBeforeNativeQuery"] = "";
+                properties["orderBy"] = "";
+                properties["blobType"] = "";
+                properties["boolValue"] = "TRUE";
+
+                string codebase = new Uri(this.GetType().Assembly.CodeBase).LocalPath;
+
+                properties.load(Path.Combine(Path.GetDirectoryName(codebase), $@"resources\db\properties\{databaseType}.json"));
+            }
+        }
+
+        public virtual void initSqlSessionFactory()
+        {
+            initMybatisConfiguration(GetProperties());
+        }
+
+        public virtual void initMybatisConfiguration(Properties properties)
+        {
             initMybatisTypeHandlers();
             initCustomMybatisMappers();
         }

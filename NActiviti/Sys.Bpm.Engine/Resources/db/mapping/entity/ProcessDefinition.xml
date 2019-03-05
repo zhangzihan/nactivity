@@ -10,6 +10,9 @@
     <Result Property="Category" Column="CATEGORY_" />
     <Result Property="Name" Column="NAME_" />
     <Result Property="Key" Column="KEY_" />
+    <Result Property="BusinessKey" Column="BUSINESS_KEY_" />
+    <Result Property="BusinessPath" Column="BUSINESS_PATH_" />
+    <Result Property="StartForm" Column="START_FORM_" />
     <Result Property="Version" Column="VERSION_" />
     <Result Property="DeploymentId" Column="DEPLOYMENT_ID_" />
     <Result Property="ResourceName" Column="RESOURCE_NAME_" />
@@ -24,12 +27,15 @@
     <!-- PROCESSDEFINITION INSERT -->
 
     <Insert Type="Insert" Id="insertProcessDefinition">
-      insert into ACT_RE_PROCDEF(ID_, REV_, CATEGORY_, NAME_, KEY_, VERSION_, DEPLOYMENT_ID_, RESOURCE_NAME_, DGRM_RESOURCE_NAME_, DESCRIPTION_, HAS_START_FORM_KEY_, HAS_GRAPHICAL_NOTATION_ , SUSPENSION_STATE_, TENANT_ID_)
+      insert into ACT_RE_PROCDEF(ID_, REV_, CATEGORY_, NAME_, KEY_, BUSINESS_KEY_, BUSINESS_PATH_, START_FORM_, VERSION_, DEPLOYMENT_ID_, RESOURCE_NAME_, DGRM_RESOURCE_NAME_, DESCRIPTION_, HAS_START_FORM_KEY_, HAS_GRAPHICAL_NOTATION_ , SUSPENSION_STATE_, TENANT_ID_)
       values (#{id},
       1,
       #{category},
       #{name},
       #{key},
+      #{businessKey},
+      #{businessPath},
+      #{startForm},
       #{version},
       #{deploymentId},
       #{resourceName},
@@ -42,7 +48,7 @@
     </Insert>
 
     <Insert Id="bulkInsertProcessDefinition">
-      INSERT INTO ACT_RE_PROCDEF(ID_, REV_, CATEGORY_, NAME_, KEY_, VERSION_, DEPLOYMENT_ID_, RESOURCE_NAME_, DGRM_RESOURCE_NAME_, DESCRIPTION_, HAS_START_FORM_KEY_, HAS_GRAPHICAL_NOTATION_ , SUSPENSION_STATE_, TENANT_ID_)
+      INSERT INTO ACT_RE_PROCDEF(ID_, REV_, CATEGORY_, NAME_, KEY_, BUSINESS_KEY_, BUSINESS_PATH_, START_FROM_, VERSION_, DEPLOYMENT_ID_, RESOURCE_NAME_, DGRM_RESOURCE_NAME_, DESCRIPTION_, HAS_START_FORM_KEY_, HAS_GRAPHICAL_NOTATION_ , SUSPENSION_STATE_, TENANT_ID_)
       VALUES
       <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
         (#{id},
@@ -50,6 +56,9 @@
         #{category},
         #{name},
         #{key},
+        #{businessKey},
+        #{businessPath},
+        #{startForm},
         #{version},
         #{deploymentId},
         #{resourceName},
@@ -68,6 +77,9 @@
       update ACT_RE_PROCDEF set
       REV_ = #{revisionNext},
       SUSPENSION_STATE_ = #{suspensionState},
+      BUSINESS_KEY_ = #{businessKey},
+      BUSINESS_PATH_ = #{businessPath},
+      START_FORM_ = #{startForm},
       CATEGORY_ = #{category}
       where ID_ = #{id}
       and REV_ = #{revision}
@@ -83,7 +95,7 @@
     <!-- PROCESSDEFINITION DELETE -->
 
     <Delete Id="deleteProcessDefinitionsByDeploymentId">
-      delete from ACT_RE_PROCDEF where DEPLOYMENT_ID_ = #{deploymenId}
+      delete from ACT_RE_PROCDEF where DEPLOYMENT_ID_ = #{deploymentId}
     </Delete>
 
 
@@ -108,7 +120,7 @@
           and RES.CATEGORY_ = #{category}
         </IsTrue>
         <IsTrue Property="categoryLike != null">
-          and RES.CATEGORY_ like #{categoryLike}}${wildcardEscapeClause
+          and RES.CATEGORY_ like #{categoryLike}${wildcardEscapeClause}
         </IsTrue>
         <IsTrue Property="categoryNotEquals != null">
           and ( RES.CATEGORY_ &lt;&gt; #{categoryNotEquals} OR RES.CATEGORY_ is null )
@@ -117,19 +129,25 @@
           and RES.NAME_ = #{name}
         </IsTrue>
         <IsTrue Property="nameLike != null">
-          and RES.NAME_ like #{nameLike}}${wildcardEscapeClause
+          and RES.NAME_ like #{nameLike}${wildcardEscapeClause}
         </IsTrue>
         <IsTrue Property="key != null">
           and RES.KEY_ = #{key}
         </IsTrue>
+        <IsTrue Property="businessKey != null">
+          and RES.BUSINESS_KEY_ = #{businessKey}
+        </IsTrue>
+        <IsTrue Property="businessPath != null">
+          and RES.BUSINESS_PATH_ = #{businessPath}
+        </IsTrue>
         <IsTrue Property="keyLike != null">
-          and RES.KEY_ like #{keyLike}}${wildcardEscapeClause
+          and RES.KEY_ like #{keyLike}${wildcardEscapeClause}
         </IsTrue>
         <IsTrue Property="resourceName != null">
           and RES.RESOURCE_NAME_ = #{resourceName}
         </IsTrue>
         <IsTrue Property="resourceNameLike != null">
-          and RES.RESOURCE_NAME_ like #{resourceNameLike}}${wildcardEscapeClause
+          and RES.RESOURCE_NAME_ like #{resourceNameLike}${wildcardEscapeClause}
         </IsTrue>
         <IsTrue Property="version != null">
           and RES.VERSION_ = #{version}
@@ -161,7 +179,7 @@
             and TENANT_ID_ = #{tenantId}
           </IsTrue>
           <IsTrue Property="tenantIdLike != null">
-            and TENANT_ID_ like #{tenantIdLike}}${wildcardEscapeClause
+            and TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
           </IsTrue>
           <IsTrue Property="withoutTenantId">
             and (TENANT_ID_ = '' or TENANT_ID_ is null)
@@ -178,7 +196,7 @@
           and RES.TENANT_ID_ = #{tenantId}
         </IsTrue>
         <IsTrue Property="tenantIdLike != null">
-          and RES.TENANT_ID_ like #{tenantIdLike}}${wildcardEscapeClause
+          and RES.TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
         </IsTrue>
         <IsTrue Property="withoutTenantId">
           and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)

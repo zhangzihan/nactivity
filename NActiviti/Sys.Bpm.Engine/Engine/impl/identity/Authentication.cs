@@ -11,7 +11,10 @@
  * limitations under the License.
  */
 
+using Microsoft.AspNetCore.Http;
+using Sys;
 using System.Threading;
+using System.Linq;
 
 namespace org.activiti.engine.impl.identity
 {
@@ -19,7 +22,15 @@ namespace org.activiti.engine.impl.identity
     public abstract class Authentication
     {
 
-        internal static ThreadLocal<string> authenticatedUserIdThreadLocal = new ThreadLocal<string>();
+        internal static ThreadLocal<string> authenticatedUserIdThreadLocal = new ThreadLocal<string>(() =>
+        {
+#if DEBUG
+            return "已验证用户";
+#else
+            HttpContext context = ProcessEngineServiceProvider.Resolve<HttpContext>();
+            return context.User.Claims.FirstOrDefault().Subject.FindFirst("subject").Value;
+#endif
+        });
 
         public static string AuthenticatedUserId
         {

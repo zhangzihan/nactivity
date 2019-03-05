@@ -53,7 +53,7 @@ namespace org.activiti.engine.impl.persistence.entity
         protected internal int? priority = Task_Fields.DEFAULT_PRIORITY;
         protected internal DateTime? createTime; // The time when the task has been created
         protected internal DateTime? dueDate;
-        protected internal int suspensionState = SuspensionState_Fields.ACTIVE.StateCode;
+        protected internal int suspensionState = SuspensionStateProvider.ACTIVE.StateCode;
         protected internal string category;
 
         protected internal bool isIdentityLinksInitialized;
@@ -743,7 +743,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return suspensionState == SuspensionState_Fields.SUSPENDED.StateCode;
+                return suspensionState == SuspensionStateProvider.SUSPENDED.StateCode;
             }
             set
             {

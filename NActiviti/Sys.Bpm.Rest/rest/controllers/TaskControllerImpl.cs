@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using org.activiti.api.runtime.shared.query;
 using org.activiti.cloud.services.api.commands;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.api.model.converter;
@@ -9,11 +10,11 @@ using org.activiti.cloud.services.rest.api.resources;
 using org.activiti.cloud.services.rest.assemblers;
 using org.activiti.engine;
 using org.activiti.engine.task;
-using org.springframework.data.domain;
 using org.springframework.hateoas;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -71,15 +72,15 @@ namespace org.activiti.cloud.services.rest.controllers
         //}
 
         [HttpGet]
-        public virtual PagedResources<TaskResource> getTasks(Pageable pageable)
+        public virtual Task<Resources<TaskModel>> getTasks(Pageable pageable)
         {
-            Page<Task> page = processEngine.getTasks(pageable);
+            IPage<TaskModel> page = processEngine.getTasks(pageable);
             //return pagedResourcesAssembler.toResource(pageable, page, taskResourceAssembler);
             return null;
         }
 
-        [HttpGet("/{userId}/mytasks")]
-        public System.Threading.Tasks.Task<IList<TaskResource>> MyTasks(string userId)
+        [HttpGet("{userId}/mytasks")]
+        public Task<Resources<TaskModel>> MyTasks(string userId)
         {
             List<ITask> tasks = this.taskService.createTaskQuery().taskAssignee(userId).list().ToList();
 
@@ -87,22 +88,23 @@ namespace org.activiti.cloud.services.rest.controllers
 
             IList<TaskResource> resources = this.taskResourceAssembler.toResources(taskConverter.from(tasks));
 
-            return System.Threading.Tasks.Task.FromResult(resources);
+            return System.Threading.Tasks.Task.FromResult(new Resources<TaskModel>(resources.Select(x => x.Content), tasks.Count, 0, 0));
         }
 
         [HttpGet("{taskId}")]
-        public virtual Resource<Task> getTaskById(string taskId)
+        public virtual Task<TaskModel> getTaskById(string taskId)
         {
-            Task task = processEngine.getTaskById(taskId);
+            TaskModel task = processEngine.getTaskById(taskId);
             if (task == null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find task for the given id: " + taskId);
             }
-            return taskResourceAssembler.toResource(task);
+
+            return Task.FromResult(taskResourceAssembler.toResource(task).Content);
         }
 
-        [HttpPost("/{taskId}/claim")]
-        public virtual Resource<Task> claimTask(string taskId)
+        [HttpPost("{taskId}/claim")]
+        public virtual Task<TaskModel> claimTask(string taskId)
         {
             string assignee = authenticationWrapper.AuthenticatedUserId;
             if (string.ReferenceEquals(assignee, null))
@@ -110,57 +112,69 @@ namespace org.activiti.cloud.services.rest.controllers
                 throw new System.InvalidOperationException("Assignee must be resolved from the Identity/Security Layer");
             }
 
-            return taskResourceAssembler.toResource(processEngine.claimTask(new ClaimTaskCmd(taskId, assignee)));
+            var res = taskResourceAssembler.toResource(processEngine.claimTask(new ClaimTaskCmd(taskId, assignee)));
+
+            return Task.FromResult(res.Content);
         }
 
 
-        [HttpPost("/{taskId}/release")]
-        public virtual Resource<Task> releaseTask(string taskId)
+        [HttpPost("{taskId}/release")]
+        public virtual Task<TaskModel> releaseTask(string taskId)
         {
 
-            return taskResourceAssembler.toResource(processEngine.releaseTask(new ReleaseTaskCmd(taskId)));
+            return Task.FromResult(taskResourceAssembler.toResource(processEngine.releaseTask(new ReleaseTaskCmd(taskId))).Content);
         }
 
-        [HttpPost("/{taskId}/complete")]
-        public virtual System.Threading.Tasks.Task<IActionResult> completeTask(string taskId, [FromBody]CompleteTaskCmd completeTaskCmd)
+        [HttpPost("{taskId}/complete")]
+        public virtual Task<IActionResult> completeTask(string taskId, [FromBody]CompleteTaskCmd completeTaskCmd)
         {
             processEngine.completeTask(completeTaskCmd ?? new CompleteTaskCmd(taskId, null));
 
-            return System.Threading.Tasks.Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<IActionResult>(Ok());
+        }
+
+        [HttpPost("{taskId}/terminate")]
+        public virtual Task<IActionResult> terminate(string taskId, string reason)
+        {
+            processEngine.deleteTask(taskId, reason);
+
+            return Task.FromResult<IActionResult>(Ok());
         }
 
         [HttpDelete("{taskId}")]
-        public virtual void deleteTask(string taskId)
+        public virtual Task<IActionResult> deleteTask(string taskId)
         {
             processEngine.deleteTask(taskId);
+
+            return Task.FromResult<IActionResult>(Ok());
         }
 
         [HttpPost]
-        public virtual Resource<Task> createNewTask([FromBody]CreateTaskCmd createTaskCmd)
+        public virtual Task<TaskModel> createNewTask([FromBody]CreateTaskCmd createTaskCmd)
         {
-            return taskResourceAssembler.toResource(processEngine.createNewTask(createTaskCmd));
+            return Task.FromResult(taskResourceAssembler.toResource(processEngine.createNewTask(createTaskCmd)).Content);
         }
 
         [HttpPut("{taskId}")]
-        public virtual IActionResult updateTask(string taskId, UpdateTaskCmd updateTaskCmd)
+        public virtual Task<IActionResult> updateTask(string taskId, UpdateTaskCmd updateTaskCmd)
         {
             processEngine.updateTask(taskId, updateTaskCmd);
 
-            return Ok();
+            return Task.FromResult<IActionResult>(Ok());
         }
 
         [HttpPost("{taskId}/subtask")]
-        public virtual Resource<Task> createSubtask(string taskId, [FromBody]CreateTaskCmd createSubtaskCmd)
+        public virtual Task<TaskModel> createSubtask(string taskId, [FromBody]CreateTaskCmd createSubtaskCmd)
         {
             ITask task = taskService.createTaskQuery().taskId(taskId).singleResult();
 
             engine.ProcessEngineConfiguration.ManagementService.executeCommand(new engine.impl.cmd.AddCountersignCmd(task.ExecutionId, createSubtaskCmd.Assignee));
-            
-            return taskResourceAssembler.toResource(processEngine.createNewSubtask(taskId, createSubtaskCmd));
+
+            return Task.FromResult(taskResourceAssembler.toResource(processEngine.createNewSubtask(taskId, createSubtaskCmd)).Content);
         }
 
         [HttpGet("{taskId}/subtasks")]
-        public virtual Resources<TaskResource> getSubtasks(string taskId)
+        public virtual Task<Resources<TaskModel>> getSubtasks(string taskId)
         {
             return null;
             //return new Resources<TaskResource>(taskResourceAssembler.toResources(taskConverter.from(processEngine.getSubtasks(taskId))), linkTo(typeof(TaskControllerImpl)).withSelfRel());

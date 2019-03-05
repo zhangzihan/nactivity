@@ -16,14 +16,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json.Linq;
+using org.activiti.api.runtime.shared.query;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.api.resources;
 using org.activiti.cloud.services.rest.assemblers;
 using org.activiti.engine;
-using org.springframework.data.domain;
 using org.springframework.hateoas;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace org.activiti.cloud.services.rest.controllers
@@ -34,24 +35,24 @@ namespace org.activiti.cloud.services.rest.controllers
     {
         private readonly ProcessDefinitionResourceAssembler resourceAssembler;
 
-        private readonly PageableRepositoryService pageableRepositoryService;
+        private readonly PageableProcessDefinitionRepositoryService pageableRepositoryService;
 
         //public virtual string handleAppException(ActivitiObjectNotFoundException ex)
         //{
         //    return ex.Message;
         //}
 
-        public ProcessDefinitionAdminControllerImpl(ProcessDefinitionResourceAssembler resourceAssembler, PageableRepositoryService pageableRepositoryService)
+        public ProcessDefinitionAdminControllerImpl(ProcessDefinitionResourceAssembler resourceAssembler, PageableProcessDefinitionRepositoryService pageableRepositoryService)
         {
             this.resourceAssembler = resourceAssembler;
             this.pageableRepositoryService = pageableRepositoryService;
         }
 
         [HttpGet]
-        public virtual PagedResources<ProcessDefinitionResource> GetAllProcessDefinitions(
+        public virtual Resources<ProcessDefinition> GetAllProcessDefinitions(
             [FromQuery][BindingBehavior(BindingBehavior.Optional)]Pageable pageable)
         {
-            Page<ProcessDefinition> page = pageableRepositoryService.getAllProcessDefinitions(pageable);
+            IPage<ProcessDefinition> page = pageableRepositoryService.getAllProcessDefinitions(pageable);
             //return pagedResourcesAssembler.toResource(pageable, page, resourceAssembler);
             //return new PagedResources<PagedResources<ProcessDefinitionResource>>();
 

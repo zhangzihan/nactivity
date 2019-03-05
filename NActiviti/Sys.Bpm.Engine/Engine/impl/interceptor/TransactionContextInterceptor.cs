@@ -41,7 +41,6 @@ namespace org.activiti.engine.impl.interceptor
 
             try
             {
-
                 if (transactionContextFactory != null && !isReused)
                 {
                     ITransactionContext transactionContext = transactionContextFactory.openTransactionContext(commandContext);

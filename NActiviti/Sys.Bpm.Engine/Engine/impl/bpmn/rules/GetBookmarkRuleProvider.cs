@@ -60,12 +60,9 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
 
         public void Register(string ruleName, Type ruleType)
         {
-            if (types.TryGetValue(ruleName, out Type rt))
-            {
-                throw new ExistsRuleTypeException(ruleName, rt);
-            }
+            types.TryGetValue(ruleName, out Type rt);
 
-            types.TryAdd(ruleName, ruleType);
+            types.AddOrUpdate(ruleName, ruleType, (rn, oldType) => ruleType);
         }
     }
 }

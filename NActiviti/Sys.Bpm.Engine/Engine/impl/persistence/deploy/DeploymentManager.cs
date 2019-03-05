@@ -22,6 +22,8 @@ namespace org.activiti.engine.impl.persistence.deploy
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.repository;
+    using org.activiti.engine.runtime;
+    using System.Linq;
 
     /// 
     /// 
@@ -146,6 +148,15 @@ namespace org.activiti.engine.impl.persistence.deploy
             // Remove any process definition from the cache
             IList<IProcessDefinition> processDefinitions = (new ProcessDefinitionQueryImpl()).deploymentId(deploymentId).list();
             IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
+
+            long count = new ExecutionQueryImpl()
+                .processDeploymentId(deploymentId)
+                .count();
+
+            if (count > 0)
+            {
+                throw new CanNotRemoveProcessDefineException();
+            }
 
             foreach (IProcessDefinition processDefinition in processDefinitions)
             {

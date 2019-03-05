@@ -54,6 +54,8 @@ namespace BpmnWebTest
                     .AllowAnyMethod()
                     .AllowAnyOrigin());
 
+            app.UseStaticFiles();
+
             app.UseMvc();
 
             app.UseSwagger();

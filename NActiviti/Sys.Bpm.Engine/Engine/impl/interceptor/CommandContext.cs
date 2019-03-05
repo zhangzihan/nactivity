@@ -153,10 +153,6 @@ namespace org.activiti.engine.impl.interceptor
             {
                 throw (Exception)exception_Renamed;
             }
-            else if (exception_Renamed is Exception)
-            {
-                throw (Exception)exception_Renamed;
-            }
             else
             {
                 throw new ActivitiException("exception while executing command " + command, exception_Renamed);

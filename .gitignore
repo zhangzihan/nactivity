@@ -244,9 +244,13 @@ ModelManifest.xml
 !Sys.Bpm.Engine/Engine/debug/*
 
 NActiviti/BpmnTest/appsettings.json
-
+BpmnWebTest/appsettings.json
+BpmnWebTest/Dockerfile
 BpmnWebTest/Test/**
 NActiviti/BpmnTest/Test/**
 NActiviti/Sys.Bpm.Rest/Test/**
 
 gloable.json
+publish_docker.bat
+Dockerfile
+start.sh

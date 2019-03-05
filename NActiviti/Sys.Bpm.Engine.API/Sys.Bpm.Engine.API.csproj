@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sys.Bpm.Model\Sys.Bpm.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Engine\impl\db\upgrade\" />
+    <Folder Include="Engine\impl\delegate\invocation\" />
+    <Folder Include="Engine\impl\persistence\entity\data\integration\" />
+  </ItemGroup>
+
+</Project>

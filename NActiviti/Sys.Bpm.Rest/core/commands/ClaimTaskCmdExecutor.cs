@@ -9,9 +9,9 @@ namespace org.activiti.cloud.services.core.commands
     public class ClaimTaskCmdExecutor : CommandExecutor<ClaimTaskCmd>
     {
         private ProcessEngineWrapper processEngine;
-        private MessageChannel<ClaimTaskResults> commandResults;
+        private IMessageChannel<ClaimTaskResults> commandResults;
 
-        public ClaimTaskCmdExecutor(ProcessEngineWrapper processEngine, MessageChannel<ClaimTaskResults> commandResults)
+        public ClaimTaskCmdExecutor(ProcessEngineWrapper processEngine, IMessageChannel<ClaimTaskResults> commandResults)
         {
             this.processEngine = processEngine;
             this.commandResults = commandResults;

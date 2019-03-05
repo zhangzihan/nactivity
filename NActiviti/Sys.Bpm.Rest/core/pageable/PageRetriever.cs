@@ -1,6 +1,6 @@
-﻿using org.activiti.cloud.services.api.model.converter;
+﻿using org.activiti.api.runtime.shared.query;
+using org.activiti.cloud.services.api.model.converter;
 using org.activiti.engine.query;
-using org.springframework.data.domain;
 using System.Collections.Generic;
 
 /*
@@ -22,11 +22,11 @@ namespace org.activiti.cloud.services.core.pageable
 {
     public class PageRetriever
     {
-        public virtual Page<TARGET> loadPage<SOURCE, TARGET, T1>(IQuery<T1, SOURCE> query, Pageable pageable, ModelConverter<SOURCE, TARGET> converter)
+        public virtual IPage<TARGET> loadPage<SOURCE, TARGET, T1>(IQuery<T1, SOURCE> query, Pageable pageable, IModelConverter<SOURCE, TARGET> converter)
         {
             IList<SOURCE> elements = query.listPage(pageable.Offset, pageable.PageSize);
             long count = query.count();
-            return new PageImpl<TARGET>(converter.from(elements), pageable, count);
+            return new PageImpl<TARGET>(converter.from(elements), count);
         }
     }
 }

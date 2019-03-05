@@ -30,6 +30,9 @@ namespace org.activiti.engine.impl.persistence.entity
         protected internal string name;
         protected internal string description;
         protected internal string key;
+        protected internal string businessKey;
+        protected internal string businessPath;
+        protected internal string startForm;
         protected internal int version;
         protected internal string category;
         protected internal string deploymentId;
@@ -40,7 +43,7 @@ namespace org.activiti.engine.impl.persistence.entity
         protected internal bool isGraphicalNotationDefined;
         protected internal IDictionary<string, object> variables;
         protected internal bool hasStartFormKey;
-        protected internal int suspensionState = SuspensionState_Fields.ACTIVE.StateCode;
+        protected internal int suspensionState = SuspensionStateProvider.ACTIVE.StateCode;
         protected internal bool isIdentityLinksInitialized;
         protected internal IList<IIdentityLinkEntity> definitionIdentityLinkEntities = new List<IIdentityLinkEntity>();
         protected internal IOSpecification ioSpecification;
@@ -87,6 +90,24 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 this.key = value;
             }
+        }
+
+        public virtual string BusinessKey
+        {
+            get => businessKey;
+            set => businessKey = value;
+        }
+
+        public virtual string BusinessPath
+        {
+            get => businessPath;
+            set => businessPath = value;
+        }
+
+        public virtual string StartForm
+        {
+            get => startForm;
+            set => startForm = value;
         }
 
 
@@ -262,7 +283,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return suspensionState == SuspensionState_Fields.SUSPENDED.StateCode;
+                return suspensionState == SuspensionStateProvider.SUSPENDED.StateCode;
             }
         }
 

@@ -23,7 +23,7 @@ namespace org.activiti.engine.impl.cmd
 
     /// 
     [Serializable]
-    public class GetProcessInstanceAttachmentsCmd : ICommand<IList<IAttachment>>
+    public class GetProcessInstanceAttachmentsCmd : ICommand<IList<IAttachmentEntity>>
     {
 
         private const long serialVersionUID = 1L;
@@ -34,7 +34,7 @@ namespace org.activiti.engine.impl.cmd
             this.processInstanceId = taskId;
         }
 
-        public virtual IList<IAttachment> execute(ICommandContext commandContext)
+        public virtual IList<IAttachmentEntity> execute(ICommandContext commandContext)
         {
             return commandContext.AttachmentEntityManager.findAttachmentsByProcessInstanceId(processInstanceId);
         }

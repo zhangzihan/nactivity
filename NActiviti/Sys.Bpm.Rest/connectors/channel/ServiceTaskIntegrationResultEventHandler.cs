@@ -35,10 +35,10 @@ namespace org.activiti.services.connectors.channel
 
         private readonly IRuntimeService runtimeService;
         private readonly IIntegrationContextService integrationContextService;
-        private readonly MessageChannel<IntegrationResultReceivedEvent[]> auditProducer;
+        private readonly IMessageChannel<IntegrationResultReceivedEvent[]> auditProducer;
         private readonly RuntimeBundleProperties runtimeBundleProperties;
 
-        public ServiceTaskIntegrationResultEventHandler(IRuntimeService runtimeService, IIntegrationContextService integrationContextService, MessageChannel<IntegrationResultReceivedEvent[]> auditProducer, RuntimeBundleProperties runtimeBundleProperties)
+        public ServiceTaskIntegrationResultEventHandler(IRuntimeService runtimeService, IIntegrationContextService integrationContextService, IMessageChannel<IntegrationResultReceivedEvent[]> auditProducer, RuntimeBundleProperties runtimeBundleProperties)
         {
             this.runtimeService = runtimeService;
             this.integrationContextService = integrationContextService;
@@ -84,7 +84,7 @@ namespace org.activiti.services.connectors.channel
         {
             if (runtimeBundleProperties.EventsProperties.IntegrationAuditEventsEnabled)
             {
-                Message<IntegrationResultReceivedEvent[]> message =
+                IMessage<IntegrationResultReceivedEvent[]> message =
                     MessageBuilder<IntegrationResultReceivedEvent[]>.withPayload(new IntegrationResultReceivedEvent[]
                     {
                         new IntegrationResultReceivedEventImpl(runtimeBundleProperties.AppName, runtimeBundleProperties.AppVersion, runtimeBundleProperties.ServiceName, runtimeBundleProperties.ServiceFullName, runtimeBundleProperties.ServiceType, runtimeBundleProperties.ServiceVersion, integrationContext.ExecutionId, integrationContext.ProcessDefinitionId, integrationContext.ProcessInstanceId, integrationContext.Id, integrationContext.FlowNodeId)

@@ -16,7 +16,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json.Linq;
+using org.activiti.api.runtime.shared.query;
 using org.activiti.bpmn.model;
+using org.activiti.cloud.services.api.commands;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core;
@@ -27,10 +29,10 @@ using org.activiti.cloud.services.rest.assemblers;
 using org.activiti.engine;
 using org.activiti.engine.repository;
 using org.activiti.image.exception;
-using org.springframework.data.domain;
 using org.springframework.hateoas;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,7 +50,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
         private readonly ProcessDefinitionResourceAssembler resourceAssembler;
 
-        private readonly PageableRepositoryService pageableRepositoryService;
+        private readonly PageableProcessDefinitionRepositoryService pageableRepositoryService;
 
         private readonly SecurityPoliciesApplicationService securityService;
 
@@ -68,7 +70,7 @@ namespace org.activiti.cloud.services.rest.controllers
         public ProcessDefinitionControllerImpl(IProcessEngine processEngine,
             ProcessDefinitionConverter processDefinitionConverter,
             ProcessDefinitionResourceAssembler resourceAssembler,
-            PageableRepositoryService pageableRepositoryService,
+            PageableProcessDefinitionRepositoryService pageableRepositoryService,
             SecurityPoliciesApplicationService securityPoliciesApplicationService)
         {
             this.repositoryService = processEngine.RepositoryService;
@@ -78,54 +80,35 @@ namespace org.activiti.cloud.services.rest.controllers
             this.securityService = securityPoliciesApplicationService;
         }
 
-        //public ProcessDefinitionControllerImpl(IRepositoryService repositoryService, 
-        //    ProcessDiagramGeneratorWrapper processDiagramGenerator, 
-        //    ProcessDefinitionConverter processDefinitionConverter, 
-        //    ProcessDefinitionResourceAssembler resourceAssembler, 
-        //    PageableRepositoryService pageableRepositoryService, 
-        //    SecurityPoliciesApplicationService securityPoliciesApplicationService)
-        //{
-        //    this.repositoryService = repositoryService;
-        //    this.processDiagramGenerator = processDiagramGenerator;
-        //    this.processDefinitionConverter = processDefinitionConverter;
-        //    this.resourceAssembler = resourceAssembler;
-        //    this.pageableRepositoryService = pageableRepositoryService;
-        //    this.securityService = securityPoliciesApplicationService;
-        //}
-
-        [HttpGet("latest")]
-        public virtual Task<IList<ProcessDefinitionResource>> GetLatestProcessDefinitions([FromQuery]Pageable pageable)
+        [HttpPost("latest")]
+        public virtual Task<Resources<ProcessDefinition>> LatestProcessDefinitions(ProcessDefinitionQuery queryObj)
         {
-            IList<IProcessDefinition> defs = repositoryService.createProcessDefinitionQuery().latestVersion().list();
+            queryObj = queryObj ?? new ProcessDefinitionQuery();
+            queryObj.Latest = true;
 
-            IList<ProcessDefinitionResource> resources = resourceAssembler.toResources(processDefinitionConverter.from(defs));
-
-            //Page<ProcessDefinition> page = pageableRepositoryService.getProcessDefinitions(pageable);
-
-            //pagedResourcesAssembler.toResource(pageable, page, resourceAssembler);
-
-            return System.Threading.Tasks.Task.FromResult<IList<ProcessDefinitionResource>>(resources);
+            return ProcessDefinitions(queryObj);
         }
 
-        [HttpGet]
-        public virtual Task<IList<ProcessDefinitionResource>> GetProcessDefinitions([FromQuery]Pageable pageable = null)
+        [HttpPost("list")]
+        public virtual Task<Resources<ProcessDefinition>> ProcessDefinitions(ProcessDefinitionQuery queryObj)
         {
-            IList<IProcessDefinition> defs = repositoryService.createProcessDefinitionQuery().list();
+            IPage<ProcessDefinition> defs = new QueryProcessDefinitionCmd().loadPage(this.repositoryService, this.pageableRepositoryService, queryObj);
 
-            IList<ProcessDefinitionResource> resources = resourceAssembler.toResources(processDefinitionConverter.from(defs));
+            IList<ProcessDefinitionResource> resources = resourceAssembler.toResources(defs.getContent());
 
-            //Page<ProcessDefinition> page = pageableRepositoryService.getProcessDefinitions(pageable);
+            Resources<ProcessDefinition> list = new Resources<ProcessDefinition>(resources.Select(x => x.Content), defs.getTotalItems(), queryObj.Pageable.Offset, queryObj.Pageable.PageSize);
 
-            //pagedResourcesAssembler.toResource(pageable, page, resourceAssembler);
-
-            return System.Threading.Tasks.Task.FromResult<IList<ProcessDefinitionResource>>(resources);
+            return System.Threading.Tasks.Task.FromResult(list);
         }
 
         [HttpGet("{id}")]
-        public virtual ProcessDefinitionResource GetProcessDefinition(string id)
+        public virtual Task<ProcessDefinition> GetProcessDefinition(string id)
         {
             IProcessDefinition processDefinition = retrieveProcessDefinition(id);
-            return resourceAssembler.toResource(processDefinitionConverter.from(processDefinition));
+
+            ProcessDefinitionResource resource = resourceAssembler.toResource(processDefinitionConverter.from(processDefinition));
+
+            return System.Threading.Tasks.Task.FromResult(resource.Content);
         }
 
         private IProcessDefinition retrieveProcessDefinition(string id)
@@ -141,62 +124,38 @@ namespace org.activiti.cloud.services.rest.controllers
         }
 
         [HttpGet("{id}/processmodel")]
-        public virtual Task<ContentResult> GetProcessModel(string id)
+        public virtual Task<string> GetProcessModel(string id)
         {
-            try
-            {
-                // first check the user can see the process definition (which has same ID as process model in engine)
-                retrieveProcessDefinition(id);
+            // first check the user can see the process definition (which has same ID as process model in engine)
+            retrieveProcessDefinition(id);
 
-                using (System.IO.Stream resourceStream = repositoryService.getProcessModel(id))
-                {
-                    resourceStream.Seek(0, SeekOrigin.Begin);
-                    byte[] data = new byte[resourceStream.Length];
-                    resourceStream.Read(data, 0, data.Length);
-
-                    string xml = Encoding.UTF8.GetString(data);
-
-                    return System.Threading.Tasks.Task.FromResult<ContentResult>(
-                        new ContentResult
-                        {
-                            ContentType = "application/xml",
-                            StatusCode = 200,
-                            Content = xml,
-                        });
-                }
-            }
-            catch(ActivitiObjectNotFoundException e)
+            using (System.IO.Stream resourceStream = repositoryService.getProcessModel(id))
             {
-                return System.Threading.Tasks.Task.FromResult<ContentResult>(
-                           new ContentResult
-                           {
-                               ContentType = "application/xml",
-                               StatusCode = 200,
-                               Content = null,
-                           });
-            }
-            catch (IOException e)
-            {
-                throw new ActivitiException("Error occured while getting process model '" + id + "' : " + e.Message, e);
+                resourceStream.Seek(0, SeekOrigin.Begin);
+                byte[] data = new byte[resourceStream.Length];
+                resourceStream.Read(data, 0, data.Length);
+
+                string xml = Encoding.UTF8.GetString(data);
+
+                return System.Threading.Tasks.Task.FromResult<string>(xml);
             }
         }
 
         [HttpGet("{id}/bpmnmodel")]
         [Produces("application/json")]
-        public virtual string GetBpmnModel(string id)
+        public virtual Task<BpmnModel> GetBpmnModel(string id)
         {
             // first check the user can see the process definition (which has same ID as BPMN model in engine)
             retrieveProcessDefinition(id);
 
             BpmnModel bpmnModel = repositoryService.getBpmnModel(id);
-            JToken json = JToken.FromObject(bpmnModel);
 
-            return json.ToString();
+            return System.Threading.Tasks.Task.FromResult<BpmnModel>(bpmnModel);
         }
 
         [HttpGet("{id}/diagram")]
         [Produces("image/svg+xml")]
-        public virtual string GetProcessDiagram(string id)
+        public virtual Task<string> GetProcessDiagram(string id)
         {
             // first check the user can see the process definition (which has same ID as BPMN model in engine)
             retrieveProcessDefinition(id);
@@ -205,7 +164,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
             byte[] data = processDiagramGenerator.generateDiagram(bpmnModel);
 
-            return Encoding.UTF8.GetString(data);
+            return System.Threading.Tasks.Task.FromResult<string>(Encoding.UTF8.GetString(data));
         }
     }
 

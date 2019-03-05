@@ -17,11 +17,13 @@ using System.Collections.Generic;
 namespace org.activiti.engine.impl.db
 {
     using DatabaseSchemaReader;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.context;
+    using org.activiti.engine.impl.db.upgrade;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.cache;
     using org.activiti.engine.impl.persistence.entity;
@@ -29,6 +31,7 @@ namespace org.activiti.engine.impl.db
     using SmartSql.Abstractions;
     using SmartSql.Utils;
     using Sys;
+    using Sys.Data;
     using System.Data;
     using System.IO;
     using System.Linq;
@@ -38,27 +41,25 @@ namespace org.activiti.engine.impl.db
     /// 
     public class DbSqlSession : ISession
     {
-
         protected internal static readonly Regex CLEAN_VERSION_REGEX = new Regex("\\d\\.\\d*");
 
-        protected internal static readonly IList<ActivitiVersion> ACTIVITI_VERSIONS = new List<ActivitiVersion>();
+        protected internal static readonly IList<ActivitiVersion> ACTIVITI_VERSIONS = DbSqlSessionVersion.ACTIVITI_VERSIONS;
 
-        public ISmartSqlMapper SqlMapper { get => ProcessEngineServiceProvider.Resolve<ISmartSqlMapper>(); }
+        public ISmartSqlMapper SqlMapper
+        {
+            get
+            {
+                ISmartSqlMapper sqlMapper = ProcessEngineServiceProvider.Resolve<ISmartSqlMapper>();
+
+                var cfg = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>();
+
+                sqlMapper.Variables = cfg.GetProperties();
+
+                return sqlMapper;
+            }
+        }
 
         private static readonly ILogger<DbSqlSession> log = ProcessEngineServiceProvider.LoggerService<DbSqlSession>();
-
-        static DbSqlSession()
-        {
-            // Version 6
-            ACTIVITI_VERSIONS.Add(new ActivitiVersion("6.0.0.0"));
-            ACTIVITI_VERSIONS.Add(new ActivitiVersion("6.0.0.1"));
-            ACTIVITI_VERSIONS.Add(new ActivitiVersion("6.0.0.2"));
-            ACTIVITI_VERSIONS.Add(new ActivitiVersion("6.0.0.3"));
-
-
-            /* Current */
-            ACTIVITI_VERSIONS.Add(new ActivitiVersion(ProcessEngine_Fields.VERSION));
-        }
 
         protected internal DbSqlSessionFactory dbSqlSessionFactory;
         protected internal IEntityCache entityCache;
@@ -208,7 +209,7 @@ namespace org.activiti.engine.impl.db
 
         private IList<TOut> selectList<TEntityImpl, TOut>(string statement, ListQueryParameterObject parameter, bool useCache = true)
         {
-            return selectListWithRawParameter<TEntityImpl, TOut>(statement, parameter.parameter, parameter.FirstResult, parameter.MaxResults, useCache);
+            return selectListWithRawParameter<TEntityImpl, TOut>(statement, parameter.Parameter, parameter.FirstResult, parameter.MaxResults, useCache);
         }
 
         public virtual IList<TOut> selectListWithRawParameter<TEntityImpl, TOut>(string statement, object parameter, int firstResult, int maxResults, bool useCache = true)
@@ -844,11 +845,11 @@ namespace org.activiti.engine.impl.db
                 }
 
                 string errorMessage = null;
-                if (!EngineTablePresent)
+                if (!IsEngineTablePresent())
                 {
                     errorMessage = addMissingComponent(errorMessage, "engine");
                 }
-                if (dbSqlSessionFactory.DbHistoryUsed && !HistoryTablePresent)
+                if (dbSqlSessionFactory.DbHistoryUsed && !IsHistoryTablePresent())
                 {
                     errorMessage = addMissingComponent(errorMessage, "history");
                 }
@@ -900,7 +901,7 @@ namespace org.activiti.engine.impl.db
 
         public virtual void dbSchemaCreate()
         {
-            if (EngineTablePresent)
+            if (IsEngineTablePresent())
             {
                 string dbVersion = DbVersion;
                 if (!ProcessEngine_Fields.VERSION.Equals(dbVersion))
@@ -940,7 +941,7 @@ namespace org.activiti.engine.impl.db
 
         public virtual void dbSchemaPrune()
         {
-            if (HistoryTablePresent && !dbSqlSessionFactory.DbHistoryUsed)
+            if (IsHistoryTablePresent() && !dbSqlSessionFactory.DbHistoryUsed)
             {
                 executeMandatorySchemaResource("drop", "history");
             }
@@ -957,7 +958,7 @@ namespace org.activiti.engine.impl.db
             bool isUpgradeNeeded = false;
             int matchingVersionIndex = -1;
 
-            if (EngineTablePresent)
+            if (IsEngineTablePresent())
             {
 
                 IPropertyEntity dbVersionProperty = selectById<PropertyEntityImpl, IPropertyEntity>(new KeyValuePair<string, object>("name", "schema.version"));
@@ -993,7 +994,7 @@ namespace org.activiti.engine.impl.db
             {
                 dbSchemaCreateEngine();
             }
-            if (HistoryTablePresent)
+            if (IsHistoryTablePresent())
             {
                 if (isUpgradeNeeded)
                 {
@@ -1030,20 +1031,14 @@ namespace org.activiti.engine.impl.db
             return matchingVersionIndex;
         }
 
-        public virtual bool EngineTablePresent
+        public virtual bool IsEngineTablePresent()
         {
-            get
-            {
-                return isTablePresent("ACT_RU_EXECUTION");
-            }
+            return isTablePresent("ACT_RU_EXECUTION");
         }
 
-        public virtual bool HistoryTablePresent
+        public virtual bool IsHistoryTablePresent()
         {
-            get
-            {
-                return isTablePresent("ACT_HI_PROCINST");
-            }
+            return isTablePresent("ACT_HI_PROCINST");
         }
 
         public virtual bool isTablePresent(string tableName)
@@ -1179,16 +1174,14 @@ namespace org.activiti.engine.impl.db
         public virtual string getResourceForDbOperation(string directory, string operation, string component)
         {
             string databaseType = dbSqlSessionFactory.DatabaseType;
-            return $"Resources/db/{directory}/activiti.{databaseType}.{operation}.{component}.sql";
+            return $"resources/db/{directory}/activiti.{databaseType}.{operation}.{component}.sql";
             //"org/activiti/db/" + directory + "/activiti." + databaseType + "." + operation + "." + component + ".sql";
         }
 
         public virtual void executeSchemaResource(string operation, string component, string resourceName, bool isOptional)
         {
-            Stream inputStream = null;
-            try
+            using (Stream inputStream = ReflectUtil.getResourceAsStream(resourceName))
             {
-                inputStream = ReflectUtil.getResourceAsStream(resourceName);
                 if (inputStream == null)
                 {
                     if (isOptional)
@@ -1205,142 +1198,143 @@ namespace org.activiti.engine.impl.db
                     executeSchemaResource(operation, component, resourceName, inputStream);
                 }
             }
-            finally
-            {
-                IoUtil.closeSilently(inputStream);
-            }
         }
 
         private void executeSchemaResource(string operation, string component, string resourceName, Stream inputStream)
         {
             log.LogInformation($"performing {operation} on {component} with resource {resourceName}");
-            //string sqlStatement = null;
-            //string exceptionSqlStatement = null;
-            //try
-            //{
-            //    Exception exception = null;
-            //    byte[] bytes = IoUtil.readInputStream(inputStream, resourceName);
-            //    string ddlStatements = StringHelper.NewString(bytes);
+            string sqlStatement = null;
+            string exceptionSqlStatement = null;
+            try
+            {
+                Exception exception = null;
+                byte[] bytes = IoUtil.readInputStream(inputStream, resourceName);
+                string ddlStatements = StringHelper.NewString(bytes);
 
-            //    // Special DDL handling for certain databases
-            //    try
-            //    {
-            //        if (Mysql)
-            //        {
-            //            DatabaseMetaData databaseMetaData = connection.MetaData;
-            //            int majorVersion = databaseMetaData.DatabaseMajorVersion;
-            //            int minorVersion = databaseMetaData.DatabaseMinorVersion;
-            //            //log.info("Found MySQL: majorVersion=" + majorVersion + " minorVersion=" + minorVersion);
+                // Special DDL handling for certain databases
+                //try
+                //{
+                //    if (Mysql)
+                //    {
+                //        DatabaseMetaData databaseMetaData = connection.MetaData;
+                //        int majorVersion = databaseMetaData.DatabaseMajorVersion;
+                //        int minorVersion = databaseMetaData.DatabaseMinorVersion;
+                //        //log.info("Found MySQL: majorVersion=" + majorVersion + " minorVersion=" + minorVersion);
 
-            //            // Special care for MySQL < 5.6
-            //            if (majorVersion <= 5 && minorVersion < 6)
-            //            {
-            //                ddlStatements = updateDdlForMySqlVersionLowerThan56(ddlStatements);
-            //            }
-            //        }
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        //log.info("Could not get database metadata", e);
-            //    }
+                //        // Special care for MySQL < 5.6
+                //        if (majorVersion <= 5 && minorVersion < 6)
+                //        {
+                //            ddlStatements = updateDdlForMySqlVersionLowerThan56(ddlStatements);
+                //        }
+                //    }
+                //}
+                //catch (Exception e)
+                //{
+                //    //log.info("Could not get database metadata", e);
+                //}
 
-            //    System.IO.StringReader reader = new StringReader(ddlStatements);
-            //    string line = readNextTrimmedLine(reader);
-            //    bool inOraclePlsqlBlock = false;
-            //    while (!string.ReferenceEquals(line, null))
-            //    {
-            //        if (line.StartsWith("# ", StringComparison.Ordinal))
-            //        {
-            //            //log.debug(line.Substring(2));
-            //        }
-            //        else if (line.StartsWith("-- ", StringComparison.Ordinal))
-            //        {
-            //            //log.debug(line.Substring(3));
-            //        }
-            //        else if (line.StartsWith("execute java ", StringComparison.Ordinal))
-            //        {
-            //            string upgradestepClassName = line.Substring(13).Trim();
-            //            IDbUpgradeStep dbUpgradeStep = null;
-            //            try
-            //            {
-            //                dbUpgradeStep = (IDbUpgradeStep)ReflectUtil.instantiate(upgradestepClassName);
-            //            }
-            //            catch (ActivitiException e)
-            //            {
-            //                throw new ActivitiException("database update java class '" + upgradestepClassName + "' can't be instantiated: " + e.Message, e);
-            //            }
-            //            try
-            //            {
-            //                //log.debug("executing upgrade step java class {}", upgradestepClassName);
-            //                dbUpgradeStep.execute(this);
-            //            }
-            //            catch (Exception e)
-            //            {
-            //                throw new ActivitiException("error while executing database update java class '" + upgradestepClassName + "': " + e.Message, e);
-            //            }
-            //        }
-            //        else if (line.Length > 0)
-            //        {
+                IDataSource ds = ProcessEngineServiceProvider.Resolve<IDataSource>();
 
-            //            if (Oracle && line.StartsWith("begin", StringComparison.Ordinal))
-            //            {
-            //                inOraclePlsqlBlock = true;
-            //                sqlStatement = addSqlStatementPiece(sqlStatement, line);
-            //            }
-            //            else if ((line.EndsWith(";", StringComparison.Ordinal) && !inOraclePlsqlBlock) || (line.StartsWith("/", StringComparison.Ordinal) && inOraclePlsqlBlock))
-            //            {
+                StringReader reader = new StringReader(ddlStatements);
+                string line = readNextTrimmedLine(reader);
+                bool inOraclePlsqlBlock = false;
 
-            //                if (inOraclePlsqlBlock)
-            //                {
-            //                    inOraclePlsqlBlock = false;
-            //                }
-            //                else
-            //                {
-            //                    sqlStatement = addSqlStatementPiece(sqlStatement, line.Substring(0, line.Length - 1));
-            //                }
+                while (!string.ReferenceEquals(line, null))
+                {
+                    if (line.StartsWith("# ", StringComparison.Ordinal))
+                    {
+                        log.LogDebug(line.Substring(2));
+                    }
+                    else if (line.StartsWith("-- ", StringComparison.Ordinal))
+                    {
+                        log.LogDebug(line.Substring(3));
+                    }
+                    else if (line.StartsWith("execute class ", StringComparison.Ordinal))
+                    {
+                        string upgradestepClassName = line.Substring("execute class ".Length).Trim();
+                        IDbUpgradeStep dbUpgradeStep = null;
+                        try
+                        {
+                            dbUpgradeStep = (IDbUpgradeStep)ReflectUtil.instantiate(upgradestepClassName);
+                        }
+                        catch (ActivitiException e)
+                        {
+                            throw new ActivitiException("database update csharp class '" + upgradestepClassName + "' can't be instantiated: " + e.Message, e);
+                        }
+                        try
+                        {
+                            log.LogDebug($"executing upgrade step java class {upgradestepClassName}");
+                            dbUpgradeStep.execute(this);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new ActivitiException("error while executing database update csharp class '" + upgradestepClassName + "': " + e.Message, e);
+                        }
+                    }
+                    else if (line.Length > 0)
+                    {
+                        if (Oracle && line.StartsWith("begin", StringComparison.Ordinal))
+                        {
+                            inOraclePlsqlBlock = true;
+                            sqlStatement = addSqlStatementPiece(sqlStatement, line);
+                        }
+                        else if ((line.EndsWith(";", StringComparison.Ordinal) && !inOraclePlsqlBlock) || (line.StartsWith("/", StringComparison.Ordinal) && inOraclePlsqlBlock))
+                        {
 
-            //                Statement jdbcStatement = connection.createStatement();
-            //                try
-            //                {
-            //                    // no logging needed as the connection will log it
-            //                    //log.debug("SQL: {}", sqlStatement);
-            //                    jdbcStatement.execute(sqlStatement);
-            //                    jdbcStatement.close();
-            //                }
-            //                catch (Exception e)
-            //                {
-            //                    if (exception == null)
-            //                    {
-            //                        exception = e;
-            //                        exceptionSqlStatement = sqlStatement;
-            //                    }
-            //                    //log.error("problem during schema {}, statement {}", operation, sqlStatement, e);
-            //                }
-            //                finally
-            //                {
-            //                    sqlStatement = null;
-            //                }
-            //            }
-            //            else
-            //            {
-            //                sqlStatement = addSqlStatementPiece(sqlStatement, line);
-            //            }
-            //        }
+                            if (inOraclePlsqlBlock)
+                            {
+                                inOraclePlsqlBlock = false;
+                            }
+                            else
+                            {
+                                sqlStatement = addSqlStatementPiece(sqlStatement, line.Substring(0, line.Length - 1));
+                            }
 
-            //        line = readNextTrimmedLine(reader);
-            //    }
+                            IDbCommand command = ds.Connection.CreateCommand();
+                            command.CommandText = sqlStatement;
+                            command.CommandType = CommandType.Text;
+                            command.Connection.Open();
+                            try
+                            {
+                                // no logging needed as the connection will log it
+                                log.LogDebug($"SQL {sqlStatement}");
+                                command.ExecuteNonQuery();
+                            }
+                            catch (Exception e)
+                            {
+                                if (exception == null)
+                                {
+                                    exception = e;
+                                    exceptionSqlStatement = sqlStatement;
+                                }
+                                log.LogError(e, $"problem during schema {operation}, statement {sqlStatement}");
+                            }
+                            finally
+                            {
+                                command.Connection.Dispose();
+                                sqlStatement = null;
+                            }
+                        }
+                        else
+                        {
+                            sqlStatement = addSqlStatementPiece(sqlStatement, line);
+                        }
+                    }
 
-            //    if (exception != null)
-            //    {
-            //        throw exception;
-            //    }
+                    line = readNextTrimmedLine(reader);
+                }
 
-            //    //log.debug("activiti db schema {} for component {} successful", operation, component);
-            //}
-            //catch (Exception e)
-            //{
-            //    throw new ActivitiException("couldn't " + operation + " db schema: " + exceptionSqlStatement, e);
-            //}
+                if (exception != null)
+                {
+                    throw exception;
+                }
+
+                log.LogDebug($"activiti db schema {operation} for component {component} successful");
+            }
+            catch (Exception e)
+            {
+                throw new ActivitiException("couldn't " + operation + " db schema: " + exceptionSqlStatement, e);
+            }
         }
 
         protected internal virtual string addSqlStatementPiece(string sqlStatement, string line)
@@ -1519,4 +1513,28 @@ namespace org.activiti.engine.impl.db
         }
     }
 
+    internal static class DbSqlSessionVersion
+    {
+        public static ActivitiVersion VERSION { get; private set; }
+        public static readonly IList<ActivitiVersion> ACTIVITI_VERSIONS = new List<ActivitiVersion>();
+
+        internal static void InitVersion(IConfiguration configuration)
+        {
+            ProcessEngine_Fields.VERSION = configuration.GetSection("currentVersion").Value;
+
+            VERSION = new ActivitiVersion(ProcessEngine_Fields.VERSION);
+
+            IEnumerable<IConfigurationSection> historyVersions = configuration.GetSection("historyVersions")?.GetChildren();
+
+            foreach (var v in historyVersions ?? new IConfigurationSection[0])
+            {
+                if (string.IsNullOrWhiteSpace(v.Value) == false)
+                {
+                    ACTIVITI_VERSIONS.Add(new ActivitiVersion(v.Value));
+                }
+            }
+
+            ACTIVITI_VERSIONS.Add(VERSION);
+        }
+    }
 }

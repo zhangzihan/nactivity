@@ -1,7 +1,7 @@
-﻿using org.activiti.engine.impl;
+﻿using org.activiti.api.runtime.shared.query;
+using org.activiti.engine.impl;
 using org.activiti.engine.query;
 using org.activiti.engine.repository;
-using org.springframework.data.domain;
 using System.Collections.Generic;
 
 /*
@@ -40,7 +40,9 @@ namespace org.activiti.cloud.services.core.pageable.sort
 
         protected internal override IQueryProperty getOrderByProperty(Sort.Order order)
         {
-            return orderByProperties[order.Property];
+            orderByProperties.TryGetValue(order.Property, out IQueryProperty qp);
+
+            return qp;
         }
     }
 }

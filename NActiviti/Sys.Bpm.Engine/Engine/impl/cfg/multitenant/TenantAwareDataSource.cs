@@ -59,10 +59,6 @@ namespace org.activiti.engine.impl.cfg.multitenant
             {
                 return CurrentDataSource.Connection;
             }
-            set
-            {
-                CurrentDataSource.Connection = value;
-            }
         }
 
         public virtual IDbConnection getConnection(string provider, string connectionString)

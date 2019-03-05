@@ -16,9 +16,12 @@ using System.Collections.Generic;
 
 namespace org.activiti.engine.impl.persistence.entity
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.engine.impl.context;
+    using System.IO;
     using System.Linq;
+    using System.Text;
+    using System.Xml.Linq;
 
     /// 
     /// 
@@ -130,6 +133,45 @@ namespace org.activiti.engine.impl.persistence.entity
             return list;
         }
 
+        public virtual void unrunable()
+        {
+            foreach (string key in (resources ?? new Dictionary<string, IResourceEntity>()).Keys)
+            {
+                IResourceEntity resource = resources[key];
+                if (resource.Bytes?.Length == 0)
+                {
+                    continue;
+                }
+
+                runable(resource, false);
+            }
+        }
+
+        public virtual void runable()
+        {
+            foreach (string key in (resources ?? new Dictionary<string, IResourceEntity>()).Keys)
+            {
+                IResourceEntity resource = resources[key];
+                if (resource.Bytes?.Length == 0)
+                {
+                    continue;
+                }
+
+                runable(resource, true);
+            }
+        }
+
+        private static void runable(IResourceEntity resource, bool runable)
+        {
+            using (MemoryStream ms = new MemoryStream(resource.Bytes))
+            {
+                XDocument doc = XDocument.Load(ms);
+                XElement process = doc.Descendants(XName.Get("process", BpmnXMLConstants.BPMN2_NAMESPACE)).First();
+                process.Attribute("isExecutable").SetValue(runable);
+                resource.Bytes = Encoding.UTF8.GetBytes(doc.ToString());
+            }
+        }
+
         // getters and setters ////////////////////////////////////////////////////////
 
         public virtual string Name
@@ -143,6 +185,12 @@ namespace org.activiti.engine.impl.persistence.entity
                 this.name = value;
             }
         }
+
+        public virtual string BusinessKey { get; set; }
+
+        public virtual string BusinessPath { get; set; }
+
+        public string StartForm { get; set; }
 
 
         public virtual string Category

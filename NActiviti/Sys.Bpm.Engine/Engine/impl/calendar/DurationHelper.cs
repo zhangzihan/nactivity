@@ -21,6 +21,7 @@ namespace org.activiti.engine.impl.calendar
     using org.activiti.engine.impl.util;
     using org.activiti.engine.runtime;
     using System.Globalization;
+    using System.Xml;
 
     /// <summary>
     /// helper class for parsing ISO8601 duration format (also recurring) and computing next timer date
@@ -104,19 +105,24 @@ namespace org.activiti.engine.impl.calendar
 
             if (isDuration(expression[0]))
             {
-                period = parsePeriod(expression[0]);
+                period = XmlConvert.ToTimeSpan(expression[0]);
                 end = expression.Count == 1 ? null : (DateTime?)parseDate(expression[1]);
             }
             else
             {
-                start = parseDate(expression[0]);
+                start = expression.Count == 1 ? DateTime.Now : parseDate(expression[0]);
                 if (isDuration(expression[1]))
                 {
-                    period = parsePeriod(expression[1]);
+                    period = XmlConvert.ToTimeSpan(expression[1]);
+                }
+                else if (expression.Count > 1)
+                {
+                    end = parseDate(expression[1]);
+                    period = end.Value.Subtract(start.Value);
                 }
                 else
                 {
-                    end = parseDate(expression[1]);
+                    end = parseDate(expression[0]);
                     period = end.Value.Subtract(start.Value);
                 }
             }
@@ -169,11 +175,10 @@ namespace org.activiti.engine.impl.calendar
 
         private DateTime getDateAfterRepeat(DateTime date)
         {
-            DateTime current = start.Value.ToLocalTime(); //TimeZoneUtil.convertToTimeZone(start, date.TimeZone);
+            DateTime current = TimeZoneUtil.convertToTimeZone(start.Value, TimeZoneInfo.Local);
 
             if (repeatWithNoBounds)
             {
-
                 while (current < date || current.Equals(date))
                 { // As long as current date is not past the engine date, we keep looping
                     DateTime newTime = add(current, period);
@@ -239,7 +244,7 @@ namespace org.activiti.engine.impl.calendar
             }
 
             return dateCalendar.Value;
-        } 
+        }
 
         protected internal virtual TimeSpan parsePeriod(string period)
         {

@@ -1,0 +1,17 @@
+Start.... selectProcessDefinitionsByQueryCriteria
+Variables:False
+Enter variables replace
+RealSql:      select RES.*  from ACT_RE_PROCDEF RES where  RES.VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = RES.KEY_   and (TENANT_ID_ = '' or TENANT_ID_ is null) )   and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)       
+SQL:      select RES.*  from ACT_RE_PROCDEF RES where  RES.VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = RES.KEY_   and (TENANT_ID_ = '' or TENANT_ID_ is null) )   and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)       Enter variables replace
+Enter variables replace
+Enter variables replace
+Enter variables replace
+Enter variables replace
+Enter variables replace
+Enter variables replace
+Enter variables replace
+Enter variables replace
+Enter variables replace
+Enter variables replace
+Enter variables replace
+Enter variables replace

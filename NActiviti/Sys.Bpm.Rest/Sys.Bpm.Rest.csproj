@@ -35,7 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sys.Bpm.Engine\Sys.Bpm.Engine.csproj" />
-    <ProjectReference Include="..\Sys.Bpm.Model\Sys.Bpm.Model.csproj" />
+    <ProjectReference Include="..\Sys.Bpm.Rest.API\Sys.Bpm.Rest.API.csproj" />
   </ItemGroup>
 
 </Project>

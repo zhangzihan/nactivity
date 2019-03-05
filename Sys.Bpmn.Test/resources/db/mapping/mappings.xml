@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<SmartSqlMapConfig xmlns="http://SmartSql.net/schemas/SmartSqlMapConfig.xsd">
+  <Settings IsWatchConfigFile="true" IgnoreParameterCase="true" IsCacheEnabled="true" />
+  <Database>
+    <DbProvider Name="MySqlClientFactory" ParameterPrefix="?" Type="MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data"/>
+    <!--<DbProvider Name="OracleClientFactory" ParameterPrefix=":" Type="Oracle.ManagedDataAccess.Client.OracleClientFactory,Oracle.ManagedDataAccess"/>
+    <DbProvider Name="SqlClientFactory" ParameterPrefix="@" Type="System.Data.SqlClient.SqlClientFactory,System.Data.SqlClient"/>-->
+    <Write Name="WriteDB" ConnectionString="server=106.75.100.106;database=activiti;uid=root;pwd=_sys31UC;charset='gbk'"/>
+    <Read Name="ReadDB-0" ConnectionString="server=106.75.100.106;database=activiti;uid=root;pwd=_sys31UC;charset='gbk'"/>
+  </Database>
+  <TypeHandlers>    
+    <TypeHandler Name="文件"
+                 Type="org.activiti.engine.impl.persistence.ByteArrayTypeHandler,Sys.Bpm.Engine"/> 
+    <TypeHandler Name="二进制引用"
+                 Type="org.activiti.engine.impl.persistence.ByteArrayRefTypeHandler,Sys.Bpm.Engine"/>
+    <TypeHandler Name="Json"
+                 Type="SmartSql.TypeHandler.JsonTypeHandler,SmartSql.TypeHandler"/>
+    <TypeHandler Name="变量类型"
+                 Type="org.activiti.engine.impl.db.IbatisVariableTypeHandler,Sys.Bpm.Engine"/>
+
+    
+  </TypeHandlers>
+  <SmartSqlMaps>
+    <SmartSqlMap Path="entity" Type="Directory"></SmartSqlMap>
+
+    <!--<mapper resource="org/activiti/db/mapping/entity/Attachment.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/ByteArray.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/Comment.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/Deployment.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/Execution.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/Group.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/HistoricActivityInstance.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/HistoricDetail.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/HistoricProcessInstance.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/HistoricVariableInstance.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/HistoricTaskInstance.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/HistoricIdentityLink.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/IdentityInfo.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/IdentityLink.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/Job.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/Membership.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/Model.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/ProcessDefinition.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/ProcessDefinitionInfo.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/Property.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/Resource.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/TableData.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/Task.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/User.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/VariableInstance.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/EventSubscription.xml" />
+    <mapper resource="org/activiti/db/mapping/entity/EventLogEntry.xml" />-->
+  </SmartSqlMaps>
+</SmartSqlMapConfig>

@@ -35,6 +35,9 @@ namespace org.activiti.engine.impl
         private string category;
         private string categoryLike;
         private string categoryNotEquals;
+        private string businessKey;
+        private string businessPath;
+        private string startForm;
         private string name;
         private string nameLike;
         private string deploymentId_Renamed;
@@ -85,9 +88,15 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionCategory(string category)
         {
-            if (ReferenceEquals(category, null))
+            //这里没看明白activiti为什么抛出异常,允许从业务角度讲可以理解,但是从程序角度讲有点限制死了.
+            //if (ReferenceEquals(category, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("category is null");
+            //}
+            if (string.IsNullOrWhiteSpace(category))
             {
-                throw new ActivitiIllegalArgumentException("category is null");
+                this.category = null;
+                return this;
             }
             this.category = category;
             return this;
@@ -95,9 +104,15 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionCategoryLike(string categoryLike)
         {
-            if (ReferenceEquals(categoryLike, null))
+            //这里没看明白activiti为什么抛出异常
+            //if (ReferenceEquals(categoryLike, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("categoryLike is null");
+            //}
+            if (string.IsNullOrWhiteSpace(categoryLike))
             {
-                throw new ActivitiIllegalArgumentException("categoryLike is null");
+                this.categoryLike = null;
+                return this;
             }
             this.categoryLike = categoryLike;
             return this;
@@ -105,9 +120,15 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionCategoryNotEquals(string categoryNotEquals)
         {
-            if (ReferenceEquals(categoryNotEquals, null))
+            //这里没看明白activiti为什么抛出异常
+            //if (ReferenceEquals(categoryNotEquals, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("categoryNotEquals is null");
+            //}
+            if (string.IsNullOrWhiteSpace(categoryNotEquals))
             {
-                throw new ActivitiIllegalArgumentException("categoryNotEquals is null");
+                this.categoryNotEquals = null;
+                return this;
             }
             this.categoryNotEquals = categoryNotEquals;
             return this;
@@ -115,9 +136,15 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionName(string name)
         {
-            if (ReferenceEquals(name, null))
+            //这里没看明白activiti为什么抛出异常
+            //if (ReferenceEquals(name, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("name is null");
+            //}
+            if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ActivitiIllegalArgumentException("name is null");
+                this.name = null;
+                return this;
             }
             this.name = name;
             return this;
@@ -125,9 +152,15 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionNameLike(string nameLike)
         {
-            if (ReferenceEquals(nameLike, null))
+            //这里没看明白activiti为什么抛出异常
+            //if (ReferenceEquals(nameLike, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("nameLike is null");
+            //}
+            if (string.IsNullOrWhiteSpace(nameLike))
             {
-                throw new ActivitiIllegalArgumentException("nameLike is null");
+                this.nameLike = null;
+                return this;
             }
             this.nameLike = nameLike;
             return this;
@@ -135,9 +168,15 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery deploymentId(string deploymentId)
         {
-            if (ReferenceEquals(deploymentId, null))
+            //这里没看明白activiti为什么抛出异常
+            //if (ReferenceEquals(deploymentId, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("id is null");
+            //}
+            if (string.IsNullOrWhiteSpace(deploymentId))
             {
-                throw new ActivitiIllegalArgumentException("id is null");
+                this.deploymentId_Renamed = null;
+                return this;
             }
             this.deploymentId_Renamed = deploymentId;
             return this;
@@ -145,9 +184,15 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery deploymentIds(ISet<string> deploymentIds)
         {
+            //这里没看明白activiti为什么抛出异常
+            //if (deploymentIds == null)
+            //{
+            //    throw new ActivitiIllegalArgumentException("ids are null");
+            //}
             if (deploymentIds == null)
             {
-                throw new ActivitiIllegalArgumentException("ids are null");
+                this.deploymentIds_Renamed = null;
+                return this;
             }
             this.deploymentIds_Renamed = deploymentIds;
             return this;
@@ -155,9 +200,15 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionKey(string key)
         {
-            if (ReferenceEquals(key, null))
+            //这里没看明白activiti为什么抛出异常
+            //if (ReferenceEquals(key, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("key is null");
+            //}
+            if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ActivitiIllegalArgumentException("key is null");
+                this.key = null;
+                return this;
             }
             this.key = key;
             return this;
@@ -165,9 +216,15 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionKeys(ISet<string> keys)
         {
+            //这里没看明白activiti为什么抛出异常
+            //if (keys == null)
+            //{
+            //    throw new ActivitiIllegalArgumentException("keys is null");
+            //}
             if (keys == null)
             {
-                throw new ActivitiIllegalArgumentException("keys is null");
+                this.keys = null;
+                return this;
             }
             this.keys = keys;
             return this;
@@ -175,9 +232,15 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionKeyLike(string keyLike)
         {
-            if (ReferenceEquals(keyLike, null))
+            //这里没看明白activiti为什么抛出异常
+            //if (ReferenceEquals(keyLike, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("keyLike is null");
+            //}
+            if (string.IsNullOrWhiteSpace(keyLike))
             {
-                throw new ActivitiIllegalArgumentException("keyLike is null");
+                this.keyLike = null;
+                return this;
             }
             this.keyLike = keyLike;
             return this;
@@ -185,9 +248,15 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionResourceName(string resourceName)
         {
-            if (ReferenceEquals(resourceName, null))
+            //这里没看明白activiti为什么抛出异常
+            //if (ReferenceEquals(resourceName, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("resourceName is null");
+            //}
+            if (string.IsNullOrWhiteSpace(resourceName))
             {
-                throw new ActivitiIllegalArgumentException("resourceName is null");
+                this.resourceName = null;
+                return this;
             }
             this.resourceName = resourceName;
             return this;
@@ -195,9 +264,15 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionResourceNameLike(string resourceNameLike)
         {
-            if (ReferenceEquals(resourceNameLike, null))
+            //这里没看明白activiti为什么抛出异常
+            //if (ReferenceEquals(resourceNameLike, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("resourceNameLike is null");
+            //}
+            if (string.IsNullOrWhiteSpace(resourceNameLike))
             {
-                throw new ActivitiIllegalArgumentException("resourceNameLike is null");
+                this.resourceNameLike = null;
+                return this;
             }
             this.resourceNameLike = resourceNameLike;
             return this;
@@ -240,14 +315,15 @@ namespace org.activiti.engine.impl
 
         protected internal virtual void checkVersion(int? version)
         {
-            if (version == null)
-            {
-                throw new ActivitiIllegalArgumentException("version is null");
-            }
-            else if (version <= 0)
-            {
-                throw new ActivitiIllegalArgumentException("version must be positive");
-            }
+            //这里没看明白activiti为什么抛出异常,允许从业务角度讲可以理解,但是从程序角度讲有点限制死了.
+            //if (version == null)
+            //{
+            //    throw new ActivitiIllegalArgumentException("version is null");
+            //}
+            //else if (version <= 0)
+            //{
+            //    throw new ActivitiIllegalArgumentException("version must be positive");
+            //}
         }
 
         public virtual IProcessDefinitionQuery latestVersion()
@@ -258,21 +334,27 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery active()
         {
-            this.suspensionState = SuspensionState_Fields.ACTIVE;
+            this.suspensionState = SuspensionStateProvider.ACTIVE;
             return this;
         }
 
         public virtual IProcessDefinitionQuery suspended()
         {
-            this.suspensionState = SuspensionState_Fields.SUSPENDED;
+            this.suspensionState = SuspensionStateProvider.SUSPENDED;
             return this;
         }
 
         public virtual IProcessDefinitionQuery processDefinitionTenantId(string tenantId)
         {
-            if (ReferenceEquals(tenantId, null))
+            //这里没看明白activiti为什么抛出异常
+            //if (ReferenceEquals(tenantId, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("processDefinition tenantId is null");
+            //}
+            if (string.IsNullOrWhiteSpace(tenantId))
             {
-                throw new ActivitiIllegalArgumentException("processDefinition tenantId is null");
+                this.tenantId = null;
+                return this;
             }
             this.tenantId = tenantId;
             return this;
@@ -280,10 +362,17 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery processDefinitionTenantIdLike(string tenantIdLike)
         {
-            if (ReferenceEquals(tenantIdLike, null))
+            //这里没看明白activiti为什么抛出异常
+            //if (ReferenceEquals(tenantIdLike, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("process definition tenantId is null");
+            //}
+            if (string.IsNullOrWhiteSpace(tenantIdLike))
             {
-                throw new ActivitiIllegalArgumentException("process definition tenantId is null");
+                this.tenantIdLike = null;
+                return this;
             }
+
             this.tenantIdLike = tenantIdLike;
             return this;
         }
@@ -312,13 +401,20 @@ namespace org.activiti.engine.impl
 
         public virtual IProcessDefinitionQuery eventSubscription(string eventType, string eventName)
         {
-            if (ReferenceEquals(eventName, null))
+            //这里没看明白activiti为什么抛出异常
+            //if (ReferenceEquals(eventName, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("event name is null");
+            //}
+            //if (ReferenceEquals(eventType, null))
+            //{
+            //    throw new ActivitiException("event type is null");
+            //}
+            if (string.IsNullOrWhiteSpace(eventType) || string.IsNullOrWhiteSpace(eventName))
             {
-                throw new ActivitiIllegalArgumentException("event name is null");
-            }
-            if (ReferenceEquals(eventType, null))
-            {
-                throw new ActivitiException("event type is null");
+                this.eventSubscriptionType = null;
+                this.eventSubscriptionName = null;
+                return this;
             }
             this.eventSubscriptionType = eventType;
             this.eventSubscriptionName = eventName;
@@ -407,6 +503,42 @@ namespace org.activiti.engine.impl
             base.checkQueryOk();
         }
 
+        public virtual IProcessDefinitionQuery processDefinitionBusinessKey(string businessKey)
+        {
+            this. businessKey = businessKey;
+            return this;
+        }
+
+        public virtual IProcessDefinitionQuery processDefinitionBusinessPath(string businessPath)
+        {
+            this.businessPath = businessPath;
+            return this;
+        }
+
+        public virtual IProcessDefinitionQuery processDefinitionStartForm(string startForm)
+        {
+            this.startForm = startForm;
+            return this;
+        }
+
+        public virtual string BusinessKey
+        {
+            get => businessKey;
+            set => processDefinitionBusinessKey(value);
+        }
+
+        public virtual string BusinessPath
+        {
+            get => businessPath;
+            set => processDefinitionBusinessPath(value);
+        }
+
+        public virtual string StartForm
+        {
+            get => startForm;
+            set => processDefinitionStartForm(value);
+        }
+
         // getters ////////////////////////////////////////////
 
         public virtual string DeploymentId
@@ -415,6 +547,7 @@ namespace org.activiti.engine.impl
             {
                 return deploymentId_Renamed;
             }
+            set => deploymentId_Renamed = value;
         }
 
         public virtual ISet<string> DeploymentIds
@@ -423,6 +556,7 @@ namespace org.activiti.engine.impl
             {
                 return deploymentIds_Renamed;
             }
+            set => deploymentIds_Renamed = value;
         }
 
         public virtual string Id
@@ -431,6 +565,7 @@ namespace org.activiti.engine.impl
             {
                 return id;
             }
+            set => id = value;
         }
 
         public virtual ISet<string> Ids
@@ -439,6 +574,7 @@ namespace org.activiti.engine.impl
             {
                 return ids;
             }
+            set => ids = value;
         }
 
         public virtual string Name
@@ -447,6 +583,7 @@ namespace org.activiti.engine.impl
             {
                 return name;
             }
+            set => name = value;
         }
 
         public virtual string NameLike
@@ -455,6 +592,7 @@ namespace org.activiti.engine.impl
             {
                 return nameLike;
             }
+            set => nameLike = value;
         }
 
         public virtual string Key
@@ -463,6 +601,7 @@ namespace org.activiti.engine.impl
             {
                 return key;
             }
+            set => key = value;
         }
 
         public virtual string KeyLike
@@ -471,6 +610,7 @@ namespace org.activiti.engine.impl
             {
                 return keyLike;
             }
+            set => keyLike = value;
         }
 
         public virtual ISet<string> Keys
@@ -479,6 +619,7 @@ namespace org.activiti.engine.impl
             {
                 return keys;
             }
+            set => keys = value;
         }
 
         public virtual int? Version
@@ -487,6 +628,7 @@ namespace org.activiti.engine.impl
             {
                 return version;
             }
+            set => processDefinitionVersion(value);
         }
 
         public virtual int? VersionGt
@@ -495,6 +637,7 @@ namespace org.activiti.engine.impl
             {
                 return versionGt;
             }
+            set => processDefinitionVersionGreaterThan(value);
         }
 
         public virtual int? VersionGte
@@ -503,6 +646,7 @@ namespace org.activiti.engine.impl
             {
                 return versionGte;
             }
+            set => processDefinitionVersionGreaterThanOrEquals(value);
         }
 
         public virtual int? VersionLt
@@ -511,6 +655,7 @@ namespace org.activiti.engine.impl
             {
                 return versionLt;
             }
+            set => processDefinitionVersionLowerThan(value);
         }
 
         public virtual int? VersionLte
@@ -519,6 +664,7 @@ namespace org.activiti.engine.impl
             {
                 return versionLte;
             }
+            set => processDefinitionVersionLowerThanOrEquals(value);
         }
 
         public virtual bool Latest
@@ -526,6 +672,14 @@ namespace org.activiti.engine.impl
             get
             {
                 return latest;
+            }
+            set
+            {
+                latest = value;
+                if (value == true)
+                {
+                    latestVersion();
+                }
             }
         }
 
@@ -535,6 +689,7 @@ namespace org.activiti.engine.impl
             {
                 return category;
             }
+            set => processDefinitionCategory(value);
         }
 
         public virtual string CategoryLike
@@ -543,6 +698,7 @@ namespace org.activiti.engine.impl
             {
                 return categoryLike;
             }
+            set => processDefinitionCategoryLike(value);
         }
 
         public virtual string ResourceName
@@ -551,6 +707,7 @@ namespace org.activiti.engine.impl
             {
                 return resourceName;
             }
+            set => processDefinitionResourceName(value);
         }
 
         public virtual string ResourceNameLike
@@ -559,6 +716,7 @@ namespace org.activiti.engine.impl
             {
                 return resourceNameLike;
             }
+            set => processDefinitionResourceNameLike(value);
         }
 
         public virtual ISuspensionState SuspensionState
@@ -580,6 +738,7 @@ namespace org.activiti.engine.impl
             {
                 return categoryNotEquals;
             }
+            set => processDefinitionCategoryNotEquals(value);
         }
 
         public virtual string TenantId
@@ -588,6 +747,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantId;
             }
+            set => processDefinitionTenantId(value);
         }
 
         public virtual string TenantIdLike
@@ -596,6 +756,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantIdLike;
             }
+            set => processDefinitionTenantIdLike(value);
         }
 
         public virtual bool WithoutTenantId
@@ -603,6 +764,13 @@ namespace org.activiti.engine.impl
             get
             {
                 return withoutTenantId;
+            }
+            set
+            {
+                if (value == true)
+                {
+                    processDefinitionWithoutTenantId();
+                }
             }
         }
 
@@ -612,6 +780,7 @@ namespace org.activiti.engine.impl
             {
                 return authorizationUserId;
             }
+            set => startableByUser(value);
         }
 
         public virtual string ProcDefId
@@ -620,6 +789,7 @@ namespace org.activiti.engine.impl
             {
                 return procDefId;
             }
+            set => processDefinitionStarter(value);
         }
 
         public virtual string EventSubscriptionName
@@ -628,6 +798,7 @@ namespace org.activiti.engine.impl
             {
                 return eventSubscriptionName;
             }
+            set => eventSubscriptionName = value;
         }
 
         public virtual string EventSubscriptionType
@@ -636,13 +807,20 @@ namespace org.activiti.engine.impl
             {
                 return eventSubscriptionType;
             }
+            set => EventSubscriptionType = value;
         }
 
         public virtual IProcessDefinitionQuery startableByUser(string userId)
         {
-            if (ReferenceEquals(userId, null))
+            //这里没看明白activiti为什么抛出异常
+            //if (ReferenceEquals(userId, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("userId is null");
+            //}
+            if (string.IsNullOrWhiteSpace(userId))
             {
-                throw new ActivitiIllegalArgumentException("userId is null");
+                this.authorizationUserId = null;
+                return this;
             }
             this.authorizationUserId = userId;
             return this;

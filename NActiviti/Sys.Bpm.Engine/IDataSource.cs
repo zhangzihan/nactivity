@@ -14,10 +14,10 @@ namespace Sys.Data
 
         string ConnectionString { get; }
 
-        IDbConnection Connection { get; set; }
+        IDbConnection Connection { get; }
 
         void forceCloseAll();
 
-        IDbConnection getConnection(string provider, string connectionString);
+        IDbConnection getConnection();
     }
 }

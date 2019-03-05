@@ -10,9 +10,9 @@ namespace org.activiti.cloud.services.core.commands
     {
 
         private ProcessEngineWrapper processEngine;
-        private MessageChannel<CompleteTaskResults> commandResults;
+        private IMessageChannel<CompleteTaskResults> commandResults;
 
-        public CompleteTaskCmdExecutor(ProcessEngineWrapper processEngine, MessageChannel<CompleteTaskResults> commandResults)
+        public CompleteTaskCmdExecutor(ProcessEngineWrapper processEngine, IMessageChannel<CompleteTaskResults> commandResults)
         {
             this.processEngine = processEngine;
             this.commandResults = commandResults;

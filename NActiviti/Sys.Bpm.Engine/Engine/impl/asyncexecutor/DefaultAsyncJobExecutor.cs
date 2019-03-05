@@ -133,7 +133,6 @@ namespace org.activiti.engine.impl.asyncexecutor
                     if (commandContext != null)
                     {
                         commandContext.JobManager.unacquire(job);
-
                     }
                     else
                     {

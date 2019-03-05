@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.SuspendedJobEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+
+  <ResultMap Id="jobResultMap" ResultType="org.activiti.engine.impl.persistence.entity.SuspendedJobEntityImpl,Sys.Bpm.Engine">
+    <Result Property="id" Column="ID_" />
+    <Result Property="revision" Column="REV_" />
+    <Result Property="jobType" Column="TYPE_" />
+    <Result Property="exclusive" Column="EXCLUSIVE_" />
+    <Result Property="executionId" Column="EXECUTION_ID_" />
+    <Result Property="processInstanceId" Column="PROCESS_INSTANCE_ID_" />
+    <Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
+    <Result Property="retries" Column="RETRIES_" />
+    <Result Property="exceptionByteArrayRef" Column="EXCEPTION_STACK_ID_" />
+    <Result Property="exceptionMessage" Column="EXCEPTION_MSG_" />
+    <Result Property="jobHandlerType" Column="HANDLER_TYPE_" />
+    <Result Property="jobHandlerConfiguration" Column="HANDLER_CFG_" />
+    <Result Property="tenantId" Column="TENANT_ID_" />
+    <Result Property="duedate" Column="DUEDATE_" />
+    <Result Property="repeat" Column="REPEAT_" />
+  </ResultMap>
+
+  <Delete Id="deleteSuspendedJob" >
+    delete from ACT_RU_SUSPENDED_JOB where ID_ = #{id} and REV_ = #{revision}
+  </Delete>
+
+  <Statement Id="selectSuspendedJobByQueryCriteriaSql">
+    from ACT_RU_SUSPENDED_JOB RES
+    <Where>
+      <IsNotNull Property="id != null">
+        RES.ID_ = #{id}
+      </IsNotNull>
+      <IsNotNull Property="processInstanceId != null">
+        and RES.PROCESS_INSTANCE_ID_ = #{processInstanceId}
+      </IsNotNull>
+      <IsNotNull Property="executionId != null">
+        and RES.EXECUTION_ID_ = #{executionId}
+      </IsNotNull>
+      <IsNotNull Property="processDefinitionId != null">
+        and RES.PROC_DEF_ID_ = #{processDefinitionId}
+      </IsNotNull>
+      <IsNotNull Property="retriesLeft">
+        and RES.RETRIES_ &gt; 0
+      </IsNotNull>
+      <IsNotNull Property="noRetriesLeft">
+        and RES.RETRIES_ &lt;= 0
+      </IsNotNull>
+      <IsNotNull Property="onlyTimers">
+        and RES.TYPE_ = 'timer'
+      </IsNotNull>
+      <IsNotNull Property="onlyMessages">
+        and RES.TYPE_ = 'message'
+      </IsNotNull>
+      <IsNotNull Property="duedateHigherThan != null">
+        and RES.DUEDATE_ &gt; #{duedateHigherThan}
+      </IsNotNull>
+      <IsNotNull Property="duedateLowerThan != null">
+        and RES.DUEDATE_ &lt; #{duedateLowerThan}
+      </IsNotNull>
+      <IsNotNull Property="duedateHigherThanOrEqual != null">
+        and RES.DUEDATE_ &gt;= #{duedateHigherThanOrEqual}
+      </IsNotNull>
+      <IsNotNull Property="duedateLowerThanOrEqual != null">
+        and RES.DUEDATE_ &lt;= #{duedateLowerThanOrEqual}
+      </IsNotNull>
+      <IsNotNull Property="withException">
+        and (RES.EXCEPTION_MSG_ is not null or RES.EXCEPTION_STACK_ID_ is not null)
+      </IsNotNull>
+      <IsNotNull Property="exceptionMessage">
+        and RES.EXCEPTION_MSG_ = #{exceptionMessage}
+      </IsNotNull>
+      <IsNotNull Property="tenantId != null">
+        and RES.TENANT_ID_ = #{tenantId}
+      </IsNotNull>
+      <IsNotNull Property="tenantIdLike != null">
+        and RES.TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
+      </IsNotNull>
+      <IsNotNull Property="withoutTenantId">
+        and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
+      </IsNotNull>
+    </Where>
+  </Statement>
+
+  <Select Id="selectSuspendedJob"  ResultMap="jobResultMap">
+    select * from ACT_RU_SUSPENDED_JOB where ID_ = #{id}
+  </Select>
+
+  <Select Id="selectSuspendedJobsByExecutionId"  ResultMap="jobResultMap">
+    select *
+    from ACT_RU_SUSPENDED_JOB J
+    where J.EXECUTION_ID_ = #{executionId}
+  </Select>
+
+  <Select Id="selectSuspendedJobsByProcessInstanceId"  ResultMap="jobResultMap">
+    select *
+    from ACT_RU_SUSPENDED_JOB J
+    where J.PROCESS_INSTANCE_ID_ = #{processInstanceId}
+  </Select>
+
+  <!-- TIMER INSERT -->
+
+  <Insert Id="insertSuspendedJob" >
+    insert into ACT_RU_SUSPENDED_JOB (
+    ID_,
+    REV_,
+    TYPE_,
+    EXCLUSIVE_,
+    EXECUTION_ID_,
+    PROCESS_INSTANCE_ID_,
+    PROC_DEF_ID_,
+    RETRIES_,
+    EXCEPTION_STACK_ID_,
+    EXCEPTION_MSG_,
+    DUEDATE_,
+    REPEAT_,
+    HANDLER_TYPE_,
+    HANDLER_CFG_,
+    TENANT_ID_)
+    values (#{id},
+    #{revision},
+    #{jobType},
+    #{exclusive},
+    #{executionId},
+    #{processInstanceId},
+    #{processDefinitionId},
+    #{retries},
+    #{exceptionByteArrayRef},
+    #{exceptionMessage},
+    #{duedate},
+    #{repeat},
+    #{jobHandlerType},
+    #{jobHandlerConfiguration},
+    #{tenantId}
+    )
+  </Insert>
+
+  <Insert Id="bulkInsertSuspendedJob" >
+    INSERT INTO ACT_RU_SUSPENDED_JOB (
+    ID_,
+    REV_,
+    TYPE_,
+    EXCLUSIVE_,
+    EXECUTION_ID_,
+    PROCESS_INSTANCE_ID_,
+    PROC_DEF_ID_,
+    RETRIES_,
+    EXCEPTION_STACK_ID_,
+    EXCEPTION_MSG_,
+    DUEDATE_,
+    REPEAT_,
+    HANDLER_TYPE_,
+    HANDLER_CFG_,
+    TENANT_ID_) VALUES
+    <For Property="Items" Key="p" Separator=",">
+      (#{id},
+      #{revision},
+      #{jobType},
+      #{exclusive},
+      #{executionId},
+      #{processInstanceId},
+      #{processDefinitionId},
+      #{retries},
+      #{exceptionByteArrayRef},
+      #{exceptionMessage},
+      #{duedate},
+      #{repeat},
+      #{jobHandlerType},
+      #{jobHandlerConfiguration},
+      #{tenantId})
+    </For>
+  </Insert>
+
+  <Select Id="selectSuspendedJobByQueryCriteria"  ResultMap="jobResultMap">
+    ${limitBefore}
+    select RES.* ${limitBetween}
+    <Include RefId="selectSuspendedJobByQueryCriteriaSql"/>
+    ${orderBy}
+    ${limitAfter}
+  </Select>
+
+  <Select Id="selectSuspendedJobCountByQueryCriteria">
+    select count(distinct RES.ID_)
+    <Include RefId="selectSuspendedJobByQueryCriteriaSql"/>
+  </Select>
+
+  <!-- JOB UPDATE STATEMENTS -->
+  <Update Id="updateSuspendedJobTenantIdForDeployment" >
+    update ACT_RU_SUSPENDED_JOB set
+    TENANT_ID_ = #{tenantId}
+    where
+    ID_ in (
+    SELECT J.ID_ from ACT_RU_SUSPENDED_JOB J
+    inner join ACT_RE_PROCDEF P on J.PROC_DEF_ID_  = P.ID_
+    inner join ACT_RE_DEPLOYMENT D on P.DEPLOYMENT_ID_ = D.ID_
+    where D.ID_ = #{deploymentId}
+    )
+  </Update>
+
+</SmartSqlMap>

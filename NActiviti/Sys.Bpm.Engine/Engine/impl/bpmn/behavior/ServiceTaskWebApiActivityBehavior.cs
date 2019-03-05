@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using Newtonsoft.Json;
+using org.activiti.bpmn.model;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json;
-using org.activiti.bpmn.model;
-using org.activiti.engine.impl.@delegate;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +25,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
 {
     using Newtonsoft.Json.Linq;
     using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.bpmn.helper;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.persistence.entity;
+    using Sys;
+    using System.Net.Http;
 
     /// <summary>
     /// ActivityBehavior that evaluates an expression when executed. Optionally, it sets the result of the expression as a variable on the execution.
@@ -50,6 +47,12 @@ namespace org.activiti.engine.impl.bpmn.behavior
         /// </summary>
         private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
 
+        private readonly IHttpClientFactory httpClientFactory;
+
+        public ServiceTaskWebApiActivityBehavior()
+        {
+            httpClientFactory = ProcessEngineServiceProvider.Resolve<IHttpClientFactory>();
+        }
 
         public override void execute(IExecutionEntity execution)
         {
@@ -57,29 +60,45 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             execution.CurrentFlowElement.ExtensionElements.TryGetValue("property",
                 out IList<ExtensionElement> pElements);
+
             if (pElements != null)
             {
-                string url = GetAttributeValue(pElements, "url");
-                string taskRequest = GetAttributeValue(pElements, "taskRequest");
-                string dataObj = GetAttributeValue(pElements, "dataObj");
-                string method = GetAttributeValue(pElements, "method");
-
-                ExpandoObject contextObject = new ExpandoObject();
-                foreach (string key in execution.Variables.Keys)
+                try
                 {
-                    (contextObject as IDictionary<string, object>).Add(key, execution.Variables[key]);
+                    string url = pElements.GetAttributeValue("url");
+                    string taskRequest = pElements.GetAttributeValue("taskRequest");
+                    string dataObj = pElements.GetAttributeValue("dataObj");
+                    string method = pElements.GetAttributeValue("method");
+
+                    ExpandoObject contextObject = new ExpandoObject();
+                    foreach (string key in execution.Variables.Keys)
+                    {
+                        (contextObject as IDictionary<string, object>).Add(key, execution.Variables[key]);
+                    }
+
+                    url = GetValue(contextObject, url, execution.Variables).ToString();
+                    taskRequest = GetValue(contextObject, taskRequest, execution.Variables).ToString();
+
+                    //调用外部服务
+                    HttpClient client = httpClientFactory.CreateClient();
+                    HttpRequestMessage message = new HttpRequestMessage("get".Equals(method, StringComparison.OrdinalIgnoreCase) ? HttpMethod.Get : HttpMethod.Post, url);
+                    if (string.IsNullOrWhiteSpace(taskRequest) == false)
+                    {
+                        message.Content = new StringContent(taskRequest, Encoding.UTF8, "application/json");
+                    }
+                    HttpResponseMessage result = client.SendAsync(message).Result;
+                    if (result.EnsureSuccessStatusCode().IsSuccessStatusCode)
+                    {
+                        if (string.IsNullOrWhiteSpace(dataObj) == false)
+                        {
+                            JToken data = JsonConvert.DeserializeObject<JToken>(result.Content.ReadAsStringAsync().Result);
+                            execution.setVariable(dataObj, data);
+                        }
+                    }
                 }
-
-                url = GetValue(contextObject, url, execution.Variables).ToString();
-                taskRequest =GetValue(contextObject, taskRequest, execution.Variables).ToString();
-                
-                //调用外部服务
-                HttpResult result = HttpHelper.Post(url, taskRequest);
-                if (result.Code == 200)
+                catch (Exception ex)
                 {
-                    JToken j = JsonConvert.DeserializeObject<JToken>(result.Content);
-                    execution.setVariable(
-                        string.IsNullOrWhiteSpace(dataObj) ? execution.CurrentFlowElement.Name : dataObj, j);
+                    throw new BpmnError(Context.CommandContext.ProcessEngineConfiguration.WebApiErrorCode, ex.Message);
                 }
             }
         }
@@ -93,7 +112,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
         /// <returns></returns>
         private object GetValue(ExpandoObject contextObject, string expstr, IDictionary<string, object> variables)
         {
-            if(string.IsNullOrWhiteSpace(expstr))
+            if (string.IsNullOrWhiteSpace(expstr))
                 return expstr;
 
             //存在动态参数，进行替换
@@ -153,126 +172,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
         }
 
 
-        /// <summary>
-        /// 获取节点的值
-        /// </summary>
-        /// <param name="elements"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private string GetAttributeValue(IList<ExtensionElement> elements, string name)
-        {
-            foreach (var element in elements)
-            {
-                string ename = element.getAttributeValue(null, "name");
-                if (ename == name)
-                {
-                    return element.getAttributeValue(null, "value");
-                }
-            }
-
-            return null;
-        }
-
-
-
         public override void trigger(IExecutionEntity execution, string signalEvent, object signalData)
         {
             //execution.setVariable();
             base.trigger(execution, signalEvent, signalData);
-        }
-
-    }
-
-    /// <summary>
-    /// http响应封装
-    /// </summary>
-    public class HttpResult
-    {
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="code">返回状态码</param>
-        /// <param name="response">返回数据</param>
-        public HttpResult(HttpStatusCode code, string response)
-        {
-            this.Code = (int)code;
-            this.Content = response;
-        }
-
-        /// <summary>
-        /// 状态码
-        /// </summary>
-        public int Code { get; set; }
-
-        /// <summary>
-        /// 返回数据
-        /// </summary>
-        public string Content { get; set; }
-    }
-
-    public class HttpHelper
-    {
-        private static Encoding encoding = Encoding.UTF8;
-
-
-        /// <summary>
-        /// 设置
-        /// </summary>
-        private static readonly JsonSerializerSettings SerializerSettingsAllField = new JsonSerializerSettings
-        {
-            DateTimeZoneHandling = DateTimeZoneHandling.Local
-        };
-
-        /// <summary>
-        /// json 格式 Post
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="obj">对象可以的，会进行 JSON.SerializeAllField()</param>
-        /// <param name="timeoutSeconds">TimeOut 秒数</param>
-        /// <returns></returns>
-        public static HttpResult Post(string url, string data = null, int timeoutSeconds = 60)
-        {
-            if (string.IsNullOrWhiteSpace(url))
-                return new HttpResult(HttpStatusCode.NotFound,"url empty");
-
-            Encoding encode = Encoding.UTF8;
-            HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(url);
-            myRequest.ContentType = "application/json;charset=utf-8";
-            myRequest.Method = "POST";
-            if (timeoutSeconds < 3)
-                timeoutSeconds = 3;
-
-            byte[] bs = null;
-            myRequest.Timeout = timeoutSeconds * 1000;
-            if (!string.IsNullOrWhiteSpace(data))
-            {
-                bs = encoding.GetBytes(data);
-                myRequest.ContentLength = bs.Length;
-            }
-            else
-                myRequest.ContentLength = 0;
-
-
-            using (Stream reqStream = myRequest.GetRequestStream())
-            {
-                if (!string.IsNullOrWhiteSpace(data))
-                    reqStream.Write(bs, 0, bs.Length);
-                reqStream.Close();
-            }
-            try
-            {
-                using (HttpWebResponse response = (HttpWebResponse)myRequest.GetResponse())
-                {
-                    using (StreamReader reader = new StreamReader(response.GetResponseStream(), encoding))
-                    {
-                        var responseData = reader.ReadToEnd().ToString();
-                        return new HttpResult(response.StatusCode, responseData);
-                    }
-                }
-            }
-            catch (WebException ex)
-            {}
-            return new HttpResult(HttpStatusCode.InternalServerError, "InternalServerError"); ;
         }
 
     }

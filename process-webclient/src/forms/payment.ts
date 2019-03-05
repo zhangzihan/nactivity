@@ -21,7 +21,7 @@ export class Payment extends BaseForm {
     }
 
     submit() {
-        Axios.post(`${contants.serverUrl}/${this.task.id}/complete`, {
+        Axios.post(`${contants.serverUrl}/workflow/tasks/${this.task.id}/complete`, {
             taskId: this.task.id,
             outputVariables: {
                 money: this.money

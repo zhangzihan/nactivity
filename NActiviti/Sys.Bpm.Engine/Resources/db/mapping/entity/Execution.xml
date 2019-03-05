@@ -336,7 +336,7 @@
   </Statement>
 
   <Statement Id="commonSelectExecutionsByQueryCriteriaSql">
-    <For Property="Items" Key="p">
+    <For Property="QueryVariableValues" Key="p">
       <Switch>
         <Case Property="queryVariableValue.local">
           inner join ACT_RU_VARIABLE A${index} on RES.ID_ = A${index}.EXECUTION_ID_
@@ -346,7 +346,7 @@
         </Default>
       </Switch>
     </For>
-    <For Property="Items" Key="p">
+    <For Property="OrQueryObjects" Key="p">
       <IsNotNull Test="orQueryObject.processDefinitionId != null or orQueryObject.processDefinitionKey != null or orQueryObject.processDefinitionVersion != null or orQueryObject.processDefinitionCategory != null or orQueryObject.processDefinitionName != null or (orQueryObject.processDefinitionIds != null and !orQueryObject.processDefinitionIds.isEmpty()) or (orQueryObject.processDefinitionKeys != null and !orQueryObject.processDefinitionKeys.isEmpty())">
         inner join ACT_RE_PROCDEF P_OR${orIndex} on RES.PROC_DEF_ID_ = P_OR${orIndex}.ID_
       </IsNotNull>
@@ -367,9 +367,6 @@
         inner join ACT_RU_EXECUTION INST on RES.PROC_INST_ID_ = INST.ID_
       </IsNotNull>
     </IsNotEmpty>
-    <If Test="DeploymentId != null or (DeploymentIds != null and CollectionUtil.IsNotEmpty(DeploymentIds))">
-      left outer join ACT_RE_PROCDEF DEPLOY_P ON RES.PROC_DEF_ID_ = DEPLOY_P.ID_
-    </If>
     <If Property="onlyProcessInstances and IsWithException">
         left outer join ACT_RU_TIMER_JOB JOB ON RES.PROC_INST_ID_ = JOB.PROCESS_INSTANCE_ID_
     </If>
@@ -451,11 +448,11 @@
         and RES.PARENT_ID_ is null
       </IsTrue>
       <IsNotNull Property="deploymentId">
-        and DEPLOY_P.DEPLOYMENT_ID_ = #{deploymentId}
+        and P.DEPLOYMENT_ID_ = #{deploymentId}
       </IsNotNull>
       <IsNotNull Property="deploymentIds">
         <IsNotEmpty Property="deploymentIds">
-          and DEPLOY_P.DEPLOYMENT_ID_ IN
+          and P.DEPLOYMENT_ID_ IN
           <For Key="deployment" Index="index" Property="deploymentIds" Open="(" Separator="," Close=")">
             #{deployment}
           </For>

@@ -34,9 +34,8 @@
   <!-- PROPERTY UPDATE -->
   
   <Update Id="updateProperty">
-    update ACT_GE_PROPERTY REV_ = #{revisionNext}, VALUE_ = #{value} 
-    where NAME_ = #{name}
-      and REV_ = #{revision}
+    update ACT_GE_PROPERTY set REV_ = #{revisionNext}, VALUE_ = #{value} 
+    where NAME_ = #{name} and REV_ = #{revision}
   </Update>
 
   <!-- PROPERTY DELETE -->

@@ -8,7 +8,7 @@ namespace org.activiti.services.subscription.channel
 {
     public class BroadcastSignaEventHandler
     {
-        private BinderAwareChannelResolver resolver;
+        private IBinderAwareChannelResolver resolver;
 
         private IRuntimeService runtimeService;
 
@@ -26,7 +26,7 @@ namespace org.activiti.services.subscription.channel
 
         public virtual void broadcastSignal(SignalCmd signalCmd)
         {
-            Message<SignalCmd> message = MessageBuilder<SignalCmd>.withPayload(signalCmd).build();
+            IMessage<SignalCmd> message = MessageBuilder<SignalCmd>.withPayload(signalCmd).build();
             resolver.resolveDestination("signalEvent").send<SignalCmd>(message);
         }
     }

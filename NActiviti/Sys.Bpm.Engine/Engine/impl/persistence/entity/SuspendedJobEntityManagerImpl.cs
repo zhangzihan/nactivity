@@ -115,7 +115,7 @@ namespace org.activiti.engine.impl.persistence.entity
         /// </summary>
         protected internal virtual void deleteExceptionByteArrayRef(ISuspendedJobEntity jobEntity)
         {
-            ByteArrayRef exceptionByteArrayRef = jobEntity.ExceptionByteArrayRef;
+            ByteArrayRef exceptionByteArrayRef = jobEntity.ExceptionByteArrayRef as ByteArrayRef;
             if (exceptionByteArrayRef != null)
             {
                 exceptionByteArrayRef.delete();

@@ -25,12 +25,15 @@
   <div class="tasks">
     <div class="header">
       <span>我的任务</span>
-      <span style="float:right" click.trigger="loadMyTasks()">
+      <span style="float:right;margin-right:4px" click.trigger="loadMyTasks()">
         <i class="fa fa-refresh"></i>
+      </span>
+      <span style="float:right" click.trigger="removeTask()">
+        <i class="fa fa-minus"></i>
       </span>
     </div>
     <div class="my-task" repeat.for="task of tasks" click.trigger="next(task)" class.bind="select&&select==task?'activate':''">
-      <strong>${task.name}</strong>
+      <strong>${task.assignee}-${task.name}</strong>
     </div>
     </ul>
 </template>

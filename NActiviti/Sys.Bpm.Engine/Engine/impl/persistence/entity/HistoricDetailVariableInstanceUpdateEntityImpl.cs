@@ -105,7 +105,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual ByteArrayRef ByteArrayRef
+        public virtual IByteArrayRef ByteArrayRef
         {
             get
             {

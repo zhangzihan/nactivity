@@ -10,9 +10,9 @@ namespace org.activiti.cloud.services.core.commands
     {
 
         private ProcessEngineWrapper processEngine;
-        private MessageChannel<RemoveProcessVariablesResults> commandResults;
+        private IMessageChannel<RemoveProcessVariablesResults> commandResults;
 
-        public RemoveProcessVariablesCmdExecutor(ProcessEngineWrapper processEngine, MessageChannel<RemoveProcessVariablesResults> commandResults)
+        public RemoveProcessVariablesCmdExecutor(ProcessEngineWrapper processEngine, IMessageChannel<RemoveProcessVariablesResults> commandResults)
         {
             this.processEngine = processEngine;
             this.commandResults = commandResults;

@@ -66,7 +66,7 @@ namespace org.activiti.engine
 
     public static class ProcessEngine_Fields
     {
-        public const string VERSION = "7.0.0.0";
+        public static string VERSION { get; internal set; } = "7.0.0.1";
     }
 
 }

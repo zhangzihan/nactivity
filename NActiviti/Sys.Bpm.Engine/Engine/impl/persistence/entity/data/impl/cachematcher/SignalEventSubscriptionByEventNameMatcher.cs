@@ -32,7 +32,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
                 (eventSubscriptionEntity.ExecutionId == null || 
                     (eventSubscriptionEntity.ExecutionId != null && 
                         eventSubscriptionEntity.Execution != null && 
-                            eventSubscriptionEntity.Execution.SuspensionState == SuspensionState_Fields.ACTIVE.StateCode)) && 
+                            eventSubscriptionEntity.Execution.SuspensionState == SuspensionStateProvider.ACTIVE.StateCode)) && 
                 ((tenantId != null && string.Compare(tenantId?.ToString(), eventSubscriptionEntity.TenantId, true) == 0) || 
                     (tenantId != null && string.IsNullOrWhiteSpace(eventSubscriptionEntity.TenantId)));
         }

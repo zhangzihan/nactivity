@@ -293,7 +293,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual ByteArrayRef ByteArrayRef
+        public virtual IByteArrayRef ByteArrayRef
         {
             get
             {
@@ -301,7 +301,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             set
             {
-                byteArrayRef = value;
+                byteArrayRef = value as ByteArrayRef;
             }
         }
 
