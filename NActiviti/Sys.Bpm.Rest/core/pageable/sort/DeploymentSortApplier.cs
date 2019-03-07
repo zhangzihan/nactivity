@@ -3,6 +3,7 @@ using org.activiti.engine.impl;
 using org.activiti.engine.query;
 using org.activiti.engine.repository;
 using org.activiti.engine.runtime;
+using System;
 using System.Collections.Generic;
 
 /*
@@ -25,12 +26,13 @@ namespace org.activiti.cloud.services.core.pageable.sort
     public class DeploymentSortApplier : BaseSortApplier<IDeploymentQuery, IDeployment>
     {
 
-        private IDictionary<string, IQueryProperty> orderByProperties = new Dictionary<string, IQueryProperty>();
+        private IDictionary<string, IQueryProperty> orderByProperties = new Dictionary<string, IQueryProperty>(StringComparer.OrdinalIgnoreCase);
 
         public DeploymentSortApplier()
         {
             orderByProperties["id"] = DeploymentQueryProperty.DEPLOYMENT_ID;
             orderByProperties["name"] = DeploymentQueryProperty.DEPLOYMENT_NAME;
+            orderByProperties["deployTime"] = DeploymentQueryProperty.DEPLOY_TIME;
         }
 
         protected internal override void applyDefaultSort(IDeploymentQuery query)

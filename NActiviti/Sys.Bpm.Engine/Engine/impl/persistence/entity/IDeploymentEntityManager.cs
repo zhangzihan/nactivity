@@ -15,25 +15,28 @@
 namespace org.activiti.engine.impl.persistence.entity
 {
 
-	using org.activiti.engine.repository;
+    using org.activiti.engine.repository;
 
-	/// 
-	public interface IDeploymentEntityManager : IEntityManager<IDeploymentEntity>
-	{
+    /// 
+    public interface IDeploymentEntityManager : IEntityManager<IDeploymentEntity>
+    {
 
-	  IDeploymentEntity findLatestDeploymentByName(string deploymentName);
+        IDeploymentEntity findLatestDeploymentByName(string deploymentName);
 
-	  IList<IDeployment> findDeploymentsByQueryCriteria(DeploymentQueryImpl deploymentQuery, Page page);
+        IList<IDeployment> findDeploymentsByQueryCriteria(DeploymentQueryImpl deploymentQuery, Page page);
 
-	  IList<string> getDeploymentResourceNames(string deploymentId);
+        IList<string> getDeploymentResourceNames(string deploymentId);
 
-	  IList<IDeployment> findDeploymentsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<IDeployment> findDeploymentsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findDeploymentCountByNativeQuery(IDictionary<string, object> parameterMap);
+        long findDeploymentCountByNativeQuery(IDictionary<string, object> parameterMap);
 
-	  long findDeploymentCountByQueryCriteria(DeploymentQueryImpl deploymentQuery);
+        long findDeploymentCountByQueryCriteria(DeploymentQueryImpl deploymentQuery);
 
-	  void deleteDeployment(string deploymentId, bool cascade);
+        void deleteDeployment(string deploymentId, bool cascade);
 
-	}
+        IDeploymentEntity saveDraft(IDeploymentEntity deployment);
+
+        void removeDrafts(string name);
+    }
 }

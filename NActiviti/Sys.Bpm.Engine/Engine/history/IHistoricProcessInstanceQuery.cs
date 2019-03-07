@@ -39,7 +39,7 @@ namespace org.activiti.engine.history
         /// <summary>
         /// Only select historic process instances whose id is in the given set of ids. {@link ProcessInstance) ids and <seealso cref="IHistoricProcessInstance"/> ids match.
         /// </summary>
-        IHistoricProcessInstanceQuery processInstanceIds(ISet<string> processInstanceIds);
+        IHistoricProcessInstanceQuery processInstanceIds(string[] processInstanceIds);
 
         /// <summary>
         /// Only select historic process instances for the given process definition </summary>
@@ -53,12 +53,12 @@ namespace org.activiti.engine.history
         /// <summary>
         /// Only select historic process instances that are defined by a process definition with one of the given process definition keys.
         /// </summary>
-        IHistoricProcessInstanceQuery processDefinitionKeyIn(IList<string> processDefinitionKeys);
+        IHistoricProcessInstanceQuery processDefinitionKeyIn(string[] processDefinitionKeys);
 
         /// <summary>
         /// Only select historic process instances that don't have a process-definition of which the key is present in the given list
         /// </summary>
-        IHistoricProcessInstanceQuery processDefinitionKeyNotIn(IList<string> processDefinitionKeys);
+        IHistoricProcessInstanceQuery processDefinitionKeyNotIn(string[] processDefinitionKeys);
 
         /// <summary>
         /// Only select historic process instances whose process definition category is processDefinitionCategory. </summary>
@@ -86,7 +86,7 @@ namespace org.activiti.engine.history
         /// <summary>
         /// Only select historic process instances that are defined by a process definition with one of the given deployment identifiers.
         /// </summary>
-        IHistoricProcessInstanceQuery deploymentIdIn(IList<string> deploymentIds);
+        IHistoricProcessInstanceQuery deploymentIdIn(string[] deploymentIds);
 
         /// <summary>
         /// Only select historic process instances that are completely finished. </summary>
@@ -108,6 +108,8 @@ namespace org.activiti.engine.history
         /// Only select the historic process instances with which the user with the given id is involved.
         /// </summary>
         IHistoricProcessInstanceQuery involvedUser(string userId);
+
+        IHistoricProcessInstanceQuery involvedGroups(string[] involvedGroups);
 
         /// <summary>
         /// Only select process instances which had a global variable with the given value when they ended. The type only applies to already ended process instances, otherwise use a

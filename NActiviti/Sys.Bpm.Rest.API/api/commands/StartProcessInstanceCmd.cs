@@ -110,7 +110,8 @@ namespace org.activiti.cloud.services.api.commands
         }
 
         /// <summary>
-        /// 业务键值,主要用来保存启动流程时的业务主键,可以是主键id，也可以是表单编号,同一流程只要保持唯一性就可以了
+        /// 业务键值,主要用来保存启动流程时的业务主键,可以是主键id，
+        /// 也可以是表单编号,同一流程只要保持唯一性就可以了
         /// </summary>
         public virtual string BusinessKey
         {
@@ -118,6 +119,9 @@ namespace org.activiti.cloud.services.api.commands
             set => businessKey = value;
         }
 
+        /// <summary>
+        /// 启动表单,根据表单判断
+        /// </summary>
         public string StartForm
         {
             get => startForm;

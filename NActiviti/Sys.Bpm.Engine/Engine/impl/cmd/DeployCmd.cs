@@ -24,6 +24,7 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.repository;
     using org.activiti.engine.repository;
     using System.Collections;
+    using System.IO;
 
     /// 
     /// 
@@ -46,77 +47,90 @@ namespace org.activiti.engine.impl.cmd
 
         protected internal virtual IDeployment executeDeploy(ICommandContext commandContext)
         {
-            IDeploymentEntity deployment = deploymentBuilder.Deployment;
-
-            deployment.runable();
-
-            deployment.DeploymentTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
-
-            if (deploymentBuilder.DuplicateFilterEnabled)
+            try
             {
+                IDeploymentEntity deployment = deploymentBuilder.Deployment;
 
-                IList<IDeployment> existingDeployments = new List<IDeployment>();
-                if (ReferenceEquals(deployment.TenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(deployment.TenantId))
+                deployment.runable();
+
+                deployment.DeploymentTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
+
+                if (deploymentBuilder.DuplicateFilterEnabled)
                 {
-                    IDeploymentEntity existingDeployment = commandContext.DeploymentEntityManager.findLatestDeploymentByName(deployment.Name);
-                    if (existingDeployment != null)
+
+                    IList<IDeployment> existingDeployments = new List<IDeployment>();
+                    if (ReferenceEquals(deployment.TenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(deployment.TenantId))
                     {
-                        existingDeployments.Add(existingDeployment);
+                        IDeploymentEntity existingDeployment = commandContext.DeploymentEntityManager.findLatestDeploymentByName(deployment.Name);
+                        if (existingDeployment != null)
+                        {
+                            existingDeployments.Add(existingDeployment);
+                        }
+                    }
+                    else
+                    {
+                        IList<IDeployment> deploymentList = commandContext.ProcessEngineConfiguration.RepositoryService.createDeploymentQuery().deploymentName(deployment.Name).deploymentTenantId(deployment.TenantId).orderByDeploymentId().desc().list();
+
+                        if (deploymentList.Count > 0)
+                        {
+                            ((List<IDeployment>)existingDeployments).AddRange(deploymentList);
+                        }
+                    }
+
+                    {
+                        IDeploymentEntity existingDeployment = null;
+                        if (existingDeployments.Count > 0)
+                        {
+                            existingDeployment = (IDeploymentEntity)existingDeployments[0];
+                        }
+
+                        if ((existingDeployment != null) && !deploymentsDiffer(deployment, existingDeployment))
+                        {
+                            commandContext.ProcessEngineConfiguration.DeploymentEntityManager.removeDrafts(deployment.Name);
+
+                            return existingDeployment;
+                        }
                     }
                 }
-                else
-                {
-                    IList<IDeployment> deploymentList = commandContext.ProcessEngineConfiguration.RepositoryService.createDeploymentQuery().deploymentName(deployment.Name).deploymentTenantId(deployment.TenantId).orderByDeploymentId().desc().list();
 
-                    if (deploymentList.Count > 0)
-                    {
-                        ((List<IDeployment>)existingDeployments).AddRange(deploymentList);
-                    }
+                deployment.New = true;
+
+                // Save the data
+                commandContext.DeploymentEntityManager.insert(deployment);
+
+                if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
+                {
+                    commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_CREATED, deployment));
                 }
 
+                // Deployment settings
+                IDictionary<string, object> deploymentSettings = new Dictionary<string, object>();
+                deploymentSettings[DeploymentSettings_Fields.IS_BPMN20_XSD_VALIDATION_ENABLED] = deploymentBuilder.Bpmn20XsdValidationEnabled;
+                deploymentSettings[DeploymentSettings_Fields.IS_PROCESS_VALIDATION_ENABLED] = deploymentBuilder.ProcessValidationEnabled;
+
+                // Actually deploy
+                commandContext.ProcessEngineConfiguration.DeploymentManager.deploy(deployment, deploymentSettings);
+
+                if (deploymentBuilder.ProcessDefinitionsActivationDate != null)
                 {
-                    IDeploymentEntity existingDeployment = null;
-                    if (existingDeployments.Count > 0)
-                    {
-                        existingDeployment = (IDeploymentEntity)existingDeployments[0];
-                    }
-
-                    if ((existingDeployment != null) && !deploymentsDiffer(deployment, existingDeployment))
-                    {
-                        return existingDeployment;
-                    }
+                    scheduleProcessDefinitionActivation(commandContext, deployment);
                 }
+
+                if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
+                {
+                    commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, deployment));
+                }
+
+                commandContext.ProcessEngineConfiguration.DeploymentEntityManager.removeDrafts(deployment.Name);
+
+                return deployment;
             }
-
-            deployment.New = true;
-
-            // Save the data
-            commandContext.DeploymentEntityManager.insert(deployment);
-
-            if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
+            catch (Exception ex)
             {
-                commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_CREATED, deployment));
+                File.WriteAllText("test.txt", ex.StackTrace);
+
+                throw;
             }
-
-            // Deployment settings
-            IDictionary<string, object> deploymentSettings = new Dictionary<string, object>();
-            deploymentSettings[DeploymentSettings_Fields.IS_BPMN20_XSD_VALIDATION_ENABLED] = deploymentBuilder.Bpmn20XsdValidationEnabled;
-            deploymentSettings[DeploymentSettings_Fields.IS_PROCESS_VALIDATION_ENABLED] = deploymentBuilder.ProcessValidationEnabled;
-
-            // Actually deploy
-            commandContext.ProcessEngineConfiguration.DeploymentManager.deploy(deployment, deploymentSettings);
-
-            if (deploymentBuilder.ProcessDefinitionsActivationDate != null)
-            {
-                scheduleProcessDefinitionActivation(commandContext, deployment);
-            }
-
-            if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
-            {
-                commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, deployment));
-            }
-
-            return deployment;
         }
 
         protected internal virtual bool deploymentsDiffer(IDeploymentEntity deployment, IDeploymentEntity saved)

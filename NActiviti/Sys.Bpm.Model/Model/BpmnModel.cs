@@ -77,7 +77,7 @@ namespace org.activiti.bpmn.model
         {
             if (attribute != null && !string.IsNullOrWhiteSpace(attribute.Name))
             {
-                IList<ExtensionAttribute> attributeList = null;
+                List<ExtensionAttribute> attributeList = null;
                 if (!this.definitionsAttributes.ContainsKey(attribute.Name))
                 {
                     attributeList = new List<ExtensionAttribute>();

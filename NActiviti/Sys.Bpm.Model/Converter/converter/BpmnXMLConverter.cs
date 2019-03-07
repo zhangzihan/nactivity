@@ -11,7 +11,9 @@ using Sys.Bpm;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -491,67 +493,73 @@ namespace org.activiti.bpmn.converter
         public virtual byte[] convertToXML(BpmnModel model, string encoding)
         {
             throw new NotImplementedException();
-            //try
-            //{
+                        
+//            try
+//            {
+//                XElement root = XElement.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+//"<bpmn2:definitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
+//" xmlns:bpmn2=\"http://www.omg.org/spec/BPMN/20100524/MODEL\"" +
+//" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\"" +
+//" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\"" +
+//" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\"" +
+//" xmlns:camunda=\"http://camunda.org/schema/1.0/bpmn\"" +
+//" id=\"\" targetNamespace=\"http://bpmn.io/schema/bpmn\"" +
+//" xsi:schemaLocation=\"http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd\"></bpmn2:definitions>", LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
 
-            //    System.IO.MemoryStream outputStream = new System.IO.MemoryStream();
+//                XMLStreamWriter writer = new XMLStreamWriter(root);
+//                XMLStreamWriter xtw = new IndentingXMLStreamWriter(writer);
 
-            //    XMLOutputFactory xof = XMLOutputFactory.newInstance();
-            //    System.IO.StreamWriter @out = new System.IO.StreamWriter(outputStream, encoding);
+//                //DefinitionsRootExport.writeRootElement(model, xtw, encoding);
+//                CollaborationExport.writePools(model, xtw);
+//                DataStoreExport.writeDataStores(model, xtw);
+//                SignalAndMessageDefinitionExport.writeSignalsAndMessages(model, xtw);
 
-            //    XMLStreamWriter writer = xof.createXMLStreamWriter(@out);
-            //    XMLStreamWriter xtw = new IndentingXMLStreamWriter(writer);
+//                foreach (Process process in model.Processes)
+//                {
 
-            //    DefinitionsRootExport.writeRootElement(model, xtw, encoding);
-            //    CollaborationExport.writePools(model, xtw);
-            //    DataStoreExport.writeDataStores(model, xtw);
-            //    SignalAndMessageDefinitionExport.writeSignalsAndMessages(model, xtw);
+//                    if (process.FlowElements?.Count == 0 && process.Lanes?.Count == 0)
+//                    {
+//                        // empty process, ignore it
+//                        continue;
+//                    }
 
-            //    foreach (Process process in model.Processes)
-            //    {
+//                    ProcessExport.writeProcess(process, xtw);
 
-            //        if (process.FlowElements.Empty && process.Lanes.Empty)
-            //        {
-            //            // empty process, ignore it
-            //            continue;
-            //        }
+//                    foreach (FlowElement flowElement in process.FlowElements)
+//                    {
+//                        createXML(flowElement, model, xtw);
+//                    }
 
-            //        ProcessExport.writeProcess(process, xtw);
+//                    foreach (Artifact artifact in process.Artifacts)
+//                    {
+//                        createXML(artifact, model, xtw);
+//                    }
 
-            //        foreach (FlowElement flowElement in process.FlowElements)
-            //        {
-            //            createXML(flowElement, model, xtw);
-            //        }
+//                    // end process element
+//                    xtw.writeEndElement();
+//                }
 
-            //        foreach (Artifact artifact in process.Artifacts)
-            //        {
-            //            createXML(artifact, model, xtw);
-            //        }
+//                BPMNDIExport.writeBPMNDI(model, xtw);
 
-            //        // end process element
-            //        xtw.writeEndElement();
-            //    }
+//                // end definitions root element
+//                xtw.writeEndElement();
+//                xtw.writeEndDocument();
 
-            //    BPMNDIExport.writeBPMNDI(model, xtw);
+//                xtw.flush();
 
-            //    // end definitions root element
-            //    xtw.writeEndElement();
-            //    xtw.writeEndDocument();
+//                //outputStream.Close();
 
-            //    xtw.flush();
+//                xtw.close();
 
-            //    outputStream.Close();
+//                //return outputStream.ToArray();
 
-            //    xtw.close();
-
-            //    return outputStream.toByteArray();
-
-            //}
-            //catch (Exception e)
-            //{
-            //    LOGGER.error("Error writing BPMN XML", e);
-            //    throw new XMLException("Error writing BPMN XML", e);
-            //}
+//                return null;
+//            }
+//            catch (Exception e)
+//            {
+//                log.LogError("Error writing BPMN XML", e);
+//                throw new XMLException("Error writing BPMN XML", e);
+//            }
         }
 
         public virtual void createXML(FlowElement flowElement, BpmnModel model, XMLStreamWriter xtw)

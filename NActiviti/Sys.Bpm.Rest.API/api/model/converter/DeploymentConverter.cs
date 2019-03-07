@@ -34,6 +34,7 @@ namespace org.activiti.cloud.services.api.model.converter
             {
                 deployment = new Deployment(source.Id,
                     source.Name,
+                    source.Category,
                     source.TenantId,
                     source.BusinessKey,
                     source.DeploymentTime);

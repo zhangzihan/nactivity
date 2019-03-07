@@ -37,6 +37,7 @@ namespace org.activiti.engine.impl.cmd
         public DeploySaveCmd(DeploymentBuilderImpl deploymentBuilder)
         {
             this.deploymentBuilder = deploymentBuilder;
+            this.deploymentBuilder.disableDuplicateStartForm();
         }
 
         public virtual IDeployment execute(ICommandContext commandContext)
@@ -52,45 +53,47 @@ namespace org.activiti.engine.impl.cmd
 
             deployment.DeploymentTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
 
-            if (deploymentBuilder.DuplicateFilterEnabled)
-            {
-                IList<IDeployment> existingDeployments = new List<IDeployment>();
-                if (ReferenceEquals(deployment.TenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(deployment.TenantId))
-                {
-                    IDeploymentEntity existingDeployment = commandContext.DeploymentEntityManager.findLatestDeploymentByName(deployment.Name);
-                    if (existingDeployment != null)
-                    {
-                        existingDeployments.Add(existingDeployment);
-                    }
-                }
-                else
-                {
-                    IList<IDeployment> deploymentList = commandContext.ProcessEngineConfiguration.RepositoryService.createDeploymentQuery().deploymentName(deployment.Name).deploymentTenantId(deployment.TenantId).orderByDeploymentId().desc().list();
+            commandContext.DeploymentEntityManager.saveDraft(deployment);
 
-                    if (deploymentList.Count > 0)
-                    {
-                        ((List<IDeployment>)existingDeployments).AddRange(deploymentList);
-                    }
-                }
+            //if (deploymentBuilder.DuplicateFilterEnabled)
+            //{
+            //    IList<IDeployment> existingDeployments = new List<IDeployment>();
+            //    if (ReferenceEquals(deployment.TenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(deployment.TenantId))
+            //    {
+            //        IDeploymentEntity existingDeployment = commandContext.DeploymentEntityManager.findLatestDeploymentByName(deployment.Name);
+            //        if (existingDeployment != null)
+            //        {
+            //            existingDeployments.Add(existingDeployment);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        IList<IDeployment> deploymentList = commandContext.ProcessEngineConfiguration.RepositoryService.createDeploymentQuery().deploymentName(deployment.Name).deploymentTenantId(deployment.TenantId).orderByDeploymentId().desc().list();
 
-                {
-                    IDeploymentEntity existingDeployment = null;
-                    if (existingDeployments.Count > 0)
-                    {
-                        existingDeployment = (IDeploymentEntity)existingDeployments[0];
-                    }
+            //        if (deploymentList.Count > 0)
+            //        {
+            //            ((List<IDeployment>)existingDeployments).AddRange(deploymentList);
+            //        }
+            //    }
 
-                    if ((existingDeployment != null) && !deploymentsDiffer(deployment, existingDeployment))
-                    {
-                        return existingDeployment;
-                    }
-                }
-            }
+            //    {
+            //        IDeploymentEntity existingDeployment = null;
+            //        if (existingDeployments.Count > 0)
+            //        {
+            //            existingDeployment = (IDeploymentEntity)existingDeployments[0];
+            //        }
 
-            deployment.New = true;
+            //        if ((existingDeployment != null) && !deploymentsDiffer(deployment, existingDeployment))
+            //        {
+            //            return existingDeployment;
+            //        }
+            //    }
+            //}
 
-            // Save the data
-            commandContext.DeploymentEntityManager.insert(deployment);
+            //deployment.New = true;
+
+            //// Save the data
+            //commandContext.DeploymentEntityManager.insert(deployment);
 
             if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {

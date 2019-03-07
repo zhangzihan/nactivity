@@ -2,6 +2,7 @@
   <style>
     
     .header {
+      border-top: 1px solid lightgray;
       border-bottom: 1px solid lightgray;
     }
 
@@ -21,14 +22,20 @@
   
   <div class="header">
     <span>流程定义列表</span>
-    <div click.trigger="createProcess()" style="float:right;display:block">
+    <div class="btn-list" click.trigger="refresh()">
+      <i class="fa fa-refresh"></i>
+    </div>
+    <div class="btn-list">
+      <i class="fa fa-minus"></i>
+    </div>
+    <div class="btn-list" click.trigger="createProcess()">
       <i class="fa fa-plus"></i>
     </div>
   </div>
 
   <div class="process-defines" repeat.for="def of defines" class.bind="select&&select==def?'activate':''">
     <div class="proc-define" click.trigger="selected(def.id)">
-      <strong>${def.name}</strong>
+      <strong>${def.name}(${def.deploymentId})</strong>
     </div>
   </div>
 </template>

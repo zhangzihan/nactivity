@@ -350,18 +350,18 @@ export class Processes {
   ]
 
   constructor(private es: EventAggregator, private processDefineService: IProcessDefineService) {
-    this.processDefineService.latest().then(data => this.defines = data);
+    this.refresh();
   }
 
-  activate(model, nctx){
-    this.es.subscribe("deploied", (wf) =>{
+  activate(model, nctx) {
+    this.es.subscribe("deploied", (wf) => {
       this.processDefineService.latest().then(data => this.defines = data);
     });
   }
 
   createProcess() {
     let name = window.prompt('新的流程');
-    
+
     let model = this.defaultBmpnModel();
 
     let def = {
@@ -383,13 +383,13 @@ export class Processes {
 
     return { key: key, xml: xml };
   }
-  
+
   @observable select;
 
   selected(id) {
+    var def = this.defines.find(x => x.id == id);
+    this.select = def;
     this.processDefineService.getProcessModel(id).then(data => {
-      var def = this.defines.find(x => x.id == id);
-      this.select = def;
       if (data != null && data != "") {
         def.xml = data;
       } else if (def.xml == null) {
@@ -397,5 +397,9 @@ export class Processes {
       }
       this.es.publish("openWorkflow", def);
     })
+  }
+
+  refresh() {
+    this.processDefineService.latest().then(data => this.defines = data);
   }
 }

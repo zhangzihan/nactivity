@@ -1,0 +1,24 @@
+{
+  "id": null,
+  "tenantId": null,
+  "name": null,
+  "nameLike": null,
+  "ids": null,
+  "category": null,
+  "categoryLike": null,
+  "categoryNotEquals": null,
+  "key": null,
+  "keyLike": null,
+  "keys": null,
+  "businessKey": null,
+  "withoutTenantId": true,
+  "latestDeployment": true,
+  "pageable": {
+    "offset": 0,
+    "pageSize": 1000,
+    "sort": [{
+      "property": "deploytime",
+      "direction": "desc"
+    }]
+  }
+}

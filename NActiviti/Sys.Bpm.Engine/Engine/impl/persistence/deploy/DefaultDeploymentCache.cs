@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,13 +23,13 @@ namespace org.activiti.engine.impl.persistence.deploy
     /// </summary>
     public class DefaultDeploymentCache<T> : IDeploymentCache<T>
     {
-        protected internal IDictionary<string, T> cache;
+        protected internal ConcurrentDictionary<string, T> cache;
 
         /// <summary>
         /// Cache with no limit </summary>
         public DefaultDeploymentCache()
         {
-            this.cache = new Dictionary<string, T>();
+            this.cache = new ConcurrentDictionary<string, T>();
         }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace org.activiti.engine.impl.persistence.deploy
             this.cache = new LinkedHashMapAnonymousInnerClass(this, limit + 1);
         }
 
-        private class LinkedHashMapAnonymousInnerClass : Dictionary<string, T>
+        private class LinkedHashMapAnonymousInnerClass : ConcurrentDictionary<string, T>
         {
             private readonly DefaultDeploymentCache<T> outerInstance;
 
@@ -49,7 +50,7 @@ namespace org.activiti.engine.impl.persistence.deploy
             // true will keep the 'access-order', which is needed to have a real LRU cache
             private long serialVersionUID;
 
-            public LinkedHashMapAnonymousInnerClass(DefaultDeploymentCache<T> outerInstance, int limit) : base(limit, StringComparer.OrdinalIgnoreCase)
+            public LinkedHashMapAnonymousInnerClass(DefaultDeploymentCache<T> outerInstance, int limit) : base(StringComparer.OrdinalIgnoreCase)
             {
                 this.outerInstance = outerInstance;
                 this.limit = limit;
@@ -77,7 +78,7 @@ namespace org.activiti.engine.impl.persistence.deploy
 
         public virtual void add(string id, T obj)
         {
-            cache[id] = obj;
+            cache.GetOrAdd(id, (key) => obj);
         }
 
         public virtual void remove(string id)
@@ -88,7 +89,7 @@ namespace org.activiti.engine.impl.persistence.deploy
             }
             if (contains(id))
             {
-                cache.Remove(id);
+                cache.TryRemove(id, out T value);
             }
         }
 
@@ -107,7 +108,5 @@ namespace org.activiti.engine.impl.persistence.deploy
         {
             return cache.Count;
         }
-
     }
-
 }

@@ -34,7 +34,7 @@ namespace org.activiti.bpmn.converter.export
             BpmnXMLConstants.OMGDI_PREFIX
         });
 
-        protected internal static readonly IList<ExtensionAttribute> defaultAttributes = new List<ExtensionAttribute>()
+        protected internal static readonly List<ExtensionAttribute> defaultAttributes = new List<ExtensionAttribute>()
         {
             new ExtensionAttribute(BpmnXMLConstants.TYPE_LANGUAGE_ATTRIBUTE),
             new ExtensionAttribute(BpmnXMLConstants.EXPRESSION_LANGUAGE_ATTRIBUTE),

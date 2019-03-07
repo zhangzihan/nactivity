@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Task = System.Threading.Tasks.Task;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -89,7 +90,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
             IList<ProcessInstanceResource> resources = resourceAssembler.toResources(instances.getContent());
 
-            return System.Threading.Tasks.Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.getTotalItems(), query.Pageable.Offset, query.Pageable.PageSize));
+            return Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.getTotalItems(), query.Pageable.Offset, query.Pageable.PageSize));
         }
 
         [HttpPost("start")]
@@ -97,7 +98,7 @@ namespace org.activiti.cloud.services.rest.controllers
         {
             ProcessInstance instance = processEngine.startProcess(cmd);
 
-            return System.Threading.Tasks.Task.FromResult<ProcessInstance>(instance);
+            return Task.FromResult<ProcessInstance>(instance);
         }
 
         [HttpGet("{processInstanceId}")]
@@ -108,7 +109,7 @@ namespace org.activiti.cloud.services.rest.controllers
             {
                 throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + processInstanceId + "'");
             }
-            return System.Threading.Tasks.Task.FromResult<Resource<ProcessInstance>>(resourceAssembler.toResource(processInstance));
+            return Task.FromResult<Resource<ProcessInstance>>(resourceAssembler.toResource(processInstance));
         }
 
         [HttpGet("{processInstanceId}/diagram")]
@@ -124,7 +125,7 @@ namespace org.activiti.cloud.services.rest.controllers
             BpmnModel bpmnModel = repositoryService.getBpmnModel(processInstance.ProcessDefinitionId);
             byte[] data = processDiagramGenerator.generateDiagram(bpmnModel, activityIds, new List<string>());
 
-            return System.Threading.Tasks.Task.FromResult<string>(Encoding.UTF8.GetString(data));
+            return Task.FromResult<string>(Encoding.UTF8.GetString(data));
         }
 
         [HttpPost("signal")]
@@ -132,7 +133,7 @@ namespace org.activiti.cloud.services.rest.controllers
         {
             processEngine.signal(cmd);
 
-            return System.Threading.Tasks.Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<IActionResult>(Ok());
         }
 
         [HttpGet("{processInstanceId}/suspend")]
@@ -140,7 +141,7 @@ namespace org.activiti.cloud.services.rest.controllers
         {
             processEngine.suspend(new SuspendProcessInstanceCmd(processInstanceId));
 
-            return System.Threading.Tasks.Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<IActionResult>(Ok());
         }
 
         [HttpGet("{processInstanceId}/activate")]
@@ -148,15 +149,15 @@ namespace org.activiti.cloud.services.rest.controllers
         {
             processEngine.activate(new ActivateProcessInstanceCmd(processInstanceId));
 
-            return System.Threading.Tasks.Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<IActionResult>(Ok());
         }
 
         [HttpPost("{processInstanceId}/terminate")]
-        public virtual System.Threading.Tasks.Task<IActionResult> Terminate(string processInstanceId, string reason)
+        public virtual Task<IActionResult> Terminate(string processInstanceId, string reason)
         {
             processEngine.deleteProcessInstance(processInstanceId, reason);
 
-            return System.Threading.Tasks.Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<IActionResult>(Ok());
         }
     }
 }

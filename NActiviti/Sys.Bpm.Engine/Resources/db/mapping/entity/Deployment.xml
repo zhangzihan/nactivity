@@ -108,6 +108,10 @@
     ${limitAfter}
   </Select>
 
+  <Select Id="selectDeploymentDraftsByName" ResultMap="deploymentResultMap">
+    select * from (select distinct  a.*, c.id_ proc_def_id_ from act_re_deployment a left join act_re_procdef c on a.id_ = c.deployment_id_ where a.name_ = ${name}) res where res.proc_def_id_ is null;
+  </Select>
+
   <Select Id="selectDeploymentCountByQueryCriteria">
     select count(distinct RES.ID_)
     <Include RefId="selectDeploymentsByQueryCriteriaSql"/>

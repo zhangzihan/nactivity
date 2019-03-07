@@ -19,10 +19,11 @@ namespace org.activiti.cloud.services.api.model
 
         }
 
-        public Deployment(string id, string name, string tenantId, string businessKey, DateTime deployTime)
+        public Deployment(string id, string name, string category, string tenantId, string businessKey, DateTime deployTime)
         {
             this.id = id;
             this.name = name;
+            this.category = category;
             this.tenantId = tenantId;
             this.businessKey = businessKey;
             this.deployTime = deployTime;

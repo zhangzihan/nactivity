@@ -35,6 +35,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Task = System.Threading.Tasks.Task;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
@@ -98,7 +99,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
             Resources<ProcessDefinition> list = new Resources<ProcessDefinition>(resources.Select(x => x.Content), defs.getTotalItems(), queryObj.Pageable.Offset, queryObj.Pageable.PageSize);
 
-            return System.Threading.Tasks.Task.FromResult(list);
+            return Task.FromResult(list);
         }
 
         [HttpGet("{id}")]
@@ -108,7 +109,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
             ProcessDefinitionResource resource = resourceAssembler.toResource(processDefinitionConverter.from(processDefinition));
 
-            return System.Threading.Tasks.Task.FromResult(resource.Content);
+            return Task.FromResult(resource.Content);
         }
 
         private IProcessDefinition retrieveProcessDefinition(string id)
@@ -129,7 +130,7 @@ namespace org.activiti.cloud.services.rest.controllers
             // first check the user can see the process definition (which has same ID as process model in engine)
             retrieveProcessDefinition(id);
 
-            using (System.IO.Stream resourceStream = repositoryService.getProcessModel(id))
+            using (Stream resourceStream = repositoryService.getProcessModel(id))
             {
                 resourceStream.Seek(0, SeekOrigin.Begin);
                 byte[] data = new byte[resourceStream.Length];
@@ -137,7 +138,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
                 string xml = Encoding.UTF8.GetString(data);
 
-                return System.Threading.Tasks.Task.FromResult<string>(xml);
+                return Task.FromResult<string>(xml);
             }
         }
 
@@ -150,7 +151,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
             BpmnModel bpmnModel = repositoryService.getBpmnModel(id);
 
-            return System.Threading.Tasks.Task.FromResult<BpmnModel>(bpmnModel);
+            return Task.FromResult<BpmnModel>(bpmnModel);
         }
 
         [HttpGet("{id}/diagram")]
@@ -164,7 +165,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
             byte[] data = processDiagramGenerator.generateDiagram(bpmnModel);
 
-            return System.Threading.Tasks.Task.FromResult<string>(Encoding.UTF8.GetString(data));
+            return Task.FromResult<string>(Encoding.UTF8.GetString(data));
         }
     }
 

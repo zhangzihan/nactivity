@@ -76,6 +76,10 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             return DbSqlSession.selectOne<DeploymentEntityImpl, long?>("selectDeploymentCountByNativeQuery", parameterMap).GetValueOrDefault();
         }
 
+        public IList<IDeployment> findDeploymentDraftsByName(string name)
+        {
+            return DbSqlSession.selectList<DeploymentEntityImpl, IDeployment>("selectDeploymentDraftsByName", new { name });
+        }
     }
 
 }

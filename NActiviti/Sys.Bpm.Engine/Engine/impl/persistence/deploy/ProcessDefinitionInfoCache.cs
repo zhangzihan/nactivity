@@ -20,6 +20,7 @@ namespace org.activiti.engine.impl.persistence.deploy
     using org.activiti.engine.impl.persistence.entity;
     using Sys.Bpm;
     using System;
+    using System.Collections.Concurrent;
 
     /// <summary>
     /// Default cache: keep everything in memory, unless a limit is set.
@@ -28,7 +29,7 @@ namespace org.activiti.engine.impl.persistence.deploy
     /// </summary>
     public class ProcessDefinitionInfoCache
     {
-        protected internal IDictionary<string, ProcessDefinitionInfoCacheObject> cache;
+        protected internal ConcurrentDictionary<string, ProcessDefinitionInfoCacheObject> cache;
         protected internal ICommandExecutor commandExecutor;
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace org.activiti.engine.impl.persistence.deploy
         public ProcessDefinitionInfoCache(ICommandExecutor commandExecutor)
         {
             this.commandExecutor = commandExecutor;
-            this.cache = new Dictionary<string, ProcessDefinitionInfoCacheObject>();
+            this.cache = new ConcurrentDictionary<string, ProcessDefinitionInfoCacheObject>();
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace org.activiti.engine.impl.persistence.deploy
             this.cache = new LinkedHashMapAnonymousInnerClass(this, limit + 1);
         }
 
-        private class LinkedHashMapAnonymousInnerClass : Dictionary<string, ProcessDefinitionInfoCacheObject>
+        private class LinkedHashMapAnonymousInnerClass : ConcurrentDictionary<string, ProcessDefinitionInfoCacheObject>
         {
             private readonly ProcessDefinitionInfoCache outerInstance;
 
@@ -58,7 +59,7 @@ namespace org.activiti.engine.impl.persistence.deploy
             // true will keep the 'access-order', which is needed to have a real LRU cache
             private long serialVersionUID;
 
-            public LinkedHashMapAnonymousInnerClass(ProcessDefinitionInfoCache outerInstance, int limit) : base(limit, StringComparer.OrdinalIgnoreCase)
+            public LinkedHashMapAnonymousInnerClass(ProcessDefinitionInfoCache outerInstance, int limit) : base(StringComparer.OrdinalIgnoreCase)
             {
                 this.outerInstance = outerInstance;
                 this.limit = limit;
@@ -115,12 +116,12 @@ namespace org.activiti.engine.impl.persistence.deploy
 
         public virtual void add(string id, ProcessDefinitionInfoCacheObject obj)
         {
-            cache[id] = obj;
+            cache.GetOrAdd(id, (str) => obj);
         }
 
         public virtual void remove(string id)
         {
-            cache.Remove(id);
+            cache.TryRemove(id, out ProcessDefinitionInfoCacheObject pico);
         }
 
         public virtual void clear()

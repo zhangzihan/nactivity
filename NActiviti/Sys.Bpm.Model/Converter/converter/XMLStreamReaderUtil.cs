@@ -13,6 +13,7 @@
 using Microsoft.Extensions.Logging;
 using Sys.Bpm;
 using System;
+using System.IO;
 
 namespace org.activiti.bpmn.converter
 {
@@ -65,6 +66,17 @@ namespace org.activiti.bpmn.converter
                 logger.LogWarning(e, $"Error while moving to end of element {elementName}");
             }
             return false;
+        }
+
+        public static XMLStreamReader createStreamReader(string bpmnXML)
+        {
+            MemoryStream ms = new MemoryStream();
+            StreamWriter sw = new StreamWriter(ms);
+            sw.Write(bpmnXML);
+            sw.Flush();
+            ms.Seek(0, SeekOrigin.Begin);
+
+            return new XMLStreamReader(ms);
         }
     }
 }

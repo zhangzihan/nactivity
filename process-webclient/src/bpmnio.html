@@ -19,16 +19,22 @@
       left: 10px;
     }
 
-    .btn-code {
+    .btn-deploy {
+      position: absolute;
+      bottom: 10px;
+      left: 90px;
+    }
+
+    .btn-copy {
       position: absolute;
       bottom: 10px;
       left: 170px;
     }
 
-    .btn-deploy {
+    .btn-code {
       position: absolute;
       bottom: 10px;
-      left: 90px;
+      left: 260px;
     }
 
     #js-properties-panel {
@@ -39,12 +45,15 @@
   <div class="bpmn-content" id="js-drop-zone">
     <div class="canvas" id="js-canvas"></div>
     <div class="properties-panel-parent" id="js-properties-panel"></div>
-
+    
+    <button class="btn btn-primary btn-save" title="download BPMN diagram" click.trigger="saveBpmn($event)">
+      保存
+    </button>
     <button class="btn btn-primary btn-deploy" title="deploy BPMN" click.trigger="deploy($event)">
       部署
     </button>
-    <button class="btn btn-primary btn-save" title="download BPMN diagram" click.trigger="saveBpmn($event)">
-      保存
+    <button class="btn btn-primary btn-copy" title="deploy BPMN" click.trigger="copy($event)">
+      复制
     </button>
     <button class="btn btn-primary btn-code" title="show BPMN XML" click.trigger="showBpmnXml($event)">
       CODE

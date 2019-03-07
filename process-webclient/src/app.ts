@@ -7,6 +7,8 @@ export class App {
 
   processes = PLATFORM.moduleName('./processes');
 
+  deployment = PLATFORM.moduleName('./DeploymentViewModel');
+
   tasks = PLATFORM.moduleName('./tasks/mytasks');
   
   configureRouter(config: RouterConfiguration, router: Router) {

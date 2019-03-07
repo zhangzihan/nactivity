@@ -149,15 +149,6 @@ namespace org.activiti.engine.impl.persistence.deploy
             IList<IProcessDefinition> processDefinitions = (new ProcessDefinitionQueryImpl()).deploymentId(deploymentId).list();
             IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
 
-            long count = new ExecutionQueryImpl()
-                .processDeploymentId(deploymentId)
-                .count();
-
-            if (count > 0)
-            {
-                throw new CanNotRemoveProcessDefineException();
-            }
-
             foreach (IProcessDefinition processDefinition in processDefinitions)
             {
 

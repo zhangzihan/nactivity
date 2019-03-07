@@ -59,7 +59,22 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public virtual void deleteDeployment(string deploymentId, bool cascade)
         {
-            IList<IProcessDefinition> processDefinitions = (new ProcessDefinitionQueryImpl()).deploymentId(deploymentId).list();
+            IList<IProcessDefinition> processDefinitions = new ProcessDefinitionQueryImpl().deploymentId(deploymentId).list();
+
+            //判断是否存在正在执行的流程
+            long count = new ExecutionQueryImpl()
+                .processDeploymentId(deploymentId)
+                .count();
+
+            //判断是否存在历史流程
+            count = count > 0 ? count : new HistoricProcessInstanceQueryImpl()
+                .deploymentId(deploymentId)
+                .count();
+
+            if (count > 0)
+            {
+                throw new CanNotRemoveProcessDefineException();
+            }
 
             updateRelatedModels(deploymentId);
 
@@ -92,7 +107,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             // Remove the deployment link from any model.
             // The model will still exists, as a model is a source for a deployment model and has a different lifecycle
-            IList<IModel> models =  this.CommandContext.ProcessEngineConfiguration.repositoryService.createModelQuery().deploymentId(deploymentId).list();
+            IList<IModel> models = this.CommandContext.ProcessEngineConfiguration.repositoryService.createModelQuery().deploymentId(deploymentId).list();
             //IList<IModel> models = new ModelQueryImpl(this.CommandContext)
             //    .deploymentId(deploymentId).list();
 
@@ -373,6 +388,39 @@ namespace org.activiti.engine.impl.persistence.entity
             return deploymentDataManager.findDeploymentCountByNativeQuery(parameterMap);
         }
 
+        public virtual IDeploymentEntity saveDraft(IDeploymentEntity deployment)
+        {
+            IDeploymentEntity exist = this.findLatestDeploymentByName(deployment.Name);
+
+            if (exist != null)
+            {
+                IProcessDefinition process = new ProcessDefinitionQueryImpl()
+                    .deploymentId(exist.Id)
+                    .latestVersion()
+                    .singleResult();
+
+                if (process == null)
+                {
+                    this.deleteDeployment(exist.Id, true);
+                }
+            }
+
+            deployment.New = true;
+
+            this.insert(deployment);
+
+            return deployment;
+        }
+
+        public virtual void removeDrafts(string name)
+        {
+            IList<IDeployment> drafts = this.deploymentDataManager.findDeploymentDraftsByName(name);
+
+            foreach (var draft in drafts)
+            {
+                this.deleteDeployment(draft.Id, true);
+            }
+        }
 
         public virtual IDeploymentDataManager DeploymentDataManager
         {

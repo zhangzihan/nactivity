@@ -50,8 +50,16 @@
 
     .process-list {
       position: absolute;
-      top: 0;
+      top: 200px;
       bottom: 225px;
+      width: 100%;
+      overflow: auto
+    }
+
+    .deployment-list {
+      position: absolute;
+      top: 0;
+      height: 200px;
       width: 100%;
       overflow: auto
     }
@@ -90,11 +98,18 @@
       background: lightblue;
       color: white;
     }
-
+    
+    .btn-list {
+      float: right;
+      margin-right: 2px;
+    }
   </style>
 
   <div class="workspace">
     <div class="left">
+      <div class="deployment-list">
+        <compose view-model.bind="deployment"></compose>
+      </div>
       <div class="process-list">
         <compose view-model.bind="processes"></compose>
       </div>

@@ -22,9 +22,9 @@ namespace org.activiti.cloud.services.api.model
         public string Name { get; set; }
 
         /// <summary>
-        /// 模型XML schema
+        /// 模型类别
         /// </summary>
-        public string Category { get; set; } = "http://camunda.org/schema/1.0/bpmn20";
+        public string Category { get; set; }
 
         /// <summary>
         /// 模型唯一标识

@@ -1,18 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using org.activiti.api.runtime.shared.query;
+using org.activiti.bpmn.converter;
+using org.activiti.bpmn.model;
 using org.activiti.cloud.services.api.commands;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.rest.controllers;
 using org.activiti.engine;
+using org.activiti.engine.impl.bpmn.parser;
 using org.activiti.engine.repository;
 using org.springframework.hateoas;
 using Sys.Bpm.rest.api;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Task = System.Threading.Tasks.Task;
 
 namespace Sys.Bpm.rest.controllers
 {
@@ -40,7 +45,7 @@ namespace Sys.Bpm.rest.controllers
         }
 
         [HttpPost("latest")]
-        public Task<Resources<Deployment>> LatestDeployments(DeploymentQuery queryObj)
+        public Task<Resources<Deployment>> Latest(DeploymentQuery queryObj)
         {
             queryObj = queryObj ?? new DeploymentQuery();
             queryObj.LatestDeployment = true;
@@ -55,7 +60,7 @@ namespace Sys.Bpm.rest.controllers
 
             Resources<Deployment> list = new Resources<Deployment>(defs.getContent(), defs.getTotalItems(), queryObj.Pageable.Offset, queryObj.Pageable.PageSize);
 
-            return System.Threading.Tasks.Task.FromResult(list);
+            return Task.FromResult(list);
         }
 
         [HttpPost]
@@ -96,7 +101,9 @@ namespace Sys.Bpm.rest.controllers
         [HttpPost("save")]
         public Task<Deployment> Save(ProcessDefinitionDeployer deployer)
         {
-            IDeploymentBuilder deployment = this.repositoryService.createDeployment();
+            IDeploymentBuilder deployment = this.repositoryService
+                .createDeployment()
+                .disableDuplicateStartForm();
 
             if (deployer.DisableBpmnValidation)
             {
@@ -129,11 +136,42 @@ namespace Sys.Bpm.rest.controllers
         }
 
         [HttpGet("{deployId}/remove")]
-        public Task<IActionResult> RemoveDeployment(string deployId)
+        public Task<IActionResult> Remove(string deployId)
         {
             this.repositoryService.deleteDeployment(deployId);
 
             return Task.FromResult<IActionResult>(Ok());
+        }
+
+        [HttpGet("{id}/processmodel")]
+        public Task<string> GetProcessModel(string id)
+        {
+            IList<string> names = repositoryService.getDeploymentResourceNames(id);
+
+            Stream resourceStream = repositoryService.getResourceAsStream(id, names[0]);
+
+            resourceStream.Seek(0, SeekOrigin.Begin);
+            byte[] data = new byte[resourceStream.Length];
+            resourceStream.Read(data, 0, data.Length);
+
+            string xml = Encoding.UTF8.GetString(data);
+
+            return Task.FromResult<string>(xml);
+        }
+
+        [HttpGet("{id}/bpmnmodel")]
+        [Produces("application/json")]
+        public Task<BpmnModel> GetBpmnModel(string id)
+        {
+            BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+
+            IList<string> names = repositoryService.getDeploymentResourceNames(id);
+
+            Stream resourceStream = repositoryService.getResourceAsStream(id, names[0]);
+
+            BpmnModel model = bpmnXMLConverter.convertToBpmnModel(new XMLStreamReader(resourceStream));
+
+            return Task.FromResult<BpmnModel>(model);
         }
     }
 }

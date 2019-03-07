@@ -2041,7 +2041,7 @@ namespace org.activiti.engine.impl.cfg
         {
             if (this.processValidator == null)
             {
-                this.processValidator = (new ProcessValidatorFactory()).createDefaultProcessValidator();
+                this.processValidator = ProcessEngineServiceProvider.Resolve<IProcessValidator>();
             }
         }
 

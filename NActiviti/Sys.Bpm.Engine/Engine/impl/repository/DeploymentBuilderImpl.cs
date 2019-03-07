@@ -25,6 +25,7 @@ namespace org.activiti.engine.impl.repository
     using org.activiti.engine.repository;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Xml.Linq;
 
     /// 
@@ -45,6 +46,7 @@ namespace org.activiti.engine.impl.repository
         protected internal bool isBpmn20XsdValidationEnabled = true;
         protected internal bool isProcessValidationEnabled = true;
         protected internal bool isDuplicateFilterEnabled;
+        protected internal bool isDuplicateStartFormEnabled = true;
         protected internal DateTime? processDefinitionsActivationDate;
         protected internal IDictionary<string, object> deploymentProperties = new Dictionary<string, object>();
 
@@ -184,14 +186,19 @@ namespace org.activiti.engine.impl.repository
 
         private string VerifyStartForm(string name, string startForm)
         {
-            IList<IProcessDefinition> processes = repositoryService.createProcessDefinitionQuery()
-                .processDefinitionStartForm(startForm)
-                .latestVersion()
-                .list();
+            if (this.isDuplicateStartFormEnabled)
+            {
+                IList<IProcessDefinition> processes = repositoryService.createProcessDefinitionQuery()
+                    .processDefinitionStartForm(startForm)
+                    .latestVersion()
+                    .list();
 
-            return processes.FirstOrDefault(x => string.IsNullOrWhiteSpace(x.StartForm) == false &&
-                x.StartForm.Trim().ToLower() == startForm.Trim().ToLower() &&
-                x.Name.Trim() != name.Trim().ToLower())?.Name;
+                return processes.FirstOrDefault(x => string.IsNullOrWhiteSpace(x.StartForm) == false &&
+                    x.StartForm.Trim().ToLower() == startForm.Trim().ToLower() &&
+                    x.Name.Trim() != name.Trim().ToLower())?.Name;
+            }
+
+            return null;
         }
 
         public virtual IDeploymentBuilder startForm(string startForm, string bpmnXML)
@@ -245,6 +252,12 @@ namespace org.activiti.engine.impl.repository
             }
         }
 
+        public virtual IDeploymentBuilder disableDuplicateStartForm()
+        {
+            this.isDuplicateStartFormEnabled = false;
+            return this;
+        }
+
         public virtual IDeploymentBuilder key(string key)
         {
             deployment.Key = key;
@@ -295,6 +308,29 @@ namespace org.activiti.engine.impl.repository
         public virtual IDeployment save()
         {
             return repositoryService.save(this);
+        }
+
+        public string copy(string id, bool fullCopy)
+        {
+            IList<string> names = repositoryService.getDeploymentResourceNames(id);
+
+            Stream resourceStream = repositoryService.getResourceAsStream(id, names[0]);
+
+            if (fullCopy)
+            {
+                resourceStream.Seek(0, SeekOrigin.Begin);
+                byte[] data = new byte[resourceStream.Length];
+                resourceStream.Read(data, 0, data.Length);
+
+                return Encoding.UTF8.GetString(data);
+            }
+
+            BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+
+            BpmnModel model = bpmnXMLConverter.convertToBpmnModel(new XMLStreamReader(resourceStream));
+
+            //return bpmnXMLConverter.convertToXML(model);
+            return null;
         }
 
         // getters and setters

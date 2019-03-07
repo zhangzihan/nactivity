@@ -24,6 +24,7 @@ using Sys.Bpm;
 using SmartSql.Abstractions.DbSession;
 using Microsoft.Extensions.Options;
 using org.activiti.engine.impl.db;
+using org.activiti.validation;
 
 namespace Sys
 {
@@ -42,6 +43,8 @@ namespace Sys
             IConfiguration configuration = services.BuildServiceProvider().GetService<IConfiguration>();
 
             DbSqlSessionVersion.InitVersion(configuration);
+
+            CreateProcessValidator(services);
 
             services.Configure<ProcessEngineOption>(configuration);
 
@@ -191,6 +194,16 @@ namespace Sys
                         servicePprovider.EnsureProcessEngineInit();
                     }
                 });
+
+            return services;
+        }
+
+        private static IServiceCollection CreateProcessValidator(IServiceCollection services)
+        {
+            IProcessValidator processValidator = new ProcessValidatorFactory().createProcessValidator();
+
+            services.AddSingleton<IProcessValidator>(processValidator);
+
             return services;
         }
 

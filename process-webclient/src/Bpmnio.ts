@@ -6,6 +6,7 @@ import { useView, inject } from "aurelia-framework";
 import Axios from 'axios'
 import $ from 'jquery';
 import BpmnModeler from 'bpmn-js/lib/Modeler';
+import BpmnModdle from 'bpmn-moddle'
 
 import propertiesPanelModule from 'bpmn-js-properties-panel';
 import propertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/camunda';
@@ -145,7 +146,7 @@ export class BpmnIO {
       this.workflow.xml = xml;
       Axios.post(`${constants.serverUrl}/workflow/process-deployer`, {
         "disableSchemaValidation": true,
-        "disableBpmnValidation": true,
+        "disableBpmnValidation": false,
         "name": this.workflow.name,
         "key": this.workflow.id,
         "enableDuplicateFiltering": true,
@@ -157,6 +158,20 @@ export class BpmnIO {
       }).catch(() => {
         alert('未知错误');
       });
+    });
+  }
+
+  copy($event) {
+    var me = this;
+    this.saveDiagram((err, xml) => {
+      var moddle = new BpmnModdle();
+
+      var model = moddle.fromXML(xml, (err, definitions) =>{
+        moddle.toXML(definitions, (err, xml) =>{
+          debugger;
+        })
+        debugger;
+      })
     });
   }
 

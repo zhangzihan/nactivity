@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sys.Bpm.Model\Sys.Bpm.Model.csproj" />
+    <ProjectReference Include="..\Sys.Bpm.ProcessValidtion\Sys.Bpm.ProcessValidtion.csproj" />
   </ItemGroup>
 
   <ItemGroup>

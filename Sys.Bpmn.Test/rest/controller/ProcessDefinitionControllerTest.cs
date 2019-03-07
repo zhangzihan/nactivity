@@ -93,35 +93,5 @@ namespace Sys.Bpmn.Test.rest.controller
 
             Assert.Null(ex);
         }
-
-        [Fact]
-        public void GetProcessModel_根据ID查找流程模型XML_并与原始文档比较()
-        {
-            Exception ex = Record.Exception(() =>
-            {
-                IProcessDefinitionController pdc = CreateController();
-
-                Deployment dep = ctx.DeployTestProcess();
-
-                ProcessDefinition pdr = pdc.LatestProcessDefinitions(new ProcessDefinitionQuery
-                {
-                    Name = dep.Name,
-                    TenantId = ctx.TenantId,
-                    Pageable = new Pageable
-                    {
-                        Offset = 0,
-                        PageSize = 1
-                    }
-                }).Result.List?.FirstOrDefault();
-
-                string xml = pdc.GetProcessModel(pdr.Id).Result;
-
-                string orig = ctx.ReadBpmn(dep.Name.EndsWith(".bpmn") ? dep.Name : dep.Name + ".bpmn");
-
-                Assert.Equal(xml.Trim(), orig.Trim());
-            });
-
-            Assert.Null(ex);
-        }
     }
 }

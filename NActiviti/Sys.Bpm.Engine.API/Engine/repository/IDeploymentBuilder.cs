@@ -85,6 +85,8 @@ namespace org.activiti.engine.repository
         /// <exception cref="org.activiti.engine.repository.StartFormNullException">表单Null异常</exception>
         IDeploymentBuilder startForm(string startForm, string bpmnXML);
 
+        IDeploymentBuilder disableDuplicateStartForm();
+
         /// <summary>
         /// Gives the deployment the given category.
         /// </summary>
@@ -126,6 +128,14 @@ namespace org.activiti.engine.repository
         /// </summary>
         /// <returns></returns>
         IDeployment save();
+
+        /// <summary>
+        /// 复制流程BpmnXML,使用选择的流程id复制一个新的流程BpmnXML.
+        /// </summary>
+        /// <param name="id">流程定义id</param>
+        /// <param name="fullCopy">true:完全复制.false:仅复制节点,不保留节点业务属性</param>
+        /// <returns></returns>
+        string copy(string id, bool fullCopy);
     }
 
 }

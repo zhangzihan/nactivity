@@ -40,7 +40,10 @@ namespace SmartSql.Command
             return ExecuteWarp((dbCommand) =>
             {
                 _logger.LogInformation(dbCommand.CommandText);
-                return dbCommand.ExecuteReader();
+
+                IDataReader reader = dbCommand.ExecuteReader();
+
+                return reader;
             }, dbSession, context);
         }
 

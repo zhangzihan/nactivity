@@ -72,6 +72,8 @@ namespace org.activiti.engine.impl.bpmn.deployer
                 BpmnModel bpmnModel = parsedDeployment.getBpmnModelForProcessDefinition(processDefinition);
                 createLocalizationValues(processDefinition.Id, bpmnModel.getProcessById(processDefinition.Key));
             }
+
+
         }
         //
         //  /**
