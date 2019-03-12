@@ -35,7 +35,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("workflow/process-instances")]
+    [Route(WorkflowConstants.PROC_INS_ROUTER_V1)]
     [ApiController]
     public class ProcessInstanceControllerImpl : ControllerBase, IProcessInstanceController
     {
@@ -90,7 +90,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
             IList<ProcessInstanceResource> resources = resourceAssembler.toResources(instances.getContent());
 
-            return Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.getTotalItems(), query.Pageable.Offset, query.Pageable.PageSize));
+            return Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.getTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
         }
 
         [HttpPost("start")]
@@ -102,14 +102,14 @@ namespace org.activiti.cloud.services.rest.controllers
         }
 
         [HttpGet("{processInstanceId}")]
-        public virtual Task<Resource<ProcessInstance>> GetProcessInstanceById(string processInstanceId)
+        public virtual Task<ProcessInstance> GetProcessInstanceById(string processInstanceId)
         {
             ProcessInstance processInstance = processEngine.getProcessInstanceById(processInstanceId);
             if (processInstance == null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + processInstanceId + "'");
             }
-            return Task.FromResult<Resource<ProcessInstance>>(resourceAssembler.toResource(processInstance));
+            return Task.FromResult<ProcessInstance>(processInstance);
         }
 
         [HttpGet("{processInstanceId}/diagram")]

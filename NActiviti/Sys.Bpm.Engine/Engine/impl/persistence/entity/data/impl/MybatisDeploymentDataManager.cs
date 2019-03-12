@@ -50,12 +50,12 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             return null;
         }
 
-        public virtual long findDeploymentCountByQueryCriteria(DeploymentQueryImpl deploymentQuery)
+        public virtual long findDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery)
         {
             return DbSqlSession.selectOne<DeploymentEntityImpl, long?>("selectDeploymentCountByQueryCriteria", deploymentQuery).GetValueOrDefault();
         }
 
-        public virtual IList<IDeployment> findDeploymentsByQueryCriteria(DeploymentQueryImpl deploymentQuery, Page page)
+        public virtual IList<IDeployment> findDeploymentsByQueryCriteria(IDeploymentQuery deploymentQuery, Page page)
         {
             const string query = "selectDeploymentsByQueryCriteria";
             return DbSqlSession.selectList<DeploymentEntityImpl, IDeployment>(query, deploymentQuery, page);
@@ -76,9 +76,9 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             return DbSqlSession.selectOne<DeploymentEntityImpl, long?>("selectDeploymentCountByNativeQuery", parameterMap).GetValueOrDefault();
         }
 
-        public IList<IDeployment> findDeploymentDraftsByName(string name)
+        public IList<IDeployment> findDeploymentDrafts(IDeploymentQuery query)
         {
-            return DbSqlSession.selectList<DeploymentEntityImpl, IDeployment>("selectDeploymentDraftsByName", new { name });
+            return DbSqlSession.selectList<DeploymentEntityImpl, IDeployment>("selectDeploymentDraftsByName", query);
         }
     }
 

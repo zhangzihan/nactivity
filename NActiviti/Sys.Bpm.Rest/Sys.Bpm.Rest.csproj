@@ -9,15 +9,12 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <WarningLevel>0</WarningLevel>
-  </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="core\SecurityPoliciesApplicationService.cs" />
     <Compile Remove="core\SecurityPoliciesProcessDefinitionRestrictionApplier.cs" />
     <Compile Remove="core\SecurityPoliciesProcessInstanceRestrictionApplier.cs" />
     <Compile Remove="core\SecurityPoliciesRestrictionApplier.cs" />
+    <Compile Remove="Test\手动创建任务.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +22,7 @@
     <None Include="core\SecurityPoliciesProcessDefinitionRestrictionApplier.cs" />
     <None Include="core\SecurityPoliciesProcessInstanceRestrictionApplier.cs" />
     <None Include="core\SecurityPoliciesRestrictionApplier.cs" />
+    <None Include="Test\手动创建任务.cs" />
   </ItemGroup>
 
   <ItemGroup>

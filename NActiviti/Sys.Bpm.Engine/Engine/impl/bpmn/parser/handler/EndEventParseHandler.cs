@@ -22,7 +22,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
     /// 
     public class EndEventParseHandler : AbstractActivityBpmnParseHandler<EndEvent>
     {
-        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<EndEventParseHandler>();
+        private new static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<EndEventParseHandler>();
 
         protected internal override Type HandledType
         {

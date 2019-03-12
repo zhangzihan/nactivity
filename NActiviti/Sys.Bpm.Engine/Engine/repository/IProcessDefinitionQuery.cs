@@ -32,7 +32,7 @@ namespace org.activiti.engine.repository
         /// <summary>
         /// Only select process definitions with the given ids.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionIds(ISet<string> processDefinitionIds);
+        IProcessDefinitionQuery processDefinitionIds(string[] processDefinitionIds);
 
         /// <summary>
         /// Only select process definitions with the given category.
@@ -68,7 +68,7 @@ namespace org.activiti.engine.repository
         /// <summary>
         /// Select process definitions that are deployed in deployments with the given set of ids
         /// </summary>
-        IProcessDefinitionQuery deploymentIds(ISet<string> deploymentIds);
+        IProcessDefinitionQuery deploymentIds(string[] deploymentIds);
 
         /// <summary>
         /// Only select process definition with the given key.
@@ -99,7 +99,7 @@ namespace org.activiti.engine.repository
         /// <summary>
         /// Only select process definition with the given keys.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionKeys(ISet<string> processDefinitionKeys);
+        IProcessDefinitionQuery processDefinitionKeys(string[] processDefinitionKeys);
 
         /// <summary>
         /// Only select process definitions where the key matches the given parameter. The syntax that should be used is the same as in SQL, eg. %activiti%

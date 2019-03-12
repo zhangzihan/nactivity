@@ -84,7 +84,7 @@ namespace org.activiti.cloud.services.api.model
         /// <summary>
         /// 上级流程实例id
         /// </summary>
-        public string ParentId { get; }
+        public string ParentId { get; set; }
 
         /// <summary>
         /// 流程定义目录
@@ -134,7 +134,7 @@ namespace org.activiti.cloud.services.api.model
         /// <summary>
         /// 
         /// </summary>
-        public int? ProcessInstanceVariablesLimit { get; }
+        public int? ProcessInstanceVariablesLimit { get; set; }
 
         /// <summary>
         /// 在某个时间之后开始

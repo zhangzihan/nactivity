@@ -2,6 +2,7 @@
 using org.activiti.engine.impl;
 using org.activiti.engine.query;
 using org.activiti.engine.task;
+using System;
 using System.Collections.Generic;
 
 /*
@@ -24,13 +25,14 @@ namespace org.activiti.cloud.services.core.pageable.sort
 {
     public class TaskSortApplier : BaseSortApplier<ITaskQuery, ITask>
     {
-        private IDictionary<string, IQueryProperty> orderByProperties = new Dictionary<string, IQueryProperty>();
+        private IDictionary<string, IQueryProperty> orderByProperties = new Dictionary<string, IQueryProperty>(StringComparer.OrdinalIgnoreCase);
 
         public TaskSortApplier()
         {
             orderByProperties["id"] = TaskQueryProperty.TASK_ID;
             orderByProperties["name"] = TaskQueryProperty.NAME;
             orderByProperties["assignee"] = TaskQueryProperty.ASSIGNEE;
+            orderByProperties["createTime"] = TaskQueryProperty.CREATE_TIME;
         }
 
         protected internal override void applyDefaultSort(ITaskQuery query)

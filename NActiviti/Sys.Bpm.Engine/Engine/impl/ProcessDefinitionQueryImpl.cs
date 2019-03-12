@@ -31,7 +31,7 @@ namespace org.activiti.engine.impl
         private const long serialVersionUID = 1L;
 
         private string id;
-        private ISet<string> ids;
+        private string[] ids;
         private string category;
         private string categoryLike;
         private string categoryNotEquals;
@@ -40,11 +40,11 @@ namespace org.activiti.engine.impl
         private string startForm;
         private string name;
         private string nameLike;
-        private string deploymentId_Renamed;
-        private ISet<string> deploymentIds_Renamed;
+        private string deploymentId_;
+        private string[] deploymentIds_;
         private string key;
         private string keyLike;
-        private ISet<string> keys;
+        private string[] keys;
         private string resourceName;
         private string resourceNameLike;
         private int? version;
@@ -80,7 +80,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionIds(ISet<string> processDefinitionIds)
+        public virtual IProcessDefinitionQuery processDefinitionIds(string[] processDefinitionIds)
         {
             this.ids = processDefinitionIds;
             return this;
@@ -175,14 +175,14 @@ namespace org.activiti.engine.impl
             //}
             if (string.IsNullOrWhiteSpace(deploymentId))
             {
-                this.deploymentId_Renamed = null;
+                this.deploymentId_ = null;
                 return this;
             }
-            this.deploymentId_Renamed = deploymentId;
+            this.deploymentId_ = deploymentId;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery deploymentIds(ISet<string> deploymentIds)
+        public virtual IProcessDefinitionQuery deploymentIds(string[] deploymentIds)
         {
             //这里没看明白activiti为什么抛出异常
             //if (deploymentIds == null)
@@ -191,10 +191,10 @@ namespace org.activiti.engine.impl
             //}
             if (deploymentIds == null)
             {
-                this.deploymentIds_Renamed = null;
+                this.deploymentIds_ = null;
                 return this;
             }
-            this.deploymentIds_Renamed = deploymentIds;
+            this.deploymentIds_ = deploymentIds;
             return this;
         }
 
@@ -214,7 +214,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionKeys(ISet<string> keys)
+        public virtual IProcessDefinitionQuery processDefinitionKeys(string[] keys)
         {
             //这里没看明白activiti为什么抛出异常
             //if (keys == null)
@@ -545,18 +545,18 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return deploymentId_Renamed;
+                return deploymentId_;
             }
-            set => deploymentId_Renamed = value;
+            set => deploymentId_ = value;
         }
 
-        public virtual ISet<string> DeploymentIds
+        public virtual string[] DeploymentIds
         {
             get
             {
-                return deploymentIds_Renamed;
+                return deploymentIds_;
             }
-            set => deploymentIds_Renamed = value;
+            set => deploymentIds_ = value;
         }
 
         public virtual string Id
@@ -568,7 +568,7 @@ namespace org.activiti.engine.impl
             set => id = value;
         }
 
-        public virtual ISet<string> Ids
+        public virtual string[] Ids
         {
             get
             {
@@ -613,7 +613,7 @@ namespace org.activiti.engine.impl
             set => keyLike = value;
         }
 
-        public virtual ISet<string> Keys
+        public virtual string[] Keys
         {
             get
             {

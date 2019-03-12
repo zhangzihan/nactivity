@@ -16,7 +16,8 @@ using System.Collections.Generic;
 
 namespace org.activiti.engine.impl
 {
-
+    using org.activiti.engine.impl.cmd;
+    using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.repository;
 
@@ -255,6 +256,11 @@ namespace org.activiti.engine.impl
         {
             checkQueryOk();
             return commandContext.DeploymentEntityManager.findDeploymentsByQueryCriteria(this, page);
+        }
+
+        public virtual IList<IDeployment> findDrafts()
+        {
+            return commandExecutor.execute<IList<IDeployment>>(new GetDraftDeploymentCmd(this));
         }
 
         // getters ////////////////////////////////////////////////////////

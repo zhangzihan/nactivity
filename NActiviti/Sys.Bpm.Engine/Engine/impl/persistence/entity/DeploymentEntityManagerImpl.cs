@@ -24,6 +24,7 @@ namespace org.activiti.engine.impl.persistence.entity
     using org.activiti.engine.impl.persistence.entity.data;
     using org.activiti.engine.impl.util;
     using org.activiti.engine.repository;
+    using System;
 
     /// 
     /// 
@@ -73,7 +74,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
             if (count > 0)
             {
-                throw new CanNotRemoveProcessDefineException();
+                throw new ExistsProcessInstanceException(processDefinitions[0].Name);
             }
 
             updateRelatedModels(deploymentId);
@@ -363,7 +364,7 @@ namespace org.activiti.engine.impl.persistence.entity
             return deploymentDataManager.findLatestDeploymentByName(deploymentName);
         }
 
-        public virtual long findDeploymentCountByQueryCriteria(DeploymentQueryImpl deploymentQuery)
+        public virtual long findDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery)
         {
             return deploymentDataManager.findDeploymentCountByQueryCriteria(deploymentQuery);
         }
@@ -412,14 +413,24 @@ namespace org.activiti.engine.impl.persistence.entity
             return deployment;
         }
 
-        public virtual void removeDrafts(string name)
+        public virtual void removeDrafts(string tenantId, string name)
         {
-            IList<IDeployment> drafts = this.deploymentDataManager.findDeploymentDraftsByName(name);
+            IDeploymentQuery query = new DeploymentQueryImpl();
+            query.deploymentTenantId(tenantId).deploymentName(name);
+
+            IList<IDeployment> drafts = this.deploymentDataManager.findDeploymentDrafts(query);
 
             foreach (var draft in drafts)
             {
                 this.deleteDeployment(draft.Id, true);
             }
+        }
+
+        public virtual IList<IDeployment> findDrafts(IDeploymentQuery query)
+        {
+            IList<IDeployment> drafts = this.deploymentDataManager.findDeploymentDrafts(query);
+
+            return drafts;
         }
 
         public virtual IDeploymentDataManager DeploymentDataManager

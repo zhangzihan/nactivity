@@ -226,18 +226,18 @@
   </Statement>
 
   <Statement Id="commonSelectHistoricTaskInstancesByQueryCriteriaSql">
-    <IsNotNull Property="candidateUser != null || candidateGroups != null || involvedGroups != null">
+    <IsTrue Property="candidateUser != null or candidateGroups != null or involvedGroups != null">
       inner join ACT_HI_IDENTITYLINK HI on HI.TASK_ID_ = RES.ID_
-    </IsNotNull>
-    <IsNotNull Property="processFinished || processUnfinished || processInstanceBusinessKey != null || processInstanceBusinessKeyLike != null || processInstanceBusinessKeyLikeIgnoreCase != null">
+    </IsTrue>
+    <IsTrue Property="processFinished or processUnfinished or processInstanceBusinessKey != null or processInstanceBusinessKeyLike != null or processInstanceBusinessKeyLikeIgnoreCase != null">
       inner join ACT_HI_PROCINST HPI ON RES.PROC_INST_ID_ = HPI.ID_
-    </IsNotNull>
-    <IsNotNull Property="processDefinitionKey != null || processDefinitionKeyLike != null || processDefinitionKeyLikeIgnoreCase != null || processDefinitionName != null || processDefinitionNameLike != null || (processCategoryInList != null &amp;&amp; processCategoryInList.size() &gt; 0) || (processCategoryNotInList != null &amp;&amp; processCategoryNotInList.size() &gt; 0) || (processDefinitionKeys != null &amp;&amp; processDefinitionKeys.size() &gt; 0)">
+    </IsTrue>
+    <IsTrue Property="processDefinitionKey != null or processDefinitionKeyLike != null or processDefinitionKeyLikeIgnoreCase != null or processDefinitionName != null or processDefinitionNameLike != null or (processCategoryInList != null and CollectionUtil.IsNotEmpty(processCategoryInList)) or (processCategoryNotInList != null and CollectionUtil.IsNotEmpty(processCategoryNotInList)) or (processDefinitionKeys != null and CollectionUtil.IsNotEmpty(processDefinitionKeys))">
       inner join ACT_RE_PROCDEF D on RES.PROC_DEF_ID_ = D.ID_
-    </IsNotNull>
-    <IsNotNull Property="deploymentId != null || (deploymentIds != null &amp;&amp; deploymentIds.size() &gt; 0)">
+    </IsTrue>
+    <IsTrue Property="deploymentId != null or (deploymentIds != null and CollectionUtil.IsNotEmpty(deploymentIds))">
       left outer join ACT_RE_PROCDEF DEPLOY_P ON RES.PROC_DEF_ID_ = DEPLOY_P.ID_
-    </IsNotNull>
+    </IsTrue>
     <For Property="queryVariableValues" Key="var">
       <Switch>
         <Case Property="var.local">
@@ -249,256 +249,256 @@
       </Switch>
     </For>
     <For Property="orQueryObjects" Key="orQueryObject">
-      <IsNotNull Property="orQueryObject.candidateUser != null || orQueryObject.candidateGroups != null || orQueryObject.involvedGroups != null">
+      <IsTrue Property="orQueryObject.candidateUser != null or orQueryObject.candidateGroups != null or orQueryObject.involvedGroups != null">
         <Switch>
           <Case Property="orQueryObject.involvedGroups != null">left</Case>
           <Default>inner</Default>
         </Switch>
         join ACT_HI_IDENTITYLINK HI_OR${orIndex} on HI_OR${orIndex}.TASK_ID_ = RES.ID_
-      </IsNotNull>
-      <IsTrue Property="orQueryObject.processFinished || orQueryObject.processUnfinished || orQueryObject.processInstanceBusinessKey != null || orQueryObject.processInstanceBusinessKeyLike != null || orQueryObject.processInstanceBusinessKeyLikeIgnoreCase != null">
+      </IsTrue>
+      <IsTrue Property="orQueryObject.processFinished or orQueryObject.processUnfinished or orQueryObject.processInstanceBusinessKey != null or orQueryObject.processInstanceBusinessKeyLike != null or orQueryObject.processInstanceBusinessKeyLikeIgnoreCase != null">
         inner join ACT_HI_PROCINST HPI_OR${orIndex} ON RES.PROC_INST_ID_ = HPI_OR${orIndex}.ID_
       </IsTrue>
-      <IsNotNull Property="orQueryObject.processDefinitionKey != null || orQueryObject.processDefinitionKeyLike != null || orQueryObject.processDefinitionKeyLikeIgnoreCase != null || orQueryObject.processDefinitionName != null || orQueryObject.processDefinitionNameLike != null || (orQueryObject.processCategoryInList != null &amp;&amp; orQueryObject.processCategoryInList.size() &gt; 0) || (orQueryObject.processCategoryNotInList != null &amp;&amp; orQueryObject.processCategoryNotInList.size() &gt; 0) || (orQueryObject.processDefinitionKeys != null &amp;&amp; orQueryObject.processDefinitionKeys.size() &gt; 0)">
+      <IsTrue Property="orQueryObject.processDefinitionKey != null or orQueryObject.processDefinitionKeyLike != null or orQueryObject.processDefinitionKeyLikeIgnoreCase != null or orQueryObject.processDefinitionName != null or orQueryObject.processDefinitionNameLike != null or (orQueryObject.processCategoryInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryInList)) or (orQueryObject.processCategoryNotInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryNotInList)) or (orQueryObject.processDefinitionKeys != null and CollectionUtil.IsNotEmpty(orQueryObject.processDefinitionKeys))">
         left outer join ACT_RE_PROCDEF D_OR${orIndex} on RES.PROC_DEF_ID_ = D_OR${orIndex}.ID_
-      </IsNotNull>
-      <IsNotNull Property="orQueryObject.deploymentId != null || (orQueryObject.deploymentIds != null &amp;&amp; orQueryObject.deploymentIds.size() &gt; 0)">
+      </IsTrue>
+      <IsTrue Property="orQueryObject.deploymentId != null or (orQueryObject.deploymentIds != null and CollectionUtil.IsNotEmpty(orQueryObject.deploymentIds))">
         left outer join ACT_RE_PROCDEF DEPLOY_P_OR${orIndex} ON RES.PROC_DEF_ID_ = DEPLOY_P_OR${orIndex}.ID_
-      </IsNotNull>
-      <IsNotNull Property="orQueryObject.queryVariableValues.size() &gt; 0">
+      </IsTrue>
+      <IsTrue Property="CollectionUtil.IsNotEmpty(orQueryObject.queryVariableValues)">
         <IsTrue Property="orQueryObject.hasLocalQueryVariableValue()">
           left outer join ACT_HI_VARINST A_L_OR${orIndex} on RES.ID_ = A_L_OR${orIndex}.TASK_ID_
         </IsTrue>
         <IsNotNull Property="orQueryObject.hasNonLocalQueryVariableValue()">
           left outer join ACT_HI_VARINST A_OR${orIndex} on RES.PROC_INST_ID_ = A_OR${orIndex}.PROC_INST_ID_
         </IsNotNull>
-      </IsNotNull>
+      </IsTrue>
     </For>
     <Where>
-      <IsNotNull Property="taskId != null">
+      <IsTrue Property="taskId != null">
         RES.ID_ = #{taskId}
-      </IsNotNull>
-      <IsNotNull Property="processDefinitionId != null">
+      </IsTrue>
+      <IsTrue Property="processDefinitionId != null">
         and RES.PROC_DEF_ID_ = #{processDefinitionId}
-      </IsNotNull>
-      <IsNotNull Property="processDefinitionKey != null">
+      </IsTrue>
+      <IsTrue Property="processDefinitionKey != null">
         and D.KEY_ = #{processDefinitionKey}
-      </IsNotNull>
-      <IsNotNull Property="processDefinitionKeyLike != null">
+      </IsTrue>
+      <IsTrue Property="processDefinitionKeyLike != null">
         and D.KEY_ like #{processDefinitionKeyLike}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="processDefinitionKeyLikeIgnoreCase != null">
+      </IsTrue>
+      <IsTrue Property="processDefinitionKeyLikeIgnoreCase != null">
         and lower(D.KEY_) like #{processDefinitionKeyLikeIgnoreCase}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="processDefinitionKeys != null &amp;&amp; processDefinitionKeys.size() &gt; 0">
+      </IsTrue>
+      <IsTrue Property="processDefinitionKeys != null and CollectionUtil.IsNotEmpty(processDefinitionKeys)">
         and D.KEY_ in
         <For Key="item" Property="processDefinitionKeys" Open="(" Separator="," Close=")">
           #{item}
         </For>
-      </IsNotNull>
-      <IsNotNull Property="processDefinitionName != null">
+      </IsTrue>
+      <IsTrue Property="processDefinitionName != null">
         and D.NAME_ = #{processDefinitionName}
-      </IsNotNull>
-      <IsNotNull Property="processDefinitionNameLike != null">
+      </IsTrue>
+      <IsTrue Property="processDefinitionNameLike != null">
         and D.NAME_ like #{processDefinitionNameLike}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="processCategoryInList != null &amp;&amp; processCategoryInList.size() &gt; 0">
+      </IsTrue>
+      <IsTrue Property="processCategoryInList != null and CollectionUtil.IsNotEmpty(processCategoryInList)">
         and D.CATEGORY_ IN
         <For Key="processCategory" Property="processCategoryInList"
                  open="(" separator="," close=")">
           #{processCategory}
         </For>
-      </IsNotNull>
-      <IsNotNull Property="processCategoryNotInList != null &amp;&amp; processCategoryNotInList.size() &gt; 0">
+      </IsTrue>
+      <IsTrue Property="processCategoryNotInList != null and CollectionUtil.IsNotEmpty(processCategoryNotInList)">
         and D.CATEGORY_ NOT IN
         <For Key="processCategory" Property="processCategoryNotInList" Open="(" Separator="," Close=")">
           #{processCategory}
         </For>
-      </IsNotNull>
-      <IsNotNull Property="deploymentId != null">
+      </IsTrue>
+      <IsTrue Property="deploymentId != null">
         and DEPLOY_P.DEPLOYMENT_ID_ = #{deploymentId}
-      </IsNotNull>
-      <IsNotNull Property="deploymentIds != null &amp;&amp; deploymentIds.size() &gt; 0">
+      </IsTrue>
+      <IsTrue Property="deploymentIds != null and CollectionUtil.IsNotEmpty(deploymentIds)">
         and DEPLOY_P.DEPLOYMENT_ID_ IN
         <For Key="deployment" Property="deploymentIds" Open="(" Separator="," Close=")">
           #{deployment}
         </For>
-      </IsNotNull>
-      <IsNotNull Property="processInstanceId != null">
+      </IsTrue>
+      <IsTrue Property="processInstanceId != null">
         and RES.PROC_INST_ID_ = #{processInstanceId}
-      </IsNotNull>
-      <IsNotNull Property="processInstanceIds != null &amp;&amp; processInstanceIds.size() &gt; 0">
+      </IsTrue>
+      <IsTrue Property="processInstanceIds != null and CollectionUtil.IsNotEmpty(processInstanceIds)">
         and RES.PROC_INST_ID_ IN
         <For Key="processInstance" Property="processInstanceIds" Open="(" Separator="," Close=")">
           #{processInstance}
         </For>
-      </IsNotNull>
-      <IsNotNull Property="processInstanceBusinessKey != null">
+      </IsTrue>
+      <IsTrue Property="processInstanceBusinessKey != null">
         and HPI.BUSINESS_KEY_ = #{processInstanceBusinessKey}
-      </IsNotNull>
-      <IsNotNull Property="processInstanceBusinessKeyLike != null">
+      </IsTrue>
+      <IsTrue Property="processInstanceBusinessKeyLike != null">
         and HPI.BUSINESS_KEY_ like #{processInstanceBusinessKeyLike}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="processInstanceBusinessKeyLikeIgnoreCase != null">
+      </IsTrue>
+      <IsTrue Property="processInstanceBusinessKeyLikeIgnoreCase != null">
         and lower(HPI.BUSINESS_KEY_) like #{processInstanceBusinessKeyLikeIgnoreCase}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="taskDefinitionKey != null">
+      </IsTrue>
+      <IsTrue Property="taskDefinitionKey != null">
         and RES.TASK_DEF_KEY_ = #{taskDefinitionKey}
-      </IsNotNull>
-      <IsNotNull Property="taskDefinitionKeyLike != null">
+      </IsTrue>
+      <IsTrue Property="taskDefinitionKeyLike != null">
         and RES.TASK_DEF_KEY_ like #{taskDefinitionKeyLike}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="executionId != null">
+      </IsTrue>
+      <IsTrue Property="executionId != null">
         and RES.EXECUTION_ID_ = #{executionId}
-      </IsNotNull>
-      <IsNotNull Property="taskName != null">
+      </IsTrue>
+      <IsTrue Property="taskName != null">
         and RES.NAME_ = #{taskName}
-      </IsNotNull>
-      <IsNotNull Property="taskNameLike != null">
+      </IsTrue>
+      <IsTrue Property="taskNameLike != null">
         and RES.NAME_ like #{taskNameLike}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="taskNameLikeIgnoreCase != null">
+      </IsTrue>
+      <IsTrue Property="taskNameLikeIgnoreCase != null">
         and lower(RES.NAME_) like #{taskNameLikeIgnoreCase}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="taskNameList != null &amp;&amp; taskNameList.size() &gt; 0">
+      </IsTrue>
+      <IsTrue Property="taskNameList != null and CollectionUtil.IsNotEmpty(taskNameList)">
         and RES.NAME_ IN
         <For Key="taskName" Property="taskNameList" Open="(" Separator="," Close=")">
           #{taskName}
         </For>
-      </IsNotNull>
-      <IsNotNull Property="taskNameListIgnoreCase != null &amp;&amp; taskNameListIgnoreCase.size() &gt; 0">
+      </IsTrue>
+      <IsTrue Property="taskNameListIgnoreCase != null and CollectionUtil.IsNotEmpty(taskNameListIgnoreCase)">
         and lower(RES.NAME_) IN
         <For Key="taskName" Property="taskNameListIgnoreCase" Open="(" Separator="," Close=")">
           #{taskName}
         </For>
-      </IsNotNull>
-      <IsNotNull Property="taskParentTaskId != null">
+      </IsTrue>
+      <IsTrue Property="taskParentTaskId != null">
         and RES.PARENT_TASK_ID_ = #{taskParentTaskId}
-      </IsNotNull>
-      <IsNotNull Property="taskDescription != null">
+      </IsTrue>
+      <IsTrue Property="taskDescription != null">
         and RES.DESCRIPTION_ = #{taskDescription}
-      </IsNotNull>
-      <IsNotNull Property="taskDescriptionLike != null">
+      </IsTrue>
+      <IsTrue Property="taskDescriptionLike != null">
         and RES.DESCRIPTION_ like #{taskDescriptionLike}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="taskDescriptionLikeIgnoreCase != null">
+      </IsTrue>
+      <IsTrue Property="taskDescriptionLikeIgnoreCase != null">
         and lower(RES.DESCRIPTION_) like #{taskDescriptionLikeIgnoreCase}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="taskDeleteReason != null">
+      </IsTrue>
+      <IsTrue Property="taskDeleteReason != null">
         and RES.DELETE_REASON_ = #{taskDeleteReason}
-      </IsNotNull>
-      <IsNotNull Property="taskDeleteReasonLike != null">
+      </IsTrue>
+      <IsTrue Property="taskDeleteReasonLike != null">
         and RES.DELETE_REASON_ like #{taskDeleteReasonLike}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="taskOwner != null">
+      </IsTrue>
+      <IsTrue Property="taskOwner != null">
         and RES.OWNER_ = #{taskOwner}
-      </IsNotNull>
-      <IsNotNull Property="taskOwnerLike != null">
+      </IsTrue>
+      <IsTrue Property="taskOwnerLike != null">
         and RES.OWNER_ like #{taskOwnerLike}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="taskOwnerLikeIgnoreCase != null">
+      </IsTrue>
+      <IsTrue Property="taskOwnerLikeIgnoreCase != null">
         and lower(RES.OWNER_) like #{taskOwnerLikeIgnoreCase}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="taskAssignee != null">
+      </IsTrue>
+      <IsTrue Property="taskAssignee != null">
         and RES.ASSIGNEE_ = #{taskAssignee}
-      </IsNotNull>
-      <IsNotNull Property="taskAssigneeLike != null">
+      </IsTrue>
+      <IsTrue Property="taskAssigneeLike != null">
         and RES.ASSIGNEE_ like #{taskAssigneeLike}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="taskAssigneeLikeIgnoreCase != null">
+      </IsTrue>
+      <IsTrue Property="taskAssigneeLikeIgnoreCase != null">
         and lower(RES.ASSIGNEE_) like #{taskAssigneeLikeIgnoreCase}${wildcardEscapeClause}
-      </IsNotNull>
-      <IsNotNull Property="taskPriority != null">
+      </IsTrue>
+      <IsTrue Property="taskPriority != null">
         and RES.PRIORITY_ = #{taskPriority}
-      </IsNotNull>
-      <IsNotNull Property="taskMinPriority != null">
+      </IsTrue>
+      <IsTrue Property="taskMinPriority != null">
         and RES.PRIORITY_ &gt;= #{taskMinPriority}
-      </IsNotNull>
-      <IsNotNull Property="taskMaxPriority != null">
+      </IsTrue>
+      <IsTrue Property="taskMaxPriority != null">
         and RES.PRIORITY_ &lt;= #{taskMaxPriority}
-      </IsNotNull>
-      <IsNotNull Property="unfinished">
+      </IsTrue>
+      <IsTrue Property="unfinished">
         and RES.END_TIME_ is null
-      </IsNotNull>
-      <IsNotNull Property="finished">
+      </IsTrue>
+      <IsTrue Property="finished">
         and RES.END_TIME_ is not null
-      </IsNotNull>
-      <IsNotNull Property="processFinished">
+      </IsTrue>
+      <IsTrue Property="processFinished">
         and HPI.END_TIME_ is not null
-      </IsNotNull>
-      <IsNotNull Property="processUnfinished">
+      </IsTrue>
+      <IsTrue Property="processUnfinished">
         and HPI.END_TIME_ is null
-      </IsNotNull>
-      <IsNotNull Property="dueDate != null">
+      </IsTrue>
+      <IsTrue Property="dueDate != null">
         and RES.DUE_DATE_ = #{dueDate}
-      </IsNotNull>
-      <IsNotNull Property="dueBefore != null">
+      </IsTrue>
+      <IsTrue Property="dueBefore != null">
         and RES.DUE_DATE_ &lt; #{dueBefore}
-      </IsNotNull>
-      <IsNotNull Property="dueAfter != null">
+      </IsTrue>
+      <IsTrue Property="dueAfter != null">
         and RES.DUE_DATE_ &gt; #{dueAfter}
-      </IsNotNull>
-      <IsNotNull Property="withoutDueDate">
+      </IsTrue>
+      <IsTrue Property="withoutDueDate">
         and RES.DUE_DATE_ is null
-      </IsNotNull>
-      <IsNotNull Property="creationDate != null">
+      </IsTrue>
+      <IsTrue Property="creationDate != null">
         and RES.START_TIME_ = #{creationDate}
-      </IsNotNull>
-      <IsNotNull Property="creationBeforeDate != null">
+      </IsTrue>
+      <IsTrue Property="creationBeforeDate != null">
         and RES.START_TIME_ &lt; #{creationBeforeDate}
-      </IsNotNull>
-      <IsNotNull Property="creationAfterDate != null">
+      </IsTrue>
+      <IsTrue Property="creationAfterDate != null">
         and RES.START_TIME_ &gt; #{creationAfterDate}
-      </IsNotNull>
-      <IsNotNull Property="completedDate != null">
+      </IsTrue>
+      <IsTrue Property="completedDate != null">
         and RES.END_TIME_ = #{completedDate}
-      </IsNotNull>
-      <IsNotNull Property="completedBeforeDate != null">
+      </IsTrue>
+      <IsTrue Property="completedBeforeDate != null">
         and RES.END_TIME_ &lt; #{completedBeforeDate}
-      </IsNotNull>
-      <IsNotNull Property="completedAfterDate != null">
+      </IsTrue>
+      <IsTrue Property="completedAfterDate != null">
         and RES.END_TIME_ &gt; #{completedAfterDate}
-      </IsNotNull>
-      <IsNotNull Property="category != null">
+      </IsTrue>
+      <IsTrue Property="category != null">
         and RES.CATEGORY_ = #{category}
-      </IsNotNull>
-      <IsNotNull Property="tenantId != null">
+      </IsTrue>
+      <IsTrue Property="tenantId != null">
         and RES.TENANT_ID_ = #{tenantId}
-      </IsNotNull>
-      <IsNotNull Property="tenantIdLike != null">
+      </IsTrue>
+      <IsTrue Property="tenantIdLike != null">
         and RES.TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
-      </IsNotNull>
+      </IsTrue>
       <IsTrue Property="withoutTenantId">
         and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
       </IsTrue>
-      <IsNotNull Property="candidateUser != null || candidateGroups != null">
+      <IsTrue Property="candidateUser != null or candidateGroups != null">
         and RES.ASSIGNEE_ is null
         and HI.TYPE_ = 'candidate'
         and
         (
-        <IsNotNull Property="candidateUser != null">
+        <IsTrue Property="candidateUser != null">
           HI.USER_ID_ = #{candidateUser}
-        </IsNotNull>
-        <IsNotNull Property="candidateUser != null &amp;&amp; candidateGroups != null &amp;&amp; candidateGroups.size() &gt; 0">
+        </IsTrue>
+        <IsTrue Property="candidateUser != null and candidateGroups != null and CollectionUtil.IsNotEmpty(candidateGroups)">
           or
-        </IsNotNull>
-        <IsNotNull Property="candidateGroups != null &amp;&amp; candidateGroups.size() &gt; 0">
+        </IsTrue>
+        <IsTrue Property="candidateGroups != null and CollectionUtil.IsNotEmpty(candidateGroups)">
           HI.GROUP_ID_ IN
           <For Key="group" Property="candidateGroups" Open="(" Separator="," Close=")">
             #{group}
           </For>
-        </IsNotNull>
+        </IsTrue>
         )
-      </IsNotNull>
-      <IsNotNull Property="involvedUser != null">
+      </IsTrue>
+      <IsTrue Property="involvedUser != null">
         and
         (
         exists(select LINK.USER_ID_ from ACT_HI_IDENTITYLINK LINK where USER_ID_ = #{involvedUser} and LINK.TASK_ID_ = RES.ID_)
         or RES.ASSIGNEE_ = #{involvedUser}
         or RES.OWNER_ = #{involvedUser}
         )
-      </IsNotNull>
-      <IsNotNull Property="involvedGroups != null &amp;&amp; involvedGroups.size() &gt; 0">
+      </IsTrue>
+      <IsTrue Property="involvedGroups != null and CollectionUtil.IsNotEmpty(involvedGroups)">
         and
         (
         HI.TYPE_ = 'participant'
@@ -508,23 +508,23 @@
           #{group}
         </For>
         )
-      </IsNotNull>
+      </IsTrue>
       <For Key="queryVar" Property="queryVariableValues">
         <IsTrue Property="!queryVar.local">
           <!-- When process instance variable is queried for, taskId should be null -->
           and A${index}.TASK_ID_ is null
         </IsTrue>
-        <IsNotNull Property="queryVar.name != null">
+        <IsTrue Property="queryVar.name != null">
           <!-- Match-all variable-names when name is null -->
           and A${index}.NAME_= #{queryVar.name}
-        </IsNotNull>
+        </IsTrue>
         <IsTrue Property="!queryVar.type.equals('null')">
           and A${index}.VAR_TYPE_ = #{queryVar.type}
         </IsTrue>
         <!-- Variable value -->
-        <IsNotNull Property="queryVar.textValue != null &amp;&amp; queryVar.longValue == null &amp;&amp; queryVar.doubleValue == null">
+        <IsTrue Property="queryVar.textValue != null and queryVar.longValue == null and queryVar.doubleValue == null">
           <Switch>
-            <Case Property="queryVar.operator.equals('EQUALS_IGNORE_CASE') || queryVar.operator.equals('NOT_EQUALS_IGNORE_CASE') || queryVar.operator.equals('LIKE_IGNORE_CASE')">
+            <Case Property="queryVar.operator.Equals('EQUALS_IGNORE_CASE') or queryVar.operator.Equals('NOT_EQUALS_IGNORE_CASE') or queryVar.operator.Equals('LIKE_IGNORE_CASE')">
               and lower(A${index}.TEXT_)
             </Case>
             <Default>
@@ -532,17 +532,17 @@
             </Default>
           </Switch>
           <Switch>
-            <Case Property="queryVar.operator.equals('LIKE') || queryVar.operator.equals('LIKE_IGNORE_CASE')">LIKE</Case>
+            <Case Property="queryVar.operator.Equals('LIKE') or queryVar.operator.Equals('LIKE_IGNORE_CASE')">LIKE</Case>
             <Default>
               <Include RefId="executionVariableOperator" />
             </Default>
           </Switch>
           #{queryVar.textValue}
           <Switch>
-            <Case Property="queryVar.operator.equals('LIKE') || queryVar.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
+            <Case Property="queryVar.operator.Equals('LIKE') or queryVar.operator.Equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
           </Switch>
-        </IsNotNull>
-        <IsNotNull Property="queryVar.textValue2 != null">
+        </IsTrue>
+        <IsTrue Property="queryVar.textValue2 != null">
           and A${index}.TEXT2_
           <Switch>
             <Case Property="queryVar.operator.equals('LIKE')">LIKE</Case>
@@ -554,19 +554,19 @@
           <Switch>
             <Case Property="queryVar.operator.equals('LIKE')">${wildcardEscapeClause}</Case>
           </Switch>
-        </IsNotNull>
-        <IsNotNull Property="queryVar.longValue != null">
+        </IsTrue>
+        <IsTrue Property="queryVar.longValue != null">
           and A${index}.LONG_
           <Include RefId="executionVariableOperator" />
           #{queryVar.longValue}
-        </IsNotNull>
-        <IsNotNull Property="queryVar.doubleValue != null">
+        </IsTrue>
+        <IsTrue Property="queryVar.doubleValue != null">
           and A${index}.DOUBLE_
           <Include RefId="executionVariableOperator" />
           #{queryVar.doubleValue}
-        </IsNotNull>
+        </IsTrue>
         <!-- Null variable type -->
-        <IsNotNull Property="queryVar.textValue == null &amp;&amp; queryVar.textValue2 == null &amp;&amp; queryVar.longValue == null &amp;&amp; queryVar.doubleValue == null">
+        <IsTrue Property="queryVar.textValue == null and queryVar.textValue2 == null and queryVar.longValue == null and queryVar.doubleValue == null">
           <Switch>
             <Case Property="queryVar.operator.equals('NOT_EQUALS')">
               and (A${index}.TEXT_ is not null or A${index}.TEXT2_ is not null or A${index}.LONG_ is not null or A${index}.DOUBLE_ is not null or A${index}.BYTEARRAY_ID_ is not null)
@@ -575,234 +575,234 @@
               and A${index}.TEXT_ is null and A${index}.TEXT2_ is null and A${index}.LONG_ is null and A${index}.DOUBLE_ is null and A${index}.BYTEARRAY_ID_ is null
             </Default>
           </Switch>
-        </IsNotNull>
+        </IsTrue>
       </For>
       <For Key="orQueryObject" Property="orQueryObjects">
         and
-        <IsNotNull Property="orQueryObject.taskId != null">
+        <IsTrue Property="orQueryObject.taskId != null">
           RES.ID_ = #{orQueryObject.taskId}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processDefinitionId != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processDefinitionId != null">
           or RES.PROC_DEF_ID_ = #{orQueryObject.processDefinitionId}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processDefinitionKey != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processDefinitionKey != null">
           or D_OR${orIndex}.KEY_ = #{orQueryObject.processDefinitionKey}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processDefinitionKeyLike != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processDefinitionKeyLike != null">
           or D_OR${orIndex}.KEY_ like #{orQueryObject.processDefinitionKeyLike}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processDefinitionKeyLikeIgnoreCase != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processDefinitionKeyLikeIgnoreCase != null">
           or lower(D_OR${orIndex}.KEY_) like #{orQueryObject.processDefinitionKeyLikeIgnoreCase}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processDefinitionKeys != null &amp;&amp; orQueryObject.processDefinitionKeys.size() &gt; 0">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processDefinitionKeys != null and CollectionUtil.IsNotEmpty(orQueryObject.processDefinitionKeys)">
           or D_OR${orIndex}.KEY_ in
           <For Key="item" Property="orQueryObject.processDefinitionKeys" Open="(" Separator="," Close=")">
             #{item}
           </For>
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processDefinitionName != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processDefinitionName != null">
           or D_OR${orIndex}.NAME_ = #{orQueryObject.processDefinitionName}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processDefinitionNameLike != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processDefinitionNameLike != null">
           or D_OR${orIndex}.NAME_ like #{orQueryObject.processDefinitionNameLike}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processCategoryInList != null &amp;&amp; orQueryObject.processCategoryInList.size() &gt; 0">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processCategoryInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryInList)">
           or D_OR${orIndex}.CATEGORY_ IN
           <For Key="processCategory" Property="orQueryObject.processCategoryInList" Open="(" Separator="," Close=")">
             #{processCategory}
           </For>
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processCategoryNotInList != null &amp;&amp; orQueryObject.processCategoryNotInList.size() &gt; 0">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processCategoryNotInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryNotInList)">
           or D_OR${orIndex}.CATEGORY_ NOT IN
           <For Key="processCategory" Property="orQueryObject.processCategoryNotInList" Open="(" Separator="," Close=")">
             #{processCategory}
           </For>
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.deploymentId != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.deploymentId != null">
           or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ = #{orQueryObject.deploymentId}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.deploymentIds != null &amp;&amp; orQueryObject.deploymentIds.size() &gt; 0">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.deploymentIds != null and CollectionUtil.IsNotEmpty(orQueryObject.deploymentIds)">
           or DEPLOY_P_OR${orIndex}.DEPLOYMENT_ID_ IN
           <For Key="deployment" Property="orQueryObject.deploymentIds" Open="(" Separator="," Close=")">
             #{deployment}
           </For>
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processInstanceId != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processInstanceId != null">
           or RES.PROC_INST_ID_ = #{orQueryObject.processInstanceId}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processInstanceIds != null &amp;&amp; orQueryObject.processInstanceIds.size() &gt; 0">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processInstanceIds != null and CollectionUtil.IsNotEmpty(orQueryObject.processInstanceIds)">
           or RES.PROC_INST_ID_ IN
           <For Key="processInstance" Property="orQueryObject.processInstanceIds" Open="(" Separator="," Close=")">
             #{processInstance}
           </For>
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processInstanceBusinessKey != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processInstanceBusinessKey != null">
           or HPI_OR${orIndex}.BUSINESS_KEY_ = #{orQueryObject.processInstanceBusinessKey}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processInstanceBusinessKeyLike != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processInstanceBusinessKeyLike != null">
           or HPI_OR${orIndex}.BUSINESS_KEY_ like #{orQueryObject.processInstanceBusinessKeyLike}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processInstanceBusinessKeyLikeIgnoreCase != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processInstanceBusinessKeyLikeIgnoreCase != null">
           or lower(HPI_OR${orIndex}.BUSINESS_KEY_) like #{orQueryObject.processInstanceBusinessKeyLikeIgnoreCase}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskDefinitionKey != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskDefinitionKey != null">
           or RES.TASK_DEF_KEY_ = #{orQueryObject.taskDefinitionKey}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskDefinitionKeyLike != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskDefinitionKeyLike != null">
           or RES.TASK_DEF_KEY_ like #{orQueryObject.taskDefinitionKeyLike}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.executionId != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.executionId != null">
           or RES.EXECUTION_ID_ = #{orQueryObject.executionId}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskName != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskName != null">
           or RES.NAME_ = #{orQueryObject.taskName}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskNameLike != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskNameLike != null">
           or RES.NAME_ like #{orQueryObject.taskNameLike}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskNameLikeIgnoreCase != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskNameLikeIgnoreCase != null">
           or lower(RES.NAME_) like #{orQueryObject.taskNameLikeIgnoreCase}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskNameList != null &amp;&amp; orQueryObject.taskNameList.size() &gt; 0">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskNameList != null and CollectionUtil.IsNotEmpty(orQueryObject.taskNameList)">
           or RES.NAME_ IN
           <For Key="taskName" Property="orQueryObject.taskNameList" Open="(" Separator="," Close=")">
             #{taskName}
           </For>
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskNameListIgnoreCase != null &amp;&amp; orQueryObject.taskNameListIgnoreCase.size() &gt; 0">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskNameListIgnoreCase != null and CollectionUtil.IsNotEmpty(orQueryObject.taskNameListIgnoreCase)">
           or lower(RES.NAME_) IN
           <For Key="taskName" Property="orQueryObject.taskNameListIgnoreCase" Open="(" Separator="," Close=")">
             #{taskName}
           </For>
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskParentTaskId != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskParentTaskId != null">
           or RES.PARENT_TASK_ID_ = #{orQueryObject.taskParentTaskId}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskDescription != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskDescription != null">
           or RES.DESCRIPTION_ = #{orQueryObject.taskDescription}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskDescriptionLike != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskDescriptionLike != null">
           or RES.DESCRIPTION_ like #{orQueryObject.taskDescriptionLike}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskDescriptionLikeIgnoreCase != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskDescriptionLikeIgnoreCase != null">
           or lower(RES.DESCRIPTION_) like #{orQueryObject.taskDescriptionLikeIgnoreCase}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskDeleteReason != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskDeleteReason != null">
           or RES.DELETE_REASON_ = #{orQueryObject.taskDeleteReason}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskDeleteReasonLike != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskDeleteReasonLike != null">
           or RES.DELETE_REASON_ like #{orQueryObject.taskDeleteReasonLike}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskOwner != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskOwner != null">
           or RES.OWNER_ = #{orQueryObject.taskOwner}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskOwnerLike != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskOwnerLike != null">
           or RES.OWNER_ like #{orQueryObject.taskOwnerLike}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskOwnerLikeIgnoreCase != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskOwnerLikeIgnoreCase != null">
           or lower(RES.OWNER_) like #{orQueryObject.taskOwnerLikeIgnoreCase}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskAssignee != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskAssignee != null">
           or RES.ASSIGNEE_ = #{orQueryObject.taskAssignee}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskAssigneeLike != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskAssigneeLike != null">
           or RES.ASSIGNEE_ like #{orQueryObject.taskAssigneeLike}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskAssigneeLikeIgnoreCase != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskAssigneeLikeIgnoreCase != null">
           or RES.ASSIGNEE_ like #{orQueryObject.taskAssigneeLikeIgnoreCase}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskPriority != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskPriority != null">
           or RES.PRIORITY_ = #{orQueryObject.taskPriority}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskMinPriority != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskMinPriority != null">
           or RES.PRIORITY_ &gt;= #{orQueryObject.taskMinPriority}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.taskMaxPriority != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.taskMaxPriority != null">
           or RES.PRIORITY_ &lt;= #{orQueryObject.taskMaxPriority}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.unfinished">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.unfinished">
           or RES.END_TIME_ is null
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.finished">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.finished">
           or RES.END_TIME_ is not null
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processFinished">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processFinished">
           or HPI_OR${orIndex}.END_TIME_ is not null
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.processUnfinished">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.processUnfinished">
           or HPI_OR${orIndex}.END_TIME_ is null
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.dueDate != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.dueDate != null">
           or RES.DUE_DATE_ = #{orQueryObject.dueDate}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.dueBefore != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.dueBefore != null">
           or RES.DUE_DATE_ &lt; #{orQueryObject.dueBefore}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.dueAfter != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.dueAfter != null">
           or RES.DUE_DATE_ &gt; #{orQueryObject.dueAfter}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.withoutDueDate">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.withoutDueDate">
           or RES.DUE_DATE_ is null
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.creationDate != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.creationDate != null">
           or RES.START_TIME_ = #{orQueryObject.creationDate}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.creationBeforeDate != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.creationBeforeDate != null">
           or RES.START_TIME_ &lt; #{orQueryObject.creationBeforeDate}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.creationAfterDate != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.creationAfterDate != null">
           or RES.START_TIME_ &gt; #{orQueryObject.creationAfterDate}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.completedDate != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.completedDate != null">
           or RES.END_TIME_ = #{orQueryObject.completedDate}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.completedBeforeDate != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.completedBeforeDate != null">
           or RES.END_TIME_ &lt; #{orQueryObject.completedBeforeDate}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.completedAfterDate != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.completedAfterDate != null">
           or RES.END_TIME_ &gt; #{orQueryObject.completedAfterDate}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.category != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.category != null">
           or RES.CATEGORY_ = #{orQueryObject.category}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.tenantId != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.tenantId != null">
           or RES.TENANT_ID_ = #{orQueryObject.tenantId}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.tenantIdLike != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.tenantIdLike != null">
           or RES.TENANT_ID_ like #{orQueryObject.tenantIdLike}${wildcardEscapeClause}
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.withoutTenantId">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.withoutTenantId != null">
           or (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.candidateUser != null || orQueryObject.candidateGroups != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.candidateUser != null or orQueryObject.candidateGroups != null">
           or (RES.ASSIGNEE_ is null
           and HI_OR${orIndex}.TYPE_ = 'candidate'
           and
           (
-          <IsNotNull Property="orQueryObject.candidateUser != null">
+          <IsTrue Property="orQueryObject.candidateUser != null">
             HI_OR${orIndex}.USER_ID_ = #{orQueryObject.candidateUser}
-          </IsNotNull>
-          <IsNotNull Property="orQueryObject.candidateUser != null &amp;&amp; orQueryObject.candidateGroups != null &amp;&amp; orQueryObject.candidateGroups.size() &gt; 0">
+          </IsTrue>
+          <IsTrue Property="orQueryObject.candidateUser != null and orQueryObject.candidateGroups != null and CollectionUtil.IsNotEmpty(orQueryObject.candidateGroups)">
             or
-          </IsNotNull>
-          <IsNotNull Property="orQueryObject.candidateGroups != null &amp;&amp; orQueryObject.candidateGroups.size() &gt; 0">
+          </IsTrue>
+          <IsTrue Property="orQueryObject.candidateGroups != null and CollectionUtil.IsNotEmpty(orQueryObject.candidateGroups)">
             HI_OR${orIndex}.GROUP_ID_ IN
             <For item="group" index="index" collection="orQueryObject.candidateGroups"
                      open="(" separator="," close=")">
               #{group}
             </For>
-          </IsNotNull>
+          </IsTrue>
           ))
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.involvedUser != null">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.involvedUser != null">
           or
           (
           exists(select LINK.USER_ID_ from ACT_HI_IDENTITYLINK LINK where USER_ID_ = #{orQueryObject.involvedUser} and LINK.TASK_ID_ = RES.ID_)
           or RES.ASSIGNEE_ = #{orQueryObject.involvedUser}
           or RES.OWNER_ = #{orQueryObject.involvedUser}
           )
-        </IsNotNull>
-        <IsNotNull Property="orQueryObject.involvedGroups != null &amp;&amp; orQueryObject.involvedGroups.size() &gt; 0">
+        </IsTrue>
+        <IsTrue Property="orQueryObject.involvedGroups != null and CollectionUtil.IsNotEmpty(orQueryObject.involvedGroups)">
           or
           (
           HI_OR${orIndex}.TYPE_ = 'participant'
@@ -812,7 +812,7 @@
             #{group}
           </For>
           )
-        </IsNotNull>
+        </IsTrue>
         <For item="queryVar" collection="orQueryObject.queryVariableValues" index="index">
           or
           <Switch>
@@ -825,17 +825,17 @@
               <!--<bind name="orLocal" value="'L_'" />-->
             </Default>
           </Switch>
-          <IsNotNull Property="queryVar.name != null">
+          <IsTrue Property="queryVar.name != null">
             <!-- Match-all variable-names when name is null -->
             and A_${orLocal}OR${orIndex}.NAME_= #{queryVar.name}
-          </IsNotNull>
+          </IsTrue>
           <IsEqual Property="!queryVar.type.equals('null')">
             and A_${orLocal}OR${orIndex}.VAR_TYPE_ = #{queryVar.type}
           </IsEqual>
           <!-- Variable value -->
-          <IsNotNull Property="queryVar.textValue != null &amp;&amp; queryVar.longValue == null &amp;&amp; queryVar.doubleValue == null">
+          <IsTrue Property="queryVar.textValue != null and queryVar.longValue == null and queryVar.doubleValue == null">
             <Switch>
-              <Case Property="queryVar.operator.equals('EQUALS_IGNORE_CASE') || queryVar.operator.equals('NOT_EQUALS_IGNORE_CASE') || queryVar.operator.equals('LIKE_IGNORE_CASE')">
+              <Case Property="queryVar.operator.equals('EQUALS_IGNORE_CASE') or queryVar.operator.equals('NOT_EQUALS_IGNORE_CASE') or queryVar.operator.equals('LIKE_IGNORE_CASE')">
                 and lower(A_${orLocal}OR${orIndex}.TEXT_)
               </Case>
               <Default>
@@ -843,17 +843,17 @@
               </Default>
             </Switch>
             <Switch>
-              <Case Property="queryVar.operator.equals('LIKE') || queryVar.operator.equals('LIKE_IGNORE_CASE')">LIKE</Case>
+              <Case Property="queryVar.operator.equals('LIKE') or queryVar.operator.equals('LIKE_IGNORE_CASE')">LIKE</Case>
               <Default>
                 <Include RefId="executionVariableOperator" />
               </Default>
             </Switch>
             #{queryVar.textValue}
             <Switch>
-              <Case Property="queryVar.operator.equals('LIKE') || queryVar.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
+              <Case Property="queryVar.operator.equals('LIKE') or queryVar.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
             </Switch>
-          </IsNotNull>
-          <IsNotNull Property="queryVar.textValue2 != null">
+          </IsTrue>
+          <IsTrue Property="queryVar.textValue2 != null">
             and A_${orLocal}OR${orIndex}.TEXT2_
             <Switch>
               <Case Property="queryVar.operator.equals('LIKE')">LIKE</Case>
@@ -865,19 +865,19 @@
             <Switch>
               <Case Property="queryVar.operator.equals('LIKE')">${wildcardEscapeClause}</Case>
             </Switch>
-          </IsNotNull>
-          <IsNotNull Property="queryVar.longValue != null">
+          </IsTrue>
+          <IsTrue Property="queryVar.longValue != null">
             and A_${orLocal}OR${orIndex}.LONG_
             <Include RefId="executionVariableOperator" />
             #{queryVar.longValue}
-          </IsNotNull>
-          <IsNotNull Property="queryVar.doubleValue != null">
+          </IsTrue>
+          <IsTrue Property="queryVar.doubleValue != null">
             and A_${orLocal}OR${orIndex}.DOUBLE_
             <Include RefId="executionVariableOperator" />
             #{queryVar.doubleValue}
-          </IsNotNull>
+          </IsTrue>
           <!-- Null variable type -->
-          <IsNotNull Property="queryVar.textValue == null &amp;&amp; queryVar.textValue2 == null &amp;&amp; queryVar.longValue == null &amp;&amp; queryVar.doubleValue == null">
+          <IsTrue Property="queryVar.textValue == null and queryVar.textValue2 == null and queryVar.longValue == null and queryVar.doubleValue == null">
             <Switch>
               <Case Property="queryVar.operator.equals('NOT_EQUALS')">
                 and (A_${orLocal}OR${orIndex}.TEXT_ is not null or A_${orLocal}OR${orIndex}.TEXT2_ is not null or A_${orLocal}OR${orIndex}.LONG_ is not null or A_${orLocal}OR${orIndex}.DOUBLE_ is not null or A_${orLocal}OR${orIndex}.BYTEARRAY_ID_ is not null)
@@ -886,9 +886,12 @@
                 and A_${orLocal}OR${orIndex}.TEXT_ is null and A_${orLocal}OR${orIndex}.TEXT2_ is null and A_${orLocal}OR${orIndex}.LONG_ is null and A_${orLocal}OR${orIndex}.DOUBLE_ is null and A_${orLocal}OR${orIndex}.BYTEARRAY_ID_ is null
               </Default>
             </Switch>
-          </IsNotNull>
+          </IsTrue>
         </For>
+
+
       </For>
+
     </Where>
   </Statement>
 
@@ -900,7 +903,7 @@
   <Statement Id="selectHistoricTaskInstancesWithVariablesByQueryCriteriaSql">
     from ACT_HI_TASKINST RES
     <Switch>
-      <Case Property="includeTaskLocalVariables &amp;&amp; includeProcessVariables">
+      <Case Property="includeTaskLocalVariables and includeProcessVariables">
         left outer join ACT_HI_VARINST VAR ON RES.ID_ = VAR.TASK_ID_ or (RES.PROC_INST_ID_ = VAR.EXECUTION_ID_ and VAR.TASK_ID_ is null)
       </Case>
       <Default>
@@ -919,13 +922,13 @@
     select * from ACT_HI_TASKINST where ID_ = #{historicTaskInstanceId}
   </Select>
 
-  
+
   <Select Id="selectHistoricTaskInstancesByProcessInstanceId"  ResultMap="historicTaskInstanceResultMap" >
     select *
-    from ACT_HI_TASKINST 
+    from ACT_HI_TASKINST
     where PROC_INST_ID_ = #{processInstanceId}
   </Select>
-  
+
   <Select Id="selectHistoricTasksByParentTaskId" ResultMap="historicTaskInstanceResultMap">
     select * from ACT_HI_TASKINST where PARENT_TASK_ID_ = #{parentTaskId}
   </Select>

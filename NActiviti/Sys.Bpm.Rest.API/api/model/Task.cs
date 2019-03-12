@@ -40,7 +40,7 @@ namespace org.activiti.cloud.services.api.model
         private string processDefinitionId;
         private string processInstanceId;
         private string parentTaskId;
-        private TaskStatus status;
+        private string status;
         private string formKey;
 
         public TaskModel()
@@ -61,7 +61,7 @@ namespace org.activiti.cloud.services.api.model
             [JsonProperty("ProcessInstanceId")]string processInstanceId,
             [JsonProperty("ParentTaskId")]string parentTaskId,
             [JsonProperty("FormKey")]string formKey,
-            [JsonProperty("Status")]TaskStatus status)
+            [JsonProperty("Status")]string status)
         {
             this.id = id;
             this.owner = owner;
@@ -147,7 +147,7 @@ namespace org.activiti.cloud.services.api.model
             set => processInstanceId = value;
         }
 
-        public virtual TaskStatus Status
+        public virtual string Status
         {
             get => status;
             set => status = value;

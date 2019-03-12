@@ -9,7 +9,7 @@ export interface IProcessDefinitionDeployerService {
    * @description 获取最终部署的流程定义
    * @param query 查询对象
   */
-  latest(query: IDeploymentQuery): Promise<IResources>;
+  latest(query: IDeploymentQuery): Promise<IResources<any>>;
 
   /**
    * @description 部署流程
@@ -27,7 +27,7 @@ export interface IProcessDefinitionDeployerService {
    * @description 获取所有部署的流程包含草稿流程
    * @param query 查询对象
    */
-  allDeployments(query: IDeploymentQuery): Promise<IResources>;
+  allDeployments(query: IDeploymentQuery): Promise<IResources<any>>;
 
   /**
    * @description 删除部署流程,如果有已存在的实例,后台会抛出异常

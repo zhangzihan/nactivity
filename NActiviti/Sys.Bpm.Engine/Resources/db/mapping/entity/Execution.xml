@@ -388,14 +388,14 @@
       <IsNotEmpty Property="processDefinitionKey">
         and P.KEY_ = #{processDefinitionKey}
       </IsNotEmpty>
-      <IsNotNull Property="processDefinitionKeys != null">
+      <IsTrue Property="processDefinitionKeys != null">
         <IsNotEmpty Property="processDefinitionKeys">
           and P.KEY_ in
           <For Key="item" Index="index" Property="processDefinitionKeys" Open="(" Separator="," Close=")">
             #{item}
           </For>
         </IsNotEmpty>
-      </IsNotNull>
+      </IsTrue>
       <IsNotNull Property="processDefinitionCategory">
         and P.CATEGORY_ = #{processDefinitionCategory}
       </IsNotNull>
@@ -911,7 +911,7 @@
 
   <Select Id="selectExecutionsByQueryCriteria" ResultMap="executionResultMap">
     ${limitBefore}
-    select distinct RES.* ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId
+    select distinct RES.ID_, RES.REV_, RES.PROC_INST_ID_, RES.BUSINESS_KEY_, RES.PROC_DEF_ID_, RES.ACT_ID_, RES.IS_ACTIVE_, RES.IS_CONCURRENT_, RES.IS_SCOPE_, RES.IS_EVENT_SCOPE_, RES.IS_MI_ROOT_, RES.PARENT_ID_, RES.SUPER_EXEC_, RES.ROOT_PROC_INST_ID_, RES.SUSPENSION_STATE_, RES.TENANT_ID_, RES.NAME_, RES.START_TIME_, RES.START_USER_ID_, RES.IS_COUNT_ENABLED_, RES.EVT_SUBSCR_COUNT_, RES.TASK_COUNT_, RES.JOB_COUNT_, RES.TIMER_JOB_COUNT_, RES.SUSP_JOB_COUNT_, RES.DEADLETTER_JOB_COUNT_, RES.VAR_COUNT_, RES.ID_LINK_COUNT_ ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId
     <Include RefId="selectExecutionsByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}
@@ -925,7 +925,7 @@
   <!--  same as selectExecutionsByQueryCriteria, but with different parameterType -->
   <Select Id="selectProcessInstanceByQueryCriteria" ResultMap="processInstanceResultMap" >
     ${limitBefore}
-    select distinct RES.* ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId, P.NAME_ as ProcessDefinitionName, P.VERSION_ as ProcessDefinitionVersion, P.DEPLOYMENT_ID_ as DeploymentId
+    select distinct RES.ID_, RES.REV_, RES.PROC_INST_ID_, RES.BUSINESS_KEY_, RES.PROC_DEF_ID_, RES.ACT_ID_, RES.IS_ACTIVE_, RES.IS_CONCURRENT_, RES.IS_SCOPE_, RES.IS_EVENT_SCOPE_, RES.IS_MI_ROOT_, RES.PARENT_ID_, RES.SUPER_EXEC_, RES.ROOT_PROC_INST_ID_, RES.SUSPENSION_STATE_, RES.TENANT_ID_, RES.NAME_, RES.START_TIME_, RES.START_USER_ID_, RES.IS_COUNT_ENABLED_, RES.EVT_SUBSCR_COUNT_, RES.TASK_COUNT_, RES.JOB_COUNT_, RES.TIMER_JOB_COUNT_, RES.SUSP_JOB_COUNT_, RES.DEADLETTER_JOB_COUNT_, RES.VAR_COUNT_, RES.ID_LINK_COUNT_  ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId, P.NAME_ as ProcessDefinitionName, P.VERSION_ as ProcessDefinitionVersion, P.DEPLOYMENT_ID_ as DeploymentId
     <Include RefId="selectExecutionsByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}
@@ -944,7 +944,7 @@
   </Select>
 
   <Select Id="selectSubProcessInstanceBySuperExecutionId" ResultMap="executionResultMap" >
-    select *
+    select ID_, REV_, PROC_INST_ID_, BUSINESS_KEY_, PROC_DEF_ID_, ACT_ID_, IS_ACTIVE_, IS_CONCURRENT_, IS_SCOPE_, IS_EVENT_SCOPE_, IS_MI_ROOT_, PARENT_ID_, SUPER_EXEC_, ROOT_PROC_INST_ID_, SUSPENSION_STATE_, TENANT_ID_, NAME_, START_TIME_, START_USER_ID_, IS_COUNT_ENABLED_, EVT_SUBSCR_COUNT_, TASK_COUNT_, JOB_COUNT_, TIMER_JOB_COUNT_, SUSP_JOB_COUNT_, DEADLETTER_JOB_COUNT_, VAR_COUNT_, ID_LINK_COUNT_ 
     from ACT_RU_EXECUTION
     where SUPER_EXEC_ = #{superExecutionId}
   </Select>

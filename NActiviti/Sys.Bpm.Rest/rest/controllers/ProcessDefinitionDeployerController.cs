@@ -6,22 +6,23 @@ using org.activiti.cloud.services.api.commands;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core.pageable;
+using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.controllers;
 using org.activiti.engine;
 using org.activiti.engine.impl.bpmn.parser;
 using org.activiti.engine.repository;
 using org.springframework.hateoas;
-using Sys.Bpm.rest.api;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
 
 namespace Sys.Bpm.rest.controllers
 {
-    [Route("workflow/process-deployer")]
+    [Route(WorkflowConstants.PROC_DEP_ROUTER_V1)]
     [ApiController]
     public class ProcessDefinitionDeployerController : ControllerBase, IProcessDefinitionDeployerController
     {
@@ -58,7 +59,7 @@ namespace Sys.Bpm.rest.controllers
         {
             IPage<Deployment> defs = new QueryDeploymentCmd().loadPage(this.repositoryService, this.pageableRepositoryService, queryObj);
 
-            Resources<Deployment> list = new Resources<Deployment>(defs.getContent(), defs.getTotalItems(), queryObj.Pageable.Offset, queryObj.Pageable.PageSize);
+            Resources<Deployment> list = new Resources<Deployment>(defs.getContent(), defs.getTotalItems(), queryObj.Pageable.PageNo, queryObj.Pageable.PageSize);
 
             return Task.FromResult(list);
         }
@@ -105,20 +106,9 @@ namespace Sys.Bpm.rest.controllers
                 .createDeployment()
                 .disableDuplicateStartForm();
 
-            if (deployer.DisableBpmnValidation)
-            {
-                deployment.disableBpmnValidation();
-            }
-
-            if (deployer.DisableSchemaValidation)
-            {
-                deployment.disableSchemaValidation();
-            }
-
-            if (deployer.EnableDuplicateFiltering)
-            {
-                deployment.enableDuplicateFiltering();
-            }
+            deployment.disableBpmnValidation();
+            deployment.disableSchemaValidation();
+            deployment.enableDuplicateFiltering();
 
             string resourceName = deployer.Name.EndsWith("bpmn", StringComparison.OrdinalIgnoreCase) ? deployer.Name : $"{deployer.Name}.bpmn";
 
@@ -133,6 +123,22 @@ namespace Sys.Bpm.rest.controllers
                 .save();
 
             return Task.FromResult<Deployment>(deploymentConverter.from(dep));
+        }
+
+        [HttpGet("{tenantId}/{name}/draft")]
+        public Task<Deployment> Draft(string tenantId, string name)
+        {
+            IDeploymentQuery query = this.repositoryService.createDeploymentQuery();
+            IList<IDeployment> defs = query.deploymentName(name)
+                .deploymentTenantId(tenantId)
+                .findDrafts();
+
+            if (defs.Count > 1)
+            {
+                throw new Exception();
+            }
+
+            return Task.FromResult<Deployment>(defs?.Count == 0 ? null : deploymentConverter.from(defs[0]));
         }
 
         [HttpGet("{deployId}/remove")]

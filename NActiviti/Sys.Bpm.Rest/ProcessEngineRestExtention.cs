@@ -45,7 +45,11 @@ namespace Sys.Bpm.Services.Rest
 
             mvcBuilder.Services.AddTransient<TaskConverter>(sp => new TaskConverter(sp.GetService<ListConverter>()));
 
+            mvcBuilder.Services.AddTransient<HistoricTaskInstanceConverter>(sp => new HistoricTaskInstanceConverter(sp.GetService<ListConverter>()));
+
             mvcBuilder.Services.AddTransient<TaskSortApplier>();
+
+            mvcBuilder.Services.AddTransient<HistorySortApplier>();
 
             //mvcBuilder.Services.AddTransient<MessageProducerActivitiEventListener>();
 
@@ -53,7 +57,14 @@ namespace Sys.Bpm.Services.Rest
             {
                 IProcessEngine engine = sp.GetService<IProcessEngine>();
 
-                return new PageableTaskRepositoryService(engine.TaskService, sp.GetService<TaskConverter>(), sp.GetService<PageRetriever>(), sp.GetService<TaskSortApplier>());
+                return new PageableTaskRepositoryService(
+                    engine.TaskService,
+                    sp.GetService<TaskConverter>(),
+                    sp.GetService<HistoricTaskInstanceConverter>(),
+                    sp.GetService<IHistoryService>(),
+                    sp.GetService<PageRetriever>(),
+                    sp.GetService<TaskSortApplier>(),
+                    sp.GetService<HistorySortApplier>());
             });
 
             mvcBuilder.Services.AddTransient<ProcessInstanceConverter>(sp =>

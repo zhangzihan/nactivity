@@ -24,10 +24,13 @@ using org.activiti.cloud.services.rest.api.resources;
 using org.activiti.cloud.services.rest.assemblers;
 using org.springframework.hateoas;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Task = System.Threading.Tasks.Task;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("/workflow/process-instances/{processInstanceId}")]
+    [Route(WorkflowConstants.PROC_INS_ROUTER_V1)]
     [ApiController]
     public class ProcessInstanceTasksControllerImpl : ControllerBase, IProcessInstanceTasksController
     {
@@ -42,12 +45,23 @@ namespace org.activiti.cloud.services.rest.controllers
             this.taskResourceAssembler = taskResourceAssembler;
         }
 
-        [HttpGet("tasks")]
-        public virtual System.Threading.Tasks.Task<Resources<TaskModel>> getTasks(string processInstanceId, Pageable pageable)
+        [HttpPost("{processInstanceId}/tasks")]
+        public virtual Task<Resources<TaskModel>> getTasks(string processInstanceId, [FromBody]ProcessInstanceTaskQuery query)
         {
-            IPage<TaskModel> page = pageableTaskService.getTasks(processInstanceId, pageable);
-            //return pagedResourcesAssembler.toResource(pageable, page, taskResourceAssembler);
-            return null;
+            IPage<TaskModel> page = pageableTaskService.getTasks(processInstanceId, query.Pageable);
+
+            List<TaskResource> res = taskResourceAssembler.toResources(page.getContent()).ToList();
+
+            if (query.IncludeCompleted)
+            {
+                IPage<TaskModel> historics = pageableTaskService.getHistoryTasks(processInstanceId, query.Pageable);
+
+                res.AddRange(taskResourceAssembler.toResources(historics.getContent()));
+            }
+
+            Resources<TaskModel> tasks = new Resources<TaskModel>(res.Select(x => x.Content), page.getTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize);
+
+            return Task.FromResult<Resources<TaskModel>>(tasks);
         }
     }
 

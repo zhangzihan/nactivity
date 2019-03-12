@@ -1,5 +1,5 @@
 
-export interface IResources {
+export interface IResources<T> {
 
   /**
    * @description 当前页记录数
@@ -24,5 +24,5 @@ export interface IResources {
   /***
    * @description 返回的数据
    */
-  list: Array<any>;
+  list: Array<T>;
 }

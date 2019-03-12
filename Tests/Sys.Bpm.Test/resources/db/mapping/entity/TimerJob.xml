@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.TimerJobEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+
+  <!-- TIMER JOB ResultMap -->
+    
+    <ResultMap Id="jobResultMap" ResultType="org.activiti.engine.impl.persistence.entity.TimerJobEntityImpl,Sys.Bpm.Engine">
+      <Result Property="Id" Column="ID_" />
+      <Result Property="Revision" Column="REV_" />
+      <Result Property="JobType" Column="TYPE_" />
+      <Result Property="LockOwner" Column="LOCK_OWNER_" />
+      <Result Property="LockExpirationTime" Column="LOCK_EXP_TIME_" />
+      <Result Property="Exclusive" Column="EXCLUSIVE_" />
+      <Result Property="ExecutionId" Column="EXECUTION_ID_" />
+      <Result Property="ProcessInstanceId" Column="PROCESS_INSTANCE_ID_" />
+      <Result Property="ProcessDefinitionId" Column="PROC_DEF_ID_" />
+      <Result Property="Retries" Column="RETRIES_" />
+      <Result Property="ExceptionByteArrayRef" Column="EXCEPTION_STACK_ID_" TypeHandler="二进制引用" />
+      <Result Property="ExceptionMessage" Column="EXCEPTION_MSG_" />
+      <Result Property="JobHandlerType" Column="HANDLER_TYPE_" />
+      <Result Property="JobHandlerConfiguration" Column="HANDLER_CFG_" />
+      <Result Property="TenantId" Column="TENANT_ID_" />
+      <Result Property="Duedate" Column="DUEDATE_" />
+      <Result Property="Repeat" Column="REPEAT_" />
+    </ResultMap>
+
+  <!-- TIMER JOB SELECT -->
+  
+    <Statement Id="selectTimerJobByQueryCriteriaSql">
+      from ACT_RU_TIMER_JOB RES
+      <IsTrue Property="executable">
+        LEFT OUTER JOIN ACT_RU_EXECUTION PI ON PI.ID_ = RES.PROCESS_INSTANCE_ID_
+      </IsTrue>
+      <Where>
+        <IsNotNull Property="id">
+          RES.ID_ = #{id}
+        </IsNotNull>
+        <IsNotNull Property="processInstanceId">
+          and RES.PROCESS_INSTANCE_ID_ = #{processInstanceId}
+        </IsNotNull>
+        <IsNotNull Property="executionId">
+          and RES.EXECUTION_ID_ = #{executionId}
+        </IsNotNull>
+        <IsNotNull Property="processDefinitionId">
+          and RES.PROC_DEF_ID_ = #{processDefinitionId}
+        </IsNotNull>
+        <IsTrue Property="executable">
+          and RES.DUEDATE_ &lt;= #{now}
+        </IsTrue>
+        <IsNotNull Property="duedateHigherThan">
+          and RES.DUEDATE_ &gt; #{duedateHigherThan}
+        </IsNotNull>
+        <IsNotNull Property="duedateLowerThan">
+          and RES.DUEDATE_ &lt; #{duedateLowerThan}
+        </IsNotNull>
+        <IsNotNull Property="duedateHigherThanOrEqual">
+          and RES.DUEDATE_ &gt;= #{duedateHigherThanOrEqual}
+        </IsNotNull>
+        <IsNotNull Property="duedateLowerThanOrEqual">
+          and RES.DUEDATE_ &lt;= #{duedateLowerThanOrEqual}
+        </IsNotNull>
+        <IsTrue Property="withException">
+          and (RES.EXCEPTION_MSG_ is not null or RES.EXCEPTION_STACK_ID_ is not null)
+        </IsTrue>
+        <IsTrue Property="exceptionMessage">
+          and RES.EXCEPTION_MSG_ = #{exceptionMessage}
+        </IsTrue>
+        <IsNotNull Property="tenantId">
+          and RES.TENANT_ID_ = #{tenantId}
+        </IsNotNull>
+        <IsNotNull Property="tenantIdLike">
+          and RES.TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
+        </IsNotNull>
+        <IsTrue Property="withoutTenantId">
+          and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
+        </IsTrue>
+      </Where>
+    </Statement>
+
+    <Select Id="selectTimerJob" ResultMap="jobResultMap">
+      select * from ACT_RU_TIMER_JOB where ID_ = #{id}
+    </Select>
+
+    <Select Id="selectTimerJobByQueryCriteria" ResultMap="jobResultMap">
+      ${limitBefore}
+      select RES.* ${limitBetween}
+      <Include RefId="selectTimerJobByQueryCriteriaSql" />
+      ${orderBy}
+      ${limitAfter}
+    </Select>
+
+    <Select Id="selectTimerJobCountByQueryCriteria">
+      select count(distinct RES.ID_)
+      <Include RefId="selectTimerJobByQueryCriteriaSql" />
+    </Select>
+
+    <Select Id="selectTimerJobsToExecute" ResultMap="jobResultMap">
+      select
+      RES.* 
+      from ACT_RU_TIMER_JOB RES
+      where DUEDATE_ &lt;= #{duedate}
+      and LOCK_OWNER_ is null
+    </Select>
+
+    <!-- TIMER INSERT -->
+
+    <Insert Id="insertTimerJob">
+      insert into ACT_RU_TIMER_JOB (
+      ID_,
+      REV_,
+      TYPE_,
+      EXCLUSIVE_,
+      EXECUTION_ID_,
+      PROCESS_INSTANCE_ID_,
+      PROC_DEF_ID_,
+      RETRIES_,
+      EXCEPTION_STACK_ID_,
+      EXCEPTION_MSG_,
+      DUEDATE_,
+      REPEAT_,
+      HANDLER_TYPE_,
+      HANDLER_CFG_,
+      TENANT_ID_)
+      values (#{id},
+      #{revision},
+      #{jobType},
+      #{exclusive},
+      #{executionId},
+      #{processInstanceId},
+      #{processDefinitionId},
+      #{retries},
+      #{exceptionByteArrayRef},
+      #{exceptionMessage},
+      #{duedate},
+      #{repeat},
+      #{jobHandlerType},
+      #{jobHandlerConfiguration},
+      #{tenantId}
+      )
+    </Insert>
+
+    <Insert Id="bulkInsertTimerJob">
+      INSERT INTO ACT_RU_TIMER_JOB (
+      ID_,
+      REV_,
+      TYPE_,
+      EXCLUSIVE_,
+      EXECUTION_ID_,
+      PROCESS_INSTANCE_ID_,
+      PROC_DEF_ID_,
+      RETRIES_,
+      EXCEPTION_STACK_ID_,
+      EXCEPTION_MSG_,
+      DUEDATE_,
+      REPEAT_,
+      HANDLER_TYPE_,
+      HANDLER_CFG_,
+      TENANT_ID_) VALUES
+      <For Property="list" Key="job" Separator=",">
+        (#{id},
+        #{revision},
+        #{jobType},
+        #{exclusive},
+        #{executionId},
+        #{processInstanceId},
+        #{processDefinitionId},
+        #{retries},
+        #{exceptionByteArrayRef},
+        #{exceptionMessage},
+        #{duedate},
+        #{repeat},
+        #{jobHandlerType},
+        #{jobHandlerConfiguration},
+        #{tenantId})
+      </For>
+    </Insert>
+
+    <Update Id="updateTimerJob">
+      update ACT_RU_TIMER_JOB
+      <Set>
+        REV_ = #{revisionNext},
+        LOCK_EXP_TIME_ = #{lockExpirationTime},
+        LOCK_OWNER_ = #{lockOwner},
+        RETRIES_ = #{retries},
+        DUEDATE_ = #{duedate},
+        EXCEPTION_STACK_ID_ = #{exceptionByteArrayRef},
+        EXCEPTION_MSG_ = #{exceptionMessage}
+      </Set>
+      where ID_= #{id}
+      and REV_ = #{revision}
+    </Update>
+
+    <Select Id="selectTimerJobByTypeAndProcessDefinitionId" ResultMap="jobResultMap">
+      select J.*
+      from ACT_RU_TIMER_JOB J
+      where J.HANDLER_TYPE_ = #{handlerType}
+      and J.PROC_DEF_ID_ = #{processDefinitionId}
+    </Select>
+
+    <Select Id="selectTimerJobsByProcessInstanceId" ResultMap="jobResultMap">
+      select *
+      from ACT_RU_TIMER_JOB J
+      where J.PROCESS_INSTANCE_ID_ = #{processInstanceId}
+    </Select>
+
+    <Select Id="selectTimerJobsByExecutionId" ResultMap="jobResultMap">
+      select *
+      from ACT_RU_TIMER_JOB J
+      where J.EXECUTION_ID_ = #{executionId}
+    </Select>
+
+    <Select Id="selectTimerJobByTypeAndProcessDefinitionKeyNoTenantId" ResultMap="jobResultMap">
+      select J.*
+      from ACT_RU_TIMER_JOB J
+      inner join ACT_RE_PROCDEF P on J.PROC_DEF_ID_ = P.ID_
+      where J.HANDLER_TYPE_ = #{handlerType}
+      and P.KEY_ = #{processDefinitionKey}
+      and (P.TENANT_ID_ = '' or P.TENANT_ID_ is null)
+    </Select>
+
+    <Select Id="selectTimerJobByTypeAndProcessDefinitionKeyAndTenantId" ResultMap="jobResultMap">
+      select J.*
+      from ACT_RU_TIMER_JOB J
+      inner join ACT_RE_PROCDEF P on J.PROC_DEF_ID_ = P.ID_
+      where J.HANDLER_TYPE_ = #{handlerType}
+      and P.KEY_ = #{processDefinitionKey}
+      and P.TENANT_ID_ = #{tenantId}
+    </Select>
+
+    <!-- JOB DELETE STATEMENTS -->
+
+    <Delete Id="deleteTimerJob">
+      delete from ACT_RU_TIMER_JOB where ID_ = #{id} and REV_ = #{revision}
+    </Delete>
+
+    <Delete Id="bulkDeleteTimerJob">
+      delete from ACT_RU_TIMER_JOB where
+      <For Key="job" Property="list" Separator=" or ">
+        ID_ = #{id}
+      </For>
+    </Delete>
+
+    <!-- JOB UPDATE STATEMENTS -->
+    <Update Id="updateTimerJobTenantIdForDeployment">
+      update ACT_RU_TIMER_JOB set
+      TENANT_ID_ = #{tenantId}
+      where
+      ID_ in (
+      SELECT J.ID_ from ACT_RU_TIMER_JOB J
+      inner join ACT_RE_PROCDEF P on J.PROC_DEF_ID_ = P.ID_
+      inner join ACT_RE_DEPLOYMENT D on P.DEPLOYMENT_ID_ = D.ID_
+      where D.ID_ = #{deploymentId}
+      )
+    </Update>
+  
+</SmartSqlMap>

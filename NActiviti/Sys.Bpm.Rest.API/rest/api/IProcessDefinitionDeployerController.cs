@@ -4,7 +4,7 @@ using org.activiti.cloud.services.api.model;
 using org.springframework.hateoas;
 using System.Threading.Tasks;
 
-namespace Sys.Bpm.rest.api
+namespace org.activiti.cloud.services.rest.api
 {
     /// <summary>
     /// 流程定义部署RestAPI
@@ -59,5 +59,7 @@ namespace Sys.Bpm.rest.api
         /// <param name="id">流程模型id</param>
         /// <returns></returns>
         Task<BpmnModel> GetBpmnModel(string id);
+
+        Task<Deployment> Draft(string tenantId, string name);
     }
 }

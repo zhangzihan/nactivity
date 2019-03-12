@@ -39,9 +39,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("workflow/process-definitions")]
+    [Route(WorkflowConstants.PROC_DEF_ROUTER_V1)]
     [ApiController]
-    public class ProcessDefinitionControllerImpl : ControllerBase, IProcessDefinitionController
+    public class ProcessDefinitionControllerImpl : ControllerBase, api.IProcessDefinitionController
     {
         private readonly IRepositoryService repositoryService;
 
@@ -97,7 +97,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
             IList<ProcessDefinitionResource> resources = resourceAssembler.toResources(defs.getContent());
 
-            Resources<ProcessDefinition> list = new Resources<ProcessDefinition>(resources.Select(x => x.Content), defs.getTotalItems(), queryObj.Pageable.Offset, queryObj.Pageable.PageSize);
+            Resources<ProcessDefinition> list = new Resources<ProcessDefinition>(resources.Select(x => x.Content), defs.getTotalItems(), queryObj.Pageable.PageNo, queryObj.Pageable.PageSize);
 
             return Task.FromResult(list);
         }
@@ -105,7 +105,7 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpGet("{id}")]
         public virtual Task<ProcessDefinition> GetProcessDefinition(string id)
         {
-            IProcessDefinition processDefinition = retrieveProcessDefinition(id);
+            engine.repository.IProcessDefinition processDefinition = retrieveProcessDefinition(id);
 
             ProcessDefinitionResource resource = resourceAssembler.toResource(processDefinitionConverter.from(processDefinition));
 
@@ -116,7 +116,7 @@ namespace org.activiti.cloud.services.rest.controllers
         {
             IProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery().processDefinitionId(id);
             //query = securityService.restrictProcessDefQuery(query, SecurityPolicy.READ);
-            IProcessDefinition processDefinition = query.singleResult();
+            engine.repository.IProcessDefinition processDefinition = query.singleResult();
             if (processDefinition == null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + id + "'");

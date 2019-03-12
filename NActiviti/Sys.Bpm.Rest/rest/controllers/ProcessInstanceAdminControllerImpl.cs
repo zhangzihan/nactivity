@@ -73,7 +73,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
             IList<ProcessInstanceResource> resources = resourceAssembler.toResources(instances.getContent());
 
-            return System.Threading.Tasks.Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.getTotalItems(), query.Pageable.Offset, query.Pageable.PageSize));
+            return System.Threading.Tasks.Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.getTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
         }
     }
 }

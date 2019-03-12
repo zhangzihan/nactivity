@@ -73,7 +73,7 @@ namespace org.activiti.api.runtime.shared.query
 
                             if (int.TryParse(query.FirstOrDefault(x => x.Key.ToLower() == "offset").Value, out int offset))
                             {
-                                obj.Offset = offset;
+                                obj.PageNo = offset;
                             }
                             if (int.TryParse(query.FirstOrDefault(x => x.Key.ToLower() == "pagesize").Value, out int pageSize))
                             {

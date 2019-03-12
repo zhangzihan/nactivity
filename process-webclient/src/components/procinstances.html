@@ -1,0 +1,46 @@
+<template>
+  <style>
+    .btn-list {
+      list-style: none;
+    }
+
+    .btn-list>li {
+      list-style: none;
+      margin-left: 4px;
+      float: left
+    }
+  </style>
+  <table class="table table-striped">
+    <tr>
+      <td>状态</td>
+      <td>流程名称</td>
+      <td>触发时间</td>
+      <td>提交人</td>
+      <td>操作</td>
+    </tr>
+    <tr repeat.for="inst of instances">
+      <td>
+        ${inst.status}
+      </td>
+      <td>
+        ${inst.name}
+      </td>
+      <td>
+        ${inst.startDate}
+      </td>
+      <td>
+        ${inst.initiator}
+      </td>
+      <td>
+        <ul class="btn-list">
+          <li>
+            <a href="#/proc-inst/${inst.id}">明细</a>
+          </li>
+          <li>
+            <a click.trigger="terminate(inst.id)">终止</a>
+          </li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+</template>

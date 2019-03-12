@@ -1,5 +1,5 @@
 
 
 export default {
-    serverUrl: window["serverUrl"]
+    serverUrl: window["serverUrl"] + "/v1"
 }

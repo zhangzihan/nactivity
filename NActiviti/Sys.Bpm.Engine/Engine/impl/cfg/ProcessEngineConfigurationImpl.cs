@@ -931,6 +931,9 @@ namespace org.activiti.engine.impl.cfg
                     case "MySql.Data.MySqlClient":
                         databaseType = DATABASE_TYPE_MYSQL;
                         break;
+                    case "System.Data.H2":
+                        databaseType = DATABASE_TYPE_H2;
+                        break;
 
                 }
 

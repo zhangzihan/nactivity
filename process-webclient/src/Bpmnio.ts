@@ -22,7 +22,6 @@ import { DialogService, DialogController } from 'aurelia-dialog';
 //import diagramXML from '../resources/newDiagram.bpmn';
 
 @inject(EventAggregator, DialogService)
-@useView(PLATFORM.moduleName('./bpmnio.html'))
 export class BpmnIO {
 
   container;
@@ -32,6 +31,16 @@ export class BpmnIO {
   bpmnModeler;
 
   workflow;
+
+  //事件BUS
+  eventBus;
+
+  //选定的节点
+  node;
+
+  element;
+
+  gfx;
 
   constructor(private es: EventAggregator, private ds: DialogService) {
     this.es.subscribe("openWorkflow", (wf) => {
@@ -107,11 +116,13 @@ export class BpmnIO {
 
   attached() {
 
-    this.container = $('#js-drop-zone');
+    window["bpmnViewModel"] = this;
 
-    this.canvas = $('#js-canvas');
+    window["bpmContainer"] = this.container = $('#js-drop-zone');
 
-    this.bpmnModeler = new BpmnModeler({
+    window["bpmCanvas"] = this.canvas = $('#js-canvas');
+
+    window["bpmModeler"] = this.bpmnModeler = new BpmnModeler({
       container: this.canvas,
       propertiesPanel: {
         parent: '#js-properties-panel'
@@ -123,6 +134,17 @@ export class BpmnIO {
       moddleExtensions: {
         camunda: camundaModdleDescriptor
       }
+    });
+
+    //取到画布事件总线
+    this.eventBus = this.bpmnModeler.get("eventBus");
+
+    this.eventBus.on("element.click", (sender, /**元素节点 */elem:any) =>{
+      //数据
+      var bizobj = elem.element.businessObject;
+      this.element = elem.element;
+      this.node = bizobj;
+      this.gfx = document.querySelector(`[data-element-id=${bizobj.id}]`);
     });
 
     ////// file drag / drop ///////////////////////

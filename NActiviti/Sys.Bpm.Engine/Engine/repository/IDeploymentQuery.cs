@@ -14,6 +14,7 @@
 namespace org.activiti.engine.repository
 {
     using org.activiti.engine.query;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Allows programmatic querying of <seealso cref="IDeployment"/>s.
@@ -131,6 +132,8 @@ namespace org.activiti.engine.repository
         /// Order by tenant id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
         IDeploymentQuery orderByTenantId();
+
+        IList<IDeployment> findDrafts();
     }
 
 }

@@ -1,0 +1,84 @@
+<template>
+  <style>
+    .instance {
+      width: 400px;
+      float: left;
+      padding: 8px 8px;
+    }
+  </style>
+
+  <div class="container instance">
+    <div class="row">
+      <div class="col-4">Id</div>
+      <div class="col-8">${instance.id}</div>
+    </div>
+    <div class="row">
+      <div class="col-4">Name</div>
+      <div class="col-8">${instance.name}</div>
+    </div>
+    <div class="row">
+      <div class="col-4">Start Date</div>
+      <div class="col-8">${instance.startDate}</div>
+    </div>
+    <div class="row">
+      <div class="col-4">Description</div>
+      <div class="col-8">${instance.description}</div>
+    </div>
+    <div class="row">
+      <div class="col-4">Initiator</div>
+      <div class="col-8">${instance.initiator}</div>
+    </div>
+    <div class="row">
+      <div class="col-4">Business key</div>
+      <div class="col-8">${instance.businessKey}</div>
+    </div>
+    <div class="row">
+      <div class="col-4">Status</div>
+      <div class="col-8">${instance.status}</div>
+    </div>
+    <div class="row">
+      <div class="col-4">Process definition id</div>
+      <div class="col-8">${instance.processDefinitionId}</div>
+    </div>
+    <div class="row">
+      <div class="col-4">Process definition key</div>
+      <div class="col-8">${instance.processDefinitionKey}</div>
+    </div>
+  </div>
+
+  <div style="float:left;padding:8px 8px">
+    <table class="table table-striped">
+      <tr>
+        <td>
+          任务状态
+        </td>
+        <td>
+          任务名称
+        </td>
+        <td>
+          处理人
+        </td>
+        <td>
+          开始时间
+        </td>
+        <td>
+          完成时间
+        </td>
+        <td>
+          操作
+        </td>
+      </tr>
+      <tr repeat.for="task of tasks.list">
+        <td>${task.status}</td>
+        <td>${task.name}</td>
+        <td>${task.assignee}</td>
+        <td>${task.createdDate}</td>
+        <td></td>
+        <td>
+          <a click.trigger="terminateTask(task.id)">终止</a>
+          <a click.trigger="toUser(task.id)">转派</a>
+        </td>
+      </tr>
+      <table>
+  </div>
+</template>

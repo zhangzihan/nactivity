@@ -31,12 +31,14 @@ namespace org.activiti.engine.impl.persistence.entity
 
         long findDeploymentCountByNativeQuery(IDictionary<string, object> parameterMap);
 
-        long findDeploymentCountByQueryCriteria(DeploymentQueryImpl deploymentQuery);
+        long findDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery);
 
         void deleteDeployment(string deploymentId, bool cascade);
 
+        IList<IDeployment> findDrafts(IDeploymentQuery deploymentQuery);
+
         IDeploymentEntity saveDraft(IDeploymentEntity deployment);
 
-        void removeDrafts(string name);
+        void removeDrafts(string tenantId, string name);
     }
 }

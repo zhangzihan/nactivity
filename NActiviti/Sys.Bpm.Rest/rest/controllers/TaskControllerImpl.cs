@@ -33,7 +33,7 @@ using System.Threading.Tasks;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("/workflow/tasks")]
+    [Route(WorkflowConstants.TASK_ROUTER_V1)]
     [ApiController]
     public class TaskControllerImpl : ControllerBase, ITaskController
     {
@@ -71,12 +71,12 @@ namespace org.activiti.cloud.services.rest.controllers
         //    return ex.Message;
         //}
 
-        [HttpGet]
-        public virtual Task<Resources<TaskModel>> getTasks(Pageable pageable)
+        [HttpPost]
+        public virtual Task<Resources<TaskModel>> getTasks(TaskQuery query)
         {
-            IPage<TaskModel> page = processEngine.getTasks(pageable);
-            //return pagedResourcesAssembler.toResource(pageable, page, taskResourceAssembler);
+            IPage<TaskModel> page = processEngine.getTasks(query.Pageable);
             return null;
+            //return pagedResourcesAssembler.toResource(pageable, page, taskResourceAssembler);
         }
 
         [HttpGet("{userId}/mytasks")]
@@ -141,7 +141,7 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult<IActionResult>(Ok());
         }
 
-        [HttpDelete("{taskId}")]
+        [HttpPost("{taskId}/remove")]
         public virtual Task<IActionResult> deleteTask(string taskId)
         {
             processEngine.deleteTask(taskId);
@@ -149,13 +149,13 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult<IActionResult>(Ok());
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public virtual Task<TaskModel> createNewTask([FromBody]CreateTaskCmd createTaskCmd)
         {
             return Task.FromResult(taskResourceAssembler.toResource(processEngine.createNewTask(createTaskCmd)).Content);
         }
 
-        [HttpPut("{taskId}")]
+        [HttpPost("{taskId}/update")]
         public virtual Task<IActionResult> updateTask(string taskId, UpdateTaskCmd updateTaskCmd)
         {
             processEngine.updateTask(taskId, updateTaskCmd);

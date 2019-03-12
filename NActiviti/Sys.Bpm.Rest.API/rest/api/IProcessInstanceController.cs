@@ -33,7 +33,7 @@ namespace org.activiti.cloud.services.rest.api
         /// </summary>
         /// <param name="processInstanceId">流程实例id</param>
         /// <returns></returns>
-        Task<Resource<ProcessInstance>> GetProcessInstanceById(string processInstanceId);
+        Task<ProcessInstance> GetProcessInstanceById(string processInstanceId);
 
         /// <summary>
         /// 获取流程图,未实现

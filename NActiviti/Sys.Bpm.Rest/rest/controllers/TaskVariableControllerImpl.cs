@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("/workflow/tasks/{taskId}/variables")]
+    [Route(WorkflowConstants.TASK_VAR_ROUTER_V1)]
     [ApiController]
     public class TaskVariableControllerImpl : ControllerBase, ITaskVariableController
     {

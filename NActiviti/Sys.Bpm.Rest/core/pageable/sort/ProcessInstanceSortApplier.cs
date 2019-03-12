@@ -2,6 +2,7 @@
 using org.activiti.engine.impl;
 using org.activiti.engine.query;
 using org.activiti.engine.runtime;
+using System;
 using System.Collections.Generic;
 
 /*
@@ -24,12 +25,14 @@ namespace org.activiti.cloud.services.core.pageable.sort
     public class ProcessInstanceSortApplier : BaseSortApplier<IProcessInstanceQuery, IProcessInstance>
     {
 
-        private IDictionary<string, IQueryProperty> orderByProperties = new Dictionary<string, IQueryProperty>();
+        private IDictionary<string, IQueryProperty> orderByProperties = new Dictionary<string, IQueryProperty>(StringComparer.OrdinalIgnoreCase);
 
         public ProcessInstanceSortApplier()
         {
             orderByProperties["id"] = ProcessInstanceQueryProperty.PROCESS_INSTANCE_ID;
             orderByProperties["processDefinitionId"] = ProcessInstanceQueryProperty.PROCESS_DEFINITION_ID;
+            orderByProperties["startDate"] = ProcessInstanceQueryProperty.PROCESS_EXECUTION_STARTDATE;
+            orderByProperties["name"] = ProcessInstanceQueryProperty.PROCESS_EXECUTION_NAME;
         }
 
         protected internal override void applyDefaultSort(IProcessInstanceQuery query)

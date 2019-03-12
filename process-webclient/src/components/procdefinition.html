@@ -1,0 +1,24 @@
+<template>
+  <div class="workspace">
+    <div class="left">
+      <div class="deployment-list">
+        <compose view-model.bind="deployment"></compose>
+      </div>
+      <div class="process-list">
+        <compose view-model.bind="processes"></compose>
+      </div>
+      <div class="tasks-list">
+        <compose view-model.bind="tasks"></compose>
+      </div>
+    </div>
+    <div class="right" class.bind="maxBpmnIo">
+      <div class="top" class.bind="hideTop">
+        <compose view-model="formlist"></compose>
+      </div>
+      <div class="has-top">
+        <a class="arrows-alt" click.trigger="maximize()" style="z-index:100"><i class="fa fa-arrows-alt"></i></a>
+        <compose view-model="bpmnio"></compose>
+      </div>
+    </div>
+  </div>
+</template>

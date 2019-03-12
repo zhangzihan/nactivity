@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("/workflow/process-instances/{processInstanceId}/variables")]
+    [Route(WorkflowConstants.PROC_INS_VAR_ROUTER_V1)]
     [ApiController]
     public class ProcessInstanceVariableControllerImpl : ControllerBase, IProcessInstanceVariableController
     {

@@ -3,6 +3,7 @@ using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core.pageable.sort;
 using org.activiti.engine;
+using org.activiti.engine.history;
 using org.activiti.engine.task;
 using System.Collections.Generic;
 
@@ -29,18 +30,36 @@ namespace org.activiti.cloud.services.core.pageable
 
         private readonly ITaskService taskService;
         private readonly TaskConverter taskConverter;
+        private readonly HistoricTaskInstanceConverter historicTaskInstanceConverter;
         private readonly PageRetriever pageRetriever;
         private readonly TaskSortApplier sortApplier;
+        private readonly HistorySortApplier historicSortApplier;
         private IUserGroupLookupProxy userGroupLookupProxy;
         private AuthenticationWrapper authenticationWrapper = new AuthenticationWrapper();
+        private readonly IHistoryService historyService;
 
-        public PageableTaskRepositoryService(ITaskService taskService, TaskConverter taskConverter, PageRetriever pageRetriever, TaskSortApplier sortApplier)
+        public PageableTaskRepositoryService(ITaskService taskService, 
+            TaskConverter taskConverter,
+            HistoricTaskInstanceConverter historicTaskInstanceConverter,
+            IHistoryService historyService,
+            PageRetriever pageRetriever, 
+            TaskSortApplier sortApplier,
+            HistorySortApplier historicSortApplier)
         {
             this.taskService = taskService;
+            this.historyService = historyService;
             this.taskConverter = taskConverter;
             this.pageRetriever = pageRetriever;
             this.sortApplier = sortApplier;
+            this.historicSortApplier = historicSortApplier;
+            this.historicTaskInstanceConverter = historicTaskInstanceConverter;
         }
+
+        public TaskSortApplier SortApplier => SortApplier;
+
+        public PageRetriever PageRetriever => pageRetriever;
+
+        public TaskConverter TaskConverter => taskConverter;
 
         public virtual IPage<TaskModel> getTasks(Pageable pageable)
         {
@@ -72,7 +91,16 @@ namespace org.activiti.cloud.services.core.pageable
         {
             ITaskQuery query = taskService.createTaskQuery().processInstanceId(processInstanceId);
             sortApplier.applySort(query, pageable);
+
             return pageRetriever.loadPage(query, pageable, taskConverter);
+        }
+
+        public virtual IPage<TaskModel> getHistoryTasks(string processInstanceId, Pageable pageable)
+        {
+            IHistoricTaskInstanceQuery query = historyService.createHistoricTaskInstanceQuery().processInstanceId(processInstanceId);
+            historicSortApplier.applySort(query, pageable);
+
+            return pageRetriever.loadPage(query, pageable, historicTaskInstanceConverter);
         }
 
         public virtual IUserGroupLookupProxy UserGroupLookupProxy

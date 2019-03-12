@@ -37,8 +37,18 @@ namespace BpmnWebTest
 
             services.AddCors();
 
-            services.AddOpenApiDocument(doc => doc.DocumentName = "v1 open api");
-            services.AddSwaggerDocument(doc => doc.DocumentName = "v1 swagger");
+#if DEBUG
+            services.AddOpenApiDocument(doc =>
+            {
+                doc.DocumentName = "Workflow OpenAPI v1";
+                doc.Title = "工作流API";
+            });
+            services.AddSwaggerDocument(doc =>
+            {
+                doc.DocumentName = "Workflow Swagger v1";
+                doc.Title = "工作流API";
+            });
+#endif
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,7 +59,7 @@ namespace BpmnWebTest
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(cors => 
+            app.UseCors(cors =>
                 cors.AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowAnyOrigin());
@@ -58,8 +68,10 @@ namespace BpmnWebTest
 
             app.UseMvc();
 
+#if DEBUG
             app.UseSwagger();
             app.UseSwaggerUi3();
+#endif
         }
     }
 }

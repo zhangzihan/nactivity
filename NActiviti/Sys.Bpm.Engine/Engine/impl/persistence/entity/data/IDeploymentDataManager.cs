@@ -22,11 +22,11 @@ namespace org.activiti.engine.impl.persistence.entity.data
     {
         IDeploymentEntity findLatestDeploymentByName(string deploymentName);
 
-        long findDeploymentCountByQueryCriteria(DeploymentQueryImpl deploymentQuery);
+        long findDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery);
 
-        IList<IDeployment> findDeploymentsByQueryCriteria(DeploymentQueryImpl deploymentQuery, Page page);
+        IList<IDeployment> findDeploymentsByQueryCriteria(IDeploymentQuery deploymentQuery, Page page);
 
-        IList<IDeployment> findDeploymentDraftsByName(string name);
+        IList<IDeployment> findDeploymentDrafts(IDeploymentQuery deploymentQuery);
 
         IList<string> getDeploymentResourceNames(string deploymentId);
 

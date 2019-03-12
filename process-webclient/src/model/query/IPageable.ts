@@ -2,7 +2,7 @@ import { ISort } from "./ISort";
 
 export interface IPageable {
 
-  offset: number;
+  pageNo: number;
 
   pageSize: number;
 

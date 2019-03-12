@@ -37,6 +37,8 @@ namespace org.activiti.engine.impl
         public static readonly ProcessInstanceQueryProperty PROCESS_DEFINITION_KEY = new ProcessInstanceQueryProperty("ProcessDefinitionKey");
         public static readonly ProcessInstanceQueryProperty PROCESS_DEFINITION_ID = new ProcessInstanceQueryProperty("ProcessDefinitionId");
         public static readonly ProcessInstanceQueryProperty TENANT_ID = new ProcessInstanceQueryProperty("RES.TENANT_ID_");
+        public static readonly ProcessInstanceQueryProperty PROCESS_EXECUTION_NAME = new ProcessInstanceQueryProperty("RES.NAME_");
+        public static readonly ProcessInstanceQueryProperty PROCESS_EXECUTION_STARTDATE = new ProcessInstanceQueryProperty("RES.START_TIME_");
 
         private string name;
 

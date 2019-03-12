@@ -1,6 +1,6 @@
 
 interface IProcessDefineService {
-    latest() : Promise<any>;
+  latest(query: any): Promise<any>;
 
-    getProcessModel(id) : Promise<string>
+  getProcessModel(id): Promise<string>
 }

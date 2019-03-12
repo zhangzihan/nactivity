@@ -19,9 +19,9 @@ namespace org.activiti.api.runtime.shared.query
         public Sort Sort { get; set; }
 
         /// <summary>
-        /// 起始位置
+        /// 页编号
         /// </summary>
-        public int Offset { get; set; }
+        public int PageNo { get; set; }
 
         /// <summary>
         /// 每页大小

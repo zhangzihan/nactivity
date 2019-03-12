@@ -1,3 +1,4 @@
+import { DirectionEnum } from 'model/query/ISort';
 import { inject, observable } from "aurelia-framework";
 import { EventAggregator } from "aurelia-event-aggregator";
 
@@ -355,7 +356,16 @@ export class Processes {
 
   activate(model, nctx) {
     this.es.subscribe("deploied", (wf) => {
-      this.processDefineService.latest().then(data => this.defines = data);
+      this.processDefineService.latest({
+        pageable: {
+          pageNo: 1,
+          pageSize: 1000,
+          sort: [{
+            property: 'name',
+            direction: DirectionEnum.asc
+          }]
+        }
+      }).then(data => this.defines = data);
     });
   }
 
@@ -400,6 +410,15 @@ export class Processes {
   }
 
   refresh() {
-    this.processDefineService.latest().then(data => this.defines = data);
+    this.processDefineService.latest({
+      pageable: {
+        pageNo: 1,
+        pageSize: 1000,
+        sort: [{
+          property: 'name',
+          direction: DirectionEnum.asc
+        }]
+      }
+    }).then(data => this.defines = data);
   }
 }

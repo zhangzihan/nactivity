@@ -86,7 +86,7 @@ namespace org.activiti.engine.impl.cmd
 
                         if ((existingDeployment != null) && !deploymentsDiffer(deployment, existingDeployment))
                         {
-                            commandContext.ProcessEngineConfiguration.DeploymentEntityManager.removeDrafts(deployment.Name);
+                            commandContext.ProcessEngineConfiguration.DeploymentEntityManager.removeDrafts(deployment.TenantId, deployment.Name);
 
                             return existingDeployment;
                         }
@@ -121,7 +121,7 @@ namespace org.activiti.engine.impl.cmd
                     commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, deployment));
                 }
 
-                commandContext.ProcessEngineConfiguration.DeploymentEntityManager.removeDrafts(deployment.Name);
+                commandContext.ProcessEngineConfiguration.DeploymentEntityManager.removeDrafts(deployment.TenantId, deployment.Name);
 
                 return deployment;
             }

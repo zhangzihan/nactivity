@@ -55,6 +55,7 @@ namespace Sys.Data
         {
             dbTypes["System.Data.SqlClient"] = "System.Data.SqlClient.SqlClientFactory,System.Data.SqlClient";
             dbTypes["MySql"] = "MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data";
+            dbTypes["H2Sql"] = "System.Data.H2.H2ClientFactory,H2Sharp";
         }
 
         //private string connectionString;
@@ -125,6 +126,11 @@ namespace Sys.Data
             get
             {
                 string connectionString = options.CurrentValue.ConnectionString;
+
+                if (options.CurrentValue.ProviderName == "H2Sql")
+                {
+                    return connectionString;
+                }
 
                 DbConnectionStringBuilder dsb = new DbConnectionStringBuilder();
                 dsb.ConnectionString = connectionString;

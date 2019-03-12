@@ -7,19 +7,19 @@ import { IResources } from 'model/query/IResources';
 
 export class ProcessDefinitionDeployerService implements IProcessDefinitionDeployerService {
 
-  private readonly serviceUrl: string = "/workflow/process-deployer";
+  private readonly controller: string = "workflow/process-deployer";
 
   save(deployer: IProcessDefinitionDeployer): Promise<any> {
     return new Promise((res, rej) => {
-      Axios.post(`${contants.serverUrl}${this.serviceUrl}/save`, deployer).then(data => {
+      Axios.post(`${contants.serverUrl}/${this.controller}/save`, deployer).then(data => {
         res(data.data);
       });
     });
   }
 
-  latest(query: any): Promise<IResources> {
+  latest(query: any): Promise<IResources<any>> {
     return new Promise((res, rej) => {
-      Axios.post(`${contants.serverUrl}${this.serviceUrl}/latest`, query).then(data => {
+      Axios.post(`${contants.serverUrl}/${this.controller}/latest`, query).then(data => {
         res(data.data);
       });
     });
@@ -27,15 +27,15 @@ export class ProcessDefinitionDeployerService implements IProcessDefinitionDeplo
 
   deploy(deployer: IProcessDefinitionDeployer): Promise<any> {
     return new Promise((res, rej) => {
-      Axios.post(`${contants.serverUrl}${this.serviceUrl}`, deployer).then(data => {
+      Axios.post(`${contants.serverUrl}/${this.controller}`, deployer).then(data => {
         res(data.data);
       });
     });
   }
 
-  allDeployments(query: any): Promise<IResources> {
+  allDeployments(query: any): Promise<IResources<any>> {
     return new Promise((res, rej) => {
-      Axios.post(`${contants.serverUrl}${this.serviceUrl}/list`, query).then(data => {
+      Axios.post(`${contants.serverUrl}/${this.controller}/list`, query).then(data => {
         res(data.data);
       });
     });
@@ -43,7 +43,7 @@ export class ProcessDefinitionDeployerService implements IProcessDefinitionDeplo
 
   remove(id: string): Promise<any> {
     return new Promise((res, rej) => {
-      Axios.get(`${contants.serverUrl}${this.serviceUrl}/${id}/remove`).then(data => {
+      Axios.get(`${contants.serverUrl}/${this.controller}/${id}/remove`).then(data => {
         res(data.data);
       });
     });
@@ -51,7 +51,7 @@ export class ProcessDefinitionDeployerService implements IProcessDefinitionDeplo
 
   getProcessModel(id: string): Promise<string> {
     return new Promise((res, rej) => {
-      Axios.get(`${contants.serverUrl}${this.serviceUrl}/${id}/processmodel`).then(data => {
+      Axios.get(`${contants.serverUrl}/${this.controller}/${id}/processmodel`).then(data => {
         res(data.data);
       });
     });

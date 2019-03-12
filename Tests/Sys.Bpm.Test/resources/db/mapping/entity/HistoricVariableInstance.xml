@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.HistoricVariableInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+
+  <!-- HISTORIC PROCESS VARIABLE RESULTMAP -->
+  <ResultMap Id="historicProcessVariableResultMap" ResultType="org.activiti.engine.impl.persistence.entity.HistoricVariableInstanceEntityImpl,Sys.Bpm.Engine">
+    <Result Property="id" Column="ID_" />
+    <Result Property="processInstanceId" Column="PROC_INST_ID_" />
+    <Result Property="executionId" Column="EXECUTION_ID_" />
+    <Result Property="taskId" Column="TASK_ID_" />
+    <Result Property="name" Column="NAME_" />
+    <Result Property="revision" Column="REV_" />
+    <Result Property="variableType" Column="VAR_TYPE_" TypeHandler="变量类型" />
+    <Result Property="byteArrayRef" Column="BYTEARRAY_ID_" TypeHandler="二进制引用" />
+    <Result Property="doubleValue" Column="DOUBLE_" />
+    <Result Property="textValue" Column="TEXT_" />
+    <Result Property="textValue2" Column="TEXT2_" />
+    <Result Property="longValue" Column="LONG_" />
+    <Result Property="createTime" Column="CREATE_TIME_" />
+    <Result Property="lastUpdatedTime" Column="LAST_UPDATED_TIME_" />
+  </ResultMap>
+
+  <ParameterMap Id="insupVariableInstance">
+    <Parameter Property="(Items_)?byteArrayRef(_p\d)?" TypeHandler="二进制引用" />
+  </ParameterMap>
+
+  <!-- HISTORIC PROCESS VARIABLE INSERT -->
+
+  <Insert Id="insertHistoricVariableInstance" ParameterMap="insupVariableInstance">
+    insert into ACT_HI_VARINST (ID_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, NAME_, REV_, VAR_TYPE_, BYTEARRAY_ID_, DOUBLE_, LONG_ , TEXT_, TEXT2_, CREATE_TIME_, LAST_UPDATED_TIME_)
+    values (
+    #{id},
+    #{processInstanceId},
+    #{executionId},
+    #{taskId},
+    #{variableName},
+    #{revision},
+    #{variableType},
+    #{byteArrayRef},
+    #{doubleValue},
+    #{longValue},
+    #{textValue},
+    #{textValue2},
+    #{createTime},
+    #{lastUpdatedTime}
+    )
+  </Insert>
+
+  <Insert Id="bulkInsertHistoricVariableInstance" ParameterMap="insupVariableInstance">
+    insert into ACT_HI_VARINST (ID_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, NAME_, REV_, VAR_TYPE_, BYTEARRAY_ID_, DOUBLE_, LONG_ , TEXT_, TEXT2_, CREATE_TIME_, LAST_UPDATED_TIME_)
+    values
+    <For Property="Items" Key="p" Separator=",">
+      (#{id},
+      #{processInstanceId},
+      #{executionId},
+      #{taskId},
+      #{variableName},
+      #{revision},
+      #{variableType},
+      #{byteArrayRef},
+      #{doubleValue},
+      #{longValue},
+      #{textValue},
+      #{textValue2},
+      #{createTime},
+      #{lastUpdatedTime})
+    </For>
+  </Insert>
+
+  <!-- HISTORIC PROCESS VARIABLE UPDATE -->
+
+  <Update Id="updateHistoricVariableInstance" ParameterMap="insupVariableInstance">
+    update ACT_HI_VARINST set
+    EXECUTION_ID_ = #{executionId},
+    REV_ = #{revisionNext},
+    BYTEARRAY_ID_ = #{byteArrayRef},
+    DOUBLE_ = #{doubleValue},
+    LONG_ = #{longValue},
+    TEXT_ = #{textValue},
+    TEXT2_ = #{textValue2},
+    VAR_TYPE_ = #{variableType},
+    LAST_UPDATED_TIME_ = #{lastUpdatedTime}
+    where ID_ = #{id}
+    and REV_ = #{revision}
+  </Update>
+
+  <!-- HISTORIC PROCESS VARIABLE DELETE -->
+
+  <Delete Id="deleteHistoricVariableInstance">
+    delete from ACT_HI_VARINST where ID_ = #{id} and REV_ = #{revision}
+  </Delete>
+
+  <Delete Id="bulkDeleteHistoricVariableInstance">
+    delete from ACT_HI_VARINST where
+    <For Key="variable" Property="list" Separator=" or ">
+      ID_ = #{id}
+    </For>
+  </Delete>
+
+  <!-- HISTORIC VARIABLE SELECT -->
+
+  <Statement Id="executionVariableOperator">
+    <Switch>
+      <Case Property="queryVariableValue.operator.equals('EQUALS')">=</Case>
+      <Case Property="queryVariableValue.operator.equals('NOT_EQUALS')">&lt;&gt;</Case>
+      <Case Property="queryVariableValue.operator.equals('GREATER_THAN')">&gt;</Case>
+      <Case Property="queryVariableValue.operator.equals('GREATER_THAN_OR_EQUAL')">&gt;=</Case>
+      <Case Property="queryVariableValue.operator.equals('LESS_THAN')">&lt;</Case>
+      <Case Property="queryVariableValue.operator.equals('LESS_THAN_OR_EQUAL')">&lt;=</Case>
+    </Switch>
+  </Statement>
+
+  <Statement Id="selectHistoricVariableInstanceByQueryCriteriaSql">
+    from ACT_HI_VARINST RES
+    <Where>
+      <IsNotNull Property="id != null">
+        RES.ID_ = #{id}
+      </IsNotNull>
+      <IsNotNull Property="processInstanceId != null">
+        and RES.PROC_INST_ID_ = #{processInstanceId}
+      </IsNotNull>
+      <IsNotNull Property="executionId != null">
+        and RES.EXECUTION_ID_ = #{executionId}
+      </IsNotNull>
+      <IsNotNull Property="executionIds != null and !executionIds.isEmpty()">
+        and RES.EXECUTION_ID_ in
+        <For Key="item" Property="executionIds" Open="(" Separator="," Close=")">
+          #{item}
+        </For>
+      </IsNotNull>
+      <IsNotNull Property="taskId != null">
+        and RES.TASK_ID_ = #{taskId}
+      </IsNotNull>
+      <IsNotNull Property="taskIds != null and !taskIds.isEmpty()">
+        and RES.TASK_ID_ in
+        <For item="item" index="index" collection="taskIds" open="(" separator="," close=")">
+          #{item}
+        </For>
+      </IsNotNull>
+      <IsTrue Property="excludeTaskRelated">
+        and RES.TASK_ID_ is NULL
+      </IsTrue>
+      <IsNotNull Property="variableName != null">
+        and RES.NAME_ = #{variableName}
+      </IsNotNull>
+      <IsNotNull Property="variableNameLike != null">
+        and RES.NAME_ like #{variableNameLike}${wildcardEscapeClause}
+      </IsNotNull>
+
+      <!-- PLEASE NOTE: If you change anything have a look into the Execution, the same query object is used there! -->
+      <IsNotNull Property="queryVariableValue != null" >
+        <IsNotNull Property="!queryVariableValue.type.equals('null')">
+          <!-- When operator is not-equals or type of value is null, type doesn't matter! -->
+          and RES.VAR_TYPE_ = #{queryVariableValue.type}
+        </IsNotNull>
+        <IsNotNull Property="queryVariableValue.textValue != null &amp;&amp; queryVariableValue.longValue == null &amp;&amp; queryVariableValue.doubleValue == null">
+          and RES.TEXT_
+          <Switch>
+            <Case Property="queryVariableValue.operator.equals('LIKE') || queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">LIKE</Case>
+            <Default>
+              <Include RefId="executionVariableOperator" />
+            </Default>
+          </Switch>
+          #{queryVariableValue.textValue}
+          <Switch>
+            <Case Property="queryVariableValue.operator.equals('LIKE') || queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
+          </Switch>
+        </IsNotNull>
+        <IsNotNull Property="queryVariableValue.textValue2 != null">
+          and RES.TEXT2_
+          <Switch>
+            <Case Property="queryVariableValue.operator.equals('LIKE') || queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">LIKE</Case>
+            <Default>
+              <Include RefId="executionVariableOperator" />
+            </Default>
+          </Switch>
+          #{queryVariableValue.textValue2}
+          <Switch>
+            <Case Property="queryVariableValue.operator.equals('LIKE') || queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
+          </Switch>
+        </IsNotNull>
+        <IsNotNull Property="queryVariableValue.longValue != null">
+          and RES.LONG_
+          <Include RefId="executionVariableOperator" />
+          #{queryVariableValue.longValue}
+        </IsNotNull>
+        <IsNotNull Property="queryVariableValue.doubleValue != null">
+          and RES.DOUBLE_
+          <Include RefId="executionVariableOperator" />
+          #{queryVariableValue.doubleValue}
+        </IsNotNull>
+        <!-- Null variable type -->
+        <IsNotNull Property="queryVariableValue.textValue == null &amp;&amp; queryVariableValue.textValue2 == null &amp;&amp; queryVariableValue.longValue == null &amp;&amp; queryVariableValue.doubleValue == null">
+          <Switch>
+            <Case Property="queryVariableValue.operator.equals('NOT_EQUALS')">
+              and (RES.TEXT_ is not null or RES.TEXT2_ is not null or RES.LONG_ is not null or RES.DOUBLE_ is not null or RES.BYTEARRAY_ID_ is not null)
+            </Case>
+            <Default>
+              and RES.TEXT_ is null and RES.TEXT2_ is null and RES.LONG_ is null and RES.DOUBLE_ is null and RES.BYTEARRAY_ID_ is null
+            </Default>
+          </Switch>
+        </IsNotNull>
+      </IsNotNull>
+    </Where>
+  </Statement>
+
+  <Select Id="selectHistoricVariableInstanceByTaskId" ResultMap="historicProcessVariableResultMap">
+    select * from ACT_HI_VARINST where TASK_ID_ = #{taskId}
+  </Select>
+
+  <Select Id="selectHistoricVariableInstanceByProcessInstanceId" ResultMap="historicProcessVariableResultMap">
+    select * from ACT_HI_VARINST where PROC_INST_ID_ = #{processInstanceId}
+  </Select>
+
+  <Select Id="selectHistoricVariableInstanceByQueryCriteria" ResultMap="historicProcessVariableResultMap">
+    ${limitBefore}
+    select RES.* ${limitBetween}
+    <Include RefId="selectHistoricVariableInstanceByQueryCriteriaSql"/>
+    ${orderBy}
+    ${limitAfter}
+  </Select>
+
+  <Select Id="selectHistoricVariableInstanceCountByQueryCriteria">
+    select count(RES.ID_)
+    <Include RefId="selectHistoricVariableInstanceByQueryCriteriaSql"/>
+  </Select>
+
+  <Select Id="selectHistoricVariableInstanceByVariableInstanceId" ResultMap="historicProcessVariableResultMap">
+    select * from ACT_HI_VARINST where ID_ = #{variableInstanceId}
+  </Select>
+
+  <Select Id="selectHistoricVariableInstanceByNativeQuery" ResultMap="historicProcessVariableResultMap">
+    <IsNotNull Property="resultType == 'LIST_PAGE'">
+      ${limitBefore}
+    </IsNotNull>
+    ${sql}
+    <IsNotNull Property="resultType == 'LIST_PAGE'">
+      ${limitAfter}
+    </IsNotNull>
+  </Select>
+
+  <Select Id="selectHistoricVariableInstanceByNativeQuery_mssql_or_db2" ResultMap="historicProcessVariableResultMap">
+    <IsNotNull Property="resultType == 'LIST_PAGE'">
+      ${limitBeforeNativeQuery}
+    </IsNotNull>
+    ${sql}
+    <IsNotNull Property="resultType == 'LIST_PAGE'">
+      ${limitAfter}
+    </IsNotNull>
+  </Select>
+
+  <Select Id="selectHistoricVariableInstanceCountByNativeQuery">
+    ${sql}
+  </Select>
+  
+</SmartSqlMap>

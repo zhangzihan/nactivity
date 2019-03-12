@@ -24,7 +24,7 @@ namespace org.activiti.engine.impl.persistence.cache
     public class EntityCacheImpl : IEntityCache
     {
 
-        protected internal IDictionary<Type, IDictionary<string, CachedEntity>> cachedObjects = new Dictionary<Type, IDictionary<string, CachedEntity>>();
+        protected internal ConcurrentDictionary<Type, IDictionary<string, CachedEntity>> cachedObjects = new ConcurrentDictionary<Type, IDictionary<string, CachedEntity>>();
 
         public virtual CachedEntity put(IEntity entity, bool storeState)
         {
@@ -32,7 +32,7 @@ namespace org.activiti.engine.impl.persistence.cache
             if (classCache == null)
             {
                 classCache = new Dictionary<string, CachedEntity>();
-                cachedObjects[entity.GetType()] = classCache;
+                cachedObjects.TryAdd(entity.GetType(), classCache);
             }
             CachedEntity cachedObject = new CachedEntity(entity, storeState);
             classCache[entity.Id] = cachedObject;
@@ -74,7 +74,9 @@ namespace org.activiti.engine.impl.persistence.cache
             {
                 if (entityClass.IsAssignableFrom(clazz))
                 {
-                    return cachedObjects[clazz];
+                    cachedObjects.TryGetValue(clazz, out IDictionary<string, CachedEntity> ret);
+
+                    return ret;
                 }
             }
             return null;

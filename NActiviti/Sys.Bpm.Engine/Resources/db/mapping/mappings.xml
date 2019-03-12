@@ -4,7 +4,9 @@
   <Settings IsWatchConfigFile="true" IgnoreParameterCase="true" IsCacheEnabled="true" />
   <Database>
     <DbProvider Name="MySqlClientFactory" ParameterPrefix="?" Type="MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data"/>
-    <!--<DbProvider Name="OracleClientFactory" ParameterPrefix=":" Type="Oracle.ManagedDataAccess.Client.OracleClientFactory,Oracle.ManagedDataAccess"/>
+    <!--
+    <DbProvider Name="H2ClientFactory" ParameterPrefix="?" Type="System.Data.H2.H2ClientFactory,H2Sharp"/>
+    <DbProvider Name="OracleClientFactory" ParameterPrefix=":" Type="Oracle.ManagedDataAccess.Client.OracleClientFactory,Oracle.ManagedDataAccess"/>
     <DbProvider Name="SqlClientFactory" ParameterPrefix="@" Type="System.Data.SqlClient.SqlClientFactory,System.Data.SqlClient"/>-->
     <Write Name="WriteDB" ConnectionString="server=106.75.100.106;database=activiti;uid=root;pwd=_sys31UC;charset='gbk'"/>
     <Read Name="ReadDB-0" ConnectionString="server=106.75.100.106;database=activiti;uid=root;pwd=_sys31UC;charset='gbk'"/>

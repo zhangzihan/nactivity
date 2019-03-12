@@ -1,17 +1,6 @@
-Start.... selectProcessDefinitionsByQueryCriteria
-Variables:False
-Enter variables replace
-RealSql:      select RES.*  from ACT_RE_PROCDEF RES where  RES.VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = RES.KEY_   and (TENANT_ID_ = '' or TENANT_ID_ is null) )   and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)       
-SQL:      select RES.*  from ACT_RE_PROCDEF RES where  RES.VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = RES.KEY_   and (TENANT_ID_ = '' or TENANT_ID_ is null) )   and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)       Enter variables replace
-Enter variables replace
-Enter variables replace
-Enter variables replace
-Enter variables replace
-Enter variables replace
-Enter variables replace
-Enter variables replace
-Enter variables replace
-Enter variables replace
-Enter variables replace
-Enter variables replace
-Enter variables replace
+   at org.activiti.engine.impl.bpmn.parser.BpmnParse.execute() in C:\Project\31Huiyi\NActivity\NActiviti\Sys.Bpm.Engine\Engine\impl\bpmn\parser\BpmnParse.cs:line 199
+   at org.activiti.engine.impl.bpmn.deployer.ParsedDeploymentBuilder.createBpmnParseFromResource(IResourceEntity resource) in C:\Project\31Huiyi\NActivity\NActiviti\Sys.Bpm.Engine\Engine\impl\bpmn\deployer\ParsedDeploymentBuilder.cs:line 97
+   at org.activiti.engine.impl.bpmn.deployer.ParsedDeploymentBuilder.build() in C:\Project\31Huiyi\NActivity\NActiviti\Sys.Bpm.Engine\Engine\impl\bpmn\deployer\ParsedDeploymentBuilder.cs:line 50
+   at org.activiti.engine.impl.bpmn.deployer.BpmnDeployer.deploy(IDeploymentEntity deployment, IDictionary`2 deploymentSettings) in C:\Project\31Huiyi\NActivity\NActiviti\Sys.Bpm.Engine\Engine\impl\bpmn\deployer\BpmnDeployer.cs:line 45
+   at org.activiti.engine.impl.persistence.deploy.DeploymentManager.deploy(IDeploymentEntity deployment, IDictionary`2 deploymentSettings) in C:\Project\31Huiyi\NActivity\NActiviti\Sys.Bpm.Engine\Engine\impl\persistence\deploy\DeploymentManager.cs:line 52
+   at org.activiti.engine.impl.cmd.DeployCmd`1.executeDeploy(ICommandContext commandContext) in C:\Project\31Huiyi\NActivity\NActiviti\Sys.Bpm.Engine\Engine\impl\cmd\DeployCmd.cs:line 112

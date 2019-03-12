@@ -24,7 +24,8 @@ namespace org.activiti.cloud.services.core.pageable
     {
         public virtual IPage<TARGET> loadPage<SOURCE, TARGET, T1>(IQuery<T1, SOURCE> query, Pageable pageable, IModelConverter<SOURCE, TARGET> converter)
         {
-            IList<SOURCE> elements = query.listPage(pageable.Offset, pageable.PageSize);
+            int firstResult = (pageable.PageNo - 1) * pageable.PageSize;
+            IList<SOURCE> elements = query.listPage(firstResult, pageable.PageSize);
             long count = query.count();
             return new PageImpl<TARGET>(converter.from(elements), count);
         }
