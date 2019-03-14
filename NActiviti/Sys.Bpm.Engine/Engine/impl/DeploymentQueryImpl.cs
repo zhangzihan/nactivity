@@ -292,6 +292,15 @@ namespace org.activiti.engine.impl
             set => deploymentNameLike(value);
         }
 
+        public virtual string BusinessKey
+        {
+            get
+            {
+                return businessKey;
+            }
+            set => deploymentBusinessKey(value);
+        }
+
         public virtual string Category
         {
             get

@@ -8,6 +8,10 @@ namespace org.activiti.api.runtime.shared.query
     /// </summary>
     public class Pageable
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
         public Pageable()
         {
 

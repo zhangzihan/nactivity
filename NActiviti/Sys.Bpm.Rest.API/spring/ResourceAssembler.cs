@@ -1,5 +1,8 @@
 ﻿namespace org.springframework.hateoas
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IResourceAssembler<T, D> where D : ResourceSupport
     {
 

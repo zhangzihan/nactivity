@@ -22,13 +22,22 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.rest.assemblers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class TaskResourceAssembler : ResourceAssemblerSupport<TaskModel, TaskResource>
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskResourceAssembler() : base(typeof(TaskControllerImpl), typeof(TaskResource))
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override TaskResource toResource(TaskModel task)
         {
             //IList<Link> links = new List<Link>();

@@ -18,8 +18,16 @@ using org.springframework.hateoas;
 
 namespace org.activiti.cloud.services.rest.api.resources
 {
+
+    /// <summary>
+    /// 流程定义资源描述
+    /// </summary>
     public class ProcessDefinitionResource : Resource<ProcessDefinition>
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public ProcessDefinitionResource(ProcessDefinition content, params Link[] links) : base(content, links)
         {

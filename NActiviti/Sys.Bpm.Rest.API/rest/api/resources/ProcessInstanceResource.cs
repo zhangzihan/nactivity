@@ -18,9 +18,17 @@ using org.springframework.hateoas;
 
 namespace org.activiti.cloud.services.rest.api.resources
 {
+
+    /// <summary>
+    /// 流程实例资源描述
+    /// </summary>
     public class ProcessInstanceResource : Resource<ProcessInstance>
     {
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessInstanceResource(ProcessInstance processInstance, params Link[] links) : base(processInstance, links)
         {
         }

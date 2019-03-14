@@ -5,17 +5,26 @@ using System.Linq;
 
 namespace org.springframework.hateoas
 {
+    /// <summary>
+    /// 资源
+    /// </summary>
     public class Resources<T> : ResourceSupport
     {
         private readonly IEnumerable<T> resourcesList;
 
         private readonly long total;
 
+        /// <summary>
+        /// 资源
+        /// </summary>
         public Resources(IEnumerable<T> resourcesList)
         {
             this.resourcesList = resourcesList;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonConstructor]
         public Resources([JsonProperty("list")]IEnumerable<T> resourcesList, 
             [JsonProperty("totalCount")]long total, 
@@ -48,6 +57,9 @@ namespace org.springframework.hateoas
         /// </summary>
         public long TotalCount { get => total; }
 
+        /// <summary>
+        /// 资源内容列表
+        /// </summary>
         public IEnumerable<T> List { get => resourcesList; }
     }
 }

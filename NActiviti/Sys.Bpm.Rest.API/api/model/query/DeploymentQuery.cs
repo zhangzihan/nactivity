@@ -4,8 +4,14 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.api.model
 {
+    /// <summary>
+    /// 部署查询对象
+    /// </summary>
     public class DeploymentQuery : AbstractQuery
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public DeploymentQuery()
         {
 

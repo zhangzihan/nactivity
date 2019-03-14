@@ -23,11 +23,17 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.core.pageable.sort
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class DeploymentSortApplier : BaseSortApplier<IDeploymentQuery, IDeployment>
     {
 
         private IDictionary<string, IQueryProperty> orderByProperties = new Dictionary<string, IQueryProperty>(StringComparer.OrdinalIgnoreCase);
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DeploymentSortApplier()
         {
             orderByProperties["id"] = DeploymentQueryProperty.DEPLOYMENT_ID;
@@ -35,11 +41,17 @@ namespace org.activiti.cloud.services.core.pageable.sort
             orderByProperties["deployTime"] = DeploymentQueryProperty.DEPLOY_TIME;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal override void applyDefaultSort(IDeploymentQuery query)
         {
             query.orderByDeploymentName().asc();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal override IQueryProperty getOrderByProperty(Sort.Order order)
         {
             orderByProperties.TryGetValue(order.Property, out IQueryProperty qp);

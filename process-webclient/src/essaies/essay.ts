@@ -8,7 +8,7 @@ import Axios from 'axios';
 export class Essay extends BaseForm {
 
     constructor(public model: EssayModel, ...args) {
-        super(args[0], args[1])
+        super(args[0], args[1], args[2])
     }
 
     submit() {
@@ -17,11 +17,11 @@ export class Essay extends BaseForm {
             return;
         }
 
-        Axios.post(`${contants.serverUrl}/workflow/process-instances/start`, {
+        this.httpInvoker.post(`${contants.serverUrl}/workflow/process-instances/start`, {
             processDefinitionKey: this.workflow.key,
             businessKey: this.workflow.businessKey,
             variables: {
-                "name": this.user.name
+                "name": this.user.current.name
             }
         }).then((res) => {
             alert('征文已提交');

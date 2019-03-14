@@ -19,12 +19,21 @@ namespace org.activiti.cloud.services.events
 {
     using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IProcessStartedEvent : IProcessEngineEvent
     {
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns> the id of the process instance of the nested process that starts the current process instance, or null if
         ///         the current process instance is not started into a nested process. </returns>
         string NestedProcessInstanceId { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns> the id of the process definition of the nested process that starts the current process instance, or null
         ///         if the current process instance is not started into a nested process. </returns>
         string NestedProcessDefinitionId { get; }

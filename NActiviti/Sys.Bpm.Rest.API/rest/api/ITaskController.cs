@@ -16,7 +16,7 @@ namespace org.activiti.cloud.services.rest.api
         /// <summary>
         /// 获取所有任务
         /// </summary>
-        /// <param name="pageable">分页</param>
+        /// <param name="query">分页</param>
         /// <returns></returns>
        Task<Resources<TaskModel>> getTasks(TaskQuery query);
 

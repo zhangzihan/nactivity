@@ -19,20 +19,36 @@ namespace org.activiti.cloud.services.events
 {
     using TaskModel = org.activiti.cloud.services.api.model.TaskModel;
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class TaskActivatedEventImpl : AbstractProcessEngineEvent, ITaskActivatedEvent
     {
 
         private TaskModel task;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskActivatedEventImpl()
         {
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskActivatedEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, TaskModel task) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
             this.task = task;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual TaskModel Task
         {
             get
@@ -40,6 +56,10 @@ namespace org.activiti.cloud.services.events
                 return task;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override string EventType
         {

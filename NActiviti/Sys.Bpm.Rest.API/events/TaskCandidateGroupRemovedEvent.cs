@@ -3,10 +3,16 @@
 	using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
 	using TaskCandidateGroup = org.activiti.cloud.services.api.model.TaskCandidateGroup;
 
-	public interface ITaskCandidateGroupRemovedEvent : IProcessEngineEvent
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface ITaskCandidateGroupRemovedEvent : IProcessEngineEvent
 	{
 
-		TaskCandidateGroup TaskCandidateGroup {get;}
+        /// <summary>
+        /// 
+        /// </summary>
+        TaskCandidateGroup TaskCandidateGroup {get;}
 	}
 
 }

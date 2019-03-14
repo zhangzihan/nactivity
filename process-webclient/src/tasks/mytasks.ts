@@ -3,14 +3,16 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { inject, observable } from "aurelia-framework";
 import { LoginUser } from 'loginuser';
 import contants from 'contants';
+import { EventBus } from 'EventBus';
+import { HttpInvoker } from 'services/httpInvoker';
 
 
-@inject('loginUser', EventAggregator)
+@inject('loginUser', 'eventBus', 'httpInvoker')
 export class MyTasks {
 
   tasks = [];
 
-  constructor(private user: LoginUser, private es: EventAggregator) {
+  constructor(private user: LoginUser, private es: EventBus, private httpInvoker: HttpInvoker) {
   }
 
   activate(model, nctx) {
@@ -18,7 +20,7 @@ export class MyTasks {
       this.loadMyTasks();
     });
 
-    this.es.subscribe('userLogined', (user) => {
+    this.es.subscribe('userLogined', (u) => {
       this.loadMyTasks();
     })
   }
@@ -36,7 +38,7 @@ export class MyTasks {
   }
 
   removeTask() {
-    Axios.post(`${contants.serverUrl}/workflow/tasks/${this.select.id}/terminate`)
+    this.httpInvoker.post(`${contants.serverUrl}/workflow/tasks/${this.select.id}/terminate`)
       .then(() => {
         this.es.publish("reloadMyTasks");
       })
@@ -46,7 +48,7 @@ export class MyTasks {
   }
 
   loadMyTasks() {
-    Axios.get(`${contants.serverUrl}/workflow/tasks/${this.user.name}/mytasks`)
+    this.httpInvoker.get(`${contants.serverUrl}/workflow/tasks/${this.user.current.id}/mytasks`)
       .then((tasks) => {
         this.tasks = tasks.data.list;
 

@@ -14,6 +14,10 @@ namespace org.activiti.cloud.services.api.model
         /// </summary>
         public string ProcessInstanceId { get; set; }
 
+
+        /// <summary>
+        /// 包含已完成的实例
+        /// </summary>
         public bool IncludeCompleted { get; set; } = true;
     }
 }

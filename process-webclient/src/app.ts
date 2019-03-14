@@ -1,16 +1,29 @@
-import { Aurelia } from 'aurelia-framework';
-import { Router, RouterConfiguration } from 'aurelia-router';
+import { WorkflowDocument } from './WorkflowDocument';
+import { Aurelia, inject, noView } from 'aurelia-framework';
+import { Router, RouterConfiguration, Redirect } from 'aurelia-router';
 import { PLATFORM } from 'aurelia-pal';
 
+@inject('document')
 export class App {
   router: Router;
 
+  constructor(private doc: WorkflowDocument) {
+
+  }
+
   configureRouter(config: RouterConfiguration, router: Router) {
     config.title = 'Aurelia';
+    
+    config.addPreActivateStep({
+      run: (nav, next) => {
+        if (nav.fragment == "/proc-inst" && this.doc.workflow == null) {
+          return next.cancel(new Redirect("proc-def"));
+        }
+        return next();
+      }
+    });
+
     config.map([
-      // { route: ['', 'welcome'], name: 'welcome', moduleId: PLATFORM.moduleName('./welcome'), nav: true, title: 'Welcome' },
-      // { route: 'users', name: 'users', moduleId: PLATFORM.moduleName('./users'), nav: true, title: 'Github Users' },
-      // { route: 'child-router', name: 'child-router', moduleId: PLATFORM.moduleName('./child-router'), nav: true, title: 'Child Router' },
       {
         route: '',
         redirect: 'proc-def'
@@ -30,7 +43,7 @@ export class App {
         title: '流程实例'
       },
       {
-        route: 'proc-inst/:id',
+        route: 'proc-inst/:id/:status',
         name: 'instance',
         moduleId: PLATFORM.moduleName('./components/procinstance'),
         title: '流程实例详情'

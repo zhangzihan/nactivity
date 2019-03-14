@@ -3,6 +3,7 @@ using org.activiti.engine.impl.persistence.entity;
 using org.activiti.engine.task;
 using System;
 using System.Collections.Generic;
+using static org.activiti.cloud.services.api.model.HistoricInstance;
 using static org.activiti.cloud.services.api.model.TaskModel;
 
 /*
@@ -22,15 +23,27 @@ using static org.activiti.cloud.services.api.model.TaskModel;
 
 namespace org.activiti.cloud.services.api.model.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class HistoricTaskInstanceConverter : IModelConverter<IHistoricTaskInstance, TaskModel>
     {
 
         private readonly ListConverter listConverter;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public HistoricTaskInstanceConverter(ListConverter listConverter)
         {
             this.listConverter = listConverter;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual TaskModel from(IHistoricTaskInstance source)
         {
@@ -43,6 +56,7 @@ namespace org.activiti.cloud.services.api.model.converter
                     source.Name,
                     source.Description,
                     source.CreateTime,
+                    source.EndTime,
                     source.ClaimTime,
                     source.DueDate,
                     source.Priority,
@@ -55,22 +69,23 @@ namespace org.activiti.cloud.services.api.model.converter
             return task;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         private string calculateStatus(IHistoricTaskInstance source)
         {
-            if (source is ITaskEntity && (((ITaskEntity)source).Deleted || ((ITaskEntity)source).Canceled))
+            if (source is IHistoricTaskInstanceEntity hs && hs.Deleted)
             {
-                return Enum.GetName(typeof(TaskStatus), TaskStatus.CANCELLED);
+                return Enum.GetName(typeof(HistoricInstanceStatus), HistoricInstanceStatus.DELETED);
             }
-            else if (((ITaskEntity)source).Suspended)
-            {
-                return Enum.GetName(typeof(TaskStatus), TaskStatus.SUSPENDED);
-            }
-            else if (!string.IsNullOrWhiteSpace(source.Assignee))
-            {
-                return Enum.GetName(typeof(TaskStatus), TaskStatus.ASSIGNED);
-            }
-            return Enum.GetName(typeof(TaskStatus), TaskStatus.CREATED);
+
+            return Enum.GetName(typeof(HistoricInstanceStatus), HistoricInstanceStatus.COMPLETED);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual IList<TaskModel> from(IList<IHistoricTaskInstance> tasks)
         {

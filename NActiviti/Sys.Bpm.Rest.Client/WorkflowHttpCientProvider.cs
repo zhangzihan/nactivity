@@ -2,17 +2,27 @@
 using Sys.Bpm.Rest.Client.API;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 
 namespace Sys.Bpm.Rest.Client
 {
-    public class WorkflowHttpCientProvider
+    public class WorkflowHttpInvokerProvider
     {
-        private readonly HttpInvoker httpInvoker;
+        private readonly HttpClient httpClient;
 
-        public WorkflowHttpCientProvider(HttpInvoker httpInvoker)
+        private IHttpInvoker httpInvoker;
+
+        public WorkflowHttpInvokerProvider(HttpClient httpClient)
         {
-            this.httpInvoker = httpInvoker;
+            this.httpClient = httpClient;
+
+            CreateHttpInvoker();
+        }
+
+        private void CreateHttpInvoker()
+        {
+            httpInvoker = new HttpInvoker(httpClient);
         }
 
         public IProcessDefinitionController GetProcessDefinitionClient()

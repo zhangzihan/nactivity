@@ -220,7 +220,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 processInstanceExecution.TenantId = tenantId;
             }
 
-            string authenticatedUserId = Authentication.AuthenticatedUserId;
+            string authenticatedUserId = Authentication.AuthenticatedUser.Id;
 
             processInstanceExecution.StartTime = Context.ProcessEngineConfiguration.Clock.CurrentTime;
             processInstanceExecution.StartUserId = authenticatedUserId;
@@ -292,7 +292,7 @@ namespace org.activiti.engine.impl.persistence.entity
             subProcessInstance.SuperExecution = superExecutionEntity;
             subProcessInstance.RootProcessInstanceId = superExecutionEntity.RootProcessInstanceId;
             subProcessInstance.IsScope = true; // process instance is always a scope for all child executions
-            subProcessInstance.StartUserId = Authentication.AuthenticatedUserId;
+            subProcessInstance.StartUserId = Authentication.AuthenticatedUser.Id;
             subProcessInstance.BusinessKey = businessKey;
 
             // Store in database

@@ -18,12 +18,21 @@ namespace org.activiti.cloud.services.events.integration
 {
 	using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
 
-	public interface IntegrationEvent : IProcessEngineEvent
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IntegrationEvent : IProcessEngineEvent
 	{
 
-		string IntegrationContextId {get;}
+        /// <summary>
+        /// 
+        /// </summary>
+        string IntegrationContextId {get;}
 
-		string FlowNodeId {get;}
+        /// <summary>
+        /// 
+        /// </summary>
+        string FlowNodeId {get;}
 
 	}
 

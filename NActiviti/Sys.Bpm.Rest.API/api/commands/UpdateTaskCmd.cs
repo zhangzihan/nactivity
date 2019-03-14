@@ -20,6 +20,10 @@ using System;
 namespace org.activiti.cloud.services.api.commands
 {
 
+
+    /// <summary>
+    /// 任务更新命令
+    /// </summary>
     public class UpdateTaskCmd : ICommand
     {
 
@@ -31,10 +35,23 @@ namespace org.activiti.cloud.services.api.commands
         private string assignee;
         private string parentTaskId;
 
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         public UpdateTaskCmd()
         {
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="name">任务名称</param>
+        /// <param name="description">任务描述</param>
+        /// <param name="dueDate">过期日期</param>
+        /// <param name="priority">任务优先级</param>
+        /// <param name="assignee">任务分配人id</param>
+        /// <param name="parentTaskId">父级任务id</param>
         //[JsonConstructor]
         public UpdateTaskCmd([JsonProperty("Name")] string name,
             [JsonProperty("Description")] string description,
@@ -52,10 +69,18 @@ namespace org.activiti.cloud.services.api.commands
             this.parentTaskId = parentTaskId;
         }
 
+        /// <summary>
+        /// 命令id
+        /// </summary>
+
         public virtual string Id
         {
             get => id;
         }
+
+        /// <summary>
+        /// 任务名称
+        /// </summary>
 
         public virtual string Name
         {
@@ -63,7 +88,12 @@ namespace org.activiti.cloud.services.api.commands
             {
                 return name;
             }
+            set => name = value;
         }
+
+        /// <summary>
+        /// 任务描述
+        /// </summary>
 
         public virtual string Description
         {
@@ -71,7 +101,12 @@ namespace org.activiti.cloud.services.api.commands
             {
                 return description;
             }
+            set => description = value;
         }
+
+        /// <summary>
+        /// 过期日期
+        /// </summary>
 
         public virtual DateTime? DueDate
         {
@@ -79,7 +114,12 @@ namespace org.activiti.cloud.services.api.commands
             {
                 return dueDate;
             }
+            set => dueDate = value;
         }
+
+        /// <summary>
+        /// 任务优先级
+        /// </summary>
 
         public virtual int? Priority
         {
@@ -87,7 +127,12 @@ namespace org.activiti.cloud.services.api.commands
             {
                 return priority;
             }
+            set => priority = value;
         }
+
+        /// <summary>
+        /// 任务分配人id
+        /// </summary>
 
         public virtual string Assignee
         {
@@ -95,7 +140,12 @@ namespace org.activiti.cloud.services.api.commands
             {
                 return assignee;
             }
+            set => assignee = value;
         }
+
+        /// <summary>
+        /// 父级任务id
+        /// </summary>
 
         public virtual string ParentTaskId
         {
@@ -103,6 +153,7 @@ namespace org.activiti.cloud.services.api.commands
             {
                 return parentTaskId;
             }
+            set => parentTaskId = value;
         }
     }
 

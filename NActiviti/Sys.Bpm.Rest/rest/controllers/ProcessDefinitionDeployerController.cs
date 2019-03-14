@@ -5,6 +5,7 @@ using org.activiti.bpmn.model;
 using org.activiti.cloud.services.api.commands;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.api.model.converter;
+using org.activiti.cloud.services.core;
 using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.controllers;
@@ -22,6 +23,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Sys.Bpm.rest.controllers
 {
+    /// <inheritdoc />
     [Route(WorkflowConstants.PROC_DEP_ROUTER_V1)]
     [ApiController]
     public class ProcessDefinitionDeployerController : ControllerBase, IProcessDefinitionDeployerController
@@ -34,6 +36,7 @@ namespace Sys.Bpm.rest.controllers
 
         private readonly SecurityPoliciesApplicationService securityPoliciesApplicationService;
 
+        /// <inheritdoc />
         public ProcessDefinitionDeployerController(IProcessEngine engine,
             DeploymentConverter deploymentConverter,
             PageableDeploymentRespositoryService pageableRepositoryService,
@@ -45,6 +48,7 @@ namespace Sys.Bpm.rest.controllers
             this.securityPoliciesApplicationService = securityPoliciesApplicationService;
         }
 
+        /// <inheritdoc />
         [HttpPost("latest")]
         public Task<Resources<Deployment>> Latest(DeploymentQuery queryObj)
         {
@@ -53,6 +57,8 @@ namespace Sys.Bpm.rest.controllers
 
             return AllDeployments(queryObj);
         }
+
+        /// <inheritdoc />
 
         [HttpPost("list")]
         public Task<Resources<Deployment>> AllDeployments(DeploymentQuery queryObj)
@@ -64,6 +70,7 @@ namespace Sys.Bpm.rest.controllers
             return Task.FromResult(list);
         }
 
+        /// <inheritdoc />
         [HttpPost]
         public Task<Deployment> Deploy([FromBody]ProcessDefinitionDeployer deployer)
         {
@@ -99,6 +106,7 @@ namespace Sys.Bpm.rest.controllers
             return Task.FromResult<Deployment>(deploymentConverter.from(dep));
         }
 
+        /// <inheritdoc />
         [HttpPost("save")]
         public Task<Deployment> Save(ProcessDefinitionDeployer deployer)
         {
@@ -125,6 +133,7 @@ namespace Sys.Bpm.rest.controllers
             return Task.FromResult<Deployment>(deploymentConverter.from(dep));
         }
 
+        /// <inheritdoc />
         [HttpGet("{tenantId}/{name}/draft")]
         public Task<Deployment> Draft(string tenantId, string name)
         {
@@ -141,6 +150,7 @@ namespace Sys.Bpm.rest.controllers
             return Task.FromResult<Deployment>(defs?.Count == 0 ? null : deploymentConverter.from(defs[0]));
         }
 
+        /// <inheritdoc />
         [HttpGet("{deployId}/remove")]
         public Task<IActionResult> Remove(string deployId)
         {
@@ -149,6 +159,7 @@ namespace Sys.Bpm.rest.controllers
             return Task.FromResult<IActionResult>(Ok());
         }
 
+        /// <inheritdoc />
         [HttpGet("{id}/processmodel")]
         public Task<string> GetProcessModel(string id)
         {
@@ -165,8 +176,8 @@ namespace Sys.Bpm.rest.controllers
             return Task.FromResult<string>(xml);
         }
 
+        /// <inheritdoc />
         [HttpGet("{id}/bpmnmodel")]
-        [Produces("application/json")]
         public Task<BpmnModel> GetBpmnModel(string id)
         {
             BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();

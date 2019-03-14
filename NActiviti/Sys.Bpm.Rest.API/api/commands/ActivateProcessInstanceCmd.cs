@@ -3,6 +3,9 @@ using System;
 
 namespace org.activiti.cloud.services.api.commands
 {
+    /// <summary>
+    /// 激活流程实例命令
+    /// </summary>
     public class ActivateProcessInstanceCmd : ICommand
     {
 
@@ -10,12 +13,19 @@ namespace org.activiti.cloud.services.api.commands
 
         private string processInstanceId;
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="processInstanceId">实例id</param>
         ////[JsonConstructor]
         public ActivateProcessInstanceCmd([JsonProperty("ProcessInstanceId")]string processInstanceId)
         {
             this.processInstanceId = processInstanceId;
         }
 
+        /// <summary>
+        /// 命令id
+        /// </summary>
         public virtual string Id
         {
             get
@@ -24,6 +34,9 @@ namespace org.activiti.cloud.services.api.commands
             }
         }
 
+        /// <summary>
+        /// 流程实例id
+        /// </summary>
         public virtual string ProcessInstanceId
         {
             get

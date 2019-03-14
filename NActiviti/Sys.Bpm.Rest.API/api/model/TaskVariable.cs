@@ -2,11 +2,27 @@
 
 namespace org.activiti.cloud.services.api.model
 {
+
+    /// <summary>
+    /// 任务数据变量
+    /// </summary>
     public class TaskVariable
     {
+
+        /// <summary>
+        /// 变量范围
+        /// </summary>
         public enum TaskVariableScope
         {
+
+            /// <summary>
+            /// 本地
+            /// </summary>
             LOCAL,
+
+            /// <summary>
+            /// 全局
+            /// </summary>
             GLOBAL
         }
 
@@ -22,11 +38,24 @@ namespace org.activiti.cloud.services.api.model
 
         private TaskVariableScope scope;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskVariable()
         {
 
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="taskId">任务id</param>
+        /// <param name="name">变量名称</param>
+        /// <param name="type">变量类型</param>
+        /// <param name="value">变量值</param>
+        /// <param name="executionId">任务执行id</param>
+        /// <param name="scope">变量作用域</param>
         //[JsonConstructor]
         public TaskVariable([JsonProperty("TaskId")]string taskId,
             [JsonProperty("Name")]string name,
@@ -43,14 +72,23 @@ namespace org.activiti.cloud.services.api.model
             this.scope = scope;
         }
 
+
+        /// <summary>
+        /// 变量名
+        /// </summary>
         public virtual string Name
         {
             get
             {
                 return name;
             }
+            set => name = value;
         }
 
+
+        /// <summary>
+        /// 变量类型
+        /// </summary>
 
         public virtual string Type
         {
@@ -58,14 +96,24 @@ namespace org.activiti.cloud.services.api.model
             {
                 return type;
             }
+            set => type = value;
         }
+
+        /// <summary>
+        /// 变量值
+        /// </summary>
         public virtual object Value
         {
             get
             {
                 return value;
             }
+            set => this.value = value;
         }
+
+        /// <summary>
+        /// 任务执行id
+        /// </summary>
 
         public virtual string ExecutionId
         {
@@ -73,7 +121,12 @@ namespace org.activiti.cloud.services.api.model
             {
                 return executionId;
             }
+            set => executionId = value;
         }
+
+        /// <summary>
+        /// 任务id
+        /// </summary>
 
         public virtual string TaskId
         {
@@ -81,7 +134,12 @@ namespace org.activiti.cloud.services.api.model
             {
                 return taskId;
             }
+            set => taskId = value;
         }
+
+        /// <summary>
+        /// 变量作用域范围
+        /// </summary>
 
         public virtual TaskVariableScope Scope
         {
@@ -89,6 +147,7 @@ namespace org.activiti.cloud.services.api.model
             {
                 return scope;
             }
+            set => scope = value;
         }
     }
 

@@ -9,8 +9,16 @@ using System.Threading.Tasks;
 
 namespace Sys.Bpm.api.http
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class JsonContent : StringContent
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
         public JsonContent(object data) :
             base(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")
         {

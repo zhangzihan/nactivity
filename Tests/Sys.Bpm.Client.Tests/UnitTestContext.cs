@@ -5,11 +5,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using org.activiti.cloud.services.api.model;
+using org.activiti.cloud.services.api.model.converter;
+using org.activiti.cloud.services.core.pageable;
+using org.activiti.cloud.services.rest.api;
+using org.activiti.engine;
+using org.activiti.engine.repository;
+using Sys.Bpm.api.http;
+using Sys.Bpm.rest.controllers;
 using Sys.Bpm.Rest.Client;
 using Sys.Bpm.Services.Rest;
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Sys.Bpmn.Test
 {
@@ -40,6 +54,18 @@ namespace Sys.Bpmn.Test
         }
 
         /// <summary>
+        /// 读取bpmn文件
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public string ReadBpmn(string name)
+        {
+            string root = Path.GetDirectoryName(new Uri(typeof(UnitTestContext).Assembly.CodeBase).LocalPath);
+
+            return File.ReadAllText(Path.Combine(root, "resources\\samples", name));
+        }
+
+        /// <summary>
         /// 解析服务
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -55,14 +81,6 @@ namespace Sys.Bpmn.Test
 
         private static UnitTestContext unitTestContext;
 
-        public static UnitTestContext Instance
-        {
-            get
-            {
-                return unitTestContext;
-            }
-        }
-
         private static object syncRoot = new object();
 
         private readonly object syncClient = new object();
@@ -77,6 +95,9 @@ namespace Sys.Bpmn.Test
             {
                 if (unitTestContext == null)
                 {
+                    AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+                    AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
                     unitTestContext = new UnitTestContext();
 
                     unitTestContext.HttpContext = new DefaultHttpContext();
@@ -99,6 +120,48 @@ namespace Sys.Bpmn.Test
                 return unitTestContext;
             }
         }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+        }
+
+        private static void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        {
+        }
+
+        public Deployment DeployTestProcess()
+        {
+            IProcessDefinitionDeployerController pddc = new ProcessDefinitionDeployerController(Resolve<IProcessEngine>(),
+                Resolve<DeploymentConverter>(),
+                Resolve<PageableDeploymentRespositoryService>(),
+                null);
+
+            ProcessDefinitionDeployer pdd = new ProcessDefinitionDeployer();
+
+            pdd.BpmnXML = ReadBpmn("简单顺序流.bpmn");
+            pdd.Name = Path.GetFileNameWithoutExtension("简单顺序流");
+            pdd.TenantId = TenantId;
+            pdd.EnableDuplicateFiltering = true;
+            pdd.StartForm = "1";
+
+            return pddc.Deploy(pdd).Result;
+        }
+
+        public WorkflowHttpInvokerProvider CeateWorkflowHttpProxy()
+        {
+            HttpClient httpClient = this.TestServer.CreateClient();
+
+            string accessToken = WebUtility.UrlEncode(JsonConvert.SerializeObject(new
+            {
+                Id = "新用户1",
+                Name = "新用户1",
+                TenantId
+            }));
+
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            return new WorkflowHttpInvokerProvider(httpClient);
+        }
     }
 
     public class UnitTestStartup
@@ -120,16 +183,6 @@ namespace Sys.Bpmn.Test
                 .AddLogging()
                 .AddProcessEngine();
 
-            services.UseWorkflowClient();
-
-            ServiceDescriptor invokeSrv = services.FirstOrDefault(x => x.ServiceType == typeof(HttpInvoker));
-            services.Remove(invokeSrv);
-
-            services.AddSingleton<HttpInvoker>(sp =>
-            {
-                return new HttpInvoker(UnitTestContext.Instance.TestServer.CreateClient());
-            });
-
             IMvcBuilder mvcBuilder = services.AddMvc()
                 .AddProcessEngineRestServices(Configuration)
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
@@ -146,7 +199,20 @@ namespace Sys.Bpmn.Test
                     .AllowAnyMethod()
                     .AllowAnyOrigin());
 
+            app.UseWorkflow();
+
             app.UseMvc();
         }
+    }
+
+    public class HttpInvoke
+    {
+        public string Url { get; set; }
+
+        public object Data { get; set; }
+
+        public Action<HttpResponseMessage> Response { get; set; }
+
+        public HttpMethod Method { get; set; } = HttpMethod.Post;
     }
 }

@@ -219,12 +219,12 @@
       <IsTrue Property="processInstanceId != null">
         RES.PROC_INST_ID_ = #{processInstanceId}
       </IsTrue>
-      <IsFalse Property="CollectionUtil.IsEmpty(processInstanceIds)">
+      <IsTrue Property="CollectionUtil.IsNotEmpty(processInstanceIds)">
         and RES.PROC_INST_ID_ in
         <For Key="item" Property="processInstanceIds" Open="(" Separator="," Close=")">
           #{item}
         </For>
-      </IsFalse>
+      </IsTrue>
       <IsTrue Property="processDefinitionId != null">
         and RES.PROC_DEF_ID_ = #{processDefinitionId}
       </IsTrue>

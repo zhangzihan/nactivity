@@ -17,9 +17,9 @@
 
 namespace org.activiti.cloud.services.events
 {
-
-
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class ActivityCompletedEventImpl : AbstractProcessEngineEvent, IActivityCompletedEvent
     {
 
@@ -27,9 +27,17 @@ namespace org.activiti.cloud.services.events
         protected internal string activityName;
         protected internal string activityType;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ActivityCompletedEventImpl()
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public ActivityCompletedEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, string activityId, string activityName, string activityType) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
@@ -38,6 +46,10 @@ namespace org.activiti.cloud.services.events
             this.activityType = activityType;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ActivityId
         {
             get
@@ -46,6 +58,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ActivityName
         {
             get
@@ -54,6 +70,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ActivityType
         {
             get
@@ -62,6 +82,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string EventType
         {
             get

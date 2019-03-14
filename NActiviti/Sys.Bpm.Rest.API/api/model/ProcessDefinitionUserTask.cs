@@ -3,30 +3,52 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.api.model
 {
+
+    /// <summary>
+    /// 用户任务
+    /// </summary>
     public class ProcessDefinitionUserTask
     {
-        private string taskName;
+        private string name;
         private string taskDocumentation;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessDefinitionUserTask()
         {
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="name">名称</param>
+        /// <param name="documentation">描述</param>
         //[JsonConstructor]
         public ProcessDefinitionUserTask([JsonProperty("Name")]string name,
             [JsonProperty("Description")]string documentation)
         {
-            taskName = name;
+            this.name = name;
             taskDocumentation = documentation;
         }
 
-        public virtual string TaskName
+        /// <summary>
+        /// 名称
+        /// </summary>
+
+        public virtual string Name
         {
             get
             {
-                return taskName;
+                return name;
             }
+            set => name = value;
         }
+
+        /// <summary>
+        /// 描述
+        /// </summary>
 
         public virtual string TaskDocumentation
         {
@@ -34,6 +56,7 @@ namespace org.activiti.cloud.services.api.model
             {
                 return taskDocumentation;
             }
+            set => taskDocumentation = value;
         }
 
 

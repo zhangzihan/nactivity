@@ -60,7 +60,7 @@
 
   <div class="forms-panel">
     <ul class='form-list'>
-      <li repeat.for="form of forms" show.bind="nextForm==null||nextForm==form.id">
+      <li repeat.for="form of forms" ><!--show.bind="nextForm==null||nextForm==form.id"-->
         <div class="form-header" style.bind="form.headerStyle">
           <span>${form.id}</span>
           <span style="float:right">${form.name}</span>

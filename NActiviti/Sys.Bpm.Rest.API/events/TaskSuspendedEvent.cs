@@ -20,9 +20,15 @@ namespace org.activiti.cloud.services.events
     using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
     using TaskModel = org.activiti.cloud.services.api.model.TaskModel;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public interface ITaskSuspendedEvent : IProcessEngineEvent
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
         TaskModel Task { get; }
     }
 

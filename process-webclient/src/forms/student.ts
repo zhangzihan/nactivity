@@ -17,7 +17,7 @@ export class Student extends BaseForm {
   toUser;
 
   constructor(...args) {
-    super(args[0], args[1]);
+    super(args[0], args[1], args[2]);
   }
 
   activate(model, nctx) {
@@ -29,7 +29,7 @@ export class Student extends BaseForm {
   }
 
   toUsers() {
-    Axios.post(`${contants.serverUrl}/workflow/tasks/${this.task.id}/subtask`, {
+    this.httpInvoker.post(`${contants.serverUrl}/workflow/tasks/${this.task.id}/subtask`, {
       taskId: this.task.id,
       name: this.task.name,
       assignee: this.toUser,
@@ -43,7 +43,7 @@ export class Student extends BaseForm {
   }
 
   submit() {
-    Axios.post(`${contants.serverUrl}/workflow/tasks/${this.task.id}/complete`, {
+    this.httpInvoker.post(`${contants.serverUrl}/workflow/tasks/${this.task.id}/complete`, {
       taskId: this.task.id,
       outputVariables: {
         approvaled: this.approvaled,
@@ -58,7 +58,7 @@ export class Student extends BaseForm {
   }
 
   terminate() {
-    Axios.post(`${contants.serverUrl}/workflow/process-instances/${this.task.processInstanceId}/terminate`, {
+    this.httpInvoker.post(`${contants.serverUrl}/workflow/process-instances/${this.task.processInstanceId}/terminate`, {
       reason: "终止流程" 
     }).then((res) => {
       this.es.publish("reloadMyTasks");

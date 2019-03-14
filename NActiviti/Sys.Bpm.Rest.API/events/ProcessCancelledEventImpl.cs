@@ -20,19 +20,35 @@ namespace org.activiti.cloud.services.events
 
 
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessCancelledEventImpl : AbstractProcessEngineEvent, IProcessCancelledEvent
     {
 
         private string cause;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessCancelledEventImpl()
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public ProcessCancelledEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, string cause) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
             this.cause = cause;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string Cause
         {
@@ -41,6 +57,10 @@ namespace org.activiti.cloud.services.events
                 return cause;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override string EventType
         {

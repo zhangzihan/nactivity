@@ -4,8 +4,9 @@ import { Student } from "forms/student";
 import { Techer } from "forms/techer";
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { inject, observable } from 'aurelia-framework';
+import { EventBus } from 'EventBus';
 
-@inject(EventAggregator)
+@inject('eventBus')
 export class FormList {
 
     forms = [
@@ -65,7 +66,7 @@ export class FormList {
     
     workflow;
     
-    constructor(private es: EventAggregator) {
+    constructor(private es: EventBus) {
     }
 
     activate(model, nctx) {

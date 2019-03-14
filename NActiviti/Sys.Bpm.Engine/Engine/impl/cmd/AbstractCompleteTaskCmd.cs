@@ -23,6 +23,7 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.task;
+    using Sys.Workflow;
 
     /// 
     [Serializable]
@@ -45,10 +46,11 @@ namespace org.activiti.engine.impl.cmd
             }
 
             commandContext.ProcessEngineConfiguration.ListenerNotificationHelper.executeTaskListeners(taskEntity, BaseTaskListener_Fields.EVENTNAME_COMPLETE);
-            if (!ReferenceEquals(Authentication.AuthenticatedUserId, null) && !ReferenceEquals(taskEntity.ProcessInstanceId, null))
+            IUserInfo user = Authentication.AuthenticatedUser;
+            if (user != null && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
             {
                 IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", taskEntity.ProcessInstanceId));
-                commandContext.IdentityLinkEntityManager.involveUser(processInstanceEntity, Authentication.AuthenticatedUserId, IdentityLinkType.PARTICIPANT);
+                commandContext.IdentityLinkEntityManager.involveUser(processInstanceEntity, user.Id, IdentityLinkType.PARTICIPANT);
             }
 
             IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;

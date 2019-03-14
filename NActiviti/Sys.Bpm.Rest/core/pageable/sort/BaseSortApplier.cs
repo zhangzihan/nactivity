@@ -19,10 +19,15 @@ using org.activiti.engine.query;
 
 namespace org.activiti.cloud.services.core.pageable.sort
 {
+    /// <summary>
     /// 
+    /// </summary>
     public abstract class BaseSortApplier<T, U> : SortApplier<T> where T : IQuery<T, U>
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void applySort(T query, Pageable pageable)
         {
             if (pageable.Sort != null && pageable.Sort != Sort.unsorted())
@@ -35,8 +40,14 @@ namespace org.activiti.cloud.services.core.pageable.sort
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal abstract void applyDefaultSort(T query);
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void applyPageableSort(T query, Sort sort)
         {
             foreach (Sort.Order order in sort)
@@ -46,6 +57,9 @@ namespace org.activiti.cloud.services.core.pageable.sort
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void applyOrder(T query, Sort.Order order)
         {
             IQueryProperty property = getOrderByProperty(order);

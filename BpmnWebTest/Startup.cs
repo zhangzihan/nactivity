@@ -66,6 +66,8 @@ namespace BpmnWebTest
 
             app.UseStaticFiles();
 
+            app.UseWorkflow();
+
             app.UseMvc();
 
 #if DEBUG

@@ -9,5 +9,7 @@ namespace Sys.Workflow
         public string Id { get; set; }
 
         public string Name { get; set; }
+
+        public string TenantId { get; set; }
     }
 }

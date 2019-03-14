@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using org.activiti.api.runtime.shared.query;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core;
@@ -19,19 +21,47 @@ using System.Threading.Tasks;
 
 namespace Sys.Bpm.Services.Rest
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ProcessEngineRestExtention
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mvcBuilder"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
         public static IMvcBuilder AddProcessEngineRestServices(this IMvcBuilder mvcBuilder, IConfiguration config)
         {
+            IServiceCollection services = mvcBuilder.Services;
+
             mvcBuilder.AddMvcOptions(opts =>
             {
                 opts.ModelBinderProviders.Insert(0, new PageableModelBinderProvider());
             });
-            mvcBuilder.Services.AddTransient<ProcessInstanceSortApplier>();
+            services.AddTransient<ProcessInstanceSortApplier>();
 
-            mvcBuilder.Services.AddSingleton<PageRetriever>();
+            services.AddSingleton<PageRetriever>();
 
-            mvcBuilder.Services.AddTransient<PageableProcessInstanceRepositoryService>(sp =>
+            services.AddSingleton<TokenUserProvider>();
+
+            services.AddTransient<HistoricInstanceConverter>();
+
+            services.AddTransient<HistoryInstanceSortApplier>();
+
+            services.AddTransient<PageableProcessHistoryRepositoryService>(sp =>
+            {
+                return new PageableProcessHistoryRepositoryService(
+                    sp.GetService<PageRetriever>(),
+                    sp.GetService<IProcessEngine>().HistoryService,
+                    sp.GetService<HistoryInstanceSortApplier>(),
+                    sp.GetService<HistoricInstanceConverter>(),
+                    sp.GetService<SecurityPoliciesApplicationService>()
+                    );
+            });
+
+            services.AddTransient<PageableProcessInstanceRepositoryService>(sp =>
             {
                 IProcessEngine engine = sp.GetService<IProcessEngine>();
 
@@ -41,19 +71,19 @@ namespace Sys.Bpm.Services.Rest
                     sp.GetService<ProcessInstanceConverter>());
             });
 
-            mvcBuilder.Services.AddTransient<ListConverter>();
+            services.AddTransient<ListConverter>();
 
-            mvcBuilder.Services.AddTransient<TaskConverter>(sp => new TaskConverter(sp.GetService<ListConverter>()));
+            services.AddTransient<TaskConverter>(sp => new TaskConverter(sp.GetService<ListConverter>()));
 
-            mvcBuilder.Services.AddTransient<HistoricTaskInstanceConverter>(sp => new HistoricTaskInstanceConverter(sp.GetService<ListConverter>()));
+            services.AddTransient<HistoricTaskInstanceConverter>(sp => new HistoricTaskInstanceConverter(sp.GetService<ListConverter>()));
 
-            mvcBuilder.Services.AddTransient<TaskSortApplier>();
+            services.AddTransient<TaskSortApplier>();
 
-            mvcBuilder.Services.AddTransient<HistorySortApplier>();
+            services.AddTransient<HistoryTaskSortApplier>();
 
-            //mvcBuilder.Services.AddTransient<MessageProducerActivitiEventListener>();
+            //services.AddTransient<MessageProducerActivitiEventListener>();
 
-            mvcBuilder.Services.AddTransient<PageableTaskRepositoryService>(sp =>
+            services.AddTransient<PageableTaskRepositoryService>(sp =>
             {
                 IProcessEngine engine = sp.GetService<IProcessEngine>();
 
@@ -64,39 +94,38 @@ namespace Sys.Bpm.Services.Rest
                     sp.GetService<IHistoryService>(),
                     sp.GetService<PageRetriever>(),
                     sp.GetService<TaskSortApplier>(),
-                    sp.GetService<HistorySortApplier>());
+                    sp.GetService<HistoryTaskSortApplier>());
             });
 
-            mvcBuilder.Services.AddTransient<ProcessInstanceConverter>(sp =>
+            services.AddTransient<ProcessInstanceConverter>(sp =>
             {
                 IProcessEngine engine = sp.GetService<IProcessEngine>();
 
                 return new ProcessInstanceConverter(sp.GetService<ListConverter>());
             });
 
-            mvcBuilder.Services.AddTransient<ProcessInstanceResourceAssembler>();
+            services.AddTransient<ProcessInstanceResourceAssembler>();
 
 
-            mvcBuilder.Services.AddTransient<ProcessEngineWrapper>(sp =>
+            services.AddTransient<ProcessEngineWrapper>(sp =>
             {
                 IProcessEngine engine = sp.GetService<IProcessEngine>();
 
                 IHttpContextAccessor httpContext = sp.GetService<IHttpContextAccessor>();
 
                 return new ProcessEngineWrapper(sp.GetService<ProcessInstanceConverter>(),
-                    engine.RuntimeService,
                     sp.GetService<PageableProcessInstanceRepositoryService>(),
-                    engine.TaskService,
                     sp.GetService<TaskConverter>(),
                     sp.GetService<PageableTaskRepositoryService>(),
                     null,
+                    sp.GetService<SecurityPoliciesApplicationService>(),
                     null,
-                    engine.RepositoryService,
                     null,
-                    null);
+                    engine,
+                    sp.GetService<HistoricInstanceConverter>());
             });
 
-            mvcBuilder.Services
+            services
                 .AddTransient<PageRetriever>()
                 .AddTransient<ProcessDefinitionConverter>()
                 .AddTransient<ProcessDefinitionSortApplier>()
@@ -107,17 +136,33 @@ namespace Sys.Bpm.Services.Rest
                 .AddTransient<PageableProcessDefinitionRepositoryService>()
                 .AddTransient<PageableDeploymentRespositoryService>();
 
-            mvcBuilder.Services.AddTransient<TaskVariableResourceAssembler>();
+            services.AddTransient<TaskVariableResourceAssembler>();
 
-            mvcBuilder.Services.AddTransient<TaskResourceAssembler>();
+            services.AddTransient<TaskResourceAssembler>();
 
-            mvcBuilder.Services.AddTransient<ProcessInstanceVariableResourceAssembler>();
+            services.AddTransient<ProcessInstanceVariableResourceAssembler>();
 
-            mvcBuilder.Services.AddTransient<AuthenticationWrapper>();
+            services.AddTransient<AuthenticationWrapper>();
 
             mvcBuilder.AddApplicationPart(typeof(IHomeController).Assembly);
 
             return mvcBuilder;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder UseWorkflow(this IApplicationBuilder app)
+        {
+            IConfiguration config = app.ApplicationServices.GetService<IConfiguration>();
+
+            SecurityPoliciesProviderOptions options = new SecurityPoliciesProviderOptions(config.GetSection("SecurityPoliciesProvider"));
+
+            app.UseMiddleware<SecurityPoliciesApplicationMiddle>(Options.Create(options));
+
+            return app;
         }
     }
 }

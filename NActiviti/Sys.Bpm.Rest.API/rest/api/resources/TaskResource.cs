@@ -19,8 +19,16 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.rest.api.resources
 {
+
+    /// <summary>
+    /// 流程任务资源描述
+    /// </summary>
     public class TaskResource : Resource<TaskModel>
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskResource(TaskModel content, IEnumerable<Link> links) : base(content, links)
         {
         }

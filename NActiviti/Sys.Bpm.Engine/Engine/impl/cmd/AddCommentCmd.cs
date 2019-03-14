@@ -20,6 +20,7 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.util;
     using org.activiti.engine.runtime;
     using org.activiti.engine.task;
+    using Sys.Workflow;
     using System.Collections.Generic;
 
     /// 
@@ -92,9 +93,9 @@ namespace org.activiti.engine.impl.cmd
                 processDefinitionId = task.ProcessDefinitionId;
             }
 
-            string userId = Authentication.AuthenticatedUserId;
+            IUserInfo user = Authentication.AuthenticatedUser;
             ICommentEntity comment = commandContext.CommentEntityManager.create();
-            comment.UserId = userId;
+            comment.UserId = user.Id;
             comment.Type = (ReferenceEquals(type, null)) ? CommentEntity_Fields.TYPE_COMMENT : type;
             comment.Time = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
             comment.TaskId = taskId;

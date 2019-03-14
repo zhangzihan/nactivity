@@ -21,19 +21,35 @@ namespace org.activiti.cloud.services.events
     using ProcessInstance = org.activiti.cloud.services.api.model.ProcessInstance;
 
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessSuspendedEventImpl : AbstractProcessEngineEvent, IProcessSuspendedEvent
     {
 
         private ProcessInstance processInstance;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessSuspendedEventImpl()
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public ProcessSuspendedEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, ProcessInstance processInstance) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
             this.processInstance = processInstance;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual ProcessInstance ProcessInstance
         {
@@ -43,6 +59,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string EventType
         {
             get
@@ -51,6 +71,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string ToString()
         {
             return "ProcessSuspendedEventImpl{" +

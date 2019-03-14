@@ -775,7 +775,7 @@ namespace org.activiti.engine.impl.history
         {
             if (HistoryEnabled)
             {
-                string authenticatedUserId = Authentication.AuthenticatedUserId;
+                string authenticatedUserId = Authentication.AuthenticatedUser.Id;
                 ICommentEntity comment = CommentEntityManager.create();
                 comment.UserId = authenticatedUserId;
                 comment.Type = CommentEntity_Fields.TYPE_EVENT;
@@ -819,7 +819,7 @@ namespace org.activiti.engine.impl.history
         {
             if (HistoryEnabled)
             {
-                string authenticatedUserId = Authentication.AuthenticatedUserId;
+                string authenticatedUserId = Authentication.AuthenticatedUser.Id;
                 ICommentEntity comment = CommentEntityManager.create();
                 comment.UserId = authenticatedUserId;
                 comment.Type = CommentEntity_Fields.TYPE_EVENT;
@@ -862,7 +862,7 @@ namespace org.activiti.engine.impl.history
         {
             if (HistoryEnabled)
             {
-                string userId = Authentication.AuthenticatedUserId;
+                string userId = Authentication.AuthenticatedUser.Id;
                 ICommentEntity comment = CommentEntityManager.create();
                 comment.UserId = userId;
                 comment.Type = CommentEntity_Fields.TYPE_EVENT;

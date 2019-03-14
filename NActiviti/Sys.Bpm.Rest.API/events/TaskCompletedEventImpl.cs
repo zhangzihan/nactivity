@@ -21,20 +21,36 @@ namespace org.activiti.cloud.services.events
 
     using TaskModel = org.activiti.cloud.services.api.model.TaskModel;
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class TaskCompletedEventImpl : AbstractProcessEngineEvent, ITaskCompletedEvent
     {
 
         private TaskModel task;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskCompletedEventImpl()
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public TaskCompletedEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, TaskModel task) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
             this.task = task;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual TaskModel Task
         {
             get
@@ -42,6 +58,10 @@ namespace org.activiti.cloud.services.events
                 return task;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override string EventType
         {

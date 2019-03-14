@@ -16,14 +16,14 @@ namespace org.activiti.cloud.services.rest.api
         /// <summary>
         /// 获取工作流定义的最终版本
         /// </summary>
-        /// <param name="pageable"></param>
+        /// <param name="queryObj">查询对象</param>
         /// <returns></returns>
         Task<Resources<ProcessDefinition>> LatestProcessDefinitions(ProcessDefinitionQuery queryObj);
 
         /// <summary>
         /// 获取所有工作流定义
         /// </summary>
-        /// <param name="pageable">分页</param>
+        /// <param name="queryObj">查询对象</param>
         /// <returns></returns>
         Task<Resources<ProcessDefinition>> ProcessDefinitions(ProcessDefinitionQuery queryObj);
 

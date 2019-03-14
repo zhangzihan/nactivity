@@ -63,17 +63,17 @@ namespace org.activiti.engine.history
         /// <summary>
         /// Only select select historic task instances which are completed on the given date
         /// </summary>
-        IHistoricTaskInstanceQuery taskCompletedOn(DateTime endDate);
+        IHistoricTaskInstanceQuery taskCompletedOn(DateTime? endDate);
 
         /// <summary>
         /// Only select select historic task instances which are completed before the given date
         /// </summary>
-        IHistoricTaskInstanceQuery taskCompletedBefore(DateTime endDate);
+        IHistoricTaskInstanceQuery taskCompletedBefore(DateTime? endDate);
 
         /// <summary>
         /// Only select select historic task instances which are completed after the given date
         /// </summary>
-        IHistoricTaskInstanceQuery taskCompletedAfter(DateTime endDate);
+        IHistoricTaskInstanceQuery taskCompletedAfter(DateTime? endDate);
 
         // ORDERING
 

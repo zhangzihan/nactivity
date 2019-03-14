@@ -20,11 +20,23 @@ using org.activiti.engine.@delegate.@event;
 
 namespace org.activiti.cloud.services.events.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class VariableDeletedEventConveter : AbstractEventConverter
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
         public VariableDeletedEventConveter(RuntimeBundleProperties runtimeBundleProperties) : base(runtimeBundleProperties)
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override IProcessEngineEvent from(IActivitiEvent @event)
         {
@@ -41,6 +53,10 @@ namespace org.activiti.cloud.services.events.converter
                 ((IActivitiVariableEvent)@event).VariableType.TypeName, 
                 ((IActivitiVariableEvent)@event).TaskId);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override string handledType()
         {

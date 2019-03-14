@@ -25,6 +25,9 @@ using Sys;
 
 namespace org.activiti.cloud.services.core.pageable
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class PageableProcessDefinitionRepositoryService
     {
         private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<PageableProcessDefinitionRepositoryService>();
@@ -39,6 +42,9 @@ namespace org.activiti.cloud.services.core.pageable
 
         private readonly SecurityPoliciesApplicationService securityService;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public PageableProcessDefinitionRepositoryService(IRepositoryService repositoryService,
             PageRetriever pageRetriever,
             ProcessDefinitionConverter processDefinitionConverter,
@@ -52,14 +58,29 @@ namespace org.activiti.cloud.services.core.pageable
             this.securityService = securityPolicyApplicationService;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public SecurityPoliciesApplicationService SecurityService => securityService;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessDefinitionConverter ProcessDefinitionConverter => processDefinitionConverter;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public PageRetriever PageRetriever => pageRetriever;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessDefinitionSortApplier SortApplier => sortApplier;
 
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual IPage<ProcessDefinition> GetLatestProcessDefinitions(Pageable pageable)
         {
@@ -73,6 +94,9 @@ namespace org.activiti.cloud.services.core.pageable
             return pageRetriever.loadPage(query, pageable, processDefinitionConverter);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IPage<ProcessDefinition> getProcessDefinitions(Pageable pageable)
         {
             IProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
@@ -83,6 +107,9 @@ namespace org.activiti.cloud.services.core.pageable
             return pageRetriever.loadPage(query, pageable, processDefinitionConverter);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IPage<ProcessDefinition> getAllProcessDefinitions(Pageable pageable)
         {
             IProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
@@ -90,8 +117,5 @@ namespace org.activiti.cloud.services.core.pageable
             sortApplier.applySort(query, pageable);
             return pageRetriever.loadPage(query, pageable, processDefinitionConverter);
         }
-
-
     }
-
 }

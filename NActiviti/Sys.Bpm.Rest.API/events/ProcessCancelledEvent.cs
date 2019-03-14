@@ -19,8 +19,14 @@ namespace org.activiti.cloud.services.events
 {
     using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IProcessCancelledEvent : IProcessEngineEvent
     {
+        /// <summary>
+        /// 
+        /// </summary>
         string Cause { get; }
     }
 

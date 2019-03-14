@@ -18,31 +18,76 @@
 namespace org.activiti.cloud.services.api.events
 {
 
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IProcessEngineEvent
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         long? Timestamp { get; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         string EventType { get; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         string ExecutionId { get; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         string ProcessDefinitionId { get; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         string ProcessInstanceId { get; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         string AppName { get; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         string AppVersion { get; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         string ServiceName { get; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         string ServiceFullName { get; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         string ServiceType { get; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         string ServiceVersion { get; }
-
     }
-
 }

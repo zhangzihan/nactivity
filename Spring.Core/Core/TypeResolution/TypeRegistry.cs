@@ -662,8 +662,7 @@ namespace Spring.Core.TypeResolution
         public static Type ResolveType(string alias)
         {
             AssertUtils.ArgumentHasText(alias, "alias");
-            Type type;
-            types.TryGetValue(alias, out type);
+            types.TryGetValue(alias, out Type type);
             return type;
         }
 

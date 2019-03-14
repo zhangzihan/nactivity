@@ -19,6 +19,10 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.api.commands
 {
+
+    /// <summary>
+    /// 流程启动命令
+    /// </summary>
     public class StartProcessInstanceCmd : ICommand
     {
         private readonly string id = "startProcessInstanceCmd";
@@ -30,6 +34,10 @@ namespace org.activiti.cloud.services.api.commands
         private string tenantId;
         private string startForm;
 
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         public StartProcessInstanceCmd()
         {
         }
@@ -46,6 +54,12 @@ namespace org.activiti.cloud.services.api.commands
         //    this.businessKey = businessKey;
         //}
 
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="processDefinitionId">流程定义id</param>
+        /// <param name="variables">流程变量</param>
         //[JsonConstructor]
         public StartProcessInstanceCmd([JsonProperty("ProcessDefinitionId")]string processDefinitionId,
             [JsonProperty("Variables")]IDictionary<string, object> variables) : this()
@@ -55,11 +69,19 @@ namespace org.activiti.cloud.services.api.commands
             this.variables = variables;
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="processDefinitionId">流程定义id</param>
         //[JsonConstructor]
         public StartProcessInstanceCmd([JsonProperty("ProcessDefinitionId")] string processDefinitionId) : this()
         {
             this.processDefinitionId = processDefinitionId;
         }
+
+        /// <summary>
+        /// 命令id
+        /// </summary>
 
         public virtual string Id
         {
@@ -67,7 +89,7 @@ namespace org.activiti.cloud.services.api.commands
         }
 
         /// <summary>
-        /// 
+        /// 流程定义key
         /// </summary>
         public virtual string ProcessDefinitionKey
         {
@@ -84,6 +106,10 @@ namespace org.activiti.cloud.services.api.commands
             get => processInstanceName;
             set => processInstanceName = value;
         }
+
+        /// <summary>
+        /// 租户id
+        /// </summary>
 
         public string TenantId
         {

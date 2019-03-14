@@ -29,7 +29,9 @@ using System.Runtime.InteropServices;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("workflow/admin/process-definitions")]
+
+    /// <inheritdoc />
+    [Route(WorkflowConstants.PROC_ADMIN_DEF_ROUTER_V1)]
     [ApiController]
     public class ProcessDefinitionAdminControllerImpl : ControllerBase, IProcessDefinitionAdminController
     {
@@ -42,11 +44,15 @@ namespace org.activiti.cloud.services.rest.controllers
         //    return ex.Message;
         //}
 
+        /// <inheritdoc />
+
         public ProcessDefinitionAdminControllerImpl(ProcessDefinitionResourceAssembler resourceAssembler, PageableProcessDefinitionRepositoryService pageableRepositoryService)
         {
             this.resourceAssembler = resourceAssembler;
             this.pageableRepositoryService = pageableRepositoryService;
         }
+
+        /// <inheritdoc />
 
         [HttpGet]
         public virtual Resources<ProcessDefinition> GetAllProcessDefinitions(

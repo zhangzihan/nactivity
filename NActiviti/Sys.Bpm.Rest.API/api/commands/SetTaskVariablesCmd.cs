@@ -20,12 +20,22 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.api.commands
 {
+
+    /// <summary>
+    /// 设置任务变量命令
+    /// </summary>
     public class SetTaskVariablesCmd : ICommand
     {
         private readonly string id = "setTaskVariablesCmd";
         private string taskId;
         private IDictionary<string, object> variables;
 
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="taskId">任务id</param>
+        /// <param name="variables">变量列表</param>
         ////[JsonConstructor]
         public SetTaskVariablesCmd([JsonProperty("TaskId")] string taskId, [JsonProperty("Variables")] IDictionary<string, object> variables)
         {
@@ -33,10 +43,18 @@ namespace org.activiti.cloud.services.api.commands
             this.variables = variables;
         }
 
+        /// <summary>
+        /// 命令id
+        /// </summary>
+
         public virtual string Id
         {
             get => id;
         }
+
+        /// <summary>
+        /// 任务id
+        /// </summary>
 
         public virtual string TaskId
         {
@@ -44,7 +62,12 @@ namespace org.activiti.cloud.services.api.commands
             {
                 return taskId;
             }
+            set => taskId = value;
         }
+
+        /// <summary>
+        /// 任务变量列表
+        /// </summary>
 
         public virtual IDictionary<string, object> Variables
         {
@@ -52,6 +75,7 @@ namespace org.activiti.cloud.services.api.commands
             {
                 return variables;
             }
+            set => variables = value;
         }
     }
 

@@ -19,15 +19,27 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.api.model.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessInstanceConverter : IModelConverter<IProcessInstance, ProcessInstance>
     {
         private readonly ListConverter listConverter;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessInstanceConverter(ListConverter listConverter)
         {
             this.listConverter = listConverter;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ProcessInstance from(IProcessInstance source)
         {
             ProcessInstance processInstance = null;
@@ -39,7 +51,7 @@ namespace org.activiti.cloud.services.api.model.converter
                     Name = source.Name,
                     Description = source.Description,
                     ProcessDefinitionId = source.ProcessDefinitionId,
-                    Initiator = source.StartUserId,
+                    StartUserId = source.StartUserId,
                     StartDate = source.StartTime,
                     BusinessKey = source.BusinessKey,
                     Status = calculateStatus(source),
@@ -49,6 +61,10 @@ namespace org.activiti.cloud.services.api.model.converter
             return processInstance;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         private string calculateStatus(IProcessInstance source)
         {
             if (source.Suspended)
@@ -62,6 +78,10 @@ namespace org.activiti.cloud.services.api.model.converter
             return Enum.GetName(typeof(ProcessInstance.ProcessInstanceStatus), ProcessInstance.ProcessInstanceStatus.RUNNING);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<org.activiti.cloud.services.api.model.ProcessInstance> from(IList<IProcessInstance> processInstances)
         {
             return listConverter.from(processInstances, this);

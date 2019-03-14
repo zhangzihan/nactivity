@@ -18,13 +18,37 @@ using Newtonsoft.Json;
 
 namespace org.activiti.cloud.services.api.model
 {
+
+    /// <summary>
+    /// 流程任务
+    /// </summary>
     public class TaskModel
     {
+
+        /// <summary>
+        /// 任务状态
+        /// </summary>
         public enum TaskStatus
         {
+
+            /// <summary>
+            /// 已创建
+            /// </summary>
             CREATED,
+
+            /// <summary>
+            /// 已分配
+            /// </summary>
             ASSIGNED,
+
+            /// <summary>
+            /// 已挂起
+            /// </summary>
             SUSPENDED,
+
+            /// <summary>
+            /// 已取消
+            /// </summary>
             CANCELLED
         }
 
@@ -34,6 +58,7 @@ namespace org.activiti.cloud.services.api.model
         private string name;
         private string description;
         private DateTime? createdDate;
+        private DateTime? endDate;
         private DateTime? claimedDate;
         private DateTime? dueDate;
         private int? priority;
@@ -43,10 +68,32 @@ namespace org.activiti.cloud.services.api.model
         private string status;
         private string formKey;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskModel()
         {
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <param name="owner">任务所有者</param>
+        /// <param name="assignee">分配人id</param>
+        /// <param name="name">任务名称</param>
+        /// <param name="description">任务描述</param>
+        /// <param name="createdDate">提交日期</param>
+        /// <param name="endDate">完成日期</param>
+        /// <param name="claimedDate">接受日期</param>
+        /// <param name="dueDate">过期日期</param>
+        /// <param name="priority">任务优先级</param>
+        /// <param name="processDefinitionId">流程定义id</param>
+        /// <param name="processInstanceId">流程实例id</param>
+        /// <param name="parentTaskId">父任务id</param>
+        /// <param name="formKey">表单key</param>
+        /// <param name="status">任务状态</param>
         //[JsonConstructor]
         public TaskModel([JsonProperty("Id")]string id,
             [JsonProperty("Owner")]string owner,
@@ -54,6 +101,7 @@ namespace org.activiti.cloud.services.api.model
             [JsonProperty("name")]string name,
             [JsonProperty("Description")]string description,
             [JsonProperty("CreatedDate")]DateTime? createdDate,
+            [JsonProperty("EndDate")]DateTime? endDate,
             [JsonProperty("ClaimedDate")]DateTime? claimedDate,
             [JsonProperty("DueDate")]DateTime? dueDate,
             [JsonProperty("Priority")]int? priority,
@@ -69,6 +117,7 @@ namespace org.activiti.cloud.services.api.model
             this.name = name;
             this.description = description;
             this.createdDate = createdDate;
+            this.endDate = endDate;
             this.claimedDate = claimedDate;
             this.dueDate = dueDate;
             this.priority = priority;
@@ -79,6 +128,10 @@ namespace org.activiti.cloud.services.api.model
             this.status = status;
         }
 
+
+        /// <summary>
+        /// id
+        /// </summary>
         public virtual string Id
         {
             get => id;
@@ -86,17 +139,29 @@ namespace org.activiti.cloud.services.api.model
         }
 
 
+        /// <summary>
+        /// 任务所有者
+        /// </summary>
+
         public virtual string Owner
         {
             get => owner;
             set => owner = value;
         }
 
+
+        /// <summary>
+        /// 分配人id
+        /// </summary>
         public virtual string Assignee
         {
             get => assignee;
             set => assignee = value;
         }
+
+        /// <summary>
+        /// 任务名称
+        /// </summary>
 
         public virtual string Name
         {
@@ -104,61 +169,107 @@ namespace org.activiti.cloud.services.api.model
             set => name = value;
         }
 
-
+        /// <summary>
+        /// 任务描述
+        /// </summary>
         public virtual string Description
         {
             get => description;
             set => description = value;
         }
 
+        /// <summary>
+        /// 提交日期
+        /// </summary>
         public virtual DateTime? CreatedDate
         {
             get => createdDate;
             set => createdDate = value;
         }
 
+        /// <summary>
+        /// 完成日期
+        /// </summary>
+        public virtual DateTime? EndDate
+        {
+            get => endDate;
+            set => endDate = value;
+        }
+
+
+        /// <summary>
+        /// 接受日期
+        /// </summary>
         public virtual DateTime? ClaimedDate
         {
             get => claimedDate;
             set => claimedDate = value;
         }
 
+
+        /// <summary>
+        /// 过期日期
+        /// </summary>
         public virtual DateTime? DueDate
         {
             get => dueDate;
             set => dueDate = value;
         }
 
+
+        /// <summary>
+        /// 任务优先级
+        /// </summary>
         public virtual int? Priority
         {
             get => priority;
             set => priority = value;
         }
 
+
+        /// <summary>
+        /// 流程定义id
+        /// </summary>
         public virtual string ProcessDefinitionId
         {
             get => processDefinitionId;
             set => processDefinitionId = value;
         }
 
+
+        /// <summary>
+        /// 流程实例id
+        /// </summary>
         public virtual string ProcessInstanceId
         {
             get => processInstanceId;
             set => processInstanceId = value;
         }
 
+
+        /// <summary>
+        /// 任务状态
+        /// </summary>
         public virtual string Status
         {
             get => status;
             set => status = value;
         }
 
+
+        /// <summary>
+        /// 父任务id
+        /// </summary>
         public virtual string ParentTaskId
         {
             get => parentTaskId;
             set => parentTaskId = value;
         }
 
+
+        /// <summary>
+        ///表单key
+        /// </summary>
         public virtual string FormKey
         {
             get => formKey;

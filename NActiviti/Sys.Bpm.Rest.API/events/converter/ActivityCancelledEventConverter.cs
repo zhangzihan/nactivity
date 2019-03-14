@@ -20,16 +20,32 @@ using org.activiti.engine.@delegate.@event;
 
 namespace org.activiti.cloud.services.events.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class ActivityCancelledEventConverter : AbstractEventConverter
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ActivityCancelledEventConverter(RuntimeBundleProperties runtimeBundleProperties) : base(runtimeBundleProperties)
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override IProcessEngineEvent from(IActivitiEvent @event)
         {
             return new ActivityCancelledEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, RuntimeBundleProperties.ServiceName, RuntimeBundleProperties.ServiceFullName, RuntimeBundleProperties.ServiceType, RuntimeBundleProperties.ServiceVersion, @event.ExecutionId, @event.ProcessDefinitionId, @event.ProcessInstanceId, ((IActivitiActivityCancelledEvent)@event).ActivityId, ((IActivitiActivityCancelledEvent)@event).ActivityName, ((IActivitiActivityCancelledEvent)@event).ActivityType, ((IActivitiActivityCancelledEvent)@event).Cause.ToString());
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override string handledType()
         {

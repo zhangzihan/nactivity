@@ -46,10 +46,10 @@ namespace org.activiti.engine.impl
         protected internal bool excludeSubprocesses_;
         protected internal string[] processDefinitionKeyIn_;
         protected internal string[] processKeyNotIn;
-        protected internal DateTime startedBefore_;
-        protected internal DateTime startedAfter_;
-        protected internal DateTime finishedBefore_;
-        protected internal DateTime finishedAfter_;
+        protected internal DateTime? startedBefore_;
+        protected internal DateTime? startedAfter_;
+        protected internal DateTime? finishedBefore_;
+        protected internal DateTime? finishedAfter_;
         protected internal string processDefinitionKey_;
         protected internal string processDefinitionCategory_;
         protected internal string processDefinitionName_;
@@ -62,7 +62,7 @@ namespace org.activiti.engine.impl
         protected internal bool withJobException_;
         protected internal string tenantId;
         protected internal string tenantIdLike;
-        protected internal bool withoutTenantId;
+        protected internal bool? withoutTenantId;
         protected internal string name;
         protected internal string nameLike;
         protected internal string nameLikeIgnoreCase;
@@ -316,7 +316,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricProcessInstanceQuery startedAfter(DateTime startedAfter)
+        public virtual IHistoricProcessInstanceQuery startedAfter(DateTime? startedAfter)
         {
             if (inOrStatement)
             {
@@ -329,7 +329,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricProcessInstanceQuery startedBefore(DateTime startedBefore)
+        public virtual IHistoricProcessInstanceQuery startedBefore(DateTime? startedBefore)
         {
             if (inOrStatement)
             {
@@ -342,7 +342,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricProcessInstanceQuery finishedAfter(DateTime finishedAfter)
+        public virtual IHistoricProcessInstanceQuery finishedAfter(DateTime? finishedAfter)
         {
             if (inOrStatement)
             {
@@ -356,7 +356,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricProcessInstanceQuery finishedBefore(DateTime finishedBefore)
+        public virtual IHistoricProcessInstanceQuery finishedBefore(DateTime? finishedBefore)
         {
             if (inOrStatement)
             {
@@ -996,7 +996,7 @@ namespace org.activiti.engine.impl
             set => processKeyNotIn = value;
         }
 
-        public virtual DateTime StartedAfter
+        public virtual DateTime? StartedAfter
         {
             get
             {
@@ -1005,7 +1005,7 @@ namespace org.activiti.engine.impl
             set => startedAfter(value);
         }
 
-        public virtual DateTime StartedBefore
+        public virtual DateTime? StartedBefore
         {
             get
             {
@@ -1014,7 +1014,7 @@ namespace org.activiti.engine.impl
             set => startedBefore(value);
         }
 
-        public virtual DateTime FinishedAfter
+        public virtual DateTime? FinishedAfter
         {
             get
             {
@@ -1023,7 +1023,7 @@ namespace org.activiti.engine.impl
             set => finishedAfter(value);
         }
 
-        public virtual DateTime FinishedBefore
+        public virtual DateTime? FinishedBefore
         {
             get
             {
@@ -1215,7 +1215,7 @@ namespace org.activiti.engine.impl
             set => processInstanceTenantIdLike(value);
         }
 
-        public virtual bool WithoutTenantId
+        public virtual bool? WithoutTenantId
         {
             get
             {
@@ -1223,7 +1223,7 @@ namespace org.activiti.engine.impl
             }
             set
             {
-                if (value)
+                if (value.GetValueOrDefault())
                 {
                     processInstanceWithoutTenantId();
                 }

@@ -226,7 +226,7 @@ namespace Activiti
             //Container.RegisterDelegate<IConfiguration>(sp => host.Services.GetService<IConfiguration>(), Reuse.Singleton);
 
             var engine = host.Services.GetService<IProcessEngine>();
-            Authentication.AuthenticatedUserId = Guid.Empty.ToString();
+            //Authentication.AuthenticatedUser = Guid.Empty.ToString();
 
             deploy(engine);
 
@@ -348,7 +348,7 @@ namespace Activiti
         static void testVacationRequest(int ts)
         {
             var engine = host.Services.GetService<IProcessEngine>();
-            Authentication.AuthenticatedUserId = Guid.Empty.ToString();
+            //Authentication.AuthenticatedUser = Guid.Empty.ToString();
 
             //deploy(engine);
 

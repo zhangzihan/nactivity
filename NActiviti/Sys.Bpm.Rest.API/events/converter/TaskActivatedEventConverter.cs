@@ -22,22 +22,38 @@ using org.activiti.engine.task;
 
 namespace org.activiti.cloud.services.events.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class TaskActivatedEventConverter : AbstractEventConverter
     {
 
         private readonly TaskConverter taskConverter;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskActivatedEventConverter(TaskConverter taskConverter, RuntimeBundleProperties runtimeBundleProperties) : base(runtimeBundleProperties)
         {
             this.taskConverter = taskConverter;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override IProcessEngineEvent from(IActivitiEvent @event)
         {
             var eventObj = (IActivitiEntityEvent)@event;
 
             return new TaskActivatedEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, RuntimeBundleProperties.ServiceName, RuntimeBundleProperties.ServiceFullName, RuntimeBundleProperties.ServiceType, RuntimeBundleProperties.ServiceVersion, @event.ExecutionId, @event.ProcessDefinitionId, @event.ProcessInstanceId, taskConverter.from((ITask)eventObj.Entity));
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override string handledType()
         {

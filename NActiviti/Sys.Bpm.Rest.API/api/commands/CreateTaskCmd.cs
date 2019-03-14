@@ -19,10 +19,22 @@ using System;
 
 namespace org.activiti.cloud.services.api.commands
 {
+    /// <summary>
+    /// 创建任务命令
+    /// </summary>
     public class CreateTaskCmd : ICommand
     {
         private readonly string id = "createTaskCmd";
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="name">任务名称</param>
+        /// <param name="description">任务描述</param>
+        /// <param name="dueDate">过期日期</param>
+        /// <param name="priority">任务优先级</param>
+        /// <param name="assignee">分配人id</param>
+        /// <param name="parentTaskId">上级任务id</param>
         ////[JsonConstructor]
         public CreateTaskCmd([JsonProperty("Name")] string name,
             [JsonProperty("Description")]string description,
@@ -40,10 +52,17 @@ namespace org.activiti.cloud.services.api.commands
             this.ParentTaskId = parentTaskId;
         }
 
+        /// <summary>
+        /// 命令id
+        /// </summary>
         public virtual string Id
         {
             get => id;
         }
+
+        /// <summary>
+        /// 任务名称
+        /// </summary>
 
         public virtual string Name
         {
@@ -51,11 +70,19 @@ namespace org.activiti.cloud.services.api.commands
             set;
         }
 
+        /// <summary>
+        /// 任务描述
+        /// </summary>
+
         public virtual string Description
         {
             get;
             set;
         }
+
+        /// <summary>
+        /// 过期日期
+        /// </summary>
 
         public virtual DateTime? DueDate
         {
@@ -63,17 +90,29 @@ namespace org.activiti.cloud.services.api.commands
             set;
         }
 
+        /// <summary>
+        /// 任务优先级
+        /// </summary>
+
         public virtual int? Priority
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 任务分配人id
+        /// </summary>
+
         public virtual string Assignee
         {
             get;
             set;
         }
+
+        /// <summary>
+        /// 上级任务id
+        /// </summary>
 
         public virtual string ParentTaskId
         {

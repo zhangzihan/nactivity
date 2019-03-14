@@ -52,9 +52,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sys.Bpm.Rest.Client", "NAct
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C38DEF13-955C-4D44-8C97-F0F1E598ADE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sys.Bpm.Client.Tests", "Tests\Sys.Bpm.Client.Tests\Sys.Bpm.Client.Tests.csproj", "{90BBB9CE-3AF6-4104-B69C-D4B1DBE23901}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sys.Bpm.Client.Tests", "Tests\Sys.Bpm.Client.Tests\Sys.Bpm.Client.Tests.csproj", "{90BBB9CE-3AF6-4104-B69C-D4B1DBE23901}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sys.Bpm.Test", "Tests\Sys.Bpm.Test\Sys.Bpm.Test.csproj", "{2F371B50-9EC5-44E1-871C-24B825E9D861}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sys.Bpm.Tests", "Tests\Sys.Bpm.Test\Sys.Bpm.Tests.csproj", "{2F371B50-9EC5-44E1-871C-24B825E9D861}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

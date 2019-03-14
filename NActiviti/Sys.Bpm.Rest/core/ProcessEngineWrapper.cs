@@ -7,6 +7,7 @@ using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.events.listeners;
 using org.activiti.cloud.services.rest.controllers;
 using org.activiti.engine;
+using org.activiti.engine.history;
 using org.activiti.engine.repository;
 using org.activiti.engine.runtime;
 using org.activiti.engine.task;
@@ -16,6 +17,9 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.core
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessEngineWrapper
     {
         private static readonly ILogger LOGGER = ProcessEngineServiceProvider.LoggerService<ProcessEngineWrapper>();
@@ -30,43 +34,60 @@ namespace org.activiti.cloud.services.core
         private readonly AuthenticationWrapper authenticationWrapper;
         private PageableProcessInstanceRepositoryService pageableProcessInstanceService;
         private readonly IApplicationEventPublisher eventPublisher;
+        private readonly IProcessEngine processEngine;
+        private readonly IHistoryService historyService;
+        private readonly HistoricInstanceConverter historicInstanceConverter;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessEngineWrapper(ProcessInstanceConverter processInstanceConverter,
-            IRuntimeService runtimeService,
             PageableProcessInstanceRepositoryService pageableProcessInstanceService,
-            ITaskService taskService,
             TaskConverter taskConverter,
             PageableTaskRepositoryService pageableTaskService,
             MessageProducerActivitiEventListener listener,
             SecurityPoliciesApplicationService securityService,
-            IRepositoryService repositoryService,
             AuthenticationWrapper authenticationWrapper,
-            IApplicationEventPublisher eventPublisher)
+            IApplicationEventPublisher eventPublisher,
+            IProcessEngine processEngine,
+            HistoricInstanceConverter historicInstanceConverter)
         {
+            this.processEngine = processEngine;
             this.processInstanceConverter = processInstanceConverter;
-            this.runtimeService = runtimeService;
+            this.runtimeService = processEngine.RuntimeService;
             this.pageableProcessInstanceService = pageableProcessInstanceService;
-            this.taskService = taskService;
+            this.taskService = processEngine.TaskService;
             this.taskConverter = taskConverter;
             this.pageableTaskService = pageableTaskService;
+            this.historyService = processEngine.HistoryService;
 #warning 暂时不处理事件侦听
             //this.runtimeService.addEventListener(listener);
             this.securityService = securityService;
-            this.repositoryService = repositoryService;
+            this.repositoryService = processEngine.RepositoryService;
             this.authenticationWrapper = authenticationWrapper;
             this.eventPublisher = eventPublisher;
+            this.historicInstanceConverter = historicInstanceConverter;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IPage<ProcessInstance> getProcessInstances(Pageable pageable)
         {
             return pageableProcessInstanceService.getProcessInstances(pageable);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IPage<ProcessInstance> getAllProcessInstances(Pageable pageable)
         {
             return pageableProcessInstanceService.getAllProcessInstances(pageable);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ProcessInstance startProcess(StartProcessInstanceCmd cmd)
         {
             string processDefinitionKey = cmd.ProcessDefinitionKey;
@@ -130,6 +151,9 @@ namespace org.activiti.cloud.services.core
             return processInstanceConverter.from(builder.start());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void signal(SignalCmd signalCmd)
         {
             //TODO: plan is to restrict access to events using a new security policy on events
@@ -139,6 +163,9 @@ namespace org.activiti.cloud.services.core
             eventPublisher.publishEvent(signalCmd);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void suspend(SuspendProcessInstanceCmd suspendProcessInstanceCmd)
         {
             verifyCanWriteToProcessInstance(suspendProcessInstanceCmd.ProcessInstanceId);
@@ -166,12 +193,18 @@ namespace org.activiti.cloud.services.core
             //}
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void activate(ActivateProcessInstanceCmd activateProcessInstanceCmd)
         {
             verifyCanWriteToProcessInstance(activateProcessInstanceCmd.ProcessInstanceId);
             runtimeService.activateProcessInstanceById(activateProcessInstanceCmd.ProcessInstanceId);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ProcessInstance getProcessInstanceById(string processInstanceId)
         {
             IProcessInstanceQuery query = runtimeService.createProcessInstanceQuery();
@@ -180,39 +213,72 @@ namespace org.activiti.cloud.services.core
             return processInstanceConverter.from(processInstance);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual HistoricInstance getHistoryProcessInstanceById(string processInstanceId)
+        {
+            IHistoricProcessInstanceQuery query = this.historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId);
+
+            IHistoricProcessInstance processInstance = query.singleResult();
+
+            return historicInstanceConverter.from(processInstance);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<string> getActiveActivityIds(string executionId)
         {
             return runtimeService.getActiveActivityIds(executionId);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IPage<TaskModel> getTasks(Pageable pageable)
         {
             return pageableTaskService.getTasks(pageable);
         }
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual IPage<TaskModel> getAllTasks(Pageable pageable)
         {
             return pageableTaskService.getAllTasks(pageable);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual TaskModel getTaskById(string taskId)
         {
             ITask task = taskService.createTaskQuery().taskId(taskId).singleResult();
             return taskConverter.from(task);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual TaskModel claimTask(ClaimTaskCmd claimTaskCmd)
         {
             taskService.claim(claimTaskCmd.TaskId, claimTaskCmd.Assignee);
             return taskConverter.from(taskService.createTaskQuery().taskId(claimTaskCmd.TaskId).singleResult());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual TaskModel releaseTask(ReleaseTaskCmd releaseTaskCmd)
         {
             taskService.unclaim(releaseTaskCmd.TaskId);
             return taskConverter.from(taskService.createTaskQuery().taskId(releaseTaskCmd.TaskId).singleResult());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void completeTask(CompleteTaskCmd completeTaskCmd)
         {
             if (completeTaskCmd != null)
@@ -220,6 +286,9 @@ namespace org.activiti.cloud.services.core
                 taskService.complete(completeTaskCmd.TaskId, completeTaskCmd.OutputVariables);
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual SetTaskVariablesCmd TaskVariables
         {
@@ -229,6 +298,9 @@ namespace org.activiti.cloud.services.core
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual SetTaskVariablesCmd TaskVariablesLocal
         {
             set
@@ -237,6 +309,9 @@ namespace org.activiti.cloud.services.core
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual SetProcessVariablesCmd ProcessVariables
         {
             set
@@ -247,6 +322,9 @@ namespace org.activiti.cloud.services.core
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void removeProcessVariables(RemoveProcessVariablesCmd removeProcessVariablesCmd)
         {
             ProcessInstance processInstance = getProcessInstanceById(removeProcessVariablesCmd.ProcessId);
@@ -259,9 +337,12 @@ namespace org.activiti.cloud.services.core
         /// <param name="taskId"> the task id to delete </param>
         public virtual void deleteTask(string taskId)
         {
-            deleteTask(taskId, "Cancelled by " + authenticationWrapper.AuthenticatedUserId);
+            deleteTask(taskId, "Cancelled by " + authenticationWrapper.AuthenticatedUser.Id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void deleteTask(string taskId, string reason)
         {
             TaskModel task = getTaskById(taskId);
@@ -275,11 +356,17 @@ namespace org.activiti.cloud.services.core
             taskService.deleteTask(taskId, reason ?? "Cancelled");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void checkWritePermissionsOnTask(TaskModel task)
         {
             //TODO: to check the user write permissions on task
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual TaskModel createNewTask(CreateTaskCmd createTaskCmd)
         {
             ITask task = taskService.newTask();
@@ -291,12 +378,15 @@ namespace org.activiti.cloud.services.core
                 task.Priority = createTaskCmd.Priority;
             }
 
-            task.Assignee = string.ReferenceEquals(createTaskCmd.Assignee, null) ? authenticationWrapper.AuthenticatedUserId : createTaskCmd.Assignee;
+            task.Assignee = string.ReferenceEquals(createTaskCmd.Assignee, null) ? authenticationWrapper.AuthenticatedUser.Id : createTaskCmd.Assignee;
             taskService.saveTask(task);
 
             return taskConverter.from(taskService.createTaskQuery().taskId(task.Id).singleResult());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual TaskModel createNewSubtask(string parentTaskId, CreateTaskCmd createSubtaskCmd)
         {
             if (taskService.createTaskQuery().taskId(parentTaskId).singleResult() == null)
@@ -314,28 +404,40 @@ namespace org.activiti.cloud.services.core
             }
             task.ParentTaskId = parentTaskId;
 
-            task.Assignee = string.ReferenceEquals(createSubtaskCmd.Assignee, null) ? authenticationWrapper.AuthenticatedUserId : createSubtaskCmd.Assignee;
+            task.Assignee = string.ReferenceEquals(createSubtaskCmd.Assignee, null) ? authenticationWrapper.AuthenticatedUser.Id : createSubtaskCmd.Assignee;
             taskService.saveTask(task);
 
             return taskConverter.from(taskService.createTaskQuery().taskId(task.Id).singleResult());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void deleteProcessInstance(string processInstanceId)
         {
-            deleteProcessInstance(processInstanceId, "Cancelled by " + authenticationWrapper.AuthenticatedUserId);
+            deleteProcessInstance(processInstanceId, "Cancelled by " + authenticationWrapper.AuthenticatedUser.Id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void deleteProcessInstance(string processInstanceId, string reason)
         {
             verifyCanWriteToProcessInstance(processInstanceId);
             runtimeService.deleteProcessInstance(processInstanceId, reason ?? "Cancelled");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<ITask> getSubtasks(string parentTaskId)
         {
             return taskService.getSubTasks(parentTaskId);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void updateTask(string taskId, UpdateTaskCmd updateTaskCmd)
         {
             ITask task = taskService.createTaskQuery().taskId(taskId).singleResult();

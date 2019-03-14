@@ -28,6 +28,8 @@ using System.Threading.Tasks;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
+
+    /// <inheritdoc />
     [Route(WorkflowConstants.TASK_VAR_ROUTER_V1)]
     [ApiController]
     public class TaskVariableControllerImpl : ControllerBase, ITaskVariableController
@@ -39,6 +41,8 @@ namespace org.activiti.cloud.services.rest.controllers
 
         private readonly TaskVariableResourceAssembler variableResourceBuilder;
 
+
+        /// <inheritdoc />
         public TaskVariableControllerImpl(ProcessEngineWrapper processEngine,
             IProcessEngine engine,
             TaskVariableResourceAssembler variableResourceBuilder)
@@ -48,6 +52,8 @@ namespace org.activiti.cloud.services.rest.controllers
             this.variableResourceBuilder = variableResourceBuilder;
         }
 
+
+        /// <inheritdoc />
         [HttpGet]
         public virtual Task<Resources<TaskVariableResource>> getVariables([FromQuery]string taskId)
         {
@@ -69,6 +75,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult(resources);
         }
 
+
+        /// <inheritdoc />
         [HttpGet("local")]
         public virtual Task<Resources<TaskVariableResource>> getVariablesLocal([FromQuery]string taskId)
         {
@@ -90,6 +98,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult(resources);
         }
 
+        /// <inheritdoc />
+
         [HttpPost]
         public virtual Task<IActionResult> setVariables(string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
         {
@@ -99,6 +109,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult<IActionResult>(Ok());
         }
 
+
+        /// <inheritdoc />
         [HttpPost("local")]
         public virtual Task<IActionResult> setVariablesLocal(string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
         {

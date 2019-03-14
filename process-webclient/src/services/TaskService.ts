@@ -1,3 +1,4 @@
+import { HttpInvoker } from 'services/httpInvoker';
 import { ITaskService } from "./ITaskService";
 import { ITaskQuery } from "model/query/ITaskQuery";
 import { IResources } from "model/query/IResources";
@@ -6,16 +7,20 @@ import { ICompleteTaskCmd } from "model/cmd/ICompleteTaskCmd";
 import { ICreateTaskCmd } from "model/cmd/ICreateTaskCmd";
 import { IUpdateTaskCmd } from "model/cmd/IUpdateTaskCmd";
 import contants from "contants";
-import Axios from "axios";
+import { inject } from "aurelia-framework";
 
-
+@inject('httpInvoker')
 export class TaskService implements ITaskService {
 
   private controller = 'workflow/tasks';
 
+  constructor(private httpInvoker: HttpInvoker) {
+
+  }
+
   getTasks(query: ITaskQuery): Promise<IResources<ITaskModel>> {
     return new Promise((res, rej) => {
-      Axios.post(`${contants.serverUrl}/${this.controller}`, query).then(data => {
+      this.httpInvoker.post(`${contants.serverUrl}/${this.controller}`, query).then(data => {
         res(data.data.list);
       }).catch(err => rej(err));
     });

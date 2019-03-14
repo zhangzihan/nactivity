@@ -72,7 +72,7 @@ namespace org.activiti.engine.impl.el
             else if (VariableScopeElResolver.LOGGED_IN_USER_KEY.Equals(expstr))
             {
                 context.IsPropertyResolved = true;
-                return Authentication.AuthenticatedUserId;
+                return Authentication.AuthenticatedUser.Id;
             }
 
             List<string> sb = new List<string>();

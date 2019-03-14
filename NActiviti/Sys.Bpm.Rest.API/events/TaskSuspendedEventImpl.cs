@@ -21,20 +21,36 @@ namespace org.activiti.cloud.services.events
 
     using TaskModel = org.activiti.cloud.services.api.model.TaskModel;
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class TaskSuspendedEventImpl : AbstractProcessEngineEvent, ITaskSuspendedEvent
     {
 
         private TaskModel task;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskSuspendedEventImpl()
         {
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskSuspendedEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, TaskModel task) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
             this.task = task;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual TaskModel Task
         {
             get
@@ -43,6 +59,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string EventType
         {
             get
@@ -51,6 +71,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string ToString()
         {
             return "TaskSuspendedEventImpl{" +

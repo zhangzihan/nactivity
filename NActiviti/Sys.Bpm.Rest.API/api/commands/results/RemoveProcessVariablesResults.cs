@@ -2,6 +2,10 @@
 
 namespace org.activiti.cloud.services.api.commands.results
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class RemoveProcessVariablesResults : ICommandResults
     {
 
@@ -9,16 +13,28 @@ namespace org.activiti.cloud.services.api.commands.results
         private string commandId;
 
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public RemoveProcessVariablesResults()
         {
             this.id = System.Guid.NewGuid().ToString();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         ////[JsonConstructor]
         public RemoveProcessVariablesResults([JsonProperty("CommandId")]string commandId) : this()
         {
             this.commandId = commandId;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string Id
         {
@@ -28,6 +44,10 @@ namespace org.activiti.cloud.services.api.commands.results
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string CommandId
         {
             get

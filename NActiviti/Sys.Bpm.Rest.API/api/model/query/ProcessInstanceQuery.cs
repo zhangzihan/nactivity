@@ -67,17 +67,17 @@ namespace org.activiti.cloud.services.api.model
         public bool? OnlyChildExecutions { get; set; } = false;
 
         /// <summary>
-        /// 
+        /// 仅查询包含执行的流程实例
         /// </summary>
         public bool? OnlyProcessInstanceExecutions { get; set; } = false;
 
         /// <summary>
-        /// 
+        /// 仅查询流程实例
         /// </summary>
         public bool? OnlyProcessInstances { get; set; } = false;
 
         /// <summary>
-        /// 
+        /// 仅查询子流程
         /// </summary>
         public bool? OnlySubProcessExecutions { get; set; } = false;
 
@@ -132,7 +132,7 @@ namespace org.activiti.cloud.services.api.model
         public string[] ProcessInstanceIds { get; set; }
 
         /// <summary>
-        /// 
+        /// 限制流程实例变量
         /// </summary>
         public int? ProcessInstanceVariablesLimit { get; set; }
 
@@ -157,7 +157,7 @@ namespace org.activiti.cloud.services.api.model
         public string SubProcessInstanceId { get; set; }
 
         /// <summary>
-        /// 
+        /// 父级流程实例id
         /// </summary>
         public string SuperProcessInstanceId { get; set; }
 

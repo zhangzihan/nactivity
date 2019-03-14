@@ -35,6 +35,8 @@ using Task = System.Threading.Tasks.Task;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
+
+    /// <inheritdoc />
     [Route(WorkflowConstants.PROC_INS_ROUTER_V1)]
     [ApiController]
     public class ProcessInstanceControllerImpl : ControllerBase, IProcessInstanceController
@@ -68,6 +70,8 @@ namespace org.activiti.cloud.services.rest.controllers
         //    return ex.Message;
         //}
 
+
+        /// <inheritdoc />
         public ProcessInstanceControllerImpl(ProcessEngineWrapper processEngine,
             ProcessInstanceResourceAssembler resourceAssembler,
             PageableProcessInstanceRepositoryService pageableProcessInstanceService,
@@ -77,12 +81,13 @@ namespace org.activiti.cloud.services.rest.controllers
             this.processEngine = processEngine;
             this.repositoryService = engine.RepositoryService;
             this.runtimeService = engine.RuntimeService;
-            this.processDiagramGenerator = processDiagramGenerator;
             this.resourceAssembler = resourceAssembler;
             this.securityService = securityPoliciesApplicationService;
             this.pageableProcessInstanceService = pageableProcessInstanceService;
         }
 
+
+        /// <inheritdoc />
         [HttpPost]
         public virtual Task<Resources<ProcessInstance>> ProcessInstances(ProcessInstanceQuery query)
         {
@@ -93,14 +98,18 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.getTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
         }
 
+
+        /// <inheritdoc />
         [HttpPost("start")]
-        public virtual Task<ProcessInstance> Start([FromBody]StartProcessInstanceCmd cmd)
+        public virtual Task<ProcessInstance> Start(StartProcessInstanceCmd cmd)
         {
             ProcessInstance instance = processEngine.startProcess(cmd);
 
             return Task.FromResult<ProcessInstance>(instance);
         }
 
+
+        /// <inheritdoc />
         [HttpGet("{processInstanceId}")]
         public virtual Task<ProcessInstance> GetProcessInstanceById(string processInstanceId)
         {
@@ -112,6 +121,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult<ProcessInstance>(processInstance);
         }
 
+
+        /// <inheritdoc />
         [HttpGet("{processInstanceId}/diagram")]
         public virtual Task<string> GetProcessDiagram(string processInstanceId)
         {
@@ -128,6 +139,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult<string>(Encoding.UTF8.GetString(data));
         }
 
+
+        /// <inheritdoc />
         [HttpPost("signal")]
         public virtual Task<IActionResult> SendSignal([FromBody]SignalCmd cmd)
         {
@@ -135,6 +148,8 @@ namespace org.activiti.cloud.services.rest.controllers
 
             return Task.FromResult<IActionResult>(Ok());
         }
+
+        /// <inheritdoc />
 
         [HttpGet("{processInstanceId}/suspend")]
         public virtual Task<IActionResult> Suspend(string processInstanceId)
@@ -144,6 +159,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult<IActionResult>(Ok());
         }
 
+
+        /// <inheritdoc />
         [HttpGet("{processInstanceId}/activate")]
         public virtual Task<IActionResult> Activate(string processInstanceId)
         {
@@ -152,6 +169,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult<IActionResult>(Ok());
         }
 
+
+        /// <inheritdoc />
         [HttpPost("{processInstanceId}/terminate")]
         public virtual Task<IActionResult> Terminate(string processInstanceId, string reason)
         {

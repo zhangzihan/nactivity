@@ -9,7 +9,7 @@ export class Payment extends BaseForm {
     task;
 
     constructor(...args) {
-        super(args[0], args[1])
+        super(args[0], args[1], args[2])
     }
 
     activate(model, nctx) {
@@ -21,7 +21,7 @@ export class Payment extends BaseForm {
     }
 
     submit() {
-        Axios.post(`${contants.serverUrl}/workflow/tasks/${this.task.id}/complete`, {
+        this.httpInvoker.post(`${contants.serverUrl}/workflow/tasks/${this.task.id}/complete`, {
             taskId: this.task.id,
             outputVariables: {
                 money: this.money

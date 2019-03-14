@@ -62,7 +62,7 @@ namespace org.activiti.engine.impl.el
                 else if (LOGGED_IN_USER_KEY.Equals(property))
                 {
                     context.IsPropertyResolved = true;
-                    return Authentication.AuthenticatedUserId;
+                    return Authentication.AuthenticatedUser.Id;
                 }
                 else
                 {

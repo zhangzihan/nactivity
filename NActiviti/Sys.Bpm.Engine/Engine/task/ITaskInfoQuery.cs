@@ -214,17 +214,17 @@ namespace org.activiti.engine.task
 	  /// <summary>
 	  /// Only select tasks that are created on the given date.
 	  /// </summary>
-	  T taskCreatedOn(DateTime createTime);
+	  T taskCreatedOn(DateTime? createTime);
 
 	  /// <summary>
 	  /// Only select tasks that are created before the given date.
 	  /// </summary>
-	  T taskCreatedBefore(DateTime before);
+	  T taskCreatedBefore(DateTime? before);
 
 	  /// <summary>
 	  /// Only select tasks that are created after the given date.
 	  /// </summary>
-	  T taskCreatedAfter(DateTime after);
+	  T taskCreatedAfter(DateTime? after);
 
 	  /// <summary>
 	  /// Only select tasks with the given category.
@@ -247,17 +247,17 @@ namespace org.activiti.engine.task
 	  /// <summary>
 	  /// Only select tasks with the given due date.
 	  /// </summary>
-	  T taskDueDate(DateTime dueDate);
+	  T taskDueDate(DateTime? dueDate);
 
 	  /// <summary>
 	  /// Only select tasks which have a due date before the given date.
 	  /// </summary>
-	  T taskDueBefore(DateTime dueDate);
+	  T taskDueBefore(DateTime? dueDate);
 
 	  /// <summary>
 	  /// Only select tasks which have a due date after the given date.
 	  /// </summary>
-	  T taskDueAfter(DateTime dueDate);
+	  T taskDueAfter(DateTime? dueDate);
 
 	  /// <summary>
 	  /// Only select tasks with no due date.

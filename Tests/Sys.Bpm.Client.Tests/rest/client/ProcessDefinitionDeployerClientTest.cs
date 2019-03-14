@@ -24,7 +24,7 @@ namespace Sys.Bpm.Client.Tests.rest.client
         {
             Exception ex = Record.Exception(() =>
             {
-                IProcessDefinitionDeployerController client = ctx.Resolve<WorkflowHttpCientProvider>().GetDefinitionDeployerClient();
+                IProcessDefinitionDeployerController client = ctx.CeateWorkflowHttpProxy().GetDefinitionDeployerClient();
 
                 DeploymentQuery query = new DeploymentQuery();
                 query.TenantId = ctx.TenantId;
@@ -57,7 +57,7 @@ namespace Sys.Bpm.Client.Tests.rest.client
         {
             Exception ex = Record.Exception(() =>
             {
-                IProcessDefinitionDeployerController client = ctx.Resolve<WorkflowHttpCientProvider>().GetDefinitionDeployerClient();
+                IProcessDefinitionDeployerController client = ctx.CeateWorkflowHttpProxy().GetDefinitionDeployerClient();
 
                 int offset = 1;
                 Resources<Deployment> list = null;

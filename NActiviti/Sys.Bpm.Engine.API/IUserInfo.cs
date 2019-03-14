@@ -18,5 +18,10 @@ namespace Sys.Workflow
         /// 用户姓名
         /// </summary>
         string Name { get; set; }
+
+        /// <summary>
+        /// 租户id
+        /// </summary>
+        string TenantId { get; set; }
     }
 }

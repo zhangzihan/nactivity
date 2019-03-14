@@ -30,17 +30,29 @@ namespace org.activiti.cloud.services.events.converter
 
         private readonly TaskConverter taskConverter;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskCancelledEventConverter(TaskConverter taskConverter, RuntimeBundleProperties runtimeBundleProperties) : base(runtimeBundleProperties)
         {
             this.taskConverter = taskConverter;
         }
+        
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override IProcessEngineEvent from(IActivitiEvent @event)
         {
             return new TaskCancelledEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, RuntimeBundleProperties.ServiceName, RuntimeBundleProperties.ServiceFullName, RuntimeBundleProperties.ServiceType, RuntimeBundleProperties.ServiceVersion, @event.ExecutionId, @event.ProcessDefinitionId, @event.ProcessInstanceId, taskConverter.from((ITask)((IActivitiEntityEvent)@event).Entity));
             //TODO: to refactor using generics to avoid this cast
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string handledType()
         {
             return "Task:" + ActivitiEventType.ENTITY_DELETED.ToString();

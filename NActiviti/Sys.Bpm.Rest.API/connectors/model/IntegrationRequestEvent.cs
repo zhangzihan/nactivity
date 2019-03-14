@@ -23,6 +23,10 @@ using System.Collections.Generic;
 
 namespace org.activiti.services.connectors.model
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class IntegrationRequestEvent
     {
 
@@ -49,11 +53,19 @@ namespace org.activiti.services.connectors.model
 
         private IDictionary<string, object> variables;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         //used by json deserialization
         public IntegrationRequestEvent()
         {
             this.id = System.Guid.NewGuid().ToString();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         //[JsonConstructor]
         public IntegrationRequestEvent([JsonProperty("Execution")]IExecutionEntity execution,
@@ -81,6 +93,10 @@ namespace org.activiti.services.connectors.model
         }
 
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Id
         {
             get
@@ -88,6 +104,10 @@ namespace org.activiti.services.connectors.model
                 return id;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string ProcessInstanceId
         {
@@ -97,6 +117,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ProcessDefinitionId
         {
             get
@@ -105,6 +129,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ExecutionId
         {
             get
@@ -113,6 +141,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string IntegrationContextId
         {
             get
@@ -121,6 +153,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string FlowNodeId
         {
             get
@@ -129,6 +165,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ConnectorType
         {
             get
@@ -137,6 +177,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string AppName
         {
             get
@@ -145,6 +189,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string AppVersion
         {
             get
@@ -153,6 +201,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ServiceName
         {
             get
@@ -161,6 +213,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ServiceFullName
         {
             get
@@ -169,6 +225,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ServiceVersion
         {
             get
@@ -177,6 +237,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ServiceType
         {
             get
@@ -185,6 +249,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDictionary<string, object> Variables
         {
             get

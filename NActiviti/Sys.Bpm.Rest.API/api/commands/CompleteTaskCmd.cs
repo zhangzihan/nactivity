@@ -20,12 +20,20 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.api.commands
 {
+    /// <summary>
+    /// 完成任务命令
+    /// </summary>
     public class CompleteTaskCmd : ICommand
     {
         private readonly string id = "completeTaskCmd";
         private string taskId;
         private IDictionary<string, object> outputVariables;
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="taskId">任务id</param>
+        /// <param name="outputVariables">提交的数据</param>
         ////[JsonConstructor]
         public CompleteTaskCmd([JsonProperty("TaskId")] string taskId, [JsonProperty("OutputVariables")] IDictionary<string, object> outputVariables)
         {
@@ -33,11 +41,17 @@ namespace org.activiti.cloud.services.api.commands
             this.outputVariables = outputVariables;
         }
 
+        /// <summary>
+        /// 命令id
+        /// </summary>
         public virtual string Id
         {
             get => id;
         }
 
+        /// <summary>
+        /// 提交的数据
+        /// </summary>
         public virtual IDictionary<string, object> OutputVariables
         {
             get
@@ -48,6 +62,9 @@ namespace org.activiti.cloud.services.api.commands
             set => outputVariables = value;
         }
 
+        /// <summary>
+        /// 任务id
+        /// </summary>
         public virtual string TaskId
         {
             get => taskId;

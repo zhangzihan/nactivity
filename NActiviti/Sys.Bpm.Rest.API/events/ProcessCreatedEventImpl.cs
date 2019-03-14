@@ -19,20 +19,36 @@ namespace org.activiti.cloud.services.events
 {
     using ProcessInstance = org.activiti.cloud.services.api.model.ProcessInstance;
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessCreatedEventImpl : AbstractProcessEngineEvent, IProcessCreatedEvent
     {
 
         private ProcessInstance processInstance;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessCreatedEventImpl()
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public ProcessCreatedEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, ProcessInstance processInstance) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
             this.processInstance = processInstance;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ProcessInstance ProcessInstance
         {
             get
@@ -41,6 +57,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string EventType
         {
             get

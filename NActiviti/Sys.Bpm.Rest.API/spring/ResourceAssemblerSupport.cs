@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace org.springframework.hateoas.mvc
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class ResourceAssemblerSupport<T, D> : IResourceAssembler<T, D> where D : ResourceSupport
     {
         private Type controllerClass;
@@ -51,6 +55,10 @@ namespace org.springframework.hateoas.mvc
             return createResourceWithId(id, entity, new object[0]);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected D createResourceWithId(object id, T entity, params object[] parameters)
         {
             D instance = instantiateResource(entity);
@@ -71,6 +79,10 @@ namespace org.springframework.hateoas.mvc
             return default(D); //BeanUtils.instantiateClass(resourceType);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract D toResource(T entity);
     }
 }

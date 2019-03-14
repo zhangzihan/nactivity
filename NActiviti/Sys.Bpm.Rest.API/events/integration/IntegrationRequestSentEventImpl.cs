@@ -19,17 +19,33 @@ namespace org.activiti.cloud.services.events.integration
 
 
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class IntegrationRequestSentEventImpl : BaseIntegrationEventImpl, IntegrationRequestSentEvent
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         //used to deserialize from json
         public IntegrationRequestSentEventImpl()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         public IntegrationRequestSentEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, string integrationContextId, string flowNodeId) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId, integrationContextId, flowNodeId)
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override string EventType
         {

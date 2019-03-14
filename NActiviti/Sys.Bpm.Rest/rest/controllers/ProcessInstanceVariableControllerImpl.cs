@@ -28,6 +28,8 @@ using System.Threading.Tasks;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
+
+    /// <inheritdoc />
     [Route(WorkflowConstants.PROC_INS_VAR_ROUTER_V1)]
     [ApiController]
     public class ProcessInstanceVariableControllerImpl : ControllerBase, IProcessInstanceVariableController
@@ -48,6 +50,8 @@ namespace org.activiti.cloud.services.rest.controllers
         //    return ex.Message;
         //}
 
+
+        /// <inheritdoc />
         public ProcessInstanceVariableControllerImpl(IProcessEngine engine,
             ProcessInstanceVariableResourceAssembler variableResourceBuilder, 
             SecurityPoliciesApplicationService securityPoliciesApplicationService, 
@@ -59,6 +63,8 @@ namespace org.activiti.cloud.services.rest.controllers
             this.processEngine = processEngine;
         }
 
+
+        /// <inheritdoc />
         [HttpGet]
         public virtual Task<Resources<ProcessVariableResource>> getVariables(string processInstanceId)
         {
@@ -74,6 +80,8 @@ namespace org.activiti.cloud.services.rest.controllers
 
             return Task.FromResult(resources);
         }
+
+        /// <inheritdoc />
 
         [HttpGet("local")]
         public virtual Task<Resources<ProcessVariableResource>> getVariablesLocal(string processInstanceId)
@@ -95,6 +103,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult(resources);
         }
 
+        /// <inheritdoc />
+
         [HttpPost]
         public virtual Task<IActionResult> setVariables(string processInstanceId, SetProcessVariablesCmd setProcessVariablesCmd)
         {
@@ -103,6 +113,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult<IActionResult>(Ok());
         }
 
+
+        /// <inheritdoc />
         [HttpPost("remove")]
         public virtual Task<IActionResult> removeVariables(string processInstanceId, RemoveProcessVariablesCmd removeProcessVariablesCmd)
         {

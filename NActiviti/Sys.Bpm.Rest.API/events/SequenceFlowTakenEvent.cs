@@ -19,21 +19,45 @@ namespace org.activiti.cloud.services.events
 {
     using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public interface ISequenceFlowTakenEvent : IProcessEngineEvent
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
         string SequenceFlowId { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         string SourceActivityId { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         string SourceActivityName { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         string SourceActivityType { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         string TargetActivityId { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         string TargetActivityName { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         string TargetActivityType { get; }
     }
 

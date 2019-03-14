@@ -20,11 +20,23 @@ using org.activiti.engine.@delegate.@event;
 
 namespace org.activiti.cloud.services.events.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class ActivityStartedEventConverter : AbstractEventConverter
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ActivityStartedEventConverter(RuntimeBundleProperties runtimeBundleProperties) : base(runtimeBundleProperties)
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override IProcessEngineEvent from(IActivitiEvent @event)
         {
@@ -41,6 +53,10 @@ namespace org.activiti.cloud.services.events.converter
                 ((IActivitiActivityEvent)@event).ActivityName, 
                 ((IActivitiActivityEvent)@event).ActivityType);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override string handledType()
         {

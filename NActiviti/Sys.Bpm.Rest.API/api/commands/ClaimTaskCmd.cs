@@ -19,19 +19,31 @@ using System;
 
 namespace org.activiti.cloud.services.api.commands
 {
+    /// <summary>
+    ///任务领取命令
+    /// </summary>
     public class ClaimTaskCmd : ICommand
     {
         private readonly string id = "claimTaskCmd";
         private string taskId;
         private string assignee;
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="taskId">任务id</param>
+        /// <param name="assignee">领取人id</param>
         ////[JsonConstructor]
-        public ClaimTaskCmd([JsonProperty("TaskId")]string taskId, [JsonProperty("Assignee")]string assignee)
+        public ClaimTaskCmd([JsonProperty("TaskId")]string taskId, 
+            [JsonProperty("Assignee")]string assignee)
         {
             this.taskId = taskId;
             this.assignee = assignee;
         }
 
+        /// <summary>
+        /// 命令id
+        /// </summary>
         public virtual string Id
         {
             get
@@ -40,20 +52,28 @@ namespace org.activiti.cloud.services.api.commands
             }
         }
 
+        /// <summary>
+        /// 任务id
+        /// </summary>
         public virtual string TaskId
         {
             get
             {
                 return taskId;
             }
+            set => taskId = value;
         }
 
+        /// <summary>
+        /// 领取人id
+        /// </summary>
         public virtual string Assignee
         {
             get
             {
                 return assignee;
             }
+            set => assignee = value;
         }
     }
 

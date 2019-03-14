@@ -15,6 +15,9 @@
 
 namespace org.activiti.cloud.services.rest.controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SecurityPoliciesApplicationService
     {
     }

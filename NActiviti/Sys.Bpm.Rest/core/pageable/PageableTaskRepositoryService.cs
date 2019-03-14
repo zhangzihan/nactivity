@@ -25,6 +25,9 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.core.pageable
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class PageableTaskRepositoryService
     {
 
@@ -33,18 +36,21 @@ namespace org.activiti.cloud.services.core.pageable
         private readonly HistoricTaskInstanceConverter historicTaskInstanceConverter;
         private readonly PageRetriever pageRetriever;
         private readonly TaskSortApplier sortApplier;
-        private readonly HistorySortApplier historicSortApplier;
+        private readonly HistoryTaskSortApplier historicSortApplier;
         private IUserGroupLookupProxy userGroupLookupProxy;
         private AuthenticationWrapper authenticationWrapper = new AuthenticationWrapper();
         private readonly IHistoryService historyService;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public PageableTaskRepositoryService(ITaskService taskService, 
             TaskConverter taskConverter,
             HistoricTaskInstanceConverter historicTaskInstanceConverter,
             IHistoryService historyService,
             PageRetriever pageRetriever, 
             TaskSortApplier sortApplier,
-            HistorySortApplier historicSortApplier)
+            HistoryTaskSortApplier historicSortApplier)
         {
             this.taskService = taskService;
             this.historyService = historyService;
@@ -55,15 +61,27 @@ namespace org.activiti.cloud.services.core.pageable
             this.historicTaskInstanceConverter = historicTaskInstanceConverter;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskSortApplier SortApplier => SortApplier;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public PageRetriever PageRetriever => pageRetriever;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskConverter TaskConverter => taskConverter;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IPage<TaskModel> getTasks(Pageable pageable)
         {
-            string userId = authenticationWrapper.AuthenticatedUserId;
+            string userId = authenticationWrapper.AuthenticatedUser.Id;
             ITaskQuery query = taskService.createTaskQuery();
             if (!string.ReferenceEquals(userId, null))
             {
@@ -79,6 +97,9 @@ namespace org.activiti.cloud.services.core.pageable
             return pageRetriever.loadPage<ITask, TaskModel, ITaskQuery>(query, pageable, taskConverter);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IPage<TaskModel> getAllTasks(Pageable pageable)
         {
             ITaskQuery query = taskService.createTaskQuery();
@@ -87,6 +108,9 @@ namespace org.activiti.cloud.services.core.pageable
             return pageRetriever.loadPage(query, pageable, taskConverter);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IPage<TaskModel> getTasks(string processInstanceId, Pageable pageable)
         {
             ITaskQuery query = taskService.createTaskQuery().processInstanceId(processInstanceId);
@@ -95,6 +119,9 @@ namespace org.activiti.cloud.services.core.pageable
             return pageRetriever.loadPage(query, pageable, taskConverter);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IPage<TaskModel> getHistoryTasks(string processInstanceId, Pageable pageable)
         {
             IHistoricTaskInstanceQuery query = historyService.createHistoricTaskInstanceQuery().processInstanceId(processInstanceId);
@@ -103,6 +130,9 @@ namespace org.activiti.cloud.services.core.pageable
             return pageRetriever.loadPage(query, pageable, historicTaskInstanceConverter);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IUserGroupLookupProxy UserGroupLookupProxy
         {
             get
@@ -116,6 +146,9 @@ namespace org.activiti.cloud.services.core.pageable
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual AuthenticationWrapper AuthenticationWrapper
         {
             get

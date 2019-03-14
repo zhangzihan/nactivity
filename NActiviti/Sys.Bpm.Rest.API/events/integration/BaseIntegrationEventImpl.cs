@@ -18,23 +18,42 @@ namespace org.activiti.cloud.services.events.integration
 {
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class BaseIntegrationEventImpl : AbstractProcessEngineEvent, IntegrationEvent
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override abstract string EventType { get; }
 
         private string integrationContextId;
         private string flowNodeId;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         //used to deserialize from jsons
         public BaseIntegrationEventImpl()
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public BaseIntegrationEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, string integrationContextId, string flowNodeId) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
             this.integrationContextId = integrationContextId;
             this.flowNodeId = flowNodeId;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string IntegrationContextId
         {
@@ -44,6 +63,10 @@ namespace org.activiti.cloud.services.events.integration
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string FlowNodeId
         {
             get

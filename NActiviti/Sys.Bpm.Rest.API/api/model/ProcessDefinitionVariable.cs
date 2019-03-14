@@ -3,15 +3,28 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.api.model
 {
+
+    /// <summary>
+    /// 流程变量
+    /// </summary>
     public class ProcessDefinitionVariable
     {
         private string variableName;
         private string variableType;
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         public ProcessDefinitionVariable()
         {
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="variableName">变量名</param>
+        /// <param name="variableType">变量类型</param>
         //[JsonConstructor]
         public ProcessDefinitionVariable([JsonProperty("VariableName")]string variableName,
             [JsonProperty("VariableType")]string variableType)
@@ -20,13 +33,21 @@ namespace org.activiti.cloud.services.api.model
             this.variableType = variableType;
         }
 
+        /// <summary>
+        /// 变量名
+        /// </summary>
         public virtual string VariableName
         {
             get
             {
                 return variableName;
             }
+            set => variableName = value;
         }
+
+        /// <summary>
+        /// 变量类型
+        /// </summary>
 
         public virtual string VariableType
         {
@@ -34,6 +55,7 @@ namespace org.activiti.cloud.services.api.model
             {
                 return variableType;
             }
+            set => variableType = value;
         }
 
         //public override ISet<ProcessDefinitionVariable> deserialize(JsonParser jp, DeserializationContext ctxt)

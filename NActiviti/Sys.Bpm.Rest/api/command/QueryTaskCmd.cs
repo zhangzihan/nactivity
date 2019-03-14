@@ -13,10 +13,20 @@ using System.Text;
 
 namespace org.activiti.cloud.services.api.commands
 {
+    /// <summary>
+    /// 任务查询命令
+    /// </summary>
     public class QueryTaskCmd : ICommand
     {
         public string Id => "queryTaskCmd";
 
+        /// <summary>
+        /// 读取分页记录
+        /// </summary>
+        /// <param name="taskService">任务仓储服务</param>
+        /// <param name="pageableRepositoryService">分页仓储服务</param>
+        /// <param name="qo">查询对象</param>
+        /// <returns></returns>
         public IPage<TaskModel> loadPage(ITaskService taskService,
             PageableTaskRepositoryService pageableRepositoryService,
             TaskQuery qo)

@@ -21,16 +21,28 @@ using static org.activiti.cloud.services.api.model.TaskModel;
 
 namespace org.activiti.cloud.services.api.model.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class TaskConverter : IModelConverter<ITask, TaskModel>
     {
 
         private readonly ListConverter listConverter;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskConverter(ListConverter listConverter)
         {
             this.listConverter = listConverter;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual TaskModel from(ITask source)
         {
             TaskModel task = null;
@@ -42,6 +54,7 @@ namespace org.activiti.cloud.services.api.model.converter
                     source.Name,
                     source.Description,
                     source.CreateTime,
+                    null,
                     source.ClaimTime,
                     source.DueDate,
                     source.Priority,
@@ -54,6 +67,10 @@ namespace org.activiti.cloud.services.api.model.converter
             return task;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         private string calculateStatus(ITask source)
         {
             if (source is ITaskEntity && (((ITaskEntity)source).Deleted || ((ITaskEntity)source).Canceled))
@@ -71,6 +88,10 @@ namespace org.activiti.cloud.services.api.model.converter
             return Enum.GetName(typeof(TaskStatus), TaskStatus.CREATED);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<TaskModel> from(IList<ITask> tasks)
         {
             return listConverter.from(tasks, this);

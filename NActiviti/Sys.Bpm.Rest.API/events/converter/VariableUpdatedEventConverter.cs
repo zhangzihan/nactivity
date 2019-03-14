@@ -20,12 +20,21 @@ using org.activiti.engine.@delegate.@event;
 
 namespace org.activiti.cloud.services.events.converter
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class VariableUpdatedEventConverter : AbstractEventConverter
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public VariableUpdatedEventConverter(RuntimeBundleProperties runtimeBundleProperties) : base(runtimeBundleProperties)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override IProcessEngineEvent from(IActivitiEvent @event)
         {
             IActivitiVariableEvent variableEvent = (IActivitiVariableEvent)@event;
@@ -33,6 +42,9 @@ namespace org.activiti.cloud.services.events.converter
             return new VariableUpdatedEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, RuntimeBundleProperties.ServiceName, RuntimeBundleProperties.ServiceFullName, RuntimeBundleProperties.ServiceType, RuntimeBundleProperties.ServiceVersion, @event.ExecutionId, @event.ProcessDefinitionId, @event.ProcessInstanceId, variableEvent.VariableName, (variableEvent.VariableValue != null) ? variableEvent.VariableValue.ToString() : "", (variableEvent.VariableType != null) ? variableEvent.VariableType.TypeName : "", variableEvent.TaskId);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override string handledType()
         {
             return ActivitiEventType.VARIABLE_UPDATED.ToString();

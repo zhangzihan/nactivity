@@ -8,6 +8,10 @@
     using org.springframework.cloud.stream.binding;
     using org.springframework.messaging.support;
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class IntegrationRequestSender
     {
         protected internal const string CONNECTOR_TYPE = "connectorType";
@@ -15,6 +19,10 @@
         private readonly IMessageChannel<IProcessEngineEvent[]> auditProducer;
         private readonly IBinderAwareChannelResolver resolver;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public IntegrationRequestSender(RuntimeBundleProperties runtimeBundleProperties, IMessageChannel<IProcessEngineEvent[]> auditProducer, IBinderAwareChannelResolver resolver)
         {
             this.runtimeBundleProperties = runtimeBundleProperties;
@@ -22,6 +30,10 @@
             this.resolver = resolver;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void sendIntegrationRequest(IntegrationRequestEvent @event)
         {
 
@@ -29,6 +41,10 @@
             sendAuditEvent(@event);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         private void sendAuditEvent(IntegrationRequestEvent integrationRequestEvent)
         {
             if (runtimeBundleProperties.EventsProperties.IntegrationAuditEventsEnabled)
@@ -38,6 +54,10 @@
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         private IMessage<IntegrationRequestEvent> buildIntegrationRequestMessage(IntegrationRequestEvent @event)
         {
             return MessageBuilder<IntegrationRequestEvent>.withPayload(@event).setHeader(CONNECTOR_TYPE, @event.ConnectorType).build();

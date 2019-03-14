@@ -33,6 +33,8 @@ using System.Threading.Tasks;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
+
+    /// <inheritdoc />
     [Route(WorkflowConstants.TASK_ROUTER_V1)]
     [ApiController]
     public class TaskControllerImpl : ControllerBase, ITaskController
@@ -52,6 +54,8 @@ namespace org.activiti.cloud.services.rest.controllers
 
         private readonly IProcessEngine engine;
 
+
+        /// <inheritdoc />
         public TaskControllerImpl(ProcessEngineWrapper processEngine,
             IProcessEngine engine,
             TaskResourceAssembler taskResourceAssembler,
@@ -71,6 +75,8 @@ namespace org.activiti.cloud.services.rest.controllers
         //    return ex.Message;
         //}
 
+
+        /// <inheritdoc />
         [HttpPost]
         public virtual Task<Resources<TaskModel>> getTasks(TaskQuery query)
         {
@@ -79,6 +85,8 @@ namespace org.activiti.cloud.services.rest.controllers
             //return pagedResourcesAssembler.toResource(pageable, page, taskResourceAssembler);
         }
 
+
+        /// <inheritdoc />
         [HttpGet("{userId}/mytasks")]
         public Task<Resources<TaskModel>> MyTasks(string userId)
         {
@@ -91,6 +99,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return System.Threading.Tasks.Task.FromResult(new Resources<TaskModel>(resources.Select(x => x.Content), tasks.Count, 0, 0));
         }
 
+
+        /// <inheritdoc />
         [HttpGet("{taskId}")]
         public virtual Task<TaskModel> getTaskById(string taskId)
         {
@@ -103,10 +113,12 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult(taskResourceAssembler.toResource(task).Content);
         }
 
+
+        /// <inheritdoc />
         [HttpPost("{taskId}/claim")]
         public virtual Task<TaskModel> claimTask(string taskId)
         {
-            string assignee = authenticationWrapper.AuthenticatedUserId;
+            string assignee = authenticationWrapper.AuthenticatedUser.Id;
             if (string.ReferenceEquals(assignee, null))
             {
                 throw new System.InvalidOperationException("Assignee must be resolved from the Identity/Security Layer");
@@ -118,6 +130,8 @@ namespace org.activiti.cloud.services.rest.controllers
         }
 
 
+        /// <inheritdoc />
+
         [HttpPost("{taskId}/release")]
         public virtual Task<TaskModel> releaseTask(string taskId)
         {
@@ -125,6 +139,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult(taskResourceAssembler.toResource(processEngine.releaseTask(new ReleaseTaskCmd(taskId))).Content);
         }
 
+
+        /// <inheritdoc />
         [HttpPost("{taskId}/complete")]
         public virtual Task<IActionResult> completeTask(string taskId, [FromBody]CompleteTaskCmd completeTaskCmd)
         {
@@ -133,6 +149,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult<IActionResult>(Ok());
         }
 
+
+        /// <inheritdoc />
         [HttpPost("{taskId}/terminate")]
         public virtual Task<IActionResult> terminate(string taskId, string reason)
         {
@@ -141,6 +159,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult<IActionResult>(Ok());
         }
 
+
+        /// <inheritdoc />
         [HttpPost("{taskId}/remove")]
         public virtual Task<IActionResult> deleteTask(string taskId)
         {
@@ -149,12 +169,16 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult<IActionResult>(Ok());
         }
 
+
+        /// <inheritdoc />
         [HttpPost("create")]
         public virtual Task<TaskModel> createNewTask([FromBody]CreateTaskCmd createTaskCmd)
         {
             return Task.FromResult(taskResourceAssembler.toResource(processEngine.createNewTask(createTaskCmd)).Content);
         }
 
+
+        /// <inheritdoc />
         [HttpPost("{taskId}/update")]
         public virtual Task<IActionResult> updateTask(string taskId, UpdateTaskCmd updateTaskCmd)
         {
@@ -163,6 +187,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult<IActionResult>(Ok());
         }
 
+
+        /// <inheritdoc />
         [HttpPost("{taskId}/subtask")]
         public virtual Task<TaskModel> createSubtask(string taskId, [FromBody]CreateTaskCmd createSubtaskCmd)
         {
@@ -173,6 +199,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return Task.FromResult(taskResourceAssembler.toResource(processEngine.createNewSubtask(taskId, createSubtaskCmd)).Content);
         }
 
+        /// <inheritdoc />
+
         [HttpGet("{taskId}/subtasks")]
         public virtual Task<Resources<TaskModel>> getSubtasks(string taskId)
         {
@@ -180,6 +208,8 @@ namespace org.activiti.cloud.services.rest.controllers
             //return new Resources<TaskResource>(taskResourceAssembler.toResources(taskConverter.from(processEngine.getSubtasks(taskId))), linkTo(typeof(TaskControllerImpl)).withSelfRel());
         }
 
+
+        /// <inheritdoc />
         public virtual AuthenticationWrapper AuthenticationWrapper
         {
             get

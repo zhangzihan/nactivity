@@ -20,17 +20,33 @@ using org.activiti.engine.@delegate.@event;
 
 namespace org.activiti.cloud.services.events.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessStartedEventConverter : AbstractEventConverter
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessStartedEventConverter(RuntimeBundleProperties runtimeBundleProperties) : base(runtimeBundleProperties)
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override IProcessEngineEvent from(IActivitiEvent @event)
         {
             return new ProcessStartedEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, RuntimeBundleProperties.ServiceName, RuntimeBundleProperties.ServiceFullName, RuntimeBundleProperties.ServiceType, RuntimeBundleProperties.ServiceVersion, @event.ExecutionId, @event.ProcessDefinitionId, @event.ProcessInstanceId, ((IActivitiProcessStartedEvent)@event).NestedProcessDefinitionId, ((IActivitiProcessStartedEvent)@event).NestedProcessInstanceId);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string handledType()
         {
             return "ProcessInstance:" + ActivitiEventType.PROCESS_STARTED.ToString();

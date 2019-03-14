@@ -8,7 +8,7 @@ import contants from 'contants';
 export class First extends BaseForm {
 
     constructor(public model: EssayModel, ...args) {
-        super(args[0], args[1]);
+        super(args[0], args[1], args[2]);
     }
 
     task;
@@ -20,7 +20,7 @@ export class First extends BaseForm {
     }
 
     submit() {
-        Axios.post(`${contants.serverUrl}/${this.task.id}/complete`, {
+        this.httpInvoker.post(`${contants.serverUrl}/${this.task.id}/complete`, {
             taskId: this.task.id,
             outputVariables: {
                 approvaled: this.model.approvaled

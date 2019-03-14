@@ -26,7 +26,9 @@ using System.Threading.Tasks;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("/workflow/admin/tasks")]
+
+    /// <inheritdoc />
+    [Route(WorkflowConstants.ADMIN_TASK_ROUTER_V1)]
     [ApiController]
     public class TaskAdminControllerImpl : ControllerBase, ITaskAdminController
     {
@@ -34,12 +36,16 @@ namespace org.activiti.cloud.services.rest.controllers
 
         private readonly TaskResourceAssembler taskResourceAssembler;
 
+
+        /// <inheritdoc />
         public TaskAdminControllerImpl(ProcessEngineWrapper processEngine, TaskResourceAssembler taskResourceAssembler)
         {
             this.processEngine = processEngine;
             this.taskResourceAssembler = taskResourceAssembler;
         }
 
+
+        /// <inheritdoc />
         [HttpGet]
         public virtual Task<Resources<TaskModel>> getAllTasks(Pageable pageable)
         {

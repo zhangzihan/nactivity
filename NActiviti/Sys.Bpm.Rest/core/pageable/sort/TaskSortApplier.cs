@@ -23,10 +23,16 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.core.pageable.sort
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class TaskSortApplier : BaseSortApplier<ITaskQuery, ITask>
     {
         private IDictionary<string, IQueryProperty> orderByProperties = new Dictionary<string, IQueryProperty>(StringComparer.OrdinalIgnoreCase);
 
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskSortApplier()
         {
             orderByProperties["id"] = TaskQueryProperty.TASK_ID;
@@ -35,11 +41,17 @@ namespace org.activiti.cloud.services.core.pageable.sort
             orderByProperties["createTime"] = TaskQueryProperty.CREATE_TIME;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal override void applyDefaultSort(ITaskQuery query)
         {
             query.orderByTaskId().asc();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal override IQueryProperty getOrderByProperty(Sort.Order order)
         {
             orderByProperties.TryGetValue(order.Property, out IQueryProperty qp);

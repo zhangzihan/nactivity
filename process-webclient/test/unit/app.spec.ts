@@ -1,8 +1,11 @@
-import {App} from 'app';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { inject } from 'aurelia-framework';
+import { App } from 'app';
+import { WorkflowDocument } from 'WorkflowDocument';
 
 class RouterStub {
   routes;
-  
+
   configure(handler) {
     handler(this);
   }
@@ -18,7 +21,7 @@ describe('the App module', () => {
 
   beforeEach(() => {
     mockedRouter = new RouterStub();
-    sut = new App();
+    sut = new App(new WorkflowDocument(new EventAggregator));
     sut.configureRouter(mockedRouter, mockedRouter);
   });
 
@@ -31,7 +34,7 @@ describe('the App module', () => {
   });
 
   it('should have a welcome route', () => {
-    expect(sut.router.routes).toContainEqual({ route: ['', 'welcome'], name: 'welcome',  moduleId: './welcome', nav: true, title: 'Welcome' });
+    expect(sut.router.routes).toContainEqual({ route: ['', 'welcome'], name: 'welcome', moduleId: './welcome', nav: true, title: 'Welcome' });
   });
 
   it('should have a users route', () => {

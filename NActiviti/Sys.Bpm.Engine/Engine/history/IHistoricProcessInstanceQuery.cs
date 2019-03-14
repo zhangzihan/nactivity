@@ -208,22 +208,22 @@ namespace org.activiti.engine.history
         /// <summary>
         /// Only select historic process instances that were started before the given date.
         /// </summary>
-        IHistoricProcessInstanceQuery startedBefore(DateTime date);
+        IHistoricProcessInstanceQuery startedBefore(DateTime? date);
 
         /// <summary>
         /// Only select historic process instances that were started after the given date.
         /// </summary>
-        IHistoricProcessInstanceQuery startedAfter(DateTime date);
+        IHistoricProcessInstanceQuery startedAfter(DateTime? date);
 
         /// <summary>
         /// Only select historic process instances that were started before the given date.
         /// </summary>
-        IHistoricProcessInstanceQuery finishedBefore(DateTime date);
+        IHistoricProcessInstanceQuery finishedBefore(DateTime? date);
 
         /// <summary>
         /// Only select historic process instances that were started after the given date.
         /// </summary>
-        IHistoricProcessInstanceQuery finishedAfter(DateTime date);
+        IHistoricProcessInstanceQuery finishedAfter(DateTime? date);
 
         /// <summary>
         /// Only select historic process instance that are started by the given user.

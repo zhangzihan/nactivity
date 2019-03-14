@@ -11,6 +11,8 @@ using System.Linq;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
+
+    /// <inheritdoc />
     [Route("v1/process-definitions/{id}/meta")]
     [ApiController]
     public class ProcessDefinitionMetaControllerImpl : ControllerBase, IProcessDefinitionMetaController
@@ -29,6 +31,8 @@ namespace org.activiti.cloud.services.rest.controllers
         //    this.resourceAssembler = resourceAssembler;
         //}
 
+
+        /// <inheritdoc />
         [HttpGet]
         public virtual ProcessDefinitionMetaResource GetProcessDefinitionMetadata(string id)
         {
@@ -72,6 +76,8 @@ namespace org.activiti.cloud.services.rest.controllers
             return resourceAssembler.toResource(new ProcessDefinitionMeta(processDefinition.Id, processDefinition.Name, processDefinition.Description, processDefinition.Version, users, groups, variables, userTasks, serviceTasks));
         }
 
+
+        /// <inheritdoc />
         private IList<ProcessDefinitionVariable> getVariables(Process process)
         {
             IList<ProcessDefinitionVariable> variables = new List<ProcessDefinitionVariable>();

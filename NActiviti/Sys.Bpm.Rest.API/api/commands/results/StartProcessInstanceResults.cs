@@ -4,6 +4,10 @@ using System;
 
 namespace org.activiti.cloud.services.api.commands.results
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class StartProcessInstanceResults : ICommandResults
     {
 
@@ -12,11 +16,19 @@ namespace org.activiti.cloud.services.api.commands.results
 
         private ProcessInstance processInstance;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public StartProcessInstanceResults()
         {
             this.id = Guid.NewGuid().ToString();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         ////[JsonConstructor]
         public StartProcessInstanceResults([JsonProperty("CommandId")]string commandId, [JsonProperty("ProcessInstance")]ProcessInstance processInstance) : this()
         {
@@ -24,6 +36,10 @@ namespace org.activiti.cloud.services.api.commands.results
             this.processInstance = processInstance;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Id
         {
             get
@@ -32,6 +48,10 @@ namespace org.activiti.cloud.services.api.commands.results
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string CommandId
         {
             get
@@ -39,6 +59,10 @@ namespace org.activiti.cloud.services.api.commands.results
                 return commandId;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual ProcessInstance ProcessInstance
         {

@@ -18,18 +18,25 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.api.model.converter
 {
-
-    //using Autowired = org.springframework.beans.factory.annotation.Autowired;
-    //using Component = org.springframework.stereotype.Component;
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessDefinitionConverter : IModelConverter<IProcessDefinition, ProcessDefinition>
     {
         private readonly ListConverter listConverter;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessDefinitionConverter(ListConverter listConverter)
         {
             this.listConverter = listConverter;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual ProcessDefinition from(IProcessDefinition source)
         {
@@ -50,6 +57,10 @@ namespace org.activiti.cloud.services.api.model.converter
             }
             return processDefinition;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual IList<ProcessDefinition> from(IList<IProcessDefinition> processDefinitions)
         {

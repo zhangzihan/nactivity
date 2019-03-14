@@ -17,9 +17,17 @@
 
 namespace org.activiti.cloud.services.api.model.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class ListConverter
     {
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<TARGET> from<SOURCE, TARGET>(IList<SOURCE> sourceElements, IModelConverter<SOURCE, TARGET> elementConverter)
         {
             IList<TARGET> targetElements = new List<TARGET>();

@@ -13,11 +13,11 @@ namespace Sys.Bpm.Rest.Client.API
 {
     class ProcessDefinitionDeployerClient : IProcessDefinitionDeployerController
     {
-        private readonly HttpInvoker httpInvoker;
+        private readonly IHttpInvoker httpInvoker;
 
         private static readonly string serviceUrl = WorkflowConstants.PROC_DEP_ROUTER_V1;
 
-        public ProcessDefinitionDeployerClient(HttpInvoker httpInvoker)
+        public ProcessDefinitionDeployerClient(IHttpInvoker httpInvoker)
         {
             this.httpInvoker = httpInvoker;
         }

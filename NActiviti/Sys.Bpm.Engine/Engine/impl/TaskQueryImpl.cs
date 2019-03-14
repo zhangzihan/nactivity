@@ -914,7 +914,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual ITaskQuery taskCreatedOn(DateTime createTime)
+        public virtual ITaskQuery taskCreatedOn(DateTime? createTime)
         {
             if (orActive)
             {
@@ -927,7 +927,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual ITaskQuery taskCreatedBefore(DateTime before)
+        public virtual ITaskQuery taskCreatedBefore(DateTime? before)
         {
             if (orActive)
             {
@@ -940,7 +940,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual ITaskQuery taskCreatedAfter(DateTime after)
+        public virtual ITaskQuery taskCreatedAfter(DateTime? after)
         {
             if (orActive)
             {
@@ -1453,7 +1453,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual ITaskQuery dueDate(DateTime dueDate)
+        public virtual ITaskQuery dueDate(DateTime? dueDate)
         {
             if (orActive)
             {
@@ -1468,12 +1468,12 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual ITaskQuery taskDueDate(DateTime dueDate)
+        public virtual ITaskQuery taskDueDate(DateTime? dueDate)
         {
             return this.dueDate(dueDate);
         }
 
-        public virtual ITaskQuery dueBefore(DateTime dueBefore)
+        public virtual ITaskQuery dueBefore(DateTime? dueBefore)
         {
             if (orActive)
             {
@@ -1488,12 +1488,12 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual ITaskQuery taskDueBefore(DateTime dueDate)
+        public virtual ITaskQuery taskDueBefore(DateTime? dueDate)
         {
             return dueBefore(dueDate);
         }
 
-        public virtual ITaskQuery dueAfter(DateTime dueAfter)
+        public virtual ITaskQuery dueAfter(DateTime? dueAfter)
         {
             if (orActive)
             {
@@ -1508,7 +1508,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual ITaskQuery taskDueAfter(DateTime dueDate)
+        public virtual ITaskQuery taskDueAfter(DateTime? dueDate)
         {
             return dueAfter(dueDate);
         }

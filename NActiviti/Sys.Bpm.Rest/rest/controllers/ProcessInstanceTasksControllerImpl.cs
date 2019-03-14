@@ -30,6 +30,8 @@ using Task = System.Threading.Tasks.Task;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
+
+    /// <inheritdoc />
     [Route(WorkflowConstants.PROC_INS_ROUTER_V1)]
     [ApiController]
     public class ProcessInstanceTasksControllerImpl : ControllerBase, IProcessInstanceTasksController
@@ -39,12 +41,16 @@ namespace org.activiti.cloud.services.rest.controllers
 
         private readonly TaskResourceAssembler taskResourceAssembler;
 
+
+        /// <inheritdoc />
         public ProcessInstanceTasksControllerImpl(PageableTaskRepositoryService pageableTaskService, TaskResourceAssembler taskResourceAssembler)
         {
             this.pageableTaskService = pageableTaskService;
             this.taskResourceAssembler = taskResourceAssembler;
         }
 
+
+        /// <inheritdoc />
         [HttpPost("{processInstanceId}/tasks")]
         public virtual Task<Resources<TaskModel>> getTasks(string processInstanceId, [FromBody]ProcessInstanceTaskQuery query)
         {

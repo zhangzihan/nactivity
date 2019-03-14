@@ -20,21 +20,37 @@ namespace org.activiti.cloud.services.events
 
 
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessStartedEventImpl : AbstractProcessEngineEvent, IProcessStartedEvent
     {
 
         private string nestedProcessDefinitionId;
         private string nestedProcessInstanceId;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessStartedEventImpl()
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public ProcessStartedEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, string nestedProcessDefinitionId, string nestedProcessInstanceId) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
             this.nestedProcessDefinitionId = nestedProcessDefinitionId;
             this.nestedProcessInstanceId = nestedProcessInstanceId;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string NestedProcessInstanceId
         {
@@ -44,6 +60,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string NestedProcessDefinitionId
         {
             get
@@ -52,6 +72,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string EventType
         {
             get

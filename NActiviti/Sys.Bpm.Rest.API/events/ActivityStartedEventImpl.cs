@@ -17,9 +17,9 @@
 
 namespace org.activiti.cloud.services.events
 {
-
-
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class ActivityStartedEventImpl : AbstractProcessEngineEvent, IActivityStartedEvent
     {
 
@@ -27,10 +27,18 @@ namespace org.activiti.cloud.services.events
         protected internal string activityName;
         protected internal string activityType;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ActivityStartedEventImpl()
         {
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ActivityStartedEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, string activityId, string activityName, string activityType) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
             this.activityId = activityId;
@@ -38,6 +46,10 @@ namespace org.activiti.cloud.services.events
             this.activityType = activityType;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ActivityId
         {
             get
@@ -45,6 +57,10 @@ namespace org.activiti.cloud.services.events
                 return activityId;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string ActivityName
         {
@@ -54,6 +70,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         public virtual string ActivityType
         {
             get
@@ -61,6 +81,10 @@ namespace org.activiti.cloud.services.events
                 return activityType;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override string EventType
         {

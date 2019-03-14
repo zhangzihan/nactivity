@@ -19,15 +19,27 @@ namespace org.activiti.cloud.services.events
 {
     using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IActivityCompletedEvent : IProcessEngineEvent
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns> the id of the activity this event is related to. This corresponds to an id defined in the process definition. </returns>
         string ActivityId { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns> the name of the activity this event is related to. </returns>
         string ActivityName { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns> the type of the activity (if set during parsing). </returns>
         string ActivityType { get; }
 

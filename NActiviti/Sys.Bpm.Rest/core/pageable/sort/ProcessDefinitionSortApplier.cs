@@ -22,11 +22,17 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.core.pageable.sort
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessDefinitionSortApplier : BaseSortApplier<IProcessDefinitionQuery, IProcessDefinition>
     {
 
         private IDictionary<string, IQueryProperty> orderByProperties = new Dictionary<string, IQueryProperty>(StringComparer.OrdinalIgnoreCase);
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessDefinitionSortApplier()
         {
             orderByProperties["id"] = ProcessDefinitionQueryProperty.PROCESS_DEFINITION_ID;
@@ -35,10 +41,17 @@ namespace org.activiti.cloud.services.core.pageable.sort
             orderByProperties["version"] = ProcessDefinitionQueryProperty.PROCESS_DEFINITION_VERSION;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal override void applyDefaultSort(IProcessDefinitionQuery query)
         {
             query.orderByProcessDefinitionId().asc();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         protected internal override IQueryProperty getOrderByProperty(Sort.Order order)
         {

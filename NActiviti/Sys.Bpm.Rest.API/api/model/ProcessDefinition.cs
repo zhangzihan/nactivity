@@ -17,6 +17,10 @@ using Newtonsoft.Json;
 
 namespace org.activiti.cloud.services.api.model
 {
+
+    /// <summary>
+    /// 流程定义DTO
+    /// </summary>
     public class ProcessDefinition
     {
         private string id;
@@ -31,10 +35,28 @@ namespace org.activiti.cloud.services.api.model
         private string businessPath;
         private string startForm;
 
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         public ProcessDefinition()
         {
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="id">流程定义id</param>
+        /// <param name="name">流程名称</param>
+        /// <param name="description">流程描述</param>
+        /// <param name="version">流程版本</param>
+        /// <param name="category">流程目录</param>
+        /// <param name="key">流程键值</param>
+        /// <param name="deploymentId">部署id</param>
+        /// <param name="tenantId">租户id</param>
+        /// <param name="businessKey">业务键值</param>
+        /// <param name="businessPath">业务路径</param>
+        /// <param name="startForm">启动表单</param>
         //[JsonConstructor]
         public ProcessDefinition([JsonProperty("Id")]string id,
             [JsonProperty("Name")]string name,
@@ -61,17 +83,29 @@ namespace org.activiti.cloud.services.api.model
             this.startForm = startForm;
         }
 
+
+        /// <summary>
+        /// 流程id
+        /// </summary>
         public virtual string Id
         {
             get => id;
             set => id = value;
         }
 
+
+        /// <summary>
+        /// 流程名称
+        /// </summary>
         public virtual string Name
         {
             get => name;
             set => name = value;
         }
+
+        /// <summary>
+        /// 流程描述
+        /// </summary>
 
         public virtual string Description
         {
@@ -79,45 +113,77 @@ namespace org.activiti.cloud.services.api.model
             set => description = value;
         }
 
+
+        /// <summary>
+        /// 流程目录
+        /// </summary>
         public virtual string Category
         {
             get => category; set => category = value;
         }
+
+        /// <summary>
+        /// 流程键值
+        /// </summary>
 
         public virtual string Key
         {
             get => key; set => key = value;
         }
 
+
+        /// <summary>
+        /// 业务键值
+        /// </summary>
         public virtual string BusinessKey
         {
             get => businessKey;
             set => businessKey = value;
         }
 
+
+        /// <summary>
+        /// 业务路径
+        /// </summary>
         public virtual string BusinessPath
         {
             get => businessPath;
             set => businessPath = value;
         }
 
+
+        /// <summary>
+        /// 启动表单
+        /// </summary>
         public virtual string StartForm
         {
             get => startForm;
             set => startForm = value;
         }
 
+
+        /// <summary>
+        /// 部署id
+        /// </summary>
         public virtual string DeploymentId
         {
             get => deploymentId; set => deploymentId = value;
         }
 
+
+        /// <summary>
+        /// 版本
+        /// </summary>
         public virtual int Version
         {
             get => version;
             set => version = value;
         }
 
+
+        /// <summary>
+        /// 租户id
+        /// </summary>
         public virtual string TenantId
         {
             get => tenantId;

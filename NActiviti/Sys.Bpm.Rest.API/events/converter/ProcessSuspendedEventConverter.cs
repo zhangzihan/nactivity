@@ -22,14 +22,26 @@ using org.activiti.engine.impl.persistence.entity;
 
 namespace org.activiti.cloud.services.events.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessSuspendedEventConverter : AbstractEventConverter
     {
         private readonly ProcessInstanceConverter processInstanceConverter;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessSuspendedEventConverter(ProcessInstanceConverter processInstanceConverter, RuntimeBundleProperties runtimeBundleProperties) : base(runtimeBundleProperties)
         {
             this.processInstanceConverter = processInstanceConverter;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override IProcessEngineEvent from(IActivitiEvent @event)
         {
@@ -45,6 +57,9 @@ namespace org.activiti.cloud.services.events.converter
                 processInstanceConverter.from(((IExecutionEntity)((IActivitiEntityEvent)@event).Entity).ProcessInstance));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override string handledType()
         {
             return "ProcessInstance:" + ActivitiEventType.ENTITY_SUSPENDED;

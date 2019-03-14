@@ -20,8 +20,14 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.core.pageable
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class PageRetriever
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IPage<TARGET> loadPage<SOURCE, TARGET, T1>(IQuery<T1, SOURCE> query, Pageable pageable, IModelConverter<SOURCE, TARGET> converter)
         {
             int firstResult = (pageable.PageNo - 1) * pageable.PageSize;

@@ -1,6 +1,14 @@
 
+export interface IUserInfo {
+  id: string;
+  name: string;
+  tenantId?: string
+}
 
 export class LoginUser {
-    id = 1;
-    name = "新用户1";
+  current: IUserInfo = {
+    id: "新用户1",
+    name: "新用户1",
+    tenantId: ""
+  }
 }

@@ -4,6 +4,10 @@ using System.Text;
 
 namespace org.activiti.cloud.services.api.model
 {
+
+    /// <summary>
+    /// 流程部署前端提交DTO
+    /// </summary>
     public class ProcessDefinitionDeployer
     {
         /// <summary>

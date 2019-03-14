@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Sys.Bpm.Rest.Client
 {
-    public class HttpInvoker
+    class HttpInvoker : IHttpInvoker
     {
         private readonly HttpClient httpClient;
 

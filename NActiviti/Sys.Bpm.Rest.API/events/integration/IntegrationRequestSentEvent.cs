@@ -16,7 +16,11 @@
 
 namespace org.activiti.cloud.services.events.integration
 {
-	public interface IntegrationRequestSentEvent : IntegrationEvent
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IntegrationRequestSentEvent : IntegrationEvent
 	{
 
 	}

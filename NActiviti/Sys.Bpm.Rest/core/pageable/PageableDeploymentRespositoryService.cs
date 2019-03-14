@@ -25,6 +25,9 @@ using Sys;
 
 namespace org.activiti.cloud.services.core.pageable
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class PageableDeploymentRespositoryService
     {
         private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<PageableDeploymentRespositoryService>();
@@ -42,6 +45,9 @@ namespace org.activiti.cloud.services.core.pageable
         //private readonly SecurityPoliciesApplicationService securityService;
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public PageableDeploymentRespositoryService(PageRetriever pageRetriever, 
             IRuntimeService runtimeService,
             DeploymentSortApplier sortApplier,
@@ -55,10 +61,19 @@ namespace org.activiti.cloud.services.core.pageable
             this.securityService = securityPolicyApplicationService;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DeploymentConverter DeploymentConverter => deploymentConverter;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public PageRetriever PageRetriever => pageRetriever;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DeploymentSortApplier SortApplier => sortApplier;
 
         //public virtual IPage<Deployment> getDeployments(Pageable pageable)

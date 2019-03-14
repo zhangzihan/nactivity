@@ -18,58 +18,118 @@ using System;
 
 namespace org.activiti.cloud.services.api.model
 {
+
+    /// <summary>
+    /// 流程实例
+    /// </summary>
     public class ProcessInstance
     {
+
+        /// <summary>
+        /// 流程实例状态
+        /// </summary>
         public enum ProcessInstanceStatus
         {
+
+            /// <summary>
+            /// 运行中
+            /// </summary>
             RUNNING,
+
+            /// <summary>
+            /// 已挂起
+            /// </summary>
             SUSPENDED,
+
+            /// <summary>
+            /// 已完成
+            /// </summary>
             COMPLETED
         }
 
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         public ProcessInstance()
         {
         }
+
+        /// <summary>
+        /// id
+        /// </summary>
 
         public virtual string Id
         {
             get;set;
         }
 
+        /// <summary>
+        /// 名称
+        /// </summary>
+
         public virtual string Name
         {
             get;set;
         }
+
+        /// <summary>
+        /// 描述
+        /// </summary>
 
         public virtual string Description
         {
             get;set;
         }
 
+        /// <summary>
+        /// 开始日期
+        /// </summary>
+
         public virtual DateTime? StartDate
         {
             get;set;
         }
 
-        public virtual string Initiator
+        /// <summary>
+        /// 提交人id
+        /// </summary>
+
+        public virtual string StartUserId
         {
             get;set;
         }
 
+
+        /// <summary>
+        /// 业务键值
+        /// </summary>
         public virtual string BusinessKey
         {
             get;set;
         }
+
+        /// <summary>
+        /// 状态
+        /// </summary>
 
         public virtual string Status
         {
             get;set;
         }
 
+        /// <summary>
+        /// 流程定义id
+        /// </summary>
+
         public virtual string ProcessDefinitionId
         {
             get;set;
         }
+
+        /// <summary>
+        /// 流程键值
+        /// </summary>
 
         public virtual string ProcessDefinitionKey
         {

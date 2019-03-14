@@ -1,6 +1,7 @@
 ﻿using org.activiti.api.runtime.shared.query;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.api.model.converter;
+using org.activiti.cloud.services.core;
 using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.api.resources;

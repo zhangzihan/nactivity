@@ -17,8 +17,14 @@ using org.activiti.api.runtime.shared.query;
 
 namespace org.activiti.cloud.services.core.pageable.sort
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface SortApplier<T>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         void applySort(T query, Pageable pageable);
 
     }

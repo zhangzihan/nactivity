@@ -4,37 +4,60 @@ using System.Runtime.Serialization;
 
 namespace org.activiti.cloud.services.api.model
 {
+
+    /// <summary>
+    /// 流程服务任务
+    /// </summary>
     public class ProcessDefinitionServiceTask
     {
-        private string taskName;
+        private string name;
         private string taskImplementation;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessDefinitionServiceTask()
         {
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="name">任务名称</param>
+        /// <param name="implementation">实现</param>
         //[JsonConstructor]
         public ProcessDefinitionServiceTask([JsonProperty("Name")]string name,
             [JsonProperty("Implementation")]string implementation)
         {
-            taskName = name;
+            this.name = name;
             taskImplementation = implementation;
         }
 
-        public virtual string TaskName
+
+        /// <summary>
+        /// 任务名称
+        /// </summary>
+        public virtual string Name
         {
             get
             {
-                return taskName;
+                return name;
             }
+            set => name = value;
         }
 
+
+        /// <summary>
+        /// 任务实现
+        /// </summary>
         public virtual string TaskImplementation
         {
             get
             {
                 return taskImplementation;
             }
+            set => taskImplementation = value;
         }
 
         //public override ISet<ProcessDefinitionServiceTask> deserialize(JsonParser jp, DeserializationContext ctxt)

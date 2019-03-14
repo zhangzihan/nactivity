@@ -16,10 +16,20 @@ using System.Text;
 
 namespace org.activiti.cloud.services.api.commands
 {
+    /// <summary>
+    /// 流程定义查询命令
+    /// </summary>
     public class QueryProcessDefinitionCmd : ICommand
     {
         public string Id => "queryProcessDefinitionCmd";
 
+        /// <summary>
+        /// 读取分页记录
+        /// </summary>
+        /// <param name="repositoryService">仓储服务</param>
+        /// <param name="pageableRepositoryService">分页仓储服务</param>
+        /// <param name="qo">查询对象</param>
+        /// <returns></returns>
         public IPage<ProcessDefinition> loadPage(IRepositoryService repositoryService, PageableProcessDefinitionRepositoryService pageableRepositoryService, ProcessDefinitionQuery qo)
         {
             ProcessDefinitionQueryImpl query = repositoryService.createProcessDefinitionQuery() as ProcessDefinitionQueryImpl;

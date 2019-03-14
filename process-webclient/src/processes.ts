@@ -1,6 +1,8 @@
 import { DirectionEnum } from 'model/query/ISort';
 import { inject, observable } from "aurelia-framework";
 import { EventAggregator } from "aurelia-event-aggregator";
+import { EventBus } from 'EventBus';
+import { WorkflowDocument } from 'WorkflowDocument';
 
 let shortid = require('shortid');
 let uuid = require('uuid');
@@ -19,7 +21,7 @@ const defBpmn = `<?xml version="1.0" encoding="UTF-8"?>
   </bpmndi:BPMNDiagram>
 </bpmn2:definitions>`
 
-@inject(EventAggregator, 'processDefineService')
+@inject('eventBus', 'processDefineService', 'document')
 export class Processes {
 
   defines = [
@@ -350,7 +352,7 @@ export class Processes {
     }
   ]
 
-  constructor(private es: EventAggregator, private processDefineService: IProcessDefineService) {
+  constructor(private es: EventBus, private processDefineService: IProcessDefineService, private doc:WorkflowDocument) {
     this.refresh();
   }
 
@@ -384,7 +386,7 @@ export class Processes {
 
     this.defines.push(def);
 
-    this.es.publish("openWorkflow", def);
+    this.doc.openWorkflow(def);
   }
 
   private defaultBmpnModel() {
@@ -405,7 +407,7 @@ export class Processes {
       } else if (def.xml == null) {
         def.xml = this.defaultBmpnModel().xml;
       }
-      this.es.publish("openWorkflow", def);
+      this.doc.openWorkflow(def);
     })
   }
 

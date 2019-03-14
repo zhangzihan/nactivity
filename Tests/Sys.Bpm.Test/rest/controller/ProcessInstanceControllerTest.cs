@@ -10,6 +10,7 @@ using org.activiti.cloud.services.rest.assemblers;
 using org.activiti.cloud.services.rest.controllers;
 using org.activiti.engine;
 using org.activiti.engine.impl.context;
+using org.activiti.engine.impl.identity;
 using org.activiti.engine.impl.persistence.entity;
 using org.activiti.engine.repository;
 using org.springframework.hateoas;
@@ -67,8 +68,14 @@ namespace Sys.Bpmn.Test.rest.controller
                         { "name", "新用户"}
                     });
 
-                cmd.ProcessInstanceName = $"{def.Name}";
                 cmd.TenantId = ctx.TenantId;
+
+                Authentication.AuthenticatedUser = new TokenUserProvider.UserInfo()
+                {
+                    Id = "新用户",
+                    Name = "新用户",
+                    TenantId = ctx.TenantId
+                };
 
                 ProcessInstance pi = processInstance.Start(cmd).Result;
                 Assert.NotNull(pi);
@@ -105,15 +112,12 @@ namespace Sys.Bpmn.Test.rest.controller
             StartProcessInstanceCmd cmd = new StartProcessInstanceCmd(def.Id,
                 new Dictionary<string, object>
                 {
-                        { "name", "新用户"}
+                    { "name", "新用户"}
                 });
 
-            cmd.ProcessInstanceName = $"{def.Name}";
             cmd.TenantId = ctx.TenantId;
 
-            HttpClient client = ctx.TestServer.CreateClient();
-
-            HttpResponseMessage res = client.PostAsync("workflow/process-instances/start", new JsonContent(cmd)).Result;
+            HttpResponseMessage res = ctx.PostAsync($"{WorkflowConstants.PROC_INS_ROUTER_V1}/start", cmd).Result;
 
             Assert.True(res.StatusCode == HttpStatusCode.OK);
 
@@ -140,9 +144,7 @@ namespace Sys.Bpmn.Test.rest.controller
 
                 ProcessInstance pi = instances[0];
 
-                HttpClient client = ctx.TestServer.CreateClient();
-
-                HttpResponseMessage res = client.GetAsync($"workflow/process-instances/{pi.Id}/suspend").Result;
+                HttpResponseMessage res = ctx.GetAsync($"{WorkflowConstants.PROC_INS_ROUTER_V1}/{pi.Id}/suspend").Result;
 
                 Assert.True(res.StatusCode == HttpStatusCode.OK);
             });
@@ -152,7 +154,6 @@ namespace Sys.Bpmn.Test.rest.controller
 
         private ProcessInstance[] GetProcessInstanceList()
         {
-            HttpClient client = ctx.TestServer.CreateClient();
             ProcessInstanceQuery piq = new ProcessInstanceQuery
             {
                 OnlyProcessInstances = true,
@@ -164,7 +165,7 @@ namespace Sys.Bpmn.Test.rest.controller
                 }
             };
 
-            HttpResponseMessage res = client.PostAsync("workflow/process-instances", new JsonContent(piq)).Result;
+            HttpResponseMessage res = ctx.PostAsync($"{WorkflowConstants.PROC_INS_ROUTER_V1}", piq).Result;
 
             Assert.True(res.StatusCode == HttpStatusCode.OK);
 

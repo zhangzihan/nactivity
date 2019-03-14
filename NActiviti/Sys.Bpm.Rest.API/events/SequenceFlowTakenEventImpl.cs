@@ -17,6 +17,10 @@
 
 namespace org.activiti.cloud.services.events
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class SequenceFlowTakenEventImpl : AbstractProcessEngineEvent, ISequenceFlowTakenEvent
     {
         private string sequenceFlowId;
@@ -27,6 +31,10 @@ namespace org.activiti.cloud.services.events
         private string targetActivityName;
         private string targetActivityType;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public SequenceFlowTakenEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, string sequenceFlowId, string sourceActivityId, string sourceActivityName, string sourceActivityType, string targetActivityId, string targetActivityName, string targetActivityType) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
             this.sequenceFlowId = sequenceFlowId;
@@ -38,6 +46,10 @@ namespace org.activiti.cloud.services.events
             this.targetActivityType = targetActivityType;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string EventType
         {
             get
@@ -45,6 +57,10 @@ namespace org.activiti.cloud.services.events
                 return "SequenceFlowTakenEvent";
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string SequenceFlowId
         {
@@ -54,6 +70,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         public virtual string SourceActivityId
         {
             get
@@ -61,6 +81,10 @@ namespace org.activiti.cloud.services.events
                 return sourceActivityId;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string SourceActivityName
         {
@@ -70,6 +94,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         public virtual string SourceActivityType
         {
             get
@@ -78,6 +106,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string TargetActivityId
         {
             get
@@ -86,6 +118,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         public virtual string TargetActivityName
         {
             get
@@ -93,6 +129,10 @@ namespace org.activiti.cloud.services.events
                 return targetActivityName;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string TargetActivityType
         {

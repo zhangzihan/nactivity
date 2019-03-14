@@ -19,8 +19,15 @@ namespace org.activiti.cloud.services.events
 {
     using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class AbstractProcessEngineEvent : IProcessEngineEvent
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract string EventType { get; }
 
         private string appName;
@@ -34,10 +41,18 @@ namespace org.activiti.cloud.services.events
         private string processInstanceId;
         private long? timestamp;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public AbstractProcessEngineEvent()
         {
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public AbstractProcessEngineEvent(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId)
         {
             this.appName = appName;
@@ -52,6 +67,10 @@ namespace org.activiti.cloud.services.events
             this.timestamp = DateTimeHelper.CurrentUnixTimeMillis();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public AbstractProcessEngineEvent(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, long? timestamp)
         {
             this.appName = appName;
@@ -66,6 +85,10 @@ namespace org.activiti.cloud.services.events
             this.timestamp = timestamp;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ExecutionId
         {
             get
@@ -74,6 +97,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ProcessDefinitionId
         {
             get
@@ -81,6 +108,10 @@ namespace org.activiti.cloud.services.events
                 return processDefinitionId;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string ProcessInstanceId
         {
@@ -90,6 +121,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual long? Timestamp
         {
             get
@@ -98,6 +133,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string AppName
         {
             get
@@ -105,6 +144,10 @@ namespace org.activiti.cloud.services.events
                 return appName;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string AppVersion
         {
@@ -114,6 +157,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ServiceName
         {
             get
@@ -121,6 +168,10 @@ namespace org.activiti.cloud.services.events
                 return serviceName;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string ServiceFullName
         {
@@ -130,6 +181,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         public virtual string ServiceType
         {
             get
@@ -137,6 +192,10 @@ namespace org.activiti.cloud.services.events
                 return serviceType;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string ServiceVersion
         {

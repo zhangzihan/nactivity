@@ -17,15 +17,27 @@
 
 namespace org.activiti.cloud.services.events
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class VariableDeletedEventImpl : AbstractProcessEngineEvent, IVariableDeletedEvent
     {
         private string variableName;
         private string variableType;
         private string taskId;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public VariableDeletedEventImpl()
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public VariableDeletedEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, string variableName, string variableType, string taskId) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
@@ -33,6 +45,10 @@ namespace org.activiti.cloud.services.events
             this.variableType = variableType;
             this.taskId = taskId;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string VariableName
         {
@@ -42,6 +58,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string VariableType
         {
             get
@@ -50,6 +70,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string TaskId
         {
             get
@@ -58,6 +82,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string EventType
         {
             get

@@ -20,8 +20,16 @@ namespace org.activiti.cloud.services.events
     using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
     using ProcessInstance = org.activiti.cloud.services.api.model.ProcessInstance;
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IProcessCompletedEvent : IProcessEngineEvent
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         ProcessInstance ProcessInstance { get; }
 

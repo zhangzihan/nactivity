@@ -17,6 +17,10 @@
 
 namespace org.activiti.cloud.services.events
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class VariableUpdatedEventImpl : AbstractProcessEngineEvent, IVariableUpdatedEvent
     {
         private string variableName;
@@ -24,10 +28,18 @@ namespace org.activiti.cloud.services.events
         private string variableType;
         private string taskId;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public VariableUpdatedEventImpl()
         {
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public VariableUpdatedEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, string variableName, string variableValue, string variableType, string taskId) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
             this.variableName = variableName;
@@ -36,6 +48,10 @@ namespace org.activiti.cloud.services.events
             this.taskId = taskId;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string VariableName
         {
             get
@@ -44,6 +60,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string VariableValue
         {
             get
@@ -52,6 +72,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string VariableType
         {
             get
@@ -60,6 +84,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string TaskId
         {
             get
@@ -68,6 +96,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string EventType
         {
             get

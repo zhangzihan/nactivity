@@ -18,15 +18,27 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.api.model.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class DeploymentConverter : IModelConverter<IDeployment, Deployment>
     {
         private readonly ListConverter listConverter;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public DeploymentConverter(ListConverter listConverter)
         {
             this.listConverter = listConverter;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Deployment from(IDeployment source)
         {
             Deployment deployment = null;
@@ -41,6 +53,10 @@ namespace org.activiti.cloud.services.api.model.converter
             }
             return deployment;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual IList<Deployment> from(IList<IDeployment> deployments)
         {

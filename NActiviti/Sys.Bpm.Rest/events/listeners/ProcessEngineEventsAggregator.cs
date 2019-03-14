@@ -19,11 +19,17 @@ using System;
 
 namespace org.activiti.cloud.services.events.listeners
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessEngineEventsAggregator : BaseCommandContextEventsAggregator<IProcessEngineEvent, MessageProducerCommandContextCloseListener>
     {
 
         private readonly MessageProducerCommandContextCloseListener closeListener;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessEngineEventsAggregator(MessageProducerCommandContextCloseListener closeListener)
         {
             this.closeListener = closeListener;

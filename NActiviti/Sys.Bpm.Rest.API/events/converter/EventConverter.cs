@@ -19,11 +19,23 @@ using org.activiti.engine.@delegate.@event;
 
 namespace org.activiti.cloud.services.events.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IEventConverter
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         IProcessEngineEvent from(IActivitiEvent @event);
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         string handledType();
 
     }

@@ -14,7 +14,7 @@ namespace org.activiti.cloud.services.rest.api
         /// 获取某个流程所有的任务
         /// </summary>
         /// <param name="processInstanceId">流程实例id</param>
-        /// <param name="ProcessInstanceTaskQuery">流程任务查询对象</param>
+        /// <param name="query">流程任务查询对象</param>
         /// <returns></returns>
         Task<Resources<TaskModel>> getTasks(string processInstanceId, ProcessInstanceTaskQuery query);
     }

@@ -30,42 +30,40 @@ using System.Threading.Tasks;
 
 namespace org.activiti.cloud.services.rest.controllers
 {
-    [Route("/workflow/admin/process-instances")]
+
+    /// <inheritdoc />
+    [Route(WorkflowConstants.PROC_ADMIN_INST_ROUTER_V1)]
     [ApiController]
     public class ProcessInstanceAdminControllerImpl : ControllerBase, IProcessInstanceAdminController
     {
-
         private ProcessEngineWrapper processEngine;
         private readonly IRepositoryService repositoryService;
         private readonly IRuntimeService runtimeService;
+        private readonly IHistoryService historyService;
         private readonly ProcessInstanceResourceAssembler resourceAssembler;
         private readonly SecurityPoliciesApplicationService securityService;
+        private readonly PageableProcessHistoryRepositoryService pageableProcessHistoryService;
         private readonly PageableProcessInstanceRepositoryService pageableProcessInstanceService;
 
-        //public virtual string handleAppException(ActivitiForbiddenException ex)
-        //{
-        //    return ex.Message;
-        //}
-
-        //public virtual string handleAppException(ActivitiObjectNotFoundException ex)
-        //{
-        //    return ex.Message;
-        //}
-
+        /// <inheritdoc />
         public ProcessInstanceAdminControllerImpl(ProcessEngineWrapper processEngine,
             ProcessInstanceResourceAssembler resourceAssembler,
             PageableProcessInstanceRepositoryService pageableProcessInstanceService,
+            PageableProcessHistoryRepositoryService pageableProcessHistoryService,
             IProcessEngine engine,
             SecurityPoliciesApplicationService securityPoliciesApplicationService)
         {
             this.processEngine = processEngine;
             this.repositoryService = engine.RepositoryService;
             this.runtimeService = engine.RuntimeService;
+            this.historyService = engine.HistoryService;
             this.resourceAssembler = resourceAssembler;
             this.securityService = securityPoliciesApplicationService;
+            this.pageableProcessHistoryService = pageableProcessHistoryService;
             this.pageableProcessInstanceService = pageableProcessInstanceService;
         }
 
+        /// <inheritdoc />
         [HttpPost]
         public virtual Task<Resources<ProcessInstance>> GetAllProcessInstances(ProcessInstanceQuery query)
         {
@@ -73,7 +71,16 @@ namespace org.activiti.cloud.services.rest.controllers
 
             IList<ProcessInstanceResource> resources = resourceAssembler.toResources(instances.getContent());
 
-            return System.Threading.Tasks.Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.getTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
+            return Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.getTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
+        }
+
+        /// <inheritdoc />
+        [HttpPost("historices")]
+        public Task<Resources<HistoricInstance>> GetAllProcessHistoriecs(HistoricInstanceQuery query)
+        {
+            IPage<HistoricInstance> historices = new QueryProcessHistoriecsCmd().loadPage(historyService, pageableProcessHistoryService, query);
+
+            return Task.FromResult<Resources<HistoricInstance>>(new Resources<HistoricInstance>(historices.getContent(), historices.getTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
         }
     }
 }

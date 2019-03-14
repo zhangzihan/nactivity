@@ -12,8 +12,14 @@ using System.Linq;
 namespace org.activiti.api.runtime.shared.query
 {
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class PageableModelBinderProvider : IModelBinderProvider
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
@@ -24,8 +30,15 @@ namespace org.activiti.api.runtime.shared.query
             return null;
         }
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class PageableModelBinder : IModelBinder
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public PageableModelBinder(Type type)
         {
             if (type == null)
@@ -33,6 +46,10 @@ namespace org.activiti.api.runtime.shared.query
                 throw new ArgumentNullException("type");
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             if (bindingContext == null)
@@ -71,9 +88,9 @@ namespace org.activiti.api.runtime.shared.query
                                 context.Request.Form as IEnumerable<KeyValuePair<string, StringValues>> :
                                 context.Request.Query as IEnumerable<KeyValuePair<string, StringValues>>;
 
-                            if (int.TryParse(query.FirstOrDefault(x => x.Key.ToLower() == "offset").Value, out int offset))
+                            if (int.TryParse(query.FirstOrDefault(x => x.Key.ToLower() == "pageno").Value, out int pageNo))
                             {
-                                obj.PageNo = offset;
+                                obj.PageNo = pageNo;
                             }
                             if (int.TryParse(query.FirstOrDefault(x => x.Key.ToLower() == "pagesize").Value, out int pageSize))
                             {

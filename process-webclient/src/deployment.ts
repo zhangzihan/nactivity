@@ -2,15 +2,16 @@ import { DirectionEnum } from 'model/query/ISort';
 import { IProcessDefinitionDeployerService } from './services/IProcessDefinitionDeployerService';
 import { useView, PLATFORM, inject, observable } from "aurelia-framework";
 import { EventAggregator } from 'aurelia-event-aggregator';
+import { EventBus } from 'EventBus';
 
-@inject('processDefinitionDeployer', EventAggregator)
+@inject('processDefinitionDeployer', 'eventBus')
 export class DeploymentViewModel {
 
   deployments: Array<any>;
 
   @observable select: any;
 
-  constructor(private deployService: IProcessDefinitionDeployerService, private es: EventAggregator) {
+  constructor(private deployService: IProcessDefinitionDeployerService, private es: EventBus) {
     this.allDeployments();
   }
 

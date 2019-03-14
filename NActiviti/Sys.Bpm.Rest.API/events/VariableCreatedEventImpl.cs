@@ -17,6 +17,10 @@
 
 namespace org.activiti.cloud.services.events
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class VariableCreatedEventImpl : AbstractProcessEngineEvent, IVariableCreatedEvent
     {
 
@@ -25,9 +29,17 @@ namespace org.activiti.cloud.services.events
         protected internal string variableType;
         protected internal string taskId;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public VariableCreatedEventImpl()
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public VariableCreatedEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, string variableName, string variableValue, string variableType, string taskId) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
@@ -37,6 +49,10 @@ namespace org.activiti.cloud.services.events
             this.taskId = taskId;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string VariableName
         {
             get
@@ -44,6 +60,10 @@ namespace org.activiti.cloud.services.events
                 return variableName;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string VariableValue
         {
@@ -53,6 +73,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string VariableType
         {
             get
@@ -61,6 +85,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string TaskId
         {
             get
@@ -69,6 +97,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string EventType
         {
             get

@@ -16,6 +16,10 @@
 
 namespace org.activiti.cloud.services.events.configuration
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class RuntimeBundleProperties
     {
         private string rbSpringAppName;
@@ -26,6 +30,10 @@ namespace org.activiti.cloud.services.events.configuration
 
         private RuntimeBundleEventsProperties eventsProperties = new RuntimeBundleEventsProperties();
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string RbSpringAppName
         {
             get
@@ -38,6 +46,10 @@ namespace org.activiti.cloud.services.events.configuration
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ServiceFullName
         {
             get
@@ -47,6 +59,10 @@ namespace org.activiti.cloud.services.events.configuration
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         // a level of indirection here as we may change this to use its own property
         public virtual string ServiceName
         {
@@ -56,6 +72,10 @@ namespace org.activiti.cloud.services.events.configuration
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string ServiceType
         {
@@ -70,6 +90,10 @@ namespace org.activiti.cloud.services.events.configuration
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         public virtual string ServiceVersion
         {
             get
@@ -83,6 +107,10 @@ namespace org.activiti.cloud.services.events.configuration
         }
 
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string AppName
         {
             get
@@ -96,6 +124,10 @@ namespace org.activiti.cloud.services.events.configuration
         }
 
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string AppVersion
         {
             get
@@ -109,6 +141,10 @@ namespace org.activiti.cloud.services.events.configuration
         }
 
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual RuntimeBundleEventsProperties EventsProperties
         {
             get
@@ -122,11 +158,18 @@ namespace org.activiti.cloud.services.events.configuration
         }
 
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public class RuntimeBundleEventsProperties
         {
 
             internal bool integrationAuditEventsEnabled;
 
+            /// <summary>
+            /// 
+            /// </summary>
             public virtual bool IntegrationAuditEventsEnabled
             {
                 get

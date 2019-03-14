@@ -60,6 +60,12 @@ namespace org.activiti.cloud.services.rest.api
         /// <returns></returns>
         Task<BpmnModel> GetBpmnModel(string id);
 
+        /// <summary>
+        /// 仅查询草稿,一个流程始终只有一个草稿.
+        /// </summary>
+        /// <param name="tenantId">租户id</param>
+        /// <param name="name">流程名称</param>
+        /// <returns>部署定义</returns>
         Task<Deployment> Draft(string tenantId, string name);
     }
 }

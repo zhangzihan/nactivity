@@ -19,6 +19,10 @@ using System.Collections.Generic;
 
 namespace org.activiti.services.connectors.model
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class IntegrationResultEvent
     {
         private string id;
@@ -32,12 +36,20 @@ namespace org.activiti.services.connectors.model
         private string serviceType;
         private string serviceVersion;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         //used by json deserialization
         public IntegrationResultEvent()
         {
             this.id = System.Guid.NewGuid().ToString();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         //[JsonConstructor]
         public IntegrationResultEvent([JsonProperty("ExecutionId")]string executionId,
             [JsonProperty("Variables")]IDictionary<string, object> variables,
@@ -58,6 +70,10 @@ namespace org.activiti.services.connectors.model
             this.serviceVersion = serviceVersion;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Id
         {
             get
@@ -66,6 +82,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ExecutionId
         {
             get
@@ -73,6 +93,10 @@ namespace org.activiti.services.connectors.model
                 return executionId;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string FlowNodeId
         {
@@ -82,6 +106,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         public virtual IDictionary<string, object> Variables
         {
             get
@@ -89,6 +117,10 @@ namespace org.activiti.services.connectors.model
                 return variables;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string AppName
         {
@@ -98,6 +130,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         public virtual string AppVersion
         {
             get
@@ -105,6 +141,10 @@ namespace org.activiti.services.connectors.model
                 return appVersion;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string ServiceName
         {
@@ -114,6 +154,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         public virtual string ServiceFullName
         {
             get
@@ -122,6 +166,10 @@ namespace org.activiti.services.connectors.model
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+
         public virtual string ServiceType
         {
             get
@@ -129,6 +177,10 @@ namespace org.activiti.services.connectors.model
                 return serviceType;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string ServiceVersion
         {

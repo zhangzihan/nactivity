@@ -18,12 +18,24 @@
 namespace org.activiti.cloud.services.api.model.converter
 {
 
-	public interface IModelConverter<SOURCE, TARGET>
+    /// <summary>
+    /// 
+    /// </summary>
+
+    public interface IModelConverter<SOURCE, TARGET>
 	{
 
-		TARGET from(SOURCE source);
 
-		IList<TARGET> from(IList<SOURCE> sources);
+        /// <summary>
+        /// 
+        /// </summary>
+        TARGET from(SOURCE source);
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IList<TARGET> from(IList<SOURCE> sources);
 	}
 
 }

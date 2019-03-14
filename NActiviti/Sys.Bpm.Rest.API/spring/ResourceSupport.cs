@@ -2,16 +2,28 @@
 
 namespace org.springframework.hateoas
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class ResourceSupport
     {
         protected IList<Link> links = new List<Link>();
 
+
+        /// <summary>
+        /// 添加链接资源
+        /// </summary>
         public ResourceSupport add(Link link)
         {
             this.links.Add(link);
 
             return this;
         }
+
+        /// <summary>
+        /// 资源链接
+        /// </summary>
 
         public IList<Link> Links
         {

@@ -64,7 +64,7 @@ namespace org.activiti.engine.impl.cmd
             attachment.Description = attachmentDescription;
             attachment.Type = attachmentType;
             attachment.Url = url;
-            attachment.UserId = Authentication.AuthenticatedUserId;
+            attachment.UserId = Authentication.AuthenticatedUser.Id;
             attachment.Time = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
 
             commandContext.AttachmentEntityManager.insert(attachment, false);

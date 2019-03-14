@@ -18,10 +18,12 @@ import {
 import { EventAggregator } from 'aurelia-event-aggregator';
 import constants from './contants';
 import { DialogService, DialogController } from 'aurelia-dialog';
+import { EventBus } from 'EventBus';
+import { HttpInvoker } from 'services/httpInvoker';
 
 //import diagramXML from '../resources/newDiagram.bpmn';
 
-@inject(EventAggregator, DialogService)
+@inject('eventBus', DialogService, 'httpInvoker')
 export class BpmnIO {
 
   container;
@@ -42,7 +44,7 @@ export class BpmnIO {
 
   gfx;
 
-  constructor(private es: EventAggregator, private ds: DialogService) {
+  constructor(private es: EventBus, private ds: DialogService, private httpInvoker: HttpInvoker) {
     this.es.subscribe("openWorkflow", (wf) => {
       this.workflow = wf;
       this.openDiagram(wf.xml);
@@ -139,7 +141,7 @@ export class BpmnIO {
     //取到画布事件总线
     this.eventBus = this.bpmnModeler.get("eventBus");
 
-    this.eventBus.on("element.click", (sender, /**元素节点 */elem:any) =>{
+    this.eventBus.on("element.click", (sender, /**元素节点 */elem: any) => {
       //数据
       var bizobj = elem.element.businessObject;
       this.element = elem.element;
@@ -166,7 +168,7 @@ export class BpmnIO {
   deploy($event) {
     this.saveDiagram((err, xml) => {
       this.workflow.xml = xml;
-      Axios.post(`${constants.serverUrl}/workflow/process-deployer`, {
+      this.httpInvoker.post(`${constants.serverUrl}/workflow/process-deployer`, {
         "disableSchemaValidation": true,
         "disableBpmnValidation": false,
         "name": this.workflow.name,
@@ -188,8 +190,8 @@ export class BpmnIO {
     this.saveDiagram((err, xml) => {
       var moddle = new BpmnModdle();
 
-      var model = moddle.fromXML(xml, (err, definitions) =>{
-        moddle.toXML(definitions, (err, xml) =>{
+      var model = moddle.fromXML(xml, (err, definitions) => {
+        moddle.toXML(definitions, (err, xml) => {
           debugger;
         })
         debugger;
@@ -201,7 +203,7 @@ export class BpmnIO {
     this.saveDiagram((err, xml) => {
       //this.setEncoded('diagram.bpmn', err ? null : xml);      
       this.workflow.xml = xml;
-      Axios.post(`${constants.serverUrl}/workflow/process-deployer/save`, {
+      this.httpInvoker.post(`${constants.serverUrl}/workflow/process-deployer/save`, {
         "disableSchemaValidation": true,
         "disableBpmnValidation": true,
         "name": this.workflow.name,

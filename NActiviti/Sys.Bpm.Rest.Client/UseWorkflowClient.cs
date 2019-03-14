@@ -14,16 +14,11 @@ namespace Sys.Bpm.Rest.Client
         {
             services.AddHttpClient(HTTPCLIENT_WORKFLOW);
 
-            services.AddSingleton<HttpInvoker>(sp =>
+            services.AddTransient<WorkflowHttpInvokerProvider>(sp =>
             {
-                IHttpClientFactory httpClientFactory = sp.GetService<IHttpClientFactory>();
+                HttpClient httpClient = sp.GetService<IHttpClientFactory>().CreateClient();
 
-                return new HttpInvoker(httpClientFactory.CreateClient());
-            });
-
-            services.AddSingleton<WorkflowHttpCientProvider>(sp =>
-            {
-                return new WorkflowHttpCientProvider(sp.GetService<HttpInvoker>());
+                return new WorkflowHttpInvokerProvider(httpClient);
             });
 
             return services;

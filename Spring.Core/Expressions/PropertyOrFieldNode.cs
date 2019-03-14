@@ -138,7 +138,7 @@ namespace Spring.Expressions
                 {
                     try
                     {
-                        if (context is IDictionary)
+                        if (context is IDictionary ctx && ctx.Contains(memberName))
                         {
                             accessor = new IDictionaryValueAccessor(memberName);
                         }

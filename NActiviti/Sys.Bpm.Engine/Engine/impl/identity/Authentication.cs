@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Sys;
 using System.Threading;
 using System.Linq;
+using Sys.Workflow;
 
 namespace org.activiti.engine.impl.identity
 {
@@ -22,17 +23,9 @@ namespace org.activiti.engine.impl.identity
     public abstract class Authentication
     {
 
-        internal static ThreadLocal<string> authenticatedUserIdThreadLocal = new ThreadLocal<string>(() =>
-        {
-#if DEBUG
-            return "已验证用户";
-#else
-            HttpContext context = ProcessEngineServiceProvider.Resolve<HttpContext>();
-            return context.User.Claims.FirstOrDefault().Subject.FindFirst("subject").Value;
-#endif
-        });
+        internal static ThreadLocal<IUserInfo> authenticatedUserIdThreadLocal = new ThreadLocal<IUserInfo>();
 
-        public static string AuthenticatedUserId
+        public static IUserInfo AuthenticatedUser
         {
             set
             {

@@ -4,15 +4,27 @@ using System.Collections.Generic;
 namespace org.activiti.cloud.services.api.model.converter
 {
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class TaskCandidateUserConverter : IModelConverter<IIdentityLink, TaskCandidateUser>
     {
 
         private readonly ListConverter listConverter;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskCandidateUserConverter(ListConverter listConverter)
         {
             this.listConverter = listConverter;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual TaskCandidateUser from(IIdentityLink source)
         {
@@ -25,6 +37,10 @@ namespace org.activiti.cloud.services.api.model.converter
             return taskCandidateUser;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<TaskCandidateUser> from(IList<IIdentityLink> identityLinks)
         {
             return listConverter.from(identityLinks, this);

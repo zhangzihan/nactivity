@@ -20,13 +20,24 @@ using org.activiti.engine.@delegate.@event;
 
 namespace org.activiti.cloud.services.events.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class SequenceFlowTakenEventConverter : AbstractEventConverter
     {
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public SequenceFlowTakenEventConverter(RuntimeBundleProperties runtimeBundleProperties) : base(runtimeBundleProperties)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override IProcessEngineEvent from(IActivitiEvent @event)
         {
             var eventObj = (IActivitiSequenceFlowTakenEvent)@event;
@@ -49,6 +60,9 @@ namespace org.activiti.cloud.services.events.converter
                 eventObj.TargetActivityType);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override string handledType()
         {
             return ActivitiEventType.SEQUENCEFLOW_TAKEN.ToString();

@@ -15,6 +15,7 @@
  */
 
 using org.activiti.engine.impl.identity;
+using Sys.Workflow;
 
 namespace org.activiti.cloud.services.core
 {
@@ -23,15 +24,18 @@ namespace org.activiti.cloud.services.core
     /// </summary>
     public class AuthenticationWrapper //: BaseAuthenticationWrapper
     {
-        public virtual string AuthenticatedUserId
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IUserInfo AuthenticatedUser
         {
             set
             {
-                Authentication.AuthenticatedUserId = value;
+                Authentication.AuthenticatedUser = value;
             }
             get
             {
-                return Authentication.AuthenticatedUserId;
+                return Authentication.AuthenticatedUser;
             }
         }
 

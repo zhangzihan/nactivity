@@ -9,12 +9,20 @@
       margin-left: 4px;
       float: left
     }
+
   </style>
   <table class="table table-striped">
     <tr>
+      <td colspan="6">
+        <button class="btn btn-primary" style="margin-right:4px" click.trigger="completed()">已完成</button>
+        <button class="btn btn-primary" click.trigger="unCompleted()">未完成</button>
+      </td>
+    </tr>
+    <tr>
       <td>状态</td>
       <td>流程名称</td>
-      <td>触发时间</td>
+      <td>提交时间</td>
+      <td>完成时间</td>
       <td>提交人</td>
       <td>操作</td>
     </tr>
@@ -29,12 +37,15 @@
         ${inst.startDate}
       </td>
       <td>
-        ${inst.initiator}
+        ${inst.endDate}
+      </td>
+      <td>
+        ${inst.startUserId}
       </td>
       <td>
         <ul class="btn-list">
           <li>
-            <a href="#/proc-inst/${inst.id}">明细</a>
+            <a click.trigger="detail(inst.id)">明细</a>
           </li>
           <li>
             <a click.trigger="terminate(inst.id)">终止</a>

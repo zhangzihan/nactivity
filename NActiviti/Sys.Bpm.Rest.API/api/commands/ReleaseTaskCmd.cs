@@ -19,23 +19,40 @@ using System;
 
 namespace org.activiti.cloud.services.api.commands
 {
+
+    /// <summary>
+    /// 任务释放命令
+    /// </summary>
     public class ReleaseTaskCmd : ICommand
     {
 
         private readonly string id = "releaseTaskCmd";
         private string taskId;
 
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="taskId">任务id</param>
         ////[JsonConstructor]
         public ReleaseTaskCmd([JsonProperty("TaskId")] string taskId)
         {
             this.taskId = taskId;
         }
 
+
+        /// <summary>
+        /// 命令id
+        /// </summary>
         public virtual string Id
         {
             get => id;
         }
 
+
+        /// <summary>
+        /// 任务id
+        /// </summary>
         public virtual string TaskId
         {
             get => taskId;

@@ -6,20 +6,36 @@ using org.activiti.engine.task;
 
 namespace org.activiti.cloud.services.events.converter
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class TaskCandidateGroupRemovedEventConverter : AbstractEventConverter
     {
 
         private readonly TaskCandidateGroupConverter taskCandidateGroupConverter;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskCandidateGroupRemovedEventConverter(TaskCandidateGroupConverter identityLinkConverter, RuntimeBundleProperties runtimeBundleProperties) : base(runtimeBundleProperties)
         {
             this.taskCandidateGroupConverter = identityLinkConverter;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override IProcessEngineEvent from(IActivitiEvent @event)
         {
             return new TaskCandidateGroupRemovedEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, RuntimeBundleProperties.ServiceName, RuntimeBundleProperties.ServiceFullName, RuntimeBundleProperties.ServiceType, RuntimeBundleProperties.ServiceVersion, @event.ExecutionId, @event.ProcessDefinitionId, @event.ProcessInstanceId, taskCandidateGroupConverter.from((IIdentityLink)((IActivitiEntityEvent)@event).Entity));
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         public override string handledType()
         {

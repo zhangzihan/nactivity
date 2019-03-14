@@ -19,18 +19,38 @@ namespace org.activiti.cloud.services.events
 {
     using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IVariableDeletedEvent : IProcessEngineEvent
     {
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns> the name of the variable involved. </returns>
         string VariableName { get; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns> The variable type as string. </returns>
         string VariableType { get; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns> the id of the execution the variable is set on. </returns>
         new string ExecutionId { get; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns> the id of the task the variable has been set on. </returns>
         string TaskId { get; }
     }

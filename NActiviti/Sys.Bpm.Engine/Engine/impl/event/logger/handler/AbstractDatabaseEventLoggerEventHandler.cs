@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl.@event.logger.handler
             putInMapIfNotNull(data, Fields_Fields.TIMESTAMP, timeStamp);
 
             // Current user
-            string userId = Authentication.AuthenticatedUserId;
+            string userId = Authentication.AuthenticatedUser.Id;
             if (!ReferenceEquals(userId, null))
             {
                 eventLogEntry.UserId = userId;

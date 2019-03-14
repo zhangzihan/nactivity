@@ -12,10 +12,17 @@ namespace org.activiti.cloud.services.rest.api
     public interface IProcessInstanceAdminController
     {
         /// <summary>
-        /// 获取所有流程实例
+        /// 获取所有当前运行的流程实例
         /// </summary>
         /// <param name="query">流程实例查询对象</param>
         /// <returns></returns>
         Task<Resources<ProcessInstance>> GetAllProcessInstances(ProcessInstanceQuery query);
+
+        /// <summary>
+        /// 获取所有历史流程实例
+        /// </summary>
+        /// <param name="query">流程实例查询对象</param>
+        /// <returns></returns>
+        Task<Resources<HistoricInstance>> GetAllProcessHistoriecs(HistoricInstanceQuery query);
     }
 }

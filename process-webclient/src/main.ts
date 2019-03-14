@@ -1,4 +1,5 @@
-﻿
+﻿import { ProcessInstanceAdminService } from './services/ProcessInstanceAdminService';
+
 
 /// <reference types="aurelia-loader-webpack/src/webpack-hot-interface"/>
 // we want font-awesome to load as soon as possible to show the fa-spinner
@@ -16,6 +17,11 @@ import { ProcessDefineService } from 'services/processdefineservice';
 import { EssayModel } from 'essaies/essaymodel';
 import { ProcessDefinitionDeployerService } from './services/ProcessDefinitionDeployerService';
 import { ProcessInstanceServie } from 'services/ProcessInstanceService';
+import { WorkflowWorkspce } from 'WorkflowWorkspace';
+import { EventBus } from 'EventBus';
+import { WorkflowDocument } from 'WorkflowDocument';
+import { HttpInvoker } from 'services/httpInvoker';
+import { ProcessInstanceHistoriceService } from 'services/ProcessInstanceHistoricService';
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
 Bluebird.config({ warnings: { wForgottenReturn: false } });
@@ -32,6 +38,12 @@ export async function configure(aurelia: Aurelia) {
   aurelia.container.registerSingleton('essayModel', EssayModel);
   aurelia.container.registerSingleton('processDefinitionDeployer', ProcessDefinitionDeployerService);
   aurelia.container.registerSingleton('processInstanceService', ProcessInstanceServie);
+  aurelia.container.registerSingleton('processInstanceAdminService', ProcessInstanceAdminService);
+  aurelia.container.registerSingleton('historyService', ProcessInstanceHistoriceService);
+  aurelia.container.registerSingleton('eventBus', EventBus);
+  aurelia.container.registerSingleton('httpInvoker', HttpInvoker);
+  aurelia.container.registerSingleton('document', WorkflowDocument);
+  aurelia.container.registerSingleton('workspace', WorkflowWorkspce);
 
   // Uncomment the line below to enable animation.
   // aurelia.use.plugin(PLATFORM.moduleName('aurelia-animator-css'));

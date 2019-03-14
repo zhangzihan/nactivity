@@ -17,9 +17,9 @@
 
 namespace org.activiti.cloud.services.events
 {
-
-
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class ActivityCancelledEventImpl : AbstractProcessEngineEvent, IActivityCancelledEvent
     {
 
@@ -28,10 +28,18 @@ namespace org.activiti.cloud.services.events
         protected internal string activityType;
         protected internal string cause;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ActivityCancelledEventImpl()
         {
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ActivityCancelledEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, string activityId, string activityName, string activityType, string cause) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
             this.activityId = activityId;
@@ -40,6 +48,10 @@ namespace org.activiti.cloud.services.events
             this.cause = cause;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ActivityId
         {
             get
@@ -48,6 +60,9 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ActivityName
         {
             get
@@ -56,6 +71,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ActivityType
         {
             get
@@ -64,6 +83,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Cause
         {
             get
@@ -72,6 +95,10 @@ namespace org.activiti.cloud.services.events
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public override string EventType
         {
             get

@@ -2,6 +2,10 @@
 
 namespace org.activiti.cloud.services.api.model
 {
+
+    /// <summary>
+    /// 流程变量
+    /// </summary>
     public class ProcessInstanceVariable
     {
 
@@ -15,11 +19,23 @@ namespace org.activiti.cloud.services.api.model
 
         private string executionId;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessInstanceVariable()
         {
 
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="processInstanceId">实例id</param>
+        /// <param name="name">变量名称</param>
+        /// <param name="type">变量类型</param>
+        /// <param name="value">变量值</param>
+        /// <param name="executionId">流程运行时id</param>
         //[JsonConstructor]
         public ProcessInstanceVariable([JsonProperty("ProcessInstanceId")]string processInstanceId,
             [JsonProperty("Name")]string name,
@@ -34,13 +50,22 @@ namespace org.activiti.cloud.services.api.model
             this.processInstanceId = processInstanceId;
         }
 
+        /// <summary>
+        /// 变量名称
+        /// </summary>
+
         public virtual string Name
         {
             get
             {
                 return name;
             }
+            set => name = value;
         }
+
+        /// <summary>
+        /// 变量类型
+        /// </summary>
 
 
         public virtual string Type
@@ -49,14 +74,24 @@ namespace org.activiti.cloud.services.api.model
             {
                 return type;
             }
+            set => type = value;
         }
+
+        /// <summary>
+        /// 变量值
+        /// </summary>
         public virtual object Value
         {
             get
             {
                 return value;
             }
+            set => this.value = value;
         }
+
+        /// <summary>
+        /// 流程实例id
+        /// </summary>
 
         public virtual string ProcessInstanceId
         {
@@ -64,7 +99,12 @@ namespace org.activiti.cloud.services.api.model
             {
                 return processInstanceId;
             }
+            set => processInstanceId = value;
         }
+
+        /// <summary>
+        /// 流程执行id
+        /// </summary>
 
         public virtual string ExecutionId
         {
@@ -72,6 +112,7 @@ namespace org.activiti.cloud.services.api.model
             {
                 return executionId;
             }
+            set => executionId = value;
         }
     }
 

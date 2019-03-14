@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core.pageable;
@@ -17,7 +18,9 @@ using Sys.Bpm.Services.Rest;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -143,6 +146,22 @@ namespace Sys.Bpmn.Test
             return pddc.Deploy(pdd).Result;
         }
 
+        public HttpClient CreateHttpClient()
+        {
+            HttpClient httpClient = this.TestServer.CreateClient();
+
+            string accessToken = WebUtility.UrlEncode(JsonConvert.SerializeObject(new
+            {
+                Id = "新用户1",
+                Name = "新用户1",
+                TenantId
+            }));
+
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            return httpClient;
+        }
+
         /// <summary>
         /// lock锁保证在并发测试是只有一个HttpClient实例进入.
         /// </summary>
@@ -150,13 +169,14 @@ namespace Sys.Bpmn.Test
         /// <returns></returns>
         public Task<HttpResponseMessage> GetAsync(string url)
         {
-            HttpClient httpClient = this.TestServer.CreateClient();
+            HttpClient httpClient = CreateHttpClient();
 
             return httpClient.GetAsync(url);
         }
+
         public Task<HttpResponseMessage> PostAsync(string url, object data)
         {
-            HttpClient httpClient = this.TestServer.CreateClient();
+            HttpClient httpClient = CreateHttpClient();
 
             return httpClient.PostAsync(url, new JsonContent(data));
         }
@@ -170,7 +190,7 @@ namespace Sys.Bpmn.Test
         {
             lock (syncClient)
             {
-                HttpClient httpClient = this.TestServer.CreateClient();
+                HttpClient httpClient = CreateHttpClient();
 
                 foreach (HttpInvoke post in posts)
                 {
@@ -225,6 +245,8 @@ namespace Sys.Bpmn.Test
                 cors.AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowAnyOrigin());
+
+            app.UseWorkflow();
 
             app.UseMvc();
         }

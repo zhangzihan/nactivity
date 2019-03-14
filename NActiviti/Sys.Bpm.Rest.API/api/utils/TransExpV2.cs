@@ -33,6 +33,10 @@ namespace org.activiti.cloud.services.api.utils
             return lambda.Compile();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static TOut Trans(TIn tIn)
         {
             return cache(tIn);

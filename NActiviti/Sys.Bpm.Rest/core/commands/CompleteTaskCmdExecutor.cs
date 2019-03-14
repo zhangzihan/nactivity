@@ -6,18 +6,27 @@ using System;
 
 namespace org.activiti.cloud.services.core.commands
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CompleteTaskCmdExecutor : CommandExecutor<CompleteTaskCmd>
     {
 
         private ProcessEngineWrapper processEngine;
         private IMessageChannel<CompleteTaskResults> commandResults;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public CompleteTaskCmdExecutor(ProcessEngineWrapper processEngine, IMessageChannel<CompleteTaskResults> commandResults)
         {
             this.processEngine = processEngine;
             this.commandResults = commandResults;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Type HandledType
         {
             get
@@ -26,6 +35,9 @@ namespace org.activiti.cloud.services.core.commands
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void execute(CompleteTaskCmd cmd)
         {
             processEngine.completeTask(cmd);

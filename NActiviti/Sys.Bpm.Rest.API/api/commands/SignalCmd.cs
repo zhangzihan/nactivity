@@ -20,16 +20,30 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.api.commands
 {
+
+    /// <summary>
+    /// 流程信号命令
+    /// </summary>
     public class SignalCmd : ICommand
     {
         private readonly string id = "signalCmd";
         private string name;
         private IDictionary<string, object> inputVariables;
 
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         public SignalCmd()
         {
         }
 
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="inputVariables">变量</param>
+        /// <param name="name">名称</param>
         //[JsonConstructor]
         public SignalCmd([JsonProperty("Name")]string name,
             [JsonProperty("InputVariables")]IDictionary<string, object> inputVariables) : this()
@@ -38,16 +52,30 @@ namespace org.activiti.cloud.services.api.commands
             this.inputVariables = inputVariables;
         }
 
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="name">名称</param>
+
         //[JsonConstructor]
         public SignalCmd([JsonProperty("Name")]string name) : this()
         {
             this.name = name;
         }
 
+        /// <summary>
+        /// 命令id
+        /// </summary>
+
         public virtual string Id
         {
             get => id;
         }
+
+        /// <summary>
+        /// 信号名称
+        /// </summary>
 
         public virtual string Name
         {
@@ -55,7 +83,12 @@ namespace org.activiti.cloud.services.api.commands
             {
                 return name;
             }
+            set => name = value;
         }
+
+        /// <summary>
+        /// 变量
+        /// </summary>
 
         public virtual IDictionary<string, object> InputVariables
         {
@@ -63,6 +96,7 @@ namespace org.activiti.cloud.services.api.commands
             {
                 return inputVariables;
             }
+            set => inputVariables = value;
         }
     }
 }
