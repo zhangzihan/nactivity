@@ -16,6 +16,7 @@ namespace org.activiti.engine.impl.persistence.entity
     using org.activiti.engine.@delegate.@event.impl;
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.persistence.entity.data;
+    using System;
     using System.Collections.Generic;
 
     /// 
@@ -33,7 +34,13 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public virtual TOut findById<TOut>(KeyValuePair<string, object> entityId)
         {
+            Type type = typeof(TOut);
             return DataManager.findById<TOut>(entityId);
+        }
+
+        public virtual TOut findById<TOut>(object entityId)
+        {
+            return findById<TOut>(new KeyValuePair<string, object>("id", entityId));
         }
 
         public virtual EntityImpl create()

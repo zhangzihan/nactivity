@@ -374,6 +374,12 @@
       <If Test="executionId != null">
         and RES.EXECUTION_ID_ = #{executionId}
       </If>
+      <IsTrue Property="CollectionUtil.IsNotEmpty(taskNotInIds)">
+        and RES.ID_ NOT IN
+        <For Property="taskNotInIds" Index="index" Key="taskId" Open="(" Separator="," Close=")">
+          #{taskId}
+        </For>
+      </IsTrue>
       <If Test="createTime != null">
         and RES.CREATE_TIME_ = #{createTime}
       </If>

@@ -48,6 +48,8 @@ namespace org.activiti.engine
         ///          the task, cannot be null. </param>
         void saveTask(ITask task);
 
+        void terminateTask(string taskId, string terminateReason, bool terminateExecution);
+
         /// <summary>
         /// Deletes the given task, not deleting historic information that is related to this task.
         /// </summary>

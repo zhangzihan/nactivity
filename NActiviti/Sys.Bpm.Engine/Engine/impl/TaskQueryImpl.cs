@@ -1851,6 +1851,20 @@ namespace org.activiti.engine.impl
             }
         }
 
+        private string[] taskNotInIds;
+
+        public ITaskQuery taskIdNotIn(string[] ids)
+        {
+            this.taskNotInIds = ids;
+            return this;
+        }
+
+        public string[] TaskNotInIds
+        {
+            get => taskNotInIds;
+            set => taskNotInIds = value;
+        }
+
         // getters ////////////////////////////////////////////////////////////////
 
         public virtual string Name

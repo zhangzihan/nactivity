@@ -76,6 +76,9 @@
           完成时间
         </td>
         <td>
+          终止原因
+        </td>
+        <td>
           操作
         </td>
       </tr>
@@ -85,11 +88,34 @@
         <td>${task.assignee}</td>
         <td>${task.createdDate}</td>
         <td>${task.endDate}</td>
+        <td>${task.deleteReason}</td>
         <td>
           <a click.trigger="terminateTask(task.id)">终止</a>
-          <a click.trigger="toUser(task.id)">转派</a>
+          <a click.trigger="transfer(task.id)">转派</a>
+          <a click.trigger="appendCountersign(task.id)">追加</a>
         </td>
       </tr>
-      <table>
+    </table>
+
+    <table class="table table-striped">
+      <tr>
+        <td colspan="2">
+          <a class="fa fa-plus" click.trigger="addUser()">Add</a>
+          <a class="fa fa-minus" click.trigger="removeUser()">Remove</a>
+        </td>
+      </tr>
+      <tr>
+        <td>Id</td>
+        <td>Name</td>
+      </tr>
+      <tr repeat.for="user of users" click.trigger="selectUser(user)">
+        <td>
+          <input value.bind="user.id" />
+        </td>
+        <td>
+          <input value.bind="user.name" />
+        </td>
+      </tr>
+    </table>
   </div>
 </template>

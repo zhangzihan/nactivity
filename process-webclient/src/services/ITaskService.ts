@@ -4,6 +4,9 @@ import { ITaskModel } from "model/resource/ITaskModel";
 import { ICompleteTaskCmd } from "model/cmd/ICompleteTaskCmd";
 import { ICreateTaskCmd } from "model/cmd/ICreateTaskCmd";
 import { IUpdateTaskCmd } from "model/cmd/IUpdateTaskCmd";
+import { ITransferTaskCmd } from "model/cmd/ITransferTaskCmd";
+import { ITerminateTaskCmd } from "model/cmd/ITerminateTaskCmd";
+import { IAppendCountersignCmd } from "model/cmd/IAppendCountersignCmd";
 
 export interface ITaskService {
   /// <summary>
@@ -84,4 +87,31 @@ export interface ITaskService {
   /// <param name="taskId">任务id</param>
   /// <returns>Task<Resources <TaskModel>></returns>
   getSubtasks(taskId: string): Promise<ITaskModel>;
+
+  /**
+   * /// <summary>
+    /// 转办任务处理人
+    /// </summary>
+    /// <param name="cmd">转办任务命令</param>
+    /// <returns></returns>
+   */
+  transferTask(cmd: ITransferTaskCmd): Promise<Array<ITaskModel>>;
+
+  /**
+   * /// <summary>
+    /// 终止任务
+    /// </summary>
+    /// <param name="cmd">终止任务命令</param>
+    /// <returns></returns>
+   */
+  terminateTask(cmd: ITerminateTaskCmd): Promise<any>;
+
+  /**
+   * /// <summary>
+    /// 追加任务处理人
+    /// </summary>
+    /// <param name="cmd">追加任务命令</param>
+    /// <returns></returns>
+   */
+  appendCountersign(cmd: IAppendCountersignCmd): Promise<Array<ITaskModel>>;
 }

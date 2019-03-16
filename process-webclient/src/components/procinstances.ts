@@ -60,7 +60,7 @@ export class ProcInstancesViewModel {
   unCompleted() {
     this.status = "uncompleted";
     this.procInsSrv.processInstances({
-      onlyProcessInstanceExecutions: true,
+      onlyProcessInstances: true,
       processDefinitionName: this.procName,
       pageable: {
         pageNo: 1,
@@ -86,6 +86,10 @@ export class ProcInstancesViewModel {
   }
 
   terminate(id) {
-    debugger;
+    this.procInsSrv.terminate(id, "已终止整个流程实例").then(data => {
+      alert("成功");
+    }).catch(err => {
+      alert(err);
+    });
   }
 }

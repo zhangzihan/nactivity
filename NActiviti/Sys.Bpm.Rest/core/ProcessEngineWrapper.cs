@@ -5,15 +5,16 @@ using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.events.listeners;
-using org.activiti.cloud.services.rest.controllers;
 using org.activiti.engine;
 using org.activiti.engine.history;
+using org.activiti.engine.impl.persistence.entity;
 using org.activiti.engine.repository;
 using org.activiti.engine.runtime;
 using org.activiti.engine.task;
 using org.springframework.context;
 using Sys;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace org.activiti.cloud.services.core
 {
@@ -147,7 +148,7 @@ namespace org.activiti.cloud.services.core
             builder.businessKey(cmd.BusinessKey);
             builder.name(cmd.ProcessInstanceName);
             builder.tenantId(cmd.TenantId);
-            
+
             return processInstanceConverter.from(builder.start());
         }
 
@@ -382,6 +383,76 @@ namespace org.activiti.cloud.services.core
             taskService.saveTask(task);
 
             return taskConverter.from(taskService.createTaskQuery().taskId(task.Id).singleResult());
+        }
+
+        /// <summary>
+        /// 追加任务处理人
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <returns></returns>
+        public virtual TaskModel[] appendCountersign(AppendCountersignCmd cmd)
+        {
+            ITask task = taskService.createTaskQuery().taskId(cmd.TaskId).singleResult();
+
+            var acmd = new engine.impl.cmd.AddCountersignCmd(task.ExecutionId, cmd.Assignees);
+
+            ITask[] tasks = processEngine.ProcessEngineConfiguration.ManagementService.executeCommand(acmd) as ITask[];
+
+            return tasks.Select(x => taskConverter.from(x)).ToArray();
+        }
+
+        /// <summary>
+        /// 终止任务
+        /// </summary>
+        /// <param name="cmd">终止任务命令</param>
+        public virtual void terminateTask(TerminateTaskCmd cmd)
+        {
+            taskService.terminateTask(cmd.TaskId, cmd.TerminateReason, true);
+        }
+
+        /// <summary>
+        /// 任务转办
+        /// </summary>
+        /// <param name="cmd">任务转办命令</param>
+        /// <returns></returns>
+        public virtual TaskModel[] transferTask(TransferTaskCmd cmd)
+        {
+            ITaskEntity task = taskService.createTaskQuery().taskId(cmd.TaskId).singleResult() as ITaskEntity;
+            if (task == null)
+            {
+                throw new ActivitiException("Parent task with id " + cmd.TaskId + " was not found");
+            }
+
+            taskService.terminateTask(task.Id, string.IsNullOrWhiteSpace(cmd.Description) ? "任务已转派" : cmd.Description, false);
+            IList<TaskModel> tasks = new List<TaskModel>();
+            foreach (var assignee in cmd.Assignees)
+            {
+                ITaskEntity newTask = taskService.newTask() as ITaskEntity;
+                newTask.Name = string.IsNullOrWhiteSpace(cmd.Name) ? task.Name : cmd.Name;
+                newTask.Category = task.Category;
+                newTask.FormKey = task.FormKey;
+                newTask.ProcessDefinitionId = task.ProcessDefinitionId;
+                newTask.ProcessInstanceId = task.ProcessInstanceId;
+                newTask.TenantId = task.TenantId;
+                //不要设置executionid
+                newTask.ExecutionId = task.ExecutionId;
+                newTask.Description = cmd.Description;
+                newTask.TaskDefinitionKey = task.TaskDefinitionKey;
+                newTask.DueDate = cmd.DueDate;
+                if (cmd.Priority != null)
+                {
+                    newTask.Priority = cmd.Priority;
+                }
+
+                newTask.Assignee = string.ReferenceEquals(assignee, null) ?
+                    authenticationWrapper.AuthenticatedUser.Id : assignee;
+
+                taskService.saveTask(newTask);
+
+                tasks.Add(taskConverter.from(taskService.createTaskQuery().taskId(newTask.Id).singleResult()));
+            }
+
+            return tasks.ToArray();
         }
 
         /// <summary>

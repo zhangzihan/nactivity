@@ -36,7 +36,7 @@ namespace org.activiti.engine.impl.cmd
 
         public  virtual IList<FlowNode>  execute(ICommandContext commandContext)
         {
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", executionId));
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
             if (execution == null)
             {
                 throw new ActivitiObjectNotFoundException("No execution found for id '" + executionId + "'", typeof(IExecutionEntity));

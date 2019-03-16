@@ -64,7 +64,8 @@ namespace org.activiti.cloud.services.api.model.converter
                     source.ProcessInstanceId,
                     source.ParentTaskId,
                     source.FormKey,
-                    calculateStatus(source));
+                    calculateStatus(source),
+                    source.DeleteReason);
             }
             return task;
         }

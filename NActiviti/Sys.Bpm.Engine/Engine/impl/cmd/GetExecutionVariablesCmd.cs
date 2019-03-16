@@ -46,7 +46,7 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }
 
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", executionId));
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
 
             if (execution == null)
             {

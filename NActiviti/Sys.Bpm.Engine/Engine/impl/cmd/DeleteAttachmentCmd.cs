@@ -46,7 +46,7 @@ namespace org.activiti.engine.impl.cmd
             string processDefinitionId = null;
             if (!ReferenceEquals(attachment.ProcessInstanceId, null))
             {
-                IExecutionEntity process = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+                IExecutionEntity process = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
                 if (process != null)
                 {
                     processDefinitionId = process.ProcessDefinitionId;

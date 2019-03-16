@@ -1,10 +1,11 @@
+import { ITaskService } from './../services/ITaskService';
 import { IProcessInstanceService } from "services/IProcessInstanceService";
 import { inject } from "aurelia-framework";
 import { ITaskModel } from "model/resource/ITaskModel";
 import { IResources } from "model/query/IResources";
 import { IProcessInstanceHistoriceService } from "services/IProcessInstanceHistoriceService";
 
-@inject("processInstanceService", "historyService")
+@inject("processInstanceService", "historyService", "taskService")
 export class ProcessInstanceViewModel {
 
   instance;
@@ -15,7 +16,16 @@ export class ProcessInstanceViewModel {
 
   status;
 
-  constructor(private procInstSrv: IProcessInstanceService, private historyService: IProcessInstanceHistoriceService) {
+  selectedUser;
+
+  users = [{
+    id: '评审员',
+    name: '评审员'
+  }];
+
+  constructor(private procInstSrv: IProcessInstanceService,
+    private historyService: IProcessInstanceHistoriceService,
+    private taskService: ITaskService) {
 
   }
 
@@ -79,11 +89,51 @@ export class ProcessInstanceViewModel {
     );
   }
 
-  terminateTask(id: string) {
-    debugger;
+  selectUser(user) {
+    this.selectedUser = user;
   }
 
-  toUser(id: string) {
-    debugger;
+  addUser() {
+    this.selectedUser = {
+      id: '评审员',
+      name: '评审员'
+    };
+    this.users.push(this.selectedUser);
+  }
+
+  removeUser() {
+    var idx = this.users.findIndex(x => x == this.selectedUser);
+    if (idx > -1) {
+      this.users.splice(idx, 1);
+    }
+  }
+
+  terminateTask(id: string) {
+    this.taskService.terminateTask({
+      taskId: id,
+      terminateReason: "已终止任务"
+    })
+  }
+
+  transfer(id: string) {
+    this.taskService.transferTask({
+      assignees: this.users.map(x => x.id),
+      taskId: id
+    }).then(data => {
+      debugger;
+    }).catch(err => {
+      alert(err);
+    })
+  }
+
+  appendCountersign(id: string) {
+    this.taskService.appendCountersign({
+      assignees: this.users.map(x => x.id),
+      taskId: id
+    }).then(data => {
+      debugger;
+    }).catch(err => {
+      alert(err);
+    })
   }
 }

@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl.cmd
 
                 if (!ReferenceEquals(comment.ProcessInstanceId, null))
                 {
-                    IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", comment.ProcessInstanceId));
+                    IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(comment.ProcessInstanceId);
 
                 }
                 else if (!ReferenceEquals(comment.TaskId, null))
@@ -69,7 +69,7 @@ namespace org.activiti.engine.impl.cmd
                 if (!ReferenceEquals(processInstanceId, null))
                 {
 
-                    IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+                    IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
 
                     comments.AddRange(commentManager.findCommentsByProcessInstanceId(processInstanceId));
                 }

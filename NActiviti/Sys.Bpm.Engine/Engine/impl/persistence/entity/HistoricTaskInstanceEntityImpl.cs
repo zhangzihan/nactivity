@@ -60,6 +60,12 @@ namespace org.activiti.engine.impl.persistence.entity
                 this.processInstanceId = execution.ProcessInstanceId;
                 this.executionId = execution.Id;
             }
+            else
+            {
+                this.processDefinitionId = task.ProcessDefinitionId;
+                this.ProcessInstanceId = task.ProcessInstanceId;
+                this.executionId = task.ExecutionId;
+            }
             this.name = task.Name;
             this.parentTaskId = task.ParentTaskId;
             this.description = task.Description;

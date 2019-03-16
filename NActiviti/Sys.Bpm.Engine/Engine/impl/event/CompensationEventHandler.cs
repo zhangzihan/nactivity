@@ -46,7 +46,7 @@ namespace org.activiti.engine.impl.@event
                 throw new ActivitiException("Compensating execution not set for compensate event subscription with id " + eventSubscription.Id);
             }
 
-            IExecutionEntity compensatingExecution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", configuration));
+            IExecutionEntity compensatingExecution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(configuration);
 
             string processDefinitionId = compensatingExecution.ProcessDefinitionId;
             Process process = ProcessDefinitionUtil.getProcess(processDefinitionId);

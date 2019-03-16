@@ -81,7 +81,10 @@ export class ProcessInstanceServie implements IProcessInstanceService {
 
   terminate(processInstanceId: string, reason: string): Promise<any> {
     return new Promise((res, rej) => {
-      this.httpInvoker.get(`${contants.serverUrl}/${this.controller}/${processInstanceId}/terminate`).then(data => {
+      this.httpInvoker.post(`${contants.serverUrl}/${this.controller}/terminate`, {
+        processInstanceId: processInstanceId,
+        reason: reason
+      }).then(data => {
         res(data.data);
       }).catch(err => rej(err));
     });

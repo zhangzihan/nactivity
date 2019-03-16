@@ -1,4 +1,5 @@
-﻿import { ProcessInstanceAdminService } from './services/ProcessInstanceAdminService';
+﻿import { TaskService } from './services/TaskService';
+import { ProcessInstanceAdminService } from './services/ProcessInstanceAdminService';
 
 
 /// <reference types="aurelia-loader-webpack/src/webpack-hot-interface"/>
@@ -44,6 +45,7 @@ export async function configure(aurelia: Aurelia) {
   aurelia.container.registerSingleton('httpInvoker', HttpInvoker);
   aurelia.container.registerSingleton('document', WorkflowDocument);
   aurelia.container.registerSingleton('workspace', WorkflowWorkspce);
+  aurelia.container.registerSingleton('taskService', TaskService);
 
   // Uncomment the line below to enable animation.
   // aurelia.use.plugin(PLATFORM.moduleName('aurelia-animator-css'));

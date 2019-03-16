@@ -125,7 +125,7 @@ namespace org.activiti.engine.impl.agenda
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
 
             // There will be a parent execution (or else we would be in the process instance handling method)
-            IExecutionEntity parentExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", execution.ParentId));
+            IExecutionEntity parentExecution = executionEntityManager.findById<IExecutionEntity>(execution.ParentId);
 
             // If the execution is a scope, all the child executions must be deleted first.
             if (execution.IsScope)

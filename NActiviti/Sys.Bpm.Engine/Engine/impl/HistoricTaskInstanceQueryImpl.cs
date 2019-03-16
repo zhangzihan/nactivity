@@ -1780,6 +1780,20 @@ namespace org.activiti.engine.impl
             return null;
         }
 
+        private string[] taskNotInIds;
+
+        public IHistoricTaskInstanceQuery taskIdNotIn(string[] ids)
+        {
+            this.taskNotInIds = ids;
+            return this;
+        }
+
+        public string[] TaskNotInIds
+        {
+            get => taskNotInIds;
+            set => taskNotInIds = value;
+        }
+
         // getters and setters
         // //////////////////////////////////////////////////////
 

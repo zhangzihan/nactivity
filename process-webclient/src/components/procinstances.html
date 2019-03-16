@@ -13,7 +13,7 @@
   </style>
   <table class="table table-striped">
     <tr>
-      <td colspan="6">
+      <td colspan="7">
         <button class="btn btn-primary" style="margin-right:4px" click.trigger="completed()">已完成</button>
         <button class="btn btn-primary" click.trigger="unCompleted()">未完成</button>
       </td>
@@ -24,6 +24,7 @@
       <td>提交时间</td>
       <td>完成时间</td>
       <td>提交人</td>
+      <td>终止原因</td>
       <td>操作</td>
     </tr>
     <tr repeat.for="inst of instances">
@@ -41,6 +42,9 @@
       </td>
       <td>
         ${inst.startUserId}
+      </td>
+      <td>
+        ${inst.deleteReason}
       </td>
       <td>
         <ul class="btn-list">

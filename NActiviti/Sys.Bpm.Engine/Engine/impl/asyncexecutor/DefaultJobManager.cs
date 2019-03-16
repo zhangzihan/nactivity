@@ -275,7 +275,7 @@ namespace org.activiti.engine.impl.asyncexecutor
             IVariableScope variableScope = null;
             if (!ReferenceEquals(timerEntity.ExecutionId, null))
             {
-                variableScope = ExecutionEntityManager.findById<VariableScopeImpl>(new KeyValuePair<string, object>("id", timerEntity.ExecutionId));
+                variableScope = ExecutionEntityManager.findById<VariableScopeImpl>(timerEntity.ExecutionId);
             }
 
             if (variableScope == null)
@@ -319,7 +319,7 @@ namespace org.activiti.engine.impl.asyncexecutor
             IExecutionEntity execution = null;
             if (!ReferenceEquals(jobEntity.ExecutionId, null))
             {
-                execution = ExecutionEntityManager.findById<ExecutionEntityImpl>(new KeyValuePair<string, object>("id", jobEntity.ExecutionId));
+                execution = ExecutionEntityManager.findById<ExecutionEntityImpl>(jobEntity.ExecutionId);
             }
 
             IDictionary<string, IJobHandler> jobHandlers = processEngineConfiguration.JobHandlers;

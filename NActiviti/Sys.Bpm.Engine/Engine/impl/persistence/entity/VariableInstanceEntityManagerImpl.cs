@@ -59,7 +59,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
             if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(new KeyValuePair<string, object>("id", entity.ExecutionId));
+                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(entity.ExecutionId);
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))
                 {
                     executionEntity.VariableCount = executionEntity.VariableCount + 1;
@@ -119,7 +119,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
             if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(new KeyValuePair<string, object>("id", entity.ExecutionId));
+                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(entity.ExecutionId);
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))
                 {
                     executionEntity.VariableCount = executionEntity.VariableCount - 1;
@@ -142,7 +142,7 @@ namespace org.activiti.engine.impl.persistence.entity
             string processDefinitionId = null;
             if (!ReferenceEquals(variableInstance.ProcessInstanceId, null))
             {
-                IExecutionEntity executionEntity = ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", variableInstance.ProcessInstanceId));
+                IExecutionEntity executionEntity = ExecutionEntityManager.findById<IExecutionEntity>(variableInstance.ProcessInstanceId);
                 if (executionEntity != null)
                 {
                     processDefinitionId = executionEntity.ProcessDefinitionId;

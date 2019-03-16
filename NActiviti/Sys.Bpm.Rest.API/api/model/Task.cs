@@ -94,6 +94,7 @@ namespace org.activiti.cloud.services.api.model
         /// <param name="parentTaskId">父任务id</param>
         /// <param name="formKey">表单key</param>
         /// <param name="status">任务状态</param>
+        /// <param name="deleteReason">任务取消原因</param>
         //[JsonConstructor]
         public TaskModel([JsonProperty("Id")]string id,
             [JsonProperty("Owner")]string owner,
@@ -109,7 +110,8 @@ namespace org.activiti.cloud.services.api.model
             [JsonProperty("ProcessInstanceId")]string processInstanceId,
             [JsonProperty("ParentTaskId")]string parentTaskId,
             [JsonProperty("FormKey")]string formKey,
-            [JsonProperty("Status")]string status)
+            [JsonProperty("Status")]string status,
+            [JsonProperty("DeleteReason")]string deleteReason)
         {
             this.id = id;
             this.owner = owner;
@@ -126,6 +128,7 @@ namespace org.activiti.cloud.services.api.model
             this.parentTaskId = parentTaskId;
             this.formKey = formKey;
             this.status = status;
+            this.DeleteReason = deleteReason;
         }
 
 
@@ -274,6 +277,14 @@ namespace org.activiti.cloud.services.api.model
         {
             get => formKey;
             set => formKey = value;
+        }
+
+        /// <summary>
+        /// 任务取消原因
+        /// </summary>
+        public virtual string DeleteReason
+        {
+            get;set;
         }
     }
 }

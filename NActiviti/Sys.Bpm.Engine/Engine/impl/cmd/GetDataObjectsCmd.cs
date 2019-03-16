@@ -59,7 +59,7 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }
 
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", executionId));
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
 
             if (execution == null)
             {
@@ -103,7 +103,7 @@ namespace org.activiti.engine.impl.cmd
                     string name = entry.Key;
                     IVariableInstance variableEntity = (IVariableInstance)entry.Value;
 
-                    IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", variableEntity.ExecutionId));
+                    IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(variableEntity.ExecutionId);
                     while (!executionEntity.IsScope)
                     {
                         executionEntity = executionEntity.Parent;

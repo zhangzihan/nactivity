@@ -208,7 +208,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 var ctx = Context.CommandContext;
                 if (processInstance == null && processInstanceId != null && ctx != null)
                 {
-                    this.processInstance = ctx.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+                    this.processInstance = ctx.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
                 }
                 return processInstance;
             }

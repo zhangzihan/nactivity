@@ -105,7 +105,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
             else if (callActivity.InheritBusinessKey)
             {
-                IExecutionEntity processInstance = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", execution.ProcessInstanceId));
+                IExecutionEntity processInstance = executionEntityManager.findById<IExecutionEntity>(execution.ProcessInstanceId);
                 businessKey = processInstance.BusinessKey;
             }
 

@@ -43,7 +43,7 @@ namespace org.activiti.engine.impl.cmd
             }
 
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
-            IExecutionEntity execution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", executionId));
+            IExecutionEntity execution = executionEntityManager.findById<IExecutionEntity>(executionId);
 
             if (execution == null)
             {

@@ -148,13 +148,12 @@ namespace org.activiti.cloud.services.rest.controllers
 
             return Task.FromResult<IActionResult>(Ok());
         }
-
-
+        
         /// <inheritdoc />
-        [HttpPost("{taskId}/terminate")]
-        public virtual Task<IActionResult> terminate(string taskId, string reason)
+        [HttpPost("terminate")]
+        public virtual Task<IActionResult> terminate(TerminateTaskCmd cmd)
         {
-            processEngine.deleteTask(taskId, reason);
+            processEngine.terminateTask(cmd);
 
             return Task.FromResult<IActionResult>(Ok());
         }
@@ -192,15 +191,31 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpPost("{taskId}/subtask")]
         public virtual Task<TaskModel> createSubtask(string taskId, [FromBody]CreateTaskCmd createSubtaskCmd)
         {
-            ITask task = taskService.createTaskQuery().taskId(taskId).singleResult();
+            TaskModel task = processEngine.createNewSubtask(taskId, createSubtaskCmd);
 
-            engine.ProcessEngineConfiguration.ManagementService.executeCommand(new engine.impl.cmd.AddCountersignCmd(task.ExecutionId, createSubtaskCmd.Assignee));
+            return Task.FromResult(task);
+        }
 
-            return Task.FromResult(taskResourceAssembler.toResource(processEngine.createNewSubtask(taskId, createSubtaskCmd)).Content);
+
+        /// <inheritdoc />
+        [HttpPost("transfer")]
+        public virtual Task<TaskModel[]> transferTask([FromBody]TransferTaskCmd cmd)
+        {
+            TaskModel[] task = processEngine.transferTask(cmd);
+
+            return Task.FromResult(task);
         }
 
         /// <inheritdoc />
+        [HttpPost("append")]
+        public virtual Task<TaskModel[]> appendCountersign(AppendCountersignCmd cmd)
+        {
+            TaskModel[] tasks = processEngine.appendCountersign(cmd);
 
+            return Task.FromResult(tasks);
+        }
+
+        /// <inheritdoc />
         [HttpGet("{taskId}/subtasks")]
         public virtual Task<Resources<TaskModel>> getSubtasks(string taskId)
         {

@@ -67,12 +67,12 @@ namespace org.activiti.engine.impl.cmd
                 ITaskInfo originalTaskEntity = null;
                 if (commandContext.ProcessEngineConfiguration.HistoryLevel.isAtLeast(HistoryLevel.AUDIT))
                 {
-                    originalTaskEntity = commandContext.HistoricTaskInstanceEntityManager.findById<ITaskInfo>(new KeyValuePair<string, object>("id", task.Id));
+                    originalTaskEntity = commandContext.HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", task.Id));
                 }
 
                 if (originalTaskEntity == null)
                 {
-                    originalTaskEntity = commandContext.TaskEntityManager.findById<ITaskInfo>(new KeyValuePair<string, object>("id", task.Id));
+                    originalTaskEntity = commandContext.TaskEntityManager.findById<ITaskEntity>(new KeyValuePair<string, object>("id", task.Id));
                 }
 
                 string originalName = originalTaskEntity.Name;

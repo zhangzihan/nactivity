@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
             if (!ReferenceEquals(entity.ProcessInstanceId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(new KeyValuePair<string, object>("id", entity.ProcessInstanceId));
+                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(entity.ProcessInstanceId);
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))
                 {
                     executionEntity.IdentityLinkCount = executionEntity.IdentityLinkCount + 1;
@@ -69,7 +69,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
             if (!ReferenceEquals(identityLink.ProcessInstanceId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(new KeyValuePair<string, object>("id", identityLink.ProcessInstanceId));
+                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(identityLink.ProcessInstanceId);
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))
                 {
                     executionEntity.IdentityLinkCount = executionEntity.IdentityLinkCount - 1;

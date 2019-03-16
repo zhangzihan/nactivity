@@ -74,7 +74,7 @@ namespace org.activiti.engine.impl.cmd
 
             if (variableEntity != null)
             {
-                IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", variableEntity.ExecutionId));
+                IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(variableEntity.ExecutionId);
                 while (!executionEntity.IsScope)
                 {
                     executionEntity = executionEntity.Parent;

@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl.bpmn.helper
             { // Call activity
 
                 IExecutionEntityManager executionEntityManager = Context.CommandContext.ExecutionEntityManager;
-                IExecutionEntity processInstanceExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", execution.ProcessInstanceId));
+                IExecutionEntity processInstanceExecution = executionEntityManager.findById<IExecutionEntity>(execution.ProcessInstanceId);
                 if (processInstanceExecution != null)
                 {
 
@@ -68,7 +68,7 @@ namespace org.activiti.engine.impl.bpmn.helper
 
                             foreach (string processInstanceId in toDeleteProcessInstanceIds)
                             {
-                                IExecutionEntity processInstanceEntity = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+                                IExecutionEntity processInstanceEntity = executionEntityManager.findById<IExecutionEntity>(processInstanceId);
 
                                 // Delete
                                 executionEntityManager.deleteProcessInstanceExecutionEntity(processInstanceEntity.Id, execution.CurrentFlowElement != null ? execution.CurrentFlowElement.Id : null, "ERROR_EVENT " + errorCode, false, false);

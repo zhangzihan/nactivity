@@ -209,7 +209,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 var ctx = Context.CommandContext;
                 if (execution == null && !string.IsNullOrWhiteSpace(executionId) && ctx != null)
                 {
-                    this.execution = ctx.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", executionId));
+                    this.execution = ctx.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
                 }
                 return execution;
             }
@@ -636,7 +636,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 var ctx = Context.CommandContext;
                 if (processInstance == null && processInstanceId != null && ctx != null)
                 {
-                    processInstance = ctx.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+                    processInstance = ctx.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
                 }
                 return processInstance;
             }

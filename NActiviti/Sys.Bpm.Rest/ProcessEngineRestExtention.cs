@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using org.activiti.api.runtime.shared.query;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core;
@@ -13,6 +15,7 @@ using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.assemblers;
 using org.activiti.cloud.services.rest.controllers;
 using org.activiti.engine;
+using Sys.Bpm.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -161,6 +164,20 @@ namespace Sys.Bpm.Services.Rest
             SecurityPoliciesProviderOptions options = new SecurityPoliciesProviderOptions(config.GetSection("SecurityPoliciesProvider"));
 
             app.UseMiddleware<SecurityPoliciesApplicationMiddle>(Options.Create(options));
+
+            app.UseExceptionHandler(error =>
+            {
+                error.Run(async context =>
+                {
+                    var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+
+                    if (exceptionHandlerPathFeature.Error is Http400Exception http400)
+                    {
+                        context.Response.ContentType = "application/json";                       
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(http400.Http400));
+                    }
+                });
+            });
 
             return app;
         }

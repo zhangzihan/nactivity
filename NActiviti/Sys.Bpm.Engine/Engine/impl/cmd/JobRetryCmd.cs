@@ -182,7 +182,7 @@ namespace org.activiti.engine.impl.cmd
             {
                 return null;
             }
-            return commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", executionId));
+            return commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
         }
 
     }

@@ -49,7 +49,7 @@ namespace org.activiti.engine.impl.cmd
             IUserInfo user = Authentication.AuthenticatedUser;
             if (user != null && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
             {
-                IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", taskEntity.ProcessInstanceId));
+                IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(taskEntity.ProcessInstanceId);
                 commandContext.IdentityLinkEntityManager.involveUser(processInstanceEntity, user.Id, IdentityLinkType.PARTICIPANT);
             }
 
@@ -71,7 +71,7 @@ namespace org.activiti.engine.impl.cmd
             // Continue process (if not a standalone task)
             if (!ReferenceEquals(taskEntity.ExecutionId, null))
             {
-                IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", taskEntity.ExecutionId));
+                IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(taskEntity.ExecutionId);
                 Context.Agenda.planTriggerExecutionOperation(executionEntity);
             }
         }

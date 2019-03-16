@@ -45,7 +45,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                 // where the compensating execution is created when leaving the subprocess and holds snapshot data).
                 if (!ReferenceEquals(eventSubscription.Configuration, null))
                 {
-                    compensatingExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", eventSubscription.Configuration));
+                    compensatingExecution = executionEntityManager.findById<IExecutionEntity>(eventSubscription.Configuration);
                     compensatingExecution.Parent = compensatingExecution.ProcessInstance;
                     compensatingExecution.IsEventScope = false;
                 }

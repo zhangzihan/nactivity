@@ -55,7 +55,7 @@ namespace org.activiti.engine.impl.persistence.entity
             // add link to execution
             if (!ReferenceEquals(jobEntity.ExecutionId, null))
             {
-                IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", jobEntity.ExecutionId));
+                IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(jobEntity.ExecutionId);
                 if (execution != null)
                 {
                     execution.Jobs.Add(jobEntity);
@@ -151,7 +151,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(new KeyValuePair<string, object>("id", entity.ExecutionId));
+                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(entity.ExecutionId);
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))
                 {
                     executionEntity.JobCount = executionEntity.JobCount - 1;
@@ -168,7 +168,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             if (!ReferenceEquals(jobEntity.ExecutionId, null))
             {
-                IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", jobEntity.ExecutionId));
+                IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(jobEntity.ExecutionId);
                 if (execution != null)
                 {
                     execution.Jobs.Remove(jobEntity);

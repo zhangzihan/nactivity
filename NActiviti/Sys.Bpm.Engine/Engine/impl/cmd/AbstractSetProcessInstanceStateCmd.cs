@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiIllegalArgumentException("ProcessInstanceId cannot be null.");
             }
 
-            IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+            IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
 
             if (executionEntity == null)
             {

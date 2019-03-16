@@ -21,18 +21,18 @@ namespace org.activiti.engine.impl.cmd
     /// <summary>
     /// 加签
     /// </summary>
-    public class AddCountersignCmd : ICommand<object>
+    public class AddCountersignCmd : ICommand<ITask[]>
     {
         private readonly string executionId;
-        private readonly string assignee;
+        private readonly string[] assignees;
 
-        public AddCountersignCmd(string executionId, string assignee)
+        public AddCountersignCmd(string executionId, string[] assignees)
         {
             this.executionId = executionId;
-            this.assignee = assignee;
+            this.assignees = assignees;
         }
 
-        public object execute(ICommandContext commandContext)
+        public ITask[] execute(ICommandContext commandContext)
         {
             ProcessEngineConfigurationImpl pec = commandContext.ProcessEngineConfiguration;
             IRuntimeService runtimeService = pec.RuntimeService;
@@ -41,37 +41,44 @@ namespace org.activiti.engine.impl.cmd
             IExecution execution = runtimeService.createExecutionQuery().executionId(executionId).singleResult();
             IExecutionEntity ee = (IExecutionEntity)execution;
             IExecutionEntity parent = ee.Parent;
-            //创建父活动的子活动
-            IExecutionEntity newExecution = pec.ExecutionEntityManager.createChildExecution(parent);//.createExecution();
 
-            //设置 为 激活 状态
-            newExecution.IsActive = true;
-            //该 属性 表示 创建 的 newExecution 对象 为 分支， 非常 重要, 不可缺少
-            newExecution.IsConcurrent = true;
-            newExecution.IsScope = false;
-            ITask newTask = taskService.createTaskQuery().executionId(executionId).singleResult();
-            ITaskEntity t = (ITaskEntity)newTask;
-            ITaskEntity taskEntity = pec.CommandExecutor.execute(new NewTaskCmd(pec.IdGenerator.NextId));
-            //taskEntity.TaskDefinitionKey = t.TaskDefinitionKey;
-            taskEntity.ProcessDefinitionId = t.ProcessDefinitionId;
-            taskEntity.TaskDefinitionKey = t.TaskDefinitionKey;
-            taskEntity.ProcessInstanceId = t.ProcessInstanceId;
-            taskEntity.ExecutionId = newExecution.Id;
-            taskEntity.Name = newTask.Name;
+            IList<ITask> tasks = new List<ITask>(assignees.Length);
+            foreach (var assignee in assignees)
+            {
+                //创建父活动的子活动
+                IExecutionEntity newExecution = pec.ExecutionEntityManager.createChildExecution(parent);//.createExecution();
 
-            string taskId = idGenerator.NextId;
-            taskEntity.Id = taskId;
-            taskEntity.Execution = newExecution;
-            taskEntity.Assignee = assignee;
-            taskService.saveTask(taskEntity);
+                //设置为激活 状态
+                newExecution.IsActive = true;
+                //该属性表示创建的newExecution对象为分支，非常重要,不可缺少
+                newExecution.IsConcurrent = true;
+                newExecution.IsScope = false;
+                ITask newTask = taskService.createTaskQuery().executionId(executionId).singleResult();
+                ITaskEntity t = (ITaskEntity)newTask;
+                ITaskEntity taskEntity = pec.CommandExecutor.execute(new NewTaskCmd(pec.IdGenerator.NextId));
+                //taskEntity.TaskDefinitionKey = t.TaskDefinitionKey;
+                taskEntity.ProcessDefinitionId = t.ProcessDefinitionId;
+                taskEntity.TaskDefinitionKey = t.TaskDefinitionKey;
+                taskEntity.ProcessInstanceId = t.ProcessInstanceId;
+                taskEntity.ExecutionId = newExecution.Id;
+                taskEntity.Name = newTask.Name;
 
-            //修改执行实例父级实例变量数和活动实例变量数
-            int loopCounter = newExecution.GetLoopVariable<int>("nrOfInstances");
-            int nrOfCompletedInstances = newExecution.GetLoopVariable<int>("nrOfActiveInstances");
-            parent.SetLoopVariable("nrOfInstances", loopCounter + 1);
-            parent.SetLoopVariable("nrOfActiveInstances", loopCounter - nrOfCompletedInstances + 1);
+                string taskId = idGenerator.NextId;
+                taskEntity.Id = taskId;
+                taskEntity.Execution = newExecution;
+                taskEntity.Assignee = assignee;
+                taskService.saveTask(taskEntity);
 
-            return null;
+                //修改执行实例父级实例变量数和活动实例变量数
+                int loopCounter = newExecution.GetLoopVariable<int>("nrOfInstances");
+                int nrOfCompletedInstances = newExecution.GetLoopVariable<int>("nrOfActiveInstances");
+                parent.SetLoopVariable("nrOfInstances", loopCounter + 1);
+                parent.SetLoopVariable("nrOfActiveInstances", loopCounter - nrOfCompletedInstances + 1);
+
+                tasks.Add(taskEntity);
+            }
+
+            return tasks.ToArray();
         }
     }
 }

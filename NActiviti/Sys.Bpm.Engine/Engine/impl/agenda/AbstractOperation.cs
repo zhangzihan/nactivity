@@ -97,7 +97,7 @@ namespace org.activiti.engine.impl.agenda
         {
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
             IExecutionEntity parentScopeExecution = null;
-            IExecutionEntity currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", executionEntity.ParentId));
+            IExecutionEntity currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(executionEntity.ParentId);
             while (currentlyExaminedExecution != null && parentScopeExecution == null)
             {
                 if (currentlyExaminedExecution.IsScope)
@@ -106,7 +106,7 @@ namespace org.activiti.engine.impl.agenda
                 }
                 else
                 {
-                    currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", currentlyExaminedExecution.ParentId));
+                    currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
                 }
             }
             return parentScopeExecution;

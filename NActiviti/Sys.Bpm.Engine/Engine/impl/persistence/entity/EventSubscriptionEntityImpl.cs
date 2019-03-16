@@ -106,7 +106,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 var ctx = Context.CommandContext;
                 if (execution == null && executionId != null && ctx != null)
                 {
-                    execution = ctx.ExecutionEntityManager.findById<ExecutionEntityImpl>(new KeyValuePair<string, object>("id", executionId));
+                    execution = ctx.ExecutionEntityManager.findById<ExecutionEntityImpl>(executionId);
                 }
                 return execution;
             }

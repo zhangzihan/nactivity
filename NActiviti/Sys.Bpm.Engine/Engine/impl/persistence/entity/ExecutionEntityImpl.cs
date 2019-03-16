@@ -445,7 +445,7 @@ namespace org.activiti.engine.impl.persistence.entity
             var ctx = Context.CommandContext;
             if (processInstance == null && processInstanceId != null && ctx != null)
             {
-                processInstance = ctx.ExecutionEntityManager.findById<ExecutionEntityImpl>(new KeyValuePair<string, object>("id", processInstanceId));
+                processInstance = ctx.ExecutionEntityManager.findById<ExecutionEntityImpl>(processInstanceId);
             }
         }
 
@@ -483,7 +483,7 @@ namespace org.activiti.engine.impl.persistence.entity
             var ctx = Context.CommandContext;
             if (parent == null && parentId != null && ctx != null)
             {
-                parent = ctx.ExecutionEntityManager.findById<ExecutionEntityImpl>(new KeyValuePair<string, object>("id", parentId));
+                parent = ctx.ExecutionEntityManager.findById<ExecutionEntityImpl>(parentId);
             }
         }
 
@@ -543,7 +543,7 @@ namespace org.activiti.engine.impl.persistence.entity
             var ctx = Context.CommandContext;
             if (superExecution == null && superExecutionId != null && ctx != null)
             {
-                superExecution = ctx.ExecutionEntityManager.findById<ExecutionEntityImpl>(new KeyValuePair<string, object>("id", superExecutionId));
+                superExecution = ctx.ExecutionEntityManager.findById<ExecutionEntityImpl>(superExecutionId);
             }
         }
 
@@ -596,7 +596,7 @@ namespace org.activiti.engine.impl.persistence.entity
             var ctx = Context.CommandContext;
             if (rootProcessInstanceId == null && ctx != null)
             {
-                rootProcessInstance = ctx.ExecutionEntityManager.findById<ExecutionEntityImpl>(new KeyValuePair<string, object>("id", rootProcessInstanceId));
+                rootProcessInstance = ctx.ExecutionEntityManager.findById<ExecutionEntityImpl>(rootProcessInstanceId);
             }
         }
 

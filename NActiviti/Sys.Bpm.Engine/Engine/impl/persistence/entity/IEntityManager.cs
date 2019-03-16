@@ -21,7 +21,21 @@ namespace org.activiti.engine.impl.persistence.entity
 
         EntityImpl create();
 
+        /// <summary>
+        /// 数据查询,key为查询参数名，value为值.
+        /// </summary>
+        /// <typeparam name="TOut"></typeparam>
+        /// <param name="entityId"></param>
+        /// <returns></returns>
         TOut findById<TOut>(KeyValuePair<string, object> entityId);
+
+        /// <summary>
+        /// 但数据查询参数名为id时使用此方法，否则使用自定义参数名的findById的方法.
+        /// </summary>
+        /// <typeparam name="TOut"></typeparam>
+        /// <param name="entityId"></param>
+        /// <returns></returns>
+        TOut findById<TOut>(object entityId);
 
         void insert(EntityImpl entity);
 

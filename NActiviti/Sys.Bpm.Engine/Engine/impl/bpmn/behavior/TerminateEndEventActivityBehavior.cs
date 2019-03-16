@@ -130,7 +130,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 {
 
                     executionEntityManager.deleteProcessInstanceExecutionEntity(scopeExecutionEntity.Id, execution.CurrentFlowElement.Id, "terminate end event", false, false);
-                    IExecutionEntity superExecutionEntity = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", scopeExecutionEntity.SuperExecutionId));
+                    IExecutionEntity superExecutionEntity = executionEntityManager.findById<IExecutionEntity>(scopeExecutionEntity.SuperExecutionId);
                     Context.Agenda.planTakeOutgoingSequenceFlowsOperation(superExecutionEntity, true);
 
                 }

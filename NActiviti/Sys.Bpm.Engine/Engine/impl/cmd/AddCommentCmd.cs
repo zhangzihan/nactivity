@@ -70,7 +70,7 @@ namespace org.activiti.engine.impl.cmd
             IExecutionEntity execution = null;
             if (!ReferenceEquals(processInstanceId, null))
             {
-                execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+                execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
 
                 if (execution == null)
                 {

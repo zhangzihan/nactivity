@@ -66,10 +66,9 @@ namespace org.activiti.cloud.services.rest.api
         /// <summary>
         /// 终止流程实例
         /// </summary>
-        /// <param name="processInstanceId">流程实例id</param>
-        /// <param name="reason">终止原因</param>
+        /// <param name="cmd">流程终止命令</param>
         /// <returns></returns>
-        Task<IActionResult> Terminate(string processInstanceId, string reason);
+        Task<IActionResult> Terminate(TerminateProcessInstanceCmd cmd);
     }
 
 }

@@ -70,7 +70,7 @@ namespace org.activiti.engine.impl.cmd
         public virtual object execute(ICommandContext commandContext)
         {
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
-            IExecutionEntity processInstance = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+            IExecutionEntity processInstance = executionEntityManager.findById<IExecutionEntity>(processInstanceId);
 
             if (processInstance == null)
             {

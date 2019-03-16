@@ -18,7 +18,7 @@ namespace org.activiti.cloud.services.rest.api
         /// </summary>
         /// <param name="query">分页</param>
         /// <returns></returns>
-       Task<Resources<TaskModel>> getTasks(TaskQuery query);
+        Task<Resources<TaskModel>> getTasks(TaskQuery query);
 
         /// <summary>
         /// 读取任务
@@ -57,6 +57,13 @@ namespace org.activiti.cloud.services.rest.api
         Task<IActionResult> completeTask(string taskId, CompleteTaskCmd completeTaskCmd);
 
         /// <summary>
+        /// 终止任务
+        /// </summary>
+        /// <param name="cmd">终止任务命令</param>
+        /// <returns></returns>
+        Task<IActionResult> terminate(TerminateTaskCmd cmd);
+
+        /// <summary>
         /// 删除任务
         /// </summary>
         /// <param name="taskId">任务id</param>
@@ -84,6 +91,20 @@ namespace org.activiti.cloud.services.rest.api
         /// <param name="createSubtaskCmd">创建子任务命令</param>
         /// <returns></returns>
         Task<TaskModel> createSubtask(string taskId, CreateTaskCmd createSubtaskCmd);
+
+        /// <summary>
+        /// 追加任务处理人
+        /// </summary>
+        /// <param name="cmd">追加任务处理人命令</param>
+        /// <returns></returns>
+        Task<TaskModel[]> appendCountersign(AppendCountersignCmd cmd);
+
+        /// <summary>
+        /// 转办任务处理人
+        /// </summary>
+        /// <param name="cmd">转办任务命令</param>
+        /// <returns></returns>
+        Task<TaskModel[]> transferTask(TransferTaskCmd cmd);
 
         /// <summary>
         /// 读取某个任务下的所有子任务

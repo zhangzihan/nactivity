@@ -116,90 +116,90 @@ namespace org.activiti.engine.impl
 
         public virtual IExecutionQuery processDefinitionId(string processDefinitionId)
         {
-            if (string.IsNullOrWhiteSpace(processDefinitionId))
-            {
-                throw new ActivitiIllegalArgumentException("Process definition id is null");
-            }
+            //if (string.IsNullOrWhiteSpace(processDefinitionId))
+            //{
+            //    throw new ActivitiIllegalArgumentException("Process definition id is null");
+            //}
             this.processDefinitionId_ = processDefinitionId;
             return this;
         }
 
         public virtual IExecutionQuery processDeploymentId(string deploymentId)
         {
-            if (string.IsNullOrWhiteSpace(deploymentId))
-            {
-                throw new ActivitiIllegalArgumentException("Process definition id is null");
-            }
+            //if (string.IsNullOrWhiteSpace(deploymentId))
+            //{
+            //    throw new ActivitiIllegalArgumentException("Process definition id is null");
+            //}
             this.deploymentId = deploymentId;
             return this;
         }
 
         public virtual IExecutionQuery processDefinitionKey(string processDefinitionKey)
         {
-            if (string.IsNullOrWhiteSpace(processDefinitionKey))
-            {
-                throw new ActivitiIllegalArgumentException("Process definition key is null");
-            }
+            //if (string.IsNullOrWhiteSpace(processDefinitionKey))
+            //{
+            //    throw new ActivitiIllegalArgumentException("Process definition key is null");
+            //}
             this.processDefinitionKey_ = processDefinitionKey;
             return this;
         }
 
         public virtual IExecutionQuery processDefinitionCategory(string processDefinitionCategory)
         {
-            if (string.IsNullOrWhiteSpace(processDefinitionCategory))
-            {
-                throw new ActivitiIllegalArgumentException("Process definition category is null");
-            }
+            //if (string.IsNullOrWhiteSpace(processDefinitionCategory))
+            //{
+            //    throw new ActivitiIllegalArgumentException("Process definition category is null");
+            //}
             this.processDefinitionCategory_ = processDefinitionCategory;
             return this;
         }
 
         public virtual IExecutionQuery processDefinitionName(string processDefinitionName)
         {
-            if (string.IsNullOrWhiteSpace(processDefinitionName))
-            {
-                throw new ActivitiIllegalArgumentException("Process definition name is null");
-            }
+            //if (string.IsNullOrWhiteSpace(processDefinitionName))
+            //{
+            //    throw new ActivitiIllegalArgumentException("Process definition name is null");
+            //}
             this.processDefinitionName_ = processDefinitionName;
             return this;
         }
 
         public virtual IExecutionQuery processDefinitionVersion(int? processDefinitionVersion)
         {
-            if (processDefinitionVersion == null)
-            {
-                throw new ActivitiIllegalArgumentException("Process definition version is null");
-            }
+            //if (processDefinitionVersion == null)
+            //{
+            //    throw new ActivitiIllegalArgumentException("Process definition version is null");
+            //}
             this.processDefinitionVersion_ = processDefinitionVersion;
             return this;
         }
 
         public virtual IExecutionQuery processInstanceId(string processInstanceId)
         {
-            if (ReferenceEquals(processInstanceId, null))
-            {
-                throw new ActivitiIllegalArgumentException("Process instance id is null");
-            }
+            //if (ReferenceEquals(processInstanceId, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("Process instance id is null");
+            //}
             this.processInstanceId_ = processInstanceId;
             return this;
         }
 
         public virtual IExecutionQuery rootProcessInstanceId(string rootProcessInstanceId)
         {
-            if (string.IsNullOrWhiteSpace(rootProcessInstanceId))
-            {
-                throw new ActivitiIllegalArgumentException("Root process instance id is null");
-            }
+            //if (string.IsNullOrWhiteSpace(rootProcessInstanceId))
+            //{
+            //    throw new ActivitiIllegalArgumentException("Root process instance id is null");
+            //}
             this.rootProcessInstanceId_ = rootProcessInstanceId;
             return this;
         }
 
         public virtual IExecutionQuery processInstanceBusinessKey(string businessKey)
         {
-            if (string.IsNullOrWhiteSpace(businessKey))
-            {
-                throw new ActivitiIllegalArgumentException("Business key is null");
-            }
+            //if (string.IsNullOrWhiteSpace(businessKey))
+            //{
+            //    throw new ActivitiIllegalArgumentException("Business key is null");
+            //}
             this.businessKey = businessKey;
             return this;
         }
@@ -212,10 +212,10 @@ namespace org.activiti.engine.impl
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(processInstanceBusinessKey))
-                {
-                    throw new ActivitiIllegalArgumentException("Business key is null");
-                }
+                //if (string.IsNullOrWhiteSpace(processInstanceBusinessKey))
+                //{
+                //    throw new ActivitiIllegalArgumentException("Business key is null");
+                //}
                 this.businessKey = processInstanceBusinessKey;
                 this.includeChildExecutionsWithBusinessKeyQuery = includeChildExecutions;
                 return this;
@@ -224,20 +224,20 @@ namespace org.activiti.engine.impl
 
         public virtual IExecutionQuery processDefinitionKeys(string[] processDefinitionKeys)
         {
-            if (processDefinitionKeys == null)
-            {
-                throw new ActivitiIllegalArgumentException("Process definition keys is null");
-            }
+            //if (processDefinitionKeys == null)
+            //{
+            //    throw new ActivitiIllegalArgumentException("Process definition keys is null");
+            //}
             this.processDefinitionKeys_ = processDefinitionKeys;
             return this;
         }
 
         public virtual IExecutionQuery executionId(string executionId)
         {
-            if (string.IsNullOrWhiteSpace(executionId))
-            {
-                throw new ActivitiIllegalArgumentException("Execution id is null");
-            }
+            //if (string.IsNullOrWhiteSpace(executionId))
+            //{
+            //    throw new ActivitiIllegalArgumentException("Execution id is null");
+            //}
             this.executionId_ = executionId;
             return this;
         }
@@ -255,10 +255,10 @@ namespace org.activiti.engine.impl
 
         public virtual IExecutionQuery parentId(string parentId)
         {
-            if (string.IsNullOrWhiteSpace(parentId))
-            {
-                throw new ActivitiIllegalArgumentException("Parent id is null");
-            }
+            //if (string.IsNullOrWhiteSpace(parentId))
+            //{
+            //    throw new ActivitiIllegalArgumentException("Parent id is null");
+            //}
             this.parentId_ = parentId;
             return this;
         }
@@ -283,20 +283,20 @@ namespace org.activiti.engine.impl
 
         public virtual IExecutionQuery executionTenantId(string tenantId)
         {
-            if (tenantId == null)
-            {
-                throw new ActivitiIllegalArgumentException("execution tenant id is null");
-            }
+            //if (tenantId == null)
+            //{
+            //    throw new ActivitiIllegalArgumentException("execution tenant id is null");
+            //}
             this.tenantId = tenantId;
             return this;
         }
 
         public virtual IExecutionQuery executionTenantIdLike(string tenantIdLike)
         {
-            if (tenantIdLike == null)
-            {
-                throw new ActivitiIllegalArgumentException("execution tenant id is null");
-            }
+            //if (tenantIdLike == null)
+            //{
+            //    throw new ActivitiIllegalArgumentException("execution tenant id is null");
+            //}
             this.tenantIdLike = tenantIdLike;
             return this;
         }
@@ -389,10 +389,10 @@ namespace org.activiti.engine.impl
 
         public virtual IExecutionQuery startedBefore(DateTime beforeTime)
         {
-            if (beforeTime == null)
-            {
-                throw new ActivitiIllegalArgumentException("before time is null");
-            }
+            //if (beforeTime == null)
+            //{
+            //    throw new ActivitiIllegalArgumentException("before time is null");
+            //}
             this.startedBefore_ = beforeTime;
 
             return this;
@@ -400,10 +400,10 @@ namespace org.activiti.engine.impl
 
         public virtual IExecutionQuery startedAfter(DateTime afterTime)
         {
-            if (afterTime == null)
-            {
-                throw new ActivitiIllegalArgumentException("after time is null");
-            }
+            //if (afterTime == null)
+            //{
+            //    throw new ActivitiIllegalArgumentException("after time is null");
+            //}
             this.startedAfter_ = afterTime;
 
             return this;
@@ -411,10 +411,10 @@ namespace org.activiti.engine.impl
 
         public virtual IExecutionQuery startedBy(string userId)
         {
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                throw new ActivitiIllegalArgumentException("user id is null");
-            }
+            //if (string.IsNullOrWhiteSpace(userId))
+            //{
+            //    throw new ActivitiIllegalArgumentException("user id is null");
+            //}
             this.startedBy_ = userId;
 
             return this;
@@ -518,6 +518,18 @@ namespace org.activiti.engine.impl
             }
         }
 
+        public IList<string> DeploymentIds
+        {
+            get => deploymentIds;
+            set => deploymentIds = value;
+        }
+
+        public virtual IList<ExecutionQueryImpl> OrQueryObjects
+        {
+            get => orQueryObjects;
+            set => orQueryObjects = value;
+        }
+
         // getters ////////////////////////////////////////////////////
 
         public virtual bool OnlyProcessInstances
@@ -534,6 +546,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionKey_;
             }
+            set => processDefinitionKey(value);
         }
 
         public virtual string ProcessDefinitionId
@@ -542,6 +555,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionId_;
             }
+            set => processDefinitionId(value);
         }
 
         public virtual string ProcessDefinitionCategory
@@ -550,6 +564,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionCategory_;
             }
+            set => processDefinitionCategory(value);
         }
 
         public virtual string ProcessDefinitionName
@@ -558,6 +573,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionName_;
             }
+            set => processDefinitionName(value);
         }
 
         public virtual int? ProcessDefinitionVersion
@@ -566,6 +582,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionVersion_;
             }
+            set => processDefinitionVersion(value);
         }
 
         public virtual string ActivityId
@@ -574,6 +591,7 @@ namespace org.activiti.engine.impl
             {
                 return activityId_;
             }
+            set => activityId(value);
         }
 
         public virtual string ProcessInstanceId
@@ -582,6 +600,7 @@ namespace org.activiti.engine.impl
             {
                 return processInstanceId_;
             }
+            set => processInstanceId(value);
         }
 
         public virtual string RootProcessInstanceId
@@ -590,14 +609,13 @@ namespace org.activiti.engine.impl
             {
                 return rootProcessInstanceId_;
             }
+            set => rootProcessInstanceId(value);
         }
 
-        public virtual string ProcessInstanceIds
+        public virtual string[] ProcessInstanceIds
         {
-            get
-            {
-                return null;
-            }
+            get;
+            set;
         }
 
         public virtual string BusinessKey
@@ -606,6 +624,7 @@ namespace org.activiti.engine.impl
             {
                 return businessKey;
             }
+            set => processInstanceBusinessKey(value);
         }
 
         public virtual string ExecutionId
@@ -614,6 +633,7 @@ namespace org.activiti.engine.impl
             {
                 return executionId_;
             }
+            set => executionId(value);
         }
 
         public virtual string SuperProcessInstanceId
@@ -622,6 +642,7 @@ namespace org.activiti.engine.impl
             {
                 return superProcessInstanceId;
             }
+            set => superProcessInstanceId = value;
         }
 
         public virtual string SubProcessInstanceId
@@ -630,6 +651,7 @@ namespace org.activiti.engine.impl
             {
                 return subProcessInstanceId;
             }
+            set => subProcessInstanceId = value;
         }
 
         public virtual bool ExcludeSubprocesses
@@ -638,6 +660,7 @@ namespace org.activiti.engine.impl
             {
                 return excludeSubprocesses;
             }
+            set => excludeSubprocesses = value;
         }
 
         public virtual ISuspensionState SuspensionState
@@ -671,6 +694,7 @@ namespace org.activiti.engine.impl
             {
                 return includeChildExecutionsWithBusinessKeyQuery;
             }
+            set => includeChildExecutionsWithBusinessKeyQuery = value;
         }
 
 
@@ -680,6 +704,7 @@ namespace org.activiti.engine.impl
             {
                 return isActive;
             }
+            set => isActive = value;
         }
 
         public virtual string InvolvedUser
@@ -710,6 +735,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionKeys_;
             }
+            set => processDefinitionKeys(value);
         }
 
         public virtual string ParentId
@@ -718,6 +744,7 @@ namespace org.activiti.engine.impl
             {
                 return parentId_;
             }
+            set => parentId(value);
         }
 
         public virtual bool OnlyChildExecutions
@@ -725,6 +752,17 @@ namespace org.activiti.engine.impl
             get
             {
                 return onlyChildExecutions_;
+            }
+            set
+            {
+                if (value)
+                {
+                    onlyChildExecutions();
+                }
+                else
+                {
+                    onlyChildExecutions_ = false;
+                }
             }
         }
 
@@ -734,6 +772,17 @@ namespace org.activiti.engine.impl
             {
                 return onlySubProcessExecutions_;
             }
+            set
+            {
+                if (value)
+                {
+                    onlySubProcessExecutions();
+                }
+                else
+                {
+                    onlySubProcessExecutions_ = false;
+                }
+            }
         }
 
         public virtual bool OnlyProcessInstanceExecutions
@@ -741,6 +790,17 @@ namespace org.activiti.engine.impl
             get
             {
                 return onlyProcessInstanceExecutions_;
+            }
+            set
+            {
+                if (value)
+                {
+                    onlyProcessInstanceExecutions();
+                }
+                else
+                {
+                    onlyProcessInstanceExecutions_ = false;
+                }
             }
         }
 
@@ -750,6 +810,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantId;
             }
+            set => executionTenantId(value);
         }
 
         public virtual string TenantIdLike
@@ -758,6 +819,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantIdLike;
             }
+            set => executionTenantIdLike(value);
         }
 
         public virtual bool WithoutTenantId
@@ -765,6 +827,17 @@ namespace org.activiti.engine.impl
             get
             {
                 return withoutTenantId;
+            }
+            set
+            {
+                if (value)
+                {
+                    executionWithoutTenantId();
+                }
+                else
+                {
+                    withoutTenantId = value;
+                }
             }
         }
 

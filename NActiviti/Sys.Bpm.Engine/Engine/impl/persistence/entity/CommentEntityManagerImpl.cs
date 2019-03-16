@@ -57,7 +57,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 string processInstanceId = comment.ProcessInstanceId;
                 if (!ReferenceEquals(comment.ProcessInstanceId, null))
                 {
-                    IExecutionEntity process = ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", comment.ProcessInstanceId));
+                    IExecutionEntity process = ExecutionEntityManager.findById<IExecutionEntity>(comment.ProcessInstanceId);
                     if (process != null)
                     {
                         processDefinitionId = process.ProcessDefinitionId;
@@ -147,7 +147,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 string processInstanceId = comment.ProcessInstanceId;
                 if (!ReferenceEquals(comment.ProcessInstanceId, null))
                 {
-                    IExecutionEntity process = ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", comment.ProcessInstanceId));
+                    IExecutionEntity process = ExecutionEntityManager.findById<IExecutionEntity>(comment.ProcessInstanceId);
                     if (process != null)
                     {
                         processDefinitionId = process.ProcessDefinitionId;

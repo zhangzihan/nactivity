@@ -11,22 +11,21 @@ export class HttpInvoker {
   }
 
   post(url, data?: any, config?: AxiosRequestConfig): AxiosPromise<any> {
-    var cfg = Object.assign(this.tokenAccess(), config);
-
+    var cfg = Object.assign({ headers: {} }, config);
+    cfg.headers = Object.assign(cfg.headers, this.tokenAccess());
     return Axios.post(url, data, cfg);
   }
 
   get(url, config?: AxiosRequestConfig): AxiosPromise<any> {
-    var cfg = Object.assign(this.tokenAccess(), config);
+    var cfg = Object.assign({ headers: {} }, config);
+    cfg.headers = Object.assign(cfg.headers, this.tokenAccess());
 
     return Axios.get(url, cfg);
   }
 
   private tokenAccess() {
     return {
-      headers: {
-        "Authorization": "Bearer " + encodeURIComponent(JSON.stringify(this.user.current))
-      }
+      "Authorization": "Bearer " + encodeURIComponent(JSON.stringify(this.user.current))
     }
   }
 

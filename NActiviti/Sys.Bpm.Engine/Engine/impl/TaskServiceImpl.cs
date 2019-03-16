@@ -51,6 +51,11 @@ namespace org.activiti.engine.impl
             commandExecutor.execute(new SaveTaskCmd(task));
         }
 
+        public virtual void terminateTask(string taskId, string terminateReason, bool terminateExecution)
+        {
+            commandExecutor.execute(new TerminateTaskCmd(taskId, terminateReason, terminateExecution));
+        }
+
         public virtual void deleteTask(string taskId)
         {
             commandExecutor.execute(new DeleteTaskCmd(taskId, null, false));

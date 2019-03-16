@@ -246,7 +246,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             IExecutionEntity currentExecution = (IExecutionEntity)execution;
             while (!found && currentExecution != null && !ReferenceEquals(currentExecution.ParentId, null))
             {
-                parentScopeExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", currentExecution.ParentId));
+                parentScopeExecution = executionEntityManager.findById<IExecutionEntity>(currentExecution.ParentId);
                 if (parentScopeExecution != null && parentScopeExecution.IsScope)
                 {
                     found = true;

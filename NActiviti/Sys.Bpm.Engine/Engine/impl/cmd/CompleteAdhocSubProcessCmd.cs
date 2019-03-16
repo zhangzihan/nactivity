@@ -39,7 +39,7 @@ namespace org.activiti.engine.impl.cmd
         public virtual object execute(ICommandContext commandContext)
         {
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
-            IExecutionEntity execution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", executionId));
+            IExecutionEntity execution = executionEntityManager.findById<IExecutionEntity>(executionId);
             if (execution == null)
             {
                 throw new ActivitiObjectNotFoundException("No execution found for id '" + executionId + "'", typeof(IExecutionEntity));

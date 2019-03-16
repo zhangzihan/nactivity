@@ -73,10 +73,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
             // Which is what we need here.
 
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
-            IExecutionEntity attachedRefScopeExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", executionEntity.ParentId));
+            IExecutionEntity attachedRefScopeExecution = executionEntityManager.findById<IExecutionEntity>(executionEntity.ParentId);
 
             IExecutionEntity parentScopeExecution = null;
-            IExecutionEntity currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", attachedRefScopeExecution.ParentId));
+            IExecutionEntity currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(attachedRefScopeExecution.ParentId);
             while (currentlyExaminedExecution != null && parentScopeExecution == null)
             {
                 if (currentlyExaminedExecution.IsScope)
@@ -85,7 +85,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
                 else
                 {
-                    currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", currentlyExaminedExecution.ParentId));
+                    currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
                 }
             }
 
@@ -116,10 +116,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
 
-            IExecutionEntity parentExecutionEntity = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", executionEntity.ParentId));
+            IExecutionEntity parentExecutionEntity = executionEntityManager.findById<IExecutionEntity>(executionEntity.ParentId);
 
             IExecutionEntity scopeExecution = null;
-            IExecutionEntity currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", parentExecutionEntity.ParentId));
+            IExecutionEntity currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>( parentExecutionEntity.ParentId);
             while (currentlyExaminedExecution != null && scopeExecution == null)
             {
                 if (currentlyExaminedExecution.IsScope)
@@ -128,7 +128,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
                 else
                 {
-                    currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", currentlyExaminedExecution.ParentId));
+                    currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
                 }
             }
 

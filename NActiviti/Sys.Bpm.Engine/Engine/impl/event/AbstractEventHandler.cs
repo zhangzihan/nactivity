@@ -108,7 +108,7 @@ namespace org.activiti.engine.impl.@event
             if (flowNode is SubProcess)
             {
                 // The parent of the boundary event execution will be the one on which the boundary event is set
-                IExecutionEntity parentExecutionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", boundaryEventExecution.ParentId));
+                IExecutionEntity parentExecutionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(boundaryEventExecution.ParentId);
                 if (parentExecutionEntity != null)
                 {
                     dispatchActivityCancelledForChildExecution(eventSubscription, parentExecutionEntity, boundaryEventExecution, commandContext);

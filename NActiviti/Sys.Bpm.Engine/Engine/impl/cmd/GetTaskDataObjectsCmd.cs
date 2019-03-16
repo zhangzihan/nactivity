@@ -84,7 +84,7 @@ namespace org.activiti.engine.impl.cmd
                     string localizedName = null;
                     string localizedDescription = null;
 
-                    IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", variableEntity.ExecutionId));
+                    IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(variableEntity.ExecutionId);
                     while (!executionEntity.IsScope)
                     {
                         executionEntity = executionEntity.Parent;

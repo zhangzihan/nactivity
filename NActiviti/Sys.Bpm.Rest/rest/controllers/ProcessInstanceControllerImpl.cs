@@ -12,6 +12,8 @@ using org.activiti.engine;
 using org.activiti.engine.runtime;
 using org.activiti.image.exception;
 using org.springframework.hateoas;
+using Sys.Bpm.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -113,12 +115,24 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpGet("{processInstanceId}")]
         public virtual Task<ProcessInstance> GetProcessInstanceById(string processInstanceId)
         {
-            ProcessInstance processInstance = processEngine.getProcessInstanceById(processInstanceId);
-            if (processInstance == null)
+            try
             {
-                throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + processInstanceId + "'");
+                ProcessInstance processInstance = processEngine.getProcessInstanceById(processInstanceId);
+                if (processInstance == null)
+                {
+                    throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + processInstanceId + "'");
+                }
+                return Task.FromResult<ProcessInstance>(processInstance);
             }
-            return Task.FromResult<ProcessInstance>(processInstance);
+            catch (ActivitiObjectNotFoundException ex)
+            {
+                throw new Http400Exception(new Http400
+                {
+                    Code = "activitiObjectNotFound",
+                    Message = "数据不存在",
+                    Target = this.GetType().Name,
+                }, ex);
+            }
         }
 
 
@@ -171,10 +185,10 @@ namespace org.activiti.cloud.services.rest.controllers
 
 
         /// <inheritdoc />
-        [HttpPost("{processInstanceId}/terminate")]
-        public virtual Task<IActionResult> Terminate(string processInstanceId, string reason)
+        [HttpPost("terminate")]
+        public virtual Task<IActionResult> Terminate(TerminateProcessInstanceCmd cmd)
         {
-            processEngine.deleteProcessInstance(processInstanceId, reason);
+            processEngine.deleteProcessInstance(cmd.ProcessInstanceId, cmd.Reason);
 
             return Task.FromResult<IActionResult>(Ok());
         }

@@ -53,7 +53,7 @@ namespace org.activiti.engine.impl.cmd
             {
                 if (!ReferenceEquals(job.ExecutionId, null))
                 {
-                    IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", job.ExecutionId));
+                    IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(job.ExecutionId);
                     if (execution != null)
                     {
                         commandContext.ExecutionEntityManager.updateProcessInstanceLockTime(execution.ProcessInstanceId);

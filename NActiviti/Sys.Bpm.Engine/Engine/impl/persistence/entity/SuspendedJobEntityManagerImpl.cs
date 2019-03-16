@@ -64,7 +64,7 @@ namespace org.activiti.engine.impl.persistence.entity
             // add link to execution
             if (!ReferenceEquals(jobEntity.ExecutionId, null))
             {
-                IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", jobEntity.ExecutionId));
+                IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(jobEntity.ExecutionId);
 
                 // Inherit tenant if (if applicable)
                 if (!ReferenceEquals(execution.TenantId, null))
@@ -95,7 +95,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
             if (!ReferenceEquals(jobEntity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(new KeyValuePair<string, object>("id", jobEntity.ExecutionId));
+                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(jobEntity.ExecutionId);
                 if (isExecutionRelatedEntityCountEnabled(executionEntity))
                 {
                     executionEntity.SuspendedJobCount = executionEntity.SuspendedJobCount - 1;

@@ -8,6 +8,9 @@ import { ICreateTaskCmd } from "model/cmd/ICreateTaskCmd";
 import { IUpdateTaskCmd } from "model/cmd/IUpdateTaskCmd";
 import contants from "contants";
 import { inject } from "aurelia-framework";
+import { ITransferTaskCmd } from 'model/cmd/ITransferTaskCmd';
+import { IAppendCountersignCmd } from 'model/cmd/IAppendCountersignCmd';
+import { ITerminateTaskCmd } from "model/cmd/ITerminateTaskCmd";
 
 @inject('httpInvoker')
 export class TaskService implements ITaskService {
@@ -64,5 +67,29 @@ export class TaskService implements ITaskService {
 
   getSubtasks(taskId: string): Promise<ITaskModel> {
     throw new Error("Method not implemented.");
+  }
+
+  terminateTask(cmd: ITerminateTaskCmd): Promise<any> {
+    return new Promise((res, rej) => {
+      this.httpInvoker.post(`${contants.serverUrl}/${this.controller}/terminate`, cmd).then(data => {
+        res(data.data);
+      }).catch(err => rej(err));
+    });
+  }
+
+  transferTask(cmd: ITransferTaskCmd): Promise<Array<ITaskModel>> {
+    return new Promise((res, rej) => {
+      this.httpInvoker.post(`${contants.serverUrl}/${this.controller}/transfer`, cmd).then(data => {
+        res(data.data);
+      }).catch(err => rej(err));
+    });
+  }
+
+  appendCountersign(cmd: IAppendCountersignCmd): Promise<Array<ITaskModel>> {
+    return new Promise((res, rej) => {
+      this.httpInvoker.post(`${contants.serverUrl}/${this.controller}/append`, cmd).then(data => {
+        res(data.data);
+      }).catch(err => rej(err));
+    });
   }
 }

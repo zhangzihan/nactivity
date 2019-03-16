@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             // find cancel boundary event:
             IExecutionEntity parentScopeExecution = null;
-            IExecutionEntity currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", executionEntity.ParentId));
+            IExecutionEntity currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(executionEntity.ParentId);
             while (currentlyExaminedExecution != null && parentScopeExecution == null)
             {
                 if (currentlyExaminedExecution.CurrentFlowElement is SubProcess)
@@ -60,7 +60,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
                 else
                 {
-                    currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", currentlyExaminedExecution.ParentId));
+                    currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
                 }
             }
 
@@ -91,7 +91,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
 
                 IExecutionEntity newParentScopeExecution = null;
-                currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", parentScopeExecution.ParentId));
+                currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(parentScopeExecution.ParentId);
                 while (currentlyExaminedExecution != null && newParentScopeExecution == null)
                 {
                     if (currentlyExaminedExecution.IsScope)
@@ -100,7 +100,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                     }
                     else
                     {
-                        currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", currentlyExaminedExecution.ParentId));
+                        currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
                     }
                 }
 
