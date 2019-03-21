@@ -8,16 +8,18 @@
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Sys.Net.Http;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
     public class UserServiceProxy : IUserServiceProxy
     {
-        private readonly HttpClient httpClient;
+        private readonly IHttpClientProxy httpProxy;
 
         public string UserServiceProxyBaseUrl { get; }
 
@@ -25,34 +27,33 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         /// 
         /// </summary>
         /// <param name="userServiceProxyBaseUrl">WebApi服务基地址</param>
-        public UserServiceProxy(string userServiceProxyBaseUrl)
+        public UserServiceProxy(string userServiceProxyBaseUrl, IHttpClientProxy httpProxy)
         {
             this.UserServiceProxyBaseUrl = userServiceProxyBaseUrl;
-
-            HttpClientHandler handler = new HttpClientHandler();
-            httpClient = new HttpClient(handler)
-            {
-                BaseAddress = new Uri(userServiceProxyBaseUrl)
-            };
-            handler.UseDefaultCredentials = UserServiceProxyBaseUrl.StartsWith("https");
-            httpClient.DefaultRequestHeaders.Connection.Add("keep-alive");
+            this.httpProxy = httpProxy;
+            this.httpProxy.HttpClient.BaseAddress = new Uri(userServiceProxyBaseUrl);
         }
 
-        /// 
+        /// <summary>
+        /// 获取系统用户
+        /// </summary>
         /// <param name="apiUrl"></param>
         /// <param name="parameter"></param>
-        public IList<IUserInfo> GetUsers(string apiUrl, object parameter)
+        public async Task<IList<IUserInfo>> GetUsers(string apiUrl, object parameter)
         {
-            HttpResponseMessage response = httpClient.PostAsync(apiUrl, new StringContent(JsonConvert.SerializeObject(parameter), Encoding.UTF8, "application/json")).GetAwaiter().GetResult();
-
-            JArray users = JsonConvert.DeserializeObject<JArray>(response.Content.ReadAsStringAsync().Result);
+            JArray users = await this.httpProxy.PostAsync<JArray>(apiUrl, new StringContent(JsonConvert.SerializeObject(parameter), Encoding.UTF8, "application/json"));
 
             return new List<IUserInfo>(users.ToObject<UserInfo[]>());
         }
 
-        public IList<IUserInfo> GetUsers(object parameter)
+        /// <summary>
+        /// 获取系统用户
+        /// </summary>
+        /// <param name="parameter">条件参数</param>
+        /// <returns></returns>
+        public async Task<IList<IUserInfo>> GetUsers(object parameter)
         {
-            return GetUsers("api/workflowusers", parameter);
+            return await GetUsers("api/workflowusers", parameter);
         }
     }
 }

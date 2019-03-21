@@ -2399,6 +2399,21 @@ namespace org.activiti.engine.impl
                 return orActive;
             }
         }
+
+        public virtual bool? IsAppend
+        {
+            get; set;
+        }
+
+        public virtual bool? IsTransfer
+        {
+            get; set;
+        }
+
+        public virtual bool? IsRuntime
+        {
+            get; set;
+        }
     }
 
 }

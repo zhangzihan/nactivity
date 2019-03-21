@@ -273,6 +273,13 @@ namespace org.activiti.bpmn.constants
         public const string MAP_EXCEPTION = "mapException";
         public const string MAP_EXCEPTION_ERRORCODE = "errorCode";
         public const string MAP_EXCEPTION_ANDCHILDREN = "includeChildExceptions";
+
+        public const string RUNTIME_ASSIGNEE_USER_VARIABLE_NAME = "runtimeAssigneeUser";
+        public const string ACTIITI_RUNTIME_ASSIGNEE_VARIABLE = "assigneeVariable";
+        public const string ACTIITI_RUNTIME_ASSIGNEE = "runtimeAssignee";
+
+        public const string ACTIVITI_COUNTERSIGNUSER_ATTRIBUTE = "countersignUsers";
+        public const string ACTIVITI_COUNTERSIGNUSER_GETPOLICY = "userPolicy";
     }
 
 }

@@ -30,6 +30,9 @@ namespace org.activiti.services.connectors.behavior
     using org.activiti.engine.impl.persistence.entity;
     using org.springframework.context;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class MQServiceTaskBehavior : AbstractBpmnActivityBehavior, ITriggerableActivityBehavior
     {
 
@@ -37,6 +40,12 @@ namespace org.activiti.services.connectors.behavior
         private readonly RuntimeBundleProperties runtimeBundleProperties;
         private readonly IApplicationEventPublisher eventPublisher;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="integrationContextManager"></param>
+        /// <param name="runtimeBundleProperties"></param>
+        /// <param name="eventPublisher"></param>
         public MQServiceTaskBehavior(IIntegrationContextManager integrationContextManager, RuntimeBundleProperties runtimeBundleProperties, IApplicationEventPublisher eventPublisher)
         {
             this.integrationContextManager = integrationContextManager;
@@ -44,6 +53,10 @@ namespace org.activiti.services.connectors.behavior
             this.eventPublisher = eventPublisher;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
         public override void execute(IExecutionEntity execution)
         {
             IIntegrationContextEntity integrationContext = storeIntegrationContext(execution);
@@ -53,8 +66,8 @@ namespace org.activiti.services.connectors.behavior
 
         /// <summary>
         /// Publishes an custom event using the Spring <seealso cref="IApplicationEventPublisher"/>. This event will be caught by
-        /// <seealso cref="IntegrationRequestSender#sendIntegrationRequest(IntegrationRequestEvent)"/> which is annotated with
-        /// <seealso cref="TransactionalEventListener"/> on phase <seealso cref="TransactionPhase#AFTER_COMMIT"/>. </summary>
+        /// <seealso ref="IntegrationRequestSender#sendIntegrationRequest(IntegrationRequestEvent)"/> which is annotated with
+        /// <seealso ref="TransactionalEventListener"/> on phase <seealso ref="TransactionPhase#AFTER_COMMIT"/>. </summary>
         /// <param name="execution"> the related execution </param>
         /// <param name="integrationContext"> the related integration context </param>
         private void publishSpringEvent(IExecutionEntity execution, IIntegrationContextEntity integrationContext)
@@ -83,6 +96,12 @@ namespace org.activiti.services.connectors.behavior
             return integrationContext;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="signalEvent"></param>
+        /// <param name="signalData"></param>
         public override void trigger(IExecutionEntity execution, string signalEvent, object signalData)
         {
             leave(execution);

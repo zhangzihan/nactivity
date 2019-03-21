@@ -27,11 +27,20 @@ namespace org.activiti.cloud.services.core.pageable.sort
             orderByProperties["createTime"] = HistoricTaskInstanceQueryProperty.START;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
         protected internal override void applyDefaultSort(IHistoricTaskInstanceQuery query)
         {
             query.orderByTaskId().asc();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         protected internal override IQueryProperty getOrderByProperty(Sort.Order order)
         {
             orderByProperties.TryGetValue(order.Property, out IQueryProperty qp);

@@ -8,6 +8,9 @@ namespace org.springframework.hateoas
     /// </summary>
     public abstract class ResourceSupport
     {
+        /// <summary>
+        /// links
+        /// </summary>
         protected IList<Link> links = new List<Link>();
 
 

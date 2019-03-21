@@ -25,7 +25,7 @@ namespace Sys.Bpm.Exceptions
         /// <param name="innerException"></param>
         public Http400Exception(Http400 http400, Exception innerException) : base(http400.Message, innerException)
         {
-
+            this.Http400 = http400;
         }
     }
 }

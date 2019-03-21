@@ -25,7 +25,7 @@ namespace org.activiti.engine.impl.persistence.entity
     /// 
     /// 
     /// 
-    public interface ITaskEntity : IVariableScope, task.ITask, IDelegateTask, IEntity, IHasRevision
+    public interface ITaskEntity : IVariableScope, ITask, IDelegateTask, IEntity, IHasRevision
     {
         new string TenantId { get; set; }
 
@@ -88,6 +88,6 @@ namespace org.activiti.engine.impl.persistence.entity
 
         new string ParentTaskId { get; set; }
 
+        void IsRuntimeAssignee();
     }
-
 }

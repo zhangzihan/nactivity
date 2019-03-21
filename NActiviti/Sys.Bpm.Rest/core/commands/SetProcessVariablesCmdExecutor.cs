@@ -6,18 +6,29 @@ using System;
 
 namespace org.activiti.cloud.services.core.commands
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SetProcessVariablesCmdExecutor : CommandExecutor<SetProcessVariablesCmd>
     {
 
         private ProcessEngineWrapper processEngine;
         private IMessageChannel<SetProcessVariablesResults> commandResults;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processEngine"></param>
+        /// <param name="commandResults"></param>
         public SetProcessVariablesCmdExecutor(ProcessEngineWrapper processEngine, IMessageChannel<SetProcessVariablesResults> commandResults)
         {
             this.processEngine = processEngine;
             this.commandResults = commandResults;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Type HandledType
         {
             get
@@ -26,6 +37,10 @@ namespace org.activiti.cloud.services.core.commands
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cmd"></param>
         public virtual void execute(SetProcessVariablesCmd cmd)
         {
             processEngine.ProcessVariables = cmd;

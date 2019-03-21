@@ -57,6 +57,9 @@ create table ACT_HI_TASKINST (
   FORM_KEY_ varchar(255),
   CATEGORY_ varchar(255),
   TENANT_ID_ varchar(255) default '',
+  IS_APPEND_ BIT,
+  IS_TRANSFER_ BIT,
+  IS_RUNTIME_ BIT,
   primary key (ID_)
 );
 

@@ -87,6 +87,15 @@ namespace org.activiti.engine.task
         /// Indicates whether this task is suspended or not. </summary>
         bool Suspended { get; }
 
+        /// <inheritdoc />
+        new bool? IsAppend { get; set; }
+
+        /// <inheritdoc />
+        new bool? IsTransfer { get; set; }
+
+        /// <inheritdoc />
+        new bool? IsRuntime { get; set; }
+
     }
 
     public static class Task_Fields

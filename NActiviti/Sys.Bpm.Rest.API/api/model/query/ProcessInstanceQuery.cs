@@ -11,6 +11,9 @@ namespace org.activiti.cloud.services.api.model
     /// </summary>
     public class ProcessInstanceQuery : AbstractQuery
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessInstanceQuery()
         {
 

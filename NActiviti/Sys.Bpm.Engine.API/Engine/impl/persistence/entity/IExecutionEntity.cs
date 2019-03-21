@@ -65,6 +65,9 @@ namespace org.activiti.engine.impl.persistence.entity
         /// </summary>
         new string SuperExecutionId { get; }
 
+        /// <inheritdoc />
+        new string ActivityId { get; set; }
+
         /// <summary>
         /// Gets the id of the current activity.
         /// </summary>

@@ -14,7 +14,7 @@
  */
 namespace org.activiti.validation.validator.impl
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.model;
 
     /// 

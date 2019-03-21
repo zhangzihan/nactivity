@@ -37,6 +37,8 @@ namespace org.activiti.engine.impl.persistence.entity
 
         void runable();
 
+        void addExecutionAdditional();
+
         IList<T> getDeployedArtifacts<T>();
 
         new string Name { get; set; }

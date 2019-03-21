@@ -53,7 +53,7 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
             ENTITY_MAPPING["job"] = typeof(IJob);
             ENTITY_MAPPING["process-definition"] = typeof(IProcessDefinition);
             ENTITY_MAPPING["process-instance"] = typeof(IProcessInstance);
-            ENTITY_MAPPING["task"] = typeof(Task);
+            ENTITY_MAPPING["task"] = typeof(ITask);
         }
 
         public virtual ITaskListener createClassDelegateTaskListener(ActivitiListener activitiListener)
@@ -104,6 +104,11 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
         public virtual IActivitiEventListener createDelegateExpressionEventListener(EventListener eventListener)
         {
             return new DelegateExpressionActivitiEventListener(expressionManager.createExpression(eventListener.Implementation), getEntityType(eventListener.EntityType));
+        }
+
+        public virtual IActivitiEventListener createCustomTaskCompletedEventListener()
+        {
+            return new CustomTaskCompletedEventListener();
         }
 
         public virtual IActivitiEventListener createEventThrowingEventListener(EventListener eventListener)

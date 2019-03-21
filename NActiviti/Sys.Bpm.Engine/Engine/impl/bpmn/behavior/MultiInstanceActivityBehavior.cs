@@ -46,9 +46,9 @@ namespace org.activiti.engine.impl.bpmn.behavior
         private const long serialVersionUID = 1L;
 
         // Variable names for outer instance(as described in spec)
-        protected internal readonly string NUMBER_OF_INSTANCES = "nrOfInstances";
-        protected internal readonly string NUMBER_OF_ACTIVE_INSTANCES = "nrOfActiveInstances";
-        protected internal readonly string NUMBER_OF_COMPLETED_INSTANCES = "nrOfCompletedInstances";
+        internal static readonly string NUMBER_OF_INSTANCES = "nrOfInstances";
+        internal static readonly string NUMBER_OF_ACTIVE_INSTANCES = "nrOfActiveInstances";
+        internal static readonly string NUMBER_OF_COMPLETED_INSTANCES = "nrOfCompletedInstances";
 
         // Instance members
         protected internal Activity activity;

@@ -30,9 +30,15 @@ export class BaseInfo extends BaseForm {
           name: this.user.current.name,
           isTecher: this.isTecher
         },
-        "name": this.user.current.name,
-        "users": [this.user.current.name],
-        "isTecher": this.isTecher
+        "user": [this.user.current.name],
+        "users": [this.user.current.name],//'新用户1','评审员'
+        "isTecher": this.isTecher,
+        "formData": {
+          "id": "123423",
+          "items": [
+            { "id": "3434343", "name": "test_product" }
+          ]
+        }
       }
     }).then((res) => {
       this.es.publish("reloadMyTasks");

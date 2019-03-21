@@ -25,7 +25,7 @@ namespace Sys.Bpm
         /// <returns></returns>
         public static IWebHostBuilder ConfigurationWorkflowWebHost(this IWebHostBuilder webHostBuilder)
         {
-            string root = Path.GetDirectoryName(new Uri(typeof(WorkflowWebHost).Assembly.CodeBase).AbsolutePath);
+            string root = Path.GetDirectoryName(new Uri(typeof(WorkflowWebHost).Assembly.CodeBase).LocalPath);
 
             string jsonFile = Path.Combine(root, "resources", "activiti.cfg.json");
 

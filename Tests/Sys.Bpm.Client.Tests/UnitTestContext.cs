@@ -11,19 +11,15 @@ using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.rest.api;
 using org.activiti.engine;
-using org.activiti.engine.repository;
-using Sys.Bpm.api.http;
 using Sys.Bpm.rest.controllers;
 using Sys.Bpm.Rest.Client;
 using Sys.Bpm.Services.Rest;
+using Sys.Net.Http;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sys.Bpmn.Test
 {
@@ -147,7 +143,7 @@ namespace Sys.Bpmn.Test
             return pddc.Deploy(pdd).Result;
         }
 
-        public WorkflowHttpInvokerProvider CeateWorkflowHttpProxy()
+        public WorkflowHttpClientProxyProvider CeateWorkflowHttpProxy()
         {
             HttpClient httpClient = this.TestServer.CreateClient();
 
@@ -160,7 +156,10 @@ namespace Sys.Bpmn.Test
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            return new WorkflowHttpInvokerProvider(httpClient);
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers.Add("Authorization", "Bearer " + accessToken);
+
+            return new WorkflowHttpClientProxyProvider(httpClient, this.Resolve<IAccessTokenProvider>(), httpContext);
         }
     }
 

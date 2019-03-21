@@ -10,8 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-
-
+using System.Threading.Tasks;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
@@ -25,12 +24,13 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         /// </summary>
         /// <param name="apiUrl">服务地址</param>
         /// <param name="parameter">请求参数</param>
-        IList<IUserInfo> GetUsers(string apiUrl, object parameter);
+        Task<IList<IUserInfo>> GetUsers(string apiUrl, object parameter);
+
         /// <summary>
         /// 获取用户信息
         /// </summary>
         /// <param name="apiUrl">服务地址</param>
         /// <param name="parameter">请求参数</param>
-        IList<IUserInfo> GetUsers(object parameter);
+        Task<IList<IUserInfo>> GetUsers(object parameter);
     }
 }

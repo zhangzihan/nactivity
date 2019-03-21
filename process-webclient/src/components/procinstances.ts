@@ -32,12 +32,16 @@ export class ProcInstancesViewModel {
 
     this.es.subscribe("openWorkflow", (doc) => {
       this.procName = doc.name;
-      if (this.status == 'uncompleted') {
-        this.unCompleted();
-      } else {
-        this.completed();
-      }
+      this.load();
     })
+  }
+
+  load() {
+    if (this.status == 'uncompleted') {
+      this.unCompleted();
+    } else {
+      this.completed();
+    }
   }
 
   determineActivationStrategy() {
@@ -87,7 +91,7 @@ export class ProcInstancesViewModel {
 
   terminate(id) {
     this.procInsSrv.terminate(id, "已终止整个流程实例").then(data => {
-      alert("成功");
+      this.load();
     }).catch(err => {
       alert(err);
     });

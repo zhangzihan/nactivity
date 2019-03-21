@@ -81,8 +81,8 @@ namespace org.activiti.cloud.services.rest.controllers
         public virtual Task<Resources<TaskModel>> getTasks(TaskQuery query)
         {
             IPage<TaskModel> page = processEngine.getTasks(query.Pageable);
-            return null;
-            //return pagedResourcesAssembler.toResource(pageable, page, taskResourceAssembler);
+
+            return Task.FromResult(new Resources<TaskModel>(page.getContent(), page.getTotalItems(), query.Pageable));
         }
 
 
@@ -96,7 +96,21 @@ namespace org.activiti.cloud.services.rest.controllers
 
             IList<TaskResource> resources = this.taskResourceAssembler.toResources(taskConverter.from(tasks));
 
-            return System.Threading.Tasks.Task.FromResult(new Resources<TaskModel>(resources.Select(x => x.Content), tasks.Count, 0, 0));
+            return Task.FromResult(new Resources<TaskModel>(resources.Select(x => x.Content), tasks.Count, 0, 0));
+        }
+
+
+        /// <inheritdoc />
+        [HttpGet("{userId}/nextform")]
+        public Task<Resources<TaskModel>> NextForm(string userId)
+        {
+            List<ITask> tasks = this.taskService.createTaskQuery().taskAssignee(userId).list().ToList();
+
+            tasks.AddRange(this.taskService.createTaskQuery().taskCandidateUser(userId).list());
+
+            IList<TaskResource> resources = this.taskResourceAssembler.toResources(taskConverter.from(tasks));
+
+            return Task.FromResult(new Resources<TaskModel>(resources.Select(x => x.Content), tasks.Count, 0, 0));
         }
 
 
@@ -144,11 +158,11 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpPost("{taskId}/complete")]
         public virtual Task<IActionResult> completeTask(string taskId, [FromBody]CompleteTaskCmd completeTaskCmd)
         {
-            processEngine.completeTask(completeTaskCmd ?? new CompleteTaskCmd(taskId, null));
+            processEngine.completeTask(completeTaskCmd);
 
             return Task.FromResult<IActionResult>(Ok());
         }
-        
+
         /// <inheritdoc />
         [HttpPost("terminate")]
         public virtual Task<IActionResult> terminate(TerminateTaskCmd cmd)
@@ -157,7 +171,6 @@ namespace org.activiti.cloud.services.rest.controllers
 
             return Task.FromResult<IActionResult>(Ok());
         }
-
 
         /// <inheritdoc />
         [HttpPost("{taskId}/remove")]
@@ -199,7 +212,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
         /// <inheritdoc />
         [HttpPost("transfer")]
-        public virtual Task<TaskModel[]> transferTask([FromBody]TransferTaskCmd cmd)
+        public virtual Task<TaskModel[]> transferTask(TransferTaskCmd cmd)
         {
             TaskModel[] task = processEngine.transferTask(cmd);
 
@@ -219,8 +232,11 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpGet("{taskId}/subtasks")]
         public virtual Task<Resources<TaskModel>> getSubtasks(string taskId)
         {
-            return null;
-            //return new Resources<TaskResource>(taskResourceAssembler.toResources(taskConverter.from(processEngine.getSubtasks(taskId))), linkTo(typeof(TaskControllerImpl)).withSelfRel());
+            IList<ITask> tasks = processEngine.getSubtasks(taskId);
+
+            IList<TaskModel> models = taskConverter.from(tasks);
+
+            return Task.FromResult(new Resources<TaskModel>(models, models.Count, 1, models.Count));
         }
 
 

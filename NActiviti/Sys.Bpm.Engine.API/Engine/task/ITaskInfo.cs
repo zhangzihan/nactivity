@@ -112,6 +112,21 @@ namespace org.activiti.engine.task
         /// The claim time of this task
         /// </summary>
         DateTime? ClaimTime { get; }
+
+        /// <summary>
+        /// 是否是其他人员追加给我的任务
+        /// </summary>
+        bool? IsAppend { get; }
+
+        /// <summary>
+        /// 是否是其他人员转办给我的任务
+        /// </summary>
+        bool? IsTransfer { get; }
+
+        /// <summary>
+        /// 是否是其他节点指定的人员
+        /// </summary>
+        bool? IsRuntime { get; }
     }
 
 }

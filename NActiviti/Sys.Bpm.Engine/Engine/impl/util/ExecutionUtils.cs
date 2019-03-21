@@ -5,6 +5,7 @@
 //  Original author: 张楠
 
 using Newtonsoft.Json.Linq;
+using org.activiti.bpmn.model;
 using org.activiti.engine.impl.persistence.entity;
 
 namespace org.activiti.engine.impl.util
@@ -42,6 +43,42 @@ namespace org.activiti.engine.impl.util
         internal static void SetLoopVariable(this IExecutionEntity execution, string variableName, object value)
         {
             execution.setVariableLocal(variableName, value);
+        }
+
+        internal static bool TryGetMultiInstance(this IExecutionEntity execution, out IExecutionEntity miRoot)
+        {
+            miRoot = execution.findMultiInstanceParentExecution();
+
+            return miRoot != null;
+        }
+
+        internal static IExecutionEntity findMultiInstanceParentExecution(this IExecutionEntity execution)
+        {
+            IExecutionEntity multiInstanceExecution = null;
+            IExecutionEntity parentExecution = execution.Parent;
+            if (parentExecution != null && parentExecution.CurrentFlowElement != null)
+            {
+                FlowElement flowElement = parentExecution.CurrentFlowElement;
+                if (flowElement is Activity)
+                {
+                    Activity activity = (Activity)flowElement;
+                    if (activity.LoopCharacteristics != null)
+                    {
+                        multiInstanceExecution = parentExecution;
+                    }
+                }
+
+                if (multiInstanceExecution == null)
+                {
+                    IExecutionEntity potentialMultiInstanceExecution = findMultiInstanceParentExecution(parentExecution);
+                    if (potentialMultiInstanceExecution != null)
+                    {
+                        multiInstanceExecution = potentialMultiInstanceExecution;
+                    }
+                }
+            }
+
+            return multiInstanceExecution;
         }
     }
 }

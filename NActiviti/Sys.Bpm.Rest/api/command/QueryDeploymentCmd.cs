@@ -21,6 +21,7 @@ namespace org.activiti.cloud.services.api.commands
     /// </summary>
     public class QueryDeploymentCmd : ICommand
     {
+        /// <inheritdoc />
         public string Id => "queryDeploymentCmd";
 
         /// <summary>
@@ -30,8 +31,8 @@ namespace org.activiti.cloud.services.api.commands
         /// <param name="pageableRepositoryService">分页仓储服务</param>
         /// <param name="qo">查询对象</param>
         /// <returns></returns>
-        public IPage<Deployment> loadPage(IRepositoryService repositoryService, 
-            PageableDeploymentRespositoryService pageableRepositoryService, 
+        public IPage<Deployment> loadPage(IRepositoryService repositoryService,
+            PageableDeploymentRespositoryService pageableRepositoryService,
             DeploymentQuery qo)
         {
             DeploymentQueryImpl query = repositoryService.createDeploymentQuery() as DeploymentQueryImpl;

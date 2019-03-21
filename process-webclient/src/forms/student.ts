@@ -14,7 +14,7 @@ export class Student extends BaseForm {
 
   approvaled = false;
 
-  toUser;
+  toUser = '新用户1';
 
   constructor(...args) {
     super(args[0], args[1], args[2]);
@@ -48,6 +48,9 @@ export class Student extends BaseForm {
       outputVariables: {
         approvaled: this.approvaled,
         className: this.className
+      },
+      runtimeAssigneeUser: {
+        users: [this.toUser]
       }
     }).then((res) => {
       this.es.publish("reloadMyTasks");
@@ -59,7 +62,7 @@ export class Student extends BaseForm {
 
   terminate() {
     this.httpInvoker.post(`${contants.serverUrl}/workflow/process-instances/${this.task.processInstanceId}/terminate`, {
-      reason: "终止流程" 
+      reason: "终止流程"
     }).then((res) => {
       this.es.publish("reloadMyTasks");
       this.es.publish("completed");

@@ -209,6 +209,9 @@ create table ACT_RU_TASK (
     TENANT_ID_ varchar(255) default '',
     FORM_KEY_ varchar(255),
     CLAIM_TIME_ timestamp,
+	IS_APPEND_ BIT,
+	IS_TRANSFER_ BIT,
+	IS_RUNTIME_ BIT,
     primary key (ID_)
 );
 

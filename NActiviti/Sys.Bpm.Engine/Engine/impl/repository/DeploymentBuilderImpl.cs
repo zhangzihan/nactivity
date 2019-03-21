@@ -221,13 +221,13 @@ namespace org.activiti.engine.impl.repository
                         ms.Seek(0, SeekOrigin.Begin);
                         XDocument doc = XDocument.Load(ms, LoadOptions.PreserveWhitespace);
 
-                        XElement start = doc.Descendants(XName.Get("process", BpmnXMLConstants.BPMN2_NAMESPACE))
-                             .Descendants(XName.Get("startEvent", BpmnXMLConstants.BPMN2_NAMESPACE))
+                        XElement start = doc.Descendants(XName.Get(BpmnXMLConstants.ELEMENT_PROCESS, BpmnXMLConstants.BPMN2_NAMESPACE))
+                             .Descendants(XName.Get(BpmnXMLConstants.ELEMENT_EVENT_START, BpmnXMLConstants.BPMN2_NAMESPACE))
                              .FirstOrDefault();
 
                         if (start != null)
                         {
-                            string formKey = start.Attribute(XName.Get("formKey", BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE))?.Value;
+                            string formKey = start.Attribute(XName.Get(BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE))?.Value;
 
                             deployment.StartForm = formKey;
                         }

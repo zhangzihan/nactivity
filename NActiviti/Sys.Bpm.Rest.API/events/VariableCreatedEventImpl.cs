@@ -23,10 +23,16 @@ namespace org.activiti.cloud.services.events
     /// </summary>
     public class VariableCreatedEventImpl : AbstractProcessEngineEvent, IVariableCreatedEvent
     {
-
+        /// <ineritdoc />
         protected internal string variableName;
+
+        /// <ineritdoc />
         protected internal string variableValue;
+
+        /// <ineritdoc />
         protected internal string variableType;
+
+        /// <ineritdoc />
         protected internal string taskId;
 
 
@@ -40,7 +46,6 @@ namespace org.activiti.cloud.services.events
         /// <summary>
         /// 
         /// </summary>
-
         public VariableCreatedEventImpl(string appName, string appVersion, string serviceName, string serviceFullName, string serviceType, string serviceVersion, string executionId, string processDefinitionId, string processInstanceId, string variableName, string variableValue, string variableType, string taskId) : base(appName, appVersion, serviceName, serviceFullName, serviceType, serviceVersion, executionId, processDefinitionId, processInstanceId)
         {
             this.variableName = variableName;
@@ -64,7 +69,6 @@ namespace org.activiti.cloud.services.events
         /// <summary>
         /// 
         /// </summary>
-
         public virtual string VariableValue
         {
             get

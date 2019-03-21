@@ -14,6 +14,9 @@
     /// </summary>
     public class IntegrationRequestSender
     {
+        /// <summary>
+        /// connectorType
+        /// </summary>
         protected internal const string CONNECTOR_TYPE = "connectorType";
         private readonly RuntimeBundleProperties runtimeBundleProperties;
         private readonly IMessageChannel<IProcessEngineEvent[]> auditProducer;

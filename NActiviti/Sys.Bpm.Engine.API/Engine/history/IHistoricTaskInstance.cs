@@ -26,7 +26,6 @@ namespace org.activiti.engine.history
     /// </summary>
     public interface IHistoricTaskInstance : ITaskInfo, IHistoricData
     {
-
         /// <summary>
         /// The reason why this task was deleted {'completed' | 'deleted' | any other user defined string }.
         /// </summary>
@@ -53,6 +52,12 @@ namespace org.activiti.engine.history
         /// <summary>
         /// Time when the task was claimed. </summary>
         new DateTime? ClaimTime { get; set; }
+
+        /// <inheritdoc />
+        new bool? IsAppend { get; set; }
+
+        /// <inheritdoc />
+        new bool? IsTransfer { get; set; }
 
     }
 

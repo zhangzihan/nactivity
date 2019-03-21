@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using org.activiti.services.api.commands;
 using System;
 using System.Collections.Generic;
 
@@ -23,7 +24,7 @@ namespace org.activiti.cloud.services.api.commands
     /// <summary>
     /// 流程启动命令
     /// </summary>
-    public class StartProcessInstanceCmd : ICommand
+    public class StartProcessInstanceCmd : ICommand, IStartProcessInstanceCmd
     {
         private readonly string id = "startProcessInstanceCmd";
         private string processDefinitionKey;

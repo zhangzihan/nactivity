@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace org.activiti.cloud.services.rest.api
 {
     /// <summary>
-    /// 流程定义部署RestAPI
+    /// 流程部署-流程发布及管理未发布和已发布流程
     /// </summary>
     public interface IProcessDefinitionDeployerController
     {
@@ -33,14 +33,14 @@ namespace org.activiti.cloud.services.rest.api
         Task<IActionResult> Remove(string deployId);
 
         /// <summary>
-        /// 查询最终部署的流程
+        /// 查询最终部署的流程(未发布)
         /// </summary>
         /// <param name="queryObj">查询对象</param>
         /// <returns></returns>
         Task<Resources<Deployment>> Latest(DeploymentQuery queryObj);
 
         /// <summary>
-        /// 查询所有的部署流程
+        /// 查询所有的部署流程(工作流列表已发布/未发布)
         /// </summary>
         /// <param name="queryObj">查询对象</param>
         /// <returns></returns>

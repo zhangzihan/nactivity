@@ -10,9 +10,12 @@ using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.controllers;
 using org.activiti.engine;
+using org.activiti.engine.exceptions;
 using org.activiti.engine.impl.bpmn.parser;
 using org.activiti.engine.repository;
+using org.activiti.validation;
 using org.springframework.hateoas;
+using Sys.Bpm.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -74,36 +77,60 @@ namespace Sys.Bpm.rest.controllers
         [HttpPost]
         public Task<Deployment> Deploy([FromBody]ProcessDefinitionDeployer deployer)
         {
-            IDeploymentBuilder deployment = this.repositoryService.createDeployment();
-
-            if (deployer.DisableBpmnValidation)
+            try
             {
-                deployment.disableBpmnValidation();
-            }
+                IDeploymentBuilder deployment = this.repositoryService.createDeployment();
 
-            if (deployer.DisableSchemaValidation)
+                if (deployer.DisableBpmnValidation)
+                {
+                    deployment.disableBpmnValidation();
+                }
+
+                if (deployer.DisableSchemaValidation)
+                {
+                    deployment.disableSchemaValidation();
+                }
+
+                if (deployer.EnableDuplicateFiltering)
+                {
+                    deployment.enableDuplicateFiltering();
+                }
+
+                string resourceName = deployer.Name.EndsWith("bpmn", StringComparison.OrdinalIgnoreCase) ? deployer.Name : $"{deployer.Name}.bpmn";
+
+                IDeployment dep = deployment.name(deployer.Name)
+                    .category(deployer.Category)
+                    .key(deployer.Key)
+                    .tenantId(deployer.TenantId)
+                    .businessKey(deployer.BusinessKey)
+                    .businessPath(deployer.BusinessPath)
+                    .startForm(deployer.StartForm, deployer.BpmnXML)
+                    .addString(resourceName, deployer.BpmnXML)
+                    .deploy();
+
+                return Task.FromResult(deploymentConverter.from(dep));
+            }
+            catch (ActivitiValidationException ex)
             {
-                deployment.disableSchemaValidation();
+                var http400 = new Http400()
+                {
+                    Code = "activitiValidationException",
+                    Message = "流程定义验证失败",
+                    Target = this.GetType().Name,
+                };
+
+                http400.Details = new List<Http400>();
+                foreach (var err in ex.ValidationErrors ?? new List<ValidationError>())
+                {
+                    http400.Details.Add(new Http400
+                    {
+                        Code = "activitiValidationException",
+                        Message = err.ToString()
+                    });
+                }
+
+                throw new Http400Exception(http400, ex);
             }
-
-            if (deployer.EnableDuplicateFiltering)
-            {
-                deployment.enableDuplicateFiltering();
-            }
-
-            string resourceName = deployer.Name.EndsWith("bpmn", StringComparison.OrdinalIgnoreCase) ? deployer.Name : $"{deployer.Name}.bpmn";
-
-            IDeployment dep = deployment.name(deployer.Name)
-                .category(deployer.Category)
-                .key(deployer.Key)
-                .tenantId(deployer.TenantId)
-                .businessKey(deployer.BusinessKey)
-                .businessPath(deployer.BusinessPath)
-                .startForm(deployer.StartForm, deployer.BpmnXML)
-                .addString(resourceName, deployer.BpmnXML)
-                .deploy();
-
-            return Task.FromResult<Deployment>(deploymentConverter.from(dep));
         }
 
         /// <inheritdoc />

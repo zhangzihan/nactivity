@@ -21,9 +21,17 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.events.listeners
 {
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="E"></typeparam>
+    /// <typeparam name="L"></typeparam>
     public abstract class BaseCommandContextEventsAggregator<E, L> where L : ICommandContextCloseListener
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="element"></param>
 
         public virtual void add(E element)
         {
@@ -43,12 +51,24 @@ namespace org.activiti.cloud.services.events.listeners
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal abstract Type CloseListenerClass { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal abstract L CloseListener { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal abstract string AttributeKey { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual ICommandContext CurrentCommandContext
         {
             get
@@ -56,7 +76,5 @@ namespace org.activiti.cloud.services.events.listeners
                 return Context.CommandContext;
             }
         }
-
     }
-
 }

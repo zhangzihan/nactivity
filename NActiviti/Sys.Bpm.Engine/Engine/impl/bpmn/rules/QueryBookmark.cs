@@ -38,21 +38,4 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         /// </summary>
         public QueryCondition[] Value { get; set; }
     }
-
-    /// <summary>
-    /// 会签人员查询条件
-    /// </summary>
-
-    public class QueryCondition
-    {
-        /// <summary>
-        /// 主标识id
-        /// </summary>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// 名称
-        /// </summary>
-        public string Name { get; set; }
-    }
 }

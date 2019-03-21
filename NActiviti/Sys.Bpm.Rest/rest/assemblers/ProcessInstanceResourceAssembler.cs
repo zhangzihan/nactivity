@@ -21,13 +21,23 @@ using System;
 
 namespace org.activiti.cloud.services.rest.assemblers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessInstanceResourceAssembler : ResourceAssemblerSupport<ProcessInstance, ProcessInstanceResource>
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessInstanceResourceAssembler() : base(typeof(ProcessInstanceControllerImpl), typeof(ProcessInstanceResource))
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstance"></param>
+        /// <returns></returns>
         public override ProcessInstanceResource toResource(ProcessInstance processInstance)
         {
             //throw new NotImplementedException();

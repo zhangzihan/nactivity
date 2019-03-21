@@ -27,28 +27,57 @@ using System.Linq;
 
 namespace org.activiti.cloud.services.events.converter
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class EventConverterContext
     {
         private static readonly ILogger LOGGER = ProcessEngineServiceProvider.LoggerService<EventConverterContext>();
 
+        /// <summary>
+        /// ProcessInstance:
+        /// </summary>
         public const string PROCESS_EVENT_PREFIX = "ProcessInstance:";
+        /// <summary>
+        /// Task:
+        /// </summary>
         public const string TASK_EVENT_PREFIX = "Task:";
+        /// <summary>
+        /// TaskCandidateUser:
+        /// </summary>
         public const string TASK_CANDIDATE_USER_EVENT_PREFIX = "TaskCandidateUser:";
+        /// <summary>
+        /// TaskCandidateGroup:
+        /// </summary>
         public const string TASK_CANDIDATE_GROUP_EVENT_PREFIX = "TaskCandidateGroup:";
+        /// <summary>
+        /// ""
+        /// </summary>
         public const string EVENT_PREFIX = "";
 
         private IDictionary<string, IEventConverter> convertersMap;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="convertersMap"></param>
         public EventConverterContext(IDictionary<string, IEventConverter> convertersMap)
         {
             this.convertersMap = convertersMap;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="converters"></param>
         public EventConverterContext(ISet<IEventConverter> converters)
         {
             this.convertersMap = converters.ToDictionary(x => x.GetType().FullName);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         internal virtual IDictionary<string, IEventConverter> ConvertersMap
         {
             get
@@ -57,6 +86,11 @@ namespace org.activiti.cloud.services.events.converter
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="activitiEvent"></param>
+        /// <returns></returns>
         public virtual IProcessEngineEvent from(IActivitiEvent activitiEvent)
         {
             IEventConverter converter = convertersMap[getPrefix(activitiEvent) + activitiEvent.Type];
@@ -73,6 +107,11 @@ namespace org.activiti.cloud.services.events.converter
             return newEvent;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="activitiEvent"></param>
+        /// <returns></returns>
         public static string getPrefix(IActivitiEvent activitiEvent)
         {
             if (isProcessEvent(activitiEvent))
@@ -99,6 +138,11 @@ namespace org.activiti.cloud.services.events.converter
             return EVENT_PREFIX;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="activitiEvent"></param>
+        /// <returns></returns>
         private static bool isProcessEvent(IActivitiEvent activitiEvent)
         {
             bool isProcessEvent = false;
@@ -118,26 +162,51 @@ namespace org.activiti.cloud.services.events.converter
             return isProcessEvent;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="activitiEvent"></param>
+        /// <returns></returns>
         private static bool isExecutionEntityEvent(IActivitiEvent activitiEvent)
         {
             return activitiEvent.Type == ActivitiEventType.ENTITY_SUSPENDED || activitiEvent.Type == ActivitiEventType.ENTITY_ACTIVATED || activitiEvent.Type == ActivitiEventType.ENTITY_CREATED;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="activitiEvent"></param>
+        /// <returns></returns>
         private static bool isTaskEvent(IActivitiEvent activitiEvent)
         {
             return activitiEvent is IActivitiEntityEvent && ((IActivitiEntityEvent)activitiEvent).Entity is TaskModel;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="activitiEvent"></param>
+        /// <returns></returns>
         private static bool isIdentityLinkEntityEvent(IActivitiEvent activitiEvent)
         {
             return activitiEvent is IActivitiEntityEvent && ((IActivitiEntityEvent)activitiEvent).Entity is IIdentityLink;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="identityLinkEntity"></param>
+        /// <returns></returns>
         private static bool isCandidateUserEntity(IIdentityLink identityLinkEntity)
         {
             return string.Compare(IdentityLinkType.CANDIDATE, identityLinkEntity.Type, true) == 0 && identityLinkEntity.UserId != null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="identityLinkEntity"></param>
+        /// <returns></returns>
         private static bool isCandidateGroupEntity(IIdentityLink identityLinkEntity)
         {
             return string.Compare(IdentityLinkType.CANDIDATE, identityLinkEntity.Type, true) == 0 && identityLinkEntity.GroupId != null;

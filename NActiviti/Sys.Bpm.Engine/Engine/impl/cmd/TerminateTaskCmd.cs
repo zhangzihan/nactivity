@@ -16,84 +16,84 @@ using System.Collections.Generic;
 
 namespace org.activiti.engine.impl.cmd
 {
+    using org.activiti.engine.@delegate;
+    using org.activiti.engine.@delegate.@event;
+    using org.activiti.engine.@delegate.@event.impl;
+    using org.activiti.engine.impl.bpmn.behavior;
     using org.activiti.engine.impl.context;
+    using org.activiti.engine.impl.identity;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
+    using org.activiti.engine.impl.util;
     using org.activiti.engine.task;
+    using Sys.Workflow;
 
     /// 
     /// 
     [Serializable]
-    public class TerminateTaskCmd : ICommand<object>
+    public class TerminateTaskCmd : CompleteTaskCmd
     {
         private const long serialVersionUID = 1L;
 
-        private readonly string taskId;
-        private readonly string terminateReason;
         private readonly bool isTerminateExecution;
 
-        public TerminateTaskCmd(string taskId, string terminateReason, bool isTerminateExecution)
+        public TerminateTaskCmd(string taskId, string terminateReason, bool isTerminateExecution, IDictionary<string, object> variables = null)
+            : base(taskId, variables)
         {
-            this.taskId = taskId;
-            this.terminateReason = terminateReason;
+            this.deleteReason = terminateReason;
             this.isTerminateExecution = isTerminateExecution;
+            this.variables = variables;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        protected internal override object execute(ICommandContext commandContext, ITaskEntity task)
         {
-            if (string.IsNullOrWhiteSpace(taskId))
+            return base.execute(commandContext, task);
+        }
+
+
+        protected internal override void executeTaskComplete(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
+        {
+            // Task complete logic
+
+            if (taskEntity.DelegationState.HasValue && taskEntity.DelegationState.Value == DelegationState.PENDING)
             {
-                throw new ActivitiIllegalArgumentException("taskId is null");
+                throw new ActivitiException("A delegated task cannot be completed, but should be resolved instead.");
             }
 
-            ITaskEntity task = commandContext.TaskEntityManager.findById<ITaskEntity>(taskId);
-
-            if (task == null)
+            commandContext.ProcessEngineConfiguration.ListenerNotificationHelper.executeTaskListeners(taskEntity, BaseTaskListener_Fields.EVENTNAME_COMPLETE);
+            IUserInfo user = Authentication.AuthenticatedUser;
+            if (user != null && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
             {
-                throw new ActivitiObjectNotFoundException("Cannot find task with id " + taskId, typeof(ITask));
+                IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(taskEntity.ProcessInstanceId);//这里为什么取ProcessInstance而不是Exceution.
+                commandContext.IdentityLinkEntityManager.involveUser(processInstanceEntity, user.Id, IdentityLinkType.PARTICIPANT);
             }
 
-            string executionId = task.ExecutionId;
-
-            if (isTerminateExecution && string.IsNullOrWhiteSpace(executionId) == false)
+            IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
+            if (eventDispatcher.Enabled)
             {
-                IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
-
-                if (execution != null)
+                if (variables != null)
                 {
-                    var query = new TaskQueryImpl();
-                    query.executionId(executionId);
-                    query.taskIdNotIn(new string[] { taskId });
-
-                    long count = commandContext.TaskEntityManager.findTaskCountByQueryCriteria(query);
-                    if (count == 0)
-                    {
-                        Context.ProcessEngineConfiguration.CommandExecutor.execute(new DeleteProcessInstanceCmd(execution.ProcessInstanceId, "强制终止任务导致当前流程已不存在可执行的任务,流程已强制终止."));
-                    }
-                    else
-                    {
-                        deleteTask(commandContext, task);
-                    }
+                    eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityWithVariablesEvent(ActivitiEventType.TASK_COMPLETED, taskEntity, variables, localScope));
                 }
                 else
                 {
-                    deleteTask(commandContext, task);
+                    eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TASK_COMPLETED, taskEntity));
                 }
             }
-            else
+
+            commandContext.TaskEntityManager.deleteTask(taskEntity, deleteReason, false, false);
+
+            if (eventDispatcher.Enabled)
             {
-                deleteTask(commandContext, task);
+                eventDispatcher.dispatchEvent(ActivitiEventBuilder.createCustomTaskCompletedEvent(taskEntity, ActivitiEventType.TASK_TERMINATED));
             }
 
-            return null;
-        }
-
-        private void deleteTask(ICommandContext commandContext, ITaskEntity task)
-        {
-            task.ExecutionId = null;
-            commandContext.TaskEntityManager.update(task);
-
-            Context.ProcessEngineConfiguration.CommandExecutor.execute(new DeleteTaskCmd(taskId, terminateReason, false));
+            // Continue process (if not a standalone task)
+            if (!ReferenceEquals(taskEntity.ExecutionId, null))
+            {
+                IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(taskEntity.ExecutionId);
+                Context.Agenda.planTriggerExecutionOperation(executionEntity);
+            }
         }
     }
 }

@@ -21,18 +21,31 @@ using System.Collections.Generic;
 
 namespace org.activiti.cloud.services.events.listeners
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class MessageProducerCommandContextCloseListener : ICommandContextCloseListener
     {
-
+        /// <summary>
+        /// processEngineEvents
+        /// </summary>
         public const string PROCESS_ENGINE_EVENTS = "processEngineEvents";
 
         private readonly IProcessEngineChannels producer;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="producer"></param>
         public MessageProducerCommandContextCloseListener(IProcessEngineChannels producer)
         {
             this.producer = producer;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
         public virtual void closed(ICommandContext commandContext)
         {
             IList<IProcessEngineEvent> events = commandContext.getGenericAttribute<IList<IProcessEngineEvent>>(PROCESS_ENGINE_EVENTS);
@@ -42,20 +55,31 @@ namespace org.activiti.cloud.services.events.listeners
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
         public virtual void closing(ICommandContext commandContext)
         {
             // No need to implement this method in this class
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
         public virtual void afterSessionsFlush(ICommandContext commandContext)
         {
             // No need to implement this method in this class
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
         public virtual void closeFailure(ICommandContext commandContext)
         {
             // No need to implement this method in this class
         }
     }
-
 }

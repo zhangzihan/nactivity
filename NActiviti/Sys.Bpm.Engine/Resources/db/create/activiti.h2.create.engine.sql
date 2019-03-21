@@ -209,6 +209,9 @@ create table ACT_RU_TASK (
     TENANT_ID_ varchar(255) default '',
     FORM_KEY_ varchar(255),
     CLAIM_TIME_ timestamp,
+	IS_APPEND_ BIT,
+	IS_TRANSFER_ BIT,
+	IS_RUNTIME_ BIT
     primary key (ID_)
 );
 
@@ -233,7 +236,7 @@ create table ACT_RU_VARIABLE (
     PROC_INST_ID_ varchar(64),
     TASK_ID_ varchar(64),
     BYTEARRAY_ID_ varchar(64),
-    DOUBLE_ double,
+    DOUBLE_ DOUBLE,
     LONG_ bigint,
     TEXT_ varchar(4000),
     TEXT2_ varchar(4000),

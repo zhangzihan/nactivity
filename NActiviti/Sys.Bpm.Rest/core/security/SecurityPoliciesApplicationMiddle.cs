@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Options;
+using System.Text.RegularExpressions;
+using Sys.Net.Http;
 
 namespace org.activiti.cloud.services.core
 {
@@ -46,18 +48,19 @@ namespace org.activiti.cloud.services.core
         public async Task Invoke(HttpContext context)
         {
 #if DEBUG
-            if (context.Request.Path.HasValue && context.Request.Path.Value.Contains("/swagger"))
+            if (context.Request.Path.HasValue &&
+                new Regex("/swagger/?").IsMatch(context.Request.Path.Value))
             {
                 await next(context);
                 return;
             }
 #endif
 
-            TokenUserProvider userProvider = context.RequestServices.GetRequiredService<TokenUserProvider>();
+            IAccessTokenProvider tokenProvider = context.RequestServices.GetRequiredService<IAccessTokenProvider>();
 
             SecurityPoliciesApplicationService spas = context.RequestServices.GetService<SecurityPoliciesApplicationService>();
 
-            spas.User = await userProvider.FromRequestHeader(context);
+            spas.User = await tokenProvider.FromRequestHeader(context);
 
             await next(context);
         }

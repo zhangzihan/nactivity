@@ -19,6 +19,7 @@ namespace org.activiti.engine
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
     using org.activiti.engine.task;
+    using org.activiti.services.api.commands;
 
     /// <summary>
     /// Service which provides access to <seealso cref="ITask"/> and form related operations.
@@ -77,13 +78,17 @@ namespace org.activiti.engine
         /// </summary>
         /// <param name="taskId">
         ///          The id of the task that will be deleted, cannot be null. If no task exists with the given taskId, the operation is ignored. </param>
+        /// <param name="deleteReason">
+        ///          reason the task is deleted. Is recorded in history, if enabled. </param>
+        /// <exception cref="ActivitiObjectNotFoundException">
+        ///           when the task with given id does not exist. </exception>
         /// <param name="cascade">
         ///          If cascade is true, also the historic information related to this task is deleted. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task with given id does not exist. </exception>
         /// <exception cref="ActivitiException">
         ///           when an error occurs while deleting the task or in case the task is part of a running process. </exception>
-        void deleteTask(string taskId, bool cascade);
+        void deleteTask(string taskId, string deleteReason, bool cascade = false);
 
         /// <summary>
         /// Deletes all tasks of the given collection.
@@ -97,19 +102,6 @@ namespace org.activiti.engine
         /// <exception cref="ActivitiException">
         ///           when an error occurs while deleting the tasks or in case one of the tasks is part of a running process. </exception>
         void deleteTasks(ICollection<string> taskIds, bool cascade);
-
-        /// <summary>
-        /// Deletes the given task, not deleting historic information that is related to this task..
-        /// </summary>
-        /// <param name="taskId">
-        ///          The id of the task that will be deleted, cannot be null. If no task exists with the given taskId, the operation is ignored. </param>
-        /// <param name="deleteReason">
-        ///          reason the task is deleted. Is recorded in history, if enabled. </param>
-        /// <exception cref="ActivitiObjectNotFoundException">
-        ///           when the task with given id does not exist. </exception>
-        /// <exception cref="ActivitiException">
-        ///           when an error occurs while deleting the task or in case the task is part of a running process </exception>
-        void deleteTask(string taskId, string deleteReason);
 
         /// <summary>
         /// Deletes all tasks of the given collection, not deleting historic information that is related to these tasks.
@@ -212,6 +204,19 @@ namespace org.activiti.engine
         void complete(string taskId, IDictionary<string, object> variables, IDictionary<string, object> transientVariables);
 
         /// <summary>
+        /// 创建一个新的任务
+        /// </summary>
+        /// <param name="name">任务名称</param>
+        /// <param name="description">任务描述</param>
+        /// <param name="dueDate">任务过期时间</param>
+        /// <param name="priority">任务优先级</param>
+        /// <param name="parentTaskId">父任务id</param>
+        /// <param name="assignee">分配人</param>
+        /// <param name="tenantId">租户id</param>
+        /// <returns></returns>
+        ITask createNewTask(string name, string description, DateTime? dueDate, int? priority, string parentTaskId, string assignee, string tenantId);
+
+        /// <summary>
         /// Called when the task is successfully executed, and the required task parameters are given by the end-user.
         /// </summary>
         /// <param name="taskId">
@@ -236,6 +241,15 @@ namespace org.activiti.engine
         void setAssignee(string taskId, string userId);
 
         /// <summary>
+        /// 增加任务处理人
+        /// </summary>
+        /// <param name="taskId">任务id</param>
+        /// <param name="assignees">人员列表</param>
+        /// <param name="tenantId">租户id</param>
+        /// <returns></returns>
+        ITask[] addCountersign(string taskId, string[] assignees, string tenantId);
+
+        /// <summary>
         /// Transfers ownership of this task to another user. No check is done whether the user is known by the identity component.
         /// </summary>
         /// <param name="taskId">
@@ -247,10 +261,30 @@ namespace org.activiti.engine
         void setOwner(string taskId, string userId);
 
         /// <summary>
+        /// 转派任务
+        /// </summary>
+        /// <param name="cmd">任务转派命令</param>
+        /// <returns></returns>
+        ITask[] transfer(ITransferTaskCmd cmd);
+
+        /// <summary>
         /// Retrieves the <seealso cref="IIdentityLink"/>s associated with the given task. Such an <seealso cref="IIdentityLink"/> informs how a certain identity (eg. group or user) is associated with a certain task (eg. as
         /// candidate, assignee, etc.)
         /// </summary>
         IList<IIdentityLink> getIdentityLinksForTask(string taskId);
+
+        /// <summary>
+        /// 创建父级任务的一个子任务
+        /// </summary>
+        /// <param name="taskName"></param>
+        /// <param name="description"></param>
+        /// <param name="dueDate"></param>
+        /// <param name="priority"></param>
+        /// <param name="parentTaskId2"></param>
+        /// <param name="assignee"></param>
+        /// <param name="tenantId"></param>
+        /// <returns></returns>
+        ITask createNewSubtask(string taskName, string description, DateTime? dueDate, int? priority, string parentTaskId, string assignee, string tenantId);
 
         /// <summary>
         /// Convenience shorthand for <seealso cref="#addUserIdentityLink(String, String, String)"/>; with type <seealso cref="IdentityLinkType#CANDIDATE"/>
@@ -273,6 +307,13 @@ namespace org.activiti.engine
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task or group doesn't exist. </exception>
         void addCandidateGroup(string taskId, string groupId);
+
+        /// <summary>
+        /// 更新当前任务
+        /// </summary>
+        /// <param name="updateTaskCmd"></param>
+        /// <returns></returns>
+        ITask updateTask(IUpdateTaskCmd updateTaskCmd);
 
         /// <summary>
         /// Involves a user with a task. The type of identity link is defined by the given identityLinkType.

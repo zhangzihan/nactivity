@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using org.activiti.api.runtime.shared.query;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,15 +27,25 @@ namespace org.springframework.hateoas
         /// 
         /// </summary>
         [JsonConstructor]
-        public Resources([JsonProperty("list")]IEnumerable<T> resourcesList, 
-            [JsonProperty("totalCount")]long total, 
-            [JsonProperty("pageNo")]int pageNo, 
+        public Resources([JsonProperty("list")]IEnumerable<T> resourcesList,
+            [JsonProperty("totalCount")]long total,
+            [JsonProperty("pageNo")]int pageNo,
             [JsonProperty("pageSize")]int pageSize)
         {
             this.resourcesList = resourcesList;
             this.total = total;
             this.PageNo = pageNo;
             this.PageSize = pageSize;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Resources([JsonProperty("list")]IEnumerable<T> resourcesList,
+            [JsonProperty("totalCount")]long total,
+            [JsonProperty("Pageable")]Pageable pageable)
+            : this(resourcesList, total, pageable.PageNo, pageable.PageSize)
+        {
         }
 
         /// <summary>

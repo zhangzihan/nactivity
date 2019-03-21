@@ -16,6 +16,7 @@ namespace org.activiti.engine.impl.variable
 {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Bson;
+    using Newtonsoft.Json.Linq;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
@@ -62,7 +63,6 @@ namespace org.activiti.engine.impl.variable
             byte[] bytes = (byte[])base.getValue(valueFields);
             if (bytes != null)
             {
-
                 object deserializedObject = deserialize(bytes, valueFields);
                 valueFields.CachedValue = deserializedObject;
 
@@ -99,15 +99,22 @@ namespace org.activiti.engine.impl.variable
 
             try
             {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    using (BsonDataWriter datawriter = new BsonDataWriter(ms))
+                string s = JsonConvert.SerializeObject(value, Formatting.Indented,
+                    new JsonSerializerSettings
                     {
-                        JsonSerializer serializer = new JsonSerializer();
-                        serializer.Serialize(datawriter, value);
-                        return ms.ToArray();
-                    }
-                }
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                        TypeNameHandling = TypeNameHandling.All
+                    });
+                return Encoding.UTF8.GetBytes(s);
+                //using (MemoryStream ms = new MemoryStream())
+                //{
+                //    using (BsonDataWriter datawriter = new BsonDataWriter(ms))
+                //    {
+                //JsonSerializer serializer = new JsonSerializer();
+                //serializer.Serialize(datawriter, value);
+                //return ms.ToArray();
+                //    }
+                //}
             }
             catch (Exception e)
             {
@@ -119,14 +126,21 @@ namespace org.activiti.engine.impl.variable
         {
             try
             {
-                using (MemoryStream ms = new MemoryStream(bytes))
+                string s = Encoding.UTF8.GetString(bytes);
+                return JsonConvert.DeserializeObject(s, new JsonSerializerSettings
                 {
-                    using (BsonDataReader reader = new BsonDataReader(ms))
-                    {
-                        JsonSerializer serializer = new JsonSerializer();
-                        return serializer.Deserialize(reader);
-                    }
-                }
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    TypeNameHandling = TypeNameHandling.All
+                });
+
+                //using (MemoryStream ms = new MemoryStream(bytes))
+                //{
+                //    using (BsonDataReader reader = new BsonDataReader(ms))
+                //    {
+                //        JsonSerializer serializer = new JsonSerializer();
+                //        return serializer.Deserialize(reader);
+                //    }
+                //}
 
                 //    string value = Encoding.UTF8.GetString(bytes);
                 //    object deserializedObject = JsonConvert.DeserializeObject(value, new JsonSerializerSettings

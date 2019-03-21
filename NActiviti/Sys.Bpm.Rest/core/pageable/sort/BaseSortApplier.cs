@@ -73,6 +73,11 @@ namespace org.activiti.cloud.services.core.pageable.sort
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         protected internal abstract IQueryProperty getOrderByProperty(Sort.Order order);
 
         private void applyDirection(T query, Sort.Direction direction)

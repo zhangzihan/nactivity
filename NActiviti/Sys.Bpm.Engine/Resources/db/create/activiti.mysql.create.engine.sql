@@ -209,6 +209,9 @@ create table ACT_RU_TASK (
     TENANT_ID_ varchar(255) default '',
     FORM_KEY_ varchar(255),
     CLAIM_TIME_ datetime(3),
+	IS_APPEND_ tinyint,
+	IS_TRANSFER_ tinyint,
+	IS_RUNTIME_ tinyint,
     primary key (ID_)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;
 

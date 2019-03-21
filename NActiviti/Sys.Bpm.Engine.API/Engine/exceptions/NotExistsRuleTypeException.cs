@@ -6,16 +6,19 @@
 //  Original author: 张楠
 ///////////////////////////////////////////////////////////
 
+using org.activiti.engine;
 using System;
 using System.Runtime.Serialization;
 
-namespace Sys.Workflow.Engine.Bpmn.Rules
+namespace org.activiti.engine.exceptions
 {
+    /// <summary>
+    /// 不存在的会签角色规则
+    /// </summary>
     [Serializable]
-    public class ExistsRuleTypeException : Exception
+    public class NotExistsRuleTypeException : ActivitiException
     {
-        public ExistsRuleTypeException(string ruleName, Type ruleType)
-            : base($"exists {ruleType.FullName} with {ruleName}")
+        public NotExistsRuleTypeException(string ruleName) : base($"Not exists {ruleName}")
         {
         }
     }

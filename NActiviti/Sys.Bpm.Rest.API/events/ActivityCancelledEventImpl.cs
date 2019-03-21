@@ -22,10 +22,24 @@ namespace org.activiti.cloud.services.events
     /// </summary>
     public class ActivityCancelledEventImpl : AbstractProcessEngineEvent, IActivityCancelledEvent
     {
-
+        /// <summary>
+        /// activityId
+        /// </summary>
         protected internal string activityId;
+
+        /// <summary>
+        /// activityName
+        /// </summary>
         protected internal string activityName;
+
+        /// <summary>
+        /// activityType
+        /// </summary>
         protected internal string activityType;
+
+        /// <summary>
+        /// cause
+        /// </summary>
         protected internal string cause;
 
 

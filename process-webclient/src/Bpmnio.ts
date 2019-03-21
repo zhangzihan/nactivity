@@ -147,6 +147,45 @@ export class BpmnIO {
       this.element = elem.element;
       this.node = bizobj;
       this.gfx = document.querySelector(`[data-element-id=${bizobj.id}]`);
+
+      /*      
+      //元素库
+      var elementRegistry = this.bpmnModeler.injector.get("elementRegistry");
+
+      //查找单个元素
+      var element = elementRegistry.get("Process_0"),
+        elementObj = element.businessObject;
+
+      var moddle = this.bpmnModeler.injector.get("moddle");
+      //创建属性对象 moddle.create("bpmn:XXXX", {property:value});
+      var extElem = moddle.create("bpmn:ExtensionElements", {
+        values: []
+      });
+      extElem.$parent = elementObj;
+
+      //创建属性数据源
+      var extProperties = moddle.create("camunda:Properties", {
+        values: []
+      });
+      extProperties.$parent = extElem;
+      var extProperty = moddle.create("bpmn:Property", {
+        name: '关联会议',
+        value: '31用户大会'
+      });
+      extProperty.value = '31用户大会';
+      extProperty.$parent = extProperties
+      extProperties.values.push(extProperty);
+
+      extElem.values.push(extProperties);
+
+      //modeling
+      var modeling = this.bpmnModeler.injector.get("modeling");
+      //更新属性
+      modeling.updateProperties(element, { extensionElements: extElem });
+
+      //更新label
+      modeling.updateLabel(elementRegistry.get("SequenceFlow_0ihgz1d"), "流程引擎");
+      */
     });
 
     ////// file drag / drop ///////////////////////

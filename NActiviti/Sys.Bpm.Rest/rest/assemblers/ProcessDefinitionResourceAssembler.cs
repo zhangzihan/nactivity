@@ -21,13 +21,23 @@ using System;
 
 namespace org.activiti.cloud.services.rest.assemblers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessDefinitionResourceAssembler : ResourceAssemblerSupport<ProcessDefinition, ProcessDefinitionResource>
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessDefinitionResourceAssembler() : base(typeof(ProcessDefinitionAdminControllerImpl), typeof(ProcessDefinitionResource))
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processDefinition"></param>
+        /// <returns></returns>
         public override ProcessDefinitionResource toResource(ProcessDefinition processDefinition)
         {
 

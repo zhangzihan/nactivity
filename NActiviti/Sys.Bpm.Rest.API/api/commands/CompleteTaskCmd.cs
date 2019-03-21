@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using org.activiti.engine.impl;
 using System;
 using System.Collections.Generic;
 
@@ -28,17 +29,30 @@ namespace org.activiti.cloud.services.api.commands
         private readonly string id = "completeTaskCmd";
         private string taskId;
         private IDictionary<string, object> outputVariables;
+        private RuntimeAssigneeUser runtimeAssignUser;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public CompleteTaskCmd()
+        {
+
+        }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="taskId">任务id</param>
         /// <param name="outputVariables">提交的数据</param>
+        /// <param name="runtimeAssignUser">如果下一步需要从当前任务中指定人员处理,则使用这个参数</param>
         ////[JsonConstructor]
-        public CompleteTaskCmd([JsonProperty("TaskId")] string taskId, [JsonProperty("OutputVariables")] IDictionary<string, object> outputVariables)
+        public CompleteTaskCmd([JsonProperty("TaskId")] string taskId,
+            [JsonProperty("OutputVariables")] IDictionary<string, object> outputVariables,
+            [JsonProperty("RuntimeAssignUsers")]RuntimeAssigneeUser runtimeAssignUser)
         {
             this.taskId = taskId;
             this.outputVariables = outputVariables;
+            this.runtimeAssignUser = runtimeAssignUser;
         }
 
         /// <summary>
@@ -59,7 +73,10 @@ namespace org.activiti.cloud.services.api.commands
                 outputVariables = outputVariables ?? new Dictionary<string, object>();
                 return outputVariables;
             }
-            set => outputVariables = value;
+            set
+            {
+                outputVariables = value;
+            }
         }
 
         /// <summary>
@@ -70,6 +87,17 @@ namespace org.activiti.cloud.services.api.commands
             get => taskId;
             set => taskId = value;
         }
-    }
 
+        /// <summary>
+        /// 如果下一步需要从当前任务中指定人员处理,则使用这个参数
+        /// </summary>
+        public RuntimeAssigneeUser RuntimeAssigneeUser
+        {
+            get => runtimeAssignUser;
+            set
+            {
+                runtimeAssignUser = value;
+            }
+        }
+    }
 }

@@ -10,17 +10,30 @@ using org.springframework.context;
 
 namespace org.activiti.services.subscriptions.behavior
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class BroadcastSignalEventActivityBehavior : IntermediateThrowSignalEventActivityBehavior
     {
         private const long serialVersionUID = 1L;
 
         private readonly IApplicationEventPublisher eventPublisher;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="eventPublisher"></param>
+        /// <param name="signalEventDefinition"></param>
+        /// <param name="signal"></param>
         public BroadcastSignalEventActivityBehavior(IApplicationEventPublisher eventPublisher, SignalEventDefinition signalEventDefinition, Signal signal) : base(signalEventDefinition, signal)
         {
             this.eventPublisher = eventPublisher;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
         public override void execute(IExecutionEntity execution)
         {
             base.execute(execution);

@@ -1,26 +1,19 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using org.activiti.api.runtime.shared.query;
+using org.activiti.cloud.services.api;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core;
 using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.core.pageable.sort;
-using org.activiti.cloud.services.events.listeners;
 using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.assemblers;
-using org.activiti.cloud.services.rest.controllers;
 using org.activiti.engine;
-using Sys.Bpm.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Sys.Net.Http;
+using System.Net.Http;
 
 namespace Sys.Bpm.Services.Rest
 {
@@ -30,7 +23,7 @@ namespace Sys.Bpm.Services.Rest
     public static class ProcessEngineRestExtention
     {
         /// <summary>
-        /// 
+        /// 注册Workflow Rest服务
         /// </summary>
         /// <param name="mvcBuilder"></param>
         /// <param name="config"></param>
@@ -46,8 +39,6 @@ namespace Sys.Bpm.Services.Rest
             services.AddTransient<ProcessInstanceSortApplier>();
 
             services.AddSingleton<PageRetriever>();
-
-            services.AddSingleton<TokenUserProvider>();
 
             services.AddTransient<HistoricInstanceConverter>();
 
@@ -109,8 +100,7 @@ namespace Sys.Bpm.Services.Rest
 
             services.AddTransient<ProcessInstanceResourceAssembler>();
 
-
-            services.AddTransient<ProcessEngineWrapper>(sp =>
+            services.AddScoped<ProcessEngineWrapper>(sp =>
             {
                 IProcessEngine engine = sp.GetService<IProcessEngine>();
 
@@ -128,12 +118,14 @@ namespace Sys.Bpm.Services.Rest
                     sp.GetService<HistoricInstanceConverter>());
             });
 
+            services.AddScoped<SecurityPoliciesApplicationService>();
+
             services
                 .AddTransient<PageRetriever>()
                 .AddTransient<ProcessDefinitionConverter>()
                 .AddTransient<ProcessDefinitionSortApplier>()
-                .AddTransient<SecurityPoliciesApplicationService>()
                 .AddTransient<ProcessDefinitionResourceAssembler>()
+                .AddTransient<ProcessDefinitionMetaResourceAssembler>()
                 .AddTransient<DeploymentConverter>()
                 .AddTransient<DeploymentSortApplier>()
                 .AddTransient<PageableProcessDefinitionRepositoryService>()
@@ -153,7 +145,7 @@ namespace Sys.Bpm.Services.Rest
         }
 
         /// <summary>
-        /// 
+        /// 挂接异常处理中间件和安全校验Token中间件,app.UseWorkflow需要写在app.UseMvc之前
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
@@ -163,21 +155,9 @@ namespace Sys.Bpm.Services.Rest
 
             SecurityPoliciesProviderOptions options = new SecurityPoliciesProviderOptions(config.GetSection("SecurityPoliciesProvider"));
 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
             app.UseMiddleware<SecurityPoliciesApplicationMiddle>(Options.Create(options));
-
-            app.UseExceptionHandler(error =>
-            {
-                error.Run(async context =>
-                {
-                    var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-
-                    if (exceptionHandlerPathFeature.Error is Http400Exception http400)
-                    {
-                        context.Response.ContentType = "application/json";                       
-                        await context.Response.WriteAsync(JsonConvert.SerializeObject(http400.Http400));
-                    }
-                });
-            });
 
             return app;
         }

@@ -1,4 +1,6 @@
-﻿using org.activiti.engine.@delegate;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using org.activiti.engine.@delegate;
 using org.activiti.engine.impl.identity;
 using org.activiti.engine.impl.persistence.entity;
 using System;
@@ -114,7 +116,10 @@ namespace org.activiti.engine.impl.el
 
                 foreach (string key in execution.Variables.Keys)
                 {
-                    (contextObject as IDictionary<string, object>).Add(key, execution.Variables[key]);
+                    var value = execution.Variables[key];
+                    object obj = ToObject(value);
+
+                    (contextObject as IDictionary<string, object>).Add(key, obj);
                 }
 
                 return Sys.Expressions.ExpressionManager.GetValue(contextObject, expstr, execution.Variables);
@@ -125,6 +130,39 @@ namespace org.activiti.engine.impl.el
             // It will use the bean resolved in this resolver as base.
 
             return null;
+        }
+
+        private object ToObject(object value)
+        {
+            if (value == null)
+            {
+                return value;
+            }
+
+            if (value is JArray arry)
+            {
+                IList<object> list = new List<object>();
+                foreach (var arr in arry)
+                {
+                    var obj = ToObject(arr);
+                    list.Add(obj);
+                }
+                return list;
+            }
+            else if (value is JValue jValue)
+            {
+                return jValue.Value;
+            }
+            else if (value is JToken jToken)
+            {
+
+                var dict = jToken.ToObject<ExpandoObject>();
+                return dict;
+            }
+            else
+            {
+                return value;
+            }
         }
     }
 }

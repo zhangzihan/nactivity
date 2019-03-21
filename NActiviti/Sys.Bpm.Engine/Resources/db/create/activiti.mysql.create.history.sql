@@ -57,6 +57,9 @@ create table ACT_HI_TASKINST (
     FORM_KEY_ varchar(255),
     CATEGORY_ varchar(255),
     TENANT_ID_ varchar(255) default '',
+	IS_APPEND_ tinyint,
+	IS_TRANSFER_ tinyint,
+	IS_RUNTIME_ tinyint,
     primary key (ID_)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;
 

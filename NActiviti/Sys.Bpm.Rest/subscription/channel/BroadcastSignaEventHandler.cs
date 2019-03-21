@@ -6,12 +6,19 @@ using org.springframework.messaging.support;
 
 namespace org.activiti.services.subscription.channel
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class BroadcastSignaEventHandler
     {
         private IBinderAwareChannelResolver resolver;
 
         private IRuntimeService runtimeService;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="signalCmd"></param>
         public virtual void receive(SignalCmd signalCmd)
         {
             if ((signalCmd.InputVariables == null) || (signalCmd.InputVariables.Count == 0))
@@ -24,6 +31,10 @@ namespace org.activiti.services.subscription.channel
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="signalCmd"></param>
         public virtual void broadcastSignal(SignalCmd signalCmd)
         {
             IMessage<SignalCmd> message = MessageBuilder<SignalCmd>.withPayload(signalCmd).build();

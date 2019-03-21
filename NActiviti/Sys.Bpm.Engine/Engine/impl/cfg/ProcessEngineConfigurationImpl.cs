@@ -697,6 +697,14 @@ namespace org.activiti.engine.impl.cfg
             initDatabaseEventLogging();
             initGetBookmarkRuleProvider();
             configuratorsAfterInit();
+
+            addDefaultEventListner();
+        }
+
+        private void addDefaultEventListner()
+        {
+            this.eventDispatcher.addEventListener(this.listenerFactory.createCustomTaskCompletedEventListener(), ActivitiEventType.TASK_TERMINATED);
+            this.eventDispatcher.addEventListener(this.listenerFactory.createCustomTaskCompletedEventListener(), ActivitiEventType.TASK_TRANSFERED);
         }
 
         private void initGetBookmarkRuleProvider()

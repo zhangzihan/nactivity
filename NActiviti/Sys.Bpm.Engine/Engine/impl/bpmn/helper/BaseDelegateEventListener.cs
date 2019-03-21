@@ -22,42 +22,42 @@ namespace org.activiti.engine.impl.bpmn.helper
     /// 
     /// </summary>
     public abstract class BaseDelegateEventListener : IActivitiEventListener
-	{
-		public abstract bool FailOnException {get;}
-		public abstract void onEvent(IActivitiEvent @event);
+    {
+        public abstract bool FailOnException { get; }
+        public abstract void onEvent(IActivitiEvent @event);
 
-	  protected internal Type entityClass;
+        protected internal Type entityClass;
 
-	  public virtual Type EntityClass
-	  {
-		  set
-		  {
-			this.entityClass = value;
-		  }
-	  }
+        public virtual Type EntityClass
+        {
+            set
+            {
+                this.entityClass = value;
+            }
+        }
 
-	  protected internal virtual bool isValidEvent(IActivitiEvent @event)
-	  {
-		bool valid = false;
-		if (entityClass != null)
-		{
-		  if (@event is IActivitiEntityEvent)
-		  {
-			object entity = ((IActivitiEntityEvent) @event).Entity;
-			if (entity != null)
-			{
-			  valid = entityClass.IsAssignableFrom(entity.GetType());
-			}
-		  }
-		}
-		else
-		{
-		  // If no class is specified, all events are valid
-		  valid = true;
-		}
-		return valid;
-	  }
+        protected internal virtual bool isValidEvent(IActivitiEvent @event)
+        {
+            bool valid = false;
+            if (entityClass != null)
+            {
+                if (@event is IActivitiEntityEvent)
+                {
+                    object entity = ((IActivitiEntityEvent)@event).Entity;
+                    if (entity != null)
+                    {
+                        valid = entityClass.IsAssignableFrom(entity.GetType());
+                    }
+                }
+            }
+            else
+            {
+                // If no class is specified, all events are valid
+                valid = true;
+            }
+            return valid;
+        }
 
-	}
+    }
 
 }

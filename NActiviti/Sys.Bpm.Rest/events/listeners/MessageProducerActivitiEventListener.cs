@@ -20,6 +20,9 @@ namespace org.activiti.cloud.services.events.listeners
     using org.activiti.cloud.services.events.converter;
     using org.activiti.engine.@delegate.@event;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class MessageProducerActivitiEventListener : IActivitiEventListener
     {
 
@@ -27,12 +30,21 @@ namespace org.activiti.cloud.services.events.listeners
 
         private readonly ProcessEngineEventsAggregator eventsAggregator;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="converterContext"></param>
+        /// <param name="eventsAggregator"></param>
         public MessageProducerActivitiEventListener(EventConverterContext converterContext, ProcessEngineEventsAggregator eventsAggregator)
         {
             this.converterContext = converterContext;
             this.eventsAggregator = eventsAggregator;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="event"></param>
         public virtual void onEvent(IActivitiEvent @event)
         {
             IProcessEngineEvent newEvent = converterContext.from(@event);
@@ -42,6 +54,9 @@ namespace org.activiti.cloud.services.events.listeners
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool FailOnException
         {
             get

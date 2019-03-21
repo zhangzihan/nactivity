@@ -36,11 +36,9 @@ namespace org.activiti.cloud.services.rest.controllers
     [ApiController]
     public class ProcessInstanceTasksControllerImpl : ControllerBase, IProcessInstanceTasksController
     {
-
         private readonly PageableTaskRepositoryService pageableTaskService;
 
         private readonly TaskResourceAssembler taskResourceAssembler;
-
 
         /// <inheritdoc />
         public ProcessInstanceTasksControllerImpl(PageableTaskRepositoryService pageableTaskService, TaskResourceAssembler taskResourceAssembler)
@@ -48,7 +46,6 @@ namespace org.activiti.cloud.services.rest.controllers
             this.pageableTaskService = pageableTaskService;
             this.taskResourceAssembler = taskResourceAssembler;
         }
-
 
         /// <inheritdoc />
         [HttpPost("{processInstanceId}/tasks")]

@@ -72,7 +72,7 @@ namespace Sys.Bpmn.Test.rest.controller
             {
                 IProcessDefinitionController pdc = CreateController();
 
-                Deployment dep = ctx.DeployTestProcess();
+                Deployment dep = ctx.HttpDeployProcess();
 
                 ProcessDefinition pdr = pdc.LatestProcessDefinitions(new ProcessDefinitionQuery
                 {

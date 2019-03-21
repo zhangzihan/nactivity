@@ -14,7 +14,7 @@
 namespace org.activiti.engine.impl.cmd
 {
 
-    
+
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
     using org.activiti.engine.impl.identity;

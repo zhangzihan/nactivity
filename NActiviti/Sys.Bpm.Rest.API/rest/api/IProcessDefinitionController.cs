@@ -9,19 +9,19 @@ using System.Threading.Tasks;
 namespace org.activiti.cloud.services.rest.api
 {
     /// <summary>
-    /// 工作流定义RestAPI
+    /// 流程定义-已发布流程
     /// </summary>
     public interface IProcessDefinitionController
     {
         /// <summary>
-        /// 获取工作流定义的最终版本
+        /// 获取工作流定义的最终版本(已发布)
         /// </summary>
         /// <param name="queryObj">查询对象</param>
         /// <returns></returns>
         Task<Resources<ProcessDefinition>> LatestProcessDefinitions(ProcessDefinitionQuery queryObj);
 
         /// <summary>
-        /// 获取所有工作流定义
+        ///获取所有工作流定义(工作流列表 已发布)
         /// </summary>
         /// <param name="queryObj">查询对象</param>
         /// <returns></returns>

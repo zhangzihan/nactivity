@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using org.activiti.services.api.commands;
 using System;
+using System.Collections.Generic;
 
 /*
  * Copyright 2018 Alfresco, Inc. and/or its affiliates.
@@ -22,9 +24,10 @@ namespace org.activiti.cloud.services.api.commands
     /// <summary>
     /// 任务转办命令
     /// </summary>
-    public class TransferTaskCmd : ICommand
+    public class TransferTaskCmd : ICommand, ITransferTaskCmd
     {
         private readonly string id = "transferTaskCmd";
+        private string _description;
 
         /// <summary>
         /// 构造函数
@@ -35,13 +38,17 @@ namespace org.activiti.cloud.services.api.commands
         /// <param name="priority">任务优先级</param>
         /// <param name="assignees">转办人员列表</param>
         /// <param name="taskId">转办的任务id</param>
+        /// <param name="tenantId">租户id</param>
+        /// <param name="variables">流程变量</param>
         ////[JsonConstructor]
         public TransferTaskCmd([JsonProperty("Name")] string name,
             [JsonProperty("Description")]string description,
             [JsonProperty("DueDate")] DateTime? dueDate,
             [JsonProperty("Priority")]int? priority,
             [JsonProperty("Assignees")]string[] assignees,
-            [JsonProperty("TaskId")]string taskId)
+            [JsonProperty("TaskId")]string taskId,
+            [JsonProperty("TenantId")] string tenantId,
+            [JsonProperty("Variables")] IDictionary<string, object> variables)
         {
             this.id = Guid.NewGuid().ToString();
             this.Name = name;
@@ -50,6 +57,8 @@ namespace org.activiti.cloud.services.api.commands
             this.Priority = priority;
             this.Assignees = assignees;
             this.TaskId = taskId;
+            this.TenantId = tenantId;
+            this.Variables = variables;
         }
 
         /// <summary>
@@ -76,8 +85,16 @@ namespace org.activiti.cloud.services.api.commands
 
         public virtual string Description
         {
-            get;
-            set;
+            get
+            {
+                return
+#if DEBUG
+                    _description = string.IsNullOrWhiteSpace(_description) ? "任务已转派" : _description;
+#else
+                _description;
+#endif
+            }
+            set => _description = value;
         }
 
         /// <summary>
@@ -119,6 +136,18 @@ namespace org.activiti.cloud.services.api.commands
             get;
             set;
         }
-    }
 
+        /// <inheritdoc />
+        public virtual string TenantId
+        {
+            get;
+            set;
+        }
+
+        /// <inheritdoc />
+        public IDictionary<string, object> Variables
+        {
+            get; set;
+        }
+    }
 }

@@ -7,21 +7,28 @@ using System.Linq;
 
 namespace org.activiti.cloud.services.core.commands
 {
-    //using Autowired = org.springframework.beans.factory.annotation.Autowired;
-    //using StreamListener = org.springframework.cloud.stream.annotation.StreamListener;
-    //using Component = org.springframework.stereotype.Component;
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class CommandEndpoint
     {
         private static readonly ILogger LOGGER = ProcessEngineServiceProvider.LoggerService<CommandEndpoint>();
 
         private IDictionary<Type, CommandExecutor<ICommand>> commandExecutors;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cmdExecutors"></param>
         public CommandEndpoint(ISet<CommandExecutor<ICommand>> cmdExecutors)
         {
             this.commandExecutors = cmdExecutors.ToDictionary(x => x.GetType());//.ToDictionary(CommandExecutor::getHandledType, System.Func.identity());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cmd"></param>
         public virtual void consumeActivateProcessInstanceCmd(ICommand cmd)
         {
             processCommand(cmd);

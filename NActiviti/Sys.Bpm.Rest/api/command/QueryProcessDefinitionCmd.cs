@@ -21,6 +21,7 @@ namespace org.activiti.cloud.services.api.commands
     /// </summary>
     public class QueryProcessDefinitionCmd : ICommand
     {
+        /// <inheritdoc />
         public string Id => "queryProcessDefinitionCmd";
 
         /// <summary>

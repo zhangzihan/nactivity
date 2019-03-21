@@ -262,7 +262,11 @@ namespace org.activiti.engine.impl.persistence.entity
             childExecution.ProcessDefinitionKey = parentExecutionEntity.ProcessDefinitionKey;
             childExecution.ProcessInstanceId = !ReferenceEquals(parentExecutionEntity.ProcessInstanceId, null) ? parentExecutionEntity.ProcessInstanceId : parentExecutionEntity.Id;
             childExecution.IsScope = false;
-
+            childExecution.ActivityId = parentExecutionEntity.ActivityId;
+            childExecution.BusinessKey = parentExecutionEntity.BusinessKey;
+            childExecution.DeploymentId = parentExecutionEntity.DeploymentId;
+            childExecution.TenantId = parentExecutionEntity.TenantId;
+            
             // manage the bidirectional parent-child relation
             parentExecutionEntity.addChildExecution(childExecution);
 

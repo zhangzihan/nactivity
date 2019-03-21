@@ -17,6 +17,10 @@ using System.Threading.Tasks;
 
 namespace org.activiti.api.runtime.shared.query
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface ISlice<T> : IEnumerable<T>
     {
 

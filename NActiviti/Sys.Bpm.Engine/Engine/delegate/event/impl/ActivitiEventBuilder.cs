@@ -99,6 +99,30 @@ namespace org.activiti.engine.@delegate.@event.impl
             return newEvent;
         }
 
+        /// <param name="type">
+        ///          type of event </param>
+        /// <param name="entity">
+        ///          the entity this event targets </param>
+        /// <returns> an <seealso cref="IActivitiEntityEvent"/> </returns>
+        public static IActivitiEntityEvent createEntityEvent(ActivitiEventType type, object entity, string executionId, string processInstanceId, string processDefinitionId)
+        {
+            ActivitiEntityEventImpl newEvent = new ActivitiEntityEventImpl(entity, type);
+
+            newEvent.ExecutionId = executionId;
+            newEvent.ProcessInstanceId = processInstanceId;
+            newEvent.ProcessDefinitionId = processDefinitionId;
+            return newEvent;
+        }
+
+        ///
+        /// <returns> an <seealso cref="IActivitiEntityEvent"/> </returns>
+        public static IActivitiEntityEvent createCustomTaskCompletedEvent(ITaskEntity entity, ActivitiEventType type)
+        {
+            CustomTaskCompletedEntityEventImpl newEvent = new CustomTaskCompletedEntityEventImpl(entity, type);
+
+            return newEvent;
+        }
+
         public static IActivitiSequenceFlowTakenEvent createSequenceFlowTakenEvent(IExecutionEntity executionEntity, ActivitiEventType type, string sequenceFlowId, string sourceActivityId, string sourceActivityName, string sourceActivityType, object sourceActivityBehavior, string targetActivityId, string targetActivityName, string targetActivityType, object targetActivityBehavior)
         {
 
@@ -121,21 +145,6 @@ namespace org.activiti.engine.@delegate.@event.impl
             newEvent.TargetActivityType = targetActivityType;
             newEvent.TargetActivityBehaviorClass = targetActivityBehavior != null ? targetActivityBehavior.GetType().FullName : null;
 
-            return newEvent;
-        }
-
-        /// <param name="type">
-        ///          type of event </param>
-        /// <param name="entity">
-        ///          the entity this event targets </param>
-        /// <returns> an <seealso cref="IActivitiEntityEvent"/> </returns>
-        public static IActivitiEntityEvent createEntityEvent(ActivitiEventType type, object entity, string executionId, string processInstanceId, string processDefinitionId)
-        {
-            ActivitiEntityEventImpl newEvent = new ActivitiEntityEventImpl(entity, type);
-
-            newEvent.ExecutionId = executionId;
-            newEvent.ProcessInstanceId = processInstanceId;
-            newEvent.ProcessDefinitionId = processDefinitionId;
             return newEvent;
         }
 

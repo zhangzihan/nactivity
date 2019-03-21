@@ -70,7 +70,7 @@ namespace org.activiti.engine.impl.jobexecutor
                     }
                     else
                     {
-                        (new StartProcessInstanceCmd<IProcessEngine>(processDefinitionEntity.Key, null, null, null, job.TenantId)).execute(commandContext);
+                        (new StartProcessInstanceCmd(processDefinitionEntity.Key, null, null, null, job.TenantId)).execute(commandContext);
                     }
                 }
                 else

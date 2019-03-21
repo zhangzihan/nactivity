@@ -35,6 +35,13 @@ namespace org.activiti.cloud.services.rest.api
         Task<Resources<TaskModel>> MyTasks(string userId);
 
         /// <summary>
+        /// 下一步表单
+        /// </summary>
+        /// <param name="userId">用户id</param>
+        /// <returns>下一步表单列表</returns>
+        Task<Resources<TaskModel>> NextForm(string userId);
+
+        /// <summary>
         /// 领取任务
         /// </summary>
         /// <param name="taskId">任务id</param>

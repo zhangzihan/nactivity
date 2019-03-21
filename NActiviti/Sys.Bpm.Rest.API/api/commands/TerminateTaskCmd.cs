@@ -27,6 +27,7 @@ namespace org.activiti.cloud.services.api.commands
     public class TerminateTaskCmd : ICommand
     {
         private readonly string id = "terminateTaskCmd";
+        private string _terminateReason;
 
         /// <summary>
         /// 构造函数
@@ -73,8 +74,16 @@ namespace org.activiti.cloud.services.api.commands
 
         public virtual string TerminateReason
         {
-            get;
-            set;
+            get
+            {
+                return
+#if DEBUG
+                    _terminateReason = string.IsNullOrWhiteSpace(_terminateReason) ? "已强制终止任务" : _terminateReason;
+# else
+                _terminateReason;
+#endif
+            }
+            set => _terminateReason = value;
         }
     }
 

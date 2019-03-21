@@ -27,7 +27,11 @@ export class DeploymentViewModel {
     this.deployService.allDeployments({
       pageable: {
         pageNo: 1,
-        pageSize: 100
+        pageSize: 1000,
+        sort: [{
+          property: 'name',
+          direction: DirectionEnum.asc
+        }]
       }
     }).then(data => this.deployments = data.list);
   }

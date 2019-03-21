@@ -205,6 +205,18 @@ namespace org.activiti.engine.@delegate.@event
         public static readonly ActivitiEventType TASK_COMPLETED = new ActivitiEventType("TASK_COMPLETED", InnerEnum.TASK_COMPLETED);
 
         /// <summary>
+        /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="#ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
+        /// result of the task completion. In that case, a <seealso cref="#ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
+        /// </summary>
+        public static readonly ActivitiEventType TASK_TERMINATED = new ActivitiEventType("TASK_TERMINATED", InnerEnum.TASK_TERMINATED);
+
+        /// <summary>
+        /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="#ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
+        /// result of the task completion. In that case, a <seealso cref="#ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
+        /// </summary>
+        public static readonly ActivitiEventType TASK_TRANSFERED = new ActivitiEventType("TASK_TERMINATED", InnerEnum.TASK_TRANSFERED); 
+
+        /// <summary>
         /// A process instance has been started. Dispatched when starting a process instance previously created. The event
         /// PROCESS_STARTED is dispatched after the associated event ENTITY_INITIALIZED.
         /// </summary>
@@ -301,6 +313,8 @@ namespace org.activiti.engine.@delegate.@event
             valueList.Add(TASK_CREATED);
             valueList.Add(TASK_ASSIGNED);
             valueList.Add(TASK_COMPLETED);
+            valueList.Add(TASK_TERMINATED);
+            valueList.Add(TASK_TRANSFERED);
             valueList.Add(PROCESS_STARTED);
             valueList.Add(PROCESS_COMPLETED);
             valueList.Add(PROCESS_COMPLETED_WITH_ERROR_END_EVENT);
@@ -347,6 +361,8 @@ namespace org.activiti.engine.@delegate.@event
             TASK_CREATED,
             TASK_ASSIGNED,
             TASK_COMPLETED,
+            TASK_TERMINATED,
+            TASK_TRANSFERED,
             PROCESS_STARTED,
             PROCESS_COMPLETED,
             PROCESS_COMPLETED_WITH_ERROR_END_EVENT,

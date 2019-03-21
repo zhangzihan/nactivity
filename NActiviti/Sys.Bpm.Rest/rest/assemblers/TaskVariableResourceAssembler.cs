@@ -6,13 +6,24 @@ using System;
 
 namespace org.activiti.cloud.services.rest.assemblers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class TaskVariableResourceAssembler : ResourceAssemblerSupport<TaskVariable, TaskVariableResource>
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskVariableResourceAssembler() : base(typeof(TaskVariableControllerImpl), typeof(TaskVariableResource))
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskVariable"></param>
+        /// <returns></returns>
         public override TaskVariableResource toResource(TaskVariable taskVariable)
         {
             throw new NotImplementedException();

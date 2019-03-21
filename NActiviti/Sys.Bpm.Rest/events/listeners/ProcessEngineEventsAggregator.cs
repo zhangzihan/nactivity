@@ -35,6 +35,9 @@ namespace org.activiti.cloud.services.events.listeners
             this.closeListener = closeListener;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal override Type CloseListenerClass
         {
             get
@@ -43,6 +46,9 @@ namespace org.activiti.cloud.services.events.listeners
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal override MessageProducerCommandContextCloseListener CloseListener
         {
             get
@@ -51,6 +57,9 @@ namespace org.activiti.cloud.services.events.listeners
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal override string AttributeKey
         {
             get
@@ -59,5 +68,4 @@ namespace org.activiti.cloud.services.events.listeners
             }
         }
     }
-
 }

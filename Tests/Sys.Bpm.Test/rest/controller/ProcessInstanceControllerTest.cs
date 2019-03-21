@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.TestHost;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using org.activiti.api.runtime.shared.query;
 using org.activiti.cloud.services.api.commands;
 using org.activiti.cloud.services.api.model;
@@ -9,18 +8,16 @@ using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.assemblers;
 using org.activiti.cloud.services.rest.controllers;
 using org.activiti.engine;
-using org.activiti.engine.impl.context;
 using org.activiti.engine.impl.identity;
 using org.activiti.engine.impl.persistence.entity;
 using org.activiti.engine.repository;
 using org.springframework.hateoas;
-using Sys.Bpm.api.http;
+using Sys.Net.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using Xunit;
 
 namespace Sys.Bpmn.Test.rest.controller
@@ -65,12 +62,12 @@ namespace Sys.Bpmn.Test.rest.controller
                 StartProcessInstanceCmd cmd = new StartProcessInstanceCmd(def.Id,
                     new Dictionary<string, object>
                     {
-                        { "name", "新用户"}
+                        { "name", new string[]{"新用户" } }
                     });
 
                 cmd.TenantId = ctx.TenantId;
 
-                Authentication.AuthenticatedUser = new TokenUserProvider.UserInfo()
+                Authentication.AuthenticatedUser = new UserInfo()
                 {
                     Id = "新用户",
                     Name = "新用户",
@@ -112,7 +109,7 @@ namespace Sys.Bpmn.Test.rest.controller
             StartProcessInstanceCmd cmd = new StartProcessInstanceCmd(def.Id,
                 new Dictionary<string, object>
                 {
-                    { "name", "新用户"}
+                    { "name", new string[]{"新用户" }}
                 });
 
             cmd.TenantId = ctx.TenantId;

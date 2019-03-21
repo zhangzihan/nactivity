@@ -3,63 +3,70 @@ using org.activiti.bpmn.model;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.rest.api;
 using org.springframework.hateoas;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
+using Sys.Net.Http;
 using System.Threading.Tasks;
 
 namespace Sys.Bpm.Rest.Client.API
 {
+    /// <inheritdoc />
     class ProcessDefinitionDeployerClient : IProcessDefinitionDeployerController
     {
-        private readonly IHttpInvoker httpInvoker;
+        private readonly IHttpClientProxy httpProxy;
 
         private static readonly string serviceUrl = WorkflowConstants.PROC_DEP_ROUTER_V1;
 
-        public ProcessDefinitionDeployerClient(IHttpInvoker httpInvoker)
+        /// <inheritdoc />
+        public ProcessDefinitionDeployerClient(IHttpClientProxy httpInvoker)
         {
-            this.httpInvoker = httpInvoker;
+            this.httpProxy = httpInvoker;
         }
 
+        /// <inheritdoc />
         public async Task<Resources<Deployment>> AllDeployments(DeploymentQuery queryObj)
         {
-            return await httpInvoker.PostAsync<Resources<Deployment>>($"{serviceUrl}/list", queryObj);
+            return await httpProxy.PostAsync<Resources<Deployment>>($"{serviceUrl}/list", queryObj);
         }
 
+        /// <inheritdoc />
         public async Task<Deployment> Deploy(ProcessDefinitionDeployer deployer)
         {
-            return await httpInvoker.PostAsync<Deployment>($"{serviceUrl}", deployer);
+            return await httpProxy.PostAsync<Deployment>($"{serviceUrl}", deployer);
         }
 
+        /// <inheritdoc />
         public async Task<BpmnModel> GetBpmnModel(string id)
         {
-            return await httpInvoker.GetAsync<BpmnModel>($"{serviceUrl}/{id}/bpmnmodel");
+            return await httpProxy.GetAsync<BpmnModel>($"{serviceUrl}/{id}/bpmnmodel");
         }
 
+        /// <inheritdoc />
         public async Task<string> GetProcessModel(string id)
         {
-            return await httpInvoker.GetAsync<string>($"{serviceUrl}/{id}/processmodel");
+            return await httpProxy.GetAsync<string>($"{serviceUrl}/{id}/processmodel");
         }
 
+        /// <inheritdoc />
         public async Task<Resources<Deployment>> Latest(DeploymentQuery queryObj)
         {
-            return await httpInvoker.PostAsync<Resources<Deployment>>($"{serviceUrl}/latest", queryObj);
+            return await httpProxy.PostAsync<Resources<Deployment>>($"{serviceUrl}/latest", queryObj);
         }
 
+        /// <inheritdoc />
         public async Task<IActionResult> Remove(string deployId)
         {
-            return await httpInvoker.GetAsync<IActionResult>($"{serviceUrl}/{deployId}/remove");
+            return await httpProxy.GetAsync<IActionResult>($"{serviceUrl}/{deployId}/remove");
         }
 
+        /// <inheritdoc />
         public async Task<Deployment> Save(ProcessDefinitionDeployer deployer)
         {
-            return await httpInvoker.PostAsync<Deployment>($"{serviceUrl}/save", deployer);
+            return await httpProxy.PostAsync<Deployment>($"{serviceUrl}/save", deployer);
         }
 
+        /// <inheritdoc />
         public async Task<Deployment> Draft(string tenantId, string name)
         {
-            return await httpInvoker.GetAsync<Deployment>($"{serviceUrl}/{tenantId}/{name}/draft");
+            return await httpProxy.GetAsync<Deployment>($"{serviceUrl}/{tenantId}/{name}/draft");
         }
     }
 }

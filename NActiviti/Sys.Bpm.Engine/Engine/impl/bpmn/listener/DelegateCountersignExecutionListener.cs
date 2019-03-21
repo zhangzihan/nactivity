@@ -9,6 +9,7 @@
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using org.activiti.bpmn.constants;
 using org.activiti.bpmn.model;
 using org.activiti.engine.@delegate;
 using org.activiti.engine.impl.context;
@@ -46,13 +47,13 @@ namespace org.activiti.engine.impl.bpmn.listener
         /// <param name="execution"></param>
         public void notify(IExecutionEntity execution)
         {
-            if (execution.getVariable("countersignUsers") == null)
+            if (execution.getVariable(BpmnXMLConstants.ACTIVITI_COUNTERSIGNUSER_ATTRIBUTE) == null)
             {
                 List<IUserInfo> users = new List<IUserInfo>();
                 IList<ExtensionElement> exActors = null;
                 if ((execution.CurrentFlowElement?.ExtensionElements.TryGetValue("property", out exActors)).GetValueOrDefault(false))
                 {
-                    string str = exActors.GetAttributeValue("actors");
+                    string str = exActors.GetAttributeValue(BpmnXMLConstants.ACTIVITI_COUNTERSIGNUSER_GETPOLICY);
 
                     QueryBookmark[] actors = JsonConvert.DeserializeObject<QueryBookmark[]>(str);
 
@@ -71,7 +72,7 @@ namespace org.activiti.engine.impl.bpmn.listener
                     throw new NoneCountersignUsersException(execution.CurrentFlowElement.Name);
                 }
 
-                execution.setVariable("countersignUsers", users.Select(x => x.Id).Distinct().ToArray());
+                execution.setVariable(BpmnXMLConstants.ACTIVITI_COUNTERSIGNUSER_ATTRIBUTE, users.Select(x => x.Id).Distinct().ToArray());
             }
         }
     }

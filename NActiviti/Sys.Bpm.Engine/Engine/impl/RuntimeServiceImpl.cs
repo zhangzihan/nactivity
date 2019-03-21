@@ -23,68 +23,68 @@ namespace org.activiti.engine.impl
     using org.activiti.engine.impl.runtime;
     using org.activiti.engine.runtime;
     using org.activiti.engine.task;
-
+    using org.activiti.services.api.commands;
 
     public class RuntimeServiceImpl : ServiceImpl, IRuntimeService
     {
         public virtual IProcessInstance startProcessInstanceByKey(string processDefinitionKey)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(processDefinitionKey, null, null, null));
+            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, null, null));
         }
 
         public virtual IProcessInstance startProcessInstanceByKey(string processDefinitionKey, string businessKey)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(processDefinitionKey, null, businessKey, null));
+            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, businessKey, null));
         }
 
         public virtual IProcessInstance startProcessInstanceByKey(string processDefinitionKey, IDictionary<string, object> variables)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(processDefinitionKey, null, null, variables));
+            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, null, variables));
         }
 
         public virtual IProcessInstance startProcessInstanceByKey(string processDefinitionKey, string businessKey, IDictionary<string, object> variables)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(processDefinitionKey, null, businessKey, variables));
+            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, businessKey, variables));
         }
 
         public virtual IProcessInstance startProcessInstanceByKeyAndTenantId(string processDefinitionKey, string tenantId)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(processDefinitionKey, null, null, null, tenantId));
+            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, null, null, tenantId));
         }
 
         public virtual IProcessInstance startProcessInstanceByKeyAndTenantId(string processDefinitionKey, string businessKey, string tenantId)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(processDefinitionKey, null, businessKey, null, tenantId));
+            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, businessKey, null, tenantId));
         }
 
         public virtual IProcessInstance startProcessInstanceByKeyAndTenantId(string processDefinitionKey, IDictionary<string, object> variables, string tenantId)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(processDefinitionKey, null, null, variables, tenantId));
+            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, null, variables, tenantId));
         }
 
         public virtual IProcessInstance startProcessInstanceByKeyAndTenantId(string processDefinitionKey, string businessKey, IDictionary<string, object> variables, string tenantId)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(processDefinitionKey, null, businessKey, variables, tenantId));
+            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, businessKey, variables, tenantId));
         }
 
         public virtual IProcessInstance startProcessInstanceById(string processDefinitionId)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(null, processDefinitionId, null, null));
+            return commandExecutor.execute(new StartProcessInstanceCmd(null, processDefinitionId, null, null));
         }
 
         public virtual IProcessInstance startProcessInstanceById(string processDefinitionId, string businessKey)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(null, processDefinitionId, businessKey, null));
+            return commandExecutor.execute(new StartProcessInstanceCmd(null, processDefinitionId, businessKey, null));
         }
 
         public virtual IProcessInstance startProcessInstanceById(string processDefinitionId, IDictionary<string, object> variables)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(null, processDefinitionId, null, variables));
+            return commandExecutor.execute(new StartProcessInstanceCmd(null, processDefinitionId, null, variables));
         }
 
         public virtual IProcessInstance startProcessInstanceById(string processDefinitionId, string businessKey, IDictionary<string, object> variables)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(null, processDefinitionId, businessKey, variables));
+            return commandExecutor.execute(new StartProcessInstanceCmd(null, processDefinitionId, businessKey, variables));
         }
 
         public virtual void deleteProcessInstance(string processInstanceId, string deleteReason)
@@ -557,7 +557,7 @@ namespace org.activiti.engine.impl
         {
             if (!ReferenceEquals(processInstanceBuilder.ProcessDefinitionId, null) || !ReferenceEquals(processInstanceBuilder.ProcessDefinitionKey, null))
             {
-                return commandExecutor.execute(new StartProcessInstanceCmd<IProcessInstance>(processInstanceBuilder));
+                return commandExecutor.execute(new StartProcessInstanceCmd(processInstanceBuilder));
             }
             else if (!ReferenceEquals(processInstanceBuilder.MessageName, null))
             {
@@ -567,6 +567,15 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("No processDefinitionId, processDefinitionKey nor messageName provided");
             }
+        }
+
+        /// <inheritdoc />
+
+        public IProcessInstance startProcessInstanceByCmd(IStartProcessInstanceCmd cmd)
+        {
+            var scmd = new StartProcessInstanceCmd(cmd);
+
+            return commandExecutor.execute(scmd);
         }
     }
 

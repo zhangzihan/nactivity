@@ -64,6 +64,11 @@ namespace org.activiti.cloud.services.rest.assemblers
             return new TaskResource(task, null);//, links);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
         public override IList<TaskResource> toResources(IEnumerable<TaskModel> entities)
         {
             return base.toResources(entities);

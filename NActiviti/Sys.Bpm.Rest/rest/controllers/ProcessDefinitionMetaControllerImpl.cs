@@ -20,6 +20,17 @@ namespace org.activiti.cloud.services.rest.controllers
         private readonly IRepositoryService repositoryService;
         private readonly ProcessDefinitionMetaResourceAssembler resourceAssembler;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="repositoryService"></param>
+        /// <param name="resourceAssembler"></param>
+        public ProcessDefinitionMetaControllerImpl(IRepositoryService repositoryService, ProcessDefinitionMetaResourceAssembler resourceAssembler)
+        {
+            this.repositoryService = repositoryService;
+            this.resourceAssembler = resourceAssembler;
+        }
+
         //public virtual string handleAppException(ActivitiObjectNotFoundException ex)
         //{
         //    return ex.Message;

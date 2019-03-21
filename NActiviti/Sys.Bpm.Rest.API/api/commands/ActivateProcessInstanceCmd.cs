@@ -43,6 +43,7 @@ namespace org.activiti.cloud.services.api.commands
             {
                 return processInstanceId;
             }
+            set => processInstanceId = value;
         }
     }
 

@@ -31,7 +31,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         public IList<IUserInfo> execute(ICommandContext commandContext)
         {
             IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
-            return proxy.GetUsers(Condition);
+            return proxy.GetUsers(Condition).Result;
         }
     }
 }

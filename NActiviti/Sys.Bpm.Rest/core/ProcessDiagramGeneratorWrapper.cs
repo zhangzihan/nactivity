@@ -39,6 +39,10 @@ namespace org.activiti.cloud.services.core
         private string defaultDiagramImageFileName;
         private bool generateDefaultDiagram;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processDiagramGenerator"></param>
         public ProcessDiagramGeneratorWrapper(IProcessDiagramGenerator processDiagramGenerator)
         {
             this.processDiagramGenerator = processDiagramGenerator;
@@ -76,6 +80,9 @@ namespace org.activiti.cloud.services.core
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool GenerateDefaultDiagram
         {
             get
@@ -84,6 +91,9 @@ namespace org.activiti.cloud.services.core
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DefaultDiagramImageFileName
         {
             get
@@ -157,6 +167,9 @@ namespace org.activiti.cloud.services.core
             return true;// available;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual string[] AvailableFonts
         {
             get

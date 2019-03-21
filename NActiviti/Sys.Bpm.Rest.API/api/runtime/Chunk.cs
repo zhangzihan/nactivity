@@ -10,7 +10,14 @@ namespace org.activiti.api.runtime.shared.query
     /// </summary>
     public abstract class Chunk<T> : ISlice<T>
     {
+        /// <summary>
+        /// list
+        /// </summary>
         protected IList<T> list;
+
+        /// <summary>
+        /// pageable
+        /// </summary>
         protected Pageable pageable;
 
 

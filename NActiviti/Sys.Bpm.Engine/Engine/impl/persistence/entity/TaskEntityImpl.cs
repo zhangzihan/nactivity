@@ -15,7 +15,7 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.persistence.entity
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate;
     using org.activiti.engine.@delegate.@event;
@@ -831,6 +831,26 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
+        public bool? IsAppend { get; set; }
+
+        public bool? IsTransfer { get; set; }
+
+        public bool? IsRuntime { get; set; }
+
+        public virtual void IsRuntimeAssignee()
+        {
+            UserTask task = this.Execution.CurrentFlowElement as UserTask;
+            if (task.ExtensionElements.TryGetValue("property", out IList<ExtensionElement> exts))
+            {
+                if (bool.TryParse(exts.GetAttributeValue(BpmnXMLConstants.ACTIITI_RUNTIME_ASSIGNEE), out bool result))
+                {
+                    this.IsRuntime = result;
+                    return;
+                }
+            }
+
+            this.IsRuntime = false;
+        }
 
         public override string ToString()
         {

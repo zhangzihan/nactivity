@@ -22,9 +22,17 @@ namespace org.activiti.cloud.services.events
     /// </summary>
     public class ActivityStartedEventImpl : AbstractProcessEngineEvent, IActivityStartedEvent
     {
-
+        /// <summary>
+        /// activityId
+        /// </summary>
         protected internal string activityId;
+        /// <summary>
+        /// activityId
+        /// </summary>
         protected internal string activityName;
+        /// <summary>
+        /// activityId
+        /// </summary>
         protected internal string activityType;
 
 

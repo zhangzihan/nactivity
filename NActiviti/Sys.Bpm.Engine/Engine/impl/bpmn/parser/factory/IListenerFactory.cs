@@ -58,5 +58,7 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
         ICustomPropertiesResolver createDelegateExpressionCustomPropertiesResolver(ActivitiListener activitiListener);
 
         ITransactionDependentTaskListener createTransactionDependentDelegateExpressionTaskListener(ActivitiListener activitiListener);
+
+        IActivitiEventListener createCustomTaskCompletedEventListener();
     }
 }

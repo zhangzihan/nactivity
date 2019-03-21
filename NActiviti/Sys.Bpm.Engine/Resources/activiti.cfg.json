@@ -18,7 +18,7 @@
   //异步作业失败重试等待时间
   "asyncFailedJobWaitTime": 1,
   //用户服务代理WEBAPI服务器地址
-  "userServiceProxyBaseUrl": "http://localhost:5005",
+  "userServiceProxyBaseUrl": "http://localhost:11015",
   //启用打印流程调用树
   "enableVerboseExecutionTreeLogging": true,
   "mailServerPort": "5025",

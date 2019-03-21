@@ -6,13 +6,24 @@ using System;
 
 namespace org.activiti.cloud.services.rest.assemblers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessInstanceVariableResourceAssembler : ResourceAssemblerSupport<ProcessInstanceVariable, ProcessVariableResource>
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ProcessInstanceVariableResourceAssembler() : base(typeof(ProcessInstanceVariableControllerImpl), typeof(ProcessVariableResource))
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstanceVariable"></param>
+        /// <returns></returns>
         public override ProcessVariableResource toResource(ProcessInstanceVariable processInstanceVariable)
         {
             //throw new NotImplementedException();

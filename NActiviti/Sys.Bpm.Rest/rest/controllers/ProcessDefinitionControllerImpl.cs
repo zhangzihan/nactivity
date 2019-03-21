@@ -14,8 +14,6 @@
  */
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Newtonsoft.Json.Linq;
 using org.activiti.api.runtime.shared.query;
 using org.activiti.bpmn.model;
 using org.activiti.cloud.services.api.commands;
@@ -28,7 +26,6 @@ using org.activiti.cloud.services.rest.api.resources;
 using org.activiti.cloud.services.rest.assemblers;
 using org.activiti.engine;
 using org.activiti.engine.repository;
-using org.activiti.image.exception;
 using org.springframework.hateoas;
 using System.Collections.Generic;
 using System.IO;

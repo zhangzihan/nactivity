@@ -156,7 +156,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
         /// <inheritdoc />
         [HttpPost("signal")]
-        public virtual Task<IActionResult> SendSignal([FromBody]SignalCmd cmd)
+        public virtual Task<IActionResult> SendSignal(SignalCmd cmd)
         {
             processEngine.signal(cmd);
 
@@ -188,7 +188,7 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpPost("terminate")]
         public virtual Task<IActionResult> Terminate(TerminateProcessInstanceCmd cmd)
         {
-            processEngine.deleteProcessInstance(cmd.ProcessInstanceId, cmd.Reason);
+            processEngine.terminateProcessInstance(cmd.ProcessInstanceId, cmd.Reason);
 
             return Task.FromResult<IActionResult>(Ok());
         }

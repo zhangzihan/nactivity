@@ -102,7 +102,7 @@ namespace org.activiti.engine.impl
         protected internal bool? includeTaskLocalVariables_ = false;
         protected internal bool? includeProcessVariables_ = false;
         protected internal int? taskVariablesLimit;
-        protected internal IList<HistoricTaskInstanceQueryImpl> orQueryObjects = new List<HistoricTaskInstanceQueryImpl>();
+        protected internal IList<IHistoricTaskInstanceQuery> orQueryObjects = new List<IHistoricTaskInstanceQuery>();
         protected internal HistoricTaskInstanceQueryImpl currentOrQueryObject = null;
         protected internal bool inOrStatement = false;
 
@@ -2483,13 +2483,28 @@ namespace org.activiti.engine.impl
             set => locale(value);
         }
 
-        public virtual IList<HistoricTaskInstanceQueryImpl> OrQueryObjects
+        public virtual IList<IHistoricTaskInstanceQuery> OrQueryObjects
         {
             get
             {
                 return orQueryObjects;
             }
             set => orQueryObjects = value;
+        }
+
+        public virtual bool? IsAppend
+        {
+            get;set;
+        }
+
+        public virtual bool? IsTransfer
+        {
+            get;set;
+        }
+
+        public virtual bool? IsRuntime
+        {
+            get; set;
         }
     }
 

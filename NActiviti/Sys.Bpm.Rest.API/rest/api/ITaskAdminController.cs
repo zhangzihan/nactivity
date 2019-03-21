@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace org.activiti.cloud.services.rest.api
 {
     /// <summary>
-    /// 流程任务管理RestAPI,管理员使用
+    /// 流程任务-管理员功能,流程任务管理RestAPI,管理员使用
     /// </summary>
     public interface ITaskAdminController
     {

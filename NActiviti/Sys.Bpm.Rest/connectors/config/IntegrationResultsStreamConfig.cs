@@ -16,6 +16,9 @@
 
 namespace org.activiti.services.connectors.config
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class IntegrationResultsStreamConfig
     {
 

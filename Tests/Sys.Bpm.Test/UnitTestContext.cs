@@ -11,18 +11,17 @@ using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.rest.api;
 using org.activiti.engine;
-using org.activiti.engine.repository;
-using Sys.Bpm.api.http;
 using Sys.Bpm.rest.controllers;
 using Sys.Bpm.Services.Rest;
+using Sys.Net.Http;
+using Sys.Workflow;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Sys.Bpmn.Test
 {
@@ -84,6 +83,8 @@ namespace Sys.Bpmn.Test
 
         private readonly object syncClient = new object();
 
+        private readonly object syncDep = new object();
+
         /// <summary>
         /// 创建测试环境上下文
         /// </summary>
@@ -128,57 +129,76 @@ namespace Sys.Bpmn.Test
         {
         }
 
-        public Deployment DeployTestProcess()
+        public Deployment HttpDeployProcess(string bpmnFile = "简单顺序流.bpmn", bool enableDuplicateFiltering = true)
         {
-            IProcessDefinitionDeployerController pddc = new ProcessDefinitionDeployerController(Resolve<IProcessEngine>(),
-                Resolve<DeploymentConverter>(),
-                Resolve<PageableDeploymentRespositoryService>(),
-                null);
-
             ProcessDefinitionDeployer pdd = new ProcessDefinitionDeployer();
 
-            pdd.BpmnXML = ReadBpmn("简单顺序流.bpmn");
-            pdd.Name = Path.GetFileNameWithoutExtension("简单顺序流");
+            pdd.BpmnXML = ReadBpmn(bpmnFile);
+            pdd.Name = Path.GetFileNameWithoutExtension(bpmnFile);
+            pdd.DisableBpmnValidation = false;
+            pdd.EnableDuplicateFiltering = enableDuplicateFiltering;
             pdd.TenantId = TenantId;
-            pdd.EnableDuplicateFiltering = true;
-            pdd.StartForm = "1";
 
-            return pddc.Deploy(pdd).Result;
+            HttpResponseMessage response = PostAsync($"{WorkflowConstants.PROC_DEP_ROUTER_V1}", pdd).Result;
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            Deployment deployment = JsonConvert.DeserializeObject<Deployment>(response.Content.ReadAsStringAsync().Result);
+
+            return deployment;
         }
 
-        public HttpClient CreateHttpClient()
+        public IHttpClientProxy CreateHttpClient(IUserInfo user = null)
         {
             HttpClient httpClient = this.TestServer.CreateClient();
 
-            string accessToken = WebUtility.UrlEncode(JsonConvert.SerializeObject(new
+            string accessToken = WebUtility.UrlEncode(JsonConvert.SerializeObject(user ?? new UserInfo
             {
                 Id = "新用户1",
                 Name = "新用户1",
-                TenantId
+                TenantId = ""
             }));
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            return httpClient;
+            DefaultHttpContext httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers.Add("Authorization", "Bearer " + accessToken);
+
+            return new HttpClientProxy(httpClient, this.Resolve<IAccessTokenProvider>(), httpContext);
         }
 
         /// <summary>
-        /// lock锁保证在并发测试是只有一个HttpClient实例进入.
+        /// 
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="url"></param>
         /// <returns></returns>
-        public Task<HttpResponseMessage> GetAsync(string url)
+        public Task<T> GetAsync<T>(string url, IUserInfo user = null)
         {
-            HttpClient httpClient = CreateHttpClient();
+            IHttpClientProxy httpClient = CreateHttpClient(user);
+
+            return httpClient.GetAsync<T>(url);
+        }
+
+        public Task<HttpResponseMessage> GetAsync(string url, IUserInfo user = null)
+        {
+            IHttpClientProxy httpClient = CreateHttpClient(user);
 
             return httpClient.GetAsync(url);
         }
 
-        public Task<HttpResponseMessage> PostAsync(string url, object data)
+        public Task<HttpResponseMessage> PostAsync(string url, object data, IUserInfo user = null)
         {
-            HttpClient httpClient = CreateHttpClient();
+            IHttpClientProxy httpClient = CreateHttpClient(user);
 
-            return httpClient.PostAsync(url, new JsonContent(data));
+            return httpClient.PostAsync(url, data);
+        }
+
+        public Task<T> PostAsync<T>(string url, object data, IUserInfo user = null)
+        {
+            IHttpClientProxy httpClient = CreateHttpClient(user);
+
+            return httpClient.PostAsync<T>(url, data);
         }
 
         /// <summary>
@@ -190,15 +210,15 @@ namespace Sys.Bpmn.Test
         {
             lock (syncClient)
             {
-                HttpClient httpClient = CreateHttpClient();
-
                 foreach (HttpInvoke post in posts)
                 {
+                    IHttpClientProxy httpClient = CreateHttpClient(post.User);
+
                     HttpResponseMessage response = null;
 
                     if (post.Method == HttpMethod.Post)
                     {
-                        response = httpClient.PostAsync(post.Url, new JsonContent(post.Data)).Result;
+                        response = httpClient.PostAsync(post.Url, post.Data).Result;
                     }
                     else if (post.Method == HttpMethod.Get)
                     {
@@ -255,6 +275,8 @@ namespace Sys.Bpmn.Test
     public class HttpInvoke
     {
         public string Url { get; set; }
+
+        public IUserInfo User { get; set; }
 
         public object Data { get; set; }
 

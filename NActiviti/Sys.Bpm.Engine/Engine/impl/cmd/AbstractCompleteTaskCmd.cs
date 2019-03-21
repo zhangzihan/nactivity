@@ -32,6 +32,8 @@ namespace org.activiti.engine.impl.cmd
 
         private const long serialVersionUID = 1L;
 
+        protected string deleteReason = null;
+
         public AbstractCompleteTaskCmd(string taskId) : base(taskId)
         {
         }
@@ -49,7 +51,7 @@ namespace org.activiti.engine.impl.cmd
             IUserInfo user = Authentication.AuthenticatedUser;
             if (user != null && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
             {
-                IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(taskEntity.ProcessInstanceId);
+                IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(taskEntity.ProcessInstanceId);//这里为什么取ProcessInstance而不是Exceution.
                 commandContext.IdentityLinkEntityManager.involveUser(processInstanceEntity, user.Id, IdentityLinkType.PARTICIPANT);
             }
 
@@ -66,7 +68,7 @@ namespace org.activiti.engine.impl.cmd
                 }
             }
 
-            commandContext.TaskEntityManager.deleteTask(taskEntity, null, false, false);
+            commandContext.TaskEntityManager.deleteTask(taskEntity, deleteReason, false, false);
 
             // Continue process (if not a standalone task)
             if (!ReferenceEquals(taskEntity.ExecutionId, null))

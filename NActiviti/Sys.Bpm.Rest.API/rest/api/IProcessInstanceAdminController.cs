@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace org.activiti.cloud.services.rest.api
 {
     /// <summary>
-    /// 工作流实例管理RestAPI,流程管理员使用
+    /// 流程实例-管理员功能,工作流实例管理RestAPI,流程管理员使用
     /// </summary>
     public interface IProcessInstanceAdminController
     {

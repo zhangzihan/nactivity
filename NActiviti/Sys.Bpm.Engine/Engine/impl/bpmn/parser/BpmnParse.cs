@@ -21,6 +21,7 @@ namespace org.activiti.engine.impl.bpmn.parser
     using org.activiti.bpmn.exceptions;
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate.@event.impl;
+    using org.activiti.engine.exceptions;
     using org.activiti.engine.impl.bpmn.parser.factory;
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.context;
@@ -29,6 +30,7 @@ namespace org.activiti.engine.impl.bpmn.parser
     using org.activiti.validation;
     using Sys;
     using System;
+    using System.Linq;
 
     /// <summary>
     /// Specific parsing of one BPMN 2.0 XML file, created by the <seealso cref="BpmnParser"/>.
@@ -163,15 +165,17 @@ namespace org.activiti.engine.impl.bpmn.parser
                             }
 
                             // Throw exception if there is any error
-                            if (errorBuilder.Length > 0)
+                            if (validationErrors.Any(x => x.Warning == false))
                             {
-                                throw new ActivitiException("Errors while parsing:\n" + errorBuilder.ToString());
+                                logger.LogError($"Following errors encounted during process validation:\r\n{errorBuilder.ToString()}");
+
+                                throw new ActivitiValidationException(validationErrors);
                             }
 
                             // Write out warnings (if any)
                             if (warningBuilder.Length > 0)
                             {
-                                logger.LogWarning($"Following warnings encountered during process validation: {warningBuilder}");
+                                logger.LogWarning($"Following warnings encountered during process validation: {warningBuilder.ToString()}");
                             }
 
                         }
@@ -194,11 +198,15 @@ namespace org.activiti.engine.impl.bpmn.parser
             {
                 if (e is ActivitiException)
                 {
-                    throw (ActivitiException)e;
+                    throw;
                 }
                 else if (e is XMLException)
                 {
-                    throw (XMLException)e;
+                    throw;
+                }
+                else if (e is ActivitiValidationException)
+                {
+                    throw;
                 }
                 else
                 {

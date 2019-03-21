@@ -44,7 +44,6 @@ namespace Sys.Bpm.Client.Tests.rest.client
 
                 Resources<Deployment> list = client.AllDeployments(query).Result;
 
-                Assert.True(list.TotalCount <= 100);
                 Assert.True(list.List.Count() <= 100);
                 Assert.DoesNotContain(list.List, x => x.TenantId != ctx.TenantId);
             });

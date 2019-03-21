@@ -1,23 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using org.activiti.bpmn.constants;
+﻿using Newtonsoft.Json;
 using org.activiti.cloud.services.api.model;
-using org.activiti.cloud.services.api.model.converter;
-using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.rest.api;
 using org.activiti.engine;
-using org.activiti.engine.impl.cfg;
-using org.activiti.engine.impl.persistence.entity;
 using org.activiti.engine.repository;
-using Sys.Bpm.api.http;
-using Sys.Bpm.rest.controllers;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Xml.Linq;
 using Xunit;
 
@@ -33,22 +23,12 @@ namespace Sys.Bpmn.Test.rest.controller
 
         [Theory]
         [InlineData("简单顺序流.bpmn")]
+        [InlineData("条件分支流程.bpmn")]
         public void Deploy_流程部署测试(string bpmnFile)
         {
             Exception ex = Record.Exception(() =>
             {
-                ProcessDefinitionDeployer pdd = new ProcessDefinitionDeployer();
-
-                pdd.BpmnXML = ctx.ReadBpmn(bpmnFile);
-                pdd.Name = Path.GetFileNameWithoutExtension(bpmnFile);
-                pdd.DisableBpmnValidation = false;
-                pdd.TenantId = ctx.TenantId;
-
-                HttpResponseMessage response = ctx.PostAsync($"{WorkflowConstants.PROC_DEP_ROUTER_V1}", pdd).Result;
-
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-                Deployment deployment = JsonConvert.DeserializeObject<Deployment>(response.Content.ReadAsStringAsync().Result);
+                Deployment deployment = ctx.HttpDeployProcess(bpmnFile, false);
 
                 Assert.NotNull(deployment);
             });

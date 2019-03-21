@@ -19,13 +19,26 @@ using org.springframework.messaging;
 
 namespace org.activiti.services.connectors.channel
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IProcessEngineIntegrationChannels
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         ISubscribableChannel integrationResultsConsumer();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ProcessEngineIntegrationChannels_Fields
     {
+        /// <summary>
+        /// integrationResultsConsumer
+        /// </summary>
         public const string INTEGRATION_RESULTS_CONSUMER = "integrationResultsConsumer";
     }
 

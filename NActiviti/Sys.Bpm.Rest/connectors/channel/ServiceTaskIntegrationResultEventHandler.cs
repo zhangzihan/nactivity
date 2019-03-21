@@ -28,9 +28,12 @@ using System.Collections.Generic;
 
 namespace org.activiti.services.connectors.channel
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ServiceTaskIntegrationResultEventHandler
     {
-        private static readonly ILogger LOGGER =  ProcessEngineServiceProvider.LoggerService<ServiceTaskIntegrationResultEventHandler>();
+        private static readonly ILogger LOGGER = ProcessEngineServiceProvider.LoggerService<ServiceTaskIntegrationResultEventHandler>();
 
 
         private readonly IRuntimeService runtimeService;
@@ -38,6 +41,13 @@ namespace org.activiti.services.connectors.channel
         private readonly IMessageChannel<IntegrationResultReceivedEvent[]> auditProducer;
         private readonly RuntimeBundleProperties runtimeBundleProperties;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="runtimeService"></param>
+        /// <param name="integrationContextService"></param>
+        /// <param name="auditProducer"></param>
+        /// <param name="runtimeBundleProperties"></param>
         public ServiceTaskIntegrationResultEventHandler(IRuntimeService runtimeService, IIntegrationContextService integrationContextService, IMessageChannel<IntegrationResultReceivedEvent[]> auditProducer, RuntimeBundleProperties runtimeBundleProperties)
         {
             this.runtimeService = runtimeService;
@@ -46,6 +56,10 @@ namespace org.activiti.services.connectors.channel
             this.runtimeBundleProperties = runtimeBundleProperties;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="integrationResultEvent"></param>
         public virtual void receive(IntegrationResultEvent integrationResultEvent)
         {
             IList<IIntegrationContextEntity> integrationContexts = integrationContextService.findIntegrationContextByExecutionId(integrationResultEvent.ExecutionId);

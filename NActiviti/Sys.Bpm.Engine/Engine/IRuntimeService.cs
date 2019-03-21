@@ -20,6 +20,7 @@ namespace org.activiti.engine
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
     using org.activiti.engine.task;
+    using org.activiti.services.api.commands;
 
     /// 
     /// 
@@ -68,6 +69,13 @@ namespace org.activiti.engine
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no process definition is deployed with the given key. </exception>
         IProcessInstance startProcessInstanceByKey(string processDefinitionKey, IDictionary<string, object> variables);
+
+        /// <summary>
+        /// 使用流程启动命令启动流程
+        /// </summary>
+        /// <param name="cmd">流程启动命令</param>
+        /// <returns></returns>
+        IProcessInstance startProcessInstanceByCmd(IStartProcessInstanceCmd cmd);
 
         /// <summary>
         /// Starts a new process instance in the latest version of the process definition with the given key.

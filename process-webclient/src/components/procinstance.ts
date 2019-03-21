@@ -112,7 +112,7 @@ export class ProcessInstanceViewModel {
     this.taskService.terminateTask({
       taskId: id,
       terminateReason: "已终止任务"
-    })
+    }).then(x => this.load());
   }
 
   transfer(id: string) {
@@ -120,7 +120,7 @@ export class ProcessInstanceViewModel {
       assignees: this.users.map(x => x.id),
       taskId: id
     }).then(data => {
-      debugger;
+      this.load();
     }).catch(err => {
       alert(err);
     })
@@ -131,7 +131,7 @@ export class ProcessInstanceViewModel {
       assignees: this.users.map(x => x.id),
       taskId: id
     }).then(data => {
-      debugger;
+      this.load();
     }).catch(err => {
       alert(err);
     })

@@ -193,7 +193,10 @@
     FORM_KEY_ = #{formKey},
     PRIORITY_ = #{priority},
     DUE_DATE_ = #{dueDate},
-    CATEGORY_ = #{category}
+    CATEGORY_ = #{category},
+    IS_APPEND_ = #{isAppend},
+    IS_TRANSFER_ = #{isTransfer},
+    IS_RUNTIME_ = #{isRuntime}
     where ID_ = #{id}
   </Update>
 

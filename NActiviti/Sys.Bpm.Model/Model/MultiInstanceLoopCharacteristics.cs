@@ -10,6 +10,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System.Text.RegularExpressions;
+
 namespace org.activiti.bpmn.model
 {
     public class MultiInstanceLoopCharacteristics : BaseElement
@@ -97,6 +99,18 @@ namespace org.activiti.bpmn.model
             {
                 this.sequential = value;
             }
+        }
+
+        public string GetCollectionVarName()
+        {
+            var regex = new Regex("\\$\\{(.*?)\\}");
+
+            if (regex.IsMatch(this.inputDataItem))
+            {
+                return regex.Match(this.inputDataItem).Groups[1].Value;
+            }
+
+            return this.inputDataItem;
         }
 
 

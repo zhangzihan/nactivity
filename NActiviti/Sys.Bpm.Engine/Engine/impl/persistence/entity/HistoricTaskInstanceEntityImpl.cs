@@ -409,6 +409,15 @@ namespace org.activiti.engine.impl.persistence.entity
                 this.queryVariables = value;
             }
         }
+
+        /// <inheritdoc />
+        public bool? IsAppend { get; set; }
+
+        /// <inheritdoc />
+        public bool? IsTransfer { get; set; }
+
+        /// <inheritdoc />
+        public bool? IsRuntime { get; set; }
     }
 
 }

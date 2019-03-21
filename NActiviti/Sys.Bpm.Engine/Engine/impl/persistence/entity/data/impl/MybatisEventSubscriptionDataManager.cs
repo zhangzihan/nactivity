@@ -112,10 +112,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
             IDictionary<string, string> @params = new Dictionary<string, string>();
             @params["eventName"] = eventName;
-            if (!ReferenceEquals(tenantId, null) && !tenantId.Equals(engine.ProcessEngineConfiguration.NO_TENANT_ID))
-            {
-                @params["tenantId"] = tenantId;
-            }
+            @params["tenantId"] = tenantId;
 
             IList<IEventSubscriptionEntity> result = (IList<IEventSubscriptionEntity>)getList(query, @params, signalEventSubscriptionByEventNameMatcher, true);
             return toSignalEventSubscriptionEntityList(result);
@@ -151,15 +148,10 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
         {
             const string query = "selectEventSubscriptionsByTypeAndProcessDefinitionId";
             IDictionary<string, string> @params = new Dictionary<string, string>();
-            if (!ReferenceEquals(type, null))
-            {
-                @params["eventType"] = type;
-            }
+            @params["eventType"] = type;
             @params["processDefinitionId"] = processDefinitionId;
-            if (!ReferenceEquals(tenantId, null) && !tenantId.Equals(engine.ProcessEngineConfiguration.NO_TENANT_ID))
-            {
-                @params["tenantId"] = tenantId;
-            }
+            @params["tenantId"] = tenantId;
+
             return DbSqlSession.selectList<EventSubscriptionEntityImpl, IEventSubscriptionEntity>(query, @params);
         }
 
@@ -169,10 +161,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             IDictionary<string, string> @params = new Dictionary<string, string>();
             @params["eventType"] = type;
             @params["eventName"] = eventName;
-            if (!ReferenceEquals(tenantId, null) && !tenantId.Equals(engine.ProcessEngineConfiguration.NO_TENANT_ID))
-            {
-                @params["tenantId"] = tenantId;
-            }
+            @params["tenantId"] = tenantId;
 
             return (IList<IEventSubscriptionEntity>)getList("selectEventSubscriptionsByName", @params, eventSubscriptionsByNameMatcher, true);
         }
@@ -187,10 +176,8 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
         {
             IDictionary<string, string> @params = new Dictionary<string, string>();
             @params["eventName"] = messageName;
-            if (!ReferenceEquals(tenantId, null) && !tenantId.Equals(engine.ProcessEngineConfiguration.NO_TENANT_ID))
-            {
-                @params["tenantId"] = tenantId;
-            }
+            @params["tenantId"] = tenantId;
+
             IMessageEventSubscriptionEntity entity = DbSqlSession.selectOne<MessageEventSubscriptionEntityImpl, IMessageEventSubscriptionEntity>("selectMessageStartEventSubscriptionByName", @params);
             return entity;
         }

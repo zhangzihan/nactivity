@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using org.activiti.services.api.commands;
 using System;
 
 /*
@@ -24,7 +25,7 @@ namespace org.activiti.cloud.services.api.commands
     /// <summary>
     /// 任务更新命令
     /// </summary>
-    public class UpdateTaskCmd : ICommand
+    public class UpdateTaskCmd : ICommand, IUpdateTaskCmd
     {
 
         private readonly string id = "updateTaskCmd";
@@ -34,6 +35,8 @@ namespace org.activiti.cloud.services.api.commands
         private int? priority;
         private string assignee;
         private string parentTaskId;
+        private string tenantId;
+        private string taskId;
 
 
         /// <summary>
@@ -46,27 +49,32 @@ namespace org.activiti.cloud.services.api.commands
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="taskId">任务id</param>
         /// <param name="name">任务名称</param>
         /// <param name="description">任务描述</param>
         /// <param name="dueDate">过期日期</param>
         /// <param name="priority">任务优先级</param>
         /// <param name="assignee">任务分配人id</param>
         /// <param name="parentTaskId">父级任务id</param>
+        /// <param name="tenantId">租户id</param>
         //[JsonConstructor]
-        public UpdateTaskCmd([JsonProperty("Name")] string name,
+        public UpdateTaskCmd([JsonProperty("TaskId")] string taskId,
+            [JsonProperty("Name")] string name,
             [JsonProperty("Description")] string description,
             [JsonProperty("DueDate")] DateTime? dueDate,
             [JsonProperty("Priority")] int? priority,
             [JsonProperty("Assignee")] string assignee,
-            [JsonProperty("ParentTaskId")] string parentTaskId) : this()
+            [JsonProperty("ParentTaskId")] string parentTaskId,
+            [JsonProperty("TenantId")] string tenantId) : this()
         {
-
+            this.taskId = taskId;
             this.name = name;
             this.description = description;
             this.dueDate = dueDate;
             this.priority = priority;
             this.assignee = assignee;
             this.parentTaskId = parentTaskId;
+            this.tenantId = tenantId;
         }
 
         /// <summary>
@@ -76,6 +84,15 @@ namespace org.activiti.cloud.services.api.commands
         public virtual string Id
         {
             get => id;
+        }
+
+        /// <summary>
+        /// 任务id
+        /// </summary>
+        public virtual string TaskId
+        {
+            get => taskId;
+            set => taskId = value;
         }
 
         /// <summary>
@@ -154,6 +171,15 @@ namespace org.activiti.cloud.services.api.commands
                 return parentTaskId;
             }
             set => parentTaskId = value;
+        }
+
+        /// <summary>
+        /// 租户id
+        /// </summary>
+        public virtual string TenantId
+        {
+            get => tenantId;
+            set => tenantId = value;
         }
     }
 

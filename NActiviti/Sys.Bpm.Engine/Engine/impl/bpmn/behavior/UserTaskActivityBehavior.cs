@@ -53,6 +53,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             ITaskEntity task = taskEntityManager.create();
             task.Execution = execution;
             task.TaskDefinitionKey = userTask.Id;
+            task.IsRuntimeAssignee();
 
             string activeTaskName = null;
             string activeTaskDescription = null;

@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sys.Bpm.api.http
+namespace Sys.Net.Http
 {
 
     /// <summary>

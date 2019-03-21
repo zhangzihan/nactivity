@@ -21,8 +21,8 @@ namespace org.activiti.engine
     /// </summary>
     public class ActivitiException : Exception
     {
-
         private const long serialVersionUID = 1L;
+        private string _code;
 
         public ActivitiException(string message, Exception cause) : base(message, cause)
         {
@@ -30,6 +30,20 @@ namespace org.activiti.engine
 
         public ActivitiException(string message) : base(message)
         {
+        }
+
+        public virtual string Code
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_code))
+                {
+                    return this.GetType().Name;
+                }
+
+                return _code;
+            }
+            set => _code = value;
         }
     }
 

@@ -14,4 +14,8 @@
     <Folder Include="Engine\impl\persistence\entity\data\integration\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+  </ItemGroup>
+
 </Project>

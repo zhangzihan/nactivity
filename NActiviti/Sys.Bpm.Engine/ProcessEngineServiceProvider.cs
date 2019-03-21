@@ -1,4 +1,5 @@
 ﻿using DatabaseSchemaReader;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,10 +20,12 @@ using Spring.Core.TypeResolution;
 using Sys.Bpm;
 using Sys.Bpm.Engine.impl;
 using Sys.Data;
+using Sys.Net.Http;
 using Sys.Workflow.Engine.Bpmn.Rules;
 using System;
 using System.Data.Common;
 using System.IO;
+using System.Net.Http;
 
 namespace Sys
 {
@@ -32,7 +35,18 @@ namespace Sys
         {
             TypeRegistry.RegisterType(typeof(CollectionUtil));
 
-            services.AddHttpClient();
+            services.AddHttpClient<HttpClient>()
+                .ConfigureHttpMessageHandlerBuilder(builder =>
+                {
+                    HttpClientHandler handler = new HttpClientHandler();
+                    handler.MaxRequestContentBufferSize = int.MaxValue;
+                    handler.ClientCertificateOptions = ClientCertificateOption.Automatic;
+                    handler.UseDefaultCredentials = true;
+                    handler.ServerCertificateCustomValidationCallback += (s, arg1, arg2, arg3) => true;
+
+                    builder.PrimaryHandler = handler;
+                    builder.Build();
+                });
 
             IGetBookmarkRuleProvider getBookmarkRuleProvider = new GetBookmarkRuleProvider();
 
@@ -153,11 +167,20 @@ namespace Sys
                 return ProcessEngineFactory.Instance;
             });
 
+            services.AddSingleton<IAccessTokenProvider>(sp => AccessTokenProvider.Create(sp.GetService<ILoggerFactory>()));
+
+            services.AddTransient<IHttpClientProxy>(sp =>
+            {
+                return new HttpClientProxy(sp.GetService<IHttpClientFactory>().CreateClient(),
+                    sp.GetService<IAccessTokenProvider>(),
+                    sp.GetService<IHttpContextAccessor>().HttpContext);
+            });
+
             services.AddSingleton<IUserServiceProxy>(sp =>
             {
                 var cfg = sp.GetService<IConfiguration>();
 
-                return new UserServiceProxy(cfg["userServiceProxyBaseUrl"]);
+                return new UserServiceProxy(cfg["userServiceProxyBaseUrl"], sp.GetService<IHttpClientProxy>());
             });
 
             services.AddTransient<IRepositoryService>(sp => sp.GetRequiredService<IProcessEngine>().RepositoryService);

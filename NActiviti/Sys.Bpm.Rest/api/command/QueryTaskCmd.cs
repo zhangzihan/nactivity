@@ -18,6 +18,7 @@ namespace org.activiti.cloud.services.api.commands
     /// </summary>
     public class QueryTaskCmd : ICommand
     {
+        /// <inheritdoc />
         public string Id => "queryTaskCmd";
 
         /// <summary>

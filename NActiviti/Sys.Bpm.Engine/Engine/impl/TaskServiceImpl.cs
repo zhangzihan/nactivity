@@ -21,6 +21,7 @@ namespace org.activiti.engine.impl
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
     using org.activiti.engine.task;
+    using org.activiti.services.api.commands;
 
     /// 
     /// 
@@ -56,19 +57,9 @@ namespace org.activiti.engine.impl
             commandExecutor.execute(new TerminateTaskCmd(taskId, terminateReason, terminateExecution));
         }
 
-        public virtual void deleteTask(string taskId)
-        {
-            commandExecutor.execute(new DeleteTaskCmd(taskId, null, false));
-        }
-
         public virtual void deleteTasks(ICollection<string> taskIds)
         {
             commandExecutor.execute(new DeleteTaskCmd(taskIds, null, false));
-        }
-
-        public virtual void deleteTask(string taskId, bool cascade)
-        {
-            commandExecutor.execute(new DeleteTaskCmd(taskId, null, cascade));
         }
 
         public virtual void deleteTasks(ICollection<string> taskIds, bool cascade)
@@ -76,9 +67,14 @@ namespace org.activiti.engine.impl
             commandExecutor.execute(new DeleteTaskCmd(taskIds, null, cascade));
         }
 
-        public virtual void deleteTask(string taskId, string deleteReason)
+        public virtual void deleteTask(string taskId)
         {
-            commandExecutor.execute(new DeleteTaskCmd(taskId, deleteReason, false));
+            deleteTask(taskId, "Canceled");
+        }
+
+        public virtual void deleteTask(string taskId, string deleteReason, bool cascade = false)
+        {
+            commandExecutor.execute(new DeleteTaskCmd(taskId, deleteReason, cascade));
         }
 
         public virtual void deleteTasks(ICollection<string> taskIds, string deleteReason)
@@ -487,6 +483,39 @@ namespace org.activiti.engine.impl
             return commandExecutor.execute(new GetTaskDataObjectCmd(taskId, dataObjectName, locale, withLocalizationFallback));
         }
 
+        public ITask updateTask(IUpdateTaskCmd updateTaskCmd)
+        {
+            return commandExecutor.execute(new UpdateTaskCmd(updateTaskCmd));
+        }
+
+        public ITask createNewSubtask(string taskName, string description, DateTime? dueDate, int? priority, string parentTaskId, string assignee, string tenantId)
+        {
+            var cmd = new CreateNewSubtaskCmd(taskName, description, dueDate, priority, parentTaskId, assignee, tenantId);
+
+            return commandExecutor.execute(cmd);
+        }
+
+        /// <inheritdoc />
+        public ITask[] transfer(ITransferTaskCmd cmd)
+        {
+            return commandExecutor.execute(new TransferTaskCmd(cmd)) as ITask[];
+        }
+
+        /// <inheritdoc />
+        public ITask[] addCountersign(string taskId, string[] assignees, string tenantId)
+        {
+            var cmd = new AddCountersignCmd(taskId, assignees, tenantId);
+
+            return commandExecutor.execute(cmd);
+        }
+
+        /// <inheritdoc />
+        public ITask createNewTask(string name, string description, DateTime? dueDate, int? priority, string parentTaskId, string assignee, string tenantId)
+        {
+            var cmd = new CreateNewTaskCmd(name, description, dueDate, priority, parentTaskId, assignee, tenantId);
+
+            return commandExecutor.execute(cmd);
+        }
     }
 
 }
