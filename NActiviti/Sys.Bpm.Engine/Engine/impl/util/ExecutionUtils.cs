@@ -24,14 +24,14 @@ namespace org.activiti.engine.impl.util
         /// <returns></returns>
         internal static T GetLoopVariable<T>(this IExecutionEntity execution, string variableName)
         {
-            object value = execution.getVariableLocal(variableName);
+            object value = execution.GetVariableLocal(variableName);
             IExecutionEntity parent = execution.Parent;
             while (value == null && parent != null)
             {
                 value = parent.GetLoopVariable<T>(variableName);
                 parent = parent.Parent;
             }
-            return value == null ? default(T) : JToken.FromObject(value).ToObject<T>();
+            return value == null ? default : JToken.FromObject(value).ToObject<T>();
         }
 
         /// <summary>
@@ -42,26 +42,25 @@ namespace org.activiti.engine.impl.util
         /// <param name="value"></param>
         internal static void SetLoopVariable(this IExecutionEntity execution, string variableName, object value)
         {
-            execution.setVariableLocal(variableName, value);
+            execution.SetVariableLocal(variableName, value);
         }
 
         internal static bool TryGetMultiInstance(this IExecutionEntity execution, out IExecutionEntity miRoot)
         {
-            miRoot = execution.findMultiInstanceParentExecution();
+            miRoot = execution.FindMultiInstanceParentExecution();
 
             return miRoot != null;
         }
 
-        internal static IExecutionEntity findMultiInstanceParentExecution(this IExecutionEntity execution)
+        internal static IExecutionEntity FindMultiInstanceParentExecution(this IExecutionEntity execution)
         {
             IExecutionEntity multiInstanceExecution = null;
             IExecutionEntity parentExecution = execution.Parent;
             if (parentExecution != null && parentExecution.CurrentFlowElement != null)
             {
                 FlowElement flowElement = parentExecution.CurrentFlowElement;
-                if (flowElement is Activity)
+                if (flowElement is Activity activity)
                 {
-                    Activity activity = (Activity)flowElement;
                     if (activity.LoopCharacteristics != null)
                     {
                         multiInstanceExecution = parentExecution;
@@ -70,7 +69,7 @@ namespace org.activiti.engine.impl.util
 
                 if (multiInstanceExecution == null)
                 {
-                    IExecutionEntity potentialMultiInstanceExecution = findMultiInstanceParentExecution(parentExecution);
+                    IExecutionEntity potentialMultiInstanceExecution = FindMultiInstanceParentExecution(parentExecution);
                     if (potentialMultiInstanceExecution != null)
                     {
                         multiInstanceExecution = potentialMultiInstanceExecution;
@@ -79,6 +78,20 @@ namespace org.activiti.engine.impl.util
             }
 
             return multiInstanceExecution;
+        }
+        internal static IExecutionEntity FindRootParent(this IExecutionEntity execution)
+        {
+            if (execution == null)
+            {
+                return null;
+            }
+            IExecutionEntity parentExecution = execution.Parent;
+            if (parentExecution != null && parentExecution.CurrentFlowElement != null)
+            {
+                return FindRootParent(parentExecution);
+            }
+
+            return parentExecution;
         }
     }
 }

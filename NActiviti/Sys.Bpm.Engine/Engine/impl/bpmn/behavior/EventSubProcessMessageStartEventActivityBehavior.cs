@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.messageEventDefinition = messageEventDefinition;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             StartEvent startEvent = (StartEvent)execution.CurrentFlowElement;
             EventSubProcess eventSubProcess = (EventSubProcess)startEvent.SubProcess;
@@ -48,14 +48,14 @@ namespace org.activiti.engine.impl.bpmn.behavior
             execution.IsScope = true;
 
             // initialize the template-defined data objects as variables
-            IDictionary<string, object> dataObjectVars = processDataObjects(eventSubProcess.DataObjects);
+            IDictionary<string, object> dataObjectVars = ProcessDataObjects(eventSubProcess.DataObjects);
             if (dataObjectVars != null)
             {
                 execution.VariablesLocal = dataObjectVars;
             }
         }
 
-        public override void trigger(IExecutionEntity execution, string triggerName, object triggerData)
+        public override void Trigger(IExecutionEntity execution, string triggerName, object triggerData, bool throwError = true)
         {
             ICommandContext commandContext = Context.CommandContext;
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
@@ -63,12 +63,12 @@ namespace org.activiti.engine.impl.bpmn.behavior
             StartEvent startEvent = (StartEvent)execution.CurrentFlowElement;
             if (startEvent.Interrupting)
             {
-                IList<IExecutionEntity> childExecutions = executionEntityManager.findChildExecutionsByParentExecutionId(execution.ParentId);
+                IList<IExecutionEntity> childExecutions = executionEntityManager.FindChildExecutionsByParentExecutionId(execution.ParentId);
                 foreach (IExecutionEntity childExecution in childExecutions)
                 {
                     if (!childExecution.Id.Equals(execution.Id))
                     {
-                        executionEntityManager.deleteExecutionAndRelatedData(childExecution, engine.history.DeleteReason_Fields.EVENT_SUBPROCESS_INTERRUPTING + "(" + startEvent.Id + ")", false);
+                        executionEntityManager.DeleteExecutionAndRelatedData(childExecution, engine.history.DeleteReasonFields.EVENT_SUBPROCESS_INTERRUPTING + "(" + startEvent.Id + ")", false);
                     }
                 }
             }
@@ -77,23 +77,23 @@ namespace org.activiti.engine.impl.bpmn.behavior
             IList<IEventSubscriptionEntity> eventSubscriptions = execution.EventSubscriptions;
             foreach (IEventSubscriptionEntity eventSubscription in eventSubscriptions)
             {
-                if (eventSubscription is IMessageEventSubscriptionEntity && eventSubscription.EventName.Equals(messageEventDefinition.MessageRef))
+                if (eventSubscription.EventType == MessageEventSubscriptionEntityFields.EVENT_TYPE && eventSubscription.EventName.Equals(messageEventDefinition.MessageRef))
                 {
 
-                    eventSubscriptionEntityManager.delete(eventSubscription);
+                    eventSubscriptionEntityManager.Delete(eventSubscription);
                 }
             }
 
             execution.CurrentFlowElement = (SubProcess)execution.CurrentFlowElement.ParentContainer;
             execution.IsScope = true;
 
-            IExecutionEntity outgoingFlowExecution = executionEntityManager.createChildExecution(execution);
+            IExecutionEntity outgoingFlowExecution = executionEntityManager.CreateChildExecution(execution);
             outgoingFlowExecution.CurrentFlowElement = startEvent;
 
-            leave(outgoingFlowExecution);
+            Leave(outgoingFlowExecution);
         }
 
-        protected internal virtual IDictionary<string, object> processDataObjects(ICollection<ValuedDataObject> dataObjects)
+        protected internal virtual IDictionary<string, object> ProcessDataObjects(ICollection<ValuedDataObject> dataObjects)
         {
             IDictionary<string, object> variablesMap = new Dictionary<string, object>();
             // convert data objects to process variables

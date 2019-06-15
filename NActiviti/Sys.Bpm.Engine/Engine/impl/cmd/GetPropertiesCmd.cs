@@ -27,9 +27,9 @@ namespace org.activiti.engine.impl.cmd
 
 	  private const long serialVersionUID = 1L;
 
-	  public virtual IDictionary<string, string> execute(ICommandContext commandContext)
+	  public virtual IDictionary<string, string> Execute(ICommandContext commandContext)
 	  {
-		IList<IPropertyEntity> propertyEntities = commandContext.PropertyEntityManager.findAll();
+		IList<IPropertyEntity> propertyEntities = commandContext.PropertyEntityManager.FindAll();
 
 		IDictionary<string, string> properties = new Dictionary<string, string>();
 		foreach (IPropertyEntity propertyEntity in propertyEntities)

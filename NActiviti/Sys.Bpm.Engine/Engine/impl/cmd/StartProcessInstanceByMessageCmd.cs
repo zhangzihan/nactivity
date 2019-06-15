@@ -52,15 +52,15 @@ namespace org.activiti.engine.impl.cmd
             this.tenantId = processInstanceBuilder.TenantId;
         }
 
-        public  virtual IProcessInstance  execute(ICommandContext  commandContext)
+        public virtual IProcessInstance Execute(ICommandContext commandContext)
         {
 
-            if (ReferenceEquals(messageName, null))
+            if (messageName is null)
             {
                 throw new ActivitiIllegalArgumentException("Cannot start process instance by message: message name is null");
             }
 
-            IMessageEventSubscriptionEntity messageEventSubscription = commandContext.EventSubscriptionEntityManager.findMessageStartEventSubscriptionByName(messageName, tenantId);
+            IMessageEventSubscriptionEntity messageEventSubscription = commandContext.EventSubscriptionEntityManager.FindMessageStartEventSubscriptionByName(messageName, tenantId);
 
             if (messageEventSubscription == null)
             {
@@ -75,14 +75,14 @@ namespace org.activiti.engine.impl.cmd
 
             DeploymentManager deploymentCache = commandContext.ProcessEngineConfiguration.DeploymentManager;
 
-            IProcessDefinition processDefinition = deploymentCache.findDeployedProcessDefinitionById(processDefinitionId);
+            IProcessDefinition processDefinition = deploymentCache.FindDeployedProcessDefinitionById(processDefinitionId);
             if (processDefinition == null)
             {
                 throw new ActivitiObjectNotFoundException("No process definition found for id '" + processDefinitionId + "'", typeof(IProcessDefinition));
             }
 
             ProcessInstanceHelper processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
-            IProcessInstance processInstance = processInstanceHelper.createAndStartProcessInstanceByMessage(processDefinition, messageName, processVariables, transientVariables);
+            IProcessInstance processInstance = processInstanceHelper.CreateAndStartProcessInstanceByMessage(processDefinition, messageName, processVariables, transientVariables);
 
             return processInstance;
         }

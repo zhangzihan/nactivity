@@ -37,18 +37,18 @@ namespace org.activiti.engine.impl.util.io
             this.classLoader = classLoader;
         }
 
-        public virtual System.IO.Stream InputStream
+        public virtual Stream InputStream
         {
             get
             {
-                System.IO.Stream inputStream = null;
+                Stream inputStream;
                 if (classLoader == null)
                 {
-                    inputStream = ReflectUtil.getResourceAsStream(resource);
+                    inputStream = ReflectUtil.GetResourceAsStream(resource);
                 }
                 else
                 {
-                    inputStream = classLoader.getResourceAsStream(resource);
+                    inputStream = classLoader.GetResourceAsStream(resource);
                 }
                 if (inputStream == null)
                 {

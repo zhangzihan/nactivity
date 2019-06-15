@@ -12,28 +12,36 @@
  */
 namespace org.activiti.engine.impl.bpmn.data
 {
-	/// <summary>
-	/// Implementation of the BPMN 2.0 'dataInputRef' and 'dataOutputRef'
-	/// 
-	/// 
-	/// </summary>
-	public class DataRef
-	{
+    /// <summary>
+    /// Implementation of the BPMN 2.0 'dataInputRef' and 'dataOutputRef'
+    /// 
+    /// 
+    /// </summary>
+    public class DataRef
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal string idRef;
 
-	  protected internal string idRef;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="idRef"></param>
+        public DataRef(string idRef)
+        {
+            this.idRef = idRef;
+        }
 
-	  public DataRef(string idRef)
-	  {
-		this.idRef = idRef;
-	  }
-
-	  public virtual string IdRef
-	  {
-		  get
-		  {
-			return this.idRef;
-		  }
-	  }
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual string IdRef
+        {
+            get
+            {
+                return this.idRef;
+            }
+        }
+    }
 }

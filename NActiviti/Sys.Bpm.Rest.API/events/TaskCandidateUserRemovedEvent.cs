@@ -1,7 +1,7 @@
 ﻿namespace org.activiti.cloud.services.events
 {
-    using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
-    using TaskCandidateUser = org.activiti.cloud.services.api.model.TaskCandidateUser;
+    using IProcessEngineEvent = api.events.IProcessEngineEvent;
+    using TaskCandidateUser = api.model.TaskCandidateUser;
 
     /// <summary>
     /// 

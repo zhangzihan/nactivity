@@ -12,43 +12,61 @@
  */
 namespace org.activiti.engine.impl.asyncexecutor.multitenant
 {
-	using org.activiti.engine.impl.cfg.multitenant;
+    using org.activiti.engine.impl.cfg.multitenant;
 
-	/// <summary>
-	/// Extends the default <seealso cref="AcquireAsyncJobsDueRunnable"/> by setting the 'tenant' context before executing.
-	/// 
-	/// 
-	/// </summary>
-	public class TenantAwareAcquireAsyncJobsDueRunnable : AcquireAsyncJobsDueRunnable
-	{
+    /// <summary>
+    /// Extends the default <seealso cref="AcquireAsyncJobsDueRunnable"/> by setting the 'tenant' context before executing.
+    /// 
+    /// 
+    /// </summary>
+    public class TenantAwareAcquireAsyncJobsDueRunnable : AcquireAsyncJobsDueRunnable
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal ITenantInfoHolder tenantInfoHolder;
 
-	  protected internal ITenantInfoHolder tenantInfoHolder;
-	  protected internal string tenantId;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal string tenantId;
 
-	  public TenantAwareAcquireAsyncJobsDueRunnable(IAsyncExecutor asyncExecutor, ITenantInfoHolder tenantInfoHolder, string tenantId) : base(asyncExecutor)
-	  {
-		this.tenantInfoHolder = tenantInfoHolder;
-		this.tenantId = tenantId;
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="asyncExecutor"></param>
+        /// <param name="tenantInfoHolder"></param>
+        /// <param name="tenantId"></param>
+        public TenantAwareAcquireAsyncJobsDueRunnable(IAsyncExecutor asyncExecutor, ITenantInfoHolder tenantInfoHolder, string tenantId) : base(asyncExecutor)
+        {
+            this.tenantInfoHolder = tenantInfoHolder;
+            this.tenantId = tenantId;
+        }
 
-	  protected internal virtual ExecutorPerTenantAsyncExecutor TenantAwareAsyncExecutor
-	  {
-		  get
-		  {
-			return (ExecutorPerTenantAsyncExecutor) asyncExecutor;
-		  }
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal virtual ExecutorPerTenantAsyncExecutor TenantAwareAsyncExecutor
+        {
+            get
+            {
+                return (ExecutorPerTenantAsyncExecutor)asyncExecutor;
+            }
+        }
 
-	  public override void run()
-	  {
-		  lock (this)
-		  {
-			tenantInfoHolder.CurrentTenantId = tenantId;
-			base.run();
-			tenantInfoHolder.clearCurrentTenantId();
-		  }
-	  }
+        private readonly object syncRoot = new object();
 
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Run()
+        {
+            lock (syncRoot)
+            {
+                tenantInfoHolder.CurrentTenantId = tenantId;
+                base.Run();
+                tenantInfoHolder.ClearCurrentTenantId();
+            }
+        }
+    }
 }

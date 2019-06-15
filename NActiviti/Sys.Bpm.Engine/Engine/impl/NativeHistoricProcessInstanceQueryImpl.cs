@@ -35,14 +35,14 @@ namespace org.activiti.engine.impl
 
         // results ////////////////////////////////////////////////////////////////
 
-        public override IList<IHistoricProcessInstance> executeList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public override IList<IHistoricProcessInstance> ExecuteList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return commandContext.HistoricProcessInstanceEntityManager.findHistoricProcessInstancesByNativeQuery(parameterMap, firstResult, maxResults);
+            return commandContext.HistoricProcessInstanceEntityManager.FindHistoricProcessInstancesByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public override long executeCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
+        public override long ExecuteCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
         {
-            return commandContext.HistoricProcessInstanceEntityManager.findHistoricProcessInstanceCountByNativeQuery(parameterMap);
+            return commandContext.HistoricProcessInstanceEntityManager.FindHistoricProcessInstanceCountByNativeQuery(parameterMap);
         }
 
     }

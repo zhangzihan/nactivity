@@ -19,21 +19,38 @@ namespace org.activiti.engine.impl.bpmn.data
     /// </summary>
     public class PrimitiveStructureInstance : IStructureInstance
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal object primitive;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal PrimitiveStructureDefinition definition;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="definition"></param>
         public PrimitiveStructureInstance(PrimitiveStructureDefinition definition) : this(definition, null)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="definition"></param>
+        /// <param name="primitive"></param>
         public PrimitiveStructureInstance(PrimitiveStructureDefinition definition, object primitive)
         {
             this.definition = definition;
             this.primitive = primitive;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual object Primitive
         {
             get
@@ -42,12 +59,20 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
 
-        public virtual object[] toArray()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual object[] ToArray()
         {
             return new object[] { this.primitive };
         }
 
-        public virtual void loadFrom(object[] array)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="array"></param>
+        public virtual void LoadFrom(object[] array)
         {
             for (int i = 0; i < array.Length; i++)
             {
@@ -60,5 +85,4 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
     }
-
 }

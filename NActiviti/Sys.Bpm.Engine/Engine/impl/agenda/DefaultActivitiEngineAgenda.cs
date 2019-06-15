@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +17,8 @@ namespace org.activiti.engine.impl.agenda
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using Sys;
-    using System;
+    using Sys.Workflow;
+    using System.Collections.Concurrent;
 
     /// 
     /// 
@@ -27,31 +26,50 @@ namespace org.activiti.engine.impl.agenda
     {
         private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<DefaultActivitiEngineAgenda>();
 
-        protected internal LinkedList<AbstractOperation> operations = new LinkedList<AbstractOperation>();
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal ConcurrentStack<AbstractOperation> operations = new ConcurrentStack<AbstractOperation>();
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ICommandContext commandContext;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
         public DefaultActivitiEngineAgenda(ICommandContext commandContext)
         {
             this.commandContext = commandContext;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Empty
         {
             get
             {
-                return operations.Count == 0;
+                return operations.IsEmpty;
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual AbstractOperation NextOperation()
         {
-            if (operations.First != null)
+            if (operations.IsEmpty == false)
             {
-                var operation = operations.First.Value;
+                if (operations.TryPop(out var operation))//.First.Value;)
+                {
+                    //operations.RemoveFirst();
 
-                operations.RemoveFirst();
-
-                return operation;
+                    return operation;
+                }
             }
 
             return null;
@@ -65,66 +83,110 @@ namespace org.activiti.engine.impl.agenda
         /// <summary>
         /// Generic method to plan a <seealso cref="Runnable"/>.
         /// </summary>
-        public virtual void planOperation(AbstractOperation operation)
+        public virtual void PlanOperation(AbstractOperation operation)
         {
-            operations.AddLast(operation);
+            operations.Push(operation);
 
             if (operation is AbstractOperation)
             {
                 IExecutionEntity execution = operation.Execution;
                 if (execution != null)
                 {
-                    commandContext.addInvolvedExecution(execution);
+                    commandContext.AddInvolvedExecution(execution);
                 }
             }
 
             logger.LogDebug($"Operation {operation.GetType()} added to agenda");
         }
 
-        public virtual void planContinueProcessOperation(IExecutionEntity execution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        public virtual void PlanContinueProcessOperation(IExecutionEntity execution)
         {
-            planOperation(new ContinueProcessOperation(commandContext, execution));
+            PlanOperation(new ContinueProcessOperation(commandContext, execution));
         }
 
-        public virtual void planContinueProcessSynchronousOperation(IExecutionEntity execution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        public virtual void PlanContinueProcessSynchronousOperation(IExecutionEntity execution)
         {
-            planOperation(new ContinueProcessOperation(commandContext, execution, true, false));
+            PlanOperation(new ContinueProcessOperation(commandContext, execution, true, false));
         }
 
-        public virtual void planContinueProcessInCompensation(IExecutionEntity execution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        public virtual void PlanContinueProcessInCompensation(IExecutionEntity execution)
         {
-            planOperation(new ContinueProcessOperation(commandContext, execution, false, true));
+            PlanOperation(new ContinueProcessOperation(commandContext, execution, false, true));
         }
 
-        public virtual void planContinueMultiInstanceOperation(IExecutionEntity execution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        public virtual void PlanContinueMultiInstanceOperation(IExecutionEntity execution)
         {
-            planOperation(new ContinueMultiInstanceOperation(commandContext, execution));
+            PlanOperation(new ContinueMultiInstanceOperation(commandContext, execution));
         }
 
-        public virtual void planTakeOutgoingSequenceFlowsOperation(IExecutionEntity execution, bool evaluateConditions)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="evaluateConditions"></param>
+        public virtual void PlanTakeOutgoingSequenceFlowsOperation(IExecutionEntity execution, bool evaluateConditions)
         {
-            planOperation(new TakeOutgoingSequenceFlowsOperation(commandContext, execution, evaluateConditions));
+            PlanOperation(new TakeOutgoingSequenceFlowsOperation(commandContext, execution, evaluateConditions));
         }
 
-        public virtual void planEndExecutionOperation(IExecutionEntity execution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        public virtual void PlanEndExecutionOperation(IExecutionEntity execution)
         {
-            planOperation(new EndExecutionOperation(commandContext, execution));
+            PlanOperation(new EndExecutionOperation(commandContext, execution));
         }
 
-        public virtual void planTriggerExecutionOperation(IExecutionEntity execution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        public virtual void PlanTriggerExecutionOperation(IExecutionEntity execution)
         {
-            planOperation(new TriggerExecutionOperation(commandContext, execution));
+            PlanOperation(new TriggerExecutionOperation(commandContext, execution));
         }
 
-        public virtual void planDestroyScopeOperation(IExecutionEntity execution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        public virtual void PlanTriggerExecutionOperation(IExecutionEntity execution, object signalData)
         {
-            planOperation(new DestroyScopeOperation(commandContext, execution));
+            PlanOperation(new TriggerExecutionOperation(commandContext, execution, signalData));
         }
 
-        public virtual void planExecuteInactiveBehaviorsOperation()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        public virtual void PlanDestroyScopeOperation(IExecutionEntity execution)
         {
-            planOperation(new ExecuteInactiveBehaviorsOperation(commandContext));
+            PlanOperation(new DestroyScopeOperation(commandContext, execution));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void PlanExecuteInactiveBehaviorsOperation()
+        {
+            PlanOperation(new ExecuteInactiveBehaviorsOperation(commandContext));
         }
     }
-
 }

@@ -19,9 +19,9 @@ namespace org.activiti.engine.impl.persistence.entity.data
 	public interface IAttachmentDataManager : IDataManager<IAttachmentEntity>
 	{
 
-	  IList<IAttachmentEntity> findAttachmentsByProcessInstanceId(string processInstanceId);
+	  IList<IAttachmentEntity> FindAttachmentsByProcessInstanceId(string processInstanceId);
 
-	  IList<IAttachmentEntity> findAttachmentsByTaskId(string taskId);
+	  IList<IAttachmentEntity> FindAttachmentsByTaskId(string taskId);
 
 	}
 

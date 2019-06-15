@@ -47,31 +47,33 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                PersistentState persistentState = new PersistentState();
-                persistentState["id"] = this.id;
-                persistentState["type"] = this.type;
+                PersistentState persistentState = new PersistentState
+                {
+                    ["id"] = this.id,
+                    ["type"] = this.type
+                };
 
-                if (!ReferenceEquals(this.userId, null))
+                if (!(this.userId is null))
                 {
                     persistentState["userId"] = this.userId;
                 }
 
-                if (!ReferenceEquals(this.groupId, null))
+                if (!(this.groupId is null))
                 {
                     persistentState["groupId"] = this.groupId;
                 }
 
-                if (!ReferenceEquals(this.taskId, null))
+                if (!(this.taskId is null))
                 {
                     persistentState["taskId"] = this.taskId;
                 }
 
-                if (!ReferenceEquals(this.processInstanceId, null))
+                if (!(this.processInstanceId is null))
                 {
                     persistentState["processInstanceId"] = this.processInstanceId;
                 }
 
-                if (!ReferenceEquals(this.processDefId, null))
+                if (!(this.processDefId is null))
                 {
                     persistentState["processDefId"] = this.processDefId;
                 }
@@ -84,7 +86,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return !ReferenceEquals(userId, null);
+                return !(userId is null);
             }
         }
 
@@ -92,7 +94,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return !ReferenceEquals(groupId, null);
+                return !(groupId is null);
             }
         }
 
@@ -117,7 +119,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             set
             {
-                if (!ReferenceEquals(this.groupId, null) && !ReferenceEquals(value, null))
+                if (!(this.groupId is null) && !(value is null))
                 {
                     throw new ActivitiException("Cannot assign a userId to a task assignment that already has a groupId");
                 }
@@ -134,7 +136,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             set
             {
-                if (!ReferenceEquals(this.userId, null) && !ReferenceEquals(value, null))
+                if (!(this.userId is null) && !(value is null))
                 {
                     throw new ActivitiException("Cannot assign a groupId to a task assignment that already has a userId");
                 }
@@ -189,7 +191,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 var ctx = Context.CommandContext;
                 if (task == null && taskId != null && ctx != null)
                 {
-                    this.task = ctx.TaskEntityManager.findById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
+                    this.task = ctx.TaskEntityManager.FindById<ITaskEntity>(taskId);
                 }
                 return task;
             }
@@ -208,7 +210,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 var ctx = Context.CommandContext;
                 if (processInstance == null && processInstanceId != null && ctx != null)
                 {
-                    this.processInstance = ctx.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
+                    this.processInstance = ctx.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
                 }
                 return processInstance;
             }
@@ -227,7 +229,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 var ctx = Context.CommandContext;
                 if (processDef == null && processDefId != null && ctx != null)
                 {
-                    this.processDef = ctx.ProcessDefinitionEntityManager.findById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("id", processDefId));
+                    this.processDef = ctx.ProcessDefinitionEntityManager.FindById<IProcessDefinitionEntity>(processDefId);
                 }
                 return processDef;
             }
@@ -256,19 +258,19 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 sb.Append(", userId=").Append(userId);
             }
-            if (!ReferenceEquals(groupId, null))
+            if (!(groupId is null))
             {
                 sb.Append(", groupId=").Append(groupId);
             }
-            if (!ReferenceEquals(taskId, null))
+            if (!(taskId is null))
             {
                 sb.Append(", taskId=").Append(taskId);
             }
-            if (!ReferenceEquals(processInstanceId, null))
+            if (!(processInstanceId is null))
             {
                 sb.Append(", processInstanceId=").Append(processInstanceId);
             }
-            if (!ReferenceEquals(processDefId, null))
+            if (!(processDefId is null))
             {
                 sb.Append(", processDefId=").Append(processDefId);
             }

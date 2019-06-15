@@ -20,8 +20,7 @@ using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core.pageable.sort;
 using org.activiti.engine;
 using org.activiti.engine.history;
-using org.activiti.engine.runtime;
-using Sys;
+using Sys.Workflow;
 
 namespace org.activiti.cloud.services.core.pageable
 {
@@ -30,15 +29,15 @@ namespace org.activiti.cloud.services.core.pageable
     /// </summary>
     public class PageableProcessHistoryRepositoryService
     {
-        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<PageableProcessHistoryRepositoryService>();
+        private readonly ILogger logger = null;
 
-        private PageRetriever pageRetriever;
+        private readonly PageRetriever pageRetriever;
 
-        private IHistoryService historyService;
+        private readonly IHistoryService historyService;
 
-        private HistoryInstanceSortApplier sortApplier;
+        private readonly HistoryInstanceSortApplier sortApplier;
 
-        private HistoricInstanceConverter processInstanceConverter;
+        private readonly HistoricInstanceConverter processInstanceConverter;
 
         private readonly SecurityPoliciesApplicationService securityService;
 
@@ -50,13 +49,15 @@ namespace org.activiti.cloud.services.core.pageable
             IHistoryService historyService,
             HistoryInstanceSortApplier sortApplier,
             HistoricInstanceConverter processInstanceConverter,
-            SecurityPoliciesApplicationService securityPolicyApplicationService)
+            SecurityPoliciesApplicationService securityPolicyApplicationService,
+            ILoggerFactory loggerFactory)
         {
             this.pageRetriever = pageRetriever;
             this.historyService = historyService;
             this.sortApplier = sortApplier;
             this.processInstanceConverter = processInstanceConverter;
             this.securityService = securityPolicyApplicationService;
+            logger = loggerFactory.CreateLogger<PageableProcessHistoryRepositoryService>();
         }
 
         /// <summary>
@@ -77,27 +78,27 @@ namespace org.activiti.cloud.services.core.pageable
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<HistoricInstance> getProcessInstances(Pageable pageable)
+        public virtual IPage<HistoricInstance> GetProcessInstances(Pageable pageable)
         {
-            IHistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery();
+            IHistoricProcessInstanceQuery query = historyService.CreateHistoricProcessInstanceQuery();
             logger.LogWarning("Securite read not implementation");
             //query = securityService.restrictProcessInstQuery(query, SecurityPolicy.READ);
 
-            sortApplier.applySort(query, pageable);
+            sortApplier.ApplySort(query, pageable);
 
-            return pageRetriever.loadPage(query, pageable, processInstanceConverter);
+            return pageRetriever.LoadPage(query, pageable, processInstanceConverter);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<HistoricInstance> getAllProcessInstances(Pageable pageable)
+        public virtual IPage<HistoricInstance> GetAllProcessInstances(Pageable pageable)
         {
-            IHistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery();
+            IHistoricProcessInstanceQuery query = historyService.CreateHistoricProcessInstanceQuery();
 
-            sortApplier.applySort(query, pageable);
+            sortApplier.ApplySort(query, pageable);
 
-            return pageRetriever.loadPage(query, pageable, processInstanceConverter);
+            return pageRetriever.LoadPage(query, pageable, processInstanceConverter);
         }
     }
 }

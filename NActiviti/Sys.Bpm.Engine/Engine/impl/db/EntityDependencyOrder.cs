@@ -13,9 +13,15 @@ namespace org.activiti.engine.impl.db
     /// </summary>
     public class EntityDependencyOrder
 	{
-
+        /// <summary>
+        /// 
+        /// </summary>
 		public static IList<Type> DELETE_ORDER = new List<Type>();
-		public static IList<Type> INSERT_ORDER = new List<Type>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static IList<Type> INSERT_ORDER = new List<Type>();
 
 		static EntityDependencyOrder()
 		{

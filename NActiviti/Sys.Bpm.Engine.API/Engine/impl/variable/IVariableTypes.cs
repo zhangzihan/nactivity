@@ -13,34 +13,49 @@
 
 namespace org.activiti.engine.impl.variable
 {
-	/// <summary>
-	/// Interface describing a container for all available <seealso cref="IVariableType"/>s of variables.
-	/// 
-	/// 
-	/// 
-	/// </summary>
-	public interface IVariableTypes
-	{
+    /// <summary>
+    /// Interface describing a container for all available <seealso cref="IVariableType"/>s of variables.
+    /// 
+    /// 
+    /// 
+    /// </summary>
+    public interface IVariableTypes
+    {
 
-	  /// <returns> the type for the given type name. Returns null if no type was found with the name. </returns>
-	  IVariableType getVariableType(string typeName);
+        /// <returns> the type for the given type name. Returns null if no type was found with the name. </returns>
+        IVariableType GetVariableType(string typeName);
 
-	  /// <returns> the variable type to be used to store the given value as a variable. </returns>
-	  /// <exception cref="ActivitiException">
-	  ///           When no available type is capable of storing the value. </exception>
-	  IVariableType findVariableType(object value);
+        /// <returns> the variable type to be used to store the given value as a variable. </returns>
+        /// <exception cref="ActivitiException">
+        ///           When no available type is capable of storing the value. </exception>
+        IVariableType FindVariableType(object value);
 
-	  IVariableTypes addType(IVariableType type);
+        IVariableTypes AddType(IVariableType type);
 
-	  /// <summary>
-	  /// Add type at the given index. The index is used when finding a type for an object. When different types can store a specific object value, the one with the smallest index will be used.
-	  /// </summary>
-	  IVariableTypes addType(IVariableType type, int index);
+        /// <summary>
+        /// Add type at the given index. The index is used when finding a type for an object. When different types can store a specific object value, the one with the smallest index will be used.
+        /// </summary>
+        IVariableTypes AddType(IVariableType type, int index);
 
-	  int getTypeIndex(IVariableType type);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        int GetTypeIndex(IVariableType type);
 
-	  int getTypeIndex(string typeName);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
+        int GetTypeIndex(string typeName);
 
-	  IVariableTypes removeType(IVariableType type);
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        IVariableTypes RemoveType(IVariableType type);
+    }
 }

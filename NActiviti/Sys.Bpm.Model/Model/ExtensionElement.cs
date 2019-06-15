@@ -81,14 +81,13 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual void addChildElement(ExtensionElement childElement)
+        public virtual void AddChildElement(ExtensionElement childElement)
         {
             if (childElement != null && !string.IsNullOrWhiteSpace(childElement.Name))
             {
-                IList<ExtensionElement> elementList = null;
                 if (!this.childElements.ContainsKey(childElement.Name))
                 {
-                    elementList = new List<ExtensionElement>();
+                    IList<ExtensionElement> elementList = new List<ExtensionElement>();
                     this.childElements[childElement.Name] = elementList;
                 }
                 this.childElements[childElement.Name].Add(childElement);
@@ -96,10 +95,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            ExtensionElement clone = new ExtensionElement();
-            clone.Values = this;
+            ExtensionElement clone = new ExtensionElement
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -126,7 +127,7 @@ namespace org.activiti.bpmn.model
                             IList<ExtensionElement> elementList = new List<ExtensionElement>();
                             foreach (ExtensionElement extensionElement in otherElementList)
                             {
-                                elementList.Add(extensionElement.clone() as ExtensionElement);
+                                elementList.Add(extensionElement.Clone() as ExtensionElement);
                             }
                             childElements[key] = elementList;
                         }

@@ -33,9 +33,9 @@ namespace org.activiti.engine.impl.cmd
             this.modelId = modelId;
         }
 
-        public  virtual IModelEntity  execute(ICommandContext  commandContext)
+        public  virtual IModelEntity  Execute(ICommandContext  commandContext)
         {
-            return commandContext.ModelEntityManager.findById<IModelEntity>(new KeyValuePair<string, object>("id", modelId));
+            return commandContext.ModelEntityManager.FindById<IModelEntity>(new KeyValuePair<string, object>("id", modelId));
         }
     }
 

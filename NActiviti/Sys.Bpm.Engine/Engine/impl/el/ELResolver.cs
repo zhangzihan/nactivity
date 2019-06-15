@@ -16,17 +16,17 @@ namespace org.activiti.engine.impl.el
         {
         }
 
-        public abstract Type getCommonPropertyType(ELContext var1, object var2);
+        public abstract Type GetCommonPropertyType(ELContext var1, object var2);
 
-        public abstract Type getType(ELContext var1, object @base, object var3);
+        public abstract Type GetType(ELContext var1, object @base, object var3);
 
-        public abstract object getValue(ELContext var1, object @base, object property);
+        public abstract object GetValue(ELContext var1, object @base, object property);
 
-        public abstract bool isReadOnly(ELContext var1, object @base, object var3);
+        public abstract bool IsReadOnly(ELContext var1, object @base, object var3);
 
-        public abstract void setValue(ELContext var1, object var2, object var3, object var4);
+        public abstract void SetValue(ELContext var1, object var2, object var3, object var4);
 
-        public virtual object invoke(ELContext context, object @base, object method, Type[] paramTypes, object[] @params)
+        public virtual object Invoke(ELContext context, object @base, object method, Type[] paramTypes, object[] @params)
         {
             return null;
         }

@@ -14,11 +14,8 @@
  */
 namespace org.activiti.engine.impl.cmd
 {
-
-
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
     using System.Collections.Generic;
 
     /// 
@@ -36,26 +33,25 @@ namespace org.activiti.engine.impl.cmd
             this.isLocal = isLocal;
         }
 
-        protected internal override object execute(ICommandContext commandContext, IExecutionEntity execution)
+        protected internal override object Execute(ICommandContext commandContext, IExecutionEntity execution)
         {
+            if (variables is null || variables.Count == 0)
+            {
+                return null;
+            }
+
             if (isLocal)
             {
-                if (variables != null)
+                foreach (string variableName in variables.Keys)
                 {
-                    foreach (string variableName in variables.Keys)
-                    {
-                        execution.setVariableLocal(variableName, variables[variableName], false);
-                    }
+                    execution.SetVariableLocal(variableName, variables[variableName], false);
                 }
             }
             else
             {
-                if (variables != null)
+                foreach (string variableName in variables.Keys)
                 {
-                    foreach (string variableName in variables.Keys)
-                    {
-                        execution.setVariable(variableName, variables[variableName], false);
-                    }
+                    execution.SetVariable(variableName, variables[variableName], false);
                 }
             }
 
@@ -63,7 +59,7 @@ namespace org.activiti.engine.impl.cmd
             // simultaneous inserts of the same
             // variable. If not, duplicate variables may occur since optimistic
             // locking doesn't work on inserts
-            execution.forceUpdate();
+            execution.ForceUpdate();
 
             return null;
         }

@@ -8,6 +8,6 @@
         string Id { get; }
         string Name { get; }
 
-        void delete();
+        void Delete();
     }
 }

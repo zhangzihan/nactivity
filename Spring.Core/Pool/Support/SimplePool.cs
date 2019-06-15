@@ -1,7 +1,7 @@
 #region License
 
 /*
-* Copyright © 2002-2011 the original author or authors.
+* Copyright ?2002-2011 the original author or authors.
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -142,15 +142,17 @@ namespace Spring.Pool.Support
 		public void AddObject()
 		{
 			throw new NotSupportedException();
-		}
+        }
 
-		/// <summary>
-		/// Synchronized borrow logic.
-		/// </summary>
-		/// <seealso cref="Spring.Pool.Support.SimplePool.BorrowObject"/>
-		protected object DoBorrow()
+        private object syncRoot = new object();
+
+        /// <summary>
+        /// Synchronized borrow logic.
+        /// </summary>
+        /// <seealso cref="Spring.Pool.Support.SimplePool.BorrowObject"/>
+        protected object DoBorrow()
 		{
-			lock (this)
+			lock (syncRoot)
 			{
 				while (free.Count > 0)
 				{
@@ -188,7 +190,7 @@ namespace Spring.Pool.Support
 		/// </returns>
 		protected bool DoReturn(object target)
 		{
-			lock (this)
+			lock (syncRoot)
 			{
 				if (busy.Contains(target))
 				{
@@ -222,14 +224,14 @@ namespace Spring.Pool.Support
 			{
 				free.Add(factory.MakeObject());
 			}
-		}
+        }
 
-		/// <summary>
-		/// Close the pool and free any resources associated with it.
-		/// </summary>
-		public void Close()
+        /// <summary>
+        /// Close the pool and free any resources associated with it.
+        /// </summary>
+        public void Close()
 		{
-			lock (this)
+			lock (syncRoot)
 			{
 				for (IEnumerator e = busy.GetEnumerator();
 				     e.MoveNext();

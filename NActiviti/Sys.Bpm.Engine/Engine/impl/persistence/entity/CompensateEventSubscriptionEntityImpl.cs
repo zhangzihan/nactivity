@@ -21,13 +21,11 @@ namespace org.activiti.engine.impl.persistence.entity
     [Serializable]
     public class CompensateEventSubscriptionEntityImpl : EventSubscriptionEntityImpl, ICompensateEventSubscriptionEntity
     {
-
         private const long serialVersionUID = 1L;
 
         public CompensateEventSubscriptionEntityImpl()
         {
-            eventType = CompensateEventSubscriptionEntity_Fields.EVENT_TYPE;
+            eventType = CompensateEventSubscriptionEntityFields.EVENT_TYPE;
         }
-
     }
 }

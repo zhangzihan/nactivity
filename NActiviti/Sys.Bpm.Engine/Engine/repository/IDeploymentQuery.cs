@@ -33,107 +33,114 @@ namespace org.activiti.engine.repository
         /// <summary>
         /// Only select deployments with the given deployment id.
         /// </summary>
-        IDeploymentQuery deploymentId(string deploymentId);
+        IDeploymentQuery SetDeploymentId(string deploymentId);
+
+        /// <summary>
+        /// Only select deployments with the given deployment ids.
+        /// </summary>
+        IDeploymentQuery SetDeploymentIds(string[] ids);
 
         /// <summary>
         /// Only select deployments with the given name.
         /// </summary>
-        IDeploymentQuery deploymentName(string name);
+        IDeploymentQuery SetDeploymentName(string name);
 
         /// <summary>
         /// Only select deployments with a name like the given string.
         /// </summary>
-        IDeploymentQuery deploymentNameLike(string nameLike);
+        IDeploymentQuery SetDeploymentNameLike(string nameLike);
 
         /// <summary>
         /// Only select deployments with the given category.
         /// </summary>
         /// <seealso cref= IDeploymentBuilder#category(String) </seealso>
-        IDeploymentQuery deploymentCategory(string category);
+        IDeploymentQuery SetDeploymentCategory(string category);
 
         /// <summary>
         /// Only select deployments with a category like the given string.
         /// </summary>
-        IDeploymentQuery deploymentCategoryLike(string categoryLike);
+        IDeploymentQuery SetDeploymentCategoryLike(string categoryLike);
 
         /// <summary>
         /// Only select deployments that have a different category then the given one.
         /// </summary>
         /// <seealso cref= IDeploymentBuilder#category(String) </seealso>
-        IDeploymentQuery deploymentCategoryNotEquals(string categoryNotEquals);
+        IDeploymentQuery SetDeploymentCategoryNotEquals(string categoryNotEquals);
 
         /// <summary>
         /// Only select deployments with the given key.
         /// </summary>
-        IDeploymentQuery deploymentKey(string key);
+        IDeploymentQuery SetDeploymentKey(string key);
 
         /// <summary>
         /// Only select deployments with a key like the given string.
         /// </summary>
-        IDeploymentQuery deploymentKeyLike(string keyLike);
+        IDeploymentQuery SetDeploymentKeyLike(string keyLike);
 
         /// <summary>
         /// Only select deployments with the given business key.
         /// </summary>
         /// <param name="businessKey"></param>
         /// <returns></returns>
-        IDeploymentQuery deploymentBusinessKey(string businessKey);
+        IDeploymentQuery SetDeploymentBusinessKey(string businessKey);
 
         /// <summary>
         /// Only select deployment that have the given tenant id.
         /// </summary>
-        IDeploymentQuery deploymentTenantId(string tenantId);
+        IDeploymentQuery SetDeploymentTenantId(string tenantId);
 
         /// <summary>
         /// Only select deployments with a tenant id like the given one.
         /// </summary>
-        IDeploymentQuery deploymentTenantIdLike(string tenantIdLike);
+        IDeploymentQuery SetDeploymentTenantIdLike(string tenantIdLike);
 
         /// <summary>
         /// Only select deployments that do not have a tenant id.
         /// </summary>
-        IDeploymentQuery deploymentWithoutTenantId();
+        IDeploymentQuery SetDeploymentWithoutTenantId();
 
         /// <summary>
         /// Only select deployments with the given process definition key. </summary>
-        IDeploymentQuery processDefinitionKey(string key);
+        IDeploymentQuery SetProcessDefinitionKey(string key);
 
         /// <summary>
         /// Only select deployments with a process definition key like the given string.
         /// </summary>
-        IDeploymentQuery processDefinitionKeyLike(string keyLike);
+        IDeploymentQuery SetProcessDefinitionKeyLike(string keyLike);
 
         /// <summary>
         /// Only select deployments where the deployment time is the latest value.
         /// Can only be used together with the deployment key.
         /// </summary>
-        IDeploymentQuery latest();
+        IDeploymentQuery SetLatest();
 
-        IDeploymentQuery latestDeployment();
+        IDeploymentQuery SetLatestDeployment();
 
         // sorting ////////////////////////////////////////////////////////
 
         /// <summary>
         /// Order by deployment id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IDeploymentQuery orderByDeploymentId();
+        IDeploymentQuery SetOrderByDeploymentId();
 
         /// <summary>
         /// Order by deployment name (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IDeploymentQuery orderByDeploymentName();
+        IDeploymentQuery SetOrderByDeploymentName();
 
         /// <summary>
         /// Order by deployment time (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IDeploymentQuery orderByDeploymenTime();
+        IDeploymentQuery SetOrderByDeploymenTime();
 
         /// <summary>
         /// Order by tenant id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IDeploymentQuery orderByTenantId();
+        IDeploymentQuery SetOrderByTenantId();
 
-        IList<IDeployment> findDrafts();
+        IList<IDeployment> FindDrafts();
+
+        IDeploymentQuery SetOnlyDrafts();
     }
 
 }

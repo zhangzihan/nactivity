@@ -20,7 +20,7 @@ namespace org.activiti.engine.impl.json
     public class JsonProcessEngineInfoConverter : JsonObjectConverter<IProcessEngineInfo>
     {
 
-        public override JToken toJsonObject(IProcessEngineInfo processEngineInfo)
+        public override JToken ToJsonObject(IProcessEngineInfo processEngineInfo)
         {
             ProcessEngineInfoImpl processEngineInfoImpl = (ProcessEngineInfoImpl)processEngineInfo;
             JToken jsonObject = JToken.FromObject(new
@@ -33,7 +33,7 @@ namespace org.activiti.engine.impl.json
             return jsonObject;
         }
 
-        public override IProcessEngineInfo toObject(StreamReader reader)
+        public override IProcessEngineInfo ToObject(StreamReader reader)
         {
             var str = reader.ReadToEnd();
 

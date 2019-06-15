@@ -27,12 +27,12 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, SubProcess subProcess)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, SubProcess subProcess)
         {
-            subProcess.Behavior = bpmnParse.ActivityBehaviorFactory.createAdhocSubprocessActivityBehavior(subProcess);
+            subProcess.Behavior = bpmnParse.ActivityBehaviorFactory.CreateAdhocSubprocessActivityBehavior(subProcess);
 
-            bpmnParse.processFlowElements(subProcess.FlowElements);
-            processArtifacts(bpmnParse, subProcess.Artifacts);
+            bpmnParse.ProcessFlowElements(subProcess.FlowElements);
+            ProcessArtifacts(bpmnParse, subProcess.Artifacts);
         }
     }
 

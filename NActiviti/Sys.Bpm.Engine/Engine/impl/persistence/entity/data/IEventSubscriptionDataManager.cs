@@ -19,40 +19,40 @@ namespace org.activiti.engine.impl.persistence.entity.data
     /// 
     public interface IEventSubscriptionDataManager : IDataManager<IEventSubscriptionEntity>
     {
-        IMessageEventSubscriptionEntity createMessageEventSubscription();
+        IMessageEventSubscriptionEntity CreateMessageEventSubscription();
 
-        ISignalEventSubscriptionEntity createSignalEventSubscription();
+        ISignalEventSubscriptionEntity CreateSignalEventSubscription();
 
-        ICompensateEventSubscriptionEntity createCompensateEventSubscription();
+        ICompensateEventSubscriptionEntity CreateCompensateEventSubscription();
 
-        long findEventSubscriptionCountByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl);
+        long FindEventSubscriptionCountByQueryCriteria(IEventSubscriptionQuery eventSubscriptionQueryImpl);
 
-        IList<IEventSubscriptionEntity> findEventSubscriptionsByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl, Page page);
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByQueryCriteria(IEventSubscriptionQuery eventSubscriptionQueryImpl, Page page);
 
-        IList<IMessageEventSubscriptionEntity> findMessageEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName);
+        IList<IMessageEventSubscriptionEntity> FindMessageEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName);
 
-        IList<ISignalEventSubscriptionEntity> findSignalEventSubscriptionsByEventName(string eventName, string tenantId);
+        IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByEventName(string eventName, string tenantId);
 
-        IList<ISignalEventSubscriptionEntity> findSignalEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName);
+        IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName);
 
-        IList<ISignalEventSubscriptionEntity> findSignalEventSubscriptionsByNameAndExecution(string name, string executionId);
+        IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByNameAndExecution(string name, string executionId);
 
-        IList<IEventSubscriptionEntity> findEventSubscriptionsByExecutionAndType(string executionId, string type);
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByExecutionAndType(string executionId, string type);
 
-        IList<IEventSubscriptionEntity> findEventSubscriptionsByProcessInstanceAndActivityId(string processInstanceId, string activityId, string type);
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByProcessInstanceAndActivityId(string processInstanceId, string activityId, string type);
 
-        IList<IEventSubscriptionEntity> findEventSubscriptionsByExecution(string executionId);
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByExecution(string executionId);
 
-        IList<IEventSubscriptionEntity> findEventSubscriptionsByTypeAndProcessDefinitionId(string type, string processDefinitionId, string tenantId);
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByTypeAndProcessDefinitionId(string type, string processDefinitionId, string tenantId);
 
-        IList<IEventSubscriptionEntity> findEventSubscriptionsByName(string type, string eventName, string tenantId);
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByName(string type, string eventName, string tenantId);
 
-        IList<IEventSubscriptionEntity> findEventSubscriptionsByNameAndExecution(string type, string eventName, string executionId);
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByNameAndExecution(string type, string eventName, string executionId);
 
-        IMessageEventSubscriptionEntity findMessageStartEventSubscriptionByName(string messageName, string tenantId);
+        IMessageEventSubscriptionEntity FindMessageStartEventSubscriptionByName(string messageName, string tenantId);
 
-        void updateEventSubscriptionTenantId(string oldTenantId, string newTenantId);
+        void UpdateEventSubscriptionTenantId(string oldTenantId, string newTenantId);
 
-        void deleteEventSubscriptionsForProcessDefinition(string processDefinitionId);
+        void DeleteEventSubscriptionsForProcessDefinition(string processDefinitionId);
     }
 }

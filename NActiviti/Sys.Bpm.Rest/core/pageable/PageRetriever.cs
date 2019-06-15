@@ -1,6 +1,10 @@
 ﻿using org.activiti.api.runtime.shared.query;
 using org.activiti.cloud.services.api.model.converter;
+using org.activiti.engine.impl;
+using org.activiti.engine.impl.cmd;
+using org.activiti.engine.impl.interceptor;
 using org.activiti.engine.query;
+using System;
 using System.Collections.Generic;
 
 /*
@@ -28,12 +32,37 @@ namespace org.activiti.cloud.services.core.pageable
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<TARGET> loadPage<SOURCE, TARGET, T1>(IQuery<T1, SOURCE> query, Pageable pageable, IModelConverter<SOURCE, TARGET> converter)
+        public virtual IPage<TARGET> LoadPage<SOURCE, TARGET, T1>(IQuery<T1, SOURCE> query, Pageable pageable, IModelConverter<SOURCE, TARGET> converter)
         {
-            int firstResult = (pageable.PageNo - 1) * pageable.PageSize;
-            IList<SOURCE> elements = query.listPage(firstResult, pageable.PageSize);
-            long count = query.count();
-            return new PageImpl<TARGET>(converter.from(elements), count);
+            int firstResult = (pageable.PageNo <= 0 ? 0 : pageable.PageNo - 1) * pageable.PageSize;
+            IList<SOURCE> elements = query.ListPage(firstResult, pageable.PageSize);
+            long count = query.Count();
+            return new PageImpl<TARGET>(converter.From(elements), count);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IPage<TARGET> LoadPage<SOURCE, TARGET, T1>(ServiceImpl service,
+            IQuery<T1, SOURCE> query,
+            Pageable pageable,
+            IModelConverter<SOURCE, TARGET> converter,
+            Func<IQuery<T1, SOURCE>, int, int, PageQueryCmd<T1, SOURCE>> createPageQueryCmd)
+        {
+            int firstResult = (pageable.PageNo <= 0 ? 0 : pageable.PageNo - 1) * pageable.PageSize;
+
+            PageQueryCmd<T1, SOURCE> cmd;
+            if (createPageQueryCmd != null)
+            {
+                cmd = createPageQueryCmd(query, firstResult, pageable.PageSize);
+            }
+            else
+            {
+                cmd = new PageQueryCmd<T1, SOURCE>(query, firstResult, pageable.PageSize);
+            }
+            var elements = service.CommandExecutor.Execute(cmd);
+            long count = query.Count();
+            return new PageImpl<TARGET>(converter.From(elements), count);
         }
     }
 }

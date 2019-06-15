@@ -18,36 +18,36 @@ namespace org.activiti.bpmn.converter.parser
     using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
-    using Sys.Bpm;
+    using Sys.Bpm.Model;
 
     /// 
     public class InterfaceParser : IBpmnXMLConstants
     {
         private static readonly ILogger log = BpmnModelLoggerFactory.LoggerService<InterfaceParser>();
 
-        public virtual void parse(XMLStreamReader xtr, BpmnModel model)
+        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
         {
             Interface interfaceObject = new Interface();
-            BpmnXMLUtil.addXMLLocation(interfaceObject, xtr);
-            interfaceObject.Id = model.TargetNamespace + ":" + xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
-            interfaceObject.Name = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
-            interfaceObject.ImplementationRef = parseMessageRef(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_IMPLEMENTATION_REF), model);
+            BpmnXMLUtil.AddXMLLocation(interfaceObject, xtr);
+            interfaceObject.Id = model.TargetNamespace + ":" + xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+            interfaceObject.Name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
+            interfaceObject.ImplementationRef = ParseMessageRef(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_IMPLEMENTATION_REF), model);
 
             bool readyWithInterface = false;
             Operation operation = null;
             try
             {
-                while (!readyWithInterface && xtr.hasNext())
+                while (!readyWithInterface && xtr.HasNext())
                 {
                     //xtr.next();
 
                     if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_OPERATION.Equals(xtr.LocalName))
                     {
                         operation = new Operation();
-                        BpmnXMLUtil.addXMLLocation(operation, xtr);
-                        operation.Id = model.TargetNamespace + ":" + xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
-                        operation.Name = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
-                        operation.ImplementationRef = parseMessageRef(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_IMPLEMENTATION_REF), model);
+                        BpmnXMLUtil.AddXMLLocation(operation, xtr);
+                        operation.Id = model.TargetNamespace + ":" + xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+                        operation.Name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
+                        operation.ImplementationRef = ParseMessageRef(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_IMPLEMENTATION_REF), model);
 
                     }
                     else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_IN_MESSAGE.Equals(xtr.LocalName))
@@ -55,7 +55,7 @@ namespace org.activiti.bpmn.converter.parser
                         string inMessageRef = xtr.ElementText;
                         if (operation != null && !string.IsNullOrWhiteSpace(inMessageRef))
                         {
-                            operation.InMessageRef = parseMessageRef(inMessageRef.Trim(), model);
+                            operation.InMessageRef = ParseMessageRef(inMessageRef.Trim(), model);
                         }
 
                     }
@@ -64,7 +64,7 @@ namespace org.activiti.bpmn.converter.parser
                         string outMessageRef = xtr.ElementText;
                         if (operation != null && !string.IsNullOrWhiteSpace(outMessageRef))
                         {
-                            operation.OutMessageRef = parseMessageRef(outMessageRef.Trim(), model);
+                            operation.OutMessageRef = ParseMessageRef(outMessageRef.Trim(), model);
                         }
 
                     }
@@ -95,7 +95,7 @@ namespace org.activiti.bpmn.converter.parser
             model.Interfaces.Add(interfaceObject);
         }
 
-        protected internal virtual string parseMessageRef(string messageRef, BpmnModel model)
+        protected internal virtual string ParseMessageRef(string messageRef, BpmnModel model)
         {
             string result = null;
             if (!string.IsNullOrWhiteSpace(messageRef))
@@ -104,10 +104,10 @@ namespace org.activiti.bpmn.converter.parser
                 if (indexOfP != -1)
                 {
                     string prefix = messageRef.Substring(0, indexOfP);
-                    string resolvedNamespace = model.getNamespace(prefix);
+                    string resolvedNamespace = model.GetNamespace(prefix);
                     messageRef = messageRef.Substring(indexOfP + 1);
 
-                    if (string.ReferenceEquals(resolvedNamespace, null))
+                    if (resolvedNamespace is null)
                     {
                         // if it's an invalid prefix will consider this is not a
                         // namespace prefix so will be used as part of the

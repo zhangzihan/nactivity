@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using org.activiti.engine.impl.interceptor;
+using Microsoft.Extensions.Options;
+using System.Linq;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
@@ -18,20 +20,23 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
     /// 获取用户的所有下属及子下属
     /// </summary>
     [GetBookmarkDescriptor("GetUnderling")]
-	public class GetUnderlingBookmarkRuleCmd : IGetBookmarkRule
+    public class GetUnderlingBookmarkRuleCmd : BaseGetBookmarkRule
     {
-
+        private readonly ExternalConnectorProvider externalConnector;
+        /// <inheritdoc />
         public GetUnderlingBookmarkRuleCmd()
         {
-
+            externalConnector = ProcessEngineServiceProvider.Resolve<ExternalConnectorProvider>();
         }
-
-        public QueryBookmark Condition { get; set; }
-
-        public IList<IUserInfo> execute(ICommandContext commandContext)
+        /// <inheritdoc />
+        public override IList<IUserInfo> Execute(ICommandContext commandContext)
         {
             IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
-            return proxy.GetUsers(Condition).Result;
+
+            return AsyncHelper.RunSync(() => proxy.GetUsers(externalConnector.GetUserByUnderling, new
+            {
+                idList = Condition.QueryCondition.Select(x => x.Id).ToArray()
+            }));
         }
     }
 }

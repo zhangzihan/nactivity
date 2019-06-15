@@ -31,9 +31,9 @@ namespace org.activiti.engine.impl.cmd.integration
             this.executionId = executionId;
         }
 
-        public virtual IList<IIntegrationContextEntity> execute(ICommandContext commandContext)
+        public virtual IList<IIntegrationContextEntity> Execute(ICommandContext commandContext)
         {
-            return commandContext.ProcessEngineConfiguration.IntegrationContextManager.findIntegrationContextByExecutionId(executionId);
+            return commandContext.ProcessEngineConfiguration.IntegrationContextManager.FindIntegrationContextByExecutionId(executionId);
         }
     }
 

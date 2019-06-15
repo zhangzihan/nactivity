@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_1" name="555" isExecutable="true">
+    <bpmn2:extensionElements>
+      <camunda:properties>
+        <camunda:property name="id" value="8a010000-5d88-0015-ff05-08d6d866dc75" gruop="default" />
+        <camunda:property name="id" value="8a010000-5d88-0015-890d-08d6d85ce6b0" gruop="default" />
+        <camunda:property name="id" value="8a010000-5d88-0015-7ca8-08d6d84ff8f0" gruop="default" />
+        <camunda:property name="tenantId" value="00090000-2700-0a00-6741-08d6ac43c54c" gruop="default" />
+        <camunda:property name="id" value="8a010000-5d88-0015-265e-08d6d84e46e3" gruop="default" />
+        <camunda:property name="id" value="8a010000-5d88-0015-2040-08d6d84e1419" gruop="default" />
+        <camunda:property name="id" value="8a010000-5d88-0015-94aa-08d6d84e00ae" gruop="default" />
+        <camunda:property name="tenantId" value="00090000-2700-0a00-6741-08d6ac43c54c" gruop="default" />
+        <camunda:property name="tenantId" value="00090000-2700-0a00-6741-08d6ac43c54c" gruop="default" />
+        <camunda:property name="id" value="8a010000-5d88-0015-9c88-08d6d84dce7a" gruop="default" />
+        <camunda:property name="_rowKey" value="6" gruop="default" />
+        <camunda:property name="_index" value="0" gruop="default" />
+        <camunda:property name="version" value="14" gruop="default" />
+        <camunda:property name="deploymentId" value="8a010000-5d88-0015-4173-08d6d866dc75" gruop="default" />
+        <camunda:property name="startForm" gruop="default" />
+        <camunda:property name="key" value="Process_1" gruop="default" />
+        <camunda:property name="id" value="8a010000-5d88-0015-60da-08d6d833a313" gruop="default" />
+        <camunda:property name="tenantId" value="00090000-2700-0a00-6741-08d6ac43c54c" gruop="default" />
+        <camunda:property name="description" gruop="default" />
+        <camunda:property name="businessPath" value="555" gruop="default" />
+        <camunda:property name="businessKey" value="555" gruop="default" />
+        <camunda:property name="category" gruop="default" />
+        <camunda:property name="name" value="555" gruop="default" />
+        <camunda:property name="tenantId" value="00090000-2700-0a00-6741-08d6ac43c54c" gruop="default" />
+      </camunda:properties>
+    </bpmn2:extensionElements>
+    <bpmn2:startEvent id="StartEvent_1kar9x9" name="666">
+      <bpmn2:extensionElements>
+        <camunda:properties />
+      </bpmn2:extensionElements>
+      <bpmn2:outgoing>SequenceFlow_1y5ak2d</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="UserTask_0m95mod" name="888" camunda:assignee="startUserId">
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="userPolicy" value="[{&#34;ruleType&#34;:&#34;GetExecutor&#34;,&#34;ruleName&#34;:&#34;获取节点执行人&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;startUserId&#34;,&#34;name&#34;:&#34;工作流发起人&#34;}]}]" group="ApprovalTask" />
+          <camunda:property name="assigneeType" value="single" group="ApprovalTask" />
+        </camunda:properties>
+        <camunda:executionListener class="org.activiti.engine.impl.bpmn.listener.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
+        <camunda:taskListener class="org.activiti.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_1y5ak2d</bpmn2:incoming>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_1y5ak2d" sourceRef="StartEvent_1kar9x9" targetRef="UserTask_0m95mod" />
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="StartEvent_1kar9x9_di" bpmnElement="StartEvent_1kar9x9">
+        <dc:Bounds x="313" y="230" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="321" y="206" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0m95mod_di" bpmnElement="UserTask_0m95mod">
+        <dc:Bounds x="483" y="325" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1y5ak2d_di" bpmnElement="SequenceFlow_1y5ak2d">
+        <di:waypoint x="331" y="266" />
+        <di:waypoint x="331" y="365" />
+        <di:waypoint x="483" y="365" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

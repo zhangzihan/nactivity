@@ -30,7 +30,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, BoundaryEvent boundaryEvent)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, BoundaryEvent boundaryEvent)
         {
             if (boundaryEvent.AttachedToRef == null)
             {
@@ -47,7 +47,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             if (eventDefinition is TimerEventDefinition || eventDefinition is ErrorEventDefinition || eventDefinition is SignalEventDefinition || eventDefinition is CancelEventDefinition || eventDefinition is MessageEventDefinition || eventDefinition is CompensateEventDefinition)
             {
 
-                bpmnParse.BpmnParserHandlers.parseElement(bpmnParse, eventDefinition);
+                bpmnParse.BpmnParserHandlers.ParseElement(bpmnParse, eventDefinition);
 
             }
             else

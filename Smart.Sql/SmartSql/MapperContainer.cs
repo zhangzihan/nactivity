@@ -19,11 +19,13 @@ namespace SmartSql
             return GetSqlMapper(new SmartSqlOptions { ConfigPath = smartSqlMapConfigPath });
         }
 
+        private object syncRoot = new object();
+
         public ISmartSqlMapper GetSqlMapper(SmartSqlOptions smartSqlOptions)
         {
             if (!_mapperContainer.ContainsKey(smartSqlOptions.ConfigPath))
             {
-                lock (this)
+                lock (syncRoot)
                 {
                     if (!_mapperContainer.ContainsKey(smartSqlOptions.ConfigPath))
                     {

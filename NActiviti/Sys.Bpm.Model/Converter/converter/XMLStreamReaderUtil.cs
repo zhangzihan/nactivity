@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 using Microsoft.Extensions.Logging;
-using Sys.Bpm;
+using Sys.Bpm.Model;
 using System;
 using System.IO;
 
@@ -26,7 +26,7 @@ namespace org.activiti.bpmn.converter
         {
             try
             {
-                while (xtr.hasNext())
+                while (xtr.HasNext())
                 {
                     //xtr.next();
 
@@ -44,11 +44,11 @@ namespace org.activiti.bpmn.converter
             return null;
         }
 
-        public static bool moveToEndOfElement(XMLStreamReader xtr, string elementName)
+        public static bool MoveToEndOfElement(XMLStreamReader xtr, string elementName)
         {
             try
             {
-                while (xtr.hasNext())
+                while (xtr.HasNext())
                 {
                     //xtr.next();
 
@@ -68,7 +68,7 @@ namespace org.activiti.bpmn.converter
             return false;
         }
 
-        public static XMLStreamReader createStreamReader(string bpmnXML)
+        public static XMLStreamReader CreateStreamReader(string bpmnXML)
         {
             MemoryStream ms = new MemoryStream();
             StreamWriter sw = new StreamWriter(ms);

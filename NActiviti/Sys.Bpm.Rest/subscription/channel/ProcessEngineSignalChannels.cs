@@ -6,25 +6,25 @@ namespace org.activiti.services.subscription.channel
     /// <summary>
     /// 
     /// </summary>
-    public interface ProcessEngineSignalChannels
+    public interface IProcessEngineSignalChannels
     {
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        ISubscribableChannel signalConsumer();
+        ISubscribableChannel SignalConsumer();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        IMessageChannel<SignalCmd> signalProducer();
+        IMessageChannel<SignalCmd> SignalProducer();
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public static class ProcessEngineSignalChannels_Fields
+    public static class ProcessEngineSignalChannelsFields
     {
         /// <summary>
         /// 

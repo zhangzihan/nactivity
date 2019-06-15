@@ -1,19 +1,21 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using org.activiti.api.runtime.shared.query;
 using org.activiti.cloud.services.api;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core;
 using org.activiti.cloud.services.core.pageable;
 using org.activiti.cloud.services.core.pageable.sort;
-using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.assemblers;
 using org.activiti.engine;
-using Sys.Net.Http;
-using System.Net.Http;
+using Serilog;
+using System.Linq;
 
 namespace Sys.Bpm.Services.Rest
 {
@@ -34,8 +36,19 @@ namespace Sys.Bpm.Services.Rest
 
             mvcBuilder.AddMvcOptions(opts =>
             {
+                JsonOutputFormatter jsonFormatter = opts.OutputFormatters.FirstOrDefault(x => x.GetType() == typeof(JsonOutputFormatter)) as JsonOutputFormatter;
+
+                if (jsonFormatter != null)
+                {
+                    //jsonFormatter.PublicSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple;
+                    //jsonFormatter.PublicSerializerSettings.TypeNameHandling = TypeNameHandling.All;
+                    jsonFormatter.PublicSerializerSettings.ReferenceLoopHandling =
+                        ReferenceLoopHandling.Ignore;
+                }
+
                 opts.ModelBinderProviders.Insert(0, new PageableModelBinderProvider());
             });
+
             services.AddTransient<ProcessInstanceSortApplier>();
 
             services.AddSingleton<PageRetriever>();
@@ -51,7 +64,8 @@ namespace Sys.Bpm.Services.Rest
                     sp.GetService<IProcessEngine>().HistoryService,
                     sp.GetService<HistoryInstanceSortApplier>(),
                     sp.GetService<HistoricInstanceConverter>(),
-                    sp.GetService<SecurityPoliciesApplicationService>()
+                    sp.GetService<SecurityPoliciesApplicationService>(),
+                    sp.GetService<ILoggerFactory>()
                     );
             });
 
@@ -62,7 +76,8 @@ namespace Sys.Bpm.Services.Rest
                 return new PageableProcessInstanceRepositoryService(sp.GetService<PageRetriever>(),
                     engine.RuntimeService,
                     sp.GetService<ProcessInstanceSortApplier>(),
-                    sp.GetService<ProcessInstanceConverter>());
+                    sp.GetService<ProcessInstanceConverter>(),
+                    sp.GetService<ILoggerFactory>());
             });
 
             services.AddTransient<ListConverter>();
@@ -115,7 +130,8 @@ namespace Sys.Bpm.Services.Rest
                     null,
                     null,
                     engine,
-                    sp.GetService<HistoricInstanceConverter>());
+                    sp.GetService<HistoricInstanceConverter>(),
+                    sp.GetService<ILoggerFactory>());
             });
 
             services.AddScoped<SecurityPoliciesApplicationService>();
@@ -139,7 +155,9 @@ namespace Sys.Bpm.Services.Rest
 
             services.AddTransient<AuthenticationWrapper>();
 
-            mvcBuilder.AddApplicationPart(typeof(IHomeController).Assembly);
+            services.AddTransient<IMvcControllerDiscovery, MvcControllerDiscovery>();
+
+            mvcBuilder.AddApplicationPart(typeof(ProcessEngineRestExtention).Assembly);
 
             return mvcBuilder;
         }

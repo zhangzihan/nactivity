@@ -30,14 +30,14 @@ namespace org.activiti.engine.impl.cmd
             this.modelId = modelId;
         }
 
-        public virtual byte[] execute(ICommandContext commandContext)
+        public virtual byte[] Execute(ICommandContext commandContext)
         {
             if (ReferenceEquals(modelId, null))
             {
                 throw new ActivitiIllegalArgumentException("modelId is null");
             }
 
-            byte[] bytes = commandContext.ModelEntityManager.findEditorSourceExtraByModelId(modelId);
+            byte[] bytes = commandContext.ModelEntityManager.FindEditorSourceExtraByModelId(modelId);
 
             return bytes;
         }

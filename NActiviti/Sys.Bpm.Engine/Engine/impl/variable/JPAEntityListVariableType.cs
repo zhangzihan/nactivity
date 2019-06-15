@@ -17,7 +17,7 @@ namespace org.activiti.engine.impl.variable
     /// 
     /// 
     /// </summary>
-    public class JPAEntityListVariableType : AbstractVariableType, ICacheableVariable
+    public class JPAEntityListVariableType : AbstractVariableType, ICacheableVariable, IJPAEntityListVariableType
     {
 
         public const string TYPE_NAME = "jpa-entity-list";
@@ -55,24 +55,23 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public override bool isAbleToStore(object value)
+        public override bool IsAbleToStore(object value)
         {
             bool canStore = false;
 
-            if (value is IList<object>)
+            if (value is IList<object> list)
             {
-                IList<object> list = (IList<object>)value;
                 if (list.Count > 0)
                 {
                     // We can only store the list if we are sure it's actually a
                     // list of JPA entities. In case the
                     // list is empty, we don't store it.
                     canStore = true;
-                    Type entityClass = mappings.getEntityMetaData(list[0].GetType()).EntityClass;
+                    Type entityClass = mappings.GetEntityMetaData(list[0].GetType()).EntityClass;
 
                     foreach (object entity in list)
                     {
-                        canStore = entity != null && mappings.isJPAEntity(entity) && mappings.getEntityMetaData(entity.GetType()).EntityClass.Equals(entityClass);
+                        canStore = entity != null && mappings.IsJPAEntity(entity) && mappings.GetEntityMetaData(entity.GetType()).EntityClass.Equals(entityClass);
                         if (!canStore)
                         {
                             // In case the object is not a JPA entity or the class
@@ -85,9 +84,9 @@ namespace org.activiti.engine.impl.variable
             return canStore;
         }
 
-        public override void setValue(object value, IValueFields valueFields)
+        public override void SetValue(object value, IValueFields valueFields)
         {
-            IEntityManagerSession entityManagerSession = Context.CommandContext.getSession<IEntityManagerSession>();
+            IEntityManagerSession entityManagerSession = Context.CommandContext.GetSession<IEntityManagerSession>();
             if (entityManagerSession == null)
             {
                 throw new ActivitiException("Cannot set JPA variable: " + typeof(IEntityManagerSession) + " not configured");
@@ -99,7 +98,7 @@ namespace org.activiti.engine.impl.variable
                 // If we don't do this, in some cases the primary key will not yet
                 // be set in the object
                 // which will cause exceptions down the road.
-                entityManagerSession.flush();
+                entityManagerSession.Flush();
             }
 
             if (value is IList<object> && ((IList<object>)value).Count > 0)
@@ -107,14 +106,14 @@ namespace org.activiti.engine.impl.variable
                 IList<object> list = (IList<object>)value;
                 IList<string> ids = new List<string>();
 
-                string type = mappings.getJPAClassString(list[0]);
+                string type = mappings.GetJPAClassString(list[0]);
                 foreach (object entry in list)
                 {
-                    ids.Add(mappings.getJPAIdString(entry));
+                    ids.Add(mappings.GetJPAIdString(entry));
                 }
 
                 // Store type in text field and the ID's as a serialized array
-                valueFields.Bytes = serializeIds(ids);
+                valueFields.Bytes = SerializeIds(ids);
                 valueFields.TextValue = type;
 
             }
@@ -130,19 +129,19 @@ namespace org.activiti.engine.impl.variable
 
         }
 
-        public override object getValue(IValueFields valueFields)
+        public override object GetValue(IValueFields valueFields)
         {
             byte[] bytes = valueFields.Bytes;
-            if (!ReferenceEquals(valueFields.TextValue, null) && bytes != null)
+            if (!(valueFields.TextValue is null) && !(bytes is null))
             {
                 string entityClass = valueFields.TextValue;
 
                 IList<object> result = new List<object>();
-                string[] ids = deserializeIds(bytes);
+                string[] ids = DeserializeIds(bytes);
 
                 foreach (string id in ids)
                 {
-                    result.Add(mappings.getJPAEntity(entityClass, id));
+                    result.Add(mappings.GetJPAEntity(entityClass, id));
                 }
 
                 return result;
@@ -151,7 +150,7 @@ namespace org.activiti.engine.impl.variable
         }
 
         /// <returns> a bytearray containing all ID's in the given string serialized as an array. </returns>
-        protected internal virtual byte[] serializeIds(IList<string> ids)
+        protected internal virtual byte[] SerializeIds(IList<string> ids)
         {
             try
             {
@@ -171,7 +170,7 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        protected internal virtual string[] deserializeIds(byte[] bytes)
+        protected internal virtual string[] DeserializeIds(byte[] bytes)
         {
             try
             {

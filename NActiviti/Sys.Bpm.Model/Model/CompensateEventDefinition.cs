@@ -44,10 +44,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            CompensateEventDefinition clone = new CompensateEventDefinition();
-            clone.Values = this;
+            CompensateEventDefinition clone = new CompensateEventDefinition
+            {
+                Values = this
+            };
             return clone;
         }
 

@@ -65,7 +65,7 @@ namespace org.activiti.engine.impl.webservice
                 if (this.client == null)
                 {
                     // TODO refactor to use configuration
-                    ISyncWebServiceClientFactory factory = (ISyncWebServiceClientFactory)ReflectUtil.instantiate(ProcessEngineConfigurationImpl.DEFAULT_WS_SYNC_FACTORY);
+                    ISyncWebServiceClientFactory factory = (ISyncWebServiceClientFactory)ReflectUtil.Instantiate(ProcessEngineConfigurationImpl.DEFAULT_WS_SYNC_FACTORY);
                     this.client = factory.create(this.wsdlLocation);
                 }
                 return this.client;

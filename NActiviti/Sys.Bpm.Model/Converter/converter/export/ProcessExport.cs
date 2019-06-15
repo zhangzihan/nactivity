@@ -27,56 +27,56 @@ namespace org.activiti.bpmn.converter.export
         /// </summary>
         public static readonly IList<ExtensionAttribute> defaultProcessAttributes = new List<ExtensionAttribute>()
         {
-            new ExtensionAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID),
-            new ExtensionAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME),
-            new ExtensionAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_PROCESS_EXECUTABLE),
-            new ExtensionAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_PROCESS_CANDIDATE_USERS),
-            new ExtensionAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_PROCESS_CANDIDATE_GROUPS)
+            new ExtensionAttribute(BpmnXMLConstants.ATTRIBUTE_ID),
+            new ExtensionAttribute(BpmnXMLConstants.ATTRIBUTE_NAME),
+            new ExtensionAttribute(BpmnXMLConstants.ATTRIBUTE_PROCESS_EXECUTABLE),
+            new ExtensionAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_PROCESS_CANDIDATE_USERS),
+            new ExtensionAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_PROCESS_CANDIDATE_GROUPS)
         };
-        public static void writeProcess(Process process, XMLStreamWriter xtw)
+        public static void WriteProcess(Process process, XMLStreamWriter xtw)
         {
             // start process element
-            xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_PROCESS);
-            xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID, process.Id);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_PROCESS, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, process.Id);
 
             if (!string.IsNullOrWhiteSpace(process.Name))
             {
-                xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME, process.Name);
+                xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, process.Name);
             }
 
-            xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_PROCESS_EXECUTABLE, Convert.ToString(process.Executable));
+            xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_PROCESS_EXECUTABLE, process.Executable ? "true" : "false");
 
             if (process.CandidateStarterUsers.Count > 0)
             {
-                xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_PROCESS_CANDIDATE_USERS, BpmnXMLUtil.convertToDelimitedString(process.CandidateStarterUsers));
+                xtw.WriteAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_PROCESS_CANDIDATE_USERS, BpmnXMLUtil.ConvertToDelimitedString(process.CandidateStarterUsers));
             }
 
             if (process.CandidateStarterGroups.Count > 0)
             {
-                xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_PROCESS_CANDIDATE_GROUPS, BpmnXMLUtil.convertToDelimitedString(process.CandidateStarterGroups));
+                xtw.WriteAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_PROCESS_CANDIDATE_GROUPS, BpmnXMLUtil.ConvertToDelimitedString(process.CandidateStarterGroups));
             }
 
             // write custom attributes
-            BpmnXMLUtil.writeCustomAttributes(process.Attributes.Values, xtw, defaultProcessAttributes);
+            BpmnXMLUtil.WriteCustomAttributes(process.Attributes.Values, xtw, defaultProcessAttributes);
 
             if (!string.IsNullOrWhiteSpace(process.Documentation))
             {
 
-                xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DOCUMENTATION);
-                xtw.writeCharacters(process.Documentation);
-                xtw.writeEndElement();
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_DOCUMENTATION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteCharacters(process.Documentation);
+                xtw.WriteEndElement();
             }
 
-            bool didWriteExtensionStartElement = ActivitiListenerExport.writeListeners(process, false, xtw);
-            didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(process, didWriteExtensionStartElement, xtw);
+            bool didWriteExtensionStartElement = ActivitiListenerExport.WriteListeners(process, false, xtw);
+            didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(process, didWriteExtensionStartElement, xtw);
 
             if (didWriteExtensionStartElement)
             {
                 // closing extensions element
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
 
-            LaneExport.writeLanes(process, xtw);
+            LaneExport.WriteLanes(process, xtw);
         }
     }
 

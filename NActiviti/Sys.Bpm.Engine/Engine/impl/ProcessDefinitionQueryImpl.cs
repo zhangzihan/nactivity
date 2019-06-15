@@ -21,7 +21,7 @@ namespace org.activiti.engine.impl
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.repository;
-    using Sys;
+    using Sys.Workflow;
 
     [Serializable]
     public class ProcessDefinitionQueryImpl : AbstractQuery<IProcessDefinitionQuery, IProcessDefinition>, IProcessDefinitionQuery
@@ -40,8 +40,8 @@ namespace org.activiti.engine.impl
         private string startForm;
         private string name;
         private string nameLike;
-        private string deploymentId_;
-        private string[] deploymentIds_;
+        private string _deploymentId;
+        private string[] _deploymentIds;
         private string key;
         private string keyLike;
         private string[] keys;
@@ -74,25 +74,20 @@ namespace org.activiti.engine.impl
         {
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionId(string processDefinitionId)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionId(string processDefinitionId)
         {
             this.id = processDefinitionId;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionIds(string[] processDefinitionIds)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionIds(string[] processDefinitionIds)
         {
             this.ids = processDefinitionIds;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionCategory(string category)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionCategory(string category)
         {
-            //这里没看明白activiti为什么抛出异常,允许从业务角度讲可以理解,但是从程序角度讲有点限制死了.
-            //if (ReferenceEquals(category, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("category is null");
-            //}
             if (string.IsNullOrWhiteSpace(category))
             {
                 this.category = null;
@@ -102,13 +97,8 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionCategoryLike(string categoryLike)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionCategoryLike(string categoryLike)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (ReferenceEquals(categoryLike, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("categoryLike is null");
-            //}
             if (string.IsNullOrWhiteSpace(categoryLike))
             {
                 this.categoryLike = null;
@@ -118,13 +108,8 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionCategoryNotEquals(string categoryNotEquals)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionCategoryNotEquals(string categoryNotEquals)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (ReferenceEquals(categoryNotEquals, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("categoryNotEquals is null");
-            //}
             if (string.IsNullOrWhiteSpace(categoryNotEquals))
             {
                 this.categoryNotEquals = null;
@@ -134,13 +119,8 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionName(string name)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionName(string name)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (ReferenceEquals(name, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("name is null");
-            //}
             if (string.IsNullOrWhiteSpace(name))
             {
                 this.name = null;
@@ -150,13 +130,8 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionNameLike(string nameLike)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionNameLike(string nameLike)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (ReferenceEquals(nameLike, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("nameLike is null");
-            //}
             if (string.IsNullOrWhiteSpace(nameLike))
             {
                 this.nameLike = null;
@@ -166,45 +141,30 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery deploymentId(string deploymentId)
+        public virtual IProcessDefinitionQuery SetDeploymentId(string deploymentId)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (ReferenceEquals(deploymentId, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("id is null");
-            //}
             if (string.IsNullOrWhiteSpace(deploymentId))
             {
-                this.deploymentId_ = null;
+                this._deploymentId = null;
                 return this;
             }
-            this.deploymentId_ = deploymentId;
+            this._deploymentId = deploymentId;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery deploymentIds(string[] deploymentIds)
+        public virtual IProcessDefinitionQuery SetDeploymentIds(string[] deploymentIds)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (deploymentIds == null)
-            //{
-            //    throw new ActivitiIllegalArgumentException("ids are null");
-            //}
             if (deploymentIds == null)
             {
-                this.deploymentIds_ = null;
+                this._deploymentIds = null;
                 return this;
             }
-            this.deploymentIds_ = deploymentIds;
+            this._deploymentIds = deploymentIds;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionKey(string key)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionKey(string key)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (ReferenceEquals(key, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("key is null");
-            //}
             if (string.IsNullOrWhiteSpace(key))
             {
                 this.key = null;
@@ -214,13 +174,8 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionKeys(string[] keys)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionKeys(string[] keys)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (keys == null)
-            //{
-            //    throw new ActivitiIllegalArgumentException("keys is null");
-            //}
             if (keys == null)
             {
                 this.keys = null;
@@ -230,13 +185,8 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionKeyLike(string keyLike)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionKeyLike(string keyLike)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (ReferenceEquals(keyLike, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("keyLike is null");
-            //}
             if (string.IsNullOrWhiteSpace(keyLike))
             {
                 this.keyLike = null;
@@ -246,13 +196,8 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionResourceName(string resourceName)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionResourceName(string resourceName)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (ReferenceEquals(resourceName, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("resourceName is null");
-            //}
             if (string.IsNullOrWhiteSpace(resourceName))
             {
                 this.resourceName = null;
@@ -262,13 +207,8 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionResourceNameLike(string resourceNameLike)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionResourceNameLike(string resourceNameLike)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (ReferenceEquals(resourceNameLike, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("resourceNameLike is null");
-            //}
             if (string.IsNullOrWhiteSpace(resourceNameLike))
             {
                 this.resourceNameLike = null;
@@ -278,79 +218,69 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionVersion(int? version)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionVersion(int? version)
         {
-            checkVersion(version);
+            CheckVersion(version);
             this.version = version;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionVersionGreaterThan(int? processDefinitionVersion)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionVersionGreaterThan(int? processDefinitionVersion)
         {
-            checkVersion(processDefinitionVersion);
+            CheckVersion(processDefinitionVersion);
             this.versionGt = processDefinitionVersion;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionVersionGreaterThanOrEquals(int? processDefinitionVersion)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionVersionGreaterThanOrEquals(int? processDefinitionVersion)
         {
-            checkVersion(processDefinitionVersion);
+            CheckVersion(processDefinitionVersion);
             this.versionGte = processDefinitionVersion;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionVersionLowerThan(int? processDefinitionVersion)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionVersionLowerThan(int? processDefinitionVersion)
         {
-            checkVersion(processDefinitionVersion);
+            CheckVersion(processDefinitionVersion);
             this.versionLt = processDefinitionVersion;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionVersionLowerThanOrEquals(int? processDefinitionVersion)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionVersionLowerThanOrEquals(int? processDefinitionVersion)
         {
-            checkVersion(processDefinitionVersion);
+            CheckVersion(processDefinitionVersion);
             this.versionLte = processDefinitionVersion;
             return this;
         }
 
-        protected internal virtual void checkVersion(int? version)
+        protected internal virtual void CheckVersion(int? version)
         {
-            //这里没看明白activiti为什么抛出异常,允许从业务角度讲可以理解,但是从程序角度讲有点限制死了.
-            //if (version == null)
-            //{
-            //    throw new ActivitiIllegalArgumentException("version is null");
-            //}
-            //else if (version <= 0)
-            //{
-            //    throw new ActivitiIllegalArgumentException("version must be positive");
-            //}
+            if (version <= 0)
+            {
+                throw new ActivitiIllegalArgumentException("version must be positive");
+            }
         }
 
-        public virtual IProcessDefinitionQuery latestVersion()
+        public virtual IProcessDefinitionQuery SetLatestVersion()
         {
             this.latest = true;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery active()
+        public virtual IProcessDefinitionQuery SetActive()
         {
             this.suspensionState = SuspensionStateProvider.ACTIVE;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery suspended()
+        public virtual IProcessDefinitionQuery SetSuspended()
         {
             this.suspensionState = SuspensionStateProvider.SUSPENDED;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionTenantId(string tenantId)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionTenantId(string tenantId)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (ReferenceEquals(tenantId, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("processDefinition tenantId is null");
-            //}
             if (string.IsNullOrWhiteSpace(tenantId))
             {
                 this.tenantId = null;
@@ -360,13 +290,8 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionTenantIdLike(string tenantIdLike)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionTenantIdLike(string tenantIdLike)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (ReferenceEquals(tenantIdLike, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("process definition tenantId is null");
-            //}
             if (string.IsNullOrWhiteSpace(tenantIdLike))
             {
                 this.tenantIdLike = null;
@@ -377,39 +302,30 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionWithoutTenantId()
+        public virtual IProcessDefinitionQuery SetProcessDefinitionWithoutTenantId()
         {
             this.withoutTenantId = true;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery messageEventSubscription(string messageName)
+        public virtual IProcessDefinitionQuery SetMessageEventSubscription(string messageName)
         {
-            return eventSubscription("message", messageName);
+            return SetEventSubscription("message", messageName);
         }
 
-        public virtual IProcessDefinitionQuery messageEventSubscriptionName(string messageName)
+        public virtual IProcessDefinitionQuery SetMessageEventSubscriptionName(string messageName)
         {
-            return eventSubscription("message", messageName);
+            return SetEventSubscription("message", messageName);
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionStarter(string procDefId)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionStarter(string procDefId)
         {
             this.procDefId = procDefId;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery eventSubscription(string eventType, string eventName)
+        public virtual IProcessDefinitionQuery SetEventSubscription(string eventType, string eventName)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (ReferenceEquals(eventName, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("event name is null");
-            //}
-            //if (ReferenceEquals(eventType, null))
-            //{
-            //    throw new ActivitiException("event type is null");
-            //}
             if (string.IsNullOrWhiteSpace(eventType) || string.IsNullOrWhiteSpace(eventName))
             {
                 this.eventSubscriptionType = null;
@@ -428,12 +344,12 @@ namespace org.activiti.engine.impl
                 // Similar behaviour as the TaskQuery.taskCandidateUser() which
                 // includes the groups the candidate
                 // user is part of
-                if (!ReferenceEquals(authorizationUserId, null))
+                if (!(authorizationUserId is null))
                 {
                     IUserGroupLookupProxy userGroupLookupProxy = Context.ProcessEngineConfiguration.UserGroupLookupProxy;
                     if (userGroupLookupProxy != null)
                     {
-                        return userGroupLookupProxy.getGroupsForCandidateUser(authorizationUserId);
+                        return userGroupLookupProxy.GetGroupsForCandidateUser(authorizationUserId);
                     }
                     else
                     {
@@ -447,75 +363,75 @@ namespace org.activiti.engine.impl
 
         // sorting ////////////////////////////////////////////
 
-        public virtual IProcessDefinitionQuery orderByDeploymentId()
+        public virtual IProcessDefinitionQuery OrderByDeploymentId()
         {
-            return orderBy(ProcessDefinitionQueryProperty.DEPLOYMENT_ID);
+            return SetOrderBy(ProcessDefinitionQueryProperty.DEPLOYMENT_ID);
         }
 
-        public virtual IProcessDefinitionQuery orderByProcessDefinitionKey()
+        public virtual IProcessDefinitionQuery OrderByProcessDefinitionKey()
         {
-            return orderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_KEY);
+            return SetOrderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_KEY);
         }
 
-        public virtual IProcessDefinitionQuery orderByProcessDefinitionCategory()
+        public virtual IProcessDefinitionQuery OrderByProcessDefinitionCategory()
         {
-            return orderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_CATEGORY);
+            return SetOrderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_CATEGORY);
         }
 
-        public virtual IProcessDefinitionQuery orderByProcessDefinitionId()
+        public virtual IProcessDefinitionQuery OrderByProcessDefinitionId()
         {
-            return orderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_ID);
+            return SetOrderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_ID);
         }
 
-        public virtual IProcessDefinitionQuery orderByProcessDefinitionVersion()
+        public virtual IProcessDefinitionQuery OrderByProcessDefinitionVersion()
         {
-            return orderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_VERSION);
+            return SetOrderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_VERSION);
         }
 
-        public virtual IProcessDefinitionQuery orderByProcessDefinitionName()
+        public virtual IProcessDefinitionQuery OrderByProcessDefinitionName()
         {
-            return orderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_NAME);
+            return SetOrderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_NAME);
         }
 
-        public virtual IProcessDefinitionQuery orderByTenantId()
+        public virtual IProcessDefinitionQuery OrderByTenantId()
         {
-            return orderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_TENANT_ID);
+            return SetOrderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_TENANT_ID);
         }
 
         // results ////////////////////////////////////////////
 
-        public override long executeCount(ICommandContext commandContext)
+        public override long ExecuteCount(ICommandContext commandContext)
         {
-            checkQueryOk();
+            CheckQueryOk();
 
-            return commandContext.ProcessDefinitionEntityManager.findProcessDefinitionCountByQueryCriteria(this);
+            return commandContext.ProcessDefinitionEntityManager.FindProcessDefinitionCountByQueryCriteria(this);
         }
 
-        public override IList<IProcessDefinition> executeList(ICommandContext commandContext, Page page)
+        public override IList<IProcessDefinition> ExecuteList(ICommandContext commandContext, Page page)
         {
-            checkQueryOk();
+            CheckQueryOk();
 
-            return commandContext.ProcessDefinitionEntityManager.findProcessDefinitionsByQueryCriteria(this, page);
+            return commandContext.ProcessDefinitionEntityManager.FindProcessDefinitionsByQueryCriteria(this, page);
         }
 
-        protected internal override void checkQueryOk()
+        protected internal override void CheckQueryOk()
         {
-            base.checkQueryOk();
+            base.CheckQueryOk();
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionBusinessKey(string businessKey)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionBusinessKey(string businessKey)
         {
-            this. businessKey = businessKey;
+            this.businessKey = businessKey;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionBusinessPath(string businessPath)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionBusinessPath(string businessPath)
         {
             this.businessPath = businessPath;
             return this;
         }
 
-        public virtual IProcessDefinitionQuery processDefinitionStartForm(string startForm)
+        public virtual IProcessDefinitionQuery SetProcessDefinitionStartForm(string startForm)
         {
             this.startForm = startForm;
             return this;
@@ -524,19 +440,19 @@ namespace org.activiti.engine.impl
         public virtual string BusinessKey
         {
             get => businessKey;
-            set => processDefinitionBusinessKey(value);
+            set => SetProcessDefinitionBusinessKey(value);
         }
 
         public virtual string BusinessPath
         {
             get => businessPath;
-            set => processDefinitionBusinessPath(value);
+            set => SetProcessDefinitionBusinessPath(value);
         }
 
         public virtual string StartForm
         {
             get => startForm;
-            set => processDefinitionStartForm(value);
+            set => SetProcessDefinitionStartForm(value);
         }
 
         // getters ////////////////////////////////////////////
@@ -545,18 +461,18 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return deploymentId_;
+                return _deploymentId;
             }
-            set => deploymentId_ = value;
+            set => _deploymentId = value;
         }
 
         public virtual string[] DeploymentIds
         {
             get
             {
-                return deploymentIds_;
+                return _deploymentIds;
             }
-            set => deploymentIds_ = value;
+            set => _deploymentIds = value;
         }
 
         public virtual string Id
@@ -628,7 +544,7 @@ namespace org.activiti.engine.impl
             {
                 return version;
             }
-            set => processDefinitionVersion(value);
+            set => SetProcessDefinitionVersion(value);
         }
 
         public virtual int? VersionGt
@@ -637,7 +553,7 @@ namespace org.activiti.engine.impl
             {
                 return versionGt;
             }
-            set => processDefinitionVersionGreaterThan(value);
+            set => SetProcessDefinitionVersionGreaterThan(value);
         }
 
         public virtual int? VersionGte
@@ -646,7 +562,7 @@ namespace org.activiti.engine.impl
             {
                 return versionGte;
             }
-            set => processDefinitionVersionGreaterThanOrEquals(value);
+            set => SetProcessDefinitionVersionGreaterThanOrEquals(value);
         }
 
         public virtual int? VersionLt
@@ -655,7 +571,7 @@ namespace org.activiti.engine.impl
             {
                 return versionLt;
             }
-            set => processDefinitionVersionLowerThan(value);
+            set => SetProcessDefinitionVersionLowerThan(value);
         }
 
         public virtual int? VersionLte
@@ -664,7 +580,7 @@ namespace org.activiti.engine.impl
             {
                 return versionLte;
             }
-            set => processDefinitionVersionLowerThanOrEquals(value);
+            set => SetProcessDefinitionVersionLowerThanOrEquals(value);
         }
 
         public virtual bool Latest
@@ -678,7 +594,7 @@ namespace org.activiti.engine.impl
                 latest = value;
                 if (value == true)
                 {
-                    latestVersion();
+                    SetLatestVersion();
                 }
             }
         }
@@ -689,7 +605,7 @@ namespace org.activiti.engine.impl
             {
                 return category;
             }
-            set => processDefinitionCategory(value);
+            set => SetProcessDefinitionCategory(value);
         }
 
         public virtual string CategoryLike
@@ -698,7 +614,7 @@ namespace org.activiti.engine.impl
             {
                 return categoryLike;
             }
-            set => processDefinitionCategoryLike(value);
+            set => SetProcessDefinitionCategoryLike(value);
         }
 
         public virtual string ResourceName
@@ -707,7 +623,7 @@ namespace org.activiti.engine.impl
             {
                 return resourceName;
             }
-            set => processDefinitionResourceName(value);
+            set => SetProcessDefinitionResourceName(value);
         }
 
         public virtual string ResourceNameLike
@@ -716,7 +632,7 @@ namespace org.activiti.engine.impl
             {
                 return resourceNameLike;
             }
-            set => processDefinitionResourceNameLike(value);
+            set => SetProcessDefinitionResourceNameLike(value);
         }
 
         public virtual ISuspensionState SuspensionState
@@ -738,7 +654,7 @@ namespace org.activiti.engine.impl
             {
                 return categoryNotEquals;
             }
-            set => processDefinitionCategoryNotEquals(value);
+            set => SetProcessDefinitionCategoryNotEquals(value);
         }
 
         public virtual string TenantId
@@ -747,7 +663,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantId;
             }
-            set => processDefinitionTenantId(value);
+            set => SetProcessDefinitionTenantId(value);
         }
 
         public virtual string TenantIdLike
@@ -756,7 +672,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantIdLike;
             }
-            set => processDefinitionTenantIdLike(value);
+            set => SetProcessDefinitionTenantIdLike(value);
         }
 
         public virtual bool WithoutTenantId
@@ -769,7 +685,7 @@ namespace org.activiti.engine.impl
             {
                 if (value == true)
                 {
-                    processDefinitionWithoutTenantId();
+                    SetProcessDefinitionWithoutTenantId();
                 }
             }
         }
@@ -780,7 +696,7 @@ namespace org.activiti.engine.impl
             {
                 return authorizationUserId;
             }
-            set => startableByUser(value);
+            set => SetStartableByUser(value);
         }
 
         public virtual string ProcDefId
@@ -789,7 +705,7 @@ namespace org.activiti.engine.impl
             {
                 return procDefId;
             }
-            set => processDefinitionStarter(value);
+            set => SetProcessDefinitionStarter(value);
         }
 
         public virtual string EventSubscriptionName
@@ -810,13 +726,8 @@ namespace org.activiti.engine.impl
             set => EventSubscriptionType = value;
         }
 
-        public virtual IProcessDefinitionQuery startableByUser(string userId)
+        public virtual IProcessDefinitionQuery SetStartableByUser(string userId)
         {
-            //这里没看明白activiti为什么抛出异常
-            //if (ReferenceEquals(userId, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("userId is null");
-            //}
             if (string.IsNullOrWhiteSpace(userId))
             {
                 this.authorizationUserId = null;

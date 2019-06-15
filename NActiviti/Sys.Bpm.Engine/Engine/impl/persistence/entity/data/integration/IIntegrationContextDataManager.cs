@@ -22,7 +22,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.integration
 
     public interface IIntegrationContextDataManager : IDataManager<IIntegrationContextEntity>
     {
-        IList<IIntegrationContextEntity> findIntegrationContextByExecutionId(string executionId);
+        IList<IIntegrationContextEntity> FindIntegrationContextByExecutionId(string executionId);
 
     }
 

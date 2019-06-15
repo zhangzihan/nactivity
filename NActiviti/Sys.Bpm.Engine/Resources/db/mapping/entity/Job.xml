@@ -77,7 +77,7 @@
   </Delete>
 
   <!-- JOB INSERT -->
-
+  
   <Insert Id="insertJob" ParameterMap="jobParameterMap">
     insert into ACT_RU_JOB (
     ID_,
@@ -171,10 +171,10 @@
     and REV_ = #{revision}
   </Update>
 
-  <Update Id="resetExpiredJob" parameterType="org.activiti.engine.impl.db.ListQueryParameterObject">
-    update ${prefix}ACT_RU_JOB
+  <Update Id="resetExpiredJob">
+    update ACT_RU_JOB
     set LOCK_OWNER_ = null, LOCK_EXP_TIME_ = null
-    where ID_ = #{id,jdbcType=VARCHAR}
+    where ID_ = #{id}
   </Update>
 
   <!-- JOB UPDATE STATEMENTS -->

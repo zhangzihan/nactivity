@@ -30,7 +30,7 @@
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
             return new Resource(Id, Name);
         }

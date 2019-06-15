@@ -15,7 +15,7 @@
 namespace org.activiti.bpmn.model
 {
 
-    public class BusinessRuleTask : Task
+    public class BusinessRuleTask : TaskActivity
     {
 
         protected internal string resultVariableName;
@@ -89,10 +89,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            BusinessRuleTask clone = new BusinessRuleTask();
-            clone.Values = this;
+            BusinessRuleTask clone = new BusinessRuleTask
+            {
+                Values = this
+            };
             return clone;
         }
 

@@ -10,7 +10,7 @@ namespace org.activiti.bpmn.converter
     {
         protected XmlReader reader = null;
         protected internal XElement element = null;
-        private XDocument document = null;
+        private readonly XDocument document = null;
         internal bool isEmpty;
 
         public XMLStreamReader(Stream input)
@@ -50,14 +50,15 @@ namespace org.activiti.bpmn.converter
         public override ReadState ReadState => reader.ReadState;
 
         public bool EndElement => reader.NodeType == XmlNodeType.EndElement || reader.IsEmptyElement;
-        public bool IsStartElement() { return reader.IsStartElement(); }
 
-        public bool IsStartElement(string name)
+        public new bool IsStartElement() { return reader.IsStartElement(); }
+
+        public new bool IsStartElement(string name)
         {
             return reader.IsStartElement(name);
         }
 
-        public bool IsStartElement(string localname, string ns)
+        public new bool IsStartElement(string localname, string ns)
         {
             return reader.IsStartElement(localname, ns);
         }
@@ -93,18 +94,18 @@ namespace org.activiti.bpmn.converter
             return reader.MoveToAttribute(name);
         }
 
-        public string getNamespacePrefix(int i)
+        public string GetNamespacePrefix(int i)
         {
             var attr = element.Attributes().Where(x => x.IsNamespaceDeclaration).ElementAt(i);
 
             return attr.Name.LocalName;
         }
 
-        public string getNamespaceURI(int i)
+        public string GetNamespaceURI(int i)
         {
             var attr = element.Attributes().Where(x => x.IsNamespaceDeclaration).ElementAt(i);
 
-            return attr.Name.NamespaceName;
+            return attr?.Value;
         }
 
         public override bool MoveToAttribute(string name, string ns)
@@ -144,7 +145,7 @@ namespace org.activiti.bpmn.converter
 
         public IXmlLineInfo LineInfo => reader as IXmlLineInfo;
 
-        public bool hasNext()
+        public bool HasNext()
         {
             if (isEmpty)
             {
@@ -169,17 +170,17 @@ namespace org.activiti.bpmn.converter
             return next;
         }
 
-        public bool next()
+        public bool Next()
         {
-            return hasNext();
+            return HasNext();
         }
 
-        public string getAttributeValue(string name)
+        public string GetAttributeValue(string name)
         {
             return reader.GetAttribute(name);
         }
 
-        public string getAttributeValue(string namespaceUri, string name)
+        public string GetAttributeValue(string namespaceUri, string name)
         {
             return reader.GetAttribute(name, namespaceUri);
         }

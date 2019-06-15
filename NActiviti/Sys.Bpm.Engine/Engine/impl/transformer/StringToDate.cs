@@ -21,9 +21,14 @@ namespace org.activiti.engine.impl.transformer
     /// </summary>
     public class StringToDate : AbstractTransformer
     {
-        protected internal override object primTransform(object anObject)
+        protected internal override object PrimTransform(object anObject)
         {
-            return DateTime.Parse(anObject?.ToString());
+            if (DateTime.TryParse(anObject?.ToString(), out var d))
+            {
+                return d;
+            }
+
+            return null;
         }
     }
 

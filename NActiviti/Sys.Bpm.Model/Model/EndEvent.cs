@@ -15,10 +15,12 @@ namespace org.activiti.bpmn.model
     public class EndEvent : Event
     {
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            EndEvent clone = new EndEvent();
-            clone.Values = this;
+            EndEvent clone = new EndEvent
+            {
+                Values = this
+            };
             return clone;
         }
 

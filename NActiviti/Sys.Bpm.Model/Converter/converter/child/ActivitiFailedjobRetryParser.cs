@@ -13,7 +13,7 @@
                 return org.activiti.bpmn.constants.BpmnXMLConstants.FAILED_JOB_RETRY_TIME_CYCLE;
             }
         }
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
             if (!(parentElement is Activity))
             {

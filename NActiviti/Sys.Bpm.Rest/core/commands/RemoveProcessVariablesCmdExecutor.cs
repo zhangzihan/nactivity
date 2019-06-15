@@ -9,11 +9,11 @@ namespace org.activiti.cloud.services.core.commands
     /// <summary>
     /// 
     /// </summary>
-    public class RemoveProcessVariablesCmdExecutor : CommandExecutor<RemoveProcessVariablesCmd>
+    public class RemoveProcessVariablesCmdExecutor : ICommandExecutor<RemoveProcessVariablesCmd>
     {
 
-        private ProcessEngineWrapper processEngine;
-        private IMessageChannel<RemoveProcessVariablesResults> commandResults;
+        private readonly ProcessEngineWrapper processEngine;
+        private readonly IMessageChannel<RemoveProcessVariablesResults> commandResults;
 
         /// <summary>
         /// 
@@ -41,11 +41,11 @@ namespace org.activiti.cloud.services.core.commands
         /// 
         /// </summary>
         /// <param name="cmd"></param>
-        public virtual void execute(RemoveProcessVariablesCmd cmd)
+        public virtual void Execute(RemoveProcessVariablesCmd cmd)
         {
-            processEngine.removeProcessVariables(cmd);
+            processEngine.RemoveProcessVariables(cmd);
             RemoveProcessVariablesResults cmdResult = new RemoveProcessVariablesResults(cmd.Id);
-            commandResults.send(MessageBuilder<RemoveProcessVariablesResults>.withPayload(cmdResult).build());
+            commandResults.Send(MessageBuilder<RemoveProcessVariablesResults>.WithPayload(cmdResult).Build());
         }
     }
 }

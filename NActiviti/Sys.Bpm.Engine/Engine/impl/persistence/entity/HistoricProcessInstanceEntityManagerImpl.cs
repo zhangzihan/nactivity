@@ -40,24 +40,24 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual IHistoricProcessInstanceEntity create(IExecutionEntity processInstanceExecutionEntity)
+        public virtual IHistoricProcessInstanceEntity Create(IExecutionEntity processInstanceExecutionEntity)
         {
-            return historicProcessInstanceDataManager.create(processInstanceExecutionEntity);
+            return historicProcessInstanceDataManager.Create(processInstanceExecutionEntity);
         }
 
-        public virtual void deleteHistoricProcessInstanceByProcessDefinitionId(string processDefinitionId)
+        public virtual void DeleteHistoricProcessInstanceByProcessDefinitionId(string processDefinitionId)
         {
             if (HistoryManager.HistoryEnabled)
             {
-                IList<string> historicProcessInstanceIds = historicProcessInstanceDataManager.findHistoricProcessInstanceIdsByProcessDefinitionId(processDefinitionId);
+                IList<string> historicProcessInstanceIds = historicProcessInstanceDataManager.FindHistoricProcessInstanceIdsByProcessDefinitionId(processDefinitionId);
                 foreach (string historicProcessInstanceId in historicProcessInstanceIds)
                 {
-                    delete(new KeyValuePair<string, object>("id", historicProcessInstanceId));
+                    Delete(new KeyValuePair<string, object>("id", historicProcessInstanceId));
                 }
             }
         }
 
-        public override void delete(KeyValuePair<string, object> id)
+        public override void Delete(KeyValuePair<string, object> id)
         {
             string historicProcessInstanceId = id.Value?.ToString();
 
@@ -68,61 +68,61 @@ namespace org.activiti.engine.impl.persistence.entity
                     return;
                 }
 
-                IHistoricProcessInstanceEntity historicProcessInstance = findById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("id", historicProcessInstanceId));
+                IHistoricProcessInstanceEntity historicProcessInstance = FindById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("id", historicProcessInstanceId));
 
-                HistoricDetailEntityManager.deleteHistoricDetailsByProcessInstanceId(historicProcessInstanceId);
-                HistoricVariableInstanceEntityManager.deleteHistoricVariableInstanceByProcessInstanceId(historicProcessInstanceId);
-                HistoricActivityInstanceEntityManager.deleteHistoricActivityInstancesByProcessInstanceId(historicProcessInstanceId);
-                HistoricTaskInstanceEntityManager.deleteHistoricTaskInstancesByProcessInstanceId(historicProcessInstanceId);
-                HistoricIdentityLinkEntityManager.deleteHistoricIdentityLinksByProcInstance(historicProcessInstanceId);
-                CommentEntityManager.deleteCommentsByProcessInstanceId(historicProcessInstanceId);
+                HistoricDetailEntityManager.DeleteHistoricDetailsByProcessInstanceId(historicProcessInstanceId);
+                HistoricVariableInstanceEntityManager.DeleteHistoricVariableInstanceByProcessInstanceId(historicProcessInstanceId);
+                HistoricActivityInstanceEntityManager.DeleteHistoricActivityInstancesByProcessInstanceId(historicProcessInstanceId);
+                HistoricTaskInstanceEntityManager.DeleteHistoricTaskInstancesByProcessInstanceId(historicProcessInstanceId);
+                HistoricIdentityLinkEntityManager.DeleteHistoricIdentityLinksByProcInstance(historicProcessInstanceId);
+                CommentEntityManager.DeleteCommentsByProcessInstanceId(historicProcessInstanceId);
 
-                delete(historicProcessInstance, false);
+                Delete(historicProcessInstance, false);
 
                 // Also delete any sub-processes that may be active (ACT-821)
 
-                IList<IHistoricProcessInstanceEntity> selectList = historicProcessInstanceDataManager.findHistoricProcessInstancesBySuperProcessInstanceId(historicProcessInstanceId);
+                IList<IHistoricProcessInstanceEntity> selectList = historicProcessInstanceDataManager.FindHistoricProcessInstancesBySuperProcessInstanceId(historicProcessInstanceId);
                 foreach (IHistoricProcessInstanceEntity child in selectList)
                 {
-                    delete(new KeyValuePair<string, object>("id", child.Id)); // NEEDS to be by id, to come again through this method!
+                    Delete(new KeyValuePair<string, object>("id", child.Id)); // NEEDS to be by id, to come again through this method!
                 }
             }
         }
 
-        public virtual long findHistoricProcessInstanceCountByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery)
+        public virtual long FindHistoricProcessInstanceCountByQueryCriteria(IHistoricProcessInstanceQuery historicProcessInstanceQuery)
         {
             if (HistoryManager.HistoryEnabled)
             {
-                return historicProcessInstanceDataManager.findHistoricProcessInstanceCountByQueryCriteria(historicProcessInstanceQuery);
+                return historicProcessInstanceDataManager.FindHistoricProcessInstanceCountByQueryCriteria(historicProcessInstanceQuery);
             }
             return 0;
         }
 
-        public virtual IList<IHistoricProcessInstance> findHistoricProcessInstancesByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery)
+        public virtual IList<IHistoricProcessInstance> FindHistoricProcessInstancesByQueryCriteria(IHistoricProcessInstanceQuery historicProcessInstanceQuery)
         {
             if (HistoryManager.HistoryEnabled)
             {
-                return historicProcessInstanceDataManager.findHistoricProcessInstancesByQueryCriteria(historicProcessInstanceQuery);
+                return historicProcessInstanceDataManager.FindHistoricProcessInstancesByQueryCriteria(historicProcessInstanceQuery);
             }
             return new List<IHistoricProcessInstance>();
         }
-        public virtual IList<IHistoricProcessInstance> findHistoricProcessInstancesAndVariablesByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery)
+        public virtual IList<IHistoricProcessInstance> FindHistoricProcessInstancesAndVariablesByQueryCriteria(IHistoricProcessInstanceQuery historicProcessInstanceQuery)
         {
             if (HistoryManager.HistoryEnabled)
             {
-                return historicProcessInstanceDataManager.findHistoricProcessInstancesAndVariablesByQueryCriteria(historicProcessInstanceQuery);
+                return historicProcessInstanceDataManager.FindHistoricProcessInstancesAndVariablesByQueryCriteria(historicProcessInstanceQuery);
             }
             return new List<IHistoricProcessInstance>();
         }
 
-        public virtual IList<IHistoricProcessInstance> findHistoricProcessInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IHistoricProcessInstance> FindHistoricProcessInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return historicProcessInstanceDataManager.findHistoricProcessInstancesByNativeQuery(parameterMap, firstResult, maxResults);
+            return historicProcessInstanceDataManager.FindHistoricProcessInstancesByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findHistoricProcessInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindHistoricProcessInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return historicProcessInstanceDataManager.findHistoricProcessInstanceCountByNativeQuery(parameterMap);
+            return historicProcessInstanceDataManager.FindHistoricProcessInstanceCountByNativeQuery(parameterMap);
         }
 
         public virtual IHistoricProcessInstanceDataManager HistoricProcessInstanceDataManager

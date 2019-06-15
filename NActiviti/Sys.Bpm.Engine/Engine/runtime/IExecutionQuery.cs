@@ -29,44 +29,44 @@ namespace org.activiti.engine.runtime
 
         /// <summary>
         /// Only select executions which have the given process definition key. * </summary>
-        IExecutionQuery processDefinitionKey(string processDefinitionKey);
+        IExecutionQuery SetProcessDefinitionKey(string processDefinitionKey);
 
         /// <summary>
         /// Only select executions which have process definitions with the given keys. * </summary>
-        IExecutionQuery processDefinitionKeys(string[] processDefinitionKeys);
+        IExecutionQuery SetProcessDefinitionKeys(string[] processDefinitionKeys);
 
         /// <summary>
         /// Only select executions which have the given process definition id. * </summary>
-        IExecutionQuery processDefinitionId(string processDefinitionId);
+        IExecutionQuery SetProcessDefinitionId(string processDefinitionId);
 
         /// <summary>
         /// Only select executions which have the given process deployment id. *
         /// </summary>
         /// <param name="deploymentId"></param>
         /// <returns></returns>
-        IExecutionQuery processDeploymentId(string deploymentId);
+        IExecutionQuery SetProcessDeploymentId(string deploymentId);
 
         /// <summary>
         /// Only select executions which have the given process definition category. </summary>
-        IExecutionQuery processDefinitionCategory(string processDefinitionCategory);
+        IExecutionQuery SetProcessDefinitionCategory(string processDefinitionCategory);
 
         /// <summary>
         /// Only select executions which have the given process definition name. </summary>
-        IExecutionQuery processDefinitionName(string processDefinitionName);
+        IExecutionQuery SetProcessDefinitionName(string processDefinitionName);
 
         /// <summary>
         /// Only select executions which have the given process definition version.
         /// Particulary useful when used in combination with <seealso cref="#processDefinitionKey(String)"/>
         /// </summary>
-        IExecutionQuery processDefinitionVersion(int? processDefinitionVersion);
+        IExecutionQuery SetProcessDefinitionVersion(int? processDefinitionVersion);
 
         /// <summary>
         /// Only select executions which have the given process instance id. * </summary>
-        IExecutionQuery processInstanceId(string processInstanceId);
+        IExecutionQuery SetProcessInstanceId(string processInstanceId);
 
         /// <summary>
         /// Only select executions which have the given root process instance id. * </summary>
-        IExecutionQuery rootProcessInstanceId(string rootProcessInstanceId);
+        IExecutionQuery SetRootProcessInstanceId(string rootProcessInstanceId);
 
         /// <summary>
         /// Only executions with the given business key.
@@ -74,56 +74,56 @@ namespace org.activiti.engine.runtime
         /// Note that only process instances have a business key and as such, child executions will NOT be returned. If you want to return child executions of the process instance with the given business key
         /// too, use the <seealso cref="#processInstanceBusinessKey(String, boolean)"/> method with a boolean value of <i>true</i> instead.
         /// </summary>
-        IExecutionQuery processInstanceBusinessKey(string processInstanceBusinessKey);
+        IExecutionQuery SetProcessInstanceBusinessKey(string processInstanceBusinessKey);
 
         /// <summary>
         /// Only executions with the given business key. Similar to <seealso cref="#processInstanceBusinessKey(String)"/>, but allows to choose whether child executions are returned or not.
         /// </summary>
-        IExecutionQuery processInstanceBusinessKey(string processInstanceBusinessKey, bool includeChildExecutions);
+        IExecutionQuery ProcessInstanceBusinessKey(string processInstanceBusinessKey, bool includeChildExecutions);
 
         /// <summary>
         /// Only select executions with the given id. * </summary>
-        IExecutionQuery executionId(string executionId);
+        IExecutionQuery SetExecutionId(string executionId);
 
         /// <summary>
         /// Only select executions which contain an activity with the given id. * </summary>
-        IExecutionQuery activityId(string activityId);
+        IExecutionQuery SetActivityId(string activityId);
 
         /// <summary>
         /// Only select executions which are a direct child-execution of the execution with the given id.
         /// 
         /// </summary>
-        IExecutionQuery parentId(string parentId);
+        IExecutionQuery SetParentId(string parentId);
 
         /// <summary>
         /// Only selects executions that have a parent id set, ie non-processinstance executions.
         /// </summary>
-        IExecutionQuery onlyChildExecutions();
+        IExecutionQuery SetOnlyChildExecutions();
 
         /// <summary>
         /// Only selects executions that are a subprocess.
         /// </summary>
-        IExecutionQuery onlySubProcessExecutions();
+        IExecutionQuery SetOnlySubProcessExecutions();
 
         /// <summary>
         /// Only selects executions that have no parent id set, ie process instance executions
         /// </summary>
-        IExecutionQuery onlyProcessInstanceExecutions();
+        IExecutionQuery SetOnlyProcessInstanceExecutions();
 
         /// <summary>
         /// Only select process instances that have the given tenant id.
         /// </summary>
-        IExecutionQuery executionTenantId(string tenantId);
+        IExecutionQuery SetExecutionTenantId(string tenantId);
 
         /// <summary>
         /// Only select process instances with a tenant id like the given one.
         /// </summary>
-        IExecutionQuery executionTenantIdLike(string tenantIdLike);
+        IExecutionQuery SetExecutionTenantIdLike(string tenantIdLike);
 
         /// <summary>
         /// Only select process instances that do not have a tenant id.
         /// </summary>
-        IExecutionQuery executionWithoutTenantId();
+        IExecutionQuery SetExecutionWithoutTenantId();
 
         /// <summary>
         /// Only select executions which have a local variable with the given value. The type of variable is determined based on the value, using types configured in
@@ -131,7 +131,7 @@ namespace org.activiti.engine.runtime
         /// </summary>
         /// <param name="name">
         ///          name of the variable, cannot be null. </param>
-        IExecutionQuery variableValueEquals(string name, object value);
+        IExecutionQuery VariableValueEquals(string name, object value);
 
         /// <summary>
         /// Only select executions which have a local string variable with the given value, case insensitive.
@@ -144,13 +144,13 @@ namespace org.activiti.engine.runtime
         ///          name of the variable, cannot be null. </param>
         /// <param name="value">
         ///          value of the variable, cannot be null. </param>
-        IExecutionQuery variableValueEqualsIgnoreCase(string name, string value);
+        IExecutionQuery VariableValueEqualsIgnoreCase(string name, string value);
 
         /// <summary>
         /// Only select executions which have at least one local variable with the given value. The type of variable is determined based on the value, using types configured in
         /// <seealso cref="ProcessEngineConfiguration#getVariableTypes()"/> . Byte-arrays and <seealso cref="Serializable"/> objects (which are not primitive type wrappers) are not supported.
         /// </summary>
-        IExecutionQuery variableValueEquals(object value);
+        IExecutionQuery VariableValueEquals(object value);
 
         /// <summary>
         /// Only select executions which have a local variable with the given name, but with a different value than the passed value. Byte-arrays and <seealso cref="Serializable"/> objects (which are not primitive
@@ -158,7 +158,7 @@ namespace org.activiti.engine.runtime
         /// </summary>
         /// <param name="name">
         ///          name of the variable, cannot be null. </param>
-        IExecutionQuery variableValueNotEquals(string name, object value);
+        IExecutionQuery VariableValueNotEquals(string name, object value);
 
         /// <summary>
         /// Only select executions which have a local string variable which is not the given value, case insensitive.
@@ -171,7 +171,7 @@ namespace org.activiti.engine.runtime
         ///          name of the variable, cannot be null. </param>
         /// <param name="value">
         ///          value of the variable, cannot be null. </param>
-        IExecutionQuery variableValueNotEqualsIgnoreCase(string name, string value);
+        IExecutionQuery VariableValueNotEqualsIgnoreCase(string name, string value);
 
         /// <summary>
         /// Only select executions which have a local variable value greater than the passed value. Booleans, Byte-arrays and <seealso cref="Serializable"/> objects (which are not primitive type wrappers) are not
@@ -181,7 +181,7 @@ namespace org.activiti.engine.runtime
         ///          variable name, cannot be null. </param>
         /// <param name="value">
         ///          variable value, cannot be null. </param>
-        IExecutionQuery variableValueGreaterThan(string name, object value);
+        IExecutionQuery VariableValueGreaterThan(string name, object value);
 
         /// <summary>
         /// Only select executions which have a local variable value greater than or equal to the passed value. Booleans, Byte-arrays and <seealso cref="Serializable"/> objects (which are not primitive type wrappers)
@@ -191,7 +191,7 @@ namespace org.activiti.engine.runtime
         ///          variable name, cannot be null. </param>
         /// <param name="value">
         ///          variable value, cannot be null. </param>
-        IExecutionQuery variableValueGreaterThanOrEqual(string name, object value);
+        IExecutionQuery VariableValueGreaterThanOrEqual(string name, object value);
 
         /// <summary>
         /// Only select executions which have a local variable value less than the passed value. Booleans, Byte-arrays and <seealso cref="Serializable"/> objects (which are not primitive type wrappers) are not
@@ -201,7 +201,7 @@ namespace org.activiti.engine.runtime
         ///          variable name, cannot be null. </param>
         /// <param name="value">
         ///          variable value, cannot be null. </param>
-        IExecutionQuery variableValueLessThan(string name, object value);
+        IExecutionQuery VariableValueLessThan(string name, object value);
 
         /// <summary>
         /// Only select executions which have a local variable value less than or equal to the passed value. Booleans, Byte-arrays and <seealso cref="Serializable"/> objects (which are not primitive type wrappers) are
@@ -211,7 +211,7 @@ namespace org.activiti.engine.runtime
         ///          variable name, cannot be null. </param>
         /// <param name="value">
         ///          variable value, cannot be null. </param>
-        IExecutionQuery variableValueLessThanOrEqual(string name, object value);
+        IExecutionQuery VariableValueLessThanOrEqual(string name, object value);
 
         /// <summary>
         /// Only select executions which have a local variable value like the given value. This be used on string variables only.
@@ -220,7 +220,7 @@ namespace org.activiti.engine.runtime
         ///          variable name, cannot be null. </param>
         /// <param name="value">
         ///          variable value, cannot be null. The string can include the wildcard character '%' to express like-strategy: starts with (string%), ends with (%string) or contains (%string%). </param>
-        IExecutionQuery variableValueLike(string name, string value);
+        IExecutionQuery VariableValueLike(string name, string value);
 
         /// <summary>
         /// Only select executions which have a local variable value like the given value (case insensitive).
@@ -229,25 +229,25 @@ namespace org.activiti.engine.runtime
         /// <param name="value"> variable value, cannot be null. The string can include the
         /// wildcard character '%' to express like-strategy: 
         /// starts with (string%), ends with (%string) or contains (%string%). </param>
-        IExecutionQuery variableValueLikeIgnoreCase(string name, string value);
+        IExecutionQuery VariableValueLikeIgnoreCase(string name, string value);
 
         /// <summary>
         /// Only select executions which are part of a process that have a variable with the given name set to the given value. Byte-arrays and <seealso cref="Serializable"/> objects (which are not primitive type
         /// wrappers) are not supported.
         /// </summary>
-        IExecutionQuery processVariableValueEquals(string variableName, object variableValue);
+        IExecutionQuery ProcessVariableValueEquals(string variableName, object variableValue);
 
         /// <summary>
         /// Only select executions which are part of a process that have at least one variable with the given value. Byte-arrays and <seealso cref="Serializable"/> objects (which are not primitive type wrappers) are
         /// not supported.
         /// </summary>
-        IExecutionQuery processVariableValueEquals(object variableValue);
+        IExecutionQuery ProcessVariableValueEquals(object variableValue);
 
         /// <summary>
         /// Only select executions which are part of a process that have a variable with the given name, but with a different value than the passed value. Byte-arrays and <seealso cref="Serializable"/> objects (which
         /// are not primitive type wrappers) are not supported.
         /// </summary>
-        IExecutionQuery processVariableValueNotEquals(string variableName, object variableValue);
+        IExecutionQuery ProcessVariableValueNotEquals(string variableName, object variableValue);
 
         /// <summary>
         /// Only select executions which are part of a process that have a local string variable with the given value, case insensitive.
@@ -260,7 +260,7 @@ namespace org.activiti.engine.runtime
         ///          name of the variable, cannot be null. </param>
         /// <param name="value">
         ///          value of the variable, cannot be null. </param>
-        IExecutionQuery processVariableValueEqualsIgnoreCase(string name, string value);
+        IExecutionQuery ProcessVariableValueEqualsIgnoreCase(string name, string value);
 
         /// <summary>
         /// Only select executions which are part of a process that have a local string variable which is not the given value, case insensitive.
@@ -273,19 +273,19 @@ namespace org.activiti.engine.runtime
         ///          name of the variable, cannot be null. </param>
         /// <param name="value">
         ///          value of the variable, cannot be null. </param>
-        IExecutionQuery processVariableValueNotEqualsIgnoreCase(string name, string value);
+        IExecutionQuery ProcessVariableValueNotEqualsIgnoreCase(string name, string value);
 
         /// <summary>
         /// Only select executions which are part of a process that have at least one variable like the given value.
         /// Byte-arrays and <seealso cref="Serializable"/> objects (which are not primitive type wrappers) are not supported.
         /// </summary>
-        IExecutionQuery processVariableValueLike(string name, string value);
+        IExecutionQuery ProcessVariableValueLike(string name, string value);
 
         /// <summary>
         /// Only select executions which are part of a process that have at least one variable like the given value (case insensitive).
         /// Byte-arrays and <seealso cref="Serializable"/> objects (which are not primitive type wrappers) are not supported.
         /// </summary>
-        IExecutionQuery processVariableValueLikeIgnoreCase(string name, string value);
+        IExecutionQuery ProcessVariableValueLikeIgnoreCase(string name, string value);
 
         // event subscriptions //////////////////////////////////////////////////
 
@@ -296,7 +296,7 @@ namespace org.activiti.engine.runtime
         /// </summary>
         /// <param name="signalName">
         ///          the name of the signal the execution has subscribed to </param>
-        IExecutionQuery signalEventSubscriptionName(string signalName);
+        IExecutionQuery SignalEventSubscriptionName(string signalName);
 
         /// <summary>
         /// Only select executions which have a message event subscription for the given messageName.
@@ -305,17 +305,17 @@ namespace org.activiti.engine.runtime
         /// </summary>
         /// <param name="messageName">
         ///          the name of the message the execution has subscribed to </param>
-        IExecutionQuery messageEventSubscriptionName(string messageName);
+        IExecutionQuery MessageEventSubscriptionName(string messageName);
 
         /// <summary>
         /// Localize execution name and description to specified locale.
         /// </summary>
-        IExecutionQuery locale(string locale);
+        IExecutionQuery Locale(string locale);
 
         /// <summary>
         /// Instruct localization to fallback to more general locales including the default locale of the JVM if the specified locale is not found. 
         /// </summary>
-        IExecutionQuery withLocalizationFallback();
+        IExecutionQuery WithLocalizationFallback();
 
 
         /// <summary>
@@ -323,42 +323,42 @@ namespace org.activiti.engine.runtime
         /// </summary>
         /// <param name="beforeTime">
         ///          executions started before this time will be returned (cannot be null) </param>
-        IExecutionQuery startedBefore(DateTime beforeTime);
+        IExecutionQuery SetStartedBefore(DateTime beforeTime);
 
         /// <summary>
         /// Only select executions that were started after the given start time.
         /// </summary>
         /// <param name="afterTime">
         ///          executions started after this time will be returned (cannot be null) </param>
-        IExecutionQuery startedAfter(DateTime afterTime);
+        IExecutionQuery SetStartedAfter(DateTime afterTime);
 
         /// <summary>
         /// Only select executions that were started after by the given user id.
         /// </summary>
         /// <param name="userId">
         ///          the user id of the authenticated user that started the execution (cannot be null) </param>
-        IExecutionQuery startedBy(string userId);
+        IExecutionQuery SetStartedBy(string userId);
 
         // ordering //////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Order by id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>). </summary>
-        IExecutionQuery orderByProcessInstanceId();
+        IExecutionQuery OrderByProcessInstanceId();
 
         /// <summary>
         /// Order by process definition key (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IExecutionQuery orderByProcessDefinitionKey();
+        IExecutionQuery OrderByProcessDefinitionKey();
 
         /// <summary>
         /// Order by process definition id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IExecutionQuery orderByProcessDefinitionId();
+        IExecutionQuery OrderByProcessDefinitionId();
 
         /// <summary>
         /// Order by tenant id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IExecutionQuery orderByTenantId();
+        IExecutionQuery OrderByTenantId();
     }
 
 }

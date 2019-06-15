@@ -31,30 +31,30 @@ namespace org.activiti.engine.impl
         private const long serialVersionUID = 1L;
         protected internal string id;
 
-        protected internal string processInstanceId_Renamed;
+        protected internal string _processInstanceId;
 
-        protected internal string executionId_Renamed;
+        protected internal string _executionId;
 
-        protected internal string processDefinitionId_Renamed;
+        protected internal string _processDefinitionId;
         protected internal bool retriesLeft;
 
-        protected internal bool executable_Renamed;
+        protected internal bool _executable;
         protected internal bool onlyTimers;
         protected internal bool onlyMessages;
 
-        protected internal DateTime? duedateHigherThan_Renamed;
-        protected internal DateTime? duedateLowerThan_Renamed;
+        protected internal DateTime? _duedateHigherThan;
+        protected internal DateTime? _duedateLowerThan;
         protected internal DateTime? duedateHigherThanOrEqual;
         protected internal DateTime? duedateLowerThanOrEqual;
 
-        protected internal bool withException_Renamed;
+        protected internal bool _withException;
 
-        protected internal string exceptionMessage_Renamed;
+        protected internal string _exceptionMessage;
         protected internal string tenantId;
         protected internal string tenantIdLike;
         protected internal bool withoutTenantId;
 
-        protected internal bool noRetriesLeft_Renamed;
+        protected internal bool _noRetriesLeft;
         protected internal bool onlyLocked;
         protected internal bool onlyUnlocked;
 
@@ -70,59 +70,43 @@ namespace org.activiti.engine.impl
         {
         }
 
-        public virtual IJobQuery jobId(string jobId)
+        public virtual IJobQuery SetJobId(string jobId)
         {
-            if (ReferenceEquals(jobId, null))
-            {
-                throw new ActivitiIllegalArgumentException("Provided job id is null");
-            }
             this.id = jobId;
             return this;
         }
 
-        public virtual IJobQuery processInstanceId(string processInstanceId)
+        public virtual IJobQuery SetProcessInstanceId(string processInstanceId)
         {
-            if (ReferenceEquals(processInstanceId, null))
-            {
-                throw new ActivitiIllegalArgumentException("Provided process instance id is null");
-            }
-            this.processInstanceId_Renamed = processInstanceId;
+            this._processInstanceId = processInstanceId;
             return this;
         }
 
-        public virtual IJobQuery processDefinitionId(string processDefinitionId)
+        public virtual IJobQuery SetProcessDefinitionId(string processDefinitionId)
         {
-            if (string.IsNullOrWhiteSpace(processDefinitionId))
-            {
-                throw new ActivitiIllegalArgumentException("Provided process definition id is null");
-            }
-            this.processDefinitionId_Renamed = processDefinitionId;
+            this._processDefinitionId = processDefinitionId;
             return this;
         }
 
-        public virtual IJobQuery executionId(string executionId)
+        public virtual IJobQuery SetExecutionId(string executionId)
         {
-            if (ReferenceEquals(executionId, null))
-            {
-                throw new ActivitiIllegalArgumentException("Provided execution id is null");
-            }
-            this.executionId_Renamed = executionId;
+            this._executionId = executionId;
             return this;
         }
 
-        public virtual IJobQuery withRetriesLeft()
+        public virtual IJobQuery SetWithRetriesLeft()
         {
             retriesLeft = true;
             return this;
         }
 
-        public virtual IJobQuery executable()
+        public virtual IJobQuery SetExecutable()
         {
-            executable_Renamed = true;
+            _executable = true;
             return this;
         }
 
-        public virtual IJobQuery timers()
+        public virtual IJobQuery SetTimers()
         {
             if (onlyMessages)
             {
@@ -132,7 +116,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IJobQuery messages()
+        public virtual IJobQuery SetMessages()
         {
             if (onlyTimers)
             {
@@ -142,47 +126,43 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IJobQuery duedateHigherThan(DateTime? date)
+        public virtual IJobQuery SetDuedateHigherThan(DateTime? date)
         {
             if (!date.HasValue)
             {
                 throw new ActivitiIllegalArgumentException("Provided date is null");
             }
-            this.duedateHigherThan_Renamed = date;
+            this._duedateHigherThan = date;
             return this;
         }
 
-        public virtual IJobQuery duedateLowerThan(DateTime? date)
+        public virtual IJobQuery SetDuedateLowerThan(DateTime? date)
         {
             if (!date.HasValue)
             {
                 throw new ActivitiIllegalArgumentException("Provided date is null");
             }
-            this.duedateLowerThan_Renamed = date;
+            this._duedateLowerThan = date;
             return this;
         }
 
-        public virtual IJobQuery duedateHigherThen(DateTime? date)
+        public virtual IJobQuery SetDuedateHigherThen(DateTime? date)
         {
-            return duedateHigherThan(date);
+            return SetDuedateHigherThan(date);
         }
 
-        public virtual IJobQuery duedateHigherThenOrEquals(DateTime? date)
+        public virtual IJobQuery SetDuedateHigherThenOrEquals(DateTime? date)
         {
-            if (!date.HasValue)
-            {
-                throw new ActivitiIllegalArgumentException("Provided date is null");
-            }
             this.duedateHigherThanOrEqual = date;
             return this;
         }
 
-        public virtual IJobQuery duedateLowerThen(DateTime? date)
+        public virtual IJobQuery SetDuedateLowerThen(DateTime? date)
         {
-            return duedateLowerThan(date);
+            return SetDuedateLowerThan(date);
         }
 
-        public virtual IJobQuery duedateLowerThenOrEquals(DateTime? date)
+        public virtual IJobQuery SetDuedateLowerThenOrEquals(DateTime? date)
         {
             if (!date.HasValue)
             {
@@ -192,61 +172,49 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IJobQuery noRetriesLeft()
+        public virtual IJobQuery SetNoRetriesLeft()
         {
-            noRetriesLeft_Renamed = true;
+            _noRetriesLeft = true;
             return this;
         }
 
-        public virtual IJobQuery withException()
+        public virtual IJobQuery SetWithException()
         {
-            this.withException_Renamed = true;
+            this._withException = true;
             return this;
         }
 
-        public virtual IJobQuery exceptionMessage(string exceptionMessage)
+        public virtual IJobQuery SetExceptionMessage(string exceptionMessage)
         {
-            if (ReferenceEquals(exceptionMessage, null))
-            {
-                throw new ActivitiIllegalArgumentException("Provided exception message is null");
-            }
-            this.exceptionMessage_Renamed = exceptionMessage;
+            this._exceptionMessage = exceptionMessage;
             return this;
         }
 
-        public virtual IJobQuery jobTenantId(string tenantId)
+        public virtual IJobQuery SetJobTenantId(string tenantId)
         {
-            if (ReferenceEquals(tenantId, null))
-            {
-                throw new ActivitiIllegalArgumentException("job is null");
-            }
             this.tenantId = tenantId;
             return this;
         }
 
-        public virtual IJobQuery jobTenantIdLike(string tenantIdLike)
+        public virtual IJobQuery SetJobTenantIdLike(string tenantIdLike)
         {
-            if (ReferenceEquals(tenantIdLike, null))
-            {
-                throw new ActivitiIllegalArgumentException("job is null");
-            }
             this.tenantIdLike = tenantIdLike;
             return this;
         }
 
-        public virtual IJobQuery jobWithoutTenantId()
+        public virtual IJobQuery SetJobWithoutTenantId()
         {
             this.withoutTenantId = true;
             return this;
         }
 
-        public virtual IJobQuery locked()
+        public virtual IJobQuery SetLocked()
         {
             this.onlyLocked = true;
             return this;
         }
 
-        public virtual IJobQuery unlocked()
+        public virtual IJobQuery SetUnlocked()
         {
             this.onlyUnlocked = true;
             return this;
@@ -254,48 +222,48 @@ namespace org.activiti.engine.impl
 
         // sorting //////////////////////////////////////////
 
-        public virtual IJobQuery orderByJobDuedate()
+        public virtual IJobQuery OrderByJobDuedate()
         {
-            return orderBy(JobQueryProperty.DUEDATE);
+            return SetOrderBy(JobQueryProperty.DUEDATE);
         }
 
-        public virtual IJobQuery orderByExecutionId()
+        public virtual IJobQuery OrderByExecutionId()
         {
-            return orderBy(JobQueryProperty.EXECUTION_ID);
+            return SetOrderBy(JobQueryProperty.EXECUTION_ID);
         }
 
-        public virtual IJobQuery orderByJobId()
+        public virtual IJobQuery OrderByJobId()
         {
-            return orderBy(JobQueryProperty.JOB_ID);
+            return SetOrderBy(JobQueryProperty.JOB_ID);
         }
 
-        public virtual IJobQuery orderByProcessInstanceId()
+        public virtual IJobQuery OrderByProcessInstanceId()
         {
-            return orderBy(JobQueryProperty.PROCESS_INSTANCE_ID);
+            return SetOrderBy(JobQueryProperty.PROCESS_INSTANCE_ID);
         }
 
-        public virtual IJobQuery orderByJobRetries()
+        public virtual IJobQuery OrderByJobRetries()
         {
-            return orderBy(JobQueryProperty.RETRIES);
+            return SetOrderBy(JobQueryProperty.RETRIES);
         }
 
-        public virtual IJobQuery orderByTenantId()
+        public virtual IJobQuery OrderByTenantId()
         {
-            return orderBy(JobQueryProperty.TENANT_ID);
+            return SetOrderBy(JobQueryProperty.TENANT_ID);
         }
 
         // results //////////////////////////////////////////
 
-        public override long executeCount(ICommandContext commandContext)
+        public override long ExecuteCount(ICommandContext commandContext)
         {
-            checkQueryOk();
-            return commandContext.JobEntityManager.findJobCountByQueryCriteria(this);
+            CheckQueryOk();
+            return commandContext.JobEntityManager.FindJobCountByQueryCriteria(this);
         }
 
-        public override IList<IJob> executeList(ICommandContext commandContext, Page page)
+        public override IList<IJob> ExecuteList(ICommandContext commandContext, Page page)
         {
-            checkQueryOk();
-            return commandContext.JobEntityManager.findJobsByQueryCriteria(this, page);
+            CheckQueryOk();
+            return commandContext.JobEntityManager.FindJobsByQueryCriteria(this, page);
         }
 
         // getters //////////////////////////////////////////
@@ -304,7 +272,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processInstanceId_Renamed;
+                return _processInstanceId;
             }
         }
 
@@ -312,7 +280,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return executionId_Renamed;
+                return _executionId;
             }
         }
 
@@ -328,7 +296,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return executable_Renamed;
+                return _executable;
             }
         }
 
@@ -344,7 +312,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return withException_Renamed;
+                return _withException;
             }
         }
 
@@ -352,7 +320,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return exceptionMessage_Renamed;
+                return _exceptionMessage;
             }
         }
 
@@ -400,7 +368,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processDefinitionId_Renamed;
+                return _processDefinitionId;
             }
         }
 
@@ -424,7 +392,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return duedateHigherThan_Renamed;
+                return _duedateHigherThan;
             }
         }
 
@@ -432,7 +400,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return duedateLowerThan_Renamed;
+                return _duedateLowerThan;
             }
         }
 
@@ -456,7 +424,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return noRetriesLeft_Renamed;
+                return _noRetriesLeft;
             }
         }
 

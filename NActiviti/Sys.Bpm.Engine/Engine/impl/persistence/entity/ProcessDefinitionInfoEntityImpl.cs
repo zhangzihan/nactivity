@@ -37,9 +37,11 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                PersistentState persistentState = new PersistentState();
-                persistentState["processDefinitionId"] = this.processDefinitionId;
-                persistentState["infoJsonId"] = this.infoJsonId;
+                PersistentState persistentState = new PersistentState
+                {
+                    ["processDefinitionId"] = this.processDefinitionId,
+                    ["infoJsonId"] = this.infoJsonId
+                };
                 return persistentState;
             }
         }

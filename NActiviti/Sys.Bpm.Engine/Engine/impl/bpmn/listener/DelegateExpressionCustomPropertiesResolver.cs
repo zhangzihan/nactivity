@@ -28,16 +28,16 @@ namespace org.activiti.engine.impl.bpmn.listener
             this.expression = expression;
         }
 
-        public virtual IDictionary<string, object> getCustomPropertiesMap(IExecutionEntity execution)
+        public virtual IDictionary<string, object> GetCustomPropertiesMap(IExecutionEntity execution)
         {
             // Note: we can't cache the result of the expression, because the
             // execution can change: eg.
             // delegateExpression='${mySpringBeanFactory.randomSpringBean()}'
-            object @delegate = expression.getValue(execution);
+            object @delegate = expression.GetValue(execution);
 
             if (@delegate is ICustomPropertiesResolver)
             {
-                return ((ICustomPropertiesResolver)@delegate).getCustomPropertiesMap(execution);
+                return ((ICustomPropertiesResolver)@delegate).GetCustomPropertiesMap(execution);
             }
             else
             {

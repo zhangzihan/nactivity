@@ -37,7 +37,7 @@ namespace org.activiti.engine.impl.cmd
             this.listener = listener;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
             if (listener == null)
             {
@@ -46,11 +46,11 @@ namespace org.activiti.engine.impl.cmd
 
             if (types != null)
             {
-                commandContext.ProcessEngineConfiguration.EventDispatcher.addEventListener(listener, types);
+                commandContext.ProcessEngineConfiguration.EventDispatcher.AddEventListener(listener, types);
             }
             else
             {
-                commandContext.ProcessEngineConfiguration.EventDispatcher.addEventListener(listener);
+                commandContext.ProcessEngineConfiguration.EventDispatcher.AddEventListener(listener);
             }
 
             return null;

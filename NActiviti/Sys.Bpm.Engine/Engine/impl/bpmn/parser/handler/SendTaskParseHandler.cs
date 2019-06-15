@@ -15,6 +15,7 @@
 namespace org.activiti.engine.impl.bpmn.parser.handler
 {
     using Microsoft.Extensions.Logging;
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.model;
     using org.activiti.engine.impl.bpmn.behavior;
 
@@ -29,39 +30,52 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, SendTask sendTask)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, SendTask sendTask)
         {
-
-            if (!string.IsNullOrWhiteSpace(sendTask.Type))
+            if (string.IsNullOrWhiteSpace(sendTask.ImplementationType))
             {
+                sendTask.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_CLASS;
+                sendTask.Implementation = ImplementationType.IMPLEMENTATION_TASK_SEND_DEFAULT;
 
-                if (sendTask.Type.Equals("mail", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    sendTask.Behavior = bpmnParse.ActivityBehaviorFactory.createMailActivityBehavior(sendTask);
-                }
-                else if (sendTask.Type.Equals("mule", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    sendTask.Behavior = bpmnParse.ActivityBehaviorFactory.createMuleActivityBehavior(sendTask);
-                }
-                else if (sendTask.Type.Equals("camel", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    sendTask.Behavior = bpmnParse.ActivityBehaviorFactory.createCamelActivityBehavior(sendTask);
-                }
-
+                CreateClassDelegateSendTask(bpmnParse, sendTask);
             }
-            else if (ImplementationType.IMPLEMENTATION_TYPE_WEBSERVICE.Equals(sendTask.ImplementationType, StringComparison.CurrentCultureIgnoreCase) && !string.IsNullOrWhiteSpace(sendTask.OperationRef))
+            else if (ImplementationType.IMPLEMENTATION_TYPE_CLASS.Equals(sendTask.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
             {
-
-                WebServiceActivityBehavior webServiceActivityBehavior = bpmnParse.ActivityBehaviorFactory.createWebServiceActivityBehavior(sendTask);
-                sendTask.Behavior = webServiceActivityBehavior;
-
+                CreateClassDelegateSendTask(bpmnParse, sendTask);
             }
-            else
-            {
-                logger.LogWarning("One of the attributes 'type' or 'operation' is mandatory on sendTask " + sendTask.Id);
-            }
+            //if (!string.IsNullOrWhiteSpace(sendTask.Type))
+            //{
+
+            //    if (sendTask.Type.Equals("mail", StringComparison.CurrentCultureIgnoreCase))
+            //    {
+            //        sendTask.Behavior = bpmnParse.ActivityBehaviorFactory.createMailActivityBehavior(sendTask);
+            //    }
+            //    else if (sendTask.Type.Equals("mule", StringComparison.CurrentCultureIgnoreCase))
+            //    {
+            //        sendTask.Behavior = bpmnParse.ActivityBehaviorFactory.createMuleActivityBehavior(sendTask);
+            //    }
+            //    else if (sendTask.Type.Equals("camel", StringComparison.CurrentCultureIgnoreCase))
+            //    {
+            //        sendTask.Behavior = bpmnParse.ActivityBehaviorFactory.createCamelActivityBehavior(sendTask);
+            //    }
+
+            //}
+            //else if (ImplementationType.IMPLEMENTATION_TYPE_WEBSERVICE.Equals(sendTask.ImplementationType, StringComparison.CurrentCultureIgnoreCase) && !string.IsNullOrWhiteSpace(sendTask.OperationRef))
+            //{
+
+            //    WebServiceActivityBehavior webServiceActivityBehavior = bpmnParse.ActivityBehaviorFactory.createWebServiceActivityBehavior(sendTask);
+            //    sendTask.Behavior = webServiceActivityBehavior;
+
+            //}
+            //else
+            //{
+            //    logger.LogWarning("One of the attributes 'type' or 'operation' is mandatory on sendTask " + sendTask.Id);
+            //}
         }
 
+        protected internal virtual void CreateClassDelegateSendTask(BpmnParse bpmnParse, SendTask sendTask)
+        {
+            sendTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateClassDelegateSendTask(sendTask);
+        }
     }
-
 }

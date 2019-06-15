@@ -1,6 +1,6 @@
 #region License
 /*
-* Copyright © 2002-2011 the original author or authors.
+* Copyright ?2002-2011 the original author or authors.
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -64,12 +64,14 @@ namespace Spring.Threading
         /// </summary>
         protected bool latched_ = false;
 
+        private object syncRoot = new object();
+
         /// <summary>
         /// Method mainly used by clients who are trying to get the latch
         /// </summary>
         public void Acquire ()
         {
-            lock (this)
+            lock (syncRoot)
             {
                 while (!latched_)
                 {
@@ -81,7 +83,7 @@ namespace Spring.Threading
         /// <summary>Wait at most msecs millisconds for a permit</summary>
         public bool Attempt (long msecs)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 if (latched_)
                 {
@@ -121,7 +123,7 @@ namespace Spring.Threading
         /// </summary>
         public void Release ()
         {
-            lock (this)
+            lock (syncRoot)
             {
                 latched_ = true;
                 Monitor.PulseAll(this);

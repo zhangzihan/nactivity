@@ -4,15 +4,20 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Sys.Bpm</RootNamespace>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <OutputPath>bin</OutputPath>
+    <LangVersion>7.3</LangVersion>
+    <Version>1.0.0.1</Version>
+    <DocumentationFile>bin\Sys.Bpm.Engine.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Com.Ctrip.Framework.Apollo.Configuration" Version="1.5.1" />
     <PackageReference Include="CS-Script.Core" Version="1.0.6" />
+    <PackageReference Include="DatabaseSchemaReader" Version="2.7.1" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="2.10.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
@@ -24,12 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Engine\impl\cfg\BeansConfigurationHelper.cs" />
     <Compile Remove="Engine\impl\cfg\JtaProcessEngineConfiguration.cs" />
     <Compile Remove="Engine\impl\cfg\multitenant\MultiSchemaMultiTenantProcessEngineConfiguration.cs" />
     <Compile Remove="Engine\impl\cfg\multitenant\TenantAwareDataSource.cs" />
     <Compile Remove="Engine\impl\cfg\SpringBeanFactoryProxyMap.cs" />
-    <Compile Remove="Engine\impl\cfg\StandaloneInMemProcessEngineConfiguration.cs" />
     <Compile Remove="Engine\impl\el\ActivitiFunctionMapper.cs" />
     <Compile Remove="Engine\impl\el\DynamicBeanPropertyELResolver.cs" />
     <Compile Remove="Engine\impl\el\ExpressionFactoryResolver.cs" />
@@ -70,12 +73,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Engine\impl\cfg\BeansConfigurationHelper.cs" />
     <None Include="Engine\impl\cfg\JtaProcessEngineConfiguration.cs" />
     <None Include="Engine\impl\cfg\multitenant\MultiSchemaMultiTenantProcessEngineConfiguration.cs" />
     <None Include="Engine\impl\cfg\multitenant\TenantAwareDataSource.cs" />
     <None Include="Engine\impl\cfg\SpringBeanFactoryProxyMap.cs" />
-    <None Include="Engine\impl\cfg\StandaloneInMemProcessEngineConfiguration.cs" />
     <None Include="Engine\impl\el\ActivitiFunctionMapper.cs" />
     <None Include="Engine\impl\el\DynamicBeanPropertyELResolver.cs" />
     <None Include="Engine\impl\el\ExpressionFactoryResolver.cs" />
@@ -117,12 +118,6 @@
     <ProjectReference Include="..\..\Smart.Sql\SmartSql\SmartSql.csproj" />
     <ProjectReference Include="..\..\Spring.Core\Spring.Core.csproj" />
     <ProjectReference Include="..\Sys.Bpm.Engine.API\Sys.Bpm.Engine.API.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="DatabaseSchemaReader">
-      <HintPath>D:\Project\dbschemareader\DatabaseSchemaReader\bin\Debug\netstandard1.5\DatabaseSchemaReader.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -205,6 +200,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="resources\db\mapping\entity\EventLogEntry.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="resources\db\mapping\entity\MessageEventSubscription.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="resources\db\mapping\entity\SignalEventSubscription.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="resources\db\mapping\entity\CompensateEventSubscription.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="resources\db\mapping\entity\EventSubscription.xml">

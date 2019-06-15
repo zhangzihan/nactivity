@@ -5,10 +5,10 @@ namespace Sys.Concurrent
 {
     public interface IExecutorService
     {
-        void execute(ThreadStart runnable);
+        void Execute(ThreadStart runnable);
 
-        void shutdown();
+        void Shutdown();
 
-        bool awaitTermination(long secondsToWaitOnShutdown, TimeSpan timeout);
+        bool AwaitTermination(long secondsToWaitOnShutdown, TimeSpan timeout);
     }
 }

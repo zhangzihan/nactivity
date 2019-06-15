@@ -23,7 +23,7 @@ namespace org.activiti.cloud.services.events.integration
     /// <summary>
     /// 
     /// </summary>
-    public class IntegrationResultReceivedEventImpl : BaseIntegrationEventImpl, IntegrationResultReceivedEvent
+    public class IntegrationResultReceivedEventImpl : BaseIntegrationEventImpl, IIntegrationResultReceivedEvent
 	{
 
 

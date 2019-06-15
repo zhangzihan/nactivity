@@ -10,14 +10,14 @@ namespace org.activiti.api.runtime.shared.query
     /// </summary>
     public class PageImpl<T> : IPage<T>
     {
-        private IList<T> content;
+        private IEnumerable<T> content;
         private long totalItems;
 
 
         /// <summary>
         /// 
         /// </summary>
-        public PageImpl(IList<T> content,
+        public PageImpl(IEnumerable<T> content,
                         long totalItems)
         {
             this.content = content;
@@ -28,7 +28,7 @@ namespace org.activiti.api.runtime.shared.query
         /// 
         /// </summary>
 
-        public IList<T> getContent()
+        public IEnumerable<T> GetContent()
         {
             return content;
         }
@@ -37,7 +37,7 @@ namespace org.activiti.api.runtime.shared.query
         /// 
         /// </summary>
 
-        public long getTotalItems()
+        public long GetTotalItems()
         {
             return totalItems;
         }

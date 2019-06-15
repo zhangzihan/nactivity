@@ -82,7 +82,7 @@ namespace org.activiti.engine.debug
             return children?.GetEnumerator();
         }
 
-        public virtual ExecutionTreeBfsIterator leafsFirstIterator()
+        public virtual ExecutionTreeBfsIterator LeafsFirstIterator()
         {
             return new ExecutionTreeBfsIterator(this, true);
         }
@@ -92,11 +92,11 @@ namespace org.activiti.engine.debug
         {
             StringBuilder strb = new StringBuilder();
             strb.Append(ExecutionEntity.Id);
-            if (!ReferenceEquals(ExecutionEntity.ActivityId, null))
+            if (!(ExecutionEntity.ActivityId is null))
             {
                 strb.Append(" : " + ExecutionEntity.ActivityId);
             }
-            if (!ReferenceEquals(ExecutionEntity.ParentId, null))
+            if (!(ExecutionEntity.ParentId is null))
             {
                 strb.Append(", parent id " + ExecutionEntity.ParentId);
             }
@@ -109,24 +109,24 @@ namespace org.activiti.engine.debug
             {
                 foreach (ExecutionTreeNode childNode in children)
                 {
-                    childNode.internalToString(strb, "", true);
+                    childNode.InternalToString(strb, "", true);
                 }
             }
             return strb.ToString();
         }
 
-        protected internal virtual void internalToString(StringBuilder strb, string prefix, bool isTail)
+        protected internal virtual void InternalToString(StringBuilder strb, string prefix, bool isTail)
         {
             strb.Append(prefix + (isTail ? "└── " : "├── ") + ExecutionEntity.Id + " : " + CurrentFlowElementId + ", parent id " + ExecutionEntity.ParentId + (ExecutionEntity.IsActive ? " (active)" : " (not active)") + (ExecutionEntity.IsScope ? " (scope)" : "") + (ExecutionEntity.IsMultiInstanceRoot ? " (multi instance root)" : "") + (ExecutionEntity.Ended ? " (ended)" : "") + Environment.NewLine);
             if (children != null)
             {
                 for (int i = 0; i < children.Count - 1; i++)
                 {
-                    children[i].internalToString(strb, prefix + (isTail ? "    " : "│   "), false);
+                    children[i].InternalToString(strb, prefix + (isTail ? "    " : "│   "), false);
                 }
                 if (children.Count > 0)
                 {
-                    children[children.Count - 1].internalToString(strb, prefix + (isTail ? "    " : "│   "), true);
+                    children[children.Count - 1].InternalToString(strb, prefix + (isTail ? "    " : "│   "), true);
                 }
             }
         }
@@ -136,9 +136,8 @@ namespace org.activiti.engine.debug
             get
             {
                 FlowElement flowElement = ExecutionEntity.CurrentFlowElement;
-                if (flowElement is SequenceFlow)
+                if (flowElement is SequenceFlow sequenceFlow)
                 {
-                    SequenceFlow sequenceFlow = (SequenceFlow)flowElement;
                     return sequenceFlow.SourceRef + " -> " + sequenceFlow.TargetRef;
                 }
                 else if (flowElement != null)
@@ -151,6 +150,5 @@ namespace org.activiti.engine.debug
                 }
             }
         }
-
     }
 }

@@ -21,30 +21,45 @@ namespace org.activiti.engine.impl.@delegate.invocation
     /// 
     /// </summary>
     public class JavaDelegateInvocation : DelegateInvocation
-	{
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal readonly IJavaDelegate delegateInstance;
 
-	  protected internal readonly IJavaDelegate delegateInstance;
-	  protected internal readonly IExecutionEntity execution;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal readonly IExecutionEntity execution;
 
-	  public JavaDelegateInvocation(IJavaDelegate delegateInstance, IExecutionEntity execution)
-	  {
-		this.delegateInstance = delegateInstance;
-		this.execution = execution;
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="delegateInstance"></param>
+        /// <param name="execution"></param>
+        public JavaDelegateInvocation(IJavaDelegate delegateInstance, IExecutionEntity execution)
+        {
+            this.delegateInstance = delegateInstance;
+            this.execution = execution;
+        }
 
-	  protected internal override void invoke()
-	  {
-		delegateInstance.execute(execution);
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal override void Invoke()
+        {
+            delegateInstance.Execute(execution);
+        }
 
-	  public override object Target
-	  {
-		  get
-		  {
-			return delegateInstance;
-		  }
-	  }
-
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public override object Target
+        {
+            get
+            {
+                return delegateInstance;
+            }
+        }
+    }
 }

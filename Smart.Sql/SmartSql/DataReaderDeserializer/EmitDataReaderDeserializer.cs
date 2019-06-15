@@ -47,14 +47,14 @@ namespace SmartSql.DataReaderDeserializer
                 IList<T> list = new List<T>();
                 Type targetType = typeof(T);
 
-                if (await dataReaderAsync.ReadAsync())
+                if (await dataReaderAsync.ReadAsync().ConfigureAwait(false))
                 {
                     var deser = _dataRowParserFactory.GetParser(dataReader, context, targetType);
                     do
                     {
                         T target = (T)deser(dataReader, context);
                         list.Add(target);
-                    } while (await dataReaderAsync.ReadAsync());
+                    } while (await dataReaderAsync.ReadAsync().ConfigureAwait(false));
                 }
                 return list;
             }
@@ -96,7 +96,7 @@ namespace SmartSql.DataReaderDeserializer
             {
 
                 Type targetType = typeof(T);
-                if (await dataReaderAsync.ReadAsync())
+                if (await dataReaderAsync.ReadAsync().ConfigureAwait(false))
                 {
                     var deser = _dataRowParserFactory.GetParser(dataReader, context, targetType);
                     object target = deser(dataReader, context);

@@ -10,23 +10,22 @@ namespace org.activiti.engine.impl.@event.logger.handler
     /// 
     public class ActivitySignaledEventHandler : AbstractDatabaseEventLoggerEventHandler
     {
-
-        public override IEventLogEntryEntity generateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
+        public override IEventLogEntryEntity GenerateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
         {
             IActivitiSignalEvent signalEvent = (IActivitiSignalEvent)@event;
 
             IDictionary<string, object> data = new Dictionary<string, object>();
-            putInMapIfNotNull(data, Fields_Fields.ACTIVITY_ID, signalEvent.ActivityId);
-            putInMapIfNotNull(data, Fields_Fields.ACTIVITY_NAME, signalEvent.ActivityName);
-            putInMapIfNotNull(data, Fields_Fields.PROCESS_DEFINITION_ID, signalEvent.ProcessDefinitionId);
-            putInMapIfNotNull(data, Fields_Fields.PROCESS_INSTANCE_ID, signalEvent.ProcessInstanceId);
-            putInMapIfNotNull(data, Fields_Fields.EXECUTION_ID, signalEvent.ExecutionId);
-            putInMapIfNotNull(data, Fields_Fields.ACTIVITY_TYPE, signalEvent.ActivityType);
+            PutInMapIfNotNull(data, FieldsFields.ACTIVITY_ID, signalEvent.ActivityId);
+            PutInMapIfNotNull(data, FieldsFields.ACTIVITY_NAME, signalEvent.ActivityName);
+            PutInMapIfNotNull(data, FieldsFields.PROCESS_DEFINITION_ID, signalEvent.ProcessDefinitionId);
+            PutInMapIfNotNull(data, FieldsFields.PROCESS_INSTANCE_ID, signalEvent.ProcessInstanceId);
+            PutInMapIfNotNull(data, FieldsFields.EXECUTION_ID, signalEvent.ExecutionId);
+            PutInMapIfNotNull(data, FieldsFields.ACTIVITY_TYPE, signalEvent.ActivityType);
 
-            putInMapIfNotNull(data, Fields_Fields.SIGNAL_NAME, signalEvent.SignalName);
-            putInMapIfNotNull(data, Fields_Fields.SIGNAL_DATA, signalEvent.SignalData);
+            PutInMapIfNotNull(data, FieldsFields.SIGNAL_NAME, signalEvent.SignalName);
+            PutInMapIfNotNull(data, FieldsFields.SIGNAL_DATA, signalEvent.SignalData);
 
-            return createEventLogEntry(signalEvent.ProcessDefinitionId, signalEvent.ProcessInstanceId, signalEvent.ExecutionId, null, data);
+            return CreateEventLogEntry(signalEvent.ProcessDefinitionId, signalEvent.ProcessInstanceId, signalEvent.ExecutionId, null, data);
         }
 
     }

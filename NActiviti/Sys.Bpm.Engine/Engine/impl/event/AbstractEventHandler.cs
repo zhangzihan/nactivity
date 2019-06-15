@@ -28,7 +28,7 @@ namespace org.activiti.engine.impl.@event
     {
         public abstract string EventHandlerType { get; }
 
-        public virtual void handleEvent(IEventSubscriptionEntity eventSubscription, object payload, ICommandContext commandContext)
+        public virtual void HandleEvent(IEventSubscriptionEntity eventSubscription, object payload, ICommandContext commandContext)
         {
             IExecutionEntity execution = eventSubscription.Execution;
             FlowNode currentFlowElement = (FlowNode)execution.CurrentFlowElement;
@@ -48,7 +48,7 @@ namespace org.activiti.engine.impl.@event
             {
                 try
                 {
-                    dispatchActivitiesCanceledIfNeeded(eventSubscription, execution, currentFlowElement, commandContext);
+                    DispatchActivitiesCanceledIfNeeded(eventSubscription, execution, currentFlowElement, commandContext);
 
                 }
                 catch (Exception e)
@@ -57,69 +57,65 @@ namespace org.activiti.engine.impl.@event
                 }
             }
 
-            Context.Agenda.planTriggerExecutionOperation(execution);
+            Context.Agenda.PlanTriggerExecutionOperation(execution);
         }
 
-        protected internal virtual void dispatchActivitiesCanceledIfNeeded(IEventSubscriptionEntity eventSubscription, IExecutionEntity execution, FlowElement currentFlowElement, ICommandContext commandContext)
+        protected internal virtual void DispatchActivitiesCanceledIfNeeded(IEventSubscriptionEntity eventSubscription, IExecutionEntity execution, FlowElement currentFlowElement, ICommandContext commandContext)
         {
-            if (currentFlowElement is BoundaryEvent)
+            if (currentFlowElement is BoundaryEvent boundaryEvent)
             {
-                BoundaryEvent boundaryEvent = (BoundaryEvent)currentFlowElement;
                 if (boundaryEvent.CancelActivity)
                 {
-                    dispatchExecutionCancelled(eventSubscription, execution, commandContext);
+                    DispatchExecutionCancelled(eventSubscription, execution, commandContext);
                 }
             }
         }
 
-        protected internal virtual void dispatchExecutionCancelled(IEventSubscriptionEntity eventSubscription, IExecutionEntity execution, ICommandContext commandContext)
+        protected internal virtual void DispatchExecutionCancelled(IEventSubscriptionEntity eventSubscription, IExecutionEntity execution, ICommandContext commandContext)
         {
             // subprocesses
             foreach (IExecutionEntity subExecution in execution.Executions)
             {
-                dispatchExecutionCancelled(eventSubscription, subExecution, commandContext);
+                DispatchExecutionCancelled(eventSubscription, subExecution, commandContext);
             }
 
             // call activities
-            IExecutionEntity subProcessInstance = commandContext.ExecutionEntityManager.findSubProcessInstanceBySuperExecutionId(execution.Id);
+            IExecutionEntity subProcessInstance = commandContext.ExecutionEntityManager.FindSubProcessInstanceBySuperExecutionId(execution.Id);
             if (subProcessInstance != null)
             {
-                dispatchExecutionCancelled(eventSubscription, subProcessInstance, commandContext);
+                DispatchExecutionCancelled(eventSubscription, subProcessInstance, commandContext);
             }
 
             // activity with message/signal boundary events
             FlowElement flowElement = execution.CurrentFlowElement;
-            if (flowElement is BoundaryEvent)
+            if (flowElement is BoundaryEvent boundaryEvent)
             {
-                BoundaryEvent boundaryEvent = (BoundaryEvent)flowElement;
                 if (boundaryEvent.AttachedToRef != null)
                 {
-                    dispatchActivityCancelled(eventSubscription, execution, boundaryEvent.AttachedToRef, commandContext);
+                    DispatchActivityCancelled(eventSubscription, execution, boundaryEvent.AttachedToRef, commandContext);
                 }
             }
         }
 
-        protected internal virtual void dispatchActivityCancelled(IEventSubscriptionEntity eventSubscription, IExecutionEntity boundaryEventExecution, FlowNode flowNode, ICommandContext commandContext)
+        protected internal virtual void DispatchActivityCancelled(IEventSubscriptionEntity eventSubscription, IExecutionEntity boundaryEventExecution, FlowNode flowNode, ICommandContext commandContext)
         {
-
             // Scope
-            commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createActivityCancelledEvent(flowNode.Id, flowNode.Name, boundaryEventExecution.Id, boundaryEventExecution.ProcessInstanceId, boundaryEventExecution.ProcessDefinitionId, parseActivityType(flowNode), eventSubscription));
+            commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityCancelledEvent(flowNode.Id, flowNode.Name, boundaryEventExecution.Id, boundaryEventExecution.ProcessInstanceId, boundaryEventExecution.ProcessDefinitionId, ParseActivityType(flowNode), eventSubscription));
 
             if (flowNode is SubProcess)
             {
                 // The parent of the boundary event execution will be the one on which the boundary event is set
-                IExecutionEntity parentExecutionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(boundaryEventExecution.ParentId);
+                IExecutionEntity parentExecutionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(boundaryEventExecution.ParentId);
                 if (parentExecutionEntity != null)
                 {
-                    dispatchActivityCancelledForChildExecution(eventSubscription, parentExecutionEntity, boundaryEventExecution, commandContext);
+                    DispatchActivityCancelledForChildExecution(eventSubscription, parentExecutionEntity, boundaryEventExecution, commandContext);
                 }
             }
         }
 
-        protected internal virtual void dispatchActivityCancelledForChildExecution(IEventSubscriptionEntity eventSubscription, IExecutionEntity parentExecutionEntity, IExecutionEntity boundaryEventExecution, ICommandContext commandContext)
+        protected internal virtual void DispatchActivityCancelledForChildExecution(IEventSubscriptionEntity eventSubscription, IExecutionEntity parentExecutionEntity, IExecutionEntity boundaryEventExecution, ICommandContext commandContext)
         {
-
-            IList<IExecutionEntity> executionEntities = commandContext.ExecutionEntityManager.findChildExecutionsByParentExecutionId(parentExecutionEntity.Id);
+            IList<IExecutionEntity> executionEntities = commandContext.ExecutionEntityManager.FindChildExecutionsByParentExecutionId(parentExecutionEntity.Id);
             foreach (IExecutionEntity childExecution in executionEntities)
             {
 
@@ -127,26 +123,21 @@ namespace org.activiti.engine.impl.@event
                 {
 
                     FlowNode flowNode = (FlowNode)childExecution.CurrentFlowElement;
-                    commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createActivityCancelledEvent(flowNode.Id, flowNode.Name, childExecution.Id, childExecution.ProcessInstanceId, childExecution.ProcessDefinitionId, parseActivityType(flowNode), eventSubscription));
+                    commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityCancelledEvent(flowNode.Id, flowNode.Name, childExecution.Id, childExecution.ProcessInstanceId, childExecution.ProcessDefinitionId, ParseActivityType(flowNode), eventSubscription));
 
                     if (childExecution.IsScope)
                     {
-                        dispatchActivityCancelledForChildExecution(eventSubscription, childExecution, boundaryEventExecution, commandContext);
+                        DispatchActivityCancelledForChildExecution(eventSubscription, childExecution, boundaryEventExecution, commandContext);
                     }
-
                 }
-
             }
-
         }
 
-        protected internal virtual string parseActivityType(FlowNode flowNode)
+        protected internal virtual string ParseActivityType(FlowNode flowNode)
         {
             string elementType = flowNode.GetType().Name;
             elementType = elementType.Substring(0, 1).ToLower() + elementType.Substring(1);
             return elementType;
         }
-
     }
-
 }

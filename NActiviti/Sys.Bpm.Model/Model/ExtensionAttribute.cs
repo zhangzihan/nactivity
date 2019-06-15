@@ -80,10 +80,10 @@ namespace org.activiti.bpmn.model
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            if (!string.ReferenceEquals(namespacePrefix, null))
+            if (!(namespacePrefix is null))
             {
                 sb.Append(namespacePrefix);
-                if (!string.ReferenceEquals(name, null))
+                if (!(name is null))
                 {
                     sb.Append(":").Append(name);
                 }
@@ -92,17 +92,19 @@ namespace org.activiti.bpmn.model
             {
                 sb.Append(name);
             }
-            if (!string.ReferenceEquals(value, null))
+            if (!(value is null))
             {
                 sb.Append("=").Append(value);
             }
             return sb.ToString();
         }
 
-        public virtual ExtensionAttribute clone()
+        public virtual ExtensionAttribute Clone()
         {
-            ExtensionAttribute clone = new ExtensionAttribute();
-            clone.Values = this;
+            ExtensionAttribute clone = new ExtensionAttribute
+            {
+                Values = this
+            };
             return clone;
         }
 

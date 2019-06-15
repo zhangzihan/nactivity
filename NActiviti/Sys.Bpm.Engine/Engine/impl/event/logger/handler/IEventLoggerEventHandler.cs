@@ -12,7 +12,7 @@ namespace org.activiti.engine.impl.@event.logger.handler
     public interface IEventLoggerEventHandler
     {
 
-        IEventLogEntryEntity generateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext);
+        IEventLogEntryEntity GenerateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext);
 
         IActivitiEvent Event { set; }
 

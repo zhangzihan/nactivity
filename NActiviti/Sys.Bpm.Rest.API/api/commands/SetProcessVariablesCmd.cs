@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using org.activiti.services.api.commands;
 using System;
 using System.Collections.Generic;
 
@@ -13,7 +14,7 @@ namespace org.activiti.cloud.services.api.commands
 
         private readonly string id = "setProcessVariablesCmd";
         private string processId;
-        private IDictionary<string, object> variables;
+        private WorkflowVariable variables;
 
 
         /// <summary>
@@ -23,7 +24,7 @@ namespace org.activiti.cloud.services.api.commands
         /// <param name="variables">变量列表</param>
         ////[JsonConstructor]
         public SetProcessVariablesCmd([JsonProperty("ProcessId")] string processId,
-            [JsonProperty("Variables")] IDictionary<string, object> variables)
+            [JsonProperty("Variables")] WorkflowVariable variables)
         {
             this.id = Guid.NewGuid().ToString();
             this.processId = processId;
@@ -56,7 +57,7 @@ namespace org.activiti.cloud.services.api.commands
         /// <summary>
         /// 变量列表
         /// </summary>
-        public virtual IDictionary<string, object> Variables
+        public virtual WorkflowVariable Variables
         {
             get
             {

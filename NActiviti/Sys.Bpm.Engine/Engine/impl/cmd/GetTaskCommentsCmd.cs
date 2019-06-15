@@ -33,9 +33,9 @@ namespace org.activiti.engine.impl.cmd
             this.taskId = taskId;
         }
 
-        public virtual IList<IComment> execute(ICommandContext commandContext)
+        public virtual IList<IComment> Execute(ICommandContext commandContext)
         {
-            return commandContext.CommentEntityManager.findCommentsByTaskId(taskId);
+            return commandContext.CommentEntityManager.FindCommentsByTaskId(taskId);
         }
     }
 

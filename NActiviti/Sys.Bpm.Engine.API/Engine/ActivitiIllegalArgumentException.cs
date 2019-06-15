@@ -26,13 +26,21 @@ namespace org.activiti.engine
 
         private const long serialVersionUID = 1L;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public ActivitiIllegalArgumentException(string message) : base(message)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="cause"></param>
         public ActivitiIllegalArgumentException(string message, Exception cause) : base(message, cause)
         {
         }
     }
-
 }

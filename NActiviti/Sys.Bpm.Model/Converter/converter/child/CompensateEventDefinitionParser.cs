@@ -12,7 +12,7 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
@@ -24,10 +24,10 @@ namespace org.activiti.bpmn.converter.child
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_COMPENSATEDEFINITION;
+                return BpmnXMLConstants.ELEMENT_EVENT_COMPENSATEDEFINITION;
             }
         }
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
             if (!(parentElement is Event))
             {
@@ -35,14 +35,14 @@ namespace org.activiti.bpmn.converter.child
             }
 
             CompensateEventDefinition eventDefinition = new CompensateEventDefinition();
-            BpmnXMLUtil.addXMLLocation(eventDefinition, xtr);
-            eventDefinition.ActivityRef = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_COMPENSATE_ACTIVITYREF);
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_COMPENSATE_WAITFORCOMPLETION)))
+            BpmnXMLUtil.AddXMLLocation(eventDefinition, xtr);
+            eventDefinition.ActivityRef = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_COMPENSATE_ACTIVITYREF);
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_COMPENSATE_WAITFORCOMPLETION)))
             {
-                eventDefinition.WaitForCompletion = bool.Parse(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_COMPENSATE_WAITFORCOMPLETION));
+                eventDefinition.WaitForCompletion = bool.Parse(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_COMPENSATE_WAITFORCOMPLETION));
             }
 
-            BpmnXMLUtil.parseChildElements(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_COMPENSATEDEFINITION, eventDefinition, xtr, model);
+            BpmnXMLUtil.ParseChildElements(BpmnXMLConstants.ELEMENT_EVENT_COMPENSATEDEFINITION, eventDefinition, xtr, model);
 
             ((Event)parentElement).EventDefinitions.Add(eventDefinition);
         }

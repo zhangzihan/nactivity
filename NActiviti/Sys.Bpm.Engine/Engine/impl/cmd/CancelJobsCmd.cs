@@ -45,42 +45,40 @@ namespace org.activiti.engine.impl.cmd
             jobIds.Add(jobId);
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            IJobEntity jobToDelete = null;
             foreach (string jobId in jobIds)
             {
-                jobToDelete = commandContext.JobEntityManager.findById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
+                IJobEntity jobToDelete = commandContext.JobEntityManager.FindById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
 
                 if (jobToDelete != null)
                 {
                     // When given job doesn't exist, ignore
                     if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
                     {
-                        commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_CANCELED, jobToDelete));
+                        commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_CANCELED, jobToDelete));
                     }
 
-                    commandContext.JobEntityManager.delete(jobToDelete);
+                    commandContext.JobEntityManager.Delete(jobToDelete);
 
                 }
                 else
                 {
-                    ITimerJobEntity timerJobToDelete = commandContext.TimerJobEntityManager.findById<ITimerJobEntity>(new KeyValuePair<string, object>("id", jobId));
+                    ITimerJobEntity timerJobToDelete = commandContext.TimerJobEntityManager.FindById<ITimerJobEntity>(new KeyValuePair<string, object>("id", jobId));
 
                     if (timerJobToDelete != null)
                     {
                         // When given job doesn't exist, ignore
                         if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
                         {
-                            commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_CANCELED, timerJobToDelete));
+                            commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_CANCELED, timerJobToDelete));
                         }
 
-                        commandContext.TimerJobEntityManager.delete(timerJobToDelete);
+                        commandContext.TimerJobEntityManager.Delete(timerJobToDelete);
                     }
                 }
             }
             return null;
         }
     }
-
 }

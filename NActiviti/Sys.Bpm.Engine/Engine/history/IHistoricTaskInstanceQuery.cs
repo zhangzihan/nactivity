@@ -29,78 +29,78 @@ namespace org.activiti.engine.history
 
         /// <summary>
         /// Only select historic task instances with the given task delete reason. </summary>
-        IHistoricTaskInstanceQuery taskDeleteReason(string taskDeleteReason);
+        IHistoricTaskInstanceQuery SetTaskDeleteReason(string taskDeleteReason);
 
         /// <summary>
         /// Only select historic task instances with a task description like the given value. The syntax that should be used is the same as in SQL, eg. %activiti%.
         /// </summary>
-        IHistoricTaskInstanceQuery taskDeleteReasonLike(string taskDeleteReasonLike);
+        IHistoricTaskInstanceQuery SetTaskDeleteReasonLike(string taskDeleteReasonLike);
 
         /// <summary>
         /// Only select historic task instances which are finished.
         /// </summary>
-        IHistoricTaskInstanceQuery finished();
+        IHistoricTaskInstanceQuery SetFinished();
 
         /// <summary>
         /// Only select historic task instances which aren't finished yet.
         /// </summary>
-        IHistoricTaskInstanceQuery unfinished();
+        IHistoricTaskInstanceQuery SetUnfinished();
 
         /// <summary>
         /// Only select historic task instances which are part of a process instance which is already finished.
         /// </summary>
-        IHistoricTaskInstanceQuery processFinished();
+        IHistoricTaskInstanceQuery SetProcessFinished();
 
         /// <summary>
         /// Only select historic task instances which are part of a process instance which is not finished yet.
         /// </summary>
-        IHistoricTaskInstanceQuery processUnfinished();
+        IHistoricTaskInstanceQuery SetProcessUnfinished();
 
         /// <summary>
         /// Only select subtasks of the given parent task </summary>
-        IHistoricTaskInstanceQuery taskParentTaskId(string parentTaskId);
+        IHistoricTaskInstanceQuery SetTaskParentTaskId(string parentTaskId);
 
         /// <summary>
         /// Only select select historic task instances which are completed on the given date
         /// </summary>
-        IHistoricTaskInstanceQuery taskCompletedOn(DateTime? endDate);
+        IHistoricTaskInstanceQuery SetTaskCompletedOn(DateTime? endDate);
 
         /// <summary>
         /// Only select select historic task instances which are completed before the given date
         /// </summary>
-        IHistoricTaskInstanceQuery taskCompletedBefore(DateTime? endDate);
+        IHistoricTaskInstanceQuery SetTaskCompletedBefore(DateTime? endDate);
 
         /// <summary>
         /// Only select select historic task instances which are completed after the given date
         /// </summary>
-        IHistoricTaskInstanceQuery taskCompletedAfter(DateTime? endDate);
+        IHistoricTaskInstanceQuery SetTaskCompletedAfter(DateTime? endDate);
 
         // ORDERING
 
         /// <summary>
         /// Order by the historic activity instance id this task was used in (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricTaskInstanceQuery orderByHistoricActivityInstanceId();
+        IHistoricTaskInstanceQuery OrderByHistoricActivityInstanceId();
 
         /// <summary>
         /// Order by duration (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricTaskInstanceQuery orderByHistoricTaskInstanceDuration();
+        IHistoricTaskInstanceQuery OrderByHistoricTaskInstanceDuration();
 
         /// <summary>
         /// Order by end time (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricTaskInstanceQuery orderByHistoricTaskInstanceEndTime();
+        IHistoricTaskInstanceQuery OrderByHistoricTaskInstanceEndTime();
 
         /// <summary>
         /// Order by start time (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricTaskInstanceQuery orderByHistoricTaskInstanceStartTime();
+        IHistoricTaskInstanceQuery OrderByHistoricTaskInstanceStartTime();
 
         /// <summary>
         /// Order by task delete reason (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricTaskInstanceQuery orderByDeleteReason();
+        IHistoricTaskInstanceQuery OrderByDeleteReason();
 
     }
 

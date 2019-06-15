@@ -15,30 +15,28 @@
 namespace org.activiti.engine.impl.persistence.entity.data
 {
 
-	using org.activiti.engine.history;
+    using org.activiti.engine.history;
 
 
-	public interface IHistoricDetailDataManager : IDataManager<IHistoricDetailEntity>
-	{
+    public interface IHistoricDetailDataManager : IDataManager<IHistoricDetailEntity>
+    {
 
-	  IHistoricDetailAssignmentEntity createHistoricDetailAssignment();
+        IHistoricDetailAssignmentEntity CreateHistoricDetailAssignment();
 
-	  IHistoricDetailTransitionInstanceEntity createHistoricDetailTransitionInstance();
+        IHistoricDetailTransitionInstanceEntity CreateHistoricDetailTransitionInstance();
 
-	  IHistoricDetailVariableInstanceUpdateEntity createHistoricDetailVariableInstanceUpdate();
+        IHistoricDetailVariableInstanceUpdateEntity CreateHistoricDetailVariableInstanceUpdate();
 
-	  IList<IHistoricDetailEntity> findHistoricDetailsByProcessInstanceId(string processInstanceId);
+        IList<IHistoricDetailEntity> FindHistoricDetailsByProcessInstanceId(string processInstanceId);
 
-	  IList<IHistoricDetailEntity> findHistoricDetailsByTaskId(string taskId);
+        IList<IHistoricDetailEntity> FindHistoricDetailsByTaskId(string taskId);
 
-	  long findHistoricDetailCountByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery);
+        long FindHistoricDetailCountByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery);
 
-	  IList<IHistoricDetail> findHistoricDetailsByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery, Page page);
+        IList<IHistoricDetail> FindHistoricDetailsByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery, Page page);
 
-	  IList<IHistoricDetail> findHistoricDetailsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<IHistoricDetail> FindHistoricDetailsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findHistoricDetailCountByNativeQuery(IDictionary<string, object> parameterMap);
-
-	}
-
+        long FindHistoricDetailCountByNativeQuery(IDictionary<string, object> parameterMap);
+    }
 }

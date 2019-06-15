@@ -25,25 +25,25 @@ namespace org.activiti.engine.impl.cmd
             this.timerJobId = timerJobId;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            IDeadLetterJobEntity jobToDelete = getJobToDelete(commandContext);
+            IDeadLetterJobEntity jobToDelete = GetJobToDelete(commandContext);
 
-            sendCancelEvent(jobToDelete);
+            SendCancelEvent(jobToDelete);
 
-            commandContext.DeadLetterJobEntityManager.delete(jobToDelete);
+            commandContext.DeadLetterJobEntityManager.Delete(jobToDelete);
             return null;
         }
 
-        protected internal virtual void sendCancelEvent(IDeadLetterJobEntity jobToDelete)
+        protected internal virtual void SendCancelEvent(IDeadLetterJobEntity jobToDelete)
         {
             if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_CANCELED, jobToDelete));
+                Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_CANCELED, jobToDelete));
             }
         }
 
-        protected internal virtual IDeadLetterJobEntity getJobToDelete(ICommandContext commandContext)
+        protected internal virtual IDeadLetterJobEntity GetJobToDelete(ICommandContext commandContext)
         {
             if (ReferenceEquals(timerJobId, null))
             {
@@ -54,7 +54,7 @@ namespace org.activiti.engine.impl.cmd
             //    log.debug("Deleting job {}", timerJobId);
             //}
 
-            IDeadLetterJobEntity job = commandContext.DeadLetterJobEntityManager.findById<IDeadLetterJobEntity>(new KeyValuePair<string, object>("id", timerJobId));
+            IDeadLetterJobEntity job = commandContext.DeadLetterJobEntityManager.FindById<IDeadLetterJobEntity>(new KeyValuePair<string, object>("id", timerJobId));
             if (job == null)
             {
                 throw new ActivitiObjectNotFoundException("No dead letter job found with id '" + timerJobId + "'", typeof(IJob));

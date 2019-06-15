@@ -46,31 +46,31 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public override void insert(IDeploymentEntity deployment)
+        public override void Insert(IDeploymentEntity deployment)
         {
-            insert(deployment, false);
+            Insert(deployment, false);
 
             var resources = deployment.GetResources().Values;
             foreach (IResourceEntity resource in resources)
             {
                 resource.DeploymentId = deployment.Id;
-                ResourceEntityManager.insert(resource);
+                ResourceEntityManager.Insert(resource);
             }
         }
 
-        public virtual void deleteDeployment(string deploymentId, bool cascade)
+        public virtual void DeleteDeployment(string deploymentId, bool cascade)
         {
-            IList<IProcessDefinition> processDefinitions = new ProcessDefinitionQueryImpl().deploymentId(deploymentId).list();
+            IList<IProcessDefinition> processDefinitions = new ProcessDefinitionQueryImpl().SetDeploymentId(deploymentId).List();
 
             //判断是否存在正在执行的流程
             long count = new ExecutionQueryImpl()
-                .processDeploymentId(deploymentId)
-                .count();
+                .SetProcessDeploymentId(deploymentId)
+                .Count();
 
             //判断是否存在历史流程
             count = count > 0 ? count : new HistoricProcessInstanceQueryImpl()
-                .deploymentId(deploymentId)
-                .count();
+                .SetDeploymentId(deploymentId)
+                .Count();
 
             if (count > 0)
             {
@@ -100,15 +100,15 @@ namespace org.activiti.engine.impl.persistence.entity
             }
 
             deleteProcessDefinitionForDeployment(deploymentId);
-            ResourceEntityManager.deleteResourcesByDeploymentId(deploymentId);
-            delete(findById<DeploymentEntityImpl>(new KeyValuePair<string, object>("id", deploymentId)), false);
+            ResourceEntityManager.DeleteResourcesByDeploymentId(deploymentId);
+            Delete(FindById<DeploymentEntityImpl>(new KeyValuePair<string, object>("id", deploymentId)), false);
         }
 
         protected internal virtual void updateRelatedModels(string deploymentId)
         {
             // Remove the deployment link from any model.
             // The model will still exists, as a model is a source for a deployment model and has a different lifecycle
-            IList<IModel> models = this.CommandContext.ProcessEngineConfiguration.repositoryService.createModelQuery().deploymentId(deploymentId).list();
+            IList<IModel> models = this.CommandContext.ProcessEngineConfiguration.repositoryService.CreateModelQuery().SetDeploymentId(deploymentId).List();
             //IList<IModel> models = new ModelQueryImpl(this.CommandContext)
             //    .deploymentId(deploymentId).list();
 
@@ -116,86 +116,86 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 IModelEntity modelEntity = (IModelEntity)model;
                 modelEntity.DeploymentId = null;
-                ModelEntityManager.updateModel(modelEntity);
+                ModelEntityManager.UpdateModel(modelEntity);
             }
         }
 
         protected internal virtual void deleteProcessDefinitionIdentityLinks(IProcessDefinition processDefinition)
         {
-            IdentityLinkEntityManager.deleteIdentityLinksByProcDef(processDefinition.Id);
+            IdentityLinkEntityManager.DeleteIdentityLinksByProcDef(processDefinition.Id);
         }
 
         protected internal virtual void deleteEventSubscriptions(IProcessDefinition processDefinition)
         {
             IEventSubscriptionEntityManager eventSubscriptionEntityManager = EventSubscriptionEntityManager;
-            eventSubscriptionEntityManager.deleteEventSubscriptionsForProcessDefinition(processDefinition.Id);
+            eventSubscriptionEntityManager.DeleteEventSubscriptionsForProcessDefinition(processDefinition.Id);
         }
 
         protected internal virtual void deleteProcessDefinitionInfo(string processDefinitionId)
         {
-            ProcessDefinitionInfoEntityManager.deleteProcessDefinitionInfo(processDefinitionId);
+            ProcessDefinitionInfoEntityManager.DeleteProcessDefinitionInfo(processDefinitionId);
         }
 
         protected internal virtual void deleteProcessDefinitionForDeployment(string deploymentId)
         {
-            ProcessDefinitionEntityManager.deleteProcessDefinitionsByDeploymentId(deploymentId);
+            ProcessDefinitionEntityManager.DeleteProcessDefinitionsByDeploymentId(deploymentId);
         }
 
         protected internal virtual void deleteProcessInstancesForProcessDefinitions(IList<IProcessDefinition> processDefinitions)
         {
             foreach (IProcessDefinition processDefinition in processDefinitions)
             {
-                ExecutionEntityManager.deleteProcessInstancesByProcessDefinition(processDefinition.Id, "deleted deployment", true);
+                ExecutionEntityManager.DeleteProcessInstancesByProcessDefinition(processDefinition.Id, "deleted deployment", true);
             }
         }
 
         protected internal virtual void removeRelatedJobs(IProcessDefinition processDefinition)
         {
-            IList<IJobEntity> timerJobs = JobEntityManager.findJobsByProcessDefinitionId(processDefinition.Id);
+            IList<IJobEntity> timerJobs = JobEntityManager.FindJobsByProcessDefinitionId(processDefinition.Id);
             if (timerJobs != null && timerJobs.Count > 0)
             {
                 foreach (IJobEntity timerJob in timerJobs)
                 {
                     if (EventDispatcher.Enabled)
                     {
-                        EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_CANCELED, timerJob, null, null, processDefinition.Id));
+                        EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_CANCELED, timerJob, null, null, processDefinition.Id));
                     }
 
-                    JobEntityManager.delete(timerJob);
+                    JobEntityManager.Delete(timerJob);
                 }
             }
         }
 
         protected internal virtual void removeTimerSuspendProcesDefJobs(IProcessDefinition processDefinition)
         {
-            IList<IJobEntity> timerJobs = JobEntityManager.findJobsByTypeAndProcessDefinitionId(TimerSuspendProcessDefinitionHandler.TYPE, processDefinition.Id);
+            IList<IJobEntity> timerJobs = JobEntityManager.FindJobsByTypeAndProcessDefinitionId(TimerSuspendProcessDefinitionHandler.TYPE, processDefinition.Id);
             if (timerJobs != null && timerJobs.Count > 0)
             {
                 foreach (IJobEntity timerJob in timerJobs)
                 {
                     if (EventDispatcher.Enabled)
                     {
-                        EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_CANCELED, timerJob, null, null, processDefinition.Id));
+                        EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_CANCELED, timerJob, null, null, processDefinition.Id));
                     }
 
-                    JobEntityManager.delete(timerJob);
+                    JobEntityManager.Delete(timerJob);
                 }
             }
         }
 
         protected internal virtual void removeTimerStartJobs(IProcessDefinition processDefinition)
         {
-            IList<ITimerJobEntity> timerStartJobs = TimerJobEntityManager.findJobsByTypeAndProcessDefinitionId(TimerStartEventJobHandler.TYPE, processDefinition.Id);
+            IList<ITimerJobEntity> timerStartJobs = TimerJobEntityManager.FindJobsByTypeAndProcessDefinitionId(TimerStartEventJobHandler.TYPE, processDefinition.Id);
             if (timerStartJobs != null && timerStartJobs.Count > 0)
             {
                 foreach (ITimerJobEntity timerStartJob in timerStartJobs)
                 {
                     if (EventDispatcher.Enabled)
                     {
-                        EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_CANCELED, timerStartJob, null, null, processDefinition.Id));
+                        EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_CANCELED, timerStartJob, null, null, processDefinition.Id));
                     }
 
-                    TimerJobEntityManager.delete(timerStartJob);
+                    TimerJobEntityManager.Delete(timerStartJob);
                 }
             }
         }
@@ -211,12 +211,12 @@ namespace org.activiti.engine.impl.persistence.entity
                 if (previousProcessDefinition != null)
                 {
 
-                    BpmnModel bpmnModel = ProcessDefinitionUtil.getBpmnModel(previousProcessDefinition.Id);
-                    org.activiti.bpmn.model.Process previousProcess = ProcessDefinitionUtil.getProcess(previousProcessDefinition.Id);
+                    BpmnModel bpmnModel = ProcessDefinitionUtil.GetBpmnModel(previousProcessDefinition.Id);
+                    Process previousProcess = ProcessDefinitionUtil.GetProcess(previousProcessDefinition.Id);
                     if (CollectionUtil.IsNotEmpty(previousProcess.FlowElements))
                     {
 
-                        IList<StartEvent> startEvents = previousProcess.findFlowElementsOfType<StartEvent>();
+                        IList<StartEvent> startEvents = previousProcess.FindFlowElementsOfType<StartEvent>();
 
                         if (CollectionUtil.IsNotEmpty(startEvents))
                         {
@@ -253,11 +253,11 @@ namespace org.activiti.engine.impl.persistence.entity
         protected internal virtual void restoreTimerStartEvent(IProcessDefinition previousProcessDefinition, StartEvent startEvent, EventDefinition eventDefinition)
         {
             TimerEventDefinition timerEventDefinition = (TimerEventDefinition)eventDefinition;
-            ITimerJobEntity timer = TimerUtil.createTimerEntityForTimerEventDefinition((TimerEventDefinition)eventDefinition, false, null, TimerStartEventJobHandler.TYPE, TimerEventHandler.createConfiguration(startEvent.Id, timerEventDefinition.EndDate, timerEventDefinition.CalendarName));
+            ITimerJobEntity timer = TimerUtil.CreateTimerEntityForTimerEventDefinition((TimerEventDefinition)eventDefinition, false, null, TimerStartEventJobHandler.TYPE, TimerEventHandler.CreateConfiguration(startEvent.Id, timerEventDefinition.EndDate, timerEventDefinition.CalendarName));
 
             if (timer != null)
             {
-                ITimerJobEntity timerJob = JobManager.createTimerJob((TimerEventDefinition)eventDefinition, false, null, TimerStartEventJobHandler.TYPE, TimerEventHandler.createConfiguration(startEvent.Id, timerEventDefinition.EndDate, timerEventDefinition.CalendarName));
+                ITimerJobEntity timerJob = JobManager.CreateTimerJob((TimerEventDefinition)eventDefinition, false, null, TimerStartEventJobHandler.TYPE, TimerEventHandler.CreateConfiguration(startEvent.Id, timerEventDefinition.EndDate, timerEventDefinition.CalendarName));
 
                 timerJob.ProcessDefinitionId = previousProcessDefinition.Id;
 
@@ -266,15 +266,15 @@ namespace org.activiti.engine.impl.persistence.entity
                     timerJob.TenantId = previousProcessDefinition.TenantId;
                 }
 
-                JobManager.scheduleTimerJob(timerJob);
+                JobManager.ScheduleTimerJob(timerJob);
             }
         }
 
         protected internal virtual void restoreSignalStartEvent(IProcessDefinition previousProcessDefinition, BpmnModel bpmnModel, StartEvent startEvent, EventDefinition eventDefinition)
         {
             SignalEventDefinition signalEventDefinition = (SignalEventDefinition)eventDefinition;
-            ISignalEventSubscriptionEntity subscriptionEntity = EventSubscriptionEntityManager.createSignalEventSubscription();
-            Signal signal = bpmnModel.getSignal(signalEventDefinition.SignalRef);
+            ISignalEventSubscriptionEntity subscriptionEntity = EventSubscriptionEntityManager.CreateSignalEventSubscription();
+            Signal signal = bpmnModel.GetSignal(signalEventDefinition.SignalRef);
             if (signal != null)
             {
                 subscriptionEntity.EventName = signal.Name;
@@ -290,19 +290,19 @@ namespace org.activiti.engine.impl.persistence.entity
                 subscriptionEntity.TenantId = previousProcessDefinition.TenantId;
             }
 
-            EventSubscriptionEntityManager.insert(subscriptionEntity);
+            EventSubscriptionEntityManager.Insert(subscriptionEntity);
         }
 
         protected internal virtual void restoreMessageStartEvent(IProcessDefinition previousProcessDefinition, BpmnModel bpmnModel, StartEvent startEvent, EventDefinition eventDefinition)
         {
             MessageEventDefinition messageEventDefinition = (MessageEventDefinition)eventDefinition;
-            if (bpmnModel.containsMessageId(messageEventDefinition.MessageRef))
+            if (bpmnModel.ContainsMessageId(messageEventDefinition.MessageRef))
             {
-                Message message = bpmnModel.getMessage(messageEventDefinition.MessageRef);
+                Message message = bpmnModel.GetMessage(messageEventDefinition.MessageRef);
                 messageEventDefinition.MessageRef = message.Name;
             }
 
-            IMessageEventSubscriptionEntity newSubscription = EventSubscriptionEntityManager.createMessageEventSubscription();
+            IMessageEventSubscriptionEntity newSubscription = EventSubscriptionEntityManager.CreateMessageEventSubscription();
             newSubscription.EventName = messageEventDefinition.MessageRef;
             newSubscription.ActivityId = startEvent.Id;
             newSubscription.Configuration = previousProcessDefinition.Id;
@@ -313,7 +313,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 newSubscription.TenantId = previousProcessDefinition.TenantId;
             }
 
-            EventSubscriptionEntityManager.insert(newSubscription);
+            EventSubscriptionEntityManager.Insert(newSubscription);
         }
 
         protected internal virtual IProcessDefinitionEntity findLatestProcessDefinition(IProcessDefinition processDefinition)
@@ -321,11 +321,11 @@ namespace org.activiti.engine.impl.persistence.entity
             IProcessDefinitionEntity latestProcessDefinition = null;
             if (!ReferenceEquals(processDefinition.TenantId, null) && !engine.ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
             {
-                latestProcessDefinition = ProcessDefinitionEntityManager.findLatestProcessDefinitionByKeyAndTenantId(processDefinition.Key, processDefinition.TenantId);
+                latestProcessDefinition = ProcessDefinitionEntityManager.FindLatestProcessDefinitionByKeyAndTenantId(processDefinition.Key, processDefinition.TenantId);
             }
             else
             {
-                latestProcessDefinition = ProcessDefinitionEntityManager.findLatestProcessDefinitionByKey(processDefinition.Key);
+                latestProcessDefinition = ProcessDefinitionEntityManager.FindLatestProcessDefinitionByKey(processDefinition.Key);
             }
             return latestProcessDefinition;
         }
@@ -337,21 +337,21 @@ namespace org.activiti.engine.impl.persistence.entity
             // Hence, the following logic
 
             ProcessDefinitionQueryImpl query = new ProcessDefinitionQueryImpl();
-            query.processDefinitionKey(processDefinitionToBeRemoved.Key);
+            query.SetProcessDefinitionKey(processDefinitionToBeRemoved.Key);
 
             if (!ReferenceEquals(processDefinitionToBeRemoved.TenantId, null) && !engine.ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinitionToBeRemoved.TenantId))
             {
-                query.processDefinitionTenantId(processDefinitionToBeRemoved.TenantId);
+                query.SetProcessDefinitionTenantId(processDefinitionToBeRemoved.TenantId);
             }
             else
             {
-                query.processDefinitionWithoutTenantId();
+                query.SetProcessDefinitionWithoutTenantId();
             }
 
-            query.processDefinitionVersionLowerThan(processDefinitionToBeRemoved.Version);
-            query.orderByProcessDefinitionVersion().desc();
+            query.SetProcessDefinitionVersionLowerThan(processDefinitionToBeRemoved.Version);
+            query.OrderByProcessDefinitionVersion().Desc();
 
-            IList<IProcessDefinition> processDefinitions = ProcessDefinitionEntityManager.findProcessDefinitionsByQueryCriteria(query, new Page(0, 1));
+            IList<IProcessDefinition> processDefinitions = ProcessDefinitionEntityManager.FindProcessDefinitionsByQueryCriteria(query, new Page(0, 1));
             if (processDefinitions != null && processDefinitions.Count > 0)
             {
                 return processDefinitions[0];
@@ -359,76 +359,76 @@ namespace org.activiti.engine.impl.persistence.entity
             return null;
         }
 
-        public virtual IDeploymentEntity findLatestDeploymentByName(string deploymentName)
+        public virtual IDeploymentEntity FindLatestDeploymentByName(string deploymentName)
         {
-            return deploymentDataManager.findLatestDeploymentByName(deploymentName);
+            return deploymentDataManager.FindLatestDeploymentByName(deploymentName);
         }
 
-        public virtual long findDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery)
+        public virtual long FindDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery)
         {
-            return deploymentDataManager.findDeploymentCountByQueryCriteria(deploymentQuery);
+            return deploymentDataManager.FindDeploymentCountByQueryCriteria(deploymentQuery);
         }
 
-        public virtual IList<IDeployment> findDeploymentsByQueryCriteria(DeploymentQueryImpl deploymentQuery, Page page)
+        public virtual IList<IDeployment> FindDeploymentsByQueryCriteria(IDeploymentQuery deploymentQuery, Page page)
         {
-            return deploymentDataManager.findDeploymentsByQueryCriteria(deploymentQuery, page);
+            return deploymentDataManager.FindDeploymentsByQueryCriteria(deploymentQuery, page);
         }
 
-        public virtual IList<string> getDeploymentResourceNames(string deploymentId)
+        public virtual IList<string> GetDeploymentResourceNames(string deploymentId)
         {
-            return deploymentDataManager.getDeploymentResourceNames(deploymentId);
+            return deploymentDataManager.GetDeploymentResourceNames(deploymentId);
         }
 
-        public virtual IList<IDeployment> findDeploymentsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IDeployment> FindDeploymentsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return deploymentDataManager.findDeploymentsByNativeQuery(parameterMap, firstResult, maxResults);
+            return deploymentDataManager.FindDeploymentsByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findDeploymentCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindDeploymentCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return deploymentDataManager.findDeploymentCountByNativeQuery(parameterMap);
+            return deploymentDataManager.FindDeploymentCountByNativeQuery(parameterMap);
         }
 
-        public virtual IDeploymentEntity saveDraft(IDeploymentEntity deployment)
+        public virtual IDeploymentEntity SaveDraft(IDeploymentEntity deployment)
         {
-            IDeploymentEntity exist = this.findLatestDeploymentByName(deployment.Name);
+            IDeploymentEntity exist = this.FindLatestDeploymentByName(deployment.Name);
 
             if (exist != null)
             {
                 IProcessDefinition process = new ProcessDefinitionQueryImpl()
-                    .deploymentId(exist.Id)
-                    .latestVersion()
-                    .singleResult();
+                    .SetDeploymentId(exist.Id)
+                    .SetLatestVersion()
+                    .SingleResult();
 
                 if (process == null)
                 {
-                    this.deleteDeployment(exist.Id, true);
+                    this.DeleteDeployment(exist.Id, true);
                 }
             }
 
             deployment.New = true;
 
-            this.insert(deployment);
+            this.Insert(deployment);
 
             return deployment;
         }
 
-        public virtual void removeDrafts(string tenantId, string name)
+        public virtual void RemoveDrafts(string tenantId, string name)
         {
             IDeploymentQuery query = new DeploymentQueryImpl();
-            query.deploymentTenantId(tenantId).deploymentName(name);
+            query.SetDeploymentTenantId(tenantId).SetDeploymentName(name);
 
-            IList<IDeployment> drafts = this.deploymentDataManager.findDeploymentDrafts(query);
+            IList<IDeployment> drafts = this.deploymentDataManager.FindDeploymentDrafts(query);
 
             foreach (var draft in drafts)
             {
-                this.deleteDeployment(draft.Id, true);
+                this.DeleteDeployment(draft.Id, true);
             }
         }
 
-        public virtual IList<IDeployment> findDrafts(IDeploymentQuery query)
+        public virtual IList<IDeployment> FindDrafts(IDeploymentQuery query)
         {
-            IList<IDeployment> drafts = this.deploymentDataManager.findDeploymentDrafts(query);
+            IList<IDeployment> drafts = this.deploymentDataManager.FindDeploymentDrafts(query);
 
             return drafts;
         }

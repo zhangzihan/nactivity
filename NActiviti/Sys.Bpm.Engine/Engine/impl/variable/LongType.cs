@@ -34,12 +34,12 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public override object getValue(IValueFields valueFields)
+        public override object GetValue(IValueFields valueFields)
         {
             return valueFields.LongValue;
         }
 
-        public override void setValue(object value, IValueFields valueFields)
+        public override void SetValue(object value, IValueFields valueFields)
         {
             valueFields.LongValue = (long?)value;
             if (value != null)
@@ -52,7 +52,7 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public override bool isAbleToStore(object value)
+        public override bool IsAbleToStore(object value)
         {
             if (value == null)
             {

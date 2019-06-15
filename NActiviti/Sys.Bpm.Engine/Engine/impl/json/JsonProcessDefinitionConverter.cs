@@ -22,7 +22,7 @@ namespace org.activiti.engine.impl.json
     public class JsonProcessDefinitionConverter : JsonObjectConverter<IProcessDefinition>
     {
 
-        public override JToken toJsonObject(IProcessDefinition processDefinition)
+        public override JToken ToJsonObject(IProcessDefinition processDefinition)
         {
             IProcessDefinitionEntity processDefinitionEntity = (IProcessDefinitionEntity)processDefinition;
             JToken jsonObject = new JObject();
@@ -38,7 +38,7 @@ namespace org.activiti.engine.impl.json
             return jsonObject;
         }
 
-        public override IProcessDefinition toObject(StreamReader reader)
+        public override IProcessDefinition ToObject(StreamReader reader)
         {
             var str = reader.ReadToEnd();
 

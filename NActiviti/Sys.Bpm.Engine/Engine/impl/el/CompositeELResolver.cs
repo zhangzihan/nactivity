@@ -6,7 +6,7 @@ namespace org.activiti.engine.impl.el
 
     public class CompositeELResolver : ELResolver
     {
-        private IList<ELResolver> resolvers = new List<ELResolver>();
+        private readonly IList<ELResolver> resolvers = new List<ELResolver>();
 
         public CompositeELResolver()
         {
@@ -14,7 +14,7 @@ namespace org.activiti.engine.impl.el
 
         public IList<ELResolver> Resolvers => resolvers;
 
-        public void add(ELResolver elResolver)
+        public void Add(ELResolver elResolver)
         {
             if (elResolver == null)
             {
@@ -26,14 +26,14 @@ namespace org.activiti.engine.impl.el
             }
         }
 
-        public override Type getCommonPropertyType(ELContext context, object @base)
+        public override Type GetCommonPropertyType(ELContext context, object @base)
         {
             Type result = null;
             int i = 0;
 
             for (int l = this.resolvers.Count; i < l; ++i)
             {
-                Type type = ((ELResolver)this.resolvers[i]).getCommonPropertyType(context, @base);
+                Type type = ((ELResolver)this.resolvers[i]).GetCommonPropertyType(context, @base);
                 if (type != null)
                 {
                     if (result != null && !type.IsAssignableFrom(result))
@@ -53,14 +53,14 @@ namespace org.activiti.engine.impl.el
             return result;
         }
 
-        public override Type getType(ELContext context, object @base, object property)
+        public override Type GetType(ELContext context, object @base, object property)
         {
             context.IsPropertyResolved = false;
             int i = 0;
 
             for (int l = this.resolvers.Count; i < l; ++i)
             {
-                Type type = ((ELResolver)this.resolvers[i]).getType(context, @base, property);
+                Type type = ((ELResolver)this.resolvers[i]).GetType(context, @base, property);
                 if (context.IsPropertyResolved)
                 {
                     return type;
@@ -70,14 +70,14 @@ namespace org.activiti.engine.impl.el
             return null;
         }
 
-        public override object getValue(ELContext context, object @base, object property)
+        public override object GetValue(ELContext context, object @base, object property)
         {
             context.IsPropertyResolved = false;
             int i = 0;
 
             for (int l = this.resolvers.Count; i < l; ++i)
             {
-                Object value = ((ELResolver)this.resolvers[i]).getValue(context, @base, property);
+                Object value = ((ELResolver)this.resolvers[i]).GetValue(context, @base, property);
                 if (context.IsPropertyResolved)
                 {
                     return value;
@@ -87,14 +87,14 @@ namespace org.activiti.engine.impl.el
             return null;
         }
 
-        public override bool isReadOnly(ELContext context, object @base, object property)
+        public override bool IsReadOnly(ELContext context, object @base, object property)
         {
             context.IsPropertyResolved = false;
             int i = 0;
 
             for (int l = this.resolvers.Count; i < l; ++i)
             {
-                bool readOnly = ((ELResolver)this.resolvers[i]).isReadOnly(context, @base, property);
+                bool readOnly = ((ELResolver)this.resolvers[i]).IsReadOnly(context, @base, property);
                 if (context.IsPropertyResolved)
                 {
                     return readOnly;
@@ -104,14 +104,14 @@ namespace org.activiti.engine.impl.el
             return false;
         }
 
-        public override void setValue(ELContext context, object @base, object property, object value)
+        public override void SetValue(ELContext context, object @base, object property, object value)
         {
             context.IsPropertyResolved = false;
             int i = 0;
 
             for (int l = this.resolvers.Count; i < l; ++i)
             {
-                ((ELResolver)this.resolvers[i]).setValue(context, @base, property, value);
+                ((ELResolver)this.resolvers[i]).SetValue(context, @base, property, value);
                 if (context.IsPropertyResolved)
                 {
                     return;
@@ -120,14 +120,14 @@ namespace org.activiti.engine.impl.el
 
         }
 
-        public override object invoke(ELContext context, object @base, object method, Type[] paramTypes, object[] @params)
+        public override object Invoke(ELContext context, object @base, object method, Type[] paramTypes, object[] @params)
         {
             context.IsPropertyResolved = false;
             int i = 0;
 
             for (int l = this.resolvers.Count; i < l; ++i)
             {
-                object result = ((ELResolver)this.resolvers[i]).invoke(context, @base, method, paramTypes, @params);
+                object result = ((ELResolver)this.resolvers[i]).Invoke(context, @base, method, paramTypes, @params);
                 if (context.IsPropertyResolved)
                 {
                     return result;

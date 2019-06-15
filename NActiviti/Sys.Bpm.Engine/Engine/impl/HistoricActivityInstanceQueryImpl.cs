@@ -26,21 +26,21 @@ namespace org.activiti.engine.impl
     {
 
         private const long serialVersionUID = 1L;
-        protected internal string activityInstanceId_Renamed;
-        protected internal string processInstanceId_Renamed;
-        protected internal string executionId_Renamed;
-        protected internal string processDefinitionId_Renamed;
-        protected internal string activityId_Renamed;
-        protected internal string activityName_Renamed;
-        protected internal string activityType_Renamed;
+        protected internal string activityInstanceId_;
+        protected internal string processInstanceId_;
+        protected internal string executionId_;
+        protected internal string processDefinitionId_;
+        protected internal string activityId_;
+        protected internal string activityName_;
+        protected internal string activityType_;
         protected internal string assignee;
         protected internal string tenantId;
         protected internal string tenantIdLike;
         protected internal bool withoutTenantId;
-        protected internal bool finished_Renamed;
-        protected internal bool unfinished_Renamed;
-        protected internal string deleteReason_Renamed;
-        protected internal string deleteReasonLike_Renamed;
+        protected internal bool finished_;
+        protected internal bool unfinished_;
+        protected internal string deleteReason_;
+        protected internal string deleteReasonLike_;
 
         public HistoricActivityInstanceQueryImpl()
         {
@@ -54,92 +54,88 @@ namespace org.activiti.engine.impl
         {
         }
 
-        public override long executeCount(ICommandContext commandContext)
+        public override long ExecuteCount(ICommandContext commandContext)
         {
-            checkQueryOk();
-            return commandContext.HistoricActivityInstanceEntityManager.findHistoricActivityInstanceCountByQueryCriteria(this);
+            CheckQueryOk();
+            return commandContext.HistoricActivityInstanceEntityManager.FindHistoricActivityInstanceCountByQueryCriteria(this);
         }
 
-        public override IList<IHistoricActivityInstance> executeList(ICommandContext commandContext, Page page)
+        public override IList<IHistoricActivityInstance> ExecuteList(ICommandContext commandContext, Page page)
         {
-            checkQueryOk();
-            return commandContext.HistoricActivityInstanceEntityManager.findHistoricActivityInstancesByQueryCriteria(this, page);
+            CheckQueryOk();
+            return commandContext.HistoricActivityInstanceEntityManager.FindHistoricActivityInstancesByQueryCriteria(this, page);
         }
 
-        public virtual IHistoricActivityInstanceQuery processInstanceId(string processInstanceId)
+        public virtual IHistoricActivityInstanceQuery SetProcessInstanceId(string processInstanceId)
         {
-            this.processInstanceId_Renamed = processInstanceId;
+            this.processInstanceId_ = processInstanceId;
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery executionId(string executionId)
+        public virtual IHistoricActivityInstanceQuery SetExecutionId(string executionId)
         {
-            this.executionId_Renamed = executionId;
+            this.executionId_ = executionId;
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery processDefinitionId(string processDefinitionId)
+        public virtual IHistoricActivityInstanceQuery SetProcessDefinitionId(string processDefinitionId)
         {
-            this.processDefinitionId_Renamed = processDefinitionId;
+            this.processDefinitionId_ = processDefinitionId;
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery activityId(string activityId)
+        public virtual IHistoricActivityInstanceQuery SetActivityId(string activityId)
         {
-            this.activityId_Renamed = activityId;
+            this.activityId_ = activityId;
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery activityName(string activityName)
+        public virtual IHistoricActivityInstanceQuery SetActivityName(string activityName)
         {
-            this.activityName_Renamed = activityName;
+            this.activityName_ = activityName;
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery activityType(string activityType)
+        public virtual IHistoricActivityInstanceQuery SetActivityType(string activityType)
         {
-            this.activityType_Renamed = activityType;
+            this.activityType_ = activityType;
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery taskAssignee(string assignee)
+        public virtual IHistoricActivityInstanceQuery SetTaskAssignee(string assignee)
         {
             this.assignee = assignee;
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery finished()
+        public virtual IHistoricActivityInstanceQuery SetFinished()
         {
-            this.finished_Renamed = true;
-            this.unfinished_Renamed = false;
+            this.finished_ = true;
+            this.unfinished_ = false;
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery unfinished()
+        public virtual IHistoricActivityInstanceQuery SetUnfinished()
         {
-            this.unfinished_Renamed = true;
-            this.finished_Renamed = false;
+            this.unfinished_ = true;
+            this.finished_ = false;
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery deleteReason(string deleteReason)
+        public virtual IHistoricActivityInstanceQuery SetDeleteReason(string deleteReason)
         {
-            this.deleteReason_Renamed = deleteReason;
+            this.deleteReason_ = deleteReason;
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery deleteReasonLike(string deleteReasonLike)
+        public virtual IHistoricActivityInstanceQuery SetDeleteReasonLike(string deleteReasonLike)
         {
-            this.deleteReasonLike_Renamed = deleteReasonLike;
+            this.deleteReasonLike_ = deleteReasonLike;
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery activityTenantId(string tenantId)
+        public virtual IHistoricActivityInstanceQuery SetActivityTenantId(string tenantId)
         {
-            if (ReferenceEquals(tenantId, null))
-            {
-                throw new ActivitiIllegalArgumentException("activity tenant id is null");
-            }
             this.tenantId = tenantId;
             return this;
         }
@@ -152,12 +148,8 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public virtual IHistoricActivityInstanceQuery activityTenantIdLike(string tenantIdLike)
+        public virtual IHistoricActivityInstanceQuery SetActivityTenantIdLike(string tenantIdLike)
         {
-            if (ReferenceEquals(tenantIdLike, null))
-            {
-                throw new ActivitiIllegalArgumentException("activity tenant id is null");
-            }
             this.tenantIdLike = tenantIdLike;
             return this;
         }
@@ -170,7 +162,7 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public virtual IHistoricActivityInstanceQuery activityWithoutTenantId()
+        public virtual IHistoricActivityInstanceQuery SetActivityWithoutTenantId()
         {
             this.withoutTenantId = true;
             return this;
@@ -187,75 +179,75 @@ namespace org.activiti.engine.impl
         // ordering
         // /////////////////////////////////////////////////////////////////
 
-        public virtual IHistoricActivityInstanceQuery orderByHistoricActivityInstanceDuration()
+        public virtual IHistoricActivityInstanceQuery OrderByHistoricActivityInstanceDuration()
         {
-            orderBy(HistoricActivityInstanceQueryProperty.DURATION);
+            SetOrderBy(HistoricActivityInstanceQueryProperty.DURATION);
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery orderByHistoricActivityInstanceEndTime()
+        public virtual IHistoricActivityInstanceQuery OrderByHistoricActivityInstanceEndTime()
         {
-            orderBy(HistoricActivityInstanceQueryProperty.END);
+            SetOrderBy(HistoricActivityInstanceQueryProperty.END);
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery orderByExecutionId()
+        public virtual IHistoricActivityInstanceQuery OrderByExecutionId()
         {
-            orderBy(HistoricActivityInstanceQueryProperty.EXECUTION_ID);
+            SetOrderBy(HistoricActivityInstanceQueryProperty.EXECUTION_ID);
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery orderByHistoricActivityInstanceId()
+        public virtual IHistoricActivityInstanceQuery OrderByHistoricActivityInstanceId()
         {
-            orderBy(HistoricActivityInstanceQueryProperty.HISTORIC_ACTIVITY_INSTANCE_ID);
+            SetOrderBy(HistoricActivityInstanceQueryProperty.HISTORIC_ACTIVITY_INSTANCE_ID);
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery orderByProcessDefinitionId()
+        public virtual IHistoricActivityInstanceQuery OrderByProcessDefinitionId()
         {
-            orderBy(HistoricActivityInstanceQueryProperty.PROCESS_DEFINITION_ID);
+            SetOrderBy(HistoricActivityInstanceQueryProperty.PROCESS_DEFINITION_ID);
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery orderByProcessInstanceId()
+        public virtual IHistoricActivityInstanceQuery OrderByProcessInstanceId()
         {
-            orderBy(HistoricActivityInstanceQueryProperty.PROCESS_INSTANCE_ID);
+            SetOrderBy(HistoricActivityInstanceQueryProperty.PROCESS_INSTANCE_ID);
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery orderByHistoricActivityInstanceStartTime()
+        public virtual IHistoricActivityInstanceQuery OrderByHistoricActivityInstanceStartTime()
         {
-            orderBy(HistoricActivityInstanceQueryProperty.START);
+            SetOrderBy(HistoricActivityInstanceQueryProperty.START);
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery orderByActivityId()
+        public virtual IHistoricActivityInstanceQuery OrderByActivityId()
         {
-            orderBy(HistoricActivityInstanceQueryProperty.ACTIVITY_ID);
+            SetOrderBy(HistoricActivityInstanceQueryProperty.ACTIVITY_ID);
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery orderByActivityName()
+        public virtual IHistoricActivityInstanceQuery OrderByActivityName()
         {
-            orderBy(HistoricActivityInstanceQueryProperty.ACTIVITY_NAME);
+            SetOrderBy(HistoricActivityInstanceQueryProperty.ACTIVITY_NAME);
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery orderByActivityType()
+        public virtual IHistoricActivityInstanceQuery OrderByActivityType()
         {
-            orderBy(HistoricActivityInstanceQueryProperty.ACTIVITY_TYPE);
+            SetOrderBy(HistoricActivityInstanceQueryProperty.ACTIVITY_TYPE);
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery orderByTenantId()
+        public virtual IHistoricActivityInstanceQuery OrderByTenantId()
         {
-            orderBy(HistoricActivityInstanceQueryProperty.TENANT_ID);
+            SetOrderBy(HistoricActivityInstanceQueryProperty.TENANT_ID);
             return this;
         }
 
-        public virtual IHistoricActivityInstanceQuery activityInstanceId(string activityInstanceId)
+        public virtual IHistoricActivityInstanceQuery SetActivityInstanceId(string activityInstanceId)
         {
-            this.activityInstanceId_Renamed = activityInstanceId;
+            this.activityInstanceId_ = activityInstanceId;
             return this;
         }
 
@@ -266,7 +258,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processInstanceId_Renamed;
+                return processInstanceId_;
             }
         }
 
@@ -274,7 +266,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return executionId_Renamed;
+                return executionId_;
             }
         }
 
@@ -282,7 +274,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processDefinitionId_Renamed;
+                return processDefinitionId_;
             }
         }
 
@@ -290,7 +282,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return activityId_Renamed;
+                return activityId_;
             }
         }
 
@@ -298,7 +290,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return activityName_Renamed;
+                return activityName_;
             }
         }
 
@@ -306,7 +298,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return activityType_Renamed;
+                return activityType_;
             }
         }
 
@@ -322,7 +314,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return finished_Renamed;
+                return finished_;
             }
         }
 
@@ -330,7 +322,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return unfinished_Renamed;
+                return unfinished_;
             }
         }
 
@@ -338,7 +330,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return activityInstanceId_Renamed;
+                return activityInstanceId_;
             }
         }
 
@@ -346,7 +338,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return deleteReason_Renamed;
+                return deleteReason_;
             }
         }
 
@@ -354,7 +346,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return deleteReasonLike_Renamed;
+                return deleteReasonLike_;
             }
         }
 

@@ -17,6 +17,7 @@ namespace org.activiti.engine.runtime
 {
 
     using org.activiti.engine.repository;
+    using Sys.Workflow;
 
     /// <summary>
     /// Represents one execution of a <seealso cref="IProcessDefinition"/>.
@@ -103,6 +104,16 @@ namespace org.activiti.engine.runtime
         /// Returns the user id of this process instance.
         /// </summary>
         string StartUserId { get; }
+
+        /// <summary>
+        /// Returns the user id of this process instance.
+        /// </summary>
+        string StartUser { get; }
+
+        /// <summary>
+        /// Returns the user id of this process instance.
+        /// </summary>
+        IUserInfo Starter { get; }
     }
 
 }

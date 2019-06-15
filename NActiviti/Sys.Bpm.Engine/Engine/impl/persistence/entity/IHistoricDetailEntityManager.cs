@@ -21,19 +21,19 @@ namespace org.activiti.engine.impl.persistence.entity
 	public interface IHistoricDetailEntityManager : IEntityManager<IHistoricDetailEntity>
 	{
 
-	  IHistoricDetailVariableInstanceUpdateEntity copyAndInsertHistoricDetailVariableInstanceUpdateEntity(IVariableInstanceEntity variableInstance);
+	  IHistoricDetailVariableInstanceUpdateEntity CopyAndInsertHistoricDetailVariableInstanceUpdateEntity(IVariableInstanceEntity variableInstance);
 
-	  long findHistoricDetailCountByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery);
+	  long FindHistoricDetailCountByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery);
 
-	  IList<IHistoricDetail> findHistoricDetailsByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery, Page page);
+	  IList<IHistoricDetail> FindHistoricDetailsByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery, Page page);
 
-	  void deleteHistoricDetailsByTaskId(string taskId);
+	  void DeleteHistoricDetailsByTaskId(string taskId);
 
-	  IList<IHistoricDetail> findHistoricDetailsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+	  IList<IHistoricDetail> FindHistoricDetailsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findHistoricDetailCountByNativeQuery(IDictionary<string, object> parameterMap);
+	  long FindHistoricDetailCountByNativeQuery(IDictionary<string, object> parameterMap);
 
-	  void deleteHistoricDetailsByProcessInstanceId(string historicProcessInstanceId);
+	  void DeleteHistoricDetailsByProcessInstanceId(string historicProcessInstanceId);
 
 	}
 }

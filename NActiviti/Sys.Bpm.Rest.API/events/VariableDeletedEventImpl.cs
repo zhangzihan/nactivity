@@ -23,9 +23,9 @@ namespace org.activiti.cloud.services.events
     /// </summary>
     public class VariableDeletedEventImpl : AbstractProcessEngineEvent, IVariableDeletedEvent
     {
-        private string variableName;
-        private string variableType;
-        private string taskId;
+        private readonly string variableName;
+        private readonly string variableType;
+        private readonly string taskId;
 
 
         /// <summary>

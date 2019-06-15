@@ -15,10 +15,9 @@
 namespace org.activiti.engine.impl.cmd
 {
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.DependencyInjection;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using Sys;
+    using Sys.Workflow;
     using System.Collections.Generic;
 
     /// 
@@ -28,7 +27,7 @@ namespace org.activiti.engine.impl.cmd
 
         public static string PROPERTY_EXECUTION_RELATED_ENTITY_COUNT = "cfg.execution-related-entities-count";
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
             /*
              * If execution related entity counting is on in config | Current property in database : Result
@@ -50,16 +49,16 @@ namespace org.activiti.engine.impl.cmd
             IPropertyEntityManager propertyEntityManager = commandContext.PropertyEntityManager;
 
             bool configProperty = commandContext.ProcessEngineConfiguration.PerformanceSettings.EnableExecutionRelationshipCounts;
-            IPropertyEntity propertyEntity = propertyEntityManager.findById<PropertyEntityImpl>(new KeyValuePair<string, object>("name", PROPERTY_EXECUTION_RELATED_ENTITY_COUNT));
+            IPropertyEntity propertyEntity = propertyEntityManager.FindById<PropertyEntityImpl>(new KeyValuePair<string, object>("name", PROPERTY_EXECUTION_RELATED_ENTITY_COUNT));
 
             if (propertyEntity == null)
             {
 
                 // 'not there' case in the table above: easy, simply insert the value
-                IPropertyEntity newPropertyEntity = propertyEntityManager.create();
+                IPropertyEntity newPropertyEntity = propertyEntityManager.Create();
                 newPropertyEntity.Name = PROPERTY_EXECUTION_RELATED_ENTITY_COUNT;
                 newPropertyEntity.Value = Convert.ToString(configProperty);
-                propertyEntityManager.insert(newPropertyEntity);
+                propertyEntityManager.Insert(newPropertyEntity);
 
             }
             else
@@ -72,14 +71,14 @@ namespace org.activiti.engine.impl.cmd
                     {
                         log.LogInformation("Configuration change: execution related entity counting feature was enabled before, but now disabled. " + "Updating all execution entities.");
                     }
-                    commandContext.ProcessEngineConfiguration.ExecutionDataManager.updateAllExecutionRelatedEntityCountFlags(configProperty);
+                    commandContext.ProcessEngineConfiguration.ExecutionDataManager.UpdateAllExecutionRelatedEntityCountFlags(configProperty);
                 }
 
                 // Update property
                 if (configProperty != propertyValue)
                 {
                     propertyEntity.Value = Convert.ToString(configProperty);
-                    propertyEntityManager.update(propertyEntity);
+                    propertyEntityManager.Update(propertyEntity);
                 }
 
             }

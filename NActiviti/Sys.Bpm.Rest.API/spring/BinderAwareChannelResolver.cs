@@ -12,11 +12,11 @@ namespace org.springframework.cloud.stream.binding
         /// <summary>
         /// 
         /// </summary>
-        IBinderAwareChannelResolver resolveDestination(string connectorType);
+        IBinderAwareChannelResolver ResolveDestination(string connectorType);
 
         /// <summary>
         /// 
         /// </summary>
-        void send<T>(IMessage<T> message);
+        void Send<T>(IMessage<T> message);
     }
 }

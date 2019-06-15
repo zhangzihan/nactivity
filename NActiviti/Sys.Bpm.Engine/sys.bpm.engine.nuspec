@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Sys.Bpm.Engine</id>
+    <version>1.0.0.1</version>
+    <title>Sys.Bpm.Engine</title>
+    <authors>Sys.Bpm.Engine</authors>
+    <owners>Sys.Bpm.Engine</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>工作流服务引擎</description>
+    <contentFiles>
+      <files include="cs/**/*.*" buildAction="Content" copyToOutput="true" flatten="true" />
+    </contentFiles>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="CS-Script.Core" version="1.0.6" exclude="Build,Analyzers" />
+        <dependency id="DatabaseSchemaReader" version="2.7.1" exclude="Build,Analyzers" />
+        <dependency id="Com.Ctrip.Framework.Apollo.Configuration" version="1.5.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Hosting.Abstractions" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Http" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.CSharp.Scripting" version="2.10.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration.CommandLine" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration.Json" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration.Binder" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration.Xml" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Http" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Hosting" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging.Console" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging.Debug" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="MySql.Data" version="8.0.13" exclude="Build,Analyzers" />
+        <dependency id="NewId" version="3.0.1" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json.Bson" version="1.0.2" exclude="Build,Analyzers" />
+        <dependency id="Dapper" version="1.50.5" exclude="Build,Analyzers" />
+        <dependency id="System.Data.Common" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CSharp" version="4.5.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Win32.Registry" version="4.5.0" exclude="Build,Analyzers" />
+        <dependency id="System.CodeDom" version="4.5.0" exclude="Build,Analyzers" />
+        <dependency id="System.Configuration.ConfigurationManager" version="4.5.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.Emit" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.Emit.Lightweight" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.Primitives" version="4.3.0"  exclude="Build,Analyzers"/>
+
+      </group>
+    </dependencies>
+  </metadata>
+
+  <files>
+    <file src="resources\" target="contentFiles\cs\netstandard2.0\resources" />
+    <file src="bin\SmartSql.DapperDeserializer.dll" target="lib\netstandard2.0" />
+    <file src="bin\SmartSql.DIExtension.dll" target="lib\netstandard2.0" />
+    <file src="bin\SmartSql.dll" target="lib\netstandard2.0" />
+    <file src="bin\SmartSql.DyRepository.dll" target="lib\netstandard2.0" />
+    <file src="bin\SmartSql.TypeHandler.dll" target="lib\netstandard2.0" />
+    <file src="bin\Spring.Core.dll" target="lib\netstandard2.0" />
+    <file src="bin\Sys.Bpm.Engine.API.dll" target="lib\netstandard2.0" />
+    <file src="bin\Sys.Bpm.Engine.dll" target="lib\netstandard2.0" />
+    <file src="bin\Sys.Bpm.Model.dll" target="lib\netstandard2.0" />
+    <file src="bin\Sys.Bpm.ProcessValidation.dll" target="lib\netstandard2.0" />
+  </files>
+</package>

@@ -32,7 +32,7 @@ namespace org.activiti.engine.impl.cmd
 
         public GetHistoricIdentityLinksForTaskCmd(string taskId, string processInstanceId)
         {
-            if (ReferenceEquals(taskId, null) && ReferenceEquals(processInstanceId, null))
+            if (taskId is null && processInstanceId is null)
             {
                 throw new ActivitiIllegalArgumentException("taskId or processInstanceId is required");
             }
@@ -40,42 +40,42 @@ namespace org.activiti.engine.impl.cmd
             this.processInstanceId = processInstanceId;
         }
 
-        public virtual IList<IHistoricIdentityLink> execute(ICommandContext commandContext)
+        public virtual IList<IHistoricIdentityLink> Execute(ICommandContext commandContext)
         {
-            if (!ReferenceEquals(taskId, null))
+            if (!(taskId is null))
             {
-                return getLinksForTask(commandContext);
+                return GetLinksForTask(commandContext);
             }
             else
             {
-                return getLinksForProcessInstance(commandContext);
+                return GetLinksForProcessInstance(commandContext);
             }
         }
 
-        protected internal virtual IList<IHistoricIdentityLink> getLinksForTask(ICommandContext commandContext)
+        protected internal virtual IList<IHistoricIdentityLink> GetLinksForTask(ICommandContext commandContext)
         {
-            IHistoricTaskInstanceEntity task = commandContext.HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("id", taskId));
+            IHistoricTaskInstanceEntity task = commandContext.HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
 
             if (task == null)
             {
                 throw new ActivitiObjectNotFoundException("No historic task exists with the given id: " + taskId, typeof(IHistoricTaskInstance));
             }
 
-            IList<IHistoricIdentityLink> identityLinks = (IList<IHistoricIdentityLink>)commandContext.HistoricIdentityLinkEntityManager.findHistoricIdentityLinksByTaskId(taskId);
+            IList<IHistoricIdentityLink> identityLinks = (IList<IHistoricIdentityLink>)commandContext.HistoricIdentityLinkEntityManager.FindHistoricIdentityLinksByTaskId(taskId);
 
             // Similar to GetIdentityLinksForTask, return assignee and owner as
             // identity link
-            if (!ReferenceEquals(task.Assignee, null))
+            if (!(task.Assignee is null))
             {
-                IHistoricIdentityLinkEntity identityLink = commandContext.HistoricIdentityLinkEntityManager.create();
+                IHistoricIdentityLinkEntity identityLink = commandContext.HistoricIdentityLinkEntityManager.Create();
                 identityLink.UserId = task.Assignee;
                 identityLink.TaskId = task.Id;
                 identityLink.Type = IdentityLinkType.ASSIGNEE;
                 identityLinks.Add(identityLink);
             }
-            if (!ReferenceEquals(task.Owner, null))
+            if (!(task.Owner is null))
             {
-                IHistoricIdentityLinkEntity identityLink = commandContext.HistoricIdentityLinkEntityManager.create();
+                IHistoricIdentityLinkEntity identityLink = commandContext.HistoricIdentityLinkEntityManager.Create();
                 identityLink.TaskId = task.Id;
                 identityLink.UserId = task.Owner;
                 identityLink.Type = IdentityLinkType.OWNER;
@@ -85,9 +85,9 @@ namespace org.activiti.engine.impl.cmd
             return identityLinks;
         }
 
-        protected internal virtual IList<IHistoricIdentityLink> getLinksForProcessInstance(ICommandContext commandContext)
+        protected internal virtual IList<IHistoricIdentityLink> GetLinksForProcessInstance(ICommandContext commandContext)
         {
-            return (IList<IHistoricIdentityLink>)commandContext.HistoricIdentityLinkEntityManager.findHistoricIdentityLinksByProcessInstanceId(processInstanceId);
+            return (IList<IHistoricIdentityLink>)commandContext.HistoricIdentityLinkEntityManager.FindHistoricIdentityLinksByProcessInstanceId(processInstanceId);
         }
 
     }

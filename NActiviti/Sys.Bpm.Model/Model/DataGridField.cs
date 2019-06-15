@@ -44,10 +44,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            DataGridField clone = new DataGridField();
-            clone.Values = this;
+            DataGridField clone = new DataGridField
+            {
+                Values = this
+            };
             return clone;
         }
 

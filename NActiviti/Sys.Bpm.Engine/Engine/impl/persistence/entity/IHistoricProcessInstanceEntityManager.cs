@@ -15,25 +15,25 @@
 namespace org.activiti.engine.impl.persistence.entity
 {
 
-	using org.activiti.engine.history;
+    using org.activiti.engine.history;
 
-	/// 
-	public interface IHistoricProcessInstanceEntityManager : IEntityManager<IHistoricProcessInstanceEntity>
-	{
+    /// 
+    public interface IHistoricProcessInstanceEntityManager : IEntityManager<IHistoricProcessInstanceEntity>
+    {
 
-	  IHistoricProcessInstanceEntity create(IExecutionEntity processInstanceExecutionEntity);
+        IHistoricProcessInstanceEntity Create(IExecutionEntity processInstanceExecutionEntity);
 
-	  long findHistoricProcessInstanceCountByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery);
+        long FindHistoricProcessInstanceCountByQueryCriteria(IHistoricProcessInstanceQuery historicProcessInstanceQuery);
 
-	  IList<IHistoricProcessInstance> findHistoricProcessInstancesByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery);
+        IList<IHistoricProcessInstance> FindHistoricProcessInstancesByQueryCriteria(IHistoricProcessInstanceQuery historicProcessInstanceQuery);
 
-	  IList<IHistoricProcessInstance> findHistoricProcessInstancesAndVariablesByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery);
+        IList<IHistoricProcessInstance> FindHistoricProcessInstancesAndVariablesByQueryCriteria(IHistoricProcessInstanceQuery historicProcessInstanceQuery);
 
-	  IList<IHistoricProcessInstance> findHistoricProcessInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<IHistoricProcessInstance> FindHistoricProcessInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findHistoricProcessInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
+        long FindHistoricProcessInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
 
-	  void deleteHistoricProcessInstanceByProcessDefinitionId(string processDefinitionId);
+        void DeleteHistoricProcessInstanceByProcessDefinitionId(string processDefinitionId);
 
-	}
+    }
 }

@@ -37,26 +37,24 @@ namespace org.activiti.engine.impl.variable
             this.deserializedObject = deserializedObject;
         }
 
-        public virtual void closing(ICommandContext commandContext)
+        public virtual void Closing(ICommandContext commandContext)
         {
-            deserializedObject.verifyIfBytesOfSerializedObjectChanged();
+            deserializedObject.VerifyIfBytesOfSerializedObjectChanged();
         }
 
-        public virtual void closed(ICommandContext commandContext)
-        {
-
-        }
-
-        public virtual void afterSessionsFlush(ICommandContext commandContext)
+        public virtual void Closed(ICommandContext commandContext)
         {
 
         }
 
-        public virtual void closeFailure(ICommandContext commandContext)
+        public virtual void AfterSessionsFlush(ICommandContext commandContext)
         {
 
         }
 
+        public virtual void CloseFailure(ICommandContext commandContext)
+        {
+
+        }
     }
-
 }

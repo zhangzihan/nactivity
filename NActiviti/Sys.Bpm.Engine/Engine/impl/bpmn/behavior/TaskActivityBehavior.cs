@@ -29,7 +29,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         private const long serialVersionUID = 1L;
 
-        protected internal virtual string getActiveValue(string originalValue, string propertyName, JToken taskElementProperties)
+        protected internal virtual string GetActiveValue(string originalValue, string propertyName, JToken taskElementProperties)
         {
             string activeValue = originalValue;
             if (taskElementProperties != null)
@@ -47,7 +47,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             return activeValue;
         }
 
-        protected internal virtual IList<string> getActiveValueList(IList<string> originalValues, string propertyName, JToken taskElementProperties)
+        protected internal virtual IList<string> GetActiveValueList(IList<string> originalValues, string propertyName, JToken taskElementProperties)
         {
             IList<string> activeValues = originalValues;
             if (taskElementProperties != null)

@@ -19,13 +19,14 @@ namespace org.activiti.engine.impl.persistence.entity.data
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.db;
     using org.activiti.engine.impl.persistence.cache;
+    using System.Collections;
     using System.Linq;
     using System.Reflection;
 
     /// 
-    public abstract class AbstractDataManager<EntityImpl> : AbstractManager, IDataManager<EntityImpl> where EntityImpl : IEntity
+    public abstract class AbstractDataManager<EntityImpl> : AbstractManager, IDataManager<EntityImpl> where EntityImpl : class, IEntity
     {
-        public abstract EntityImpl create();
+        public abstract EntityImpl Create();
 
         public abstract Type ManagedEntityClass { get; }
 
@@ -38,7 +39,7 @@ namespace org.activiti.engine.impl.persistence.entity.data
             var res = invoker.Invoke(db, new object[] { id, useCache });
             if (res == null)
             {
-                return default(IEntity);
+                return default;
             }
 
             return (IEntity)res;
@@ -46,29 +47,39 @@ namespace org.activiti.engine.impl.persistence.entity.data
 
         private static readonly Func<DbSqlSession, Type, Type, string, object, IList<EntityImpl>> selectList = (db, managedType, outType, dbQueryName, parameter) =>
         {
-            MethodInfo m = db.GetType().GetMethod("selectList", new Type[] { typeof(string), typeof(object) });
+            MethodInfo m = db.GetType().GetMethod("selectList", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance, Type.DefaultBinder, new Type[] { typeof(string), typeof(object) }, null);
 
             var invoker = m.MakeGenericMethod(new Type[] { managedType, outType });
 
             var res = invoker.Invoke(db, new object[] { dbQueryName, parameter });
             if (res == null)
             {
-                return default(IList<EntityImpl>);
+                return default;
             }
 
-            return (IList<EntityImpl>)res;
+            return ToEntityImpl(res as IEnumerable).ToList();
         };
+
+        private static IEnumerable<EntityImpl> ToEntityImpl(IEnumerable list)
+        {
+            IEnumerator @enum = list.GetEnumerator();
+            while (@enum.MoveNext())
+            {
+                EntityImpl obj = @enum.Current as EntityImpl;
+                yield return obj;
+            }
+        }
 
         private static readonly Func<DbSqlSession, Type, Type, string, object, EntityImpl> selectOne = (db, managedType, outType, selectQuery, parameter) =>
         {
-            MethodInfo m = db.GetType().GetMethod("selectOne", new Type[] { typeof(string), typeof(object) });
+            MethodInfo m = db.GetType().GetMethod("selectOne", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance, Type.DefaultBinder, new Type[] { typeof(string), typeof(object) }, null);
 
             var invoker = m.MakeGenericMethod(new Type[] { managedType, outType });
 
             var res = invoker.Invoke(db, new object[] { selectQuery, parameter });
             if (res == null)
             {
-                return default(EntityImpl);
+                return default;
             }
 
             return (EntityImpl)res;
@@ -91,7 +102,7 @@ namespace org.activiti.engine.impl.persistence.entity.data
         {
             get
             {
-                return getSession<DbSqlSession>();
+                return GetSession<DbSqlSession>();
             }
         }
 
@@ -99,19 +110,19 @@ namespace org.activiti.engine.impl.persistence.entity.data
         {
             get
             {
-                return getSession<IEntityCache>();
+                return GetSession<IEntityCache>();
             }
         }
 
-        public virtual TOut findById<TOut>(KeyValuePair<string, object> id)
+        public virtual TOut FindById<TOut>(KeyValuePair<string, object> id)
         {
             if (id.Value == null)
             {
-                return default(TOut);
+                return default;
             }
 
             // Cache
-            TOut cachedEntity = (TOut)EntityCache.findInCache(ManagedEntityClass, id.Value?.ToString());
+            TOut cachedEntity = (TOut)EntityCache.FindInCache(ManagedEntityClass, id.Value?.ToString());
             if (cachedEntity != null)
             {
                 return cachedEntity;
@@ -121,36 +132,36 @@ namespace org.activiti.engine.impl.persistence.entity.data
             return (TOut)selectById(DbSqlSession, ManagedEntityClass, typeof(TOut), id, false);
         }
 
-        public virtual void insert(EntityImpl entity)
+        public virtual void Insert(EntityImpl entity)
         {
-            DbSqlSession.insert(entity);
+            DbSqlSession.Insert(entity);
         }
 
-        public virtual EntityImpl update(EntityImpl entity)
+        public virtual EntityImpl Update(EntityImpl entity)
         {
-            DbSqlSession.update(entity);
+            DbSqlSession.Update(entity);
             return entity;
         }
 
-        public virtual void delete(KeyValuePair<string, object> entityId)
+        public virtual void Delete(KeyValuePair<string, object> entityId)
         {
-            EntityImpl entity = findById<EntityImpl>(entityId);
+            EntityImpl entity = FindById<EntityImpl>(entityId);
 
-            delete(entity);
+            Delete(entity);
         }
 
-        public virtual void delete(EntityImpl entity)
+        public virtual void Delete(EntityImpl entity)
         {
-            DbSqlSession.delete(entity);
+            DbSqlSession.Delete(entity);
         }
 
 
-        protected internal virtual EntityImpl getEntity(string selectQuery, object parameter, ISingleCachedEntityMatcher<EntityImpl> cachedEntityMatcher, bool checkDatabase)
+        protected internal virtual EntityImpl GetEntity(string selectQuery, object parameter, ISingleCachedEntityMatcher<EntityImpl> cachedEntityMatcher, bool checkDatabase)
         {
             // Cache
-            foreach (EntityImpl cachedEntity in EntityCache.findInCache(ManagedEntityClass))
+            foreach (EntityImpl cachedEntity in EntityCache.FindInCache(ManagedEntityClass))
             {
-                if (cachedEntityMatcher.isRetained(cachedEntity, parameter))
+                if (cachedEntityMatcher.IsRetained(cachedEntity, parameter))
                 {
                     return cachedEntity;
                 }
@@ -162,7 +173,7 @@ namespace org.activiti.engine.impl.persistence.entity.data
                 return selectOne(DbSqlSession, ManagedEntityClass, typeof(EntityImpl), selectQuery, parameter);
             }
 
-            return default(EntityImpl);
+            return default;
         }
 
         /// <summary>
@@ -175,13 +186,24 @@ namespace org.activiti.engine.impl.persistence.entity.data
         /// <param name="parameter"> The parameters for the query. </param>
         /// <param name="entityMatcher"> The matcher used to determine which entities from the cache needs to be retained </param>
         /// <param name="checkCache"> If false, no cache check will be done, and the returned list will simply be the list from the database. </param>
-        protected internal virtual ICollection<EntityImpl> getList(string dbQueryName, object parameter, ICachedEntityMatcher<EntityImpl> cachedEntityMatcher, bool checkCache)
+        protected internal virtual ICollection<EntityImpl> GetList(string dbQueryName, object parameter, ICachedEntityMatcher<EntityImpl> cachedEntityMatcher, bool checkCache)
         {
-            ICollection<EntityImpl> result = selectList(DbSqlSession, ManagedEntityClass, typeof(EntityImpl), dbQueryName, parameter);
+            return GetList(dbQueryName, parameter, cachedEntityMatcher, checkCache, ManagedEntityClass);
+        }
+
+        protected internal virtual ICollection<EntityImpl> GetList(string dbQueryName, object parameter, ICachedEntityMatcher<EntityImpl> cachedEntityMatcher, bool checkCache, Type managedEntityClass)
+        {
+            return GetList(dbQueryName, parameter, cachedEntityMatcher, checkCache, managedEntityClass, typeof(EntityImpl));
+        }
+
+
+        protected internal virtual ICollection<EntityImpl> GetList(string dbQueryName, object parameter, ICachedEntityMatcher<EntityImpl> cachedEntityMatcher, bool checkCache, Type managedEntityClass, Type outType)
+        {
+            ICollection<EntityImpl> result = selectList(DbSqlSession, managedEntityClass, outType, dbQueryName, parameter);
 
             if (checkCache)
             {
-                ICollection<CachedEntity> cachedObjects = EntityCache.findInCacheAsCachedObjects(ManagedEntityClass);
+                ICollection<CachedEntity> cachedObjects = EntityCache.FindInCacheAsCachedObjects(ManagedEntityClass);
 
                 if ((cachedObjects != null && cachedObjects.Count > 0) || ManagedEntitySubClasses != null)
                 {
@@ -199,7 +221,7 @@ namespace org.activiti.engine.impl.persistence.entity.data
                         foreach (CachedEntity cachedObject in cachedObjects)
                         {
                             EntityImpl cachedEntity = (EntityImpl)cachedObject.Entity;
-                            if (cachedEntityMatcher.isRetained(result, cachedObjects, cachedEntity, parameter))
+                            if (cachedEntityMatcher.IsRetained(result, cachedObjects, cachedEntity, parameter))
                             {
                                 entityMap[cachedEntity.Id] = cachedEntity; // will overwite db version with newer version
                             }
@@ -210,13 +232,13 @@ namespace org.activiti.engine.impl.persistence.entity.data
                     {
                         foreach (Type entitySubClass in ManagedEntitySubClasses)
                         {
-                            ICollection<CachedEntity> subclassCachedObjects = EntityCache.findInCacheAsCachedObjects(entitySubClass);
+                            ICollection<CachedEntity> subclassCachedObjects = EntityCache.FindInCacheAsCachedObjects(entitySubClass);
                             if (subclassCachedObjects != null)
                             {
                                 foreach (CachedEntity subclassCachedObject in subclassCachedObjects)
                                 {
                                     EntityImpl cachedSubclassEntity = (EntityImpl)subclassCachedObject.Entity;
-                                    if (cachedEntityMatcher.isRetained(result, cachedObjects, cachedSubclassEntity, parameter))
+                                    if (cachedEntityMatcher.IsRetained(result, cachedObjects, cachedSubclassEntity, parameter))
                                     {
                                         entityMap[cachedSubclassEntity.Id] = cachedSubclassEntity; // will overwite db version with newer version
                                     }
@@ -238,7 +260,7 @@ namespace org.activiti.engine.impl.persistence.entity.data
                 for (var idx = list.Count - 1; idx >= 0; idx--)
                 {
                     var item = list[idx];
-                    if (DbSqlSession.isEntityToBeDeleted(item))
+                    if (DbSqlSession.IsEntityToBeDeleted(item))
                     {
                         list.RemoveAt(idx);
                     }
@@ -249,10 +271,9 @@ namespace org.activiti.engine.impl.persistence.entity.data
 
             return new List<EntityImpl>();
         }
-
-        protected internal virtual IList<EntityImpl> getListFromCache(ICachedEntityMatcher<EntityImpl> entityMatcher, object parameter)
+        protected internal virtual IList<EntityImpl> GetListFromCache(ICachedEntityMatcher<EntityImpl> entityMatcher, object parameter)
         {
-            ICollection<CachedEntity> cachedObjects = EntityCache.findInCacheAsCachedObjects(ManagedEntityClass);
+            ICollection<CachedEntity> cachedObjects = EntityCache.FindInCacheAsCachedObjects(ManagedEntityClass);
 
             DbSqlSession dbSqlSession = DbSqlSession;
 
@@ -262,7 +283,7 @@ namespace org.activiti.engine.impl.persistence.entity.data
                 foreach (CachedEntity cachedObject in cachedObjects)
                 {
                     EntityImpl cachedEntity = (EntityImpl)cachedObject.Entity;
-                    if (entityMatcher.isRetained(null, cachedObjects, cachedEntity, parameter) && !dbSqlSession.isEntityToBeDeleted(cachedEntity))
+                    if (entityMatcher.IsRetained(null, cachedObjects, cachedEntity, parameter) && !dbSqlSession.IsEntityToBeDeleted(cachedEntity))
                     {
                         result.Add(cachedEntity);
                     }
@@ -273,13 +294,13 @@ namespace org.activiti.engine.impl.persistence.entity.data
             {
                 foreach (Type entitySubClass in ManagedEntitySubClasses)
                 {
-                    ICollection<CachedEntity> subclassCachedObjects = EntityCache.findInCacheAsCachedObjects(entitySubClass);
+                    ICollection<CachedEntity> subclassCachedObjects = EntityCache.FindInCacheAsCachedObjects(entitySubClass);
                     if (subclassCachedObjects != null)
                     {
                         foreach (CachedEntity subclassCachedObject in subclassCachedObjects)
                         {
                             EntityImpl cachedSubclassEntity = (EntityImpl)subclassCachedObject.Entity;
-                            if (entityMatcher.isRetained(null, cachedObjects, cachedSubclassEntity, parameter) && !dbSqlSession.isEntityToBeDeleted(cachedSubclassEntity))
+                            if (entityMatcher.IsRetained(null, cachedObjects, cachedSubclassEntity, parameter) && !dbSqlSession.IsEntityToBeDeleted(cachedSubclassEntity))
                             {
                                 result.Add(cachedSubclassEntity);
                             }

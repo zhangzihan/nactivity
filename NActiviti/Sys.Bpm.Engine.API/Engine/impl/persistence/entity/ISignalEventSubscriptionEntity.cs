@@ -25,7 +25,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
     }
 
-    public static class SignalEventSubscriptionEntity_Fields
+    public static class SignalEventSubscriptionEntityFields
     {
         public const string EVENT_TYPE = "signal";
     }

@@ -12,7 +12,7 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.model;
 
     /// 
@@ -23,10 +23,11 @@ namespace org.activiti.bpmn.converter.child
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_TEXT_ANNOTATION_TEXT;
+                return BpmnXMLConstants.ELEMENT_TEXT_ANNOTATION_TEXT;
             }
         }
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
             if (!(parentElement is TextAnnotation))
             {

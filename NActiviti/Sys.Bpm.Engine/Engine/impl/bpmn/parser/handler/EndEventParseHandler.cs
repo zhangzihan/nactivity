@@ -16,7 +16,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
 {
     using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
-    using Sys;
+    using Sys.Workflow;
 
     /// 
     /// 
@@ -32,18 +32,15 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, EndEvent endEvent)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, EndEvent endEvent)
         {
-
-            EventDefinition eventDefinition = null;
             if (endEvent.EventDefinitions.Count > 0)
             {
-                eventDefinition = endEvent.EventDefinitions[0];
+                EventDefinition eventDefinition = endEvent.EventDefinitions[0];
 
-                if (eventDefinition is ErrorEventDefinition)
+                if (eventDefinition is ErrorEventDefinition errorDefinition)
                 {
-                    ErrorEventDefinition errorDefinition = (ErrorEventDefinition)eventDefinition;
-                    if (bpmnParse.BpmnModel.containsErrorRef(errorDefinition.ErrorCode))
+                    if (bpmnParse.BpmnModel.ContainsErrorRef(errorDefinition.ErrorCode))
                     {
                         string errorCode = bpmnParse.BpmnModel.Errors[errorDefinition.ErrorCode];
                         if (string.IsNullOrWhiteSpace(errorCode))
@@ -51,25 +48,25 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
                             logger.LogWarning("errorCode is required for an error event " + endEvent.Id);
                         }
                     }
-                    endEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createErrorEndEventActivityBehavior(endEvent, errorDefinition);
+                    endEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateErrorEndEventActivityBehavior(endEvent, errorDefinition);
                 }
                 else if (eventDefinition is TerminateEventDefinition)
                 {
-                    endEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createTerminateEndEventActivityBehavior(endEvent);
+                    endEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateTerminateEndEventActivityBehavior(endEvent);
                 }
                 else if (eventDefinition is CancelEventDefinition)
                 {
-                    endEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createCancelEndEventActivityBehavior(endEvent);
+                    endEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateCancelEndEventActivityBehavior(endEvent);
                 }
                 else
                 {
-                    endEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createNoneEndEventActivityBehavior(endEvent);
+                    endEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateNoneEndEventActivityBehavior(endEvent);
                 }
 
             }
             else
             {
-                endEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createNoneEndEventActivityBehavior(endEvent);
+                endEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateNoneEndEventActivityBehavior(endEvent);
             }
         }
 

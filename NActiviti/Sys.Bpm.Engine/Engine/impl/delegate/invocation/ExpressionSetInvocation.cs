@@ -23,10 +23,22 @@ namespace org.activiti.engine.impl.@delegate.invocation
     /// </summary>
     public class ExpressionSetInvocation : ExpressionInvocation
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal readonly object value;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ELContext elContext;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="valueExpression"></param>
+        /// <param name="elContext"></param>
+        /// <param name="value"></param>
         public ExpressionSetInvocation(ValueExpression valueExpression, ELContext elContext, object value) : base(valueExpression)
         {
             this.value = value;
@@ -34,9 +46,12 @@ namespace org.activiti.engine.impl.@delegate.invocation
             this.invocationParameters = new object[] { value };
         }
 
-        protected internal override void invoke()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal override void Invoke()
         {
-            valueExpression.setValue(elContext, value);
+            valueExpression.SetValue(elContext, value);
         }
 
     }

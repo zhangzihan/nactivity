@@ -58,7 +58,7 @@ namespace org.activiti.cloud.services.rest.controllers
         public virtual Resources<ProcessDefinition> GetAllProcessDefinitions(
             [FromQuery][BindingBehavior(BindingBehavior.Optional)]Pageable pageable)
         {
-            IPage<ProcessDefinition> page = pageableRepositoryService.getAllProcessDefinitions(pageable);
+            IPage<ProcessDefinition> page = pageableRepositoryService.GetAllProcessDefinitions(pageable);
             //return pagedResourcesAssembler.toResource(pageable, page, resourceAssembler);
             //return new PagedResources<PagedResources<ProcessDefinitionResource>>();
 

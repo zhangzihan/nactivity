@@ -13,16 +13,18 @@
 
 namespace org.activiti.engine.impl.variable
 {
-	/// <summary>
-	/// Interface to abstract the JPA cacheable setting
-	/// 
-	/// 
-	/// 
-	/// </summary>
-	public interface ICacheableVariable
-	{
-
-	  bool ForceCacheable {set;}
-	}
+    /// <summary>
+    /// Interface to abstract the JPA cacheable setting
+    /// 
+    /// 
+    /// 
+    /// </summary>
+    public interface ICacheableVariable
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        bool ForceCacheable { set; }
+    }
 
 }

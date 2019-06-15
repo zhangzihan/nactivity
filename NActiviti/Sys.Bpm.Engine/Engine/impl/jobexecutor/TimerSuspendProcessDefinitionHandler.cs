@@ -33,14 +33,14 @@ namespace org.activiti.engine.impl.jobexecutor
 
         public JToken JTokenconfiguration { get; private set; }
 
-        public override void execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
+        public override void Execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
         {
             JToken cfgJson = JToken.FromObject(configuration);
             string processDefinitionId = job.ProcessDefinitionId;
-            bool suspendProcessInstances = getIncludeProcessInstances(cfgJson);
+            bool suspendProcessInstances = GetIncludeProcessInstances(cfgJson);
 
             SuspendProcessDefinitionCmd suspendProcessDefinitionCmd = new SuspendProcessDefinitionCmd(processDefinitionId, null, suspendProcessInstances, null, job.TenantId);
-            suspendProcessDefinitionCmd.execute(commandContext);
+            suspendProcessDefinitionCmd.Execute(commandContext);
         }
 
     }

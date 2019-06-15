@@ -25,27 +25,27 @@ namespace org.activiti.engine.impl.cmd
     {
 
         private const long serialVersionUID = 1L;
-        protected internal ISet<string> executionIds;
+        protected internal string[] executionIds;
 
-        public GetExecutionsVariablesCmd(ISet<string> executionIds)
+        public GetExecutionsVariablesCmd(string[] executionIds)
         {
             this.executionIds = executionIds;
         }
 
-        public virtual IList<IVariableInstance> execute(ICommandContext commandContext)
+        public virtual IList<IVariableInstance> Execute(ICommandContext commandContext)
         {
             // Verify existence of executions
             if (executionIds == null)
             {
                 throw new ActivitiIllegalArgumentException("executionIds is null");
             }
-            if (executionIds.Count == 0)
+            if (executionIds.Length == 0)
             {
                 throw new ActivitiIllegalArgumentException("Set of executionIds is empty");
             }
 
             IList<IVariableInstance> instances = new List<IVariableInstance>();
-            IList<IVariableInstanceEntity> entities = commandContext.VariableInstanceEntityManager.findVariableInstancesByExecutionIds(executionIds);
+            IList<IVariableInstanceEntity> entities = commandContext.VariableInstanceEntityManager.FindVariableInstancesByExecutionIds(executionIds);
             foreach (IVariableInstanceEntity entity in entities)
             {
                 instances.Add(entity);

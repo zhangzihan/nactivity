@@ -38,11 +38,11 @@ namespace org.activiti.engine.impl.bpmn.helper
             EntityClass = entityClass;
         }
 
-        public override void onEvent(IActivitiEvent @event)
+        public override void OnEvent(IActivitiEvent @event)
         {
-            if (isValidEvent(@event))
+            if (IsValidEvent(@event))
             {
-                DelegateInstance.onEvent(@event);
+                DelegateInstance.OnEvent(@event);
             }
         }
 
@@ -64,7 +64,7 @@ namespace org.activiti.engine.impl.bpmn.helper
             {
                 if (delegateInstance == null)
                 {
-                    object instance = ReflectUtil.instantiate(className);
+                    object instance = ReflectUtil.Instantiate(className);
                     if (instance is IActivitiEventListener)
                     {
                         delegateInstance = (IActivitiEventListener)instance;

@@ -28,13 +28,13 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, SubProcess subProcess)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, SubProcess subProcess)
         {
 
-            subProcess.Behavior = bpmnParse.ActivityBehaviorFactory.createSubprocessActivityBehavior(subProcess);
+            subProcess.Behavior = bpmnParse.ActivityBehaviorFactory.CreateSubprocessActivityBehavior(subProcess);
 
-            bpmnParse.processFlowElements(subProcess.FlowElements);
-            processArtifacts(bpmnParse, subProcess.Artifacts);
+            bpmnParse.ProcessFlowElements(subProcess.FlowElements);
+            ProcessArtifacts(bpmnParse, subProcess.Artifacts);
 
             // no data objects for event subprocesses
             /*

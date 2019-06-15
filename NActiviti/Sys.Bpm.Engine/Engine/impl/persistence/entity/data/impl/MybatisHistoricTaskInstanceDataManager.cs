@@ -35,37 +35,37 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IHistoricTaskInstanceEntity create()
+        public override IHistoricTaskInstanceEntity Create()
         {
             return new HistoricTaskInstanceEntityImpl();
         }
 
-        public virtual IHistoricTaskInstanceEntity create(ITaskEntity task, IExecutionEntity execution)
+        public virtual IHistoricTaskInstanceEntity Create(ITaskEntity task, IExecutionEntity execution)
         {
             return new HistoricTaskInstanceEntityImpl(task, execution);
         }
 
-        public virtual IList<IHistoricTaskInstanceEntity> findHistoricTasksByParentTaskId(string parentTaskId)
+        public virtual IList<IHistoricTaskInstanceEntity> FindHistoricTasksByParentTaskId(string parentTaskId)
         {
-            return DbSqlSession.selectList<HistoricTaskInstanceEntityImpl, IHistoricTaskInstanceEntity>("selectHistoricTasksByParentTaskId", new { parentTaskId });
+            return DbSqlSession.SelectList<HistoricTaskInstanceEntityImpl, IHistoricTaskInstanceEntity>("selectHistoricTasksByParentTaskId", new { parentTaskId });
         }
 
-        public virtual IList<IHistoricTaskInstanceEntity> findHistoricTaskInstanceByProcessInstanceId(string processInstanceId)
+        public virtual IList<IHistoricTaskInstanceEntity> FindHistoricTaskInstanceByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<HistoricTaskInstanceEntityImpl, IHistoricTaskInstanceEntity>("selectHistoricTaskInstancesByProcessInstanceId", new { processInstanceId });
+            return DbSqlSession.SelectList<HistoricTaskInstanceEntityImpl, IHistoricTaskInstanceEntity>("selectHistoricTaskInstancesByProcessInstanceId", new { processInstanceId });
         }
 
-        public virtual long findHistoricTaskInstanceCountByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery)
+        public virtual long FindHistoricTaskInstanceCountByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery)
         {
-            return ((long?)DbSqlSession.selectOne<HistoricTaskInstanceEntityImpl, long?>("selectHistoricTaskInstanceCountByQueryCriteria", historicTaskInstanceQuery)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<HistoricTaskInstanceEntityImpl, long?>("selectHistoricTaskInstanceCountByQueryCriteria", historicTaskInstanceQuery).GetValueOrDefault();
         }
 
-        public virtual IList<IHistoricTaskInstance> findHistoricTaskInstancesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery)
+        public virtual IList<IHistoricTaskInstance> FindHistoricTaskInstancesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery)
         {
-            return DbSqlSession.selectList<HistoricTaskInstanceEntityImpl, IHistoricTaskInstance>("selectHistoricTaskInstancesByQueryCriteria", historicTaskInstanceQuery);
+            return DbSqlSession.SelectList<HistoricTaskInstanceEntityImpl, IHistoricTaskInstance>("selectHistoricTaskInstancesByQueryCriteria", historicTaskInstanceQuery);
         }
 
-        public virtual IList<IHistoricTaskInstance> findHistoricTaskInstancesAndVariablesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery)
+        public virtual IList<IHistoricTaskInstance> FindHistoricTaskInstancesAndVariablesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery)
         {
             var query = historicTaskInstanceQuery as HistoricTaskInstanceQueryImpl;
             // paging doesn't work for combining task instances and variables
@@ -89,7 +89,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
             query.FirstResult = 0;
 
-            IList<IHistoricTaskInstance> instanceList = DbSqlSession.selectListWithRawParameterWithoutFilter<HistoricTaskInstanceEntityImpl, IHistoricTaskInstance>("selectHistoricTaskInstancesWithVariablesByQueryCriteria", historicTaskInstanceQuery, query.FirstResult, query.MaxResults);
+            IList<IHistoricTaskInstance> instanceList = DbSqlSession.SelectListWithRawParameterWithoutFilter<HistoricTaskInstanceEntityImpl, IHistoricTaskInstance>("selectHistoricTaskInstancesWithVariablesByQueryCriteria", historicTaskInstanceQuery, query.FirstResult, query.MaxResults);
 
             if (instanceList != null && instanceList.Count > 0)
             {
@@ -115,14 +115,14 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             return instanceList;
         }
 
-        public virtual IList<IHistoricTaskInstance> findHistoricTaskInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IHistoricTaskInstance> FindHistoricTaskInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return DbSqlSession.selectListWithRawParameter<HistoricTaskInstanceEntityImpl, IHistoricTaskInstance>("selectHistoricTaskInstanceByNativeQuery", parameterMap, firstResult, maxResults);
+            return DbSqlSession.SelectListWithRawParameter<HistoricTaskInstanceEntityImpl, IHistoricTaskInstance>("selectHistoricTaskInstanceByNativeQuery", parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findHistoricTaskInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindHistoricTaskInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return ((long?)DbSqlSession.selectOne<HistoricTaskInstanceEntityImpl, long?>("selectHistoricTaskInstanceCountByNativeQuery", parameterMap)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<HistoricTaskInstanceEntityImpl, long?>("selectHistoricTaskInstanceCountByNativeQuery", parameterMap).GetValueOrDefault();
         }
 
     }

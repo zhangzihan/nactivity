@@ -26,7 +26,7 @@ namespace org.activiti.bpmn.converter.child
                 return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_INPUT_ASSOCIATION;
             }
         }
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
 
             if (!(parentElement is Activity))
@@ -34,7 +34,7 @@ namespace org.activiti.bpmn.converter.child
                 return;
             }
             DataAssociation dataAssociation = new DataAssociation();
-            BpmnXMLUtil.addXMLLocation(dataAssociation, xtr);
+            BpmnXMLUtil.AddXMLLocation(dataAssociation, xtr);
             DataAssociationParser.parseDataAssociation(dataAssociation, ElementName, xtr);
 
             ((Activity)parentElement).DataInputAssociations.Add(dataAssociation);

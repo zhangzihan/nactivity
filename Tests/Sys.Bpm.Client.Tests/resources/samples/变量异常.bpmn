@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_REDGSJdur" name="变量异常" isExecutable="true">
+    <bpmn2:startEvent id="Start_Yg9Bez4CYT">
+      <bpmn2:outgoing>SequenceFlow_0i055ew</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_0i055ew" sourceRef="Start_Yg9Bez4CYT" targetRef="Task_1onf3by" />
+    <bpmn2:userTask id="Task_1onf3by" name="变量异常" camunda:assignee="${starter}">
+      <bpmn2:incoming>SequenceFlow_0i055ew</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_1n47na5</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_1cpdm1w" default="SequenceFlow_0wadh9t">
+      <bpmn2:incoming>SequenceFlow_1n47na5</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_0g2zvj3</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_0wadh9t</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_1n47na5" sourceRef="Task_1onf3by" targetRef="ExclusiveGateway_1cpdm1w" />
+    <bpmn2:sequenceFlow id="SequenceFlow_0g2zvj3" sourceRef="ExclusiveGateway_1cpdm1w" targetRef="Task_1jgoeau">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${hasTicket==true}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:manualTask id="Task_1jgoeau" name="M1">
+      <bpmn2:incoming>SequenceFlow_0g2zvj3</bpmn2:incoming>
+    </bpmn2:manualTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_0wadh9t" sourceRef="ExclusiveGateway_1cpdm1w" targetRef="Task_0zqvpol" />
+    <bpmn2:manualTask id="Task_0zqvpol" name="M2">
+      <bpmn2:incoming>SequenceFlow_0wadh9t</bpmn2:incoming>
+    </bpmn2:manualTask>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_REDGSJdur">
+      <bpmndi:BPMNShape id="_BPMNShape_Start_Yg9Bez4CYT" bpmnElement="Start_Yg9Bez4CYT">
+        <dc:Bounds x="208" y="250" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0i055ew_di" bpmnElement="SequenceFlow_0i055ew">
+        <di:waypoint x="244" y="268" />
+        <di:waypoint x="354" y="268" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_16rjg5y_di" bpmnElement="Task_1onf3by">
+        <dc:Bounds x="354" y="228" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1cpdm1w_di" bpmnElement="ExclusiveGateway_1cpdm1w" isMarkerVisible="true">
+        <dc:Bounds x="544" y="243" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1n47na5_di" bpmnElement="SequenceFlow_1n47na5">
+        <di:waypoint x="454" y="268" />
+        <di:waypoint x="544" y="268" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0g2zvj3_di" bpmnElement="SequenceFlow_0g2zvj3">
+        <di:waypoint x="569" y="243" />
+        <di:waypoint x="569" y="144" />
+        <di:waypoint x="688" y="144" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ManualTask_1g2ux3u_di" bpmnElement="Task_1jgoeau">
+        <dc:Bounds x="688" y="104" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0wadh9t_di" bpmnElement="SequenceFlow_0wadh9t">
+        <di:waypoint x="569" y="293" />
+        <di:waypoint x="569" y="393" />
+        <di:waypoint x="688" y="393" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ManualTask_0wrwkoh_di" bpmnElement="Task_0zqvpol">
+        <dc:Bounds x="688" y="353" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

@@ -75,10 +75,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            StartEvent clone = new StartEvent();
-            clone.Values = this;
+            StartEvent clone = new StartEvent
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -98,7 +100,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (FormProperty property in val.FormProperties)
                     {
-                        formProperties.Add(property.clone() as FormProperty);
+                        formProperties.Add(property.Clone() as FormProperty);
                     }
                 }
             }

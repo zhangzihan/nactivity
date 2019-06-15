@@ -13,19 +13,18 @@
 
 namespace org.activiti.engine.impl.cmd
 {
-    
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.identity;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
     using org.activiti.engine.runtime;
     using org.activiti.engine.task;
     using Sys.Workflow;
-    using System.Collections.Generic;
 
     /// 
     public class AddCommentCmd : ICommand<IComment>
     {
+        private readonly ILogger<AddCommentCmd> logger = ProcessEngineServiceProvider.LoggerService<AddCommentCmd>();
 
         protected internal string taskId;
         protected internal string processInstanceId;
@@ -47,18 +46,17 @@ namespace org.activiti.engine.impl.cmd
             this.message = message;
         }
 
-        public virtual IComment execute(ICommandContext commandContext)
+        public virtual IComment Execute(ICommandContext commandContext)
         {
-
-            ITaskEntity task = null;
             // Validate task
-            if (!ReferenceEquals(taskId, null))
+            if (!(taskId is null))
             {
-                task = commandContext.TaskEntityManager.findById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
+                ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(taskId);
 
                 if (task == null)
                 {
-                    throw new ActivitiObjectNotFoundException("Cannot find task with id " + taskId, typeof(ITask));
+                    logger.LogWarning("Cannot find task with id " + taskId, typeof(ITask));
+                    return null;
                 }
 
                 if (task.Suspended)
@@ -67,14 +65,15 @@ namespace org.activiti.engine.impl.cmd
                 }
             }
 
-            IExecutionEntity execution = null;
-            if (!ReferenceEquals(processInstanceId, null))
+            if (!(processInstanceId is null))
             {
-                execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
+                IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
                 if (execution == null)
                 {
-                    throw new ActivitiObjectNotFoundException("execution " + processInstanceId + " doesn't exist", typeof(IExecution));
+                    logger.LogWarning("Cannot find task with id " + taskId, typeof(ITask));
+                    return null;
+                    //throw new ActivitiObjectNotFoundException("execution " + processInstanceId + " doesn't exist", typeof(IExecution));
                 }
 
                 if (execution.Suspended)
@@ -83,24 +82,14 @@ namespace org.activiti.engine.impl.cmd
                 }
             }
 
-            string processDefinitionId = null;
-            if (execution != null)
-            {
-                processDefinitionId = execution.ProcessDefinitionId;
-            }
-            else if (task != null)
-            {
-                processDefinitionId = task.ProcessDefinitionId;
-            }
-
             IUserInfo user = Authentication.AuthenticatedUser;
-            ICommentEntity comment = commandContext.CommentEntityManager.create();
+            ICommentEntity comment = commandContext.CommentEntityManager.Create();
             comment.UserId = user.Id;
-            comment.Type = (ReferenceEquals(type, null)) ? CommentEntity_Fields.TYPE_COMMENT : type;
+            comment.Type = (type is null) ? CommentEntityFields.TYPE_COMMENT : type;
             comment.Time = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
             comment.TaskId = taskId;
             comment.ProcessInstanceId = processInstanceId;
-            comment.Action = Event_Fields.ACTION_ADD_COMMENT;
+            comment.Action = EventFields.ACTION_ADD_COMMENT;
 
             string eventMessage = message.Replace("\\s+", " ");
             if (eventMessage.Length > 163)
@@ -111,7 +100,7 @@ namespace org.activiti.engine.impl.cmd
 
             comment.FullMessage = message;
 
-            commandContext.CommentEntityManager.insert(comment);
+            commandContext.CommentEntityManager.Insert(comment);
 
             return comment;
         }

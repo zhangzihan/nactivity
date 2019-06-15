@@ -18,51 +18,51 @@ namespace org.activiti.bpmn.converter.export
 
     public class CollaborationExport : IBpmnXMLConstants
     {
-        public static void writePools(BpmnModel model, XMLStreamWriter xtw)
+        public static void WritePools(BpmnModel model, XMLStreamWriter xtw)
         {
-            if (model.Pools?.Count > 0)
+            if ((model.Pools?.Count).GetValueOrDefault() > 0)
             {
-                xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_COLLABORATION);
-                xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID, "Collaboration");
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_COLLABORATION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, "Collaboration");
                 foreach (Pool pool in model.Pools)
                 {
-                    xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_PARTICIPANT);
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID, pool.Id);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_PARTICIPANT, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, pool.Id);
                     if (!string.IsNullOrWhiteSpace(pool.Name))
                     {
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME, pool.Name);
+                        xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, pool.Name);
                     }
                     if (!string.IsNullOrWhiteSpace(pool.ProcessRef))
                     {
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_PROCESS_REF, pool.ProcessRef);
+                        xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_PROCESS_REF, pool.ProcessRef);
                     }
-                    xtw.writeEndElement();
+                    xtw.WriteEndElement();
                 }
 
                 foreach (MessageFlow messageFlow in model.MessageFlows.Values)
                 {
-                    xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_MESSAGE_FLOW);
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID, messageFlow.Id);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_MESSAGE_FLOW, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, messageFlow.Id);
                     if (!string.IsNullOrWhiteSpace(messageFlow.Name))
                     {
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME, messageFlow.Name);
+                        xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, messageFlow.Name);
                     }
                     if (!string.IsNullOrWhiteSpace(messageFlow.SourceRef))
                     {
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF, messageFlow.SourceRef);
+                        xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF, messageFlow.SourceRef);
                     }
                     if (!string.IsNullOrWhiteSpace(messageFlow.TargetRef))
                     {
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FLOW_TARGET_REF, messageFlow.TargetRef);
+                        xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_TARGET_REF, messageFlow.TargetRef);
                     }
                     if (!string.IsNullOrWhiteSpace(messageFlow.MessageRef))
                     {
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_MESSAGE_REF, messageFlow.MessageRef);
+                        xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_MESSAGE_REF, messageFlow.MessageRef);
                     }
-                    xtw.writeEndElement();
+                    xtw.WriteEndElement();
                 }
 
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
         }
     }

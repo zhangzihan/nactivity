@@ -44,15 +44,15 @@ namespace org.activiti.cloud.services.core.pageable.sort
         /// <summary>
         /// 
         /// </summary>
-        protected internal override void applyDefaultSort(IDeploymentQuery query)
+        protected internal override void ApplyDefaultSort(IDeploymentQuery query)
         {
-            query.orderByDeploymentName().asc();
+            query.SetOrderByDeploymentName().Asc();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        protected internal override IQueryProperty getOrderByProperty(Sort.Order order)
+        protected internal override IQueryProperty GetOrderByProperty(Sort.Order order)
         {
             orderByProperties.TryGetValue(order.Property, out IQueryProperty qp);
 

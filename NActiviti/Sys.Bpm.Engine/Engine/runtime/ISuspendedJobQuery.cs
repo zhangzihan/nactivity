@@ -29,106 +29,106 @@ namespace org.activiti.engine.runtime
 
 	  /// <summary>
 	  /// Only select jobs with the given id </summary>
-	  ISuspendedJobQuery jobId(string jobId);
+	  ISuspendedJobQuery SetJobId(string jobId);
 
 	  /// <summary>
 	  /// Only select jobs which exist for the given process instance. * </summary>
-	  ISuspendedJobQuery processInstanceId(string processInstanceId);
+	  ISuspendedJobQuery SetProcessInstanceId(string processInstanceId);
 
 	  /// <summary>
 	  /// Only select jobs which exist for the given execution </summary>
-	  ISuspendedJobQuery executionId(string executionId);
+	  ISuspendedJobQuery SetExecutionId(string executionId);
 
 	  /// <summary>
 	  /// Only select jobs which exist for the given process definition id </summary>
-	  ISuspendedJobQuery processDefinitionId(string processDefinitionid);
+	  ISuspendedJobQuery SetProcessDefinitionId(string processDefinitionid);
 
 	  /// <summary>
 	  /// Only select jobs which have retries left </summary>
-	  ISuspendedJobQuery withRetriesLeft();
+	  ISuspendedJobQuery SetWithRetriesLeft();
 
 	  /// <summary>
 	  /// Only select jobs which have no retries left </summary>
-	  ISuspendedJobQuery noRetriesLeft();
+	  ISuspendedJobQuery SetNoRetriesLeft();
 
 	  /// <summary>
 	  /// Only select jobs which are executable, ie. retries &gt; 0 and duedate is null or duedate is in the past
 	  /// 
 	  /// </summary>
-	  ISuspendedJobQuery executable();
+	  ISuspendedJobQuery SetExecutable();
 
 	  /// <summary>
 	  /// Only select jobs that are timers. Cannot be used together with <seealso cref="#messages()"/>
 	  /// </summary>
-	  ISuspendedJobQuery timers();
+	  ISuspendedJobQuery SetTimers();
 
 	  /// <summary>
 	  /// Only select jobs that are messages. Cannot be used together with <seealso cref="#timers()"/>
 	  /// </summary>
-	  ISuspendedJobQuery messages();
+	  ISuspendedJobQuery SetMessages();
 
 	  /// <summary>
 	  /// Only select jobs where the duedate is lower than the given date. </summary>
-	  ISuspendedJobQuery duedateLowerThan(DateTime? date);
+	  ISuspendedJobQuery SetDuedateLowerThan(DateTime? date);
 
 	  /// <summary>
 	  /// Only select jobs where the duedate is higher then the given date. </summary>
-	  ISuspendedJobQuery duedateHigherThan(DateTime? date);
+	  ISuspendedJobQuery SetDuedateHigherThan(DateTime? date);
 
 	  /// <summary>
 	  /// Only select jobs that failed due to an exception. </summary>
-	  ISuspendedJobQuery withException();
+	  ISuspendedJobQuery SetWithException();
 
 	  /// <summary>
 	  /// Only select jobs that failed due to an exception with the given message. </summary>
-	  ISuspendedJobQuery exceptionMessage(string exceptionMessage);
+	  ISuspendedJobQuery SetExceptionMessage(string exceptionMessage);
 
 	  /// <summary>
 	  /// Only select jobs that have the given tenant id.
 	  /// </summary>
-	  ISuspendedJobQuery jobTenantId(string tenantId);
+	  ISuspendedJobQuery SetJobTenantId(string tenantId);
 
 	  /// <summary>
 	  /// Only select jobs with a tenant id like the given one.
 	  /// </summary>
-	  ISuspendedJobQuery jobTenantIdLike(string tenantIdLike);
+	  ISuspendedJobQuery SetJobTenantIdLike(string tenantIdLike);
 
 	  /// <summary>
 	  /// Only select jobs that do not have a tenant id.
 	  /// </summary>
-	  ISuspendedJobQuery jobWithoutTenantId();
+	  ISuspendedJobQuery SetJobWithoutTenantId();
 
 	  // sorting //////////////////////////////////////////
 
 	  /// <summary>
 	  /// Order by job id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
 	  /// </summary>
-	  ISuspendedJobQuery orderByJobId();
+	  ISuspendedJobQuery OrderByJobId();
 
 	  /// <summary>
 	  /// Order by duedate (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
 	  /// </summary>
-	  ISuspendedJobQuery orderByJobDuedate();
+	  ISuspendedJobQuery OrderByJobDuedate();
 
 	  /// <summary>
 	  /// Order by retries (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
 	  /// </summary>
-	  ISuspendedJobQuery orderByJobRetries();
+	  ISuspendedJobQuery OrderByJobRetries();
 
 	  /// <summary>
 	  /// Order by process instance id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
 	  /// </summary>
-	  ISuspendedJobQuery orderByProcessInstanceId();
+	  ISuspendedJobQuery OrderByProcessInstanceId();
 
 	  /// <summary>
 	  /// Order by execution id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
 	  /// </summary>
-	  ISuspendedJobQuery orderByExecutionId();
+	  ISuspendedJobQuery OrderByExecutionId();
 
 	  /// <summary>
 	  /// Order by tenant id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
 	  /// </summary>
-	  ISuspendedJobQuery orderByTenantId();
+	  ISuspendedJobQuery OrderByTenantId();
 
 	}
 

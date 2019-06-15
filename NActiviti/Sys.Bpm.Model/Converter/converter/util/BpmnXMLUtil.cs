@@ -12,70 +12,70 @@ namespace org.activiti.bpmn.converter.util
 
     public class BpmnXMLUtil : IBpmnXMLConstants
     {
-        private static IDictionary<string, BaseChildElementParser> genericChildParserMap = new Dictionary<string, BaseChildElementParser>();
+        private static readonly IDictionary<string, BaseChildElementParser> genericChildParserMap = new Dictionary<string, BaseChildElementParser>();
 
         static BpmnXMLUtil()
         {
-            addGenericParser(new ActivitiEventListenerParser());
-            addGenericParser(new CancelEventDefinitionParser());
-            addGenericParser(new CompensateEventDefinitionParser());
-            addGenericParser(new ConditionExpressionParser());
-            addGenericParser(new DataInputAssociationParser());
-            addGenericParser(new DataOutputAssociationParser());
-            addGenericParser(new DataStateParser());
-            addGenericParser(new DocumentationParser());
-            addGenericParser(new ErrorEventDefinitionParser());
-            addGenericParser(new ExecutionListenerParser());
-            addGenericParser(new FieldExtensionParser());
-            addGenericParser(new FormPropertyParser());
-            addGenericParser(new IOSpecificationParser());
-            addGenericParser(new MessageEventDefinitionParser());
-            addGenericParser(new MultiInstanceParser());
-            addGenericParser(new SignalEventDefinitionParser());
-            addGenericParser(new TaskListenerParser());
-            addGenericParser(new TerminateEventDefinitionParser());
-            addGenericParser(new TimerEventDefinitionParser());
-            addGenericParser(new TimeDateParser());
-            addGenericParser(new TimeCycleParser());
-            addGenericParser(new TimeDurationParser());
-            addGenericParser(new FlowNodeRefParser());
-            addGenericParser(new ActivitiFailedjobRetryParser());
-            addGenericParser(new ActivitiMapExceptionParser());
+            AddGenericParser(new ActivitiEventListenerParser());
+            AddGenericParser(new CancelEventDefinitionParser());
+            AddGenericParser(new CompensateEventDefinitionParser());
+            AddGenericParser(new ConditionExpressionParser());
+            AddGenericParser(new DataInputAssociationParser());
+            AddGenericParser(new DataOutputAssociationParser());
+            AddGenericParser(new DataStateParser());
+            AddGenericParser(new DocumentationParser());
+            AddGenericParser(new ErrorEventDefinitionParser());
+            AddGenericParser(new ExecutionListenerParser());
+            AddGenericParser(new FieldExtensionParser());
+            AddGenericParser(new FormPropertyParser());
+            AddGenericParser(new IOSpecificationParser());
+            AddGenericParser(new MessageEventDefinitionParser());
+            AddGenericParser(new MultiInstanceParser());
+            AddGenericParser(new SignalEventDefinitionParser());
+            AddGenericParser(new TaskListenerParser());
+            AddGenericParser(new TerminateEventDefinitionParser());
+            AddGenericParser(new TimerEventDefinitionParser());
+            AddGenericParser(new TimeDateParser());
+            AddGenericParser(new TimeCycleParser());
+            AddGenericParser(new TimeDurationParser());
+            AddGenericParser(new FlowNodeRefParser());
+            AddGenericParser(new ActivitiFailedjobRetryParser());
+            AddGenericParser(new ActivitiMapExceptionParser());
         }
 
-        private static void addGenericParser(BaseChildElementParser parser)
+        private static void AddGenericParser(BaseChildElementParser parser)
         {
             genericChildParserMap[parser.ElementName] = parser;
         }
 
-        public static void addXMLLocation(BaseElement element, XMLStreamReader xtr)
+        public static void AddXMLLocation(BaseElement element, XMLStreamReader xtr)
         {
             element.XmlRowNumber = xtr.LineInfo.LineNumber;
             element.XmlColumnNumber = xtr.LineInfo.LinePosition;
         }
 
-        public static void addXMLLocation(GraphicInfo graphicInfo, XMLStreamReader xtr)
+        public static void AddXMLLocation(GraphicInfo graphicInfo, XMLStreamReader xtr)
         {
             graphicInfo.XmlRowNumber = xtr.LineInfo.LineNumber;
             graphicInfo.XmlColumnNumber = xtr.LineInfo.LinePosition;
         }
 
-        public static void parseChildElements(string elementName, BaseElement parentElement, XMLStreamReader xtr, BpmnModel model)
+        public static void ParseChildElements(string elementName, BaseElement parentElement, XMLStreamReader xtr, BpmnModel model)
         {
-            parseChildElements(elementName, parentElement, xtr, null, model);
+            ParseChildElements(elementName, parentElement, xtr, null, model);
         }
 
-        public static void parseChildElements(string elementName, BaseElement parentElement, XMLStreamReader xtr, IDictionary<string, BaseChildElementParser> childParsers, BpmnModel model)
+        public static void ParseChildElements(string elementName, BaseElement parentElement, XMLStreamReader xtr, IDictionary<string, BaseChildElementParser> childParsers, BpmnModel model)
         {
             IDictionary<string, BaseChildElementParser> localParserMap = new Dictionary<string, BaseChildElementParser>(genericChildParserMap);
             if (childParsers != null)
             {
-                localParserMap.putAll(childParsers);
+                localParserMap.PutAll(childParsers);
             }
 
             bool inExtensionElements = false;
             bool readyWithChildElements = false;
-            while (!readyWithChildElements && xtr.hasNext())
+            while (!readyWithChildElements && xtr.HasNext())
             {
                 //xtr.next();
 
@@ -89,18 +89,18 @@ namespace org.activiti.bpmn.converter.util
                     {
                         BaseChildElementParser childParser = localParserMap[xtr.LocalName];
                         //if we're into an extension element but the current element is not accepted by this parentElement then is read as a custom extension element
-                        if (inExtensionElements && !childParser.accepts(parentElement))
+                        if (inExtensionElements && !childParser.Accepts(parentElement))
                         {
-                            ExtensionElement extensionElement = BpmnXMLUtil.parseExtensionElement(xtr);
-                            parentElement.addExtensionElement(extensionElement);
+                            ExtensionElement extensionElement = BpmnXMLUtil.ParseExtensionElement(xtr);
+                            parentElement.AddExtensionElement(extensionElement);
                             continue;
                         }
-                        localParserMap[xtr.LocalName].parseChildElement(xtr, parentElement, model);
+                        localParserMap[xtr.LocalName].ParseChildElement(xtr, parentElement, model);
                     }
                     else if (inExtensionElements)
                     {
-                        ExtensionElement extensionElement = BpmnXMLUtil.parseExtensionElement(xtr);
-                        parentElement.addExtensionElement(extensionElement);
+                        ExtensionElement extensionElement = BpmnXMLUtil.ParseExtensionElement(xtr);
+                        parentElement.AddExtensionElement(extensionElement);
                     }
 
                 }
@@ -120,15 +120,15 @@ namespace org.activiti.bpmn.converter.util
                 {
                     readyWithChildElements = true;
                 }
-            } 
+            }
         }
 
-        public static ExtensionElement parseExtensionElement(XMLStreamReader xtr)
+        public static ExtensionElement ParseExtensionElement(XMLStreamReader xtr)
         {
             ExtensionElement extensionElement = CreateExtensionElement(xtr);
 
             bool readyWithExtensionElement = false;
-            while (!readyWithExtensionElement && xtr.hasNext())
+            while (!readyWithExtensionElement && xtr.HasNext())
             {
                 //xtr.next();
 
@@ -144,15 +144,15 @@ namespace org.activiti.bpmn.converter.util
                     if (xtr.IsEmptyElement)
                     {
                         ExtensionElement childExtensionElement = CreateExtensionElement(xtr);
-                        extensionElement.addChildElement(childExtensionElement);
+                        extensionElement.AddChildElement(childExtensionElement);
                         xtr.isEmpty = xtr.IsStartElement() && xtr.EndElement;
-                        xtr.next();
+                        xtr.Next();
                         return childExtensionElement;
                     }
                     else
                     {
-                        ExtensionElement childExtensionElement = parseExtensionElement(xtr);
-                        extensionElement.addChildElement(childExtensionElement);
+                        ExtensionElement childExtensionElement = ParseExtensionElement(xtr);
+                        extensionElement.AddChildElement(childExtensionElement);
                     }
                 }
                 else if (xtr.EndElement && string.Compare(extensionElement.Name, xtr.LocalName, true) == 0)
@@ -170,8 +170,10 @@ namespace org.activiti.bpmn.converter.util
 
         private static ExtensionElement CreateExtensionElement(XMLStreamReader xtr)
         {
-            ExtensionElement extensionElement = new ExtensionElement();
-            extensionElement.Name = xtr.LocalName;
+            ExtensionElement extensionElement = new ExtensionElement
+            {
+                Name = xtr.LocalName
+            };
             if (!string.IsNullOrWhiteSpace(xtr.NamespaceURI))
             {
                 extensionElement.Namespace = xtr.NamespaceURI;
@@ -183,9 +185,11 @@ namespace org.activiti.bpmn.converter.util
 
             foreach (var attr in xtr.element.Attributes())
             {
-                ExtensionAttribute extensionAttribute = new ExtensionAttribute();
-                extensionAttribute.Name = attr.Name.LocalName;
-                extensionAttribute.Value = attr.Value;
+                ExtensionAttribute extensionAttribute = new ExtensionAttribute
+                {
+                    Name = attr.Name.LocalName,
+                    Value = attr.Value
+                };
                 if (!string.IsNullOrWhiteSpace(attr.Name.NamespaceName))
                 {
                     extensionAttribute.Namespace = attr.Name.NamespaceName;
@@ -194,40 +198,40 @@ namespace org.activiti.bpmn.converter.util
                 {
                     extensionAttribute.NamespacePrefix = xtr.element.GetPrefixOfNamespace(attr.Name.NamespaceName);
                 }
-                extensionElement.addAttribute(extensionAttribute);
+                extensionElement.AddAttribute(extensionAttribute);
             }
 
             return extensionElement;
         }
 
-        public static void writeDefaultAttribute(string attributeName, string value, XMLStreamWriter xtw)
+        public static void WriteDefaultAttribute(string attributeName, string value, XMLStreamWriter xtw)
         {
             if (!string.IsNullOrWhiteSpace(value) && !"null".Equals(value, StringComparison.CurrentCultureIgnoreCase))
             {
-                xtw.writeAttribute(attributeName, value);
+                xtw.WriteAttribute(attributeName, value);
             }
         }
 
-        public static void writeQualifiedAttribute(string attributeName, string value, XMLStreamWriter xtw)
+        public static void WriteQualifiedAttribute(string attributeName, string value, XMLStreamWriter xtw)
         {
             if (!string.IsNullOrWhiteSpace(value))
             {
-                xtw.writeAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, attributeName, value);
+                xtw.WriteAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, attributeName, value);
             }
         }
 
-        public static bool writeExtensionElements(BaseElement baseElement, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        public static bool WriteExtensionElements(BaseElement baseElement, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
-            return didWriteExtensionStartElement = writeExtensionElements(baseElement, didWriteExtensionStartElement, null, xtw);
+            return WriteExtensionElements(baseElement, didWriteExtensionStartElement, null, xtw);
         }
 
-        public static bool writeExtensionElements(BaseElement baseElement, bool didWriteExtensionStartElement, IDictionary<string, string> namespaceMap, XMLStreamWriter xtw)
+        public static bool WriteExtensionElements(BaseElement baseElement, bool didWriteExtensionStartElement, IDictionary<string, string> namespaceMap, XMLStreamWriter xtw)
         {
             if (baseElement.ExtensionElements.Count > 0)
             {
                 if (!didWriteExtensionStartElement)
                 {
-                    xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EXTENSIONS);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                     didWriteExtensionStartElement = true;
                 }
 
@@ -240,14 +244,14 @@ namespace org.activiti.bpmn.converter.util
                 {
                     foreach (ExtensionElement extensionElement in extensionElements)
                     {
-                        writeExtensionElement(extensionElement, namespaceMap, xtw);
+                        WriteExtensionElement(extensionElement, namespaceMap, xtw);
                     }
                 }
             }
             return didWriteExtensionStartElement;
         }
 
-        protected internal static void writeExtensionElement(ExtensionElement extensionElement, IDictionary<string, string> namespaceMap, XMLStreamWriter xtw)
+        protected internal static void WriteExtensionElement(ExtensionElement extensionElement, IDictionary<string, string> namespaceMap, XMLStreamWriter xtw)
         {
             if (!string.IsNullOrWhiteSpace(extensionElement.Name))
             {
@@ -256,24 +260,24 @@ namespace org.activiti.bpmn.converter.util
                 {
                     if (!string.IsNullOrWhiteSpace(extensionElement.NamespacePrefix))
                     {
-                        xtw.writeStartElement(extensionElement.NamespacePrefix, extensionElement.Name, extensionElement.Namespace);
+                        xtw.WriteStartElement(extensionElement.NamespacePrefix, extensionElement.Name, extensionElement.Namespace);
 
                         if (!namespaceMap.ContainsKey(extensionElement.NamespacePrefix) || !namespaceMap[extensionElement.NamespacePrefix].Equals(extensionElement.Namespace))
                         {
 
-                            xtw.writeNamespace(extensionElement.NamespacePrefix, extensionElement.Namespace);
+                            xtw.WriteNamespace(extensionElement.NamespacePrefix, extensionElement.Namespace);
                             namespaceMap[extensionElement.NamespacePrefix] = extensionElement.Namespace;
                             localNamespaceMap[extensionElement.NamespacePrefix] = extensionElement.Namespace;
                         }
                     }
                     else
                     {
-                        xtw.writeStartElement(extensionElement.Namespace, extensionElement.Name);
+                        xtw.WriteStartElement(extensionElement.Namespace, extensionElement.Name);
                     }
                 }
                 else
                 {
-                    xtw.writeStartElement(extensionElement.Name);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, extensionElement.Name, BpmnXMLConstants.BPMN2_NAMESPACE);
                 }
 
                 foreach (IList<ExtensionAttribute> attributes in extensionElement.Attributes.Values)
@@ -290,20 +294,20 @@ namespace org.activiti.bpmn.converter.util
                                     if (!namespaceMap.ContainsKey(attribute.NamespacePrefix) || !namespaceMap[attribute.NamespacePrefix].Equals(attribute.Namespace))
                                     {
 
-                                        xtw.writeNamespace(attribute.NamespacePrefix, attribute.Namespace);
+                                        xtw.WriteNamespace(attribute.NamespacePrefix, attribute.Namespace);
                                         namespaceMap[attribute.NamespacePrefix] = attribute.Namespace;
                                     }
 
-                                    xtw.writeAttribute(attribute.NamespacePrefix, attribute.Namespace, attribute.Name, attribute.Value);
+                                    xtw.WriteAttribute(attribute.NamespacePrefix, attribute.Namespace, attribute.Name, attribute.Value);
                                 }
                                 else
                                 {
-                                    xtw.writeAttribute(attribute.Namespace, attribute.Name, attribute.Value);
+                                    xtw.WriteAttribute(attribute.Namespace, attribute.Name, attribute.Value);
                                 }
                             }
                             else
                             {
-                                xtw.writeAttribute(attribute.Name, attribute.Value);
+                                xtw.WriteAttribute(attribute.Name, attribute.Value);
                             }
                         }
                     }
@@ -311,7 +315,7 @@ namespace org.activiti.bpmn.converter.util
 
                 if (extensionElement.ElementText != null)
                 {
-                    xtw.writeCData(extensionElement.ElementText);
+                    xtw.WriteCData(extensionElement.ElementText);
                 }
                 else
                 {
@@ -319,7 +323,7 @@ namespace org.activiti.bpmn.converter.util
                     {
                         foreach (ExtensionElement childElement in childElements)
                         {
-                            writeExtensionElement(childElement, namespaceMap, xtw);
+                            WriteExtensionElement(childElement, namespaceMap, xtw);
                         }
                     }
                 }
@@ -329,11 +333,11 @@ namespace org.activiti.bpmn.converter.util
                     namespaceMap.Remove(prefix);
                 }
 
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
         }
 
-        public static IList<string> parseDelimitedList(string s)
+        public static IList<string> ParseDelimitedList(string s)
         {
             IList<string> result = new List<string>();
             if (!string.IsNullOrWhiteSpace(s))
@@ -382,7 +386,7 @@ namespace org.activiti.bpmn.converter.util
             return result;
         }
 
-        public static string convertToDelimitedString(IList<string> stringList)
+        public static string ConvertToDelimitedString(IList<string> stringList)
         {
             StringBuilder resultString = new StringBuilder();
 
@@ -406,13 +410,15 @@ namespace org.activiti.bpmn.converter.util
         /// <param name="xtr"> </param>
         /// <param name="element"> </param>
         /// <param name="blackLists"> </param>
-        public static void addCustomAttributes(XMLStreamReader xtr, BaseElement element, params IList<ExtensionAttribute>[] blackLists)
+        public static void AddCustomAttributes(XMLStreamReader xtr, BaseElement element, params IList<ExtensionAttribute>[] blackLists)
         {
             foreach (var attr in xtr.element.Attributes())
             {
-                ExtensionAttribute extensionAttribute = new ExtensionAttribute();
-                extensionAttribute.Name = attr.Name.LocalName;
-                extensionAttribute.Value = attr.Value;
+                ExtensionAttribute extensionAttribute = new ExtensionAttribute
+                {
+                    Name = attr.Name.LocalName,
+                    Value = attr.Value
+                };
                 if (!string.IsNullOrWhiteSpace(attr.Name.NamespaceName))
                 {
                     extensionAttribute.Namespace = attr.Name.NamespaceName;
@@ -421,16 +427,16 @@ namespace org.activiti.bpmn.converter.util
                 {
                     extensionAttribute.NamespacePrefix = xtr.element.GetPrefixOfNamespace(attr.Name.Namespace);
                 }
-                if (!isBlacklisted(extensionAttribute, blackLists))
+                if (!IsBlacklisted(extensionAttribute, blackLists))
                 {
-                    element.addAttribute(extensionAttribute);
+                    element.AddAttribute(extensionAttribute);
                 }
             }
         }
 
-        public static void writeCustomAttributes(ICollection<IList<ExtensionAttribute>> attributes, XMLStreamWriter xtw, params IList<ExtensionAttribute>[] blackLists)
+        public static void WriteCustomAttributes(ICollection<IList<ExtensionAttribute>> attributes, XMLStreamWriter xtw, params IList<ExtensionAttribute>[] blackLists)
         {
-            writeCustomAttributes(attributes, xtw, new Dictionary<string, string>(), blackLists);
+            WriteCustomAttributes(attributes, xtw, new Dictionary<string, string>(), blackLists);
         }
 
         /// <summary>
@@ -439,7 +445,7 @@ namespace org.activiti.bpmn.converter.util
         /// <param name="attributes"> </param>
         /// <param name="xtw"> </param>
         /// <param name="blackLists"> </param>
-        public static void writeCustomAttributes(ICollection<IList<ExtensionAttribute>> attributes, XMLStreamWriter xtw, IDictionary<string, string> namespaceMap, params IList<ExtensionAttribute>[] blackLists)
+        public static void WriteCustomAttributes(ICollection<IList<ExtensionAttribute>> attributes, XMLStreamWriter xtw, IDictionary<string, string> namespaceMap, params IList<ExtensionAttribute>[] blackLists)
         {
             foreach (IList<ExtensionAttribute> attributeList in attributes)
             {
@@ -447,27 +453,27 @@ namespace org.activiti.bpmn.converter.util
                 {
                     foreach (ExtensionAttribute attribute in attributeList)
                     {
-                        if (!isBlacklisted(attribute, blackLists))
+                        if (!IsBlacklisted(attribute, blackLists))
                         {
                             if (attribute.NamespacePrefix == null)
                             {
                                 if (attribute.Namespace == null)
                                 {
-                                    xtw.writeAttribute(attribute.Name, attribute.Value);
+                                    xtw.WriteAttribute(attribute.Name, attribute.Value);
                                 }
                                 else
                                 {
-                                    xtw.writeAttribute(attribute.Namespace, attribute.Name, attribute.Value);
+                                    xtw.WriteAttribute(attribute.Namespace, attribute.Name, attribute.Value);
                                 }
                             }
                             else
                             {
-                                if (!namespaceMap.ContainsKey(attribute.NamespacePrefix))
+                                if (!namespaceMap.ContainsKey(attribute.Name))
                                 {
-                                    namespaceMap[attribute.NamespacePrefix] = attribute.Namespace;
-                                    xtw.writeNamespace(attribute.NamespacePrefix, attribute.Namespace);
+                                    namespaceMap[attribute.Name] = attribute.Namespace;
+                                    xtw.WriteNamespace(attribute.NamespacePrefix, attribute.Namespace);
                                 }
-                                xtw.writeAttribute(attribute.NamespacePrefix, attribute.Namespace, attribute.Name, attribute.Value);
+                                xtw.WriteAttribute(attribute.NamespacePrefix, attribute.Namespace, attribute.Name, attribute.Value);
                             }
                         }
                     }
@@ -475,7 +481,7 @@ namespace org.activiti.bpmn.converter.util
             }
         }
 
-        public static bool isBlacklisted(ExtensionAttribute attribute, params IList<ExtensionAttribute>[] blackLists)
+        public static bool IsBlacklisted(ExtensionAttribute attribute, params IList<ExtensionAttribute>[] blackLists)
         {
             if (blackLists != null)
             {

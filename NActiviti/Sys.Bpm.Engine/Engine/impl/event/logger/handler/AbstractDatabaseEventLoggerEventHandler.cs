@@ -5,20 +5,19 @@ namespace org.activiti.engine.impl.@event.logger.handler
 {
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.identity;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
     using org.activiti.engine.repository;
-    using Sys;
     using Sys.Bpm;
+    using Sys.Workflow;
 
     /// 
     public abstract class AbstractDatabaseEventLoggerEventHandler : IEventLoggerEventHandler
     {
         private static readonly ILogger<AbstractDatabaseEventLoggerEventHandler> log = ProcessEngineServiceProvider.LoggerService<AbstractDatabaseEventLoggerEventHandler>();
-        public abstract IEventLogEntryEntity generateEventLogEntry(org.activiti.engine.impl.interceptor.CommandContext<IEventLogEntryEntity> commandContext);
+        public abstract IEventLogEntryEntity GenerateEventLogEntry(org.activiti.engine.impl.interceptor.CommandContext<IEventLogEntryEntity> commandContext);
 
         protected internal IActivitiEvent @event;
         protected internal DateTime? timeStamp;
@@ -28,49 +27,49 @@ namespace org.activiti.engine.impl.@event.logger.handler
         {
         }
 
-        protected internal virtual IEventLogEntryEntity createEventLogEntry(IDictionary<string, object> data)
+        protected internal virtual IEventLogEntryEntity CreateEventLogEntry(IDictionary<string, object> data)
         {
-            return createEventLogEntry(null, null, null, null, data);
+            return CreateEventLogEntry(null, null, null, null, data);
         }
 
-        protected internal virtual IEventLogEntryEntity createEventLogEntry(string processDefinitionId, string processInstanceId, string executionId, string taskId, IDictionary<string, object> data)
+        protected internal virtual IEventLogEntryEntity CreateEventLogEntry(string processDefinitionId, string processInstanceId, string executionId, string taskId, IDictionary<string, object> data)
         {
-            return createEventLogEntry(@event.Type.ToString(), processDefinitionId, processInstanceId, executionId, taskId, data);
+            return CreateEventLogEntry(@event.Type.ToString(), processDefinitionId, processInstanceId, executionId, taskId, data);
         }
 
-        protected internal virtual IEventLogEntryEntity createEventLogEntry(string type, string processDefinitionId, string processInstanceId, string executionId, string taskId, IDictionary<string, object> data)
+        protected internal virtual IEventLogEntryEntity CreateEventLogEntry(string type, string processDefinitionId, string processInstanceId, string executionId, string taskId, IDictionary<string, object> data)
         {
 
-            IEventLogEntryEntity eventLogEntry = Context.CommandContext.EventLogEntryEntityManager.create();
+            IEventLogEntryEntity eventLogEntry = Context.CommandContext.EventLogEntryEntityManager.Create();
             eventLogEntry.ProcessDefinitionId = processDefinitionId;
             eventLogEntry.ProcessInstanceId = processInstanceId;
             eventLogEntry.ExecutionId = executionId;
             eventLogEntry.TaskId = taskId;
             eventLogEntry.Type = type;
             eventLogEntry.TimeStamp = timeStamp;
-            putInMapIfNotNull(data, Fields_Fields.TIMESTAMP, timeStamp);
+            PutInMapIfNotNull(data, FieldsFields.TIMESTAMP, timeStamp);
 
             // Current user
             string userId = Authentication.AuthenticatedUser.Id;
-            if (!ReferenceEquals(userId, null))
+            if (!(userId is null))
             {
                 eventLogEntry.UserId = userId;
-                putInMapIfNotNull(data, "userId", userId);
+                PutInMapIfNotNull(data, "userId", userId);
             }
 
             // Current tenant
-            if (!data.ContainsKey(Fields_Fields.TENANT_ID) && !string.IsNullOrWhiteSpace(processDefinitionId))
+            if (!data.ContainsKey(FieldsFields.TENANT_ID) && !string.IsNullOrWhiteSpace(processDefinitionId))
             {
-                IProcessDefinition processDefinition = ProcessDefinitionUtil.getProcessDefinition(processDefinitionId);
+                IProcessDefinition processDefinition = ProcessDefinitionUtil.GetProcessDefinition(processDefinitionId);
                 if (processDefinition != null && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
                 {
-                    putInMapIfNotNull(data, Fields_Fields.TENANT_ID, processDefinition.TenantId);
+                    PutInMapIfNotNull(data, FieldsFields.TENANT_ID, processDefinition.TenantId);
                 }
             }
 
             try
             {
-                eventLogEntry.Data = objectMapper.writeValueAsBytes(data);
+                eventLogEntry.Data = objectMapper.WriteValueAsBytes(data);
             }
             catch (Exception e)
             {
@@ -106,12 +105,12 @@ namespace org.activiti.engine.impl.@event.logger.handler
         }
 
         // Helper methods //////////////////////////////////////////////////////
-        public virtual T getEntityFromEvent<T>()
+        public virtual T GetEntityFromEvent<T>()
         {
             return (T)((IActivitiEntityEvent)@event).Entity;
         }
 
-        public virtual void putInMapIfNotNull(IDictionary<string, object> map, string key, object value)
+        public virtual void PutInMapIfNotNull(IDictionary<string, object> map, string key, object value)
         {
             if (value != null)
             {

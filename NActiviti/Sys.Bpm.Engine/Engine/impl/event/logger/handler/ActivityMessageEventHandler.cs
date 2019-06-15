@@ -10,23 +10,22 @@ namespace org.activiti.engine.impl.@event.logger.handler
     /// 
     public class ActivityMessageEventHandler : AbstractDatabaseEventLoggerEventHandler
     {
-
-        public override IEventLogEntryEntity generateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
+        public override IEventLogEntryEntity GenerateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
         {
             IActivitiMessageEvent messageEvent = (IActivitiMessageEvent)@event;
 
             IDictionary<string, object> data = new Dictionary<string, object>();
-            putInMapIfNotNull(data, Fields_Fields.ACTIVITY_ID, messageEvent.ActivityId);
-            putInMapIfNotNull(data, Fields_Fields.ACTIVITY_NAME, messageEvent.ActivityName);
-            putInMapIfNotNull(data, Fields_Fields.PROCESS_DEFINITION_ID, messageEvent.ProcessDefinitionId);
-            putInMapIfNotNull(data, Fields_Fields.PROCESS_INSTANCE_ID, messageEvent.ProcessInstanceId);
-            putInMapIfNotNull(data, Fields_Fields.EXECUTION_ID, messageEvent.ExecutionId);
-            putInMapIfNotNull(data, Fields_Fields.ACTIVITY_TYPE, messageEvent.ActivityType);
+            PutInMapIfNotNull(data, FieldsFields.ACTIVITY_ID, messageEvent.ActivityId);
+            PutInMapIfNotNull(data, FieldsFields.ACTIVITY_NAME, messageEvent.ActivityName);
+            PutInMapIfNotNull(data, FieldsFields.PROCESS_DEFINITION_ID, messageEvent.ProcessDefinitionId);
+            PutInMapIfNotNull(data, FieldsFields.PROCESS_INSTANCE_ID, messageEvent.ProcessInstanceId);
+            PutInMapIfNotNull(data, FieldsFields.EXECUTION_ID, messageEvent.ExecutionId);
+            PutInMapIfNotNull(data, FieldsFields.ACTIVITY_TYPE, messageEvent.ActivityType);
 
-            putInMapIfNotNull(data, Fields_Fields.MESSAGE_NAME, messageEvent.MessageName);
-            putInMapIfNotNull(data, Fields_Fields.MESSAGE_DATA, messageEvent.MessageData);
+            PutInMapIfNotNull(data, FieldsFields.MESSAGE_NAME, messageEvent.MessageName);
+            PutInMapIfNotNull(data, FieldsFields.MESSAGE_DATA, messageEvent.MessageData);
 
-            return createEventLogEntry(messageEvent.ProcessDefinitionId, messageEvent.ProcessInstanceId, messageEvent.ExecutionId, null, data);
+            return CreateEventLogEntry(messageEvent.ProcessDefinitionId, messageEvent.ProcessInstanceId, messageEvent.ExecutionId, null, data);
         }
 
     }

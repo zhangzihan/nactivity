@@ -58,10 +58,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            CustomProperty clone = new CustomProperty();
-            clone.Values = this;
+            CustomProperty clone = new CustomProperty
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -76,7 +78,7 @@ namespace org.activiti.bpmn.model
 
                 if (val.ComplexValue != null && val.ComplexValue is DataGrid)
                 {
-                    ComplexValue = ((DataGrid)val.ComplexValue).clone();
+                    ComplexValue = ((DataGrid)val.ComplexValue).Clone();
                 }
             }
         }

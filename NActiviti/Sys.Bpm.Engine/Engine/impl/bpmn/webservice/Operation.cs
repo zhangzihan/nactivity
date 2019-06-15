@@ -52,9 +52,9 @@ namespace org.activiti.engine.impl.bpmn.webservice
             InMessage = inMessage;
         }
 
-        public virtual MessageInstance sendMessage(MessageInstance message, ConcurrentDictionary<string, Uri> overridenEndpointAddresses)
+        public virtual MessageInstance SendMessage(MessageInstance message, ConcurrentDictionary<string, Uri> overridenEndpointAddresses)
         {
-            return this.implementation.sendFor(message, this, overridenEndpointAddresses);
+            return this.implementation.SendFor(message, this, overridenEndpointAddresses);
         }
 
         public virtual string Id

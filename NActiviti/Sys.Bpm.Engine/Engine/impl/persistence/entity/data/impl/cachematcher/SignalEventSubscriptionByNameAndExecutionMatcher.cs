@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Spring.Expressions;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,18 +23,23 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class SignalEventSubscriptionByNameAndExecutionMatcher : CachedEntityMatcherAdapter<IEventSubscriptionEntity>
     {
 
-        public override bool isRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
+        public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
         {
-            IDictionary<string, object> @params = (IDictionary<string, object>)parameter ?? new Dictionary<string, object>();
-            @params.TryGetValue("executionId", out object executionId);
-            @params.TryGetValue("eventName", out object name);
+            if (parameter == null)
+            {
+                return false;
+            }
+
+            JToken @params = JToken.FromObject(parameter);
+            string executionId = @params["executionId"]?.ToString();
+            string name = @params["eventName"]?.ToString();
 
             return eventSubscriptionEntity.EventType != null && 
-                eventSubscriptionEntity.EventType.Equals(SignalEventSubscriptionEntity_Fields.EVENT_TYPE) && 
+                eventSubscriptionEntity.EventType.Equals(SignalEventSubscriptionEntityFields.EVENT_TYPE) && 
                 eventSubscriptionEntity.ExecutionId != null && 
-                string.Compare(eventSubscriptionEntity.ExecutionId, executionId?.ToString(), true) == 0 && 
+                string.Compare(eventSubscriptionEntity.ExecutionId, executionId, true) == 0 && 
                 eventSubscriptionEntity.EventName != null && 
-                string.Compare(eventSubscriptionEntity.EventName, name?.ToString(), true) == 0;
+                string.Compare(eventSubscriptionEntity.EventName, name, true) == 0;
         }
 
     }

@@ -12,11 +12,19 @@
  */
 namespace org.activiti.engine.impl.interceptor
 {
+    /// <summary>
     /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface ICommand<T>
     {
 
-        T execute(ICommandContext commandContext);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <returns></returns>
+        T Execute(ICommandContext commandContext);
     }
 
 }

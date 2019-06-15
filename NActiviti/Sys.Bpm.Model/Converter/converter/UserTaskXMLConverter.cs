@@ -59,9 +59,9 @@ namespace org.activiti.bpmn.converter
 
         public override string XMLElementName => BpmnXMLConstants.ELEMENT_TASK_USER;
 
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
-            string formKey = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY);
+            string formKey = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY);
             UserTask userTask = null;
             if (!string.IsNullOrWhiteSpace(formKey))
             {
@@ -74,77 +74,77 @@ namespace org.activiti.bpmn.converter
             {
                 userTask = new UserTask();
             }
-            BpmnXMLUtil.addXMLLocation(userTask, xtr);
-            userTask.DueDate = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_DUEDATE);
-            userTask.BusinessCalendarName = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_BUSINESS_CALENDAR_NAME);
-            userTask.Category = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_CATEGORY);
+            BpmnXMLUtil.AddXMLLocation(userTask, xtr);
+            userTask.DueDate = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_DUEDATE);
+            userTask.BusinessCalendarName = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_BUSINESS_CALENDAR_NAME);
+            userTask.Category = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_CATEGORY);
             userTask.FormKey = formKey;
-            userTask.Assignee = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_ASSIGNEE);
-            userTask.Owner = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_OWNER);
-            userTask.Priority = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_PRIORITY);
+            userTask.Assignee = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_ASSIGNEE);
+            userTask.Owner = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_OWNER);
+            userTask.Priority = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_PRIORITY);
 
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_CANDIDATEUSERS)))
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_CANDIDATEUSERS)))
             {
-                string expression = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_CANDIDATEUSERS);
-                (userTask.CandidateUsers as List<string>).AddRange(parseDelimitedList(expression));
+                string expression = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_CANDIDATEUSERS);
+                (userTask.CandidateUsers as List<string>).AddRange(ParseDelimitedList(expression));
             }
 
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_CANDIDATEGROUPS)))
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_CANDIDATEGROUPS)))
             {
-                string expression = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_CANDIDATEGROUPS);
-                (userTask.CandidateGroups as List<string>).AddRange(parseDelimitedList(expression));
+                string expression = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_CANDIDATEGROUPS);
+                (userTask.CandidateGroups as List<string>).AddRange(ParseDelimitedList(expression));
             }
 
-            userTask.ExtensionId = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXTENSIONID);
+            userTask.ExtensionId = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXTENSIONID);
 
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_SKIP_EXPRESSION)))
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_SKIP_EXPRESSION)))
             {
-                string expression = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_SKIP_EXPRESSION);
+                string expression = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_USER_SKIP_EXPRESSION);
                 userTask.SkipExpression = expression;
             }
 
-            BpmnXMLUtil.addCustomAttributes(xtr, userTask, defaultElementAttributes, defaultActivityAttributes, defaultUserTaskAttributes);
+            BpmnXMLUtil.AddCustomAttributes(xtr, userTask, defaultElementAttributes, defaultActivityAttributes, defaultUserTaskAttributes);
 
-            parseChildElements(XMLElementName, userTask, childParserMap, model, xtr);
+            ParseChildElements(XMLElementName, userTask, childParserMap, model, xtr);
 
             return userTask;
         }
 
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             UserTask userTask = (UserTask)element;
-            writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_ASSIGNEE, userTask.Assignee, xtw);
-            writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_OWNER, userTask.Owner, xtw);
-            writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_CANDIDATEUSERS, convertToDelimitedString(userTask.CandidateUsers), xtw);
-            writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_CANDIDATEGROUPS, convertToDelimitedString(userTask.CandidateGroups), xtw);
-            writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_DUEDATE, userTask.DueDate, xtw);
-            writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_BUSINESS_CALENDAR_NAME, userTask.BusinessCalendarName, xtw);
-            writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_CATEGORY, userTask.Category, xtw);
-            writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY, userTask.FormKey, xtw);
+            WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_ASSIGNEE, userTask.Assignee, xtw);
+            WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_OWNER, userTask.Owner, xtw);
+            WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_CANDIDATEUSERS, ConvertToDelimitedString(userTask.CandidateUsers), xtw);
+            WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_CANDIDATEGROUPS, ConvertToDelimitedString(userTask.CandidateGroups), xtw);
+            WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_DUEDATE, userTask.DueDate, xtw);
+            WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_BUSINESS_CALENDAR_NAME, userTask.BusinessCalendarName, xtw);
+            WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_CATEGORY, userTask.Category, xtw);
+            WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY, userTask.FormKey, xtw);
             if (userTask.Priority != null)
 
             {
-                writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_PRIORITY, userTask.Priority.ToString(), xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_PRIORITY, userTask.Priority.ToString(), xtw);
             }
             if (!string.IsNullOrWhiteSpace(userTask.ExtensionId))
 
             {
-                writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXTENSIONID, userTask.ExtensionId, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXTENSIONID, userTask.ExtensionId, xtw);
             }
             if (userTask.SkipExpression != null)
 
             {
-                writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_SKIP_EXPRESSION, userTask.SkipExpression, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_SKIP_EXPRESSION, userTask.SkipExpression, xtw);
             }
             // write custom attributes
-            BpmnXMLUtil.writeCustomAttributes(userTask.Attributes.Values, xtw, defaultElementAttributes, defaultActivityAttributes, defaultUserTaskAttributes);
+            BpmnXMLUtil.WriteCustomAttributes(userTask.Attributes.Values, xtw, defaultElementAttributes, defaultActivityAttributes, defaultUserTaskAttributes);
         }
 
-        protected internal override bool writeExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        protected internal override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             UserTask userTask = (UserTask)element;
-            didWriteExtensionStartElement = writeFormProperties(userTask, didWriteExtensionStartElement, xtw);
-            didWriteExtensionStartElement = writeCustomIdentities(element, didWriteExtensionStartElement, xtw);
+            didWriteExtensionStartElement = WriteFormProperties(userTask, didWriteExtensionStartElement, xtw);
+            didWriteExtensionStartElement = WriteCustomIdentities(element, didWriteExtensionStartElement, xtw);
             if (userTask.CustomProperties.Count() > 0)
             {
                 foreach (CustomProperty customProperty in userTask.CustomProperties)
@@ -156,18 +156,18 @@ namespace org.activiti.bpmn.converter
 
                     if (!didWriteExtensionStartElement)
                     {
-                        xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EXTENSIONS);
+                        xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                         didWriteExtensionStartElement = true;
                     }
-                    xtw.writeStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, customProperty.Name, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-                    xtw.writeCharacters(customProperty.SimpleValue);
-                    xtw.writeEndElement();
+                    xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, customProperty.Name, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                    xtw.WriteCharacters(customProperty.SimpleValue);
+                    xtw.WriteEndElement();
                 }
             }
             return didWriteExtensionStartElement;
         }
 
-        protected bool writeCustomIdentities(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        protected bool WriteCustomIdentities(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             UserTask userTask = (UserTask)element;
             if (userTask.CustomUserIdentityLinks.Count == 0 && userTask.CustomGroupIdentityLinks.Count == 0)
@@ -177,9 +177,8 @@ namespace org.activiti.bpmn.converter
             }
 
             if (!didWriteExtensionStartElement)
-
             {
-                xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EXTENSIONS);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                 didWriteExtensionStartElement = true;
             }
             List<string> identityLinkTypes = new List<string>();
@@ -187,16 +186,16 @@ namespace org.activiti.bpmn.converter
             identityLinkTypes.AddRange(userTask.CustomGroupIdentityLinks.Keys);
             foreach (string identityType in identityLinkTypes)
             {
-                writeCustomIdentities(userTask, identityType, userTask.CustomUserIdentityLinks[identityType], userTask.CustomGroupIdentityLinks[identityType], xtw);
+                WriteCustomIdentities(userTask, identityType, userTask.CustomUserIdentityLinks[identityType], userTask.CustomGroupIdentityLinks[identityType], xtw);
             }
 
             return didWriteExtensionStartElement;
         }
 
-        protected void writeCustomIdentities(UserTask userTask, string identityType, ISet<string> users, ISet<string> groups, XMLStreamWriter xtw)
+        protected void WriteCustomIdentities(UserTask userTask, string identityType, ISet<string> users, ISet<string> groups, XMLStreamWriter xtw)
         {
-            xtw.writeStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_CUSTOM_RESOURCE, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-            writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, identityType, xtw);
+            xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_CUSTOM_RESOURCE, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, identityType, xtw);
 
             IList<string> identityList = new List<string>();
 
@@ -216,18 +215,18 @@ namespace org.activiti.bpmn.converter
                 }
             }
 
-            string delimitedString = convertToDelimitedString(identityList);
+            string delimitedString = ConvertToDelimitedString(identityList);
 
-            xtw.writeStartElement(BpmnXMLConstants.ELEMENT_RESOURCE_ASSIGNMENT);
-            xtw.writeStartElement(BpmnXMLConstants.ELEMENT_FORMAL_EXPRESSION);
-            xtw.writeCharacters(delimitedString);
-            xtw.writeEndElement(); // End ELEMENT_FORMAL_EXPRESSION
-            xtw.writeEndElement(); // End ELEMENT_RESOURCE_ASSIGNMENT
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_RESOURCE_ASSIGNMENT, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_FORMAL_EXPRESSION, BpmnXMLConstants.BPMN2_NAMESPACE);
+            xtw.WriteCharacters(delimitedString);
+            xtw.WriteEndElement(); // End ELEMENT_FORMAL_EXPRESSION
+            xtw.WriteEndElement(); // End ELEMENT_RESOURCE_ASSIGNMENT
 
-            xtw.writeEndElement(); // End ELEMENT_CUSTOM_RESOURCE
+            xtw.WriteEndElement(); // End ELEMENT_CUSTOM_RESOURCE
         }
 
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
 
@@ -235,7 +234,7 @@ namespace org.activiti.bpmn.converter
         {
             public override string ElementName => "humanPerformer";
 
-            public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+            public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
             {
 
                 string resourceElement = XMLStreamReaderUtil.moveDown(xtr);
@@ -256,7 +255,7 @@ namespace org.activiti.bpmn.converter
 
             public override string ElementName => "potentialOwner";
 
-            public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+            public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
             {
 
                 string resourceElement = XMLStreamReaderUtil.moveDown(xtr);
@@ -267,13 +266,13 @@ namespace org.activiti.bpmn.converter
                     if (!string.IsNullOrWhiteSpace(expression) && BpmnXMLConstants.ELEMENT_FORMAL_EXPRESSION.Equals(expression))
                     {
 
-                        IList<string> assignmentList = CommaSplitter.splitCommas(xtr.ElementText);
+                        IList<string> assignmentList = CommaSplitter.SplitCommas(xtr.ElementText);
 
                         for (var idx = 0; idx < assignmentList.Count; idx++)
                         {
                             string assignmentValue = assignmentList[idx];
 
-                            if (string.ReferenceEquals(assignmentValue, null))
+                            if (assignmentValue is null)
                             {
                                 continue;
                             }
@@ -308,15 +307,15 @@ namespace org.activiti.bpmn.converter
 
                 {
                     string resourceId = xtr.ElementText;
-                    if (model.containsResourceId(resourceId))
+                    if (model.ContainsResourceId(resourceId))
                     {
-                        Resource resource = model.getResource(resourceId);
+                        Resource resource = model.GetResource(resourceId);
                         ((UserTask)parentElement).CandidateGroups.Add(resource.Name);
                     }
                     else
                     {
                         Resource resource = new Resource(resourceId, resourceId);
-                        model.addResource(resource);
+                        model.AddResource(resource);
                         ((UserTask)parentElement).CandidateGroups.Add(resource.Name);
                     }
                 }
@@ -327,21 +326,21 @@ namespace org.activiti.bpmn.converter
         {
 
 
-            public override string ElementName => constants.BpmnXMLConstants.ELEMENT_CUSTOM_RESOURCE;
+            public override string ElementName => BpmnXMLConstants.ELEMENT_CUSTOM_RESOURCE;
 
-            public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+            public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
             {
 
-                string identityLinkType = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_NAME);
+                string identityLinkType = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_NAME);
 
                 // the attribute value may be unqualified
-                if (string.ReferenceEquals(identityLinkType, null))
+                if (identityLinkType is null)
 
                 {
-                    identityLinkType = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
+                    identityLinkType = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
                 }
 
-                if (string.ReferenceEquals(identityLinkType, null))
+                if (identityLinkType is null)
 
                 {
                     return;
@@ -355,12 +354,12 @@ namespace org.activiti.bpmn.converter
                     if (!string.IsNullOrWhiteSpace(expression) && BpmnXMLConstants.ELEMENT_FORMAL_EXPRESSION.Equals(expression))
                     {
 
-                        IList<string> assignmentList = CommaSplitter.splitCommas(xtr.ElementText);
+                        IList<string> assignmentList = CommaSplitter.SplitCommas(xtr.ElementText);
 
                         for (var idx = 0; idx < assignmentList.Count; idx++)
                         {
                             string assignmentValue = assignmentList[idx];
-                            if (string.ReferenceEquals(assignmentValue, null))
+                            if (assignmentValue is null)
                             {
                                 continue;
                             }
@@ -377,16 +376,16 @@ namespace org.activiti.bpmn.converter
                             if (assignmentValue.StartsWith(userPrefix, StringComparison.Ordinal))
                             {
                                 assignmentValue = assignmentList[idx] = StringHelper.SubstringSpecial(assignmentValue, userPrefix.Length, assignmentValue.Length - 1).Trim();
-                                ((UserTask)parentElement).addCustomUserIdentityLink(assignmentValue, identityLinkType);
+                                ((UserTask)parentElement).AddCustomUserIdentityLink(assignmentValue, identityLinkType);
                             }
                             else if (assignmentValue.StartsWith(groupPrefix, StringComparison.Ordinal))
                             {
                                 assignmentValue = assignmentList[idx] = StringHelper.SubstringSpecial(assignmentValue, groupPrefix.Length, assignmentValue.Length - 1).Trim();
-                                ((UserTask)parentElement).addCustomGroupIdentityLink(assignmentValue, identityLinkType);
+                                ((UserTask)parentElement).AddCustomGroupIdentityLink(assignmentValue, identityLinkType);
                             }
                             else
                             {
-                                ((UserTask)parentElement).addCustomGroupIdentityLink(assignmentValue, identityLinkType);
+                                ((UserTask)parentElement).AddCustomGroupIdentityLink(assignmentValue, identityLinkType);
                             }
                         }
                     }
@@ -394,5 +393,4 @@ namespace org.activiti.bpmn.converter
             }
         }
     }
-
 }

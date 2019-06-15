@@ -17,7 +17,7 @@ namespace org.springframework.hateoas
         /// <summary>
         /// 添加链接资源
         /// </summary>
-        public ResourceSupport add(Link link)
+        public ResourceSupport Add(Link link)
         {
             this.links.Add(link);
 

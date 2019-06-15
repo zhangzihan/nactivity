@@ -15,15 +15,16 @@ using System.Reflection;
  */
 namespace org.activiti.engine.impl.util
 {
+    using Microsoft.Extensions.Logging;
+    using org.activiti.engine;
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.context;
     using Sys;
+    using Sys.Workflow;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using org.activiti.engine;
-    using Microsoft.Extensions.Logging;
-    using System.IO;
 
     /// 
     public abstract class ReflectUtil
@@ -46,7 +47,7 @@ namespace org.activiti.engine.impl.util
             }
         }
 
-        public static Type loadClass(string className)
+        public static Type LoadClass(string className)
         {
             Type clazz = null;
             ClassLoader classLoader = CustomClassLoader;
@@ -60,7 +61,7 @@ namespace org.activiti.engine.impl.util
                 try
                 {
                     log.LogTrace($"Trying to load class with custom classloader: {className}");
-                    clazz = loadClass(classLoader, className);
+                    clazz = LoadClass(classLoader, className);
                 }
                 catch (Exception t)
                 {
@@ -105,47 +106,47 @@ namespace org.activiti.engine.impl.util
             return clazz;
         }
 
-        public static Stream getResourceAsStream(string name)
+        public static Stream GetResourceAsStream(string name)
         {
             System.IO.Stream resourceStream = null;
             ClassLoader classLoader = CustomClassLoader;
             if (classLoader != null)
             {
-                resourceStream = classLoader.getResourceAsStream(name);
+                resourceStream = classLoader.GetResourceAsStream(name);
             }
 
             if (resourceStream == null)
             {
                 // Try the current Thread context classloader
                 //classLoader = Thread.CurrentThread.ContextClassLoader;
-                resourceStream = classLoader.getResourceAsStream(name);
+                resourceStream = classLoader.GetResourceAsStream(name);
             }
             return resourceStream;
         }
 
-        public static Uri getResource(string name)
+        public static Uri GetResource(string name)
         {
             Uri url = null;
             ClassLoader classLoader = CustomClassLoader;
             if (classLoader != null)
             {
-                url = classLoader.getResource(name);
+                url = classLoader.GetResource(name);
             }
             if (url == null)
             {
                 // Try the current Thread context classloader
                 //classLoader = Thread.CurrentThread.ContextClassLoader;
-                url = classLoader.getResource(name);
+                url = classLoader.GetResource(name);
             }
 
             return url;
         }
 
-        public static object instantiate(string className)
+        public static object Instantiate(string className)
         {
             try
             {
-                Type clazz = loadClass(className);
+                Type clazz = LoadClass(className);
                 return Activator.CreateInstance(clazz);
             }
             catch (Exception e)
@@ -154,12 +155,12 @@ namespace org.activiti.engine.impl.util
             }
         }
 
-        public static object invoke(object target, string methodName, object[] args)
+        public static object Invoke(object target, string methodName, object[] args)
         {
             try
             {
                 Type clazz = target.GetType();
-                MethodInfo method = findMethod(clazz, methodName, args);
+                MethodInfo method = FindMethod(clazz, methodName, args);
                 //method.Accessible = true;
                 return method.Invoke(target, args);
             }
@@ -172,15 +173,15 @@ namespace org.activiti.engine.impl.util
         /// <summary>
         /// Returns the field of the given object or null if it doesn't exist.
         /// </summary>
-        public static FieldInfo getField(string fieldName, object @object)
+        public static FieldInfo GetField(string fieldName, object @object)
         {
-            return getField(fieldName, @object.GetType());
+            return GetField(fieldName, @object.GetType());
         }
 
         /// <summary>
         /// Returns the field of the given class or null if it doesn't exist.
         /// </summary>
-        public static FieldInfo getField(string fieldName, Type clazz)
+        public static FieldInfo GetField(string fieldName, Type clazz)
         {
             FieldInfo field = null;
             try
@@ -194,7 +195,7 @@ namespace org.activiti.engine.impl.util
                 Type superClass = clazz.BaseType;
                 if (superClass != null)
                 {
-                    return getField(fieldName, superClass);
+                    return GetField(fieldName, superClass);
                 }
             }
             catch (Exception)
@@ -204,7 +205,7 @@ namespace org.activiti.engine.impl.util
             return field;
         }
 
-        public static void setField(FieldInfo field, object @object, object value)
+        public static void SetField(FieldInfo field, object @object, object value)
         {
             try
             {
@@ -223,7 +224,7 @@ namespace org.activiti.engine.impl.util
         /// <summary>
         /// Returns the setter-method for the given field name or null if no setter exists.
         /// </summary>
-        public static MethodInfo getSetter(string fieldName, Type clazz, Type fieldType)
+        public static MethodInfo GetSetter(string fieldName, Type clazz, Type fieldType)
         {
             //string setterName = "set" + Character.toTitleCase(fieldName[0]) + fieldName.Substring(1, fieldName.Length - 1);
             try
@@ -254,12 +255,12 @@ namespace org.activiti.engine.impl.util
             }
         }
 
-        private static MethodInfo findMethod(Type clazz, string methodName, object[] args)
+        private static MethodInfo FindMethod(Type clazz, string methodName, object[] args)
         {
-            foreach (MethodInfo method in clazz.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance))
+            foreach (MethodInfo method in clazz.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase))
             {
                 // TODO add parameter matching
-                if (method.Name.Equals(methodName) && matches(method.GetParameters().Select(x => x.ParameterType).ToArray(), args))
+                if (method.Name.Equals(methodName) && Matches(method.GetParameters().Select(x => x.ParameterType).ToArray(), args))
                 {
                     return method;
                 }
@@ -267,15 +268,15 @@ namespace org.activiti.engine.impl.util
             Type superClass = clazz.BaseType;
             if (superClass != null)
             {
-                return findMethod(superClass, methodName, args);
+                return FindMethod(superClass, methodName, args);
             }
             return null;
         }
 
-        public static object instantiate(string className, object[] args)
+        public static object Instantiate(string className, object[] args)
         {
-            Type clazz = loadClass(className);
-            ConstructorInfo constructor = findMatchingConstructor(clazz, args);
+            Type clazz = LoadClass(className);
+            ConstructorInfo constructor = FindMatchingConstructor(clazz, args);
             if (constructor == null)
             {
                 throw new ActivitiException("couldn't find constructor for " + className + " with args " + args?.ToList());
@@ -290,7 +291,7 @@ namespace org.activiti.engine.impl.util
             }
         }
 
-        private static ConstructorInfo findMatchingConstructor(Type clazz, object[] args)
+        private static ConstructorInfo FindMatchingConstructor(Type clazz, object[] args)
         {
             foreach (ConstructorInfo constructor in clazz.GetConstructors(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance))
             { // cannot
@@ -303,7 +304,7 @@ namespace org.activiti.engine.impl.util
               // JDK
               // 5/6
               // incompatibility
-                if (matches(constructor.GetParameters().Select(x => x.ParameterType).ToArray(), args))
+                if (Matches(constructor.GetParameters().Select(x => x.ParameterType).ToArray(), args))
                 {
                     return constructor;
                 }
@@ -311,7 +312,7 @@ namespace org.activiti.engine.impl.util
             return null;
         }
 
-        private static bool matches(Type[] parameterTypes, object[] args)
+        private static bool Matches(Type[] parameterTypes, object[] args)
         {
             if ((parameterTypes == null) || (parameterTypes.Length == 0))
             {
@@ -348,14 +349,14 @@ namespace org.activiti.engine.impl.util
             }
         }
 
-        private static Type loadClass(ClassLoader classLoader, string className)
+        private static Type LoadClass(ClassLoader classLoader, string className)
         {
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            bool useClassForName = processEngineConfiguration == null || processEngineConfiguration.UseClassForNameClassLoading;
+            _ = processEngineConfiguration == null || processEngineConfiguration.UseClassForNameClassLoading;
             return Type.GetType(className, true);
         }
 
-        public static bool isGetter(MethodInfo method)
+        public static bool IsGetter(MethodInfo method)
         {
             string name = method.Name;
             Type type = method.ReturnType;
@@ -375,7 +376,7 @@ namespace org.activiti.engine.impl.util
             return @params.Length == 0 && !type.Equals(typeof(void));
         }
 
-        public static bool isSetter(MethodInfo method, bool allowBuilderPattern)
+        public static bool IsSetter(MethodInfo method, bool allowBuilderPattern)
         {
             string name = method.Name;
             Type type = method.ReturnType;
@@ -389,14 +390,14 @@ namespace org.activiti.engine.impl.util
             return @params.Length == 1 && (type.Equals(typeof(void)) || (allowBuilderPattern && type.IsAssignableFrom(method.DeclaringType)));
         }
 
-        public static bool isSetter(MethodInfo method)
+        public static bool IsSetter(MethodInfo method)
         {
-            return isSetter(method, false);
+            return IsSetter(method, false);
         }
 
-        public static string getGetterShorthandName(MethodInfo method)
+        public static string GetGetterShorthandName(MethodInfo method)
         {
-            if (!isGetter(method))
+            if (!IsGetter(method))
             {
                 return method.Name;
             }
@@ -416,9 +417,9 @@ namespace org.activiti.engine.impl.util
             return name;
         }
 
-        public static string getSetterShorthandName(MethodInfo method)
+        public static string GetSetterShorthandName(MethodInfo method)
         {
-            if (!isSetter(method))
+            if (!IsSetter(method))
             {
                 return method.Name;
             }

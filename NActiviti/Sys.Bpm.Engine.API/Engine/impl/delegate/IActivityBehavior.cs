@@ -20,8 +20,11 @@ namespace org.activiti.engine.impl.@delegate
     /// 
     public interface IActivityBehavior
     {
-
-        void execute(IExecutionEntity execution);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        void Execute(IExecutionEntity execution);
     }
 
 }

@@ -27,7 +27,7 @@ namespace org.activiti.engine
     public interface IUserGroupLookupProxy
     {
 
-        IList<string> getGroupsForCandidateUser(string candidateUser);
+        IList<string> GetGroupsForCandidateUser(string candidateUser);
     }
 
 }

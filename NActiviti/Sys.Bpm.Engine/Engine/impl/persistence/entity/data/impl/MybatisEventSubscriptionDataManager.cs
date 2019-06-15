@@ -18,12 +18,13 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
 
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.persistence.entity.data.impl.cachematcher;
+    using System.Linq;
 
     /// 
     public class MybatisEventSubscriptionDataManager : AbstractDataManager<IEventSubscriptionEntity>, IEventSubscriptionDataManager
     {
 
-        private static IList<Type> ENTITY_SUBCLASSES = new List<Type>();
+        private static readonly IList<Type> ENTITY_SUBCLASSES = new List<Type>();
 
         static MybatisEventSubscriptionDataManager()
         {
@@ -68,150 +69,158 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IEventSubscriptionEntity create()
+        public override IEventSubscriptionEntity Create()
         {
             // only allowed to create subclasses
             throw new System.NotSupportedException();
         }
 
-        public virtual ICompensateEventSubscriptionEntity createCompensateEventSubscription()
+        public virtual ICompensateEventSubscriptionEntity CreateCompensateEventSubscription()
         {
             return new CompensateEventSubscriptionEntityImpl();
         }
 
-        public virtual IMessageEventSubscriptionEntity createMessageEventSubscription()
+        public virtual IMessageEventSubscriptionEntity CreateMessageEventSubscription()
         {
             return new MessageEventSubscriptionEntityImpl();
         }
 
-        public virtual ISignalEventSubscriptionEntity createSignalEventSubscription()
+        public virtual ISignalEventSubscriptionEntity CreateSignalEventSubscription()
         {
             return new SignalEventSubscriptionEntityImpl();
         }
 
-        public virtual long findEventSubscriptionCountByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl)
+        public virtual long FindEventSubscriptionCountByQueryCriteria(IEventSubscriptionQuery eventSubscriptionQueryImpl)
         {
             const string query = "selectEventSubscriptionCountByQueryCriteria";
-            return DbSqlSession.selectOne<EventSubscriptionEntityImpl, long?>(query, eventSubscriptionQueryImpl).GetValueOrDefault();
+            return DbSqlSession.SelectOne<EventSubscriptionEntityImpl, long?>(query, eventSubscriptionQueryImpl).GetValueOrDefault();
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl, Page page)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByQueryCriteria(IEventSubscriptionQuery eventSubscriptionQueryImpl, Page page)
         {
             const string query = "selectEventSubscriptionByQueryCriteria";
-            return DbSqlSession.selectList<EventSubscriptionEntityImpl, IEventSubscriptionEntity>(query, eventSubscriptionQueryImpl, page);
+            return DbSqlSession.SelectList<EventSubscriptionEntityImpl, IEventSubscriptionEntity>(query, eventSubscriptionQueryImpl, page);
         }
 
-        public virtual IList<IMessageEventSubscriptionEntity> findMessageEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName)
+        public virtual IList<IMessageEventSubscriptionEntity> FindMessageEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName)
         {
-            return toMessageEventSubscriptionEntityList((IList<IEventSubscriptionEntity>)getList("selectMessageEventSubscriptionsByProcessInstanceAndEventName", new { processInstanceId, eventName }, messageEventSubscriptionsByProcInstAndEventNameMatcher, true));
+            var list = GetList("selectMessageEventSubscriptionsByProcessInstanceAndEventName", new { processInstanceId, eventName }, messageEventSubscriptionsByProcInstAndEventNameMatcher, true, typeof(MessageEventSubscriptionEntityImpl), typeof(MessageEventSubscriptionEntityImpl));
+
+            return list.Cast<IMessageEventSubscriptionEntity>().ToList();
         }
 
-        public virtual IList<ISignalEventSubscriptionEntity> findSignalEventSubscriptionsByEventName(string eventName, string tenantId)
+        public virtual IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByEventName(string eventName, string tenantId)
         {
             const string query = "selectSignalEventSubscriptionsByEventName";
 
-            IDictionary<string, string> @params = new Dictionary<string, string>();
-            @params["eventName"] = eventName;
-            @params["tenantId"] = tenantId;
+            IDictionary<string, string> @params = new Dictionary<string, string>
+            {
+                ["eventName"] = eventName,
+                ["tenantId"] = tenantId
+            };
 
-            IList<IEventSubscriptionEntity> result = (IList<IEventSubscriptionEntity>)getList(query, @params, signalEventSubscriptionByEventNameMatcher, true);
-            return toSignalEventSubscriptionEntityList(result);
+            var list = GetList(query, @params, signalEventSubscriptionByEventNameMatcher, true, typeof(SignalEventSubscriptionEntityImpl), typeof(SignalEventSubscriptionEntityImpl));
+
+            return list.Cast<ISignalEventSubscriptionEntity>().ToList();
         }
 
-        public virtual IList<ISignalEventSubscriptionEntity> findSignalEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName)
+        public virtual IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName)
         {
             const string query = "selectSignalEventSubscriptionsByProcessInstanceAndEventName";
-            return toSignalEventSubscriptionEntityList((IList<IEventSubscriptionEntity>)getList(query, new { processInstanceId, eventName }, signalEventSubscriptionByProcInstAndEventNameMatcher, true));
+
+            var list = GetList(query, new { processInstanceId, eventName }, signalEventSubscriptionByProcInstAndEventNameMatcher, true, typeof(SignalEventSubscriptionEntityImpl), typeof(SignalEventSubscriptionEntityImpl));
+
+            return list.Cast<ISignalEventSubscriptionEntity>().ToList();
         }
 
-        public virtual IList<ISignalEventSubscriptionEntity> findSignalEventSubscriptionsByNameAndExecution(string eventName, string executionId)
+        public virtual IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByNameAndExecution(string eventName, string executionId)
         {
-            return toSignalEventSubscriptionEntityList((IList<IEventSubscriptionEntity>)getList("selectSignalEventSubscriptionsByNameAndExecution", new { executionId, eventName }, signalEventSubscriptionByNameAndExecutionMatcher, true));
+            var list = GetList("selectSignalEventSubscriptionsByNameAndExecution", new { executionId, eventName }, signalEventSubscriptionByNameAndExecutionMatcher, true, typeof(SignalEventSubscriptionEntityImpl), typeof(SignalEventSubscriptionEntityImpl));
+
+            return list.Cast<ISignalEventSubscriptionEntity>().ToList();
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByExecutionAndType(string executionId, string eventType)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByExecutionAndType(string executionId, string eventType)
         {
-            return (IList<IEventSubscriptionEntity>)getList("selectEventSubscriptionsByExecutionAndType", new { executionId, eventType }, eventSubscriptionsByExecutionAndTypeMatcher, true);
+            var list = GetList("selectEventSubscriptionsByExecutionAndType", new { executionId, eventType }, eventSubscriptionsByExecutionAndTypeMatcher, true, typeof(EventSubscriptionEntityImpl), typeof(EventSubscriptionEntityImpl));
+
+            return list.Cast<IEventSubscriptionEntity>().ToList();
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByProcessInstanceAndActivityId(string processInstanceId, string activityId, string eventType)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByProcessInstanceAndActivityId(string processInstanceId, string activityId, string eventType)
         {
-            return (IList<IEventSubscriptionEntity>)getList("selectEventSubscriptionsByProcessInstanceTypeAndActivity", new { processInstanceId, eventType, activityId }, eventSubscriptionsByProcInstTypeAndActivityMatcher, true);
+            var list = GetList("selectEventSubscriptionsByProcessInstanceTypeAndActivity", new { processInstanceId, eventType, activityId }, eventSubscriptionsByProcInstTypeAndActivityMatcher, true, typeof(EventSubscriptionEntityImpl), typeof(EventSubscriptionEntityImpl));
+
+            return list.Cast<IEventSubscriptionEntity>().ToList();
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByExecution(string executionId)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByExecution(string executionId)
         {
-            return (IList<IEventSubscriptionEntity>)getList("selectEventSubscriptionsByExecution", new { executionId }, eventSubscritionsByExecutionIdMatcher, true);
+            var list = GetList("selectEventSubscriptionsByExecution", new { executionId }, eventSubscritionsByExecutionIdMatcher, true, typeof(EventSubscriptionEntityImpl), typeof(EventSubscriptionEntityImpl));
+
+            return list.Cast<IEventSubscriptionEntity>().ToList();
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByTypeAndProcessDefinitionId(string type, string processDefinitionId, string tenantId)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByTypeAndProcessDefinitionId(string type, string processDefinitionId, string tenantId)
         {
             const string query = "selectEventSubscriptionsByTypeAndProcessDefinitionId";
-            IDictionary<string, string> @params = new Dictionary<string, string>();
-            @params["eventType"] = type;
-            @params["processDefinitionId"] = processDefinitionId;
-            @params["tenantId"] = tenantId;
+            IDictionary<string, string> @params = new Dictionary<string, string>
+            {
+                ["eventType"] = type,
+                ["processDefinitionId"] = processDefinitionId,
+                ["tenantId"] = tenantId
+            };
 
-            return DbSqlSession.selectList<EventSubscriptionEntityImpl, IEventSubscriptionEntity>(query, @params);
+            return DbSqlSession.SelectList<EventSubscriptionEntityImpl, IEventSubscriptionEntity>(query, @params);
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByName(string type, string eventName, string tenantId)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByName(string type, string eventName, string tenantId)
         {
 
-            IDictionary<string, string> @params = new Dictionary<string, string>();
-            @params["eventType"] = type;
-            @params["eventName"] = eventName;
-            @params["tenantId"] = tenantId;
+            IDictionary<string, string> @params = new Dictionary<string, string>
+            {
+                ["eventType"] = type,
+                ["eventName"] = eventName,
+                ["tenantId"] = tenantId
+            };
 
-            return (IList<IEventSubscriptionEntity>)getList("selectEventSubscriptionsByName", @params, eventSubscriptionsByNameMatcher, true);
+            var list = GetList("selectEventSubscriptionsByName", @params, eventSubscriptionsByNameMatcher, true, typeof(EventSubscriptionEntityImpl), typeof(EventSubscriptionEntityImpl));
+
+            return list.Cast<IEventSubscriptionEntity>().ToList();
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByNameAndExecution(string eventType, string eventName, string executionId)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByNameAndExecution(string eventType, string eventName, string executionId)
         {
             const string query = "selectEventSubscriptionsByNameAndExecution";
-            return DbSqlSession.selectList<EventSubscriptionEntityImpl, IEventSubscriptionEntity>(query, new { eventType, eventName, executionId });
+            return DbSqlSession.SelectList<EventSubscriptionEntityImpl, IEventSubscriptionEntity>(query, new { eventType, eventName, executionId });
         }
 
-        public virtual IMessageEventSubscriptionEntity findMessageStartEventSubscriptionByName(string messageName, string tenantId)
+        public virtual IMessageEventSubscriptionEntity FindMessageStartEventSubscriptionByName(string messageName, string tenantId)
         {
-            IDictionary<string, string> @params = new Dictionary<string, string>();
-            @params["eventName"] = messageName;
-            @params["tenantId"] = tenantId;
+            IDictionary<string, string> @params = new Dictionary<string, string>
+            {
+                ["eventName"] = messageName,
+                ["tenantId"] = tenantId
+            };
 
-            IMessageEventSubscriptionEntity entity = DbSqlSession.selectOne<MessageEventSubscriptionEntityImpl, IMessageEventSubscriptionEntity>("selectMessageStartEventSubscriptionByName", @params);
+            IMessageEventSubscriptionEntity entity = DbSqlSession.SelectOne<MessageEventSubscriptionEntityImpl, IMessageEventSubscriptionEntity>("selectMessageStartEventSubscriptionByName", @params);
+
             return entity;
         }
 
-        public virtual void updateEventSubscriptionTenantId(string oldTenantId, string newTenantId)
+        public virtual void UpdateEventSubscriptionTenantId(string oldTenantId, string newTenantId)
         {
-            DbSqlSession.update<EventSubscriptionEntityImpl>("updateTenantIdOfEventSubscriptions", new { oldTenantId, newTenantId });
+            DbSqlSession.Update<EventSubscriptionEntityImpl>("updateTenantIdOfEventSubscriptions", new { oldTenantId, newTenantId });
         }
 
-        public virtual void deleteEventSubscriptionsForProcessDefinition(string processDefinitionId)
+        public override void Delete(IEventSubscriptionEntity entity)
         {
-            DbSqlSession.delete("deleteEventSubscriptionsForProcessDefinition", new { processDefinitionId }, typeof(EventSubscriptionEntityImpl));
+            base.Delete(entity);
         }
 
-        protected internal virtual IList<ISignalEventSubscriptionEntity> toSignalEventSubscriptionEntityList(IList<IEventSubscriptionEntity> result)
+        public virtual void DeleteEventSubscriptionsForProcessDefinition(string processDefinitionId)
         {
-            IList<ISignalEventSubscriptionEntity> signalEventSubscriptionEntities = new List<ISignalEventSubscriptionEntity>(result.Count);
-            foreach (IEventSubscriptionEntity eventSubscriptionEntity in result)
-            {
-                signalEventSubscriptionEntities.Add((ISignalEventSubscriptionEntity)eventSubscriptionEntity);
-            }
-            return signalEventSubscriptionEntities;
+            DbSqlSession.Delete("deleteEventSubscriptionsForProcessDefinition", new { processDefinitionId }, typeof(EventSubscriptionEntityImpl));
         }
-
-        protected internal virtual IList<IMessageEventSubscriptionEntity> toMessageEventSubscriptionEntityList(IList<IEventSubscriptionEntity> result)
-        {
-            IList<IMessageEventSubscriptionEntity> messageEventSubscriptionEntities = new List<IMessageEventSubscriptionEntity>(result.Count);
-            foreach (IEventSubscriptionEntity eventSubscriptionEntity in result)
-            {
-                messageEventSubscriptionEntities.Add((IMessageEventSubscriptionEntity)eventSubscriptionEntity);
-            }
-            return messageEventSubscriptionEntities;
-        }
-
     }
-
 }

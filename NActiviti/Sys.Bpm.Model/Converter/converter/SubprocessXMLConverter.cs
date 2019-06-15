@@ -19,6 +19,7 @@ namespace org.activiti.bpmn.converter
     using org.activiti.bpmn.exceptions;
     using org.activiti.bpmn.model;
     using Sys.Bpm;
+    using Sys.Bpm.Model;
     using System;
     using System.Linq;
     using System.Xml.Linq;
@@ -27,8 +28,8 @@ namespace org.activiti.bpmn.converter
     public class SubprocessXMLConverter : BpmnXMLConverter
     {
         private static readonly ILogger logger = BpmnModelLoggerFactory.LoggerService<SubprocessXMLConverter>();
-     
-        public override byte[] convertToXML(BpmnModel model, string encoding)
+
+        public override byte[] ConvertToXML(BpmnModel model, string encoding)
         {
             try
             {
@@ -40,10 +41,10 @@ namespace org.activiti.bpmn.converter
                 XElement writer = doc.Root; //xof.createXElement(@out);
                 XMLStreamWriter xtw = new IndentingXMLStreamWriter(writer);
 
-                DefinitionsRootExport.writeRootElement(model, xtw, encoding);
-                CollaborationExport.writePools(model, xtw);
-                DataStoreExport.writeDataStores(model, xtw);
-                SignalAndMessageDefinitionExport.writeSignalsAndMessages(model, xtw);
+                DefinitionsRootExport.WriteRootElement(model, xtw, encoding);
+                CollaborationExport.WritePools(model, xtw);
+                DataStoreExport.WriteDataStores(model, xtw);
+                SignalAndMessageDefinitionExport.WriteSignalsAndMessages(model, xtw);
 
                 foreach (Process process in model.Processes)
                 {
@@ -54,35 +55,35 @@ namespace org.activiti.bpmn.converter
                         continue;
                     }
 
-                    ProcessExport.writeProcess(process, xtw);
+                    ProcessExport.WriteProcess(process, xtw);
 
                     foreach (FlowElement flowElement in process.FlowElements)
                     {
-                        createXML(flowElement, model, xtw);
+                        CreateXML(flowElement, model, xtw);
                     }
 
                     foreach (Artifact artifact in process.Artifacts)
                     {
-                        createXML(artifact, model, xtw);
+                        CreateXML(artifact, model, xtw);
                     }
 
                     // end process element
-                    xtw.writeEndElement();
+                    xtw.WriteEndElement();
                 }
 
                 // refactor each subprocess into a separate Diagram
-                IList<BpmnModel> subModels = parseSubModels(model);
+                IList<BpmnModel> subModels = ParseSubModels(model);
                 foreach (BpmnModel tempModel in subModels)
                 {
                     if (tempModel.FlowLocationMap.Count > 0 || tempModel.LocationMap.Count > 0)
                     {
-                        BPMNDIExport.writeBPMNDI(tempModel, xtw);
+                        BPMNDIExport.WriteBPMNDI(tempModel, xtw);
                     }
                 }
 
                 // end definitions root element
-                xtw.writeEndElement();
-                xtw.writeEndDocument();
+                xtw.WriteEndElement();
+                xtw.WriteEndDocument();
 
                 xtw.Flush();
                 outputStream.Seek(0, System.IO.SeekOrigin.Begin);
@@ -90,7 +91,8 @@ namespace org.activiti.bpmn.converter
 
                 // cleanup
                 outputStream.Close();
-                xtw.close();
+                //XElementHelper.Close(xtw);
+                xtw.Close();
 
                 return bytes;
             }
@@ -101,7 +103,7 @@ namespace org.activiti.bpmn.converter
             }
         }
 
-        protected internal virtual IList<BpmnModel> parseSubModels(BpmnModel model)
+        protected internal virtual IList<BpmnModel> ParseSubModels(BpmnModel model)
         {
             IList<BpmnModel> subModels = new List<BpmnModel>();
 
@@ -111,22 +113,20 @@ namespace org.activiti.bpmn.converter
             IDictionary<string, IList<GraphicInfo>> flowLocations = new Dictionary<string, IList<GraphicInfo>>();
             IDictionary<string, GraphicInfo> labelLocations = new Dictionary<string, GraphicInfo>();
 
-            locations.putAll(model.LocationMap);
-            flowLocations.putAll(model.FlowLocationMap);
-            labelLocations.putAll(model.LabelLocationMap);
+            locations.PutAll(model.LocationMap);
+            flowLocations.PutAll(model.FlowLocationMap);
+            labelLocations.PutAll(model.LabelLocationMap);
 
             // include main process as separate model
             BpmnModel mainModel = new BpmnModel();
             // set main process in submodel to subprocess
-            mainModel.addProcess(model.MainProcess);
-
-            string elementId = null;
+            mainModel.AddProcess(model.MainProcess);
             foreach (FlowElement element in flowElements)
             {
-                elementId = element.Id;
+                string elementId = element.Id;
                 if (element is SubProcess)
                 {
-                    ((List<BpmnModel>)subModels).AddRange(parseSubModels(element, locations, flowLocations, labelLocations));
+                    ((List<BpmnModel>)subModels).AddRange(ParseSubModels(element, locations, flowLocations, labelLocations));
                 }
 
                 if (element is SequenceFlow && null != flowLocations[elementId])
@@ -155,27 +155,28 @@ namespace org.activiti.bpmn.converter
             return subModels;
         }
 
-        private IList<BpmnModel> parseSubModels(FlowElement subElement, IDictionary<string, GraphicInfo> locations, IDictionary<string, IList<GraphicInfo>> flowLocations, IDictionary<string, GraphicInfo> labelLocations)
+        private IList<BpmnModel> ParseSubModels(FlowElement subElement, IDictionary<string, GraphicInfo> locations, IDictionary<string, IList<GraphicInfo>> flowLocations, IDictionary<string, GraphicInfo> labelLocations)
         {
             IList<BpmnModel> subModels = new List<BpmnModel>();
             BpmnModel subModel = new BpmnModel();
-            string elementId = null;
 
             // find nested subprocess models
             ICollection<FlowElement> subFlowElements = ((SubProcess)subElement).FlowElements;
             // set main process in submodel to subprocess
-            Process newMainProcess = new Process();
-            newMainProcess.Id = subElement.Id;
+            Process newMainProcess = new Process
+            {
+                Id = subElement.Id
+            };
             newMainProcess.FlowElements.ToList().AddRange(subFlowElements);
             newMainProcess.Artifacts.ToList().AddRange(((SubProcess)subElement).Artifacts);
-            subModel.addProcess(newMainProcess);
+            subModel.AddProcess(newMainProcess);
 
             foreach (FlowElement element in subFlowElements)
             {
-                elementId = element.Id;
+                string elementId = element.Id;
                 if (element is SubProcess)
                 {
-                    ((List<BpmnModel>)subModels).AddRange(parseSubModels(element, locations, flowLocations, labelLocations));
+                    ((List<BpmnModel>)subModels).AddRange(ParseSubModels(element, locations, flowLocations, labelLocations));
                 }
 
                 if (element is SequenceFlow && null != flowLocations[elementId])

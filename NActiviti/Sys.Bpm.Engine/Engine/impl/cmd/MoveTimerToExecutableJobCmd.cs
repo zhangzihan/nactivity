@@ -17,7 +17,7 @@ namespace org.activiti.engine.impl.cmd
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using Sys;
+    using Sys.Workflow;
     using System.Collections.Generic;
 
     /// 
@@ -35,15 +35,15 @@ namespace org.activiti.engine.impl.cmd
             this.jobId = jobId;
         }
 
-        public  virtual IJobEntity  execute(ICommandContext  commandContext)
+        public  virtual IJobEntity  Execute(ICommandContext  commandContext)
         {
 
-            if (ReferenceEquals(jobId, null))
+            if (jobId is null)
             {
                 throw new ActivitiIllegalArgumentException("jobId and job is null");
             }
 
-            ITimerJobEntity timerJob = commandContext.TimerJobEntityManager.findById<ITimerJobEntity>(new KeyValuePair<string, object>("id", jobId));
+            ITimerJobEntity timerJob = commandContext.TimerJobEntityManager.FindById<ITimerJobEntity>(new KeyValuePair<string, object>("id", jobId));
 
             if (timerJob == null)
             {
@@ -55,7 +55,7 @@ namespace org.activiti.engine.impl.cmd
                 log.LogDebug($"Executing timer job {timerJob.Id}");
             }
 
-            return commandContext.JobManager.moveTimerJobToExecutableJob(timerJob);
+            return commandContext.JobManager.MoveTimerJobToExecutableJob(timerJob);
         }
 
         public virtual string JobId

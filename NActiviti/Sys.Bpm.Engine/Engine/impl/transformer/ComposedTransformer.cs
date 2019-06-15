@@ -28,12 +28,12 @@ namespace org.activiti.engine.impl.transformer
         /// <summary>
         /// {@inheritDoc}
         /// </summary>
-        protected internal override object primTransform(object anObject)
+        protected internal override object PrimTransform(object anObject)
         {
             object current = anObject;
             foreach (ITransformer transformer in this.transformers)
             {
-                current = transformer.transform(current);
+                current = transformer.Transform(current);
             }
             return current;
         }

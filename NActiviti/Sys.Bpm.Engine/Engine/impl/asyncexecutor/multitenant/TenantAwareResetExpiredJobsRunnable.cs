@@ -14,19 +14,38 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
 {
     using org.activiti.engine.impl.cfg.multitenant;
 
+    /// <summary>
     /// 
+    /// </summary>
     public class TenantAwareResetExpiredJobsRunnable : ResetExpiredJobsRunnable
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ITenantInfoHolder tenantInfoHolder;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string tenantId;
 
+        private readonly object syncRoot = new object();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="asyncExecutor"></param>
+        /// <param name="tenantInfoHolder"></param>
+        /// <param name="tenantId"></param>
         public TenantAwareResetExpiredJobsRunnable(IAsyncExecutor asyncExecutor, ITenantInfoHolder tenantInfoHolder, string tenantId) : base(asyncExecutor)
         {
             this.tenantInfoHolder = tenantInfoHolder;
             this.tenantId = tenantId;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual ExecutorPerTenantAsyncExecutor TenantAwareAsyncExecutor
         {
             get
@@ -35,15 +54,17 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-        public override void run()
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Run()
         {
-            lock (this)
+            lock (syncRoot)
             {
                 tenantInfoHolder.CurrentTenantId = tenantId;
-                base.run();
-                tenantInfoHolder.clearCurrentTenantId();
+                base.Run();
+                tenantInfoHolder.ClearCurrentTenantId();
             }
         }
-
     }
 }

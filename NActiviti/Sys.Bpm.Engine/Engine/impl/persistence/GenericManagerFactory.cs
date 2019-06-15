@@ -43,7 +43,7 @@ namespace org.activiti.engine.impl.persistence
             }
         }
 
-        public virtual ISession openSession(ICommandContext commandContext)
+        public virtual ISession OpenSession(ICommandContext commandContext)
         {
             try
             {

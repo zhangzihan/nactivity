@@ -38,7 +38,7 @@ namespace org.activiti.cloud.services.api.model.converter
         /// 
         /// </summary>
 
-        public virtual ProcessDefinition from(IProcessDefinition source)
+        public virtual ProcessDefinition From(IProcessDefinition source)
         {
             ProcessDefinition processDefinition = null;
             if (source != null)
@@ -62,9 +62,9 @@ namespace org.activiti.cloud.services.api.model.converter
         /// 
         /// </summary>
 
-        public virtual IList<ProcessDefinition> from(IList<IProcessDefinition> processDefinitions)
+        public virtual IEnumerable<ProcessDefinition> From(IEnumerable<IProcessDefinition> processDefinitions)
         {
-            return listConverter.from(processDefinitions, this);
+            return listConverter.From(processDefinitions, this);
         }
     }
 }

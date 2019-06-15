@@ -28,7 +28,7 @@ namespace org.activiti.cloud.services.events
     public class ProcessCompletedEventImpl : AbstractProcessEngineEvent, IProcessCompletedEvent
     {
 
-        private ProcessInstance processInstance;
+        private readonly ProcessInstance processInstance;
 
 
         /// <summary>

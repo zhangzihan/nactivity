@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_ZXLv_Rtgq" name="催办任务" isExecutable="true">
+    <bpmn2:startEvent id="Start_Wd5hvIdDse">
+      <bpmn2:outgoing>SequenceFlow_005mzrp</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_005mzrp" sourceRef="Start_Wd5hvIdDse" targetRef="Task_0ksstjw" />
+    <bpmn2:userTask id="Task_0ksstjw" name="催办任务" camunda:assignee="评审员">
+      <bpmn2:documentation>test</bpmn2:documentation>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="url" value="http://localhost/process-test/timer-datetime" />
+        </camunda:properties>
+        <camunda:taskListener class="org.activiti.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_005mzrp</bpmn2:incoming>
+    </bpmn2:userTask>
+    <bpmn2:boundaryEvent id="BoundaryEvent_0pude3q" attachedToRef="Task_0ksstjw">
+      <bpmn2:outgoing>SequenceFlow_1ca2ngh</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">R1/PT10S</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+    </bpmn2:boundaryEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_1ca2ngh" sourceRef="BoundaryEvent_0pude3q" targetRef="Task_0lg0svh" />
+    <bpmn2:manualTask id="Task_0lg0svh" name="定时催办">
+      <bpmn2:documentation>${'已催办' + DateTime.Now}</bpmn2:documentation>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="url" value="http://localhost/process-test/timer-datetime" />
+        </camunda:properties>
+        <camunda:executionListener class="org.activiti.engine.impl.bpmn.listener.ActivityDebugLoggerListener,Sys.Bpm.Engine" event="start" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_1ca2ngh</bpmn2:incoming>
+    </bpmn2:manualTask>
+    <bpmn2:textAnnotation id="TextAnnotation_0o4ksf2">
+      <bpmn2:text>定时催办</bpmn2:text>
+    </bpmn2:textAnnotation>
+    <bpmn2:association id="Association_1cijv0x" sourceRef="Task_0ksstjw" targetRef="TextAnnotation_0o4ksf2" />
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_ZXLv_Rtgq">
+      <bpmndi:BPMNShape id="_BPMNShape_Start_Wd5hvIdDse" bpmnElement="Start_Wd5hvIdDse">
+        <dc:Bounds x="208" y="250" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_005mzrp_di" bpmnElement="SequenceFlow_005mzrp">
+        <di:waypoint x="244" y="268" />
+        <di:waypoint x="363" y="268" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_143ui52_di" bpmnElement="Task_0ksstjw">
+        <dc:Bounds x="363" y="228" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1jt1seg_di" bpmnElement="BoundaryEvent_0pude3q">
+        <dc:Bounds x="386" y="290" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ca2ngh_di" bpmnElement="SequenceFlow_1ca2ngh">
+        <di:waypoint x="404" y="326" />
+        <di:waypoint x="404" y="413" />
+        <di:waypoint x="487" y="413" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0o4ksf2_di" bpmnElement="TextAnnotation_0o4ksf2">
+        <dc:Bounds x="459" y="323" width="99" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1cijv0x_di" bpmnElement="Association_1cijv0x">
+        <di:waypoint x="463" y="295" />
+        <di:waypoint x="494" y="323" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ManualTask_08ma5c0_di" bpmnElement="Task_0lg0svh">
+        <dc:Bounds x="487" y="373" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

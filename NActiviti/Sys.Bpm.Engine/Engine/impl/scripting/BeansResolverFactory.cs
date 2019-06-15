@@ -22,18 +22,18 @@ namespace org.activiti.engine.impl.scripting
 
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
 
-        public virtual IResolver createResolver(ProcessEngineConfigurationImpl processEngineConfiguration, IVariableScope variableScope)
+        public virtual IResolver CreateResolver(ProcessEngineConfigurationImpl processEngineConfiguration, IVariableScope variableScope)
         {
             this.processEngineConfiguration = processEngineConfiguration;
             return this;
         }
 
-        public virtual bool containsKey(object key)
+        public virtual bool ContainsKey(object key)
         {
             return processEngineConfiguration.Beans.ContainsKey(key);
         }
 
-        public virtual object get(object key)
+        public virtual object Get(object key)
         {
             return processEngineConfiguration.Beans[key];
         }

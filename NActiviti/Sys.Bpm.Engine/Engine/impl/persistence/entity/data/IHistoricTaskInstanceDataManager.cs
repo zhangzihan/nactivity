@@ -21,21 +21,21 @@ namespace org.activiti.engine.impl.persistence.entity.data
 	public interface IHistoricTaskInstanceDataManager : IDataManager<IHistoricTaskInstanceEntity>
 	{
 
-	  IHistoricTaskInstanceEntity create(ITaskEntity task, IExecutionEntity execution);
+	  IHistoricTaskInstanceEntity Create(ITaskEntity task, IExecutionEntity execution);
 
-	  IList<IHistoricTaskInstanceEntity> findHistoricTasksByParentTaskId(string parentTaskId);
+	  IList<IHistoricTaskInstanceEntity> FindHistoricTasksByParentTaskId(string parentTaskId);
 
-	  IList<IHistoricTaskInstanceEntity> findHistoricTaskInstanceByProcessInstanceId(string processInstanceId);
+	  IList<IHistoricTaskInstanceEntity> FindHistoricTaskInstanceByProcessInstanceId(string processInstanceId);
 
-	  long findHistoricTaskInstanceCountByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery);
+	  long FindHistoricTaskInstanceCountByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery);
 
-	  IList<IHistoricTaskInstance> findHistoricTaskInstancesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery);
+	  IList<IHistoricTaskInstance> FindHistoricTaskInstancesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery);
 
-	  IList<IHistoricTaskInstance> findHistoricTaskInstancesAndVariablesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery);
+	  IList<IHistoricTaskInstance> FindHistoricTaskInstancesAndVariablesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery);
 
-	  IList<IHistoricTaskInstance> findHistoricTaskInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+	  IList<IHistoricTaskInstance> FindHistoricTaskInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findHistoricTaskInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
+	  long FindHistoricTaskInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
 
 	}
 

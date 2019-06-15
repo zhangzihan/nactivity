@@ -1,6 +1,6 @@
 #region License
 /*
-* Copyright © 2002-2011 the original author or authors.
+* Copyright ?2002-2011 the original author or authors.
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -60,14 +60,16 @@ namespace Spring.Threading
 		public Semaphore(long initialPermits)
 		{
             nPermits = initialPermits;
-		}
-		
+        }
+
+        private object syncRoot = new object();
+
         /// <summary>
         /// Release a permit
         /// </summary>
-		public virtual void Release () 
+        public virtual void Release () 
 		{
-			lock (this) 
+			lock (syncRoot) 
 			{
 				++nPermits;
 			    Monitor.Pulse(this);
@@ -79,7 +81,7 @@ namespace Spring.Threading
         /// </summary>
 		public virtual void Acquire () 
 		{
-			lock (this) 
+			lock (syncRoot) 
 			{
 				try 
 				{
@@ -102,7 +104,7 @@ namespace Spring.Threading
         /// <returns>true if aquired</returns>
         public virtual bool Attempt(long msecs)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 if (nPermits > 0)
                 {
@@ -155,7 +157,7 @@ namespace Spring.Threading
         /// </exception>
         public virtual void Release(long n)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 if (n < 0)
                     throw new ArgumentOutOfRangeException("n", n, "Negative argument");
@@ -174,7 +176,7 @@ namespace Spring.Threading
 	    {
 	        get
 	        {
-	            lock (this)
+	            lock (syncRoot)
 	            {
 	                return nPermits;
 	            }

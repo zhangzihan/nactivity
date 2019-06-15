@@ -30,21 +30,21 @@ namespace org.activiti.engine.impl.cmd
             this.pageSize = pageSize;
         }
 
-        public virtual IList<IEventLogEntry> execute(ICommandContext commandContext)
+        public virtual IList<IEventLogEntry> Execute(ICommandContext commandContext)
         {
             if (!ReferenceEquals(processInstanceId, null))
             {
-                return commandContext.EventLogEntryEntityManager.findEventLogEntriesByProcessInstanceId(processInstanceId);
+                return commandContext.EventLogEntryEntityManager.FindEventLogEntriesByProcessInstanceId(processInstanceId);
 
             }
             else if (startLogNr != null)
             {
-                return commandContext.EventLogEntryEntityManager.findEventLogEntries(startLogNr.Value, pageSize != null ? pageSize.Value : -1);
+                return commandContext.EventLogEntryEntityManager.FindEventLogEntries(startLogNr.Value, pageSize != null ? pageSize.Value : -1);
 
             }
             else
             {
-                return commandContext.EventLogEntryEntityManager.findAllEventLogEntries();
+                return commandContext.EventLogEntryEntityManager.FindAllEventLogEntries();
             }
         }
 

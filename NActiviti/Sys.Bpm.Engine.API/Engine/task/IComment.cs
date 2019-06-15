@@ -54,7 +54,7 @@ namespace org.activiti.engine.task
         /// <summary>
         /// the full comment message the user had related to the task and/or process instance
         /// </summary>
-        /// <seealso cref= ITaskService#getTaskComments(String) </seealso>
+        /// <seealso cref= ITaskService.GetTaskComments(String) </seealso>
         string FullMessage { get; }
     }
 

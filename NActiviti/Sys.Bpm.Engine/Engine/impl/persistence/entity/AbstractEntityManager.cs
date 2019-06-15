@@ -22,7 +22,6 @@ namespace org.activiti.engine.impl.persistence.entity
     /// 
     public abstract class AbstractEntityManager<EntityImpl> : AbstractManager, IEntityManager<EntityImpl> where EntityImpl : IEntity
     {
-
         public AbstractEntityManager(ProcessEngineConfigurationImpl processEngineConfiguration) : base(processEngineConfiguration)
         {
         }
@@ -32,74 +31,73 @@ namespace org.activiti.engine.impl.persistence.entity
          */
 
 
-        public virtual TOut findById<TOut>(KeyValuePair<string, object> entityId)
+        public virtual TOut FindById<TOut>(KeyValuePair<string, object> entityId)
         {
-            Type type = typeof(TOut);
-            return DataManager.findById<TOut>(entityId);
+            return DataManager.FindById<TOut>(entityId);
         }
 
-        public virtual TOut findById<TOut>(object entityId)
+        public virtual TOut FindById<TOut>(object entityId)
         {
-            return findById<TOut>(new KeyValuePair<string, object>("id", entityId));
+            return FindById<TOut>(new KeyValuePair<string, object>("id", entityId));
         }
 
-        public virtual EntityImpl create()
+        public virtual EntityImpl Create()
         {
-            return DataManager.create();
+            return DataManager.Create();
         }
 
-        public virtual void insert(EntityImpl entity)
+        public virtual void Insert(EntityImpl entity)
         {
-            insert(entity, true);
+            Insert(entity, true);
         }
 
-        public virtual void insert(EntityImpl entity, bool fireCreateEvent)
+        public virtual void Insert(EntityImpl entity, bool fireCreateEvent)
         {
-            DataManager.insert(entity);
+            DataManager.Insert(entity);
 
             IActivitiEventDispatcher eventDispatcher = EventDispatcher;
             if (fireCreateEvent && eventDispatcher.Enabled)
             {
-                eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_CREATED, entity));
-                eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, entity));
+                eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_CREATED, entity));
+                eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, entity));
             }
         }
 
-        public virtual EntityImpl update(EntityImpl entity)
+        public virtual EntityImpl Update(EntityImpl entity)
         {
-            return update(entity, true);
+            return Update(entity, true);
         }
 
-        public virtual EntityImpl update(EntityImpl entity, bool fireUpdateEvent)
+        public virtual EntityImpl Update(EntityImpl entity, bool fireUpdateEvent)
         {
-            EntityImpl updatedEntity = DataManager.update(entity);
+            EntityImpl updatedEntity = DataManager.Update(entity);
 
             if (fireUpdateEvent && EventDispatcher.Enabled)
             {
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_UPDATED, entity));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_UPDATED, entity));
             }
 
             return updatedEntity;
         }
 
-        public virtual void delete(KeyValuePair<string, object> id)
+        public virtual void Delete(KeyValuePair<string, object> id)
         {
-            EntityImpl entity = findById<EntityImpl>(id);
-            delete(entity);
+            EntityImpl entity = FindById<EntityImpl>(id);
+            Delete(entity);
         }
 
-        public virtual void delete(EntityImpl entity)
+        public virtual void Delete(EntityImpl entity)
         {
-            delete(entity, true);
+            Delete(entity, true);
         }
 
-        public virtual void delete(EntityImpl entity, bool fireDeleteEvent)
+        public virtual void Delete(EntityImpl entity, bool fireDeleteEvent)
         {
-            DataManager.delete(entity);
+            DataManager.Delete(entity);
 
             if (fireDeleteEvent && EventDispatcher.Enabled)
             {
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_DELETED, entity));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, entity));
             }
         }
 
@@ -115,16 +113,16 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        protected internal virtual bool isExecutionRelatedEntityCountEnabled(IExecutionEntity executionEntity)
+        protected internal virtual bool IsExecutionRelatedEntityCountEnabled(IExecutionEntity executionEntity)
         {
             if (executionEntity is ICountingExecutionEntity)
             {
-                return isExecutionRelatedEntityCountEnabled((ICountingExecutionEntity)executionEntity);
+                return IsExecutionRelatedEntityCountEnabled((ICountingExecutionEntity)executionEntity);
             }
             return false;
         }
 
-        protected internal virtual bool isExecutionRelatedEntityCountEnabled(ICountingExecutionEntity executionEntity)
+        protected internal virtual bool IsExecutionRelatedEntityCountEnabled(ICountingExecutionEntity executionEntity)
         {
 
             /*
@@ -145,8 +143,5 @@ namespace org.activiti.engine.impl.persistence.entity
 
             return ExecutionRelatedEntityCountEnabledGlobally && executionEntity.IsCountEnabled;
         }
-
-
     }
-
 }

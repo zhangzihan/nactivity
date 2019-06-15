@@ -35,29 +35,29 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IModelEntity create()
+        public override IModelEntity Create()
         {
             return new ModelEntityImpl();
         }
 
-        public virtual IList<IModel> findModelsByQueryCriteria(ModelQueryImpl query, Page page)
+        public virtual IList<IModel> FindModelsByQueryCriteria(IModelQuery query, Page page)
         {
-            return DbSqlSession.selectList<ModelEntityImpl, IModel>("selectModelsByQueryCriteria", query, page);
+            return DbSqlSession.SelectList<ModelEntityImpl, IModel>("selectModelsByQueryCriteria", query, page);
         }
 
-        public virtual long findModelCountByQueryCriteria(ModelQueryImpl query)
+        public virtual long FindModelCountByQueryCriteria(IModelQuery query)
         {
-            return ((long?)DbSqlSession.selectOne<ModelEntityImpl, long?>("selectModelCountByQueryCriteria", query)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<ModelEntityImpl, long?>("selectModelCountByQueryCriteria", query).GetValueOrDefault();
         }
 
-        public virtual IList<IModel> findModelsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IModel> FindModelsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return DbSqlSession.selectListWithRawParameter<ModelEntityImpl, IModel>("selectModelByNativeQuery", parameterMap, firstResult, maxResults);
+            return DbSqlSession.SelectListWithRawParameter<ModelEntityImpl, IModel>("selectModelByNativeQuery", parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findModelCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindModelCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return ((long?)DbSqlSession.selectOne<ModelEntityImpl, long?>("selectModelCountByNativeQuery", parameterMap)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<ModelEntityImpl, long?>("selectModelCountByNativeQuery", parameterMap).GetValueOrDefault();
         }
 
     }

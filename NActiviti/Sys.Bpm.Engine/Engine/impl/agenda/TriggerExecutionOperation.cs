@@ -6,6 +6,9 @@
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using Sys;
+    using Sys.Workflow;
+    using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Operation that triggers a wait state and continues the process, leaving that activity.
@@ -17,45 +20,68 @@
     /// </summary>
     public class TriggerExecutionOperation : AbstractOperation
     {
-        public TriggerExecutionOperation(ICommandContext commandContext, IExecutionEntity execution) : base(commandContext, execution)
+        private readonly ILogger<TriggerExecutionOperation> logger = ProcessEngineServiceProvider.LoggerService<TriggerExecutionOperation>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <param name="execution"></param>
+        public TriggerExecutionOperation(ICommandContext commandContext, IExecutionEntity execution) : this(commandContext, execution, null)
         {
         }
 
-        protected override void run()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <param name="execution"></param>
+        public TriggerExecutionOperation(ICommandContext commandContext, IExecutionEntity execution, object signalData) : base(commandContext, execution, signalData)
         {
-            FlowElement currentFlowElement = getCurrentFlowElement(execution);
-            if (currentFlowElement is FlowNode)
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected override void RunOperation()
+        {
+            try
             {
-
-                IActivityBehavior activityBehavior = (IActivityBehavior)((FlowNode)currentFlowElement).Behavior;
-                if (activityBehavior is ITriggerableActivityBehavior)
+                FlowElement currentFlowElement = GetCurrentFlowElement(execution);
+                if (currentFlowElement is FlowNode node)
                 {
-
-                    if (currentFlowElement is BoundaryEvent)
+                    IActivityBehavior activityBehavior = (IActivityBehavior)node.Behavior;
+                    if (activityBehavior is ITriggerableActivityBehavior behavior)
                     {
-                        commandContext.HistoryManager.recordActivityStart(execution);
+                        if (currentFlowElement is BoundaryEvent)
+                        {
+                            commandContext.HistoryManager.RecordActivityStart(execution);
+                        }
+
+                        behavior.Trigger(execution, null, SignalData, false);
+
+                        if (currentFlowElement is BoundaryEvent)
+                        {
+                            commandContext.HistoryManager.RecordActivityEnd(execution, null);
+                        }
+
                     }
-
-                  ((ITriggerableActivityBehavior)activityBehavior).trigger(execution, null, null);
-
-                    if (currentFlowElement is BoundaryEvent)
+                    else
                     {
-                        commandContext.HistoryManager.recordActivityEnd(execution, null);
+                        throw new ActivitiException("Invalid behavior: " + activityBehavior + " should implement " + typeof(ITriggerableActivityBehavior).FullName);
                     }
 
                 }
                 else
                 {
-                    throw new ActivitiException("Invalid behavior: " + activityBehavior + " should implement " + typeof(ITriggerableActivityBehavior).FullName);
+                    throw new ActivitiException("Programmatic error: no current flow element found or invalid type: " + currentFlowElement + ". Halting.");
                 }
-
             }
-            else
+            catch (Exception ex)
             {
-                throw new ActivitiException("Programmatic error: no current flow element found or invalid type: " + currentFlowElement + ". Halting.");
+                logger.LogError(ex, ex.Message);
+                throw;
             }
         }
-
     }
-
 }

@@ -14,6 +14,7 @@
  */
 namespace org.activiti.bpmn.converter
 {
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.export;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
@@ -34,46 +35,53 @@ namespace org.activiti.bpmn.converter
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_TASK_SEND;
+                return BpmnXMLConstants.ELEMENT_TASK_SEND;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             SendTask sendTask = new SendTask();
-            BpmnXMLUtil.addXMLLocation(sendTask, xtr);
-            sendTask.Type = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TYPE);
+            BpmnXMLUtil.AddXMLLocation(sendTask, xtr);
+            //sendTask.Type = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TYPE);
 
-            if ("##WebService".Equals(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_IMPLEMENTATION)))
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_CLASS)))
             {
-                sendTask.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_WEBSERVICE;
-                sendTask.OperationRef = parseOperationRef(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_OPERATION_REF), model);
+                sendTask.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_CLASS;
+                sendTask.Implementation = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_CLASS);
             }
 
-            parseChildElements(XMLElementName, sendTask, model, xtr);
+            //if ("##WebService".Equals(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_TASK_IMPLEMENTATION)))
+            //{
+            //    sendTask.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_WEBSERVICE;
+            //    sendTask.OperationRef = parseOperationRef(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_TASK_OPERATION_REF), model);
+            //}
+
+            ParseChildElements(XMLElementName, sendTask, model, xtr);
 
             return sendTask;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
 
             SendTask sendTask = (SendTask)element;
 
             if (!string.IsNullOrWhiteSpace(sendTask.Type))
             {
-                writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TYPE, sendTask.Type, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TYPE, sendTask.Type, xtw);
             }
         }
-        protected internal override bool writeExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        protected internal override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             SendTask sendTask = (SendTask)element;
-            didWriteExtensionStartElement = FieldExtensionExport.writeFieldExtensions(sendTask.FieldExtensions, didWriteExtensionStartElement, xtw);
+            didWriteExtensionStartElement = FieldExtensionExport.WriteFieldExtensions(sendTask.FieldExtensions, didWriteExtensionStartElement, xtw);
             return didWriteExtensionStartElement;
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
 
-        protected internal virtual string parseOperationRef(string operationRef, BpmnModel model)
+        protected internal virtual string ParseOperationRef(string operationRef, BpmnModel model)
         {
             string result = null;
             if (!string.IsNullOrWhiteSpace(operationRef))
@@ -82,7 +90,7 @@ namespace org.activiti.bpmn.converter
                 if (indexOfP != -1)
                 {
                     string prefix = operationRef.Substring(0, indexOfP);
-                    string resolvedNamespace = model.getNamespace(prefix);
+                    string resolvedNamespace = model.GetNamespace(prefix);
                     result = resolvedNamespace + ":" + operationRef.Substring(indexOfP + 1);
                 }
                 else

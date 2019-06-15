@@ -17,7 +17,7 @@ namespace org.activiti.engine
     public interface IActivitiEngineAgendaFactory
     {
 
-        IActivitiEngineAgenda createAgenda(ICommandContext commandContext);
+        IActivitiEngineAgenda CreateAgenda(ICommandContext commandContext);
 
     }
 

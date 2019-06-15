@@ -15,15 +15,24 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.persistence.entity
 {
+    using Newtonsoft.Json.Linq;
     using org.activiti.bpmn.constants;
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
+    using org.activiti.engine.exceptions;
+    using org.activiti.engine.impl.cfg;
+    using org.activiti.engine.impl.cmd;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.db;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.task;
+    using Sys.Net.Http;
+    using Sys.Workflow;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
 
     /// 
     /// 
@@ -50,7 +59,7 @@ namespace org.activiti.engine.impl.persistence.entity
         protected internal string localizedName;
         protected internal string description;
         protected internal string localizedDescription;
-        protected internal int? priority = Task_Fields.DEFAULT_PRIORITY;
+        protected internal int? priority = TaskFields.DEFAULT_PRIORITY;
         protected internal DateTime? createTime; // The time when the task has been created
         protected internal DateTime? dueDate;
         protected internal int suspensionState = SuspensionStateProvider.ACTIVE.StateCode;
@@ -88,15 +97,34 @@ namespace org.activiti.engine.impl.persistence.entity
 
         }
 
+        private string businessKey;
+        public virtual string BusinessKey
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(businessKey))
+                {
+                    businessKey = Execution.BusinessKey;
+                }
+
+                return businessKey;
+            }
+        }
+
         public override PersistentState PersistentState
         {
             get
             {
-                PersistentState persistentState = new PersistentState();
-                persistentState["assignee"] = this.assignee;
-                persistentState["owner"] = this.owner;
-                persistentState["name"] = this.name;
-                persistentState["priority"] = this.priority;
+                PersistentState persistentState = new PersistentState
+                {
+                    ["assignee"] = this.assignee,
+                    ["owner"] = this.owner,
+                    ["name"] = this.name,
+                    ["priority"] = this.priority,
+                    ["canTransfer"] = CanTransfer,
+                    ["isTransfer"] = IsTransfer,
+                    ["onlyAssignee"] = OnlyAssignee
+                };
                 if (!string.IsNullOrWhiteSpace(executionId))
                 {
                     persistentState["executionId"] = this.executionId;
@@ -117,7 +145,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     persistentState["dueDate"] = this.dueDate;
                 }
-                if (!ReferenceEquals(parentTaskId, null))
+                if (!(parentTaskId is null))
                 {
                     persistentState["parentTaskId"] = this.parentTaskId;
                 }
@@ -146,7 +174,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual void forceUpdate()
+        public virtual void ForceUpdate()
         {
             this.forcedUpdate = true;
         }
@@ -165,38 +193,40 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        protected internal override void initializeVariableInstanceBackPointer(IVariableInstanceEntity variableInstance)
+        protected internal override void InitializeVariableInstanceBackPointer(IVariableInstanceEntity variableInstance)
         {
             variableInstance.TaskId = id;
             variableInstance.ExecutionId = executionId;
             variableInstance.ProcessInstanceId = processInstanceId;
         }
 
-        protected internal override IList<IVariableInstanceEntity> loadVariableInstances()
+        protected internal override IList<IVariableInstanceEntity> LoadVariableInstances()
         {
-            return Context.CommandContext.VariableInstanceEntityManager.findVariableInstancesByTaskId(id);
+            return Context.CommandContext.VariableInstanceEntityManager.FindVariableInstancesByTaskId(id);
         }
 
-        protected internal override IVariableInstanceEntity createVariableInstance(string variableName, object value, IExecutionEntity sourceActivityExecution)
+        protected internal override IVariableInstanceEntity CreateVariableInstance(string variableName, object value, IExecutionEntity sourceActivityExecution)
         {
-            IVariableInstanceEntity result = base.createVariableInstance(variableName, value, sourceActivityExecution);
+            IVariableInstanceEntity result = base.CreateVariableInstance(variableName, value, sourceActivityExecution);
 
             // Dispatch event, if needed
-            if (Context.ProcessEngineConfiguration != null && Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
+            ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
+            if (!(processEngineConfiguration is null) && processEngineConfiguration.EventDispatcher.Enabled)
             {
-                Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createVariableEvent(ActivitiEventType.VARIABLE_CREATED, variableName, value, result.Type, result.TaskId, result.ExecutionId, ProcessInstanceId, ProcessDefinitionId));
+                processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateVariableEvent(ActivitiEventType.VARIABLE_CREATED, variableName, value, result.Type, result.TaskId, result.ExecutionId, ProcessInstanceId, ProcessDefinitionId));
             }
             return result;
         }
 
-        protected internal override void updateVariableInstance(IVariableInstanceEntity variableInstance, object value, IExecutionEntity sourceActivityExecution)
+        protected internal override void UpdateVariableInstance(IVariableInstanceEntity variableInstance, object value, IExecutionEntity sourceActivityExecution)
         {
-            base.updateVariableInstance(variableInstance, value, sourceActivityExecution);
+            base.UpdateVariableInstance(variableInstance, value, sourceActivityExecution);
 
             // Dispatch event, if needed
-            if (Context.ProcessEngineConfiguration != null && Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
+            ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
+            if (!(processEngineConfiguration is null) && processEngineConfiguration.EventDispatcher.Enabled)
             {
-                Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createVariableEvent(ActivitiEventType.VARIABLE_UPDATED, variableInstance.Name, value, variableInstance.Type, variableInstance.TaskId, variableInstance.ExecutionId, ProcessInstanceId, ProcessDefinitionId));
+                processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateVariableEvent(ActivitiEventType.VARIABLE_UPDATED, variableInstance.Name, value, variableInstance.Type, variableInstance.TaskId, variableInstance.ExecutionId, ProcessInstanceId, ProcessDefinitionId));
             }
         }
 
@@ -206,10 +236,10 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                var ctx = Context.CommandContext;
-                if (execution == null && !string.IsNullOrWhiteSpace(executionId) && ctx != null)
+                var config = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
+                if (execution == null && !string.IsNullOrWhiteSpace(executionId))
                 {
-                    this.execution = ctx.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
+                    this.execution = config.CommandExecutor.Execute(new GetExecutionByIdCmd(executionId));
                 }
                 return execution;
             }
@@ -221,34 +251,34 @@ namespace org.activiti.engine.impl.persistence.entity
 
         // task assignment ////////////////////////////////////////////////////////////
 
-        public virtual void addCandidateUser(string userId)
+        public virtual void AddCandidateUser(string userId)
         {
-            Context.CommandContext.IdentityLinkEntityManager.addCandidateUser(this, userId);
+            Context.CommandContext.IdentityLinkEntityManager.AddCandidateUser(this, userId);
         }
 
-        public virtual void addCandidateUsers(ICollection<string> candidateUsers)
+        public virtual void AddCandidateUsers(IEnumerable<string> candidateUsers)
         {
-            Context.CommandContext.IdentityLinkEntityManager.addCandidateUsers(this, candidateUsers);
+            Context.CommandContext.IdentityLinkEntityManager.AddCandidateUsers(this, candidateUsers);
         }
 
-        public virtual void addCandidateGroup(string groupId)
+        public virtual void AddCandidateGroup(string groupId)
         {
-            Context.CommandContext.IdentityLinkEntityManager.addCandidateGroup(this, groupId);
+            Context.CommandContext.IdentityLinkEntityManager.AddCandidateGroup(this, groupId);
         }
 
-        public virtual void addCandidateGroups(ICollection<string> candidateGroups)
+        public virtual void AddCandidateGroups(IEnumerable<string> candidateGroups)
         {
-            Context.CommandContext.IdentityLinkEntityManager.addCandidateGroups(this, candidateGroups);
+            Context.CommandContext.IdentityLinkEntityManager.AddCandidateGroups(this, candidateGroups);
         }
 
-        public virtual void addUserIdentityLink(string userId, string identityLinkType)
+        public virtual void AddUserIdentityLink(string userId, string identityLinkType)
         {
-            Context.CommandContext.IdentityLinkEntityManager.addUserIdentityLink(this, userId, identityLinkType);
+            Context.CommandContext.IdentityLinkEntityManager.AddUserIdentityLink(this, userId, identityLinkType);
         }
 
-        public virtual void addGroupIdentityLink(string groupId, string identityLinkType)
+        public virtual void AddGroupIdentityLink(string groupId, string identityLinkType)
         {
-            Context.CommandContext.IdentityLinkEntityManager.addGroupIdentityLink(this, groupId, identityLinkType);
+            Context.CommandContext.IdentityLinkEntityManager.AddGroupIdentityLink(this, groupId, identityLinkType);
         }
 
         public virtual ISet<IIdentityLink> Candidates
@@ -267,29 +297,29 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual void deleteCandidateGroup(string groupId)
+        public virtual void DeleteCandidateGroup(string groupId)
         {
-            deleteGroupIdentityLink(groupId, IdentityLinkType.CANDIDATE);
+            DeleteGroupIdentityLink(groupId, IdentityLinkType.CANDIDATE);
         }
 
-        public virtual void deleteCandidateUser(string userId)
+        public virtual void DeleteCandidateUser(string userId)
         {
-            deleteUserIdentityLink(userId, IdentityLinkType.CANDIDATE);
+            DeleteUserIdentityLink(userId, IdentityLinkType.CANDIDATE);
         }
 
-        public virtual void deleteGroupIdentityLink(string groupId, string identityLinkType)
+        public virtual void DeleteGroupIdentityLink(string groupId, string identityLinkType)
         {
-            if (!ReferenceEquals(groupId, null))
+            if (!(groupId is null))
             {
-                Context.CommandContext.IdentityLinkEntityManager.deleteIdentityLink(this, null, groupId, identityLinkType);
+                Context.CommandContext.IdentityLinkEntityManager.DeleteIdentityLink(this, null, groupId, identityLinkType);
             }
         }
 
-        public virtual void deleteUserIdentityLink(string userId, string identityLinkType)
+        public virtual void DeleteUserIdentityLink(string userId, string identityLinkType)
         {
-            if (!ReferenceEquals(userId, null))
+            if (!(userId is null))
             {
-                Context.CommandContext.IdentityLinkEntityManager.deleteIdentityLink(this, userId, null, identityLinkType);
+                Context.CommandContext.IdentityLinkEntityManager.DeleteIdentityLink(this, userId, null, identityLinkType);
             }
         }
 
@@ -300,7 +330,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 var ctx = Context.CommandContext;
                 if (!isIdentityLinksInitialized && ctx != null)
                 {
-                    taskIdentityLinkEntities = ctx.IdentityLinkEntityManager.findIdentityLinksByTaskId(id);
+                    taskIdentityLinkEntities = ctx.IdentityLinkEntityManager.FindIdentityLinksByTaskId(id);
                     isIdentityLinksInitialized = true;
                 }
 
@@ -327,7 +357,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             get
             {
-                if (!ReferenceEquals(localizedName, null) && localizedName.Length > 0)
+                if (!(localizedName is null) && localizedName.Length > 0)
                 {
                     return localizedName;
                 }
@@ -346,7 +376,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             get
             {
-                if (!ReferenceEquals(localizedDescription, null) && localizedDescription.Length > 0)
+                if (!(localizedDescription is null) && localizedDescription.Length > 0)
                 {
                     return localizedDescription;
                 }
@@ -368,6 +398,112 @@ namespace org.activiti.engine.impl.persistence.entity
             get
             {
                 return assignee;
+            }
+        }
+
+        public virtual string AssigneeUser
+        {
+            get; set;
+        }
+
+        internal static IEnumerable<ITask> EnsureAssignerInitialized(IEnumerable<TaskEntityImpl> tasks)
+        {
+            if (tasks == null || tasks.Count() == 0)
+            {
+                yield break;
+            }
+
+            //foreach (var task in tasks)
+            //{
+            //    task.EnsureAssignerInitialized();
+
+            //    yield return task;
+            //}
+
+            var variableIns = Context.CommandContext.VariableInstanceEntityManager.FindVariableInstancesByTaskIds(tasks.Select(x => x.Id).ToArray());
+
+            var variables = variableIns.Where(x => tasks.Any(y => y.assignee == x.Name))
+                .Select(x => new
+                {
+                    x.TaskId,
+                    x.Name,
+                    x.Value
+                });
+
+            var taskEntities = tasks.Cast<TaskEntityImpl>();
+            foreach (TaskEntityImpl task in taskEntities)
+            {
+                var variable = variables.FirstOrDefault(x => x.TaskId == task.Id && x.Name == task.Assignee);
+                if (variable != null)
+                {
+                    task.assigner = variable.Value as IUserInfo;
+                }
+                else
+                {
+                    task.assigner = new UserInfo
+                    {
+                        Id = task.assignee
+                    };
+                }
+
+                yield return task;
+            }
+
+            yield break;
+        }
+
+        private IUserInfo EnsureAssignerInitialized()
+        {
+            if (assignee == null)
+            {
+                assigner = null;
+
+                return null;
+            }
+
+            //if (AssigneeUser != null)
+            //{
+            //    assigner = new UserInfo
+            //    {
+            //        Id = assignee,
+            //        Name = AssigneeUser
+            //    };
+
+            //    return assigner;
+            //}
+
+            //由于缓存问题，先不要从变量里获取用户
+            if (Context.CommandContext != null && (assigner == null || assigner.Id != this.assignee))
+            {
+                if (this.VariablesLocal.TryGetValue(this.assignee, out var userInfo) && userInfo != null)
+                {
+                    assigner = JToken.FromObject(userInfo).ToObject<UserInfo>();
+
+                    return assigner;
+                }
+            }
+
+            assigner = new UserInfo
+            {
+                Id = assignee,
+                FullName = assignee
+            };
+
+            return assigner;
+        }
+
+        internal IUserInfo assigner = null;
+
+        public virtual IUserInfo Assigner
+        {
+            get
+            {
+                if (assigner == null)
+                {
+                    assigner = EnsureAssignerInitialized();
+                }
+
+                return assigner;
             }
         }
 
@@ -455,26 +591,26 @@ namespace org.activiti.engine.impl.persistence.entity
         }
 
         // Overridden to avoid fetching *all* variables (as is the case in the super // call)
-        protected internal override IVariableInstanceEntity getSpecificVariable(string variableName)
+        protected internal override IVariableInstanceEntity GetSpecificVariable(string variableName)
         {
             ICommandContext commandContext = Context.CommandContext;
             if (commandContext == null)
             {
                 throw new ActivitiException("lazy loading outside command context");
             }
-            IVariableInstanceEntity variableInstance = commandContext.VariableInstanceEntityManager.findVariableInstanceByTaskAndName(id, variableName);
+            IVariableInstanceEntity variableInstance = commandContext.VariableInstanceEntityManager.FindVariableInstanceByTaskAndName(id, variableName);
 
             return variableInstance;
         }
 
-        protected internal override IList<IVariableInstanceEntity> getSpecificVariables(ICollection<string> variableNames)
+        protected internal override IList<IVariableInstanceEntity> GetSpecificVariables(IEnumerable<string> variableNames)
         {
             ICommandContext commandContext = Context.CommandContext;
             if (commandContext == null)
             {
                 throw new ActivitiException("lazy loading outside command context");
             }
-            return commandContext.VariableInstanceEntityManager.findVariableInstancesByTaskAndNames(id, variableNames);
+            return commandContext.VariableInstanceEntityManager.FindVariableInstancesByTaskAndNames(id, variableNames);
         }
 
         // regular getters and setters ////////////////////////////////////////////////////////
@@ -636,7 +772,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 var ctx = Context.CommandContext;
                 if (processInstance == null && processInstanceId != null && ctx != null)
                 {
-                    processInstance = ctx.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
+                    processInstance = ctx.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
                 }
                 return processInstance;
             }
@@ -720,7 +856,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                ensureVariableInstancesInitialized();
+                EnsureVariableInstancesInitialized();
                 return variableInstances;
             }
         }
@@ -760,7 +896,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (IVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!ReferenceEquals(variableInstance.Id, null) && !ReferenceEquals(variableInstance.TaskId, null))
+                        if (!(variableInstance.Id is null) && !(variableInstance.TaskId is null))
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }
@@ -779,7 +915,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (IVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!ReferenceEquals(variableInstance.Id, null) && ReferenceEquals(variableInstance.TaskId, null))
+                        if (!(variableInstance.Id is null) && variableInstance.TaskId is null)
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }
@@ -835,12 +971,16 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public bool? IsTransfer { get; set; }
 
+        public bool? CanTransfer { get; set; }
+
+        public bool? OnlyAssignee { get; set; }
+
         public bool? IsRuntime { get; set; }
 
         public virtual void IsRuntimeAssignee()
         {
             UserTask task = this.Execution.CurrentFlowElement as UserTask;
-            if (task.ExtensionElements.TryGetValue("property", out IList<ExtensionElement> exts))
+            if (task.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY, out IList<ExtensionElement> exts))
             {
                 if (bool.TryParse(exts.GetAttributeValue(BpmnXMLConstants.ACTIITI_RUNTIME_ASSIGNEE), out bool result))
                 {

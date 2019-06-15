@@ -23,35 +23,35 @@ namespace org.activiti.engine.impl.el
     /// 
     /// </summary>
     [Serializable]
-	public class FixedValue : IExpression
-	{
+    public class FixedValue : IExpression
+    {
 
-	  private const long serialVersionUID = 1L;
-	  private object value;
+        private const long serialVersionUID = 1L;
+        private readonly object value;
 
-	  public FixedValue(object value)
-	  {
-		this.value = value;
-	  }
+        public FixedValue(object value)
+        {
+            this.value = value;
+        }
 
-	  public virtual object getValue(IVariableScope variableScope)
-	  {
-		return value;
-	  }
+        public virtual object GetValue(IVariableScope variableScope)
+        {
+            return value;
+        }
 
-	  public virtual void setValue(object value, IVariableScope variableScope)
-	  {
-		throw new ActivitiException("Cannot change fixed value");
-	  }
+        public virtual void SetValue(object value, IVariableScope variableScope)
+        {
+            throw new ActivitiException("Cannot change fixed value");
+        }
 
-	  public virtual string ExpressionText
-	  {
-		  get
-		  {
-			return value.ToString();
-		  }
-	  }
+        public virtual string ExpressionText
+        {
+            get
+            {
+                return value.ToString();
+            }
+        }
 
-	}
+    }
 
 }

@@ -15,7 +15,7 @@ namespace org.activiti.bpmn.model
     public abstract class EventDefinition : BaseElement
     {
 
-        public override abstract BaseElement clone();
+        public override abstract BaseElement Clone();
     }
 
 }

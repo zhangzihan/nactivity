@@ -18,22 +18,38 @@ namespace org.activiti.engine.impl.cfg.standalone
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.db;
     using org.activiti.engine.impl.interceptor;
-    using Sys;
+    using Sys.Workflow;
 
     /// 
     public class StandaloneMybatisTransactionContext : ITransactionContext
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ICommandContext commandContext;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDictionary<TransactionState, IList<ITransactionListener>> stateTransactionListeners;
+
         private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<StandaloneMybatisTransactionContext>();
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
         public StandaloneMybatisTransactionContext(ICommandContext commandContext)
         {
             this.commandContext = commandContext;
         }
 
-        public virtual void addTransactionListener(TransactionState transactionState, ITransactionListener transactionListener)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transactionState"></param>
+        /// <param name="transactionListener"></param>
+        public virtual void AddTransactionListener(TransactionState transactionState, ITransactionListener transactionListener)
         {
             if (stateTransactionListeners == null)
             {
@@ -48,16 +64,18 @@ namespace org.activiti.engine.impl.cfg.standalone
             transactionListeners.Add(transactionListener);
         }
 
-        public virtual void commit()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Commit()
         {
             log.LogDebug("firing event committing...");
-            fireTransactionEvent(TransactionState.COMMITTING, false);
+            FireTransactionEvent(TransactionState.COMMITTING, false);
 
             log.LogDebug("committing the ibatis sql session...");
-            DbSqlSession.commit();
+            DbSqlSession.Commit();
             log.LogDebug("firing event committed...");
-            fireTransactionEvent(TransactionState.COMMITTED, true);
-
+            FireTransactionEvent(TransactionState.COMMITTED, true);
         }
 
         /// <summary>
@@ -65,12 +83,12 @@ namespace org.activiti.engine.impl.cfg.standalone
         /// </summary>
         /// <param name="transactionState"> The <seealso cref="TransactionState"/> for which the listeners will be called. </param>
         /// <param name="executeInNewContext"> If true, the listeners will be called in a new command context.
-        ///                            This is needed for example when firing the <seealso cref="TransactionState#COMMITTED"/>
+        ///                            This is needed for example when firing the <seealso cref="TransactionState"/>
         ///                            event: the transacation is already committed and executing logic in the same
-        ///                            context could lead to strange behaviour (for example doing a <seealso cref="SqlSession#update(String)"/>
+        ///                            context could lead to strange behaviour (for example doing a <seealso cref="DbSqlSession"/>
         ///                            would actually roll back the update (as the MyBatis context is already committed
         ///                            and the internal flags have not been correctly set). </param>
-        protected internal virtual void fireTransactionEvent(TransactionState transactionState, bool executeInNewContext)
+        protected internal virtual void FireTransactionEvent(TransactionState transactionState, bool executeInNewContext)
         {
             if (stateTransactionListeners == null)
             {
@@ -87,11 +105,11 @@ namespace org.activiti.engine.impl.cfg.standalone
             {
                 ICommandExecutor commandExecutor = commandContext.ProcessEngineConfiguration.CommandExecutor;
                 CommandConfig commandConfig = new CommandConfig(false, TransactionPropagation.REQUIRES_NEW);
-                commandExecutor.execute(commandConfig, new CommandAnonymousInnerClass(this, transactionListeners));
+                commandExecutor.Execute(commandConfig, new CommandAnonymousInnerClass(this, transactionListeners));
             }
             else
             {
-                executeTransactionListeners(transactionListeners, commandContext);
+                ExecuteTransactionListeners(transactionListeners, commandContext);
             }
 
         }
@@ -100,7 +118,7 @@ namespace org.activiti.engine.impl.cfg.standalone
         {
             private readonly StandaloneMybatisTransactionContext outerInstance;
 
-            private IList<ITransactionListener> transactionListeners;
+            private readonly IList<ITransactionListener> transactionListeners;
 
             public CommandAnonymousInnerClass(StandaloneMybatisTransactionContext outerInstance, IList<ITransactionListener> transactionListeners)
             {
@@ -108,21 +126,29 @@ namespace org.activiti.engine.impl.cfg.standalone
                 this.transactionListeners = transactionListeners;
             }
 
-            public virtual object execute(ICommandContext commandContext)
+            public virtual object Execute(ICommandContext commandContext)
             {
-                outerInstance.executeTransactionListeners(transactionListeners, commandContext);
+                outerInstance.ExecuteTransactionListeners(transactionListeners, commandContext);
                 return commandContext.GetResult();
             }
         }
 
-        protected internal virtual void executeTransactionListeners(IList<ITransactionListener> transactionListeners, ICommandContext commandContext)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transactionListeners"></param>
+        /// <param name="commandContext"></param>
+        protected internal virtual void ExecuteTransactionListeners(IList<ITransactionListener> transactionListeners, ICommandContext commandContext)
         {
             foreach (ITransactionListener transactionListener in transactionListeners)
             {
-                transactionListener.execute(commandContext);
+                transactionListener.Execute(commandContext);
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual DbSqlSession DbSqlSession
         {
             get
@@ -131,40 +157,42 @@ namespace org.activiti.engine.impl.cfg.standalone
             }
         }
 
-        public virtual void rollback()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Rollback()
         {
             try
             {
                 try
                 {
                     log.LogDebug("firing event rolling back...");
-                    fireTransactionEvent(TransactionState.ROLLINGBACK, false);
+                    FireTransactionEvent(TransactionState.ROLLINGBACK, false);
 
                 }
                 catch (Exception exception)
                 {
                     log.LogInformation("Exception during transaction: {}", exception.Message);
-                    commandContext.exception(exception);
+                    commandContext.SetException(exception);
                 }
                 finally
                 {
                     log.LogDebug("rolling back ibatis sql session...");
-                    DbSqlSession.rollback();
+                    DbSqlSession.Rollback();
                 }
 
             }
             catch (Exception exception)
             {
                 log.LogInformation("Exception during transaction: {}", exception.Message);
-                commandContext.exception(exception);
+                commandContext.SetException(exception);
 
             }
             finally
             {
                 log.LogDebug("firing event rolled back...");
-                fireTransactionEvent(TransactionState.ROLLED_BACK, true);
+                FireTransactionEvent(TransactionState.ROLLED_BACK, true);
             }
         }
     }
-
 }

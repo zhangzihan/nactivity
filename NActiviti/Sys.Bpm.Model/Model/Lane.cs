@@ -64,10 +64,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            Lane clone = new Lane();
-            clone.Values = this;
+            Lane clone = new Lane
+            {
+                Values = this
+            };
             return clone;
         }
 

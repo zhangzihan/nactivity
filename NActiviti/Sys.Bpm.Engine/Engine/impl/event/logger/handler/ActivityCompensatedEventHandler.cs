@@ -10,20 +10,19 @@ namespace org.activiti.engine.impl.@event.logger.handler
     /// 
     public class ActivityCompensatedEventHandler : AbstractDatabaseEventLoggerEventHandler
     {
-
-        public override IEventLogEntryEntity generateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
+        public override IEventLogEntryEntity GenerateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
         {
             IActivitiActivityEvent activityEvent = (IActivitiActivityEvent)@event;
 
             IDictionary<string, object> data = new Dictionary<string, object>();
-            putInMapIfNotNull(data, Fields_Fields.ACTIVITY_ID, activityEvent.ActivityId);
-            putInMapIfNotNull(data, Fields_Fields.ACTIVITY_NAME, activityEvent.ActivityName);
-            putInMapIfNotNull(data, Fields_Fields.PROCESS_DEFINITION_ID, activityEvent.ProcessDefinitionId);
-            putInMapIfNotNull(data, Fields_Fields.PROCESS_INSTANCE_ID, activityEvent.ProcessInstanceId);
-            putInMapIfNotNull(data, Fields_Fields.EXECUTION_ID, activityEvent.ExecutionId);
-            putInMapIfNotNull(data, Fields_Fields.ACTIVITY_TYPE, activityEvent.ActivityType);
+            PutInMapIfNotNull(data, FieldsFields.ACTIVITY_ID, activityEvent.ActivityId);
+            PutInMapIfNotNull(data, FieldsFields.ACTIVITY_NAME, activityEvent.ActivityName);
+            PutInMapIfNotNull(data, FieldsFields.PROCESS_DEFINITION_ID, activityEvent.ProcessDefinitionId);
+            PutInMapIfNotNull(data, FieldsFields.PROCESS_INSTANCE_ID, activityEvent.ProcessInstanceId);
+            PutInMapIfNotNull(data, FieldsFields.EXECUTION_ID, activityEvent.ExecutionId);
+            PutInMapIfNotNull(data, FieldsFields.ACTIVITY_TYPE, activityEvent.ActivityType);
 
-            return createEventLogEntry(activityEvent.ProcessDefinitionId, activityEvent.ProcessInstanceId, activityEvent.ExecutionId, null, data);
+            return CreateEventLogEntry(activityEvent.ProcessDefinitionId, activityEvent.ProcessInstanceId, activityEvent.ExecutionId, null, data);
         }
 
     }

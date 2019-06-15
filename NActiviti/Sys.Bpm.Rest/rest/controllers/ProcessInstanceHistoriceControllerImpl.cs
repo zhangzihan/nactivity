@@ -23,6 +23,7 @@ using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.api.resources;
 using org.activiti.cloud.services.rest.assemblers;
 using org.activiti.engine;
+using org.activiti.engine.history;
 using org.springframework.hateoas;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace org.activiti.cloud.services.rest.controllers
     [ApiController]
     public class ProcessInstanceHistoriceControllerImpl : ControllerBase, IProcessInstanceHistoriceController
     {
-        private ProcessEngineWrapper processEngine;
+        private readonly ProcessEngineWrapper processEngine;
         private readonly IRepositoryService repositoryService;
         private readonly IRuntimeService runtimeService;
         private readonly IHistoryService historyService;
@@ -61,21 +62,44 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpPost]
         public virtual Task<Resources<HistoricInstance>> ProcessInstances(HistoricInstanceQuery query)
         {
-            IPage<HistoricInstance> historices = new QueryProcessHistoriecsCmd().loadPage(historyService, pageableProcessHistoryService, query);
+            IPage<HistoricInstance> historices = new QueryProcessHistoriecsCmd()
+                .LoadPage(historyService, pageableProcessHistoryService, query);
 
-            return Task.FromResult<Resources<HistoricInstance>>(new Resources<HistoricInstance>(historices.getContent(), historices.getTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
+            return Task.FromResult<Resources<HistoricInstance>>(new Resources<HistoricInstance>(historices.GetContent(), historices.GetTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
         }
 
         /// <inheritdoc />
         [HttpGet("{processInstanceId}")]
         public Task<HistoricInstance> GetProcessInstanceById(string processInstanceId)
         {
-            HistoricInstance processInstance = processEngine.getHistoryProcessInstanceById(processInstanceId);
+            HistoricInstance processInstance = processEngine.GetHistoryProcessInstanceById(processInstanceId);
             if (processInstance == null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + processInstanceId + "'");
             }
             return Task.FromResult<HistoricInstance>(processInstance);
+        }
+
+        /// <inheritdoc />
+        [HttpGet("{processInstanceId}/variables/{taskId?}")]
+        public Task<Resources<HistoricVariableInstance>> GetVariables(string processInstanceId, string taskId)
+        {
+            return GetVariables(new ProcessVariablesQuery
+            {
+                ProcessInstanceId = processInstanceId,
+                TaskId = taskId
+            });
+        }
+
+        /// <inheritdoc />
+        [HttpPost("variables")]
+        public Task<Resources<HistoricVariableInstance>> GetVariables(ProcessVariablesQuery query)
+        {
+            IList<HistoricVariableInstance> resourcesList = processEngine.GetHistoricVariables(query);
+
+            Resources<HistoricVariableInstance> resources = new Resources<HistoricVariableInstance>(resourcesList);
+
+            return Task.FromResult(resources);
         }
     }
 }

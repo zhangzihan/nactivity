@@ -15,8 +15,6 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.cmd
 {
-
-    
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
@@ -25,60 +23,63 @@ namespace org.activiti.engine.impl.cmd
     [Serializable]
     public class CompleteTaskCmd : AbstractCompleteTaskCmd
     {
-
         private const long serialVersionUID = 1L;
-        protected internal IDictionary<string, object> variables;
-        protected internal IDictionary<string, object> transientVariables;
-        protected internal bool localScope;
+        protected IDictionary<string, object> variables;
+        protected IDictionary<string, object> transientVariables;
+        protected bool localScope;
+        private readonly object syncRoot = new object();
 
         public CompleteTaskCmd(string taskId, IDictionary<string, object> variables) : base(taskId)
         {
             this.variables = variables;
         }
 
-        public CompleteTaskCmd(string taskId, IDictionary<string, object> variables, bool localScope) : this(taskId, variables)
+        public CompleteTaskCmd(string taskId, IDictionary<string, object> variables, bool localScope) : this(taskId, variables, null, localScope)
         {
-            this.localScope = localScope;
         }
 
-        public CompleteTaskCmd(string taskId, IDictionary<string, object> variables, IDictionary<string, object> transientVariables) : this(taskId, variables)
+        public CompleteTaskCmd(string taskId, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, bool localScope = false) : this(taskId, variables)
         {
+            this.localScope = localScope;
             this.transientVariables = transientVariables;
         }
 
-        protected internal override object execute(ICommandContext commandContext, ITaskEntity task)
+        protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
         {
-            if (variables != null)
+            lock (syncRoot)
             {
-                if (localScope)
+                if (variables != null)
                 {
-                    task.VariablesLocal = variables;
+                    if (localScope)
+                    {
+                        task.VariablesLocal = variables;
+                    }
+                    else if (!(task.ExecutionId is null))
+                    {
+                        task.ExecutionVariables = variables;
+                    }
+                    else
+                    {
+                        task.Variables = variables;
+                    }
                 }
-                else if (!ReferenceEquals(task.ExecutionId, null))
+
+                if (transientVariables != null)
                 {
-                    task.ExecutionVariables = variables;
+                    if (localScope)
+                    {
+                        task.TransientVariablesLocal = transientVariables;
+                    }
+                    else
+                    {
+                        task.TransientVariables = transientVariables;
+                    }
                 }
-                else
-                {
-                    task.Variables = variables;
-                }
+
+                ExecuteTaskComplete(commandContext, task, variables, localScope);
+
+                return null;
             }
-
-            if (transientVariables != null)
-            {
-                if (localScope)
-                {
-                    task.TransientVariablesLocal = transientVariables;
-                }
-                else
-                {
-                    task.TransientVariables = transientVariables;
-                }
-            }
-
-            executeTaskComplete(commandContext, task, variables, localScope);
-
-            return null;
         }
 
         protected internal override string SuspendedTaskException

@@ -28,12 +28,12 @@ namespace org.activiti.cloud.services.api.model.converter
         /// <summary>
         /// 
         /// </summary>
-        public virtual IList<TARGET> from<SOURCE, TARGET>(IList<SOURCE> sourceElements, IModelConverter<SOURCE, TARGET> elementConverter)
+        public virtual IEnumerable<TARGET> From<SOURCE, TARGET>(IEnumerable<SOURCE> sourceElements, IModelConverter<SOURCE, TARGET> elementConverter)
         {
             IList<TARGET> targetElements = new List<TARGET>();
             foreach (SOURCE sourceElement in sourceElements)
             {
-                targetElements.Add(elementConverter.from(sourceElement));
+                targetElements.Add(elementConverter.From(sourceElement));
             }
             return targetElements;
         }

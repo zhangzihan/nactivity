@@ -49,6 +49,9 @@ namespace org.activiti.engine.impl.cfg
         /// </summary>
         protected internal bool enableLocalization = true;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool EnableEagerExecutionTreeFetching
         {
             get
@@ -61,7 +64,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool EnableExecutionRelationshipCounts
         {
             get
@@ -74,7 +79,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool ValidateExecutionRelationshipCountConfigOnBoot
         {
             get
@@ -87,7 +94,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool EnableLocalization
         {
             get
@@ -99,8 +108,5 @@ namespace org.activiti.engine.impl.cfg
                 this.enableLocalization = value;
             }
         }
-
-
     }
-
 }

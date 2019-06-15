@@ -20,12 +20,14 @@ namespace SmartSql.DataReaderDeserializer
         {
         }
 
+        private object syncRoot = new object();
+
         public Func<IDataReader, RequestContext, object> GetParser(IDataReader dataReader, RequestContext requestContext, Type targetType)
         {
             string key = $"{requestContext.FullSqlId}_{targetType.GUID.ToString("N")}";
             if (!_cachedDeserializer.ContainsKey(key))
             {
-                lock (this)
+                lock (syncRoot)
                 {
                     if (!_cachedDeserializer.ContainsKey(key))
                     {

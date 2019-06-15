@@ -15,14 +15,14 @@
 namespace org.activiti.engine.impl.persistence.entity.data
 {
 
-	/// 
-	public interface IHistoricIdentityLinkDataManager : IDataManager<IHistoricIdentityLinkEntity>
-	{
+    /// 
+    public interface IHistoricIdentityLinkDataManager : IDataManager<IHistoricIdentityLinkEntity>
+    {
 
-	  IList<IHistoricIdentityLinkEntity> findHistoricIdentityLinksByTaskId(string taskId);
+        IList<IHistoricIdentityLinkEntity> FindHistoricIdentityLinksByTaskId(string taskId);
 
-	  IList<IHistoricIdentityLinkEntity> findHistoricIdentityLinksByProcessInstanceId(string processInstanceId);
+        IList<IHistoricIdentityLinkEntity> FindHistoricIdentityLinksByProcessInstanceId(string processInstanceId);
 
-	}
+    }
 
 }

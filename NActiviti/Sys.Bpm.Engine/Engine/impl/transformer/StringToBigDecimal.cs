@@ -20,9 +20,14 @@ namespace org.activiti.engine.impl.transformer
     /// </summary>
     public class StringToBigDecimal : AbstractTransformer
     {
-        protected internal override object primTransform(object anObject)
+        protected internal override object PrimTransform(object anObject)
         {
-            return decimal.Parse(anObject?.ToString());
+            if (decimal.TryParse(anObject?.ToString(), out var d))
+            {
+                return d;
+            }
+
+            return null;
         }
     }
 

@@ -19,21 +19,20 @@ namespace org.activiti.engine.impl.persistence.entity
     public interface IProcessDefinitionInfoEntityManager : IEntityManager<IProcessDefinitionInfoEntity>
     {
 
-        void insertProcessDefinitionInfo(IProcessDefinitionInfoEntity processDefinitionInfo);
+        void InsertProcessDefinitionInfo(IProcessDefinitionInfoEntity processDefinitionInfo);
 
-        void updateProcessDefinitionInfo(IProcessDefinitionInfoEntity updatedProcessDefinitionInfo);
+        void UpdateProcessDefinitionInfo(IProcessDefinitionInfoEntity updatedProcessDefinitionInfo);
 
-        void deleteProcessDefinitionInfo(string processDefinitionId);
+        void DeleteProcessDefinitionInfo(string processDefinitionId);
 
-        void updateInfoJson(string id, byte[] json);
+        void UpdateInfoJson(string id, byte[] json);
 
-        void deleteInfoJson(IProcessDefinitionInfoEntity processDefinitionInfo);
+        void DeleteInfoJson(IProcessDefinitionInfoEntity processDefinitionInfo);
 
-        new IProcessDefinitionInfoEntity findById<IProcessDefinitionInfoEntity>(KeyValuePair<string, object> id);
+        new IProcessDefinitionInfoEntity FindById<IProcessDefinitionInfoEntity>(KeyValuePair<string, object> id);
 
-        IProcessDefinitionInfoEntity findProcessDefinitionInfoByProcessDefinitionId(string processDefinitionId);
+        IProcessDefinitionInfoEntity FindProcessDefinitionInfoByProcessDefinitionId(string processDefinitionId);
 
-        byte[] findInfoJsonById(string infoJsonId);
-
+        byte[] FindInfoJsonById(string infoJsonId);
     }
 }

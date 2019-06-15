@@ -5,8 +5,8 @@ namespace org.activiti.engine.impl.persistence
 {
     public interface ITypeHandler<T>
     {
-        T getResult(DbDataReader rs, String columnName);
+        T GetResult(DbDataReader rs, String columnName);
 
-        T getResult(DbDataReader rs, int columnIndex);
+        T GetResult(DbDataReader rs, int columnIndex);
     }
 }

@@ -38,15 +38,15 @@ namespace org.activiti.engine.impl.cmd
             this.attachment = attachment;
         }
 
-        public  virtual object  execute(ICommandContext commandContext)
+        public  virtual object  Execute(ICommandContext commandContext)
         {
-            IAttachmentEntity updateAttachment = commandContext.AttachmentEntityManager.findById<IAttachmentEntity>(new KeyValuePair<string, object>("id", attachment.Id));
+            IAttachmentEntity updateAttachment = commandContext.AttachmentEntityManager.FindById<IAttachmentEntity>(new KeyValuePair<string, object>("id", attachment.Id));
 
             string processInstanceId = updateAttachment.ProcessInstanceId;
             string processDefinitionId = null;
             if (!ReferenceEquals(updateAttachment.ProcessInstanceId, null))
             {
-                IExecutionEntity process = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
+                IExecutionEntity process = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
                 if (process != null)
                 {
                     processDefinitionId = process.ProcessDefinitionId;
@@ -58,7 +58,7 @@ namespace org.activiti.engine.impl.cmd
 
             if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_UPDATED, attachment, processInstanceId, processInstanceId, processDefinitionId));
+                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_UPDATED, attachment, processInstanceId, processInstanceId, processDefinitionId));
             }
 
             return null;

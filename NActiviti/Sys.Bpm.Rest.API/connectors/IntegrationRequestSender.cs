@@ -40,20 +40,20 @@
         public virtual void sendIntegrationRequest(IntegrationRequestEvent @event)
         {
 
-            resolver.resolveDestination(@event.ConnectorType).send(buildIntegrationRequestMessage(@event));
-            sendAuditEvent(@event);
+            resolver.ResolveDestination(@event.ConnectorType).Send(buildIntegrationRequestMessage(@event));
+            SendAuditEvent(@event);
         }
 
 
         /// <summary>
         /// 
         /// </summary>
-        private void sendAuditEvent(IntegrationRequestEvent integrationRequestEvent)
+        private void SendAuditEvent(IntegrationRequestEvent integrationRequestEvent)
         {
             if (runtimeBundleProperties.EventsProperties.IntegrationAuditEventsEnabled)
             {
                 IntegrationRequestSentEventImpl @event = new IntegrationRequestSentEventImpl(runtimeBundleProperties.AppName, runtimeBundleProperties.AppVersion, runtimeBundleProperties.ServiceName, runtimeBundleProperties.ServiceFullName, runtimeBundleProperties.ServiceType, runtimeBundleProperties.ServiceVersion, integrationRequestEvent.ExecutionId, integrationRequestEvent.ProcessDefinitionId, integrationRequestEvent.ProcessInstanceId, integrationRequestEvent.IntegrationContextId, integrationRequestEvent.FlowNodeId);
-                auditProducer.send(MessageBuilder<IProcessEngineEvent[]>.withPayload(new IProcessEngineEvent[] { @event }).build());
+                auditProducer.Send(MessageBuilder<IProcessEngineEvent[]>.WithPayload(new IProcessEngineEvent[] { @event }).Build());
             }
         }
 
@@ -63,7 +63,7 @@
         /// </summary>
         private IMessage<IntegrationRequestEvent> buildIntegrationRequestMessage(IntegrationRequestEvent @event)
         {
-            return MessageBuilder<IntegrationRequestEvent>.withPayload(@event).setHeader(CONNECTOR_TYPE, @event.ConnectorType).build();
+            return MessageBuilder<IntegrationRequestEvent>.WithPayload(@event).SetHeader(CONNECTOR_TYPE, @event.ConnectorType).Build();
         }
     }
 

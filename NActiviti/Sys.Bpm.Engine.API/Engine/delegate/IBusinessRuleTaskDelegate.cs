@@ -14,15 +14,32 @@ namespace org.activiti.engine.@delegate
 {
     using org.activiti.engine.impl.@delegate;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IBusinessRuleTaskDelegate : IActivityBehavior
     {
 
-        void addRuleVariableInputIdExpression(IExpression inputId);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inputId"></param>
+        void AddRuleVariableInputIdExpression(IExpression inputId);
 
-        void addRuleIdExpression(IExpression inputId);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inputId"></param>
+        void AddRuleIdExpression(IExpression inputId);
 
+        /// <summary>
+        /// 
+        /// </summary>
         bool Exclude { set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         string ResultVariable { set; }
     }
 

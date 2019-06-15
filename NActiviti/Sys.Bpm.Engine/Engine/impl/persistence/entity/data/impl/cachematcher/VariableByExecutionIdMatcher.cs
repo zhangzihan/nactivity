@@ -20,7 +20,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class VariableByExecutionIdMatcher : CachedEntityMatcherAdapter<IVariableInstanceEntity>
     {
 
-        public override bool isRetained(IVariableInstanceEntity variableInstanceEntity, object parameter)
+        public override bool IsRetained(IVariableInstanceEntity variableInstanceEntity, object parameter)
         {
             if (variableInstanceEntity == null || variableInstanceEntity.ExecutionId == null || parameter == null)
             {

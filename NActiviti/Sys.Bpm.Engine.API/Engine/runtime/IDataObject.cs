@@ -13,40 +13,39 @@
 
 namespace org.activiti.engine.runtime
 {
-	/*
-	 * Represents a modeled DataObject.
-	 */
-	public interface IDataObject
-	{
+    /// <summary>
+    /// Represents a modeled DataObject.
+    /// </summary>
+    public interface IDataObject
+    {
+        /// <summary>
+        /// Name of the DataObject.
+        /// </summary>
+        string Name { get; }
 
-	  /// <summary>
-	  /// Name of the DataObject.
-	  /// </summary>
-	  string Name {get;}
+        /// <summary>
+        /// Localized Name of the DataObject.
+        /// </summary>
+        string LocalizedName { get; }
 
-	  /// <summary>
-	  /// Localized Name of the DataObject.
-	  /// </summary>
-	  string LocalizedName {get;}
+        /// <summary>
+        /// Description of the DataObject.
+        /// </summary>
+        string Description { get; }
 
-	  /// <summary>
-	  /// Description of the DataObject.
-	  /// </summary>
-	  string Description {get;}
+        /// <summary>
+        /// Value of the DataObject.
+        /// </summary>
+        object Value { get; }
 
-	  /// <summary>
-	  /// Value of the DataObject.
-	  /// </summary>
-	  object Value {get;}
+        /// <summary>
+        /// Type of the DataObject.
+        /// </summary>
+        string Type { get; }
 
-	  /// <summary>
-	  /// Type of the DataObject.
-	  /// </summary>
-	  string Type {get;}
-
-	  /// <summary>
-	  /// The id of the flow element in the process defining this data object.
-	  /// </summary>
-	  string DataObjectDefinitionKey {get;}
-	}
+        /// <summary>
+        /// The id of the flow element in the process defining this data object.
+        /// </summary>
+        string DataObjectDefinitionKey { get; }
+    }
 }

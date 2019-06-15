@@ -19,13 +19,24 @@ namespace org.activiti.engine.impl.bpmn.data
     /// </summary>
     public class ItemDefinition
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string id;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IStructureDefinition structure;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool isCollection;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ItemKind itemKind;
 
         private ItemDefinition()
@@ -34,17 +45,29 @@ namespace org.activiti.engine.impl.bpmn.data
             this.itemKind = ItemKind.Information;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="structure"></param>
         public ItemDefinition(string id, IStructureDefinition structure) : this()
         {
             this.id = id;
             this.structure = structure;
         }
 
-        public virtual ItemInstance createInstance()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual ItemInstance CreateInstance()
         {
-            return new ItemInstance(this, this.structure.createInstance());
+            return new ItemInstance(this, this.structure.CreateInstance());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IStructureDefinition StructureDefinition
         {
             get
@@ -53,6 +76,9 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Collection
         {
             get
@@ -65,7 +91,9 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ItemKind ItemKind
         {
             get
@@ -78,7 +106,9 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Id
         {
             get
@@ -87,5 +117,4 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
     }
-
 }

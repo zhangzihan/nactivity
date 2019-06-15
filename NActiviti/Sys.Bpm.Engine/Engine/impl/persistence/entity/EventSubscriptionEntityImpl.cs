@@ -22,7 +22,7 @@ namespace org.activiti.engine.impl.persistence.entity
     /// 
     /// 
     [Serializable]
-    public abstract class EventSubscriptionEntityImpl : AbstractEntity, IEventSubscriptionEntity
+    public class EventSubscriptionEntityImpl : AbstractEntity, IEventSubscriptionEntity
     {
 
         private const long serialVersionUID = 1L;
@@ -50,9 +50,11 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                PersistentState persistentState = new PersistentState();
-                persistentState["executionId"] = executionId;
-                persistentState["configuration"] = configuration;
+                PersistentState persistentState = new PersistentState
+                {
+                    ["executionId"] = executionId,
+                    ["configuration"] = configuration
+                };
 
                 return persistentState;
             }
@@ -106,7 +108,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 var ctx = Context.CommandContext;
                 if (execution == null && executionId != null && ctx != null)
                 {
-                    execution = ctx.ExecutionEntityManager.findById<ExecutionEntityImpl>(executionId);
+                    execution = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(executionId);
                 }
                 return execution;
             }
@@ -204,7 +206,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             const int prime = 31;
             int result = 1;
-            result = prime * result + ((ReferenceEquals(id, null)) ? 0 : id.GetHashCode());
+            result = (prime * result) + ((id is null) ? 0 : id.GetHashCode());
             return result;
         }
 
@@ -223,9 +225,9 @@ namespace org.activiti.engine.impl.persistence.entity
                 return false;
             }
             EventSubscriptionEntityImpl other = (EventSubscriptionEntityImpl)obj;
-            if (ReferenceEquals(id, null))
+            if (id is null)
             {
-                if (!ReferenceEquals(other.id, null))
+                if (!(other.id is null))
                 {
                     return false;
                 }

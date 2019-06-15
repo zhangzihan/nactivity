@@ -67,11 +67,13 @@ namespace org.activiti.engine.impl.scripting
             return eval(readFully(reader), scriptContext);
         }
 
+        private object syncRoot = new object();
+
         public virtual ScriptEngineFactory Factory
         {
             get
             {
-                lock (this)
+                lock (syncRoot)
                 {
                     if (scriptEngineFactory == null)
                     {
@@ -220,7 +222,7 @@ namespace org.activiti.engine.impl.scripting
             {
                 try
                 {
-                    return typeof(JuelScriptEngine).GetMethod("print", new Type[] { typeof(object) });
+                    return typeof(JuelScriptEngine).GetMethod("print", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance, Type.DefaultBinder, Type.DefaultBinder, new Type[] { typeof(object) }, null);
                 }
                 catch (Exception)
                 {
@@ -241,7 +243,7 @@ namespace org.activiti.engine.impl.scripting
             {
                 try
                 {
-                    return typeof(JuelScriptEngine).GetMethod("importFunctions", new Type[] { typeof(ScriptContext), typeof(string), typeof(object) });
+                    return typeof(JuelScriptEngine).GetMethod("importFunctions", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance, Type.DefaultBinder, new Type[] { typeof(ScriptContext), typeof(string), typeof(object) } null);
                 }
                 catch (Exception)
                 {

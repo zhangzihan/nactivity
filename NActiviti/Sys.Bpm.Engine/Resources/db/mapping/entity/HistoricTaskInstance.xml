@@ -28,6 +28,7 @@
     <Result Property="description" Column="DESCRIPTION_" />
     <Result Property="owner" Column="OWNER_" />
     <Result Property="assignee" Column="ASSIGNEE_" />
+    <Result Property="assigneeUser" Column="ASSIGNEE_USER_" />
     <Result Property="startTime" Column="START_TIME_" />
     <Result Property="claimTime" Column="CLAIM_TIME_" />
     <Result Property="endTime" Column="END_TIME_" />
@@ -39,6 +40,9 @@
     <Result Property="dueDate" Column="DUE_DATE_" />
     <Result Property="category" Column="CATEGORY_" />
     <Result Property="tenantId" Column="TENANT_ID_" />
+    <Result Property="canTransfer" Column="CAN_TRANSFER_" />
+    <Result Property="isTransfer" Column="IS_TRANSFER_" />
+    <Result Property="onlyAssignee" Column="ONLY_ASSIGNEE_" />
   </ResultMap>
 
   <!--<collection property="queryVariables" column="TASK_ID_" javaType="ArrayList" ofType="org.activiti.engine.impl.persistence.entity.HistoricVariableInstanceEntity">
@@ -66,6 +70,7 @@
     <Result Property="description" Column="DESCRIPTION_" />
     <Result Property="owner" Column="OWNER_" />
     <Result Property="assignee" Column="ASSIGNEE_" />
+    <Result Property="assigneeUser" Column="ASSIGNEE_USER_" />
     <Result Property="startTime" Column="START_TIME_" />
     <Result Property="claimTime" Column="CLAIM_TIME_" />
     <Result Property="endTime" Column="END_TIME_" />
@@ -77,6 +82,9 @@
     <Result Property="dueDate" Column="DUE_DATE_" />
     <Result Property="category" Column="CATEGORY_" />
     <Result Property="tenantId" Column="TENANT_ID_" />
+    <Result Property="canTransfer" Column="CAN_TRANSFER_" />
+    <Result Property="isTransfer" Column="IS_TRANSFER_" />
+    <Result Property="onlyAssignee" Column="ONLY_ASSIGNEE_" />
   </ResultMap>
 
   <!-- HISTORIC TASK INSTANCE INSERT -->
@@ -92,6 +100,7 @@
     DESCRIPTION_,
     OWNER_,
     ASSIGNEE_,
+    ASSIGNEE_USER_,
     START_TIME_,
     CLAIM_TIME_,
     END_TIME_,
@@ -102,7 +111,10 @@
     PRIORITY_,
     DUE_DATE_,
     CATEGORY_,
-    TENANT_ID_
+    TENANT_ID_,
+    CAN_TRANSFER_,
+    IS_TRANSFER_,
+    ONLY_ASSIGNEE_
     ) values (
     #{id},
     #{processDefinitionId},
@@ -113,6 +125,7 @@
     #{description},
     #{owner},
     #{assignee},
+    #{assigneeUser},
     #{startTime},
     #{claimTime},
     #{endTime},
@@ -123,7 +136,10 @@
     #{priority},
     #{dueDate},
     #{category},
-    #{tenantId}
+    #{tenantId},
+    #{canTransfer},
+    #{isTransfer},
+    #{onlyAssignee}
     )
   </Insert>
 
@@ -138,6 +154,7 @@
     DESCRIPTION_,
     OWNER_,
     ASSIGNEE_,
+    ASSIGNEE_USER_,
     START_TIME_,
     CLAIM_TIME_,
     END_TIME_,
@@ -148,7 +165,10 @@
     PRIORITY_,
     DUE_DATE_,
     CATEGORY_,
-    TENANT_ID_
+    TENANT_ID_,
+    CAN_TRANSFER_,
+    IS_TRANSFER_,
+    ONLY_ASSIGNEE_
     ) values
     <For Property="Items" Key="p" Separator=",">
       (#{id},
@@ -160,6 +180,7 @@
       #{description},
       #{owner},
       #{assignee},
+      #{assigneeUser},
       #{startTime},
       #{claimTime},
       #{endTime},
@@ -170,7 +191,10 @@
       #{priority},
       #{dueDate},
       #{category},
-      #{tenantId})
+      #{tenantId},
+      #{canTransfer},
+      #{isTransfer},
+      #{onlyAssignee})
     </For>
   </Insert>
 
@@ -217,14 +241,14 @@
 
   <Statement Id="executionVariableOperator">
     <Switch>
-      <Case Property="queryVar.operator.equals('EQUALS')">=</Case>
-      <Case Property="queryVar.operator.equals('EQUALS_IGNORE_CASE')">=</Case>
-      <Case Property="queryVar.operator.equals('NOT_EQUALS')">&lt;&gt;</Case>
-      <Case Property="queryVar.operator.equals('NOT_EQUALS_IGNORE_CASE')">&lt;&gt;</Case>
-      <Case Property="queryVar.operator.equals('GREATER_THAN')">&gt;</Case>
-      <Case Property="queryVar.operator.equals('GREATER_THAN_OR_EQUAL')">&gt;=</Case>
-      <Case Property="queryVar.operator.equals('LESS_THAN')">&lt;</Case>
-      <Case Property="queryVar.operator.equals('LESS_THAN_OR_EQUAL')">&lt;=</Case>
+      <Case Property="queryVar.operator == 'EQUALS'">=</Case>
+      <Case Property="queryVar.operator == 'EQUALS_IGNORE_CASE'">=</Case>
+      <Case Property="queryVar.operator == 'NOT_EQUALS'">&lt;&gt;</Case>
+      <Case Property="queryVar.operator == 'NOT_EQUALS_IGNORE_CASE'">&lt;&gt;</Case>
+      <Case Property="queryVar.operator == 'GREATER_THAN'">&gt;</Case>
+      <Case Property="queryVar.operator == 'GREATER_THAN_OR_EQUAL'">&gt;=</Case>
+      <Case Property="queryVar.operator == 'LESS_THAN'">&lt;</Case>
+      <Case Property="queryVar.operator == 'LESS_THAN_OR_EQUAL'">&lt;=</Case>
     </Switch>
   </Statement>
 
@@ -521,13 +545,13 @@
           <!-- Match-all variable-names when name is null -->
           and A${index}.NAME_= #{queryVar.name}
         </IsTrue>
-        <IsTrue Property="!queryVar.type.equals('null')">
+        <IsTrue Property="queryVar.type != 'null'">
           and A${index}.VAR_TYPE_ = #{queryVar.type}
         </IsTrue>
         <!-- Variable value -->
         <IsTrue Property="queryVar.textValue != null and queryVar.longValue == null and queryVar.doubleValue == null">
           <Switch>
-            <Case Property="queryVar.operator.Equals('EQUALS_IGNORE_CASE') or queryVar.operator.Equals('NOT_EQUALS_IGNORE_CASE') or queryVar.operator.Equals('LIKE_IGNORE_CASE')">
+            <Case Property="queryVar.operator == 'EQUALS_IGNORE_CASE' or queryVar.operator == 'NOT_EQUALS_IGNORE_CASE' or queryVar.operator == 'LIKE_IGNORE_CASE'">
               and lower(A${index}.TEXT_)
             </Case>
             <Default>
@@ -535,27 +559,27 @@
             </Default>
           </Switch>
           <Switch>
-            <Case Property="queryVar.operator.Equals('LIKE') or queryVar.operator.Equals('LIKE_IGNORE_CASE')">LIKE</Case>
+            <Case Property="queryVar.operator == 'LIKE' or queryVar.operator == 'LIKE_IGNORE_CASE'">LIKE</Case>
             <Default>
               <Include RefId="executionVariableOperator" />
             </Default>
           </Switch>
           #{queryVar.textValue}
           <Switch>
-            <Case Property="queryVar.operator.Equals('LIKE') or queryVar.operator.Equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
+            <Case Property="queryVar.operator == 'LIKE' or queryVar.operator == 'LIKE_IGNORE_CASE'">${wildcardEscapeClause}</Case>
           </Switch>
         </IsTrue>
         <IsTrue Property="queryVar.textValue2 != null">
           and A${index}.TEXT2_
           <Switch>
-            <Case Property="queryVar.operator.equals('LIKE')">LIKE</Case>
+            <Case Property="queryVar.operator == 'LIKE'">LIKE</Case>
             <Default>
               <Include RefId="executionVariableOperator" />
             </Default>
           </Switch>
           #{queryVar.textValue2}
           <Switch>
-            <Case Property="queryVar.operator.equals('LIKE')">${wildcardEscapeClause}</Case>
+            <Case Property="queryVar.operator == 'LIKE'">${wildcardEscapeClause}</Case>
           </Switch>
         </IsTrue>
         <IsTrue Property="queryVar.longValue != null">
@@ -571,7 +595,7 @@
         <!-- Null variable type -->
         <IsTrue Property="queryVar.textValue == null and queryVar.textValue2 == null and queryVar.longValue == null and queryVar.doubleValue == null">
           <Switch>
-            <Case Property="queryVar.operator.equals('NOT_EQUALS')">
+            <Case Property="queryVar.operator == 'NOT_EQUALS'">
               and (A${index}.TEXT_ is not null or A${index}.TEXT2_ is not null or A${index}.LONG_ is not null or A${index}.DOUBLE_ is not null or A${index}.BYTEARRAY_ID_ is not null)
             </Case>
             <Default>
@@ -832,13 +856,13 @@
             <!-- Match-all variable-names when name is null -->
             and A_${orLocal}OR${orIndex}.NAME_= #{queryVar.name}
           </IsTrue>
-          <IsEqual Property="!queryVar.type.equals('null')">
+          <IsEqual Property="queryVar.type != 'null'">
             and A_${orLocal}OR${orIndex}.VAR_TYPE_ = #{queryVar.type}
           </IsEqual>
           <!-- Variable value -->
           <IsTrue Property="queryVar.textValue != null and queryVar.longValue == null and queryVar.doubleValue == null">
             <Switch>
-              <Case Property="queryVar.operator.equals('EQUALS_IGNORE_CASE') or queryVar.operator.equals('NOT_EQUALS_IGNORE_CASE') or queryVar.operator.equals('LIKE_IGNORE_CASE')">
+              <Case Property="queryVar.operator == 'EQUALS_IGNORE_CASE' or queryVar.operator == 'NOT_EQUALS_IGNORE_CASE' or queryVar.operator == 'LIKE_IGNORE_CASE'">
                 and lower(A_${orLocal}OR${orIndex}.TEXT_)
               </Case>
               <Default>
@@ -846,27 +870,27 @@
               </Default>
             </Switch>
             <Switch>
-              <Case Property="queryVar.operator.equals('LIKE') or queryVar.operator.equals('LIKE_IGNORE_CASE')">LIKE</Case>
+              <Case Property="queryVar.operator == 'LIKE' or queryVar.operator == 'LIKE_IGNORE_CASE'">LIKE</Case>
               <Default>
                 <Include RefId="executionVariableOperator" />
               </Default>
             </Switch>
             #{queryVar.textValue}
             <Switch>
-              <Case Property="queryVar.operator.equals('LIKE') or queryVar.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
+              <Case Property="queryVar.operator == 'LIKE' or queryVar.operator == 'LIKE_IGNORE_CASE'">${wildcardEscapeClause}</Case>
             </Switch>
           </IsTrue>
           <IsTrue Property="queryVar.textValue2 != null">
             and A_${orLocal}OR${orIndex}.TEXT2_
             <Switch>
-              <Case Property="queryVar.operator.equals('LIKE')">LIKE</Case>
+              <Case Property="queryVar.operator == 'LIKE'">LIKE</Case>
               <Default>
                 <Include RefId="executionVariableOperator" />
               </Default>
             </Switch>
             #{queryVar.textValue2}
             <Switch>
-              <Case Property="queryVar.operator.equals('LIKE')">${wildcardEscapeClause}</Case>
+              <Case Property="queryVar.operator == 'LIKE'">${wildcardEscapeClause}</Case>
             </Switch>
           </IsTrue>
           <IsTrue Property="queryVar.longValue != null">
@@ -882,7 +906,7 @@
           <!-- Null variable type -->
           <IsTrue Property="queryVar.textValue == null and queryVar.textValue2 == null and queryVar.longValue == null and queryVar.doubleValue == null">
             <Switch>
-              <Case Property="queryVar.operator.equals('NOT_EQUALS')">
+              <Case Property="queryVar.operator == 'NOT_EQUALS'">
                 and (A_${orLocal}OR${orIndex}.TEXT_ is not null or A_${orLocal}OR${orIndex}.TEXT2_ is not null or A_${orLocal}OR${orIndex}.LONG_ is not null or A_${orLocal}OR${orIndex}.DOUBLE_ is not null or A_${orLocal}OR${orIndex}.BYTEARRAY_ID_ is not null)
               </Case>
               <Default>

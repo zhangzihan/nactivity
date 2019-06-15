@@ -18,7 +18,6 @@ namespace org.activiti.engine.impl.bpmn.behavior
 {
 
     using org.activiti.bpmn.model;
-    using org.activiti.engine.@delegate;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.@delegate;
     using org.activiti.engine.impl.persistence.entity;
@@ -32,7 +31,6 @@ namespace org.activiti.engine.impl.bpmn.behavior
     [Serializable]
     public class AbstractBpmnActivityBehavior : FlowNodeActivityBehavior
     {
-
         private const long serialVersionUID = 1L;
 
         protected internal MultiInstanceActivityBehavior multiInstanceActivityBehavior;
@@ -41,25 +39,30 @@ namespace org.activiti.engine.impl.bpmn.behavior
         /// Subclasses that call leave() will first pass through this method, before the regular <seealso cref="FlowNodeActivityBehavior#leave(ActivityExecution)"/> is called. This way, we can check if the activity
         /// has loop characteristics, and delegate to the behavior if this is the case.
         /// </summary>
-        public override void leave(IExecutionEntity execution)
+        public override void Leave(IExecutionEntity execution)
+        {
+            Leave(execution, null);
+        }
+
+        public override void Leave(IExecutionEntity execution, object signalData)
         {
             FlowElement currentFlowElement = execution.CurrentFlowElement;
-            ICollection<BoundaryEvent> boundaryEvents = findBoundaryEventsForFlowNode(execution.ProcessDefinitionId, currentFlowElement);
+            ICollection<BoundaryEvent> boundaryEvents = FindBoundaryEventsForFlowNode(execution.ProcessDefinitionId, currentFlowElement);
             if (CollectionUtil.IsNotEmpty(boundaryEvents))
             {
-                executeCompensateBoundaryEvents(boundaryEvents, execution);
+                ExecuteCompensateBoundaryEvents(boundaryEvents, execution);
             }
-            if (!hasLoopCharacteristics())
+            if (!HasLoopCharacteristics())
             {
-                base.leave(execution);
+                base.Leave(execution, signalData);
             }
-            else if (hasMultiInstanceCharacteristics())
+            else if (HasMultiInstanceCharacteristics())
             {
-                multiInstanceActivityBehavior.leave(execution);
+                multiInstanceActivityBehavior.Leave(execution, signalData);
             }
         }
 
-        protected internal virtual void executeCompensateBoundaryEvents(ICollection<BoundaryEvent> boundaryEvents, IExecutionEntity execution)
+        protected internal virtual void ExecuteCompensateBoundaryEvents(ICollection<BoundaryEvent> boundaryEvents, IExecutionEntity execution)
         {
 
             // The parent execution becomes a scope, and a child execution is created for each of the boundary events
@@ -76,27 +79,27 @@ namespace org.activiti.engine.impl.bpmn.behavior
                     continue;
                 }
 
-                IExecutionEntity childExecutionEntity = Context.CommandContext.ExecutionEntityManager.createChildExecution(execution);
+                IExecutionEntity childExecutionEntity = Context.CommandContext.ExecutionEntityManager.CreateChildExecution(execution);
                 childExecutionEntity.ParentId = execution.Id;
                 childExecutionEntity.CurrentFlowElement = boundaryEvent;
                 childExecutionEntity.IsScope = false;
 
                 IActivityBehavior boundaryEventBehavior = ((IActivityBehavior)boundaryEvent.Behavior);
-                boundaryEventBehavior.execute(childExecutionEntity);
+                boundaryEventBehavior.Execute(childExecutionEntity);
             }
 
         }
 
-        protected internal virtual ICollection<BoundaryEvent> findBoundaryEventsForFlowNode(string processDefinitionId, FlowElement flowElement)
+        protected internal virtual ICollection<BoundaryEvent> FindBoundaryEventsForFlowNode(string processDefinitionId, FlowElement flowElement)
         {
-            Process process = getProcessDefinition(processDefinitionId);
+            Process process = GetProcessDefinition(processDefinitionId);
 
             // This could be cached or could be done at parsing time
             IList<BoundaryEvent> results = new List<BoundaryEvent>(1);
-            ICollection<BoundaryEvent> boundaryEvents = process.findFlowElementsOfType<BoundaryEvent>(true);
+            ICollection<BoundaryEvent> boundaryEvents = process.FindFlowElementsOfType<BoundaryEvent>(true);
             foreach (BoundaryEvent boundaryEvent in boundaryEvents)
             {
-                if (!ReferenceEquals(boundaryEvent.AttachedToRefId, null) && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
+                if (!(boundaryEvent.AttachedToRefId is null) && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
                 {
                     results.Add(boundaryEvent);
                 }
@@ -104,18 +107,18 @@ namespace org.activiti.engine.impl.bpmn.behavior
             return results;
         }
 
-        protected internal virtual Process getProcessDefinition(string processDefinitionId)
+        protected internal virtual Process GetProcessDefinition(string processDefinitionId)
         {
             // TODO: must be extracted / cache should be accessed in another way
-            return ProcessDefinitionUtil.getProcess(processDefinitionId);
+            return ProcessDefinitionUtil.GetProcess(processDefinitionId);
         }
 
-        protected internal virtual bool hasLoopCharacteristics()
+        protected internal virtual bool HasLoopCharacteristics()
         {
-            return hasMultiInstanceCharacteristics();
+            return HasMultiInstanceCharacteristics();
         }
 
-        protected internal virtual bool hasMultiInstanceCharacteristics()
+        protected internal virtual bool HasMultiInstanceCharacteristics()
         {
             return multiInstanceActivityBehavior != null;
         }

@@ -3,6 +3,7 @@
 namespace Spring.Expressions.Parser
 {
 	// Generate header specific to lexer CSharp file
+	using System;
 	using Stream                          = System.IO.Stream;
 	using TextReader                      = System.IO.TextReader;
 	using Hashtable                       = System.Collections.Hashtable;
@@ -13,13 +14,18 @@ namespace Spring.Expressions.Parser
 	using TokenStreamRecognitionException = antlr.TokenStreamRecognitionException;
 	using CharStreamException             = antlr.CharStreamException;
 	using CharStreamIOException           = antlr.CharStreamIOException;
+	using ANTLRException                  = antlr.ANTLRException;
+	using CharScanner                     = antlr.CharScanner;
 	using InputBuffer                     = antlr.InputBuffer;
 	using ByteBuffer                      = antlr.ByteBuffer;
 	using CharBuffer                      = antlr.CharBuffer;
 	using Token                           = antlr.Token;
 	using IToken                          = antlr.IToken;
+	using CommonToken                     = antlr.CommonToken;
+	using SemanticException               = antlr.SemanticException;
 	using RecognitionException            = antlr.RecognitionException;
 	using NoViableAltForCharException     = antlr.NoViableAltForCharException;
+	using MismatchedCharException         = antlr.MismatchedCharException;
 	using TokenStream                     = antlr.TokenStream;
 	using LexerSharedInputState           = antlr.LexerSharedInputState;
 	using BitSet                          = antlr.collections.impl.BitSet;
@@ -1073,10 +1079,15 @@ _loop161_breakloop:			;
 				break;
 			}
 			default:
+				if (((cached_LA1 >= '\u4e00' && cached_LA1 <= '\u9fa5')))
+				{
+					matchRange('\u4e00','\u9fa5');
+				}
+			else
 			{
 				throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());
 			}
-			 }
+			break; }
 		}
 		{    // ( ... )*
 			for (;;)
@@ -1118,10 +1129,15 @@ _loop161_breakloop:			;
 					break;
 				}
 				default:
+					if (((cached_LA1 >= '\u4e00' && cached_LA1 <= '\u9fa5')))
+					{
+						matchRange('\u4e00','\u9fa5');
+					}
+				else
 				{
 					goto _loop166_breakloop;
 				}
-				 }
+				break; }
 			}
 _loop166_breakloop:			;
 		}    // ( ... )*
@@ -1907,10 +1923,13 @@ _loop206_breakloop:			;
 	
 	private static long[] mk_tokenSet_0_()
 	{
-		long[] data = new long[1025];
+		long[] data = new long[2504];
 		data[0]=0L;
 		data[1]=576460745995190270L;
-		for (int i = 2; i<=1024; i++) { data[i]=0L; }
+		for (int i = 2; i<=311; i++) { data[i]=0L; }
+		for (int i = 312; i<=637; i++) { data[i]=-1L; }
+		data[638]=274877906943L;
+		for (int i = 639; i<=2503; i++) { data[i]=0L; }
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());

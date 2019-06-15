@@ -18,7 +18,7 @@ namespace org.activiti.cloud.services.api.model
         /// <summary>
         /// 是否验证流程
         /// </summary>
-        public bool DisableBpmnValidation { get; set; } = true;
+        public bool DisableBpmnValidation { get; set; } = false;
 
         /// <summary>
         /// 模型名称

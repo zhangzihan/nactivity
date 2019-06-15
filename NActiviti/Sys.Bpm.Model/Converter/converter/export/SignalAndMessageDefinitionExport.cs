@@ -8,38 +8,36 @@ namespace org.activiti.bpmn.converter.export
 
     public class SignalAndMessageDefinitionExport : IBpmnXMLConstants
     {
-        public static void writeSignalsAndMessages(BpmnModel model, XMLStreamWriter xtw)
+        public static void WriteSignalsAndMessages(BpmnModel model, XMLStreamWriter xtw)
         {
 
             foreach (Process process in model.Processes)
             {
-                foreach (FlowElement flowElement in process.findFlowElementsOfType<Event>())
+                foreach (FlowElement flowElement in process.FindFlowElementsOfType<Event>())
                 {
                     Event @event = (Event)flowElement;
                     if (@event.EventDefinitions.Count > 0)
                     {
                         EventDefinition eventDefinition = @event.EventDefinitions[0];
-                        if (eventDefinition is SignalEventDefinition)
+                        if (eventDefinition is SignalEventDefinition signalEvent)
                         {
-                            SignalEventDefinition signalEvent = (SignalEventDefinition)eventDefinition;
                             if (!string.IsNullOrWhiteSpace(signalEvent.SignalRef))
                             {
-                                if (!model.containsSignalId(signalEvent.SignalRef))
+                                if (!model.ContainsSignalId(signalEvent.SignalRef))
                                 {
                                     Signal signal = new Signal(signalEvent.SignalRef, signalEvent.SignalRef);
-                                    model.addSignal(signal);
+                                    model.AddSignal(signal);
                                 }
                             }
                         }
-                        else if (eventDefinition is MessageEventDefinition)
+                        else if (eventDefinition is MessageEventDefinition messageEvent)
                         {
-                            MessageEventDefinition messageEvent = (MessageEventDefinition)eventDefinition;
                             if (!string.IsNullOrWhiteSpace(messageEvent.MessageRef))
                             {
-                                if (!model.containsMessageId(messageEvent.MessageRef))
+                                if (!model.ContainsMessageId(messageEvent.MessageRef))
                                 {
                                     Message message = new Message(messageEvent.MessageRef, messageEvent.MessageRef, null);
-                                    model.addMessage(message);
+                                    model.AddMessage(message);
                                 }
                             }
                         }
@@ -49,31 +47,31 @@ namespace org.activiti.bpmn.converter.export
 
             foreach (Signal signal in model.Signals)
             {
-                xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_SIGNAL);
-                xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID, signal.Id);
-                xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME, signal.Name);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_SIGNAL, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, signal.Id);
+                xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, signal.Name);
                 if (signal.Scope != null)
                 {
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_SCOPE, signal.Scope);
+                    xtw.WriteAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_SCOPE, signal.Scope);
                 }
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
 
             foreach (Message message in model.Messages)
             {
-                xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_MESSAGE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_MESSAGE, BpmnXMLConstants.BPMN2_NAMESPACE);
                 string messageId = message.Id;
                 // remove the namespace from the message id if set
                 if (model.TargetNamespace != null && messageId.StartsWith(model.TargetNamespace, StringComparison.Ordinal))
                 {
                     messageId = messageId.Replace(model.TargetNamespace, "");
-                    messageId = messageId.replaceFirst(":", "");
+                    messageId = messageId.ReplaceFirst(":", "");
                 }
                 else
                 {
                     foreach (string prefix in model.Namespaces.Keys)
                     {
-                        string @namespace = model.getNamespace(prefix);
+                        string @namespace = model.GetNamespace(prefix);
                         if (messageId.StartsWith(@namespace, StringComparison.Ordinal))
                         {
                             messageId = messageId.Replace(model.TargetNamespace, "");
@@ -81,10 +79,10 @@ namespace org.activiti.bpmn.converter.export
                         }
                     }
                 }
-                xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID, messageId);
+                xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, messageId);
                 if (!string.IsNullOrWhiteSpace(message.Name))
                 {
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME, message.Name);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, message.Name);
                 }
                 if (!string.IsNullOrWhiteSpace(message.ItemRef))
                 {
@@ -92,7 +90,7 @@ namespace org.activiti.bpmn.converter.export
                     string itemRef = message.ItemRef;
                     foreach (string prefix in model.Namespaces.Keys)
                     {
-                        string @namespace = model.getNamespace(prefix);
+                        string @namespace = model.GetNamespace(prefix);
                         if (itemRef.StartsWith(@namespace, StringComparison.Ordinal))
                         {
                             if (prefix.Length == 0)
@@ -106,9 +104,9 @@ namespace org.activiti.bpmn.converter.export
                             break;
                         }
                     }
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ITEM_REF, itemRef);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ITEM_REF, itemRef);
                 }
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
         }
     }

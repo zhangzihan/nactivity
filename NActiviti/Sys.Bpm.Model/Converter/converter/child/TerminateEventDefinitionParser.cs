@@ -12,7 +12,7 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
@@ -25,10 +25,10 @@ namespace org.activiti.bpmn.converter.child
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_TERMINATEDEFINITION;
+                return BpmnXMLConstants.ELEMENT_EVENT_TERMINATEDEFINITION;
             }
         }
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
             if (!(parentElement is EndEvent))
             {
@@ -38,17 +38,17 @@ namespace org.activiti.bpmn.converter.child
             TerminateEventDefinition eventDefinition = new TerminateEventDefinition();
 
             parseTerminateAllAttribute(xtr, eventDefinition);
-            parseTerminateMultiInstanceAttribute(xtr, eventDefinition);
+            ParseTerminateMultiInstanceAttribute(xtr, eventDefinition);
 
-            BpmnXMLUtil.addXMLLocation(eventDefinition, xtr);
-            BpmnXMLUtil.parseChildElements(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_TERMINATEDEFINITION, eventDefinition, xtr, model);
+            BpmnXMLUtil.AddXMLLocation(eventDefinition, xtr);
+            BpmnXMLUtil.ParseChildElements(BpmnXMLConstants.ELEMENT_EVENT_TERMINATEDEFINITION, eventDefinition, xtr, model);
 
             ((Event)parentElement).EventDefinitions.Add(eventDefinition);
         }
 
         protected internal virtual void parseTerminateAllAttribute(XMLStreamReader xtr, TerminateEventDefinition eventDefinition)
         {
-            string terminateAllValue = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TERMINATE_ALL);
+            string terminateAllValue = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TERMINATE_ALL);
             if (!string.ReferenceEquals(terminateAllValue, null) && "true".Equals(terminateAllValue))
             {
                 eventDefinition.TerminateAll = true;
@@ -59,10 +59,10 @@ namespace org.activiti.bpmn.converter.child
             }
         }
 
-        protected internal virtual void parseTerminateMultiInstanceAttribute(XMLStreamReader xtr, TerminateEventDefinition eventDefinition)
+        protected internal virtual void ParseTerminateMultiInstanceAttribute(XMLStreamReader xtr, TerminateEventDefinition eventDefinition)
         {
-            string terminateMiValue = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TERMINATE_MULTI_INSTANCE);
-            if (!string.ReferenceEquals(terminateMiValue, null) && "true".Equals(terminateMiValue))
+            string terminateMiValue = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TERMINATE_MULTI_INSTANCE);
+            if (!(terminateMiValue is null) && "true".Equals(terminateMiValue))
             {
                 eventDefinition.TerminateMultiInstance = true;
             }

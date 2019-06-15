@@ -19,17 +19,17 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class ResourceParser : IBpmnXMLConstants
     {
-        public virtual void parse(XMLStreamReader xtr, BpmnModel model)
+        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
         {
-            string resourceId = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID);
-            string resourceName = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME);
+            string resourceId = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+            string resourceName = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
 
             Resource resource;
-            if (model.containsResourceId(resourceId))
+            if (model.ContainsResourceId(resourceId))
             {
-                resource = model.getResource(resourceId);
+                resource = model.GetResource(resourceId);
                 resource.Name = resourceName;
-                foreach (org.activiti.bpmn.model.Process process in model.Processes)
+                foreach (Process process in model.Processes)
                 {
                     foreach (FlowElement fe in process.FlowElements)
                     {
@@ -44,10 +44,10 @@ namespace org.activiti.bpmn.converter.parser
             else
             {
                 resource = new Resource(resourceId, resourceName);
-                model.addResource(resource);
+                model.AddResource(resource);
             }
 
-            BpmnXMLUtil.addXMLLocation(resource, xtr);
+            BpmnXMLUtil.AddXMLLocation(resource, xtr);
         }
     }
 

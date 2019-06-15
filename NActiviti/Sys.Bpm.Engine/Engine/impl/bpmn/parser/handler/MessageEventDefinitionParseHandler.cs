@@ -29,27 +29,25 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, MessageEventDefinition messageDefinition)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, MessageEventDefinition messageDefinition)
         {
             BpmnModel bpmnModel = bpmnParse.BpmnModel;
             string messageRef = messageDefinition.MessageRef;
-            if (bpmnModel.containsMessageId(messageRef))
+            if (bpmnModel.ContainsMessageId(messageRef))
             {
-                Message message = bpmnModel.getMessage(messageRef);
+                Message message = bpmnModel.GetMessage(messageRef);
                 messageDefinition.MessageRef = message.Name;
                 messageDefinition.ExtensionElements = message.ExtensionElements;
             }
 
-            if (bpmnParse.CurrentFlowElement is IntermediateCatchEvent)
+            if (bpmnParse.CurrentFlowElement is IntermediateCatchEvent intermediateCatchEvent)
             {
-                IntermediateCatchEvent intermediateCatchEvent = (IntermediateCatchEvent)bpmnParse.CurrentFlowElement;
-                intermediateCatchEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createIntermediateCatchMessageEventActivityBehavior(intermediateCatchEvent, messageDefinition);
+                intermediateCatchEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateCatchMessageEventActivityBehavior(intermediateCatchEvent, messageDefinition);
 
             }
-            else if (bpmnParse.CurrentFlowElement is BoundaryEvent)
+            else if (bpmnParse.CurrentFlowElement is BoundaryEvent boundaryEvent)
             {
-                BoundaryEvent boundaryEvent = (BoundaryEvent)bpmnParse.CurrentFlowElement;
-                boundaryEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createBoundaryMessageEventActivityBehavior(boundaryEvent, messageDefinition, boundaryEvent.CancelActivity);
+                boundaryEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateBoundaryMessageEventActivityBehavior(boundaryEvent, messageDefinition, boundaryEvent.CancelActivity);
             }
 
             else

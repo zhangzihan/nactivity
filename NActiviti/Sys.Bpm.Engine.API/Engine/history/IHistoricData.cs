@@ -8,7 +8,5 @@ namespace org.activiti.engine.history
     {
 
         DateTime? Time { get; }
-
     }
-
 }

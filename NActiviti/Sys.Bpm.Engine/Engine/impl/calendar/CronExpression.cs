@@ -192,7 +192,7 @@ namespace org.activiti.engine.impl.calendar
             dayMap["SAT"] = Convert.ToInt32(7);
         }
 
-        private string cronExpression;
+        private readonly string cronExpression;
         private TimeZoneInfo timeZone;
         [NonSerialized]
         protected internal SortedSet<int> seconds;
@@ -224,7 +224,7 @@ namespace org.activiti.engine.impl.calendar
 
         public static readonly int MAX_YEAR = new DateTime().Year + 100;
 
-        private IClockReader clockReader;
+        private readonly IClockReader clockReader;
 
         /// <summary>
         /// Constructs a new <CODE>CronExpression</CODE> based on the specified parameter.
@@ -251,7 +251,7 @@ namespace org.activiti.engine.impl.calendar
         ///           if the string expression cannot be parsed into a valid <CODE>CronExpression</CODE> </exception>
         public CronExpression(string cronExpression, IClockReader clockReader)
         {
-            if (ReferenceEquals(cronExpression, null))
+            if (cronExpression is null)
             {
                 throw new System.ArgumentException("cronExpression cannot be null");
             }
@@ -259,7 +259,7 @@ namespace org.activiti.engine.impl.calendar
             this.clockReader = clockReader;
             this.cronExpression = cronExpression.ToUpper(CultureInfo.GetCultureInfo("en-us"));
 
-            buildExpression(this.cronExpression);
+            BuildExpression(this.cronExpression);
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace org.activiti.engine.impl.calendar
         //
         // //////////////////////////////////////////////////////////////////////////
 
-        protected internal virtual void buildExpression(string expression)
+        protected internal virtual void BuildExpression(string expression)
         {
             expressionParsed = true;
 
@@ -360,7 +360,7 @@ namespace org.activiti.engine.impl.calendar
                     string[] vTok = expr.Split(',');
                     foreach (var v in vTok)
                     {
-                        storeExpressionVals(0, v, exprOn);
+                        StoreExpressionVals(0, v, exprOn);
                     }
 
                     exprOn++;
@@ -373,11 +373,11 @@ namespace org.activiti.engine.impl.calendar
 
                 if (exprOn <= YEAR)
                 {
-                    storeExpressionVals(0, "*", YEAR);
+                    StoreExpressionVals(0, "*", YEAR);
                 }
 
-                SortedSet<int> dow = getSet(DAY_OF_WEEK);
-                SortedSet<int> dom = getSet(DAY_OF_MONTH);
+                SortedSet<int> dow = GetSet(DAY_OF_WEEK);
+                SortedSet<int> dom = GetSet(DAY_OF_MONTH);
 
                 // Copying the logic from the UnsupportedOperationException below
                 bool dayOfMSpec = !dom.Contains(NO_SPEC.Value);
@@ -402,11 +402,10 @@ namespace org.activiti.engine.impl.calendar
             }
         }
 
-        protected internal virtual int storeExpressionVals(int pos, string s, int type)
+        protected internal virtual int StoreExpressionVals(int pos, string s, int type)
         {
-
             int incr = 0;
-            int i = skipWhiteSpace(pos, s);
+            int i = SkipWhiteSpace(pos, s);
             if (i >= s.Length)
             {
                 return i;
@@ -415,11 +414,11 @@ namespace org.activiti.engine.impl.calendar
             if ((c >= 'A') && (c <= 'Z') && (!s.Equals("L")) && (!s.Equals("LW")) && (!new Regex("^L-[0-9]*[W]?").IsMatch(s)))
             {
                 string sub = s.Substring(i, 3);
-                int sval = -1;
                 int eval = -1;
+                int sval;
                 if (type == MONTH)
                 {
-                    sval = getMonthNumber(sub) + 1;
+                    sval = GetMonthNumber(sub) + 1;
                     if (sval <= 0)
                     {
                         throw new Exception($"Invalid Month value: '{sub}' {i}");
@@ -431,7 +430,7 @@ namespace org.activiti.engine.impl.calendar
                         {
                             i += 4;
                             sub = s.Substring(i, 3);
-                            eval = getMonthNumber(sub) + 1;
+                            eval = GetMonthNumber(sub) + 1;
                             if (eval <= 0)
                             {
                                 throw new Exception($"Invalid Month value: '{sub}'{i}");
@@ -441,7 +440,7 @@ namespace org.activiti.engine.impl.calendar
                 }
                 else if (type == DAY_OF_WEEK)
                 {
-                    sval = getDayOfWeekNumber(sub);
+                    sval = GetDayOfWeekNumber(sub);
                     if (sval < 0)
                     {
                         throw new Exception($"Invalid Day-of-Week value: '{sub}'{i}");
@@ -453,7 +452,7 @@ namespace org.activiti.engine.impl.calendar
                         {
                             i += 4;
                             sub = s.Substring(i, 3);
-                            eval = getDayOfWeekNumber(sub);
+                            eval = GetDayOfWeekNumber(sub);
                             if (eval < 0)
                             {
                                 throw new Exception($"Invalid Day-of-Week value: '{sub}'{i}");
@@ -491,7 +490,7 @@ namespace org.activiti.engine.impl.calendar
                 {
                     incr = 1;
                 }
-                addToSet(sval, eval, incr, type);
+                AddToSet(sval, eval, incr, type);
                 return (i + 3);
             }
 
@@ -515,7 +514,7 @@ namespace org.activiti.engine.impl.calendar
                     }
                 }
 
-                addToSet(NO_SPEC_INT, -1, 0, type);
+                AddToSet(NO_SPEC_INT, -1, 0, type);
                 return i;
             }
 
@@ -523,7 +522,7 @@ namespace org.activiti.engine.impl.calendar
             {
                 if (c == '*' && (i + 1) >= s.Length)
                 {
-                    addToSet(ALL_SPEC_INT, -1, incr, type);
+                    AddToSet(ALL_SPEC_INT, -1, incr, type);
                     return i + 1;
                 }
                 else if (c == '/' && ((i + 1) >= s.Length || s[i + 1] == ' ' || s[i + 1] == '\t'))
@@ -543,7 +542,7 @@ namespace org.activiti.engine.impl.calendar
                         throw new Exception("Unexpected end of string." + i);
                     }
 
-                    incr = getNumericValue(s, i);
+                    incr = GetNumericValue(s, i);
 
                     i++;
                     if (incr > 10)
@@ -576,7 +575,7 @@ namespace org.activiti.engine.impl.calendar
                     incr = 1;
                 }
 
-                addToSet(ALL_SPEC_INT, -1, incr, type);
+                AddToSet(ALL_SPEC_INT, -1, incr, type);
                 return i;
             }
             else if (c == 'L')
@@ -588,14 +587,14 @@ namespace org.activiti.engine.impl.calendar
                 }
                 if (type == DAY_OF_WEEK)
                 {
-                    addToSet(7, 7, 0, type);
+                    AddToSet(7, 7, 0, type);
                 }
                 if (type == DAY_OF_MONTH && s.Length > i)
                 {
                     c = s[i];
                     if (c == '-')
                     {
-                        ValueSet vs = getValue(0, s, i + 1);
+                        ValueSet vs = GetValue(0, s, i + 1);
                         lastdayOffset = vs.value;
                         if (lastdayOffset > 30)
                         {
@@ -621,18 +620,18 @@ namespace org.activiti.engine.impl.calendar
                 i++;
                 if (i >= s.Length)
                 {
-                    addToSet(val, -1, -1, type);
+                    AddToSet(val, -1, -1, type);
                 }
                 else
                 {
                     c = s[i];
                     if (c >= '0' && c <= '9')
                     {
-                        ValueSet vs = getValue(val, s, i);
+                        ValueSet vs = GetValue(val, s, i);
                         val = vs.value;
                         i = vs.pos;
                     }
-                    i = checkNext(i, s, val, type);
+                    i = CheckNext(i, s, val, type);
                     return i;
                 }
             }
@@ -644,7 +643,7 @@ namespace org.activiti.engine.impl.calendar
             return i;
         }
 
-        protected internal virtual int checkNext(int pos, string s, int val, int type)
+        protected internal virtual int CheckNext(int pos, string s, int val, int type)
         {
 
             int end = -1;
@@ -652,7 +651,7 @@ namespace org.activiti.engine.impl.calendar
 
             if (i >= s.Length)
             {
-                addToSet(val, end, -1, type);
+                AddToSet(val, end, -1, type);
                 return i;
             }
 
@@ -672,7 +671,7 @@ namespace org.activiti.engine.impl.calendar
                 {
                     throw new Exception("'L' option is not valid here. (pos=" + i + ")" + i);
                 }
-                SortedSet<int> set = getSet(type);
+                SortedSet<int> set = GetSet(type);
                 set.Add(Convert.ToInt32(val));
                 i++;
                 return i;
@@ -692,7 +691,7 @@ namespace org.activiti.engine.impl.calendar
                 {
                     throw new Exception("The 'W' option does not make sense with values larger than 31 (max number of days in a month)" + i);
                 }
-                SortedSet<int> set = getSet(type);
+                SortedSet<int> set = GetSet(type);
                 set.Add(Convert.ToInt32(val));
                 i++;
                 return i;
@@ -718,7 +717,7 @@ namespace org.activiti.engine.impl.calendar
                     throw new Exception("A numeric value between 1 and 5 must follow the '#' option " + i);
                 }
 
-                SortedSet<int> set = getSet(type);
+                SortedSet<int> set = GetSet(type);
                 set.Add(Convert.ToInt32(val));
                 i++;
                 return i;
@@ -733,18 +732,18 @@ namespace org.activiti.engine.impl.calendar
                 i++;
                 if (i >= s.Length)
                 {
-                    addToSet(val, end, 1, type);
+                    AddToSet(val, end, 1, type);
                     return i;
                 }
                 c = s[i];
                 if (c >= '0' && c <= '9')
                 {
-                    ValueSet vs = getValue(v, s, i);
+                    ValueSet vs = GetValue(v, s, i);
                     int v1 = vs.value;
                     end = v1;
                     i = vs.pos;
                 }
-                if (i < s.Length && ((c = s[i]) == '/'))
+                if (i < s.Length && ((_ = s[i]) == '/'))
                 {
                     i++;
                     c = s[i];
@@ -752,27 +751,27 @@ namespace org.activiti.engine.impl.calendar
                     i++;
                     if (i >= s.Length)
                     {
-                        addToSet(val, end, v2, type);
+                        AddToSet(val, end, v2, type);
                         return i;
                     }
                     c = s[i];
                     if (c >= '0' && c <= '9')
                     {
-                        ValueSet vs = getValue(v2, s, i);
+                        ValueSet vs = GetValue(v2, s, i);
                         int v3 = vs.value;
-                        addToSet(val, end, v3, type);
+                        AddToSet(val, end, v3, type);
                         i = vs.pos;
                         return i;
                     }
                     else
                     {
-                        addToSet(val, end, v2, type);
+                        AddToSet(val, end, v2, type);
                         return i;
                     }
                 }
                 else
                 {
-                    addToSet(val, end, 1, type);
+                    AddToSet(val, end, 1, type);
                     return i;
                 }
             }
@@ -785,15 +784,15 @@ namespace org.activiti.engine.impl.calendar
                 i++;
                 if (i >= s.Length)
                 {
-                    addToSet(val, end, v2, type);
+                    AddToSet(val, end, v2, type);
                     return i;
                 }
                 c = s[i];
                 if (c >= '0' && c <= '9')
                 {
-                    ValueSet vs = getValue(v2, s, i);
+                    ValueSet vs = GetValue(v2, s, i);
                     int v3 = vs.value;
-                    addToSet(val, end, v3, type);
+                    AddToSet(val, end, v3, type);
                     i = vs.pos;
                     return i;
                 }
@@ -803,12 +802,12 @@ namespace org.activiti.engine.impl.calendar
                 }
             }
 
-            addToSet(val, end, 0, type);
+            AddToSet(val, end, 0, type);
             i++;
             return i;
         }
 
-        protected internal virtual int skipWhiteSpace(int i, string s)
+        protected internal virtual int SkipWhiteSpace(int i, string s)
         {
             for (; i < s.Length && (s[i] == ' ' || s[i] == '\t'); i++)
             {
@@ -817,7 +816,7 @@ namespace org.activiti.engine.impl.calendar
             return i;
         }
 
-        protected internal virtual int findNextWhiteSpace(int i, string s)
+        protected internal virtual int FindNextWhiteSpace(int i, string s)
         {
             for (; i < s.Length && (s[i] != ' ' || s[i] != '\t'); i++)
             {
@@ -826,10 +825,9 @@ namespace org.activiti.engine.impl.calendar
             return i;
         }
 
-        protected internal virtual void addToSet(int val, int end, int incr, int type)
+        protected internal virtual void AddToSet(int val, int end, int incr, int type)
         {
-
-            SortedSet<int> set = getSet(type);
+            SortedSet<int> set = GetSet(type);
 
             if (type == SECOND || type == MINUTE)
             {
@@ -987,9 +985,9 @@ namespace org.activiti.engine.impl.calendar
                         max = 31;
                         break;
                     case YEAR:
-                        throw new System.ArgumentException("Start year must be less than stop year");
+                        throw new ArgumentException("Start year must be less than stop year");
                     default:
-                        throw new System.ArgumentException("Unexpected type encountered");
+                        throw new ArgumentException("Unexpected type encountered");
                 }
                 stopAt += max;
             }
@@ -1018,7 +1016,7 @@ namespace org.activiti.engine.impl.calendar
             }
         }
 
-        protected internal virtual SortedSet<int> getSet(int type)
+        protected internal virtual SortedSet<int> GetSet(int type)
         {
             switch (type)
             {
@@ -1041,7 +1039,7 @@ namespace org.activiti.engine.impl.calendar
             }
         }
 
-        protected internal virtual ValueSet getValue(int v, string s, int i)
+        protected internal virtual ValueSet GetValue(int v, string s, int i)
         {
             char c = s[i];
             StringBuilder s1 = new StringBuilder(v.ToString());
@@ -1055,21 +1053,22 @@ namespace org.activiti.engine.impl.calendar
                 }
                 c = s[i];
             }
-            ValueSet val = new ValueSet();
-
-            val.pos = (i < s.Length) ? i : i + 1;
-            val.value = int.Parse(s1.ToString());
+            ValueSet val = new ValueSet
+            {
+                pos = (i < s.Length) ? i : i + 1,
+                value = int.Parse(s1.ToString())
+            };
             return val;
         }
 
-        protected internal virtual int getNumericValue(string s, int i)
+        protected internal virtual int GetNumericValue(string s, int i)
         {
-            int endOfVal = findNextWhiteSpace(i, s);
+            int endOfVal = FindNextWhiteSpace(i, s);
             string val = s.Substring(i, endOfVal - i);
             return int.Parse(val);
         }
 
-        protected internal virtual int getMonthNumber(string s)
+        protected internal virtual int GetMonthNumber(string s)
         {
             int? integer = (int?)monthMap[s];
 
@@ -1081,9 +1080,9 @@ namespace org.activiti.engine.impl.calendar
             return integer.Value;
         }
 
-        protected internal virtual int getDayOfWeekNumber(string s)
+        protected internal virtual int GetDayOfWeekNumber(string s)
         {
-            int? integer = (int?)dayMap[s];
+            int? integer = dayMap[s];
 
             if (integer == null)
             {
@@ -1109,10 +1108,10 @@ namespace org.activiti.engine.impl.calendar
         //    return after == null ? null : after;
         //}
 
-        public virtual DateTime? getTimeAfter(DateTime afterTime)
+        public virtual DateTime? GetTimeAfter(DateTime afterTime)
         {
             // Computation is based on Gregorian year only.
-            DateTime cl = clockReader.getCurrentCalendar(TimeZone); // new
+            DateTime cl = clockReader.GetCurrentCalendar(TimeZone); // new
                                                                     // java.util.GregorianCalendar(getTimeZone());
 
             // move ahead one second, since we're computing the time *after* the
@@ -1172,7 +1171,7 @@ namespace org.activiti.engine.impl.calendar
                 if (min != t)
                 {
                     cl = cl.Set(DatePart.SECOND, 0).Set(DatePart.MINUTE, min);
-                    cl = setCalendarHour(cl, hr);
+                    cl = SetCalendarHour(cl, hr);
                     continue;
                 }
                 cl = cl.Set(DatePart.MINUTE, min);
@@ -1196,7 +1195,7 @@ namespace org.activiti.engine.impl.calendar
                 if (hr != t)
                 {
                     cl = cl.Set(DatePart.SECOND, 0).Set(DatePart.MINUTE, 0).Set(DatePart.DAY, day);
-                    cl = setCalendarHour(cl, hr);
+                    cl = SetCalendarHour(cl, hr);
                     continue;
                 }
                 cl = cl.Set(DatePart.HOUR, hr);
@@ -1219,21 +1218,21 @@ namespace org.activiti.engine.impl.calendar
                         if (!nearestWeekday)
                         {
                             t = day;
-                            day = getLastDayOfMonth(mon, cl.Year);
+                            day = GetLastDayOfMonth(mon, cl.Year);
                             day -= lastdayOffset;
                         }
                         else
                         {
                             t = day;
-                            day = getLastDayOfMonth(mon, cl.Year);
+                            day = GetLastDayOfMonth(mon, cl.Year);
                             day -= lastdayOffset;
 
                             // java.util.Calendar tcal =
                             // java.util.Calendar.getInstance(getTimeZone());
-                            DateTime tcal = clockReader.getCurrentCalendar(TimeZone);
+                            DateTime tcal = clockReader.GetCurrentCalendar(TimeZone);
                             tcal = new DateTime(cl.Year, mon - 1, day, 0, 0, 0);
 
-                            int ldom = getLastDayOfMonth(mon, cl.Year);
+                            int ldom = GetLastDayOfMonth(mon, cl.Year);
                             DayOfWeek dow = tcal.DayOfWeek;
 
                             if (dow == DayOfWeek.Saturday && day == 1)
@@ -1269,9 +1268,9 @@ namespace org.activiti.engine.impl.calendar
 
                         // java.util.Calendar tcal =
                         // java.util.Calendar.getInstance(getTimeZone());
-                        DateTime tcal = clockReader.getCurrentCalendar(TimeZone);
+                        DateTime tcal = clockReader.GetCurrentCalendar(TimeZone);
                         tcal = new DateTime(cl.Year, mon - 1, day, 0, 0, 0);
-                        int ldom = getLastDayOfMonth(mon, cl.Year);
+                        int ldom = GetLastDayOfMonth(mon, cl.Year);
                         DayOfWeek dow = tcal.DayOfWeek;
 
                         if (dow == DayOfWeek.Saturday && day == 1)
@@ -1305,7 +1304,7 @@ namespace org.activiti.engine.impl.calendar
                         day = ((int?)st.Min).Value;
                         // make sure we don't over-run a short month, such as
                         // february
-                        int lastDay = getLastDayOfMonth(mon, cl.Year);
+                        int lastDay = GetLastDayOfMonth(mon, cl.Year);
                         if (day > lastDay)
                         {
                             day = ((int?)daysOfMonth.Min).Value;
@@ -1345,7 +1344,7 @@ namespace org.activiti.engine.impl.calendar
                             daysToAdd = (int)dow + (7 - (int)cDow);
                         }
 
-                        int lDay = getLastDayOfMonth(mon, cl.Year);
+                        int lDay = GetLastDayOfMonth(mon, cl.Year);
 
                         if (day + daysToAdd > lDay)
                         { // did we already miss the
@@ -1402,7 +1401,7 @@ namespace org.activiti.engine.impl.calendar
 
                         daysToAdd = (nthdayOfWeek - weekOfMonth) * 7;
                         day += daysToAdd;
-                        if (daysToAdd < 0 || day > getLastDayOfMonth(mon, cl.Year))
+                        if (daysToAdd < 0 || day > GetLastDayOfMonth(mon, cl.Year))
                         {
                             cl = new DateTime(cl.Year, mon, 1, 0, 0, 0);
                             // no '- 1' here because we are promoting the month
@@ -1436,7 +1435,7 @@ namespace org.activiti.engine.impl.calendar
                             daysToAdd = dow + (7 - cDow);
                         }
 
-                        int lDay = getLastDayOfMonth(mon, cl.Year);
+                        int lDay = GetLastDayOfMonth(mon, cl.Year);
 
                         if (day + daysToAdd > lDay)
                         { // will we pass the end of
@@ -1532,7 +1531,7 @@ namespace org.activiti.engine.impl.calendar
         /// </summary>
         /// <param name="cal"> </param>
         /// <param name="hour"> </param>
-        protected internal virtual DateTime setCalendarHour(DateTime cal, int hour)
+        protected internal virtual DateTime SetCalendarHour(DateTime cal, int hour)
         {
             cal = cal.Set(DatePart.HOUR, hour);
             if (cal.Hour != hour && hour != 24)
@@ -1543,20 +1542,19 @@ namespace org.activiti.engine.impl.calendar
             return cal;
         }
 
-        protected internal virtual bool isLeapYear(int year)
+        protected internal virtual bool IsLeapYear(int year)
         {
             return ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0));
         }
 
-        protected internal virtual int getLastDayOfMonth(int monthNum, int year)
+        protected internal virtual int GetLastDayOfMonth(int monthNum, int year)
         {
-
             switch (monthNum)
             {
                 case 1:
                     return 31;
                 case 2:
-                    return (isLeapYear(year)) ? 29 : 28;
+                    return (IsLeapYear(year)) ? 29 : 28;
                 case 3:
                     return 31;
                 case 4:

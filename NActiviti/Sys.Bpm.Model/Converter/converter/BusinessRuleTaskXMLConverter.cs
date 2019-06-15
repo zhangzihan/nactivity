@@ -14,7 +14,7 @@
  */
 namespace org.activiti.bpmn.converter
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
@@ -34,52 +34,52 @@ namespace org.activiti.bpmn.converter
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_TASK_BUSINESSRULE;
+                return BpmnXMLConstants.ELEMENT_TASK_BUSINESSRULE;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             BusinessRuleTask businessRuleTask = new BusinessRuleTask();
-            BpmnXMLUtil.addXMLLocation(businessRuleTask, xtr);
-            businessRuleTask.InputVariables = parseDelimitedList(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_RULE_VARIABLES_INPUT));
-            businessRuleTask.RuleNames = parseDelimitedList(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_RULE_RULES));
-            businessRuleTask.ResultVariableName = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_RULE_RESULT_VARIABLE);
-            businessRuleTask.ClassName = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_RULE_CLASS);
-            string exclude = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_RULE_EXCLUDE);
-            if (org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE.Equals(exclude, StringComparison.CurrentCultureIgnoreCase))
+            BpmnXMLUtil.AddXMLLocation(businessRuleTask, xtr);
+            businessRuleTask.InputVariables = ParseDelimitedList(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_RULE_VARIABLES_INPUT));
+            businessRuleTask.RuleNames = ParseDelimitedList(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_RULE_RULES));
+            businessRuleTask.ResultVariableName = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_RULE_RESULT_VARIABLE);
+            businessRuleTask.ClassName = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_RULE_CLASS);
+            string exclude = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_RULE_EXCLUDE);
+            if (BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE.Equals(exclude, StringComparison.CurrentCultureIgnoreCase))
             {
                 businessRuleTask.Exclude = true;
             }
-            parseChildElements(XMLElementName, businessRuleTask, model, xtr);
+            ParseChildElements(XMLElementName, businessRuleTask, model, xtr);
             return businessRuleTask;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             BusinessRuleTask businessRuleTask = (BusinessRuleTask)element;
-            string inputVariables = convertToDelimitedString(businessRuleTask.InputVariables);
+            string inputVariables = ConvertToDelimitedString(businessRuleTask.InputVariables);
             if (!string.IsNullOrWhiteSpace(inputVariables))
             {
-                writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_RULE_VARIABLES_INPUT, inputVariables, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_RULE_VARIABLES_INPUT, inputVariables, xtw);
             }
-            string ruleNames = convertToDelimitedString(businessRuleTask.RuleNames);
+            string ruleNames = ConvertToDelimitedString(businessRuleTask.RuleNames);
             if (!string.IsNullOrWhiteSpace(ruleNames))
             {
-                writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_RULE_RULES, ruleNames, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_RULE_RULES, ruleNames, xtw);
             }
             if (!string.IsNullOrWhiteSpace(businessRuleTask.ResultVariableName))
             {
-                writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_RULE_RESULT_VARIABLE, businessRuleTask.ResultVariableName, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_RULE_RESULT_VARIABLE, businessRuleTask.ResultVariableName, xtw);
             }
             if (!string.IsNullOrWhiteSpace(businessRuleTask.ClassName))
             {
-                writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_RULE_CLASS, businessRuleTask.ClassName, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_RULE_CLASS, businessRuleTask.ClassName, xtw);
             }
             if (businessRuleTask.Exclude)
             {
-                writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_RULE_EXCLUDE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_RULE_EXCLUDE, BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE, xtw);
             }
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
     }

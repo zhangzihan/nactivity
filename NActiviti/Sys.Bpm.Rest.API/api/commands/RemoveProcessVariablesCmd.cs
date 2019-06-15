@@ -12,7 +12,7 @@ namespace org.activiti.cloud.services.api.commands
     {
         private readonly string id = "removeProcessVariablesCmd";
         private string processId;
-        private IList<string> variableNames;
+        private IEnumerable<string> variableNames;
 
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace org.activiti.cloud.services.api.commands
         /// <param name="variableNames"></param>
         ////[JsonConstructor]
         public RemoveProcessVariablesCmd([JsonProperty("ProcessId")] string processId,
-            [JsonProperty("Variables")]IList<string> variableNames)
+            [JsonProperty("Variables")]IEnumerable<string> variableNames)
         {
             this.processId = processId;
             this.variableNames = variableNames;
@@ -49,9 +49,9 @@ namespace org.activiti.cloud.services.api.commands
 
 
         /// <summary>
-        /// 带移除变量列表
+        /// 待移除变量列表
         /// </summary>
-        public virtual IList<string> VariableNames
+        public virtual IEnumerable<string> VariableNames
         {
             get => variableNames;
             set => variableNames = value;

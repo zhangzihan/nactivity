@@ -17,20 +17,20 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
     using org.activiti.bpmn.model;
 
     /// 
-    public class TaskParseHandler : AbstractActivityBpmnParseHandler<Task>
+    public class TaskParseHandler : AbstractActivityBpmnParseHandler<TaskActivity>
     {
 
         protected internal override Type HandledType
         {
             get
             {
-                return typeof(Task);
+                return typeof(TaskActivity);
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, Task task)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, TaskActivity task)
         {
-            task.Behavior = bpmnParse.ActivityBehaviorFactory.createTaskActivityBehavior(task);
+            task.Behavior = bpmnParse.ActivityBehaviorFactory.CreateTaskActivityBehavior(task);
         }
 
     }

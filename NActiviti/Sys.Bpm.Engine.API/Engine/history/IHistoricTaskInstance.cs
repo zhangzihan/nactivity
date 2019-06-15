@@ -40,12 +40,12 @@ namespace org.activiti.engine.history
         DateTime? EndTime { get; }
 
         /// <summary>
-        /// Difference between <seealso cref="#getEndTime()"/> and <seealso cref="#getStartTime()"/> in milliseconds.
+        /// Difference between <seealso cref="EndTime"/> and <seealso cref="StartTime"/> in milliseconds.
         /// </summary>
         long? DurationInMillis { get; }
 
         /// <summary>
-        /// Difference between <seealso cref="#getEndTime()"/> and <seealso cref="#getClaimTime()"/> in milliseconds.
+        /// Difference between <seealso cref="EndTime"/> and <seealso cref="ClaimTime"/> in milliseconds.
         /// </summary>
         long? WorkTimeInMillis { get; }
 
@@ -58,6 +58,12 @@ namespace org.activiti.engine.history
 
         /// <inheritdoc />
         new bool? IsTransfer { get; set; }
+
+        /// <inheritdoc />
+        new bool? CanTransfer { get; set; }
+
+        /// <inheritdoc />
+        new bool? OnlyAssignee { get; set; }
 
     }
 

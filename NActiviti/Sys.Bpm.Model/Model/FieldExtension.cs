@@ -63,10 +63,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            FieldExtension clone = new FieldExtension();
-            clone.Values = this;
+            FieldExtension clone = new FieldExtension
+            {
+                Values = this
+            };
             return clone;
         }
 

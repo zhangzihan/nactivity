@@ -4,8 +4,7 @@ using org.activiti.cloud.services.api.model;
 using org.activiti.engine.@delegate.@event;
 using org.activiti.engine.impl.persistence.entity;
 using org.activiti.engine.task;
-using Sys;
-using System;
+using Sys.Workflow;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,7 +31,7 @@ namespace org.activiti.cloud.services.events.converter
     /// </summary>
     public class EventConverterContext
     {
-        private static readonly ILogger LOGGER = ProcessEngineServiceProvider.LoggerService<EventConverterContext>();
+        private readonly ILogger logger = null;
 
         /// <summary>
         /// ProcessInstance:
@@ -55,7 +54,7 @@ namespace org.activiti.cloud.services.events.converter
         /// </summary>
         public const string EVENT_PREFIX = "";
 
-        private IDictionary<string, IEventConverter> convertersMap;
+        private readonly IDictionary<string, IEventConverter> convertersMap;
 
         /// <summary>
         /// 
@@ -70,9 +69,12 @@ namespace org.activiti.cloud.services.events.converter
         /// 
         /// </summary>
         /// <param name="converters"></param>
-        public EventConverterContext(ISet<IEventConverter> converters)
+        /// <param name="loggerFactory"></param>
+        public EventConverterContext(ISet<IEventConverter> converters,
+            ILoggerFactory loggerFactory)
         {
             this.convertersMap = converters.ToDictionary(x => x.GetType().FullName);
+            logger = loggerFactory.CreateLogger<EventConverterContext>();
         }
 
         /// <summary>
@@ -91,18 +93,18 @@ namespace org.activiti.cloud.services.events.converter
         /// </summary>
         /// <param name="activitiEvent"></param>
         /// <returns></returns>
-        public virtual IProcessEngineEvent from(IActivitiEvent activitiEvent)
+        public virtual IProcessEngineEvent From(IActivitiEvent activitiEvent)
         {
-            IEventConverter converter = convertersMap[getPrefix(activitiEvent) + activitiEvent.Type];
+            IEventConverter converter = convertersMap[GetPrefix(activitiEvent) + activitiEvent.Type];
 
             IProcessEngineEvent newEvent = null;
             if (converter != null)
             {
-                newEvent = converter.from(activitiEvent);
+                newEvent = converter.From(activitiEvent);
             }
             else
             {
-                LOGGER.LogDebug(">> Ommited Event Type: " + activitiEvent.GetType().FullName);
+                logger.LogDebug(">> Ommited Event Type: " + activitiEvent.GetType().FullName);
             }
             return newEvent;
         }
@@ -112,24 +114,24 @@ namespace org.activiti.cloud.services.events.converter
         /// </summary>
         /// <param name="activitiEvent"></param>
         /// <returns></returns>
-        public static string getPrefix(IActivitiEvent activitiEvent)
+        public static string GetPrefix(IActivitiEvent activitiEvent)
         {
-            if (isProcessEvent(activitiEvent))
+            if (IsProcessEvent(activitiEvent))
             {
                 return PROCESS_EVENT_PREFIX;
             }
-            else if (isTaskEvent(activitiEvent))
+            else if (IsTaskEvent(activitiEvent))
             {
                 return TASK_EVENT_PREFIX;
             }
-            else if (isIdentityLinkEntityEvent(activitiEvent))
+            else if (IsIdentityLinkEntityEvent(activitiEvent))
             {
                 IIdentityLink identityLinkEntity = (IIdentityLink)((IActivitiEntityEvent)activitiEvent).Entity;
-                if (isCandidateUserEntity(identityLinkEntity))
+                if (IsCandidateUserEntity(identityLinkEntity))
                 {
                     return TASK_CANDIDATE_USER_EVENT_PREFIX;
                 }
-                else if (isCandidateGroupEntity(identityLinkEntity))
+                else if (IsCandidateGroupEntity(identityLinkEntity))
                 {
                     return TASK_CANDIDATE_GROUP_EVENT_PREFIX;
                 }
@@ -143,7 +145,7 @@ namespace org.activiti.cloud.services.events.converter
         /// </summary>
         /// <param name="activitiEvent"></param>
         /// <returns></returns>
-        private static bool isProcessEvent(IActivitiEvent activitiEvent)
+        private static bool IsProcessEvent(IActivitiEvent activitiEvent)
         {
             bool isProcessEvent = false;
             if (activitiEvent is IActivitiEntityEvent)
@@ -151,7 +153,7 @@ namespace org.activiti.cloud.services.events.converter
                 object entity = ((IActivitiEntityEvent)activitiEvent).Entity;
                 if (entity != null && entity.GetType().IsAssignableFrom(typeof(ProcessInstance)))
                 {
-                    isProcessEvent = !isExecutionEntityEvent(activitiEvent) || ((IExecutionEntity)entity).ProcessInstanceType;
+                    isProcessEvent = !IsExecutionEntityEvent(activitiEvent) || ((IExecutionEntity)entity).ProcessInstanceType;
                 }
             }
             else if (activitiEvent.Type == ActivitiEventType.PROCESS_CANCELLED)
@@ -167,7 +169,7 @@ namespace org.activiti.cloud.services.events.converter
         /// </summary>
         /// <param name="activitiEvent"></param>
         /// <returns></returns>
-        private static bool isExecutionEntityEvent(IActivitiEvent activitiEvent)
+        private static bool IsExecutionEntityEvent(IActivitiEvent activitiEvent)
         {
             return activitiEvent.Type == ActivitiEventType.ENTITY_SUSPENDED || activitiEvent.Type == ActivitiEventType.ENTITY_ACTIVATED || activitiEvent.Type == ActivitiEventType.ENTITY_CREATED;
         }
@@ -177,7 +179,7 @@ namespace org.activiti.cloud.services.events.converter
         /// </summary>
         /// <param name="activitiEvent"></param>
         /// <returns></returns>
-        private static bool isTaskEvent(IActivitiEvent activitiEvent)
+        private static bool IsTaskEvent(IActivitiEvent activitiEvent)
         {
             return activitiEvent is IActivitiEntityEvent && ((IActivitiEntityEvent)activitiEvent).Entity is TaskModel;
         }
@@ -187,7 +189,7 @@ namespace org.activiti.cloud.services.events.converter
         /// </summary>
         /// <param name="activitiEvent"></param>
         /// <returns></returns>
-        private static bool isIdentityLinkEntityEvent(IActivitiEvent activitiEvent)
+        private static bool IsIdentityLinkEntityEvent(IActivitiEvent activitiEvent)
         {
             return activitiEvent is IActivitiEntityEvent && ((IActivitiEntityEvent)activitiEvent).Entity is IIdentityLink;
         }
@@ -197,7 +199,7 @@ namespace org.activiti.cloud.services.events.converter
         /// </summary>
         /// <param name="identityLinkEntity"></param>
         /// <returns></returns>
-        private static bool isCandidateUserEntity(IIdentityLink identityLinkEntity)
+        private static bool IsCandidateUserEntity(IIdentityLink identityLinkEntity)
         {
             return string.Compare(IdentityLinkType.CANDIDATE, identityLinkEntity.Type, true) == 0 && identityLinkEntity.UserId != null;
         }
@@ -207,7 +209,7 @@ namespace org.activiti.cloud.services.events.converter
         /// </summary>
         /// <param name="identityLinkEntity"></param>
         /// <returns></returns>
-        private static bool isCandidateGroupEntity(IIdentityLink identityLinkEntity)
+        private static bool IsCandidateGroupEntity(IIdentityLink identityLinkEntity)
         {
             return string.Compare(IdentityLinkType.CANDIDATE, identityLinkEntity.Type, true) == 0 && identityLinkEntity.GroupId != null;
         }

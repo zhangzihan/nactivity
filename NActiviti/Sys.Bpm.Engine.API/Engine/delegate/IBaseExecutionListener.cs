@@ -22,10 +22,24 @@ namespace org.activiti.engine.@delegate
     {
     }
 
-    public static class BaseExecutionListener_Fields
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class BaseExecutionListenerFields
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string EVENTNAME_START = "start";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string EVENTNAME_END = "end";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string EVENTNAME_TAKE = "take";
     }
 

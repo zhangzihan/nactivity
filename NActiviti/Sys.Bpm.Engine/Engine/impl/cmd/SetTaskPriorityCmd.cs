@@ -33,11 +33,11 @@ namespace org.activiti.engine.impl.cmd
             this.priority = priority;
         }
 
-        protected internal override object execute(ICommandContext commandContext, ITaskEntity task)
+        protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
         {
             task.Priority = priority;
-            commandContext.HistoryManager.recordTaskPriorityChange(task.Id, task.Priority);
-            commandContext.TaskEntityManager.update(task);
+            commandContext.HistoryManager.RecordTaskPriorityChange(task.Id, task.Priority);
+            commandContext.TaskEntityManager.Update(task);
 
             return null;
         }

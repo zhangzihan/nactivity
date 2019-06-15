@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.persistence.entity
     public interface IEntityManager<EntityImpl> where EntityImpl : IEntity
     {
 
-        EntityImpl create();
+        EntityImpl Create();
 
         /// <summary>
         /// 数据查询,key为查询参数名，value为值.
@@ -27,7 +27,7 @@ namespace org.activiti.engine.impl.persistence.entity
         /// <typeparam name="TOut"></typeparam>
         /// <param name="entityId"></param>
         /// <returns></returns>
-        TOut findById<TOut>(KeyValuePair<string, object> entityId);
+        TOut FindById<TOut>(KeyValuePair<string, object> entityId);
 
         /// <summary>
         /// 但数据查询参数名为id时使用此方法，否则使用自定义参数名的findById的方法.
@@ -35,21 +35,21 @@ namespace org.activiti.engine.impl.persistence.entity
         /// <typeparam name="TOut"></typeparam>
         /// <param name="entityId"></param>
         /// <returns></returns>
-        TOut findById<TOut>(object entityId);
+        TOut FindById<TOut>(object entityId);
 
-        void insert(EntityImpl entity);
+        void Insert(EntityImpl entity);
 
-        void insert(EntityImpl entity, bool fireCreateEvent);
+        void Insert(EntityImpl entity, bool fireCreateEvent);
 
-        EntityImpl update(EntityImpl entity);
+        EntityImpl Update(EntityImpl entity);
 
-        EntityImpl update(EntityImpl entity, bool fireUpdateEvent);
+        EntityImpl Update(EntityImpl entity, bool fireUpdateEvent);
 
-        void delete(KeyValuePair<string, object> entityId);
+        void Delete(KeyValuePair<string, object> entityId);
 
-        void delete(EntityImpl entity);
+        void Delete(EntityImpl entity);
 
-        void delete(EntityImpl entity, bool fireDeleteEvent);
+        void Delete(EntityImpl entity, bool fireDeleteEvent);
 
     }
 }

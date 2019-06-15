@@ -36,9 +36,9 @@ namespace org.activiti.engine.impl.scripting
             cachedEngines = new ConcurrentDictionary<string, dynamic>();
         }
 
-        public virtual object evaluate(string script, IExecutionEntity execution)
-        {   
-            return evaluate(script, execution, createBindings(execution));
+        public virtual object Evaluate(string script, IExecutionEntity execution)
+        {
+            return Evaluate(script, execution, CreateBindings(execution));
         }
 
         public virtual bool CacheScriptingEngines
@@ -53,13 +53,13 @@ namespace org.activiti.engine.impl.scripting
             }
         }
 
-        protected virtual object evaluate(string script, IExecutionEntity execution, IDictionary<string, object> bindings)
+        protected virtual object Evaluate(string script, IExecutionEntity execution, IDictionary<string, object> bindings)
         {
             //CSScriptLib.CSScript.RoslynEvaluator.
             return null;
         }
 
-        protected internal virtual IDictionary<string, object> createBindings(IVariableScope variableScope)
+        protected internal virtual IDictionary<string, object> CreateBindings(IVariableScope variableScope)
         {
             if (variableScope == null)
             {

@@ -18,7 +18,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     /// 
     public class DeadLetterJobsByExecutionIdMatcher : CachedEntityMatcherAdapter<IDeadLetterJobEntity>
     {
-        public override bool isRetained(IDeadLetterJobEntity jobEntity, object parameter)
+        public override bool IsRetained(IDeadLetterJobEntity jobEntity, object parameter)
         {
             if (jobEntity == null || jobEntity.ExecutionId == null || parameter == null)
             {

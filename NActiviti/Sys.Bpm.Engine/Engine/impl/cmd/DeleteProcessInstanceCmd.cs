@@ -20,7 +20,9 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
     using org.activiti.engine.runtime;
+    using org.activiti.engine.task;
     using System.Collections.Generic;
+    using ICommandExecutor = interceptor.ICommandExecutor;
 
     /// 
     [Serializable]
@@ -37,25 +39,26 @@ namespace org.activiti.engine.impl.cmd
             this.deleteReason = deleteReason;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            if (ReferenceEquals(processInstanceId, null))
+            if (processInstanceId is null)
             {
                 throw new ActivitiIllegalArgumentException("processInstanceId is null");
             }
 
-            IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
+            ICommandExecutor commandExecutor = commandContext.ProcessEngineConfiguration.CommandExecutor;
 
-            if (processInstanceEntity == null)
+            IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
+
+            if (processInstanceEntity is null)
             {
                 throw new ActivitiObjectNotFoundException("No process instance found for id '" + processInstanceId + "'", typeof(IProcessInstance));
             }
 
-            commandContext.ExecutionEntityManager.deleteProcessInstance(processInstanceEntity.ProcessInstanceId, deleteReason, false);
+            commandContext.ExecutionEntityManager.DeleteProcessInstance(processInstanceEntity.ProcessInstanceId, deleteReason, false);
 
             return null;
         }
-
     }
 
 }

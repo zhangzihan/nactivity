@@ -18,7 +18,7 @@ namespace org.activiti.bpmn.converter.child
     using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
-    using Sys.Bpm;
+    using Sys.Bpm.Model;
 
     /// 
     public class IOSpecificationParser : BaseChildElementParser
@@ -33,7 +33,7 @@ namespace org.activiti.bpmn.converter.child
             }
         }
 
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
 
             if (!(parentElement is Activity) && !(parentElement is Process))
@@ -42,31 +42,31 @@ namespace org.activiti.bpmn.converter.child
             }
 
             IOSpecification ioSpecification = new IOSpecification();
-            BpmnXMLUtil.addXMLLocation(ioSpecification, xtr);
+            BpmnXMLUtil.AddXMLLocation(ioSpecification, xtr);
             bool readyWithIOSpecification = false;
             try
             {
-                while (!readyWithIOSpecification && xtr.hasNext())
+                while (!readyWithIOSpecification && xtr.HasNext())
                 {
                     //xtr.next();
 
                     if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DATA_INPUT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         DataSpec dataSpec = new DataSpec();
-                        BpmnXMLUtil.addXMLLocation(dataSpec, xtr);
-                        dataSpec.Id = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
-                        dataSpec.Name = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
-                        dataSpec.ItemSubjectRef = parseItemSubjectRef(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ITEM_SUBJECT_REF), model);
+                        BpmnXMLUtil.AddXMLLocation(dataSpec, xtr);
+                        dataSpec.Id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+                        dataSpec.Name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
+                        dataSpec.ItemSubjectRef = ParseItemSubjectRef(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ITEM_SUBJECT_REF), model);
                         ioSpecification.DataInputs.Add(dataSpec);
 
                     }
                     else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DATA_OUTPUT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         DataSpec dataSpec = new DataSpec();
-                        BpmnXMLUtil.addXMLLocation(dataSpec, xtr);
-                        dataSpec.Id = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
-                        dataSpec.Name = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
-                        dataSpec.ItemSubjectRef = parseItemSubjectRef(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ITEM_SUBJECT_REF), model);
+                        BpmnXMLUtil.AddXMLLocation(dataSpec, xtr);
+                        dataSpec.Id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+                        dataSpec.Name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
+                        dataSpec.ItemSubjectRef = ParseItemSubjectRef(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ITEM_SUBJECT_REF), model);
                         ioSpecification.DataOutputs.Add(dataSpec);
 
                     }
@@ -114,7 +114,7 @@ namespace org.activiti.bpmn.converter.child
             }
         }
 
-        protected internal virtual string parseItemSubjectRef(string itemSubjectRef, BpmnModel model)
+        protected internal virtual string ParseItemSubjectRef(string itemSubjectRef, BpmnModel model)
         {
             string result = null;
             if (!string.IsNullOrWhiteSpace(itemSubjectRef))
@@ -123,7 +123,7 @@ namespace org.activiti.bpmn.converter.child
                 if (indexOfP != -1)
                 {
                     string prefix = itemSubjectRef.Substring(0, indexOfP);
-                    string resolvedNamespace = model.getNamespace(prefix);
+                    string resolvedNamespace = model.GetNamespace(prefix);
                     result = resolvedNamespace + ":" + itemSubjectRef.Substring(indexOfP + 1);
                 }
                 else

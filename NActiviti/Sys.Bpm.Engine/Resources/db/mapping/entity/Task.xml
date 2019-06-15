@@ -27,6 +27,7 @@
     <Result Property="createTime" Column="CREATE_TIME_" />
     <Result Property="owner" Column="OWNER_" />
     <Result Property="assignee" Column="ASSIGNEE_" />
+    <Result Property="assigneeUser" Column="ASSIGNEE_USER_" />
     <Result Property="delegationStateString" Column="DELEGATION_" />
     <Result Property="executionId" Column="EXECUTION_ID_" />
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />
@@ -41,6 +42,8 @@
     <Result Property="isAppend" Column="IS_APPEND_" />
     <Result Property="isTransfer" Column="IS_TRANSFER_" />
     <Result Property="isRuntime" Column="IS_RUNTIME_" />
+    <Result Property="canTransfer" Column="CAN_TRANSFER_" />
+    <Result Property="onlyAssignee" Column="ONLY_ASSIGNEE_" />
   </ResultMap>
 
   <!--
@@ -69,6 +72,7 @@
     <Result Property="createTime" Column="CREATE_TIME_" />
     <Result Property="owner" Column="OWNER_" />
     <Result Property="assignee" Column="ASSIGNEE_" />
+    <Result Property="assigneeUser" Column="ASSIGNEE_USER_" />
     <Result Property="delegationStateString" Column="DELEGATION_" />
     <Result Property="executionId" Column="EXECUTION_ID_" />
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />
@@ -83,13 +87,15 @@
     <Result Property="isAppend" Column="IS_APPEND_" />
     <Result Property="isTransfer" Column="IS_TRANSFER_" />
     <Result Property="isRuntime" Column="IS_RUNTIME_" />
+    <Result Property="canTransfer" Column="CAN_TRANSFER_" />
+    <Result Property="onlyAssignee" Column="ONLY_ASSIGNEE_" />
   </ResultMap>
 
   <!-- TASK INSERT -->
 
   <Insert Id="insertTask">
     insert into ACT_RU_TASK (ID_, REV_, NAME_, PARENT_TASK_ID_, DESCRIPTION_, PRIORITY_, CREATE_TIME_, OWNER_,
-    ASSIGNEE_, DELEGATION_, EXECUTION_ID_, PROC_INST_ID_, PROC_DEF_ID_, TASK_DEF_KEY_, DUE_DATE_, CATEGORY_, SUSPENSION_STATE_, TENANT_ID_, FORM_KEY_, IS_APPEND_, IS_TRANSFER_, IS_RUNTIME_)
+    ASSIGNEE_, ASSIGNEE_USER_, DELEGATION_, EXECUTION_ID_, PROC_INST_ID_, PROC_DEF_ID_, TASK_DEF_KEY_, DUE_DATE_, CATEGORY_, SUSPENSION_STATE_, TENANT_ID_, FORM_KEY_, IS_APPEND_, IS_TRANSFER_, IS_RUNTIME_, CAN_TRANSFER_, ONLY_ASSIGNEE_)
     values (#{id},
     1,
     #{name},
@@ -99,6 +105,7 @@
     #{createTime},
     #{owner},
     #{assignee},
+    #{assigneeUser},
     #{delegationStateString},
     #{executionId},
     #{processInstanceId},
@@ -111,13 +118,15 @@
     #{formKey},
     #{isAppend},
     #{isTransfer},
-    #{isRuntime}
+    #{isRuntime},
+    #{canTransfer},
+    #{onlyAssignee}
     )
   </Insert>
 
   <Insert Id="bulkInsertTask">
     INSERT INTO ACT_RU_TASK (ID_, REV_, NAME_, PARENT_TASK_ID_, DESCRIPTION_, PRIORITY_, CREATE_TIME_, OWNER_,
-    ASSIGNEE_, DELEGATION_, EXECUTION_ID_, PROC_INST_ID_, PROC_DEF_ID_, TASK_DEF_KEY_, DUE_DATE_, CATEGORY_, SUSPENSION_STATE_, TENANT_ID_, FORM_KEY_, IS_APPEND_, IS_TRANSFER_, IS_RUNTIME_)
+    ASSIGNEE_, ASSIGNEE_USER_, DELEGATION_, EXECUTION_ID_, PROC_INST_ID_, PROC_DEF_ID_, TASK_DEF_KEY_, DUE_DATE_, CATEGORY_, SUSPENSION_STATE_, TENANT_ID_, FORM_KEY_, IS_APPEND_, IS_TRANSFER_, IS_RUNTIME_, CAN_TRANSFER_, ONLY_ASSIGNEE_)
     VALUES
     <For Property="Items" Key="task" Separator=",">
       (#{id},
@@ -129,6 +138,7 @@
       #{createTime},
       #{owner},
       #{assignee},
+      #{assigneeUser},
       #{delegationStateString},
       #{executionId},
       #{processInstanceId},
@@ -141,7 +151,9 @@
       #{formKey},
       #{isAppend},
       #{isTransfer},
-      #{isRuntime})
+      #{isRuntime},
+      #{canTransfer},
+      #{onlyAssignee})
     </For>
   </Insert>
 
@@ -157,6 +169,7 @@
       CREATE_TIME_ = #{createTime},
       OWNER_ = #{owner},
       ASSIGNEE_ = #{assignee},
+      ASSIGNEE_USER_ = #{assigneeUser},
       DELEGATION_ = #{delegationStateString},
       EXECUTION_ID_ = #{executionId},
       PROC_DEF_ID_ = #{processDefinitionId},
@@ -251,34 +264,36 @@
       </Switch>
     </For>
     <For Property="orQueryObjects" Index="orIndex" Key="orQueryObject">
-      <If Test="orQueryObject.candidateUser != null or orQueryObject.candidateGroups != null or orQueryObject.bothCandidateAndAssigned or orQueryObject.involvedGroups != null">
-        <Switch>
-          <Case Test="orQueryObject.bothCandidateAndAssigned or orQueryObject.involvedGroups != null">left</Case>
-          <Default>inner</Default>
-        </Switch>
-        join ACT_RU_IDENTITYLINK I_OR${orIndex} on I_OR${orIndex}.TASK_ID_ = RES.ID_
-      </If>
-
-      <If Test="orQueryObject.queryVariableValues)">
-        <If Test="orQueryObject.hasLocalQueryVariableValue()">
-          left outer join ACT_RU_VARIABLE A_L_OR${orIndex} on RES.ID_ = A_L_OR${orIndex}.TASK_ID_
+      <Trim>
+        <If Test="orQueryObject.candidateUser != null or orQueryObject.candidateGroups != null or orQueryObject.bothCandidateAndAssigned or orQueryObject.involvedGroups != null">
+          <Switch>
+            <Case Test="orQueryObject.bothCandidateAndAssigned or orQueryObject.involvedGroups != null">left</Case>
+            <Default>inner</Default>
+          </Switch>
+          join ACT_RU_IDENTITYLINK I_OR${orIndex} on I_OR${orIndex}.TASK_ID_ = RES.ID_
         </If>
-        <If Test="orQueryObject.hasNonLocalQueryVariableValue()">
-          left outer join ACT_RU_VARIABLE A_OR${orIndex} on RES.PROC_INST_ID_ = A_OR${orIndex}.PROC_INST_ID_
+
+        <!--<If Test="orQueryObject.queryVariableValues">
+          <If Test="orQueryObject.hasLocalQueryVariableValue()">
+            left outer join ACT_RU_VARIABLE A_L_OR${orIndex} on RES.ID_ = A_L_OR${orIndex}.TASK_ID_
+          </If>
+          <If Test="orQueryObject.hasNonLocalQueryVariableValue()">
+            left outer join ACT_RU_VARIABLE A_OR${orIndex} on RES.PROC_INST_ID_ = A_OR${orIndex}.PROC_INST_ID_
+          </If>
+        </If>-->
+
+        <If Test="orQueryObject.processDefinitionKey != null or orQueryObject.processDefinitionKeyLike != null or orQueryObject.processDefinitionKeyLikeIgnoreCase != null or orQueryObject.processDefinitionName != null or orQueryObject.processDefinitionNameLike != null or (orQueryObject.processCategoryInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryInList)) or (orQueryObject.processCategoryNotInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryNotInList)) or (orQueryObject.processDefinitionKeys != null and CollectionUtil.IsNotEmpty(orQueryObject.processDefinitionKeys))">
+          left outer join ACT_RE_PROCDEF D_OR${orIndex} on RES.PROC_DEF_ID_ = D_OR${orIndex}.ID_
         </If>
-      </If>
 
-      <If Test="orQueryObject.processDefinitionKey != null or orQueryObject.processDefinitionKeyLike != null or orQueryObject.processDefinitionKeyLikeIgnoreCase != null or orQueryObject.processDefinitionName != null or orQueryObject.processDefinitionNameLike != null or (orQueryObject.processCategoryInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryInList)) or (orQueryObject.processCategoryNotInList != null and CollectionUtil.IsNotEmpty(orQueryObject.processCategoryNotInList)) or (orQueryObject.processDefinitionKeys != null and CollectionUtil.IsNotEmpty(orQueryObject.processDefinitionKeys))">
-        left outer join ACT_RE_PROCDEF D_OR${orIndex} on RES.PROC_DEF_ID_ = D_OR${orIndex}.ID_
-      </If>
+        <If Test="orQueryObject.processInstanceBusinessKey != null or orQueryObject.processInstanceBusinessKeyLike != null or orQueryObject.processInstanceBusinessKeyLikeIgnoreCase != null">
+          inner join ACT_RU_EXECUTION E_OR${orIndex} on RES.PROC_INST_ID_ = E_OR${orIndex}.ID_
+        </If>
 
-      <If Test="orQueryObject.processInstanceBusinessKey != null or orQueryObject.processInstanceBusinessKeyLike != null or orQueryObject.processInstanceBusinessKeyLikeIgnoreCase != null">
-        inner join ACT_RU_EXECUTION E_OR${orIndex} on RES.PROC_INST_ID_ = E_OR${orIndex}.ID_
-      </If>
-
-      <If Test="orQueryObject.deploymentId != null or (orQueryObject.deploymentIds != null and CollectionUtil.IsNotEmpty(orQueryObject.deploymentIds))">
-        left outer join ACT_RE_PROCDEF DEPLOY_P_OR${orIndex} ON RES.PROC_DEF_ID_ = DEPLOY_P_OR${orIndex}.ID_
-      </If>
+        <If Test="orQueryObject.deploymentId != null or (orQueryObject.deploymentIds != null and CollectionUtil.IsNotEmpty(orQueryObject.deploymentIds))">
+          left outer join ACT_RE_PROCDEF DEPLOY_P_OR${orIndex} ON RES.PROC_DEF_ID_ = DEPLOY_P_OR${orIndex}.ID_
+        </If>
+      </Trim>
     </For>
 
     <If Test="processDefinitionKey != null or processDefinitionKeyLike != null or  processDefinitionKeyLikeIgnoreCase != null or processDefinitionName != null or processDefinitionNameLike != null or (processCategoryInList != null and CollectionUtil.IsNotEmpty(processCategoryInList)) or (processCategoryNotInList != null and CollectionUtil.IsNotEmpty(processCategoryNotInList)) or (processDefinitionKeys != null and CollectionUtil.IsNotEmpty(processDefinitionKeys))">
@@ -397,6 +412,12 @@
       </If>
       <If Test="executionId != null">
         and RES.EXECUTION_ID_ = #{executionId}
+      </If>
+      <If Test="CollectionUtil.IsNotEmpty(executionIds)">
+        and RES.EXECUTION_ID_ IN
+        <For Property="executionIds" Index="index" Key="excutionId" Open="(" Separator="," Close=")">
+          #{excutionId}
+        </For>
       </If>
       <IsTrue Property="CollectionUtil.IsNotEmpty(taskNotInIds)">
         and RES.ID_ NOT IN
@@ -527,76 +548,78 @@
         )
       </If>
       <For Key="queryVariableValue" Property="queryVariableValues" Index="index">
-        <If Test="!queryVariableValue.local">
-          <!-- When process instance variable is queried for, taskId should be null -->
-          and A${index}.TASK_ID_ is null
-        </If>
-        <If Test="queryVariableValue.name != null">
-          <!-- Match-all variable-names when name is null -->
-          and A${index}.NAME_= #{queryVariableValue.name}
-        </If>
-        <If Test="queryVariableValue.name == null">
-          and A${index}.NAME_ is not null
-        </If>
-        <If Test="!queryVariableValue.type=='null'">
-          and A${index}.TYPE_ = #{queryVariableValue.type}
-        </If>
+        <Trim>
+          <If Test="!queryVariableValue.local">
+            <!-- When process instance variable is queried for, taskId should be null -->
+            and A${index}.TASK_ID_ is null
+          </If>
+          <If Test="queryVariableValue.name != null">
+            <!-- Match-all variable-names when name is null -->
+            and A${index}.NAME_= #{queryVariableValue.name}
+          </If>
+          <If Test="queryVariableValue.name == null">
+            and A${index}.NAME_ is not null
+          </If>
+          <If Test="!queryVariableValue.type=='null'">
+            and A${index}.TYPE_ = #{queryVariableValue.type}
+          </If>
 
-        <!-- Variable value -->
-        <If Test="queryVariableValue.textValue != null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
-          <Switch>
-            <Case Test="queryVariableValue.operator=='EQUALS_IGNORE_CASE' or queryVariableValue.operator=='NOT_EQUALS_IGNORE_CASE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">
-              and lower(A${index}.TEXT_)
-            </Case>
-            <Default>
-              and A${index}.TEXT_
-            </Default>
-          </Switch>
-          <Switch>
-            <Case Test="queryVariableValue.operator=='LIKE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">LIKE</Case>
-            <Default>
-              <Include RefId="executionVariableOperator" />
-            </Default>
-          </Switch>
-          #{queryVariableValue.textValue}
-          <Switch>
-            <Case Test="queryVariableValue.operator=='LIKE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">${wildcardEscapeClause}</Case>
-          </Switch>
-        </If>
-        <If Test="queryVariableValue.textValue2 != null">
-          and A${index}.TEXT2_
-          <Switch>
-            <Case Test="queryVariableValue.operator=='LIKE'">LIKE</Case>
-            <Default>
-              <Include RefId="executionVariableOperator" />
-            </Default>
-          </Switch>
-          #{queryVariableValue.textValue2}
-          <Switch>
-            <Case Test="queryVariableValue.operator='LIKE'">${wildcardEscapeClause}</Case>
-          </Switch>
-        </If>
-        <If Test="queryVariableValue.longValue != null">
-          and A${index}.LONG_
-          <Include RefId="executionVariableOperator" />
-          #{queryVariableValue.longValue}
-        </If>
-        <If Test="queryVariableValue.doubleValue != null">
-          and A${index}.DOUBLE_
-          <Include RefId="executionVariableOperator" />
-          #{queryVariableValue.doubleValue}
-        </If>
-        <!-- Null variable type -->
-        <If Test="queryVariableValue.textValue == null and queryVariableValue.textValue2 == null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
-          <Switch>
-            <Case Test="queryVariableValue.operator=='NOT_EQUALS'">
-              and (A${index}.TEXT_ is not null or A${index}.TEXT2_ is not null or A${index}.LONG_ is not null or A${index}.DOUBLE_ is not null or A${index}.BYTEARRAY_ID_ is not null)
-            </Case>
-            <Default>
-              and A${index}.TEXT_ is null and A${index}.TEXT2_ is null and A${index}.LONG_ is null and A${index}.DOUBLE_ is null and A${index}.BYTEARRAY_ID_ is null
-            </Default>
-          </Switch>
-        </If>
+          <!-- Variable value -->
+          <If Test="queryVariableValue.textValue != null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
+            <Switch>
+              <Case Test="queryVariableValue.operator=='EQUALS_IGNORE_CASE' or queryVariableValue.operator=='NOT_EQUALS_IGNORE_CASE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">
+                and lower(A${index}.TEXT_)
+              </Case>
+              <Default>
+                and A${index}.TEXT_
+              </Default>
+            </Switch>
+            <Switch>
+              <Case Test="queryVariableValue.operator=='LIKE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">LIKE</Case>
+              <Default>
+                <Include RefId="executionVariableOperator" />
+              </Default>
+            </Switch>
+            #{queryVariableValue.textValue}
+            <Switch>
+              <Case Test="queryVariableValue.operator=='LIKE' or queryVariableValue.operator=='LIKE_IGNORE_CASE'">${wildcardEscapeClause}</Case>
+            </Switch>
+          </If>
+          <If Test="queryVariableValue.textValue2 != null">
+            and A${index}.TEXT2_
+            <Switch>
+              <Case Test="queryVariableValue.operator=='LIKE'">LIKE</Case>
+              <Default>
+                <Include RefId="executionVariableOperator" />
+              </Default>
+            </Switch>
+            #{queryVariableValue.textValue2}
+            <Switch>
+              <Case Test="queryVariableValue.operator='LIKE'">${wildcardEscapeClause}</Case>
+            </Switch>
+          </If>
+          <If Test="queryVariableValue.longValue != null">
+            and A${index}.LONG_
+            <Include RefId="executionVariableOperator" />
+            #{queryVariableValue.longValue}
+          </If>
+          <If Test="queryVariableValue.doubleValue != null">
+            and A${index}.DOUBLE_
+            <Include RefId="executionVariableOperator" />
+            #{queryVariableValue.doubleValue}
+          </If>
+          <!-- Null variable type -->
+          <If Test="queryVariableValue.textValue == null and queryVariableValue.textValue2 == null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
+            <Switch>
+              <Case Test="queryVariableValue.operator=='NOT_EQUALS'">
+                and (A${index}.TEXT_ is not null or A${index}.TEXT2_ is not null or A${index}.LONG_ is not null or A${index}.DOUBLE_ is not null or A${index}.BYTEARRAY_ID_ is not null)
+              </Case>
+              <Default>
+                and A${index}.TEXT_ is null and A${index}.TEXT2_ is null and A${index}.LONG_ is null and A${index}.DOUBLE_ is null and A${index}.BYTEARRAY_ID_ is null
+              </Default>
+            </Switch>
+          </If>
+        </Trim>
       </For>
       <If Test="suspensionState != null">
         <If Test="suspensionState.stateCode == 1">
@@ -617,6 +640,10 @@
       </If>
       <Switch>
         <Case Test="bothCandidateAndAssigned">
+          <!-- if dbIdentityUsed set true in process engine configuration -->
+          <If Test="userIdForCandidateAndAssignee != null and candidateGroups == null">
+            and (RES.ASSIGNEE_ = #{userIdForCandidateAndAssignee} or (RES.ASSIGNEE_ is null and (I.USER_ID_ = #{userIdForCandidateAndAssignee} ) ) )
+          </If>
           <!-- if dbIdentityUsed set false in process engine configuration of using custom session factory of GroupIdentityManager -->
           <If Test="candidateGroups != null">
             and (RES.ASSIGNEE_ = #{userIdForCandidateAndAssignee}
@@ -634,7 +661,7 @@
       </Switch>
       <For Key="orQueryObject" Property="orQueryObjects">
         and
-        <Trim Prefix="(" PrefixOverrides="OR" Suffix=")">
+        <Trim Prefix="(" Suffix=")">
           <If Test="orQueryObject.taskId != null">
             RES.ID_ = #{orQueryObject.taskId}
           </If>
@@ -1057,7 +1084,7 @@
     select distinct TEMPRES_ID_ as ID_, TEMPRES_REV_ as REV_, TEMPRES_NAME_ as NAME_,
     TEMPRES_PARENT_TASK_ID_ as PARENT_TASK_ID_, TEMPRES_DESCRIPTION_ as DESCRIPTION_,
     TEMPRES_PRIORITY_ as PRIORITY_, TEMPRES_CREATE_TIME_ as CREATE_TIME_,
-    TEMPRES_OWNER_ as OWNER_, TEMPRES_ASSIGNEE_ as ASSIGNEE_, TEMPRES_DELEGATION_ as DELEGATION_,
+    TEMPRES_OWNER_ as OWNER_, TEMPRES_ASSIGNEE_ as ASSIGNEE_, TEMPRES_ASSIGNEE_USER_ as ASSIGNEE_USER_,TEMPRES_DELEGATION_ as DELEGATION_,
     TEMPRES_FORM_KEY_ as FORM_KEY_, TEMPRES_EXECUTION_ID_ as EXECUTION_ID_, TEMPRES_PROC_INST_ID_ as PROC_INST_ID_,
     TEMPRES_PROC_DEF_ID_ as PROC_DEF_ID_, TEMPRES_TASK_DEF_KEY_ as TASK_DEF_KEY_,
     TEMPRES_DUE_DATE_ as DUE_DATE_, TEMPRES_SUSPENSION_STATE_ as SUSPENSION_STATE_, TEMPRES_CATEGORY_ as CATEGORY_,
@@ -1069,7 +1096,7 @@
     RES.ID_ as TEMPRES_ID_, RES.REV_ as TEMPRES_REV_, RES.NAME_ as TEMPRES_NAME_,
     RES.PARENT_TASK_ID_ as TEMPRES_PARENT_TASK_ID_, RES.DESCRIPTION_ as TEMPRES_DESCRIPTION_,
     RES.PRIORITY_ as TEMPRES_PRIORITY_, RES.CREATE_TIME_ as TEMPRES_CREATE_TIME_,
-    RES.OWNER_ as TEMPRES_OWNER_, RES.ASSIGNEE_ as TEMPRES_ASSIGNEE_, RES.DELEGATION_ as TEMPRES_DELEGATION_,
+    RES.OWNER_ as TEMPRES_OWNER_, RES.ASSIGNEE_ as TEMPRES_ASSIGNEE_, RES.ASSIGNEE_USER_ as TEMPRES_ASSIGNEE_USER_, RES.DELEGATION_ as TEMPRES_DELEGATION_,
     RES.FORM_KEY_ as TEMPRES_FORM_KEY_, RES.EXECUTION_ID_ as TEMPRES_EXECUTION_ID_, RES.PROC_INST_ID_ as TEMPRES_PROC_INST_ID_,
     RES.PROC_DEF_ID_ as TEMPRES_PROC_DEF_ID_, RES.TASK_DEF_KEY_ as TEMPRES_TASK_DEF_KEY_,
     RES.DUE_DATE_ as TEMPRES_DUE_DATE_, RES.SUSPENSION_STATE_ as TEMPRES_SUSPENSION_STATE_, RES.CATEGORY_ as TEMPRES_CATEGORY_,

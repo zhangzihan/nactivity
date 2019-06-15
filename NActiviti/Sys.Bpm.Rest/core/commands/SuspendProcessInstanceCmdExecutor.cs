@@ -9,11 +9,11 @@ namespace org.activiti.cloud.services.core.commands
     /// <summary>
     /// 
     /// </summary>
-    public class SuspendProcessInstanceCmdExecutor : CommandExecutor<SuspendProcessInstanceCmd>
+    public class SuspendProcessInstanceCmdExecutor : ICommandExecutor<SuspendProcessInstanceCmd>
     {
 
-        private ProcessEngineWrapper processEngine;
-        private IMessageChannel<SuspendProcessInstanceResults> commandResults;
+        private readonly ProcessEngineWrapper processEngine;
+        private readonly IMessageChannel<SuspendProcessInstanceResults> commandResults;
 
         /// <summary>
         /// 
@@ -41,11 +41,11 @@ namespace org.activiti.cloud.services.core.commands
         /// 
         /// </summary>
         /// <param name="cmd"></param>
-        public virtual void execute(SuspendProcessInstanceCmd cmd)
+        public virtual void Execute(SuspendProcessInstanceCmd cmd)
         {
-            processEngine.suspend(cmd);
+            processEngine.Suspend(cmd);
             SuspendProcessInstanceResults cmdResult = new SuspendProcessInstanceResults(cmd.Id);
-            commandResults.send(MessageBuilder<SuspendProcessInstanceResults>.withPayload(cmdResult).build());
+            commandResults.Send(MessageBuilder<SuspendProcessInstanceResults>.WithPayload(cmdResult).Build());
         }
     }
 }

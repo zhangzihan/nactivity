@@ -44,10 +44,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            TextAnnotation clone = new TextAnnotation();
-            clone.Values = this;
+            TextAnnotation clone = new TextAnnotation
+            {
+                Values = this
+            };
             return clone;
         }
 

@@ -21,12 +21,12 @@ namespace org.activiti.engine.impl.bpmn.helper
 
     public class DefaultClassDelegateFactory : IClassDelegateFactory
     {
-        public virtual ClassDelegate create(string id, string className, IList<FieldDeclaration> fieldDeclarations, IExpression skipExpression, IList<MapExceptionEntry> mapExceptions)
+        public virtual ClassDelegate Create(string id, string className, IList<FieldDeclaration> fieldDeclarations, IExpression skipExpression, IList<MapExceptionEntry> mapExceptions)
         {
             return new ClassDelegate(id, className, fieldDeclarations, skipExpression, mapExceptions);
         }
 
-        public virtual ClassDelegate create(string className, IList<FieldDeclaration> fieldDeclarations)
+        public virtual ClassDelegate Create(string className, IList<FieldDeclaration> fieldDeclarations)
         {
             return new ClassDelegate(className, fieldDeclarations);
         }

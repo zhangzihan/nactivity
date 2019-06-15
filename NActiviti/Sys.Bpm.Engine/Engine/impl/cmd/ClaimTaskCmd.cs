@@ -14,10 +14,13 @@
  */
 namespace org.activiti.engine.impl.cmd
 {
-    
+
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
+    using Sys;
+    using Sys.Workflow;
+    using Sys.Workflow.Engine.Bpmn.Rules;
 
     /// 
     [Serializable]
@@ -28,18 +31,20 @@ namespace org.activiti.engine.impl.cmd
 
         protected internal string userId;
 
+        private readonly IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
+
         public ClaimTaskCmd(string taskId, string userId) : base(taskId)
         {
             this.userId = userId;
         }
 
-        protected internal override object execute(ICommandContext commandContext, ITaskEntity task)
+        protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
         {
-            if (!ReferenceEquals(userId, null))
+            if (!(userId is null))
             {
                 task.ClaimTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
 
-                if (!ReferenceEquals(task.Assignee, null))
+                if (!(task.Assignee is null))
                 {
                     if (!task.Assignee.Equals(userId))
                     {
@@ -51,20 +56,23 @@ namespace org.activiti.engine.impl.cmd
                 }
                 else
                 {
-                    commandContext.TaskEntityManager.changeTaskAssignee(task, userId);
+                    IUserInfo user = AsyncHelper.RunSync(() => userService.GetUser(userId));
+                    task.SetVariable(userId, user);
+                    commandContext.TaskEntityManager.ChangeTaskAssignee(task, userId, user?.FullName);
                 }
             }
             else
             {
                 // Task claim time should be null
                 task.ClaimTime = null;
+                task.RemoveVariable(task.Assignee);
 
                 // Task should be assigned to no one
-                commandContext.TaskEntityManager.changeTaskAssignee(task, null);
+                commandContext.TaskEntityManager.ChangeTaskAssignee(task, null, null);
             }
 
             // Add claim time to historic task instance
-            commandContext.HistoryManager.recordTaskClaim(task);
+            commandContext.HistoryManager.RecordTaskClaim(task);
 
             return null;
         }

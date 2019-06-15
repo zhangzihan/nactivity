@@ -30,13 +30,13 @@ namespace org.activiti.cloud.services.events.converter
         /// 
         /// </summary>
 
-        IProcessEngineEvent from(IActivitiEvent @event);
+        IProcessEngineEvent From(IActivitiEvent @event);
 
 
         /// <summary>
         /// 
         /// </summary>
-        string handledType();
+        string HandledType();
 
     }
 }

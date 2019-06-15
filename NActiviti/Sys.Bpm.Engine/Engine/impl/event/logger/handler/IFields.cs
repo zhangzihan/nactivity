@@ -6,7 +6,7 @@
 
 	}
 
-	public static class Fields_Fields
+	public static class FieldsFields
 	{
 	  public const string ACTIVITY_ID = "activityId";
 	  public const string ACTIVITY_NAME = "activityName";

@@ -13,10 +13,12 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            LongDataObject clone = new LongDataObject();
-            clone.Values = this;
+            LongDataObject clone = new LongDataObject
+            {
+                Values = this
+            };
             return clone;
         }
     }

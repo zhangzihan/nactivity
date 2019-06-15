@@ -56,14 +56,14 @@ namespace SmartSql.DapperDeserializer
             {
                 IList<T> list = new List<T>();
                 var dataReaderAsync = dataReader as DbDataReader;
-                if (await dataReaderAsync.ReadAsync())
+                if (await dataReaderAsync.ReadAsync().ConfigureAwait(false))
                 {
                     var rowParser = Dapper.SqlMapper.GetRowParser(dataReader, typeof(T));
                     do
                     {
                         var item = (T)rowParser(dataReader);
                         list.Add(item);
-                    } while (await dataReaderAsync.ReadAsync());
+                    } while (await dataReaderAsync.ReadAsync().ConfigureAwait(false));
                 }
                 return list;
             }
@@ -79,7 +79,7 @@ namespace SmartSql.DapperDeserializer
             try
             {
                 var dataReaderAsync = dataReader as DbDataReader;
-                await dataReaderAsync.ReadAsync();
+                await dataReaderAsync.ReadAsync().ConfigureAwait(false);
                 var rowParser = Dapper.SqlMapper.GetRowParser(dataReader, typeof(T));
                 return (T)rowParser(dataReader);
             }

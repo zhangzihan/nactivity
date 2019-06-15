@@ -11,26 +11,75 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using org.activiti.engine.impl.interceptor;
+using Microsoft.Extensions.Options;
+using System.Linq;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
     /// <summary>
     /// 根据用户id获取用户信息
+    /*[
+
+  {
+    "ruleType": "GetDept",
+    "ruleName": "获取部门",
+    "queryCondition": [
+      {
+        "id": "部门Id",
+        "name": "部门名称"
+      }
+    ]
+  },
+  {
+    "ruleType": "GetDuty",
+    "ruleName": "获取职责",
+    "queryCondition": [
+      {
+        "id": "角色Id",
+        "name": "角色名称"
+      }
+    ]
+  },
+  {
+    "ruleType": "GetExecutor",
+    "ruleName": "获取节点执行人",
+    "queryCondition": [
+      {
+        "id": "节点Id",
+        "name": "节点名称"
+      }
+    ]
+  },
+  {
+    "ruleType": "GetUser",
+    "ruleName": "获取执行人",
+    "queryCondition": [
+      {
+        "id": "人员Id",
+        "name": "人员名称"
+      }
+    ]
+  }
+]*/
     /// </summary>
     [GetBookmarkDescriptor("GetUser")]
-    public class GetUserBookmarkRuleCmd : IGetBookmarkRule
+    public class GetUserBookmarkRuleCmd : BaseGetBookmarkRule
     {
+        private readonly ExternalConnectorProvider externalConnector;
+        /// <inheritdoc />
         public GetUserBookmarkRuleCmd()
         {
-
+            externalConnector = ProcessEngineServiceProvider.Resolve<ExternalConnectorProvider>();
         }
-
-        public QueryBookmark Condition { get; set; }
-
-        public IList<IUserInfo> execute(ICommandContext commandContext)
+        /// <inheritdoc />
+        public override IList<IUserInfo> Execute(ICommandContext commandContext)
         {
             IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
-            return proxy.GetUsers(Condition).Result;
+
+            return AsyncHelper.RunSync(() => proxy.GetUsers(externalConnector.GetUserByUser, new
+            {
+                idList = Condition.QueryCondition.Select(x => x.Id).ToArray()
+            }));
         }
     }
 }

@@ -12,26 +12,26 @@
  */
 namespace org.activiti.engine.impl.bpmn.data
 {
-	/// <summary>
-	/// An instance of <seealso cref="IStructureDefinition"/>
-	/// 
-	/// 
-	/// </summary>
-	public interface IStructureInstance
-	{
+    /// <summary>
+    /// An instance of <seealso cref="IStructureDefinition"/>
+    /// 
+    /// 
+    /// </summary>
+    public interface IStructureInstance
+    {
 
-	  /// <summary>
-	  /// Converts this structure instance into an array
-	  /// </summary>
-	  /// <returns> this structure as an array </returns>
-	  object[] toArray();
+        /// <summary>
+        /// Converts this structure instance into an array
+        /// </summary>
+        /// <returns> this structure as an array </returns>
+        object[] ToArray();
 
-	  /// <summary>
-	  /// Loads this structure from array
-	  /// </summary>
-	  /// <param name="array">
-	  ///          the array where this structure loads data </param>
-	  void loadFrom(object[] array);
-	}
+        /// <summary>
+        /// Loads this structure from array
+        /// </summary>
+        /// <param name="array">
+        ///          the array where this structure loads data </param>
+        void LoadFrom(object[] array);
+    }
 
 }

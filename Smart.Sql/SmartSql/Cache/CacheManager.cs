@@ -5,6 +5,7 @@ using SmartSql.Abstractions;
 using Microsoft.Extensions.Logging;
 using SmartSql.Configuration.Statements;
 using SmartSql.Abstractions.DbSession;
+using System.Collections.Concurrent;
 
 namespace SmartSql.Cahce
 {
@@ -13,7 +14,7 @@ namespace SmartSql.Cahce
         private readonly ILogger<CacheManager> _logger;
         private readonly SmartSqlContext _smartSqlContext;
         private readonly IDbConnectionSessionStore _dbSessionStore;
-        private readonly IDictionary<Guid, SessionRequest> _cachedSessionRequest = new Dictionary<Guid, SessionRequest>();
+        private readonly ConcurrentDictionary<Guid, SessionRequest> _cachedSessionRequest = new ConcurrentDictionary<Guid, SessionRequest>();
         private IDictionary<string, DateTime> _cacheMappedLastFlushTime;
         private readonly System.Threading.Timer _timer;
         private readonly TimeSpan _defaultDueTime = TimeSpan.FromMinutes(1);
@@ -51,7 +52,7 @@ namespace SmartSql.Cahce
                         SessionId = sessionId,
                         Requests = new List<RequestContext> { context }
                     };
-                    _cachedSessionRequest.Add(sessionId, sessionRequest);
+                    _cachedSessionRequest.TryAdd(sessionId, sessionRequest);
                 }
             }
         }
@@ -64,7 +65,7 @@ namespace SmartSql.Cahce
                 {
                     FlushOnExecute(context);
                 }
-                _cachedSessionRequest.Remove(sessionId);
+                _cachedSessionRequest.TryRemove(sessionId, out _);
             }
         }
 

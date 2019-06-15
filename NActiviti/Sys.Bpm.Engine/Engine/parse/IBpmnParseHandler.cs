@@ -43,8 +43,6 @@ namespace org.activiti.engine.parse
         /// </summary>
         /// <param name="bpmnParse">
         ///          The <seealso cref="BpmnParse"/> instance that acts as container for all things produced during the parsing. </param>
-        void parse(BpmnParse bpmnParse, BaseElement element);
-
+        void Parse(BpmnParse bpmnParse, BaseElement element);
     }
-
 }

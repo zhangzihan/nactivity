@@ -27,8 +27,8 @@ namespace org.activiti.cloud.services.events
     public class ProcessStartedEventImpl : AbstractProcessEngineEvent, IProcessStartedEvent
     {
 
-        private string nestedProcessDefinitionId;
-        private string nestedProcessInstanceId;
+        private readonly string nestedProcessDefinitionId;
+        private readonly string nestedProcessInstanceId;
 
 
         /// <summary>

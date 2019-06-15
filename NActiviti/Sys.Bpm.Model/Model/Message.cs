@@ -55,10 +55,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            Message clone = new Message();
-            clone.Values = this;
+            Message clone = new Message
+            {
+                Values = this
+            };
             return clone;
         }
 

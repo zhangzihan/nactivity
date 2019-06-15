@@ -16,7 +16,7 @@
 
 namespace org.activiti.cloud.services.events
 {
-    using TaskModel = org.activiti.cloud.services.api.model.TaskModel;
+    using TaskModel = api.model.TaskModel;
 
     /// <summary>
     /// Task cancelled event implementation
@@ -24,7 +24,7 @@ namespace org.activiti.cloud.services.events
     public class TaskCancelledEventImpl : AbstractProcessEngineEvent
     {
 
-        private TaskModel task;
+        private readonly TaskModel task;
 
 
         /// <summary>

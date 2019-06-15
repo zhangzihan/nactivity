@@ -48,7 +48,7 @@ namespace org.activiti.engine.impl.cmd
             }
         }
 
-        protected internal override AbstractSetProcessInstanceStateCmd getProcessInstanceChangeStateCmd(IProcessInstance processInstance)
+        protected internal override AbstractSetProcessInstanceStateCmd GetProcessInstanceChangeStateCmd(IProcessInstance processInstance)
         {
             return new SuspendProcessInstanceCmd(processInstance.Id);
         }

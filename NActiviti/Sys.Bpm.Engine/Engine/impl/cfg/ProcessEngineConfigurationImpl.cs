@@ -22,7 +22,6 @@ namespace org.activiti.engine.impl.cfg
     using javax.transaction;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
     using org.activiti.engine.cfg;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
@@ -60,18 +59,30 @@ namespace org.activiti.engine.impl.cfg
     using org.activiti.engine.parse;
     using org.activiti.engine.runtime;
     using org.activiti.validation;
-    using SmartSql.Abstractions;
     using Sys;
     using Sys.Bpm;
     using Sys.Data;
+    using Sys.Workflow;
     using Sys.Workflow.Engine.Bpmn.Rules;
     using System.IO;
     using System.Linq;
 
+    /// <inheritdoc />
     public abstract class ProcessEngineConfigurationImpl : ProcessEngineConfiguration
     {
-        private ILogger<ProcessEngineConfigurationImpl> log = ProcessEngineServiceProvider.LoggerService<ProcessEngineConfigurationImpl>();
+        private static readonly ILogger<ProcessEngineConfigurationImpl> log = ProcessEngineServiceProvider.LoggerService<ProcessEngineConfigurationImpl>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="historyService"></param>
+        /// <param name="taskService"></param>
+        /// <param name="dynamicBpmnService"></param>
+        /// <param name="repositoryService"></param>
+        /// <param name="runtimeService"></param>
+        /// <param name="managementService"></param>
+        /// <param name="asyncExecutor"></param>
+        /// <param name="configuration"></param>
         public ProcessEngineConfigurationImpl(IHistoryService historyService,
             ITaskService taskService,
             IDynamicBpmnService dynamicBpmnService,
@@ -111,45 +122,102 @@ namespace org.activiti.engine.impl.cfg
             {
                 (managementService as ServiceImpl).processEngineConfiguration = this;
             }
+            this.asyncExecutor = asyncExecutor;
         }
 
         #region fields
-
-        public const string DB_SCHEMA_UPDATE_CREATE = "create";
-        public const string DB_SCHEMA_UPDATE_DROP_CREATE = "drop-create";
-
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DEFAULT_WS_SYNC_FACTORY = "org.activiti.engine.impl.webservice.CxfWebServiceClientFactory";
 
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DEFAULT_MYBATIS_MAPPING_FILE = "resources/db/mapping/mappings.xml";
 
+        /// <summary>
+        /// 
+        /// </summary>
         public const int DEFAULT_GENERIC_MAX_LENGTH_STRING = 4000;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const int DEFAULT_ORACLE_MAX_LENGTH_STRING = 2000;
 
         // SERVICES /////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IRepositoryService repositoryService;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IRuntimeService runtimeService;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoryService historyService;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ITaskService taskService;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IManagementService managementService;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDynamicBpmnService dynamicBpmnService;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IUserGroupLookupProxy userGroupLookupProxy;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private IIntegrationContextService integrationContextService;
 
         // COMMAND EXECUTORS ////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal CommandConfig defaultCommandConfig;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal CommandConfig schemaCommandConfig;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ICommandInterceptor commandInvoker;
 
         /// <summary>
-        /// the configurable list which will be <seealso cref="#initInterceptorChain(java.util.List) processed"/> to build the <seealso cref="#commandExecutor"/>
+        /// the configurable list which will be to build the <seealso cref="CommandExecutor"/>
         /// </summary>
         protected internal IList<ICommandInterceptor> customPreCommandInterceptors;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<ICommandInterceptor> customPostCommandInterceptors;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<ICommandInterceptor> commandInterceptors;
 
         /// <summary>
@@ -158,114 +226,439 @@ namespace org.activiti.engine.impl.cfg
 
         // DATA MANAGERS /////////////////////////////////////////////////////////////
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IAttachmentDataManager attachmentDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IByteArrayDataManager byteArrayDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ICommentDataManager commentDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDeploymentDataManager deploymentDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IEventLogEntryDataManager eventLogEntryDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IEventSubscriptionDataManager eventSubscriptionDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExecutionDataManager executionDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoricActivityInstanceDataManager historicActivityInstanceDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoricDetailDataManager historicDetailDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoricIdentityLinkDataManager historicIdentityLinkDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoricProcessInstanceDataManager historicProcessInstanceDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoricTaskInstanceDataManager historicTaskInstanceDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoricVariableInstanceDataManager historicVariableInstanceDataManager;
-        protected internal IdentityLinkDataManager identityLinkDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal IIdentityLinkDataManager identityLinkDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IJobDataManager jobDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ITimerJobDataManager timerJobDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ISuspendedJobDataManager suspendedJobDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDeadLetterJobDataManager deadLetterJobDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IModelDataManager modelDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IProcessDefinitionDataManager processDefinitionDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IProcessDefinitionInfoDataManager processDefinitionInfoDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IPropertyDataManager propertyDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IResourceDataManager resourceDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ITaskDataManager taskDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IVariableInstanceDataManager variableInstanceDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private IIntegrationContextDataManager integrationContextDataManager;
 
 
         // ENTITY MANAGERS ///////////////////////////////////////////////////////////
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IAttachmentEntityManager attachmentEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IByteArrayEntityManager byteArrayEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ICommentEntityManager commentEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDeploymentEntityManager deploymentEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IEventLogEntryEntityManager eventLogEntryEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IEventSubscriptionEntityManager eventSubscriptionEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExecutionEntityManager executionEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoricActivityInstanceEntityManager historicActivityInstanceEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoricDetailEntityManager historicDetailEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoricIdentityLinkEntityManager historicIdentityLinkEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoricProcessInstanceEntityManager historicProcessInstanceEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoricTaskInstanceEntityManager historicTaskInstanceEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoricVariableInstanceEntityManager historicVariableInstanceEntityManager;
-        protected internal IdentityLinkEntityManager identityLinkEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal IIdentityLinkEntityManager identityLinkEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IJobEntityManager jobEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ITimerJobEntityManager timerJobEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ISuspendedJobEntityManager suspendedJobEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDeadLetterJobEntityManager deadLetterJobEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IModelEntityManager modelEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IProcessDefinitionEntityManager processDefinitionEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IProcessDefinitionInfoEntityManager processDefinitionInfoEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IPropertyEntityManager propertyEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IResourceEntityManager resourceEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ITableDataManager tableDataManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ITaskEntityManager taskEntityManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IVariableInstanceEntityManager variableInstanceEntityManager;
+
         private IIntegrationContextManager integrationContextManager;
 
         // History Manager
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IHistoryManager historyManager;
 
         // Job Manager
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IJobManager jobManager;
 
         // SESSION FACTORIES /////////////////////////////////////////////////////////
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<ISessionFactory> customSessionFactories;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal DbSqlSessionFactory dbSqlSessionFactory;
-        protected internal IDictionary<Type, ISessionFactory> sessionFactories;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal ConcurrentDictionary<Type, ISessionFactory> sessionFactories;
 
         // CONFIGURATORS ////////////////////////////////////////////////////////////
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool enableConfiguratorServiceLoader = false; // Enabled by default. In certain environments this should be set to false (eg osgi)
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IProcessEngineConfigurator> configurators; // The injected configurators
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IProcessEngineConfigurator> allConfigurators; // Including auto-discovered configurators
 
         // DEPLOYERS //////////////////////////////////////////////////////////////////
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal BpmnDeployer bpmnDeployer;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal BpmnParser bpmnParser;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ParsedDeploymentBuilderFactory parsedDeploymentBuilderFactory;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal TimerManager timerManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal EventSubscriptionManager eventSubscriptionManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal BpmnDeploymentHelper bpmnDeploymentHelper;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal CachingAndArtifactsManager cachingAndArtifactsManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IDeployer> customPreDeployers;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IDeployer> customPostDeployers;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IDeployer> deployers;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal DeploymentManager deploymentManager;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int processDefinitionCacheLimit = -1; // By default, no limit
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDeploymentCache<ProcessDefinitionCacheEntry> processDefinitionCache;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int processDefinitionInfoCacheLimit = -1; // By default, no limit
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ProcessDefinitionInfoCache processDefinitionInfoCache;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int knowledgeBaseCacheLimit = -1;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDeploymentCache<object> knowledgeBaseCache;
 
         // JOB EXECUTOR /////////////////////////////////////////////////////////////
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IJobHandler> customJobHandlers;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDictionary<string, IJobHandler> jobHandlers;
 
         // HELPERS //////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ProcessInstanceHelper processInstanceHelper;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ListenerNotificationHelper listenerNotificationHelper;
 
         // ASYNC EXECUTOR ///////////////////////////////////////////////////////////
@@ -312,8 +705,8 @@ namespace org.activiti.engine.impl.cfg
         /// The queue onto which jobs will be placed before they are actually executed.
         /// Threads form the async executor threadpool will take work from this queue.
         /// 
-        /// By default null. If null, an <seealso cref="ArrayBlockingQueue"/> will be created of
-        /// size <seealso cref="#asyncExecutorThreadPoolQueueSize"/>.
+        /// By default null. If null, an  will be created of
+        /// size <seealso cref="AsyncExecutorThreadPoolQueueSize"/>.
         /// 
         /// When the queue is full, the job will be executed by the calling thread
         /// (ThreadPoolExecutor.CallerRunsPolicy())
@@ -363,7 +756,7 @@ namespace org.activiti.engine.impl.cfg
         /// The time (in milliseconds) the timer acquisition thread will wait to
         /// execute the next acquirement query. This happens when no new timer jobs
         /// were found or when less timer jobs have been fetched than set in
-        /// <seealso cref="#asyncExecutorMaxTimerJobsPerAcquisition"/>. Default value = 10
+        /// <seealso cref="asyncExecutorMaxTimerJobsPerAcquisition"/>. Default value = 10
         /// seconds.
         /// 
         /// (This property is only applicable when using the
@@ -375,7 +768,7 @@ namespace org.activiti.engine.impl.cfg
         /// The time (in milliseconds) the async job acquisition thread will wait to
         /// execute the next acquirement query. This happens when no new async jobs
         /// were found or when less async jobs have been fetched than set in
-        /// <seealso cref="#asyncExecutorMaxAsyncJobsDuePerAcquisition"/>. Default value = 10
+        /// <seealso cref="asyncExecutorMaxAsyncJobsDuePerAcquisition"/>. Default value = 10
         /// seconds.
         /// 
         /// (This property is only applicable when using the
@@ -458,7 +851,7 @@ namespace org.activiti.engine.impl.cfg
         protected internal bool asyncExecutorMessageQueueMode;
 
         /// <summary>
-        /// Allows to define a custom factory for creating the <seealso cref="Runnable"/> that is executed by the async executor.
+        /// Allows to define a custom factory for creating the that is executed by the async executor.
         /// 
         /// (This property is only applicable when using the <seealso cref="DefaultAsyncJobExecutor"/>).
         /// </summary>
@@ -467,33 +860,93 @@ namespace org.activiti.engine.impl.cfg
         // MYBATIS SQL SESSION FACTORY //////////////////////////////////////////////
 
         //protected internal DefaultSqlSessionFactory sqlSessionFactory;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ITransactionFactory transactionFactory;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ISet<Type> customMybatisMappers;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ISet<string> customMybatisXMLMappers;
 
         // ID GENERATOR ///////////////////////////////////////////////////////////////
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IIdGenerator idGenerator;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDataSource idGeneratorDataSource;
 
         // BPMN PARSER //////////////////////////////////////////////////////////////
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IBpmnParseHandler> preBpmnParseHandlers;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IBpmnParseHandler> postBpmnParseHandlers;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IBpmnParseHandler> customDefaultBpmnParseHandlers;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IActivityBehaviorFactory activityBehaviorFactory;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IListenerFactory listenerFactory;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IBpmnParseFactory bpmnParseFactory;
 
         // PROCESS VALIDATION //////////////////////////////////////////////////////////////
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IProcessValidator processValidator;
 
         // OTHER //////////////////////////////////////////////////////////////////////
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IVariableType> customPreVariableTypes;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IVariableType> customPostVariableTypes;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IVariableTypes variableTypes;
 
         /// <summary>
@@ -510,31 +963,97 @@ namespace org.activiti.engine.impl.cfg
         /// </summary>
         protected internal bool serializableVariableTypeTrackDeserializedObjects = true;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ExpressionManager expressionManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<string> customScriptingEngineClasses;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ScriptingEngines scriptingEngines;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IResolverFactory> resolverFactories;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IBusinessCalendarManager businessCalendarManager;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int executionQueryLimit = 20000;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int taskQueryLimit = 20000;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int historicTaskQueryLimit = 20000;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int historicProcessInstancesQueryLimit = 20000;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string wsSyncFactoryClassName = DEFAULT_WS_SYNC_FACTORY;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ConcurrentDictionary<string, Uri> wsOverridenEndpointAddresses = new ConcurrentDictionary<string, Uri>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal CommandContextFactory commandContextFactory;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ITransactionContextFactory transactionContextFactory;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDictionary<object, object> beans;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDelegateInterceptor delegateInterceptor;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDictionary<string, IEventHandler> eventHandlers;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IEventHandler> customEventHandlers;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IFailedJobCommandFactory failedJobCommandFactory;
 
         /// <summary>
@@ -552,14 +1071,37 @@ namespace org.activiti.engine.impl.cfg
         /// The default setting is quite low, as not to surprise anyone with sudden memory spikes. Change it to something higher if the environment Activiti runs in allows it.
         /// </summary>
         protected internal int batchSizeProcessInstances = 25;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int batchSizeTasks = 25;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool enableEventDispatcher = true;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IActivitiEventDispatcher eventDispatcher;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IActivitiEventListener> eventListeners;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDictionary<string, IList<IActivitiEventListener>> typedEventListeners;
 
         // Event logging to database
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool enableDatabaseEventLogging;
 
         /// <summary>
@@ -595,20 +1137,28 @@ namespace org.activiti.engine.impl.cfg
         /// </summary>
         protected internal int maxNrOfStatementsInBulkInsert = 100;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int DEFAULT_MAX_NR_OF_STATEMENTS_BULK_INSERT_SQL_SERVER = 70; // currently Execution has most params (28). 2000 / 28 = 71.
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ObjectMapper objectMapper = new ObjectMapper();
 
         /// <summary>
         /// Flag that can be set to configure or nota relational database is used.
         /// This is useful for custom implementations that do not use relational databases at all.
         /// 
-        /// If true (default), the <seealso cref="ProcessEngineConfiguration#getDatabaseSchemaUpdate()"/> value will be used to determine
+        /// If true (default), the <seealso cref="ProcessEngineConfiguration.DatabaseSchemaUpdate"/> value will be used to determine
         /// what needs to happen wrt the database schema.
         /// 
         /// If false, no validation or schema creation will be done. That means that the database schema must have been
         /// created 'manually' before but the engine does not validate whether the schema is correct.
-        /// The <seealso cref="ProcessEngineConfiguration#getDatabaseSchemaUpdate()"/> value will not be used.
+        /// The <seealso cref="ProcessEngineConfiguration.DatabaseSchemaUpdate"/> value will not be used.
         /// </summary>
         protected internal bool usingRelationalDatabase = true;
 
@@ -618,21 +1168,33 @@ namespace org.activiti.engine.impl.cfg
         /// </summary>
         protected internal bool enableVerboseExecutionTreeLogging;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal PerformanceSettings performanceSettings = new PerformanceSettings();
 
-        private object syncRoot = new object();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly object syncRoot = new object();
         #endregion
 
         // buildProcessEngine
         // ///////////////////////////////////////////////////////
 
-        public override IProcessEngine buildProcessEngine()
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override IProcessEngine BuildProcessEngine()
         {
-            init();
+            Init();
 
             ProcessEngineImpl processEngine = new ProcessEngineImpl(this);
 
-            postProcessEngineInitialisation();
+            PostProcessEngineInitialisation();
 
             return processEngine;
         }
@@ -641,81 +1203,83 @@ namespace org.activiti.engine.impl.cfg
         /// <summary>
         /// 初始化
         /// </summary>
-        public virtual void init()
+        public virtual void Init()
         {
-            initConfigurators();
-            configuratorsBeforeInit();
-            initHistoryLevel();
-            initExpressionManager();
+            InitConfigurators();
+            ConfiguratorsBeforeInit();
+            InitHistoryLevel();
+            InitExpressionManager();
 
             if (usingRelationalDatabase)
             {
-                initDataSource();
+                InitDataSource();
             }
 
-            initAgendaFactory();
-            initHelpers();
-            initVariableTypes();
-            initBeans();
-            initScriptingEngines();
-            initClock();
-            initBusinessCalendarManager();
-            initCommandContextFactory();
-            initTransactionContextFactory();
+            InitAgendaFactory();
+            InitHelpers();
+            InitVariableTypes();
+            InitBeans();
+            InitScriptingEngines();
+            InitClock();
+            InitBusinessCalendarManager();
+            InitCommandContextFactory();
+            InitTransactionContextFactory();
             //初始化命令执行器
-            initCommandExecutors();
+            InitCommandExecutors();
             //服务初始化
-            initServices();
-            initIdGenerator();
-            initBehaviorFactory();
-            initListenerFactory();
-            initBpmnParser();
-            initProcessDefinitionCache();
-            initProcessDefinitionInfoCache();
-            initKnowledgeBaseCache();
-            initJobHandlers();
-            initJobManager();
-            initAsyncExecutor();
+            InitServices();
+            InitIdGenerator();
+            InitBehaviorFactory();
+            InitListenerFactory();
+            InitBpmnParser();
+            InitProcessDefinitionCache();
+            InitProcessDefinitionInfoCache();
+            InitKnowledgeBaseCache();
+            InitJobHandlers();
+            InitJobManager();
+            InitAsyncExecutor();
 
-            initTransactionFactory();
+            InitTransactionFactory();
 
             if (usingRelationalDatabase)
             {
-                initSqlSessionFactory();
+                InitSqlSessionFactory();
             }
 
-            initSessionFactories();
-            initDataManagers();
-            initEntityManagers();
-            initHistoryManager();
-            initDeployers();
-            initDelegateInterceptor();
-            initEventHandlers();
-            initFailedJobCommandFactory();
-            initEventDispatcher();
-            initProcessValidator();
-            initDatabaseEventLogging();
-            initGetBookmarkRuleProvider();
-            configuratorsAfterInit();
+            InitSessionFactories();
+            InitDataManagers();
+            InitEntityManagers();
+            InitHistoryManager();
+            InitDeployers();
+            InitDelegateInterceptor();
+            InitEventHandlers();
+            InitFailedJobCommandFactory();
+            InitEventDispatcher();
+            InitProcessValidator();
+            InitDatabaseEventLogging();
+            InitGetBookmarkRuleProvider();
+            ConfiguratorsAfterInit();
 
-            addDefaultEventListner();
+            AddDefaultEventListner();
         }
 
-        private void addDefaultEventListner()
+        private void AddDefaultEventListner()
         {
-            this.eventDispatcher.addEventListener(this.listenerFactory.createCustomTaskCompletedEventListener(), ActivitiEventType.TASK_TERMINATED);
-            this.eventDispatcher.addEventListener(this.listenerFactory.createCustomTaskCompletedEventListener(), ActivitiEventType.TASK_TRANSFERED);
+            this.eventDispatcher.AddEventListener(this.listenerFactory.CreateCustomTaskCompletedEventListener(), ActivitiEventType.TASK_TERMINATED);
+            this.eventDispatcher.AddEventListener(this.listenerFactory.CreateCustomTaskCompletedEventListener(), ActivitiEventType.TASK_TRANSFERED);
         }
 
-        private void initGetBookmarkRuleProvider()
+        private void InitGetBookmarkRuleProvider()
         {
             GetBookmarkRuleProvider = new GetBookmarkRuleProvider();
         }
 
         // failedJobCommandFactory
         // ////////////////////////////////////////////////////////
-
-        public virtual void initFailedJobCommandFactory()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitFailedJobCommandFactory()
         {
             if (failedJobCommandFactory == null)
             {
@@ -725,20 +1289,25 @@ namespace org.activiti.engine.impl.cfg
 
         // command executors
         // ////////////////////////////////////////////////////////
-
-        public virtual void initCommandExecutors()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitCommandExecutors()
         {
-            initDefaultCommandConfig();
-            initSchemaCommandConfig();
+            InitDefaultCommandConfig();
+            InitSchemaCommandConfig();
             //命令调用器
-            initCommandInvoker();
+            InitCommandInvoker();
             //初始化命令拦截器
-            initCommandInterceptors();
+            InitCommandInterceptors();
             //初始化命令执行器
-            initCommandExecutor();
+            InitCommandExecutor();
         }
 
-        public virtual void initDefaultCommandConfig()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitDefaultCommandConfig()
         {
             if (defaultCommandConfig == null)
             {
@@ -746,11 +1315,14 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initSchemaCommandConfig()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitSchemaCommandConfig()
         {
             if (schemaCommandConfig == null)
             {
-                schemaCommandConfig = (new CommandConfig()).transactionNotSupported();
+                schemaCommandConfig = (new CommandConfig()).TransactionNotSupported();
             }
         }
 
@@ -758,7 +1330,7 @@ namespace org.activiti.engine.impl.cfg
         /// <summary>
         /// 命令调用器
         /// </summary>
-        public virtual void initCommandInvoker()
+        public virtual void InitCommandInvoker()
         {
             if (commandInvoker == null)
             {
@@ -776,7 +1348,7 @@ namespace org.activiti.engine.impl.cfg
         /// <summary>
         /// 初始化命令拦截器
         /// </summary>
-        public virtual void initCommandInterceptors()
+        public virtual void InitCommandInterceptors()
         {
             if (commandInterceptors == null)
             {
@@ -799,15 +1371,20 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ICollection<ICommandInterceptor> DefaultCommandInterceptors
         {
             get
             {
-                IList<ICommandInterceptor> interceptors = new List<ICommandInterceptor>();
-                //添加一个日志拦截器
-                interceptors.Add(new LogInterceptor());
+                IList<ICommandInterceptor> interceptors = new List<ICommandInterceptor>
+                {
+                    //添加一个日志拦截器
+                    new LogInterceptor()
+                };
 
-                ICommandInterceptor transactionInterceptor = createTransactionInterceptor();
+                ICommandInterceptor transactionInterceptor = CreateTransactionInterceptor();
                 if (transactionInterceptor != null)
                 {
                     //添加一个事务控制拦截器
@@ -832,12 +1409,12 @@ namespace org.activiti.engine.impl.cfg
         /// <summary>
         /// 初始化命令执行器
         /// </summary>
-        public virtual void initCommandExecutor()
+        public virtual void InitCommandExecutor()
         {
             if (commandExecutor == null)
             {
                 //初始化命令拦截器链，并返回第一个拦截器
-                ICommandInterceptor first = initInterceptorChain(commandInterceptors);
+                ICommandInterceptor first = InitInterceptorChain(commandInterceptors);
                 commandExecutor = new CommandExecutorImpl(DefaultCommandConfig, first);
             }
         }
@@ -847,7 +1424,7 @@ namespace org.activiti.engine.impl.cfg
         /// </summary>
         /// <param name="chain"></param>
         /// <returns></returns>
-        public virtual ICommandInterceptor initInterceptorChain(IList<ICommandInterceptor> chain)
+        public virtual ICommandInterceptor InitInterceptorChain(IList<ICommandInterceptor> chain)
         {
             if (chain == null || chain.Count == 0)
             {
@@ -860,22 +1437,28 @@ namespace org.activiti.engine.impl.cfg
             return chain[0];
         }
 
-        public abstract ICommandInterceptor createTransactionInterceptor();
+        /// <summary>
+        /// 
+        /// </summary>
+        public abstract ICommandInterceptor CreateTransactionInterceptor();
 
         /// <summary>
         /// 服务初始化
         /// </summary>
-        public virtual void initServices()
+        public virtual void InitServices()
         {
-            initService(repositoryService);
-            initService(runtimeService);
-            initService(historyService);
-            initService(taskService);
-            initService(managementService);
-            initService(dynamicBpmnService);
+            InitService(repositoryService);
+            InitService(runtimeService);
+            InitService(historyService);
+            InitService(taskService);
+            InitService(managementService);
+            InitService(dynamicBpmnService);
         }
 
-        public virtual void initService(object service)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitService(object service)
         {
             if (service is ServiceImpl)
             {
@@ -887,36 +1470,64 @@ namespace org.activiti.engine.impl.cfg
         // DataSource
         // ///////////////////////////////////////////////////////////////
 
-        public virtual void initDataSource()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitDataSource()
         {
             if (string.IsNullOrWhiteSpace(databaseType))
             {
-                initDatabaseType();
+                InitDatabaseType();
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal static Properties databaseTypeMappings;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DATABASE_TYPE_H2 = "h2";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DATABASE_TYPE_HSQL = "hsql";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DATABASE_TYPE_MYSQL = "mysql";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DATABASE_TYPE_ORACLE = "oracle";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DATABASE_TYPE_POSTGRES = "postgres";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DATABASE_TYPE_MSSQL = "mssql";
 
         static ProcessEngineConfigurationImpl()
         {
-            databaseTypeMappings = new Properties();
-
-            databaseTypeMappings["H2"] = DATABASE_TYPE_H2;
-            databaseTypeMappings["HSQL Database Engine"] = DATABASE_TYPE_HSQL;
-            databaseTypeMappings["MySQL"] = DATABASE_TYPE_MYSQL;
-            databaseTypeMappings["Oracle"] = DATABASE_TYPE_ORACLE;
-            databaseTypeMappings["PostgreSQL"] = DATABASE_TYPE_POSTGRES;
-            databaseTypeMappings["Microsoft SQL Server"] = DATABASE_TYPE_MSSQL;
+            databaseTypeMappings = new Properties
+            {
+                ["H2"] = DATABASE_TYPE_H2,
+                ["HSQL Database Engine"] = DATABASE_TYPE_HSQL,
+                ["MySQL"] = DATABASE_TYPE_MYSQL,
+                ["Oracle"] = DATABASE_TYPE_ORACLE,
+                ["PostgreSQL"] = DATABASE_TYPE_POSTGRES,
+                ["Microsoft SQL Server"] = DATABASE_TYPE_MSSQL
+            };
         }
 
-        public virtual void initDatabaseType()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitDatabaseType()
         {
             try
             {
@@ -960,7 +1571,10 @@ namespace org.activiti.engine.impl.cfg
         // myBatis SqlSessionFactory
         // ////////////////////////////////////////////////
 
-        public virtual void initTransactionFactory()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitTransactionFactory()
         {
             if (transactionFactory == null)
             {
@@ -977,73 +1591,112 @@ namespace org.activiti.engine.impl.cfg
 
 
         private Properties properties;
+        /// <summary>
+        /// 
+        /// </summary>
         public override Properties GetProperties()
         {
             if (properties == null)
             {
-                initProperties();
+                InitProperties();
             }
 
             return properties;
         }
 
-        private void initProperties()
+        /// <summary>
+        /// 
+        /// </summary>
+        private void InitProperties()
         {
             lock (syncRoot)
             {
                 string wildcardEscapeClause = "";
-                if ((!ReferenceEquals(databaseWildcardEscapeCharacter, null)) && (databaseWildcardEscapeCharacter.Length != 0))
+                if ((!(databaseWildcardEscapeCharacter is null)) && (databaseWildcardEscapeCharacter.Length != 0))
                 {
                     wildcardEscapeClause = " escape '" + databaseWildcardEscapeCharacter + "'";
                 }
 
-                properties = new Properties();
-                properties["wildcardEscapeClause"] = wildcardEscapeClause;
-                //set default properties
-                properties["limitBefore"] = "";
-                properties["limitAfter"] = "";
-                properties["limitBetween"] = "";
-                properties["limitOuterJoinBetween"] = "";
-                properties["limitBeforeNativeQuery"] = "";
-                properties["orderBy"] = "";
-                properties["blobType"] = "";
-                properties["boolValue"] = "TRUE";
+                properties = new Properties
+                {
+                    ["wildcardEscapeClause"] = wildcardEscapeClause,
+                    //set default properties
+                    ["limitBefore"] = "",
+                    ["limitAfter"] = "",
+                    ["limitBetween"] = "",
+                    ["limitOuterJoinBetween"] = "",
+                    ["limitBeforeNativeQuery"] = "",
+                    ["orderBy"] = "",
+                    ["blobType"] = "",
+                    ["boolValue"] = "TRUE"
+                };
 
-                string codebase = new Uri(this.GetType().Assembly.CodeBase).LocalPath;
+                string codebase = AppDomain.CurrentDomain.BaseDirectory;
 
-                properties.load(Path.Combine(Path.GetDirectoryName(codebase), $@"resources\db\properties\{databaseType}.json"));
+                string pFile = Path.Combine(new string[]{
+                    Path.GetDirectoryName(codebase),
+                        "resources",
+                        "db",
+                        "properties",
+                        $"{databaseType}.json"
+                });
+
+                if (File.Exists(pFile) == false)
+                {
+                    throw new FileNotFoundException(pFile);
+                }
+
+                properties.Load(pFile);
             }
         }
 
-        public virtual void initSqlSessionFactory()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitSqlSessionFactory()
         {
-            initMybatisConfiguration(GetProperties());
+            InitMybatisConfiguration(GetProperties());
         }
 
-        public virtual void initMybatisConfiguration(Properties properties)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitMybatisConfiguration(Properties properties)
         {
-            initMybatisTypeHandlers();
-            initCustomMybatisMappers();
+            InitMybatisTypeHandlers();
+            InitCustomMybatisMappers();
         }
 
-        public virtual void initMybatisTypeHandlers()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitMybatisTypeHandlers()
         {
 
         }
 
-        public virtual void initCustomMybatisMappers()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitCustomMybatisMappers()
         {
         }
 
-        protected internal virtual System.IO.Stream getResourceAsStream(string resource)
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal virtual Stream GetResourceAsStream(string resource)
         {
-            return ReflectUtil.getResourceAsStream(resource);
+            return ReflectUtil.GetResourceAsStream(resource);
         }
 
 
         // Data managers ///////////////////////////////////////////////////////////
 
-        public virtual void initDataManagers()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitDataManagers()
         {
             if (attachmentDataManager == null)
             {
@@ -1149,7 +1802,10 @@ namespace org.activiti.engine.impl.cfg
 
         // Entity managers //////////////////////////////////////////////////////////
 
-        public virtual void initEntityManagers()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitEntityManagers()
         {
             if (attachmentEntityManager == null)
             {
@@ -1260,7 +1916,10 @@ namespace org.activiti.engine.impl.cfg
 
         // History manager ///////////////////////////////////////////////////////////
 
-        public virtual void initHistoryManager()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitHistoryManager()
         {
             if (historyManager == null)
             {
@@ -1270,7 +1929,10 @@ namespace org.activiti.engine.impl.cfg
 
         // Job manager ///////////////////////////////////////////////////////////
 
-        public virtual void initJobManager()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitJobManager()
         {
             if (jobManager == null)
             {
@@ -1282,34 +1944,40 @@ namespace org.activiti.engine.impl.cfg
 
         // session factories ////////////////////////////////////////////////////////
 
-        public virtual void initSessionFactories()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitSessionFactories()
         {
             if (sessionFactories == null)
             {
-                sessionFactories = new Dictionary<Type, ISessionFactory>();
+                sessionFactories = new ConcurrentDictionary<Type, ISessionFactory>();
 
                 if (usingRelationalDatabase)
                 {
-                    initDbSqlSessionFactory();
+                    InitDbSqlSessionFactory();
                 }
 
-                addSessionFactory(new GenericManagerFactory(typeof(IEntityCache), typeof(EntityCacheImpl)));
+                AddSessionFactory(new GenericManagerFactory(typeof(IEntityCache), typeof(EntityCacheImpl)));
             }
 
             if (customSessionFactories != null)
             {
                 foreach (ISessionFactory sessionFactory in customSessionFactories)
                 {
-                    addSessionFactory(sessionFactory);
+                    AddSessionFactory(sessionFactory);
                 }
             }
         }
 
-        public virtual void initDbSqlSessionFactory()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitDbSqlSessionFactory()
         {
             if (dbSqlSessionFactory == null)
             {
-                dbSqlSessionFactory = createDbSqlSessionFactory();
+                dbSqlSessionFactory = CreateDbSqlSessionFactory();
             }
             dbSqlSessionFactory.DatabaseType = databaseType;
             dbSqlSessionFactory.IdGenerator = idGenerator;
@@ -1319,24 +1987,32 @@ namespace org.activiti.engine.impl.cfg
             dbSqlSessionFactory.TablePrefixIsSchema = tablePrefixIsSchema;
             dbSqlSessionFactory.DatabaseCatalog = databaseCatalog;
             dbSqlSessionFactory.DatabaseSchema = databaseSchema;
-            dbSqlSessionFactory.setBulkInsertEnabled(isBulkInsertEnabled, databaseType);
+            dbSqlSessionFactory.SetBulkInsertEnabled(isBulkInsertEnabled, databaseType);
             dbSqlSessionFactory.MaxNrOfStatementsInBulkInsert = maxNrOfStatementsInBulkInsert;
-            addSessionFactory(dbSqlSessionFactory);
+            AddSessionFactory(dbSqlSessionFactory);
         }
 
-        public virtual DbSqlSessionFactory createDbSqlSessionFactory()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual DbSqlSessionFactory CreateDbSqlSessionFactory()
         {
             return new DbSqlSessionFactory();
         }
 
-        public virtual void addSessionFactory(ISessionFactory sessionFactory)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void AddSessionFactory(ISessionFactory sessionFactory)
         {
-            sessionFactories[sessionFactory.SessionType] = sessionFactory;
+            sessionFactories.AddOrUpdate(sessionFactory.SessionType, sessionFactory, (key, old) => sessionFactory);
         }
 
-        public virtual void initConfigurators()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitConfigurators()
         {
-
             allConfigurators = new List<IProcessEngineConfigurator>();
 
             // Configurators that are explicitly added to the config
@@ -1357,7 +2033,7 @@ namespace org.activiti.engine.impl.cfg
                     classLoader = ReflectUtil.ClassLoader;
                 }
 
-                IEnumerable<IProcessEngineConfigurator> configuratorServiceLoader = ServiceLoader.load<IEnumerable<IProcessEngineConfigurator>>(classLoader);
+                IEnumerable<IProcessEngineConfigurator> configuratorServiceLoader = ServiceLoader.Load<IEnumerable<IProcessEngineConfigurator>>(classLoader);
                 int nrOfServiceLoadedConfigurators = 0;
                 foreach (IProcessEngineConfigurator configurator in configuratorServiceLoader)
                 {
@@ -1372,7 +2048,6 @@ namespace org.activiti.engine.impl.cfg
 
                 if (allConfigurators.Count > 0)
                 {
-
                     // Order them according to the priorities (useful for dependent
                     // configurator)
                     allConfigurators.OrderBy(x => x, new ComparatorAnonymousInnerClass(this));
@@ -1383,9 +2058,7 @@ namespace org.activiti.engine.impl.cfg
                     {
                         log.LogInformation($"{configurator.GetType()} (priority:{configurator.Priority})");
                     }
-
                 }
-
             }
         }
 
@@ -1415,28 +2088,37 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void configuratorsBeforeInit()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void ConfiguratorsBeforeInit()
         {
             foreach (IProcessEngineConfigurator configurator in allConfigurators)
             {
                 log.LogInformation($"Executing beforeInit() of {configurator.GetType()} (priority:{configurator.Priority})");
-                configurator.beforeInit(this);
+                configurator.BeforeInit(this);
             }
         }
 
-        public virtual void configuratorsAfterInit()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void ConfiguratorsAfterInit()
         {
             foreach (IProcessEngineConfigurator configurator in allConfigurators)
             {
                 log.LogInformation($"Executing configure() of {configurator.GetType()} (priority:{configurator.Priority})");
-                configurator.configure(this);
+                configurator.Configure(this);
             }
         }
 
         // deployers
         // ////////////////////////////////////////////////////////////////
 
-        public virtual void initProcessDefinitionCache()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitProcessDefinitionCache()
         {
             if (processDefinitionCache == null)
             {
@@ -1451,7 +2133,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initProcessDefinitionInfoCache()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitProcessDefinitionInfoCache()
         {
             if (processDefinitionInfoCache == null)
             {
@@ -1466,7 +2151,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initKnowledgeBaseCache()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitKnowledgeBaseCache()
         {
             if (knowledgeBaseCache == null)
             {
@@ -1481,7 +2169,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initDeployers()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitDeployers()
         {
             if (this.deployers == null)
             {
@@ -1499,21 +2190,24 @@ namespace org.activiti.engine.impl.cfg
 
             if (deploymentManager == null)
             {
-                deploymentManager = new DeploymentManager();
-                deploymentManager.Deployers = deployers;
-
-                deploymentManager.ProcessDefinitionCache = processDefinitionCache;
-                deploymentManager.ProcessDefinitionInfoCache = processDefinitionInfoCache;
-                deploymentManager.KnowledgeBaseCache = knowledgeBaseCache;
-                deploymentManager.ProcessEngineConfiguration = this;
-                deploymentManager.ProcessDefinitionEntityManager = processDefinitionEntityManager;
-                deploymentManager.DeploymentEntityManager = deploymentEntityManager;
+                deploymentManager = new DeploymentManager
+                {
+                    Deployers = deployers,
+                    ProcessDefinitionCache = processDefinitionCache,
+                    ProcessDefinitionInfoCache = processDefinitionInfoCache,
+                    KnowledgeBaseCache = knowledgeBaseCache,
+                    ProcessEngineConfiguration = this,
+                    ProcessDefinitionEntityManager = processDefinitionEntityManager,
+                    DeploymentEntityManager = deploymentEntityManager
+                };
             }
         }
 
-        public virtual void initBpmnDeployerDependencies()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitBpmnDeployerDependencies()
         {
-
             if (parsedDeploymentBuilderFactory == null)
             {
                 parsedDeploymentBuilderFactory = new ParsedDeploymentBuilderFactory();
@@ -1553,6 +2247,9 @@ namespace org.activiti.engine.impl.cfg
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ICollection<IDeployer> DefaultDeployers
         {
             get
@@ -1564,7 +2261,7 @@ namespace org.activiti.engine.impl.cfg
                     bpmnDeployer = new BpmnDeployer();
                 }
 
-                initBpmnDeployerDependencies();
+                InitBpmnDeployerDependencies();
 
                 bpmnDeployer.IdGenerator = idGenerator;
                 bpmnDeployer.ParsedDeploymentBuilderFactory = parsedDeploymentBuilderFactory;
@@ -1576,12 +2273,17 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initListenerFactory()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitListenerFactory()
         {
             if (listenerFactory == null)
             {
-                DefaultListenerFactory defaultListenerFactory = new DefaultListenerFactory();
-                defaultListenerFactory.ExpressionManager = expressionManager;
+                DefaultListenerFactory defaultListenerFactory = new DefaultListenerFactory
+                {
+                    ExpressionManager = expressionManager
+                };
                 listenerFactory = defaultListenerFactory;
             }
             else if ((listenerFactory is AbstractBehaviorFactory) && ((AbstractBehaviorFactory)listenerFactory).ExpressionManager == null)
@@ -1590,12 +2292,17 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initBehaviorFactory()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitBehaviorFactory()
         {
             if (activityBehaviorFactory == null)
             {
-                DefaultActivityBehaviorFactory defaultActivityBehaviorFactory = new DefaultActivityBehaviorFactory();
-                defaultActivityBehaviorFactory.ExpressionManager = expressionManager;
+                DefaultActivityBehaviorFactory defaultActivityBehaviorFactory = new DefaultActivityBehaviorFactory
+                {
+                    ExpressionManager = expressionManager
+                };
                 activityBehaviorFactory = defaultActivityBehaviorFactory;
             }
             else if ((activityBehaviorFactory is AbstractBehaviorFactory) && ((AbstractBehaviorFactory)activityBehaviorFactory).ExpressionManager == null)
@@ -1604,7 +2311,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initBpmnParser()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitBpmnParser()
         {
             if (bpmnParser == null)
             {
@@ -1632,46 +2342,51 @@ namespace org.activiti.engine.impl.cfg
             }
 
             BpmnParseHandlers bpmnParseHandlers = new BpmnParseHandlers();
-            bpmnParseHandlers.addHandlers(parseHandlers);
+            bpmnParseHandlers.AddHandlers(parseHandlers);
             bpmnParser.BpmnParserHandlers = bpmnParseHandlers;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IBpmnParseHandler> DefaultBpmnParseHandlers
         {
             get
             {
                 // Alphabetic list of default parse handler classes
-                IList<IBpmnParseHandler> bpmnParserHandlers = new List<IBpmnParseHandler>();
-                bpmnParserHandlers.Add(new BoundaryEventParseHandler());
-                bpmnParserHandlers.Add(new BusinessRuleParseHandler());
-                bpmnParserHandlers.Add(new CallActivityParseHandler());
-                bpmnParserHandlers.Add(new CancelEventDefinitionParseHandler());
-                bpmnParserHandlers.Add(new CompensateEventDefinitionParseHandler());
-                bpmnParserHandlers.Add(new EndEventParseHandler());
-                bpmnParserHandlers.Add(new ErrorEventDefinitionParseHandler());
-                bpmnParserHandlers.Add(new EventBasedGatewayParseHandler());
-                bpmnParserHandlers.Add(new ExclusiveGatewayParseHandler());
-                bpmnParserHandlers.Add(new InclusiveGatewayParseHandler());
-                bpmnParserHandlers.Add(new IntermediateCatchEventParseHandler());
-                bpmnParserHandlers.Add(new IntermediateThrowEventParseHandler());
-                bpmnParserHandlers.Add(new ManualTaskParseHandler());
-                bpmnParserHandlers.Add(new MessageEventDefinitionParseHandler());
-                bpmnParserHandlers.Add(new ParallelGatewayParseHandler());
-                bpmnParserHandlers.Add(new ProcessParseHandler());
-                bpmnParserHandlers.Add(new ReceiveTaskParseHandler());
-                bpmnParserHandlers.Add(new ScriptTaskParseHandler());
-                bpmnParserHandlers.Add(new SendTaskParseHandler());
-                bpmnParserHandlers.Add(new SequenceFlowParseHandler());
-                bpmnParserHandlers.Add(new ServiceTaskParseHandler());
-                bpmnParserHandlers.Add(new SignalEventDefinitionParseHandler());
-                bpmnParserHandlers.Add(new StartEventParseHandler());
-                bpmnParserHandlers.Add(new SubProcessParseHandler());
-                bpmnParserHandlers.Add(new EventSubProcessParseHandler());
-                bpmnParserHandlers.Add(new AdhocSubProcessParseHandler());
-                bpmnParserHandlers.Add(new TaskParseHandler());
-                bpmnParserHandlers.Add(new TimerEventDefinitionParseHandler());
-                bpmnParserHandlers.Add(new TransactionParseHandler());
-                bpmnParserHandlers.Add(new UserTaskParseHandler());
+                IList<IBpmnParseHandler> bpmnParserHandlers = new List<IBpmnParseHandler>
+                {
+                    new BoundaryEventParseHandler(),
+                    new BusinessRuleParseHandler(),
+                    new CallActivityParseHandler(),
+                    new CancelEventDefinitionParseHandler(),
+                    new CompensateEventDefinitionParseHandler(),
+                    new EndEventParseHandler(),
+                    new ErrorEventDefinitionParseHandler(),
+                    new EventBasedGatewayParseHandler(),
+                    new ExclusiveGatewayParseHandler(),
+                    new InclusiveGatewayParseHandler(),
+                    new IntermediateCatchEventParseHandler(),
+                    new IntermediateThrowEventParseHandler(),
+                    new ManualTaskParseHandler(),
+                    new MessageEventDefinitionParseHandler(),
+                    new ParallelGatewayParseHandler(),
+                    new ProcessParseHandler(),
+                    new ReceiveTaskParseHandler(),
+                    new ScriptTaskParseHandler(),
+                    new SendTaskParseHandler(),
+                    new SequenceFlowParseHandler(),
+                    new ServiceTaskParseHandler(),
+                    new SignalEventDefinitionParseHandler(),
+                    new StartEventParseHandler(),
+                    new SubProcessParseHandler(),
+                    new EventSubProcessParseHandler(),
+                    new AdhocSubProcessParseHandler(),
+                    new TaskParseHandler(),
+                    new TimerEventDefinitionParseHandler(),
+                    new TransactionParseHandler(),
+                    new UserTaskParseHandler()
+                };
 
                 // Replace any default handler if the user wants to replace them
                 if (customDefaultBpmnParseHandlers != null)
@@ -1715,7 +2430,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initClock()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitClock()
         {
             if (clock == null)
             {
@@ -1723,7 +2441,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initAgendaFactory()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitAgendaFactory()
         {
             if (this.engineAgendaFactory == null)
             {
@@ -1731,7 +2452,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initJobHandlers()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitJobHandlers()
         {
             jobHandlers = new Dictionary<string, IJobHandler>();
 
@@ -1766,19 +2490,23 @@ namespace org.activiti.engine.impl.cfg
         // async executor
         // /////////////////////////////////////////////////////////////
 
-        public virtual void initAsyncExecutor()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitAsyncExecutor()
         {
             if (asyncExecutor == null)
             {
-                DefaultAsyncJobExecutor defaultAsyncExecutor = new DefaultAsyncJobExecutor();
+                DefaultAsyncJobExecutor defaultAsyncExecutor = new DefaultAsyncJobExecutor
+                {
+                    // Message queue mode
+                    MessageQueueMode = asyncExecutorMessageQueueMode,
 
-                // Message queue mode
-                defaultAsyncExecutor.MessageQueueMode = asyncExecutorMessageQueueMode;
-
-                // Thread pool config
-                defaultAsyncExecutor.CorePoolSize = asyncExecutorCorePoolSize;
-                defaultAsyncExecutor.MaxPoolSize = asyncExecutorMaxPoolSize;
-                defaultAsyncExecutor.KeepAliveTime = asyncExecutorThreadKeepAliveTime;
+                    // Thread pool config
+                    CorePoolSize = asyncExecutorCorePoolSize,
+                    MaxPoolSize = asyncExecutorMaxPoolSize,
+                    KeepAliveTime = asyncExecutorThreadKeepAliveTime
+                };
 
                 // Threadpool queue
                 if (asyncExecutorThreadPoolQueue != null)
@@ -1797,7 +2525,7 @@ namespace org.activiti.engine.impl.cfg
                 // Job locking
                 defaultAsyncExecutor.TimerLockTimeInMillis = asyncExecutorTimerLockTimeInMillis;
                 defaultAsyncExecutor.AsyncJobLockTimeInMillis = asyncExecutorAsyncJobLockTimeInMillis;
-                if (!ReferenceEquals(asyncExecutorLockOwner, null))
+                if (!(asyncExecutorLockOwner is null))
                 {
                     defaultAsyncExecutor.LockOwner = asyncExecutorLockOwner;
                 }
@@ -1819,18 +2547,24 @@ namespace org.activiti.engine.impl.cfg
         // history
         // //////////////////////////////////////////////////////////////////
 
-        public virtual void initHistoryLevel()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitHistoryLevel()
         {
             if (historyLevel == null)
             {
-                historyLevel = HistoryLevel.getHistoryLevelForKey(History);
+                historyLevel = HistoryLevel.GetHistoryLevelForKey(History);
             }
         }
 
         // id generator
         // /////////////////////////////////////////////////////////////
 
-        public virtual void initIdGenerator()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitIdGenerator()
         {
             if (idGenerator == null)
             {
@@ -1848,7 +2582,10 @@ namespace org.activiti.engine.impl.cfg
         // OTHER
         // ////////////////////////////////////////////////////////////////////
 
-        public virtual void initCommandContextFactory()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitCommandContextFactory()
         {
             if (commandContextFactory == null)
             {
@@ -1857,7 +2594,10 @@ namespace org.activiti.engine.impl.cfg
             commandContextFactory.ProcessEngineConfiguration = this;
         }
 
-        public virtual void initTransactionContextFactory()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitTransactionContextFactory()
         {
             if (transactionContextFactory == null)
             {
@@ -1865,7 +2605,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initHelpers()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitHelpers()
         {
             if (processInstanceHelper == null)
             {
@@ -1877,7 +2620,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initVariableTypes()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitVariableTypes()
         {
             if (variableTypes == null)
             {
@@ -1886,37 +2632,40 @@ namespace org.activiti.engine.impl.cfg
                 {
                     foreach (IVariableType customVariableType in customPreVariableTypes)
                     {
-                        variableTypes.addType(customVariableType);
+                        variableTypes.AddType(customVariableType);
                     }
                 }
-                variableTypes.addType(new NullType());
-                variableTypes.addType(new StringType(MaxLengthString));
-                variableTypes.addType(new LongStringType(MaxLengthString + 1));
-                variableTypes.addType(new BooleanType());
-                variableTypes.addType(new ShortType());
-                variableTypes.addType(new IntegerType());
-                variableTypes.addType(new LongType());
-                variableTypes.addType(new DateType());
-                variableTypes.addType(new JodaDateType());
-                variableTypes.addType(new JodaDateTimeType());
-                variableTypes.addType(new DoubleType());
-                variableTypes.addType(new UUIDType());
-                variableTypes.addType(new JsonType(MaxLengthString, objectMapper));
-                variableTypes.addType(new LongJsonType(MaxLengthString + 1, objectMapper));
-                variableTypes.addType(new ByteArrayType());
-                variableTypes.addType(new SerializableType(serializableVariableTypeTrackDeserializedObjects));
-                variableTypes.addType(new CustomObjectType("item", typeof(ItemInstance)));
-                variableTypes.addType(new CustomObjectType("message", typeof(MessageInstance)));
+                variableTypes.AddType(new NullType());
+                variableTypes.AddType(new StringType(MaxLengthString));
+                variableTypes.AddType(new LongStringType(MaxLengthString + 1));
+                variableTypes.AddType(new BooleanType());
+                variableTypes.AddType(new ShortType());
+                variableTypes.AddType(new IntegerType());
+                variableTypes.AddType(new LongType());
+                variableTypes.AddType(new DateType());
+                variableTypes.AddType(new JodaDateType());
+                variableTypes.AddType(new JodaDateTimeType());
+                variableTypes.AddType(new DoubleType());
+                variableTypes.AddType(new UUIDType());
+                variableTypes.AddType(new JsonType(MaxLengthString, objectMapper));
+                variableTypes.AddType(new LongJsonType(MaxLengthString + 1, objectMapper));
+                variableTypes.AddType(new ByteArrayType());
+                variableTypes.AddType(new SerializableType(serializableVariableTypeTrackDeserializedObjects));
+                variableTypes.AddType(new CustomObjectType("item", typeof(ItemInstance)));
+                variableTypes.AddType(new CustomObjectType("message", typeof(MessageInstance)));
                 if (customPostVariableTypes != null)
                 {
                     foreach (IVariableType customVariableType in customPostVariableTypes)
                     {
-                        variableTypes.addType(customVariableType);
+                        variableTypes.AddType(customVariableType);
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int MaxLengthString
         {
             get
@@ -1939,13 +2688,18 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initScriptingEngines()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitScriptingEngines()
         {
             if (resolverFactories == null)
             {
-                resolverFactories = new List<IResolverFactory>();
-                resolverFactories.Add(new VariableScopeResolverFactory());
-                resolverFactories.Add(new BeansResolverFactory());
+                resolverFactories = new List<IResolverFactory>
+                {
+                    new VariableScopeResolverFactory(),
+                    new BeansResolverFactory()
+                };
             }
             if (scriptingEngines == null)
             {
@@ -1953,7 +2707,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initExpressionManager()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitExpressionManager()
         {
             if (expressionManager == null)
             {
@@ -1961,20 +2718,26 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initBusinessCalendarManager()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitBusinessCalendarManager()
         {
             if (businessCalendarManager == null)
             {
                 MapBusinessCalendarManager mapBusinessCalendarManager = new MapBusinessCalendarManager();
-                mapBusinessCalendarManager.addBusinessCalendar(DurationBusinessCalendar.NAME, new DurationBusinessCalendar(this.clock));
-                mapBusinessCalendarManager.addBusinessCalendar(DueDateBusinessCalendar.NAME, new DueDateBusinessCalendar(this.clock));
-                mapBusinessCalendarManager.addBusinessCalendar(CycleBusinessCalendar.NAME, new CycleBusinessCalendar(this.clock));
+                mapBusinessCalendarManager.AddBusinessCalendar(DurationBusinessCalendar.NAME, new DurationBusinessCalendar(this.clock));
+                mapBusinessCalendarManager.AddBusinessCalendar(DueDateBusinessCalendar.NAME, new DueDateBusinessCalendar(this.clock));
+                mapBusinessCalendarManager.AddBusinessCalendar(CycleBusinessCalendar.NAME, new CycleBusinessCalendar(this.clock));
 
                 businessCalendarManager = mapBusinessCalendarManager;
             }
         }
 
-        public virtual void initDelegateInterceptor()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitDelegateInterceptor()
         {
             if (delegateInterceptor == null)
             {
@@ -1982,7 +2745,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initEventHandlers()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitEventHandlers()
         {
             if (eventHandlers == null)
             {
@@ -2007,7 +2773,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initBeans()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitBeans()
         {
             if (beans == null)
             {
@@ -2015,7 +2784,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initEventDispatcher()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitEventDispatcher()
         {
             if (this.eventDispatcher == null)
             {
@@ -2028,7 +2800,7 @@ namespace org.activiti.engine.impl.cfg
             {
                 foreach (IActivitiEventListener listenerToAdd in eventListeners)
                 {
-                    this.eventDispatcher.addEventListener(listenerToAdd);
+                    this.eventDispatcher.AddEventListener(listenerToAdd);
                 }
             }
 
@@ -2037,18 +2809,21 @@ namespace org.activiti.engine.impl.cfg
                 foreach (KeyValuePair<string, IList<IActivitiEventListener>> listenersToAdd in typedEventListeners.SetOfKeyValuePairs())
                 {
                     // Extract types from the given string
-                    ActivitiEventType[] types = ActivitiEventType.getTypesFromString(listenersToAdd.Key);
+                    ActivitiEventType[] types = ActivitiEventType.GetTypesFromString(listenersToAdd.Key);
 
                     foreach (IActivitiEventListener listenerToAdd in listenersToAdd.Value)
                     {
-                        this.eventDispatcher.addEventListener(listenerToAdd, types);
+                        this.eventDispatcher.AddEventListener(listenerToAdd, types);
                     }
                 }
             }
 
         }
 
-        public virtual void initProcessValidator()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitProcessValidator()
         {
             if (this.processValidator == null)
             {
@@ -2056,30 +2831,36 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void initDatabaseEventLogging()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void InitDatabaseEventLogging()
         {
             if (enableDatabaseEventLogging)
             {
                 // Database event logging uses the default logging mechanism and adds
                 // a specific event listener to the list of event listeners
-                EventDispatcher.addEventListener(new EventLogger(clock, objectMapper));
+                EventDispatcher.AddEventListener(new EventLogger(clock, objectMapper));
             }
         }
 
         /// <summary>
         /// Called when the <seealso cref="IProcessEngine"/> is initialized, but before it is returned
         /// </summary>
-        protected internal virtual void postProcessEngineInitialisation()
+        protected internal virtual void PostProcessEngineInitialisation()
         {
             if (performanceSettings.ValidateExecutionRelationshipCountConfigOnBoot)
             {
-                commandExecutor.execute(new ValidateExecutionRelatedEntityCountCfgCmd());
+                commandExecutor.Execute(new ValidateExecutionRelatedEntityCountCfgCmd());
             }
         }
 
         // getters and setters
         // //////////////////////////////////////////////////////
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual CommandConfig DefaultCommandConfig
         {
             get
@@ -2093,6 +2874,9 @@ namespace org.activiti.engine.impl.cfg
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual CommandConfig SchemaCommandConfig
         {
             get
@@ -2106,6 +2890,9 @@ namespace org.activiti.engine.impl.cfg
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ICommandInterceptor CommandInvoker
         {
             get
@@ -2119,6 +2906,9 @@ namespace org.activiti.engine.impl.cfg
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<ICommandInterceptor> CustomPreCommandInterceptors
         {
             get
@@ -2131,6 +2921,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<ICommandInterceptor> CustomPostCommandInterceptors
         {
             get
@@ -2143,6 +2936,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<ICommandInterceptor> CommandInterceptors
         {
             get
@@ -2155,6 +2951,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual interceptor.ICommandExecutor CommandExecutor
         {
             get
@@ -2167,6 +2966,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override IRepositoryService RepositoryService
         {
             get
@@ -2179,6 +2981,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override IRuntimeService RuntimeService
         {
             get
@@ -2191,6 +2996,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override IHistoryService HistoryService
         {
             get
@@ -2203,6 +3011,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override ITaskService TaskService
         {
             get
@@ -2215,6 +3026,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override IManagementService ManagementService
         {
             get
@@ -2227,6 +3041,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDynamicBpmnService DynamicBpmnService
         {
             get
@@ -2239,6 +3056,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override IUserGroupLookupProxy UserGroupLookupProxy
         {
             get
@@ -2252,6 +3072,9 @@ namespace org.activiti.engine.impl.cfg
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override IIntegrationContextManager IntegrationContextManager
         {
             get
@@ -2276,6 +3099,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override IIntegrationContextService IntegrationContextService
         {
             get
@@ -2288,6 +3114,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ProcessEngineConfigurationImpl ProcessEngineConfiguration
         {
             get
@@ -2296,7 +3125,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual IDictionary<Type, ISessionFactory> SessionFactories
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual ConcurrentDictionary<Type, ISessionFactory> SessionFactories
         {
             get
             {
@@ -2308,6 +3140,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IProcessEngineConfigurator> Configurators
         {
             get
@@ -2320,7 +3155,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual ProcessEngineConfigurationImpl addConfigurator(IProcessEngineConfigurator configurator)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual ProcessEngineConfigurationImpl AddConfigurator(IProcessEngineConfigurator configurator)
         {
             if (this.configurators == null)
             {
@@ -2330,6 +3168,9 @@ namespace org.activiti.engine.impl.cfg
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool EnableConfiguratorServiceLoader
         {
             set
@@ -2342,6 +3183,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IProcessEngineConfigurator> AllConfigurators
         {
             get
@@ -2350,6 +3194,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual BpmnDeployer BpmnDeployer
         {
             get
@@ -2362,6 +3209,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual BpmnParser BpmnParser
         {
             get
@@ -2374,6 +3224,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ParsedDeploymentBuilderFactory ParsedDeploymentBuilderFactory
         {
             get
@@ -2386,6 +3239,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual TimerManager TimerManager
         {
             get
@@ -2399,6 +3255,9 @@ namespace org.activiti.engine.impl.cfg
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual EventSubscriptionManager EventSubscriptionManager
         {
             get
@@ -2412,6 +3271,9 @@ namespace org.activiti.engine.impl.cfg
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual BpmnDeploymentHelper BpmnDeploymentHelper
         {
             get
@@ -2424,6 +3286,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual CachingAndArtifactsManager CachingAndArtifactsManager
         {
             get
@@ -2436,8 +3301,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IDeployer> Deployers
         {
             get
@@ -2450,6 +3316,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IIdGenerator IdGenerator
         {
             get
@@ -2462,6 +3331,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string WsSyncFactoryClassName
         {
             get
@@ -2478,9 +3350,9 @@ namespace org.activiti.engine.impl.cfg
         /// Add or replace the address of the given web-service endpoint with the given value </summary>
         /// <param name="endpointName"> The endpoint name for which a new address must be set </param>
         /// <param name="address"> The new address of the endpoint </param>
-        public virtual ProcessEngineConfiguration addWsEndpointAddress(string endpointName, Uri address)
+        public virtual ProcessEngineConfiguration AddWsEndpointAddress(string endpointName, Uri address)
         {
-            this.wsOverridenEndpointAddresses.TryAdd(endpointName, address);
+            this.wsOverridenEndpointAddresses.AddOrUpdate(endpointName, address, (key, old) => address);
 
             return this;
         }
@@ -2488,9 +3360,9 @@ namespace org.activiti.engine.impl.cfg
         /// <summary>
         /// Remove the address definition of the given web-service endpoint </summary>
         /// <param name="endpointName"> The endpoint name for which the address definition must be removed </param>
-        public virtual ProcessEngineConfiguration removeWsEndpointAddress(string endpointName)
+        public virtual ProcessEngineConfiguration RemoveWsEndpointAddress(string endpointName)
         {
-            if (this.wsOverridenEndpointAddresses.TryRemove(endpointName, out var uri))
+            if (this.wsOverridenEndpointAddresses.TryRemove(endpointName, out _))
             {
                 return this;
             }
@@ -2498,6 +3370,9 @@ namespace org.activiti.engine.impl.cfg
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ConcurrentDictionary<string, Uri> WsOverridenEndpointAddresses
         {
             get
@@ -2506,10 +3381,13 @@ namespace org.activiti.engine.impl.cfg
             }
             set
             {
-                this.wsOverridenEndpointAddresses.putAll(value);
+                this.wsOverridenEndpointAddresses.PutAll((IDictionary<string, Uri>)value);
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ScriptingEngines ScriptingEngines
         {
             get
@@ -2522,6 +3400,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IVariableTypes VariableTypes
         {
             get
@@ -2534,6 +3415,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool SerializableVariableTypeTrackDeserializedObjects
         {
             get
@@ -2546,6 +3430,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ExpressionManager ExpressionManager
         {
             get
@@ -2558,6 +3445,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IBusinessCalendarManager BusinessCalendarManager
         {
             get
@@ -2570,6 +3460,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int ExecutionQueryLimit
         {
             get
@@ -2582,6 +3475,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int TaskQueryLimit
         {
             get
@@ -2594,6 +3490,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int HistoricTaskQueryLimit
         {
             get
@@ -2606,6 +3505,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int HistoricProcessInstancesQueryLimit
         {
             get
@@ -2619,6 +3521,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual CommandContextFactory CommandContextFactory
         {
             get
@@ -2631,6 +3536,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ITransactionContextFactory TransactionContextFactory
         {
             get
@@ -2643,6 +3551,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IDeployer> CustomPreDeployers
         {
             get
@@ -2655,6 +3566,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IDeployer> CustomPostDeployers
         {
             get
@@ -2667,6 +3581,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDictionary<string, IJobHandler> JobHandlers
         {
             get
@@ -2679,6 +3596,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ProcessInstanceHelper ProcessInstanceHelper
         {
             get
@@ -2691,6 +3611,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ListenerNotificationHelper ListenerNotificationHelper
         {
             get
@@ -2703,6 +3626,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DbSqlSessionFactory DbSqlSessionFactory
         {
             get
@@ -2715,6 +3641,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ITransactionFactory TransactionFactory
         {
             get
@@ -2727,6 +3656,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<ISessionFactory> CustomSessionFactories
         {
             get
@@ -2739,6 +3671,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IJobHandler> CustomJobHandlers
         {
             get
@@ -2751,6 +3686,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<string> CustomScriptingEngineClasses
         {
             get
@@ -2763,6 +3701,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IVariableType> CustomPreVariableTypes
         {
             get
@@ -2775,6 +3716,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IVariableType> CustomPostVariableTypes
         {
             get
@@ -2787,6 +3731,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IBpmnParseHandler> PreBpmnParseHandlers
         {
             get
@@ -2799,6 +3746,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IBpmnParseHandler> CustomDefaultBpmnParseHandlers
         {
             get
@@ -2811,6 +3761,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IBpmnParseHandler> PostBpmnParseHandlers
         {
             get
@@ -2823,6 +3776,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IActivityBehaviorFactory ActivityBehaviorFactory
         {
             get
@@ -2835,6 +3791,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IListenerFactory ListenerFactory
         {
             get
@@ -2847,6 +3806,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IBpmnParseFactory BpmnParseFactory
         {
             get
@@ -2859,6 +3821,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDictionary<object, object> Beans
         {
             get
@@ -2871,6 +3836,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IResolverFactory> ResolverFactories
         {
             get
@@ -2883,6 +3851,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DeploymentManager DeploymentManager
         {
             get
@@ -2895,6 +3866,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDelegateInterceptor DelegateInterceptor
         {
             get
@@ -2907,12 +3881,18 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual IEventHandler getEventHandler(string eventType)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IEventHandler GetEventHandler(string eventType)
         {
             return eventHandlers[eventType];
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDictionary<string, IEventHandler> EventHandlers
         {
             get
@@ -2925,6 +3905,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IEventHandler> CustomEventHandlers
         {
             get
@@ -2937,6 +3920,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IFailedJobCommandFactory FailedJobCommandFactory
         {
             get
@@ -2949,6 +3935,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDataSource IdGeneratorDataSource
         {
             get
@@ -2961,6 +3950,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int BatchSizeProcessInstances
         {
             get
@@ -2973,6 +3965,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int BatchSizeTasks
         {
             get
@@ -2985,6 +3980,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int ProcessDefinitionCacheLimit
         {
             get
@@ -2997,6 +3995,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDeploymentCache<ProcessDefinitionCacheEntry> ProcessDefinitionCache
         {
             get
@@ -3009,6 +4010,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int KnowledgeBaseCacheLimit
         {
             get
@@ -3021,6 +4025,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDeploymentCache<object> KnowledgeBaseCache
         {
             get
@@ -3033,6 +4040,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool EnableSafeBpmnXml
         {
             get
@@ -3045,6 +4055,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IActivitiEventDispatcher EventDispatcher
         {
             get
@@ -3057,12 +4070,18 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual ProcessEngineConfigurationImpl setEnableEventDispatcher(bool enableEventDispatcher)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual ProcessEngineConfigurationImpl SetEnableEventDispatcher(bool enableEventDispatcher)
         {
             this.enableEventDispatcher = enableEventDispatcher;
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDictionary<string, IList<IActivitiEventListener>> TypedEventListeners
         {
             get
@@ -3075,6 +4094,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IActivitiEventListener> EventListeners
         {
             get
@@ -3087,6 +4109,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IProcessValidator ProcessValidator
         {
             get
@@ -3099,6 +4124,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool EnableEventDispatcher
         {
             get
@@ -3107,6 +4135,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool EnableDatabaseEventLogging
         {
             get
@@ -3119,6 +4150,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int MaxLengthStringVariableType
         {
             get
@@ -3131,6 +4165,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool BulkInsertEnabled
         {
             get
@@ -3143,6 +4180,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool UsingRelationalDatabase
         {
             get
@@ -3155,6 +4195,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool EnableEagerExecutionTreeFetching
         {
             get
@@ -3167,6 +4210,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool EnableExecutionRelationshipCounts
         {
             get
@@ -3179,6 +4225,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool EnableLocalization
         {
             get
@@ -3191,6 +4240,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int MaxNrOfStatementsInBulkInsert
         {
             get
@@ -3203,6 +4255,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool EnableVerboseExecutionTreeLogging
         {
             get
@@ -3215,6 +4270,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual PerformanceSettings PerformanceSettings
         {
             get
@@ -3227,6 +4285,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IAttachmentDataManager AttachmentDataManager
         {
             get
@@ -3239,6 +4300,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IByteArrayDataManager ByteArrayDataManager
         {
             get
@@ -3251,6 +4315,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ICommentDataManager CommentDataManager
         {
             get
@@ -3263,6 +4330,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDeploymentDataManager DeploymentDataManager
         {
             get
@@ -3275,6 +4345,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IEventLogEntryDataManager EventLogEntryDataManager
         {
             get
@@ -3287,6 +4360,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IEventSubscriptionDataManager EventSubscriptionDataManager
         {
             get
@@ -3299,6 +4375,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecutionDataManager ExecutionDataManager
         {
             get
@@ -3311,6 +4390,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IHistoricActivityInstanceDataManager HistoricActivityInstanceDataManager
         {
             get
@@ -3323,6 +4405,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IHistoricDetailDataManager HistoricDetailDataManager
         {
             get
@@ -3335,6 +4420,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IHistoricIdentityLinkDataManager HistoricIdentityLinkDataManager
         {
             get
@@ -3347,6 +4435,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IHistoricProcessInstanceDataManager HistoricProcessInstanceDataManager
         {
             get
@@ -3359,6 +4450,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IHistoricTaskInstanceDataManager HistoricTaskInstanceDataManager
         {
             get
@@ -3371,6 +4465,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IHistoricVariableInstanceDataManager HistoricVariableInstanceDataManager
         {
             get
@@ -3383,7 +4480,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual IdentityLinkDataManager IdentityLinkDataManager
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IIdentityLinkDataManager IdentityLinkDataManager
         {
             get
             {
@@ -3395,6 +4495,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IJobDataManager JobDataManager
         {
             get
@@ -3407,6 +4510,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ITimerJobDataManager TimerJobDataManager
         {
             get
@@ -3419,6 +4525,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ISuspendedJobDataManager SuspendedJobDataManager
         {
             get
@@ -3431,6 +4540,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDeadLetterJobDataManager DeadLetterJobDataManager
         {
             get
@@ -3443,7 +4555,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IModelDataManager ModelDataManager
         {
             get
@@ -3456,6 +4570,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IProcessDefinitionDataManager ProcessDefinitionDataManager
         {
             get
@@ -3468,6 +4585,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IProcessDefinitionInfoDataManager ProcessDefinitionInfoDataManager
         {
             get
@@ -3480,6 +4600,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IPropertyDataManager PropertyDataManager
         {
             get
@@ -3492,6 +4615,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IResourceDataManager ResourceDataManager
         {
             get
@@ -3504,6 +4630,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ITaskDataManager TaskDataManager
         {
             get
@@ -3516,6 +4645,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IVariableInstanceDataManager VariableInstanceDataManager
         {
             get
@@ -3529,6 +4661,9 @@ namespace org.activiti.engine.impl.cfg
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IAttachmentEntityManager AttachmentEntityManager
         {
             get
@@ -3541,6 +4676,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IByteArrayEntityManager ByteArrayEntityManager
         {
             get
@@ -3553,6 +4691,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ICommentEntityManager CommentEntityManager
         {
             get
@@ -3565,6 +4706,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDeploymentEntityManager DeploymentEntityManager
         {
             get
@@ -3577,6 +4721,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IEventLogEntryEntityManager EventLogEntryEntityManager
         {
             get
@@ -3589,6 +4736,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IEventSubscriptionEntityManager EventSubscriptionEntityManager
         {
             get
@@ -3601,6 +4751,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecutionEntityManager ExecutionEntityManager
         {
             get
@@ -3613,6 +4766,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IHistoricActivityInstanceEntityManager HistoricActivityInstanceEntityManager
         {
             get
@@ -3625,6 +4781,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IHistoricDetailEntityManager HistoricDetailEntityManager
         {
             get
@@ -3637,6 +4796,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IHistoricIdentityLinkEntityManager HistoricIdentityLinkEntityManager
         {
             get
@@ -3649,6 +4811,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IHistoricProcessInstanceEntityManager HistoricProcessInstanceEntityManager
         {
             get
@@ -3661,6 +4826,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IHistoricTaskInstanceEntityManager HistoricTaskInstanceEntityManager
         {
             get
@@ -3673,6 +4841,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IHistoricVariableInstanceEntityManager HistoricVariableInstanceEntityManager
         {
             get
@@ -3685,7 +4856,10 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual IdentityLinkEntityManager IdentityLinkEntityManager
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IIdentityLinkEntityManager IdentityLinkEntityManager
         {
             get
             {
@@ -3697,6 +4871,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IJobEntityManager JobEntityManager
         {
             get
@@ -3709,6 +4886,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ITimerJobEntityManager TimerJobEntityManager
         {
             get
@@ -3722,6 +4902,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ISuspendedJobEntityManager SuspendedJobEntityManager
         {
             get
@@ -3735,6 +4918,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDeadLetterJobEntityManager DeadLetterJobEntityManager
         {
             get
@@ -3747,6 +4933,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IModelEntityManager ModelEntityManager
         {
             get
@@ -3759,6 +4948,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IProcessDefinitionEntityManager ProcessDefinitionEntityManager
         {
             get
@@ -3771,6 +4963,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IProcessDefinitionInfoEntityManager ProcessDefinitionInfoEntityManager
         {
             get
@@ -3783,6 +4978,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IPropertyEntityManager PropertyEntityManager
         {
             get
@@ -3795,6 +4993,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IResourceEntityManager ResourceEntityManager
         {
             get
@@ -3807,6 +5008,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ITaskEntityManager TaskEntityManager
         {
             get
@@ -3819,6 +5023,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IVariableInstanceEntityManager VariableInstanceEntityManager
         {
             get
@@ -3831,6 +5038,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ITableDataManager TableDataManager
         {
             get
@@ -3843,6 +5053,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IHistoryManager HistoryManager
         {
             get
@@ -3855,6 +5068,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IJobManager JobManager
         {
             get
@@ -3867,6 +5083,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override IClock Clock
         {
             get
@@ -3886,14 +5105,20 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
-        public virtual void resetClock()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void ResetClock()
         {
             if (this.clock != null)
             {
-                clock.reset();
+                clock.Reset();
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DelegateExpressionFieldInjectionMode DelegateExpressionFieldInjectionMode
         {
             get
@@ -3906,6 +5131,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ObjectMapper ObjectMapper
         {
             get
@@ -3919,6 +5147,9 @@ namespace org.activiti.engine.impl.cfg
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncExecutorCorePoolSize
         {
             get
@@ -3931,6 +5162,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncExecutorNumberOfRetries
         {
             get
@@ -3943,6 +5177,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncExecutorMaxPoolSize
         {
             get
@@ -3955,6 +5192,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual long AsyncExecutorThreadKeepAliveTime
         {
             get
@@ -3967,6 +5207,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncExecutorThreadPoolQueueSize
         {
             get
@@ -3979,6 +5222,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ConcurrentQueue<ThreadStart> AsyncExecutorThreadPoolQueue
         {
             get
@@ -3991,6 +5237,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual long AsyncExecutorSecondsToWaitOnShutdown
         {
             get
@@ -4003,6 +5252,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncExecutorMaxTimerJobsPerAcquisition
         {
             get
@@ -4015,6 +5267,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncExecutorMaxAsyncJobsDuePerAcquisition
         {
             get
@@ -4027,6 +5282,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncExecutorDefaultTimerJobAcquireWaitTime
         {
             get
@@ -4039,6 +5297,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncExecutorDefaultAsyncJobAcquireWaitTime
         {
             get
@@ -4051,6 +5312,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncExecutorDefaultQueueSizeFullWaitTime
         {
             get
@@ -4063,6 +5327,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string AsyncExecutorLockOwner
         {
             get
@@ -4075,6 +5342,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncExecutorTimerLockTimeInMillis
         {
             get
@@ -4087,6 +5357,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncExecutorAsyncJobLockTimeInMillis
         {
             get
@@ -4099,6 +5372,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncExecutorResetExpiredJobsInterval
         {
             get
@@ -4111,6 +5387,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecuteAsyncRunnableFactory AsyncExecutorExecuteAsyncRunnableFactory
         {
             get
@@ -4123,6 +5402,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncExecutorResetExpiredJobsPageSize
         {
             get
@@ -4135,6 +5417,9 @@ namespace org.activiti.engine.impl.cfg
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool AsyncExecutorIsMessageQueueMode
         {
             get

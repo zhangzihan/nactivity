@@ -22,52 +22,52 @@ namespace org.activiti.engine.impl.cmd
     using System.Collections.Generic;
 
     [Serializable]
-	public class GetTaskVariableInstanceCmd : ICommand<IVariableInstance>
-	{
+    public class GetTaskVariableInstanceCmd : ICommand<IVariableInstance>
+    {
 
-	  private const long serialVersionUID = 1L;
-	  protected internal string taskId;
-	  protected internal string variableName;
-	  protected internal bool isLocal;
+        private const long serialVersionUID = 1L;
+        protected internal string taskId;
+        protected internal string variableName;
+        protected internal bool isLocal;
 
-	  public GetTaskVariableInstanceCmd(string taskId, string variableName, bool isLocal)
-	  {
-		this.taskId = taskId;
-		this.variableName = variableName;
-		this.isLocal = isLocal;
-	  }
+        public GetTaskVariableInstanceCmd(string taskId, string variableName, bool isLocal)
+        {
+            this.taskId = taskId;
+            this.variableName = variableName;
+            this.isLocal = isLocal;
+        }
 
-	  public  virtual IVariableInstance  execute(ICommandContext  commandContext)
-	  {
-		if (ReferenceEquals(taskId, null))
-		{
-		  throw new ActivitiIllegalArgumentException("taskId is null");
-		}
-		if (ReferenceEquals(variableName, null))
-		{
-		  throw new ActivitiIllegalArgumentException("variableName is null");
-		}
+        public virtual IVariableInstance Execute(ICommandContext commandContext)
+        {
+            if (taskId is null)
+            {
+                throw new ActivitiIllegalArgumentException("taskId is null");
+            }
+            if (variableName is null)
+            {
+                throw new ActivitiIllegalArgumentException("variableName is null");
+            }
 
-		ITaskEntity task = commandContext.TaskEntityManager.findById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
+            ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(taskId);
 
-		if (task == null)
-		{
-		  throw new ActivitiObjectNotFoundException("task " + taskId + " doesn't exist", typeof(ITask));
-		}
+            if (task == null)
+            {
+                throw new ActivitiObjectNotFoundException("task " + taskId + " doesn't exist", typeof(ITask));
+            }
 
-		IVariableInstance variableEntity;
+            IVariableInstance variableEntity;
 
-		if (isLocal)
-		{
-		  variableEntity = task.getVariableInstanceLocal(variableName, false);
-		}
-		else
-		{
-		  variableEntity = task.getVariableInstance(variableName, false);
-		}
+            if (isLocal)
+            {
+                variableEntity = task.GetVariableInstanceLocal(variableName, false);
+            }
+            else
+            {
+                variableEntity = task.GetVariableInstance(variableName, false);
+            }
 
-		return variableEntity;
-	  }
-	}
+            return variableEntity;
+        }
+    }
 
 }

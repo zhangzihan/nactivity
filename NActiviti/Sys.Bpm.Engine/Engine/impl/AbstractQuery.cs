@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl
         protected internal ICommandContext commandContext;
 
         protected internal new string databaseType;
-        protected internal string orderBy_Renamed;
+        protected internal string _orderBy;
 
         protected internal ResultType? resultType;
 
@@ -85,52 +85,52 @@ namespace org.activiti.engine.impl
         {
         }
 
-        public virtual AbstractQuery<T, U> setCommandExecutor(ICommandExecutor commandExecutor)
+        public virtual AbstractQuery<T, U> SetCommandExecutor(ICommandExecutor commandExecutor)
         {
             this.commandExecutor = commandExecutor;
 
             return this;
         }
 
-        public virtual T orderBy(IQueryProperty property)
+        public virtual T SetOrderBy(IQueryProperty property)
         {
             this.orderProperty = property;
 
             return this as T;
         }
 
-        public virtual T orderBy(IQueryProperty property, NullHandlingOnOrder nullHandlingOnOrder)
+        public virtual T SetOrderBy(IQueryProperty property, NullHandlingOnOrder nullHandlingOnOrder)
         {
-            orderBy(property);
+            SetOrderBy(property);
             this.nullHandlingOnOrder = nullHandlingOnOrder;
 
             return this as T;
         }
 
-        public virtual T asc()
+        public virtual T Asc()
         {
-            return direction(Direction.ASCENDING);
+            return Direction(impl.Direction.ASCENDING);
         }
 
-        public virtual T desc()
+        public virtual T Desc()
         {
-            return direction(Direction.DESCENDING);
+            return Direction(impl.Direction.DESCENDING);
         }
 
-        public virtual T direction(Direction direction)
+        public virtual T Direction(Direction direction)
         {
             if (orderProperty == null)
             {
                 throw new ActivitiIllegalArgumentException("You should call any of the orderBy methods first before specifying a direction");
             }
 
-            addOrder(orderProperty.Name, direction.Name, nullHandlingOnOrder);
+            AddOrder(orderProperty.Name, direction.Name, nullHandlingOnOrder);
             orderProperty = null;
 
             return this as T;
         }
 
-        protected internal virtual void checkQueryOk()
+        protected internal virtual void CheckQueryOk()
         {
             if (orderProperty != null)
             {
@@ -138,80 +138,80 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public virtual U singleResult()
+        public virtual U SingleResult()
         {
             this.resultType = ResultType.SINGLE_RESULT;
             if (commandExecutor != null)
             {
-                return (U)commandExecutor.execute(this);
+                return (U)commandExecutor.Execute(this);
             }
-            return executeSingleResult(Context.CommandContext);
+            return ExecuteSingleResult(Context.CommandContext);
         }
 
-        public virtual IList<U> list()
+        public virtual IList<U> List()
         {
             this.resultType = ResultType.LIST;
             if (commandExecutor != null)
             {
-                return (IList<U>)commandExecutor.execute(this);
+                return (IList<U>)commandExecutor.Execute(this);
             }
-            return executeList(Context.CommandContext, null);
+            return ExecuteList(Context.CommandContext, null);
         }
 
-        public virtual IList<U> listPage(int firstResult, int maxResults)
+        public virtual IList<U> ListPage(int firstResult, int maxResults)
         {
             this.firstResult = firstResult;
             this.maxResults = maxResults;
             this.resultType = ResultType.LIST_PAGE;
             if (commandExecutor != null)
             {
-                return (IList<U>)commandExecutor.execute(this);
+                return (IList<U>)commandExecutor.Execute(this);
             }
-            return executeList(Context.CommandContext, new Page(firstResult, maxResults));
+            return ExecuteList(Context.CommandContext, new Page(firstResult, maxResults));
         }
 
-        public virtual long count()
+        public virtual long Count()
         {
             this.resultType = ResultType.COUNT;
             if (commandExecutor != null)
             {
-                return (long)commandExecutor.execute(this);
+                return (long)commandExecutor.Execute(this);
             }
-            return executeCount(Context.CommandContext);
+            return ExecuteCount(Context.CommandContext);
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
             if (resultType == ResultType.LIST)
             {
-                return executeList(commandContext, null);
+                return ExecuteList(commandContext, null);
             }
             else if (resultType == ResultType.SINGLE_RESULT)
             {
-                return executeSingleResult(commandContext);
+                return ExecuteSingleResult(commandContext);
             }
             else if (resultType == ResultType.LIST_PAGE)
             {
-                return executeList(commandContext, null);
+                return ExecuteList(commandContext, null);
             }
             else
             {
-                return executeCount(commandContext);
+                return ExecuteCount(commandContext);
             }
         }
 
-        public abstract long executeCount(ICommandContext commandContext);
+        public abstract long ExecuteCount(ICommandContext commandContext);
 
         /// <summary>
         /// Executes the actual query to retrieve the list of results.
         /// </summary>
         /// <param name="page">
         ///          used if the results must be paged. If null, no paging will be applied. </param>
-        public abstract IList<U> executeList(ICommandContext commandContext, Page page);
+        public abstract IList<U> ExecuteList(ICommandContext commandContext, Page page);
 
-        public virtual U executeSingleResult(ICommandContext commandContext)
+        public virtual U ExecuteSingleResult(ICommandContext commandContext)
         {
-            IList<U> results = executeList(commandContext, null);
+            IList<U> results = ExecuteList(commandContext, null);
             if (results.Count == 1)
             {
                 return results[0];
@@ -220,19 +220,19 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiException("Query return " + results.Count + " results instead of max 1");
             }
-            return default(U);
+            return default;
         }
 
-        protected internal virtual void addOrder(string column, string sortOrder, NullHandlingOnOrder? nullHandlingOnOrder)
+        protected internal virtual void AddOrder(string column, string sortOrder, NullHandlingOnOrder? nullHandlingOnOrder)
         {
 
-            if (ReferenceEquals(orderBy_Renamed, null))
+            if (_orderBy is null)
             {
-                orderBy_Renamed = "";
+                _orderBy = "";
             }
             else
             {
-                orderBy_Renamed = orderBy_Renamed + ", ";
+                _orderBy += ", ";
             }
 
             string defaultOrderByClause = column + " " + sortOrder;
@@ -245,15 +245,15 @@ namespace org.activiti.engine.impl
 
                     if (ProcessEngineConfigurationImpl.DATABASE_TYPE_H2.Equals(databaseType) || ProcessEngineConfigurationImpl.DATABASE_TYPE_HSQL.Equals(databaseType) || ProcessEngineConfigurationImpl.DATABASE_TYPE_POSTGRES.Equals(databaseType) || ProcessEngineConfigurationImpl.DATABASE_TYPE_ORACLE.Equals(databaseType))
                     {
-                        orderBy_Renamed = orderBy_Renamed + defaultOrderByClause + " NULLS FIRST";
+                        _orderBy = _orderBy + defaultOrderByClause + " NULLS FIRST";
                     }
                     else if (ProcessEngineConfigurationImpl.DATABASE_TYPE_MYSQL.Equals(databaseType))
                     {
-                        orderBy_Renamed = orderBy_Renamed + "isnull(" + column + ") desc," + defaultOrderByClause;
+                        _orderBy = _orderBy + "isnull(" + column + ") desc," + defaultOrderByClause;
                     }
                     else
                     {
-                        orderBy_Renamed = orderBy_Renamed + defaultOrderByClause;
+                        _orderBy += defaultOrderByClause;
                     }
 
                 }
@@ -262,15 +262,15 @@ namespace org.activiti.engine.impl
 
                     if (ProcessEngineConfigurationImpl.DATABASE_TYPE_H2.Equals(databaseType) || ProcessEngineConfigurationImpl.DATABASE_TYPE_HSQL.Equals(databaseType) || ProcessEngineConfigurationImpl.DATABASE_TYPE_POSTGRES.Equals(databaseType) || ProcessEngineConfigurationImpl.DATABASE_TYPE_ORACLE.Equals(databaseType))
                     {
-                        orderBy_Renamed = orderBy_Renamed + column + " " + sortOrder + " NULLS LAST";
+                        _orderBy = _orderBy + column + " " + sortOrder + " NULLS LAST";
                     }
                     else if (ProcessEngineConfigurationImpl.DATABASE_TYPE_MYSQL.Equals(databaseType))
                     {
-                        orderBy_Renamed = orderBy_Renamed + "isnull(" + column + ") asc," + defaultOrderByClause;
+                        _orderBy = _orderBy + "isnull(" + column + ") asc," + defaultOrderByClause;
                     }
                     else
                     {
-                        orderBy_Renamed = orderBy_Renamed + defaultOrderByClause;
+                        _orderBy += defaultOrderByClause;
                     }
 
                 }
@@ -278,7 +278,7 @@ namespace org.activiti.engine.impl
             }
             else
             {
-                orderBy_Renamed = orderBy_Renamed + defaultOrderByClause;
+                _orderBy += defaultOrderByClause;
             }
 
         }
@@ -287,13 +287,13 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                if (ReferenceEquals(orderBy_Renamed, null))
+                if (_orderBy is null)
                 {
                     return base.OrderBy;
                 }
                 else
                 {
-                    return orderBy_Renamed;
+                    return _orderBy;
                 }
             }
         }

@@ -35,7 +35,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.timerEventDefinition = timerEventDefinition;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             if (!(execution.CurrentFlowElement is BoundaryEvent))
             {
@@ -43,10 +43,12 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
 
             IJobManager jobManager = Context.CommandContext.JobManager;
-            ITimerJobEntity timerJob = jobManager.createTimerJob(timerEventDefinition, interrupting, execution, TriggerTimerEventJobHandler.TYPE, TimerEventHandler.createConfiguration(execution.CurrentActivityId, timerEventDefinition.EndDate, timerEventDefinition.CalendarName));
+            string timerConfig = TimerEventHandler.CreateConfiguration(execution.CurrentActivityId, timerEventDefinition.EndDate, timerEventDefinition.CalendarName);
+            ITimerJobEntity timerJob = jobManager.CreateTimerJob(timerEventDefinition, interrupting, execution, TriggerTimerEventJobHandler.TYPE, timerConfig);
+
             if (timerJob != null)
             {
-                jobManager.scheduleTimerJob(timerJob);
+                jobManager.ScheduleTimerJob(timerJob);
             }
         }
 

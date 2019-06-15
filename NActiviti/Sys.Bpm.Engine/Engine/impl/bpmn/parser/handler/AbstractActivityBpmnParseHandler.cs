@@ -18,34 +18,33 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
     using org.activiti.engine.impl.el;
 
     /// 
-    public abstract class AbstractActivityBpmnParseHandler<T> : AbstractFlowNodeBpmnParseHandler<T> where T : org.activiti.bpmn.model.FlowNode
+    public abstract class AbstractActivityBpmnParseHandler<T> : AbstractFlowNodeBpmnParseHandler<T> where T : FlowNode
     {
 
-        public override void parse(BpmnParse bpmnParse, BaseElement element)
+        public override void Parse(BpmnParse bpmnParse, BaseElement element)
         {
-            base.parse(bpmnParse, element);
+            base.Parse(bpmnParse, element);
 
             if (element is Activity && ((Activity)element).LoopCharacteristics != null)
             {
-                createMultiInstanceLoopCharacteristics(bpmnParse, (Activity)element);
+                CreateMultiInstanceLoopCharacteristics(bpmnParse, (Activity)element);
             }
         }
 
-        protected internal virtual void createMultiInstanceLoopCharacteristics(BpmnParse bpmnParse, Activity modelActivity)
+        protected internal virtual void CreateMultiInstanceLoopCharacteristics(BpmnParse bpmnParse, Activity modelActivity)
         {
 
             MultiInstanceLoopCharacteristics loopCharacteristics = modelActivity.LoopCharacteristics;
 
             // Activity Behavior
-            MultiInstanceActivityBehavior miActivityBehavior = null;
-
+            MultiInstanceActivityBehavior miActivityBehavior;
             if (loopCharacteristics.Sequential)
             {
-                miActivityBehavior = bpmnParse.ActivityBehaviorFactory.createSequentialMultiInstanceBehavior(modelActivity, (AbstractBpmnActivityBehavior)modelActivity.Behavior);
+                miActivityBehavior = bpmnParse.ActivityBehaviorFactory.CreateSequentialMultiInstanceBehavior(modelActivity, (AbstractBpmnActivityBehavior)modelActivity.Behavior);
             }
             else
             {
-                miActivityBehavior = bpmnParse.ActivityBehaviorFactory.createParallelMultiInstanceBehavior(modelActivity, (AbstractBpmnActivityBehavior)modelActivity.Behavior);
+                miActivityBehavior = bpmnParse.ActivityBehaviorFactory.CreateParallelMultiInstanceBehavior(modelActivity, (AbstractBpmnActivityBehavior)modelActivity.Behavior);
             }
 
             modelActivity.Behavior = miActivityBehavior;
@@ -55,13 +54,13 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             // loop cardinality
             if (!string.IsNullOrWhiteSpace(loopCharacteristics.LoopCardinality))
             {
-                miActivityBehavior.LoopCardinalityExpression = expressionManager.createExpression(loopCharacteristics.LoopCardinality);
+                miActivityBehavior.LoopCardinalityExpression = expressionManager.CreateExpression(loopCharacteristics.LoopCardinality);
             }
 
             // completion condition
             if (!string.IsNullOrWhiteSpace(loopCharacteristics.CompletionCondition))
             {
-                miActivityBehavior.CompletionConditionExpression = expressionManager.createExpression(loopCharacteristics.CompletionCondition);
+                miActivityBehavior.CompletionConditionExpression = expressionManager.CreateExpression(loopCharacteristics.CompletionCondition);
             }
 
             // activiti:collection
@@ -69,7 +68,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             {
                 if (loopCharacteristics.InputDataItem.Contains("{"))
                 {
-                    miActivityBehavior.CollectionExpression = expressionManager.createExpression(loopCharacteristics.InputDataItem);
+                    miActivityBehavior.CollectionExpression = expressionManager.CreateExpression(loopCharacteristics.InputDataItem);
                 }
                 else
                 {

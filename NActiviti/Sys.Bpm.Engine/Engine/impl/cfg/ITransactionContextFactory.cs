@@ -17,9 +17,11 @@ namespace org.activiti.engine.impl.cfg
     /// 
     public interface ITransactionContextFactory
     {
-
-        ITransactionContext openTransactionContext(ICommandContext commandContext);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <returns></returns>
+        ITransactionContext OpenTransactionContext(ICommandContext commandContext);
     }
-
 }

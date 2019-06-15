@@ -38,7 +38,7 @@ namespace org.activiti.engine.repository
         string Name { get; }
 
         /// <summary>
-        /// unique name for all versions this process definitions </summary>
+        /// unique name for all versions this process definitions, bpmn process id </summary>
         string Key { get; }
 
         /// <summary>

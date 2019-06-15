@@ -15,6 +15,7 @@ using System.Collections.Generic;
  */
 namespace org.activiti.bpmn.converter
 {
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.child;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
@@ -43,30 +44,30 @@ namespace org.activiti.bpmn.converter
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_TEXT_ANNOTATION;
+                return BpmnXMLConstants.ELEMENT_TEXT_ANNOTATION;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             TextAnnotation textAnnotation = new TextAnnotation();
-            BpmnXMLUtil.addXMLLocation(textAnnotation, xtr);
-            textAnnotation.TextFormat = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TEXTFORMAT);
-            parseChildElements(XMLElementName, textAnnotation, childParserMap, model, xtr);
+            BpmnXMLUtil.AddXMLLocation(textAnnotation, xtr);
+            textAnnotation.TextFormat = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_TEXTFORMAT);
+            ParseChildElements(XMLElementName, textAnnotation, childParserMap, model, xtr);
             return textAnnotation;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             TextAnnotation textAnnotation = (TextAnnotation)element;
-            writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TEXTFORMAT, textAnnotation.TextFormat, xtw);
+            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_TEXTFORMAT, textAnnotation.TextFormat, xtw);
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             TextAnnotation textAnnotation = (TextAnnotation)element;
             if (!string.IsNullOrWhiteSpace(textAnnotation.Text))
             {
-                xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_TEXT_ANNOTATION_TEXT);
-                xtw.writeCharacters(textAnnotation.Text);
-                xtw.writeEndElement();
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_TEXT_ANNOTATION_TEXT, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteCharacters(textAnnotation.Text);
+                xtw.WriteEndElement();
             }
         }
     }

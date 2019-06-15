@@ -34,9 +34,9 @@ namespace org.activiti.engine.impl.cmd
             this.executionId = executionId;
         }
 
-        public  virtual IList<FlowNode>  execute(ICommandContext commandContext)
+        public  virtual IList<FlowNode>  Execute(ICommandContext commandContext)
         {
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
             if (execution == null)
             {
                 throw new ActivitiObjectNotFoundException("No execution found for id '" + executionId + "'", typeof(IExecutionEntity));
@@ -52,7 +52,7 @@ namespace org.activiti.engine.impl.cmd
             AdhocSubProcess adhocSubProcess = (AdhocSubProcess)execution.CurrentFlowElement;
 
             // if sequential ordering, only one child execution can be active, so no enabled activities
-            if (adhocSubProcess.hasSequentialOrdering())
+            if (adhocSubProcess.HasSequentialOrdering())
             {
                 if (execution.Executions.Count > 0)
                 {
@@ -62,9 +62,8 @@ namespace org.activiti.engine.impl.cmd
 
             foreach (FlowElement flowElement in adhocSubProcess.FlowElements)
             {
-                if (flowElement is FlowNode)
+                if (flowElement is FlowNode flowNode)
                 {
-                    FlowNode flowNode = (FlowNode)flowElement;
                     if (flowNode.IncomingFlows.Count == 0)
                     {
                         enabledFlowNodes.Add(flowNode);

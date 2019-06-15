@@ -12,20 +12,40 @@
  */
 namespace org.activiti.engine.history
 {
-	/// 
-	public interface IDeleteReason
-	{
+    /// 
+    public interface IDeleteReason
+    {
 
-	}
+    }
 
-	public static class DeleteReason_Fields
-	{
-	  public const string PROCESS_INSTANCE_DELETED = "process instance deleted";
-	  public const string TERMINATE_END_EVENT = "terminate end event";
-	  public const string BOUNDARY_EVENT_INTERRUPTING = "boundary event";
-	  public const string EVENT_SUBPROCESS_INTERRUPTING = "event subprocess";
-	  public const string EVENT_BASED_GATEWAY_CANCEL = "event based gateway cancel";
-	  public const string TRANSACTION_CANCELED = "transaction canceled";
-	}
-
+    /// <summary>
+    /// 
+    /// </summary>
+	public static class DeleteReasonFields
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string PROCESS_INSTANCE_DELETED = "process instance deleted";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string TERMINATE_END_EVENT = "terminate end event";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string BOUNDARY_EVENT_INTERRUPTING = "boundary event";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string EVENT_SUBPROCESS_INTERRUPTING = "event subprocess";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string EVENT_BASED_GATEWAY_CANCEL = "event based gateway cancel";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string TRANSACTION_CANCELED = "transaction canceled";
+    }
 }

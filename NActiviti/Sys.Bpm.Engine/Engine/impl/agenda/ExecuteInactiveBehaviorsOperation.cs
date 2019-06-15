@@ -8,11 +8,12 @@ namespace org.activiti.engine.impl.agenda
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
-    using Sys;
+    using Sys.Workflow;
+    using System;
 
 
     /// <summary>
-    /// Operation that usually gets scheduled as last operation of handling a <seealso cref="Command"/>.
+    /// Operation that usually gets scheduled as last operation of handling a <seealso cref="ICommand&lt;T&gt;"/>.
     /// 
     /// Executes 'background' behaviours of executions that currently are in an activity that implements
     /// the <seealso cref="IInactiveActivityBehavior"/> interface.
@@ -23,58 +24,73 @@ namespace org.activiti.engine.impl.agenda
     {
         private static readonly ILogger<ExecuteInactiveBehaviorsOperation> log = ProcessEngineServiceProvider.LoggerService<ExecuteInactiveBehaviorsOperation>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ICollection<IExecutionEntity> involvedExecutions;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
         public ExecuteInactiveBehaviorsOperation(ICommandContext commandContext) : base(commandContext, null)
         {
             this.involvedExecutions = commandContext.InvolvedExecutions;
         }
 
-        protected override void run()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected override void RunOperation()
         {
-
-            /*
-             * Algorithm: for each execution that is involved in this command context,
-             *
-             * 1) Get its process definition
-             * 2) Verify if its process definitions has any InactiveActivityBehavior behaviours.
-             * 3) If so, verify if there are any executions inactive in those activities
-             * 4) Execute the inactivated behavior
-             *
-             */
-
-            foreach (IExecutionEntity executionEntity in involvedExecutions)
+            try
             {
 
-                Process process = ProcessDefinitionUtil.getProcess(executionEntity.ProcessDefinitionId);
-                ICollection<string> flowNodeIdsWithInactivatedBehavior = new List<string>();
-                foreach (FlowNode flowNode in process.findFlowElementsOfType<FlowNode>())
-                {
-                    if (flowNode.Behavior is IInactiveActivityBehavior)
-                    {
-                        flowNodeIdsWithInactivatedBehavior.Add(flowNode.Id);
-                    }
-                }
+                /*
+                 * Algorithm: for each execution that is involved in this command context,
+                 *
+                 * 1) Get its process definition
+                 * 2) Verify if its process definitions has any InactiveActivityBehavior behaviours.
+                 * 3) If so, verify if there are any executions inactive in those activities
+                 * 4) Execute the inactivated behavior
+                 *
+                 */
 
-                if (flowNodeIdsWithInactivatedBehavior.Count > 0)
+                foreach (IExecutionEntity executionEntity in involvedExecutions)
                 {
-                    ICollection<IExecutionEntity> inactiveExecutions = commandContext.ExecutionEntityManager.findInactiveExecutionsByProcessInstanceId(executionEntity.ProcessInstanceId);
-                    foreach (IExecutionEntity inactiveExecution in inactiveExecutions)
+
+                    Process process = ProcessDefinitionUtil.GetProcess(executionEntity.ProcessDefinitionId);
+                    ICollection<string> flowNodeIdsWithInactivatedBehavior = new List<string>();
+                    foreach (FlowNode flowNode in process.FindFlowElementsOfType<FlowNode>())
                     {
-                        if (!inactiveExecution.IsActive && flowNodeIdsWithInactivatedBehavior.Contains(inactiveExecution.ActivityId) && !inactiveExecution.Deleted)
+                        if (flowNode.Behavior is IInactiveActivityBehavior)
                         {
+                            flowNodeIdsWithInactivatedBehavior.Add(flowNode.Id);
+                        }
+                    }
 
-                            FlowNode flowNode = (FlowNode)process.getFlowElement(inactiveExecution.ActivityId, true);
-                            IInactiveActivityBehavior inactiveActivityBehavior = ((IInactiveActivityBehavior)flowNode.Behavior);
-                            log.LogDebug($"Found InactiveActivityBehavior instance of class {inactiveActivityBehavior.GetType()} that can be executed on activity '{flowNode.Id}'");
-                            inactiveActivityBehavior.executeInactive(inactiveExecution);
+                    if (flowNodeIdsWithInactivatedBehavior.Count > 0)
+                    {
+                        ICollection<IExecutionEntity> inactiveExecutions = commandContext.ExecutionEntityManager.FindInactiveExecutionsByProcessInstanceId(executionEntity.ProcessInstanceId);
+                        foreach (IExecutionEntity inactiveExecution in inactiveExecutions)
+                        {
+                            if (!inactiveExecution.IsActive && flowNodeIdsWithInactivatedBehavior.Contains(inactiveExecution.ActivityId) && !inactiveExecution.Deleted)
+                            {
+
+                                FlowNode flowNode = (FlowNode)process.GetFlowElement(inactiveExecution.ActivityId, true);
+                                IInactiveActivityBehavior inactiveActivityBehavior = ((IInactiveActivityBehavior)flowNode.Behavior);
+                                log.LogDebug($"Found InactiveActivityBehavior instance of class {inactiveActivityBehavior.GetType()} that can be executed on activity '{flowNode.Id}'");
+                                inactiveActivityBehavior.ExecuteInactive(inactiveExecution);
+                            }
                         }
                     }
                 }
-
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, ex.Message);
+                throw;
             }
         }
-
     }
-
 }

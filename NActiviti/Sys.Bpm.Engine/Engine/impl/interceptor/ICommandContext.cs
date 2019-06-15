@@ -33,12 +33,12 @@ namespace org.activiti.engine.impl.interceptor
         IHistoricIdentityLinkEntityManager HistoricIdentityLinkEntityManager { get; }
         IHistoricProcessInstanceEntityManager HistoricProcessInstanceEntityManager { get; }
 
-        T getSession<T>() where T : ISession;
+        T GetSession<T>() where T : ISession;
 
         IHistoricTaskInstanceEntityManager HistoricTaskInstanceEntityManager { get; }
         IHistoricVariableInstanceEntityManager HistoricVariableInstanceEntityManager { get; }
         IHistoryManager HistoryManager { get; }
-        IdentityLinkEntityManager IdentityLinkEntityManager { get; }
+        IIdentityLinkEntityManager IdentityLinkEntityManager { get; }
         ICollection<IExecutionEntity> InvolvedExecutions { get; }
         IJobEntityManager JobEntityManager { get; }
         IJobManager JobManager { get; }
@@ -63,14 +63,14 @@ namespace org.activiti.engine.impl.interceptor
         ITimerJobEntityManager TimerJobEntityManager { get; }
         IVariableInstanceEntityManager VariableInstanceEntityManager { get; }
 
-        void addAttribute(string key, object value);
-        void addCloseListener(ICommandContextCloseListener commandContextCloseListener);
-        void addInvolvedExecution(IExecutionEntity executionEntity);
-        void close();
-        void exception(Exception exception);
-        object getAttribute(string key);
-        T getGenericAttribute<T>(string key);
-        bool hasCloseListener(Type type);
-        bool hasInvolvedExecutions();
+        void AddAttribute(string key, object value);
+        void AddCloseListener(ICommandContextCloseListener commandContextCloseListener);
+        void AddInvolvedExecution(IExecutionEntity executionEntity);
+        void Close();
+        void SetException(Exception exception);
+        object GetAttribute(string key);
+        T GetGenericAttribute<T>(string key);
+        bool HasCloseListener(Type type);
+        bool HasInvolvedExecutions();
     }
 }

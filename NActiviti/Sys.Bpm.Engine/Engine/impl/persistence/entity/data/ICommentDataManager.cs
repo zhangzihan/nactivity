@@ -19,30 +19,28 @@ namespace org.activiti.engine.impl.persistence.entity.data
 
     /// 
     public interface ICommentDataManager : IDataManager<ICommentEntity>
-	{
+    {
 
-	  IList<IComment> findCommentsByTaskId(string taskId);
+        IList<IComment> FindCommentsByTaskId(string taskId);
 
-	  IList<IComment> findCommentsByTaskIdAndType(string taskId, string type);
+        IList<IComment> FindCommentsByTaskIdAndType(string taskId, string type);
 
-	  IList<IComment> findCommentsByType(string type);
+        IList<IComment> FindCommentsByType(string type);
 
-	  IList<IEvent> findEventsByTaskId(string taskId);
+        IList<IEvent> FindEventsByTaskId(string taskId);
 
-	  IList<IEvent> findEventsByProcessInstanceId(string processInstanceId);
+        IList<IEvent> FindEventsByProcessInstanceId(string processInstanceId);
 
-	  void deleteCommentsByTaskId(string taskId);
+        void DeleteCommentsByTaskId(string taskId);
 
-	  void deleteCommentsByProcessInstanceId(string processInstanceId);
+        void DeleteCommentsByProcessInstanceId(string processInstanceId);
 
-	  IList<IComment> findCommentsByProcessInstanceId(string processInstanceId);
+        IList<IComment> FindCommentsByProcessInstanceId(string processInstanceId);
 
-	  IList<IComment> findCommentsByProcessInstanceId(string processInstanceId, string type);
+        IList<IComment> FindCommentsByProcessInstanceId(string processInstanceId, string type);
 
-	  IComment findComment(string commentId);
+        IComment FindComment(string commentId);
 
-	  IEvent findEvent(string commentId);
-
-	}
-
+        IEvent FindEvent(string commentId);
+    }
 }

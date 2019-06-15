@@ -29,13 +29,13 @@ namespace org.activiti.engine.impl.util.io
             this.url = url;
         }
 
-        public virtual System.IO.Stream InputStream
+        public virtual Stream InputStream
         {
             get
             {
                 try
                 {
-                    return new BufferedStream(url.openStream());
+                    return new BufferedStream(url.OpenStream());
                 }
                 catch (IOException e)
                 {

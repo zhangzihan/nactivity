@@ -53,7 +53,5 @@ namespace org.activiti.engine.task
         /// The process instance id associated with this identity link.
         /// </summary>
         string ProcessInstanceId { get; }
-
     }
-
 }

@@ -15,7 +15,7 @@
 namespace org.activiti.engine.impl.cmd
 {
 
-    
+
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
@@ -40,51 +40,48 @@ namespace org.activiti.engine.impl.cmd
 
         public AddIdentityLinkForProcessInstanceCmd(string processInstanceId, string userId, string groupId, string type)
         {
-            validateParams(processInstanceId, userId, groupId, type);
+            ValidateParams(processInstanceId, userId, groupId, type);
             this.processInstanceId = processInstanceId;
             this.userId = userId;
             this.groupId = groupId;
             this.type = type;
         }
 
-        protected internal virtual void validateParams(string processInstanceId, string userId, string groupId, string type)
+        protected internal virtual void ValidateParams(string processInstanceId, string userId, string groupId, string type)
         {
 
-            if (ReferenceEquals(processInstanceId, null))
+            if (processInstanceId is null)
             {
                 throw new ActivitiIllegalArgumentException("processInstanceId is null");
             }
 
-            if (ReferenceEquals(type, null))
+            if (type is null)
             {
                 throw new ActivitiIllegalArgumentException("type is required when adding a new process instance identity link");
             }
 
-            if (ReferenceEquals(userId, null) && ReferenceEquals(groupId, null))
+            if (userId is null && groupId is null)
             {
                 throw new ActivitiIllegalArgumentException("userId and groupId cannot both be null");
             }
 
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
-            IExecutionEntity processInstance = executionEntityManager.findById<IExecutionEntity>(processInstanceId);
+            IExecutionEntity processInstance = executionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
             if (processInstance == null)
             {
                 throw new ActivitiObjectNotFoundException("Cannot find process instance with id " + processInstanceId, typeof(IExecutionEntity));
             }
 
-            IdentityLinkEntityManager identityLinkEntityManager = commandContext.IdentityLinkEntityManager;
-            identityLinkEntityManager.addIdentityLink(processInstance, userId, groupId, type);
-            commandContext.HistoryManager.createProcessInstanceIdentityLinkComment(processInstanceId, userId, groupId, type, true);
+            IIdentityLinkEntityManager identityLinkEntityManager = commandContext.IdentityLinkEntityManager;
+            identityLinkEntityManager.AddIdentityLink(processInstance, userId, groupId, type);
+            commandContext.HistoryManager.CreateProcessInstanceIdentityLinkComment(processInstanceId, userId, groupId, type, true);
 
             return null;
-
         }
-
     }
-
 }

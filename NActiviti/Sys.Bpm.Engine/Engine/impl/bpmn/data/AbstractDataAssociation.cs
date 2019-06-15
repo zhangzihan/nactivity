@@ -47,7 +47,7 @@ namespace org.activiti.engine.impl.bpmn.data
 		this.target = target;
 	  }
 
-	  public abstract void evaluate(IExecutionEntity execution);
+	  public abstract void Evaluate(IExecutionEntity execution);
 
 	  public virtual string Source
 	  {

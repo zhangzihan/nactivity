@@ -25,6 +25,6 @@ namespace org.activiti.engine.impl.interceptor
     {
         Type SessionType { get; }
 
-        ISession openSession(ICommandContext commandContext);
+        ISession OpenSession(ICommandContext commandContext);
     }
 }

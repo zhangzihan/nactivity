@@ -37,20 +37,19 @@ namespace org.activiti.engine.impl.@event
             }
         }
 
-        public override void handleEvent(IEventSubscriptionEntity eventSubscription, object payload, ICommandContext commandContext)
+        public override void HandleEvent(IEventSubscriptionEntity eventSubscription, object payload, ICommandContext commandContext)
         {
-            if (!ReferenceEquals(eventSubscription.ExecutionId, null))
+            if (!(eventSubscription.ExecutionId is null))
             {
 
-                base.handleEvent(eventSubscription, payload, commandContext);
+                base.HandleEvent(eventSubscription, payload, commandContext);
 
             }
-            else if (!ReferenceEquals(eventSubscription.ProcessDefinitionId, null))
+            else if (!(eventSubscription.ProcessDefinitionId is null))
             {
-
                 // Find initial flow element matching the signal start event
                 string processDefinitionId = eventSubscription.ProcessDefinitionId;
-                IProcessDefinition processDefinition = ProcessDefinitionUtil.getProcessDefinition(processDefinitionId);
+                IProcessDefinition processDefinition = ProcessDefinitionUtil.GetProcessDefinition(processDefinitionId);
 
                 if (processDefinition == null)
                 {
@@ -62,8 +61,8 @@ namespace org.activiti.engine.impl.@event
                     throw new ActivitiException("Could not handle signal: process definition with id: " + processDefinitionId + " is suspended");
                 }
 
-                org.activiti.bpmn.model.Process process = ProcessDefinitionUtil.getProcess(processDefinitionId);
-                FlowElement flowElement = process.getFlowElement(eventSubscription.ActivityId, true);
+                Process process = ProcessDefinitionUtil.GetProcess(processDefinitionId);
+                FlowElement flowElement = process.GetFlowElement(eventSubscription.ActivityId, true);
                 if (flowElement == null)
                 {
                     throw new ActivitiException("Could not find matching FlowElement for activityId " + eventSubscription.ActivityId);
@@ -76,7 +75,7 @@ namespace org.activiti.engine.impl.@event
                     variables = (IDictionary<string, object>)payload;
                 }
                 ProcessInstanceHelper processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
-                processInstanceHelper.createAndStartProcessInstanceWithInitialFlowElement(processDefinition, null, null, flowElement, process, variables, null, true);
+                processInstanceHelper.CreateAndStartProcessInstanceWithInitialFlowElement(processDefinition, null, null, flowElement, process, variables, null, true);
 
             }
             else

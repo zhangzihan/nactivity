@@ -30,7 +30,7 @@ namespace org.activiti.cloud.services.api.commands
         private string processDefinitionKey;
         private string processDefinitionId;
         private string processInstanceName;
-        private IDictionary<string, object> variables;
+        private WorkflowVariable variables;
         private string businessKey;
         private string tenantId;
         private string startForm;
@@ -62,8 +62,9 @@ namespace org.activiti.cloud.services.api.commands
         /// <param name="processDefinitionId">流程定义id</param>
         /// <param name="variables">流程变量</param>
         //[JsonConstructor]
-        public StartProcessInstanceCmd([JsonProperty("ProcessDefinitionId")]string processDefinitionId,
-            [JsonProperty("Variables")]IDictionary<string, object> variables) : this()
+        public StartProcessInstanceCmd(
+            [JsonProperty("ProcessDefinitionId")]string processDefinitionId,
+            [JsonProperty("Variables")]WorkflowVariable variables) : this()
         {
             this.processDefinitionId = processDefinitionId;
 
@@ -75,7 +76,8 @@ namespace org.activiti.cloud.services.api.commands
         /// </summary>
         /// <param name="processDefinitionId">流程定义id</param>
         //[JsonConstructor]
-        public StartProcessInstanceCmd([JsonProperty("ProcessDefinitionId")] string processDefinitionId) : this()
+        public StartProcessInstanceCmd(
+            [JsonProperty("ProcessDefinitionId")] string processDefinitionId) : this()
         {
             this.processDefinitionId = processDefinitionId;
         }
@@ -130,10 +132,16 @@ namespace org.activiti.cloud.services.api.commands
         /// <summary>
         /// 流程启动变量
         /// </summary>
-        public virtual IDictionary<string, object> Variables
+        public virtual WorkflowVariable Variables
         {
             get => variables;
             set => variables = value;
+        }
+
+        /// <inheritdoc />
+        public virtual string ProcessName
+        {
+            get; set;
         }
 
         /// <summary>

@@ -14,26 +14,47 @@
  */
 namespace org.activiti.engine.impl.asyncexecutor
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow;
+    using System;
 
     /// 
     public class FindExpiredJobsCmd : ICommand<IList<IJobEntity>>
     {
+        private readonly ILogger<FindExpiredJobsCmd> logger = ProcessEngineServiceProvider.LoggerService<FindExpiredJobsCmd>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int pageSize;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pageSize"></param>
         public FindExpiredJobsCmd(int pageSize)
         {
             this.pageSize = pageSize;
         }
 
-        public virtual IList<IJobEntity> execute(ICommandContext commandContext)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <returns></returns>
+        public virtual IList<IJobEntity> Execute(ICommandContext commandContext)
         {
-            return commandContext.JobEntityManager.findExpiredJobs(new Page(0, pageSize));
+            try
+            {
+                return commandContext.JobEntityManager.FindExpiredJobs(new Page(0, pageSize));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
-
     }
-
 }

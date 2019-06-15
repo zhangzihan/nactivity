@@ -8,65 +8,87 @@ namespace org.activiti.engine.impl.agenda
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
     using org.activiti.engine.impl.bpmn.helper;
+    using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.@delegate;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
     using org.activiti.engine.logging;
-    using Sys;
+    using Sys.Workflow;
 
     /// <summary>
     /// Special operation when executing an instance of a multi-instance.
     /// It's similar to the <seealso cref="ContinueProcessOperation"/>, but simpler, as it doesn't need to 
     /// cater for as many use cases.
-    /// 
-    /// 
-    /// 
     /// </summary>
     public class ContinueMultiInstanceOperation : AbstractOperation
     {
         private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<ContinueMultiInstanceOperation>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <param name="execution"></param>
         public ContinueMultiInstanceOperation(ICommandContext commandContext, IExecutionEntity execution) : base(commandContext, execution)
         {
         }
 
-        protected override void run()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected override void RunOperation()
         {
-            FlowElement currentFlowElement = getCurrentFlowElement(execution);
-            if (currentFlowElement is FlowNode)
+            try
             {
-                continueThroughMultiInstanceFlowNode((FlowNode)currentFlowElement);
+                FlowElement currentFlowElement = GetCurrentFlowElement(execution);
+                if (currentFlowElement is FlowNode)
+                {
+                    ContinueThroughMultiInstanceFlowNode((FlowNode)currentFlowElement);
+                }
+                else
+                {
+                    throw new Exception("Programmatic error: no valid multi instance flow node, type: " + currentFlowElement + ". Halting.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                throw new Exception("Programmatic error: no valid multi instance flow node, type: " + currentFlowElement + ". Halting.");
+                logger.LogError(ex, ex.Message);
+                throw;
             }
         }
 
-        protected internal virtual void continueThroughMultiInstanceFlowNode(FlowNode flowNode)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="flowNode"></param>
+        protected internal virtual void ContinueThroughMultiInstanceFlowNode(FlowNode flowNode)
         {
             if (!flowNode.Asynchronous)
             {
-                executeSynchronous(flowNode);
+                ExecuteSynchronous(flowNode);
             }
             else
             {
-                executeAsynchronous(flowNode);
+                ExecuteAsynchronous(flowNode);
             }
         }
 
-        protected internal virtual void executeSynchronous(FlowNode flowNode)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="flowNode"></param>
+        protected internal virtual void ExecuteSynchronous(FlowNode flowNode)
         {
 
             // Execution listener
             if (CollectionUtil.IsNotEmpty(flowNode.ExecutionListeners))
             {
-                executeExecutionListeners(flowNode, BaseExecutionListener_Fields.EVENTNAME_START);
+                ExecuteExecutionListeners(flowNode, BaseExecutionListenerFields.EVENTNAME_START);
             }
 
-            commandContext.HistoryManager.recordActivityStart(execution);
+            commandContext.HistoryManager.RecordActivityStart(execution);
 
             // Execute actual behavior
             IActivityBehavior activityBehavior = (IActivityBehavior)flowNode.Behavior;
@@ -74,25 +96,26 @@ namespace org.activiti.engine.impl.agenda
             {
                 logger.LogDebug($"Executing activityBehavior {activityBehavior.GetType()} on activity '{flowNode.Id}' with execution {execution.Id}");
 
-                if (Context.ProcessEngineConfiguration != null && Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
+                ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
+                if (processEngineConfiguration != null && processEngineConfiguration.EventDispatcher.Enabled)
                 {
-                    Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createActivityEvent(ActivitiEventType.ACTIVITY_STARTED, flowNode.Id, flowNode.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, flowNode));
+                    processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityEvent(ActivitiEventType.ACTIVITY_STARTED, flowNode.Id, flowNode.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, flowNode));
                 }
 
                 try
                 {
-                    activityBehavior.execute(execution);
+                    activityBehavior.Execute(execution);
                 }
                 catch (BpmnError error)
                 {
                     // re-throw business fault so that it can be caught by an Error Intermediate Event or Error Event Sub-Process in the process
-                    ErrorPropagation.propagateError(error, execution);
+                    ErrorPropagation.PropagateError(error, execution);
                 }
                 catch (Exception e)
                 {
                     if (LogMDC.MDCEnabled)
                     {
-                        LogMDC.putMDCExecution(execution);
+                        LogMDC.PutMDCExecution(execution);
                     }
                     throw e;
                 }
@@ -103,10 +126,14 @@ namespace org.activiti.engine.impl.agenda
             }
         }
 
-        protected internal virtual void executeAsynchronous(FlowNode flowNode)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="flowNode"></param>
+        protected internal virtual void ExecuteAsynchronous(FlowNode flowNode)
         {
-            IJobEntity job = commandContext.JobManager.createAsyncJob(execution, flowNode.Exclusive);
-            commandContext.JobManager.scheduleAsyncJob(job);
+            IJobEntity job = commandContext.JobManager.CreateAsyncJob(execution, flowNode.Exclusive);
+            commandContext.JobManager.ScheduleAsyncJob(job);
         }
     }
 }

@@ -15,10 +15,12 @@ namespace org.activiti.bpmn.model
     public class CancelEventDefinition : EventDefinition
     {
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            CancelEventDefinition clone = new CancelEventDefinition();
-            clone.Values = this;
+            CancelEventDefinition clone = new CancelEventDefinition
+            {
+                Values = this
+            };
             return clone;
         }
 

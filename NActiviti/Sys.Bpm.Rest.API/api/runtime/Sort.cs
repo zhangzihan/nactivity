@@ -56,7 +56,7 @@ namespace org.activiti.api.runtime.shared.query
         /// <summary>
         /// 取消所有排序
         /// </summary>
-        public static Sort unsorted()
+        public static Sort UnSorted()
         {
             return new Sort();
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,14 +19,15 @@ namespace org.activiti.engine.impl.db
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using Microsoft.Extensions.DependencyInjection;
-    using Sys;
-    using Sys.Data;
+    using SmartSql.Abstractions;
 
     /// 
     /// 
     public class DbSqlSessionFactory : ISessionFactory
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal static readonly IDictionary<string, IDictionary<string, string>> databaseSpecificStatements = new Dictionary<string, IDictionary<string, string>>();
 
         /// <summary>
@@ -35,11 +35,26 @@ namespace org.activiti.engine.impl.db
         /// </summary>
         protected internal static IDictionary<Type, bool> bulkInsertableMap;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string databaseType;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string databaseTablePrefix = "";
+
+        /// <summary>
+        /// 
+        /// </summary>
         private bool tablePrefixIsSchema;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string databaseCatalog;
+
         /// <summary>
         /// In some situations you want to set the schema to use for table checks /
         /// generation if the database metadata doesn't return that correctly, see
@@ -48,12 +63,25 @@ namespace org.activiti.engine.impl.db
         /// </summary>
         protected internal string databaseSchema;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IIdGenerator idGenerator;
 
         // Caches, filled while executing processes 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool isDbHistoryUsed = true;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int maxNrOfStatementsInBulkInsert = 100;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Type SessionType
         {
             get
@@ -62,7 +90,12 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        public virtual ISession openSession(ICommandContext commandContext)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <returns></returns>
+        public virtual ISession OpenSession(ICommandContext commandContext)
         {
             DbSqlSession dbSqlSession = new DbSqlSession(this, commandContext.EntityCache);
 
@@ -72,37 +105,79 @@ namespace org.activiti.engine.impl.db
         // insert, update and delete statements
         // /////////////////////////////////////
 
-        public virtual string getInsertStatement(Type clazz, ref Type managedType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <param name="managedType"></param>
+        /// <returns></returns>
+        public virtual string GetInsertStatement(Type clazz, ref Type managedType)
         {
-            return getStatement(clazz, "insert", ref managedType);
+            return GetStatement(clazz, "insert", ref managedType);
         }
 
-        public virtual string getBulkInsertStatement(Type clazz, ref Type managedType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <param name="managedType"></param>
+        /// <returns></returns>
+        public virtual string GetBulkInsertStatement(Type clazz, ref Type managedType)
         {
-            return getStatement(clazz, "bulkInsert", ref managedType);
+            return GetStatement(clazz, "bulkInsert", ref managedType);
         }
 
-        public virtual string getUpdateStatement(Type clazz, ref Type managedType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <param name="managedType"></param>
+        /// <returns></returns>
+        public virtual string GetUpdateStatement(Type clazz, ref Type managedType)
         {
-            return getStatement(clazz, "update", ref managedType);
+            return GetStatement(clazz, "update", ref managedType);
         }
 
-        public virtual string getDeleteStatement(Type clazz, ref Type managedType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <param name="managedType"></param>
+        /// <returns></returns>
+        public virtual string GetDeleteStatement(Type clazz, ref Type managedType)
         {
-            return getStatement(clazz, "delete", ref managedType);
+            return GetStatement(clazz, "delete", ref managedType);
         }
 
-        public virtual string getBulkDeleteStatement(Type clazz, ref Type managedType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <param name="managedType"></param>
+        /// <returns></returns>
+        public virtual string GetBulkDeleteStatement(Type clazz, ref Type managedType)
         {
-            return getStatement(clazz, "bulkDelete", ref managedType);
+            return GetStatement(clazz, "bulkDelete", ref managedType);
         }
 
-        public virtual string getSelectStatement(ref Type entityClass)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityClass"></param>
+        /// <returns></returns>
+        public virtual string GetSelectStatement(ref Type entityClass)
         {
-            return getStatement(entityClass, "select", ref entityClass);
+            return GetStatement(entityClass, "select", ref entityClass);
         }
 
-        private string getStatement(Type clazz, string prefix, ref Type managedType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <param name="prefix"></param>
+        /// <param name="managedType"></param>
+        /// <returns></returns>
+        private string GetStatement(Type clazz, string prefix, ref Type managedType)
         {
             if (clazz == typeof(HistoricDetailVariableInstanceUpdateEntityImpl))
             {
@@ -128,7 +203,13 @@ namespace org.activiti.engine.impl.db
         // db specific mappings
         // /////////////////////////////////////////////////////
 
-        protected internal static void addDatabaseSpecificStatement(string databaseType, string activitiStatement, string ibatisStatement)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="databaseType"></param>
+        /// <param name="activitiStatement"></param>
+        /// <param name="ibatisStatement"></param>
+        protected internal static void AddDatabaseSpecificStatement(string databaseType, string activitiStatement, string ibatisStatement)
         {
             databaseSpecificStatements.TryGetValue(databaseType, out IDictionary<string, string> specificStatements);
             if (specificStatements == null)
@@ -139,7 +220,12 @@ namespace org.activiti.engine.impl.db
             specificStatements[activitiStatement] = ibatisStatement;
         }
 
-        public virtual string mapStatement(string statement)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="statement"></param>
+        /// <returns></returns>
+        public virtual string MapStatement(string statement)
         {
             return statement;
         }
@@ -147,6 +233,9 @@ namespace org.activiti.engine.impl.db
         // customized getters and setters
         // ///////////////////////////////////////////
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DatabaseType
         {
             set
@@ -159,16 +248,25 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        public virtual void setBulkInsertEnabled(bool isBulkInsertEnabled, string databaseType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isBulkInsertEnabled"></param>
+        /// <param name="databaseType"></param>
+        public virtual void SetBulkInsertEnabled(bool isBulkInsertEnabled, string databaseType)
         {
             // If false, just keep don't initialize the map. Memory saved.
             if (isBulkInsertEnabled)
             {
-                initBulkInsertEnabledMap(databaseType);
+                InitBulkInsertEnabledMap(databaseType);
             }
         }
 
-        protected internal virtual void initBulkInsertEnabledMap(string databaseType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="databaseType"></param>
+        protected internal virtual void InitBulkInsertEnabledMap(string databaseType)
         {
             bulkInsertableMap = new Dictionary<Type, bool>();
 
@@ -184,9 +282,16 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        internal SmartSql.Abstractions.RequestContext CreateRequestContext(string scope, string sqlId, object request)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="sqlId"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        internal RequestContext CreateRequestContext(string scope, string sqlId, object request)
         {
-            var req = new SmartSql.Abstractions.RequestContext()
+            var req = new RequestContext()
             {
                 Scope = scope,
                 SqlId = sqlId,
@@ -196,13 +301,21 @@ namespace org.activiti.engine.impl.db
             return req;
         }
 
-        public virtual bool? isBulkInsertable(Type entityClass)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityClass"></param>
+        /// <returns></returns>
+        public virtual bool? IsBulkInsertable(Type entityClass)
         {
             return bulkInsertableMap != null && bulkInsertableMap.ContainsKey(entityClass) && bulkInsertableMap[entityClass];
         }
 
         // getters and setters //////////////////////////////////////////////////////
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IIdGenerator IdGenerator
         {
             get
@@ -215,7 +328,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool DbHistoryUsed
         {
             get
@@ -228,7 +343,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DatabaseTablePrefix
         {
             set
@@ -241,7 +358,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DatabaseCatalog
         {
             get
@@ -254,7 +373,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DatabaseSchema
         {
             get
@@ -267,7 +388,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool TablePrefixIsSchema
         {
             set
@@ -280,7 +403,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int MaxNrOfStatementsInBulkInsert
         {
             get
@@ -292,8 +417,5 @@ namespace org.activiti.engine.impl.db
                 this.maxNrOfStatementsInBulkInsert = value;
             }
         }
-
-
     }
-
 }

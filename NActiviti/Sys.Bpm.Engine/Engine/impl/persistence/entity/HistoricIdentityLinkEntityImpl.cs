@@ -40,26 +40,28 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                PersistentState persistentState = new PersistentState();
-                persistentState["id"] = this.id;
-                persistentState["type"] = this.type;
+                PersistentState persistentState = new PersistentState
+                {
+                    ["id"] = this.id,
+                    ["type"] = this.type
+                };
 
-                if (!ReferenceEquals(this.userId, null))
+                if (!(this.userId is null))
                 {
                     persistentState["userId"] = this.userId;
                 }
 
-                if (!ReferenceEquals(this.groupId, null))
+                if (!(this.groupId is null))
                 {
                     persistentState["groupId"] = this.groupId;
                 }
 
-                if (!ReferenceEquals(this.taskId, null))
+                if (!(this.taskId is null))
                 {
                     persistentState["taskId"] = this.taskId;
                 }
 
-                if (!ReferenceEquals(this.processInstanceId, null))
+                if (!(this.processInstanceId is null))
                 {
                     persistentState["processInstanceId"] = this.processInstanceId;
                 }
@@ -72,7 +74,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return !ReferenceEquals(userId, null);
+                return !(userId is null);
             }
         }
 
@@ -80,7 +82,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return !ReferenceEquals(groupId, null);
+                return !(groupId is null);
             }
         }
 
@@ -105,7 +107,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             set
             {
-                if (!ReferenceEquals(this.groupId, null) && !ReferenceEquals(value, null))
+                if (!(groupId is null) && !(value is null))
                 {
                     throw new ActivitiException("Cannot assign a userId to a task assignment that already has a groupId");
                 }
@@ -122,7 +124,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
             set
             {
-                if (!ReferenceEquals(this.userId, null) && !ReferenceEquals(value, null))
+                if (!(userId is null) && !(value is null))
                 {
                     throw new ActivitiException("Cannot assign a groupId to a task assignment that already has a userId");
                 }

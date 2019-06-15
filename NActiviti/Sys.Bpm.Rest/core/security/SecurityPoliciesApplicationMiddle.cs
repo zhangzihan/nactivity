@@ -20,6 +20,16 @@ using System.Net.Http.Headers;
 using Microsoft.Extensions.Options;
 using System.Text.RegularExpressions;
 using Sys.Net.Http;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Linq;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc.Internal;
+using Microsoft.AspNetCore.Authorization;
+using org.activiti.engine.impl.identity;
 
 namespace org.activiti.cloud.services.core
 {
@@ -47,22 +57,27 @@ namespace org.activiti.cloud.services.core
         /// <returns></returns>
         public async Task Invoke(HttpContext context)
         {
+            //IMvcControllerDiscovery mvcControllerDiscovery = context.RequestServices.GetService<IMvcControllerDiscovery>();
+
+            //var controllers = mvcControllerDiscovery.GetControllers();
+
 #if DEBUG
             if (context.Request.Path.HasValue &&
                 new Regex("/swagger/?").IsMatch(context.Request.Path.Value))
             {
-                await next(context);
+                await next(context).ConfigureAwait(false);
                 return;
             }
 #endif
-
             IAccessTokenProvider tokenProvider = context.RequestServices.GetRequiredService<IAccessTokenProvider>();
 
             SecurityPoliciesApplicationService spas = context.RequestServices.GetService<SecurityPoliciesApplicationService>();
 
-            spas.User = await tokenProvider.FromRequestHeader(context);
+            spas.User = await tokenProvider.FromRequestHeaderAsync(context).ConfigureAwait(false);
 
-            await next(context);
+            Authentication.AuthenticatedUser = spas.User;
+
+            await next(context).ConfigureAwait(false);
         }
     }
 }

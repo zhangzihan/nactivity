@@ -18,10 +18,9 @@ using org.activiti.api.runtime.shared.query;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core.pageable.sort;
-using org.activiti.cloud.services.rest.controllers;
 using org.activiti.engine;
 using org.activiti.engine.repository;
-using Sys;
+using Sys.Workflow;
 
 namespace org.activiti.cloud.services.core.pageable
 {
@@ -30,7 +29,7 @@ namespace org.activiti.cloud.services.core.pageable
     /// </summary>
     public class PageableProcessDefinitionRepositoryService
     {
-        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<PageableProcessDefinitionRepositoryService>();
+        private readonly ILogger logger = null;
 
         private readonly IRepositoryService repositoryService;
 
@@ -49,13 +48,15 @@ namespace org.activiti.cloud.services.core.pageable
             PageRetriever pageRetriever,
             ProcessDefinitionConverter processDefinitionConverter,
             ProcessDefinitionSortApplier sortApplier,
-            SecurityPoliciesApplicationService securityPolicyApplicationService)
+            SecurityPoliciesApplicationService securityPolicyApplicationService,
+            ILoggerFactory loggerFactory)
         {
             this.repositoryService = repositoryService;
             this.pageRetriever = pageRetriever;
             this.processDefinitionConverter = processDefinitionConverter;
             this.sortApplier = sortApplier;
             this.securityService = securityPolicyApplicationService;
+            logger = loggerFactory.CreateLogger<PageableProcessDefinitionRepositoryService>();
         }
 
         /// <summary>
@@ -84,38 +85,38 @@ namespace org.activiti.cloud.services.core.pageable
 
         public virtual IPage<ProcessDefinition> GetLatestProcessDefinitions(Pageable pageable)
         {
-            IProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery()
-                .latestVersion();
+            IProcessDefinitionQuery query = repositoryService.CreateProcessDefinitionQuery()
+                .SetLatestVersion();
 
             logger.LogWarning("Securite read not implementation");
             //query = securityService.restrictProcessDefQuery(query, SecurityPolicy.READ);
 
-            sortApplier.applySort(query, pageable);
-            return pageRetriever.loadPage(query, pageable, processDefinitionConverter);
+            sortApplier.ApplySort(query, pageable);
+            return pageRetriever.LoadPage(query, pageable, processDefinitionConverter);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<ProcessDefinition> getProcessDefinitions(Pageable pageable)
+        public virtual IPage<ProcessDefinition> GetProcessDefinitions(Pageable pageable)
         {
-            IProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
+            IProcessDefinitionQuery query = repositoryService.CreateProcessDefinitionQuery();
             logger.LogWarning("Securite read not implementation");
             //query = securityService.restrictProcessDefQuery(query, SecurityPolicy.READ);
 
-            sortApplier.applySort(query, pageable);
-            return pageRetriever.loadPage(query, pageable, processDefinitionConverter);
+            sortApplier.ApplySort(query, pageable);
+            return pageRetriever.LoadPage(query, pageable, processDefinitionConverter);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<ProcessDefinition> getAllProcessDefinitions(Pageable pageable)
+        public virtual IPage<ProcessDefinition> GetAllProcessDefinitions(Pageable pageable)
         {
-            IProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
+            IProcessDefinitionQuery query = repositoryService.CreateProcessDefinitionQuery();
 
-            sortApplier.applySort(query, pageable);
-            return pageRetriever.loadPage(query, pageable, processDefinitionConverter);
+            sortApplier.ApplySort(query, pageable);
+            return pageRetriever.LoadPage(query, pageable, processDefinitionConverter);
         }
     }
 }

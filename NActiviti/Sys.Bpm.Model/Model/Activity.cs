@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using org.activiti.bpmn.constants;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,6 +79,14 @@ namespace org.activiti.bpmn.model
             }
         }
 
+        public virtual ExtensionAttribute AssigneeType
+        {
+            get
+            {
+                return this.GetExtensionElementAttribute(BpmnXMLConstants.ELEMENT_USER_TASK_EXTENSION_ASSIGNE_TYPE);
+            }
+        }
+
 
         public virtual MultiInstanceLoopCharacteristics LoopCharacteristics
         {
@@ -92,7 +101,7 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual bool hasMultiInstanceLoopCharacteristics()
+        public virtual bool HasMultiInstanceLoopCharacteristics()
         {
             return LoopCharacteristics != null;
         }
@@ -159,11 +168,11 @@ namespace org.activiti.bpmn.model
                 ForCompensation = val.ForCompensation;
                 if (val.LoopCharacteristics != null)
                 {
-                    LoopCharacteristics = val.LoopCharacteristics.clone() as MultiInstanceLoopCharacteristics;
+                    LoopCharacteristics = val.LoopCharacteristics.Clone() as MultiInstanceLoopCharacteristics;
                 }
                 if (val.IoSpecification != null)
                 {
-                    IoSpecification = val.IoSpecification.clone() as IOSpecification;
+                    IoSpecification = val.IoSpecification.Clone() as IOSpecification;
                 }
 
                 dataInputAssociations = new List<DataAssociation>();
@@ -171,7 +180,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (DataAssociation association in val.DataInputAssociations)
                     {
-                        dataInputAssociations.Add(association.clone() as DataAssociation);
+                        dataInputAssociations.Add(association.Clone() as DataAssociation);
                     }
                 }
 
@@ -180,7 +189,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (DataAssociation association in val.DataOutputAssociations)
                     {
-                        dataOutputAssociations.Add(association.clone() as DataAssociation);
+                        dataOutputAssociations.Add(association.Clone() as DataAssociation);
                     }
                 }
 

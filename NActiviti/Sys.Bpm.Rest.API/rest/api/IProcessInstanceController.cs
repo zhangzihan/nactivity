@@ -24,9 +24,19 @@ namespace org.activiti.cloud.services.rest.api
         /// <summary>
         /// 启动一个流程
         /// </summary>
-        /// <param name="cmd">流程启动命令</param>
+        /// <param name="cmds">批量流程启动命令</param>
         /// <returns></returns>
-        Task<ProcessInstance> Start(StartProcessInstanceCmd cmd);
+        Task<ProcessInstance[]> Start(StartProcessInstanceCmd[] cmds);
+
+        /// <summary>
+        /// 启动一个流程
+        /// </summary>
+        /// <param name="processDefinitionId">流程启动命令</param>
+        /// <param name="businessKey">流程启动命令</param>
+        /// <param name="activityId">流程启动命令</param>
+        /// <param name="variables">流程启动命令</param>
+        /// <returns></returns>
+        Task<ProcessInstance> StartByActiviti(string processDefinitionId, string businessKey, string activityId, IDictionary<string, object> variables);
 
         /// <summary>
         /// 查找一个流程实例
@@ -47,28 +57,28 @@ namespace org.activiti.cloud.services.rest.api
         /// </summary>
         /// <param name="cmd">信号命令</param>
         /// <returns></returns>
-        Task<IActionResult> SendSignal(SignalCmd cmd);
+        Task<ActionResult> SendSignal(SignalCmd cmd);
 
         /// <summary>
         /// 挂起流程实例
         /// </summary>
         /// <param name="processInstanceId">流程实例id</param>
         /// <returns></returns>
-        Task<IActionResult> Suspend(string processInstanceId);
+        Task<ProcessInstance> Suspend(string processInstanceId);
 
         /// <summary>
         /// 激活挂起的流程实例
         /// </summary>
         /// <param name="processInstanceId">流程实例id</param>
         /// <returns></returns>
-        Task<IActionResult> Activate(string processInstanceId);
+        Task<ProcessInstance> Activate(string processInstanceId);
 
         /// <summary>
         /// 终止流程实例
         /// </summary>
         /// <param name="cmd">流程终止命令</param>
         /// <returns></returns>
-        Task<IActionResult> Terminate(TerminateProcessInstanceCmd cmd);
+        Task<ActionResult> Terminate(TerminateProcessInstanceCmd cmd);
     }
 
 }

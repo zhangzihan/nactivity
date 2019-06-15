@@ -46,10 +46,12 @@
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            Import clone = new Import();
-            clone.Values = this;
+            Import clone = new Import
+            {
+                Values = this
+            };
             return clone;
         }
 

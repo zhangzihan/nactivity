@@ -33,10 +33,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual DataGrid clone()
+        public virtual DataGrid Clone()
         {
-            DataGrid clone = new DataGrid();
-            clone.Values = this;
+            DataGrid clone = new DataGrid
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -49,7 +51,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (DataGridRow row in value.Rows)
                     {
-                        rows.Add(row.clone());
+                        rows.Add(row.Clone());
                     }
                 }
             }

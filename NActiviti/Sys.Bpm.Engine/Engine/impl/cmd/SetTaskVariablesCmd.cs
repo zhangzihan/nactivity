@@ -18,7 +18,6 @@ namespace org.activiti.engine.impl.cmd
 {
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
 
     /// 
     /// 
@@ -37,7 +36,7 @@ namespace org.activiti.engine.impl.cmd
             this.isLocal = isLocal;
         }
 
-        protected internal override T1 execute(ICommandContext commandContext, ITaskEntity task)
+        protected internal override T1 Execute(ICommandContext commandContext, ITaskEntity task)
         {
             if (isLocal)
             {
@@ -45,7 +44,7 @@ namespace org.activiti.engine.impl.cmd
                 {
                     foreach (string variableName in variables.Keys)
                     {
-                        task.setVariableLocal(variableName, variables[variableName], false);
+                        task.SetVariableLocal(variableName, variables[variableName], false);
                     }
                 }
 
@@ -56,7 +55,7 @@ namespace org.activiti.engine.impl.cmd
                 {
                     foreach (string variableName in variables.Keys)
                     {
-                        task.setVariable(variableName, variables[variableName], false);
+                        task.SetVariable(variableName, variables[variableName], false);
                     }
                 }
             }
@@ -64,9 +63,9 @@ namespace org.activiti.engine.impl.cmd
             // ACT-1887: Force an update of the task's revision to prevent
             // simultaneous inserts of the same variable. If not, duplicate variables may occur since optimistic
             // locking doesn't work on inserts
-            task.forceUpdate();
+            task.ForceUpdate();
 
-            return default(T1);
+            return default;
         }
 
         protected internal override string SuspendedTaskException

@@ -23,67 +23,67 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class BpmnEdgeParser : IBpmnXMLConstants
     {
-        public virtual void parse(XMLStreamReader xtr, BpmnModel model)
+        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
         {
 
-            string id = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_BPMNELEMENT);
+            string id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_BPMNELEMENT);
             IList<GraphicInfo> wayPointList = new List<GraphicInfo>();
-            while (xtr.hasNext())
+            while (xtr.HasNext())
             {
                 //xtr.next();
 
-                if (xtr.IsStartElement() && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    while (xtr.hasNext())
+                    while (xtr.HasNext())
                     {
                         //xtr.next();
 
-                        if (xtr.IsStartElement() && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_BOUNDS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                        if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DI_BOUNDS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                         {
                             GraphicInfo graphicInfo = new GraphicInfo();
-                            BpmnXMLUtil.addXMLLocation(graphicInfo, xtr);
-                            graphicInfo.X = Convert.ToDouble(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_X));
-                            graphicInfo.Y = Convert.ToDouble(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_Y));
-                            graphicInfo.Width = Convert.ToDouble(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_WIDTH));
-                            graphicInfo.Height = Convert.ToDouble(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_HEIGHT));
-                            model.addLabelGraphicInfo(id, graphicInfo);
+                            BpmnXMLUtil.AddXMLLocation(graphicInfo, xtr);
+                            graphicInfo.X = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_X));
+                            graphicInfo.Y = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_Y));
+                            graphicInfo.Width = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_WIDTH));
+                            graphicInfo.Height = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_HEIGHT));
+                            model.AddLabelGraphicInfo(id, graphicInfo);
                             break;
                         }
-                        else if (xtr.EndElement && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                        else if (xtr.EndElement && BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                         {
                             break;
                         }
 
-                        if (xtr.IsEmptyElement && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                        if (xtr.IsEmptyElement && BpmnXMLConstants.ELEMENT_DI_LABEL.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                         {
                             break;
                         }
                     }
 
                 }
-                else if (xtr.IsStartElement() && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_WAYPOINT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DI_WAYPOINT.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     GraphicInfo graphicInfo = new GraphicInfo();
-                    BpmnXMLUtil.addXMLLocation(graphicInfo, xtr);
-                    graphicInfo.X = Convert.ToDouble(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_X));
-                    graphicInfo.Y = Convert.ToDouble(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_Y));
+                    BpmnXMLUtil.AddXMLLocation(graphicInfo, xtr);
+                    graphicInfo.X = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_X));
+                    graphicInfo.Y = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_Y));
                     wayPointList.Add(graphicInfo);
 
                 }
-                else if (xtr.EndElement && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_EDGE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                else if (xtr.EndElement && BpmnXMLConstants.ELEMENT_DI_EDGE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     break;
                 }
 
-                if (xtr.IsEmptyElement && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_EDGE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                if (xtr.IsEmptyElement && BpmnXMLConstants.ELEMENT_DI_EDGE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     break;
                 }
             }
-            model.addFlowGraphicInfoList(id, wayPointList);
+            model.AddFlowGraphicInfoList(id, wayPointList);
         }
 
-        public virtual BaseElement parseElement()
+        public virtual BaseElement ParseElement()
         {
             return null;
         }

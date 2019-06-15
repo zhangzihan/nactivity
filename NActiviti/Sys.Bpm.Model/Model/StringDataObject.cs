@@ -11,10 +11,12 @@
             }
         }
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            StringDataObject clone = new StringDataObject();
-            clone.Values = this;
+            StringDataObject clone = new StringDataObject
+            {
+                Values = this
+            };
             return clone;
         }
     }

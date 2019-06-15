@@ -35,7 +35,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, Process process)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, Process process)
         {
             if (process.Executable == false)
             {
@@ -43,13 +43,13 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
             else
             {
-                bpmnParse.ProcessDefinitions.Add(transformProcess(bpmnParse, process));
+                bpmnParse.ProcessDefinitions.Add(TransformProcess(bpmnParse, process));
             }
         }
 
-        protected internal virtual IProcessDefinitionEntity transformProcess(BpmnParse bpmnParse, Process process)
+        protected internal virtual IProcessDefinitionEntity TransformProcess(BpmnParse bpmnParse, Process process)
         {
-            IProcessDefinitionEntity currentProcessDefinition = Context.CommandContext.ProcessDefinitionEntityManager.create();
+            IProcessDefinitionEntity currentProcessDefinition = Context.CommandContext.ProcessDefinitionEntityManager.Create();
             bpmnParse.CurrentProcessDefinition = currentProcessDefinition;
 
             /*
@@ -61,25 +61,25 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             currentProcessDefinition.Description = process.Documentation;
             currentProcessDefinition.DeploymentId = bpmnParse.Deployment.Id;
 
-            if (!ReferenceEquals(bpmnParse.Deployment.EngineVersion, null))
+            if (!(bpmnParse.Deployment.EngineVersion is null))
             {
                 currentProcessDefinition.EngineVersion = bpmnParse.Deployment.EngineVersion;
             }
 
-            createEventListeners(bpmnParse, process.EventListeners);
+            CreateEventListeners(bpmnParse, process.EventListeners);
 
             if (logger.IsEnabled(LogLevel.Debug))
             {
                 logger.LogDebug($"Parsing process {currentProcessDefinition.Key}");
             }
 
-            bpmnParse.processFlowElements(process.FlowElements);
-            processArtifacts(bpmnParse, process.Artifacts);
+            bpmnParse.ProcessFlowElements(process.FlowElements);
+            ProcessArtifacts(bpmnParse, process.Artifacts);
 
             return currentProcessDefinition;
         }
 
-        protected internal virtual void createEventListeners(BpmnParse bpmnParse, IList<EventListener> eventListeners)
+        protected internal virtual void CreateEventListeners(BpmnParse bpmnParse, IList<EventListener> eventListeners)
         {
 
             if (eventListeners != null && eventListeners.Count > 0)
@@ -87,22 +87,22 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
                 foreach (EventListener eventListener in eventListeners)
                 {
                     // Extract specific event-types (if any)
-                    ActivitiEventType[] types = ActivitiEventType.getTypesFromString(eventListener.Events);
+                    ActivitiEventType[] types = ActivitiEventType.GetTypesFromString(eventListener.Events);
 
                     if (ImplementationType.IMPLEMENTATION_TYPE_CLASS.Equals(eventListener.ImplementationType))
                     {
-                        getEventSupport(bpmnParse.BpmnModel).addEventListener(bpmnParse.ListenerFactory.createClassDelegateEventListener(eventListener), types);
+                        GetEventSupport(bpmnParse.BpmnModel).AddEventListener(bpmnParse.ListenerFactory.CreateClassDelegateEventListener(eventListener), types);
 
                     }
                     else if (ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(eventListener.ImplementationType))
                     {
-                        getEventSupport(bpmnParse.BpmnModel).addEventListener(bpmnParse.ListenerFactory.createDelegateExpressionEventListener(eventListener), types);
+                        GetEventSupport(bpmnParse.BpmnModel).AddEventListener(bpmnParse.ListenerFactory.CreateDelegateExpressionEventListener(eventListener), types);
 
                     }
                     else if (ImplementationType.IMPLEMENTATION_TYPE_THROW_SIGNAL_EVENT.Equals(eventListener.ImplementationType) || ImplementationType.IMPLEMENTATION_TYPE_THROW_GLOBAL_SIGNAL_EVENT.Equals(eventListener.ImplementationType) || ImplementationType.IMPLEMENTATION_TYPE_THROW_MESSAGE_EVENT.Equals(eventListener.ImplementationType) || ImplementationType.IMPLEMENTATION_TYPE_THROW_ERROR_EVENT.Equals(eventListener.ImplementationType))
                     {
 
-                        getEventSupport(bpmnParse.BpmnModel).addEventListener(bpmnParse.ListenerFactory.createEventThrowingEventListener(eventListener), types);
+                        GetEventSupport(bpmnParse.BpmnModel).AddEventListener(bpmnParse.ListenerFactory.CreateEventThrowingEventListener(eventListener), types);
 
                     }
                     else
@@ -114,11 +114,9 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
 
         }
 
-        protected internal virtual ActivitiEventSupport getEventSupport(BpmnModel bpmnModel)
+        protected internal virtual ActivitiEventSupport GetEventSupport(BpmnModel bpmnModel)
         {
             return (ActivitiEventSupport)bpmnModel.EventSupport;
         }
-
     }
-
 }

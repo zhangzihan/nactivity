@@ -14,6 +14,7 @@
  */
 namespace org.activiti.bpmn.converter
 {
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
@@ -33,23 +34,23 @@ namespace org.activiti.bpmn.converter
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_THROW;
+                return BpmnXMLConstants.ELEMENT_EVENT_THROW;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             ThrowEvent throwEvent = new ThrowEvent();
-            BpmnXMLUtil.addXMLLocation(throwEvent, xtr);
-            parseChildElements(XMLElementName, throwEvent, model, xtr);
+            BpmnXMLUtil.AddXMLLocation(throwEvent, xtr);
+            ParseChildElements(XMLElementName, throwEvent, model, xtr);
             return throwEvent;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             ThrowEvent throwEvent = (ThrowEvent)element;
-            writeEventDefinitions(throwEvent, throwEvent.EventDefinitions, model, xtw);
+            WriteEventDefinitions(throwEvent, throwEvent.EventDefinitions, model, xtw);
         }
     }
 

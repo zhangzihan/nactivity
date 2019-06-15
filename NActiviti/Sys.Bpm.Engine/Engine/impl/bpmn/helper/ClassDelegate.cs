@@ -39,7 +39,7 @@ namespace org.activiti.engine.impl.bpmn.helper
     /// 
     /// </summary>
     [Serializable]
-    public class ClassDelegate : AbstractBpmnActivityBehavior, ITaskListener, IExecutionListener, ITransactionDependentExecutionListener, ITransactionDependentTaskListener, @delegate.ISubProcessActivityBehavior, ICustomPropertiesResolver
+    public class ClassDelegate : AbstractBpmnActivityBehavior, ITaskListener, IExecutionListener, ITransactionDependentExecutionListener, ITransactionDependentTaskListener, ISubProcessActivityBehavior, ICustomPropertiesResolver
     {
 
         private const long serialVersionUID = 1L;
@@ -82,17 +82,17 @@ namespace org.activiti.engine.impl.bpmn.helper
         }
 
         // Execution listener
-        public virtual void notify(IExecutionEntity execution)
+        public virtual void Notify(IExecutionEntity execution)
         {
             if (executionListenerInstance == null)
             {
                 executionListenerInstance = ExecutionListenerInstance;
             }
-            Context.ProcessEngineConfiguration.DelegateInterceptor.handleInvocation(new ExecutionListenerInvocation(executionListenerInstance, execution));
+            Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new ExecutionListenerInvocation(executionListenerInstance, execution));
         }
 
         // Transaction Dependent execution listener
-        public virtual void notify(string processInstanceId, string executionId, FlowElement flowElement, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap)
+        public virtual void Notify(string processInstanceId, string executionId, FlowElement flowElement, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap)
         {
             if (transactionDependentExecutionListenerInstance == null)
             {
@@ -100,20 +100,20 @@ namespace org.activiti.engine.impl.bpmn.helper
             }
 
             // Note that we can't wrap it in the delegate interceptor like usual here due to being executed when the context is already removed.
-            transactionDependentExecutionListenerInstance.notify(processInstanceId, executionId, flowElement, executionVariables, customPropertiesMap);
+            transactionDependentExecutionListenerInstance.Notify(processInstanceId, executionId, flowElement, executionVariables, customPropertiesMap);
         }
 
-        public virtual IDictionary<string, object> getCustomPropertiesMap(IExecutionEntity execution)
+        public virtual IDictionary<string, object> GetCustomPropertiesMap(IExecutionEntity execution)
         {
             if (customPropertiesResolverInstance == null)
             {
                 customPropertiesResolverInstance = CustomPropertiesResolverInstance;
             }
-            return customPropertiesResolverInstance.getCustomPropertiesMap(execution);
+            return customPropertiesResolverInstance.GetCustomPropertiesMap(execution);
         }
 
         // Task listener
-        public virtual void notify(IDelegateTask delegateTask)
+        public virtual void Notify(IDelegateTask delegateTask)
         {
             if (taskListenerInstance == null)
             {
@@ -121,7 +121,7 @@ namespace org.activiti.engine.impl.bpmn.helper
             }
             try
             {
-                Context.ProcessEngineConfiguration.DelegateInterceptor.handleInvocation(new TaskListenerInvocation(taskListenerInstance, delegateTask));
+                Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new TaskListenerInvocation(taskListenerInstance, delegateTask));
             }
             catch (Exception e)
             {
@@ -129,13 +129,13 @@ namespace org.activiti.engine.impl.bpmn.helper
             }
         }
 
-        public virtual void notify(string processInstanceId, string executionId, Task task, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap)
+        public virtual void Notify(string processInstanceId, string executionId, TaskActivity task, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap)
         {
             if (transactionDependentTaskListenerInstance == null)
             {
                 transactionDependentTaskListenerInstance = TransactionDependentTaskListenerInstance;
             }
-            transactionDependentTaskListenerInstance.notify(processInstanceId, executionId, task, executionVariables, customPropertiesMap);
+            transactionDependentTaskListenerInstance.Notify(processInstanceId, executionId, task, executionVariables, customPropertiesMap);
         }
 
 
@@ -143,7 +143,7 @@ namespace org.activiti.engine.impl.bpmn.helper
         {
             get
             {
-                object delegateInstance = instantiateDelegate(className, fieldDeclarations);
+                object delegateInstance = InstantiateDelegate(className, fieldDeclarations);
                 if (delegateInstance is IExecutionListener)
                 {
                     return (IExecutionListener)delegateInstance;
@@ -163,7 +163,7 @@ namespace org.activiti.engine.impl.bpmn.helper
         {
             get
             {
-                object delegateInstance = instantiateDelegate(className, fieldDeclarations);
+                object delegateInstance = InstantiateDelegate(className, fieldDeclarations);
                 if (delegateInstance is ITransactionDependentExecutionListener)
                 {
                     return (ITransactionDependentExecutionListener)delegateInstance;
@@ -179,7 +179,7 @@ namespace org.activiti.engine.impl.bpmn.helper
         {
             get
             {
-                object delegateInstance = instantiateDelegate(className, fieldDeclarations);
+                object delegateInstance = InstantiateDelegate(className, fieldDeclarations);
                 if (delegateInstance is ICustomPropertiesResolver)
                 {
                     return (ICustomPropertiesResolver)delegateInstance;
@@ -195,7 +195,7 @@ namespace org.activiti.engine.impl.bpmn.helper
         {
             get
             {
-                object delegateInstance = instantiateDelegate(className, fieldDeclarations);
+                object delegateInstance = InstantiateDelegate(className, fieldDeclarations);
                 if (delegateInstance is ITaskListener)
                 {
                     return (ITaskListener)delegateInstance;
@@ -211,7 +211,7 @@ namespace org.activiti.engine.impl.bpmn.helper
         {
             get
             {
-                object delegateInstance = instantiateDelegate(className, fieldDeclarations);
+                object delegateInstance = InstantiateDelegate(className, fieldDeclarations);
                 if (delegateInstance is ITransactionDependentTaskListener)
                 {
                     return (ITransactionDependentTaskListener)delegateInstance;
@@ -224,17 +224,17 @@ namespace org.activiti.engine.impl.bpmn.helper
         }
 
         // Activity Behavior
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
-            bool isSkipExpressionEnabled = SkipExpressionUtil.isSkipExpressionEnabled(execution, skipExpression);
-            if (!isSkipExpressionEnabled || (isSkipExpressionEnabled && !SkipExpressionUtil.shouldSkipFlowElement(execution, skipExpression)))
+            bool isSkipExpressionEnabled = SkipExpressionUtil.IsSkipExpressionEnabled(execution, skipExpression);
+            if (!isSkipExpressionEnabled || (isSkipExpressionEnabled && !SkipExpressionUtil.ShouldSkipFlowElement(execution, skipExpression)))
             {
                 if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
                 {
-                    JToken taskElementProperties = Context.getBpmnOverrideElementProperties(serviceTaskId, execution.ProcessDefinitionId);
-                    if (taskElementProperties != null && taskElementProperties[DynamicBpmnConstants_Fields.SERVICE_TASK_CLASS_NAME] != null)
+                    JToken taskElementProperties = Context.GetBpmnOverrideElementProperties(serviceTaskId, execution.ProcessDefinitionId);
+                    if (taskElementProperties != null && taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_CLASS_NAME] != null)
                     {
-                        string overrideClassName = taskElementProperties[DynamicBpmnConstants_Fields.SERVICE_TASK_CLASS_NAME].ToString();
+                        string overrideClassName = taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_CLASS_NAME].ToString();
                         if (!string.IsNullOrWhiteSpace(overrideClassName) && !overrideClassName.Equals(className))
                         {
                             className = overrideClassName;
@@ -250,15 +250,15 @@ namespace org.activiti.engine.impl.bpmn.helper
 
                 try
                 {
-                    activityBehaviorInstance.execute(execution);
+                    activityBehaviorInstance.Execute(execution);
                 }
                 catch (BpmnError error)
                 {
-                    ErrorPropagation.propagateError(error, execution);
+                    ErrorPropagation.PropagateError(error, execution);
                 }
                 catch (Exception e)
                 {
-                    if (!ErrorPropagation.mapException(e, execution, mapExceptions))
+                    if (!ErrorPropagation.MapException(e, execution, mapExceptions))
                     {
                         throw e;
                     }
@@ -267,7 +267,7 @@ namespace org.activiti.engine.impl.bpmn.helper
         }
 
         // Signallable activity behavior
-        public override void trigger(IExecutionEntity execution, string signalName, object signalData)
+        public override void Trigger(IExecutionEntity execution, string signalName, object signalData, bool throwError = true)
         {
             if (activityBehaviorInstance == null)
             {
@@ -276,7 +276,7 @@ namespace org.activiti.engine.impl.bpmn.helper
 
             if (activityBehaviorInstance is ITriggerableActivityBehavior)
             {
-                ((ITriggerableActivityBehavior)activityBehaviorInstance).trigger(execution, signalName, signalData);
+                ((ITriggerableActivityBehavior)activityBehaviorInstance).Trigger(execution, signalName, signalData);
             }
             else
             {
@@ -285,7 +285,7 @@ namespace org.activiti.engine.impl.bpmn.helper
         }
 
         // Subprocess activityBehaviour
-        public virtual void completing(IExecutionEntity execution, IExecutionEntity subProcessInstance)
+        public virtual void Completing(IExecutionEntity execution, IExecutionEntity subProcessInstance)
         {
             if (activityBehaviorInstance == null)
             {
@@ -294,7 +294,7 @@ namespace org.activiti.engine.impl.bpmn.helper
 
             if (activityBehaviorInstance is @delegate.ISubProcessActivityBehavior)
             {
-                ((@delegate.ISubProcessActivityBehavior)activityBehaviorInstance).completing(execution, subProcessInstance);
+                ((@delegate.ISubProcessActivityBehavior)activityBehaviorInstance).Completing(execution, subProcessInstance);
             }
             else
             {
@@ -302,16 +302,16 @@ namespace org.activiti.engine.impl.bpmn.helper
             }
         }
 
-        public virtual void completed(IExecutionEntity execution)
+        public virtual void Completed(IExecutionEntity execution)
         {
             if (activityBehaviorInstance == null)
             {
                 activityBehaviorInstance = ActivityBehaviorInstance;
             }
 
-            if (activityBehaviorInstance is @delegate.ISubProcessActivityBehavior)
+            if (activityBehaviorInstance is ISubProcessActivityBehavior)
             {
-                ((@delegate.ISubProcessActivityBehavior)activityBehaviorInstance).completed(execution);
+                ((ISubProcessActivityBehavior)activityBehaviorInstance).Completed(execution);
             }
             else
             {
@@ -323,15 +323,15 @@ namespace org.activiti.engine.impl.bpmn.helper
         {
             get
             {
-                object delegateInstance = instantiateDelegate(className, fieldDeclarations);
+                object delegateInstance = InstantiateDelegate(className, fieldDeclarations);
 
                 if (delegateInstance is IActivityBehavior)
                 {
-                    return determineBehaviour((IActivityBehavior)delegateInstance);
+                    return DetermineBehaviour((IActivityBehavior)delegateInstance);
                 }
                 else if (delegateInstance is IJavaDelegate)
                 {
-                    return determineBehaviour(new ServiceTaskJavaDelegateActivityBehavior((IJavaDelegate)delegateInstance));
+                    return DetermineBehaviour(new ServiceTaskJavaDelegateActivityBehavior((IJavaDelegate)delegateInstance));
                 }
                 else
                 {
@@ -342,9 +342,9 @@ namespace org.activiti.engine.impl.bpmn.helper
 
         // Adds properties to the given delegation instance (eg multi instance) if
         // needed
-        protected internal virtual IActivityBehavior determineBehaviour(IActivityBehavior delegateInstance)
+        protected internal virtual IActivityBehavior DetermineBehaviour(IActivityBehavior delegateInstance)
         {
-            if (hasMultiInstanceCharacteristics())
+            if (HasMultiInstanceCharacteristics())
             {
                 multiInstanceActivityBehavior.InnerActivityBehavior = (AbstractBpmnActivityBehavior)delegateInstance;
                 return multiInstanceActivityBehavior;
@@ -352,50 +352,50 @@ namespace org.activiti.engine.impl.bpmn.helper
             return delegateInstance;
         }
 
-        protected internal virtual object instantiateDelegate(string className, IList<FieldDeclaration> fieldDeclarations)
+        protected internal virtual object InstantiateDelegate(string className, IList<FieldDeclaration> fieldDeclarations)
         {
-            return defaultInstantiateDelegate(className, fieldDeclarations);
+            return DefaultInstantiateDelegate(className, fieldDeclarations);
         }
 
         // --HELPER METHODS (also usable by external classes)
         // ----------------------------------------
 
-        public static object defaultInstantiateDelegate(Type clazz, IList<FieldDeclaration> fieldDeclarations)
+        public static object DefaultInstantiateDelegate(Type clazz, IList<FieldDeclaration> fieldDeclarations)
         {
-            return defaultInstantiateDelegate(clazz.FullName, fieldDeclarations);
+            return DefaultInstantiateDelegate(clazz.FullName, fieldDeclarations);
         }
 
-        public static object defaultInstantiateDelegate(string className, IList<FieldDeclaration> fieldDeclarations)
+        public static object DefaultInstantiateDelegate(string className, IList<FieldDeclaration> fieldDeclarations)
         {
-            object @object = ReflectUtil.instantiate(className);
-            applyFieldDeclaration(fieldDeclarations, @object);
+            object @object = ReflectUtil.Instantiate(className);
+            ApplyFieldDeclaration(fieldDeclarations, @object);
             return @object;
         }
 
-        public static void applyFieldDeclaration(IList<FieldDeclaration> fieldDeclarations, object target)
+        public static void ApplyFieldDeclaration(IList<FieldDeclaration> fieldDeclarations, object target)
         {
-            applyFieldDeclaration(fieldDeclarations, target, true);
+            ApplyFieldDeclaration(fieldDeclarations, target, true);
         }
 
-        public static void applyFieldDeclaration(IList<FieldDeclaration> fieldDeclarations, object target, bool throwExceptionOnMissingField)
+        public static void ApplyFieldDeclaration(IList<FieldDeclaration> fieldDeclarations, object target, bool throwExceptionOnMissingField)
         {
             if (fieldDeclarations != null)
             {
                 foreach (FieldDeclaration declaration in fieldDeclarations)
                 {
-                    applyFieldDeclaration(declaration, target, throwExceptionOnMissingField);
+                    ApplyFieldDeclaration(declaration, target, throwExceptionOnMissingField);
                 }
             }
         }
 
-        public static void applyFieldDeclaration(FieldDeclaration declaration, object target)
+        public static void ApplyFieldDeclaration(FieldDeclaration declaration, object target)
         {
-            applyFieldDeclaration(declaration, target, true);
+            ApplyFieldDeclaration(declaration, target, true);
         }
 
-        public static void applyFieldDeclaration(FieldDeclaration declaration, object target, bool throwExceptionOnMissingField)
+        public static void ApplyFieldDeclaration(FieldDeclaration declaration, object target, bool throwExceptionOnMissingField)
         {
-            MethodInfo setterMethod = ReflectUtil.getSetter(declaration.Name, target.GetType(), declaration.Value.GetType());
+            MethodInfo setterMethod = ReflectUtil.GetSetter(declaration.Name, target.GetType(), declaration.Value.GetType());
 
             if (setterMethod != null)
             {
@@ -418,7 +418,7 @@ namespace org.activiti.engine.impl.bpmn.helper
             }
             else
             {
-                FieldInfo field = ReflectUtil.getField(declaration.Name, target);
+                FieldInfo field = ReflectUtil.GetField(declaration.Name, target);
                 if (field == null)
                 {
                     if (throwExceptionOnMissingField)
@@ -432,16 +432,16 @@ namespace org.activiti.engine.impl.bpmn.helper
                 }
 
                 // Check if the delegate field's type is correct
-                if (!fieldTypeCompatible(declaration, field))
+                if (!FieldTypeCompatible(declaration, field))
                 {
                     throw new ActivitiIllegalArgumentException("Incompatible type set on field declaration '" + declaration.Name + "' for class " + target.GetType().FullName + ". Declared value has type " + declaration.Value.GetType().FullName + ", while expecting " + field.DeclaringType.Name);
                 }
-                ReflectUtil.setField(field, target, declaration.Value);
+                ReflectUtil.SetField(field, target, declaration.Value);
 
             }
         }
 
-        public static bool fieldTypeCompatible(FieldDeclaration declaration, FieldInfo field)
+        public static bool FieldTypeCompatible(FieldDeclaration declaration, FieldInfo field)
         {
             if (declaration.Value != null)
             {
@@ -464,7 +464,5 @@ namespace org.activiti.engine.impl.bpmn.helper
                 return className;
             }
         }
-
     }
-
 }

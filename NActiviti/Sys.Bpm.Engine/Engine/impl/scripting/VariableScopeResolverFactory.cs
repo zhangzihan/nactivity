@@ -21,7 +21,7 @@ namespace org.activiti.engine.impl.scripting
     public class VariableScopeResolverFactory : IResolverFactory
     {
 
-        public virtual IResolver createResolver(ProcessEngineConfigurationImpl processEngineConfiguration, IVariableScope variableScope)
+        public virtual IResolver CreateResolver(ProcessEngineConfigurationImpl processEngineConfiguration, IVariableScope variableScope)
         {
             if (variableScope != null)
             {

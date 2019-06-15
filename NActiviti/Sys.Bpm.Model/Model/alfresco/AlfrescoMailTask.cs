@@ -4,10 +4,12 @@
     public class AlfrescoMailTask : ServiceTask
     {
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            AlfrescoMailTask clone = new AlfrescoMailTask();
-            clone.Values = this;
+            AlfrescoMailTask clone = new AlfrescoMailTask
+            {
+                Values = this
+            };
             return clone;
         }
 

@@ -30,10 +30,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            FormValue clone = new FormValue();
-            clone.Values = this;
+            FormValue clone = new FormValue
+            {
+                Values = this
+            };
             return clone;
         }
 

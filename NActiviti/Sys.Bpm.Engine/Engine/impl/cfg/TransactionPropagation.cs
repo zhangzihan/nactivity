@@ -19,11 +19,17 @@ namespace org.activiti.engine.impl.cfg
     /// </summary>
     public enum TransactionPropagation
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         REQUIRED,
+        /// <summary>
+        /// 
+        /// </summary>
         REQUIRES_NEW,
+        /// <summary>
+        /// 
+        /// </summary>
         NOT_SUPPORTED,
-
     }
-
 }

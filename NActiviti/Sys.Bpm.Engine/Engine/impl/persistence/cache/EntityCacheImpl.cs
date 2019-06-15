@@ -15,7 +15,6 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.persistence.cache
 {
-
     using org.activiti.engine.impl.persistence.entity;
     using System.Collections.Concurrent;
     using System.Linq;
@@ -23,36 +22,30 @@ namespace org.activiti.engine.impl.persistence.cache
     /// 
     public class EntityCacheImpl : IEntityCache
     {
+        protected internal readonly ConcurrentDictionary<Type, IDictionary<string, CachedEntity>> cachedObjects = new ConcurrentDictionary<Type, IDictionary<string, CachedEntity>>();
 
-        protected internal ConcurrentDictionary<Type, IDictionary<string, CachedEntity>> cachedObjects = new ConcurrentDictionary<Type, IDictionary<string, CachedEntity>>();
-
-        public virtual CachedEntity put(IEntity entity, bool storeState)
+        public virtual CachedEntity Put(IEntity entity, bool storeState)
         {
-            cachedObjects.TryGetValue(entity.GetType(), out var classCache);
-            if (classCache == null)
-            {
-                classCache = new Dictionary<string, CachedEntity>();
-                cachedObjects.TryAdd(entity.GetType(), classCache);
-            }
+            ConcurrentDictionary<string, CachedEntity> classCache = cachedObjects.GetOrAdd(entity.GetType(), new ConcurrentDictionary<string, CachedEntity>()) as ConcurrentDictionary<string, CachedEntity>;
             CachedEntity cachedObject = new CachedEntity(entity, storeState);
-            classCache[entity.Id] = cachedObject;
+            classCache.AddOrUpdate(entity.Id, cachedObject, (id, cacheObject) => cachedObject);
             return cachedObject;
         }
 
-        public virtual T findInCache<T>(string id)
+        public virtual T FindInCache<T>(string id)
         {
             Type entityClass = typeof(T);
 
-            return (T)findInCache(entityClass, id);
+            return (T)FindInCache(entityClass, id);
         }
 
-        public virtual object findInCache(Type entityClass, string id)
+        public virtual object FindInCache(Type entityClass, string id)
         {
             CachedEntity cachedObject = null;
             cachedObjects.TryGetValue(entityClass, out IDictionary<string, CachedEntity> classCache);
             if (classCache == null)
             {
-                classCache = findClassCacheByCheckingSubclasses(entityClass);
+                classCache = FindClassCacheByCheckingSubclasses(entityClass);
             }
 
             if (classCache != null)
@@ -68,7 +61,7 @@ namespace org.activiti.engine.impl.persistence.cache
             return null;
         }
 
-        protected internal virtual IDictionary<string, CachedEntity> findClassCacheByCheckingSubclasses(Type entityClass)
+        protected internal virtual IDictionary<string, CachedEntity> FindClassCacheByCheckingSubclasses(Type entityClass)
         {
             foreach (Type clazz in cachedObjects.Keys)
             {
@@ -82,38 +75,38 @@ namespace org.activiti.engine.impl.persistence.cache
             return null;
         }
 
-        public virtual void cacheRemove(Type entityClass, string entityId)
+        public virtual void CacheRemove(Type entityClass, string entityId)
         {
             cachedObjects.TryGetValue(entityClass, out IDictionary<string, CachedEntity> classCache);
-            if (classCache == null)
+            if (classCache is ConcurrentDictionary<string, CachedEntity> dict)
             {
-                return;
+                dict.TryRemove(entityId, out _);
             }
-            classCache.Remove(entityId);
         }
 
-        public virtual ICollection<CachedEntity> findInCacheAsCachedObjects<T>()
+        public virtual ICollection<CachedEntity> FindInCacheAsCachedObjects<T>()
         {
             Type entityClass = typeof(T);
 
-            return findInCacheAsCachedObjects(entityClass);
+            return FindInCacheAsCachedObjects(entityClass);
         }
 
-        public virtual ICollection<CachedEntity> findInCacheAsCachedObjects(Type entityClass)
+        public virtual ICollection<CachedEntity> FindInCacheAsCachedObjects(Type entityClass)
         {
             cachedObjects.TryGetValue(entityClass, out IDictionary<string, CachedEntity> classCache);
-            if (classCache != null)
+            if (classCache is ConcurrentDictionary<string, CachedEntity> dict)
             {
-                return classCache.Values;
+                return dict.Values;
             }
+
             return null;
         }
 
-        public virtual IList<T> findInCache<T>()
+        public virtual IList<T> FindInCache<T>()
         {
             Type entityClass = typeof(T);
 
-            var ret = findInCache(entityClass);
+            var ret = FindInCache(entityClass);
             if (ret != null)
             {
                 return ret.Select(x => (T)x).ToList();
@@ -122,16 +115,16 @@ namespace org.activiti.engine.impl.persistence.cache
             return null;
         }
 
-        public virtual IList<object> findInCache(Type entityClass)
+        public virtual IList<object> FindInCache(Type entityClass)
         {
             cachedObjects.TryGetValue(entityClass, out IDictionary<string, CachedEntity> classCache);
 
-            if (classCache == null)
+            if (classCache is null)
             {
-                classCache = findClassCacheByCheckingSubclasses(entityClass);
+                classCache = FindClassCacheByCheckingSubclasses(entityClass);
             }
 
-            if (classCache != null)
+            if (!(classCache is null))
             {
                 IList<object> entities = new List<object>(classCache.Count);
                 foreach (CachedEntity cachedObject in classCache.Values)
@@ -152,12 +145,12 @@ namespace org.activiti.engine.impl.persistence.cache
             }
         }
 
-        public virtual void close()
+        public virtual void Close()
         {
 
         }
 
-        public virtual void flush()
+        public virtual void Flush()
         {
 
         }

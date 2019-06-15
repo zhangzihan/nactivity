@@ -35,32 +35,32 @@ namespace org.activiti.engine.impl.cfg.multitenant
             this.schemaOperation = schemaOperation;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            if (ProcessEngineConfigurationImpl.DB_SCHEMA_UPDATE_DROP_CREATE.Equals(schemaOperation))
+            if (ProcessEngineConfiguration.DB_SCHEMA_UPDATE_DROP_CREATE.Equals(schemaOperation))
             {
                 try
                 {
-                    commandContext.DbSqlSession.dbSchemaDrop();
+                    commandContext.DbSqlSession.DbSchemaDrop();
                 }
                 catch (Exception)
                 {
                     // ignore
                 }
             }
-            if (ProcessEngineConfiguration.DB_SCHEMA_UPDATE_CREATE_DROP.Equals(schemaOperation) || ProcessEngineConfigurationImpl.DB_SCHEMA_UPDATE_DROP_CREATE.Equals(schemaOperation) || ProcessEngineConfigurationImpl.DB_SCHEMA_UPDATE_CREATE.Equals(schemaOperation))
+            if (ProcessEngineConfiguration.DB_SCHEMA_UPDATE_CREATE_DROP.Equals(schemaOperation) || ProcessEngineConfiguration.DB_SCHEMA_UPDATE_DROP_CREATE.Equals(schemaOperation) || ProcessEngineConfiguration.DB_SCHEMA_UPDATE_CREATE.Equals(schemaOperation))
             {
-                commandContext.DbSqlSession.dbSchemaCreate();
+                commandContext.DbSqlSession.DbSchemaCreate();
 
             }
             else if (ProcessEngineConfiguration.DB_SCHEMA_UPDATE_FALSE.Equals(schemaOperation))
             {
-                commandContext.DbSqlSession.dbSchemaCheckVersion();
+                commandContext.DbSqlSession.DbSchemaCheckVersion();
 
             }
             else if (ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE.Equals(schemaOperation))
             {
-                commandContext.DbSqlSession.dbSchemaUpdate();
+                commandContext.DbSqlSession.DbSchemaUpdate();
             }
 
             return commandContext.GetResult();

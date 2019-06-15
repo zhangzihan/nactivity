@@ -23,14 +23,14 @@ namespace org.activiti.engine.impl
 
         // results ////////////////////////////////////////////////////////////////
 
-        public override IList<IHistoricVariableInstance> executeList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public override IList<IHistoricVariableInstance> ExecuteList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return commandContext.HistoricVariableInstanceEntityManager.findHistoricVariableInstancesByNativeQuery(parameterMap, firstResult, maxResults);
+            return commandContext.HistoricVariableInstanceEntityManager.FindHistoricVariableInstancesByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public override long executeCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
+        public override long ExecuteCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
         {
-            return commandContext.HistoricVariableInstanceEntityManager.findHistoricVariableInstanceCountByNativeQuery(parameterMap);
+            return commandContext.HistoricVariableInstanceEntityManager.FindHistoricVariableInstanceCountByNativeQuery(parameterMap);
         }
 
     }

@@ -30,14 +30,14 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         private const long serialVersionUID = 1L;
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             // Do nothing: waitstate behavior
         }
 
-        public override void trigger(IExecutionEntity execution, string signalName, object data)
+        public override void Trigger(IExecutionEntity execution, string signalName, object data, bool throwError = true)
         {
-            leave(execution);
+            Leave(execution);
         }
 
     }

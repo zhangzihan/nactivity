@@ -18,27 +18,29 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.@delegate;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
+    using org.activiti.engine.impl.agenda;
+    using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.identity;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.task;
+    using Sys.Bpm;
     using Sys.Workflow;
 
     /// 
     [Serializable]
     public abstract class AbstractCompleteTaskCmd : NeedsActiveTaskCmd<object>
     {
-
         private const long serialVersionUID = 1L;
 
-        protected string deleteReason = null;
+        protected string completeReason = null;
 
         public AbstractCompleteTaskCmd(string taskId) : base(taskId)
         {
         }
 
-        protected internal virtual void executeTaskComplete(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
+        protected internal virtual void ExecuteTaskComplete(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
         {
             // Task complete logic
 
@@ -47,37 +49,37 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiException("A delegated task cannot be completed, but should be resolved instead.");
             }
 
-            commandContext.ProcessEngineConfiguration.ListenerNotificationHelper.executeTaskListeners(taskEntity, BaseTaskListener_Fields.EVENTNAME_COMPLETE);
+            ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.ProcessEngineConfiguration;
+            processEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(taskEntity, BaseTaskListenerFields.EVENTNAME_COMPLETE);
+
             IUserInfo user = Authentication.AuthenticatedUser;
-            if (user != null && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
+            if (!(user is null) && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
             {
-                IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(taskEntity.ProcessInstanceId);//这里为什么取ProcessInstance而不是Exceution.
-                commandContext.IdentityLinkEntityManager.involveUser(processInstanceEntity, user.Id, IdentityLinkType.PARTICIPANT);
+                IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ProcessInstanceId);
+                commandContext.IdentityLinkEntityManager.InvolveUser(processInstanceEntity, user.Id, IdentityLinkType.PARTICIPANT);
             }
 
             IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
             if (eventDispatcher.Enabled)
             {
-                if (variables != null)
+                if (variables is null)
                 {
-                    eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityWithVariablesEvent(ActivitiEventType.TASK_COMPLETED, taskEntity, variables, localScope));
+                    eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_COMPLETED, taskEntity));
                 }
                 else
                 {
-                    eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TASK_COMPLETED, taskEntity));
+                    eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityWithVariablesEvent(ActivitiEventType.TASK_COMPLETED, taskEntity, variables, localScope));
                 }
             }
 
-            commandContext.TaskEntityManager.deleteTask(taskEntity, deleteReason, false, false);
+            commandContext.TaskEntityManager.DeleteTask(taskEntity, completeReason, false, false);
 
             // Continue process (if not a standalone task)
-            if (!ReferenceEquals(taskEntity.ExecutionId, null))
+            if (!(taskEntity.ExecutionId is null))
             {
-                IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(taskEntity.ExecutionId);
-                Context.Agenda.planTriggerExecutionOperation(executionEntity);
+                IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ExecutionId);
+                Context.Agenda.PlanTriggerExecutionOperation(executionEntity, variables);
             }
         }
-
     }
-
 }

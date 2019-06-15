@@ -36,60 +36,61 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IHistoricProcessInstanceEntity create()
+        public override IHistoricProcessInstanceEntity Create()
         {
             return new HistoricProcessInstanceEntityImpl();
         }
 
-        public virtual IHistoricProcessInstanceEntity create(IExecutionEntity processInstanceExecutionEntity)
+        public virtual IHistoricProcessInstanceEntity Create(IExecutionEntity processInstanceExecutionEntity)
         {
             return new HistoricProcessInstanceEntityImpl(processInstanceExecutionEntity);
         }
 
-        public virtual IList<string> findHistoricProcessInstanceIdsByProcessDefinitionId(string processDefinitionId)
+        public virtual IList<string> FindHistoricProcessInstanceIdsByProcessDefinitionId(string processDefinitionId)
         {
-            return DbSqlSession.selectList<HistoricProcessInstanceEntityImpl, string>("selectHistoricProcessInstanceIdsByProcessDefinitionId", new { processDefinitionId });
+            return DbSqlSession.SelectList<HistoricProcessInstanceEntityImpl, string>("selectHistoricProcessInstanceIdsByProcessDefinitionId", new { processDefinitionId });
         }
 
-        public virtual IList<IHistoricProcessInstanceEntity> findHistoricProcessInstancesBySuperProcessInstanceId(string superProcessInstanceId)
+        public virtual IList<IHistoricProcessInstanceEntity> FindHistoricProcessInstancesBySuperProcessInstanceId(string superProcessInstanceId)
         {
-            return DbSqlSession.selectList<HistoricProcessInstanceEntityImpl, IHistoricProcessInstanceEntity>("selectHistoricProcessInstanceIdsBySuperProcessInstanceId", new { superProcessInstanceId });
+            return DbSqlSession.SelectList<HistoricProcessInstanceEntityImpl, IHistoricProcessInstanceEntity>("selectHistoricProcessInstanceIdsBySuperProcessInstanceId", new { superProcessInstanceId });
         }
 
-        public virtual long findHistoricProcessInstanceCountByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery)
+        public virtual long FindHistoricProcessInstanceCountByQueryCriteria(IHistoricProcessInstanceQuery historicProcessInstanceQuery)
         {
-            return ((long?)DbSqlSession.selectOne<HistoricProcessInstanceEntityImpl, long?>("selectHistoricProcessInstanceCountByQueryCriteria", historicProcessInstanceQuery)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<HistoricProcessInstanceEntityImpl, long?>("selectHistoricProcessInstanceCountByQueryCriteria", historicProcessInstanceQuery).GetValueOrDefault();
         }
 
-        public virtual IList<IHistoricProcessInstance> findHistoricProcessInstancesByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery)
+        public virtual IList<IHistoricProcessInstance> FindHistoricProcessInstancesByQueryCriteria(IHistoricProcessInstanceQuery historicProcessInstanceQuery)
         {
-            return DbSqlSession.selectList<HistoricProcessInstanceEntityImpl, IHistoricProcessInstance>("selectHistoricProcessInstancesByQueryCriteria", historicProcessInstanceQuery);
+            return DbSqlSession.SelectList<HistoricProcessInstanceEntityImpl, IHistoricProcessInstance>("selectHistoricProcessInstancesByQueryCriteria", historicProcessInstanceQuery);
         }
 
-        public virtual IList<IHistoricProcessInstance> findHistoricProcessInstancesAndVariablesByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery)
+        public virtual IList<IHistoricProcessInstance> FindHistoricProcessInstancesAndVariablesByQueryCriteria(IHistoricProcessInstanceQuery historicProcessInstanceQuery)
         {
+            var hisQuery = historicProcessInstanceQuery as HistoricProcessInstanceQueryImpl;
             // paging doesn't work for combining process instances and variables
             // due to an outer join, so doing it in-memory
-            if (historicProcessInstanceQuery.FirstResult < 0 || historicProcessInstanceQuery.MaxResults <= 0)
+            if (hisQuery.FirstResult < 0 || hisQuery.MaxResults <= 0)
             {
                 return new List<IHistoricProcessInstance>();
             }
 
-            int firstResult = historicProcessInstanceQuery.FirstResult;
-            int maxResults = historicProcessInstanceQuery.MaxResults;
+            int firstResult = hisQuery.FirstResult;
+            int maxResults = hisQuery.MaxResults;
 
             // setting max results, limit to 20000 results for performance reasons
-            if (historicProcessInstanceQuery.ProcessInstanceVariablesLimit != null)
+            if (hisQuery.ProcessInstanceVariablesLimit != null)
             {
-                historicProcessInstanceQuery.MaxResults = historicProcessInstanceQuery.ProcessInstanceVariablesLimit.GetValueOrDefault();
+                hisQuery.MaxResults = hisQuery.ProcessInstanceVariablesLimit.GetValueOrDefault();
             }
             else
             {
-                historicProcessInstanceQuery.MaxResults = ProcessEngineConfiguration.HistoricProcessInstancesQueryLimit;
+                hisQuery.MaxResults = ProcessEngineConfiguration.HistoricProcessInstancesQueryLimit;
             }
-            historicProcessInstanceQuery.FirstResult = 0;
+            hisQuery.FirstResult = 0;
 
-            IList<IHistoricProcessInstance> instanceList = DbSqlSession.selectListWithRawParameterWithoutFilter<HistoricProcessInstanceEntityImpl, IHistoricProcessInstance>("selectHistoricProcessInstancesWithVariablesByQueryCriteria", historicProcessInstanceQuery, historicProcessInstanceQuery.FirstResult, historicProcessInstanceQuery.MaxResults);
+            IList<IHistoricProcessInstance> instanceList = DbSqlSession.SelectListWithRawParameterWithoutFilter<HistoricProcessInstanceEntityImpl, IHistoricProcessInstance>("selectHistoricProcessInstancesWithVariablesByQueryCriteria", hisQuery, hisQuery.FirstResult, hisQuery.MaxResults);
 
             if (instanceList != null && instanceList.Count > 0)
             {
@@ -115,14 +116,14 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             return instanceList;
         }
 
-        public virtual IList<IHistoricProcessInstance> findHistoricProcessInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IHistoricProcessInstance> FindHistoricProcessInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return DbSqlSession.selectListWithRawParameter<HistoricProcessInstanceEntityImpl, IHistoricProcessInstance>("selectHistoricProcessInstanceByNativeQuery", parameterMap, firstResult, maxResults);
+            return DbSqlSession.SelectListWithRawParameter<HistoricProcessInstanceEntityImpl, IHistoricProcessInstance>("selectHistoricProcessInstanceByNativeQuery", parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findHistoricProcessInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindHistoricProcessInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return ((long?)DbSqlSession.selectOne<HistoricProcessInstanceEntityImpl, long?>("selectHistoricProcessInstanceCountByNativeQuery", parameterMap)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<HistoricProcessInstanceEntityImpl, long?>("selectHistoricProcessInstanceCountByNativeQuery", parameterMap).GetValueOrDefault();
         }
 
     }

@@ -17,24 +17,24 @@ namespace org.activiti.engine.impl.cmd
 
         private const long serialVersionUID = 1L;
 
-        private ICollection<string> variableNames;
+        private IEnumerable<string> variableNames;
         private bool isLocal;
 
-        public RemoveExecutionVariablesCmd(string executionId, ICollection<string> variableNames, bool isLocal) : base(executionId)
+        public RemoveExecutionVariablesCmd(string executionId, IEnumerable<string> variableNames, bool isLocal) : base(executionId)
         {
             this.variableNames = variableNames;
             this.isLocal = isLocal;
         }
 
-        protected internal override object execute(ICommandContext commandContext, IExecutionEntity execution)
+        protected internal override object Execute(ICommandContext commandContext, IExecutionEntity execution)
         {
             if (isLocal)
             {
-                execution.removeVariablesLocal(variableNames);
+                execution.RemoveVariablesLocal(variableNames);
             }
             else
             {
-                execution.removeVariables(variableNames);
+                execution.RemoveVariables(variableNames);
             }
 
             return null;

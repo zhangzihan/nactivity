@@ -23,9 +23,9 @@ namespace org.activiti.services.subscription
         /// 
         /// </summary>
         /// <param name="signalCmd"></param>
-        public virtual void sendSignal(SignalCmd signalCmd)
+        public virtual void SendSignal(SignalCmd signalCmd)
         {
-            eventHandler.broadcastSignal(signalCmd);
+            eventHandler.BroadcastSignal(signalCmd);
         }
     }
 }

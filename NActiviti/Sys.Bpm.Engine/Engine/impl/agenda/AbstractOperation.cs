@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-/* Licensed under the Apache License, Version 2.0 (the "License");
+﻿/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,6 +13,7 @@
 namespace org.activiti.engine.impl.agenda
 {
     using org.activiti.bpmn.model;
+    using org.activiti.engine.@delegate;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
@@ -26,47 +25,84 @@ namespace org.activiti.engine.impl.agenda
     /// exposing some shared helper methods and member fields to subclasses.
     /// 
     /// An operations is a <seealso cref="Runnable"/> instance that is put on the <seealso cref="IAgenda"/> during
-    /// the execution of a <seealso cref="Command"/>.
+    /// the execution of a <seealso cref="ICommand&lt;T&gt;"/>.
     /// 
     /// 
     /// </summary>
     public abstract class AbstractOperation
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ICommandContext commandContext;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IAgenda agenda;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExecutionEntity execution;
 
+        public object SignalData { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal Action Run { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        protected abstract void RunOperation();
+
+        /// <summary>
+        /// 
+        /// </summary>
         public AbstractOperation()
         {
-            Run = new Action(run);
+            Run = new Action(RunOperation);
         }
 
-        protected abstract void run();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <param name="execution"></param>
+        public AbstractOperation(ICommandContext commandContext, IExecutionEntity execution) : this(commandContext, execution, null)
+        {
+        }
 
-        public AbstractOperation(ICommandContext commandContext, IExecutionEntity execution) : this()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <param name="execution"></param>
+        public AbstractOperation(ICommandContext commandContext, IExecutionEntity execution, object signalData) : this()
         {
             this.commandContext = commandContext;
             this.execution = execution;
             this.agenda = commandContext.Agenda;
+            SignalData = signalData;
         }
 
         /// <summary>
         /// Helper method to match the activityId of an execution with a FlowElement of the process definition referenced by the execution.
         /// </summary>
-        protected internal virtual FlowElement getCurrentFlowElement(IExecutionEntity execution)
+        protected internal virtual FlowElement GetCurrentFlowElement(IExecutionEntity execution)
         {
             if (execution.CurrentFlowElement != null)
             {
                 return execution.CurrentFlowElement;
             }
-            else if (!ReferenceEquals(execution.CurrentActivityId, null))
+            else if (!(execution.CurrentActivityId is null))
             {
                 string processDefinitionId = execution.ProcessDefinitionId;
-                org.activiti.bpmn.model.Process process = ProcessDefinitionUtil.getProcess(processDefinitionId);
+                Process process = ProcessDefinitionUtil.GetProcess(processDefinitionId);
                 string activityId = execution.CurrentActivityId;
-                FlowElement currentFlowElement = process.getFlowElement(activityId, true);
+                FlowElement currentFlowElement = process.GetFlowElement(activityId, true);
                 return currentFlowElement;
             }
             return null;
@@ -76,28 +112,28 @@ namespace org.activiti.engine.impl.agenda
         /// Executes the execution listeners defined on the given element, with the given event type.
         /// Uses the <seealso cref="#execution"/> of this operation instance as argument for the execution listener.
         /// </summary>
-        protected internal virtual void executeExecutionListeners(IHasExecutionListeners elementWithExecutionListeners, string eventType)
+        protected internal virtual void ExecuteExecutionListeners(IHasExecutionListeners elementWithExecutionListeners, string eventType)
         {
-            executeExecutionListeners(elementWithExecutionListeners, execution, eventType);
+            ExecuteExecutionListeners(elementWithExecutionListeners, execution, eventType);
         }
 
         /// <summary>
         /// Executes the execution listeners defined on the given element, with the given event type,
         /// and passing the provided execution to the <seealso cref="IExecutionListener"/> instances.
         /// </summary>
-        protected internal virtual void executeExecutionListeners(IHasExecutionListeners elementWithExecutionListeners, IExecutionEntity executionEntity, string eventType)
+        protected internal virtual void ExecuteExecutionListeners(IHasExecutionListeners elementWithExecutionListeners, IExecutionEntity executionEntity, string eventType)
         {
-            commandContext.ProcessEngineConfiguration.ListenerNotificationHelper.executeExecutionListeners(elementWithExecutionListeners, executionEntity, eventType);
+            commandContext.ProcessEngineConfiguration.ListenerNotificationHelper.ExecuteExecutionListeners(elementWithExecutionListeners, executionEntity, eventType);
         }
 
         /// <summary>
         /// Returns the first parent execution of the provided execution that is a scope.
         /// </summary>
-        protected internal virtual IExecutionEntity findFirstParentScopeExecution(IExecutionEntity executionEntity)
+        protected internal virtual IExecutionEntity FindFirstParentScopeExecution(IExecutionEntity executionEntity)
         {
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
             IExecutionEntity parentScopeExecution = null;
-            IExecutionEntity currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(executionEntity.ParentId);
+            IExecutionEntity currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(executionEntity.ParentId);
             while (currentlyExaminedExecution != null && parentScopeExecution == null)
             {
                 if (currentlyExaminedExecution.IsScope)
@@ -106,12 +142,15 @@ namespace org.activiti.engine.impl.agenda
                 }
                 else
                 {
-                    currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
+                    currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
                 }
             }
             return parentScopeExecution;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ICommandContext CommandContext
         {
             get
@@ -124,30 +163,26 @@ namespace org.activiti.engine.impl.agenda
             }
         }
 
-
-        public virtual IAgenda getAgenda()
-        {
-            return agenda;
-        }
-
-        public virtual void setAgenda(DefaultActivitiEngineAgenda agenda)
-        {
-            this.agenda = agenda;
-        }
-
-        public virtual IExecutionEntity Execution
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual IAgenda Agenda
         {
             get
             {
-                return execution;
+                return agenda;
             }
-            set
-            {
-                this.execution = value;
-            }
+            set => agenda = value;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IExecutionEntity Execution
+        {
+            get => execution;
+            set => execution = value;
+        }
     }
-
 }

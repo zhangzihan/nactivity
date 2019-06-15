@@ -25,7 +25,7 @@ namespace org.activiti.engine.impl.calendar
         {
         }
 
-        public override DateTime? resolveDuedate(string duedateDescription, int maxIterations)
+        public override DateTime? ResolveDuedate(string duedateDescription, int maxIterations)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace org.activiti.engine.impl.calendar
                 else
                 {
                     CronExpression ce = new CronExpression(duedateDescription, clockReader);
-                    return ce.getTimeAfter(clockReader.CurrentTime).GetValueOrDefault(DateTime.MaxValue);
+                    return ce.GetTimeAfter(clockReader.CurrentTime).GetValueOrDefault(DateTime.MaxValue);
                 }
 
             }
@@ -47,18 +47,18 @@ namespace org.activiti.engine.impl.calendar
 
         }
 
-        public override bool? validateDuedate(string duedateDescription, int maxIterations, DateTime? endDate, DateTime? newTimer)
+        public override bool? ValidateDuedate(string duedateDescription, int maxIterations, DateTime? endDate, DateTime? newTimer)
         {
             if (endDate != null)
             {
-                return base.validateDuedate(duedateDescription, maxIterations, endDate, newTimer);
+                return base.ValidateDuedate(duedateDescription, maxIterations, endDate, newTimer);
             }
             // end date could be part of the chron expression
             try
             {
                 if (!string.IsNullOrWhiteSpace(duedateDescription) && duedateDescription.StartsWith("R", StringComparison.Ordinal))
                 {
-                    return (new DurationHelper(duedateDescription, maxIterations, clockReader)).isValidDate(newTimer);
+                    return (new DurationHelper(duedateDescription, maxIterations, clockReader)).IsValidDate(newTimer);
                 }
                 else
                 {

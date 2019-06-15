@@ -23,17 +23,17 @@ namespace org.activiti.cloud.services.core.pageable.sort
         {
             orderByProperties["id"] = HistoricProcessInstanceQueryProperty.PROCESS_INSTANCE_ID_;
             orderByProperties["name"] = HistoricProcessInstanceQueryProperty.BUSINESS_KEY;
-            orderByProperties["createTime"] = HistoricProcessInstanceQueryProperty.START_TIME;
+            orderByProperties["startDate"] = HistoricProcessInstanceQueryProperty.START_TIME;
         }
 
         /// <inheritdoc />
-        protected internal override void applyDefaultSort(IHistoricProcessInstanceQuery query)
+        protected internal override void ApplyDefaultSort(IHistoricProcessInstanceQuery query)
         {
-            query.orderByProcessInstanceStartTime().asc();
+            query.OrderByProcessInstanceStartTime().Asc();
         }
 
         /// <inheritdoc />
-        protected internal override IQueryProperty getOrderByProperty(Sort.Order order)
+        protected internal override IQueryProperty GetOrderByProperty(Sort.Order order)
         {
             orderByProperties.TryGetValue(order.Property, out IQueryProperty qp);
 

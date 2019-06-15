@@ -8,7 +8,7 @@ namespace Sys.Expressions
     {
         public static object GetValue(object context, string expression, IDictionary<string, object> variables)
         {
-            Regex expToken = new Regex(@"[#]{(\w+)}", RegexOptions.IgnoreCase);
+            Regex expToken = new Regex(@"[#]{(([\p{L}\p{N}_]+)(\.[\p{L}\p{N}_]+)*)}", RegexOptions.IgnoreCase);
 
             string expr = expression;
             if (expToken.IsMatch(expr))

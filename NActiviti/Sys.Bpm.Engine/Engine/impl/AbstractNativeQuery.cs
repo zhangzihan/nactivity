@@ -27,7 +27,7 @@ namespace org.activiti.engine.impl
     /// 
     /// </summary>
     [Serializable]
-    public abstract class AbstractNativeQuery<T, U> : ICommand<object>, INativeQuery<T, U> where U : class
+    public abstract class AbstractNativeQuery<T, U> : ICommand<object>, INativeQuery<T, U> where U : class where T : class
     {
 
         private const long serialVersionUID = 1L;
@@ -41,7 +41,7 @@ namespace org.activiti.engine.impl
         protected internal int firstResult;
         protected internal ResultType? resultType;
 
-        private IDictionary<string, object> parameters = new Dictionary<string, object>();
+        private readonly IDictionary<string, object> parameters = new Dictionary<string, object>();
         private string sqlStatement;
 
         protected internal AbstractNativeQuery(ICommandExecutor commandExecutor)
@@ -54,73 +54,73 @@ namespace org.activiti.engine.impl
             this.commandContext = commandContext;
         }
 
-        public virtual AbstractNativeQuery<T, U> setCommandExecutor(ICommandExecutor commandExecutor)
+        public virtual AbstractNativeQuery<T, U> SetCommandExecutor(ICommandExecutor commandExecutor)
         {
             this.commandExecutor = commandExecutor;
             return this;
         }
 
-        public virtual T sql(string sqlStatement)
+        public virtual T Sql(string sqlStatement)
         {
             this.sqlStatement = sqlStatement;
-            //return  this as T;
-            return default(T);
+
+            return this as T;
         }
 
-        public virtual T parameter(string name, object value)
+        public virtual T SetParameter(string name, object value)
         {
             parameters[name] = value;
-            return default(T);
-            //return (T)this;
+
+            return this as T;
         }
 
-        public virtual U singleResult()
+        public virtual U SingleResult()
         {
             this.resultType = ResultType.SINGLE_RESULT;
             if (commandExecutor != null)
             {
-                return (U)commandExecutor.execute(this);
+                return (U)commandExecutor.Execute(this);
             }
-            return executeSingleResult(Context.CommandContext);
+            return ExecuteSingleResult(Context.CommandContext);
         }
 
-        public virtual IList<U> list()
+        public virtual IList<U> List()
         {
             this.resultType = ResultType.LIST;
             if (commandExecutor != null)
             {
-                return (IList<U>)commandExecutor.execute(this);
+                return (IList<U>)commandExecutor.Execute(this);
             }
-            return executeList(Context.CommandContext, ParameterMap, 0, int.MaxValue);
+            return ExecuteList(Context.CommandContext, ParameterMap, 0, int.MaxValue);
         }
 
-        public virtual IList<U> listPage(int firstResult, int maxResults)
+        public virtual IList<U> ListPage(int firstResult, int maxResults)
         {
             this.firstResult = firstResult;
             this.maxResults = maxResults;
             this.resultType = ResultType.LIST_PAGE;
             if (commandExecutor != null)
             {
-                return (IList<U>)commandExecutor.execute(this);
+                return (IList<U>)commandExecutor.Execute(this);
             }
-            return executeList(Context.CommandContext, ParameterMap, firstResult, maxResults);
+            return ExecuteList(Context.CommandContext, ParameterMap, firstResult, maxResults);
         }
 
-        public virtual long count()
+        public virtual long Count()
         {
             this.resultType = ResultType.COUNT;
             if (commandExecutor != null)
             {
-                return ((long?)commandExecutor.execute(this)).GetValueOrDefault();
+                return ((long?)commandExecutor.Execute(this)).GetValueOrDefault();
             }
-            return executeCount(Context.CommandContext, ParameterMap);
+            return ExecuteCount(Context.CommandContext, ParameterMap);
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
             if (resultType == ResultType.LIST)
             {
-                return executeList(commandContext, ParameterMap, 0, int.MaxValue);
+                return ExecuteList(commandContext, ParameterMap, 0, int.MaxValue);
             }
             else if (resultType == ResultType.LIST_PAGE)
             {
@@ -140,7 +140,7 @@ namespace org.activiti.engine.impl
 
                 int firstRow = firstResult + 1;
                 parameterMap["firstRow"] = firstRow;
-                int lastRow = 0;
+                int lastRow;
                 if (maxResults == int.MaxValue)
                 {
                     lastRow = maxResults;
@@ -150,19 +150,19 @@ namespace org.activiti.engine.impl
                     lastRow = firstResult + maxResults + 1;
                 }
                 parameterMap["lastRow"] = lastRow;
-                return executeList(commandContext, parameterMap, firstResult, maxResults);
+                return ExecuteList(commandContext, parameterMap, firstResult, maxResults);
             }
             else if (resultType == ResultType.SINGLE_RESULT)
             {
-                return executeSingleResult(commandContext);
+                return ExecuteSingleResult(commandContext);
             }
             else
             {
-                return executeCount(commandContext, ParameterMap);
+                return ExecuteCount(commandContext, ParameterMap);
             }
         }
 
-        public abstract long executeCount(ICommandContext commandContext, IDictionary<string, object> parameterMap);
+        public abstract long ExecuteCount(ICommandContext commandContext, IDictionary<string, object> parameterMap);
 
         /// <summary>
         /// Executes the actual query to retrieve the list of results.
@@ -172,11 +172,11 @@ namespace org.activiti.engine.impl
         /// </param>
         /// <param name="page">
         ///          used if the results must be paged. If null, no paging will be applied. </param>
-        public abstract IList<U> executeList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        public abstract IList<U> ExecuteList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-        public virtual U executeSingleResult(ICommandContext commandContext)
+        public virtual U ExecuteSingleResult(ICommandContext commandContext)
         {
-            IList<U> results = executeList(commandContext, ParameterMap, 0, int.MaxValue);
+            IList<U> results = ExecuteList(commandContext, ParameterMap, 0, int.MaxValue);
             if (results.Count == 1)
             {
                 return results[0];
@@ -185,16 +185,18 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiException("Query return " + results.Count + " results instead of max 1");
             }
-            return default(U);
+            return default;
         }
 
         private IDictionary<string, object> ParameterMap
         {
             get
             {
-                Dictionary<string, object> parameterMap = new Dictionary<string, object>();
-                parameterMap["sql"] = sqlStatement;
-                parameterMap.putAll(parameters);
+                Dictionary<string, object> parameterMap = new Dictionary<string, object>
+                {
+                    ["sql"] = sqlStatement
+                };
+                parameterMap.PutAll(parameters);
                 return parameterMap;
             }
         }
@@ -206,7 +208,5 @@ namespace org.activiti.engine.impl
                 return parameters;
             }
         }
-
     }
-
 }

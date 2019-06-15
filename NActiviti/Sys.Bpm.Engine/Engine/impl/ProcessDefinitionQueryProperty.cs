@@ -41,7 +41,7 @@ namespace org.activiti.engine.impl
         public static readonly ProcessDefinitionQueryProperty DEPLOYMENT_ID = new ProcessDefinitionQueryProperty("RES.DEPLOYMENT_ID_");
         public static readonly ProcessDefinitionQueryProperty PROCESS_DEFINITION_TENANT_ID = new ProcessDefinitionQueryProperty("RES.TENANT_ID_");
 
-        private string name;
+        private readonly string name;
 
         public ProcessDefinitionQueryProperty(string name)
         {
@@ -57,7 +57,7 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public static ProcessDefinitionQueryProperty findByName(string propertyName)
+        public static ProcessDefinitionQueryProperty FindByName(string propertyName)
         {
             return properties[propertyName];
         }

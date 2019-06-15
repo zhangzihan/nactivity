@@ -32,7 +32,7 @@ namespace org.activiti.engine.impl.el
             this.wrappedMap = map;
         }
 
-        public override object getValue(ELContext context, object @base, object property)
+        public override object GetValue(ELContext context, object @base, object property)
         {
             if (@base == null)
             {
@@ -45,12 +45,12 @@ namespace org.activiti.engine.impl.el
             return null;
         }
 
-        public override bool isReadOnly(ELContext context, object @base, object property)
+        public override bool IsReadOnly(ELContext context, object @base, object property)
         {
             return true;
         }
 
-        public override void setValue(ELContext context, object @base, object property, object value)
+        public override void SetValue(ELContext context, object @base, object property, object value)
         {
             if (@base == null)
             {
@@ -61,12 +61,12 @@ namespace org.activiti.engine.impl.el
             }
         }
 
-        public override Type getCommonPropertyType(ELContext context, object arg)
+        public override Type GetCommonPropertyType(ELContext context, object arg)
         {
             return typeof(object);
         }
 
-        public override Type getType(ELContext context, object arg1, object arg2)
+        public override Type GetType(ELContext context, object arg1, object arg2)
         {
             return typeof(object);
         }

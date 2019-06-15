@@ -12,13 +12,16 @@
  */
 namespace org.activiti.engine.impl.cfg
 {
-	using org.activiti.engine.impl.interceptor;
+    using org.activiti.engine.impl.interceptor;
 
-	/// 
-	public interface ITransactionListener
-	{
+    /// 
+    public interface ITransactionListener
+    {
 
-	  void execute(ICommandContext commandContext);
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        void Execute(ICommandContext commandContext);
+    }
 }

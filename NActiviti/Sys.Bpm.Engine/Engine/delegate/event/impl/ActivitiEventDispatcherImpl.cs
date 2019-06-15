@@ -47,26 +47,26 @@ namespace org.activiti.engine.@delegate.@event.impl
         }
 
 
-        public virtual void addEventListener(IActivitiEventListener listenerToAdd)
+        public virtual void AddEventListener(IActivitiEventListener listenerToAdd)
         {
-            eventSupport.addEventListener(listenerToAdd);
+            eventSupport.AddEventListener(listenerToAdd);
         }
 
-        public virtual void addEventListener(IActivitiEventListener listenerToAdd, params ActivitiEventType[] types)
+        public virtual void AddEventListener(IActivitiEventListener listenerToAdd, params ActivitiEventType[] types)
         {
-            eventSupport.addEventListener(listenerToAdd, types);
+            eventSupport.AddEventListener(listenerToAdd, types);
         }
 
-        public virtual void removeEventListener(IActivitiEventListener listenerToRemove)
+        public virtual void RemoveEventListener(IActivitiEventListener listenerToRemove)
         {
-            eventSupport.removeEventListener(listenerToRemove);
+            eventSupport.RemoveEventListener(listenerToRemove);
         }
 
-        public virtual void dispatchEvent(IActivitiEvent @event)
+        public virtual void DispatchEvent(IActivitiEvent @event)
         {
             if (enabled)
             {
-                eventSupport.dispatchEvent(@event);
+                eventSupport.DispatchEvent(@event);
             }
 
             if (@event.Type == ActivitiEventType.ENTITY_DELETED && @event is IActivitiEntityEvent)
@@ -83,10 +83,10 @@ namespace org.activiti.engine.@delegate.@event.impl
             ICommandContext commandContext = Context.CommandContext;
             if (commandContext != null)
             {
-                BpmnModel bpmnModel = extractBpmnModelFromEvent(@event);
+                BpmnModel bpmnModel = ExtractBpmnModelFromEvent(@event);
                 if (bpmnModel != null)
                 {
-                    ((ActivitiEventSupport)bpmnModel.EventSupport).dispatchEvent(@event);
+                    ((ActivitiEventSupport)bpmnModel.EventSupport).DispatchEvent(@event);
                 }
             }
 
@@ -101,16 +101,16 @@ namespace org.activiti.engine.@delegate.@event.impl
         /// </summary>
         /// <param name="event">
         /// @return </param>
-        protected internal virtual BpmnModel extractBpmnModelFromEvent(IActivitiEvent @event)
+        protected internal virtual BpmnModel ExtractBpmnModelFromEvent(IActivitiEvent @event)
         {
             BpmnModel result = null;
 
-            if (result == null && !ReferenceEquals(@event.ProcessDefinitionId, null))
+            if (result == null && !(@event.ProcessDefinitionId is null))
             {
-                IProcessDefinition processDefinition = ProcessDefinitionUtil.getProcessDefinition(@event.ProcessDefinitionId, true);
+                IProcessDefinition processDefinition = ProcessDefinitionUtil.GetProcessDefinition(@event.ProcessDefinitionId, true);
                 if (processDefinition != null)
                 {
-                    result = Context.ProcessEngineConfiguration.DeploymentManager.resolveProcessDefinition(processDefinition).BpmnModel;
+                    result = Context.ProcessEngineConfiguration.DeploymentManager.ResolveProcessDefinition(processDefinition).BpmnModel;
                 }
             }
 

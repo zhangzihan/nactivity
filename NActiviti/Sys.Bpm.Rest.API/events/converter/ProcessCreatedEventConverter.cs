@@ -43,7 +43,7 @@ namespace org.activiti.cloud.services.events.converter
         /// 
         /// </summary>
 
-        public override IProcessEngineEvent from(IActivitiEvent @event)
+        public override IProcessEngineEvent From(IActivitiEvent @event)
         {
             return new ProcessCreatedEventImpl(RuntimeBundleProperties.AppName, 
                 RuntimeBundleProperties.AppVersion, 
@@ -54,14 +54,14 @@ namespace org.activiti.cloud.services.events.converter
                 @event.ExecutionId, 
                 @event.ProcessDefinitionId, 
                 @event.ProcessInstanceId, 
-                processInstanceConverter.from(((IExecutionEntity)((IActivitiEntityEvent)@event).Entity).ProcessInstance));
+                processInstanceConverter.From(((IExecutionEntity)((IActivitiEntityEvent)@event).Entity).ProcessInstance));
         }
 
 
         /// <summary>
         /// 
         /// </summary>
-        public override string handledType()
+        public override string HandledType()
         {
             return "ProcessInstance:" + ActivitiEventType.ENTITY_CREATED.ToString();
         }

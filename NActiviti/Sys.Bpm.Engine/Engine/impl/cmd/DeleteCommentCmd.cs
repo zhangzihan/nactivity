@@ -36,53 +36,50 @@ namespace org.activiti.engine.impl.cmd
             this.commentId = commentId;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
             ICommentEntityManager commentManager = commandContext.CommentEntityManager;
 
-            if (!ReferenceEquals(commentId, null))
+            if (!(commentId is null))
             {
                 // Delete for an individual comment
-                IComment comment = commentManager.findComment(commentId);
+                IComment comment = commentManager.FindComment(commentId);
                 if (comment == null)
                 {
                     throw new ActivitiObjectNotFoundException("Comment with id '" + commentId + "' doesn't exists.", typeof(IComment));
                 }
 
-                if (!ReferenceEquals(comment.ProcessInstanceId, null))
+                if (!(comment.ProcessInstanceId is null))
                 {
-                    IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(comment.ProcessInstanceId);
+                    commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(comment.ProcessInstanceId);
 
                 }
-                else if (!ReferenceEquals(comment.TaskId, null))
+                else if (!(comment.TaskId is null))
                 {
-                    ITask task = commandContext.TaskEntityManager.findById<ITask>(new KeyValuePair<string, object>("id", comment.TaskId));
+                    commandContext.TaskEntityManager.FindById<ITask>(new KeyValuePair<string, object>("id", comment.TaskId));
                 }
 
-                commentManager.delete((ICommentEntity)comment);
-
+                commentManager.Delete((ICommentEntity)comment);
             }
             else
             {
                 // Delete all comments on a task of process
                 List<IComment> comments = new List<IComment>();
-                if (!ReferenceEquals(processInstanceId, null))
+                if (!(processInstanceId is null))
                 {
+                    commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
-                    IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
-
-                    comments.AddRange(commentManager.findCommentsByProcessInstanceId(processInstanceId));
+                    comments.AddRange(commentManager.FindCommentsByProcessInstanceId(processInstanceId));
                 }
-                if (!ReferenceEquals(taskId, null))
+                if (!(taskId is null))
                 {
-
-                    ITask task = commandContext.TaskEntityManager.findById<ITask>(new KeyValuePair<string, object>("id", taskId));
-                    comments.AddRange(commentManager.findCommentsByTaskId(taskId));
+                    commandContext.TaskEntityManager.FindById<ITask>(new KeyValuePair<string, object>("id", taskId));
+                    comments.AddRange(commentManager.FindCommentsByTaskId(taskId));
                 }
 
                 foreach (IComment comment in comments)
                 {
-                    commentManager.delete((ICommentEntity)comment);
+                    commentManager.Delete((ICommentEntity)comment);
                 }
             }
             return null;

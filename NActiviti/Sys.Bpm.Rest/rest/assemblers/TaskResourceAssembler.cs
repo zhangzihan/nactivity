@@ -38,7 +38,7 @@ namespace org.activiti.cloud.services.rest.assemblers
         /// <summary>
         /// 
         /// </summary>
-        public override TaskResource toResource(TaskModel task)
+        public override TaskResource ToResource(TaskModel task)
         {
             //IList<Link> links = new List<Link>();
             //links.Add(linkTo(methodOn(typeof(TaskControllerImpl)).getTaskById(task.Id)).withSelfRel());
@@ -69,9 +69,9 @@ namespace org.activiti.cloud.services.rest.assemblers
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public override IList<TaskResource> toResources(IEnumerable<TaskModel> entities)
+        public override IList<TaskResource> ToResources(IEnumerable<TaskModel> entities)
         {
-            return base.toResources(entities);
+            return base.ToResources(entities);
         }
     }
 }

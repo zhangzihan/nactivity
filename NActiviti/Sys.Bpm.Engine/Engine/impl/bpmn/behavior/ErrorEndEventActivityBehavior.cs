@@ -33,9 +33,9 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.errorCode = errorCode;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
-            ErrorPropagation.propagateError(errorCode, execution);
+            ErrorPropagation.PropagateError(errorCode, execution);
         }
 
         public virtual string ErrorCode

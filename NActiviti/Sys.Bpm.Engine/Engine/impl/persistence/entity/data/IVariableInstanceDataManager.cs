@@ -15,26 +15,24 @@
 namespace org.activiti.engine.impl.persistence.entity.data
 {
 
-	/// 
-	public interface IVariableInstanceDataManager : IDataManager<IVariableInstanceEntity>
-	{
+    /// 
+    public interface IVariableInstanceDataManager : IDataManager<IVariableInstanceEntity>
+    {
+        IList<IVariableInstanceEntity> FindVariableInstancesByTaskId(string taskId);
 
-	  IList<IVariableInstanceEntity> findVariableInstancesByTaskId(string taskId);
+        IList<IVariableInstanceEntity> FindVariableInstancesByTaskIds(string[] taskIds);
 
-	  IList<IVariableInstanceEntity> findVariableInstancesByTaskIds(ISet<string> taskIds);
+        IList<IVariableInstanceEntity> FindVariableInstancesByExecutionId(string executionId);
 
-	  IList<IVariableInstanceEntity> findVariableInstancesByExecutionId(string executionId);
+        IList<IVariableInstanceEntity> FindVariableInstancesByExecutionIds(string[] executionIds);
 
-	  IList<IVariableInstanceEntity> findVariableInstancesByExecutionIds(ISet<string> executionIds);
+        IVariableInstanceEntity FindVariableInstanceByExecutionAndName(string executionId, string variableName);
 
-	  IVariableInstanceEntity findVariableInstanceByExecutionAndName(string executionId, string variableName);
+        IList<IVariableInstanceEntity> FindVariableInstancesByExecutionAndNames(string executionId, IEnumerable<string> names);
 
-	  IList<IVariableInstanceEntity> findVariableInstancesByExecutionAndNames(string executionId, ICollection<string> names);
+        IVariableInstanceEntity FindVariableInstanceByTaskAndName(string taskId, string variableName);
 
-	  IVariableInstanceEntity findVariableInstanceByTaskAndName(string taskId, string variableName);
-
-	  IList<IVariableInstanceEntity> findVariableInstancesByTaskAndNames(string taskId, ICollection<string> names);
-
-	}
+        IList<IVariableInstanceEntity> FindVariableInstancesByTaskAndNames(string taskId, IEnumerable<string> names);
+    }
 
 }

@@ -46,6 +46,6 @@ namespace org.activiti.services.api.commands
         /// <summary>
         /// 流程变量
         /// </summary>
-        IDictionary<string, object> Variables { get; set; }
+        WorkflowVariable Variables { get; set; }
     }
 }

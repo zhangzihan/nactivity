@@ -30,9 +30,10 @@ namespace org.activiti.engine.impl.interceptor
     /// </summary>
     public interface IDelegateInterceptor
     {
-
-        void handleInvocation(DelegateInvocation invocation);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="invocation"></param>
+        void HandleInvocation(DelegateInvocation invocation);
     }
-
 }

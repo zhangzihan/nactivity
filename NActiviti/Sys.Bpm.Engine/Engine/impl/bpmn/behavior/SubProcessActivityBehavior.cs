@@ -32,19 +32,17 @@ namespace org.activiti.engine.impl.bpmn.behavior
     {
         private const long serialVersionUID = 1L;
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
-            SubProcess subProcess = getSubProcessFromExecution(execution);
+            SubProcess subProcess = GetSubProcessFromExecution(execution);
 
             FlowElement startElement = null;
             if (CollectionUtil.IsNotEmpty(subProcess.FlowElements))
             {
                 foreach (FlowElement subElement in subProcess.FlowElements)
                 {
-                    if (subElement is StartEvent)
+                    if (subElement is StartEvent startEvent)
                     {
-                        StartEvent startEvent = (StartEvent)subElement;
-
                         // start none event
                         if (CollectionUtil.IsEmpty(startEvent.EventDefinitions))
                         {
@@ -55,29 +53,24 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
             }
 
-            if (startElement == null)
-            {
-                throw new ActivitiException("No initial activity found for subprocess " + subProcess.Id);
-            }
-
             execution.IsScope = true;
 
             // initialize the template-defined data objects as variables
-            IDictionary<string, object> dataObjectVars = processDataObjects(subProcess.DataObjects);
+            IDictionary<string, object> dataObjectVars = ProcessDataObjects(subProcess.DataObjects);
             if (dataObjectVars != null)
             {
                 execution.VariablesLocal = dataObjectVars;
             }
 
-            IExecutionEntity startSubProcessExecution = Context.CommandContext.ExecutionEntityManager.createChildExecution(execution);
-            startSubProcessExecution.CurrentFlowElement = startElement;
-            Context.Agenda.planContinueProcessOperation(startSubProcessExecution);
+            IExecutionEntity startSubProcessExecution = Context.CommandContext.ExecutionEntityManager.CreateChildExecution(execution);
+            startSubProcessExecution.CurrentFlowElement = startElement ?? throw new ActivitiException("No initial activity found for subprocess " + subProcess.Id);
+            Context.Agenda.PlanContinueProcessOperation(startSubProcessExecution);
         }
 
-        protected internal virtual SubProcess getSubProcessFromExecution(IExecutionEntity execution)
+        protected internal virtual SubProcess GetSubProcessFromExecution(IExecutionEntity execution)
         {
             FlowElement flowElement = execution.CurrentFlowElement;
-            SubProcess subProcess = null;
+            SubProcess subProcess;
             if (flowElement is SubProcess)
             {
                 subProcess = (SubProcess)flowElement;
@@ -89,7 +82,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             return subProcess;
         }
 
-        protected internal virtual IDictionary<string, object> processDataObjects(ICollection<ValuedDataObject> dataObjects)
+        protected internal virtual IDictionary<string, object> ProcessDataObjects(ICollection<ValuedDataObject> dataObjects)
         {
             IDictionary<string, object> variablesMap = new Dictionary<string, object>();
             // convert data objects to process variables

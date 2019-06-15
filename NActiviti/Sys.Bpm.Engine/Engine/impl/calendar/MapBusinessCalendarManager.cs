@@ -15,42 +15,41 @@
 namespace org.activiti.engine.impl.calendar
 {
 
-	/// 
-	public class MapBusinessCalendarManager : IBusinessCalendarManager
-	{
+    /// 
+    public class MapBusinessCalendarManager : IBusinessCalendarManager
+    {
 
-	  private readonly IDictionary<string, IBusinessCalendar> businessCalendars;
+        private readonly IDictionary<string, IBusinessCalendar> businessCalendars;
 
-	  public MapBusinessCalendarManager()
-	  {
-		this.businessCalendars = new Dictionary<string, IBusinessCalendar>();
-	  }
+        public MapBusinessCalendarManager()
+        {
+            this.businessCalendars = new Dictionary<string, IBusinessCalendar>();
+        }
 
-	  public MapBusinessCalendarManager(IDictionary<string, IBusinessCalendar> businessCalendars)
-	  {
-		if (businessCalendars == null)
-		{
-		  throw new System.ArgumentException("businessCalendars can not be null");
-		}
+        public MapBusinessCalendarManager(IDictionary<string, IBusinessCalendar> businessCalendars)
+        {
+            if (businessCalendars == null)
+            {
+                throw new System.ArgumentException("businessCalendars can not be null");
+            }
 
-		this.businessCalendars = new Dictionary<string, IBusinessCalendar>(businessCalendars);
-	  }
+            this.businessCalendars = new Dictionary<string, IBusinessCalendar>(businessCalendars);
+        }
 
-	  public virtual IBusinessCalendar getBusinessCalendar(string businessCalendarRef)
-	  {
-		IBusinessCalendar businessCalendar = businessCalendars[businessCalendarRef];
-		if (businessCalendar == null)
-		{
-		  throw new ActivitiException("Requested business calendar " + businessCalendarRef + " does not exist. Allowed calendars are " + this.businessCalendars.Keys + ".");
-		}
-		return businessCalendar;
-	  }
+        public virtual IBusinessCalendar GetBusinessCalendar(string businessCalendarRef)
+        {
+            IBusinessCalendar businessCalendar = businessCalendars[businessCalendarRef];
+            if (businessCalendar == null)
+            {
+                throw new ActivitiException("Requested business calendar " + businessCalendarRef + " does not exist. Allowed calendars are " + this.businessCalendars.Keys + ".");
+            }
+            return businessCalendar;
+        }
 
-	  public virtual IBusinessCalendarManager addBusinessCalendar(string businessCalendarRef, IBusinessCalendar businessCalendar)
-	  {
-		businessCalendars[businessCalendarRef] = businessCalendar;
-		return this;
-	  }
-	}
-
+        public virtual IBusinessCalendarManager AddBusinessCalendar(string businessCalendarRef, IBusinessCalendar businessCalendar)
+        {
+            businessCalendars[businessCalendarRef] = businessCalendar;
+            return this;
+        }
+    }
 }

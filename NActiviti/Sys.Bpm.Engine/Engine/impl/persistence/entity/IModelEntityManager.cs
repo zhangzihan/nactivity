@@ -15,33 +15,32 @@
 namespace org.activiti.engine.impl.persistence.entity
 {
 
-	using org.activiti.engine.repository;
+    using org.activiti.engine.repository;
 
-	/// 
-	public interface IModelEntityManager : IEntityManager<IModelEntity>
-	{
+    /// 
+    public interface IModelEntityManager : IEntityManager<IModelEntity>
+    {
 
-	  void insertEditorSourceForModel(string modelId, byte[] modelSource);
+        void InsertEditorSourceForModel(string modelId, byte[] modelSource);
 
-	  void insertEditorSourceExtraForModel(string modelId, byte[] modelSource);
+        void InsertEditorSourceExtraForModel(string modelId, byte[] modelSource);
 
-	  IList<IModel> findModelsByQueryCriteria(ModelQueryImpl query, Page page);
+        IList<IModel> FindModelsByQueryCriteria(IModelQuery query, Page page);
 
-	  long findModelCountByQueryCriteria(ModelQueryImpl query);
+        long FindModelCountByQueryCriteria(IModelQuery query);
 
-	  byte[] findEditorSourceByModelId(string modelId);
+        byte[] FindEditorSourceByModelId(string modelId);
 
-	  byte[] findEditorSourceExtraByModelId(string modelId);
+        byte[] FindEditorSourceExtraByModelId(string modelId);
 
-	  IList<IModel> findModelsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<IModel> FindModelsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findModelCountByNativeQuery(IDictionary<string, object> parameterMap);
+        long FindModelCountByNativeQuery(IDictionary<string, object> parameterMap);
 
-	  void updateModel(IModelEntity updatedModel);
+        void UpdateModel(IModelEntity updatedModel);
 
-	  void deleteEditorSource(IModelEntity model);
+        void DeleteEditorSource(IModelEntity model);
 
-	  void deleteEditorSourceExtra(IModelEntity model);
-
-	}
+        void DeleteEditorSourceExtra(IModelEntity model);
+    }
 }

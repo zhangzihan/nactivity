@@ -19,11 +19,8 @@ namespace org.activiti.engine.impl.@event
     /// 
     public interface IEventHandler
     {
-
         string EventHandlerType { get; }
 
-        void handleEvent(IEventSubscriptionEntity eventSubscription, object payload, ICommandContext commandContext);
-
+        void HandleEvent(IEventSubscriptionEntity eventSubscription, object payload, ICommandContext commandContext);
     }
-
 }

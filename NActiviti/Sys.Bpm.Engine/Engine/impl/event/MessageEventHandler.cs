@@ -32,18 +32,16 @@ namespace org.activiti.engine.impl.@event
             }
         }
 
-        public override void handleEvent(IEventSubscriptionEntity eventSubscription, object payload, ICommandContext commandContext)
+        public override void HandleEvent(IEventSubscriptionEntity eventSubscription, object payload, ICommandContext commandContext)
         {
             // As stated in the ActivitiEventType java-doc, the message-event is
             // thrown before the actual message has been sent
             if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createMessageEvent(ActivitiEventType.ACTIVITY_MESSAGE_RECEIVED, eventSubscription.ActivityId, eventSubscription.EventName, payload, eventSubscription.ExecutionId, eventSubscription.ProcessInstanceId, eventSubscription.Execution.ProcessDefinitionId));
+                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateMessageEvent(ActivitiEventType.ACTIVITY_MESSAGE_RECEIVED, eventSubscription.ActivityId, eventSubscription.EventName, payload, eventSubscription.ExecutionId, eventSubscription.ProcessInstanceId, eventSubscription.Execution.ProcessDefinitionId));
             }
 
-            base.handleEvent(eventSubscription, payload, commandContext);
+            base.HandleEvent(eventSubscription, payload, commandContext);
         }
-
     }
-
 }

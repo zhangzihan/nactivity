@@ -475,7 +475,7 @@ ID
 options {
 	testLiterals = true;
 }
-	: ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*
+	: ('a'..'z'|'A'..'Z'|'_'|'\u4e00'..'\u9fa5') ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'\u4e00'..'\u9fa5')*
 	;
 
 NUMERIC_LITERAL

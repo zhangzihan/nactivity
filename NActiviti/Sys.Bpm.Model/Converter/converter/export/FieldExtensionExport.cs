@@ -21,7 +21,7 @@ namespace org.activiti.bpmn.converter.export
 
     public class FieldExtensionExport : IBpmnXMLConstants
     {
-        public static bool writeFieldExtensions(IList<FieldExtension> fieldExtensionList, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        public static bool WriteFieldExtensions(IList<FieldExtension> fieldExtensionList, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
 
             foreach (FieldExtension fieldExtension in fieldExtensionList)
@@ -35,25 +35,25 @@ namespace org.activiti.bpmn.converter.export
 
                         if (!didWriteExtensionStartElement)
                         {
-                            xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EXTENSIONS);
+                            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                             didWriteExtensionStartElement = true;
                         }
 
-                        xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_FIELD, org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-                        BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FIELD_NAME, fieldExtension.FieldName, xtw);
+                        xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_FIELD, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FIELD_NAME, fieldExtension.FieldName, xtw);
 
                         if (!string.IsNullOrWhiteSpace(fieldExtension.StringValue))
                         {
-                            xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_FIELD_STRING, org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-                            xtw.writeCData(fieldExtension.StringValue);
+                            xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_FIELD_STRING, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                            xtw.WriteCData(fieldExtension.StringValue);
                         }
                         else
                         {
-                            xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FIELD_EXPRESSION, org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-                            xtw.writeCData(fieldExtension.Expression);
+                            xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ATTRIBUTE_FIELD_EXPRESSION, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                            xtw.WriteCData(fieldExtension.Expression);
                         }
-                        xtw.writeEndElement();
-                        xtw.writeEndElement();
+                        xtw.WriteEndElement();
+                        xtw.WriteEndElement();
                     }
                 }
             }

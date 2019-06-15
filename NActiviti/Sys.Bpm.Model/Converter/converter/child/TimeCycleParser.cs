@@ -12,7 +12,7 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.model;
 
     /// 
@@ -23,10 +23,10 @@ namespace org.activiti.bpmn.converter.child
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TIMER_CYCLE;
+                return BpmnXMLConstants.ATTRIBUTE_TIMER_CYCLE;
             }
         }
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
             if (!(parentElement is TimerEventDefinition))
             {
@@ -35,9 +35,9 @@ namespace org.activiti.bpmn.converter.child
 
             TimerEventDefinition eventDefinition = (TimerEventDefinition)parentElement;
 
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_END_DATE)))
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_END_DATE)))
             {
-                eventDefinition.EndDate = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_END_DATE);
+                eventDefinition.EndDate = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_END_DATE);
             }
             eventDefinition.TimeCycle = xtr.ElementText;
         }

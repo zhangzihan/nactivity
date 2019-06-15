@@ -33,10 +33,12 @@
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            AlfrescoStartEvent clone = new AlfrescoStartEvent();
-            clone.Values = this;
+            AlfrescoStartEvent clone = new AlfrescoStartEvent
+            {
+                Values = this
+            };
             return clone;
         }
 

@@ -32,10 +32,12 @@
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            ItemDefinition clone = new ItemDefinition();
-            clone.Values = this;
+            ItemDefinition clone = new ItemDefinition
+            {
+                Values = this
+            };
             return clone;
         }
 

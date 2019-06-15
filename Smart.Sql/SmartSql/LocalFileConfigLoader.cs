@@ -121,6 +121,7 @@ namespace SmartSql
             return configStream;
         }
 
+        private object syncRoot = new object();
 
         /// <summary>
         /// 监控配置文件-热更新
@@ -136,7 +137,7 @@ namespace SmartSql
             _fileWatcherLoader.Watch(cofigFileInfo, () =>
             {
                 Thread.Sleep(DELAYED_LOAD_FILE);
-                lock (this)
+                lock (syncRoot)
                 {
                     try
                     {
@@ -174,7 +175,7 @@ namespace SmartSql
                 _fileWatcherLoader.Watch(sqlMapFileInfo, () =>
                 {
                     Thread.Sleep(DELAYED_LOAD_FILE);
-                    lock (this)
+                    lock (syncRoot)
                     {
                         try
                         {

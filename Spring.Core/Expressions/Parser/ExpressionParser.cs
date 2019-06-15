@@ -4,18 +4,26 @@ namespace Spring.Expressions.Parser
 {
 	// Generate the header common to all output files.
 	using System;
-
+	
 	using TokenBuffer              = antlr.TokenBuffer;
+	using TokenStreamException     = antlr.TokenStreamException;
+	using TokenStreamIOException   = antlr.TokenStreamIOException;
+	using ANTLRException           = antlr.ANTLRException;
+	using LLkParser = antlr.LLkParser;
 	using Token                    = antlr.Token;
+	using IToken                   = antlr.IToken;
 	using TokenStream              = antlr.TokenStream;
 	using RecognitionException     = antlr.RecognitionException;
 	using NoViableAltException     = antlr.NoViableAltException;
+	using MismatchedTokenException = antlr.MismatchedTokenException;
+	using SemanticException        = antlr.SemanticException;
 	using ParserSharedInputState   = antlr.ParserSharedInputState;
 	using BitSet                   = antlr.collections.impl.BitSet;
 	using AST                      = antlr.collections.AST;
 	using ASTPair                  = antlr.ASTPair;
 	using ASTFactory               = antlr.ASTFactory;
-
+	using ASTArray                 = antlr.collections.impl.ASTArray;
+	
 	internal 	class ExpressionParser : antlr.LLkParser
 	{
 		public const int EOF = 1;
@@ -88,10 +96,10 @@ namespace Spring.Expressions.Parser
 		public const int EXPONENT_PART = 69;
 		public const int SIGN = 70;
 		public const int REAL_TYPE_SUFFIX = 71;
-
-
+		
+		
     // CLOVER:OFF
-
+    
     public override void reportError(RecognitionException ex)
     {
 		//base.reportError(ex);
@@ -103,7 +111,7 @@ namespace Spring.Expressions.Parser
 		//base.reportError(error);
         throw new RecognitionException(error);
     }
-
+    
     private string GetRelationalOperatorNodeType(string op)
     {
         switch (op)
@@ -119,48 +127,48 @@ namespace Spring.Expressions.Parser
             case "between" : return "Spring.Expressions.OpBetween";
             case "like" : return "Spring.Expressions.OpLike";
             case "matches" : return "Spring.Expressions.OpMatches";
-            default :
+            default : 
                 throw new ArgumentException("Node type for operator '" + op + "' is not defined.");
         }
     }
-
+		
 		protected void initialize()
 		{
 			tokenNames = tokenNames_;
 			initializeFactory();
 		}
-
-
+		
+		
 		protected ExpressionParser(TokenBuffer tokenBuf, int k) : base(tokenBuf, k)
 		{
 			initialize();
 		}
-
+		
 		public ExpressionParser(TokenBuffer tokenBuf) : this(tokenBuf,2)
 		{
 		}
-
+		
 		protected ExpressionParser(TokenStream lexer, int k) : base(lexer,k)
 		{
 			initialize();
 		}
-
+		
 		public ExpressionParser(TokenStream lexer) : this(lexer,2)
 		{
 		}
-
+		
 		public ExpressionParser(ParserSharedInputState state) : base(state,2)
 		{
 			initialize();
 		}
-
+		
 	public void expr() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST expr_AST = null;
-
+		
 		try {      // for error handling
 			expression();
 			if (0 == inputState.guessing)
@@ -184,14 +192,14 @@ namespace Spring.Expressions.Parser
 		}
 		returnAST = expr_AST;
 	}
-
+	
 	public void expression() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST expression_AST = null;
-
+		
 		try {      // for error handling
 			logicalOrExpression();
 			if (0 == inputState.guessing)
@@ -284,14 +292,14 @@ namespace Spring.Expressions.Parser
 		}
 		returnAST = expression_AST;
 	}
-
+	
 	public void exprList() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST exprList_AST = null;
-
+		
 		try {      // for error handling
 			match(LPAREN);
 			expression();
@@ -316,7 +324,7 @@ namespace Spring.Expressions.Parser
 					{
 						if (_cnt4 >= 1) { goto _loop4_breakloop; } else { throw new NoViableAltException(LT(1), getFilename());; }
 					}
-
+					
 					_cnt4++;
 				}
 _loop4_breakloop:				;
@@ -349,14 +357,14 @@ _loop4_breakloop:				;
 		}
 		returnAST = exprList_AST;
 	}
-
+	
 	public void logicalOrExpression() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST logicalOrExpression_AST = null;
-
+		
 		try {      // for error handling
 			logicalXorExpression();
 			if (0 == inputState.guessing)
@@ -382,7 +390,7 @@ _loop4_breakloop:				;
 					{
 						goto _loop13_breakloop;
 					}
-
+					
 				}
 _loop13_breakloop:				;
 			}    // ( ... )*
@@ -402,14 +410,14 @@ _loop13_breakloop:				;
 		}
 		returnAST = logicalOrExpression_AST;
 	}
-
+	
 	public void parenExpr() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST parenExpr_AST = null;
-
+		
 		try {      // for error handling
 			match(LPAREN);
 			expression();
@@ -434,14 +442,14 @@ _loop13_breakloop:				;
 		}
 		returnAST = parenExpr_AST;
 	}
-
+	
 	public void logicalXorExpression() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST logicalXorExpression_AST = null;
-
+		
 		try {      // for error handling
 			logicalAndExpression();
 			if (0 == inputState.guessing)
@@ -467,7 +475,7 @@ _loop13_breakloop:				;
 					{
 						goto _loop16_breakloop;
 					}
-
+					
 				}
 _loop16_breakloop:				;
 			}    // ( ... )*
@@ -487,14 +495,14 @@ _loop16_breakloop:				;
 		}
 		returnAST = logicalXorExpression_AST;
 	}
-
+	
 	public void logicalAndExpression() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST logicalAndExpression_AST = null;
-
+		
 		try {      // for error handling
 			relationalExpression();
 			if (0 == inputState.guessing)
@@ -520,7 +528,7 @@ _loop16_breakloop:				;
 					{
 						goto _loop19_breakloop;
 					}
-
+					
 				}
 _loop19_breakloop:				;
 			}    // ( ... )*
@@ -540,17 +548,17 @@ _loop19_breakloop:				;
 		}
 		returnAST = logicalAndExpression_AST;
 	}
-
+	
 	public void relationalExpression() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST relationalExpression_AST = null;
 		Spring.Expressions.SpringAST e1_AST = null;
 		Spring.Expressions.SpringAST op_AST = null;
 		Spring.Expressions.SpringAST e2_AST = null;
-
+		
 		try {      // for error handling
 			sumExpr();
 			if (0 == inputState.guessing)
@@ -590,7 +598,7 @@ _loop19_breakloop:				;
 				{
 					throw new NoViableAltException(LT(1), getFilename());
 				}
-
+				
 			}
 			relationalExpression_AST = (Spring.Expressions.SpringAST)currentAST.root;
 		}
@@ -608,14 +616,14 @@ _loop19_breakloop:				;
 		}
 		returnAST = relationalExpression_AST;
 	}
-
+	
 	public void sumExpr() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST sumExpr_AST = null;
-
+		
 		try {      // for error handling
 			prodExpr();
 			if (0 == inputState.guessing)
@@ -645,7 +653,7 @@ _loop19_breakloop:				;
 							{
 								throw new NoViableAltException(LT(1), getFilename());
 							}
-
+							
 						}
 						prodExpr();
 						if (0 == inputState.guessing)
@@ -657,7 +665,7 @@ _loop19_breakloop:				;
 					{
 						goto _loop25_breakloop;
 					}
-
+					
 				}
 _loop25_breakloop:				;
 			}    // ( ... )*
@@ -677,14 +685,14 @@ _loop25_breakloop:				;
 		}
 		returnAST = sumExpr_AST;
 	}
-
+	
 	public void relationalOperator() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST relationalOperator_AST = null;
-
+		
 		try {      // for error handling
 			switch ( LA(1) )
 			{
@@ -807,14 +815,14 @@ _loop25_breakloop:				;
 		}
 		returnAST = relationalOperator_AST;
 	}
-
+	
 	public void prodExpr() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST prodExpr_AST = null;
-
+		
 		try {      // for error handling
 			powExpr();
 			if (0 == inputState.guessing)
@@ -869,7 +877,7 @@ _loop25_breakloop:				;
 					{
 						goto _loop29_breakloop;
 					}
-
+					
 				}
 _loop29_breakloop:				;
 			}    // ( ... )*
@@ -889,14 +897,14 @@ _loop29_breakloop:				;
 		}
 		returnAST = prodExpr_AST;
 	}
-
+	
 	public void powExpr() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST powExpr_AST = null;
-
+		
 		try {      // for error handling
 			unaryExpression();
 			if (0 == inputState.guessing)
@@ -922,7 +930,7 @@ _loop29_breakloop:				;
 				{
 					throw new NoViableAltException(LT(1), getFilename());
 				}
-
+				
 			}
 			powExpr_AST = (Spring.Expressions.SpringAST)currentAST.root;
 		}
@@ -940,14 +948,14 @@ _loop29_breakloop:				;
 		}
 		returnAST = powExpr_AST;
 	}
-
+	
 	public void unaryExpression() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST unaryExpression_AST = null;
-
+		
 		try {      // for error handling
 			if ((LA(1)==PLUS||LA(1)==MINUS||LA(1)==BANG))
 			{
@@ -1003,7 +1011,7 @@ _loop29_breakloop:				;
 			{
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-
+			
 		}
 		catch (RecognitionException ex)
 		{
@@ -1019,14 +1027,14 @@ _loop29_breakloop:				;
 		}
 		returnAST = unaryExpression_AST;
 	}
-
+	
 	public void primaryExpression() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST primaryExpression_AST = null;
-
+		
 		try {      // for error handling
 			startNode();
 			if (0 == inputState.guessing)
@@ -1048,7 +1056,7 @@ _loop29_breakloop:				;
 				{
 					throw new NoViableAltException(LT(1), getFilename());
 				}
-
+				
 			}
 			if (0==inputState.guessing)
 			{
@@ -1077,14 +1085,14 @@ _loop29_breakloop:				;
 		}
 		returnAST = primaryExpression_AST;
 	}
-
+	
 	public void unaryOperator() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST unaryOperator_AST = null;
-
+		
 		try {      // for error handling
 			switch ( LA(1) )
 			{
@@ -1135,14 +1143,14 @@ _loop29_breakloop:				;
 		}
 		returnAST = unaryOperator_AST;
 	}
-
+	
 	public void startNode() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST startNode_AST = null;
-
+		
 		try {      // for error handling
 			{
 				switch ( LA(1) )
@@ -1347,14 +1355,14 @@ _loop29_breakloop:				;
 		}
 		returnAST = startNode_AST;
 	}
-
+	
 	public void node() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST node_AST = null;
-
+		
 		try {      // for error handling
 			{ // ( ... )+
 				int _cnt43=0;
@@ -1455,14 +1463,14 @@ _loop43_breakloop:				;
 		}
 		returnAST = node_AST;
 	}
-
+	
 	public void methodOrProperty() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST methodOrProperty_AST = null;
-
+		
 		try {      // for error handling
 			bool synPredMatched56 = false;
 			if (((LA(1)==ID) && (LA(2)==LPAREN)))
@@ -1508,7 +1516,7 @@ _loop43_breakloop:				;
 			{
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-
+			
 		}
 		catch (RecognitionException ex)
 		{
@@ -1524,14 +1532,14 @@ _loop43_breakloop:				;
 		}
 		returnAST = methodOrProperty_AST;
 	}
-
+	
 	public void functionOrVar() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST functionOrVar_AST = null;
-
+		
 		try {      // for error handling
 			bool synPredMatched46 = false;
 			if (((LA(1)==POUND) && (LA(2)==ID)))
@@ -1574,7 +1582,7 @@ _loop43_breakloop:				;
 			{
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-
+			
 		}
 		catch (RecognitionException ex)
 		{
@@ -1590,14 +1598,14 @@ _loop43_breakloop:				;
 		}
 		returnAST = functionOrVar_AST;
 	}
-
+	
 	public void localFunctionOrVar() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST localFunctionOrVar_AST = null;
-
+		
 		try {      // for error handling
 			bool synPredMatched51 = false;
 			if (((LA(1)==DOLLAR) && (LA(2)==ID)))
@@ -1640,7 +1648,7 @@ _loop43_breakloop:				;
 			{
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-
+			
 		}
 		catch (RecognitionException ex)
 		{
@@ -1656,17 +1664,17 @@ _loop43_breakloop:				;
 		}
 		returnAST = localFunctionOrVar_AST;
 	}
-
+	
 	public void reference() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST reference_AST = null;
 		Spring.Expressions.SpringAST cn_AST = null;
 		Spring.Expressions.SpringAST id_AST = null;
 		Spring.Expressions.SpringAST localid_AST = null;
-
+		
 		try {      // for error handling
 			bool synPredMatched64 = false;
 			if (((LA(1)==AT) && (LA(2)==LPAREN)))
@@ -1744,7 +1752,7 @@ _loop43_breakloop:				;
 			{
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-
+			
 		}
 		catch (RecognitionException ex)
 		{
@@ -1760,14 +1768,14 @@ _loop43_breakloop:				;
 		}
 		returnAST = reference_AST;
 	}
-
+	
 	public void indexer() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST indexer_AST = null;
-
+		
 		try {      // for error handling
 			Spring.Expressions.IndexerNode tmp46_AST = null;
 			tmp46_AST = (Spring.Expressions.IndexerNode) astFactory.create(LT(1), "Spring.Expressions.IndexerNode");
@@ -1794,7 +1802,7 @@ _loop43_breakloop:				;
 					{
 						goto _loop67_breakloop;
 					}
-
+					
 				}
 _loop67_breakloop:				;
 			}    // ( ... )*
@@ -1815,14 +1823,14 @@ _loop67_breakloop:				;
 		}
 		returnAST = indexer_AST;
 	}
-
+	
 	public void literal() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST literal_AST = null;
-
+		
 		try {      // for error handling
 			switch ( LA(1) )
 			{
@@ -1902,15 +1910,15 @@ _loop67_breakloop:				;
 		}
 		returnAST = literal_AST;
 	}
-
+	
 	public void type() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST type_AST = null;
 		Spring.Expressions.SpringAST tn_AST = null;
-
+		
 		try {      // for error handling
 			match(TYPE);
 			name();
@@ -1946,15 +1954,15 @@ _loop67_breakloop:				;
 		}
 		returnAST = type_AST;
 	}
-
+	
 	public void constructor() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST constructor_AST = null;
 		Spring.Expressions.SpringAST type_AST = null;
-
+		
 		try {      // for error handling
 			bool synPredMatched90 = false;
 			if (((LA(1)==LITERAL_new) && (LA(2)==ID)))
@@ -2014,7 +2022,7 @@ _loop67_breakloop:				;
 			{
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-
+			
 		}
 		catch (RecognitionException ex)
 		{
@@ -2030,14 +2038,14 @@ _loop67_breakloop:				;
 		}
 		returnAST = constructor_AST;
 	}
-
+	
 	public void projection() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST projection_AST = null;
-
+		
 		try {      // for error handling
 			Spring.Expressions.ProjectionNode tmp57_AST = null;
 			tmp57_AST = (Spring.Expressions.ProjectionNode) astFactory.create(LT(1), "Spring.Expressions.ProjectionNode");
@@ -2065,14 +2073,14 @@ _loop67_breakloop:				;
 		}
 		returnAST = projection_AST;
 	}
-
+	
 	public void selection() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST selection_AST = null;
-
+		
 		try {      // for error handling
 			Spring.Expressions.SelectionNode tmp59_AST = null;
 			tmp59_AST = (Spring.Expressions.SelectionNode) astFactory.create(LT(1), "Spring.Expressions.SelectionNode");
@@ -2099,7 +2107,7 @@ _loop67_breakloop:				;
 					{
 						goto _loop71_breakloop;
 					}
-
+					
 				}
 _loop71_breakloop:				;
 			}    // ( ... )*
@@ -2120,14 +2128,14 @@ _loop71_breakloop:				;
 		}
 		returnAST = selection_AST;
 	}
-
+	
 	public void firstSelection() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST firstSelection_AST = null;
-
+		
 		try {      // for error handling
 			Spring.Expressions.SelectionFirstNode tmp62_AST = null;
 			tmp62_AST = (Spring.Expressions.SelectionFirstNode) astFactory.create(LT(1), "Spring.Expressions.SelectionFirstNode");
@@ -2155,14 +2163,14 @@ _loop71_breakloop:				;
 		}
 		returnAST = firstSelection_AST;
 	}
-
+	
 	public void lastSelection() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST lastSelection_AST = null;
-
+		
 		try {      // for error handling
 			Spring.Expressions.SelectionLastNode tmp64_AST = null;
 			tmp64_AST = (Spring.Expressions.SelectionLastNode) astFactory.create(LT(1), "Spring.Expressions.SelectionLastNode");
@@ -2190,14 +2198,14 @@ _loop71_breakloop:				;
 		}
 		returnAST = lastSelection_AST;
 	}
-
+	
 	public void listInitializer() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST listInitializer_AST = null;
-
+		
 		try {      // for error handling
 			Spring.Expressions.ListInitializerNode tmp66_AST = null;
 			tmp66_AST = (Spring.Expressions.ListInitializerNode) astFactory.create(LT(1), "Spring.Expressions.ListInitializerNode");
@@ -2224,7 +2232,7 @@ _loop71_breakloop:				;
 					{
 						goto _loop99_breakloop;
 					}
-
+					
 				}
 _loop99_breakloop:				;
 			}    // ( ... )*
@@ -2245,14 +2253,14 @@ _loop99_breakloop:				;
 		}
 		returnAST = listInitializer_AST;
 	}
-
+	
 	public void mapInitializer() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST mapInitializer_AST = null;
-
+		
 		try {      // for error handling
 			match(POUND);
 			Spring.Expressions.MapInitializerNode tmp70_AST = null;
@@ -2280,7 +2288,7 @@ _loop99_breakloop:				;
 					{
 						goto _loop102_breakloop;
 					}
-
+					
 				}
 _loop102_breakloop:				;
 			}    // ( ... )*
@@ -2301,14 +2309,14 @@ _loop102_breakloop:				;
 		}
 		returnAST = mapInitializer_AST;
 	}
-
+	
 	public void lambda() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST lambda_AST = null;
-
+		
 		try {      // for error handling
 			match(LAMBDA);
 			{
@@ -2326,7 +2334,7 @@ _loop102_breakloop:				;
 				{
 					throw new NoViableAltException(LT(1), getFilename());
 				}
-
+				
 			}
 			match(PIPE);
 			expression();
@@ -2362,15 +2370,15 @@ _loop102_breakloop:				;
 		}
 		returnAST = lambda_AST;
 	}
-
+	
 	public void attribute() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST attribute_AST = null;
 		Spring.Expressions.SpringAST tn_AST = null;
-
+		
 		try {      // for error handling
 			match(AT);
 			match(LBRACKET);
@@ -2394,7 +2402,7 @@ _loop102_breakloop:				;
 				{
 					throw new NoViableAltException(LT(1), getFilename());
 				}
-
+				
 			}
 			match(RBRACKET);
 			if (0==inputState.guessing)
@@ -2424,14 +2432,14 @@ _loop102_breakloop:				;
 		}
 		returnAST = attribute_AST;
 	}
-
+	
 	public void function() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST function_AST = null;
-
+		
 		try {      // for error handling
 			match(POUND);
 			Spring.Expressions.FunctionNode tmp80_AST = null;
@@ -2459,14 +2467,14 @@ _loop102_breakloop:				;
 		}
 		returnAST = function_AST;
 	}
-
+	
 	public void var() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST var_AST = null;
-
+		
 		try {      // for error handling
 			match(POUND);
 			Spring.Expressions.VariableNode tmp82_AST = null;
@@ -2489,14 +2497,14 @@ _loop102_breakloop:				;
 		}
 		returnAST = var_AST;
 	}
-
+	
 	public void methodArgs() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST methodArgs_AST = null;
-
+		
 		try {      // for error handling
 			match(LPAREN);
 			{
@@ -2523,7 +2531,7 @@ _loop102_breakloop:				;
 							{
 								goto _loop60_breakloop;
 							}
-
+							
 						}
 _loop60_breakloop:						;
 					}    // ( ... )*
@@ -2534,7 +2542,7 @@ _loop60_breakloop:						;
 				{
 					throw new NoViableAltException(LT(1), getFilename());
 				}
-
+				
 			}
 			match(RPAREN);
 			methodArgs_AST = (Spring.Expressions.SpringAST)currentAST.root;
@@ -2553,14 +2561,14 @@ _loop60_breakloop:						;
 		}
 		returnAST = methodArgs_AST;
 	}
-
+	
 	public void localFunction() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST localFunction_AST = null;
-
+		
 		try {      // for error handling
 			match(DOLLAR);
 			Spring.Expressions.LocalFunctionNode tmp87_AST = null;
@@ -2588,14 +2596,14 @@ _loop60_breakloop:						;
 		}
 		returnAST = localFunction_AST;
 	}
-
+	
 	public void localVar() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST localVar_AST = null;
-
+		
 		try {      // for error handling
 			match(DOLLAR);
 			Spring.Expressions.LocalVariableNode tmp89_AST = null;
@@ -2618,14 +2626,14 @@ _loop60_breakloop:						;
 		}
 		returnAST = localVar_AST;
 	}
-
+	
 	public void property() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST property_AST = null;
-
+		
 		try {      // for error handling
 			Spring.Expressions.PropertyOrFieldNode tmp90_AST = null;
 			tmp90_AST = (Spring.Expressions.PropertyOrFieldNode) astFactory.create(LT(1), "Spring.Expressions.PropertyOrFieldNode");
@@ -2647,14 +2655,14 @@ _loop60_breakloop:						;
 		}
 		returnAST = property_AST;
 	}
-
+	
 	public void argument() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST argument_AST = null;
-
+		
 		try {      // for error handling
 			expression();
 			if (0 == inputState.guessing)
@@ -2677,14 +2685,14 @@ _loop60_breakloop:						;
 		}
 		returnAST = argument_AST;
 	}
-
+	
 	public void quotableName() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST quotableName_AST = null;
-
+		
 		try {      // for error handling
 			if ((LA(1)==STRING_LITERAL))
 			{
@@ -2706,7 +2714,7 @@ _loop60_breakloop:						;
 			{
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-
+			
 		}
 		catch (RecognitionException ex)
 		{
@@ -2722,14 +2730,14 @@ _loop60_breakloop:						;
 		}
 		returnAST = quotableName_AST;
 	}
-
+	
 	public void name() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST name_AST = null;
-
+		
 		try {      // for error handling
 			Spring.Expressions.QualifiedIdentifier tmp92_AST = null;
 			tmp92_AST = (Spring.Expressions.QualifiedIdentifier) astFactory.create(LT(1), "Spring.Expressions.QualifiedIdentifier");
@@ -2751,7 +2759,7 @@ _loop60_breakloop:						;
 					{
 						goto _loop78_breakloop;
 					}
-
+					
 				}
 _loop78_breakloop:				;
 			}    // ( ... )*
@@ -2771,14 +2779,14 @@ _loop78_breakloop:				;
 		}
 		returnAST = name_AST;
 	}
-
+	
 	public void qualifiedId() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST qualifiedId_AST = null;
-
+		
 		try {      // for error handling
 			Spring.Expressions.QualifiedIdentifier tmp94_AST = null;
 			tmp94_AST = (Spring.Expressions.QualifiedIdentifier) astFactory.create(LT(1), "Spring.Expressions.QualifiedIdentifier");
@@ -2802,7 +2810,7 @@ _loop78_breakloop:				;
 					{
 						goto _loop114_breakloop;
 					}
-
+					
 				}
 _loop114_breakloop:				;
 			}    // ( ... )*
@@ -2822,14 +2830,14 @@ _loop114_breakloop:				;
 		}
 		returnAST = qualifiedId_AST;
 	}
-
+	
 	public void ctorArgs() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST ctorArgs_AST = null;
-
+		
 		try {      // for error handling
 			match(LPAREN);
 			{
@@ -2856,7 +2864,7 @@ _loop114_breakloop:				;
 							{
 								goto _loop107_breakloop;
 							}
-
+							
 						}
 _loop107_breakloop:						;
 					}    // ( ... )*
@@ -2867,7 +2875,7 @@ _loop107_breakloop:						;
 				{
 					throw new NoViableAltException(LT(1), getFilename());
 				}
-
+				
 			}
 			match(RPAREN);
 			ctorArgs_AST = (Spring.Expressions.SpringAST)currentAST.root;
@@ -2886,14 +2894,14 @@ _loop107_breakloop:						;
 		}
 		returnAST = ctorArgs_AST;
 	}
-
+	
 	public void argList() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST argList_AST = null;
-
+		
 		try {      // for error handling
 			{
 				Spring.Expressions.SpringAST tmp100_AST = null;
@@ -2915,7 +2923,7 @@ _loop107_breakloop:						;
 						{
 							goto _loop87_breakloop;
 						}
-
+						
 					}
 _loop87_breakloop:					;
 				}    // ( ... )*
@@ -2947,15 +2955,15 @@ _loop87_breakloop:					;
 		}
 		returnAST = argList_AST;
 	}
-
+	
 	public void arrayConstructor() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST arrayConstructor_AST = null;
 		Spring.Expressions.SpringAST type_AST = null;
-
+		
 		try {      // for error handling
 			match(LITERAL_new);
 			qualifiedId();
@@ -2983,7 +2991,7 @@ _loop87_breakloop:					;
 				{
 					throw new NoViableAltException(LT(1), getFilename());
 				}
-
+				
 			}
 			if (0==inputState.guessing)
 			{
@@ -3012,14 +3020,14 @@ _loop87_breakloop:					;
 		}
 		returnAST = arrayConstructor_AST;
 	}
-
+	
 	public void arrayRank() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST arrayRank_AST = null;
-
+		
 		try {      // for error handling
 			Spring.Expressions.SpringAST tmp104_AST = null;
 			tmp104_AST = (Spring.Expressions.SpringAST) astFactory.create(LT(1));
@@ -3049,7 +3057,7 @@ _loop87_breakloop:					;
 							{
 								goto _loop96_breakloop;
 							}
-
+							
 						}
 _loop96_breakloop:						;
 					}    // ( ... )*
@@ -3060,7 +3068,7 @@ _loop96_breakloop:						;
 				{
 					throw new NoViableAltException(LT(1), getFilename());
 				}
-
+				
 			}
 			match(RBRACKET);
 			arrayRank_AST = (Spring.Expressions.SpringAST)currentAST.root;
@@ -3079,14 +3087,14 @@ _loop96_breakloop:						;
 		}
 		returnAST = arrayRank_AST;
 	}
-
+	
 	public void mapEntry() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST mapEntry_AST = null;
-
+		
 		try {      // for error handling
 			expression();
 			if (0 == inputState.guessing)
@@ -3126,14 +3134,14 @@ _loop96_breakloop:						;
 		}
 		returnAST = mapEntry_AST;
 	}
-
+	
 	public void namedArgument() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST namedArgument_AST = null;
-
+		
 		try {      // for error handling
 			bool synPredMatched111 = false;
 			if (((LA(1)==ID) && (LA(2)==ASSIGN)))
@@ -3180,7 +3188,7 @@ _loop96_breakloop:						;
 			{
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-
+			
 		}
 		catch (RecognitionException ex)
 		{
@@ -3196,14 +3204,14 @@ _loop96_breakloop:						;
 		}
 		returnAST = namedArgument_AST;
 	}
-
+	
 	public void boolLiteral() //throws RecognitionException, TokenStreamException
 {
-
+		
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		Spring.Expressions.SpringAST boolLiteral_AST = null;
-
+		
 		try {      // for error handling
 			if ((LA(1)==TRUE))
 			{
@@ -3224,7 +3232,7 @@ _loop96_breakloop:						;
 			{
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-
+			
 		}
 		catch (RecognitionException ex)
 		{
@@ -3240,12 +3248,12 @@ _loop96_breakloop:						;
 		}
 		returnAST = boolLiteral_AST;
 	}
-
+	
 	public new Spring.Expressions.SpringAST getAST()
 	{
 		return (Spring.Expressions.SpringAST) returnAST;
 	}
-
+	
 	private void initializeFactory()
 	{
 		if (astFactory == null)
@@ -3258,7 +3266,7 @@ _loop96_breakloop:						;
 	{
 		factory.setMaxNodeType(71);
 	}
-
+	
 	public static readonly string[] tokenNames_ = new string[] {
 		@"""<0>""",
 		@"""EOF""",
@@ -3333,7 +3341,7 @@ _loop96_breakloop:						;
 		@"""SIGN""",
 		@"""REAL_TYPE_SUFFIX"""
 	};
-
+	
 	private static long[] mk_tokenSet_0_()
 	{
 		long[] data = { 2L, 0L};
@@ -3478,6 +3486,6 @@ _loop96_breakloop:						;
 		return data;
 	}
 	public static readonly BitSet tokenSet_23_ = new BitSet(mk_tokenSet_23_());
-
+	
 }
 }

@@ -21,53 +21,53 @@ namespace org.activiti.engine.impl.cmd
     using System.Collections.Generic;
 
     [Serializable]
-	public class SetProcessInstanceNameCmd : ICommand<object>
-	{
+    public class SetProcessInstanceNameCmd : ICommand<object>
+    {
 
-	  private const long serialVersionUID = 1L;
+        private const long serialVersionUID = 1L;
 
-	  protected internal string processInstanceId;
-	  protected internal string name;
+        protected internal string processInstanceId;
+        protected internal string name;
 
-	  public SetProcessInstanceNameCmd(string processInstanceId, string name)
-	  {
-		this.processInstanceId = processInstanceId;
-		this.name = name;
-	  }
+        public SetProcessInstanceNameCmd(string processInstanceId, string name)
+        {
+            this.processInstanceId = processInstanceId;
+            this.name = name;
+        }
 
-	  public  virtual object  execute(ICommandContext commandContext)
-	  {
-		if (ReferenceEquals(processInstanceId, null))
-		{
-		  throw new ActivitiIllegalArgumentException("processInstanceId is null");
-		}
+        public virtual object Execute(ICommandContext commandContext)
+        {
+            if (processInstanceId is null)
+            {
+                throw new ActivitiIllegalArgumentException("processInstanceId is null");
+            }
 
-		IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
-		if (execution == null)
-		{
-		  throw new ActivitiObjectNotFoundException("process instance " + processInstanceId + " doesn't exist", typeof(IProcessInstance));
-		}
+            if (execution == null)
+            {
+                throw new ActivitiObjectNotFoundException("process instance " + processInstanceId + " doesn't exist", typeof(IProcessInstance));
+            }
 
-		if (!execution.ProcessInstanceType)
-		{
-		  throw new ActivitiObjectNotFoundException("process instance " + processInstanceId + " doesn't exist, the given ID references an execution, though", typeof(IProcessInstance));
-		}
+            if (!execution.ProcessInstanceType)
+            {
+                throw new ActivitiObjectNotFoundException("process instance " + processInstanceId + " doesn't exist, the given ID references an execution, though", typeof(IProcessInstance));
+            }
 
-		if (execution.Suspended)
-		{
-		  throw new ActivitiException("process instance " + processInstanceId + " is suspended, cannot set name");
-		}
+            if (execution.Suspended)
+            {
+                throw new ActivitiException("process instance " + processInstanceId + " is suspended, cannot set name");
+            }
 
-		// Actually set the name
-		execution.Name = name;
+            // Actually set the name
+            execution.Name = name;
 
-		// Record the change in history
-		commandContext.HistoryManager.recordProcessInstanceNameChange(processInstanceId, name);
+            // Record the change in history
+            commandContext.HistoryManager.RecordProcessInstanceNameChange(processInstanceId, name);
 
-		return null;
-	  }
+            return null;
+        }
 
-	}
+    }
 
 }

@@ -10,38 +10,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using org.activiti.engine.@delegate;
+
 namespace org.activiti.engine.impl.cfg
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public enum DelegateExpressionFieldInjectionMode
-	{
+    {
 
-	  /// <summary>
-	  /// This is the pre version 5.21 mode: field expressions are allowed and the
-	  /// only way to inject values.
-	  /// 
-	  /// Using the
-	  /// <seealso cref="DelegateHelper#getField(org.activiti.engine.delegate.DelegateExecution, String)"/>
-	  /// method is not possible when using this mode, unless the Expressions are still defined
-	  /// as members of the delegate (otherwise an exception will be thrown). In that case, they
-	  /// should not be used, but rather the DelegateHelper methods should be used.
-	  /// </summary>
-	  COMPATIBILITY,
+        /// <summary>
+        /// This is the pre version 5.21 mode: field expressions are allowed and the
+        /// only way to inject values.
+        /// 
+        /// Using the
+        /// <seealso cref="DelegateHelper"/>
+        /// method is not possible when using this mode, unless the Expressions are still defined
+        /// as members of the delegate (otherwise an exception will be thrown). In that case, they
+        /// should not be used, but rather the DelegateHelper methods should be used.
+        /// </summary>
+        COMPATIBILITY,
 
-	  /// <summary>
-	  /// Allows injection when using delegateExpressions but will not throw an exception
-	  /// when the fields are not defined on the delegate. This allows for mixed behaviours
-	  /// where some delegates have injection (for example because they are not singletons)
-	  /// and some don't.
-	  /// </summary>
-	  MIXED,
+        /// <summary>
+        /// Allows injection when using delegateExpressions but will not throw an exception
+        /// when the fields are not defined on the delegate. This allows for mixed behaviours
+        /// where some delegates have injection (for example because they are not singletons)
+        /// and some don't.
+        /// </summary>
+        MIXED,
 
-	  /// <summary>
-	  /// (Advised mode, as it is the safest) 
-	  /// 
-	  /// Disables field injection when using delegateExpressions, no field injection will happen.
-	  /// </summary>
-	  DISABLED
-
-	}
-
+        /// <summary>
+        /// (Advised mode, as it is the safest) 
+        /// 
+        /// Disables field injection when using delegateExpressions, no field injection will happen.
+        /// </summary>
+        DISABLED
+    }
 }

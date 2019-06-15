@@ -9,11 +9,11 @@ namespace org.activiti.cloud.services.core.commands
     /// <summary>
     /// 
     /// </summary>
-    public class SetTaskVariablesCmdExecutor : CommandExecutor<SetTaskVariablesCmd>
+    public class SetTaskVariablesCmdExecutor : ICommandExecutor<SetTaskVariablesCmd>
     {
 
-        private ProcessEngineWrapper processEngine;
-        private IMessageChannel<SetTaskVariablesResults> commandResults;
+        private readonly ProcessEngineWrapper processEngine;
+        private readonly IMessageChannel<SetTaskVariablesResults> commandResults;
 
         /// <summary>
         /// 
@@ -41,11 +41,11 @@ namespace org.activiti.cloud.services.core.commands
         /// 
         /// </summary>
         /// <param name="cmd"></param>
-        public virtual void execute(SetTaskVariablesCmd cmd)
+        public virtual void Execute(SetTaskVariablesCmd cmd)
         {
-            processEngine.TaskVariables = cmd;
+            processEngine.SetTaskVariables(cmd);
             SetTaskVariablesResults cmdResult = new SetTaskVariablesResults(cmd.Id);
-            commandResults.send(MessageBuilder<SetTaskVariablesResults>.withPayload(cmdResult).build());
+            commandResults.Send(MessageBuilder<SetTaskVariablesResults>.WithPayload(cmdResult).Build());
         }
     }
 

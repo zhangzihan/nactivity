@@ -24,17 +24,27 @@ namespace org.activiti.engine.impl.@delegate.invocation
     /// </summary>
     public class ExpressionGetInvocation : ExpressionInvocation
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal readonly ELContext elContext;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="valueExpression"></param>
+        /// <param name="elContext"></param>
         public ExpressionGetInvocation(ValueExpression valueExpression, ELContext elContext) : base(valueExpression)
         {
             this.elContext = elContext;
         }
 
-        protected internal override void invoke()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal override void Invoke()
         {
-            invocationResult = valueExpression.getValue(elContext);
+            invocationResult = valueExpression.GetValue(elContext);
         }
     }
 }

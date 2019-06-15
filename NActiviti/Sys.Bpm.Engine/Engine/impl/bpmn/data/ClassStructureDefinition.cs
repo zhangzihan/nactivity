@@ -21,21 +21,38 @@ namespace org.activiti.engine.impl.bpmn.data
     /// </summary>
     public class ClassStructureDefinition : IFieldBaseStructureDefinition
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string id;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal Type classStructure;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="classStructure"></param>
         public ClassStructureDefinition(Type classStructure) : this(classStructure.FullName, classStructure)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="classStructure"></param>
         public ClassStructureDefinition(string id, Type classStructure)
         {
             this.id = id;
             this.classStructure = classStructure;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Id
         {
             get
@@ -44,6 +61,9 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int FieldSize
         {
             get
@@ -53,19 +73,33 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
 
-        public virtual string getFieldNameAt(int index)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public virtual string GetFieldNameAt(int index)
         {
             // TODO
             return null;
         }
 
-        public virtual Type getFieldTypeAt(int index)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public virtual Type GetFieldTypeAt(int index)
         {
             // TODO
             return null;
         }
 
-        public virtual IStructureInstance createInstance()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual IStructureInstance CreateInstance()
         {
             return new FieldBaseStructureInstance(this);
         }

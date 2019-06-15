@@ -26,8 +26,7 @@ namespace org.activiti.engine.impl.persistence.entity
     using org.activiti.engine.repository;
     using org.activiti.engine.runtime;
     using org.activiti.engine.task;
-    using Sys;
-    using System.Data;
+    using Sys.Workflow;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -117,7 +116,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return getSession<DbSqlSession>();
+                return GetSession<DbSqlSession>();
             }
         }
 
@@ -130,7 +129,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (string tableName in TablesPresentInDatabase)
                     {
-                        tableCount[tableName] = getTableCount(tableName);
+                        tableCount[tableName] = GetTableCount(tableName);
                     }
 
                     log.LogDebug($"Number of rows per activiti table: {tableCount}");
@@ -165,13 +164,13 @@ namespace org.activiti.engine.impl.persistence.entity
                     //}
 
                     string catalog = null;
-                    if (!ReferenceEquals(ProcessEngineConfiguration.DatabaseCatalog, null) && ProcessEngineConfiguration.DatabaseCatalog.Length > 0)
+                    if (!(ProcessEngineConfiguration.DatabaseCatalog is null) && ProcessEngineConfiguration.DatabaseCatalog.Length > 0)
                     {
                         catalog = ProcessEngineConfiguration.DatabaseCatalog;
                     }
 
                     string schema = null;
-                    if (!ReferenceEquals(ProcessEngineConfiguration.DatabaseSchema, null) && ProcessEngineConfiguration.DatabaseSchema.Length > 0)
+                    if (!(ProcessEngineConfiguration.DatabaseSchema is null) && ProcessEngineConfiguration.DatabaseSchema.Length > 0)
                     {
                         if ("oracle".Equals(DbSqlSession.DbSqlSessionFactory.DatabaseType))
                         {
@@ -202,33 +201,31 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        protected internal virtual long getTableCount(string tableName)
+        protected internal virtual long GetTableCount(string tableName)
         {
             log.LogDebug($"selecting table count for {tableName}");
-            long? count = (long?)DbSqlSession.selectOne<TableDataManagerImpl, long?>("selectTableCount", tableName);
-            return count.Value;
+            return DbSqlSession.SelectOne<TableDataManagerImpl, long?>("selectTableCount", tableName).GetValueOrDefault();
         }
 
-        public virtual TablePage getTablePage(TablePageQueryImpl tablePageQuery, int firstResult, int maxResults)
+        public virtual TablePage GetTablePage(ITablePageQuery tablePageQuery, int firstResult, int maxResults)
         {
-
             TablePage tablePage = new TablePage();
+            TablePageQueryImpl tablePageQueryImpl = tablePageQuery as TablePageQueryImpl;
 
-            IList<Dictionary<string, object>> tableData = DbSqlSession.selectList<PropertyEntityImpl, Dictionary<string, object>>("selectTableData", null, firstResult, maxResults);
+            IList<Dictionary<string, object>> tableData = DbSqlSession.SelectList<PropertyEntityImpl, Dictionary<string, object>>("selectTableData", null, firstResult, maxResults);
 
-            tablePage.TableName = tablePageQuery.TableName;
-            tablePage.Total = getTableCount(tablePageQuery.TableName);
+            tablePage.TableName = tablePageQueryImpl.TableName;
+            tablePage.Total = GetTableCount(tablePageQueryImpl.TableName);
             tablePage.Rows = (IList<IDictionary<string, object>>)tableData;
             tablePage.FirstResult = firstResult;
 
             return tablePage;
         }
 
-        public virtual string getTableName(Type entityClass, bool withPrefix)
+        public virtual string GetTableName(Type entityClass, bool withPrefix)
         {
             string databaseTablePrefix = DbSqlSession.DbSqlSessionFactory.DatabaseTablePrefix;
-            string tableName = null;
-
+            string tableName;
             if (entityClass.IsAssignableFrom(typeof(IEntity)))
             {
                 tableName = entityToTableNameMap[entityClass];
@@ -247,7 +244,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual TableMetaData getTableMetaData(string tableName)
+        public virtual TableMetaData GetTableMetaData(string tableName)
         {
             TableMetaData result = new TableMetaData();
             try
@@ -261,13 +258,13 @@ namespace org.activiti.engine.impl.persistence.entity
                 }
 
                 string catalog = null;
-                if (!ReferenceEquals(ProcessEngineConfiguration.DatabaseCatalog, null) && ProcessEngineConfiguration.DatabaseCatalog.Length > 0)
+                if (!(ProcessEngineConfiguration.DatabaseCatalog is null) && ProcessEngineConfiguration.DatabaseCatalog.Length > 0)
                 {
                     catalog = ProcessEngineConfiguration.DatabaseCatalog;
                 }
 
                 string schema = null;
-                if (!ReferenceEquals(ProcessEngineConfiguration.DatabaseSchema, null) && ProcessEngineConfiguration.DatabaseSchema.Length > 0)
+                if (!(ProcessEngineConfiguration.DatabaseSchema is null) && ProcessEngineConfiguration.DatabaseSchema.Length > 0)
                 {
                     if ("oracle".Equals(DbSqlSession.DbSqlSessionFactory.DatabaseType))
                     {

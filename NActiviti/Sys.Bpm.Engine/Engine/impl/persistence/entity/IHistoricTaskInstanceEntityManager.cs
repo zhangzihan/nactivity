@@ -15,25 +15,24 @@
 namespace org.activiti.engine.impl.persistence.entity
 {
 
-	using org.activiti.engine.history;
+    using org.activiti.engine.history;
 
-	/// 
-	public interface IHistoricTaskInstanceEntityManager : IEntityManager<IHistoricTaskInstanceEntity>
-	{
+    /// 
+    public interface IHistoricTaskInstanceEntityManager : IEntityManager<IHistoricTaskInstanceEntity>
+    {
 
-	  IHistoricTaskInstanceEntity create(ITaskEntity task, IExecutionEntity execution);
+        IHistoricTaskInstanceEntity Create(ITaskEntity task, IExecutionEntity execution);
 
-	  long findHistoricTaskInstanceCountByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery);
+        long FindHistoricTaskInstanceCountByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery);
 
-	  IList<IHistoricTaskInstance> findHistoricTaskInstancesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery);
+        IList<IHistoricTaskInstance> FindHistoricTaskInstancesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery);
 
-	  IList<IHistoricTaskInstance> findHistoricTaskInstancesAndVariablesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery);
+        IList<IHistoricTaskInstance> FindHistoricTaskInstancesAndVariablesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery);
 
-	  IList<IHistoricTaskInstance> findHistoricTaskInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<IHistoricTaskInstance> FindHistoricTaskInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findHistoricTaskInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
+        long FindHistoricTaskInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
 
-	  void deleteHistoricTaskInstancesByProcessInstanceId(string processInstanceId);
-
-	}
+        void DeleteHistoricTaskInstancesByProcessInstanceId(string processInstanceId);
+    }
 }

@@ -15,6 +15,7 @@ using System.Collections.Generic;
  */
 namespace org.activiti.bpmn.converter
 {
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.child;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
@@ -43,42 +44,42 @@ namespace org.activiti.bpmn.converter
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_TASK_SCRIPT;
+                return BpmnXMLConstants.ELEMENT_TASK_SCRIPT;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             ScriptTask scriptTask = new ScriptTask();
-            BpmnXMLUtil.addXMLLocation(scriptTask, xtr);
-            scriptTask.ScriptFormat = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_FORMAT);
-            scriptTask.ResultVariable = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_RESULTVARIABLE);
+            BpmnXMLUtil.AddXMLLocation(scriptTask, xtr);
+            scriptTask.ScriptFormat = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_FORMAT);
+            scriptTask.ResultVariable = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_RESULTVARIABLE);
             if (string.IsNullOrWhiteSpace(scriptTask.ResultVariable))
             {
-                scriptTask.ResultVariable = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_RESULTVARIABLE);
+                scriptTask.ResultVariable = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_RESULTVARIABLE);
             }
-            string autoStoreVariables = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_AUTO_STORE_VARIABLE);
+            string autoStoreVariables = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_AUTO_STORE_VARIABLE);
             if (!string.IsNullOrWhiteSpace(autoStoreVariables))
             {
                 scriptTask.AutoStoreVariables = Convert.ToBoolean(autoStoreVariables);
             }
-            parseChildElements(XMLElementName, scriptTask, childParserMap, model, xtr);
+            ParseChildElements(XMLElementName, scriptTask, childParserMap, model, xtr);
             return scriptTask;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             ScriptTask scriptTask = (ScriptTask)element;
-            writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_FORMAT, scriptTask.ScriptFormat, xtw);
-            writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_RESULTVARIABLE, scriptTask.ResultVariable, xtw);
-            writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_AUTO_STORE_VARIABLE, scriptTask.AutoStoreVariables.ToString(), xtw);
+            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_FORMAT, scriptTask.ScriptFormat, xtw);
+            WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_RESULTVARIABLE, scriptTask.ResultVariable, xtw);
+            WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_AUTO_STORE_VARIABLE, scriptTask.AutoStoreVariables.ToString(), xtw);
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             ScriptTask scriptTask = (ScriptTask)element;
             if (!string.IsNullOrWhiteSpace(scriptTask.Script))
             {
-                xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_TEXT);
-                xtw.writeCData(scriptTask.Script);
-                xtw.writeEndElement();
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_TEXT, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteCData(scriptTask.Script);
+                xtw.WriteEndElement();
             }
         }
     }

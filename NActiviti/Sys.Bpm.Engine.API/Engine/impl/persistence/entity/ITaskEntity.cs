@@ -68,7 +68,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         IDictionary<string, IVariableInstanceEntity> VariableInstanceEntities { get; }
 
-        void forceUpdate();
+        void ForceUpdate();
 
         new bool Deleted { get; set; }
 
@@ -79,6 +79,8 @@ namespace org.activiti.engine.impl.persistence.entity
         new bool Suspended { get; set; }
 
         new string Assignee { get; set; }
+
+        new string AssigneeUser { get; set; }
 
         new string Owner { get; set; }
 

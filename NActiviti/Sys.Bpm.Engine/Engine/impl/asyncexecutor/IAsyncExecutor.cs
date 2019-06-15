@@ -12,75 +12,103 @@
  */
 namespace org.activiti.engine.impl.asyncexecutor
 {
-	using org.activiti.engine.impl.cfg;
-	using org.activiti.engine.impl.persistence.entity;
-	using org.activiti.engine.runtime;
+    using org.activiti.engine.impl.cfg;
+    using org.activiti.engine.impl.persistence.entity;
+    using org.activiti.engine.runtime;
 
-	/// 
-	/// 
-	public interface IAsyncExecutor
-	{
+    /// 
+    /// 
+    public interface IAsyncExecutor
+    {
 
-	  /// <summary>
-	  /// Starts the Async Executor: jobs will be acquired and executed.
-	  /// </summary>
-	  void start();
+        /// <summary>
+        /// Starts the Async Executor: jobs will be acquired and executed.
+        /// </summary>
+        void Start();
 
-	  /// <summary>
-	  /// Stops executing jobs.
-	  /// </summary>
-	  void shutdown();
+        /// <summary>
+        /// Stops executing jobs.
+        /// </summary>
+        void Shutdown();
 
-	  /// <summary>
-	  /// Offers the provided <seealso cref="IJobEntity"/> to this <seealso cref="IAsyncExecutor"/> instance
-	  /// to execute. If the offering does not work for some reason, false 
-	  /// will be returned (For example when the job queue is full in the <seealso cref="DefaultAsyncJobExecutor"/>). 
-	  /// </summary>
-	  bool executeAsyncJob(IJob job);
-
-
-	  /* Getters and Setters */
-
-	  ProcessEngineConfigurationImpl ProcessEngineConfiguration {set;get;}
+        /// <summary>
+        /// Offers the provided <seealso cref="IJobEntity"/> to this <seealso cref="IAsyncExecutor"/> instance
+        /// to execute. If the offering does not work for some reason, false 
+        /// will be returned (For example when the job queue is full in the <seealso cref="DefaultAsyncJobExecutor"/>). 
+        /// </summary>
+        bool ExecuteAsyncJob(IJob job);
 
 
-	  bool AutoActivate {get;set;}
+        /* Getters and Setters */
 
+        /// <summary>
+        /// 
+        /// </summary>
+        ProcessEngineConfigurationImpl ProcessEngineConfiguration { set; get; }
 
-	  bool Active {get;}
+        /// <summary>
+        /// 
+        /// </summary>
+        bool AutoActivate { get; set; }
 
-	  string LockOwner {get;}
+        /// <summary>
+        /// 
+        /// </summary>
+        bool Active { get; }
 
-	  int TimerLockTimeInMillis {get;set;}
+        /// <summary>
+        /// 
+        /// </summary>
+        string LockOwner { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        int TimerLockTimeInMillis { get; set; }
 
-	  int AsyncJobLockTimeInMillis {get;set;}
+        /// <summary>
+        /// 
+        /// </summary>
+        int AsyncJobLockTimeInMillis { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        int DefaultTimerJobAcquireWaitTimeInMillis { get; set; }
 
-	  int DefaultTimerJobAcquireWaitTimeInMillis {get;set;}
+        /// <summary>
+        /// 
+        /// </summary>
+        int DefaultAsyncJobAcquireWaitTimeInMillis { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        int DefaultQueueSizeFullWaitTimeInMillis { get; set; }
 
-	  int DefaultAsyncJobAcquireWaitTimeInMillis {get;set;}
+        /// <summary>
+        /// 
+        /// </summary>
+        int MaxAsyncJobsDuePerAcquisition { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        int MaxTimerJobsPerAcquisition { get; set; }
 
-	  int DefaultQueueSizeFullWaitTimeInMillis {get;set;}
+        /// <summary>
+        /// 
+        /// </summary>
+        int RetryWaitTimeInMillis { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        int ResetExpiredJobsInterval { get; set; }
 
-	  int MaxAsyncJobsDuePerAcquisition {get;set;}
-
-
-	  int MaxTimerJobsPerAcquisition {get;set;}
-
-
-	  int RetryWaitTimeInMillis {get;set;}
-
-
-	  int ResetExpiredJobsInterval {get;set;}
-
-
-	  int ResetExpiredJobsPageSize {get;set;}
-
-
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        int ResetExpiredJobsPageSize { get; set; }
+    }
 }

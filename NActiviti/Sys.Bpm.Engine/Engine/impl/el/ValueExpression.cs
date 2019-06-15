@@ -33,12 +33,12 @@ namespace org.activiti.engine.impl.el
             get; set;
         }
 
-        internal void setValue(ELContext context, object value)
+        internal void SetValue(ELContext context, object value)
         {
             throw new NotImplementedException("Value Expression 51 line");
         }
 
-        internal object getValue(ELContext elContext)
+        internal object GetValue(ELContext elContext)
         {
             if (string.IsNullOrWhiteSpace(this.ExpressionString))
             {
@@ -51,13 +51,13 @@ namespace org.activiti.engine.impl.el
             {
                 var variableScope = eLResolver.Resolvers.First(x => x.GetType() == typeof(VariableScopeElResolver)) as VariableScopeElResolver;
 
-                return getValue(elContext, variableScope.VariableScope);
+                return GetValue(elContext, variableScope.VariableScope);
             }
 
             throw new NotImplementedException("Value Expression not support!");
         }
 
-        private object getValue(ELContext context, IVariableScope variableScope)
+        private object GetValue(ELContext context, IVariableScope variableScope)
         {
             string expstr = ExpressionString;
 

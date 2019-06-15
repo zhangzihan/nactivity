@@ -13,12 +13,12 @@ namespace org.springframework.context
         /// <summary>
         /// 
         /// </summary>
-        void publishEvent(IntegrationRequestEvent @event);
+        void PublishEvent(IntegrationRequestEvent @event);
 
 
         /// <summary>
         /// 
         /// </summary>
-        void publishEvent(ICommand signalCmd);
+        void PublishEvent(ICommand signalCmd);
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using SmartSql.Abstractions;
 using System.Reflection;
 using SmartSql.Exceptions;
+using SmartSql.Utils;
 
 namespace SmartSql.Configuration.Tags
 {
@@ -18,6 +19,7 @@ namespace SmartSql.Configuration.Tags
         public string Separator { get; set; }
         public string Close { get; set; }
         public string Key { get; set; }
+        public string Index { get; set; }
 
         public override bool IsCondition(RequestContext context)
         {
@@ -39,29 +41,71 @@ namespace SmartSql.Configuration.Tags
             {
                 throw new SmartSqlException("[For] tag must have childTag!");
             }
-            if (!(ChildTags[0] is SqlText childText))
+            foreach (ITag tag in ChildTags)
             {
-                throw new SmartSqlException("[For] ChildTag only support SqlText!");
+                if (tag is SqlText childText)
+                {
+                    context.Sql.Append(Open);
+                    IEnumerator reqVal = (GetPropertyValue(context) as IEnumerable).GetEnumerator();
+                    reqVal.MoveNext();
+                    bool isDirectValue = IsDirectValue(reqVal.Current);
+                    var itemSqlStr = childText.BodyText;
+                    if (isDirectValue)
+                    {
+                        BuildItemSql_DirectValue(itemSqlStr, context);
+                    }
+                    else
+                    {
+                        string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}#";
+                        if (new Regex($"([{dbPrefixs}]{{(.*?)}})", RegexOptions.IgnoreCase).IsMatch(itemSqlStr))
+                        {
+                            BuildItemSql_NotDirectValue(itemSqlStr, context);
+                        }
+                        else
+                        {
+                            context.Sql.Append(childText.BodyText);
+                        }
+                    }
+                    context.Sql.Append(Close);
+                }
+                else if (tag is TrimTag trimSql)
+                {
+                    BuildTrim_Sql(trimSql, context);
+                }
+                else
+                {
+                    throw new SmartSqlException("[For] ChildTag only support SqlText!");
+                }
             }
-            context.Sql.Append(Open);
-            IEnumerator reqVal = (GetPropertyValue(context) as IEnumerable).GetEnumerator();
-            reqVal.MoveNext();
-            bool isDirectValue = IsDirectValue(reqVal.Current);
-            var itemSqlStr = childText.BodyText;
-            if (isDirectValue)
-            {
-                BuildItemSql_DirectValue(itemSqlStr, context);
-            }
-            else
-            {
-                BuildItemSql_NotDirectValue(itemSqlStr, context);
-            }
-            context.Sql.Append(Close);
         }
 
         private string KeyPrepend(string property)
         {
             return string.Join("_", property.Split(new char[] { '.' }));
+        }
+
+        private void BuildTrim_Sql(TrimTag trimSql, RequestContext context)
+        {
+            context.Sql.Append(" ");
+            context.Sql.Append(trimSql.Prefix);
+
+            var reqVal = GetPropertyValue(context) as IEnumerable;
+            foreach (var itemVal in reqVal)
+            {
+                if (context.Request is IDictionary<string, object> request)
+                {
+                    request[Key] = ObjectUtils.ToDictionary(itemVal, true);
+                }
+
+                trimSql.BuildChildSql(context);
+            }
+            if (context.Request is IDictionary<string, object> req)
+            {
+                req.Remove(Key);
+            }
+
+            context.Sql.Append(trimSql.Suffix);
+            context.Sql.Append(" ");
         }
 
         private void BuildItemSql_DirectValue(string itemSqlStr, RequestContext context)
@@ -86,7 +130,14 @@ namespace SmartSql.Configuration.Tags
                                   , key_name_dbPrefix
                                   , RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.CultureInvariant);
 
-                context.Sql.AppendFormat("{0}", item_sql);
+                if (!string.IsNullOrWhiteSpace(Index))
+                {
+                    context.Sql.AppendFormat("{0}", item_sql.Replace("${" + Index + "}", "" + item_index));
+                }
+                else
+                {
+                    context.Sql.AppendFormat("{0}", item_sql);
+                }
                 item_index++;
             }
         }
@@ -129,7 +180,14 @@ namespace SmartSql.Configuration.Tags
                                       , RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.CultureInvariant);
                 }
 
-                context.Sql.AppendFormat("{0}", item_sql);
+                if (!string.IsNullOrWhiteSpace(Index))
+                {
+                    context.Sql.AppendFormat("{0}", item_sql.Replace("${" + Index + "}", "" + item_index));
+                }
+                else
+                {
+                    context.Sql.AppendFormat("{0}", item_sql);
+                }
                 item_index++;
             }
         }

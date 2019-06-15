@@ -42,68 +42,69 @@ namespace org.activiti.engine.impl.bpmn.behavior
         internal bool? cleanEnvBoolean;
         internal string directoryStr;
 
-        private void readFields(IExecutionEntity execution)
+        private void ReadFields(IExecutionEntity execution)
         {
-            commandStr = getStringFromField(command, execution);
-            arg1Str = getStringFromField(arg1, execution);
-            arg2Str = getStringFromField(arg2, execution);
-            arg3Str = getStringFromField(arg3, execution);
-            arg4Str = getStringFromField(arg4, execution);
-            arg5Str = getStringFromField(arg5, execution);
-            waitStr = getStringFromField(wait, execution);
-            resultVariableStr = getStringFromField(outputVariable, execution);
-            errorCodeVariableStr = getStringFromField(errorCodeVariable, execution);
+            commandStr = GetStringFromField(command, execution);
+            arg1Str = GetStringFromField(arg1, execution);
+            arg2Str = GetStringFromField(arg2, execution);
+            arg3Str = GetStringFromField(arg3, execution);
+            arg4Str = GetStringFromField(arg4, execution);
+            arg5Str = GetStringFromField(arg5, execution);
+            waitStr = GetStringFromField(wait, execution);
+            resultVariableStr = GetStringFromField(outputVariable, execution);
+            errorCodeVariableStr = GetStringFromField(errorCodeVariable, execution);
 
-            string redirectErrorStr = getStringFromField(redirectError, execution);
-            string cleanEnvStr = getStringFromField(cleanEnv, execution);
+            string redirectErrorStr = GetStringFromField(redirectError, execution);
+            string cleanEnvStr = GetStringFromField(cleanEnv, execution);
 
-            waitFlag = ReferenceEquals(waitStr, null) || waitStr.Equals("true");
+            waitFlag = waitStr is null || waitStr.Equals("true");
             redirectErrorFlag = "true".Equals(redirectErrorStr);
             cleanEnvBoolean = "true".Equals(cleanEnvStr);
-            directoryStr = getStringFromField(directory, execution);
+            directoryStr = GetStringFromField(directory, execution);
 
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
 
-            readFields(execution);
+            ReadFields(execution);
 
-            IList<string> argList = new List<string>();
-            argList.Add(commandStr);
+            IList<string> argList = new List<string>
+            {
+                commandStr
+            };
 
-            if (!ReferenceEquals(arg1Str, null))
+            if (!(arg1Str is null))
             {
                 argList.Add(arg1Str);
             }
-            if (!ReferenceEquals(arg2Str, null))
+            if (!(arg2Str is null))
             {
                 argList.Add(arg2Str);
             }
-            if (!ReferenceEquals(arg3Str, null))
+            if (!(arg3Str is null))
             {
                 argList.Add(arg3Str);
             }
-            if (!ReferenceEquals(arg4Str, null))
+            if (!(arg4Str is null))
             {
                 argList.Add(arg4Str);
             }
-            if (!ReferenceEquals(arg5Str, null))
+            if (!(arg5Str is null))
             {
                 argList.Add(arg5Str);
             }
 
             ShellExecutorContext executorContext = new ShellExecutorContext(waitFlag, cleanEnvBoolean, redirectErrorFlag, directoryStr, resultVariableStr, errorCodeVariableStr, argList);
-
-            ICommandExecutor commandExecutor = null;
-
             ICommandExecutorFactory shellCommandExecutorFactory = CommandExecutorContext.ShellCommandExecutorFactory;
 
+
+            ICommandExecutor commandExecutor;
             if (shellCommandExecutorFactory != null)
             {
                 // if there is a ShellExecutorFactoryProvided
                 // then it will be used to create a desired shell command executor.
-                commandExecutor = shellCommandExecutorFactory.createExecutor(executorContext);
+                commandExecutor = shellCommandExecutorFactory.CreateExecutor(executorContext);
             }
             else
             {
@@ -113,21 +114,21 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             try
             {
-                commandExecutor.executeCommand(execution);
+                commandExecutor.ExecuteCommand(execution);
             }
             catch (Exception e)
             {
                 throw new ActivitiException("Could not execute shell command ", e);
             }
 
-            leave(execution);
+            Leave(execution);
         }
 
-        protected internal virtual string getStringFromField(IExpression expression, IExecutionEntity execution)
+        protected internal virtual string GetStringFromField(IExpression expression, IExecutionEntity execution)
         {
             if (expression != null)
             {
-                object value = expression.getValue(execution);
+                object value = expression.GetValue(execution);
                 if (value != null)
                 {
                     return value.ToString();

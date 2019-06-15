@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +20,20 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class SignalEventSubscriptionByEventNameMatcher : CachedEntityMatcherAdapter<IEventSubscriptionEntity>
     {
 
-        public override bool isRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
+        public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
         {
+            if (parameter == null)
+            {
+                return false;
+            }
 
-            IDictionary<string, object> @params = (IDictionary<string, object>)parameter ?? new Dictionary<string, object>();
-            @params.TryGetValue("eventName", out object eventName);
-            @params.TryGetValue("tenantId", out object tenantId);
+            JObject token = JObject.FromObject(parameter);
+
+            token.TryGetValue("eventName", StringComparison.OrdinalIgnoreCase, out var eventName);
+            token.TryGetValue("tenantId", StringComparison.OrdinalIgnoreCase, out var tenantId);
 
             return eventSubscriptionEntity.EventType != null && 
-                string.Compare(eventSubscriptionEntity.EventType, SignalEventSubscriptionEntity_Fields.EVENT_TYPE, true) == 0 && 
+                string.Compare(eventSubscriptionEntity.EventType, SignalEventSubscriptionEntityFields.EVENT_TYPE, true) == 0 && 
                 eventSubscriptionEntity.EventName != null && 
                 string.Compare(eventSubscriptionEntity.EventName, eventName?.ToString(), true) == 0 &&
                 (eventSubscriptionEntity.ExecutionId == null || 

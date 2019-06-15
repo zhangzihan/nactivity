@@ -36,14 +36,14 @@ namespace org.activiti.engine.impl.cmd
             this.isLocal = isLocal;
         }
 
-        public virtual IDictionary<string, IVariableInstance> execute(ICommandContext commandContext)
+        public virtual IDictionary<string, IVariableInstance> Execute(ICommandContext commandContext)
         {
             if (ReferenceEquals(taskId, null))
             {
                 throw new ActivitiIllegalArgumentException("taskId is null");
             }
 
-            ITaskEntity task = commandContext.TaskEntityManager.findById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
+            ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(taskId);
 
             if (task == null)
             {
@@ -68,11 +68,11 @@ namespace org.activiti.engine.impl.cmd
             {
                 if (isLocal)
                 {
-                    variables = task.getVariableInstancesLocal(variableNames, false);
+                    variables = task.GetVariableInstancesLocal(variableNames, false);
                 }
                 else
                 {
-                    variables = task.getVariableInstances(variableNames, false);
+                    variables = task.GetVariableInstances(variableNames, false);
                 }
 
             }

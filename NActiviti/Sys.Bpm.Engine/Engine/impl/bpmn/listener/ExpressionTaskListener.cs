@@ -29,9 +29,9 @@ namespace org.activiti.engine.impl.bpmn.listener
 		this.expression = expression;
 	  }
 
-	  public virtual void notify(IDelegateTask delegateTask)
+	  public virtual void Notify(IDelegateTask delegateTask)
 	  {
-		expression.getValue(delegateTask);
+		expression.GetValue(delegateTask);
 	  }
 
 	  /// <summary>

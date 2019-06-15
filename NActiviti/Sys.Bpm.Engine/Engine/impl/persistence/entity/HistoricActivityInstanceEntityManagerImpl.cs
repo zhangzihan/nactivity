@@ -42,42 +42,42 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual IList<IHistoricActivityInstanceEntity> findUnfinishedHistoricActivityInstancesByExecutionAndActivityId(string executionId, string activityId)
+        public virtual IList<IHistoricActivityInstanceEntity> FindUnfinishedHistoricActivityInstancesByExecutionAndActivityId(string executionId, string activityId)
         {
-            return historicActivityInstanceDataManager.findUnfinishedHistoricActivityInstancesByExecutionAndActivityId(executionId, activityId);
+            return historicActivityInstanceDataManager.FindUnfinishedHistoricActivityInstancesByExecutionAndActivityId(executionId, activityId);
         }
 
-        public virtual IList<IHistoricActivityInstanceEntity> findUnfinishedHistoricActivityInstancesByProcessInstanceId(string processInstanceId)
+        public virtual IList<IHistoricActivityInstanceEntity> FindUnfinishedHistoricActivityInstancesByProcessInstanceId(string processInstanceId)
         {
-            return historicActivityInstanceDataManager.findUnfinishedHistoricActivityInstancesByProcessInstanceId(processInstanceId);
+            return historicActivityInstanceDataManager.FindUnfinishedHistoricActivityInstancesByProcessInstanceId(processInstanceId);
         }
 
-        public virtual void deleteHistoricActivityInstancesByProcessInstanceId(string historicProcessInstanceId)
+        public virtual void DeleteHistoricActivityInstancesByProcessInstanceId(string historicProcessInstanceId)
         {
-            if (HistoryManager.isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (HistoryManager.IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                historicActivityInstanceDataManager.deleteHistoricActivityInstancesByProcessInstanceId(historicProcessInstanceId);
+                historicActivityInstanceDataManager.DeleteHistoricActivityInstancesByProcessInstanceId(historicProcessInstanceId);
             }
         }
 
-        public virtual long findHistoricActivityInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindHistoricActivityInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return historicActivityInstanceDataManager.findHistoricActivityInstanceCountByNativeQuery(parameterMap);
+            return historicActivityInstanceDataManager.FindHistoricActivityInstanceCountByNativeQuery(parameterMap);
         }
 
-        public virtual long findHistoricActivityInstanceCountByQueryCriteria(IHistoricActivityInstanceQuery historicActivityInstanceQuery)
+        public virtual long FindHistoricActivityInstanceCountByQueryCriteria(IHistoricActivityInstanceQuery historicActivityInstanceQuery)
         {
-            return historicActivityInstanceDataManager.findHistoricActivityInstanceCountByQueryCriteria(historicActivityInstanceQuery);
+            return historicActivityInstanceDataManager.FindHistoricActivityInstanceCountByQueryCriteria(historicActivityInstanceQuery);
         }
 
-        public virtual IList<IHistoricActivityInstance> findHistoricActivityInstancesByQueryCriteria(IHistoricActivityInstanceQuery historicActivityInstanceQuery, Page page)
+        public virtual IList<IHistoricActivityInstance> FindHistoricActivityInstancesByQueryCriteria(IHistoricActivityInstanceQuery historicActivityInstanceQuery, Page page)
         {
-            return historicActivityInstanceDataManager.findHistoricActivityInstancesByQueryCriteria(historicActivityInstanceQuery, page);
+            return historicActivityInstanceDataManager.FindHistoricActivityInstancesByQueryCriteria(historicActivityInstanceQuery, page);
         }
 
-        public virtual IList<IHistoricActivityInstance> findHistoricActivityInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IHistoricActivityInstance> FindHistoricActivityInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return historicActivityInstanceDataManager.findHistoricActivityInstancesByNativeQuery(parameterMap, firstResult, maxResults);
+            return historicActivityInstanceDataManager.FindHistoricActivityInstancesByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
         public virtual IHistoricActivityInstanceDataManager HistoricActivityInstanceDataManager

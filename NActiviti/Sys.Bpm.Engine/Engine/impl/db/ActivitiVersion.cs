@@ -15,22 +15,37 @@ namespace org.activiti.engine.impl.db
     /// </summary>
     public class ActivitiVersion
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string mainVersion;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<string> alternativeVersionStrings;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ActivitiVersion(string mainVersion)
         {
             this.mainVersion = mainVersion;
             this.alternativeVersionStrings = new List<string>(new string[] { mainVersion });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ActivitiVersion(string mainVersion, IList<string> alternativeVersionStrings)
         {
             this.mainVersion = mainVersion;
             this.alternativeVersionStrings = alternativeVersionStrings;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string MainVersion
         {
             get
@@ -39,7 +54,10 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        public virtual bool matches(string version)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual bool Matches(string version)
         {
             if (version.Equals(mainVersion))
             {
@@ -55,11 +73,17 @@ namespace org.activiti.engine.impl.db
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override int GetHashCode()
         {
             return alternativeVersionStrings.Sum(x => x.GetHashCode()) >> 2;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override bool Equals(object obj)
         {
             if (!(obj is ActivitiVersion))
@@ -84,7 +108,5 @@ namespace org.activiti.engine.impl.db
                 }
             }
         }
-
     }
-
 }

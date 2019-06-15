@@ -35,7 +35,7 @@ namespace org.activiti.cloud.services.rest.controllers
     public class TaskVariableControllerImpl : ControllerBase, ITaskVariableController
     {
 
-        private ProcessEngineWrapper processEngine;
+        private readonly ProcessEngineWrapper processEngine;
 
         private readonly ITaskService taskService;
 
@@ -55,10 +55,10 @@ namespace org.activiti.cloud.services.rest.controllers
 
         /// <inheritdoc />
         [HttpGet]
-        public virtual Task<Resources<TaskVariableResource>> getVariables([FromQuery]string taskId)
+        public virtual Task<Resources<TaskVariableResource>> GetVariables([FromQuery]string taskId)
         {
-            IDictionary<string, object> variables = taskService.getVariables(taskId);
-            IDictionary<string, IVariableInstance> variableInstancesMap = taskService.getVariableInstances(taskId);
+            _ = taskService.GetVariables(taskId);
+            IDictionary<string, IVariableInstance> variableInstancesMap = taskService.GetVariableInstances(taskId);
             IList<IVariableInstance> variableInstances = new List<IVariableInstance>();
             if (variableInstancesMap != null)
             {
@@ -67,7 +67,7 @@ namespace org.activiti.cloud.services.rest.controllers
             IList<TaskVariableResource> resourcesList = new List<TaskVariableResource>();
             foreach (IVariableInstance variableInstance in variableInstances)
             {
-                resourcesList.Add(variableResourceBuilder.toResource(new TaskVariable(variableInstance.TaskId, variableInstance.Name, variableInstance.TypeName, variableInstance.Value, variableInstance.ExecutionId, TaskVariable.TaskVariableScope.GLOBAL)));
+                resourcesList.Add(variableResourceBuilder.ToResource(new TaskVariable(variableInstance.TaskId, variableInstance.Name, variableInstance.TypeName, variableInstance.Value, variableInstance.ExecutionId, TaskVariable.TaskVariableScope.GLOBAL)));
             }
 
             Resources<TaskVariableResource> resources = new Resources<TaskVariableResource>(resourcesList);
@@ -78,10 +78,10 @@ namespace org.activiti.cloud.services.rest.controllers
 
         /// <inheritdoc />
         [HttpGet("local")]
-        public virtual Task<Resources<TaskVariableResource>> getVariablesLocal([FromQuery]string taskId)
+        public virtual Task<Resources<TaskVariableResource>> GetVariablesLocal([FromQuery]string taskId)
         {
-            IDictionary<string, object> variables = taskService.getVariablesLocal(taskId);
-            IDictionary<string, IVariableInstance> variableInstancesMap = taskService.getVariableInstancesLocal(taskId);
+            _ = taskService.GetVariablesLocal(taskId);
+            IDictionary<string, IVariableInstance> variableInstancesMap = taskService.GetVariableInstancesLocal(taskId);
             IList<IVariableInstance> variableInstances = new List<IVariableInstance>();
             if (variableInstancesMap != null)
             {
@@ -90,7 +90,7 @@ namespace org.activiti.cloud.services.rest.controllers
             IList<TaskVariableResource> resourcesList = new List<TaskVariableResource>();
             foreach (IVariableInstance variableInstance in variableInstances)
             {
-                resourcesList.Add(variableResourceBuilder.toResource(new TaskVariable(variableInstance.TaskId, variableInstance.Name, variableInstance.TypeName, variableInstance.Value, variableInstance.ExecutionId, TaskVariable.TaskVariableScope.LOCAL)));
+                resourcesList.Add(variableResourceBuilder.ToResource(new TaskVariable(variableInstance.TaskId, variableInstance.Name, variableInstance.TypeName, variableInstance.Value, variableInstance.ExecutionId, TaskVariable.TaskVariableScope.LOCAL)));
             }
 
             Resources<TaskVariableResource> resources = new Resources<TaskVariableResource>(resourcesList);
@@ -101,22 +101,33 @@ namespace org.activiti.cloud.services.rest.controllers
         /// <inheritdoc />
 
         [HttpPost]
-        public virtual Task<IActionResult> setVariables(string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
+        public virtual Task<ActionResult> SetVariables(string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
         {
+            processEngine.SetTaskVariables(setTaskVariablesCmd);
 
-            processEngine.TaskVariables = setTaskVariablesCmd;
-
-            return Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<ActionResult>(Ok());
         }
 
 
         /// <inheritdoc />
         [HttpPost("local")]
-        public virtual Task<IActionResult> setVariablesLocal(string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
+        public virtual Task<ActionResult> SetVariablesLocal(string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
         {
-            processEngine.TaskVariablesLocal = setTaskVariablesCmd;
+            processEngine.SetTaskVariablesLocal(setTaskVariablesCmd);
 
-            return Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<ActionResult>(Ok());
+        }
+
+        /// <inheritdoc />
+        [HttpGet("{variableName}")]
+        public Task<TaskVariableResource> GetVariable(string taskId, string variableName)
+        {
+            _ = taskService.GetVariable(taskId, variableName);
+            IVariableInstance variableInstance = taskService.GetVariableInstance(taskId, variableName);
+
+            TaskVariableResource resource = variableResourceBuilder.ToResource(new TaskVariable(variableInstance.TaskId, variableInstance.Name, variableInstance.TypeName, variableInstance.Value, variableInstance.ExecutionId, TaskVariable.TaskVariableScope.GLOBAL));
+
+            return Task.FromResult(resource);
         }
     }
 

@@ -36,7 +36,7 @@ namespace org.activiti.engine
         /// <summary>
         /// Generic method to plan a <seealso cref="Runnable"/>.
         /// </summary>
-        void planOperation(AbstractOperation operation);
+        void PlanOperation(AbstractOperation operation);
     }
 
 }

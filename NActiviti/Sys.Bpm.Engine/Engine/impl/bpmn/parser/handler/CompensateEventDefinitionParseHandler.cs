@@ -19,40 +19,34 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
     /// 
     /// 
     public class CompensateEventDefinitionParseHandler : AbstractBpmnParseHandler<CompensateEventDefinition>
-	{
+    {
 
         protected internal override Type HandledType
-	  {
-		  get
-		  {
-			return typeof(CompensateEventDefinition);
-		  }
-	  }
+        {
+            get
+            {
+                return typeof(CompensateEventDefinition);
+            }
+        }
 
-	  protected internal override void executeParse(BpmnParse bpmnParse, CompensateEventDefinition eventDefinition)
-	  {
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, CompensateEventDefinition eventDefinition)
+        {
 
-		if (bpmnParse.CurrentFlowElement is ThrowEvent)
-		{
-		  ThrowEvent throwEvent = (ThrowEvent) bpmnParse.CurrentFlowElement;
-		  throwEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createIntermediateThrowCompensationEventActivityBehavior(throwEvent, eventDefinition);
+            if (bpmnParse.CurrentFlowElement is ThrowEvent throwEvent)
+            {
+                throwEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateThrowCompensationEventActivityBehavior(throwEvent, eventDefinition);
 
-		}
-		else if (bpmnParse.CurrentFlowElement is BoundaryEvent)
-		{
-		  BoundaryEvent boundaryEvent = (BoundaryEvent) bpmnParse.CurrentFlowElement;
-		  boundaryEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createBoundaryCompensateEventActivityBehavior(boundaryEvent, eventDefinition, boundaryEvent.CancelActivity);
+            }
+            else if (bpmnParse.CurrentFlowElement is BoundaryEvent boundaryEvent)
+            {
+                boundaryEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateBoundaryCompensateEventActivityBehavior(boundaryEvent, eventDefinition, boundaryEvent.CancelActivity);
+            }
+            else
+            {
 
-		}
-		else
-		{
+                // What to do?
 
-		  // What to do?
-
-		}
-
-	  }
-
-	}
-
+            }
+        }
+    }
 }

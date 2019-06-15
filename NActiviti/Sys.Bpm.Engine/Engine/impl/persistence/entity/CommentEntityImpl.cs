@@ -54,11 +54,11 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return (!ReferenceEquals(fullMessage, null) ? fullMessage.GetBytes() : null);
+                return fullMessage?.GetBytes();
             }
             set
             {
-                fullMessage = (value != null ? StringHelper.NewString(value) : null);
+                fullMessage = value != null ? StringHelper.NewString(value) : null;
             }
         }
 
@@ -82,7 +82,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                if (ReferenceEquals(message, null))
+                if (message is null)
                 {
                     return null;
                 }
@@ -107,7 +107,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 StringBuilder stringBuilder = new StringBuilder();
                 foreach (string part in value)
                 {
-                    if (!ReferenceEquals(part, null))
+                    if (!(part is null))
                     {
                         stringBuilder.Append(part.Replace(MESSAGE_PARTS_MARKER, " | "));
                         stringBuilder.Append(MESSAGE_PARTS_MARKER);
@@ -217,7 +217,5 @@ namespace org.activiti.engine.impl.persistence.entity
                 this.action = value;
             }
         }
-
     }
-
 }

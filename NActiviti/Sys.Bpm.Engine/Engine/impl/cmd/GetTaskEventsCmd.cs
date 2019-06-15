@@ -33,9 +33,9 @@ namespace org.activiti.engine.impl.cmd
             this.taskId = taskId;
         }
 
-        public virtual IList<IEvent> execute(ICommandContext commandContext)
+        public virtual IList<IEvent> Execute(ICommandContext commandContext)
         {
-            return commandContext.CommentEntityManager.findEventsByTaskId(taskId);
+            return commandContext.CommentEntityManager.FindEventsByTaskId(taskId);
         }
     }
 

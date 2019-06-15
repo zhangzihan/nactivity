@@ -12,15 +12,13 @@
  */
 namespace org.activiti.engine.impl.cmd
 {
-    
+
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.deploy;
     using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
     using org.activiti.engine.repository;
-    using System.Collections.Generic;
 
     /// 
     public class SetProcessDefinitionCategoryCmd : ICommand<object>
@@ -35,7 +33,7 @@ namespace org.activiti.engine.impl.cmd
             this.category = category;
         }
 
-        public  virtual object  execute(ICommandContext commandContext)
+        public  virtual object  Execute(ICommandContext commandContext)
         {
 
             if (string.IsNullOrWhiteSpace(processDefinitionId))
@@ -43,7 +41,7 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiIllegalArgumentException("Process definition id is null");
             }
 
-            IProcessDefinitionEntity processDefinition = commandContext.ProcessDefinitionEntityManager.findById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("id", processDefinitionId));
+            IProcessDefinitionEntity processDefinition = commandContext.ProcessDefinitionEntityManager.FindById<IProcessDefinitionEntity>(processDefinitionId);
 
             if (processDefinition == null)
             {
@@ -57,12 +55,12 @@ namespace org.activiti.engine.impl.cmd
             IDeploymentCache<ProcessDefinitionCacheEntry> processDefinitionCache = commandContext.ProcessEngineConfiguration.ProcessDefinitionCache;
             if (processDefinitionCache != null)
             {
-                processDefinitionCache.remove(processDefinitionId);
+                processDefinitionCache.Remove(processDefinitionId);
             }
 
             if (commandContext.EventDispatcher.Enabled)
             {
-                commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_UPDATED, processDefinition));
+                commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_UPDATED, processDefinition));
             }
 
             return null;

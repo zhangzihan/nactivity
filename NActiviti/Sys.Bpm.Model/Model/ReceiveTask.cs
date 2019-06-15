@@ -12,13 +12,15 @@
  */
 namespace org.activiti.bpmn.model
 {
-    public class ReceiveTask : Task
+    public class ReceiveTask : TaskActivity
     {
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            ReceiveTask clone = new ReceiveTask();
-            clone.Values = this;
+            ReceiveTask clone = new ReceiveTask
+            {
+                Values = this
+            };
             return clone;
         }
     }

@@ -11,6 +11,7 @@
  * limitations under the License.
  */
 using System;
+using System.IO;
 using org.activiti.engine;
 
 namespace org.activiti.engine.impl.util.io
@@ -34,13 +35,13 @@ namespace org.activiti.engine.impl.util.io
             this.byteArrayEncoding = byteArrayEncoding;
         }
 
-        public virtual System.IO.Stream InputStream
+        public virtual Stream InputStream
         {
             get
             {
                 try
                 {
-                    return new System.IO.MemoryStream(ReferenceEquals(byteArrayEncoding, null) ? @string.GetBytes() : @string.GetBytes(byteArrayEncoding));
+                    return new MemoryStream(byteArrayEncoding is null ? @string.GetBytes() : @string.GetBytes(byteArrayEncoding));
                 }
                 catch (Exception e)
                 {

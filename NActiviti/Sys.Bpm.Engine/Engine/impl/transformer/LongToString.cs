@@ -23,9 +23,9 @@ namespace org.activiti.engine.impl.transformer
         /// <summary>
         /// {@inheritDoc}
         /// </summary>
-        protected internal override object primTransform(object anObject)
+        protected internal override object PrimTransform(object anObject)
         {
-            return ((long?)anObject).ToString();
+            return anObject?.ToString();
         }
     }
 

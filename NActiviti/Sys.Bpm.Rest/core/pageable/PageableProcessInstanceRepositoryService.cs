@@ -19,8 +19,9 @@ using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core.pageable.sort;
 using org.activiti.engine;
+using org.activiti.engine.impl;
 using org.activiti.engine.runtime;
-using Sys;
+using Sys.Workflow;
 
 namespace org.activiti.cloud.services.core.pageable
 {
@@ -29,15 +30,15 @@ namespace org.activiti.cloud.services.core.pageable
     /// </summary>
     public class PageableProcessInstanceRepositoryService
     {
-        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<PageableProcessInstanceRepositoryService>();
+        private readonly ILogger logger = null;
 
-        private PageRetriever pageRetriever;
+        private readonly PageRetriever pageRetriever;
 
-        private IRuntimeService runtimeService;
+        private readonly IRuntimeService runtimeService;
 
-        private ProcessInstanceSortApplier sortApplier;
+        private readonly ProcessInstanceSortApplier sortApplier;
 
-        private ProcessInstanceConverter processInstanceConverter;
+        private readonly ProcessInstanceConverter processInstanceConverter;
 
         //private readonly SecurityPoliciesApplicationService securityService;
 
@@ -45,13 +46,18 @@ namespace org.activiti.cloud.services.core.pageable
         /// <summary>
         /// 
         /// </summary>
-        public PageableProcessInstanceRepositoryService(PageRetriever pageRetriever, IRuntimeService runtimeService, ProcessInstanceSortApplier sortApplier, ProcessInstanceConverter processInstanceConverter)//, SecurityPoliciesApplicationService securityPolicyApplicationService)
+        public PageableProcessInstanceRepositoryService(PageRetriever pageRetriever,
+            IRuntimeService runtimeService,
+            ProcessInstanceSortApplier sortApplier,
+            ProcessInstanceConverter processInstanceConverter,
+            ILoggerFactory loggerFactory)//, SecurityPoliciesApplicationService securityPolicyApplicationService)
         {
             this.pageRetriever = pageRetriever;
             this.runtimeService = runtimeService;
             this.sortApplier = sortApplier;
             this.processInstanceConverter = processInstanceConverter;
             //this.securityService = securityPolicyApplicationService;
+            logger = loggerFactory.CreateLogger<PageableProcessInstanceRepositoryService>();
         }
 
         /// <summary>
@@ -72,27 +78,33 @@ namespace org.activiti.cloud.services.core.pageable
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<ProcessInstance> getProcessInstances(Pageable pageable)
+        public virtual IPage<ProcessInstance> GetProcessInstances(Pageable pageable)
         {
-            IProcessInstanceQuery query = runtimeService.createProcessInstanceQuery();
+            IProcessInstanceQuery query = runtimeService.CreateProcessInstanceQuery();
             logger.LogWarning("Securite read not implementation");
             //query = securityService.restrictProcessInstQuery(query, SecurityPolicy.READ);
 
-            sortApplier.applySort(query, pageable);
+            sortApplier.ApplySort(query, pageable);
 
-            return pageRetriever.loadPage(query, pageable, processInstanceConverter);
+            return pageRetriever.LoadPage(runtimeService as ServiceImpl, query, pageable, processInstanceConverter, (q, firstResult, pageSize) =>
+            {
+                return new engine.impl.cmd.GetProcessInstancesCmd(q, firstResult, pageSize);
+            });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<ProcessInstance> getAllProcessInstances(Pageable pageable)
+        public virtual IPage<ProcessInstance> GetAllProcessInstances(Pageable pageable)
         {
+            IProcessInstanceQuery query = runtimeService.CreateProcessInstanceQuery();
 
-            IProcessInstanceQuery query = runtimeService.createProcessInstanceQuery();
+            sortApplier.ApplySort(query, pageable);
 
-            sortApplier.applySort(query, pageable);
-            return pageRetriever.loadPage(query, pageable, processInstanceConverter);
+            return pageRetriever.LoadPage(runtimeService as ServiceImpl, query, pageable, processInstanceConverter, (q, firstResult, pageSize) =>
+            {
+                return new engine.impl.cmd.GetProcessInstancesCmd(q, firstResult, pageSize);
+            });
         }
     }
 }

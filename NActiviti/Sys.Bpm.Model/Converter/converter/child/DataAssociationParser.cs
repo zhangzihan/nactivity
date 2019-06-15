@@ -16,7 +16,7 @@ namespace org.activiti.bpmn.converter.child
     using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
-    using Sys.Bpm;
+    using Sys.Bpm.Model;
     using System;
 
     public class DataAssociationParser : IBpmnXMLConstants
@@ -30,9 +30,9 @@ namespace org.activiti.bpmn.converter.child
             try
             {
 
-                dataAssociation.Id = xtr.getAttributeValue("id");
+                dataAssociation.Id = xtr.GetAttributeValue("id");
 
-                while (!readyWithDataAssociation && xtr.hasNext())
+                while (!readyWithDataAssociation && xtr.HasNext())
                 {
                     //xtr.next();
 
@@ -66,7 +66,7 @@ namespace org.activiti.bpmn.converter.child
                     else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_ASSIGNMENT.Equals(xtr.LocalName))
                     {
                         assignment = new Assignment();
-                        BpmnXMLUtil.addXMLLocation(assignment, xtr);
+                        BpmnXMLUtil.AddXMLLocation(assignment, xtr);
 
                     }
                     else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_FROM.Equals(xtr.LocalName))

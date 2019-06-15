@@ -20,16 +20,17 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class ParticipantParser : IBpmnXMLConstants
     {
-        public virtual void parse(XMLStreamReader xtr, BpmnModel model)
+        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
         {
-
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID)))
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID)))
             {
-                Pool pool = new Pool();
-                pool.Id = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID);
-                pool.Name = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME);
-                pool.ProcessRef = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_PROCESS_REF);
-                BpmnXMLUtil.parseChildElements(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_PARTICIPANT, pool, xtr, model);
+                Pool pool = new Pool
+                {
+                    Id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID),
+                    Name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME),
+                    ProcessRef = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_PROCESS_REF)
+                };
+                BpmnXMLUtil.ParseChildElements(BpmnXMLConstants.ELEMENT_PARTICIPANT, pool, xtr, model);
                 model.Pools.Add(pool);
             }
         }

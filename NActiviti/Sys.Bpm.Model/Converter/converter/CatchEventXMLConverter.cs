@@ -14,7 +14,7 @@
  */
 namespace org.activiti.bpmn.converter
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
@@ -34,24 +34,24 @@ namespace org.activiti.bpmn.converter
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_CATCH;
+                return BpmnXMLConstants.ELEMENT_EVENT_CATCH;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             IntermediateCatchEvent catchEvent = new IntermediateCatchEvent();
-            BpmnXMLUtil.addXMLLocation(catchEvent, xtr);
-            parseChildElements(XMLElementName, catchEvent, model, xtr);
+            BpmnXMLUtil.AddXMLLocation(catchEvent, xtr);
+            ParseChildElements(XMLElementName, catchEvent, model, xtr);
             return catchEvent;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
 
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             IntermediateCatchEvent catchEvent = (IntermediateCatchEvent)element;
-            writeEventDefinitions(catchEvent, catchEvent.EventDefinitions, model, xtw);
+            WriteEventDefinitions(catchEvent, catchEvent.EventDefinitions, model, xtw);
         }
     }
 

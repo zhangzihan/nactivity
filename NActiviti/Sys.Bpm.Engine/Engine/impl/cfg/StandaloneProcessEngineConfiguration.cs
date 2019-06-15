@@ -19,11 +19,23 @@ namespace org.activiti.engine.impl.cfg
     using org.activiti.engine.impl.asyncexecutor;
     using org.activiti.engine.impl.interceptor;
     using Sys;
+    using Sys.Workflow.Engine.Bpmn.Rules;
     using System;
 
     /// 
     public class StandaloneProcessEngineConfiguration : ProcessEngineConfigurationImpl
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="historyService"></param>
+        /// <param name="taskService"></param>
+        /// <param name="dynamicBpmnService"></param>
+        /// <param name="repositoryService"></param>
+        /// <param name="runtimeService"></param>
+        /// <param name="managementService"></param>
+        /// <param name="asyncExecutor"></param>
+        /// <param name="configuration"></param>
         public StandaloneProcessEngineConfiguration(IHistoryService historyService,
             ITaskService taskService,
             IDynamicBpmnService dynamicBpmnService,
@@ -42,7 +54,11 @@ namespace org.activiti.engine.impl.cfg
         {
         }
 
-        public override ICommandInterceptor createTransactionInterceptor()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override ICommandInterceptor CreateTransactionInterceptor()
         {
             return null;
         }

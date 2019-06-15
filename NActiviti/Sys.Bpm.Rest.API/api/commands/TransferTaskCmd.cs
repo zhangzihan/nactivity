@@ -30,6 +30,14 @@ namespace org.activiti.cloud.services.api.commands
         private string _description;
 
         /// <summary>
+        /// TransferTaskCmd
+        /// </summary>
+        public TransferTaskCmd()
+        {
+
+        }
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="name">任务名称</param>
@@ -48,9 +56,8 @@ namespace org.activiti.cloud.services.api.commands
             [JsonProperty("Assignees")]string[] assignees,
             [JsonProperty("TaskId")]string taskId,
             [JsonProperty("TenantId")] string tenantId,
-            [JsonProperty("Variables")] IDictionary<string, object> variables)
+            [JsonProperty("Variables")] WorkflowVariable variables)
         {
-            this.id = Guid.NewGuid().ToString();
             this.Name = name;
             this.Description = description;
             this.DueDate = dueDate;
@@ -145,7 +152,7 @@ namespace org.activiti.cloud.services.api.commands
         }
 
         /// <inheritdoc />
-        public IDictionary<string, object> Variables
+        public WorkflowVariable Variables
         {
             get; set;
         }

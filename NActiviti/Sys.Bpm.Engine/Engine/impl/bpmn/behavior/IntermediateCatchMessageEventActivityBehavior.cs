@@ -38,51 +38,51 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.messageEventDefinition = messageEventDefinition;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             ICommandContext commandContext = Context.CommandContext;
 
-            string messageName = null;
+            string messageName;
             if (!string.IsNullOrWhiteSpace(messageEventDefinition.MessageRef))
             {
                 messageName = messageEventDefinition.MessageRef;
             }
             else
             {
-                IExpression messageExpression = commandContext.ProcessEngineConfiguration.ExpressionManager.createExpression(messageEventDefinition.MessageExpression);
-                messageName = messageExpression.getValue(execution).ToString();
+                IExpression messageExpression = commandContext.ProcessEngineConfiguration.ExpressionManager.CreateExpression(messageEventDefinition.MessageExpression);
+                messageName = messageExpression.GetValue(execution).ToString();
             }
 
-            commandContext.EventSubscriptionEntityManager.insertMessageEvent(messageName, execution);
+            commandContext.EventSubscriptionEntityManager.InsertMessageEvent(messageName, execution);
 
             if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createMessageEvent(ActivitiEventType.ACTIVITY_MESSAGE_WAITING, execution.ActivityId, messageName, null, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId));
+                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateMessageEvent(ActivitiEventType.ACTIVITY_MESSAGE_WAITING, execution.ActivityId, messageName, null, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId));
             }
         }
 
-        public override void trigger(IExecutionEntity execution, string triggerName, object triggerData)
+        public override void Trigger(IExecutionEntity execution, string triggerName, object triggerData, bool throwError = true)
         {
-            IExecutionEntity executionEntity = deleteMessageEventSubScription(execution);
-            leaveIntermediateCatchEvent(executionEntity);
+            IExecutionEntity executionEntity = DeleteMessageEventSubScription(execution);
+            LeaveIntermediateCatchEvent(executionEntity);
         }
 
-        public override void eventCancelledByEventGateway(IExecutionEntity execution)
+        public override void EventCancelledByEventGateway(IExecutionEntity execution)
         {
-            deleteMessageEventSubScription(execution);
-            Context.CommandContext.ExecutionEntityManager.deleteExecutionAndRelatedData(execution, DeleteReason_Fields.EVENT_BASED_GATEWAY_CANCEL, false);
+            DeleteMessageEventSubScription(execution);
+            Context.CommandContext.ExecutionEntityManager.DeleteExecutionAndRelatedData(execution, DeleteReasonFields.EVENT_BASED_GATEWAY_CANCEL, false);
         }
 
-        protected internal virtual IExecutionEntity deleteMessageEventSubScription(IExecutionEntity execution)
+        protected internal virtual IExecutionEntity DeleteMessageEventSubScription(IExecutionEntity execution)
         {
             IEventSubscriptionEntityManager eventSubscriptionEntityManager = Context.CommandContext.EventSubscriptionEntityManager;
             IList<IEventSubscriptionEntity> eventSubscriptions = execution.EventSubscriptions;
             foreach (IEventSubscriptionEntity eventSubscription in eventSubscriptions)
             {
-                if (eventSubscription is IMessageEventSubscriptionEntity && eventSubscription.EventName.Equals(messageEventDefinition.MessageRef))
+                if (eventSubscription.EventType == MessageEventSubscriptionEntityFields.EVENT_TYPE && eventSubscription.EventName.Equals(messageEventDefinition.MessageRef))
                 {
 
-                    eventSubscriptionEntityManager.delete(eventSubscription);
+                    eventSubscriptionEntityManager.Delete(eventSubscription);
                 }
             }
             return execution;

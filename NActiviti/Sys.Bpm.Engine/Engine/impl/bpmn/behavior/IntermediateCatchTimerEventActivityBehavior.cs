@@ -36,30 +36,30 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.timerEventDefinition = timerEventDefinition;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             IJobManager jobManager = Context.CommandContext.JobManager;
 
             // end date should be ignored for intermediate timer events.
-            ITimerJobEntity timerJob = jobManager.createTimerJob(timerEventDefinition, false, execution, TriggerTimerEventJobHandler.TYPE, TimerEventHandler.createConfiguration(execution.CurrentActivityId, null, timerEventDefinition.CalendarName));
+            ITimerJobEntity timerJob = jobManager.CreateTimerJob(timerEventDefinition, false, execution, TriggerTimerEventJobHandler.TYPE, TimerEventHandler.CreateConfiguration(execution.CurrentActivityId, null, timerEventDefinition.CalendarName));
 
             if (timerJob != null)
             {
-                jobManager.scheduleTimerJob(timerJob);
+                jobManager.ScheduleTimerJob(timerJob);
             }
         }
 
-        public override void eventCancelledByEventGateway(IExecutionEntity execution)
+        public override void EventCancelledByEventGateway(IExecutionEntity execution)
         {
             IJobEntityManager jobEntityManager = Context.CommandContext.JobEntityManager;
-            IList<IJobEntity> jobEntities = jobEntityManager.findJobsByExecutionId(execution.Id);
+            IList<IJobEntity> jobEntities = jobEntityManager.FindJobsByExecutionId(execution.Id);
 
             foreach (IJobEntity jobEntity in jobEntities)
             { // Should be only one
-                jobEntityManager.delete(jobEntity);
+                jobEntityManager.Delete(jobEntity);
             }
 
-            Context.CommandContext.ExecutionEntityManager.deleteExecutionAndRelatedData(execution, DeleteReason_Fields.EVENT_BASED_GATEWAY_CANCEL, false);
+            Context.CommandContext.ExecutionEntityManager.DeleteExecutionAndRelatedData(execution, DeleteReasonFields.EVENT_BASED_GATEWAY_CANCEL, false);
         }
 
 

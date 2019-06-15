@@ -43,7 +43,7 @@ namespace org.activiti.engine.debug
             this.reverseOrder = reverseOrder;
         }
 
-        protected internal virtual void flattenTree()
+        protected internal virtual void FlattenTree()
         {
             flattenedList = new LinkedList<ExecutionTreeNode>();
 
@@ -75,17 +75,17 @@ namespace org.activiti.engine.debug
             flattenedListIterator = flattenedList.GetEnumerator();
         }
 
-        public bool hasNext()
+        public bool HasNext()
         {
             if (flattenedList == null)
             {
-                flattenTree();
+                FlattenTree();
             }
 
             return true; //flattenedListIterator.hasNext();
         }
 
-        public ExecutionTreeNode next()
+        public ExecutionTreeNode Next()
         {
             if (MoveNext())
             {
@@ -95,11 +95,11 @@ namespace org.activiti.engine.debug
             return null;
         }
 
-        public void remove()
+        public void Remove()
         {
             if (flattenedList == null)
             {
-                flattenTree();
+                FlattenTree();
             }
 
             if (flattenedListIterator.Current != null)
@@ -112,7 +112,7 @@ namespace org.activiti.engine.debug
         {
             if (flattenedList == null)
             {
-                flattenTree();
+                FlattenTree();
             }
 
             return flattenedListIterator.MoveNext();

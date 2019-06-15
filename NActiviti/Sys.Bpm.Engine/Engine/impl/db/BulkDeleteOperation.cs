@@ -30,16 +30,29 @@ namespace org.activiti.engine.impl.db
     public class BulkDeleteOperation
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string statement;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal object parameter;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public BulkDeleteOperation(string statement, object parameter)
         {
             this.statement = statement;
             this.parameter = parameter;
         }
 
-        public virtual void execute(Type entityClass, ISmartSqlMapper sqlMapper)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Execute(Type entityClass, ISmartSqlMapper sqlMapper)
         {
             sqlMapper.Execute(new RequestContext
             {
@@ -49,6 +62,9 @@ namespace org.activiti.engine.impl.db
             });//.delete(statement, parameter);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override string ToString()
         {
             return "bulk delete: " + statement + "(" + parameter + ")";

@@ -40,33 +40,33 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual IList<IHistoricIdentityLinkEntity> findHistoricIdentityLinksByTaskId(string taskId)
+        public virtual IList<IHistoricIdentityLinkEntity> FindHistoricIdentityLinksByTaskId(string taskId)
         {
-            return historicIdentityLinkDataManager.findHistoricIdentityLinksByTaskId(taskId);
+            return historicIdentityLinkDataManager.FindHistoricIdentityLinksByTaskId(taskId);
         }
 
-        public virtual IList<IHistoricIdentityLinkEntity> findHistoricIdentityLinksByProcessInstanceId(string processInstanceId)
+        public virtual IList<IHistoricIdentityLinkEntity> FindHistoricIdentityLinksByProcessInstanceId(string processInstanceId)
         {
-            return historicIdentityLinkDataManager.findHistoricIdentityLinksByProcessInstanceId(processInstanceId);
+            return historicIdentityLinkDataManager.FindHistoricIdentityLinksByProcessInstanceId(processInstanceId);
         }
 
-        public virtual void deleteHistoricIdentityLinksByTaskId(string taskId)
+        public virtual void DeleteHistoricIdentityLinksByTaskId(string taskId)
         {
-            IList<IHistoricIdentityLinkEntity> identityLinks = findHistoricIdentityLinksByTaskId(taskId);
+            IList<IHistoricIdentityLinkEntity> identityLinks = FindHistoricIdentityLinksByTaskId(taskId);
             foreach (IHistoricIdentityLinkEntity identityLink in identityLinks)
             {
-                delete(identityLink);
+                Delete(identityLink);
             }
         }
 
-        public virtual void deleteHistoricIdentityLinksByProcInstance(string processInstanceId)
+        public virtual void DeleteHistoricIdentityLinksByProcInstance(string processInstanceId)
         {
 
-            IList<IHistoricIdentityLinkEntity> identityLinks = historicIdentityLinkDataManager.findHistoricIdentityLinksByProcessInstanceId(processInstanceId);
+            IList<IHistoricIdentityLinkEntity> identityLinks = historicIdentityLinkDataManager.FindHistoricIdentityLinksByProcessInstanceId(processInstanceId);
 
             foreach (IHistoricIdentityLinkEntity identityLink in identityLinks)
             {
-                delete(identityLink);
+                Delete(identityLink);
             }
 
         }

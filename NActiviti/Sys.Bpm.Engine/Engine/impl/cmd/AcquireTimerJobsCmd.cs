@@ -31,23 +31,23 @@ namespace org.activiti.engine.impl.cmd
             this.asyncExecutor = asyncExecutor;
         }
 
-        public virtual AcquiredTimerJobEntities execute(ICommandContext commandContext)
+        public virtual AcquiredTimerJobEntities Execute(ICommandContext commandContext)
         {
             AcquiredTimerJobEntities acquiredJobs = new AcquiredTimerJobEntities();
-            IList<ITimerJobEntity> timerJobs = commandContext.TimerJobEntityManager.findTimerJobsToExecute(new Page(0, asyncExecutor.MaxAsyncJobsDuePerAcquisition));
+
+            IList<ITimerJobEntity> timerJobs = commandContext.TimerJobEntityManager.FindTimerJobsToExecute(new Page(0, asyncExecutor.MaxAsyncJobsDuePerAcquisition));
 
             foreach (ITimerJobEntity job in timerJobs)
             {
-                lockJob(commandContext, job, asyncExecutor.AsyncJobLockTimeInMillis);
-                acquiredJobs.addJob(job);
+                LockJob(commandContext, job, asyncExecutor.AsyncJobLockTimeInMillis);
+                acquiredJobs.AddJob(job);
             }
 
             return acquiredJobs;
         }
 
-        protected internal virtual void lockJob(ICommandContext commandContext, ITimerJobEntity job, int lockTimeInMillis)
+        protected internal virtual void LockJob(ICommandContext commandContext, ITimerJobEntity job, int lockTimeInMillis)
         {
-
             // This will trigger an optimistic locking exception when two concurrent executors 
             // try to lock, as the revision will not match.
 

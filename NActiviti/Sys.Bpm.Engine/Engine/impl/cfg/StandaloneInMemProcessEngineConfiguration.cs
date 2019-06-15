@@ -11,11 +11,33 @@
  * limitations under the License.
  */
 
+using Microsoft.Extensions.Configuration;
+using org.activiti.engine.impl.asyncexecutor;
+
 namespace org.activiti.engine.impl.cfg
 {
     /// 
     public class StandaloneInMemProcessEngineConfiguration : StandaloneProcessEngineConfiguration
     {
+        public StandaloneInMemProcessEngineConfiguration(
+            IHistoryService historyService,
+            ITaskService taskService,
+            IDynamicBpmnService dynamicBpmnService,
+            IRepositoryService repositoryService,
+            IRuntimeService runtimeService,
+            IManagementService managementService,
+            IAsyncExecutor asyncExecutor,
+            IConfiguration configuration) : base(
+                historyService,
+                taskService,
+                dynamicBpmnService,
+                repositoryService,
+                runtimeService,
+                managementService,
+                asyncExecutor,
+                configuration)
+        {
+        }
     }
 
 }

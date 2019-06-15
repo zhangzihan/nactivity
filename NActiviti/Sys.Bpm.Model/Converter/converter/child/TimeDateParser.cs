@@ -12,6 +12,7 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.model;
 
     public class TimeDateParser : BaseChildElementParser
@@ -21,10 +22,10 @@ namespace org.activiti.bpmn.converter.child
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TIMER_DATE;
+                return BpmnXMLConstants.ATTRIBUTE_TIMER_DATE;
             }
         }
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
             if (!(parentElement is TimerEventDefinition))
             {

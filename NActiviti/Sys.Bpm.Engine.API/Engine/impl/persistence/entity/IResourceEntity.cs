@@ -28,6 +28,8 @@ namespace org.activiti.engine.impl.persistence.entity
 
 
         bool Generated { set; get; }
+
+        string BpmnXml { get; }
     }
 
 }

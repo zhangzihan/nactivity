@@ -35,18 +35,18 @@ namespace org.activiti.engine.impl.variable
             this.variableInstanceEntity = variableInstanceEntity;
         }
 
-        public virtual void verifyIfBytesOfSerializedObjectChanged()
+        public virtual void VerifyIfBytesOfSerializedObjectChanged()
         {
             // this first check verifies if the variable value was not overwritten with another object
             if (deserializedObject == variableInstanceEntity.CachedValue && !variableInstanceEntity.Deleted)
             {
-                byte[] bytes = type.serialize(deserializedObject, variableInstanceEntity);
+                byte[] bytes = type.Serialize(deserializedObject, variableInstanceEntity);
                 if (!StructuralComparisons.StructuralEqualityComparer.Equals(originalBytes, bytes))
                 {
 
                     // Add an additional check to prevent byte differences due to JDK changes etc
-                    object originalObject = type.deserialize(originalBytes, variableInstanceEntity);
-                    byte[] refreshedOriginalBytes = type.serialize(originalObject, variableInstanceEntity);
+                    object originalObject = type.Deserialize(originalBytes, variableInstanceEntity);
+                    byte[] refreshedOriginalBytes = type.Serialize(originalObject, variableInstanceEntity);
 
                     if (!StructuralComparisons.StructuralEqualityComparer.Equals(refreshedOriginalBytes, bytes))
                     {

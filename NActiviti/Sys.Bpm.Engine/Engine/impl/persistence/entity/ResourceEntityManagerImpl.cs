@@ -39,19 +39,19 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual void deleteResourcesByDeploymentId(string deploymentId)
+        public virtual void DeleteResourcesByDeploymentId(string deploymentId)
         {
-            resourceDataManager.deleteResourcesByDeploymentId(deploymentId);
+            resourceDataManager.DeleteResourcesByDeploymentId(deploymentId);
         }
 
-        public virtual IResourceEntity findResourceByDeploymentIdAndResourceName(string deploymentId, string resourceName)
+        public virtual IResourceEntity FindResourceByDeploymentIdAndResourceName(string deploymentId, string resourceName)
         {
-            return resourceDataManager.findResourceByDeploymentIdAndResourceName(deploymentId, resourceName);
+            return resourceDataManager.FindResourceByDeploymentIdAndResourceName(deploymentId, resourceName);
         }
 
-        public virtual IList<IResourceEntity> findResourcesByDeploymentId(string deploymentId)
+        public virtual IList<IResourceEntity> FindResourcesByDeploymentId(string deploymentId)
         {
-            return resourceDataManager.findResourcesByDeploymentId(deploymentId);
+            return resourceDataManager.FindResourcesByDeploymentId(deploymentId);
         }
 
         public virtual IResourceDataManager ResourceDataManager

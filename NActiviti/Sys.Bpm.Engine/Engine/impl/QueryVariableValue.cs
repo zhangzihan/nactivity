@@ -15,7 +15,6 @@
 
 namespace org.activiti.engine.impl
 {
-
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.variable;
@@ -29,12 +28,12 @@ namespace org.activiti.engine.impl
     public class QueryVariableValue
     {
         private const long serialVersionUID = 1L;
-        private string name;
-        private object value;
-        private QueryOperator? @operator;
+        private readonly string name;
+        private readonly object value;
+        private readonly QueryOperator? @operator;
 
         private IVariableInstanceEntity variableInstanceEntity;
-        private bool local;
+        private readonly bool local;
 
         public QueryVariableValue(string name, object value, QueryOperator @operator, bool local)
         {
@@ -44,27 +43,27 @@ namespace org.activiti.engine.impl
             this.local = local;
         }
 
-        public virtual void initialize(IVariableTypes types)
+        public virtual void Initialize(IVariableTypes types)
         {
             if (variableInstanceEntity == null)
             {
-                IVariableType type = types.findVariableType(value);
+                IVariableType type = types.FindVariableType(value);
                 if (type is ByteArrayType)
                 {
                     throw new ActivitiIllegalArgumentException("Variables of type ByteArray cannot be used to query");
                 }
-                else if (type is JPAEntityVariableType && @operator != QueryOperator.EQUALS)
+                else if (type is IJPAEntityVariableType && @operator != QueryOperator.EQUALS)
                 {
                     throw new ActivitiIllegalArgumentException("JPA entity variables can only be used in 'variableValueEquals'");
                 }
-                else if (type is JPAEntityListVariableType)
+                else if (type is IJPAEntityListVariableType)
                 {
                     throw new ActivitiIllegalArgumentException("Variables containing a list of JPA entities cannot be used to query");
                 }
                 else
                 {
                     // Type implementation determines which fields are set on the entity
-                    variableInstanceEntity = Context.CommandContext.VariableInstanceEntityManager.create(name, type, value);
+                    variableInstanceEntity = Context.CommandContext.VariableInstanceEntityManager.Create(name, type, value);
                 }
             }
         }

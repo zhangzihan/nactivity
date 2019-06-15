@@ -12,10 +12,9 @@
  */
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using Sys;
 using Sys.Bpm;
+using Sys.Workflow;
 using System;
-using System.Text;
 
 namespace org.activiti.engine.impl.variable
 {
@@ -49,14 +48,14 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public override object getValue(IValueFields valueFields)
+        public override object GetValue(IValueFields valueFields)
         {
             JToken jsonValue = null;
-            if (!ReferenceEquals(valueFields.TextValue, null) && valueFields.TextValue.Length > 0)
+            if (!(valueFields.TextValue is null) && valueFields.TextValue.Length > 0)
             {
                 try
                 {
-                    jsonValue = objectMapper.readTree(valueFields.TextValue);
+                    jsonValue = objectMapper.ReadTree(valueFields.TextValue);
                 }
                 catch (Exception e)
                 {
@@ -66,12 +65,12 @@ namespace org.activiti.engine.impl.variable
             return jsonValue;
         }
 
-        public override void setValue(object value, IValueFields valueFields)
+        public override void SetValue(object value, IValueFields valueFields)
         {
-            valueFields.TextValue = value != null ? value.ToString() : null;
+            valueFields.TextValue = value?.ToString();
         }
 
-        public override bool isAbleToStore(object value)
+        public override bool IsAbleToStore(object value)
         {
             if (value == null)
             {

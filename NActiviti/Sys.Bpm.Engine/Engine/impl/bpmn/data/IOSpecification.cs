@@ -27,15 +27,29 @@ namespace org.activiti.engine.impl.bpmn.data
     /// </summary>
     public class IOSpecification
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<Data> dataInputs;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<Data> dataOutputs;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<DataRef> dataInputRefs;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<DataRef> dataOutputRefs;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public IOSpecification()
         {
             this.dataInputs = new List<Data>();
@@ -44,19 +58,26 @@ namespace org.activiti.engine.impl.bpmn.data
             this.dataOutputRefs = new List<DataRef>();
         }
 
-        public virtual void initialize(IExecutionEntity execution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        public virtual void Initialize(IExecutionEntity execution)
         {
             foreach (Data data in this.dataInputs)
             {
-                execution.setVariable(data.Name, data.Definition.createInstance());
+                execution.SetVariable(data.Name, data.Definition.CreateInstance());
             }
 
             foreach (Data data in this.dataOutputs)
             {
-                execution.setVariable(data.Name, data.Definition.createInstance());
+                execution.SetVariable(data.Name, data.Definition.CreateInstance());
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<Data> DataInputs
         {
             get
@@ -65,6 +86,9 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<Data> DataOutputs
         {
             get
@@ -73,26 +97,45 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
 
-        public virtual void addInput(Data data)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        public virtual void AddInput(Data data)
         {
             this.dataInputs.Add(data);
         }
 
-        public virtual void addOutput(Data data)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        public virtual void AddOutput(Data data)
         {
             this.dataOutputs.Add(data);
         }
 
-        public virtual void addInputRef(DataRef dataRef)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataRef"></param>
+        public virtual void AddInputRef(DataRef dataRef)
         {
             this.dataInputRefs.Add(dataRef);
         }
 
-        public virtual void addOutputRef(DataRef dataRef)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataRef"></param>
+        public virtual void AddOutputRef(DataRef dataRef)
         {
             this.dataOutputRefs.Add(dataRef);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string FirstDataInputName
         {
             get
@@ -101,6 +144,9 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string FirstDataOutputName
         {
             get
@@ -116,5 +162,4 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
     }
-
 }

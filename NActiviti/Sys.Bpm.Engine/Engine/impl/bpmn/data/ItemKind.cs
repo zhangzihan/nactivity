@@ -12,16 +12,22 @@
  */
 namespace org.activiti.engine.impl.bpmn.data
 {
-	/// <summary>
-	/// Implementation of the BPMN 2.0 'itemKind'
-	/// 
-	/// 
-	/// </summary>
-	public enum ItemKind
-	{
+    /// <summary>
+    /// Implementation of the BPMN 2.0 'itemKind'
+    /// 
+    /// 
+    /// </summary>
+    public enum ItemKind
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        Information,
 
-	  Information,
-	  Physical
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        Physical
+    }
 
 }

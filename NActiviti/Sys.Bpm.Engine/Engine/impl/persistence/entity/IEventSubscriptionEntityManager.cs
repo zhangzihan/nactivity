@@ -15,88 +15,86 @@
 namespace org.activiti.engine.impl.persistence.entity
 {
 
-	using org.activiti.bpmn.model;
+    using org.activiti.bpmn.model;
 
-	/// 
-	public interface IEventSubscriptionEntityManager : IEntityManager<IEventSubscriptionEntity>
-	{
+    /// 
+    public interface IEventSubscriptionEntityManager : IEntityManager<IEventSubscriptionEntity>
+    {
 
-	  /* Create entity */
+        /* Create entity */
 
-	  IMessageEventSubscriptionEntity createMessageEventSubscription();
+        IMessageEventSubscriptionEntity CreateMessageEventSubscription();
 
-	  ISignalEventSubscriptionEntity createSignalEventSubscription();
+        ISignalEventSubscriptionEntity CreateSignalEventSubscription();
 
-	  ICompensateEventSubscriptionEntity createCompensateEventSubscription();
-
-
-	  /* Create and insert */
-
-	  ISignalEventSubscriptionEntity insertSignalEvent(string signalName, Signal signal, IExecutionEntity execution);
-
-	  IMessageEventSubscriptionEntity insertMessageEvent(string messageName, IExecutionEntity execution);
-
-	  ICompensateEventSubscriptionEntity insertCompensationEvent(IExecutionEntity execution, string activityId);
+        ICompensateEventSubscriptionEntity CreateCompensateEventSubscription();
 
 
-	  /* Update */
+        /* Create and insert */
 
-	  void updateEventSubscriptionTenantId(string oldTenantId, string newTenantId);
+        ISignalEventSubscriptionEntity InsertSignalEvent(string signalName, Signal signal, IExecutionEntity execution);
 
+        IMessageEventSubscriptionEntity InsertMessageEvent(string messageName, IExecutionEntity execution);
 
-	  /* Delete */
-
-	  void deleteEventSubscriptionsForProcessDefinition(string processDefinitionId);
-
-
-	  /* Event receival */
-
-	  void eventReceived(IEventSubscriptionEntity eventSubscriptionEntity, object payload, bool processASync);
+        ICompensateEventSubscriptionEntity InsertCompensationEvent(IExecutionEntity execution, string activityId);
 
 
-	  /* Find (generic) */
+        /* Update */
 
-	  IList<IEventSubscriptionEntity> findEventSubscriptionsByName(string type, string eventName, string tenantId);
-
-	  IList<IEventSubscriptionEntity> findEventSubscriptionsByNameAndExecution(string type, string eventName, string executionId);
-
-	  IList<IEventSubscriptionEntity> findEventSubscriptionsByExecution(string executionId);
-
-	  IList<IEventSubscriptionEntity> findEventSubscriptionsByExecutionAndType(string executionId, string type);
-
-	  IList<IEventSubscriptionEntity> findEventSubscriptionsByProcessInstanceAndActivityId(string processInstanceId, string activityId, string type);
-
-	  IList<IEventSubscriptionEntity> findEventSubscriptionsByTypeAndProcessDefinitionId(string type, string processDefinitionId, string tenantId);
-
-	  IList<IEventSubscriptionEntity> findEventSubscriptionsByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl, Page page);
-
-	  long findEventSubscriptionCountByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl);
+        void UpdateEventSubscriptionTenantId(string oldTenantId, string newTenantId);
 
 
-	  /* Find (signal) */
+        /* Delete */
 
-	  IList<ISignalEventSubscriptionEntity> findSignalEventSubscriptionsByEventName(string eventName, string tenantId);
-
-	  IList<ISignalEventSubscriptionEntity> findSignalEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName);
-
-	  IList<ISignalEventSubscriptionEntity> findSignalEventSubscriptionsByNameAndExecution(string name, string executionId);
+        void DeleteEventSubscriptionsForProcessDefinition(string processDefinitionId);
 
 
-	  /* Find (message) */
+        /* Event receival */
 
-	  IMessageEventSubscriptionEntity findMessageStartEventSubscriptionByName(string messageName, string tenantId);
-
-	  IList<IMessageEventSubscriptionEntity> findMessageEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName);
+        void EventReceived(IEventSubscriptionEntity eventSubscriptionEntity, object payload, bool processASync);
 
 
-	  /* Find (compensation) */
+        /* Find (generic) */
 
-	  IList<ICompensateEventSubscriptionEntity> findCompensateEventSubscriptionsByExecutionId(string executionId);
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByName(string type, string eventName, string tenantId);
 
-	  IList<ICompensateEventSubscriptionEntity> findCompensateEventSubscriptionsByExecutionIdAndActivityId(string executionId, string activityId);
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByNameAndExecution(string type, string eventName, string executionId);
 
-	  IList<ICompensateEventSubscriptionEntity> findCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(string processInstanceId, string activityId);
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByExecution(string executionId);
+
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByExecutionAndType(string executionId, string type);
+
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByProcessInstanceAndActivityId(string processInstanceId, string activityId, string type);
+
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByTypeAndProcessDefinitionId(string type, string processDefinitionId, string tenantId);
+
+        IList<IEventSubscriptionEntity> FindEventSubscriptionsByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl, Page page);
+
+        long FindEventSubscriptionCountByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl);
 
 
-	}
+        /* Find (signal) */
+
+        IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByEventName(string eventName, string tenantId);
+
+        IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName);
+
+        IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByNameAndExecution(string name, string executionId);
+
+
+        /* Find (message) */
+
+        IMessageEventSubscriptionEntity FindMessageStartEventSubscriptionByName(string messageName, string tenantId);
+
+        IList<IMessageEventSubscriptionEntity> FindMessageEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName);
+
+
+        /* Find (compensation) */
+
+        IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByExecutionId(string executionId);
+
+        IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByExecutionIdAndActivityId(string executionId, string activityId);
+
+        IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(string processInstanceId, string activityId);
+    }
 }

@@ -22,7 +22,7 @@ namespace org.activiti.engine.impl.jobexecutor
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
-    using Sys;
+    using Sys.Workflow;
 
     public class TimerStartEventJobHandler : TimerEventHandler, IJobHandler
     {
@@ -38,9 +38,9 @@ namespace org.activiti.engine.impl.jobexecutor
             }
         }
 
-        public virtual void execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
+        public virtual void Execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
         {
-            IProcessDefinitionEntity processDefinitionEntity = ProcessDefinitionUtil.getProcessDefinitionFromDatabase(job.ProcessDefinitionId); // From DB -> need to get latest suspended state
+            IProcessDefinitionEntity processDefinitionEntity = ProcessDefinitionUtil.GetProcessDefinitionFromDatabase(job.ProcessDefinitionId); // From DB -> need to get latest suspended state
             if (processDefinitionEntity == null)
             {
                 throw new ActivitiException("Could not find process definition needed for timer start event");
@@ -52,25 +52,25 @@ namespace org.activiti.engine.impl.jobexecutor
                 {
                     if (commandContext.EventDispatcher.Enabled)
                     {
-                        commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TIMER_FIRED, job));
+                        commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TIMER_FIRED, job));
                     }
 
                     // Find initial flow element matching the signal start event
-                    Process process = ProcessDefinitionUtil.getProcess(job.ProcessDefinitionId);
-                    string activityId = getActivityIdFromConfiguration(configuration);
+                    Process process = ProcessDefinitionUtil.GetProcess(job.ProcessDefinitionId);
+                    string activityId = GetActivityIdFromConfiguration(configuration);
                     if (string.IsNullOrWhiteSpace(activityId) == false)
                     {
-                        FlowElement flowElement = process.getFlowElement(activityId, true);
+                        FlowElement flowElement = process.GetFlowElement(activityId, true);
                         if (flowElement == null)
                         {
                             throw new ActivitiException("Could not find matching FlowElement for activityId " + activityId);
                         }
                         ProcessInstanceHelper processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
-                        processInstanceHelper.createAndStartProcessInstanceWithInitialFlowElement(processDefinitionEntity, null, null, flowElement, process, null, null, true);
+                        processInstanceHelper.CreateAndStartProcessInstanceWithInitialFlowElement(processDefinitionEntity, null, null, flowElement, process, null, null, true);
                     }
                     else
                     {
-                        (new StartProcessInstanceCmd(processDefinitionEntity.Key, null, null, null, job.TenantId)).execute(commandContext);
+                        (new StartProcessInstanceCmd(processDefinitionEntity.Key, null, null, null, job.TenantId)).Execute(commandContext);
                     }
                 }
                 else

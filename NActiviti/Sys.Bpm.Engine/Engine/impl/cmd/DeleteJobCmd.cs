@@ -8,9 +8,8 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
     using org.activiti.engine.runtime;
-    using Sys;
+    using Sys.Workflow;
     using System.Collections.Generic;
 
     /// 
@@ -30,27 +29,27 @@ namespace org.activiti.engine.impl.cmd
             this.jobId = jobId;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            IJobEntity jobToDelete = getJobToDelete(commandContext);
+            IJobEntity jobToDelete = GetJobToDelete(commandContext);
 
-            sendCancelEvent(jobToDelete);
+            SendCancelEvent(jobToDelete);
 
-            commandContext.JobEntityManager.delete(jobToDelete);
+            commandContext.JobEntityManager.Delete(jobToDelete);
             return null;
         }
 
-        protected internal virtual void sendCancelEvent(IJobEntity jobToDelete)
+        protected internal virtual void SendCancelEvent(IJobEntity jobToDelete)
         {
             if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_CANCELED, jobToDelete));
+                Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_CANCELED, jobToDelete));
             }
         }
 
-        protected internal virtual IJobEntity getJobToDelete(ICommandContext commandContext)
+        protected internal virtual IJobEntity GetJobToDelete(ICommandContext commandContext)
         {
-            if (ReferenceEquals(jobId, null))
+            if (jobId is null)
             {
                 throw new ActivitiIllegalArgumentException("jobId is null");
             }
@@ -59,7 +58,7 @@ namespace org.activiti.engine.impl.cmd
                 log.LogDebug($"Deleting job {jobId}");
             }
 
-            IJobEntity job = commandContext.JobEntityManager.findById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
+            IJobEntity job = commandContext.JobEntityManager.FindById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
             if (job == null)
             {
                 throw new ActivitiObjectNotFoundException("No job found with id '" + jobId + "'", typeof(IJob));
@@ -68,7 +67,7 @@ namespace org.activiti.engine.impl.cmd
             // We need to check if the job was locked, ie acquired by the job acquisition thread
             // This happens if the the job was already acquired, but not yet executed.
             // In that case, we can't allow to delete the job.
-            if (!ReferenceEquals(job.LockOwner, null))
+            if (!(job.LockOwner is null))
             {
                 throw new ActivitiException("Cannot delete job when the job is being executed. Try again later.");
             }

@@ -32,7 +32,7 @@ namespace org.activiti.engine.impl.cmd
             this.category = category;
         }
 
-        public  virtual object  execute(ICommandContext commandContext)
+        public  virtual object  Execute(ICommandContext commandContext)
         {
 
             if (ReferenceEquals(deploymentId, null))
@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiIllegalArgumentException("Deployment id is null");
             }
 
-            IDeploymentEntity deployment = commandContext.DeploymentEntityManager.findById<IDeploymentEntity>(new KeyValuePair<string, object>("id", deploymentId));
+            IDeploymentEntity deployment = commandContext.DeploymentEntityManager.FindById<IDeploymentEntity>(deploymentId);
 
             if (deployment == null)
             {
@@ -52,7 +52,7 @@ namespace org.activiti.engine.impl.cmd
 
             if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_UPDATED, deployment));
+                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_UPDATED, deployment));
             }
 
             return null;

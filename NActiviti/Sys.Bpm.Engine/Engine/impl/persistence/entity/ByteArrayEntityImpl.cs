@@ -97,9 +97,8 @@ namespace org.activiti.engine.impl.persistence.entity
 
             public override bool Equals(object obj)
             {
-                if (obj is PersistentState_)
+                if (obj is PersistentState_ other)
                 {
-                    PersistentState_ other = (PersistentState_)obj;
                     return this.name == other.name && this.bytes.Equals(other.bytes);
                 }
                 return false;

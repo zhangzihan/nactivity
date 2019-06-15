@@ -48,12 +48,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual bool hasParallelOrdering()
+        public virtual bool HasParallelOrdering()
         {
             return !ORDERING_SEQUENTIALL.Equals(ordering);
         }
 
-        public virtual bool hasSequentialOrdering()
+        public virtual bool HasSequentialOrdering()
         {
             return ORDERING_SEQUENTIALL.Equals(ordering);
         }

@@ -58,40 +58,40 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.signalEventDefinition = signalEventDefinition;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             ICommandContext commandContext = Context.CommandContext;
 
-            string eventSubscriptionName = null;
-            if (!ReferenceEquals(signalEventName, null))
+            string eventSubscriptionName;
+            if (!(signalEventName is null))
             {
                 eventSubscriptionName = signalEventName;
             }
             else
             {
-                IExpression expressionObject = commandContext.ProcessEngineConfiguration.ExpressionManager.createExpression(signalExpression);
-                eventSubscriptionName = expressionObject.getValue(execution).ToString();
+                IExpression expressionObject = commandContext.ProcessEngineConfiguration.ExpressionManager.CreateExpression(signalExpression);
+                eventSubscriptionName = expressionObject.GetValue(execution).ToString();
             }
 
             IEventSubscriptionEntityManager eventSubscriptionEntityManager = commandContext.EventSubscriptionEntityManager;
-            IList<ISignalEventSubscriptionEntity> subscriptionEntities = null;
+            IList<ISignalEventSubscriptionEntity> subscriptionEntities;
             if (processInstanceScope)
             {
-                subscriptionEntities = eventSubscriptionEntityManager.findSignalEventSubscriptionsByProcessInstanceAndEventName(execution.ProcessInstanceId, eventSubscriptionName);
+                subscriptionEntities = eventSubscriptionEntityManager.FindSignalEventSubscriptionsByProcessInstanceAndEventName(execution.ProcessInstanceId, eventSubscriptionName);
             }
             else
             {
-                subscriptionEntities = eventSubscriptionEntityManager.findSignalEventSubscriptionsByEventName(eventSubscriptionName, execution.TenantId);
+                subscriptionEntities = eventSubscriptionEntityManager.FindSignalEventSubscriptionsByEventName(eventSubscriptionName, execution.TenantId);
             }
 
             foreach (ISignalEventSubscriptionEntity signalEventSubscriptionEntity in subscriptionEntities)
             {
-                Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createSignalEvent(ActivitiEventType.ACTIVITY_SIGNALED, signalEventSubscriptionEntity.ActivityId, eventSubscriptionName, null, signalEventSubscriptionEntity.ExecutionId, signalEventSubscriptionEntity.ProcessInstanceId, signalEventSubscriptionEntity.ProcessDefinitionId));
+                Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateSignalEvent(ActivitiEventType.ACTIVITY_SIGNALED, signalEventSubscriptionEntity.ActivityId, eventSubscriptionName, null, signalEventSubscriptionEntity.ExecutionId, signalEventSubscriptionEntity.ProcessInstanceId, signalEventSubscriptionEntity.ProcessDefinitionId));
 
-                eventSubscriptionEntityManager.eventReceived(signalEventSubscriptionEntity, null, signalEventDefinition.Async);
+                eventSubscriptionEntityManager.EventReceived(signalEventSubscriptionEntity, null, signalEventDefinition.Async);
             }
 
-            Context.Agenda.planTakeOutgoingSequenceFlowsOperation(execution, true);
+            Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(execution, true);
         }
     }
 

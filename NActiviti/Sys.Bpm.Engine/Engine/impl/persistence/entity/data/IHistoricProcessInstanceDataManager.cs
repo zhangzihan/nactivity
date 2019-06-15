@@ -21,21 +21,21 @@ namespace org.activiti.engine.impl.persistence.entity.data
 	public interface IHistoricProcessInstanceDataManager : IDataManager<IHistoricProcessInstanceEntity>
 	{
 
-	  IHistoricProcessInstanceEntity create(IExecutionEntity processInstanceExecutionEntity);
+	  IHistoricProcessInstanceEntity Create(IExecutionEntity processInstanceExecutionEntity);
 
-	  IList<string> findHistoricProcessInstanceIdsByProcessDefinitionId(string processDefinitionId);
+	  IList<string> FindHistoricProcessInstanceIdsByProcessDefinitionId(string processDefinitionId);
 
-	  IList<IHistoricProcessInstanceEntity> findHistoricProcessInstancesBySuperProcessInstanceId(string superProcessInstanceId);
+	  IList<IHistoricProcessInstanceEntity> FindHistoricProcessInstancesBySuperProcessInstanceId(string superProcessInstanceId);
 
-	  long findHistoricProcessInstanceCountByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery);
+	  long FindHistoricProcessInstanceCountByQueryCriteria(IHistoricProcessInstanceQuery historicProcessInstanceQuery);
 
-	  IList<IHistoricProcessInstance> findHistoricProcessInstancesByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery);
+	  IList<IHistoricProcessInstance> FindHistoricProcessInstancesByQueryCriteria(IHistoricProcessInstanceQuery historicProcessInstanceQuery);
 
-	  IList<IHistoricProcessInstance> findHistoricProcessInstancesAndVariablesByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery);
+	  IList<IHistoricProcessInstance> FindHistoricProcessInstancesAndVariablesByQueryCriteria(IHistoricProcessInstanceQuery historicProcessInstanceQuery);
 
-	  IList<IHistoricProcessInstance> findHistoricProcessInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+	  IList<IHistoricProcessInstance> FindHistoricProcessInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findHistoricProcessInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
+	  long FindHistoricProcessInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
 
 	}
 

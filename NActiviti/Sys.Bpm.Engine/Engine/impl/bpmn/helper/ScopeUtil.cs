@@ -15,8 +15,6 @@
 
 namespace org.activiti.engine.impl.bpmn.helper
 {
-
-    using org.activiti.engine.@delegate;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
@@ -31,7 +29,7 @@ namespace org.activiti.engine.impl.bpmn.helper
         /// <summary>
         /// we create a separate execution for each compensation handler invocation.
         /// </summary>
-        public static void throwCompensationEvent(IList<ICompensateEventSubscriptionEntity> eventSubscriptions, IExecutionEntity execution, bool async)
+        public static void ThrowCompensationEvent(IList<ICompensateEventSubscriptionEntity> eventSubscriptions, IExecutionEntity execution, bool async)
         {
 
             IExecutionEntityManager executionEntityManager = Context.CommandContext.ExecutionEntityManager;
@@ -43,15 +41,15 @@ namespace org.activiti.engine.impl.bpmn.helper
 
                 // check whether compensating execution is already created (which is the case when compensating an embedded subprocess,
                 // where the compensating execution is created when leaving the subprocess and holds snapshot data).
-                if (!ReferenceEquals(eventSubscription.Configuration, null))
+                if (!(eventSubscription.Configuration is null))
                 {
-                    compensatingExecution = executionEntityManager.findById<IExecutionEntity>(eventSubscription.Configuration);
+                    compensatingExecution = executionEntityManager.FindById<IExecutionEntity>(eventSubscription.Configuration);
                     compensatingExecution.Parent = compensatingExecution.ProcessInstance;
                     compensatingExecution.IsEventScope = false;
                 }
                 else
                 {
-                    compensatingExecution = executionEntityManager.createChildExecution(execution);
+                    compensatingExecution = executionEntityManager.CreateChildExecution(execution);
                     eventSubscription.Configuration = compensatingExecution.Id;
                 }
 
@@ -62,7 +60,7 @@ namespace org.activiti.engine.impl.bpmn.helper
 
             foreach (ICompensateEventSubscriptionEntity compensateEventSubscriptionEntity in eventSubscriptions)
             {
-                Context.CommandContext.EventSubscriptionEntityManager.eventReceived(compensateEventSubscriptionEntity, null, async);
+                Context.CommandContext.EventSubscriptionEntityManager.EventReceived(compensateEventSubscriptionEntity, null, async);
             }
         }
 
@@ -80,15 +78,15 @@ namespace org.activiti.engine.impl.bpmn.helper
             /// <summary>
             /// Creates a new event scope execution and moves existing event subscriptions to this new execution
             /// </summary>
-            public static void createCopyOfSubProcessExecutionForCompensation(IExecutionEntity subProcessExecution)
+            public static void CreateCopyOfSubProcessExecutionForCompensation(IExecutionEntity subProcessExecution)
             {
                 IEventSubscriptionEntityManager eventSubscriptionEntityManager = Context.CommandContext.EventSubscriptionEntityManager;
-                IList<IEventSubscriptionEntity> eventSubscriptions = eventSubscriptionEntityManager.findEventSubscriptionsByExecutionAndType(subProcessExecution.Id, "compensate");
+                IList<IEventSubscriptionEntity> eventSubscriptions = eventSubscriptionEntityManager.FindEventSubscriptionsByExecutionAndType(subProcessExecution.Id, "compensate");
 
                 IList<ICompensateEventSubscriptionEntity> compensateEventSubscriptions = new List<ICompensateEventSubscriptionEntity>();
                 foreach (IEventSubscriptionEntity @event in eventSubscriptions)
                 {
-                    if (@event is ICompensateEventSubscriptionEntity)
+                    if (@event.EventType == CompensateEventSubscriptionEntityFields.EVENT_TYPE)
                     {
                         compensateEventSubscriptions.Add((ICompensateEventSubscriptionEntity)@event);
                     }
@@ -99,32 +97,32 @@ namespace org.activiti.engine.impl.bpmn.helper
 
                     IExecutionEntity processInstanceExecutionEntity = subProcessExecution.ProcessInstance;
 
-                    IExecutionEntity eventScopeExecution = Context.CommandContext.ExecutionEntityManager.createChildExecution(processInstanceExecutionEntity);
+                    IExecutionEntity eventScopeExecution = Context.CommandContext.ExecutionEntityManager.CreateChildExecution(processInstanceExecutionEntity);
                     eventScopeExecution.IsActive = false;
                     eventScopeExecution.IsEventScope = true;
                     eventScopeExecution.CurrentFlowElement = subProcessExecution.CurrentFlowElement;
 
                     // copy local variables to eventScopeExecution by value. This way,
                     // the eventScopeExecution references a 'snapshot' of the local variables
-                    (new SubProcessVariableSnapshotter()).setVariablesSnapshots(subProcessExecution, eventScopeExecution);
+                    (new SubProcessVariableSnapshotter()).SetVariablesSnapshots(subProcessExecution, eventScopeExecution);
 
                     // set event subscriptions to the event scope execution:
                     foreach (ICompensateEventSubscriptionEntity eventSubscriptionEntity in compensateEventSubscriptions)
                     {
-                        eventSubscriptionEntityManager.delete(eventSubscriptionEntity);
+                        eventSubscriptionEntityManager.Delete(eventSubscriptionEntity);
 
-                        ICompensateEventSubscriptionEntity newSubscription = eventSubscriptionEntityManager.insertCompensationEvent(eventScopeExecution, eventSubscriptionEntity.ActivityId);
+                        ICompensateEventSubscriptionEntity newSubscription = eventSubscriptionEntityManager.InsertCompensationEvent(eventScopeExecution, eventSubscriptionEntity.ActivityId);
                         newSubscription.Configuration = eventSubscriptionEntity.Configuration;
                         newSubscription.Created = eventSubscriptionEntity.Created;
                     }
 
-                    ICompensateEventSubscriptionEntity eventSubscription = eventSubscriptionEntityManager.insertCompensationEvent(processInstanceExecutionEntity, eventScopeExecution.CurrentFlowElement.Id);
+                    ICompensateEventSubscriptionEntity eventSubscription = eventSubscriptionEntityManager.InsertCompensationEvent(processInstanceExecutionEntity, eventScopeExecution.CurrentFlowElement.Id);
                     eventSubscription.Configuration = eventScopeExecution.Id;
                 }
             }
         }
 
-        internal static void createCopyOfSubProcessExecutionForCompensation(IExecutionEntity parentExecution)
+        internal static void CreateCopyOfSubProcessExecutionForCompensation(IExecutionEntity parentExecution)
         {
             throw new NotImplementedException();
         }

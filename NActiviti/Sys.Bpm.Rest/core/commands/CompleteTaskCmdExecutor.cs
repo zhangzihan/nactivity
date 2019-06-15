@@ -9,11 +9,11 @@ namespace org.activiti.cloud.services.core.commands
     /// <summary>
     /// 
     /// </summary>
-    public class CompleteTaskCmdExecutor : CommandExecutor<CompleteTaskCmd>
+    public class CompleteTaskCmdExecutor : ICommandExecutor<CompleteTaskCmd>
     {
 
-        private ProcessEngineWrapper processEngine;
-        private IMessageChannel<CompleteTaskResults> commandResults;
+        private readonly ProcessEngineWrapper processEngine;
+        private readonly IMessageChannel<CompleteTaskResults> commandResults;
 
         /// <summary>
         /// 
@@ -38,11 +38,11 @@ namespace org.activiti.cloud.services.core.commands
         /// <summary>
         /// 
         /// </summary>
-        public virtual void execute(CompleteTaskCmd cmd)
+        public virtual void Execute(CompleteTaskCmd cmd)
         {
-            processEngine.completeTask(cmd);
+            processEngine.CompleteTask(cmd);
             CompleteTaskResults cmdResult = new CompleteTaskResults(cmd.Id);
-            commandResults.send(MessageBuilder<CompleteTaskResults>.withPayload(cmdResult).build());
+            commandResults.Send(MessageBuilder<CompleteTaskResults>.WithPayload(cmdResult).Build());
         }
     }
 

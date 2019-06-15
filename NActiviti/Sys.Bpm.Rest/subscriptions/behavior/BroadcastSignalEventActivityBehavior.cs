@@ -34,26 +34,25 @@ namespace org.activiti.services.subscriptions.behavior
         /// 
         /// </summary>
         /// <param name="execution"></param>
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
-            base.execute(execution);
-
-            ICommandContext commandContext = Context.CommandContext;
-            string eventSubscriptionName = null;
+            base.Execute(execution);
+            _ = Context.CommandContext;
+            string eventSubscriptionName;
             if (signalEventName != null)
             {
                 eventSubscriptionName = signalEventName;
             }
             else
             {
-                eventSubscriptionName = new ExpressionManager().createExpression(signalExpression)
-                    .getValue(execution).ToString();
+                eventSubscriptionName = new ExpressionManager().CreateExpression(signalExpression)
+                    .GetValue(execution).ToString();
 
                 //Expression expressionObject = commandContext.ProcessEngineConfiguration.ExpressionManager.createExpression(signalExpression);
                 //eventSubscriptionName = expressionObject.getValue(execution).ToString();
             }
 
-            eventPublisher.publishEvent(new SignalCmd(eventSubscriptionName, null));
+            eventPublisher.PublishEvent(new SignalCmd(eventSubscriptionName, null));
         }
     }
 }

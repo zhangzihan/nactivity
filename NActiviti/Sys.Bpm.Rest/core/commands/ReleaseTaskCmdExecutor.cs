@@ -9,11 +9,11 @@ namespace org.activiti.cloud.services.core.commands
     /// <summary>
     /// 
     /// </summary>
-    public class ReleaseTaskCmdExecutor : CommandExecutor<ReleaseTaskCmd>
+    public class ReleaseTaskCmdExecutor : ICommandExecutor<ReleaseTaskCmd>
     {
 
-        private ProcessEngineWrapper processEngine;
-        private IMessageChannel<ReleaseTaskResults> commandResults;
+        private readonly ProcessEngineWrapper processEngine;
+        private readonly IMessageChannel<ReleaseTaskResults> commandResults;
 
         /// <summary>
         /// 
@@ -41,11 +41,11 @@ namespace org.activiti.cloud.services.core.commands
         /// 
         /// </summary>
         /// <param name="cmd"></param>
-        public virtual void execute(ReleaseTaskCmd cmd)
+        public virtual void Execute(ReleaseTaskCmd cmd)
         {
-            processEngine.releaseTask(cmd);
+            processEngine.ReleaseTask(cmd);
             ReleaseTaskResults cmdResult = new ReleaseTaskResults(cmd.Id);
-            commandResults.send(MessageBuilder<ReleaseTaskResults>.withPayload(cmdResult).build());
+            commandResults.Send(MessageBuilder<ReleaseTaskResults>.WithPayload(cmdResult).Build());
         }
     }
 

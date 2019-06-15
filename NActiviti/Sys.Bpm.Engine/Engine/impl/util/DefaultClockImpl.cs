@@ -54,16 +54,16 @@ namespace org.activiti.engine.impl.util
             }
         }
 
-        public virtual void reset()
+        public virtual void Reset()
         {
             CURRENT_TIME = DateTime.Now;
         }
 
 
 
-        public virtual DateTime getCurrentCalendar(TimeZoneInfo timeZone)
+        public virtual DateTime GetCurrentCalendar(TimeZoneInfo timeZone)
         {
-            return TimeZoneUtil.convertToTimeZone(CurrentCalendar, timeZone);
+            return TimeZoneUtil.ConvertToTimeZone(CurrentCalendar, timeZone);
         }
 
         public virtual TimeZoneInfo CurrentTimeZone

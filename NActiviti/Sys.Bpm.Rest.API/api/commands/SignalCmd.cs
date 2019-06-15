@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using org.activiti.services.api.commands;
 using System;
 using System.Collections.Generic;
 
@@ -28,7 +29,7 @@ namespace org.activiti.cloud.services.api.commands
     {
         private readonly string id = "signalCmd";
         private string name;
-        private IDictionary<string, object> inputVariables;
+        private WorkflowVariable inputVariables;
 
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace org.activiti.cloud.services.api.commands
         /// <param name="name">名称</param>
         //[JsonConstructor]
         public SignalCmd([JsonProperty("Name")]string name,
-            [JsonProperty("InputVariables")]IDictionary<string, object> inputVariables) : this()
+            [JsonProperty("InputVariables")]WorkflowVariable inputVariables) : this()
         {
             this.name = name;
             this.inputVariables = inputVariables;
@@ -90,7 +91,7 @@ namespace org.activiti.cloud.services.api.commands
         /// 变量
         /// </summary>
 
-        public virtual IDictionary<string, object> InputVariables
+        public virtual WorkflowVariable InputVariables
         {
             get
             {

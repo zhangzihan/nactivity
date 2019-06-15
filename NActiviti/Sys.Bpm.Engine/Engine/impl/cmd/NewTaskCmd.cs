@@ -34,9 +34,9 @@ namespace org.activiti.engine.impl.cmd
             this.taskId = taskId;
         }
 
-        public  virtual ITaskEntity  execute(ICommandContext  commandContext)
+        public  virtual ITaskEntity  Execute(ICommandContext  commandContext)
         {
-            ITaskEntity task = commandContext.TaskEntityManager.create();
+            ITaskEntity task = commandContext.TaskEntityManager.Create();
             task.Id = taskId;
             task.CreateTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
             task.Revision = 0;

@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+<bpmn2:definitions 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+  xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="sample-diagram" 
+  targetNamespace="http://bpmn.io/schema/bpmn" 
+  xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  
   <bpmn2:process id="Process_1" name="条件会议注册路径" isExecutable="true">
-    <bpmn2:startEvent id="StartEvent_1" camunda:formKey="2">
+    <bpmn2:startEvent id="StartEvent_1" camunda:formKey="1">
       <bpmn2:outgoing>SequenceFlow_0ihgz1d</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_0ihgz1d" name="从基本信息提交的数据判断会议注册人是否为教师" sourceRef="StartEvent_1" targetRef="ExclusiveGateway_1y6gcmn" />
@@ -10,7 +19,6 @@
     </bpmn2:userTask>
     <bpmn2:userTask id="Task_085qd6k" name="学生注册" camunda:formKey="2" camunda:assignee="${name}">
       <bpmn2:incoming>SequenceFlow_0uc2k2q</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_0049oal</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_1y6gcmn">
       <bpmn2:incoming>SequenceFlow_0ihgz1d</bpmn2:incoming>
@@ -23,10 +31,6 @@
     <bpmn2:sequenceFlow id="SequenceFlow_0uc2k2q" name="如果不是教师跳转学生注册" sourceRef="ExclusiveGateway_1y6gcmn" targetRef="Task_085qd6k">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${isTecher==false}</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
-    <bpmn2:sequenceFlow id="SequenceFlow_0049oal" sourceRef="Task_085qd6k" targetRef="Task_0ruarv8" />
-    <bpmn2:userTask id="Task_0ruarv8" name="支付" camunda:formKey="4" camunda:assignee="${name}">
-      <bpmn2:incoming>SequenceFlow_0049oal</bpmn2:incoming>
-    </bpmn2:userTask>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
@@ -65,13 +69,6 @@
           <dc:Bounds x="338" y="93" width="77" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0049oal_di" bpmnElement="SequenceFlow_0049oal">
-        <di:waypoint x="635" y="88" />
-        <di:waypoint x="707" y="88" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_0tubbc9_di" bpmnElement="Task_0ruarv8">
-        <dc:Bounds x="707" y="48" width="100" height="80" />
-      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn2:definitions>

@@ -4,6 +4,8 @@ using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core.pageable.sort;
 using org.activiti.engine;
 using org.activiti.engine.history;
+using org.activiti.engine.impl;
+using org.activiti.engine.impl.cmd;
 using org.activiti.engine.task;
 using System.Collections.Generic;
 
@@ -44,11 +46,11 @@ namespace org.activiti.cloud.services.core.pageable
         /// <summary>
         /// 
         /// </summary>
-        public PageableTaskRepositoryService(ITaskService taskService, 
+        public PageableTaskRepositoryService(ITaskService taskService,
             TaskConverter taskConverter,
             HistoricTaskInstanceConverter historicTaskInstanceConverter,
             IHistoryService historyService,
-            PageRetriever pageRetriever, 
+            PageRetriever pageRetriever,
             TaskSortApplier sortApplier,
             HistoryTaskSortApplier historicSortApplier)
         {
@@ -79,55 +81,97 @@ namespace org.activiti.cloud.services.core.pageable
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<TaskModel> getTasks(Pageable pageable)
+        public virtual IPage<TaskModel> GetTasks(Pageable pageable)
         {
             string userId = authenticationWrapper.AuthenticatedUser.Id;
-            ITaskQuery query = taskService.createTaskQuery();
-            if (!string.ReferenceEquals(userId, null))
+            ITaskQuery query = taskService.CreateTaskQuery();
+            if (!(userId is null))
             {
                 IList<string> groups = null;
                 if (userGroupLookupProxy != null)
                 {
-                    groups = userGroupLookupProxy.getGroupsForCandidateUser(userId);
+                    groups = userGroupLookupProxy.GetGroupsForCandidateUser(userId);
                 }
-                query = query.taskCandidateOrAssigned(userId, groups);
+                query = query.SetTaskCandidateOrAssigned(userId, groups);
             }
-            sortApplier.applySort(query, pageable);
+            sortApplier.ApplySort(query, pageable);
 
-            return pageRetriever.loadPage<ITask, TaskModel, ITaskQuery>(query, pageable, taskConverter);
+            return pageRetriever.LoadPage<ITask, TaskModel, ITaskQuery>(taskService as ServiceImpl, query, pageable, taskConverter, (q, firstResult, pageSize) =>
+            {
+                return new GetProcessInstanceTasksCmd(q, firstResult, pageSize);
+            });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<TaskModel> getAllTasks(Pageable pageable)
+        public virtual IPage<TaskModel> GetAllTasks(Pageable pageable)
         {
-            ITaskQuery query = taskService.createTaskQuery();
-            sortApplier.applySort(query, pageable);
+            ITaskQuery query = taskService.CreateTaskQuery();
+            sortApplier.ApplySort(query, pageable);
 
-            return pageRetriever.loadPage(query, pageable, taskConverter);
+            return pageRetriever.LoadPage(taskService as ServiceImpl, query, pageable, taskConverter, (q, firstResult, pageSize) =>
+            {
+                return new GetProcessInstanceTasksCmd(q, firstResult, pageSize);
+            });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<TaskModel> getTasks(string processInstanceId, Pageable pageable)
+        public virtual IPage<TaskModel> GetTasks(string processInstanceId, string businessKey, string tenantId, Pageable pageable)
         {
-            ITaskQuery query = taskService.createTaskQuery().processInstanceId(processInstanceId);
-            sortApplier.applySort(query, pageable);
+            ITaskQuery query = taskService.CreateTaskQuery();
+            if (string.IsNullOrWhiteSpace(processInstanceId) == false)
+            {
+                query.SetProcessInstanceId(processInstanceId);
+            }
+            else
+            {
+                query.SetProcessInstanceBusinessKey(businessKey)
+                .SetTaskTenantId(tenantId);
+            }
+            if (pageable.PageSize == 0)
+            {
+                pageable.PageNo = 1;
+                pageable.PageSize = int.MaxValue;
+            }
 
-            return pageRetriever.loadPage(query, pageable, taskConverter);
+            sortApplier.ApplySort(query, pageable);
+
+            return pageRetriever.LoadPage(taskService as ServiceImpl, query, pageable, taskConverter, (q, firstResult, pageSize) =>
+            {
+                return new GetProcessInstanceTasksCmd(q, firstResult, pageSize);
+            });
         }
 
         /// <summary>
-        /// 
+        /// 获取流程实例历史记录，默认不启用分页，返回当期流程实例下的所有历史任务.
         /// </summary>
-        public virtual IPage<TaskModel> getHistoryTasks(string processInstanceId, Pageable pageable)
+        public virtual IPage<TaskModel> GetHistoryTasks(string processInstanceId, string businessKey, string tenantId, Pageable pageable)
         {
-            IHistoricTaskInstanceQuery query = historyService.createHistoricTaskInstanceQuery().processInstanceId(processInstanceId);
-            historicSortApplier.applySort(query, pageable);
+            IHistoricTaskInstanceQuery query = historyService.CreateHistoricTaskInstanceQuery();
+            if (string.IsNullOrWhiteSpace(processInstanceId) == false)
+            {
+                query.SetProcessInstanceId(processInstanceId);
+            }
+            else
+            {
+                query.SetProcessInstanceBusinessKey(businessKey)
+                .SetTaskTenantId(tenantId);
+            }
 
-            return pageRetriever.loadPage(query, pageable, historicTaskInstanceConverter);
+            if (pageable.PageSize == 0)
+            {
+                pageable.PageNo = 1;
+                pageable.PageSize = int.MaxValue;
+            }
+            historicSortApplier.ApplySort(query, pageable);
+
+            return pageRetriever.LoadPage(historyService as ServiceImpl, query, pageable, historicTaskInstanceConverter, (q, firstResult, pageSize) =>
+            {
+                return new GetHistoricInstanceTasksCmd(q, firstResult, pageSize);
+            });
         }
 
         /// <summary>

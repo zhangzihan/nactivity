@@ -26,7 +26,7 @@ namespace org.activiti.cloud.services.events
     public class TaskActivatedEventImpl : AbstractProcessEngineEvent, ITaskActivatedEvent
     {
 
-        private TaskModel task;
+        private readonly TaskModel task;
 
 
         /// <summary>

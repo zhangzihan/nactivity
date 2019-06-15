@@ -15,42 +15,41 @@
 namespace org.activiti.engine.impl.persistence.entity
 {
 
-	using org.activiti.engine.task;
+    using org.activiti.engine.task;
 
-	public interface ITaskEntityManager : IEntityManager<ITaskEntity>
-	{
+    public interface ITaskEntityManager : IEntityManager<ITaskEntity>
+    {
 
-	  void insert(ITaskEntity taskEntity, IExecutionEntity execution);
+        void Insert(ITaskEntity taskEntity, IExecutionEntity execution);
 
-	  void changeTaskAssignee(ITaskEntity taskEntity, string assignee);
+        void ChangeTaskAssignee(ITaskEntity taskEntity, string assignee, string assigneeUser);
 
-	  void changeTaskAssigneeNoEvents(ITaskEntity taskEntity, string assignee);
+        void ChangeTaskAssigneeNoEvents(ITaskEntity taskEntity, string assignee, string assigneeUser);
 
-	  void changeTaskOwner(ITaskEntity taskEntity, string owner);
+        void ChangeTaskOwner(ITaskEntity taskEntity, string owner);
 
-	  IList<ITaskEntity> findTasksByExecutionId(string executionId);
+        IList<ITaskEntity> FindTasksByExecutionId(string executionId);
 
-	  IList<ITaskEntity> findTasksByProcessInstanceId(string processInstanceId);
+        IList<ITaskEntity> FindTasksByProcessInstanceId(string processInstanceId);
 
-	  IList<ITask> findTasksByQueryCriteria(TaskQueryImpl taskQuery);
+        IList<ITask> FindTasksByQueryCriteria(ITaskQuery taskQuery);
 
-	  IList<ITask> findTasksAndVariablesByQueryCriteria(TaskQueryImpl taskQuery);
+        IList<ITask> FindTasksAndVariablesByQueryCriteria(ITaskQuery taskQuery);
 
-	  long findTaskCountByQueryCriteria(TaskQueryImpl taskQuery);
+        long FindTaskCountByQueryCriteria(ITaskQuery taskQuery);
 
-	  IList<ITask> findTasksByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<ITask> FindTasksByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findTaskCountByNativeQuery(IDictionary<string, object> parameterMap);
+        long FindTaskCountByNativeQuery(IDictionary<string, object> parameterMap);
 
-	  IList<ITask> findTasksByParentTaskId(string parentTaskId);
+        IList<ITask> FindTasksByParentTaskId(string parentTaskId);
 
-	  void updateTaskTenantIdForDeployment(string deploymentId, string newTenantId);
+        void UpdateTaskTenantIdForDeployment(string deploymentId, string newTenantId);
 
-	  void deleteTask(string taskId, string deleteReason, bool cascade);
+        void DeleteTask(string taskId, string deleteReason, bool cascade);
 
-	  void deleteTasksByProcessInstanceId(string processInstanceId, string deleteReason, bool cascade);
+        void DeleteTasksByProcessInstanceId(string processInstanceId, string deleteReason, bool cascade);
 
-	  void deleteTask(ITaskEntity task, string deleteReason, bool cascade, bool cancel);
-
-	}
+        void DeleteTask(ITaskEntity task, string deleteReason, bool cascade, bool cancel);
+    }
 }

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Sys.Bpm.Rest</id>
+    <version>1.0.0.1</version>
+    <title>Sys.Bpm.Rest</title>
+    <authors>Sys.Bpm.Rest</authors>
+    <owners>Sys.Bpm.Rest</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>工作流服务引擎Rest</description>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Microsoft.AspNetCore" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Hosting.Abstractions" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Mvc" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="System.IdentityModel.Tokens.Jwt" version="5.4.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+
+  <files>
+    <file src="bin\Sys.Bpm.Rest.API.dll" target="lib\netstandard2.0" />
+    <file src="bin\Sys.Bpm.Rest.dll" target="lib\netstandard2.0" />
+  </files>
+</package>

@@ -17,8 +17,7 @@ namespace org.activiti.engine
 {
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl;
-    using org.activiti.engine.impl.cfg;
-    using Sys;
+    using Sys.Workflow;
     using System.Collections.Concurrent;
 
     /// <summary>
@@ -39,7 +38,7 @@ namespace org.activiti.engine
     /// </summary>
     public class ProcessEngineFactory
     {
-        private ILogger<ProcessEngineFactory> log = ProcessEngineServiceProvider.LoggerService<ProcessEngineFactory>();
+        private static readonly ILogger<ProcessEngineFactory> log = ProcessEngineServiceProvider.LoggerService<ProcessEngineFactory>();
 
         private static ProcessEngineFactory processEngineFactory;
 
@@ -72,7 +71,7 @@ namespace org.activiti.engine
         /// Initializes all process engines that can be found on the classpath for resources <code>activiti.cfg.xml</code> (plain Activiti style configuration) and for resources
         /// <code>activiti-context.xml</code> (Spring style configuration).
         /// </summary>
-        public void init()
+        public void Init()
         {
             lock (typeof(ProcessEngineFactory))
             {
@@ -83,7 +82,7 @@ namespace org.activiti.engine
                         processEngines = new ConcurrentDictionary<string, IProcessEngine>();
                     }
                     log.LogInformation("Initializing process engine using configuration '{}'");
-                    initProcessEngineFromResource();
+                    InitProcessEngineFromResource();
                     Initialized = true;
                 }
                 else
@@ -97,27 +96,27 @@ namespace org.activiti.engine
         /// Registers the given process engine. No <seealso cref="IProcessEngineInfo"/> will be available for this process engine. An engine that is registered will be closed when the <seealso cref="ProcessEngines#destroy()"/>
         /// is called.
         /// </summary>
-        public static void registerProcessEngine(IProcessEngine processEngine)
+        public static void RegisterProcessEngine(IProcessEngine processEngine)
         {
-            processEngines[processEngine.Name] = processEngine;
+            processEngines.AddOrUpdate(processEngine.Name, processEngine, (key, old) => processEngine);
         }
 
         /// <summary>
         /// Unregisters the given process engine.
         /// </summary>
-        public static void unregister(IProcessEngine processEngine)
+        public static void Unregister(IProcessEngine processEngine)
         {
-            processEngines.TryRemove(processEngine.Name, out var engine);
+            processEngines.TryRemove(processEngine.Name, out _);
         }
 
-        private IProcessEngineInfo initProcessEngineFromResource()
+        private IProcessEngineInfo InitProcessEngineFromResource()
         {
             IProcessEngineInfo processEngineInfo = null;
             string processEngineName = null;
             try
             {
                 log.LogInformation("initializing process engine");
-                IProcessEngine processEngine = buildProcessEngine();
+                IProcessEngine processEngine = BuildProcessEngine();
                 processEngineName = processEngine.Name;
                 log.LogInformation($"initialised process engine {processEngineName}");
                 processEngineInfo = new ProcessEngineInfoImpl(processEngineName, null);
@@ -127,7 +126,7 @@ namespace org.activiti.engine
             catch (Exception e)
             {
                 log.LogError(e, $"Exception while initializing process engine: {e.Message}");
-                processEngineInfo = new ProcessEngineInfoImpl(null, getExceptionString(e));
+                processEngineInfo = new ProcessEngineInfoImpl(null, GetExceptionString(e));
                 throw e;
             }
 
@@ -136,19 +135,19 @@ namespace org.activiti.engine
             return processEngineInfo;
         }
 
-        private string getExceptionString(Exception e)
+        private string GetExceptionString(Exception e)
         {
             Console.WriteLine(e.StackTrace);
             return e.StackTrace;
         }
 
-        private IProcessEngine buildProcessEngine()
+        private IProcessEngine BuildProcessEngine()
         {
             try
             {
                 ProcessEngineConfiguration engineConfig = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>();
 
-                return engineConfig.buildProcessEngine();
+                return engineConfig.BuildProcessEngine();
             }
             catch (Exception ex)
             {
@@ -171,7 +170,7 @@ namespace org.activiti.engine
         /// Get initialization results. Only info will we available for process engines which were added in the <seealso cref="ProcessEngines#init()"/>. No <seealso cref="IProcessEngineInfo"/> is available for engines which were
         /// registered programatically.
         /// </summary>
-        public IProcessEngineInfo getProcessEngineInfo(string processEngineName)
+        public IProcessEngineInfo GetProcessEngineInfo(string processEngineName)
         {
             processEngineInfosByName.TryGetValue(processEngineName, out var pe);
 
@@ -182,7 +181,7 @@ namespace org.activiti.engine
         {
             get
             {
-                return getProcessEngine(NAME_DEFAULT);
+                return GetProcessEngine(NAME_DEFAULT);
             }
         }
 
@@ -191,11 +190,11 @@ namespace org.activiti.engine
         /// </summary>
         /// <param name="processEngineName">
         ///          is the name of the process engine or null for the default process engine. </param>
-        public IProcessEngine getProcessEngine(string processEngineName)
+        public IProcessEngine GetProcessEngine(string processEngineName)
         {
             if (!Initialized)
             {
-                init();
+                Init();
             }
 
             processEngines.TryGetValue(processEngineName, out var engine);
@@ -206,12 +205,12 @@ namespace org.activiti.engine
         /// <summary>
         /// retries to initialize a process engine that previously failed.
         /// </summary>
-        public IProcessEngineInfo retry()
+        public IProcessEngineInfo Retry()
         {
             log.LogDebug($"retying initializing of resource.");
             try
             {
-                return initProcessEngineFromResource();
+                return InitProcessEngineFromResource();
             }
             catch (Exception e)
             {
@@ -233,7 +232,7 @@ namespace org.activiti.engine
         /// <summary>
         /// closes all process engines. This method should be called when the server shuts down.
         /// </summary>
-        public void destroy()
+        public void Destroy()
         {
             lock (typeof(ProcessEngineFactory))
             {
@@ -247,11 +246,11 @@ namespace org.activiti.engine
                         IProcessEngine processEngine = engines[processEngineName];
                         try
                         {
-                            processEngine.close();
+                            processEngine.Close();
                         }
                         catch (Exception e)
                         {
-                            log.LogError(e, $"exception while closing {(ReferenceEquals(processEngineName, null) ? "the default process engine" : "process engine " + processEngineName)}");
+                            log.LogError(e, $"exception while closing {(processEngineName is null ? "the default process engine" : "process engine " + processEngineName)}");
                         }
                     }
 

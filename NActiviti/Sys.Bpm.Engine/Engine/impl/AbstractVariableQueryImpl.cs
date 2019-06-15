@@ -44,146 +44,157 @@ namespace org.activiti.engine.impl
         {
         }
 
-        public override abstract long executeCount(ICommandContext commandContext);
+        public override abstract long ExecuteCount(ICommandContext commandContext);
 
-        public override abstract IList<U> executeList(ICommandContext commandContext, Page page);
+        public override abstract IList<U> ExecuteList(ICommandContext commandContext, Page page);
 
-        public virtual T variableValueEquals(string name, object value)
+        public virtual T VariableValueEquals(string name, object value)
         {
-            return variableValueEquals(name, value, true);
+            return VariableValueEquals(name, value, true);
         }
 
-        protected internal virtual T variableValueEquals(string name, object value, bool localScope)
+        protected internal virtual T VariableValueEquals(string name, object value, bool localScope)
         {
-            addVariable(name, value, QueryOperator.EQUALS, localScope);
-            return default(T); //(T)this;
+            AddVariable(name, value, QueryOperator.EQUALS, localScope);
+
+            return this as T;
         }
 
-        public virtual T variableValueEquals(object value)
+        public virtual T VariableValueEquals(object value)
         {
-            return variableValueEquals(value, true);
+            return VariableValueEquals(value, true);
         }
 
-        protected internal virtual T variableValueEquals(object value, bool localScope)
+        protected internal virtual T VariableValueEquals(object value, bool localScope)
         {
             queryVariableValues.Add(new QueryVariableValue(null, value, QueryOperator.EQUALS, localScope));
-            return default(T); //(T)this;
+
+            return this as T;
         }
 
-        public virtual T variableValueEqualsIgnoreCase(string name, string value)
+        public virtual T VariableValueEqualsIgnoreCase(string name, string value)
         {
-            return variableValueEqualsIgnoreCase(name, value, true);
+            return VariableValueEqualsIgnoreCase(name, value, true);
         }
 
-        protected internal virtual T variableValueEqualsIgnoreCase(string name, string value, bool localScope)
+        protected internal virtual T VariableValueEqualsIgnoreCase(string name, string value, bool localScope)
         {
-            if (ReferenceEquals(value, null))
+            if (value is null)
             {
                 throw new ActivitiIllegalArgumentException("value is null");
             }
-            addVariable(name, value.ToLower(), QueryOperator.EQUALS_IGNORE_CASE, localScope);
-            return default(T); //(T)this;
+            AddVariable(name, value.ToLower(), QueryOperator.EQUALS_IGNORE_CASE, localScope);
+
+            return this as T;
         }
 
-        public virtual T variableValueNotEqualsIgnoreCase(string name, string value)
+        public virtual T VariableValueNotEqualsIgnoreCase(string name, string value)
         {
-            return variableValueNotEqualsIgnoreCase(name, value, true);
+            return VariableValueNotEqualsIgnoreCase(name, value, true);
         }
 
-        protected internal virtual T variableValueNotEqualsIgnoreCase(string name, string value, bool localScope)
+        protected internal virtual T VariableValueNotEqualsIgnoreCase(string name, string value, bool localScope)
         {
-            if (ReferenceEquals(value, null))
+            if (value is null)
             {
                 throw new ActivitiIllegalArgumentException("value is null");
             }
-            addVariable(name, value.ToLower(), QueryOperator.NOT_EQUALS_IGNORE_CASE, localScope);
-            return default(T); //(T)this;
+            AddVariable(name, value.ToLower(), QueryOperator.NOT_EQUALS_IGNORE_CASE, localScope);
+
+            return this as T;
         }
 
-        public virtual T variableValueNotEquals(string name, object value)
+        public virtual T VariableValueNotEquals(string name, object value)
         {
-            return variableValueNotEquals(name, value, true);
+            return VariableValueNotEquals(name, value, true);
         }
 
-        protected internal virtual T variableValueNotEquals(string name, object value, bool localScope)
+        protected internal virtual T VariableValueNotEquals(string name, object value, bool localScope)
         {
-            addVariable(name, value, QueryOperator.NOT_EQUALS, localScope);
-            return default(T); //(T)this;
+            AddVariable(name, value, QueryOperator.NOT_EQUALS, localScope);
+
+            return this as T;
         }
 
-        public virtual T variableValueGreaterThan(string name, object value)
+        public virtual T VariableValueGreaterThan(string name, object value)
         {
-            return variableValueGreaterThan(name, value, true);
+            return VariableValueGreaterThan(name, value, true);
         }
 
-        protected internal virtual T variableValueGreaterThan(string name, object value, bool localScope)
+        protected internal virtual T VariableValueGreaterThan(string name, object value, bool localScope)
         {
-            addVariable(name, value, QueryOperator.GREATER_THAN, localScope);
-            return default(T); //(T)this;
+            AddVariable(name, value, QueryOperator.GREATER_THAN, localScope);
+
+            return this as T;
         }
 
-        public virtual T variableValueGreaterThanOrEqual(string name, object value)
+        public virtual T VariableValueGreaterThanOrEqual(string name, object value)
         {
-            return variableValueGreaterThanOrEqual(name, value, true);
+            return VariableValueGreaterThanOrEqual(name, value, true);
         }
 
-        protected internal virtual T variableValueGreaterThanOrEqual(string name, object value, bool localScope)
+        protected internal virtual T VariableValueGreaterThanOrEqual(string name, object value, bool localScope)
         {
-            addVariable(name, value, QueryOperator.GREATER_THAN_OR_EQUAL, localScope);
-            return default(T); //(T)this;
+            AddVariable(name, value, QueryOperator.GREATER_THAN_OR_EQUAL, localScope);
+
+            return this as T;
         }
 
-        public virtual T variableValueLessThan(string name, object value)
+        public virtual T VariableValueLessThan(string name, object value)
         {
-            return variableValueLessThan(name, value, true);
+            return VariableValueLessThan(name, value, true);
         }
 
-        protected internal virtual T variableValueLessThan(string name, object value, bool localScope)
+        protected internal virtual T VariableValueLessThan(string name, object value, bool localScope)
         {
-            addVariable(name, value, QueryOperator.LESS_THAN, localScope);
-            return default(T); //(T)this;
+            AddVariable(name, value, QueryOperator.LESS_THAN, localScope);
+
+            return this as T;
         }
 
-        public virtual T variableValueLessThanOrEqual(string name, object value)
+        public virtual T VariableValueLessThanOrEqual(string name, object value)
         {
-            return variableValueLessThanOrEqual(name, value, true);
+            return VariableValueLessThanOrEqual(name, value, true);
         }
 
-        protected internal virtual T variableValueLessThanOrEqual(string name, object value, bool localScope)
+        protected internal virtual T VariableValueLessThanOrEqual(string name, object value, bool localScope)
         {
-            addVariable(name, value, QueryOperator.LESS_THAN_OR_EQUAL, localScope);
-            return default(T); //(T)this;
+            AddVariable(name, value, QueryOperator.LESS_THAN_OR_EQUAL, localScope);
+
+            return this as T;
         }
 
-        public virtual T variableValueLike(string name, string value)
+        public virtual T VariableValueLike(string name, string value)
         {
-            return variableValueLike(name, value, true);
+            return VariableValueLike(name, value, true);
         }
 
-        public virtual T variableValueLikeIgnoreCase(string name, string value)
+        public virtual T VariableValueLikeIgnoreCase(string name, string value)
         {
-            return variableValueLikeIgnoreCase(name, value, true);
+            return VariableValueLikeIgnoreCase(name, value, true);
         }
 
-        protected internal virtual T variableValueLike(string name, string value, bool localScope)
+        protected internal virtual T VariableValueLike(string name, string value, bool localScope)
         {
-            addVariable(name, value, QueryOperator.LIKE, localScope);
-            return default(T); //(T)this;
+            AddVariable(name, value, QueryOperator.LIKE, localScope);
+
+            return this as T;
         }
 
-        protected internal virtual T variableValueLikeIgnoreCase(string name, string value, bool localScope)
+        protected internal virtual T VariableValueLikeIgnoreCase(string name, string value, bool localScope)
         {
-            addVariable(name, value.ToLower(), QueryOperator.LIKE_IGNORE_CASE, localScope);
-            return default(T); //(T)this;
+            AddVariable(name, value.ToLower(), QueryOperator.LIKE_IGNORE_CASE, localScope);
+
+            return this as T;
         }
 
-        protected internal virtual void addVariable(string name, object value, QueryOperator @operator, bool localScope)
+        protected internal virtual void AddVariable(string name, object value, QueryOperator @operator, bool localScope)
         {
-            if (ReferenceEquals(name, null))
+            if (name is null)
             {
                 throw new ActivitiIllegalArgumentException("name is null");
             }
-            if (value == null || isBoolean(value))
+            if (value == null || IsBoolean(value))
             {
                 // Null-values and booleans can only be used in EQUALS and
                 // NOT_EQUALS
@@ -217,7 +228,7 @@ namespace org.activiti.engine.impl
             queryVariableValues.Add(new QueryVariableValue(name, value, @operator, localScope));
         }
 
-        protected internal virtual bool isBoolean(object value)
+        protected internal virtual bool IsBoolean(object value)
         {
             if (value == null)
             {
@@ -226,14 +237,14 @@ namespace org.activiti.engine.impl
             return value.GetType().IsAssignableFrom(typeof(bool)) || value.GetType().IsAssignableFrom(typeof(bool));
         }
 
-        protected internal virtual void ensureVariablesInitialized()
+        protected internal virtual void EnsureVariablesInitialized()
         {
             if (queryVariableValues.Count > 0)
             {
                 IVariableTypes variableTypes = Context.ProcessEngineConfiguration.VariableTypes;
                 foreach (QueryVariableValue queryVariableValue in queryVariableValues)
                 {
-                    queryVariableValue.initialize(variableTypes);
+                    queryVariableValue.Initialize(variableTypes);
                 }
             }
         }
@@ -246,7 +257,7 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public virtual bool hasLocalQueryVariableValue()
+        public virtual bool HasLocalQueryVariableValue()
         {
             foreach (QueryVariableValue qvv in queryVariableValues)
             {
@@ -258,7 +269,7 @@ namespace org.activiti.engine.impl
             return false;
         }
 
-        public virtual bool hasNonLocalQueryVariableValue()
+        public virtual bool HasNonLocalQueryVariableValue()
         {
             foreach (QueryVariableValue qvv in queryVariableValues)
             {

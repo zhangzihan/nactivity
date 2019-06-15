@@ -23,8 +23,7 @@ namespace org.activiti.engine.impl
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.variable;
-    using org.activiti.engine.task;
-    using Sys;
+    using Sys.Workflow;
     using System.Linq;
 
     /// 
@@ -50,6 +49,7 @@ namespace org.activiti.engine.impl
         protected internal string processInstanceBusinessKeyLike_;
         protected internal string processInstanceBusinessKeyLikeIgnoreCase_;
         protected internal string executionId_;
+        protected internal IList<string> executionIds;
         protected internal string taskId_;
         protected internal string taskName_;
         protected internal string taskNameLike_;
@@ -119,39 +119,39 @@ namespace org.activiti.engine.impl
             this.databaseType = databaseType;
         }
 
-        public override long executeCount(ICommandContext commandContext)
+        public override long ExecuteCount(ICommandContext commandContext)
         {
-            ensureVariablesInitialized();
-            checkQueryOk();
-            return commandContext.HistoricTaskInstanceEntityManager.findHistoricTaskInstanceCountByQueryCriteria(this);
+            EnsureVariablesInitialized();
+            CheckQueryOk();
+            return commandContext.HistoricTaskInstanceEntityManager.FindHistoricTaskInstanceCountByQueryCriteria(this);
         }
 
-        public override IList<IHistoricTaskInstance> executeList(ICommandContext commandContext, Page page)
+        public override IList<IHistoricTaskInstance> ExecuteList(ICommandContext commandContext, Page page)
         {
-            ensureVariablesInitialized();
-            checkQueryOk();
-            IList<IHistoricTaskInstance> tasks = null;
+            EnsureVariablesInitialized();
+            CheckQueryOk();
+            IList<IHistoricTaskInstance> tasks;
             if (includeTaskLocalVariables_.GetValueOrDefault() || includeProcessVariables_.GetValueOrDefault())
             {
-                tasks = commandContext.HistoricTaskInstanceEntityManager.findHistoricTaskInstancesAndVariablesByQueryCriteria(this);
+                tasks = commandContext.HistoricTaskInstanceEntityManager.FindHistoricTaskInstancesAndVariablesByQueryCriteria(this);
             }
             else
             {
-                tasks = commandContext.HistoricTaskInstanceEntityManager.findHistoricTaskInstancesByQueryCriteria(this);
+                tasks = commandContext.HistoricTaskInstanceEntityManager.FindHistoricTaskInstancesByQueryCriteria(this);
             }
 
             if (tasks != null && Context.ProcessEngineConfiguration.PerformanceSettings.EnableLocalization)
             {
                 foreach (IHistoricTaskInstance task in tasks)
                 {
-                    localize(task);
+                    Localize(task);
                 }
             }
 
             return tasks;
         }
 
-        public virtual IHistoricTaskInstanceQuery processInstanceId(string processInstanceId)
+        public virtual IHistoricTaskInstanceQuery SetProcessInstanceId(string processInstanceId)
         {
             if (inOrStatement)
             {
@@ -164,34 +164,37 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processInstanceIdIn(IList<string> processInstanceIds)
+        public virtual IHistoricTaskInstanceQuery SetProcessInstanceIdIn(string[] processInstanceIds)
         {
-            //if (processInstanceIds?.Count == 0)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Process instance id list is empty");
-            //}
-            //foreach (string processInstanceId in processInstanceIds)
-            //{
-            //    if (ReferenceEquals(processInstanceId, null))
-            //    {
-            //        throw new ActivitiIllegalArgumentException("None of the given process instance ids can be null");
-            //    }
-            //}
-
-            var ids = processInstanceIds?.Where(x => x != null) ?? new List<string>();
+            var ids = processInstanceIds is null ? new List<string>() : processInstanceIds.Where(x => !(x is null)).ToList();
 
             if (inOrStatement)
             {
-                this.currentOrQueryObject.processInstanceIds = ids.Count() == 0 ? null : ids.ToList();
+                this.currentOrQueryObject.processInstanceIds = ids.Count == 0 ? null : ids;
             }
             else
             {
-                this.processInstanceIds = processInstanceIds = ids.Count() == 0 ? null : ids.ToList();
+                this.processInstanceIds = ids.Count == 0 ? null : ids;
             }
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processInstanceBusinessKey(string processInstanceBusinessKey)
+        public virtual IHistoricTaskInstanceQuery SetExecutionIdIn(string[] executionIds)
+        {
+            var ids = executionIds is null ? new List<string>() : executionIds.Where(x => x != null).ToList();
+
+            if (inOrStatement)
+            {
+                currentOrQueryObject.executionIds = ids.Count == 0 ? null : ids;
+            }
+            else
+            {
+                this.executionIds = ids.Count == 0 ? null : ids;
+            }
+            return this;
+        }
+
+        public virtual IHistoricTaskInstanceQuery SetProcessInstanceBusinessKey(string processInstanceBusinessKey)
         {
             if (inOrStatement)
             {
@@ -204,7 +207,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processInstanceBusinessKeyLike(string processInstanceBusinessKeyLike)
+        public virtual IHistoricTaskInstanceQuery SetProcessInstanceBusinessKeyLike(string processInstanceBusinessKeyLike)
         {
             if (inOrStatement)
             {
@@ -217,7 +220,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processInstanceBusinessKeyLikeIgnoreCase(string processInstanceBusinessKeyLikeIgnoreCase)
+        public virtual IHistoricTaskInstanceQuery SetProcessInstanceBusinessKeyLikeIgnoreCase(string processInstanceBusinessKeyLikeIgnoreCase)
         {
             if (inOrStatement)
             {
@@ -230,7 +233,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery executionId(string executionId)
+        public virtual IHistoricTaskInstanceQuery SetExecutionId(string executionId)
         {
             if (inOrStatement)
             {
@@ -243,7 +246,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processDefinitionId(string processDefinitionId)
+        public virtual IHistoricTaskInstanceQuery SetProcessDefinitionId(string processDefinitionId)
         {
             if (inOrStatement)
             {
@@ -256,7 +259,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processDefinitionKey(string processDefinitionKey)
+        public virtual IHistoricTaskInstanceQuery SetProcessDefinitionKey(string processDefinitionKey)
         {
             if (inOrStatement)
             {
@@ -269,7 +272,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processDefinitionKeyLike(string processDefinitionKeyLike)
+        public virtual IHistoricTaskInstanceQuery SetProcessDefinitionKeyLike(string processDefinitionKeyLike)
         {
             if (inOrStatement)
             {
@@ -282,7 +285,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processDefinitionKeyLikeIgnoreCase(string processDefinitionKeyLikeIgnoreCase)
+        public virtual IHistoricTaskInstanceQuery SetProcessDefinitionKeyLikeIgnoreCase(string processDefinitionKeyLikeIgnoreCase)
         {
             if (inOrStatement)
             {
@@ -295,7 +298,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processDefinitionKeyIn(IList<string> processDefinitionKeys)
+        public virtual IHistoricTaskInstanceQuery SetProcessDefinitionKeyIn(IList<string> processDefinitionKeys)
         {
             if (inOrStatement)
             {
@@ -308,7 +311,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processDefinitionName(string processDefinitionName)
+        public virtual IHistoricTaskInstanceQuery SetProcessDefinitionName(string processDefinitionName)
         {
             if (inOrStatement)
             {
@@ -321,7 +324,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processDefinitionNameLike(string processDefinitionNameLike)
+        public virtual IHistoricTaskInstanceQuery SetProcessDefinitionNameLike(string processDefinitionNameLike)
         {
             if (inOrStatement)
             {
@@ -334,69 +337,37 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processCategoryIn(IList<string> processCategoryInList)
+        public virtual IHistoricTaskInstanceQuery SetProcessCategoryIn(IList<string> processCategoryInList)
         {
-            //if (processCategoryInList == null)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Process category list is null");
-            //}
-            //if (processCategoryInList.Count == 0)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Process category list is empty");
-            //}
-            //foreach (string processCategory in processCategoryInList)
-            //{
-            //    if (ReferenceEquals(processCategory, null))
-            //    {
-            //        throw new ActivitiIllegalArgumentException("None of the given process categories can be null");
-            //    }
-            //}
-
-            var cates = processCategoryInList?.Where(x => x != null) ?? new List<string>();
+            var cates = processCategoryInList is null ? new List<string>() : processCategoryInList.Where(x => !(x is null)).ToList();
 
             if (inOrStatement)
             {
-                currentOrQueryObject.processCategoryInList = cates.Count() == 0 ? null : cates.ToList();
+                currentOrQueryObject.processCategoryInList = cates.Count == 0 ? null : cates;
             }
             else
             {
-                this.processCategoryInList = cates.Count() == 0 ? null : cates.ToList();
+                this.processCategoryInList = cates.Count == 0 ? null : cates;
             }
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processCategoryNotIn(IList<string> processCategoryNotInList)
+        public virtual IHistoricTaskInstanceQuery SetProcessCategoryNotIn(IList<string> processCategoryNotInList)
         {
-            //if (processCategoryNotInList == null)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Process category list is null");
-            //}
-            //if (processCategoryNotInList.Count == 0)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Process category list is empty");
-            //}
-            //foreach (string processCategory in processCategoryNotInList)
-            //{
-            //    if (ReferenceEquals(processCategory, null))
-            //    {
-            //        throw new ActivitiIllegalArgumentException("None of the given process categories can be null");
-            //    }
-            //}
-
-            var cates = processCategoryNotInList?.Where(x => x != null) ?? new List<string>();
+            var cates = processCategoryNotInList is null ? new List<string>() : processCategoryNotInList.Where(x => !(x is null)).ToList();
 
             if (inOrStatement)
             {
-                currentOrQueryObject.processCategoryNotInList = cates.Count() == 0 ? null : cates.ToList();
+                currentOrQueryObject.processCategoryNotInList = cates.Count == 0 ? null : cates;
             }
             else
             {
-                this.processCategoryNotInList = cates.Count() == 0 ? null : cates.ToList();
+                processCategoryNotInList = cates.Count == 0 ? null : cates;
             }
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery deploymentId(string deploymentId)
+        public virtual IHistoricTaskInstanceQuery SetDeploymentId(string deploymentId)
         {
             if (inOrStatement)
             {
@@ -409,7 +380,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery deploymentIdIn(IList<string> deploymentIds)
+        public virtual IHistoricTaskInstanceQuery SetDeploymentIdIn(IList<string> deploymentIds)
         {
             if (inOrStatement)
             {
@@ -422,7 +393,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskId(string taskId)
+        public virtual IHistoricTaskInstanceQuery SetTaskId(string taskId)
         {
             if (inOrStatement)
             {
@@ -435,7 +406,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskName(string taskName)
+        public virtual IHistoricTaskInstanceQuery SetTaskName(string taskName)
         {
             if (inOrStatement)
             {
@@ -448,65 +419,36 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskNameIn(IList<string> taskNameList)
+        public virtual IHistoricTaskInstanceQuery SetTaskNameIn(IList<string> taskNameList)
         {
-            //if (taskNameList == null)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Task name list is null");
-            //}
-            //if (taskNameList.Count == 0)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Task name list is empty");
-            //}
-
-            var taskNames = taskNameList?.Where(x => x != null) ?? new List<string>();
-
-            if (taskName_ != null)
+            if (!(taskName_ is null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameIn and taskName");
             }
-            if (taskNameLike_ != null)
+            if (!(taskNameLike_ is null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameIn and taskNameLike");
             }
-            if (taskNameLikeIgnoreCase_ != null)
+            if (!(taskNameLikeIgnoreCase_ is null))
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameIn and taskNameLikeIgnoreCase");
             }
 
+            var taskNames = taskNameList is null ? new List<string>() : taskNameList.Where(x => x != null).ToList();
+
             if (inOrStatement)
             {
-                currentOrQueryObject.taskNameList = taskNames.Count() == 0 ? null : taskNames.ToList();
+                currentOrQueryObject.taskNameList = taskNames.Count == 0 ? null : taskNames;
             }
             else
             {
-                this.taskNameList = taskNames.Count() == 0 ? null : taskNames.ToList();
+                this.taskNameList = taskNames.Count == 0 ? null : taskNames;
             }
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskNameInIgnoreCase(IList<string> taskNameList)
+        public virtual IHistoricTaskInstanceQuery SetTaskNameInIgnoreCase(IList<string> taskNameList)
         {
-            //if (taskNameList == null)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Task name list is null");
-            //}
-            //if (taskNameList.Count == 0)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Task name list is empty");
-            //}
-            //foreach (string taskName in taskNameList)
-            //{
-            //    if (ReferenceEquals(taskName, null))
-            //    {
-            //        throw new ActivitiIllegalArgumentException("None of the given task names can be null");
-            //    }
-            //}
-
-            var taskNames = (taskNameList?.Where(x => x != null) ?? new List<string>())
-                .Select(x => x.ToLower())
-                .ToList();
-
             if (taskName_ != null)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and name");
@@ -520,12 +462,7 @@ namespace org.activiti.engine.impl
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and nameLikeIgnoreCase");
             }
 
-            //int nameListSize = taskNames.Count();
-            //IList<string> caseIgnoredTaskNameList = new List<string>(nameListSize);
-            //foreach (string taskName in taskNameList)
-            //{
-            //    caseIgnoredTaskNameList.Add(taskName.ToLower());
-            //}
+            var taskNames = taskNameList is null ? new List<string>() : taskNameList.Where(x => x != null).Select(x => x.ToLower()).ToList();
 
             if (inOrStatement)
             {
@@ -538,7 +475,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskNameLike(string taskNameLike)
+        public virtual IHistoricTaskInstanceQuery SetTaskNameLike(string taskNameLike)
         {
             if (inOrStatement)
             {
@@ -551,7 +488,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskNameLikeIgnoreCase(string taskNameLikeIgnoreCase)
+        public virtual IHistoricTaskInstanceQuery SetTaskNameLikeIgnoreCase(string taskNameLikeIgnoreCase)
         {
             if (inOrStatement)
             {
@@ -564,7 +501,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskParentTaskId(string parentTaskId)
+        public virtual IHistoricTaskInstanceQuery SetTaskParentTaskId(string parentTaskId)
         {
             if (inOrStatement)
             {
@@ -577,7 +514,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskDescription(string taskDescription)
+        public virtual IHistoricTaskInstanceQuery SetTaskDescription(string taskDescription)
         {
             if (inOrStatement)
             {
@@ -590,7 +527,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskDescriptionLike(string taskDescriptionLike)
+        public virtual IHistoricTaskInstanceQuery SetTaskDescriptionLike(string taskDescriptionLike)
         {
             if (inOrStatement)
             {
@@ -603,7 +540,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskDescriptionLikeIgnoreCase(string taskDescriptionLikeIgnoreCase)
+        public virtual IHistoricTaskInstanceQuery SetTaskDescriptionLikeIgnoreCase(string taskDescriptionLikeIgnoreCase)
         {
             if (inOrStatement)
             {
@@ -616,7 +553,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskDeleteReason(string taskDeleteReason)
+        public virtual IHistoricTaskInstanceQuery SetTaskDeleteReason(string taskDeleteReason)
         {
             if (inOrStatement)
             {
@@ -629,7 +566,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskDeleteReasonLike(string taskDeleteReasonLike)
+        public virtual IHistoricTaskInstanceQuery SetTaskDeleteReasonLike(string taskDeleteReasonLike)
         {
             if (inOrStatement)
             {
@@ -642,7 +579,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskAssignee(string taskAssignee)
+        public virtual IHistoricTaskInstanceQuery SetTaskAssignee(string taskAssignee)
         {
             if (inOrStatement)
             {
@@ -655,7 +592,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskAssigneeLike(string taskAssigneeLike)
+        public virtual IHistoricTaskInstanceQuery SetTaskAssigneeLike(string taskAssigneeLike)
         {
             if (inOrStatement)
             {
@@ -668,7 +605,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskAssigneeLikeIgnoreCase(string taskAssigneeLikeIgnoreCase)
+        public virtual IHistoricTaskInstanceQuery SetTaskAssigneeLikeIgnoreCase(string taskAssigneeLikeIgnoreCase)
         {
             if (inOrStatement)
             {
@@ -681,51 +618,36 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskAssigneeIds(IList<string> assigneeIds)
+        public virtual IHistoricTaskInstanceQuery SetTaskAssigneeIds(IList<string> assigneeIds)
         {
-            //if (assigneeIds == null)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Task assignee list is null");
-            //}
-            //if (assigneeIds.Count == 0)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Task assignee list is empty");
-            //}
-            //foreach (string assignee in assigneeIds)
-            //{
-            //    if (ReferenceEquals(assignee, null))
-            //    {
-            //        throw new ActivitiIllegalArgumentException("None of the given task assignees can be null");
-            //    }
-            //}
+            var ids = assigneeIds is null ? new List<string>() : assigneeIds.Where(x => x != null).ToList();
 
-            var ids = assigneeIds.Where(x => x != null) ?? new List<string>();
-
-            if (taskAssignee_ != null && ids.Count() > 0)
+            if (taskAssignee_ != null && ids.Count > 0)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssignee");
             }
-            if (taskAssigneeLike_ != null && ids.Count() > 0)
+            if (taskAssigneeLike_ != null && ids.Count > 0)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssigneeLike");
             }
-            if (taskAssigneeLikeIgnoreCase_ != null && ids.Count() > 0)
+            if (taskAssigneeLikeIgnoreCase_ != null && ids.Count > 0)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssigneeLikeIgnoreCase");
             }
 
             if (inOrStatement)
             {
-                currentOrQueryObject.taskAssigneeIds_ = ids.Count() == 0 ? null : ids.ToList();
+                currentOrQueryObject.taskAssigneeIds_ = ids.Count == 0 ? null : ids;
             }
             else
             {
-                this.taskAssigneeIds_ = ids.Count() == 0 ? null : ids.ToList();
+                this.taskAssigneeIds_ = ids.Count == 0 ? null : ids;
             }
+
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskOwner(string taskOwner)
+        public virtual IHistoricTaskInstanceQuery SetTaskOwner(string taskOwner)
         {
             if (inOrStatement)
             {
@@ -738,7 +660,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskOwnerLike(string taskOwnerLike)
+        public virtual IHistoricTaskInstanceQuery SetTaskOwnerLike(string taskOwnerLike)
         {
             if (inOrStatement)
             {
@@ -751,7 +673,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskOwnerLikeIgnoreCase(string taskOwnerLikeIgnoreCase)
+        public virtual IHistoricTaskInstanceQuery SetTaskOwnerLikeIgnoreCase(string taskOwnerLikeIgnoreCase)
         {
             if (inOrStatement)
             {
@@ -764,7 +686,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery finished()
+        public virtual IHistoricTaskInstanceQuery SetFinished()
         {
             if (inOrStatement)
             {
@@ -777,7 +699,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery unfinished()
+        public virtual IHistoricTaskInstanceQuery SetUnfinished()
         {
             if (inOrStatement)
             {
@@ -790,293 +712,293 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskVariableValueEquals(string variableName, object variableValue)
+        public virtual IHistoricTaskInstanceQuery SetTaskVariableValueEquals(string variableName, object variableValue)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueEquals(variableName, variableValue);
+                currentOrQueryObject.VariableValueEquals(variableName, variableValue);
                 return this;
             }
             else
             {
-                return variableValueEquals(variableName, variableValue);
+                return VariableValueEquals(variableName, variableValue);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery taskVariableValueEquals(object variableValue)
+        public virtual IHistoricTaskInstanceQuery SetTaskVariableValueEquals(object variableValue)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueEquals(variableValue);
+                currentOrQueryObject.VariableValueEquals(variableValue);
                 return this;
             }
             else
             {
-                return variableValueEquals(variableValue);
+                return VariableValueEquals(variableValue);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery taskVariableValueEqualsIgnoreCase(string name, string value)
+        public virtual IHistoricTaskInstanceQuery SetTaskVariableValueEqualsIgnoreCase(string name, string value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueEqualsIgnoreCase(name, value);
+                currentOrQueryObject.VariableValueEqualsIgnoreCase(name, value);
                 return this;
             }
             else
             {
-                return variableValueEqualsIgnoreCase(name, value);
+                return VariableValueEqualsIgnoreCase(name, value);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery taskVariableValueNotEqualsIgnoreCase(string name, string value)
+        public virtual IHistoricTaskInstanceQuery SetTaskVariableValueNotEqualsIgnoreCase(string name, string value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueNotEqualsIgnoreCase(name, value);
+                currentOrQueryObject.VariableValueNotEqualsIgnoreCase(name, value);
                 return this;
             }
             else
             {
-                return variableValueNotEqualsIgnoreCase(name, value);
+                return VariableValueNotEqualsIgnoreCase(name, value);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery taskVariableValueNotEquals(string variableName, object variableValue)
+        public virtual IHistoricTaskInstanceQuery SetTaskVariableValueNotEquals(string variableName, object variableValue)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueNotEquals(variableName, variableValue);
+                currentOrQueryObject.VariableValueNotEquals(variableName, variableValue);
                 return this;
             }
             else
             {
-                return variableValueNotEquals(variableName, variableValue);
+                return VariableValueNotEquals(variableName, variableValue);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery taskVariableValueGreaterThan(string name, object value)
+        public virtual IHistoricTaskInstanceQuery SetTaskVariableValueGreaterThan(string name, object value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueGreaterThan(name, value);
+                currentOrQueryObject.VariableValueGreaterThan(name, value);
                 return this;
             }
             else
             {
-                return variableValueGreaterThan(name, value);
+                return VariableValueGreaterThan(name, value);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery taskVariableValueGreaterThanOrEqual(string name, object value)
+        public virtual IHistoricTaskInstanceQuery SetTaskVariableValueGreaterThanOrEqual(string name, object value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueGreaterThanOrEqual(name, value);
+                currentOrQueryObject.VariableValueGreaterThanOrEqual(name, value);
                 return this;
             }
             else
             {
-                return variableValueGreaterThanOrEqual(name, value);
+                return VariableValueGreaterThanOrEqual(name, value);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery taskVariableValueLessThan(string name, object value)
+        public virtual IHistoricTaskInstanceQuery SetTaskVariableValueLessThan(string name, object value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueLessThan(name, value);
+                currentOrQueryObject.VariableValueLessThan(name, value);
                 return this;
             }
             else
             {
-                return variableValueLessThan(name, value);
+                return VariableValueLessThan(name, value);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery taskVariableValueLessThanOrEqual(string name, object value)
+        public virtual IHistoricTaskInstanceQuery SetTaskVariableValueLessThanOrEqual(string name, object value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueLessThanOrEqual(name, value);
+                currentOrQueryObject.VariableValueLessThanOrEqual(name, value);
                 return this;
             }
             else
             {
-                return variableValueLessThanOrEqual(name, value);
+                return VariableValueLessThanOrEqual(name, value);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery taskVariableValueLike(string name, string value)
+        public virtual IHistoricTaskInstanceQuery SetTaskVariableValueLike(string name, string value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueLike(name, value);
+                currentOrQueryObject.VariableValueLike(name, value);
                 return this;
             }
             else
             {
-                return variableValueLike(name, value);
+                return VariableValueLike(name, value);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery taskVariableValueLikeIgnoreCase(string name, string value)
+        public virtual IHistoricTaskInstanceQuery SetTaskVariableValueLikeIgnoreCase(string name, string value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueLikeIgnoreCase(name, value, true);
+                currentOrQueryObject.VariableValueLikeIgnoreCase(name, value, true);
                 return this;
             }
             else
             {
-                return variableValueLikeIgnoreCase(name, value, true);
+                return VariableValueLikeIgnoreCase(name, value, true);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery processVariableValueEquals(string variableName, object variableValue)
+        public virtual IHistoricTaskInstanceQuery SetProcessVariableValueEquals(string variableName, object variableValue)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueEquals(variableName, variableValue, false);
+                currentOrQueryObject.VariableValueEquals(variableName, variableValue, false);
                 return this;
             }
             else
             {
-                return variableValueEquals(variableName, variableValue, false);
+                return VariableValueEquals(variableName, variableValue, false);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery processVariableValueNotEquals(string variableName, object variableValue)
+        public virtual IHistoricTaskInstanceQuery SetProcessVariableValueNotEquals(string variableName, object variableValue)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueNotEquals(variableName, variableValue, false);
+                currentOrQueryObject.VariableValueNotEquals(variableName, variableValue, false);
                 return this;
             }
             else
             {
-                return variableValueNotEquals(variableName, variableValue, false);
+                return VariableValueNotEquals(variableName, variableValue, false);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery processVariableValueEquals(object variableValue)
+        public virtual IHistoricTaskInstanceQuery SetProcessVariableValueEquals(object variableValue)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueEquals(variableValue, false);
+                currentOrQueryObject.VariableValueEquals(variableValue, false);
                 return this;
             }
             else
             {
-                return variableValueEquals(variableValue, false);
+                return VariableValueEquals(variableValue, false);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery processVariableValueEqualsIgnoreCase(string name, string value)
+        public virtual IHistoricTaskInstanceQuery SetProcessVariableValueEqualsIgnoreCase(string name, string value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueEqualsIgnoreCase(name, value, false);
+                currentOrQueryObject.VariableValueEqualsIgnoreCase(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueEqualsIgnoreCase(name, value, false);
+                return VariableValueEqualsIgnoreCase(name, value, false);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery processVariableValueNotEqualsIgnoreCase(string name, string value)
+        public virtual IHistoricTaskInstanceQuery SetProcessVariableValueNotEqualsIgnoreCase(string name, string value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueNotEqualsIgnoreCase(name, value, false);
+                currentOrQueryObject.VariableValueNotEqualsIgnoreCase(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueNotEqualsIgnoreCase(name, value, false);
+                return VariableValueNotEqualsIgnoreCase(name, value, false);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery processVariableValueGreaterThan(string name, object value)
+        public virtual IHistoricTaskInstanceQuery SetProcessVariableValueGreaterThan(string name, object value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueGreaterThan(name, value, false);
+                currentOrQueryObject.VariableValueGreaterThan(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueGreaterThan(name, value, false);
+                return VariableValueGreaterThan(name, value, false);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery processVariableValueGreaterThanOrEqual(string name, object value)
+        public virtual IHistoricTaskInstanceQuery SetProcessVariableValueGreaterThanOrEqual(string name, object value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueGreaterThanOrEqual(name, value, false);
+                currentOrQueryObject.VariableValueGreaterThanOrEqual(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueGreaterThanOrEqual(name, value, false);
+                return VariableValueGreaterThanOrEqual(name, value, false);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery processVariableValueLessThan(string name, object value)
+        public virtual IHistoricTaskInstanceQuery SetProcessVariableValueLessThan(string name, object value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueLessThan(name, value, false);
+                currentOrQueryObject.VariableValueLessThan(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueLessThan(name, value, false);
+                return VariableValueLessThan(name, value, false);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery processVariableValueLessThanOrEqual(string name, object value)
+        public virtual IHistoricTaskInstanceQuery SetProcessVariableValueLessThanOrEqual(string name, object value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueLessThanOrEqual(name, value, false);
+                currentOrQueryObject.VariableValueLessThanOrEqual(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueLessThanOrEqual(name, value, false);
+                return VariableValueLessThanOrEqual(name, value, false);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery processVariableValueLike(string name, string value)
+        public virtual IHistoricTaskInstanceQuery SetProcessVariableValueLike(string name, string value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueLike(name, value, false);
+                currentOrQueryObject.VariableValueLike(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueLike(name, value, false);
+                return VariableValueLike(name, value, false);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery processVariableValueLikeIgnoreCase(string name, string value)
+        public virtual IHistoricTaskInstanceQuery SetProcessVariableValueLikeIgnoreCase(string name, string value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueLikeIgnoreCase(name, value, false);
+                currentOrQueryObject.VariableValueLikeIgnoreCase(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueLikeIgnoreCase(name, value, false);
+                return VariableValueLikeIgnoreCase(name, value, false);
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery taskDefinitionKey(string taskDefinitionKey)
+        public virtual IHistoricTaskInstanceQuery SetTaskDefinitionKey(string taskDefinitionKey)
         {
             if (inOrStatement)
             {
@@ -1089,7 +1011,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskDefinitionKeyLike(string taskDefinitionKeyLike)
+        public virtual IHistoricTaskInstanceQuery SetTaskDefinitionKeyLike(string taskDefinitionKeyLike)
         {
             if (inOrStatement)
             {
@@ -1102,7 +1024,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskPriority(int? taskPriority)
+        public virtual IHistoricTaskInstanceQuery SetTaskPriority(int? taskPriority)
         {
             if (inOrStatement)
             {
@@ -1115,7 +1037,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskMinPriority(int? taskMinPriority)
+        public virtual IHistoricTaskInstanceQuery SetTaskMinPriority(int? taskMinPriority)
         {
             if (inOrStatement)
             {
@@ -1128,7 +1050,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskMaxPriority(int? taskMaxPriority)
+        public virtual IHistoricTaskInstanceQuery SetTaskMaxPriority(int? taskMaxPriority)
         {
             if (inOrStatement)
             {
@@ -1141,7 +1063,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processFinished()
+        public virtual IHistoricTaskInstanceQuery SetProcessFinished()
         {
             if (inOrStatement)
             {
@@ -1154,7 +1076,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery processUnfinished()
+        public virtual IHistoricTaskInstanceQuery SetProcessUnfinished()
         {
             if (inOrStatement)
             {
@@ -1167,21 +1089,21 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        protected internal override void ensureVariablesInitialized()
+        protected internal override void EnsureVariablesInitialized()
         {
             IVariableTypes types = Context.ProcessEngineConfiguration.VariableTypes;
             foreach (QueryVariableValue var in queryVariableValues)
             {
-                var.initialize(types);
+                var.Initialize(types);
             }
 
             foreach (HistoricTaskInstanceQueryImpl orQueryObject in orQueryObjects)
             {
-                orQueryObject.ensureVariablesInitialized();
+                orQueryObject.EnsureVariablesInitialized();
             }
         }
 
-        public virtual IHistoricTaskInstanceQuery taskDueDate(DateTime? dueDate)
+        public virtual IHistoricTaskInstanceQuery SetTaskDueDate(DateTime? dueDate)
         {
             if (inOrStatement)
             {
@@ -1194,7 +1116,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskDueAfter(DateTime? dueAfter)
+        public virtual IHistoricTaskInstanceQuery SetTaskDueAfter(DateTime? dueAfter)
         {
             if (inOrStatement)
             {
@@ -1207,7 +1129,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskDueBefore(DateTime? dueBefore)
+        public virtual IHistoricTaskInstanceQuery SetTaskDueBefore(DateTime? dueBefore)
         {
             if (inOrStatement)
             {
@@ -1220,7 +1142,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskCreatedOn(DateTime? creationDate)
+        public virtual IHistoricTaskInstanceQuery SetTaskCreatedOn(DateTime? creationDate)
         {
             if (inOrStatement)
             {
@@ -1233,7 +1155,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskCreatedBefore(DateTime? creationBeforeDate)
+        public virtual IHistoricTaskInstanceQuery SetTaskCreatedBefore(DateTime? creationBeforeDate)
         {
             if (inOrStatement)
             {
@@ -1246,7 +1168,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskCreatedAfter(DateTime? creationAfterDate)
+        public virtual IHistoricTaskInstanceQuery SetTaskCreatedAfter(DateTime? creationAfterDate)
         {
             if (inOrStatement)
             {
@@ -1259,7 +1181,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskCompletedOn(DateTime? completedDate)
+        public virtual IHistoricTaskInstanceQuery SetTaskCompletedOn(DateTime? completedDate)
         {
             if (inOrStatement)
             {
@@ -1272,7 +1194,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskCompletedBefore(DateTime? completedBeforeDate)
+        public virtual IHistoricTaskInstanceQuery SetTaskCompletedBefore(DateTime? completedBeforeDate)
         {
             if (inOrStatement)
             {
@@ -1285,7 +1207,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskCompletedAfter(DateTime? completedAfterDate)
+        public virtual IHistoricTaskInstanceQuery SetTaskCompletedAfter(DateTime? completedAfterDate)
         {
             if (inOrStatement)
             {
@@ -1298,7 +1220,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery withoutTaskDueDate()
+        public virtual IHistoricTaskInstanceQuery SetWithoutTaskDueDate()
         {
             if (inOrStatement)
             {
@@ -1311,7 +1233,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskCategory(string category)
+        public virtual IHistoricTaskInstanceQuery SetTaskCategory(string category)
         {
             if (inOrStatement)
             {
@@ -1325,13 +1247,8 @@ namespace org.activiti.engine.impl
         }
 
 
-        public virtual IHistoricTaskInstanceQuery taskCandidateUser(string candidateUser)
+        public virtual IHistoricTaskInstanceQuery SetTaskCandidateUser(string candidateUser)
         {
-            if (ReferenceEquals(candidateUser, null))
-            {
-                throw new ActivitiIllegalArgumentException("Candidate user is null");
-            }
-
             if (inOrStatement)
             {
                 this.currentOrQueryObject.candidateUser = candidateUser;
@@ -1343,13 +1260,8 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskCandidateUser(string candidateUser, IList<string> usersGroups)
+        public virtual IHistoricTaskInstanceQuery SetTaskCandidateUser(string candidateUser, IList<string> usersGroups)
         {
-            //if (ReferenceEquals(candidateUser, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("Candidate user is null");
-            //}
-
             if (inOrStatement)
             {
                 this.currentOrQueryObject.candidateUser = candidateUser;
@@ -1363,18 +1275,8 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskCandidateGroup(string candidateGroup)
+        public virtual IHistoricTaskInstanceQuery SetTaskCandidateGroup(string candidateGroup)
         {
-            //if (ReferenceEquals(candidateGroup, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("Candidate group is null");
-            //}
-
-            //if (candidateGroups != null)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both candidateGroup and candidateGroupIn");
-            //}
-
             if (inOrStatement)
             {
                 this.currentOrQueryObject.candidateGroup = candidateGroup;
@@ -1386,37 +1288,27 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskCandidateGroupIn(IList<string> candidateGroups)
+        public virtual IHistoricTaskInstanceQuery SetTaskCandidateGroupIn(IList<string> candidateGroups)
         {
-            //if (candidateGroups == null)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Candidate group list is null");
-            //}
+            var groups = candidateGroups is null ? new List<string>() : candidateGroups.Where(x => x != null).ToList();
 
-            //if (candidateGroups.Count == 0)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Candidate group list is empty");
-            //}
-
-            var groups = candidateGroups?.Where(x => x != null) ?? new List<string>();
-
-            if (string.IsNullOrWhiteSpace(candidateGroup) == false && groups.Count() > 0)
+            if (string.IsNullOrWhiteSpace(candidateGroup) == false && groups.Count > 0)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both candidateGroupIn and candidateGroup");
             }
 
             if (inOrStatement)
             {
-                this.currentOrQueryObject.candidateGroups = groups.Count() == 0 ? null : groups.ToList();
+                this.currentOrQueryObject.candidateGroups = groups.Count == 0 ? null : groups;
             }
             else
             {
-                this.candidateGroups = groups.Count() == 0 ? null : groups.ToList();
+                this.candidateGroups = groups.Count == 0 ? null : groups;
             }
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskInvolvedUser(string involvedUser)
+        public virtual IHistoricTaskInstanceQuery SetTaskInvolvedUser(string involvedUser)
         {
             if (inOrStatement)
             {
@@ -1429,32 +1321,23 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskInvolvedGroupsIn(IList<string> involvedGroups)
+        public virtual IHistoricTaskInstanceQuery SetTaskInvolvedGroupsIn(IList<string> involvedGroups)
         {
-            //if (involvedGroups == null || involvedGroups.Count == 0)
-            //{
-            //    throw new ActivitiIllegalArgumentException("Involved groups list is null or empty.");
-            //}
-
-            var groups = involvedGroups?.Where(x => x != null) ?? new List<string>();
+            var groups = involvedGroups is null ? new List<string>() : involvedGroups.Where(x => x != null).ToList();
 
             if (inOrStatement)
             {
-                this.currentOrQueryObject.involvedGroups = groups.Count() == 0 ? null : groups.ToList();
+                this.currentOrQueryObject.involvedGroups = groups.Count == 0 ? null : groups;
             }
             else
             {
-                this.involvedGroups = groups.Count() == 0 ? null : groups.ToList();
+                this.involvedGroups = groups.Count == 0 ? null : groups;
             }
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskTenantId(string tenantId)
+        public virtual IHistoricTaskInstanceQuery SetTaskTenantId(string tenantId)
         {
-            //if (ReferenceEquals(tenantId, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("task tenant id is null");
-            //}
             if (inOrStatement)
             {
                 this.currentOrQueryObject.tenantId = tenantId;
@@ -1466,12 +1349,8 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskTenantIdLike(string tenantIdLike)
+        public virtual IHistoricTaskInstanceQuery SetTaskTenantIdLike(string tenantIdLike)
         {
-            //if (ReferenceEquals(tenantIdLike, null))
-            //{
-            //    throw new ActivitiIllegalArgumentException("task tenant id is null");
-            //}
             if (inOrStatement)
             {
                 this.currentOrQueryObject.tenantIdLike = tenantIdLike;
@@ -1483,7 +1362,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery taskWithoutTenantId()
+        public virtual IHistoricTaskInstanceQuery TaskWithoutTenantId()
         {
             if (inOrStatement)
             {
@@ -1496,31 +1375,31 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery locale(string locale)
+        public virtual IHistoricTaskInstanceQuery SetLocale(string locale)
         {
             this.locale_ = locale;
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery withLocalizationFallback()
+        public virtual IHistoricTaskInstanceQuery WithLocalizationFallback()
         {
             withLocalizationFallback_ = true;
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery includeTaskLocalVariables()
+        public virtual IHistoricTaskInstanceQuery SetIncludeTaskLocalVariables()
         {
             this.includeTaskLocalVariables_ = true;
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery includeProcessVariables()
+        public virtual IHistoricTaskInstanceQuery SetIncludeProcessVariables()
         {
             this.includeProcessVariables_ = true;
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery limitTaskVariables(int? taskVariablesLimit)
+        public virtual IHistoricTaskInstanceQuery SetLimitTaskVariables(int? taskVariablesLimit)
         {
             this.taskVariablesLimit = taskVariablesLimit;
             return this;
@@ -1532,10 +1411,10 @@ namespace org.activiti.engine.impl
             {
                 return taskVariablesLimit;
             }
-            set => limitTaskVariables(value);
+            set => SetLimitTaskVariables(value);
         }
 
-        public virtual IHistoricTaskInstanceQuery or()
+        public virtual IHistoricTaskInstanceQuery Or()
         {
             if (inOrStatement)
             {
@@ -1548,7 +1427,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery endOr()
+        public virtual IHistoricTaskInstanceQuery EndOr()
         {
             if (!inOrStatement)
             {
@@ -1560,27 +1439,27 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        protected internal virtual void localize(IHistoricTaskInstance task)
+        protected internal virtual void Localize(IHistoricTaskInstance task)
         {
             IHistoricTaskInstanceEntity taskEntity = (IHistoricTaskInstanceEntity)task;
             taskEntity.LocalizedName = null;
             taskEntity.LocalizedDescription = null;
 
-            if (!ReferenceEquals(locale_, null))
+            if (!(locale_ is null))
             {
                 string processDefinitionId = task.ProcessDefinitionId;
                 if (!string.IsNullOrWhiteSpace(processDefinitionId))
                 {
-                    JToken languageNode = Context.getLocalizationElementProperties(locale_, task.TaskDefinitionKey, processDefinitionId, withLocalizationFallback_.GetValueOrDefault());
+                    JToken languageNode = Context.GetLocalizationElementProperties(locale_, task.TaskDefinitionKey, processDefinitionId, withLocalizationFallback_.GetValueOrDefault());
                     if (languageNode != null)
                     {
-                        JToken languageNameNode = languageNode[DynamicBpmnConstants_Fields.LOCALIZATION_NAME];
+                        JToken languageNameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
                         if (languageNameNode != null)
                         {
                             taskEntity.LocalizedName = languageNameNode.ToString();
                         }
 
-                        JToken languageDescriptionNode = languageNode[DynamicBpmnConstants_Fields.LOCALIZATION_DESCRIPTION];
+                        JToken languageDescriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
                         if (languageDescriptionNode != null)
                         {
                             taskEntity.LocalizedDescription = languageDescriptionNode.ToString();
@@ -1593,138 +1472,138 @@ namespace org.activiti.engine.impl
         // ordering
         // /////////////////////////////////////////////////////////////////
 
-        public virtual IHistoricTaskInstanceQuery orderByTaskId()
+        public virtual IHistoricTaskInstanceQuery OrderByTaskId()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.HISTORIC_TASK_INSTANCE_ID);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.HISTORIC_TASK_INSTANCE_ID);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByHistoricActivityInstanceId()
+        public virtual IHistoricTaskInstanceQuery OrderByHistoricActivityInstanceId()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.PROCESS_DEFINITION_ID);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.PROCESS_DEFINITION_ID);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByProcessDefinitionId()
+        public virtual IHistoricTaskInstanceQuery OrderByProcessDefinitionId()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.PROCESS_DEFINITION_ID);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.PROCESS_DEFINITION_ID);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByProcessInstanceId()
+        public virtual IHistoricTaskInstanceQuery OrderByProcessInstanceId()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.PROCESS_INSTANCE_ID);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.PROCESS_INSTANCE_ID);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByExecutionId()
+        public virtual IHistoricTaskInstanceQuery OrderByExecutionId()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.EXECUTION_ID);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.EXECUTION_ID);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByHistoricTaskInstanceDuration()
+        public virtual IHistoricTaskInstanceQuery OrderByHistoricTaskInstanceDuration()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.DURATION);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.DURATION);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByHistoricTaskInstanceEndTime()
+        public virtual IHistoricTaskInstanceQuery OrderByHistoricTaskInstanceEndTime()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.END);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.END);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByHistoricActivityInstanceStartTime()
+        public virtual IHistoricTaskInstanceQuery OrderByHistoricActivityInstanceStartTime()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.START);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.START);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByHistoricTaskInstanceStartTime()
+        public virtual IHistoricTaskInstanceQuery OrderByHistoricTaskInstanceStartTime()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.START);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.START);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByTaskCreateTime()
+        public virtual IHistoricTaskInstanceQuery OrderByTaskCreateTime()
         {
-            return orderByHistoricTaskInstanceStartTime();
+            return OrderByHistoricTaskInstanceStartTime();
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByTaskName()
+        public virtual IHistoricTaskInstanceQuery OrderByTaskName()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.TASK_NAME);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.TASK_NAME);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByTaskDescription()
+        public virtual IHistoricTaskInstanceQuery OrderByTaskDescription()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.TASK_DESCRIPTION);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.TASK_DESCRIPTION);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByTaskAssignee()
+        public virtual IHistoricTaskInstanceQuery OrderByTaskAssignee()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.TASK_ASSIGNEE);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.TASK_ASSIGNEE);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByTaskOwner()
+        public virtual IHistoricTaskInstanceQuery OrderByTaskOwner()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.TASK_OWNER);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.TASK_OWNER);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByTaskDueDate()
+        public virtual IHistoricTaskInstanceQuery OrderByTaskDueDate()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.TASK_DUE_DATE);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.TASK_DUE_DATE);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByDueDateNullsFirst()
+        public virtual IHistoricTaskInstanceQuery OrderByDueDateNullsFirst()
         {
-            return orderBy(HistoricTaskInstanceQueryProperty.TASK_DUE_DATE, NullHandlingOnOrder.NULLS_FIRST);
+            return SetOrderBy(HistoricTaskInstanceQueryProperty.TASK_DUE_DATE, NullHandlingOnOrder.NULLS_FIRST);
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByDueDateNullsLast()
+        public virtual IHistoricTaskInstanceQuery OrderByDueDateNullsLast()
         {
-            return orderBy(HistoricTaskInstanceQueryProperty.TASK_DUE_DATE, NullHandlingOnOrder.NULLS_LAST);
+            return SetOrderBy(HistoricTaskInstanceQueryProperty.TASK_DUE_DATE, NullHandlingOnOrder.NULLS_LAST);
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByDeleteReason()
+        public virtual IHistoricTaskInstanceQuery OrderByDeleteReason()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.DELETE_REASON);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.DELETE_REASON);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByTaskDefinitionKey()
+        public virtual IHistoricTaskInstanceQuery OrderByTaskDefinitionKey()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.TASK_DEFINITION_KEY);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.TASK_DEFINITION_KEY);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByTaskPriority()
+        public virtual IHistoricTaskInstanceQuery OrderByTaskPriority()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.TASK_PRIORITY);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.TASK_PRIORITY);
             return this;
         }
 
-        public virtual IHistoricTaskInstanceQuery orderByTenantId()
+        public virtual IHistoricTaskInstanceQuery OrderByTenantId()
         {
-            orderBy(HistoricTaskInstanceQueryProperty.TENANT_ID_);
+            SetOrderBy(HistoricTaskInstanceQueryProperty.TENANT_ID_);
             return this;
         }
 
-        protected internal override void checkQueryOk()
+        protected internal override void CheckQueryOk()
         {
-            base.checkQueryOk();
+            base.CheckQueryOk();
             // In case historic query variables are included, an additional order-by
             // clause should be added
             // to ensure the last value of a variable is used
             if (includeProcessVariables_.GetValueOrDefault() || includeTaskLocalVariables_.GetValueOrDefault())
             {
-                this.orderBy(HistoricTaskInstanceQueryProperty.INCLUDED_VARIABLE_TIME).asc();
+                this.SetOrderBy(HistoricTaskInstanceQueryProperty.INCLUDED_VARIABLE_TIME).Asc();
             }
         }
 
@@ -1733,7 +1612,7 @@ namespace org.activiti.engine.impl
             get
             {
                 string specialOrderBy = base.OrderBy;
-                if (!ReferenceEquals(specialOrderBy, null) && specialOrderBy.Length > 0)
+                if (!(specialOrderBy is null) && specialOrderBy.Length > 0)
                 {
                     specialOrderBy = specialOrderBy.Replace("RES.", "TEMPRES_");
                     specialOrderBy = specialOrderBy.Replace("VAR.", "TEMPVAR_");
@@ -1746,10 +1625,12 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                if (!ReferenceEquals(candidateGroup, null))
+                if (!(candidateGroup is null))
                 {
-                    IList<string> candidateGroupList = new List<string>(1);
-                    candidateGroupList.Add(candidateGroup);
+                    IList<string> candidateGroupList = new List<string>(1)
+                    {
+                        candidateGroup
+                    };
                     return candidateGroupList;
 
                 }
@@ -1758,20 +1639,20 @@ namespace org.activiti.engine.impl
                     return candidateGroups;
 
                 }
-                else if (!ReferenceEquals(candidateUser, null))
+                else if (!(candidateUser is null))
                 {
-                    return getGroupsForCandidateUser(candidateUser);
+                    return GetGroupsForCandidateUser(candidateUser);
                 }
                 return null;
             }
         }
 
-        protected internal virtual IList<string> getGroupsForCandidateUser(string candidateUser)
+        protected internal virtual IList<string> GetGroupsForCandidateUser(string candidateUser)
         {
             IUserGroupLookupProxy userGroupLookupProxy = Context.ProcessEngineConfiguration.UserGroupLookupProxy;
             if (userGroupLookupProxy != null)
             {
-                return userGroupLookupProxy.getGroupsForCandidateUser(candidateUser);
+                return userGroupLookupProxy.GetGroupsForCandidateUser(candidateUser);
             }
             else
             {
@@ -1782,9 +1663,9 @@ namespace org.activiti.engine.impl
 
         private string[] taskNotInIds;
 
-        public IHistoricTaskInstanceQuery taskIdNotIn(string[] ids)
+        public IHistoricTaskInstanceQuery SetTaskIdNotIn(string[] ids)
         {
-            this.taskNotInIds = ids;
+            taskNotInIds = ids;
             return this;
         }
 
@@ -1803,7 +1684,7 @@ namespace org.activiti.engine.impl
             {
                 return processInstanceId_;
             }
-            set => processInstanceId(value);
+            set => SetProcessInstanceId(value);
         }
 
         public virtual IList<string> ProcessInstanceIds
@@ -1812,7 +1693,7 @@ namespace org.activiti.engine.impl
             {
                 return processInstanceIds;
             }
-            set => processInstanceIdIn(value);
+            set => SetProcessInstanceIdIn(value.ToArray());
         }
 
         public virtual string ProcessInstanceBusinessKey
@@ -1829,7 +1710,15 @@ namespace org.activiti.engine.impl
             {
                 return executionId_;
             }
-            set => executionId(value);
+            set => SetExecutionId(value);
+        }
+
+        public virtual IList<string> ExecutionIds
+        {
+            get
+            {
+                return executionIds;
+            }
         }
 
         public virtual string ProcessDefinitionId
@@ -1838,7 +1727,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionId_;
             }
-            set => processDefinitionId(value);
+            set => SetProcessDefinitionId(value);
         }
 
         public virtual string ProcessDefinitionKey
@@ -1847,7 +1736,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionKey_;
             }
-            set => processDefinitionKey(value);
+            set => SetProcessDefinitionKey(value);
         }
 
         public virtual string ProcessDefinitionKeyLike
@@ -1856,7 +1745,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionKeyLike_;
             }
-            set => processDefinitionKeyLike(value);
+            set => SetProcessDefinitionKeyLike(value);
         }
         public virtual IList<string> ProcessDefinitionKeys
         {
@@ -1864,7 +1753,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionKeys;
             }
-            set => processDefinitionKeyIn(value);
+            set => SetProcessDefinitionKeyIn(value);
         }
         public virtual string ProcessDefinitionName
         {
@@ -1872,7 +1761,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionName_;
             }
-            set => processDefinitionName(value);
+            set => SetProcessDefinitionName(value);
         }
 
         public virtual string ProcessDefinitionNameLike
@@ -1881,7 +1770,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionNameLike_;
             }
-            set => processDefinitionNameLike(value);
+            set => SetProcessDefinitionNameLike(value);
         }
 
         public virtual IList<string> ProcessCategoryInList
@@ -1890,7 +1779,7 @@ namespace org.activiti.engine.impl
             {
                 return processCategoryInList;
             }
-            set => processCategoryIn(value);
+            set => SetProcessCategoryIn(value);
         }
 
         public virtual IList<string> ProcessCategoryNotInList
@@ -1899,7 +1788,7 @@ namespace org.activiti.engine.impl
             {
                 return processCategoryNotInList;
             }
-            set => processCategoryNotIn(value);
+            set => SetProcessCategoryNotIn(value);
         }
 
         public virtual string DeploymentId
@@ -1908,7 +1797,7 @@ namespace org.activiti.engine.impl
             {
                 return deploymentId_;
             }
-            set => deploymentId(value);
+            set => SetDeploymentId(value);
         }
 
         public virtual IList<string> DeploymentIds
@@ -1917,7 +1806,7 @@ namespace org.activiti.engine.impl
             {
                 return deploymentIds;
             }
-            set => deploymentIdIn(value);
+            set => SetDeploymentIdIn(value);
         }
 
         public virtual string ProcessInstanceBusinessKeyLike
@@ -1926,7 +1815,7 @@ namespace org.activiti.engine.impl
             {
                 return processInstanceBusinessKeyLike_;
             }
-            set => processInstanceBusinessKeyLike(value);
+            set => SetProcessInstanceBusinessKeyLike(value);
         }
 
         public virtual string TaskDefinitionKeyLike
@@ -1935,7 +1824,7 @@ namespace org.activiti.engine.impl
             {
                 return taskDefinitionKeyLike_;
             }
-            set => taskDefinitionKeyLike(value);
+            set => SetTaskDefinitionKeyLike(value);
         }
 
         public virtual int? TaskPriority
@@ -1944,7 +1833,7 @@ namespace org.activiti.engine.impl
             {
                 return taskPriority_;
             }
-            set => taskPriority(value);
+            set => SetTaskPriority(value);
         }
 
         public virtual int? TaskMinPriority
@@ -1953,7 +1842,7 @@ namespace org.activiti.engine.impl
             {
                 return taskMinPriority_;
             }
-            set => taskMinPriority(value);
+            set => SetTaskMinPriority(value);
         }
 
         public virtual int? TaskMaxPriority
@@ -1962,7 +1851,7 @@ namespace org.activiti.engine.impl
             {
                 return taskMaxPriority_;
             }
-            set => taskMaxPriority(value);
+            set => SetTaskMaxPriority(value);
         }
 
         public virtual bool? ProcessFinished
@@ -1975,7 +1864,7 @@ namespace org.activiti.engine.impl
             {
                 if (value.GetValueOrDefault())
                 {
-                    processFinished();
+                    SetProcessFinished();
                 }
                 else
                 {
@@ -1994,7 +1883,7 @@ namespace org.activiti.engine.impl
             {
                 if (value.GetValueOrDefault())
                 {
-                    processUnfinished();
+                    SetProcessUnfinished();
                 }
                 else
                 {
@@ -2009,7 +1898,7 @@ namespace org.activiti.engine.impl
             {
                 return dueDate;
             }
-            set => taskDueDate(value);
+            set => SetTaskDueDate(value);
         }
 
         public virtual DateTime? DueAfter
@@ -2018,7 +1907,7 @@ namespace org.activiti.engine.impl
             {
                 return dueAfter;
             }
-            set => taskDueAfter(value);
+            set => SetTaskDueAfter(value);
         }
 
         public virtual DateTime? DueBefore
@@ -2027,7 +1916,7 @@ namespace org.activiti.engine.impl
             {
                 return dueBefore;
             }
-            set => taskDueBefore(value);
+            set => SetTaskDueBefore(value);
         }
 
         public virtual bool? WithoutDueDate
@@ -2040,7 +1929,7 @@ namespace org.activiti.engine.impl
             {
                 if (value.GetValueOrDefault())
                 {
-                    withoutTaskDueDate();
+                    SetWithoutTaskDueDate();
                 }
                 else
                 {
@@ -2055,7 +1944,7 @@ namespace org.activiti.engine.impl
             {
                 return creationAfterDate;
             }
-            set => taskCreatedAfter(value);
+            set => SetTaskCreatedAfter(value);
         }
 
         public virtual DateTime? CreationBeforeDate
@@ -2064,7 +1953,7 @@ namespace org.activiti.engine.impl
             {
                 return creationBeforeDate;
             }
-            set => taskCreatedBefore(value);
+            set => SetTaskCreatedBefore(value);
         }
 
         public virtual DateTime? CompletedDate
@@ -2073,7 +1962,7 @@ namespace org.activiti.engine.impl
             {
                 return completedDate;
             }
-            set => taskCompletedOn(value);
+            set => SetTaskCompletedOn(value);
         }
 
         public virtual DateTime? CompletedAfterDate
@@ -2082,7 +1971,7 @@ namespace org.activiti.engine.impl
             {
                 return completedAfterDate;
             }
-            set => taskCompletedAfter(value);
+            set => SetTaskCompletedAfter(value);
         }
 
         public virtual DateTime? CompletedBeforeDate
@@ -2091,7 +1980,7 @@ namespace org.activiti.engine.impl
             {
                 return completedBeforeDate;
             }
-            set => taskCompletedBefore(value);
+            set => SetTaskCompletedBefore(value);
         }
 
         public virtual string Category
@@ -2100,7 +1989,7 @@ namespace org.activiti.engine.impl
             {
                 return category;
             }
-            set => taskCategory(value);
+            set => SetTaskCategory(value);
         }
 
         public virtual string TenantId
@@ -2109,7 +1998,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantId;
             }
-            set => taskTenantId(value);
+            set => SetTaskTenantId(value);
         }
 
         public virtual string TenantIdLike
@@ -2118,7 +2007,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantIdLike;
             }
-            set => taskTenantIdLike(value);
+            set => SetTaskTenantIdLike(value);
         }
 
         public virtual bool? WithoutTenantId
@@ -2131,7 +2020,7 @@ namespace org.activiti.engine.impl
             {
                 if (value.GetValueOrDefault())
                 {
-                    taskWithoutTenantId();
+                    TaskWithoutTenantId();
                 }
                 else
                 {
@@ -2150,7 +2039,7 @@ namespace org.activiti.engine.impl
             {
                 if (value.GetValueOrDefault())
                 {
-                    includeProcessVariables();
+                    SetIncludeProcessVariables();
                 }
                 else
                 {
@@ -2169,7 +2058,7 @@ namespace org.activiti.engine.impl
             {
                 if (value.GetValueOrDefault())
                 {
-                    includeProcessVariables();
+                    SetIncludeProcessVariables();
                 }
                 else
                 {
@@ -2197,7 +2086,7 @@ namespace org.activiti.engine.impl
             {
                 if (value.GetValueOrDefault())
                 {
-                    finished();
+                    SetFinished();
                 }
                 else
                 {
@@ -2216,7 +2105,7 @@ namespace org.activiti.engine.impl
             {
                 if (value.GetValueOrDefault())
                 {
-                    unfinished();
+                    SetUnfinished();
                 }
                 else
                 {
@@ -2231,7 +2120,7 @@ namespace org.activiti.engine.impl
             {
                 return taskName_;
             }
-            set => taskName(value);
+            set => SetTaskName(value);
         }
 
         public virtual string TaskNameLike
@@ -2240,7 +2129,7 @@ namespace org.activiti.engine.impl
             {
                 return taskNameLike_;
             }
-            set => taskNameLike(value);
+            set => SetTaskNameLike(value);
         }
 
         public virtual IList<string> TaskNameList
@@ -2249,7 +2138,7 @@ namespace org.activiti.engine.impl
             {
                 return taskNameList;
             }
-            set => taskNameIn(taskNameList);
+            set => SetTaskNameIn(taskNameList);
         }
 
         public virtual IList<string> TaskNameListIgnoreCase
@@ -2258,7 +2147,7 @@ namespace org.activiti.engine.impl
             {
                 return taskNameListIgnoreCase;
             }
-            set => taskNameInIgnoreCase(value);
+            set => SetTaskNameInIgnoreCase(value);
         }
 
         public virtual string TaskDescription
@@ -2267,7 +2156,7 @@ namespace org.activiti.engine.impl
             {
                 return taskDescription_;
             }
-            set => taskDescription(value);
+            set => SetTaskDescription(value);
         }
 
         public virtual string TaskDescriptionLike
@@ -2276,7 +2165,7 @@ namespace org.activiti.engine.impl
             {
                 return taskDescriptionLike_;
             }
-            set => taskDescriptionLike(value);
+            set => SetTaskDescriptionLike(value);
         }
 
         public virtual string TaskDeleteReason
@@ -2285,7 +2174,7 @@ namespace org.activiti.engine.impl
             {
                 return taskDeleteReason_;
             }
-            set => taskDeleteReason(value);
+            set => SetTaskDeleteReason(value);
         }
 
         public virtual string TaskDeleteReasonLike
@@ -2294,7 +2183,7 @@ namespace org.activiti.engine.impl
             {
                 return taskDeleteReasonLike_;
             }
-            set => taskDeleteReasonLike(value);
+            set => SetTaskDeleteReasonLike(value);
         }
 
         public virtual IList<string> TaskAssigneeIds
@@ -2303,7 +2192,7 @@ namespace org.activiti.engine.impl
             {
                 return taskAssigneeIds_;
             }
-            set => taskAssigneeIds(value);
+            set => SetTaskAssigneeIds(value);
         }
 
         public virtual string TaskAssignee
@@ -2312,7 +2201,7 @@ namespace org.activiti.engine.impl
             {
                 return taskAssignee_;
             }
-            set => taskAssignee(value);
+            set => SetTaskAssignee(value);
         }
 
         public virtual string TaskAssigneeLike
@@ -2321,7 +2210,7 @@ namespace org.activiti.engine.impl
             {
                 return taskAssigneeLike_;
             }
-            set => taskAssigneeLike(value);
+            set => SetTaskAssigneeLike(value);
         }
 
         public virtual string TaskId
@@ -2330,7 +2219,7 @@ namespace org.activiti.engine.impl
             {
                 return taskId_;
             }
-            set => taskId(value);
+            set => SetTaskId(value);
         }
 
         public virtual string TaskDefinitionKey
@@ -2339,7 +2228,7 @@ namespace org.activiti.engine.impl
             {
                 return taskDefinitionKey_;
             }
-            set => taskDefinitionKey(value);
+            set => SetTaskDefinitionKey(value);
         }
 
         public virtual string TaskOwnerLike
@@ -2348,7 +2237,7 @@ namespace org.activiti.engine.impl
             {
                 return taskOwnerLike_;
             }
-            set => taskOwnerLike(value);
+            set => SetTaskOwnerLike(value);
         }
 
         public virtual string TaskOwner
@@ -2357,7 +2246,7 @@ namespace org.activiti.engine.impl
             {
                 return taskOwner_;
             }
-            set => taskOwner(value);
+            set => SetTaskOwner(value);
         }
 
         public virtual string TaskParentTaskId
@@ -2366,7 +2255,7 @@ namespace org.activiti.engine.impl
             {
                 return taskParentTaskId_;
             }
-            set => taskParentTaskId(value);
+            set => SetTaskParentTaskId(value);
         }
 
         public virtual DateTime? CreationDate
@@ -2375,7 +2264,7 @@ namespace org.activiti.engine.impl
             {
                 return creationDate;
             }
-            set => taskCreatedOn(value);
+            set => SetTaskCreatedOn(value);
         }
 
         public virtual string CandidateUser
@@ -2384,7 +2273,7 @@ namespace org.activiti.engine.impl
             {
                 return candidateUser;
             }
-            set => taskCandidateUser(value);
+            set => SetTaskCandidateUser(value);
         }
 
         public virtual string CandidateGroup
@@ -2393,7 +2282,7 @@ namespace org.activiti.engine.impl
             {
                 return candidateGroup;
             }
-            set => taskCandidateGroup(value);
+            set => SetTaskCandidateGroup(value);
         }
 
         /// <summary>
@@ -2405,7 +2294,7 @@ namespace org.activiti.engine.impl
             {
                 return involvedUser;
             }
-            set => taskInvolvedUser(value);
+            set => SetTaskInvolvedUser(value);
         }
 
         /// <summary>
@@ -2417,7 +2306,7 @@ namespace org.activiti.engine.impl
             {
                 return involvedGroups;
             }
-            set => taskInvolvedGroupsIn(value);
+            set => SetTaskInvolvedGroupsIn(value);
         }
 
         public virtual string ProcessDefinitionKeyLikeIgnoreCase
@@ -2426,7 +2315,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionKeyLikeIgnoreCase_;
             }
-            set => processDefinitionKeyLikeIgnoreCase(value);
+            set => SetProcessDefinitionKeyLikeIgnoreCase(value);
         }
 
         public virtual string ProcessInstanceBusinessKeyLikeIgnoreCase
@@ -2435,7 +2324,7 @@ namespace org.activiti.engine.impl
             {
                 return processInstanceBusinessKeyLikeIgnoreCase_;
             }
-            set => processInstanceBusinessKeyLikeIgnoreCase(value);
+            set => SetProcessInstanceBusinessKeyLikeIgnoreCase(value);
         }
 
         public virtual string TaskNameLikeIgnoreCase
@@ -2444,7 +2333,7 @@ namespace org.activiti.engine.impl
             {
                 return taskNameLikeIgnoreCase_;
             }
-            set => taskNameLikeIgnoreCase(value);
+            set => SetTaskNameLikeIgnoreCase(value);
         }
 
         public virtual string TaskDescriptionLikeIgnoreCase
@@ -2453,7 +2342,7 @@ namespace org.activiti.engine.impl
             {
                 return taskDescriptionLikeIgnoreCase_;
             }
-            set => taskDescriptionLikeIgnoreCase(value);
+            set => SetTaskDescriptionLikeIgnoreCase(value);
         }
 
         public virtual string TaskOwnerLikeIgnoreCase
@@ -2462,7 +2351,7 @@ namespace org.activiti.engine.impl
             {
                 return taskOwnerLikeIgnoreCase_;
             }
-            set => taskOwnerLikeIgnoreCase(value);
+            set => SetTaskOwnerLikeIgnoreCase(value);
         }
 
         public virtual string TaskAssigneeLikeIgnoreCase
@@ -2471,7 +2360,7 @@ namespace org.activiti.engine.impl
             {
                 return taskAssigneeLikeIgnoreCase_;
             }
-            set => taskAssigneeLikeIgnoreCase(value);
+            set => SetTaskAssigneeLikeIgnoreCase(value);
         }
 
         public virtual string Locale
@@ -2480,7 +2369,7 @@ namespace org.activiti.engine.impl
             {
                 return locale_;
             }
-            set => locale(value);
+            set => SetLocale(value);
         }
 
         public virtual IList<IHistoricTaskInstanceQuery> OrQueryObjects
@@ -2494,12 +2383,12 @@ namespace org.activiti.engine.impl
 
         public virtual bool? IsAppend
         {
-            get;set;
+            get; set;
         }
 
         public virtual bool? IsTransfer
         {
-            get;set;
+            get; set;
         }
 
         public virtual bool? IsRuntime

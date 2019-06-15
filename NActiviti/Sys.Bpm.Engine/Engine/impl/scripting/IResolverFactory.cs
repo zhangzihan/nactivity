@@ -21,7 +21,7 @@ namespace org.activiti.engine.impl.scripting
     public interface IResolverFactory
     {
 
-        IResolver createResolver(ProcessEngineConfigurationImpl processEngineConfiguration, IVariableScope variableScope);
+        IResolver CreateResolver(ProcessEngineConfigurationImpl processEngineConfiguration, IVariableScope variableScope);
 
     }
 

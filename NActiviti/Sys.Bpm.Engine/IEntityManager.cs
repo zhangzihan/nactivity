@@ -13,10 +13,10 @@ namespace Sys.Data
 
         bool Open { get; set; }
 
-        void close();
+        void Close();
 
-        object find(Type entityClass, object primaryKey);
+        object Find(Type entityClass, object primaryKey);
 
-        void flush();
+        void Flush();
     }
 }

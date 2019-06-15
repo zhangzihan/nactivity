@@ -6,7 +6,7 @@ namespace org.activiti.engine.impl.util
     public class TimeZoneUtil
     {
 
-        public static DateTime convertToTimeZone(DateTime time, TimeZoneInfo timeZone)
+        public static DateTime ConvertToTimeZone(DateTime time, TimeZoneInfo timeZone)
         {
             return TimeZoneInfo.ConvertTime(time, timeZone ?? TimeZoneInfo.Local);
             //DateTime foreignTime = new GregorianCalendar(timeZone);

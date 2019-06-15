@@ -36,19 +36,19 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IAttachmentEntity create()
+        public override IAttachmentEntity Create()
         {
             return new AttachmentEntityImpl();
         }
 
-        public virtual IList<IAttachmentEntity> findAttachmentsByProcessInstanceId(string processInstanceId)
+        public virtual IList<IAttachmentEntity> FindAttachmentsByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<AttachmentEntityImpl, IAttachmentEntity>("selectAttachmentsByProcessInstanceId", new { processInstanceId });
+            return DbSqlSession.SelectList<AttachmentEntityImpl, IAttachmentEntity>("selectAttachmentsByProcessInstanceId", new { processInstanceId });
         }
 
-        public virtual IList<IAttachmentEntity> findAttachmentsByTaskId(string taskId)
+        public virtual IList<IAttachmentEntity> FindAttachmentsByTaskId(string taskId)
         {
-            return DbSqlSession.selectList<AttachmentEntityImpl, IAttachmentEntity>("selectAttachmentsByTaskId", new { taskId });
+            return DbSqlSession.SelectList<AttachmentEntityImpl, IAttachmentEntity>("selectAttachmentsByTaskId", new { taskId });
         }
     }
 }

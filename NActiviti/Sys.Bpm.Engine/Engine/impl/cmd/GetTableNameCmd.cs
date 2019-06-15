@@ -18,13 +18,13 @@ namespace org.activiti.engine.impl.cmd
             this.entityClass = entityClass;
         }
 
-        public  virtual string  execute(ICommandContext  commandContext)
+        public  virtual string  Execute(ICommandContext  commandContext)
         {
             if (entityClass == null)
             {
                 throw new ActivitiIllegalArgumentException("entityClass is null");
             }
-            return commandContext.TableDataManager.getTableName(entityClass, true);
+            return commandContext.TableDataManager.GetTableName(entityClass, true);
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using org.activiti.api.runtime.shared.query;
 using org.activiti.cloud.services.api.commands;
 using org.activiti.cloud.services.api.model;
@@ -12,19 +13,23 @@ using org.activiti.engine.impl.identity;
 using org.activiti.engine.impl.persistence.entity;
 using org.activiti.engine.repository;
 using org.springframework.hateoas;
+using Sys.Bpm.Exceptions;
 using Sys.Net.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Xunit;
+using Xunit.Extensions.Ordering;
 
 namespace Sys.Bpmn.Test.rest.controller
 {
+    [Order(3)]
     public class ProcessInstanceControllerTest
     {
-        private readonly UnitTestContext ctx = UnitTestContext.CreateDefaultUnitTestContext();
+        private readonly IntegrationTestContext ctx = IntegrationTestContext.CreateDefaultUnitTestContext();
 
         public ProcessInstanceControllerTest()
         {
@@ -43,59 +48,21 @@ namespace Sys.Bpmn.Test.rest.controller
         /// <summary>
         /// 简单顺序流的每个任务分配变量名都是name,启动时如果没有name变量名,会抛出异常.
         /// </summary>
-        [Fact]
-        public void Start_启动一个流程实例()
+        [Theory]
+        [InlineData("用户1", "用户2")]
+        public void Start_启动一个流程实例(params string[] users)
         {
             Exception ex = Record.Exception(() =>
             {
-                IProcessInstanceController processInstance = CreateController();
+                ctx.HttpDeployProcess();
 
-                IProcessEngine pe = ctx.Resolve<IProcessEngine>();
-                IProcessDefinition def = pe.RepositoryService.createProcessDefinitionQuery()
-                    .processDefinitionName("简单顺序流")
-                    .processDefinitionTenantId(ctx.TenantId)
-                    .latestVersion()
-                    .singleResult();
-
-                Assert.NotNull(def);
-
-                StartProcessInstanceCmd cmd = new StartProcessInstanceCmd(def.Id,
-                    new Dictionary<string, object>
-                    {
-                        { "name", new string[]{"新用户" } }
-                    });
-
-                cmd.TenantId = ctx.TenantId;
-
-                Authentication.AuthenticatedUser = new UserInfo()
-                {
-                    Id = "新用户",
-                    Name = "新用户",
-                    TenantId = ctx.TenantId
-                };
-
-                ProcessInstance pi = processInstance.Start(cmd).Result;
-                Assert.NotNull(pi);
+                StartProcess(users);
             });
 
             Assert.Null(ex);
         }
 
-        /// <summary>
-        /// 简单顺序流的每个任务分配变量名都是name,启动时如果没有name变量名,会抛出异常.
-        /// </summary>
-        [Fact]
-        public void Start_使用URL启动一个流程实例()
-        {
-            Exception ex = Record.Exception(() =>
-            {
-                StartProcess();
-            });
-
-            Assert.Null(ex);
-        }
-
-        private void StartProcess()
+        private void StartProcess(string[] users)
         {
             IProcessEngine pe = ctx.Resolve<IProcessEngine>();
             IProcessDefinition def = pe.RepositoryService.createProcessDefinitionQuery()
@@ -106,25 +73,34 @@ namespace Sys.Bpmn.Test.rest.controller
 
             Assert.NotNull(def);
 
-            StartProcessInstanceCmd cmd = new StartProcessInstanceCmd(def.Id,
-                new Dictionary<string, object>
+            IList<StartProcessInstanceCmd> cmds = new List<StartProcessInstanceCmd>();
+
+            foreach (var usr in users)
+            {
+                cmds.Add(
+                new StartProcessInstanceCmd(def.Id,
+                    new Dictionary<string, object>
+                    {
+                        { "name", new string[]{ usr }}
+                    })
                 {
-                    { "name", new string[]{"新用户" }}
+                    TenantId = ctx.TenantId
                 });
+            };
 
-            cmd.TenantId = ctx.TenantId;
-
-            HttpResponseMessage res = ctx.PostAsync($"{WorkflowConstants.PROC_INS_ROUTER_V1}/start", cmd).Result;
+            HttpResponseMessage res = AsyncHelper.RunSync<HttpResponseMessage>(() => ctx.CreateHttpClientProxy().PostAsync<HttpResponseMessage>($"{WorkflowConstants.PROC_INS_ROUTER_V1}/start", cmds.ToArray()));
 
             Assert.True(res.StatusCode == HttpStatusCode.OK);
 
-            ProcessInstance pi = JsonConvert.DeserializeObject<ProcessInstance>(res.Content.ReadAsStringAsync().Result);
+            ProcessInstance[] pi = JsonConvert.DeserializeObject<ProcessInstance[]>(res.Content.ReadAsStringAsync().Result);
 
             Assert.NotNull(pi);
+            Assert.True(pi.Length == users.Length);
         }
 
-        [Fact]
-        public void Suspend_挂起一个流程()
+        [Theory]
+        [InlineData("新用户")]
+        public void Suspend_挂起一个流程(params string[] users)
         {
             Exception ex = Record.Exception(() =>
             {
@@ -134,14 +110,14 @@ namespace Sys.Bpmn.Test.rest.controller
 
                 if (instances.Length == 0)
                 {
-                    StartProcess();
+                    StartProcess(users);
 
                     instances = GetProcessInstanceList();
                 }
 
                 ProcessInstance pi = instances[0];
 
-                HttpResponseMessage res = ctx.GetAsync($"{WorkflowConstants.PROC_INS_ROUTER_V1}/{pi.Id}/suspend").Result;
+                HttpResponseMessage res = AsyncHelper.RunSync<HttpResponseMessage>(() => ctx.GetAsync<HttpResponseMessage>($"{WorkflowConstants.PROC_INS_ROUTER_V1}/{pi.Id}/suspend"));
 
                 Assert.True(res.StatusCode == HttpStatusCode.OK);
             });
@@ -162,7 +138,7 @@ namespace Sys.Bpmn.Test.rest.controller
                 }
             };
 
-            HttpResponseMessage res = ctx.PostAsync($"{WorkflowConstants.PROC_INS_ROUTER_V1}", piq).Result;
+            HttpResponseMessage res = AsyncHelper.RunSync<HttpResponseMessage>(() => ctx.PostAsync<HttpResponseMessage>($"{WorkflowConstants.PROC_INS_ROUTER_V1}", piq));
 
             Assert.True(res.StatusCode == HttpStatusCode.OK);
 
@@ -178,35 +154,88 @@ namespace Sys.Bpmn.Test.rest.controller
         {
             Exception ex = Record.Exception(() =>
             {
-                //IProcessInstanceController processInstance = new ProcessInstanceControllerImpl(ctx.Resolve<ProcessEngineWrapper>(),
-                //    ctx.Resolve<ProcessInstanceResourceAssembler>(),
-                //    ctx.Resolve<PageableProcessInstanceService>(),
-                //    ctx.Resolve<IProcessEngine>(),
-                //    ctx.Resolve<SecurityPoliciesApplicationService>());
+                IProcessEngine pe = ctx.Resolve<IProcessEngine>();
+                IProcessDefinition def = pe.RepositoryService.createProcessDefinitionQuery()
+                    .processDefinitionName("简单顺序流")
+                    .processDefinitionTenantId(ctx.TenantId)
+                    .latestVersion()
+                    .singleResult();
 
-                //IProcessEngine pe = ctx.Resolve<IProcessEngine>();
-                //IProcessDefinition def = pe.RepositoryService.createProcessDefinitionQuery()
-                //    .processDefinitionName("简单顺序流")
-                //    .processDefinitionTenantId(ctx.TenantId)
-                //    .latestVersion()
-                //    .singleResult();
+                Assert.NotNull(def);
 
-                //Assert.NotNull(def);
+                string uid = Guid.NewGuid().ToString();
 
-                //StartProcessInstanceCmd cmd = new StartProcessInstanceCmd(def.Id,
-                //    new Dictionary<string, object>
-                //    {
-                //            { "name", "新用户"}
-                //    });
+                StartProcessInstanceCmd cmd = new StartProcessInstanceCmd(def.Id,
+                        new Dictionary<string, object>
+                        {
+                            { "name", new string[]{ uid }}
+                        })
+                {
+                    TenantId = ctx.TenantId
+                };
 
-                //cmd.ProcessInstanceName = $"{def.Name}";
-                //cmd.TenantId = ctx.TenantId;
+                IHttpClientProxy clientProxy = ctx.CreateHttpClientProxy(new UserInfo
+                {
+                    Id = uid,
+                    Name = uid,
+                    TenantId = ctx.TenantId
+                });
 
-                //ProcessInstance pi = processInstance.Start(cmd).Result;
-                //Assert.NotNull(pi);
+                //启动流程
+                ProcessInstance res = AsyncHelper.RunSync<ProcessInstance[]>(() => clientProxy.PostAsync<ProcessInstance[]>($"{WorkflowConstants.PROC_INS_ROUTER_V1}/start", new StartProcessInstanceCmd[] { cmd }))[0];
+
+                Assert.NotNull(res);
+
+                //查找我的任务--教师注册
+                Resources<TaskModel> tasks = AsyncHelper.RunSync<Resources<TaskModel>>(() =>
+                    clientProxy.GetAsync<Resources<TaskModel>>($"{WorkflowConstants.TASK_ROUTER_V1}/{uid}/mytasks"));
+
+                Assert.NotNull(tasks);
+                Assert.True(tasks.List.Count() > 0);
+
+                TaskModel task = tasks.List.FirstOrDefault(x => x.ProcessInstanceId == res.Id);
+
+                //完成我的任务--教师注册
+                HttpResponseMessage complete = AsyncHelper.RunSync<HttpResponseMessage>(() =>
+                    clientProxy.PostAsync<HttpResponseMessage>($"{WorkflowConstants.TASK_ROUTER_V1}/complete", new CompleteTaskCmd(task.Id, null, null)));
+
+                Assert.True(complete.StatusCode == HttpStatusCode.OK);
+
+                //查找我的任务--学生注册
+                tasks = AsyncHelper.RunSync<Resources<TaskModel>>(() =>
+                    clientProxy.GetAsync<Resources<TaskModel>>($"{WorkflowConstants.TASK_ROUTER_V1}/{uid}/mytasks"));
+
+                Assert.NotNull(tasks);
+                Assert.True(tasks.List.Count() > 0);
+
+                task = tasks.List.FirstOrDefault(x => x.ProcessInstanceId == res.Id);
+
+                //完成我的任务--学生注册
+                complete = AsyncHelper.RunSync<HttpResponseMessage>(() =>
+                    clientProxy.PostAsync<HttpResponseMessage>($"{WorkflowConstants.TASK_ROUTER_V1}/complete", new CompleteTaskCmd(task.Id, null, null)));
+
+                Assert.True(complete.StatusCode == HttpStatusCode.OK);
+
+                //查找我的任务--支付
+                tasks = AsyncHelper.RunSync<Resources<TaskModel>>(() =>
+                    clientProxy.GetAsync<Resources<TaskModel>>($"{WorkflowConstants.TASK_ROUTER_V1}/{uid}/mytasks"));
+
+                Assert.NotNull(tasks);
+                Assert.True(tasks.List.Count() > 0);
+
+                task = tasks.List.FirstOrDefault(x => x.ProcessInstanceId == res.Id);
+
+                //完成我的任务--支付
+                complete = AsyncHelper.RunSync<HttpResponseMessage>(() =>
+                    clientProxy.PostAsync<HttpResponseMessage>($"{WorkflowConstants.TASK_ROUTER_V1}/complete", new CompleteTaskCmd(task.Id, null, null)));
+
+                Assert.True(complete.StatusCode == HttpStatusCode.OK);
+
+                //查找流程实例是否存在
+                HttpResponseMessage response = AsyncHelper.RunSync<HttpResponseMessage>(() => clientProxy.GetAsync<HttpResponseMessage>($"{WorkflowConstants.PROC_INS_ROUTER_V1}/{res.Id}"));
             });
 
-            Assert.Null(ex);
+            Assert.NotNull(ex);
         }
     }
 }

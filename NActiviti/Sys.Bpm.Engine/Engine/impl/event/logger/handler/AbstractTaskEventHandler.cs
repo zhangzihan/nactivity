@@ -13,24 +13,24 @@ namespace org.activiti.engine.impl.@event.logger.handler
         protected internal virtual IDictionary<string, object> handleCommonTaskFields(ITaskEntity task)
         {
             IDictionary<string, object> data = new Dictionary<string, object>();
-            putInMapIfNotNull(data, Fields_Fields.ID, task.Id);
-            putInMapIfNotNull(data, Fields_Fields.NAME, task.Name);
-            putInMapIfNotNull(data, Fields_Fields.TASK_DEFINITION_KEY, task.TaskDefinitionKey);
-            putInMapIfNotNull(data, Fields_Fields.DESCRIPTION, task.Description);
-            putInMapIfNotNull(data, Fields_Fields.ASSIGNEE, task.Assignee);
-            putInMapIfNotNull(data, Fields_Fields.OWNER, task.Owner);
-            putInMapIfNotNull(data, Fields_Fields.CATEGORY, task.Category);
-            putInMapIfNotNull(data, Fields_Fields.CREATE_TIME, task.CreateTime);
-            putInMapIfNotNull(data, Fields_Fields.DUE_DATE, task.DueDate);
-            putInMapIfNotNull(data, Fields_Fields.FORM_KEY, task.FormKey);
-            putInMapIfNotNull(data, Fields_Fields.PRIORITY, task.Priority);
-            putInMapIfNotNull(data, Fields_Fields.PROCESS_DEFINITION_ID, task.ProcessDefinitionId);
-            putInMapIfNotNull(data, Fields_Fields.PROCESS_INSTANCE_ID, task.ProcessInstanceId);
-            putInMapIfNotNull(data, Fields_Fields.EXECUTION_ID, task.ExecutionId);
+            PutInMapIfNotNull(data, FieldsFields.ID, task.Id);
+            PutInMapIfNotNull(data, FieldsFields.NAME, task.Name);
+            PutInMapIfNotNull(data, FieldsFields.TASK_DEFINITION_KEY, task.TaskDefinitionKey);
+            PutInMapIfNotNull(data, FieldsFields.DESCRIPTION, task.Description);
+            PutInMapIfNotNull(data, FieldsFields.ASSIGNEE, task.Assignee);
+            PutInMapIfNotNull(data, FieldsFields.OWNER, task.Owner);
+            PutInMapIfNotNull(data, FieldsFields.CATEGORY, task.Category);
+            PutInMapIfNotNull(data, FieldsFields.CREATE_TIME, task.CreateTime);
+            PutInMapIfNotNull(data, FieldsFields.DUE_DATE, task.DueDate);
+            PutInMapIfNotNull(data, FieldsFields.FORM_KEY, task.FormKey);
+            PutInMapIfNotNull(data, FieldsFields.PRIORITY, task.Priority);
+            PutInMapIfNotNull(data, FieldsFields.PROCESS_DEFINITION_ID, task.ProcessDefinitionId);
+            PutInMapIfNotNull(data, FieldsFields.PROCESS_INSTANCE_ID, task.ProcessInstanceId);
+            PutInMapIfNotNull(data, FieldsFields.EXECUTION_ID, task.ExecutionId);
 
-            if (!ReferenceEquals(task.TenantId, null) && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(task.TenantId))
+            if (!(task.TenantId is null) && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(task.TenantId))
             {
-                putInMapIfNotNull(data, Fields_Fields.TENANT_ID, task.TenantId); // Important for standalone tasks
+                PutInMapIfNotNull(data, FieldsFields.TENANT_ID, task.TenantId); // Important for standalone tasks
             }
             return data;
         }

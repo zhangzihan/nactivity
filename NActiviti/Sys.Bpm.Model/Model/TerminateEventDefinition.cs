@@ -34,10 +34,12 @@ namespace org.activiti.bpmn.model
         /// </summary>
         protected internal bool terminateMultiInstance;
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            TerminateEventDefinition clone = new TerminateEventDefinition();
-            clone.Values = this;
+            TerminateEventDefinition clone = new TerminateEventDefinition
+            {
+                Values = this
+            };
             return clone;
         }
 

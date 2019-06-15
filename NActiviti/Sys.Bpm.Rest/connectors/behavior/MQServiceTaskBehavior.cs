@@ -57,11 +57,11 @@ namespace org.activiti.services.connectors.behavior
         /// 
         /// </summary>
         /// <param name="execution"></param>
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
-            IIntegrationContextEntity integrationContext = storeIntegrationContext(execution);
+            IIntegrationContextEntity integrationContext = StoreIntegrationContext(execution);
 
-            publishSpringEvent(execution, integrationContext);
+            PublishSpringEvent(execution, integrationContext);
         }
 
         /// <summary>
@@ -70,24 +70,24 @@ namespace org.activiti.services.connectors.behavior
         /// <seealso ref="TransactionalEventListener"/> on phase <seealso ref="TransactionPhase#AFTER_COMMIT"/>. </summary>
         /// <param name="execution"> the related execution </param>
         /// <param name="integrationContext"> the related integration context </param>
-        private void publishSpringEvent(IExecutionEntity execution, IIntegrationContextEntity integrationContext)
+        private void PublishSpringEvent(IExecutionEntity execution, IIntegrationContextEntity integrationContext)
         {
             IntegrationRequestEvent @event = new IntegrationRequestEvent(execution, integrationContext, runtimeBundleProperties.AppName, runtimeBundleProperties.AppVersion, runtimeBundleProperties.ServiceName, runtimeBundleProperties.ServiceFullName, runtimeBundleProperties.ServiceType, runtimeBundleProperties.ServiceVersion);
 
-            eventPublisher.publishEvent(@event);
+            eventPublisher.PublishEvent(@event);
         }
 
 
-        private IIntegrationContextEntity storeIntegrationContext(IExecutionEntity execution)
+        private IIntegrationContextEntity StoreIntegrationContext(IExecutionEntity execution)
         {
-            IIntegrationContextEntity integrationContext = buildIntegrationContext(execution);
-            integrationContextManager.insert(integrationContext);
+            IIntegrationContextEntity integrationContext = BuildIntegrationContext(execution);
+            integrationContextManager.Insert(integrationContext);
             return integrationContext;
         }
 
-        private IIntegrationContextEntity buildIntegrationContext(IExecutionEntity execution)
+        private IIntegrationContextEntity BuildIntegrationContext(IExecutionEntity execution)
         {
-            IIntegrationContextEntity integrationContext = integrationContextManager.create();
+            IIntegrationContextEntity integrationContext = integrationContextManager.Create();
             integrationContext.ExecutionId = execution.Id;
             integrationContext.ProcessInstanceId = execution.ProcessInstanceId;
             integrationContext.ProcessDefinitionId = execution.ProcessDefinitionId;
@@ -102,9 +102,9 @@ namespace org.activiti.services.connectors.behavior
         /// <param name="execution"></param>
         /// <param name="signalEvent"></param>
         /// <param name="signalData"></param>
-        public override void trigger(IExecutionEntity execution, string signalEvent, object signalData)
+        public override void Trigger(IExecutionEntity execution, string signalEvent, object signalData, bool throwError = true)
         {
-            leave(execution);
+            Leave(execution);
         }
     }
 }

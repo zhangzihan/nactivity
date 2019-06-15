@@ -37,9 +37,9 @@ namespace org.activiti.engine.impl.bpmn.helper
             EntityClass = entityClass;
         }
 
-        public override void onEvent(IActivitiEvent @event)
+        public override void OnEvent(IActivitiEvent @event)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
             //if (isValidEvent(@event))
             //{
             //    object @delegate = DelegateExpressionUtil.resolveDelegateExpression(expression, new NoExecutionVariableScope());

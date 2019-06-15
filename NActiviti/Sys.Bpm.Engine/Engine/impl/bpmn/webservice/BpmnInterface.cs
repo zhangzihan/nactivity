@@ -71,12 +71,12 @@ namespace org.activiti.engine.impl.bpmn.webservice
         }
 
 
-        public virtual void addOperation(Operation operation)
+        public virtual void AddOperation(Operation operation)
         {
             operations[operation.Id] = operation;
         }
 
-        public virtual Operation getOperation(string operationId)
+        public virtual Operation GetOperation(string operationId)
         {
             return operations[operationId];
         }

@@ -13,8 +13,15 @@
 
 namespace org.activiti.engine.impl.db.upgrade
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IDbUpgradeStep
     {
-        void execute(DbSqlSession dbSqlSession);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbSqlSession"></param>
+        void Execute(DbSqlSession dbSqlSession);
     }
 }

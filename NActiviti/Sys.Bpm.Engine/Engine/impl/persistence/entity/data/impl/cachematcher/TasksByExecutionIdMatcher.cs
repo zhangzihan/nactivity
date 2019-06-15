@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class TasksByExecutionIdMatcher : CachedEntityMatcherAdapter<ITaskEntity>
     {
 
-        public override bool isRetained(ITaskEntity taskEntity, object parameter)
+        public override bool IsRetained(ITaskEntity taskEntity, object parameter)
         {
             if (taskEntity == null || taskEntity.ExecutionId == null || parameter == null)
             {

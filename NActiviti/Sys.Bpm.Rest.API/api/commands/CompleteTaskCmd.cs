@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using org.activiti.engine.impl;
+using org.activiti.services.api.commands;
 using System;
 using System.Collections.Generic;
 
@@ -28,8 +29,7 @@ namespace org.activiti.cloud.services.api.commands
     {
         private readonly string id = "completeTaskCmd";
         private string taskId;
-        private IDictionary<string, object> outputVariables;
-        private RuntimeAssigneeUser runtimeAssignUser;
+        private WorkflowVariable outputVariables;
 
         /// <summary>
         /// 构造函数
@@ -47,12 +47,12 @@ namespace org.activiti.cloud.services.api.commands
         /// <param name="runtimeAssignUser">如果下一步需要从当前任务中指定人员处理,则使用这个参数</param>
         ////[JsonConstructor]
         public CompleteTaskCmd([JsonProperty("TaskId")] string taskId,
-            [JsonProperty("OutputVariables")] IDictionary<string, object> outputVariables,
+            [JsonProperty("OutputVariables")] WorkflowVariable outputVariables,
             [JsonProperty("RuntimeAssignUsers")]RuntimeAssigneeUser runtimeAssignUser)
         {
             this.taskId = taskId;
             this.outputVariables = outputVariables;
-            this.runtimeAssignUser = runtimeAssignUser;
+            this.RuntimeAssigneeUser = runtimeAssignUser;
         }
 
         /// <summary>
@@ -64,13 +64,37 @@ namespace org.activiti.cloud.services.api.commands
         }
 
         /// <summary>
+        /// 任务关联的业务主键,需要和Assignee同时使用
+        /// </summary>
+        public virtual string BusinessKey
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// 任务执行者,需要和BusinessKey同时使用
+        /// </summary>
+        public virtual string Assignee
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// 任务附加备注
+        /// </summary>
+        public virtual string Comment
+        {
+            get; set;
+        }
+
+        /// <summary>
         /// 提交的数据
         /// </summary>
-        public virtual IDictionary<string, object> OutputVariables
+        public virtual WorkflowVariable OutputVariables
         {
             get
             {
-                outputVariables = outputVariables ?? new Dictionary<string, object>();
+                outputVariables = outputVariables ?? new WorkflowVariable();
                 return outputVariables;
             }
             set
@@ -88,16 +112,14 @@ namespace org.activiti.cloud.services.api.commands
             set => taskId = value;
         }
 
+        public bool LocalScope
+        {
+            get; set;
+        }
+
         /// <summary>
         /// 如果下一步需要从当前任务中指定人员处理,则使用这个参数
         /// </summary>
-        public RuntimeAssigneeUser RuntimeAssigneeUser
-        {
-            get => runtimeAssignUser;
-            set
-            {
-                runtimeAssignUser = value;
-            }
-        }
+        public RuntimeAssigneeUser RuntimeAssigneeUser { get; set; }
     }
 }

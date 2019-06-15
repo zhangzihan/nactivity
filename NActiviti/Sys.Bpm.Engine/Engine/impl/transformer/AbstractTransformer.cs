@@ -26,11 +26,11 @@ namespace org.activiti.engine.impl.transformer
         /// <summary>
         /// {@inheritDoc}
         /// </summary>
-        public virtual object transform(object anObject)
+        public virtual object Transform(object anObject)
         {
             try
             {
-                return this.primTransform(anObject);
+                return this.PrimTransform(anObject);
             }
             catch (Exception)
             {
@@ -45,7 +45,7 @@ namespace org.activiti.engine.impl.transformer
         /// <param name="anObject">
         ///          the object to be transformed </param>
         /// <returns> the transformed object </returns>
-        protected internal abstract object primTransform(object anObject);
+        protected internal abstract object PrimTransform(object anObject);
     }
 
 }

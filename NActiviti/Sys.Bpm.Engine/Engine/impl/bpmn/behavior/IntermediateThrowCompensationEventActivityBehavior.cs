@@ -39,7 +39,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.compensateEventDefinition = compensateEventDefinition;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             ThrowEvent throwEvent = (ThrowEvent)execution.CurrentFlowElement;
 
@@ -59,18 +59,15 @@ namespace org.activiti.engine.impl.bpmn.behavior
             IList<ICompensateEventSubscriptionEntity> eventSubscriptions = new List<ICompensateEventSubscriptionEntity>();
             if (!string.IsNullOrWhiteSpace(activityRef))
             {
-
                 // If an activity ref is provided, only that activity is compensated
-                ((List<ICompensateEventSubscriptionEntity>)eventSubscriptions).AddRange(eventSubscriptionEntityManager.findCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(execution.ProcessInstanceId, activityRef));
-
+                ((List<ICompensateEventSubscriptionEntity>)eventSubscriptions).AddRange(eventSubscriptionEntityManager.FindCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(execution.ProcessInstanceId, activityRef));
             }
             else
             {
-
                 // If no activity ref is provided, it is broadcast to the current sub process / process instance
-                Process process = ProcessDefinitionUtil.getProcess(execution.ProcessDefinitionId);
+                Process process = ProcessDefinitionUtil.GetProcess(execution.ProcessDefinitionId);
 
-                IFlowElementsContainer flowElementsContainer = null;
+                IFlowElementsContainer flowElementsContainer;
                 if (throwEvent.SubProcess == null)
                 {
                     flowElementsContainer = process;
@@ -84,7 +81,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 {
                     if (flowElement is Activity)
                     {
-                        ((List<ICompensateEventSubscriptionEntity>)eventSubscriptions).AddRange(eventSubscriptionEntityManager.findCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(execution.ProcessInstanceId, flowElement.Id));
+                        ((List<ICompensateEventSubscriptionEntity>)eventSubscriptions).AddRange(eventSubscriptionEntityManager.FindCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(execution.ProcessInstanceId, flowElement.Id));
                     }
                 }
 
@@ -92,13 +89,13 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             if (eventSubscriptions.Count == 0)
             {
-                leave(execution);
+                Leave(execution);
             }
             else
             {
                 // TODO: implement async (waitForCompletion=false in bpmn)
-                ScopeUtil.throwCompensationEvent(eventSubscriptions, execution, false);
-                leave(execution);
+                ScopeUtil.ThrowCompensationEvent(eventSubscriptions, execution, false);
+                Leave(execution);
             }
         }
     }

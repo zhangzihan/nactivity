@@ -20,7 +20,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class UnfinishedHistoricActivityInstanceMatcher : CachedEntityMatcherAdapter<IHistoricActivityInstanceEntity>
     {
 
-        public override bool isRetained(IHistoricActivityInstanceEntity entity, object parameter)
+        public override bool IsRetained(IHistoricActivityInstanceEntity entity, object parameter)
         {
             IDictionary<string, object> paramMap = (IDictionary<string, object>)parameter ?? new Dictionary<string, object>();
             paramMap.TryGetValue("executionId", out object executionId);

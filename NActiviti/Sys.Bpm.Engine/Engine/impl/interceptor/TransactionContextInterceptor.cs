@@ -32,7 +32,7 @@ namespace org.activiti.engine.impl.interceptor
             this.transactionContextFactory = transactionContextFactory;
         }
 
-        public override T execute<T>(CommandConfig config, ICommand<T> command)
+        public override T Execute<T>(CommandConfig config, ICommand<T> command)
         {
 
             ICommandContext commandContext = Context.CommandContext;
@@ -43,13 +43,12 @@ namespace org.activiti.engine.impl.interceptor
             {
                 if (transactionContextFactory != null && !isReused)
                 {
-                    ITransactionContext transactionContext = transactionContextFactory.openTransactionContext(commandContext);
+                    ITransactionContext transactionContext = transactionContextFactory.OpenTransactionContext(commandContext);
                     Context.TransactionContext = transactionContext;
-                    commandContext.addCloseListener(new TransactionCommandContextCloseListener(transactionContext));
+                    commandContext.AddCloseListener(new TransactionCommandContextCloseListener(transactionContext));
                 }
 
-                return next.execute(config, command);
-
+                return next.Execute(config, command);
             }
             catch(Exception e)
             {
@@ -59,10 +58,9 @@ namespace org.activiti.engine.impl.interceptor
             {
                 if (transactionContextFactory != null && !isReused)
                 {
-                    Context.removeTransactionContext();
+                    Context.RemoveTransactionContext();
                 }
             }
-
         }
 
         public virtual ITransactionContextFactory TransactionContextFactory
@@ -76,8 +74,5 @@ namespace org.activiti.engine.impl.interceptor
                 this.transactionContextFactory = value;
             }
         }
-
-
     }
-
 }

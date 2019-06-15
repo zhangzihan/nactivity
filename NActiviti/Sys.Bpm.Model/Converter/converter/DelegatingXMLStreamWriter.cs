@@ -21,18 +21,8 @@ namespace org.activiti.bpmn.converter
     /// 
     public abstract class DelegatingXMLStreamWriter : XMLStreamWriter
     {
-        public DelegatingXMLStreamWriter(XElement writer) : base(writer)
+        public DelegatingXMLStreamWriter(XElement writer) : base(writer.CreateWriter())
         {
-        }
-
-        public virtual void close()
-        {
-            base.writer.Close();
-        }
-
-        public virtual void flush()
-        {
-            base.Flush();
         }
 
         public virtual INamespaceContext NamespaceContext
@@ -48,10 +38,10 @@ namespace org.activiti.bpmn.converter
             }
         }
 
-        public virtual object getProperty(string name)
-        {
-            return element.Attribute(name)?.Value;
-        }
+        //public virtual object GetProperty(string name)
+        //{
+        //    return element.Attribute(name)?.Value;
+        //}
     }
 
 }

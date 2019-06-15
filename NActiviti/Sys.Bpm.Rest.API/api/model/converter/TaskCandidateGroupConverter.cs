@@ -25,7 +25,7 @@ namespace org.activiti.cloud.services.api.model.converter
         /// 
         /// </summary>
 
-        public virtual TaskCandidateGroup from(IIdentityLink source)
+        public virtual TaskCandidateGroup From(IIdentityLink source)
         {
             TaskCandidateGroup taskCandidateGroup = null;
 
@@ -40,9 +40,9 @@ namespace org.activiti.cloud.services.api.model.converter
         /// 
         /// </summary>
 
-        public virtual IList<TaskCandidateGroup> from(IList<IIdentityLink> identityLinks)
+        public virtual IEnumerable<TaskCandidateGroup> From(IEnumerable<IIdentityLink> identityLinks)
         {
-            return listConverter.from(identityLinks, this);
+            return listConverter.From(identityLinks, this);
         }
     }
 

@@ -80,7 +80,7 @@ namespace org.activiti.engine.@delegate
         /**
          * Change the current BPMN element the execution is at. 
          */
-        void setCurrentFlowElement(FlowElement flowElement);
+        void SetCurrentFlowElement(FlowElement flowElement);
 
         /**
          * Returns the {@link ActivitiListener} instance matching an {@link ExecutionListener}
@@ -92,7 +92,7 @@ namespace org.activiti.engine.@delegate
         /**
          * Called when an {@link ExecutionListener} is being executed. 
          */
-        void setCurrentActivitiListener(ActivitiListener currentActivitiListener);
+        void SetCurrentActivitiListener(ActivitiListener currentActivitiListener);
 
         /* Execution management */
 

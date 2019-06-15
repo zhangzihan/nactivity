@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using org.activiti.api.runtime.shared.query;
 using org.activiti.cloud.services.api.commands;
 using org.activiti.cloud.services.api.model;
@@ -10,10 +9,10 @@ using org.activiti.cloud.services.rest.api.resources;
 using org.activiti.cloud.services.rest.assemblers;
 using org.activiti.engine;
 using org.activiti.engine.task;
+using org.activiti.services.api.commands;
 using org.springframework.hateoas;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 /*
@@ -40,7 +39,7 @@ namespace org.activiti.cloud.services.rest.controllers
     public class TaskControllerImpl : ControllerBase, ITaskController
     {
 
-        private ProcessEngineWrapper processEngine;
+        private readonly ProcessEngineWrapper processEngine;
 
         private readonly TaskResourceAssembler taskResourceAssembler;
 
@@ -78,11 +77,11 @@ namespace org.activiti.cloud.services.rest.controllers
 
         /// <inheritdoc />
         [HttpPost]
-        public virtual Task<Resources<TaskModel>> getTasks(TaskQuery query)
+        public virtual Task<Resources<TaskModel>> GetTasks(TaskQuery query)
         {
-            IPage<TaskModel> page = processEngine.getTasks(query.Pageable);
+            IPage<TaskModel> page = processEngine.GetTasks(query.Pageable);
 
-            return Task.FromResult(new Resources<TaskModel>(page.getContent(), page.getTotalItems(), query.Pageable));
+            return Task.FromResult(new Resources<TaskModel>(page.GetContent(), page.GetTotalItems(), query.Pageable));
         }
 
 
@@ -90,55 +89,38 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpGet("{userId}/mytasks")]
         public Task<Resources<TaskModel>> MyTasks(string userId)
         {
-            List<ITask> tasks = this.taskService.createTaskQuery().taskAssignee(userId).list().ToList();
+            IList<ITask> tasks = this.taskService.GetMyTasks(userId);
 
-            tasks.AddRange(this.taskService.createTaskQuery().taskCandidateUser(userId).list());
-
-            IList<TaskResource> resources = this.taskResourceAssembler.toResources(taskConverter.from(tasks));
+            IList<TaskResource> resources = this.taskResourceAssembler.ToResources(taskConverter.From(tasks.OrderByDescending(x => x.CreateTime)));
 
             return Task.FromResult(new Resources<TaskModel>(resources.Select(x => x.Content), tasks.Count, 0, 0));
         }
-
-
-        /// <inheritdoc />
-        [HttpGet("{userId}/nextform")]
-        public Task<Resources<TaskModel>> NextForm(string userId)
-        {
-            List<ITask> tasks = this.taskService.createTaskQuery().taskAssignee(userId).list().ToList();
-
-            tasks.AddRange(this.taskService.createTaskQuery().taskCandidateUser(userId).list());
-
-            IList<TaskResource> resources = this.taskResourceAssembler.toResources(taskConverter.from(tasks));
-
-            return Task.FromResult(new Resources<TaskModel>(resources.Select(x => x.Content), tasks.Count, 0, 0));
-        }
-
 
         /// <inheritdoc />
         [HttpGet("{taskId}")]
-        public virtual Task<TaskModel> getTaskById(string taskId)
+        public virtual Task<TaskModel> GetTaskById(string taskId)
         {
-            TaskModel task = processEngine.getTaskById(taskId);
+            TaskModel task = processEngine.GetTaskById(taskId);
             if (task == null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find task for the given id: " + taskId);
             }
 
-            return Task.FromResult(taskResourceAssembler.toResource(task).Content);
+            return Task.FromResult(taskResourceAssembler.ToResource(task).Content);
         }
 
 
         /// <inheritdoc />
         [HttpPost("{taskId}/claim")]
-        public virtual Task<TaskModel> claimTask(string taskId)
+        public virtual Task<TaskModel> ClaimTask(string taskId)
         {
             string assignee = authenticationWrapper.AuthenticatedUser.Id;
-            if (string.ReferenceEquals(assignee, null))
+            if (assignee is null)
             {
                 throw new System.InvalidOperationException("Assignee must be resolved from the Identity/Security Layer");
             }
 
-            var res = taskResourceAssembler.toResource(processEngine.claimTask(new ClaimTaskCmd(taskId, assignee)));
+            var res = taskResourceAssembler.ToResource(processEngine.ClaimTask(new ClaimTaskCmd(taskId, assignee)));
 
             return Task.FromResult(res.Content);
         }
@@ -147,64 +129,119 @@ namespace org.activiti.cloud.services.rest.controllers
         /// <inheritdoc />
 
         [HttpPost("{taskId}/release")]
-        public virtual Task<TaskModel> releaseTask(string taskId)
+        public virtual Task<TaskModel> ReleaseTask(string taskId)
         {
+            TaskModel model = processEngine.ReleaseTask(new ReleaseTaskCmd(taskId, "任务退回"));
 
-            return Task.FromResult(taskResourceAssembler.toResource(processEngine.releaseTask(new ReleaseTaskCmd(taskId))).Content);
+            return Task.FromResult(taskResourceAssembler.ToResource(model).Content);
         }
 
 
         /// <inheritdoc />
-        [HttpPost("{taskId}/complete")]
-        public virtual Task<IActionResult> completeTask(string taskId, [FromBody]CompleteTaskCmd completeTaskCmd)
-        {
-            processEngine.completeTask(completeTaskCmd);
 
-            return Task.FromResult<IActionResult>(Ok());
+        [HttpPost("release")]
+        public virtual Task<TaskModel> ReleaseTask(ReleaseTaskCmd cmd)
+        {
+            TaskModel model = processEngine.ReleaseTask(cmd);
+
+            return Task.FromResult(taskResourceAssembler.ToResource(model).Content);
+        }
+
+
+        /// <inheritdoc />
+        [HttpPost("complete")]
+        public virtual Task<ActionResult> CompleteTask([FromBody]CompleteTaskCmd completeTaskCmd)
+        {
+            processEngine.CompleteTask(completeTaskCmd);
+
+            return Task.FromResult<ActionResult>(Ok());
+        }
+
+        /// <inheritdoc />
+        [HttpPost("approvaled")]
+        public Task<ActionResult> Approvaled(ApprovaleTaskCmd cmd)
+        {
+
+            processEngine.CompleteApprovalTask(new CompleteTaskCmd
+            {
+                TaskId = cmd.TaskId,
+                LocalScope = true,
+                OutputVariables = new WorkflowVariable(cmd.Variables)
+                {
+                    [WorkflowVariable.GLOBAL_APPROVALED_VARIABLE] = true,
+                    [WorkflowVariable.GLOBAL_APPROVALED_COMMENTS] = string.IsNullOrWhiteSpace(cmd.Comments) ? "同意" : cmd.Comments,
+                }
+            });
+
+            return Task.FromResult<ActionResult>(Ok());
+        }
+
+        /// <inheritdoc />
+        [HttpPost("reject")]
+        public Task<ActionResult> Reject(RejectTaskCmd cmd)
+        {
+            processEngine.CompleteApprovalTask(new CompleteTaskCmd
+            {
+                TaskId = cmd.TaskId,
+                LocalScope = true,
+                OutputVariables = new WorkflowVariable(cmd.Variables)
+                {
+                    [WorkflowVariable.GLOBAL_APPROVALED_VARIABLE] = false,
+                    [WorkflowVariable.GLOBAL_APPROVALED_COMMENTS] = string.IsNullOrWhiteSpace(cmd.RejectReason) ? "拒绝" : cmd.RejectReason,
+                }
+            });
+
+            return Task.FromResult<ActionResult>(Ok());
+        }
+
+        [HttpPost("returnTo")]
+        public Task<ActionResult> ReturnTo(ReturnToTaskCmd cmd)
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <inheritdoc />
         [HttpPost("terminate")]
-        public virtual Task<IActionResult> terminate(TerminateTaskCmd cmd)
+        public virtual Task<ActionResult> Terminate(TerminateTaskCmd cmd)
         {
-            processEngine.terminateTask(cmd);
+            processEngine.TerminateTask(cmd);
 
-            return Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<ActionResult>(Ok());
         }
 
         /// <inheritdoc />
         [HttpPost("{taskId}/remove")]
-        public virtual Task<IActionResult> deleteTask(string taskId)
+        public virtual Task<ActionResult> DeleteTask(string taskId)
         {
-            processEngine.deleteTask(taskId);
+            processEngine.DeleteTask(taskId);
 
-            return Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<ActionResult>(Ok());
         }
 
 
         /// <inheritdoc />
         [HttpPost("create")]
-        public virtual Task<TaskModel> createNewTask([FromBody]CreateTaskCmd createTaskCmd)
+        public virtual Task<TaskModel> CreateNewTask([FromBody]CreateTaskCmd createTaskCmd)
         {
-            return Task.FromResult(taskResourceAssembler.toResource(processEngine.createNewTask(createTaskCmd)).Content);
+            return Task.FromResult(taskResourceAssembler.ToResource(processEngine.CreateNewTask(createTaskCmd)).Content);
         }
 
 
         /// <inheritdoc />
-        [HttpPost("{taskId}/update")]
-        public virtual Task<IActionResult> updateTask(string taskId, UpdateTaskCmd updateTaskCmd)
+        [HttpPost("update")]
+        public virtual Task<ActionResult> UpdateTask(UpdateTaskCmd updateTaskCmd)
         {
-            processEngine.updateTask(taskId, updateTaskCmd);
+            processEngine.UpdateTask(updateTaskCmd);
 
-            return Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<ActionResult>(Ok());
         }
 
 
         /// <inheritdoc />
-        [HttpPost("{taskId}/subtask")]
-        public virtual Task<TaskModel> createSubtask(string taskId, [FromBody]CreateTaskCmd createSubtaskCmd)
+        [HttpPost("subtask")]
+        public virtual Task<TaskModel> CreateSubtask([FromBody]CreateTaskCmd createSubtaskCmd)
         {
-            TaskModel task = processEngine.createNewSubtask(taskId, createSubtaskCmd);
+            TaskModel task = processEngine.CreateNewSubtask(createSubtaskCmd);
 
             return Task.FromResult(task);
         }
@@ -212,33 +249,32 @@ namespace org.activiti.cloud.services.rest.controllers
 
         /// <inheritdoc />
         [HttpPost("transfer")]
-        public virtual Task<TaskModel[]> transferTask(TransferTaskCmd cmd)
+        public virtual Task<TaskModel[]> TransferTask(TransferTaskCmd cmd)
         {
-            TaskModel[] task = processEngine.transferTask(cmd);
+            TaskModel[] task = processEngine.TransferTask(cmd);
 
             return Task.FromResult(task);
         }
 
         /// <inheritdoc />
         [HttpPost("append")]
-        public virtual Task<TaskModel[]> appendCountersign(AppendCountersignCmd cmd)
+        public virtual Task<TaskModel[]> AppendCountersign(AppendCountersignCmd cmd)
         {
-            TaskModel[] tasks = processEngine.appendCountersign(cmd);
+            TaskModel[] tasks = processEngine.AppendCountersign(cmd);
 
             return Task.FromResult(tasks);
         }
 
         /// <inheritdoc />
         [HttpGet("{taskId}/subtasks")]
-        public virtual Task<Resources<TaskModel>> getSubtasks(string taskId)
+        public virtual Task<Resources<TaskModel>> GetSubtasks(string taskId)
         {
-            IList<ITask> tasks = processEngine.getSubtasks(taskId);
+            IList<ITask> tasks = processEngine.GetSubtasks(taskId);
 
-            IList<TaskModel> models = taskConverter.from(tasks);
+            IEnumerable<TaskModel> models = taskConverter.From(tasks);
 
-            return Task.FromResult(new Resources<TaskModel>(models, models.Count, 1, models.Count));
+            return Task.FromResult(new Resources<TaskModel>(models, models.Count(), 1, models.Count()));
         }
-
 
         /// <inheritdoc />
         public virtual AuthenticationWrapper AuthenticationWrapper

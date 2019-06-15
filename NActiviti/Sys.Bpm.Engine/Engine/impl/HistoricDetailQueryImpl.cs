@@ -29,12 +29,12 @@ namespace org.activiti.engine.impl
     {
 
         private const long serialVersionUID = 1L;
-        protected internal string id_Renamed;
-        protected internal string taskId_Renamed;
-        protected internal string processInstanceId_Renamed;
-        protected internal string executionId_Renamed;
-        protected internal string activityId_Renamed;
-        protected internal string activityInstanceId_Renamed;
+        protected internal string _id;
+        protected internal string _taskId;
+        protected internal string _processInstanceId;
+        protected internal string _executionId;
+        protected internal string _activityId;
+        protected internal string _activityInstanceId;
         protected internal string type;
         protected internal bool excludeTaskRelated;
 
@@ -50,80 +50,76 @@ namespace org.activiti.engine.impl
         {
         }
 
-        public virtual IHistoricDetailQuery id(string id)
+        public virtual IHistoricDetailQuery SetId(string id)
         {
-            this.id_Renamed = id;
+            this._id = id;
             return this;
         }
 
-        public virtual IHistoricDetailQuery processInstanceId(string processInstanceId)
+        public virtual IHistoricDetailQuery SetProcessInstanceId(string processInstanceId)
         {
-            this.processInstanceId_Renamed = processInstanceId;
+            this._processInstanceId = processInstanceId;
             return this;
         }
 
-        public virtual IHistoricDetailQuery executionId(string executionId)
+        public virtual IHistoricDetailQuery SetExecutionId(string executionId)
         {
-            this.executionId_Renamed = executionId;
+            this._executionId = executionId;
             return this;
         }
 
-        public virtual IHistoricDetailQuery activityId(string activityId)
+        public virtual IHistoricDetailQuery SetActivityId(string activityId)
         {
-            this.activityId_Renamed = activityId;
+            this._activityId = activityId;
             return this;
         }
 
-        public virtual IHistoricDetailQuery activityInstanceId(string activityInstanceId)
-        {
-            this.activityInstanceId_Renamed = activityInstanceId;
-            return this;
-        }
-
-        public virtual IHistoricDetailQuery taskId(string taskId)
-        {
-            this.taskId_Renamed = taskId;
-            return this;
-        }
-
-        public virtual IHistoricDetailQuery formProperties()
+        public virtual IHistoricDetailQuery FormProperties()
         {
             this.type = "FormProperty";
             return this;
         }
 
-        public virtual IHistoricDetailQuery variableUpdates()
+        public virtual IHistoricDetailQuery SetActivityInstanceId(string activityInstanceId)
+        {
+            this._activityInstanceId = activityInstanceId;
+            return this;
+        }
+
+        public virtual IHistoricDetailQuery SetTaskId(string taskId)
+        {
+            this._taskId = taskId;
+            return this;
+        }
+
+        public virtual IHistoricDetailQuery SetVariableUpdates()
         {
             this.type = "VariableUpdate";
             return this;
         }
 
-        public virtual IHistoricDetailQuery excludeTaskDetails()
+        public virtual IHistoricDetailQuery SetExcludeTaskDetails()
         {
             this.excludeTaskRelated = true;
             return this;
         }
 
-        public override long executeCount(ICommandContext commandContext)
+        public override long ExecuteCount(ICommandContext commandContext)
         {
-            checkQueryOk();
-            return commandContext.HistoricDetailEntityManager.findHistoricDetailCountByQueryCriteria(this);
+            CheckQueryOk();
+            return commandContext.HistoricDetailEntityManager.FindHistoricDetailCountByQueryCriteria(this);
         }
 
-        public override IList<IHistoricDetail> executeList(ICommandContext commandContext, Page page)
+        public override IList<IHistoricDetail> ExecuteList(ICommandContext commandContext, Page page)
         {
-            checkQueryOk();
-            IList<IHistoricDetail> historicDetails = commandContext.HistoricDetailEntityManager.findHistoricDetailsByQueryCriteria(this, page) ?? new List<IHistoricDetail>();
-
-            IHistoricDetailVariableInstanceUpdateEntity varUpdate = null;
+            CheckQueryOk();
+            IList<IHistoricDetail> historicDetails = commandContext.HistoricDetailEntityManager.FindHistoricDetailsByQueryCriteria(this, page) ?? new List<IHistoricDetail>();
             if (historicDetails != null)
             {
                 foreach (IHistoricDetail historicDetail in historicDetails)
                 {
-                    if (historicDetail is IHistoricDetailVariableInstanceUpdateEntity)
+                    if (historicDetail is IHistoricDetailVariableInstanceUpdateEntity varUpdate)
                     {
-                        varUpdate = (IHistoricDetailVariableInstanceUpdateEntity)historicDetail;
-
                         // Touch byte-array to ensure initialized inside context
                         // TODO there should be a generic way to initialize variable
                         // values
@@ -155,39 +151,39 @@ namespace org.activiti.engine.impl
         // order by
         // /////////////////////////////////////////////////////////////////
 
-        public virtual IHistoricDetailQuery orderByProcessInstanceId()
+        public virtual IHistoricDetailQuery OrderByProcessInstanceId()
         {
-            orderBy(HistoricDetailQueryProperty.PROCESS_INSTANCE_ID);
+            SetOrderBy(HistoricDetailQueryProperty.PROCESS_INSTANCE_ID);
             return this;
         }
 
-        public virtual IHistoricDetailQuery orderByTime()
+        public virtual IHistoricDetailQuery OrderByTime()
         {
-            orderBy(HistoricDetailQueryProperty.TIME);
+            SetOrderBy(HistoricDetailQueryProperty.TIME);
             return this;
         }
 
-        public virtual IHistoricDetailQuery orderByVariableName()
+        public virtual IHistoricDetailQuery OrderByVariableName()
         {
-            orderBy(HistoricDetailQueryProperty.VARIABLE_NAME);
+            SetOrderBy(HistoricDetailQueryProperty.VARIABLE_NAME);
             return this;
         }
 
-        public virtual IHistoricDetailQuery orderByFormPropertyId()
+        public virtual IHistoricDetailQuery OrderByFormPropertyId()
         {
-            orderBy(HistoricDetailQueryProperty.VARIABLE_NAME);
+            SetOrderBy(HistoricDetailQueryProperty.VARIABLE_NAME);
             return this;
         }
 
-        public virtual IHistoricDetailQuery orderByVariableRevision()
+        public virtual IHistoricDetailQuery OrderByVariableRevision()
         {
-            orderBy(HistoricDetailQueryProperty.VARIABLE_REVISION);
+            SetOrderBy(HistoricDetailQueryProperty.VARIABLE_REVISION);
             return this;
         }
 
-        public virtual IHistoricDetailQuery orderByVariableType()
+        public virtual IHistoricDetailQuery OrderByVariableType()
         {
-            orderBy(HistoricDetailQueryProperty.VARIABLE_TYPE);
+            SetOrderBy(HistoricDetailQueryProperty.VARIABLE_TYPE);
             return this;
         }
 
@@ -198,7 +194,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return id_Renamed;
+                return _id;
             }
         }
 
@@ -206,7 +202,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processInstanceId_Renamed;
+                return _processInstanceId;
             }
         }
 
@@ -214,7 +210,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return taskId_Renamed;
+                return _taskId;
             }
         }
 
@@ -222,7 +218,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return activityId_Renamed;
+                return _activityId;
             }
         }
 
@@ -246,7 +242,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return executionId_Renamed;
+                return _executionId;
             }
         }
 
@@ -254,7 +250,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return activityInstanceId_Renamed;
+                return _activityInstanceId;
             }
         }
 

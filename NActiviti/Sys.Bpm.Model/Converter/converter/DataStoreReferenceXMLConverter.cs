@@ -14,7 +14,7 @@
  */
 namespace org.activiti.bpmn.converter
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
@@ -34,37 +34,37 @@ namespace org.activiti.bpmn.converter
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DATA_STORE_REFERENCE;
+                return BpmnXMLConstants.ELEMENT_DATA_STORE_REFERENCE;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             DataStoreReference dataStoreRef = new DataStoreReference();
-            BpmnXMLUtil.addXMLLocation(dataStoreRef, xtr);
-            parseChildElements(XMLElementName, dataStoreRef, model, xtr);
+            BpmnXMLUtil.AddXMLLocation(dataStoreRef, xtr);
+            ParseChildElements(XMLElementName, dataStoreRef, model, xtr);
             return dataStoreRef;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             DataStoreReference dataStoreRef = (DataStoreReference)element;
             if (!string.IsNullOrWhiteSpace(dataStoreRef.DataStoreRef))
             {
-                xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DATA_STORE_REF, dataStoreRef.DataStoreRef);
+                xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DATA_STORE_REF, dataStoreRef.DataStoreRef);
             }
 
             if (!string.IsNullOrWhiteSpace(dataStoreRef.ItemSubjectRef))
             {
-                xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ITEM_SUBJECT_REF, dataStoreRef.ItemSubjectRef);
+                xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ITEM_SUBJECT_REF, dataStoreRef.ItemSubjectRef);
             }
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             DataStoreReference dataStoreRef = (DataStoreReference)element;
             if (!string.IsNullOrWhiteSpace(dataStoreRef.DataState))
             {
-                xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DATA_STATE);
-                xtw.writeCharacters(dataStoreRef.DataState);
-                xtw.writeEndElement();
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_DATA_STATE, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteCharacters(dataStoreRef.DataState);
+                xtw.WriteEndElement();
             }
         }
     }

@@ -10,6 +10,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System.IO;
+
 namespace org.activiti.engine.impl.util.io
 {
 
@@ -24,7 +26,7 @@ namespace org.activiti.engine.impl.util.io
             this.bytes = bytes;
         }
 
-        public virtual System.IO.Stream InputStream
+        public virtual Stream InputStream
         {
             get
             {

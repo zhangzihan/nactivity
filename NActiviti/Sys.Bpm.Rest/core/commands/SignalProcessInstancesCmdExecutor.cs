@@ -9,11 +9,11 @@ namespace org.activiti.cloud.services.core.commands
     /// <summary>
     /// 
     /// </summary>
-    public class SignalProcessInstancesCmdExecutor : CommandExecutor<SignalCmd>
+    public class SignalProcessInstancesCmdExecutor : ICommandExecutor<SignalCmd>
     {
 
-        private ProcessEngineWrapper processEngine;
-        private IMessageChannel<SignalProcessInstancesResults> commandResults;
+        private readonly ProcessEngineWrapper processEngine;
+        private readonly IMessageChannel<SignalProcessInstancesResults> commandResults;
 
         /// <summary>
         /// 
@@ -41,11 +41,11 @@ namespace org.activiti.cloud.services.core.commands
         /// 
         /// </summary>
         /// <param name="cmd"></param>
-        public virtual void execute(SignalCmd cmd)
+        public virtual void Execute(SignalCmd cmd)
         {
-            processEngine.signal(cmd);
+            processEngine.Signal(cmd);
             SignalProcessInstancesResults cmdResult = new SignalProcessInstancesResults(cmd.Id);
-            commandResults.send(MessageBuilder<SignalProcessInstancesResults>.withPayload(cmdResult).build());
+            commandResults.Send(MessageBuilder<SignalProcessInstancesResults>.WithPayload(cmdResult).Build());
         }
     }
 

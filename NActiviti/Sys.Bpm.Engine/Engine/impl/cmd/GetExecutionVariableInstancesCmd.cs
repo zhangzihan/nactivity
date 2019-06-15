@@ -21,40 +21,41 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
     using org.activiti.engine.runtime;
+    using System.Linq;
 
     [Serializable]
     public class GetExecutionVariableInstancesCmd : ICommand<IDictionary<string, IVariableInstance>>
     {
         private const long serialVersionUID = 1L;
         protected internal string executionId;
-        protected internal ICollection<string> variableNames;
+        protected internal IEnumerable<string> variableNames;
         protected internal bool isLocal;
 
-        public GetExecutionVariableInstancesCmd(string executionId, ICollection<string> variableNames, bool isLocal)
+        public GetExecutionVariableInstancesCmd(string executionId, IEnumerable<string> variableNames, bool isLocal)
         {
             this.executionId = executionId;
             this.variableNames = variableNames;
             this.isLocal = isLocal;
         }
 
-        public virtual IDictionary<string, IVariableInstance> execute(ICommandContext commandContext)
+        public virtual IDictionary<string, IVariableInstance> Execute(ICommandContext commandContext)
         {
 
             // Verify existance of execution
-            if (ReferenceEquals(executionId, null))
+            if (executionId is null)
             {
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }
 
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
 
             if (execution == null)
             {
                 throw new ActivitiObjectNotFoundException("execution " + executionId + " doesn't exist", typeof(IExecution));
             }
 
-            IDictionary<string, IVariableInstance> variables = null;
-            if (variableNames == null || variableNames.Count == 0)
+            IDictionary<string, IVariableInstance> variables;
+            if ((variableNames?.Count()).GetValueOrDefault(0) == 0)
             {
                 // Fetch all
                 if (isLocal)
@@ -65,18 +66,17 @@ namespace org.activiti.engine.impl.cmd
                 {
                     variables = execution.VariableInstances;
                 }
-
             }
             else
             {
                 // Fetch specific collection of variables
                 if (isLocal)
                 {
-                    variables = execution.getVariableInstancesLocal(variableNames, false);
+                    variables = execution.GetVariableInstancesLocal(variableNames, false);
                 }
                 else
                 {
-                    variables = execution.getVariableInstances(variableNames, false);
+                    variables = execution.GetVariableInstances(variableNames, false);
                 }
             }
 

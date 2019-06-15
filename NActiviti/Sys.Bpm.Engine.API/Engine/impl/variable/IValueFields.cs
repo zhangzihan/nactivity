@@ -53,10 +53,9 @@ namespace org.activiti.engine.impl.variable
         /// <returns> the byte array value, if any, or null. </returns>
         byte[] Bytes { get; set; }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         object CachedValue { get; set; }
-
-
     }
-
 }

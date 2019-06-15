@@ -25,10 +25,9 @@ namespace org.activiti.engine.@delegate.@event
         /// </summary>
         /// <param name="event">
         ///          the event </param>
-        void onEvent(IActivitiEvent @event);
+        void OnEvent(IActivitiEvent @event);
 
         /// <returns> whether or not the current operation should fail when this listeners execution throws an exception. </returns>
         bool FailOnException { get; }
     }
-
 }

@@ -49,36 +49,35 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.resultVariable = resultVariable;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
-            object value = null;
             try
             {
-                bool isSkipExpressionEnabled = SkipExpressionUtil.isSkipExpressionEnabled(execution, skipExpression);
-                if (!isSkipExpressionEnabled || (isSkipExpressionEnabled && !SkipExpressionUtil.shouldSkipFlowElement(execution, skipExpression)))
+                bool isSkipExpressionEnabled = SkipExpressionUtil.IsSkipExpressionEnabled(execution, skipExpression);
+                if (!isSkipExpressionEnabled || (isSkipExpressionEnabled && !SkipExpressionUtil.ShouldSkipFlowElement(execution, skipExpression)))
                 {
 
                     if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
                     {
-                        JToken taskElementProperties = Context.getBpmnOverrideElementProperties(serviceTaskId, execution.ProcessDefinitionId);
-                        if (taskElementProperties != null && taskElementProperties[DynamicBpmnConstants_Fields.SERVICE_TASK_EXPRESSION] != null)
+                        JToken taskElementProperties = Context.GetBpmnOverrideElementProperties(serviceTaskId, execution.ProcessDefinitionId);
+                        if (taskElementProperties != null && taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_EXPRESSION] != null)
                         {
-                            string overrideExpression = taskElementProperties[DynamicBpmnConstants_Fields.SERVICE_TASK_EXPRESSION].ToString();
+                            string overrideExpression = taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_EXPRESSION].ToString();
                             if (!string.IsNullOrWhiteSpace(overrideExpression) && !overrideExpression.Equals(expression.ExpressionText))
                             {
-                                expression = Context.ProcessEngineConfiguration.ExpressionManager.createExpression(overrideExpression);
+                                expression = Context.ProcessEngineConfiguration.ExpressionManager.CreateExpression(overrideExpression);
                             }
                         }
                     }
 
-                    value = expression.getValue(execution);
-                    if (!ReferenceEquals(resultVariable, null))
+                    object value = expression.GetValue(execution);
+                    if (!(resultVariable is null))
                     {
-                        execution.setVariable(resultVariable, value);
+                        execution.SetVariable(resultVariable, value);
                     }
                 }
 
-                leave(execution);
+                Leave(execution);
             }
             catch (Exception exc)
             {
@@ -97,7 +96,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
                 if (error != null)
                 {
-                    ErrorPropagation.propagateError(error, execution);
+                    ErrorPropagation.PropagateError(error, execution);
                 }
                 else
                 {

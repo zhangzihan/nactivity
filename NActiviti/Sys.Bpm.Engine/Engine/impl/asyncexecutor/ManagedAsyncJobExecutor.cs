@@ -1,7 +1,6 @@
 ﻿using javax.enterprise.concurrent;
 using Microsoft.Extensions.Logging;
-using Sys;
-using System;
+using Sys.Workflow;
 using System.Collections.Concurrent;
 using System.Threading;
 
@@ -30,8 +29,14 @@ namespace org.activiti.engine.impl.asyncexecutor
     {
         private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<ManagedAsyncJobExecutor>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ManagedThreadFactory threadFactory;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ManagedThreadFactory ThreadFactory
         {
             get
@@ -44,13 +49,15 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
-        protected internal override void initAsyncJobExecutionThreadPool()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal override void InitAsyncJobExecutionThreadPool()
         {
             if (threadFactory == null)
             {
                 log.LogWarning("A managed thread factory was not found, falling back to self-managed threads");
-                base.initAsyncJobExecutionThreadPool();
+                base.InitAsyncJobExecutionThreadPool();
             }
             else
             {
@@ -70,9 +77,8 @@ namespace org.activiti.engine.impl.asyncexecutor
 
                 }
 
-                startJobAcquisitionThread();
+                StartJobAcquisitionThread();
             }
         }
     }
-
 }

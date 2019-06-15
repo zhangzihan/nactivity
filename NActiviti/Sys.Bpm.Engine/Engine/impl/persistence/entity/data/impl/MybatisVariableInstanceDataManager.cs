@@ -37,60 +37,68 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IVariableInstanceEntity create()
+        public override IVariableInstanceEntity Create()
         {
-            VariableInstanceEntityImpl variableInstanceEntity = new VariableInstanceEntityImpl();
-            variableInstanceEntity.Revision = 0; // For backwards compatibility, variables / HistoricVariableUpdate assumes revision 0 for the first time
+            VariableInstanceEntityImpl variableInstanceEntity = new VariableInstanceEntityImpl
+            {
+                Revision = 0 // For backwards compatibility, variables / HistoricVariableUpdate assumes revision 0 for the first time
+            };
             return variableInstanceEntity;
         }
 
-        public virtual IList<IVariableInstanceEntity> findVariableInstancesByTaskId(string taskId)
+        public virtual IList<IVariableInstanceEntity> FindVariableInstancesByTaskId(string taskId)
         {
-            return DbSqlSession.selectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariablesByTaskId", new { taskId });
+            return DbSqlSession.SelectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariablesByTaskId", new { taskId });
         }
 
-        public virtual IList<IVariableInstanceEntity> findVariableInstancesByTaskIds(ISet<string> taskIds)
+        public virtual IList<IVariableInstanceEntity> FindVariableInstancesByTaskIds(string[] taskIds)
         {
-            return DbSqlSession.selectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariablesByTaskIds", new { ids = taskIds });
+            return DbSqlSession.SelectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariablesByTaskIds", new { ids = taskIds });
         }
 
-        public virtual IList<IVariableInstanceEntity> findVariableInstancesByExecutionId(string executionId)
+        public virtual IList<IVariableInstanceEntity> FindVariableInstancesByExecutionId(string executionId)
         {
-            return (IList<IVariableInstanceEntity>)getList("selectVariablesByExecutionId", new { executionId }, variableInstanceEntity, true);
+            return (IList<IVariableInstanceEntity>)GetList("selectVariablesByExecutionId", new { executionId }, variableInstanceEntity, true);
         }
 
-        public virtual IList<IVariableInstanceEntity> findVariableInstancesByExecutionIds(ISet<string> executionIds)
+        public virtual IList<IVariableInstanceEntity> FindVariableInstancesByExecutionIds(string[] executionIds)
         {
-            return DbSqlSession.selectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariablesByExecutionIds", new { executionIds });
+            return DbSqlSession.SelectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariablesByExecutionIds", new { executionIds });
         }
 
-        public virtual IVariableInstanceEntity findVariableInstanceByExecutionAndName(string executionId, string variableName)
+        public virtual IVariableInstanceEntity FindVariableInstanceByExecutionAndName(string executionId, string variableName)
         {
-            IDictionary<string, string> @params = new Dictionary<string, string>(2);
-            @params["executionId"] = executionId;
-            @params["name"] = variableName;
-            return DbSqlSession.selectOne<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariableInstanceByExecutionAndName", @params);
+            IDictionary<string, string> @params = new Dictionary<string, string>(2)
+            {
+                ["executionId"] = executionId,
+                ["name"] = variableName
+            };
+            return DbSqlSession.SelectOne<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariableInstanceByExecutionAndName", @params);
         }
 
-        public virtual IList<IVariableInstanceEntity> findVariableInstancesByExecutionAndNames(string executionId, ICollection<string> names)
+        public virtual IList<IVariableInstanceEntity> FindVariableInstancesByExecutionAndNames(string executionId, IEnumerable<string> names)
         {
-            return DbSqlSession.selectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariableInstancesByExecutionAndNames", new { executionId, names });
+            return DbSqlSession.SelectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariableInstancesByExecutionAndNames", new { executionId, names });
         }
 
-        public virtual IVariableInstanceEntity findVariableInstanceByTaskAndName(string taskId, string variableName)
+        public virtual IVariableInstanceEntity FindVariableInstanceByTaskAndName(string taskId, string variableName)
         {
-            IDictionary<string, string> @params = new Dictionary<string, string>(2);
-            @params["taskId"] = taskId;
-            @params["name"] = variableName;
-            return DbSqlSession.selectOne<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariableInstanceByTaskAndName", @params);
+            IDictionary<string, string> @params = new Dictionary<string, string>(2)
+            {
+                ["taskId"] = taskId,
+                ["name"] = variableName
+            };
+            return DbSqlSession.SelectOne<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariableInstanceByTaskAndName", @params);
         }
 
-        public virtual IList<IVariableInstanceEntity> findVariableInstancesByTaskAndNames(string taskId, ICollection<string> names)
+        public virtual IList<IVariableInstanceEntity> FindVariableInstancesByTaskAndNames(string taskId, IEnumerable<string> names)
         {
-            IDictionary<string, object> @params = new Dictionary<string, object>(2);
-            @params["taskId"] = taskId;
-            @params["names"] = names;
-            return DbSqlSession.selectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariableInstancesByTaskAndNames", @params);
+            IDictionary<string, object> @params = new Dictionary<string, object>(2)
+            {
+                ["taskId"] = taskId,
+                ["names"] = names
+            };
+            return DbSqlSession.SelectList<VariableInstanceEntityImpl, IVariableInstanceEntity>("selectVariableInstancesByTaskAndNames", @params);
         }
 
     }

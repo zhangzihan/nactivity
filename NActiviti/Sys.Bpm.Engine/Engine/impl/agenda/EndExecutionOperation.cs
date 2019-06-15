@@ -15,7 +15,7 @@ namespace org.activiti.engine.impl.agenda
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
-    using Sys;
+    using Sys.Workflow;
 
     /// <summary>
     /// This operations ends an execution and follows the typical BPMN rules to continue the process (if possible).
@@ -29,27 +29,47 @@ namespace org.activiti.engine.impl.agenda
     {
         private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<EndExecutionOperation>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <param name="execution"></param>
         public EndExecutionOperation(ICommandContext commandContext, IExecutionEntity execution) : base(commandContext, execution)
         {
         }
 
-        protected override void run()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected override void RunOperation()
         {
-            if (execution.ProcessInstanceType)
+            try
             {
-                handleProcessInstanceExecution(execution);
+                if (execution.ProcessInstanceType)
+                {
+                    HandleProcessInstanceExecution(execution);
+                }
+                else
+                {
+                    HandleRegularExecution();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                handleRegularExecution();
+                logger.LogError(ex, ex.Message);
+                throw;
             }
         }
 
-        protected internal virtual void handleProcessInstanceExecution(IExecutionEntity processInstanceExecution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstanceExecution"></param>
+        protected internal virtual void HandleProcessInstanceExecution(IExecutionEntity processInstanceExecution)
         {
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
 
-            string processInstanceId = processInstanceExecution.Id; 
+            string processInstanceId = processInstanceExecution.Id;
             // No parent execution == process instance id
             logger.LogDebug($"No parent execution found. Verifying if process instance {processInstanceId} can be stopped.");
 
@@ -63,7 +83,7 @@ namespace org.activiti.engine.impl.agenda
                 subProcessActivityBehavior = (@delegate.ISubProcessActivityBehavior)superExecutionElement.Behavior;
                 try
                 {
-                    subProcessActivityBehavior.completing(superExecution, processInstanceExecution);
+                    subProcessActivityBehavior.Completing(superExecution, processInstanceExecution);
                 }
                 //catch (Exception e)
                 //{
@@ -77,25 +97,25 @@ namespace org.activiti.engine.impl.agenda
                 }
             }
 
-            int activeExecutions = getNumberOfActiveChildExecutionsForProcessInstance(executionEntityManager, processInstanceId);
+            int activeExecutions = GetNumberOfActiveChildExecutionsForProcessInstance(executionEntityManager, processInstanceId);
             if (activeExecutions == 0)
             {
                 logger.LogDebug($"No active executions found. Ending process instance {processInstanceId} ");
 
                 // note the use of execution here vs processinstance execution for getting the flowelement
-                executionEntityManager.deleteProcessInstanceExecutionEntity(processInstanceId, execution.CurrentFlowElement != null ? execution.CurrentFlowElement.Id : null, null, false, false);
+                executionEntityManager.DeleteProcessInstanceExecutionEntity(processInstanceId, execution.CurrentFlowElement?.Id, null, false, false);
             }
             else
             {
                 logger.LogDebug($"Active executions found. Process instance {processInstanceId} will not be ended.");
             }
 
-            Process process = ProcessDefinitionUtil.getProcess(processInstanceExecution.ProcessDefinitionId);
+            Process process = ProcessDefinitionUtil.GetProcess(processInstanceExecution.ProcessDefinitionId);
 
             // Execute execution listeners for process end.
             if (CollectionUtil.IsNotEmpty(process.ExecutionListeners))
             {
-                executeExecutionListeners(process, processInstanceExecution, BaseExecutionListener_Fields.EVENTNAME_END);
+                ExecuteExecutionListeners(process, processInstanceExecution, BaseExecutionListenerFields.EVENTNAME_END);
             }
 
             // and trigger execution afterwards if doing a call activity
@@ -104,7 +124,7 @@ namespace org.activiti.engine.impl.agenda
                 superExecution.SubProcessInstance = null;
                 try
                 {
-                    subProcessActivityBehavior.completed(superExecution);
+                    subProcessActivityBehavior.Completed(superExecution);
                 }
                 //catch (Exception e)
                 //{
@@ -119,30 +139,32 @@ namespace org.activiti.engine.impl.agenda
             }
         }
 
-        protected internal virtual void handleRegularExecution()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal virtual void HandleRegularExecution()
         {
-
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
 
             // There will be a parent execution (or else we would be in the process instance handling method)
-            IExecutionEntity parentExecution = executionEntityManager.findById<IExecutionEntity>(execution.ParentId);
+            IExecutionEntity parentExecution = executionEntityManager.FindById<IExecutionEntity>(execution.ParentId);
 
             // If the execution is a scope, all the child executions must be deleted first.
             if (execution.IsScope)
             {
-                executionEntityManager.deleteChildExecutions(execution, null, false);
+                executionEntityManager.DeleteChildExecutions(execution, null, false);
             }
 
             // Delete current execution
             logger.LogDebug($"Ending execution {execution.Id}");
-            executionEntityManager.deleteExecutionAndRelatedData(execution, null, false);
+            executionEntityManager.DeleteExecutionAndRelatedData(execution, null, false);
 
             logger.LogDebug($"Parent execution found. Continuing process using execution {parentExecution.Id}");
 
             // When ending an execution in a multi instance subprocess , special care is needed
-            if (isEndEventInMultiInstanceSubprocess(execution))
+            if (IsEndEventInMultiInstanceSubprocess(execution))
             {
-                handleMultiInstanceSubProcess(executionEntityManager, parentExecution);
+                HandleMultiInstanceSubProcess(executionEntityManager, parentExecution);
                 return;
             }
 
@@ -150,9 +172,8 @@ namespace org.activiti.engine.impl.agenda
 
             // If there are no more active child executions, the process can be continued
             // If not (eg an embedded subprocess still has active elements, we cannot continue)
-            if (getNumberOfActiveChildExecutionsForExecution(executionEntityManager, parentExecution.Id) == 0 || isAllEventScopeExecutions(executionEntityManager, parentExecution))
+            if (GetNumberOfActiveChildExecutionsForExecution(executionEntityManager, parentExecution.Id) == 0 || IsAllEventScopeExecutions(executionEntityManager, parentExecution))
             {
-
                 IExecutionEntity executionToContinue = null;
 
                 if (subProcess != null)
@@ -163,11 +184,11 @@ namespace org.activiti.engine.impl.agenda
 
                     if (subProcess.ForCompensation)
                     {
-                        Context.Agenda.planEndExecutionOperation(parentExecution);
+                        Context.Agenda.PlanEndExecutionOperation(parentExecution);
                     }
                     else
                     {
-                        executionToContinue = handleSubProcessEnd(executionEntityManager, parentExecution, subProcess);
+                        executionToContinue = HandleSubProcessEnd(executionEntityManager, parentExecution, subProcess);
                     }
                 }
                 else
@@ -176,7 +197,7 @@ namespace org.activiti.engine.impl.agenda
                     // In the 'regular' case (not being in a subprocess), we use the parent execution to
                     // continue process instance execution
 
-                    executionToContinue = handleRegularExecutionEnd(executionEntityManager, parentExecution);
+                    executionToContinue = HandleRegularExecutionEnd(executionEntityManager, parentExecution);
                 }
 
                 if (executionToContinue != null)
@@ -185,22 +206,27 @@ namespace org.activiti.engine.impl.agenda
                     // not the process instance root execution (otherwise the process instance is finished)
                     if (executionToContinue.ProcessInstanceType)
                     {
-                        handleProcessInstanceExecution(executionToContinue);
+                        HandleProcessInstanceExecution(executionToContinue);
                     }
                     else
                     {
-                        Context.Agenda.planTakeOutgoingSequenceFlowsOperation(executionToContinue, true);
+                        Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(executionToContinue, true);
                     }
                 }
             }
         }
 
-        protected internal virtual IExecutionEntity handleSubProcessEnd(IExecutionEntityManager executionEntityManager, IExecutionEntity parentExecution, SubProcess subProcess)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntityManager"></param>
+        /// <param name="parentExecution"></param>
+        /// <param name="subProcess"></param>
+        /// <returns></returns>
+        protected internal virtual IExecutionEntity HandleSubProcessEnd(IExecutionEntityManager executionEntityManager, IExecutionEntity parentExecution, SubProcess subProcess)
         {
-
-            IExecutionEntity executionToContinue = null;
             // create a new execution to take the outgoing sequence flows
-            executionToContinue = executionEntityManager.createChildExecution(parentExecution.Parent);
+            IExecutionEntity executionToContinue = executionEntityManager.CreateChildExecution(parentExecution.Parent);
             executionToContinue.CurrentFlowElement = subProcess;
 
             bool hasCompensation = false;
@@ -212,9 +238,8 @@ namespace org.activiti.engine.impl.agenda
             {
                 foreach (FlowElement subElement in subProcess.FlowElements)
                 {
-                    if (subElement is Activity)
+                    if (subElement is Activity subActivity)
                     {
-                        Activity subActivity = (Activity)subElement;
                         if (CollectionUtil.IsNotEmpty(subActivity.BoundaryEvents))
                         {
                             foreach (BoundaryEvent boundaryEvent in subActivity.BoundaryEvents)
@@ -235,32 +260,36 @@ namespace org.activiti.engine.impl.agenda
             // The following method does exactly that, and moves the executions beneath the process instance.
             if (hasCompensation)
             {
-                ScopeUtil.createCopyOfSubProcessExecutionForCompensation(parentExecution);
+                ScopeUtil.CreateCopyOfSubProcessExecutionForCompensation(parentExecution);
             }
 
-            executionEntityManager.deleteChildExecutions(parentExecution, null, false);
-            executionEntityManager.deleteExecutionAndRelatedData(parentExecution, null, false);
+            executionEntityManager.DeleteChildExecutions(parentExecution, null, false);
+            executionEntityManager.DeleteExecutionAndRelatedData(parentExecution, null, false);
 
-            Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createActivityEvent(ActivitiEventType.ACTIVITY_COMPLETED, subProcess.Id, subProcess.Name, parentExecution.Id, parentExecution.ProcessInstanceId, parentExecution.ProcessDefinitionId, subProcess));
+            Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityEvent(ActivitiEventType.ACTIVITY_COMPLETED, subProcess.Id, subProcess.Name, parentExecution.Id, parentExecution.ProcessInstanceId, parentExecution.ProcessDefinitionId, subProcess));
             return executionToContinue;
         }
 
-        protected internal virtual IExecutionEntity handleRegularExecutionEnd(IExecutionEntityManager executionEntityManager, IExecutionEntity parentExecution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntityManager"></param>
+        /// <param name="parentExecution"></param>
+        /// <returns></returns>
+        protected internal virtual IExecutionEntity HandleRegularExecutionEnd(IExecutionEntityManager executionEntityManager, IExecutionEntity parentExecution)
         {
-            IExecutionEntity executionToContinue = null;
-
             if (!parentExecution.ProcessInstanceType && !(parentExecution.CurrentFlowElement is SubProcess))
             {
                 parentExecution.CurrentFlowElement = execution.CurrentFlowElement;
             }
 
-            if (execution.CurrentFlowElement is SubProcess)
+            IExecutionEntity executionToContinue;
+            if (execution.CurrentFlowElement is SubProcess currentSubProcess)
             {
-                SubProcess currentSubProcess = (SubProcess)execution.CurrentFlowElement;
                 if (currentSubProcess.OutgoingFlows.Count > 0)
                 {
                     // create a new execution to take the outgoing sequence flows
-                    executionToContinue = executionEntityManager.createChildExecution(parentExecution);
+                    executionToContinue = executionEntityManager.CreateChildExecution(parentExecution);
                     executionToContinue.CurrentFlowElement = execution.CurrentFlowElement;
                 }
                 else
@@ -268,11 +297,11 @@ namespace org.activiti.engine.impl.agenda
                     if (!parentExecution.Id.Equals(parentExecution.ProcessInstanceId))
                     {
                         // create a new execution to take the outgoing sequence flows
-                        executionToContinue = executionEntityManager.createChildExecution(parentExecution.Parent);
+                        executionToContinue = executionEntityManager.CreateChildExecution(parentExecution.Parent);
                         executionToContinue.CurrentFlowElement = parentExecution.CurrentFlowElement;
 
-                        executionEntityManager.deleteChildExecutions(parentExecution, null, false);
-                        executionEntityManager.deleteExecutionAndRelatedData(parentExecution, null, false);
+                        executionEntityManager.DeleteChildExecutions(parentExecution, null, false);
+                        executionEntityManager.DeleteExecutionAndRelatedData(parentExecution, null, false);
                     }
                     else
                     {
@@ -287,9 +316,14 @@ namespace org.activiti.engine.impl.agenda
             return executionToContinue;
         }
 
-        protected internal virtual void handleMultiInstanceSubProcess(IExecutionEntityManager executionEntityManager, IExecutionEntity parentExecution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntityManager"></param>
+        /// <param name="parentExecution"></param>
+        protected internal virtual void HandleMultiInstanceSubProcess(IExecutionEntityManager executionEntityManager, IExecutionEntity parentExecution)
         {
-            IList<IExecutionEntity> activeChildExecutions = getActiveChildExecutionsForExecution(executionEntityManager, parentExecution.Id);
+            IList<IExecutionEntity> activeChildExecutions = GetActiveChildExecutionsForExecution(executionEntityManager, parentExecution.Id);
             bool containsOtherChildExecutions = false;
             foreach (IExecutionEntity activeExecution in activeChildExecutions)
             {
@@ -301,20 +335,24 @@ namespace org.activiti.engine.impl.agenda
 
             if (!containsOtherChildExecutions)
             {
-
                 // Destroy the current scope (subprocess) and leave via the subprocess
 
-                ScopeUtil.createCopyOfSubProcessExecutionForCompensation(parentExecution);
-                Context.Agenda.planDestroyScopeOperation(parentExecution);
+                ScopeUtil.CreateCopyOfSubProcessExecutionForCompensation(parentExecution);
+                Context.Agenda.PlanDestroyScopeOperation(parentExecution);
 
                 SubProcess subProcess = execution.CurrentFlowElement.SubProcess;
                 MultiInstanceActivityBehavior multiInstanceBehavior = (MultiInstanceActivityBehavior)subProcess.Behavior;
                 parentExecution.CurrentFlowElement = subProcess;
-                multiInstanceBehavior.leave(parentExecution);
+                multiInstanceBehavior.Leave(parentExecution);
             }
         }
 
-        protected internal virtual bool isEndEventInMultiInstanceSubprocess(IExecutionEntity executionEntity)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntity"></param>
+        /// <returns></returns>
+        protected internal virtual bool IsEndEventInMultiInstanceSubprocess(IExecutionEntity executionEntity)
         {
             if (executionEntity.CurrentFlowElement is EndEvent)
             {
@@ -324,9 +362,15 @@ namespace org.activiti.engine.impl.agenda
             return false;
         }
 
-        protected internal virtual int getNumberOfActiveChildExecutionsForProcessInstance(IExecutionEntityManager executionEntityManager, string processInstanceId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntityManager"></param>
+        /// <param name="processInstanceId"></param>
+        /// <returns></returns>
+        protected internal virtual int GetNumberOfActiveChildExecutionsForProcessInstance(IExecutionEntityManager executionEntityManager, string processInstanceId)
         {
-            ICollection<IExecutionEntity> executions = executionEntityManager.findChildExecutionsByProcessInstanceId(processInstanceId);
+            ICollection<IExecutionEntity> executions = executionEntityManager.FindChildExecutionsByProcessInstanceId(processInstanceId);
             int activeExecutions = 0;
             foreach (IExecutionEntity execution in executions)
             {
@@ -338,9 +382,15 @@ namespace org.activiti.engine.impl.agenda
             return activeExecutions;
         }
 
-        protected internal virtual int getNumberOfActiveChildExecutionsForExecution(IExecutionEntityManager executionEntityManager, string executionId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntityManager"></param>
+        /// <param name="executionId"></param>
+        /// <returns></returns>
+        protected internal virtual int GetNumberOfActiveChildExecutionsForExecution(IExecutionEntityManager executionEntityManager, string executionId)
         {
-            IList<IExecutionEntity> executions = executionEntityManager.findChildExecutionsByParentExecutionId(executionId);
+            IList<IExecutionEntity> executions = executionEntityManager.FindChildExecutionsByParentExecutionId(executionId);
             int activeExecutions = 0;
 
             // Filter out the boundary events
@@ -355,10 +405,16 @@ namespace org.activiti.engine.impl.agenda
             return activeExecutions;
         }
 
-        protected internal virtual IList<IExecutionEntity> getActiveChildExecutionsForExecution(IExecutionEntityManager executionEntityManager, string executionId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntityManager"></param>
+        /// <param name="executionId"></param>
+        /// <returns></returns>
+        protected internal virtual IList<IExecutionEntity> GetActiveChildExecutionsForExecution(IExecutionEntityManager executionEntityManager, string executionId)
         {
             IList<IExecutionEntity> activeChildExecutions = new List<IExecutionEntity>();
-            IList<IExecutionEntity> executions = executionEntityManager.findChildExecutionsByParentExecutionId(executionId);
+            IList<IExecutionEntity> executions = executionEntityManager.FindChildExecutionsByParentExecutionId(executionId);
 
             foreach (IExecutionEntity activeExecution in executions)
             {
@@ -371,15 +427,21 @@ namespace org.activiti.engine.impl.agenda
             return activeChildExecutions;
         }
 
-        protected internal virtual bool isAllEventScopeExecutions(IExecutionEntityManager executionEntityManager, IExecutionEntity parentExecution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntityManager"></param>
+        /// <param name="parentExecution"></param>
+        /// <returns></returns>
+        protected internal virtual bool IsAllEventScopeExecutions(IExecutionEntityManager executionEntityManager, IExecutionEntity parentExecution)
         {
             bool allEventScopeExecutions = true;
-            IList<IExecutionEntity> executions = executionEntityManager.findChildExecutionsByParentExecutionId(parentExecution.Id);
+            IList<IExecutionEntity> executions = executionEntityManager.FindChildExecutionsByParentExecutionId(parentExecution.Id);
             foreach (IExecutionEntity childExecution in executions)
             {
                 if (childExecution.IsEventScope)
                 {
-                    executionEntityManager.deleteExecutionAndRelatedData(childExecution, null, false);
+                    executionEntityManager.DeleteExecutionAndRelatedData(childExecution, null, false);
                 }
                 else
                 {
@@ -390,7 +452,13 @@ namespace org.activiti.engine.impl.agenda
             return allEventScopeExecutions;
         }
 
-        protected internal virtual bool allChildExecutionsEnded(IExecutionEntity parentExecutionEntity, IExecutionEntity executionEntityToIgnore)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parentExecutionEntity"></param>
+        /// <param name="executionEntityToIgnore"></param>
+        /// <returns></returns>
+        protected internal virtual bool AllChildExecutionsEnded(IExecutionEntity parentExecutionEntity, IExecutionEntity executionEntityToIgnore)
         {
             foreach (IExecutionEntity childExecutionEntity in parentExecutionEntity.Executions)
             {
@@ -402,7 +470,7 @@ namespace org.activiti.engine.impl.agenda
                     }
                     if (childExecutionEntity.Executions != null && childExecutionEntity.Executions.Count > 0)
                     {
-                        if (!allChildExecutionsEnded(childExecutionEntity, executionEntityToIgnore))
+                        if (!AllChildExecutionsEnded(childExecutionEntity, executionEntityToIgnore))
                         {
                             return false;
                         }
@@ -412,5 +480,4 @@ namespace org.activiti.engine.impl.agenda
             return true;
         }
     }
-
 }

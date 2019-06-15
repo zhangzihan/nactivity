@@ -33,9 +33,9 @@ namespace org.activiti.engine.impl.bpmn.listener
             this.expression = expression;
         }
 
-        public virtual IDictionary<string, object> getCustomPropertiesMap(IExecutionEntity execution)
+        public virtual IDictionary<string, object> GetCustomPropertiesMap(IExecutionEntity execution)
         {
-            object expressionValue = expression.getValue(execution);
+            object expressionValue = expression.GetValue(execution);
             if (expressionValue is System.Collections.IDictionary)
             {
                 return (IDictionary<string, object>)expressionValue;

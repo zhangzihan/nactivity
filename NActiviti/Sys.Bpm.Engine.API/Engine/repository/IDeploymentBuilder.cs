@@ -16,6 +16,9 @@ namespace org.activiti.engine.repository
 {
     using java.util.zip;
     using org.activiti.bpmn.model;
+    using org.activiti.engine.impl.persistence.entity;
+    using System.Collections.Generic;
+    using System.IO;
 
     /// <summary>
     /// Builder for creating new deployments.
@@ -31,51 +34,114 @@ namespace org.activiti.engine.repository
     /// </summary>
     public interface IDeploymentBuilder
     {
+        /// <summary>
+        /// 提交部署后返回的部署实体
+        /// </summary>
+        IDeploymentEntity Deployment { get; }
 
-        IDeploymentBuilder addInputStream(string resourceName, System.IO.Stream inputStream);
+        /// <summary>
+        /// 是否启用流程验证
+        /// </summary>
+        bool ProcessValidationEnabled { get; }
 
-        IDeploymentBuilder addClasspathResource(string resource);
+        /// <summary>
+        /// 是否启用bpmn2 xsd验证，待实现
+        /// </summary>
+        bool Bpmn20XsdValidationEnabled { get; }
 
-        IDeploymentBuilder addString(string resourceName, string text);
+        /// <summary>
+        /// 是否启用重复性校验
+        /// </summary>
+        bool DuplicateFilterEnabled { get; }
 
-        IDeploymentBuilder addBytes(string resourceName, byte[] bytes);
+        /// <summary>
+        /// 流程定义激活日期
+        /// </summary>
+        DateTime? ProcessDefinitionsActivationDate { get; }
 
-        IDeploymentBuilder addZipInputStream(ZipInputStream zipInputStream);
+        /// <summary>
+        /// 流程部署时的附加变量
+        /// </summary>
+        IDictionary<string, object> DeploymentProperties { get; }
 
-        IDeploymentBuilder addBpmnModel(string resourceName, BpmnModel bpmnModel);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resourceName"></param>
+        /// <param name="inputStream"></param>
+        /// <returns></returns>
+        IDeploymentBuilder AddInputStream(string resourceName, Stream inputStream);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <returns></returns>
+        IDeploymentBuilder AddClasspathResource(string resource);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resourceName"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        IDeploymentBuilder AddString(string resourceName, string text);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resourceName"></param>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        IDeploymentBuilder AddBytes(string resourceName, byte[] bytes);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="zipInputStream"></param>
+        /// <returns></returns>
+        IDeploymentBuilder AddZipInputStream(ZipInputStream zipInputStream);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resourceName"></param>
+        /// <param name="bpmnModel"></param>
+        /// <returns></returns>
+        IDeploymentBuilder AddBpmnModel(string resourceName, BpmnModel bpmnModel);
 
         /// <summary>
         /// If called, no XML schema validation against the BPMN 2.0 XSD.
         /// 
         /// Not recommended in general.
         /// </summary>
-        IDeploymentBuilder disableSchemaValidation();
+        IDeploymentBuilder DisableSchemaValidation();
 
         /// <summary>
         /// If called, no validation that the process definition is executable on the engine will be done against the process definition.
         /// 
         /// Not recommended in general.
         /// </summary>
-        IDeploymentBuilder disableBpmnValidation();
+        IDeploymentBuilder DisableBpmnValidation();
 
         /// <summary>
         /// Gives the deployment the given name.
         /// </summary>
-        IDeploymentBuilder name(string name);
+        IDeploymentBuilder Name(string name);
 
         /// <summary>
         /// 设置业务键值
         /// </summary>
         /// <param name="businessKey"></param>
         /// <returns></returns>
-        IDeploymentBuilder businessKey(string businessKey);
+        IDeploymentBuilder BusinessKey(string businessKey);
 
         /// <summary>
         /// 设置业务路径
         /// </summary>
         /// <param name="businessPath"></param>
         /// <returns></returns>
-        IDeploymentBuilder businessPath(string businessPath);
+        IDeploymentBuilder BusinessPath(string businessPath);
 
         /// <summary>
         /// 设置启动表单
@@ -83,51 +149,55 @@ namespace org.activiti.engine.repository
         /// <param name="startForm">开始表单，如果部署是未指定开始表单，则使用bpmnXML的开始节点FormKey</param>
         /// <returns>流程定义XML</returns>
         /// <exception cref="org.activiti.engine.repository.StartFormNullException">表单Null异常</exception>
-        IDeploymentBuilder startForm(string startForm, string bpmnXML);
+        IDeploymentBuilder StartForm(string startForm, string bpmnXML);
 
-        IDeploymentBuilder disableDuplicateStartForm();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        IDeploymentBuilder DisableDuplicateStartForm();
 
         /// <summary>
         /// Gives the deployment the given category.
         /// </summary>
-        IDeploymentBuilder category(string category);
+        IDeploymentBuilder Category(string category);
 
         /// <summary>
         /// Gives the deployment the given key.
         /// </summary>
-        IDeploymentBuilder key(string key);
+        IDeploymentBuilder Key(string key);
 
         /// <summary>
         /// Gives the deployment the given tenant id.
         /// </summary>
-        IDeploymentBuilder tenantId(string tenantId);
+        IDeploymentBuilder TenantId(string tenantId);
 
         /// <summary>
         /// If set, this deployment will be compared to any previous deployment. This means that every (non-generated) resource will be compared with the provided resources of this deployment.
         /// </summary>
-        IDeploymentBuilder enableDuplicateFiltering();
+        IDeploymentBuilder EnableDuplicateFiltering();
 
         /// <summary>
         /// Sets the date on which the process definitions contained in this deployment will be activated. This means that all process definitions will be deployed as usual, but they will be suspended from
         /// the start until the given activation date.
         /// </summary>
-        IDeploymentBuilder activateProcessDefinitionsOn(DateTime date);
+        IDeploymentBuilder ActivateProcessDefinitionsOn(DateTime date);
 
         /// <summary>
         /// Allows to add a property to this <seealso cref="IDeploymentBuilder"/> that influences the deployment.
         /// </summary>
-        IDeploymentBuilder deploymentProperty(string propertyKey, object propertyValue);
+        IDeploymentBuilder DeploymentProperty(string propertyKey, object propertyValue);
 
         /// <summary>
         /// Deploys all provided sources to the Activiti engine.
         /// </summary>
-        IDeployment deploy();
+        IDeployment Deploy();
 
         /// <summary>
         /// 保存为草稿
         /// </summary>
         /// <returns></returns>
-        IDeployment save();
+        IDeployment Save();
 
         /// <summary>
         /// 复制流程BpmnXML,使用选择的流程id复制一个新的流程BpmnXML.
@@ -135,7 +205,6 @@ namespace org.activiti.engine.repository
         /// <param name="id">流程定义id</param>
         /// <param name="fullCopy">true:完全复制.false:仅复制节点,不保留节点业务属性</param>
         /// <returns></returns>
-        string copy(string id, bool fullCopy);
+        string Copy(string id, bool fullCopy);
     }
-
 }

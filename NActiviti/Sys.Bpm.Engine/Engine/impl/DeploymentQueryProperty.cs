@@ -50,7 +50,7 @@ namespace org.activiti.engine.impl
         public static readonly DeploymentQueryProperty DEPLOYMENT_TENANT_ID = new DeploymentQueryProperty("RES.TENANT_ID_");
         public static readonly DeploymentQueryProperty DEPLOY_TIME = new DeploymentQueryProperty("RES.DEPLOY_TIME_");
 
-        private string name;
+        private readonly string name;
 
         public DeploymentQueryProperty(string name)
         {
@@ -66,11 +66,9 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public static DeploymentQueryProperty findByName(string propertyName)
+        public static DeploymentQueryProperty FindByName(string propertyName)
         {
             return properties[propertyName];
         }
-
     }
-
 }

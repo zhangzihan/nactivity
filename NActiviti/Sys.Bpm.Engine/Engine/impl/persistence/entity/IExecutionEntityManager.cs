@@ -22,77 +22,75 @@ namespace org.activiti.engine.impl.persistence.entity
     public interface IExecutionEntityManager : IEntityManager<IExecutionEntity>
 	{
 
-	  IExecutionEntity createProcessInstanceExecution(IProcessDefinition processDefinition, string businessKey, string tenantId, string initiatorVariableName);
+	  IExecutionEntity CreateProcessInstanceExecution(IProcessDefinition processDefinition, string businessKey, string tenantId, string initiatorVariableName);
 
-	  IExecutionEntity createChildExecution(IExecutionEntity parentExecutionEntity);
+	  IExecutionEntity CreateChildExecution(IExecutionEntity parentExecutionEntity);
 
-	  IExecutionEntity createSubprocessInstance(IProcessDefinition processDefinition, IExecutionEntity superExecutionEntity, string businessKey);
+	  IExecutionEntity CreateSubprocessInstance(IProcessDefinition processDefinition, IExecutionEntity superExecutionEntity, string businessKey);
 
 	  /// <summary>
 	  /// Finds the <seealso cref="IExecutionEntity"/> for the given root process instance id.
 	  /// All children will have been fetched and initialized. 
 	  /// </summary>
-	  IExecutionEntity findByRootProcessInstanceId(string rootProcessInstanceId);
+	  IExecutionEntity FindByRootProcessInstanceId(string rootProcessInstanceId);
 
-	  IExecutionEntity findSubProcessInstanceBySuperExecutionId(string superExecutionId);
+	  IExecutionEntity FindSubProcessInstanceBySuperExecutionId(string superExecutionId);
 
-	  IList<IExecutionEntity> findChildExecutionsByParentExecutionId(string parentExecutionId);
+	  IList<IExecutionEntity> FindChildExecutionsByParentExecutionId(string parentExecutionId);
 
-	  IList<IExecutionEntity> findChildExecutionsByProcessInstanceId(string processInstanceId);
+	  IList<IExecutionEntity> FindChildExecutionsByProcessInstanceId(string processInstanceId);
 
-	  IList<IExecutionEntity> findExecutionsByParentExecutionAndActivityIds(string parentExecutionId, ICollection<string> activityIds);
+	  IList<IExecutionEntity> FindExecutionsByParentExecutionAndActivityIds(string parentExecutionId, ICollection<string> activityIds);
 
-	  long findExecutionCountByQueryCriteria(ExecutionQueryImpl executionQuery);
+	  long FindExecutionCountByQueryCriteria(IExecutionQuery executionQuery);
 
-	  IList<IExecutionEntity> findExecutionsByQueryCriteria(ExecutionQueryImpl executionQuery, Page page);
+	  IList<IExecutionEntity> FindExecutionsByQueryCriteria(IExecutionQuery executionQuery, Page page);
 
-	  long findProcessInstanceCountByQueryCriteria(ProcessInstanceQueryImpl executionQuery);
+	  long FindProcessInstanceCountByQueryCriteria(IProcessInstanceQuery executionQuery);
 
-	  IList<IProcessInstance> findProcessInstanceByQueryCriteria(ProcessInstanceQueryImpl executionQuery);
+	  IList<IProcessInstance> FindProcessInstanceByQueryCriteria(IProcessInstanceQuery executionQuery);
 
-	  IList<IProcessInstance> findProcessInstanceAndVariablesByQueryCriteria(ProcessInstanceQueryImpl executionQuery);
+	  IList<IProcessInstance> FindProcessInstanceAndVariablesByQueryCriteria(ProcessInstanceQueryImpl executionQuery);
 
-	  ICollection<IExecutionEntity> findInactiveExecutionsByProcessInstanceId(string processInstanceId);
+	  ICollection<IExecutionEntity> FindInactiveExecutionsByProcessInstanceId(string processInstanceId);
 
-	  ICollection<IExecutionEntity> findInactiveExecutionsByActivityIdAndProcessInstanceId(string activityId, string processInstanceId);
+	  ICollection<IExecutionEntity> FindInactiveExecutionsByActivityIdAndProcessInstanceId(string activityId, string processInstanceId);
 
-	  IList<IExecution> findExecutionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+	  IList<IExecution> FindExecutionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  IList<IProcessInstance> findProcessInstanceByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+	  IList<IProcessInstance> FindProcessInstanceByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findExecutionCountByNativeQuery(IDictionary<string, object> parameterMap);
+	  long FindExecutionCountByNativeQuery(IDictionary<string, object> parameterMap);
 
 
 	  /// <summary>
 	  /// Returns all child executions of a given <seealso cref="IExecutionEntity"/>.
 	  /// In the list, child executions will be behind parent executions. 
 	  /// </summary>
-	  IList<IExecutionEntity> collectChildren(IExecutionEntity executionEntity);
+	  IList<IExecutionEntity> CollectChildren(IExecutionEntity executionEntity);
 
-	  IExecutionEntity findFirstScope(IExecutionEntity executionEntity);
+	  IExecutionEntity FindFirstScope(IExecutionEntity executionEntity);
 
-	  IExecutionEntity findFirstMultiInstanceRoot(IExecutionEntity executionEntity);
-
-
-	  void updateExecutionTenantIdForDeployment(string deploymentId, string newTenantId);
-
-	  string updateProcessInstanceBusinessKey(IExecutionEntity executionEntity, string businessKey);
+	  IExecutionEntity FindFirstMultiInstanceRoot(IExecutionEntity executionEntity);
 
 
-	  void deleteProcessInstancesByProcessDefinition(string processDefinitionId, string deleteReason, bool cascade);
+	  void UpdateExecutionTenantIdForDeployment(string deploymentId, string newTenantId);
 
-	  void deleteProcessInstance(string processInstanceId, string deleteReason, bool cascade);
-
-	  void deleteProcessInstanceExecutionEntity(string processInstanceId, string currentFlowElementId, string deleteReason, bool cascade, bool cancel);
-
-	  void deleteChildExecutions(IExecutionEntity executionEntity, string deleteReason, bool cancel);
-
-	  void deleteExecutionAndRelatedData(IExecutionEntity executionEntity, string deleteReason, bool cancel);
+	  string UpdateProcessInstanceBusinessKey(IExecutionEntity executionEntity, string businessKey);
 
 
-	  void updateProcessInstanceLockTime(string processInstanceId);
+	  void DeleteProcessInstancesByProcessDefinition(string processDefinitionId, string deleteReason, bool cascade);
 
-	  void clearProcessInstanceLockTime(string processInstanceId);
+	  void DeleteProcessInstance(string processInstanceId, string deleteReason, bool cascade);
 
+	  void DeleteProcessInstanceExecutionEntity(string processInstanceId, string currentFlowElementId, string deleteReason, bool cascade, bool cancel);
+
+	  void DeleteChildExecutions(IExecutionEntity executionEntity, string deleteReason, bool cancel);
+
+	  void DeleteExecutionAndRelatedData(IExecutionEntity executionEntity, string deleteReason, bool cancel);
+
+	  void UpdateProcessInstanceLockTime(string processInstanceId);
+
+	  void ClearProcessInstanceLockTime(string processInstanceId);
 	}
 }

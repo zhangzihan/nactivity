@@ -47,38 +47,38 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.fieldDeclarations = fieldDeclarations;
         }
 
-        public override void trigger(IExecutionEntity execution, string signalName, object signalData)
+        public override void Trigger(IExecutionEntity execution, string signalName, object signalData, bool throwError = true)
         {
-            object @delegate = DelegateExpressionUtil.resolveDelegateExpression(expression, execution, fieldDeclarations);
+            object @delegate = DelegateExpressionUtil.ResolveDelegateExpression(expression, execution, fieldDeclarations);
             if (@delegate is ITriggerableActivityBehavior)
             {
-                ((ITriggerableActivityBehavior)@delegate).trigger(execution, signalName, signalData);
+                ((ITriggerableActivityBehavior)@delegate).Trigger(execution, signalName, signalData);
             }
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
 
             try
             {
-                bool isSkipExpressionEnabled = SkipExpressionUtil.isSkipExpressionEnabled(execution, skipExpression);
-                if (!isSkipExpressionEnabled || (isSkipExpressionEnabled && !SkipExpressionUtil.shouldSkipFlowElement(execution, skipExpression)))
+                bool isSkipExpressionEnabled = SkipExpressionUtil.IsSkipExpressionEnabled(execution, skipExpression);
+                if (!isSkipExpressionEnabled || (isSkipExpressionEnabled && !SkipExpressionUtil.ShouldSkipFlowElement(execution, skipExpression)))
                 {
 
                     if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
                     {
-                        JToken taskElementProperties = Context.getBpmnOverrideElementProperties(serviceTaskId, execution.ProcessDefinitionId);
-                        if (taskElementProperties != null && taskElementProperties[DynamicBpmnConstants_Fields.SERVICE_TASK_DELEGATE_EXPRESSION] != null)
+                        JToken taskElementProperties = Context.GetBpmnOverrideElementProperties(serviceTaskId, execution.ProcessDefinitionId);
+                        if (taskElementProperties != null && taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_DELEGATE_EXPRESSION] != null)
                         {
-                            string overrideExpression = taskElementProperties[DynamicBpmnConstants_Fields.SERVICE_TASK_DELEGATE_EXPRESSION].ToString();
+                            string overrideExpression = taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_DELEGATE_EXPRESSION].ToString();
                             if (!string.IsNullOrWhiteSpace(overrideExpression) && !overrideExpression.Equals(expression.ExpressionText))
                             {
-                                expression = Context.ProcessEngineConfiguration.ExpressionManager.createExpression(overrideExpression);
+                                expression = Context.ProcessEngineConfiguration.ExpressionManager.CreateExpression(overrideExpression);
                             }
                         }
                     }
 
-                    object @delegate = DelegateExpressionUtil.resolveDelegateExpression(expression, execution, fieldDeclarations);
+                    object @delegate = DelegateExpressionUtil.ResolveDelegateExpression(expression, execution, fieldDeclarations);
                     if (@delegate is IActivityBehavior)
                     {
 
@@ -87,13 +87,13 @@ namespace org.activiti.engine.impl.bpmn.behavior
                             ((AbstractBpmnActivityBehavior)@delegate).MultiInstanceActivityBehavior = MultiInstanceActivityBehavior;
                         }
 
-                        Context.ProcessEngineConfiguration.DelegateInterceptor.handleInvocation(new ActivityBehaviorInvocation((IActivityBehavior)@delegate, execution));
+                        Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new ActivityBehaviorInvocation((IActivityBehavior)@delegate, execution));
 
                     }
                     else if (@delegate is IJavaDelegate)
                     {
-                        Context.ProcessEngineConfiguration.DelegateInterceptor.handleInvocation(new JavaDelegateInvocation((IJavaDelegate)@delegate, execution));
-                        leave(execution);
+                        Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new JavaDelegateInvocation((IJavaDelegate)@delegate, execution));
+                        Leave(execution);
 
                     }
                     else
@@ -103,7 +103,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
                 else
                 {
-                    leave(execution);
+                    Leave(execution);
                 }
             }
             catch (Exception exc)
@@ -123,7 +123,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
                 if (error != null)
                 {
-                    ErrorPropagation.propagateError(error, execution);
+                    ErrorPropagation.PropagateError(error, execution);
                 }
                 else
                 {

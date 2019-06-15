@@ -35,6 +35,13 @@ namespace org.activiti.bpmn.model
         }
 
 
+        public virtual string Implementation
+        {
+            get;
+            set;
+        }
+
+
         public virtual string ImplementationType
         {
             get
@@ -61,10 +68,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            SendTask clone = new SendTask();
-            clone.Values = this;
+            SendTask clone = new SendTask
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -83,7 +92,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (FieldExtension extension in val.FieldExtensions)
                     {
-                        fieldExtensions.Add(extension.clone() as FieldExtension);
+                        fieldExtensions.Add(extension.Clone() as FieldExtension);
                     }
                 }
             }

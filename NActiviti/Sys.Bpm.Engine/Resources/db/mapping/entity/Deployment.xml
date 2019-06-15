@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" ?> 
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.DeploymentEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- DEPLOYMENT RESULTMAP -->
-  
+
   <ResultMap Id="deploymentResultMap" ResultType="org.activiti.engine.impl.persistence.entity.DeploymentEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="name" Column="NAME_" />
@@ -12,9 +12,9 @@
     <Result Property="businessKey" Column="BUSINESS_KEY_" />
     <Result Property="deploymentTime" Column="DEPLOY_TIME_"/>
   </ResultMap>
-  
+
   <!-- DEPLOYMENT INSERT -->
-    
+
   <Insert Id="insertDeployment">
     insert into ACT_RE_DEPLOYMENT(ID_, NAME_, BUSINESS_KEY_, CATEGORY_, TENANT_ID_, DEPLOY_TIME_)
     values(#{id}, #{name}, #{businessKey}, #{category}, #{tenantId}, #{deploymentTime})
@@ -23,43 +23,52 @@
   <Insert Id="bulkInsertDeployment">
     insert into ACT_RE_DEPLOYMENT(ID_, NAME_, BUSINESS_KEY_, CATEGORY_, TENANT_ID_, DEPLOY_TIME_)
     values
-      <For  Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
-        (#{id},
-         #{name},
-         #{businessKey},
-         #{category},
-         #{tenantId},
-         #{deploymentTime})
-      </For>
+    <For  Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
+      (#{id},
+      #{name},
+      #{businessKey},
+      #{category},
+      #{tenantId},
+      #{deploymentTime})
+    </For>
   </Insert>
 
   <!-- DEPLOYMENT UPDATE -->
-  
+
   <Update Id="updateDeployment">
     update ACT_RE_DEPLOYMENT set
-      CATEGORY_ = #{category},
-      BUSINESS_KEY_ = #{businessKey},
-      TENANT_ID_ = #{tenantId}
+    CATEGORY_ = #{category},
+    BUSINESS_KEY_ = #{businessKey},
+    TENANT_ID_ = #{tenantId}
     where ID_ = #{id}
   </Update>
-  
+
   <!-- DEPLOYMENT DELETE -->
-  
+
   <Delete Id="deleteDeployment">
     delete from ACT_RE_DEPLOYMENT where ID_ = #{id}
   </Delete>
 
   <!-- DEPLOYMENT SELECT -->
-  
-  <Statement Id="selectDeploymentsByQueryCriteriaSql">  
+
+  <Statement Id="selectDeploymentsByQueryCriteriaSql">
     from ACT_RE_DEPLOYMENT RES
     <IsTrue Property="processDefinitionKey != null or processDefinitionKeyLike != null">
-    	inner join ACT_RE_PROCDEF PROCDEF on RES.ID_ = PROCDEF.DEPLOYMENT_ID_
+      inner join ACT_RE_PROCDEF PROCDEF on RES.ID_ = PROCDEF.DEPLOYMENT_ID_
+    </IsTrue>
+    <IsTrue Property="onlyDrafts">
+      left join ACT_RE_PROCDEF PROCDEF on RES.ID_ = PROCDEF.DEPLOYMENT_ID_
     </IsTrue>
     <IsTrue Property="latestDeployment">
       inner join (select ${isNull, tenant_id_, ''} tenant_id_, name_, max(DEPLOY_TIME_) DEPLOY_TIME_ from ACT_RE_DEPLOYMENT group by ${isNull, tenant_id_, ''}, name_) B on ${isNull, RES.tenant_id_, ''} = B.tenant_id_ and RES.name_= B.name_ and RES.DEPLOY_TIME_ = B.DEPLOY_TIME_
     </IsTrue>
     <Where>
+      <IsTrue Property="CollectionUtil.IsNotEmpty(ids)">
+        and RES.ID_ in
+        <For Key="item" Index="index" Property="ids" Open="(" Separator="," Close=")">
+          #{item}
+        </For>
+      </IsTrue>
       <IsTrue Property="deploymentId != null">
         RES.ID_ = #{deploymentId}
       </IsTrue>
@@ -76,7 +85,7 @@
         and RES.CATEGORY_ = #{category}
       </IsTrue>
       <IsTrue Property="categoryNotEquals != null">
-        and ( RES.CATEGORY_ &lt;&gt; #{categoryNotEquals} OR RES.CATEGORY_ is null )  
+        and ( RES.CATEGORY_ &lt;&gt; #{categoryNotEquals} OR RES.CATEGORY_ is null )
       </IsTrue>
       <IsTrue Property="tenantId != null">
         and RES.TENANT_ID_ = #{tenantId}
@@ -95,42 +104,54 @@
       </IsTrue>
     </Where>
   </Statement>
-  
+
   <Select Id="selectDeployment" ResultMap="deploymentResultMap">
     select * from ACT_RE_DEPLOYMENT where ID_ = #{id}
   </Select>
 
   <Select Id="selectDeploymentsByQueryCriteria" ResultMap="deploymentResultMap">
     ${limitBefore}
-    select distinct RES.* ${limitBetween}
+    select RES.* from (select distinct RES.* <IsTrue Property="onlyDrafts">,PROCDEF.ID_ as PROC_DEF_ID_</IsTrue> ${limitBetween}
     <Include RefId="selectDeploymentsByQueryCriteriaSql"/>
+    ) RES
+    <Where>
+      <IsTrue Property="onlyDrafts">
+        RES.PROC_DEF_ID_ is null
+      </IsTrue>
+    </Where>
     ${orderBy}
     ${limitAfter}
   </Select>
 
-  <Select Id="selectDeploymentDraftsByName" ResultMap="deploymentResultMap">
-    select * from (select distinct  a.*, c.id_ proc_def_id_ from act_re_deployment a left join act_re_procdef c on a.id_ = c.deployment_id_ where a.name_ = ${name}) res where res.proc_def_id_ is null;
+  <Select Id="selectDeploymentDrafts" ResultMap="deploymentResultMap">
+    select * from (select distinct  a.*, c.id_ proc_def_id_ from ACT_RE_DEPLOYMENT a left join ACT_RE_PROCDEF c on a.id_ = c.deployment_id_ where a.name_ = ${name}) RES where RES.proc_def_id_ is null
   </Select>
 
   <Select Id="selectDeploymentCountByQueryCriteria">
-    select count(distinct RES.ID_)
+    select count(distinct RES.ID_) from (select RES.ID_ <IsTrue Property="onlyDrafts">,PROCDEF.ID_ as PROC_DEF_ID_</IsTrue>
     <Include RefId="selectDeploymentsByQueryCriteriaSql"/>
+    ) RES
+    <Where>
+      <IsTrue Property="onlyDrafts">
+        RES.PROC_DEF_ID_ is null
+      </IsTrue>
+    </Where>
   </Select>
-    
+
   <Select Id="selectDeploymentsByName" ResultMap="deploymentResultMap">
     select * from ACT_RE_DEPLOYMENT D where NAME_=#{deploymentName} order by D.DEPLOY_TIME_ desc
   </Select>
-  
+
   <Select Id="selectDeploymentById" ResultMap="deploymentResultMap">
     select * from ACT_RE_DEPLOYMENT where ID_ = #{id}
   </Select>
 
   <!-- mysql specific -->
   <Select Id="selectDeploymentsByQueryCriteria_mysql" ResultMap="deploymentResultMap">
-  	${limitBefore}
+    ${limitBefore}
     select distinct RES.* ${limitBetween}
     <Include RefId="selectDeploymentsByQueryCriteriaSql"/>
-   	${orderBy}
+    ${orderBy}
     ${limitAfter}
   </Select>
 

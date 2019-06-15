@@ -16,16 +16,15 @@
 namespace org.activiti.engine.impl.interceptor
 {
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.DependencyInjection;
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.context;
-    using Sys;
+    using Sys.Workflow;
 
     /// 
     /// 
     public class CommandContextInterceptor : AbstractCommandInterceptor
     {
-        private  ILogger<CommandContextInterceptor> log = ProcessEngineServiceProvider.LoggerService<CommandContextInterceptor>();
+        private static readonly ILogger<CommandContextInterceptor> log = ProcessEngineServiceProvider.LoggerService<CommandContextInterceptor>();
 
         protected internal CommandContextFactory commandContextFactory;
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
@@ -40,7 +39,7 @@ namespace org.activiti.engine.impl.interceptor
             this.processEngineConfiguration = processEngineConfiguration;
         }
 
-        public override T execute<T>(CommandConfig config, ICommand<T> command)
+        public override T Execute<T>(CommandConfig config, ICommand<T> command)
         {
             ICommandContext context = Context.CommandContext;
 
@@ -49,7 +48,7 @@ namespace org.activiti.engine.impl.interceptor
             // rollback state, and some other command is being fired to compensate (eg. decrementing job retries)
             if (!config.ContextReusePossible || context == null || context.Exception != null)
             {
-                context = commandContextFactory.createCommandContext<T>(command);
+                context = commandContextFactory.CreateCommandContext<T>(command);
             }
             else
             {
@@ -64,12 +63,16 @@ namespace org.activiti.engine.impl.interceptor
                 Context.CommandContext = context;
                 Context.ProcessEngineConfiguration = processEngineConfiguration;
 
-                return next.execute(config, command);
+                return next.Execute(config, command);
 
+            }
+            catch (NullReferenceException e)
+            {
+                context.SetException(e);
             }
             catch (Exception e)
             {
-                context.exception(e);
+                context.SetException(e);
             }
             finally
             {
@@ -77,20 +80,20 @@ namespace org.activiti.engine.impl.interceptor
                 {
                     if (!contextReused)
                     {
-                        context.close();
+                        context.Close();
                     }
                 }
                 finally
                 {
 
                     // Pop from stack
-                    Context.removeCommandContext();
-                    Context.removeProcessEngineConfiguration();
-                    Context.removeBpmnOverrideContext();
+                    Context.RemoveCommandContext();
+                    Context.RemoveProcessEngineConfiguration();
+                    Context.RemoveBpmnOverrideContext();
                 }
             }
 
-            return default(T);
+            return default;
         }
 
         public virtual CommandContextFactory CommandContextFactory

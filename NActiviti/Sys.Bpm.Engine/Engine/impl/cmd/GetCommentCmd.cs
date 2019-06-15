@@ -31,15 +31,15 @@ namespace org.activiti.engine.impl.cmd
         {
             this.commentId = commentId;
 
-            if (ReferenceEquals(commentId, null))
+            if (commentId is null)
             {
                 throw new ActivitiIllegalArgumentException("commentId is null");
             }
         }
 
-        public  virtual IComment  execute(ICommandContext  commandContext)
+        public  virtual IComment  Execute(ICommandContext  commandContext)
         {
-            return commandContext.CommentEntityManager.findComment(commentId);
+            return commandContext.CommentEntityManager.FindComment(commentId);
         }
     }
 

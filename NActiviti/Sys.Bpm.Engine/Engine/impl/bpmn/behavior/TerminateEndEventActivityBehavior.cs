@@ -39,54 +39,52 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
-
             ICommandContext commandContext = Context.CommandContext;
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
 
             if (terminateAll)
             {
-                terminateAllBehaviour(execution, commandContext, executionEntityManager);
+                TerminateAllBehaviour(execution, commandContext, executionEntityManager);
             }
             else if (terminateMultiInstance)
             {
-                terminateMultiInstanceRoot(execution, commandContext, executionEntityManager);
+                TerminateMultiInstanceRoot(execution, commandContext, executionEntityManager);
             }
             else
             {
-                defaultTerminateEndEventBehaviour(execution, commandContext, executionEntityManager);
+                DefaultTerminateEndEventBehaviour(execution, commandContext, executionEntityManager);
             }
         }
 
-        protected internal virtual void terminateAllBehaviour(IExecutionEntity execution, ICommandContext commandContext, IExecutionEntityManager executionEntityManager)
+        protected internal virtual void TerminateAllBehaviour(IExecutionEntity execution, ICommandContext commandContext, IExecutionEntityManager executionEntityManager)
         {
-            IExecutionEntity rootExecutionEntity = executionEntityManager.findByRootProcessInstanceId(execution.RootProcessInstanceId);
-            string deleteReason = createDeleteReason(execution.CurrentActivityId);
-            deleteExecutionEntities(executionEntityManager, rootExecutionEntity, deleteReason);
-            endAllHistoricActivities(rootExecutionEntity.Id, deleteReason);
-            commandContext.HistoryManager.recordProcessInstanceEnd(rootExecutionEntity.Id, deleteReason, execution.CurrentActivityId);
+            IExecutionEntity rootExecutionEntity = executionEntityManager.FindByRootProcessInstanceId(execution.RootProcessInstanceId);
+            string deleteReason = CreateDeleteReason(execution.CurrentActivityId);
+            DeleteExecutionEntities(executionEntityManager, rootExecutionEntity, deleteReason);
+            EndAllHistoricActivities(rootExecutionEntity.Id, deleteReason);
+            commandContext.HistoryManager.RecordProcessInstanceEnd(rootExecutionEntity.Id, deleteReason, execution.CurrentActivityId);
         }
 
-        protected internal virtual void defaultTerminateEndEventBehaviour(IExecutionEntity execution, ICommandContext commandContext, IExecutionEntityManager executionEntityManager)
+        protected internal virtual void DefaultTerminateEndEventBehaviour(IExecutionEntity execution, ICommandContext commandContext, IExecutionEntityManager executionEntityManager)
         {
 
-            IExecutionEntity scopeExecutionEntity = executionEntityManager.findFirstScope(execution);
-            sendProcessInstanceCancelledEvent(scopeExecutionEntity, execution.CurrentFlowElement);
+            IExecutionEntity scopeExecutionEntity = executionEntityManager.FindFirstScope(execution);
+            SendProcessInstanceCancelledEvent(scopeExecutionEntity, execution.CurrentFlowElement);
 
             // If the scope is the process instance, we can just terminate it all
             // Special treatment is needed when the terminated activity is a subprocess (embedded/callactivity/..)
             // The subprocess is destroyed, but the execution calling it, continues further on.
             // In case of a multi-instance subprocess, only one instance is terminated, the other instances continue to exist.
 
-            string deleteReason = createDeleteReason(execution.CurrentActivityId);
+            string deleteReason = CreateDeleteReason(execution.CurrentActivityId);
 
-            if (scopeExecutionEntity.ProcessInstanceType && ReferenceEquals(scopeExecutionEntity.SuperExecutionId, null))
+            if (scopeExecutionEntity.ProcessInstanceType && scopeExecutionEntity.SuperExecutionId is null)
             {
-
-                endAllHistoricActivities(scopeExecutionEntity.Id, deleteReason);
-                deleteExecutionEntities(executionEntityManager, scopeExecutionEntity, deleteReason);
-                commandContext.HistoryManager.recordProcessInstanceEnd(scopeExecutionEntity.Id, deleteReason, execution.CurrentActivityId);
+                EndAllHistoricActivities(scopeExecutionEntity.Id, deleteReason);
+                DeleteExecutionEntities(executionEntityManager, scopeExecutionEntity, deleteReason);
+                commandContext.HistoryManager.RecordProcessInstanceEnd(scopeExecutionEntity.Id, deleteReason, execution.CurrentActivityId);
 
             }
             else if (scopeExecutionEntity.CurrentFlowElement != null && scopeExecutionEntity.CurrentFlowElement is SubProcess)
@@ -95,58 +93,54 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 SubProcess subProcess = (SubProcess)scopeExecutionEntity.CurrentFlowElement;
 
                 scopeExecutionEntity.DeleteReason = deleteReason;
-                if (subProcess.hasMultiInstanceLoopCharacteristics())
+                if (subProcess.HasMultiInstanceLoopCharacteristics())
                 {
 
-                    Context.Agenda.planDestroyScopeOperation(scopeExecutionEntity);
+                    Context.Agenda.PlanDestroyScopeOperation(scopeExecutionEntity);
                     MultiInstanceActivityBehavior multiInstanceBehavior = (MultiInstanceActivityBehavior)subProcess.Behavior;
-                    multiInstanceBehavior.leave(scopeExecutionEntity);
-
+                    multiInstanceBehavior.Leave(scopeExecutionEntity);
                 }
                 else
                 {
-                    Context.Agenda.planDestroyScopeOperation(scopeExecutionEntity);
-                    IExecutionEntity outgoingFlowExecution = executionEntityManager.createChildExecution(scopeExecutionEntity.Parent);
+                    Context.Agenda.PlanDestroyScopeOperation(scopeExecutionEntity);
+                    IExecutionEntity outgoingFlowExecution = executionEntityManager.CreateChildExecution(scopeExecutionEntity.Parent);
                     outgoingFlowExecution.CurrentFlowElement = scopeExecutionEntity.CurrentFlowElement;
-                    Context.Agenda.planTakeOutgoingSequenceFlowsOperation(outgoingFlowExecution, true);
+                    Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(outgoingFlowExecution, true);
                 }
 
             }
-            else if (ReferenceEquals(scopeExecutionEntity.ParentId, null) && !ReferenceEquals(scopeExecutionEntity.SuperExecutionId, null))
+            else if (scopeExecutionEntity.ParentId is null && !(scopeExecutionEntity.SuperExecutionId is null))
             { // CallActivity
 
                 IExecutionEntity callActivityExecution = scopeExecutionEntity.SuperExecution;
                 CallActivity callActivity = (CallActivity)callActivityExecution.CurrentFlowElement;
 
-                if (callActivity.hasMultiInstanceLoopCharacteristics())
+                if (callActivity.HasMultiInstanceLoopCharacteristics())
                 {
 
                     MultiInstanceActivityBehavior multiInstanceBehavior = (MultiInstanceActivityBehavior)callActivity.Behavior;
-                    multiInstanceBehavior.leave(callActivityExecution);
-                    executionEntityManager.deleteProcessInstanceExecutionEntity(scopeExecutionEntity.Id, execution.CurrentFlowElement.Id, "terminate end event", false, false);
-
+                    multiInstanceBehavior.Leave(callActivityExecution);
+                    executionEntityManager.DeleteProcessInstanceExecutionEntity(scopeExecutionEntity.Id, execution.CurrentFlowElement.Id, "terminate end event", false, false);
                 }
                 else
                 {
 
-                    executionEntityManager.deleteProcessInstanceExecutionEntity(scopeExecutionEntity.Id, execution.CurrentFlowElement.Id, "terminate end event", false, false);
-                    IExecutionEntity superExecutionEntity = executionEntityManager.findById<IExecutionEntity>(scopeExecutionEntity.SuperExecutionId);
-                    Context.Agenda.planTakeOutgoingSequenceFlowsOperation(superExecutionEntity, true);
-
+                    executionEntityManager.DeleteProcessInstanceExecutionEntity(scopeExecutionEntity.Id, execution.CurrentFlowElement.Id, "terminate end event", false, false);
+                    IExecutionEntity superExecutionEntity = executionEntityManager.FindById<IExecutionEntity>(scopeExecutionEntity.SuperExecutionId);
+                    Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(superExecutionEntity, true);
                 }
-
             }
         }
 
-        protected internal virtual void endAllHistoricActivities(string processInstanceId, string deleteReason)
+        protected internal virtual void EndAllHistoricActivities(string processInstanceId, string deleteReason)
         {
 
-            if (!Context.ProcessEngineConfiguration.HistoryLevel.isAtLeast(HistoryLevel.ACTIVITY))
+            if (!Context.ProcessEngineConfiguration.HistoryLevel.IsAtLeast(HistoryLevel.ACTIVITY))
             {
                 return;
             }
 
-            IList<IHistoricActivityInstanceEntity> historicActivityInstances = Context.CommandContext.HistoricActivityInstanceEntityManager.findUnfinishedHistoricActivityInstancesByProcessInstanceId(processInstanceId);
+            IList<IHistoricActivityInstanceEntity> historicActivityInstances = Context.CommandContext.HistoricActivityInstanceEntityManager.FindUnfinishedHistoricActivityInstancesByProcessInstanceId(processInstanceId);
 
             foreach (IHistoricActivityInstanceEntity historicActivityInstance in historicActivityInstances)
             {
@@ -156,92 +150,88 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 ProcessEngineConfigurationImpl config = Context.ProcessEngineConfiguration;
                 if (config != null && config.EventDispatcher.Enabled)
                 {
-                    config.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_ENDED, historicActivityInstance));
+                    config.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_ENDED, historicActivityInstance));
                 }
             }
 
         }
 
-        protected internal virtual void terminateMultiInstanceRoot(IExecutionEntity execution, ICommandContext commandContext, IExecutionEntityManager executionEntityManager)
+        protected internal virtual void TerminateMultiInstanceRoot(IExecutionEntity execution, ICommandContext commandContext, IExecutionEntityManager executionEntityManager)
         {
-
             // When terminateMultiInstance is 'true', we look for the multi instance root and delete it from there.
-            IExecutionEntity miRootExecutionEntity = executionEntityManager.findFirstMultiInstanceRoot(execution);
+            IExecutionEntity miRootExecutionEntity = executionEntityManager.FindFirstMultiInstanceRoot(execution);
             if (miRootExecutionEntity != null)
             {
                 // Create sibling execution to continue process instance execution before deletion
-                IExecutionEntity siblingExecution = executionEntityManager.createChildExecution(miRootExecutionEntity.Parent);
+                IExecutionEntity siblingExecution = executionEntityManager.CreateChildExecution(miRootExecutionEntity.Parent);
                 siblingExecution.CurrentFlowElement = miRootExecutionEntity.CurrentFlowElement;
 
-                deleteExecutionEntities(executionEntityManager, miRootExecutionEntity, createDeleteReason(miRootExecutionEntity.ActivityId));
+                DeleteExecutionEntities(executionEntityManager, miRootExecutionEntity, CreateDeleteReason(miRootExecutionEntity.ActivityId));
 
-                Context.Agenda.planTakeOutgoingSequenceFlowsOperation(siblingExecution, true);
+                Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(siblingExecution, true);
             }
             else
             {
-                defaultTerminateEndEventBehaviour(execution, commandContext, executionEntityManager);
+                DefaultTerminateEndEventBehaviour(execution, commandContext, executionEntityManager);
             }
         }
 
-        protected internal virtual void deleteExecutionEntities(IExecutionEntityManager executionEntityManager, IExecutionEntity rootExecutionEntity, string deleteReason)
+        protected internal virtual void DeleteExecutionEntities(IExecutionEntityManager executionEntityManager, IExecutionEntity rootExecutionEntity, string deleteReason)
         {
-
-            IList<IExecutionEntity> childExecutions = executionEntityManager.collectChildren(rootExecutionEntity);
+            IList<IExecutionEntity> childExecutions = executionEntityManager.CollectChildren(rootExecutionEntity);
             for (int i = childExecutions.Count - 1; i >= 0; i--)
             {
-                executionEntityManager.deleteExecutionAndRelatedData(childExecutions[i], deleteReason, false);
+                executionEntityManager.DeleteExecutionAndRelatedData(childExecutions[i], deleteReason, false);
             }
-            executionEntityManager.deleteExecutionAndRelatedData(rootExecutionEntity, deleteReason, false);
+            executionEntityManager.DeleteExecutionAndRelatedData(rootExecutionEntity, deleteReason, false);
         }
 
-        protected internal virtual void sendProcessInstanceCancelledEvent(IExecutionEntity execution, FlowElement terminateEndEvent)
+        protected internal virtual void SendProcessInstanceCancelledEvent(IExecutionEntity execution, FlowElement terminateEndEvent)
         {
             if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                if ((execution.ProcessInstanceType && ReferenceEquals(execution.SuperExecutionId, null)) || (ReferenceEquals(execution.ParentId, null) && !ReferenceEquals(execution.SuperExecutionId, null)))
+                if ((execution.ProcessInstanceType && execution.SuperExecutionId is null) || (execution.ParentId is null && !(execution.SuperExecutionId is null)))
                 {
-
-                    Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createCancelledEvent(execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, execution.CurrentFlowElement));
+                    Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateCancelledEvent(execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, execution.CurrentFlowElement));
                 }
             }
 
-            dispatchExecutionCancelled(execution, terminateEndEvent);
+            DispatchExecutionCancelled(execution, terminateEndEvent);
         }
 
-        protected internal virtual void dispatchExecutionCancelled(IExecutionEntity execution, FlowElement terminateEndEvent)
+        protected internal virtual void DispatchExecutionCancelled(IExecutionEntity execution, FlowElement terminateEndEvent)
         {
-
             IExecutionEntityManager executionEntityManager = Context.CommandContext.ExecutionEntityManager;
 
             // subprocesses
-            foreach (IExecutionEntity subExecution in executionEntityManager.findChildExecutionsByParentExecutionId(execution.Id))
+            foreach (IExecutionEntity subExecution in executionEntityManager.FindChildExecutionsByParentExecutionId(execution.Id))
             {
-                dispatchExecutionCancelled(subExecution, terminateEndEvent);
+                DispatchExecutionCancelled(subExecution, terminateEndEvent);
             }
 
             // call activities
-            IExecutionEntity subProcessInstance = Context.CommandContext.ExecutionEntityManager.findSubProcessInstanceBySuperExecutionId(execution.Id);
+            IExecutionEntity subProcessInstance = Context.CommandContext.ExecutionEntityManager.FindSubProcessInstanceBySuperExecutionId(execution.Id);
             if (subProcessInstance != null)
             {
-                dispatchExecutionCancelled(subProcessInstance, terminateEndEvent);
+                DispatchExecutionCancelled(subProcessInstance, terminateEndEvent);
             }
 
             // activity with message/signal boundary events
             FlowElement currentFlowElement = execution.CurrentFlowElement;
             if (currentFlowElement is FlowNode)
             {
-                dispatchActivityCancelled(execution, terminateEndEvent);
+                DispatchActivityCancelled(execution, terminateEndEvent);
             }
         }
 
-        protected internal virtual void dispatchActivityCancelled(IExecutionEntity execution, FlowElement terminateEndEvent)
+        protected internal virtual void DispatchActivityCancelled(IExecutionEntity execution, FlowElement terminateEndEvent)
         {
-            Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createActivityCancelledEvent(execution.CurrentFlowElement.Id, execution.CurrentFlowElement.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, parseActivityType((FlowNode)execution.CurrentFlowElement), terminateEndEvent));
+            Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityCancelledEvent(execution.CurrentFlowElement.Id, execution.CurrentFlowElement.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, ParseActivityType((FlowNode)execution.CurrentFlowElement), terminateEndEvent));
         }
 
-        protected internal virtual string createDeleteReason(string activityId)
+        protected internal virtual string CreateDeleteReason(string activityId)
         {
-            return engine.history.DeleteReason_Fields.TERMINATE_END_EVENT + " (" + activityId + ")";
+            return engine.history.DeleteReasonFields.TERMINATE_END_EVENT + " (" + activityId + ")";
         }
 
         public virtual bool TerminateAll
@@ -268,8 +258,5 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 this.terminateMultiInstance = value;
             }
         }
-
-
     }
-
 }

@@ -21,7 +21,7 @@ namespace org.activiti.engine.impl
     public interface ICondition
     {
 
-        bool evaluate(string sequenceFlowId, IExecutionEntity execution);
+        bool Evaluate(string sequenceFlowId, IExecutionEntity execution);
     }
 
 }

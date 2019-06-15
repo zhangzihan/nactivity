@@ -21,7 +21,6 @@ namespace org.activiti.engine.impl.persistence.entity
     using org.activiti.engine.impl.el;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.variable;
-    using Sys;
     using Sys.Bpm;
     using System.Collections.ObjectModel;
     using System.Linq;
@@ -47,13 +46,13 @@ namespace org.activiti.engine.impl.persistence.entity
 
         protected internal ELContext cachedElContext;
 
-        protected internal abstract IList<IVariableInstanceEntity> loadVariableInstances();
+        protected internal abstract IList<IVariableInstanceEntity> LoadVariableInstances();
 
         protected internal abstract VariableScopeImpl ParentVariableScope { get; }
 
-        protected internal abstract void initializeVariableInstanceBackPointer(IVariableInstanceEntity variableInstance);
+        protected internal abstract void InitializeVariableInstanceBackPointer(IVariableInstanceEntity variableInstance);
 
-        protected internal virtual void ensureVariableInstancesInitialized()
+        protected internal virtual void EnsureVariableInstancesInitialized()
         {
             if (variableInstances == null)
             {
@@ -64,7 +63,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     throw new ActivitiException("lazy loading outside command context");
                 }
-                ICollection<IVariableInstanceEntity> variableInstancesList = loadVariableInstances();
+                IEnumerable<IVariableInstanceEntity> variableInstancesList = LoadVariableInstances();
                 foreach (IVariableInstanceEntity variableInstance in variableInstancesList)
                 {
                     variableInstances[variableInstance.Name] = variableInstance;
@@ -77,7 +76,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return collectVariables(new Dictionary<string, object>());
+                return CollectVariables(new Dictionary<string, object>());
             }
             set
             {
@@ -85,7 +84,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (string variableName in value.Keys)
                     {
-                        setVariable(variableName, value[variableName]);
+                        SetVariable(variableName, value[variableName]);
                     }
                 }
             }
@@ -96,21 +95,21 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return collectVariableInstances(new Dictionary<string, IVariableInstance>());
+                return CollectVariableInstances(new Dictionary<string, IVariableInstance>());
             }
         }
 
-        public virtual IDictionary<string, object> getVariables(ICollection<string> variableNames)
+        public virtual IDictionary<string, object> GetVariables(IEnumerable<string> variableNames)
         {
-            return getVariables(variableNames, true);
+            return GetVariables(variableNames, true);
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstances(ICollection<string> variableNames)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstances(IEnumerable<string> variableNames)
         {
-            return getVariableInstances(variableNames, true);
+            return GetVariableInstances(variableNames, true);
         }
 
-        public virtual IDictionary<string, object> getVariables(ICollection<string> variableNames, bool fetchAllVariables)
+        public virtual IDictionary<string, object> GetVariables(IEnumerable<string> variableNames, bool fetchAllVariables)
         {
 
             IDictionary<string, object> requestedVariables = new Dictionary<string, object>();
@@ -150,11 +149,11 @@ namespace org.activiti.engine.impl.persistence.entity
                 IVariableScope parent = ParentVariableScope;
                 if (parent != null)
                 {
-                    requestedVariables.putAll(parent.getVariables(variableNamesToFetch, fetchAllVariables));
+                    requestedVariables.PutAll(parent.GetVariables(variableNamesToFetch, fetchAllVariables));
                 }
 
                 // Fetch variables on this scope
-                IList<IVariableInstanceEntity> variables = getSpecificVariables(variableNamesToFetch);
+                IList<IVariableInstanceEntity> variables = GetSpecificVariables(variableNamesToFetch);
                 foreach (IVariableInstanceEntity variable in variables)
                 {
                     requestedVariables[variable.Name] = variable.Value;
@@ -164,7 +163,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstances(ICollection<string> variableNames, bool fetchAllVariables)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstances(IEnumerable<string> variableNames, bool fetchAllVariables)
         {
             IDictionary<string, IVariableInstance> requestedVariables = new Dictionary<string, IVariableInstance>();
             ISet<string> variableNamesToFetch = new HashSet<string>(variableNames);
@@ -203,11 +202,11 @@ namespace org.activiti.engine.impl.persistence.entity
                 IVariableScope parent = ParentVariableScope;
                 if (parent != null)
                 {
-                    requestedVariables.putAll(parent.getVariableInstances(variableNamesToFetch, fetchAllVariables));
+                    requestedVariables.PutAll(parent.GetVariableInstances(variableNamesToFetch, fetchAllVariables));
                 }
 
                 // Fetch variables on this scope
-                IList<IVariableInstanceEntity> variables = getSpecificVariables(variableNamesToFetch);
+                IList<IVariableInstanceEntity> variables = GetSpecificVariables(variableNamesToFetch);
                 foreach (IVariableInstanceEntity variable in variables)
                 {
                     requestedVariables[variable.Name] = variable;
@@ -219,13 +218,13 @@ namespace org.activiti.engine.impl.persistence.entity
 
         }
 
-        protected internal virtual IDictionary<string, object> collectVariables(Dictionary<string, object> variables)
+        protected internal virtual IDictionary<string, object> CollectVariables(Dictionary<string, object> variables)
         {
-            ensureVariableInstancesInitialized();
+            EnsureVariableInstancesInitialized();
             VariableScopeImpl parentScope = ParentVariableScope;
             if (parentScope != null)
             {
-                variables.putAll(parentScope.collectVariables(variables));
+                variables.PutAll(parentScope.CollectVariables(variables));
             }
 
             foreach (IVariableInstanceEntity variableInstance in variableInstances.Values)
@@ -249,13 +248,13 @@ namespace org.activiti.engine.impl.persistence.entity
             return variables;
         }
 
-        protected internal virtual IDictionary<string, IVariableInstance> collectVariableInstances(Dictionary<string, IVariableInstance> variables)
+        protected internal virtual IDictionary<string, IVariableInstance> CollectVariableInstances(Dictionary<string, IVariableInstance> variables)
         {
-            ensureVariableInstancesInitialized();
+            EnsureVariableInstancesInitialized();
             VariableScopeImpl parentScope = ParentVariableScope;
             if (parentScope != null)
             {
-                variables.putAll(parentScope.collectVariableInstances(variables));
+                variables.PutAll(parentScope.CollectVariableInstances(variables));
             }
 
             foreach (IVariableInstance variableInstance in variableInstances.Values)
@@ -270,20 +269,20 @@ namespace org.activiti.engine.impl.persistence.entity
 
             if (transientVariabes != null)
             {
-                variables.putAll(transientVariabes);
+                variables.PutAll(transientVariabes);
             }
 
             return variables;
         }
 
-        public virtual object getVariable(string variableName)
+        public virtual object GetVariable(string variableName)
         {
-            return getVariable(variableName, true);
+            return GetVariable(variableName, true);
         }
 
-        public virtual IVariableInstance getVariableInstance(string variableName)
+        public virtual IVariableInstance GetVariableInstance(string variableName)
         {
-            return getVariableInstance(variableName, true);
+            return GetVariableInstance(variableName, true);
         }
 
         /// <summary>
@@ -297,10 +296,10 @@ namespace org.activiti.engine.impl.persistence.entity
         /// 
         /// In case 'false' is used, only the specific variable will be fetched.
         /// </summary>
-        public virtual object getVariable(string variableName, bool fetchAllVariables)
+        public virtual object GetVariable(string variableName, bool fetchAllVariables)
         {
             object value = null;
-            IVariableInstance variable = getVariableInstance(variableName, fetchAllVariables);
+            IVariableInstance variable = GetVariableInstance(variableName, fetchAllVariables);
             if (variable != null)
             {
                 value = variable.Value;
@@ -308,7 +307,7 @@ namespace org.activiti.engine.impl.persistence.entity
             return value;
         }
 
-        public virtual IVariableInstance getVariableInstance(string variableName, bool fetchAllVariables)
+        public virtual IVariableInstance GetVariableInstance(string variableName, bool fetchAllVariables)
         {
             // Transient variable
             if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
@@ -324,7 +323,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
             if (fetchAllVariables == true)
             {
-                ensureVariableInstancesInitialized();
+                EnsureVariableInstancesInitialized();
                 variableInstances.TryGetValue(variableName, out IVariableInstanceEntity variableInstance);
                 if (variableInstance != null)
                 {
@@ -335,7 +334,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 IVariableScope parentScope = ParentVariableScope;
                 if (parentScope != null)
                 {
-                    return parentScope.getVariableInstance(variableName, true);
+                    return parentScope.GetVariableInstance(variableName, true);
                 }
 
                 return null;
@@ -348,7 +347,7 @@ namespace org.activiti.engine.impl.persistence.entity
                     return variableInstances[variableName];
                 }
 
-                IVariableInstanceEntity variable = getSpecificVariable(variableName);
+                IVariableInstanceEntity variable = GetSpecificVariable(variableName);
                 if (variable != null)
                 {
                     usedVariablesCache[variableName] = variable;
@@ -359,29 +358,29 @@ namespace org.activiti.engine.impl.persistence.entity
                 IVariableScope parentScope = ParentVariableScope;
                 if (parentScope != null)
                 {
-                    return parentScope.getVariableInstance(variableName, false);
+                    return parentScope.GetVariableInstance(variableName, false);
                 }
 
                 return null;
             }
         }
 
-        protected internal abstract IVariableInstanceEntity getSpecificVariable(string variableName);
+        protected internal abstract IVariableInstanceEntity GetSpecificVariable(string variableName);
 
-        public virtual object getVariableLocal(string variableName)
+        public virtual object GetVariableLocal(string variableName)
         {
-            return getVariableLocal(variableName, true);
+            return GetVariableLocal(variableName, true);
         }
 
-        public virtual IVariableInstance getVariableInstanceLocal(string variableName)
+        public virtual IVariableInstance GetVariableInstanceLocal(string variableName)
         {
-            return getVariableInstanceLocal(variableName, true);
+            return GetVariableInstanceLocal(variableName, true);
         }
 
-        public virtual object getVariableLocal(string variableName, bool fetchAllVariables)
+        public virtual object GetVariableLocal(string variableName, bool fetchAllVariables)
         {
             object value = null;
-            IVariableInstance variable = getVariableInstanceLocal(variableName, fetchAllVariables);
+            IVariableInstance variable = GetVariableInstanceLocal(variableName, fetchAllVariables);
             if (variable != null)
             {
                 value = variable.Value;
@@ -389,7 +388,7 @@ namespace org.activiti.engine.impl.persistence.entity
             return value;
         }
 
-        public virtual IVariableInstance getVariableInstanceLocal(string variableName, bool fetchAllVariables)
+        public virtual IVariableInstance GetVariableInstanceLocal(string variableName, bool fetchAllVariables)
         {
 
             if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
@@ -405,7 +404,7 @@ namespace org.activiti.engine.impl.persistence.entity
             if (fetchAllVariables == true)
             {
 
-                ensureVariableInstancesInitialized();
+                EnsureVariableInstancesInitialized();
 
                 variableInstances.TryGetValue(variableName, out IVariableInstanceEntity variableInstance);
                 if (variableInstance != null)
@@ -427,7 +426,7 @@ namespace org.activiti.engine.impl.persistence.entity
                     }
                 }
 
-                IVariableInstanceEntity variable = getSpecificVariable(variableName);
+                IVariableInstanceEntity variable = GetSpecificVariable(variableName);
                 if (variable != null)
                 {
                     usedVariablesCache[variableName] = variable;
@@ -438,14 +437,14 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual bool hasVariables()
+        public virtual bool HasVariables()
         {
             if (transientVariabes != null && transientVariabes.Count > 0)
             {
                 return true;
             }
 
-            ensureVariableInstancesInitialized();
+            EnsureVariableInstancesInitialized();
             if (variableInstances.Count > 0)
             {
                 return true;
@@ -453,46 +452,46 @@ namespace org.activiti.engine.impl.persistence.entity
             IVariableScope parentScope = ParentVariableScope;
             if (parentScope != null)
             {
-                return parentScope.hasVariables();
+                return parentScope.HasVariables();
             }
             return false;
         }
 
-        public virtual bool hasVariablesLocal()
+        public virtual bool HasVariablesLocal()
         {
             if (transientVariabes != null && transientVariabes.Count > 0)
             {
                 return true;
             }
-            ensureVariableInstancesInitialized();
+            EnsureVariableInstancesInitialized();
             return variableInstances.Count > 0;
         }
 
-        public virtual bool hasVariable(string variableName)
+        public virtual bool HasVariable(string variableName)
         {
-            if (hasVariableLocal(variableName))
+            if (HasVariableLocal(variableName))
             {
                 return true;
             }
             IVariableScope parentScope = ParentVariableScope;
             if (parentScope != null)
             {
-                return parentScope.hasVariable(variableName);
+                return parentScope.HasVariable(variableName);
             }
             return false;
         }
 
-        public virtual bool hasVariableLocal(string variableName)
+        public virtual bool HasVariableLocal(string variableName)
         {
             if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
             {
                 return true;
             }
-            ensureVariableInstancesInitialized();
+            EnsureVariableInstancesInitialized();
             return variableInstances.ContainsKey(variableName);
         }
 
-        protected internal virtual ISet<string> collectVariableNames(ISet<string> variableNames)
+        protected internal virtual ISet<string> CollectVariableNames(ISet<string> variableNames)
         {
             if (transientVariabes != null)
             {
@@ -502,11 +501,11 @@ namespace org.activiti.engine.impl.persistence.entity
                 });
             }
 
-            ensureVariableInstancesInitialized();
+            EnsureVariableInstancesInitialized();
             VariableScopeImpl parentScope = ParentVariableScope;
             if (parentScope != null)
             {
-                parentScope.collectVariableNames(variableNames).ToList().ForEach(x =>
+                parentScope.CollectVariableNames(variableNames).ToList().ForEach(x =>
                 {
                     variableNames.Add(x);
                 });
@@ -523,7 +522,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return collectVariableNames(new HashSet<string>());
+                return CollectVariableNames(new HashSet<string>());
             }
         }
 
@@ -533,7 +532,7 @@ namespace org.activiti.engine.impl.persistence.entity
             get
             {
                 IDictionary<string, object> variables = new Dictionary<string, object>();
-                ensureVariableInstancesInitialized();
+                EnsureVariableInstancesInitialized();
                 foreach (IVariableInstanceEntity variableInstance in variableInstances.Values)
                 {
                     variables[variableInstance.Name] = variableInstance.Value;
@@ -557,7 +556,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (string variableName in value.Keys)
                     {
-                        setVariableLocal(variableName, value[variableName]);
+                        SetVariableLocal(variableName, value[variableName]);
                     }
                 }
             }
@@ -569,7 +568,7 @@ namespace org.activiti.engine.impl.persistence.entity
             get
             {
                 IDictionary<string, IVariableInstance> variables = new Dictionary<string, IVariableInstance>();
-                ensureVariableInstancesInitialized();
+                EnsureVariableInstancesInitialized();
                 foreach (IVariableInstanceEntity variableInstance in variableInstances.Values)
                 {
                     variables[variableInstance.Name] = variableInstance;
@@ -580,23 +579,23 @@ namespace org.activiti.engine.impl.persistence.entity
                 }
                 if (transientVariabes != null)
                 {
-                    variables.putAll(transientVariabes);
+                    variables.PutAll(transientVariabes);
                 }
                 return variables;
             }
         }
 
-        public virtual IDictionary<string, object> getVariablesLocal(ICollection<string> variableNames)
+        public virtual IDictionary<string, object> GetVariablesLocal(IEnumerable<string> variableNames)
         {
-            return getVariablesLocal(variableNames, true);
+            return GetVariablesLocal(variableNames, true);
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstancesLocal(ICollection<string> variableNames)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstancesLocal(IEnumerable<string> variableNames)
         {
-            return getVariableInstancesLocal(variableNames, true);
+            return GetVariableInstancesLocal(variableNames, true);
         }
 
-        public virtual IDictionary<string, object> getVariablesLocal(ICollection<string> variableNames, bool fetchAllVariables)
+        public virtual IDictionary<string, object> GetVariablesLocal(IEnumerable<string> variableNames, bool fetchAllVariables)
         {
             IDictionary<string, object> requestedVariables = new Dictionary<string, object>();
 
@@ -629,7 +628,7 @@ namespace org.activiti.engine.impl.persistence.entity
             else
             {
 
-                IList<IVariableInstanceEntity> variables = getSpecificVariables(variableNamesToFetch);
+                IList<IVariableInstanceEntity> variables = GetSpecificVariables(variableNamesToFetch);
                 foreach (IVariableInstanceEntity variable in variables)
                 {
                     requestedVariables[variable.Name] = variable.Value;
@@ -640,7 +639,7 @@ namespace org.activiti.engine.impl.persistence.entity
             return requestedVariables;
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstancesLocal(ICollection<string> variableNames, bool fetchAllVariables)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstancesLocal(IEnumerable<string> variableNames, bool fetchAllVariables)
         {
             IDictionary<string, IVariableInstance> requestedVariables = new Dictionary<string, IVariableInstance>();
 
@@ -672,7 +671,7 @@ namespace org.activiti.engine.impl.persistence.entity
             else
             {
 
-                IList<IVariableInstanceEntity> variables = getSpecificVariables(variableNamesToFetch);
+                IList<IVariableInstanceEntity> variables = GetSpecificVariables(variableNamesToFetch);
                 foreach (IVariableInstanceEntity variable in variables)
                 {
                     requestedVariables[variable.Name] = variable;
@@ -682,7 +681,7 @@ namespace org.activiti.engine.impl.persistence.entity
             return requestedVariables;
         }
 
-        protected internal abstract IList<IVariableInstanceEntity> getSpecificVariables(ICollection<string> variableNames);
+        protected internal abstract IList<IVariableInstanceEntity> GetSpecificVariables(IEnumerable<string> variableNames);
 
         [JsonIgnore]
         public virtual ISet<string> VariableNamesLocal
@@ -697,7 +696,7 @@ namespace org.activiti.engine.impl.persistence.entity
                         variableNames.Add(x);
                     });
                 }
-                ensureVariableInstancesInitialized();
+                EnsureVariableInstancesInitialized();
                 variableInstances.Keys.ToList().ForEach(x =>
                 {
                     variableNames.Add(x);
@@ -711,7 +710,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                ensureVariableInstancesInitialized();
+                EnsureVariableInstancesInitialized();
                 return new ReadOnlyDictionary<string, IVariableInstanceEntity>(variableInstances);
             }
         }
@@ -724,61 +723,61 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual void createVariablesLocal<T1>(IDictionary<string, T1> variables)
+        public virtual void CreateVariablesLocal<T1>(IDictionary<string, T1> variables)
         {
             if (variables != null)
             {
                 foreach (var entry in variables)
                 {
-                    createVariableLocal(entry.Key, entry.Value);
+                    CreateVariableLocal(entry.Key, entry.Value);
                 }
             }
         }
 
-        public virtual void removeVariables()
+        public virtual void RemoveVariables()
         {
-            ensureVariableInstancesInitialized();
+            EnsureVariableInstancesInitialized();
             ISet<string> variableNames = new HashSet<string>(variableInstances.Keys);
             foreach (string variableName in variableNames)
             {
-                removeVariable(variableName);
+                RemoveVariable(variableName);
             }
         }
 
-        public virtual void removeVariablesLocal()
+        public virtual void RemoveVariablesLocal()
         {
             IList<string> variableNames = new List<string>(VariableNamesLocal);
             foreach (string variableName in variableNames)
             {
-                removeVariableLocal(variableName);
+                RemoveVariableLocal(variableName);
             }
         }
 
-        public virtual void removeVariables(ICollection<string> variableNames)
+        public virtual void RemoveVariables(IEnumerable<string> variableNames)
         {
             if (variableNames != null)
             {
                 foreach (string variableName in variableNames)
                 {
-                    removeVariable(variableName);
+                    RemoveVariable(variableName);
                 }
             }
         }
 
-        public virtual void removeVariablesLocal(ICollection<string> variableNames)
+        public virtual void RemoveVariablesLocal(IEnumerable<string> variableNames)
         {
             if (variableNames != null)
             {
                 foreach (string variableName in variableNames)
                 {
-                    removeVariableLocal(variableName);
+                    RemoveVariableLocal(variableName);
                 }
             }
         }
 
-        public virtual void setVariable(string variableName, object value)
+        public virtual void SetVariable(string variableName, object value)
         {
-            setVariable(variableName, value, SourceActivityExecution, true);
+            SetVariable(variableName, value, SourceActivityExecution, true);
         }
 
         /// <summary>
@@ -789,9 +788,9 @@ namespace org.activiti.engine.impl.persistence.entity
         /// (ie fetching all variables) Setting the fetchAllVariables parameter to false does not do that.
         /// 
         /// </summary>
-        public virtual void setVariable(string variableName, object value, bool fetchAllVariables)
+        public virtual void SetVariable(string variableName, object value, bool fetchAllVariables)
         {
-            setVariable(variableName, value, SourceActivityExecution, fetchAllVariables);
+            SetVariable(variableName, value, SourceActivityExecution, fetchAllVariables);
         }
 
         /// <summary>
@@ -799,7 +798,7 @@ namespace org.activiti.engine.impl.persistence.entity
         /// </summary>
         ///  <param name="sourceExecution"> The execution where the variable was originally set, used for history data. </param>
         ///  <param name="fetchAllVariables"> If true, all existing variables will be fetched when setting the variable. </param>
-        protected internal virtual void setVariable(string variableName, object value, IExecutionEntity sourceExecution, bool fetchAllVariables)
+        protected internal virtual void SetVariable(string variableName, object value, IExecutionEntity sourceExecution, bool fetchAllVariables)
         {
             if (fetchAllVariables == true)
             {
@@ -807,13 +806,13 @@ namespace org.activiti.engine.impl.persistence.entity
                 // If it's in the cache, it's more recent
                 if (usedVariablesCache.ContainsKey(variableName))
                 {
-                    updateVariableInstance(usedVariablesCache[variableName], value, sourceExecution);
+                    UpdateVariableInstance(usedVariablesCache[variableName], value, sourceExecution);
                 }
 
                 // If the variable exists on this scope, replace it
-                if (hasVariableLocal(variableName))
+                if (HasVariableLocal(variableName))
                 {
-                    setVariableLocal(variableName, value, sourceExecution, true);
+                    SetVariableLocal(variableName, value, sourceExecution, true);
                     return;
                 }
 
@@ -823,11 +822,11 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     if (sourceExecution == null)
                     {
-                        parentVariableScope.setVariable(variableName, value);
+                        parentVariableScope.SetVariable(variableName, value);
                     }
                     else
                     {
-                        parentVariableScope.setVariable(variableName, value, sourceExecution, true);
+                        parentVariableScope.SetVariable(variableName, value, sourceExecution, true);
                     }
                     return;
                 }
@@ -836,11 +835,11 @@ namespace org.activiti.engine.impl.persistence.entity
                 // we're creating it
                 if (sourceExecution != null)
                 {
-                    createVariableLocal(variableName, value, sourceExecution);
+                    CreateVariableLocal(variableName, value, sourceExecution);
                 }
                 else
                 {
-                    createVariableLocal(variableName, value);
+                    CreateVariableLocal(variableName, value);
                 }
 
             }
@@ -851,23 +850,23 @@ namespace org.activiti.engine.impl.persistence.entity
                 if (usedVariablesCache.ContainsKey(variableName))
                 {
 
-                    updateVariableInstance(usedVariablesCache[variableName], value, sourceExecution);
+                    UpdateVariableInstance(usedVariablesCache[variableName], value, sourceExecution);
 
                 }
                 else if (variableInstances != null && variableInstances.ContainsKey(variableName))
                 {
 
-                    updateVariableInstance(variableInstances[variableName], value, sourceExecution);
+                    UpdateVariableInstance(variableInstances[variableName], value, sourceExecution);
 
                 }
                 else
                 {
                     // Not in local cache, check if defined on this scope
                     // Create it if it doesn't exist yet
-                    IVariableInstanceEntity variable = getSpecificVariable(variableName);
+                    IVariableInstanceEntity variable = GetSpecificVariable(variableName);
                     if (variable != null)
                     {
-                        updateVariableInstance(variable, value, sourceExecution);
+                        UpdateVariableInstance(variable, value, sourceExecution);
                         usedVariablesCache[variableName] = variable;
                     }
                     else
@@ -878,17 +877,17 @@ namespace org.activiti.engine.impl.persistence.entity
                         {
                             if (sourceExecution == null)
                             {
-                                parent.setVariable(variableName, value, fetchAllVariables);
+                                parent.SetVariable(variableName, value, fetchAllVariables);
                             }
                             else
                             {
-                                parent.setVariable(variableName, value, sourceExecution, fetchAllVariables);
+                                parent.SetVariable(variableName, value, sourceExecution, fetchAllVariables);
                             }
 
                             return;
                         }
 
-                        variable = createVariableInstance(variableName, value, sourceExecution);
+                        variable = CreateVariableInstance(variableName, value, sourceExecution);
                         usedVariablesCache[variableName] = variable;
 
                     }
@@ -899,9 +898,9 @@ namespace org.activiti.engine.impl.persistence.entity
 
         }
 
-        public virtual object setVariableLocal(string variableName, object value)
+        public virtual object SetVariableLocal(string variableName, object value)
         {
-            return setVariableLocal(variableName, value, SourceActivityExecution, true);
+            return SetVariableLocal(variableName, value, SourceActivityExecution, true);
         }
 
         /// <summary>
@@ -910,12 +909,12 @@ namespace org.activiti.engine.impl.persistence.entity
         /// Setting the fetchAllVariables parameter to true is the default behaviour (ie fetching all variables) Setting the fetchAllVariables parameter to false does not do that.
         /// 
         /// </summary>
-        public virtual object setVariableLocal(string variableName, object value, bool fetchAllVariables)
+        public virtual object SetVariableLocal(string variableName, object value, bool fetchAllVariables)
         {
-            return setVariableLocal(variableName, value, SourceActivityExecution, fetchAllVariables);
+            return SetVariableLocal(variableName, value, SourceActivityExecution, fetchAllVariables);
         }
 
-        public virtual object setVariableLocal(string variableName, object value, IExecutionEntity sourceActivityExecution, bool fetchAllVariables)
+        public virtual object SetVariableLocal(string variableName, object value, IExecutionEntity sourceActivityExecution, bool fetchAllVariables)
         {
 
             if (fetchAllVariables == true)
@@ -924,10 +923,10 @@ namespace org.activiti.engine.impl.persistence.entity
                 // If it's in the cache, it's more recent
                 if (usedVariablesCache.ContainsKey(variableName))
                 {
-                    updateVariableInstance(usedVariablesCache[variableName], value, sourceActivityExecution);
+                    UpdateVariableInstance(usedVariablesCache[variableName], value, sourceActivityExecution);
                 }
 
-                ensureVariableInstancesInitialized();
+                EnsureVariableInstancesInitialized();
 
                 variableInstances.TryGetValue(variableName, out IVariableInstanceEntity variableInstance);
                 if (variableInstance == null)
@@ -937,38 +936,37 @@ namespace org.activiti.engine.impl.persistence.entity
 
                 if (variableInstance == null)
                 {
-                    createVariableLocal(variableName, value);
+                    CreateVariableLocal(variableName, value);
                 }
                 else
                 {
-                    updateVariableInstance(variableInstance, value, sourceActivityExecution);
+                    UpdateVariableInstance(variableInstance, value, sourceActivityExecution);
                 }
 
                 return null;
-
             }
             else
             {
 
                 if (usedVariablesCache.ContainsKey(variableName))
                 {
-                    updateVariableInstance(usedVariablesCache[variableName], value, sourceActivityExecution);
+                    UpdateVariableInstance(usedVariablesCache[variableName], value, sourceActivityExecution);
                 }
                 else if (variableInstances != null && variableInstances.ContainsKey(variableName))
                 {
-                    updateVariableInstance(variableInstances[variableName], value, sourceActivityExecution);
+                    UpdateVariableInstance(variableInstances[variableName], value, sourceActivityExecution);
                 }
                 else
                 {
 
-                    IVariableInstanceEntity variable = getSpecificVariable(variableName);
+                    IVariableInstanceEntity variable = GetSpecificVariable(variableName);
                     if (variable != null)
                     {
-                        updateVariableInstance(variable, value, sourceActivityExecution);
+                        UpdateVariableInstance(variable, value, sourceActivityExecution);
                     }
                     else
                     {
-                        variable = createVariableInstance(variableName, value, sourceActivityExecution);
+                        variable = CreateVariableInstance(variableName, value, sourceActivityExecution);
                     }
                     usedVariablesCache[variableName] = variable;
 
@@ -979,37 +977,37 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual void createVariableLocal(string variableName, object value)
+        public virtual void CreateVariableLocal(string variableName, object value)
         {
-            createVariableLocal(variableName, value, SourceActivityExecution);
+            CreateVariableLocal(variableName, value, SourceActivityExecution);
         }
 
         /// <summary>
         /// only called when a new variable is created on this variable scope. This method is also responsible for propagating the creation of this variable to the history.
         /// </summary>
-        protected internal virtual void createVariableLocal(string variableName, object value, IExecutionEntity sourceActivityExecution)
+        protected internal virtual void CreateVariableLocal(string variableName, object value, IExecutionEntity sourceActivityExecution)
         {
-            ensureVariableInstancesInitialized();
+            EnsureVariableInstancesInitialized();
 
             if (variableInstances.ContainsKey(variableName))
             {
                 throw new ActivitiException("variable '" + variableName + "' already exists. Use setVariableLocal if you want to overwrite the value");
             }
 
-            createVariableInstance(variableName, value, sourceActivityExecution);
+            CreateVariableInstance(variableName, value, sourceActivityExecution);
         }
 
-        public virtual void removeVariable(string variableName)
+        public virtual void RemoveVariable(string variableName)
         {
-            removeVariable(variableName, SourceActivityExecution);
+            RemoveVariable(variableName, SourceActivityExecution);
         }
 
-        protected internal virtual void removeVariable(string variableName, IExecutionEntity sourceActivityExecution)
+        protected internal virtual void RemoveVariable(string variableName, IExecutionEntity sourceActivityExecution)
         {
-            ensureVariableInstancesInitialized();
+            EnsureVariableInstancesInitialized();
             if (variableInstances.ContainsKey(variableName))
             {
-                removeVariableLocal(variableName);
+                RemoveVariableLocal(variableName);
                 return;
             }
             VariableScopeImpl parentVariableScope = ParentVariableScope;
@@ -1017,18 +1015,18 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 if (sourceActivityExecution == null)
                 {
-                    parentVariableScope.removeVariable(variableName);
+                    parentVariableScope.RemoveVariable(variableName);
                 }
                 else
                 {
-                    parentVariableScope.removeVariable(variableName, sourceActivityExecution);
+                    parentVariableScope.RemoveVariable(variableName, sourceActivityExecution);
                 }
             }
         }
 
-        public virtual void removeVariableLocal(string variableName)
+        public virtual void RemoveVariableLocal(string variableName)
         {
-            removeVariableLocal(variableName, SourceActivityExecution);
+            RemoveVariableLocal(variableName, SourceActivityExecution);
         }
 
         protected internal virtual IExecutionEntity SourceActivityExecution
@@ -1039,30 +1037,30 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        protected internal virtual void removeVariableLocal(string variableName, IExecutionEntity sourceActivityExecution)
+        protected internal virtual void RemoveVariableLocal(string variableName, IExecutionEntity sourceActivityExecution)
         {
-            ensureVariableInstancesInitialized();
+            EnsureVariableInstancesInitialized();
             variableInstances.TryGetValue(variableName, out IVariableInstanceEntity variableInstance);
             variableInstances.Remove(variableName);
             if (variableInstance != null)
             {
-                deleteVariableInstanceForExplicitUserCall(variableInstance, sourceActivityExecution);
+                DeleteVariableInstanceForExplicitUserCall(variableInstance, sourceActivityExecution);
             }
         }
 
-        protected internal virtual void deleteVariableInstanceForExplicitUserCall(IVariableInstanceEntity variableInstance, IExecutionEntity sourceActivityExecution)
+        protected internal virtual void DeleteVariableInstanceForExplicitUserCall(IVariableInstanceEntity variableInstance, IExecutionEntity sourceActivityExecution)
         {
-            Context.CommandContext.VariableInstanceEntityManager.delete(variableInstance);
+            Context.CommandContext.VariableInstanceEntityManager.Delete(variableInstance);
             variableInstance.Value = null;
 
             // Record historic variable deletion
-            Context.CommandContext.HistoryManager.recordVariableRemoved(variableInstance);
+            Context.CommandContext.HistoryManager.RecordVariableRemoved(variableInstance);
 
             // Record historic detail
-            Context.CommandContext.HistoryManager.recordHistoricDetailVariableCreate(variableInstance, sourceActivityExecution, ActivityIdUsedForDetails);
+            Context.CommandContext.HistoryManager.RecordHistoricDetailVariableCreate(variableInstance, sourceActivityExecution, ActivityIdUsedForDetails);
         }
 
-        protected internal virtual void updateVariableInstance(IVariableInstanceEntity variableInstance, object value, IExecutionEntity sourceActivityExecution)
+        protected internal virtual void UpdateVariableInstance(IVariableInstanceEntity variableInstance, object value, IExecutionEntity sourceActivityExecution)
         {
 
             // Always check if the type should be altered. It's possible that the
@@ -1073,13 +1071,13 @@ namespace org.activiti.engine.impl.persistence.entity
 
             IVariableTypes variableTypes = Context.ProcessEngineConfiguration.VariableTypes;
 
-            IVariableType newType = variableTypes.findVariableType(value);
+            IVariableType newType = variableTypes.FindVariableType(value);
 
             if (newType != null && !newType.Equals(variableInstance.Type))
             {
                 variableInstance.Value = null;
                 variableInstance.Type = newType;
-                variableInstance.forceUpdate();
+                variableInstance.ForceUpdate();
                 variableInstance.Value = value;
             }
             else
@@ -1087,20 +1085,20 @@ namespace org.activiti.engine.impl.persistence.entity
                 variableInstance.Value = value;
             }
 
-            Context.CommandContext.HistoryManager.recordHistoricDetailVariableCreate(variableInstance, sourceActivityExecution, ActivityIdUsedForDetails);
+            Context.CommandContext.HistoryManager.RecordHistoricDetailVariableCreate(variableInstance, sourceActivityExecution, ActivityIdUsedForDetails);
 
-            Context.CommandContext.HistoryManager.recordVariableUpdate(variableInstance);
+            Context.CommandContext.HistoryManager.RecordVariableUpdate(variableInstance);
         }
 
-        protected internal virtual IVariableInstanceEntity createVariableInstance(string variableName, object value, IExecutionEntity sourceActivityExecution)
+        protected internal virtual IVariableInstanceEntity CreateVariableInstance(string variableName, object value, IExecutionEntity sourceActivityExecution)
         {
             IVariableTypes variableTypes = Context.ProcessEngineConfiguration.VariableTypes;
 
-            IVariableType type = variableTypes.findVariableType(value);
+            IVariableType type = variableTypes.FindVariableType(value);
 
-            IVariableInstanceEntity variableInstance = Context.CommandContext.VariableInstanceEntityManager.create(variableName, type, value);
-            initializeVariableInstanceBackPointer(variableInstance);
-            Context.CommandContext.VariableInstanceEntityManager.insert(variableInstance);
+            IVariableInstanceEntity variableInstance = Context.CommandContext.VariableInstanceEntityManager.Create(variableName, type, value);
+            InitializeVariableInstanceBackPointer(variableInstance);
+            Context.CommandContext.VariableInstanceEntityManager.Insert(variableInstance);
 
             if (variableInstances != null)
             {
@@ -1108,10 +1106,10 @@ namespace org.activiti.engine.impl.persistence.entity
             }
 
             // Record historic variable
-            Context.CommandContext.HistoryManager.recordVariableCreate(variableInstance);
+            Context.CommandContext.HistoryManager.RecordVariableCreate(variableInstance);
 
             // Record historic detail
-            Context.CommandContext.HistoryManager.recordHistoricDetailVariableCreate(variableInstance, sourceActivityExecution, ActivityIdUsedForDetails);
+            Context.CommandContext.HistoryManager.RecordHistoricDetailVariableCreate(variableInstance, sourceActivityExecution, ActivityIdUsedForDetails);
 
             return variableInstance;
         }
@@ -1127,7 +1125,7 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 foreach (string variableName in value.Keys)
                 {
-                    setTransientVariableLocal(variableName, value[variableName]);
+                    SetTransientVariableLocal(variableName, value[variableName]);
                 }
             }
             get
@@ -1148,7 +1146,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual void setTransientVariableLocal(string variableName, object variableValue)
+        public virtual void SetTransientVariableLocal(string variableName, object variableValue)
         {
             if (transientVariabes == null)
             {
@@ -1163,27 +1161,27 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 foreach (string variableName in value.Keys)
                 {
-                    setTransientVariable(variableName, value[variableName]);
+                    SetTransientVariable(variableName, value[variableName]);
                 }
             }
             get
             {
-                return collectTransientVariables(new Dictionary<string, object>());
+                return CollectTransientVariables(new Dictionary<string, object>());
             }
         }
 
-        public virtual void setTransientVariable(string variableName, object variableValue)
+        public virtual void SetTransientVariable(string variableName, object variableValue)
         {
             VariableScopeImpl parentVariableScope = ParentVariableScope;
             if (parentVariableScope != null)
             {
-                parentVariableScope.setTransientVariable(variableName, variableValue);
+                parentVariableScope.SetTransientVariable(variableName, variableValue);
                 return;
             }
-            setTransientVariableLocal(variableName, variableValue);
+            SetTransientVariableLocal(variableName, variableValue);
         }
 
-        public virtual object getTransientVariableLocal(string variableName)
+        public virtual object GetTransientVariableLocal(string variableName)
         {
             if (transientVariabes != null)
             {
@@ -1193,7 +1191,7 @@ namespace org.activiti.engine.impl.persistence.entity
         }
 
 
-        public virtual object getTransientVariable(string variableName)
+        public virtual object GetTransientVariable(string variableName)
         {
             if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
             {
@@ -1203,19 +1201,19 @@ namespace org.activiti.engine.impl.persistence.entity
             VariableScopeImpl parentScope = ParentVariableScope;
             if (parentScope != null)
             {
-                return parentScope.getTransientVariable(variableName);
+                return parentScope.GetTransientVariable(variableName);
             }
 
             return null;
         }
 
 
-        protected internal virtual IDictionary<string, object> collectTransientVariables(Dictionary<string, object> variables)
+        protected internal virtual IDictionary<string, object> CollectTransientVariables(Dictionary<string, object> variables)
         {
             VariableScopeImpl parentScope = ParentVariableScope;
             if (parentScope != null)
             {
-                variables.putAll(parentScope.collectVariables(variables));
+                variables.PutAll(parentScope.CollectVariables(variables));
             }
 
             if (transientVariabes != null)
@@ -1229,7 +1227,7 @@ namespace org.activiti.engine.impl.persistence.entity
             return variables;
         }
 
-        public virtual void removeTransientVariableLocal(string variableName)
+        public virtual void RemoveTransientVariableLocal(string variableName)
         {
             if (transientVariabes != null)
             {
@@ -1237,7 +1235,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual void removeTransientVariablesLocal()
+        public virtual void RemoveTransientVariablesLocal()
         {
             if (transientVariabes != null)
             {
@@ -1245,27 +1243,27 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual void removeTransientVariable(string variableName)
+        public virtual void RemoveTransientVariable(string variableName)
         {
             if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
             {
-                removeTransientVariableLocal(variableName);
+                RemoveTransientVariableLocal(variableName);
                 return;
             }
             VariableScopeImpl parentVariableScope = ParentVariableScope;
             if (parentVariableScope != null)
             {
-                parentVariableScope.removeTransientVariable(variableName);
+                parentVariableScope.RemoveTransientVariable(variableName);
             }
         }
 
-        public virtual void removeTransientVariables()
+        public virtual void RemoveTransientVariables()
         {
-            removeTransientVariablesLocal();
+            RemoveTransientVariablesLocal();
             VariableScopeImpl parentVariableScope = ParentVariableScope;
             if (parentVariableScope != null)
             {
-                parentVariableScope.removeTransientVariablesLocal();
+                parentVariableScope.RemoveTransientVariablesLocal();
             }
         }
 
@@ -1296,14 +1294,14 @@ namespace org.activiti.engine.impl.persistence.entity
         }
 
 
-        public virtual T getVariable<T>(string variableName)
+        public virtual T GetVariable<T>(string variableName)
         {
-            return (T)getVariable(variableName);
+            return (T)GetVariable(variableName);
         }
 
-        public virtual T getVariableLocal<T>(string variableName)
+        public virtual T GetVariableLocal<T>(string variableName)
         {
-            return (T)getVariableLocal(variableName);
+            return (T)GetVariableLocal(variableName);
         }
     }
 

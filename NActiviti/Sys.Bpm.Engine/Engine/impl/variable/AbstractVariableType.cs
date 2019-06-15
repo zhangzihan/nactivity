@@ -11,9 +11,9 @@ namespace org.activiti.engine.impl.variable
         public abstract string TypeName { get; }
         public abstract bool Cachable { get; }
 
-        public abstract object getValue(IValueFields valueFields);
-        public abstract bool isAbleToStore(object value);
-        public abstract void setValue(object value, IValueFields valueFields);
+        public abstract object GetValue(IValueFields valueFields);
+        public abstract bool IsAbleToStore(object value);
+        public abstract void SetValue(object value, IValueFields valueFields);
 
         public override string ToString()
         {

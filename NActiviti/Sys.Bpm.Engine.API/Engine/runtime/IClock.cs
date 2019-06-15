@@ -21,13 +21,19 @@ namespace org.activiti.engine.runtime
     /// </summary>
     public interface IClock : IClockReader
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         new DateTime CurrentTime { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         new DateTime CurrentCalendar { get; set; }
 
-        void reset();
-
+        /// <summary>
+        /// 
+        /// </summary>
+        void Reset();
     }
-
 }

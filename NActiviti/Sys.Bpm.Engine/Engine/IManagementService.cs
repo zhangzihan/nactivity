@@ -42,37 +42,37 @@ namespace org.activiti.engine
         /// <summary>
         /// Gets the table name (including any configured prefix) for an Activiti entity like Task, Execution or the like.
         /// </summary>
-        string getTableName(Type activitiEntityClass);
+        string GetTableName(Type activitiEntityClass);
 
         /// <summary>
         /// Gets the metadata (column names, column types, etc.) of a certain table. Returns null when no table exists with the given name.
         /// </summary>
-        TableMetaData getTableMetaData(string tableName);
+        TableMetaData GetTableMetaData(string tableName);
 
         /// <summary>
         /// Creates a <seealso cref="ITablePageQuery"/> that can be used to fetch <seealso cref="TablePage"/> containing specific sections of table row data.
         /// </summary>
-        ITablePageQuery createTablePageQuery();
+        ITablePageQuery CreateTablePageQuery();
 
         /// <summary>
         /// Returns a new JobQuery implementation, that can be used to dynamically query the jobs.
         /// </summary>
-        IJobQuery createJobQuery();
+        IJobQuery CreateJobQuery();
 
         /// <summary>
         /// Returns a new TimerJobQuery implementation, that can be used to dynamically query the timer jobs.
         /// </summary>
-        ITimerJobQuery createTimerJobQuery();
+        ITimerJobQuery CreateTimerJobQuery();
 
         /// <summary>
         /// Returns a new SuspendedJobQuery implementation, that can be used to dynamically query the suspended jobs.
         /// </summary>
-        ISuspendedJobQuery createSuspendedJobQuery();
+        ISuspendedJobQuery CreateSuspendedJobQuery();
 
         /// <summary>
         /// Returns a new DeadLetterJobQuery implementation, that can be used to dynamically query the dead letter jobs.
         /// </summary>
-        IDeadLetterJobQuery createDeadLetterJobQuery();
+        IDeadLetterJobQuery CreateDeadLetterJobQuery();
 
         /// <summary>
         /// Forced synchronous execution of a job (eg. for administration or testing) The job will be executed, even if the process definition and/or the process instance is in suspended state.
@@ -81,7 +81,7 @@ namespace org.activiti.engine
         ///          id of the job to execute, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when there is no job with the given id. </exception>
-        void executeJob(string jobId);
+        void ExecuteJob(string jobId);
 
         /// <summary>
         /// Moves a timer job to the executable job table (eg. for administration or testing). The timer job will be moved, even if the process definition and/or the process instance is in suspended state.
@@ -90,7 +90,7 @@ namespace org.activiti.engine
         ///          id of the timer job to move, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when there is no job with the given id. </exception>
-        IJob moveTimerToExecutableJob(string jobId);
+        IJob MoveTimerToExecutableJob(string jobId);
 
         /// <summary>
         /// Moves a job to the dead letter job table (eg. for administration or testing). The job will be moved, even if the process definition and/or the process instance has retries left.
@@ -99,7 +99,7 @@ namespace org.activiti.engine
         ///          id of the job to move, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when there is no job with the given id. </exception>
-        IJob moveJobToDeadLetterJob(string jobId);
+        IJob MoveJobToDeadLetterJob(string jobId);
 
         /// <summary>
         /// Moves a job that is in the dead letter job table back to be an executable job, 
@@ -111,7 +111,7 @@ namespace org.activiti.engine
         ///          the number of retries (value greater than 0) which will be set on the job. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when there is no job with the given id. </exception>
-        IJob moveDeadLetterJobToExecutableJob(string jobId, int retries);
+        IJob MoveDeadLetterJobToExecutableJob(string jobId, int retries);
 
         /// <summary>
         /// Delete the job with the provided id.
@@ -120,7 +120,7 @@ namespace org.activiti.engine
         ///          id of the job to delete, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when there is no job with the given id. </exception>
-        void deleteJob(string jobId);
+        void DeleteJob(string jobId);
 
         /// <summary>
         /// Delete the timer job with the provided id.
@@ -129,7 +129,7 @@ namespace org.activiti.engine
         ///          id of the timer job to delete, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when there is no job with the given id. </exception>
-        void deleteTimerJob(string jobId);
+        void DeleteTimerJob(string jobId);
 
         /// <summary>
         /// Delete the dead letter job with the provided id.
@@ -138,7 +138,7 @@ namespace org.activiti.engine
         ///          id of the dead letter job to delete, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when there is no job with the given id. </exception>
-        void deleteDeadLetterJob(string jobId);
+        void DeleteDeadLetterJob(string jobId);
 
         /// <summary>
         /// Sets the number of retries that a job has left.
@@ -150,7 +150,7 @@ namespace org.activiti.engine
         ///          id of the job to modify, cannot be null. </param>
         /// <param name="retries">
         ///          number of retries. </param>
-        void setJobRetries(string jobId, int retries);
+        void SetJobRetries(string jobId, int retries);
 
         /// <summary>
         /// Sets the number of retries that a timer job has left.
@@ -162,7 +162,7 @@ namespace org.activiti.engine
         ///          id of the timer job to modify, cannot be null. </param>
         /// <param name="retries">
         ///          number of retries. </param>
-        void setTimerJobRetries(string jobId, int retries);
+        void SetTimerJobRetries(string jobId, int retries);
 
         /// <summary>
         /// Returns the full stacktrace of the exception that occurs when the job with the given id was last executed. 
@@ -172,7 +172,7 @@ namespace org.activiti.engine
         ///          id of the job, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no job exists with the given id. </exception>
-        string getJobExceptionStacktrace(string jobId);
+        string GetJobExceptionStacktrace(string jobId);
 
         /// <summary>
         /// Returns the full stacktrace of the exception that occurs when the <seealso cref="TimerJobEntity"/> with the given id was last executed. 
@@ -182,7 +182,7 @@ namespace org.activiti.engine
         ///          id of the job, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no job exists with the given id. </exception>
-        string getTimerJobExceptionStacktrace(string jobId);
+        string GetTimerJobExceptionStacktrace(string jobId);
 
         /// <summary>
         /// Returns the full stacktrace of the exception that occurs when the <seealso cref="SuspendedJobEntity"/> with the given id was last executed. 
@@ -192,7 +192,7 @@ namespace org.activiti.engine
         ///          id of the job, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no job exists with the given id. </exception>
-        string getSuspendedJobExceptionStacktrace(string jobId);
+        string GetSuspendedJobExceptionStacktrace(string jobId);
 
         /// <summary>
         /// Returns the full stacktrace of the exception that occurs when the <seealso cref="DeadLetterJobEntity"/> with the given id was last executed. 
@@ -202,7 +202,7 @@ namespace org.activiti.engine
         ///          id of the job, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no job exists with the given id. </exception>
-        string getDeadLetterJobExceptionStacktrace(string jobId);
+        string GetDeadLetterJobExceptionStacktrace(string jobId);
 
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace org.activiti.engine
         /// <summary>
         /// programmatic schema update on a given connection returning feedback about what happened
         /// </summary>
-        string databaseSchemaUpgrade(IDbConnection connection, string catalog, string schema);
+        string DatabaseSchemaUpgrade(IDbConnection connection, string catalog, string schema);
 
         /// <summary>
         /// Executes a given command with the default <seealso cref="CommandConfig"/>.
@@ -220,7 +220,7 @@ namespace org.activiti.engine
         /// <param name="command">
         ///          the command, cannot be null. </param>
         /// <returns> the result of command execution </returns>
-        T executeCommand<T>(ICommand<T> command);
+        T ExecuteCommand<T>(ICommand<T> command);
 
         /// <summary>
         /// Executes a given command with the specified <seealso cref="CommandConfig"/>.
@@ -230,32 +230,30 @@ namespace org.activiti.engine
         /// <param name="command">
         ///          the command, cannot be null. </param>
         /// <returns> the result of command execution </returns>
-        T executeCommand<T>(CommandConfig config, ICommand<T> command);
+        T ExecuteCommand<T>(CommandConfig config, ICommand<T> command);
 
         /// <summary>
         /// Executes the sql contained in the <seealso cref="CustomSqlExecution"/> parameter.
         /// </summary>
-        ResultType executeCustomSql<MapperType, ResultType>(ICustomSqlExecution<MapperType, ResultType> customSqlExecution);
+        ResultType ExecuteCustomSql<MapperType, ResultType>(ICustomSqlExecution<MapperType, ResultType> customSqlExecution);
 
         /// <summary>
         /// Returns a list of event log entries, describing everything the engine has processed. Note that the event logging must specifically must be enabled in the process engine configuration.
         /// 
         /// Passing null as arguments will effectively fetch ALL event log entries. Be careful, as this list might be huge!
         /// </summary>
-        IList<IEventLogEntry> getEventLogEntries(long? startLogNr, long? pageSize);
+        IList<IEventLogEntry> GetEventLogEntries(long? startLogNr, long? pageSize);
 
         /// <summary>
         /// Returns a list of event log entries for a specific process instance id. Note that the event logging must specifically must be enabled in the process engine configuration.
         /// 
         /// Passing null as arguments will effectively fetch ALL event log entries. Be careful, as this list might be huge!
         /// </summary>
-        IList<IEventLogEntry> getEventLogEntriesByProcessInstanceId(string processInstanceId);
+        IList<IEventLogEntry> GetEventLogEntriesByProcessInstanceId(string processInstanceId);
 
         /// <summary>
         /// Delete a EventLogEntry. Typically only used in testing, as deleting log entries defeats the whole purpose of keeping a log.
         /// </summary>
-        void deleteEventLogEntry(long logNr);
-
+        void DeleteEventLogEntry(long logNr);
     }
-
 }

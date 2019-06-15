@@ -19,11 +19,11 @@ namespace org.activiti.bpmn.model
         /// <param name="namespace"> </param>
         /// <param name="name"> </param>
         /// <returns> attribute value or null in case when attribute was not found </returns>
-        string getAttributeValue(string @namespace, string name);
+        string GetAttributeValue(string @namespace, string name);
 
         /// <summary>
         /// add attribute to the object </summary>
-        void addAttribute(ExtensionAttribute attribute);
+        void AddAttribute(ExtensionAttribute attribute);
 
     }
 

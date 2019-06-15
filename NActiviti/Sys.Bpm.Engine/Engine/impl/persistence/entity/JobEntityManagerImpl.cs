@@ -40,36 +40,36 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual bool insertJobEntity(IJobEntity timerJobEntity)
+        public virtual bool InsertJobEntity(IJobEntity timerJobEntity)
         {
-            return doInsert(timerJobEntity, true);
+            return DoInsert(timerJobEntity, true);
         }
 
-        public override void insert(IJobEntity jobEntity, bool fireCreateEvent)
+        public override void Insert(IJobEntity jobEntity, bool fireCreateEvent)
         {
-            doInsert(jobEntity, fireCreateEvent);
+            DoInsert(jobEntity, fireCreateEvent);
         }
 
-        protected internal virtual bool doInsert(IJobEntity jobEntity, bool fireCreateEvent)
+        protected internal virtual bool DoInsert(IJobEntity jobEntity, bool fireCreateEvent)
         {
             // add link to execution
-            if (!ReferenceEquals(jobEntity.ExecutionId, null))
+            if (!(jobEntity.ExecutionId is null))
             {
-                IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(jobEntity.ExecutionId);
+                IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
                 if (execution != null)
                 {
                     execution.Jobs.Add(jobEntity);
 
                     // Inherit tenant if (if applicable)
-                    if (!ReferenceEquals(execution.TenantId, null))
+                    if (!(execution.TenantId is null))
                     {
                         jobEntity.TenantId = execution.TenantId;
                     }
 
-                    if (isExecutionRelatedEntityCountEnabled(execution))
+                    if (IsExecutionRelatedEntityCountEnabled(execution))
                     {
                         ICountingExecutionEntity countingExecutionEntity = (ICountingExecutionEntity)execution;
-                        countingExecutionEntity.JobCount = countingExecutionEntity.JobCount + 1;
+                        countingExecutionEntity.JobCount += 1;
                     }
                 }
                 else
@@ -78,97 +78,97 @@ namespace org.activiti.engine.impl.persistence.entity
                 }
             }
 
-            base.insert(jobEntity, fireCreateEvent);
+            base.Insert(jobEntity, fireCreateEvent);
             return true;
         }
 
-        public virtual IList<IJobEntity> findJobsToExecute(Page page)
+        public virtual IList<IJobEntity> FindJobsToExecute(Page page)
         {
-            return jobDataManager.findJobsToExecute(page);
+            return jobDataManager.FindJobsToExecute(page);
         }
 
-        public virtual IList<IJobEntity> findJobsByExecutionId(string executionId)
+        public virtual IList<IJobEntity> FindJobsByExecutionId(string executionId)
         {
-            return jobDataManager.findJobsByExecutionId(executionId);
+            return jobDataManager.FindJobsByExecutionId(executionId);
         }
 
-        public virtual IList<IJobEntity> findJobsByProcessDefinitionId(string processDefinitionId)
+        public virtual IList<IJobEntity> FindJobsByProcessDefinitionId(string processDefinitionId)
         {
-            return jobDataManager.findJobsByProcessDefinitionId(processDefinitionId);
+            return jobDataManager.FindJobsByProcessDefinitionId(processDefinitionId);
         }
 
-        public virtual IList<IJobEntity> findJobsByTypeAndProcessDefinitionId(string jobTypeTimer, string id)
+        public virtual IList<IJobEntity> FindJobsByTypeAndProcessDefinitionId(string jobTypeTimer, string id)
         {
-            return jobDataManager.findJobsByTypeAndProcessDefinitionId(jobTypeTimer, id);
+            return jobDataManager.FindJobsByTypeAndProcessDefinitionId(jobTypeTimer, id);
         }
 
-        public virtual IList<IJobEntity> findJobsByProcessInstanceId(string processInstanceId)
+        public virtual IList<IJobEntity> FindJobsByProcessInstanceId(string processInstanceId)
         {
-            return jobDataManager.findJobsByProcessInstanceId(processInstanceId);
+            return jobDataManager.FindJobsByProcessInstanceId(processInstanceId);
         }
 
-        public virtual IList<IJobEntity> findExpiredJobs(Page page)
+        public virtual IList<IJobEntity> FindExpiredJobs(Page page)
         {
-            return jobDataManager.findExpiredJobs(page);
+            return jobDataManager.FindExpiredJobs(page);
         }
 
-        public virtual void resetExpiredJob(string jobId)
+        public virtual void ResetExpiredJob(string jobId)
         {
-            jobDataManager.resetExpiredJob(jobId);
+            jobDataManager.ResetExpiredJob(jobId);
         }
 
-        public virtual IList<IJob> findJobsByQueryCriteria(JobQueryImpl jobQuery, Page page)
+        public virtual IList<IJob> FindJobsByQueryCriteria(IJobQuery jobQuery, Page page)
         {
-            return jobDataManager.findJobsByQueryCriteria(jobQuery, page);
+            return jobDataManager.FindJobsByQueryCriteria(jobQuery, page);
         }
 
-        public virtual long findJobCountByQueryCriteria(JobQueryImpl jobQuery)
+        public virtual long FindJobCountByQueryCriteria(IJobQuery jobQuery)
         {
-            return jobDataManager.findJobCountByQueryCriteria(jobQuery);
+            return jobDataManager.FindJobCountByQueryCriteria(jobQuery);
         }
 
-        public virtual void updateJobTenantIdForDeployment(string deploymentId, string newTenantId)
+        public virtual void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId)
         {
-            jobDataManager.updateJobTenantIdForDeployment(deploymentId, newTenantId);
+            jobDataManager.UpdateJobTenantIdForDeployment(deploymentId, newTenantId);
         }
 
-        public override void delete(IJobEntity jobEntity)
+        public override void Delete(IJobEntity jobEntity)
         {
-            base.delete(jobEntity);
+            base.Delete(jobEntity);
 
-            deleteExceptionByteArrayRef(jobEntity);
+            DeleteExceptionByteArrayRef(jobEntity);
 
-            removeExecutionLink(jobEntity);
+            RemoveExecutionLink(jobEntity);
 
             // Send event
             if (EventDispatcher.Enabled)
             {
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_DELETED, this));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, this));
             }
         }
 
-        public override void delete(IJobEntity entity, bool fireDeleteEvent)
+        public override void Delete(IJobEntity entity, bool fireDeleteEvent)
         {
-            if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!(entity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(entity.ExecutionId);
-                if (isExecutionRelatedEntityCountEnabled(executionEntity))
+                ICountingExecutionEntity executionEntity = ExecutionEntityManager.FindById<ICountingExecutionEntity>(entity.ExecutionId);
+                if (IsExecutionRelatedEntityCountEnabled(executionEntity))
                 {
-                    executionEntity.JobCount = executionEntity.JobCount - 1;
+                    executionEntity.JobCount -= 1;
                 }
             }
-            base.delete(entity, fireDeleteEvent);
+            base.Delete(entity, fireDeleteEvent);
         }
 
         /// <summary>
         /// Removes the job's execution's reference to this job, if the job has an associated execution.
         /// Subclasses may override to provide custom implementations.
         /// </summary>
-        protected internal virtual void removeExecutionLink(IJobEntity jobEntity)
+        protected internal virtual void RemoveExecutionLink(IJobEntity jobEntity)
         {
-            if (!ReferenceEquals(jobEntity.ExecutionId, null))
+            if (!(jobEntity.ExecutionId is null))
             {
-                IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(jobEntity.ExecutionId);
+                IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
                 if (execution != null)
                 {
                     execution.Jobs.Remove(jobEntity);
@@ -180,12 +180,11 @@ namespace org.activiti.engine.impl.persistence.entity
         /// Deletes a the byte array used to store the exception information.  Subclasses may override
         /// to provide custom implementations.
         /// </summary>
-        protected internal virtual void deleteExceptionByteArrayRef(IJobEntity jobEntity)
+        protected internal virtual void DeleteExceptionByteArrayRef(IJobEntity jobEntity)
         {
-            ByteArrayRef exceptionByteArrayRef = jobEntity.ExceptionByteArrayRef as ByteArrayRef;
-            if (exceptionByteArrayRef != null)
+            if (jobEntity.ExceptionByteArrayRef is ByteArrayRef exceptionByteArrayRef)
             {
-                exceptionByteArrayRef.delete();
+                exceptionByteArrayRef.Delete();
             }
         }
 

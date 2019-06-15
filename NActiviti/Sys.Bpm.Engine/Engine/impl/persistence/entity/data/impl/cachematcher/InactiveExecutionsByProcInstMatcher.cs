@@ -20,7 +20,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class InactiveExecutionsByProcInstMatcher : CachedEntityMatcherAdapter<IExecutionEntity>
     {
 
-        public override bool isRetained(IExecutionEntity executionEntity, object parameter)
+        public override bool IsRetained(IExecutionEntity executionEntity, object parameter)
         {
             IDictionary<string, object> paramMap = (IDictionary<string, object>)parameter ?? new Dictionary<string, object>();
             paramMap.TryGetValue("processInstanceId", out object processInstanceId);

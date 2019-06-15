@@ -34,7 +34,7 @@ namespace org.activiti.engine.impl.cmd
             this.processDefinitionId = processDefinitionId;
         }
 
-        public virtual JToken execute(ICommandContext commandContext)
+        public virtual JToken Execute(ICommandContext commandContext)
         {
             if (string.IsNullOrWhiteSpace(processDefinitionId))
             {
@@ -44,9 +44,9 @@ namespace org.activiti.engine.impl.cmd
             JToken resultNode = null;
             DeploymentManager deploymentManager = commandContext.ProcessEngineConfiguration.DeploymentManager;
             // make sure the process definition is in the cache
-            IProcessDefinition processDefinition = deploymentManager.findDeployedProcessDefinitionById(processDefinitionId);
+            deploymentManager.FindDeployedProcessDefinitionById(processDefinitionId);
 
-            ProcessDefinitionInfoCacheObject definitionInfoCacheObject = deploymentManager.ProcessDefinitionInfoCache.get(processDefinitionId);
+            ProcessDefinitionInfoCacheObject definitionInfoCacheObject = deploymentManager.ProcessDefinitionInfoCache.Get(processDefinitionId);
             if (definitionInfoCacheObject != null)
             {
                 resultNode = definitionInfoCacheObject.InfoNode;

@@ -16,13 +16,13 @@ using System.Collections.Generic;
 namespace org.activiti.engine.impl
 {
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.DependencyInjection;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
     using org.activiti.engine.impl.asyncexecutor;
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.interceptor;
-    using Sys;
+    using Sys.Workflow;
+    using System.Collections.Concurrent;
 
     public class ProcessEngineImpl : IProcessEngine
     {
@@ -35,11 +35,11 @@ namespace org.activiti.engine.impl
         protected internal IDynamicBpmnService dynamicBpmnService;
         protected internal IAsyncExecutor asyncExecutor;
         protected internal ICommandExecutor commandExecutor;
-        protected internal IDictionary<Type, ISessionFactory> sessionFactories;
+        protected internal ConcurrentDictionary<Type, ISessionFactory> sessionFactories;
         protected internal ITransactionContextFactory transactionContextFactory;
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
 
-        private ILogger<ProcessEngineImpl> log = ProcessEngineServiceProvider.LoggerService<ProcessEngineImpl>();
+        private readonly ILogger<ProcessEngineImpl> log = ProcessEngineServiceProvider.LoggerService<ProcessEngineImpl>();
 
         public ProcessEngineImpl(ProcessEngineConfigurationImpl processEngineConfiguration)
         {
@@ -56,12 +56,12 @@ namespace org.activiti.engine.impl
             this.sessionFactories = processEngineConfiguration.SessionFactories;
             this.transactionContextFactory = processEngineConfiguration.TransactionContextFactory;
 
-            if (processEngineConfiguration.UsingRelationalDatabase && !ReferenceEquals(processEngineConfiguration.DatabaseSchemaUpdate, null))
+            if (processEngineConfiguration.UsingRelationalDatabase && !(processEngineConfiguration.DatabaseSchemaUpdate is null))
             {
-                commandExecutor.execute(processEngineConfiguration.SchemaCommandConfig, new SchemaOperationsProcessEngineBuild());
+                commandExecutor.Execute(processEngineConfiguration.SchemaCommandConfig, new SchemaOperationsProcessEngineBuild());
             }
 
-            if (ReferenceEquals(name, null))
+            if (name is null)
             {
                 log.LogInformation("default activiti ProcessEngine created");
             }
@@ -70,37 +70,37 @@ namespace org.activiti.engine.impl
                 log.LogInformation($"ProcessEngine {name} created");
             }
 
-            ProcessEngineFactory.registerProcessEngine(this);
+            ProcessEngineFactory.RegisterProcessEngine(this);
 
             if (asyncExecutor != null && asyncExecutor.AutoActivate)
             {
-                asyncExecutor.start();
+                asyncExecutor.Start();
             }
 
             if (processEngineConfiguration.ProcessEngineLifecycleListener != null)
             {
-                processEngineConfiguration.ProcessEngineLifecycleListener.onProcessEngineBuilt(this);
+                processEngineConfiguration.ProcessEngineLifecycleListener.OnProcessEngineBuilt(this);
             }
 
-            processEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createGlobalEvent(ActivitiEventType.ENGINE_CREATED));
+            processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateGlobalEvent(ActivitiEventType.ENGINE_CREATED));
         }
 
-        public virtual void close()
+        public virtual void Close()
         {
-            ProcessEngineFactory.unregister(this);
+            ProcessEngineFactory.Unregister(this);
             if (asyncExecutor != null && asyncExecutor.Active)
             {
-                asyncExecutor.shutdown();
+                asyncExecutor.Shutdown();
             }
 
-            commandExecutor.execute(processEngineConfiguration.SchemaCommandConfig, new SchemaOperationProcessEngineClose());
+            commandExecutor.Execute(processEngineConfiguration.SchemaCommandConfig, new SchemaOperationProcessEngineClose());
 
             if (processEngineConfiguration.ProcessEngineLifecycleListener != null)
             {
-                processEngineConfiguration.ProcessEngineLifecycleListener.onProcessEngineClosed(this);
+                processEngineConfiguration.ProcessEngineLifecycleListener.OnProcessEngineClosed(this);
             }
 
-            processEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createGlobalEvent(ActivitiEventType.ENGINE_CLOSED));
+            processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateGlobalEvent(ActivitiEventType.ENGINE_CLOSED));
         }
 
         // getters and setters

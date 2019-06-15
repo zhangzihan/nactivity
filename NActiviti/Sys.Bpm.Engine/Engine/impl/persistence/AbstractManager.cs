@@ -45,9 +45,9 @@ namespace org.activiti.engine.impl.persistence
             }
         }
 
-        protected internal virtual T getSession<T>() where T : ISession
+        protected internal virtual T GetSession<T>() where T : ISession
         {
-            return CommandContext.getSession<T>();
+            return CommandContext.GetSession<T>();
         }
 
         // Engine scoped
@@ -172,7 +172,7 @@ namespace org.activiti.engine.impl.persistence
             }
         }
 
-        protected internal virtual IdentityLinkEntityManager IdentityLinkEntityManager
+        protected internal virtual IIdentityLinkEntityManager IdentityLinkEntityManager
         {
             get
             {

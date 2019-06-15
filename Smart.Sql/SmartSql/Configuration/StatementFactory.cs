@@ -375,12 +375,14 @@ namespace SmartSql.Configuration
                         var separator = xmlNode?.GetAttribute("Separator")?.Trim();
                         var close = xmlNode?.GetAttribute("Close")?.Trim();
                         var key = xmlNode?.GetAttribute("Key")?.Trim();
+                        var index = xmlNode?.GetAttribute("Index")?.Trim();
                         tag = new For
                         {
                             Prepend = prepend,
                             Property = property,
                             Open = open,
                             Close = close,
+                            Index = index,
                             Separator = separator,
                             Key = key,
                             ChildTags = new List<ITag>()

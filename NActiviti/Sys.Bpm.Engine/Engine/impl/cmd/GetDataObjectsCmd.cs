@@ -23,6 +23,7 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
     using org.activiti.engine.runtime;
+    using System.Linq;
 
     [Serializable]
     public class GetDataObjectsCmd : ICommand<IDictionary<string, IDataObject>>
@@ -30,19 +31,19 @@ namespace org.activiti.engine.impl.cmd
 
         private const long serialVersionUID = 1L;
         protected internal string executionId;
-        protected internal ICollection<string> dataObjectNames;
+        protected internal IEnumerable<string> dataObjectNames;
         protected internal bool isLocal;
         protected internal string locale;
         protected internal bool withLocalizationFallback;
 
-        public GetDataObjectsCmd(string executionId, ICollection<string> dataObjectNames, bool isLocal)
+        public GetDataObjectsCmd(string executionId, IEnumerable<string> dataObjectNames, bool isLocal)
         {
             this.executionId = executionId;
             this.dataObjectNames = dataObjectNames;
             this.isLocal = isLocal;
         }
 
-        public GetDataObjectsCmd(string executionId, ICollection<string> dataObjectNames, bool isLocal, string locale, bool withLocalizationFallback)
+        public GetDataObjectsCmd(string executionId, IEnumerable<string> dataObjectNames, bool isLocal, string locale, bool withLocalizationFallback)
         {
             this.executionId = executionId;
             this.dataObjectNames = dataObjectNames;
@@ -51,23 +52,23 @@ namespace org.activiti.engine.impl.cmd
             this.withLocalizationFallback = withLocalizationFallback;
         }
 
-        public virtual IDictionary<string, IDataObject> execute(ICommandContext commandContext)
+        public virtual IDictionary<string, IDataObject> Execute(ICommandContext commandContext)
         {
             // Verify existance of execution
-            if (ReferenceEquals(executionId, null))
+            if (executionId is null)
             {
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }
 
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
 
             if (execution == null)
             {
                 throw new ActivitiObjectNotFoundException("execution " + executionId + " doesn't exist", typeof(IExecution));
             }
 
-            IDictionary<string, IVariableInstance> variables = null;
-            if (dataObjectNames == null || dataObjectNames.Count == 0)
+            IDictionary<string, IVariableInstance> variables;
+            if ((dataObjectNames?.Count()).GetValueOrDefault(0) == 0)
             {
                 // Fetch all
                 if (isLocal)
@@ -85,11 +86,11 @@ namespace org.activiti.engine.impl.cmd
                 // Fetch specific collection of variables
                 if (isLocal)
                 {
-                    variables = execution.getVariableInstancesLocal(dataObjectNames, false);
+                    variables = execution.GetVariableInstancesLocal(dataObjectNames, false);
                 }
                 else
                 {
-                    variables = execution.getVariableInstances(dataObjectNames, false);
+                    variables = execution.GetVariableInstances(dataObjectNames, false);
                 }
             }
 
@@ -101,17 +102,17 @@ namespace org.activiti.engine.impl.cmd
                 foreach (KeyValuePair<string, IVariableInstance> entry in variables.SetOfKeyValuePairs())
                 {
                     string name = entry.Key;
-                    IVariableInstance variableEntity = (IVariableInstance)entry.Value;
+                    IVariableInstance variableEntity = entry.Value;
 
-                    IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(variableEntity.ExecutionId);
+                    IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(variableEntity.ExecutionId);
                     while (!executionEntity.IsScope)
                     {
                         executionEntity = executionEntity.Parent;
                     }
 
-                    BpmnModel bpmnModel = ProcessDefinitionUtil.getBpmnModel(execution.ProcessDefinitionId);
+                    BpmnModel bpmnModel = ProcessDefinitionUtil.GetBpmnModel(execution.ProcessDefinitionId);
                     ValuedDataObject foundDataObject = null;
-                    if (ReferenceEquals(executionEntity.ParentId, null))
+                    if (executionEntity.ParentId is null)
                     {
                         foreach (ValuedDataObject dataObject in bpmnModel.MainProcess.DataObjects)
                         {
@@ -124,7 +125,7 @@ namespace org.activiti.engine.impl.cmd
                     }
                     else
                     {
-                        SubProcess subProcess = (SubProcess)bpmnModel.getFlowElement(execution.ActivityId);
+                        SubProcess subProcess = (SubProcess)bpmnModel.GetFlowElement(execution.ActivityId);
                         foreach (ValuedDataObject dataObject in subProcess.DataObjects)
                         {
                             if (dataObject.Name.Equals(variableEntity.Name))
@@ -138,18 +139,18 @@ namespace org.activiti.engine.impl.cmd
                     string localizedName = null;
                     string localizedDescription = null;
 
-                    if (!ReferenceEquals(locale, null) && foundDataObject != null)
+                    if (!(locale is null) && foundDataObject != null)
                     {
-                        JToken languageNode = Context.getLocalizationElementProperties(locale, foundDataObject.Id, execution.ProcessDefinitionId, withLocalizationFallback);
+                        JToken languageNode = Context.GetLocalizationElementProperties(locale, foundDataObject.Id, execution.ProcessDefinitionId, withLocalizationFallback);
 
                         if (languageNode != null)
                         {
-                            JToken nameNode = languageNode[DynamicBpmnConstants_Fields.LOCALIZATION_NAME];
+                            JToken nameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
                             if (nameNode != null)
                             {
                                 localizedName = nameNode.ToString();
                             }
-                            JToken descriptionNode = languageNode[DynamicBpmnConstants_Fields.LOCALIZATION_DESCRIPTION];
+                            JToken descriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
                             if (descriptionNode != null)
                             {
                                 localizedDescription = descriptionNode.ToString();

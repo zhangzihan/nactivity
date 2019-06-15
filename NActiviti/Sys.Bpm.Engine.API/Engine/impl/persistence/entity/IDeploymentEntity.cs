@@ -25,21 +25,21 @@ namespace org.activiti.engine.impl.persistence.entity
     {
         new string Id { get; set; }
 
-        void addResource(IResourceEntity resource);
+        void AddResource(IResourceEntity resource);
 
         IDictionary<string, IResourceEntity> GetResources();
 
         void SetResources(IDictionary<string, IResourceEntity> value);
 
-        void addDeployedArtifact(object deployedArtifact);
+        void AddDeployedArtifact(object deployedArtifact);
 
-        void unrunable();
+        void Unrunable();
 
-        void runable();
+        void Runable();
 
-        void addExecutionAdditional();
+        void DeployExecutionBehavior();
 
-        IList<T> getDeployedArtifacts<T>();
+        IList<T> GetDeployedArtifacts<T>();
 
         new string Name { get; set; }
 

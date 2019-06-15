@@ -27,7 +27,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
         {
         }
 
-        public override IByteArrayEntity create()
+        public override IByteArrayEntity Create()
         {
             return new ByteArrayEntityImpl();
         }
@@ -40,14 +40,14 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public virtual IList<IByteArrayEntity> findAll()
+        public virtual IList<IByteArrayEntity> FindAll()
         {
-            return DbSqlSession.selectList<ByteArrayEntityImpl, IByteArrayEntity>("selectByteArrays");
+            return DbSqlSession.SelectList<ByteArrayEntityImpl, IByteArrayEntity>("selectByteArrays");
         }
 
-        public virtual void deleteByteArrayNoRevisionCheck(string byteArrayEntityId)
+        public virtual void DeleteByteArrayNoRevisionCheck(string byteArrayEntityId)
         {
-            DbSqlSession.delete("deleteByteArrayNoRevisionCheck", new KeyValuePair<string, object>("id", byteArrayEntityId), typeof(ByteArrayEntityImpl));
+            DbSqlSession.Delete("deleteByteArrayNoRevisionCheck", new KeyValuePair<string, object>("id", byteArrayEntityId), typeof(ByteArrayEntityImpl));
         }
 
     }

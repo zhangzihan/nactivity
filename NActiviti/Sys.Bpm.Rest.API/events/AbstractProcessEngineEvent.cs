@@ -17,7 +17,7 @@
 
 namespace org.activiti.cloud.services.events
 {
-    using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
+    using IProcessEngineEvent = api.events.IProcessEngineEvent;
 
 
     /// <summary>
@@ -30,16 +30,16 @@ namespace org.activiti.cloud.services.events
         /// </summary>
         public abstract string EventType { get; }
 
-        private string appName;
-        private string appVersion;
-        private string serviceName;
-        private string serviceFullName;
-        private string serviceType;
-        private string serviceVersion;
-        private string executionId;
-        private string processDefinitionId;
-        private string processInstanceId;
-        private long? timestamp;
+        private readonly string appName;
+        private readonly string appVersion;
+        private readonly string serviceName;
+        private readonly string serviceFullName;
+        private readonly string serviceType;
+        private readonly string serviceVersion;
+        private readonly string executionId;
+        private readonly string processDefinitionId;
+        private readonly string processInstanceId;
+        private readonly long? timestamp;
 
 
         /// <summary>

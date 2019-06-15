@@ -1,4 +1,6 @@
-﻿using org.activiti.engine.runtime;
+﻿using Newtonsoft.Json.Linq;
+using org.activiti.engine.runtime;
+using Sys.Net.Http;
 using System;
 using System.Collections.Generic;
 
@@ -40,7 +42,7 @@ namespace org.activiti.cloud.services.api.model.converter
         /// <summary>
         /// 
         /// </summary>
-        public virtual ProcessInstance from(IProcessInstance source)
+        public virtual ProcessInstance From(IProcessInstance source)
         {
             ProcessInstance processInstance = null;
             if (source != null)
@@ -54,7 +56,8 @@ namespace org.activiti.cloud.services.api.model.converter
                     StartUserId = source.StartUserId,
                     StartDate = source.StartTime,
                     BusinessKey = source.BusinessKey,
-                    Status = calculateStatus(source),
+                    Status = CalculateStatus(source),
+                    Starter = JToken.FromObject(source.Starter).ToObject<UserInfo>(),
                     ProcessDefinitionKey = source.ProcessDefinitionKey
                 };
             }
@@ -65,7 +68,7 @@ namespace org.activiti.cloud.services.api.model.converter
         /// <summary>
         /// 
         /// </summary>
-        private string calculateStatus(IProcessInstance source)
+        private string CalculateStatus(IProcessInstance source)
         {
             if (source.Suspended)
             {
@@ -82,9 +85,9 @@ namespace org.activiti.cloud.services.api.model.converter
         /// <summary>
         /// 
         /// </summary>
-        public virtual IList<org.activiti.cloud.services.api.model.ProcessInstance> from(IList<IProcessInstance> processInstances)
+        public virtual IEnumerable<ProcessInstance> From(IEnumerable<IProcessInstance> processInstances)
         {
-            return listConverter.from(processInstances, this);
+            return listConverter.From(processInstances, this);
         }
     }
 

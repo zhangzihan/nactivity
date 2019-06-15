@@ -30,7 +30,7 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override abstract BaseElement clone();
+        public override abstract BaseElement Clone();
 
         public override BaseElement Values
         {

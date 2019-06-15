@@ -17,9 +17,9 @@ namespace org.activiti.engine.impl.cmd
             this.customSqlExecution = customSqlExecution;
         }
 
-        public virtual ResultType execute(ICommandContext commandContext)
+        public virtual ResultType Execute(ICommandContext commandContext)
         {
-            Mapper mapper = (Mapper)commandContext.DbSqlSession.getMapper(mapperClass);
+            Mapper mapper = (Mapper)commandContext.DbSqlSession.GetMapper(mapperClass);
 
             return customSqlExecution.execute(mapper);
         }

@@ -30,10 +30,10 @@ namespace org.activiti.cloud.services.rest.api
         /// </summary>
         /// <param name="deployId">流程定义部署id</param>
         /// <returns></returns>
-        Task<IActionResult> Remove(string deployId);
+        Task<ActionResult> Remove(string deployId);
 
         /// <summary>
-        /// 查询最终部署的流程(未发布)
+        /// 查询最终部署的流程(已发布)
         /// </summary>
         /// <param name="queryObj">查询对象</param>
         /// <returns></returns>
@@ -54,11 +54,18 @@ namespace org.activiti.cloud.services.rest.api
         Task<string> GetProcessModel(string id);
 
         /// <summary>
+        /// 查找流程定义XML描述
+        /// </summary>
+        /// <param name="query">查询对象</param>
+        /// <returns></returns>
+        Task<string> GetProcessModel(DeploymentQuery query);
+
+        /// <summary>
         /// 查找流程定义模型
         /// </summary>
         /// <param name="id">流程模型id</param>
         /// <returns></returns>
-        Task<BpmnModel> GetBpmnModel(string id);
+        Task<ActionResult<BpmnModel>> GetBpmnModel(string id);
 
         /// <summary>
         /// 仅查询草稿,一个流程始终只有一个草稿.

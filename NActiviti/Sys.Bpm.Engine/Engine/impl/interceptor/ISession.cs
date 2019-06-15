@@ -16,9 +16,15 @@ namespace org.activiti.engine.impl.interceptor
     public interface ISession
     {
 
-        void flush();
+        /// <summary>
+        /// 
+        /// </summary>
+        void Flush();
 
-        void close();
+        /// <summary>
+        /// 
+        /// </summary>
+        void Close();
     }
 
 }

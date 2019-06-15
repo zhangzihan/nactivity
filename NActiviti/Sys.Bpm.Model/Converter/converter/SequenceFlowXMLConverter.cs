@@ -35,41 +35,41 @@ namespace org.activiti.bpmn.converter
             }
         }
 
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             SequenceFlow sequenceFlow = new SequenceFlow();
-            BpmnXMLUtil.addXMLLocation(sequenceFlow, xtr);
-            sequenceFlow.SourceRef = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF);
-            sequenceFlow.TargetRef = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FLOW_TARGET_REF);
-            sequenceFlow.Name = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
-            sequenceFlow.SkipExpression = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FLOW_SKIP_EXPRESSION);
+            BpmnXMLUtil.AddXMLLocation(sequenceFlow, xtr);
+            sequenceFlow.SourceRef = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF);
+            sequenceFlow.TargetRef = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FLOW_TARGET_REF);
+            sequenceFlow.Name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
+            sequenceFlow.SkipExpression = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FLOW_SKIP_EXPRESSION);
 
-            parseChildElements(XMLElementName, sequenceFlow, model, xtr);
+            ParseChildElements(XMLElementName, sequenceFlow, model, xtr);
 
             return sequenceFlow;
         }
 
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             SequenceFlow sequenceFlow = (SequenceFlow)element;
-            writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF, sequenceFlow.SourceRef, xtw);
-            writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_TARGET_REF, sequenceFlow.TargetRef, xtw);
+            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF, sequenceFlow.SourceRef, xtw);
+            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_TARGET_REF, sequenceFlow.TargetRef, xtw);
             if (!string.IsNullOrWhiteSpace(sequenceFlow.SkipExpression))
             {
-                writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_SKIP_EXPRESSION, sequenceFlow.SkipExpression, xtw);
+                WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_SKIP_EXPRESSION, sequenceFlow.SkipExpression, xtw);
             }
         }
 
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             SequenceFlow sequenceFlow = (SequenceFlow)element;
 
             if (!string.IsNullOrWhiteSpace(sequenceFlow.ConditionExpression))
             {
-                xtw.writeStartElement(BpmnXMLConstants.ELEMENT_FLOW_CONDITION);
-                xtw.writeAttribute(BpmnXMLConstants.XSI_PREFIX, BpmnXMLConstants.XSI_NAMESPACE, "type", "tFormalExpression");
-                xtw.writeCData(sequenceFlow.ConditionExpression);
-                xtw.writeEndElement();
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_FLOW_CONDITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteAttribute(BpmnXMLConstants.XSI_PREFIX, BpmnXMLConstants.XSI_NAMESPACE, "type", "tFormalExpression");
+                xtw.WriteCData(sequenceFlow.ConditionExpression);
+                xtw.WriteEndElement();
             }
         }
     }

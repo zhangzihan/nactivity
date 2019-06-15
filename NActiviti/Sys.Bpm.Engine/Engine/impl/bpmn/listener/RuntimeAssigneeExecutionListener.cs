@@ -7,19 +7,14 @@
 ///////////////////////////////////////////////////////////
 ///
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using org.activiti.bpmn.constants;
 using org.activiti.bpmn.model;
 using org.activiti.engine.@delegate;
 using org.activiti.engine.exceptions;
-using org.activiti.engine.impl.context;
 using org.activiti.engine.impl.persistence.entity;
 using org.activiti.engine.impl.util;
-using Sys;
 using Sys.Workflow;
-using Sys.Workflow.Engine.Bpmn.Rules;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,29 +26,26 @@ namespace org.activiti.engine.impl.bpmn.listener
     /// </summary>
     public class RuntimeAssigneeExecutionListener : IExecutionListener
     {
-        private readonly ILogger<RuntimeAssigneeExecutionListener> logger =
-            ProcessEngineServiceProvider.LoggerService<RuntimeAssigneeExecutionListener>();
-
         /// <summary>
         /// 侦听接收通知处理
         /// </summary>
         /// <param name="execution"></param>
-        public void notify(IExecutionEntity execution)
+        public void Notify(IExecutionEntity execution)
         {
             UserTask task = execution.CurrentFlowElement as UserTask;
 
-            if (task.ExtensionElements.TryGetValue("property", out IList<ExtensionElement> exts))
+            if (task.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY, out IList<ExtensionElement> exts))
             {
                 if (bool.TryParse(exts.GetAttributeValue(BpmnXMLConstants.ACTIITI_RUNTIME_ASSIGNEE), out bool result) == false || result == false)
                 {
                     return;
                 }
 
-                var variable = execution.getVariableInstance(BpmnXMLConstants.RUNTIME_ASSIGNEE_USER_VARIABLE_NAME);
+                var variable = execution.GetVariableInstance(BpmnXMLConstants.RUNTIME_ASSIGNEE_USER_VARIABLE_NAME);
 
                 RuntimeAssigneeUser user = JToken.FromObject(variable.Value).ToObject<RuntimeAssigneeUser>();
 
-                if (user.Users?.Count() == 0)
+                if ((user?.Users?.Count()).GetValueOrDefault() == 0)
                 {
                     throw new NotFoundAssigneeException();
                 }

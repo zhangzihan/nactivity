@@ -14,14 +14,20 @@ namespace org.activiti.engine.impl.agenda
 {
     using org.activiti.engine.impl.interceptor;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class DefaultActivitiEngineAgendaFactory : IActivitiEngineAgendaFactory
     {
 
-        public virtual IActivitiEngineAgenda createAgenda(ICommandContext commandContext)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <returns></returns>
+        public virtual IActivitiEngineAgenda CreateAgenda(ICommandContext commandContext)
         {
             return new DefaultActivitiEngineAgenda(commandContext);
         }
-
     }
-
 }

@@ -2,8 +2,10 @@
 
 namespace org.activiti.engine.impl.persistence.entity
 {
-
+    using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.context;
+    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow;
     using System.Collections.Generic;
 
     /// <summary>
@@ -16,7 +18,6 @@ namespace org.activiti.engine.impl.persistence.entity
     [Serializable]
     public class ByteArrayRef : IByteArrayRef
     {
-
         private const long serialVersionUID = 1L;
 
         private string id;
@@ -54,32 +55,32 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                ensureInitialized();
-                return (entity != null ? entity.Bytes : null);
+                EnsureInitialized();
+                return (entity?.Bytes);
             }
             set
             {
-                if (ReferenceEquals(id, null))
+                if (id is null)
                 {
                     if (value != null)
                     {
                         IByteArrayEntityManager byteArrayEntityManager = Context.CommandContext.ByteArrayEntityManager;
-                        entity = byteArrayEntityManager.create();
+                        entity = byteArrayEntityManager.Create();
                         entity.Name = name;
                         entity.Bytes = value;
-                        byteArrayEntityManager.insert(entity);
+                        byteArrayEntityManager.Insert(entity);
                         id = entity.Id;
                     }
                 }
                 else
                 {
-                    ensureInitialized();
+                    EnsureInitialized();
                     entity.Bytes = value;
                 }
             }
         }
 
-        public virtual void setValue(string name, byte[] bytes)
+        public virtual void SetValue(string name, byte[] bytes)
         {
             this.name = name;
             Bytes = bytes;
@@ -90,24 +91,24 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                ensureInitialized();
+                EnsureInitialized();
                 return entity;
             }
         }
 
-        public virtual void delete()
+        public virtual void Delete()
         {
-            if (!deleted && !ReferenceEquals(id, null))
+            if (!deleted && !(id is null))
             {
                 if (entity != null)
                 {
                     // if the entity has been loaded already,
                     // we might as well use the safer optimistic locking delete.
-                    Context.CommandContext.ByteArrayEntityManager.delete(entity);
+                    Context.CommandContext.ByteArrayEntityManager.Delete(entity);
                 }
                 else
                 {
-                    Context.CommandContext.ByteArrayEntityManager.deleteByteArrayById(id);
+                    Context.CommandContext.ByteArrayEntityManager.DeleteByteArrayById(id);
                 }
                 entity = null;
                 id = null;
@@ -115,12 +116,25 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public void ensureInitialized()
+        public void EnsureInitialized()
         {
             var ctx = Context.CommandContext;
-            if (id != null && entity == null && ctx != null)
+            if (id != null && entity == null)
             {
-                entity = ctx.ByteArrayEntityManager.findById<IByteArrayEntity>(new KeyValuePair<string, object>("id", id));
+                if (ctx == null)
+                {
+                    var pi = ProcessEngineServiceProvider.Resolve<IProcessEngine>().ProcessEngineConfiguration as ProcessEngineConfigurationImpl;
+
+                    if (pi == null)
+                    {
+                        return;
+                    }
+
+                    ctx = pi.CommandContextFactory.CreateCommandContext(new ByteArrayRefCmd(id));
+                    Context.CommandContext = ctx;
+                }
+
+                entity = ctx.ByteArrayEntityManager.FindById<IByteArrayEntity>(new KeyValuePair<string, object>("id", id));
                 name = entity.Name;
             }
         }
@@ -136,6 +150,22 @@ namespace org.activiti.engine.impl.persistence.entity
         public override string ToString()
         {
             return "ByteArrayRef[id=" + id + ", name=" + name + ", entity=" + entity + (deleted ? ", deleted]" : "]");
+        }
+
+        private class ByteArrayRefCmd : ICommand<IByteArrayEntity>
+        {
+            private readonly string id;
+
+            public ByteArrayRefCmd(string id)
+            {
+                this.id = id;
+            }
+
+
+            public IByteArrayEntity Execute(ICommandContext commandContext)
+            {
+                return commandContext.ByteArrayEntityManager.FindById<IByteArrayEntity>(new KeyValuePair<string, object>("id", id));
+            }
         }
     }
 

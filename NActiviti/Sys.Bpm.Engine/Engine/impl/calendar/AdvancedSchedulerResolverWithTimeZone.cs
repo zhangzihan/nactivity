@@ -13,7 +13,7 @@ namespace org.activiti.engine.impl.calendar
     public class AdvancedSchedulerResolverWithTimeZone : IAdvancedSchedulerResolver
     {
 
-        public virtual DateTime? resolve(string duedateDescription, IClockReader clockReader, TimeZoneInfo timeZone)
+        public virtual DateTime? Resolve(string duedateDescription, IClockReader clockReader, TimeZoneInfo timeZone)
         {
             DateTime? nextRun = null;
 
@@ -21,11 +21,11 @@ namespace org.activiti.engine.impl.calendar
             {
                 if (duedateDescription.StartsWith("R", StringComparison.Ordinal))
                 {
-                    nextRun = (new DurationHelper(duedateDescription, clockReader)).getCalendarAfter(clockReader.getCurrentCalendar(timeZone));
+                    nextRun = (new DurationHelper(duedateDescription, clockReader)).GetCalendarAfter(clockReader.GetCurrentCalendar(timeZone));
                 }
                 else
                 {
-                    nextRun = (new CronExpression(duedateDescription, clockReader, timeZone)).getTimeAfter(clockReader.getCurrentCalendar(timeZone));
+                    nextRun = (new CronExpression(duedateDescription, clockReader, timeZone)).GetTimeAfter(clockReader.GetCurrentCalendar(timeZone));
                 }
 
             }

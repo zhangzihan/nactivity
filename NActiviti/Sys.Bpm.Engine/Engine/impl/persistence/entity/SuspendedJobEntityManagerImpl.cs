@@ -33,79 +33,79 @@ namespace org.activiti.engine.impl.persistence.entity
             this.jobDataManager = jobDataManager;
         }
 
-        public virtual IList<ISuspendedJobEntity> findJobsByExecutionId(string id)
+        public virtual IList<ISuspendedJobEntity> FindJobsByExecutionId(string id)
         {
-            return jobDataManager.findJobsByExecutionId(id);
+            return jobDataManager.FindJobsByExecutionId(id);
         }
 
-        public virtual IList<ISuspendedJobEntity> findJobsByProcessInstanceId(string id)
+        public virtual IList<ISuspendedJobEntity> FindJobsByProcessInstanceId(string id)
         {
-            return jobDataManager.findJobsByProcessInstanceId(id);
+            return jobDataManager.FindJobsByProcessInstanceId(id);
         }
 
-        public virtual IList<IJob> findJobsByQueryCriteria(SuspendedJobQueryImpl jobQuery, Page page)
+        public virtual IList<IJob> FindJobsByQueryCriteria(ISuspendedJobQuery jobQuery, Page page)
         {
-            return jobDataManager.findJobsByQueryCriteria(jobQuery, page);
+            return jobDataManager.FindJobsByQueryCriteria(jobQuery, page);
         }
 
-        public virtual long findJobCountByQueryCriteria(SuspendedJobQueryImpl jobQuery)
+        public virtual long FindJobCountByQueryCriteria(ISuspendedJobQuery jobQuery)
         {
-            return jobDataManager.findJobCountByQueryCriteria(jobQuery);
+            return jobDataManager.FindJobCountByQueryCriteria(jobQuery);
         }
 
-        public virtual void updateJobTenantIdForDeployment(string deploymentId, string newTenantId)
+        public virtual void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId)
         {
-            jobDataManager.updateJobTenantIdForDeployment(deploymentId, newTenantId);
+            jobDataManager.UpdateJobTenantIdForDeployment(deploymentId, newTenantId);
         }
 
-        public override void insert(ISuspendedJobEntity jobEntity, bool fireCreateEvent)
+        public override void Insert(ISuspendedJobEntity jobEntity, bool fireCreateEvent)
         {
 
             // add link to execution
-            if (!ReferenceEquals(jobEntity.ExecutionId, null))
+            if (!(jobEntity.ExecutionId is null))
             {
-                IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(jobEntity.ExecutionId);
+                IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
 
                 // Inherit tenant if (if applicable)
-                if (!ReferenceEquals(execution.TenantId, null))
+                if (!(execution.TenantId is null))
                 {
                     jobEntity.TenantId = execution.TenantId;
                 }
 
-                if (isExecutionRelatedEntityCountEnabled(execution))
+                if (IsExecutionRelatedEntityCountEnabled(execution))
                 {
                     ICountingExecutionEntity countingExecutionEntity = (ICountingExecutionEntity)execution;
-                    countingExecutionEntity.SuspendedJobCount = countingExecutionEntity.SuspendedJobCount + 1;
+                    countingExecutionEntity.SuspendedJobCount += 1;
                 }
             }
 
-            base.insert(jobEntity, fireCreateEvent);
+            base.Insert(jobEntity, fireCreateEvent);
         }
 
-        public override void insert(ISuspendedJobEntity jobEntity)
+        public override void Insert(ISuspendedJobEntity jobEntity)
         {
-            insert(jobEntity, true);
+            Insert(jobEntity, true);
         }
 
-        public override void delete(ISuspendedJobEntity jobEntity)
+        public override void Delete(ISuspendedJobEntity jobEntity)
         {
-            base.delete(jobEntity);
+            base.Delete(jobEntity);
 
-            deleteExceptionByteArrayRef(jobEntity);
+            DeleteExceptionByteArrayRef(jobEntity);
 
-            if (!ReferenceEquals(jobEntity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!(jobEntity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(jobEntity.ExecutionId);
-                if (isExecutionRelatedEntityCountEnabled(executionEntity))
+                ICountingExecutionEntity executionEntity = ExecutionEntityManager.FindById<ICountingExecutionEntity>(jobEntity.ExecutionId);
+                if (IsExecutionRelatedEntityCountEnabled(executionEntity))
                 {
-                    executionEntity.SuspendedJobCount = executionEntity.SuspendedJobCount - 1;
+                    executionEntity.SuspendedJobCount -= 1;
                 }
             }
 
             // Send event
             if (EventDispatcher.Enabled)
             {
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_DELETED, this));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, this));
             }
         }
 
@@ -113,18 +113,17 @@ namespace org.activiti.engine.impl.persistence.entity
         /// Deletes a the byte array used to store the exception information.  Subclasses may override
         /// to provide custom implementations.
         /// </summary>
-        protected internal virtual void deleteExceptionByteArrayRef(ISuspendedJobEntity jobEntity)
+        protected internal virtual void DeleteExceptionByteArrayRef(ISuspendedJobEntity jobEntity)
         {
-            ByteArrayRef exceptionByteArrayRef = jobEntity.ExceptionByteArrayRef as ByteArrayRef;
-            if (exceptionByteArrayRef != null)
+            if (jobEntity.ExceptionByteArrayRef is ByteArrayRef exceptionByteArrayRef)
             {
-                exceptionByteArrayRef.delete();
+                exceptionByteArrayRef.Delete();
             }
         }
 
-        protected internal virtual ISuspendedJobEntity createSuspendedJob(IAbstractJobEntity job)
+        protected internal virtual ISuspendedJobEntity CreateSuspendedJob(IAbstractJobEntity job)
         {
-            ISuspendedJobEntity newSuspendedJobEntity = create();
+            ISuspendedJobEntity newSuspendedJobEntity = Create();
             newSuspendedJobEntity.JobHandlerConfiguration = job.JobHandlerConfiguration;
             newSuspendedJobEntity.JobHandlerType = job.JobHandlerType;
             newSuspendedJobEntity.Exclusive = job.Exclusive;

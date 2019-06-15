@@ -43,6 +43,8 @@ namespace org.activiti.engine.impl.persistence.entity
 
         new string Assignee { get; set; }
 
+        new string AssigneeUser { get; set; }
+
         new string TaskDefinitionKey { get; set; }
 
         new string FormKey { get; set; }

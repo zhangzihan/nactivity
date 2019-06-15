@@ -20,15 +20,15 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class LaneParser : IBpmnXMLConstants
     {
-        public virtual void parse(XMLStreamReader xtr, Process activeProcess, BpmnModel model)
+        public virtual void Parse(XMLStreamReader xtr, Process activeProcess, BpmnModel model)
         {
             Lane lane = new Lane();
-            BpmnXMLUtil.addXMLLocation(lane, xtr);
-            lane.Id = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID);
-            lane.Name = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME);
+            BpmnXMLUtil.AddXMLLocation(lane, xtr);
+            lane.Id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+            lane.Name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
             lane.ParentProcess = activeProcess;
             activeProcess.Lanes.Add(lane);
-            BpmnXMLUtil.parseChildElements(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_LANE, lane, xtr, model);
+            BpmnXMLUtil.ParseChildElements(BpmnXMLConstants.ELEMENT_LANE, lane, xtr, model);
         }
     }
 

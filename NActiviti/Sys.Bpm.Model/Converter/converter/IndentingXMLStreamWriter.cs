@@ -27,7 +27,7 @@ namespace org.activiti.bpmn.converter
         private static readonly object SEEN_DATA = new object();
 
         private object state = SEEN_NOTHING;
-        private Stack<object> stateStack = new Stack<object>();
+        private readonly Stack<object> stateStack = new Stack<object>();
 
         private string indentStep = "  ";
         private int depth = 0;
@@ -47,7 +47,7 @@ namespace org.activiti.bpmn.converter
         /// <seealso cref= #setIndentStep(int)
         /// </seealso>
         /// @deprecated Only return the length of the indent string. 
-        public virtual int getIndentStep()
+        public virtual int GetIndentStep()
         {
             return indentStep.Length;
         }
@@ -60,52 +60,52 @@ namespace org.activiti.bpmn.converter
         /// <seealso cref= #getIndentStep()
         /// </seealso>
         /// @deprecated Should use the version that takes string. 
-        public virtual void setIndentStep(int indentStep)
+        public virtual void SetIndentStep(int indentStep)
         {
             StringBuilder s = new StringBuilder();
             for (; indentStep > 0; indentStep--)
             {
                 s.Append(' ');
             }
-            setIndentStep(s.ToString());
+            SetIndentStep(s.ToString());
         }
 
-        public virtual void setIndentStep(string s)
+        public virtual void SetIndentStep(string s)
         {
             this.indentStep = s;
         }
 
-        private void onStartElement()
+        private void OnStartElement()
         {
             stateStack.Push(SEEN_ELEMENT);
             state = SEEN_NOTHING;
             if (depth > 0)
             {
-                base.writeCharacters("\n");
+                base.WriteCharacters("\n");
             }
-            doIndent();
+            DoIndent();
             depth++;
         }
 
-        private void onEndElement()
+        private void OnEndElement()
         {
             depth--;
             if (state == SEEN_ELEMENT)
             {
-                base.writeCharacters("\n");
-                doIndent();
+                base.WriteCharacters("\n");
+                DoIndent();
             }
             state = stateStack.Pop();
         }
 
-        private void onEmptyElement()
+        private void OnEmptyElement()
         {
             state = SEEN_ELEMENT;
             if (depth > 0)
             {
-                base.writeCharacters("\n");
+                base.WriteCharacters("\n");
             }
-            doIndent();
+            DoIndent();
         }
 
         /// <summary>
@@ -113,94 +113,94 @@ namespace org.activiti.bpmn.converter
         /// </summary>
         /// <exception cref="org.xml.sax.SAXException">
         ///              If there is an error writing the indentation characters, or if a filter further down the chain raises an exception. </exception>
-        private void doIndent()
+        private void DoIndent()
         {
             if (depth > 0)
             {
                 for (int i = 0; i < depth; i++)
                 {
-                    base.writeCharacters(indentStep);
+                    base.WriteCharacters(indentStep);
                 }
             }
         }
 
-        public override void writeStartDocument()
+        public override void WriteStartDocument()
         {
-            base.writeStartDocument();
-            base.writeCharacters("\n");
+            base.WriteStartDocument();
+            base.WriteCharacters("\n");
         }
 
-        public override void writeStartDocument(string version)
+        public override void WriteStartDocument(string version)
         {
-            base.writeStartDocument(version);
-            base.writeCharacters("\n");
+            base.WriteStartDocument(version);
+            base.WriteCharacters("\n");
         }
 
 
-        public override void writeStartDocument(string encoding, string version)
+        public override void WriteStartDocument(string encoding, string version)
         {
-            base.writeStartDocument(encoding, version);
-            base.writeCharacters("\n");
+            base.WriteStartDocument(encoding, version);
+            base.WriteCharacters("\n");
         }
 
-        public override void writeStartElement(string localName)
+        public override void WriteStartElement(string localName)
         {
-            onStartElement();
-            base.writeStartElement(localName);
+            OnStartElement();
+            base.WriteStartElement(localName);
         }
 
-        public override void writeStartElement(string namespaceURI, string localName)
+        public override void WriteStartElement(string namespaceURI, string localName)
         {
-            onStartElement();
-            base.writeStartElement(namespaceURI, localName);
+            OnStartElement();
+            base.WriteStartElement(namespaceURI, localName);
         }
 
-        public override void writeStartElement(string prefix, string localName, string namespaceURI)
+        public override void WriteStartElement(string prefix, string localName, string namespaceURI)
         {
-            onStartElement();
-            base.writeStartElement(prefix, localName, namespaceURI);
+            OnStartElement();
+            base.WriteStartElement(prefix, localName, namespaceURI);
         }
 
-        public override void writeEmptyElement(string namespaceURI, string localName)
+        public override void WriteEmptyElement(string namespaceURI, string localName)
         {
-            onEmptyElement();
-            base.writeEmptyElement(namespaceURI, localName);
+            OnEmptyElement();
+            base.WriteEmptyElement(namespaceURI, localName);
         }
 
-        public override void writeEmptyElement(string prefix, string localName, string namespaceURI)
+        public override void WriteEmptyElement(string prefix, string localName, string namespaceURI)
         {
-            onEmptyElement();
-            base.writeEmptyElement(prefix, localName, namespaceURI);
+            OnEmptyElement();
+            base.WriteEmptyElement(prefix, localName, namespaceURI);
         }
 
-        public override void writeEmptyElement(string localName)
+        public override void WriteEmptyElement(string localName)
         {
-            onEmptyElement();
-            base.writeEmptyElement(localName);
+            OnEmptyElement();
+            base.WriteEmptyElement(localName);
         }
 
-        public override void writeEndElement()
+        public override void WriteEndElement()
         {
-            onEndElement();
-            base.writeEndElement();
+            OnEndElement();
+            base.WriteEndElement();
         }
 
-        public override void writeCharacters(string text)
+        public override void WriteCharacters(string text)
         {
             state = SEEN_DATA;
-            base.writeCharacters(text);
+            base.WriteCharacters(text);
         }
 
-        public override void writeCharacters(char[] text, int start, int len)
+        public override void WriteCharacters(char[] text, int start, int len)
         {
             state = SEEN_DATA;
-            base.writeCharacters(text, start, len);
+            base.WriteCharacters(text, start, len);
         }
 
-        public override void writeCData(string data)
+        public override void WriteCData(string data)
         {
             state = SEEN_DATA;
-            base.writeCData(data);
+            base.WriteCData(data);
         }
     }
 }

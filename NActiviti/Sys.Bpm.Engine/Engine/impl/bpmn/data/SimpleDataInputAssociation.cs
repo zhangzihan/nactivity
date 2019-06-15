@@ -30,28 +30,48 @@ namespace org.activiti.engine.impl.bpmn.data
 
         private const long serialVersionUID = 1L;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<Assignment> assignments = new List<Assignment>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceExpression"></param>
+        /// <param name="target"></param>
         public SimpleDataInputAssociation(IExpression sourceExpression, string target) : base(sourceExpression, target)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
         public SimpleDataInputAssociation(string source, string target) : base(source, target)
         {
         }
 
-        public virtual void addAssignment(Assignment assignment)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="assignment"></param>
+        public virtual void AddAssignment(Assignment assignment)
         {
             this.assignments.Add(assignment);
         }
 
-        public override void evaluate(IExecutionEntity execution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        public override void Evaluate(IExecutionEntity execution)
         {
             foreach (Assignment assignment in this.assignments)
             {
-                assignment.evaluate(execution);
+                assignment.Evaluate(execution);
             }
         }
     }
-
 }

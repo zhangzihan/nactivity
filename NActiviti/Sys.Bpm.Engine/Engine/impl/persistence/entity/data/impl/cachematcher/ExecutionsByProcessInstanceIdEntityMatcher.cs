@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class ExecutionsByProcessInstanceIdEntityMatcher : CachedEntityMatcherAdapter<IExecutionEntity>
     {
 
-        public override bool isRetained(IExecutionEntity entity, object parameter)
+        public override bool IsRetained(IExecutionEntity entity, object parameter)
         {
             // parameter = process instance execution id
             return !string.IsNullOrWhiteSpace(entity.ProcessInstanceId) && !string.IsNullOrWhiteSpace(entity.ParentId);

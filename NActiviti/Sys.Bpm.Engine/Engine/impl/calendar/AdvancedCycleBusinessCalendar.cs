@@ -6,7 +6,7 @@ namespace org.activiti.engine.impl.calendar
 {
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.runtime;
-    using Sys;
+    using Sys.Workflow;
 
     /// <summary>
     /// An Activiti BusinessCalendar for cycle based schedules that takes into account a different daylight savings time zone than the one that the server is configured for.
@@ -48,19 +48,19 @@ namespace org.activiti.engine.impl.calendar
     /// </summary>
     public class AdvancedCycleBusinessCalendar : CycleBusinessCalendar
     {
-        private static ILogger<AdvancedCycleBusinessCalendar> log = ProcessEngineServiceProvider.LoggerService<AdvancedCycleBusinessCalendar>();
+        private static readonly ILogger<AdvancedCycleBusinessCalendar> log = ProcessEngineServiceProvider.LoggerService<AdvancedCycleBusinessCalendar>();
 
         private int? defaultScheduleVersion;
 
         private const int DEFAULT_VERSION = 2;
 
-        private static readonly IDictionary<int, IAdvancedSchedulerResolver> resolvers;
+        private static readonly ConcurrentDictionary<int, IAdvancedSchedulerResolver> resolvers;
 
         static AdvancedCycleBusinessCalendar()
         {
             resolvers = new ConcurrentDictionary<int, IAdvancedSchedulerResolver>();
-            resolvers[1] = new AdvancedSchedulerResolverWithoutTimeZone();
-            resolvers[2] = new AdvancedSchedulerResolverWithTimeZone();
+            resolvers.TryAdd(1, new AdvancedSchedulerResolverWithoutTimeZone());
+            resolvers.TryAdd(2, new AdvancedSchedulerResolverWithTimeZone());
         }
 
         public AdvancedCycleBusinessCalendar(IClockReader clockReader) : base(clockReader)
@@ -85,12 +85,12 @@ namespace org.activiti.engine.impl.calendar
         }
 
 
-        public override DateTime? resolveDuedate(string duedateDescription, int maxIterations)
+        public override DateTime? ResolveDuedate(string duedateDescription, int maxIterations)
         {
             log.LogInformation($"Resolving Due Date: {duedateDescription}");
 
-            string timeZone = getValueFrom("DSTZONE", duedateDescription);
-            string version = getValueFrom("VER", duedateDescription);
+            string timeZone = GetValueFrom("DSTZONE", duedateDescription);
+            string version = GetValueFrom("VER", duedateDescription);
 
             // START is a legacy value that is no longer used, but may still exist
             // in
@@ -98,7 +98,7 @@ namespace org.activiti.engine.impl.calendar
             // Could be used in the future as a start date for a CRON job
             // String startDate = getValueFrom("START", duedateDescription);
 
-            duedateDescription = removeValueFrom("VER", removeValueFrom("START", removeValueFrom("DSTZONE", duedateDescription))).Trim();
+            duedateDescription = RemoveValueFrom("VER", RemoveValueFrom("START", RemoveValueFrom("DSTZONE", duedateDescription))).Trim();
 
             try
             {
@@ -107,7 +107,7 @@ namespace org.activiti.engine.impl.calendar
                 var key = string.IsNullOrWhiteSpace(version) ? DefaultScheduleVersion.Value : Convert.ToInt32(version);
                 if (resolvers.TryGetValue(key, out var rev))
                 {
-                    DateTime? date = rev.resolve(duedateDescription, clockReader, ReferenceEquals(timeZone, null) ? clockReader.CurrentTimeZone : TimeZoneInfo.Local);
+                    DateTime? date = rev.Resolve(duedateDescription, clockReader, timeZone is null ? clockReader.CurrentTimeZone : TimeZoneInfo.Local);
 
                     log.LogInformation($"Calculated Date: {(!date.HasValue ? "Will Not Run Again" : date.Value.ToString("yyyy-MM-dd HH:mm:ss"))}");
 
@@ -123,7 +123,7 @@ namespace org.activiti.engine.impl.calendar
 
         }
 
-        private string getValueFrom(string field, string duedateDescription)
+        private string GetValueFrom(string field, string duedateDescription)
         {
             int fieldIndex = duedateDescription.IndexOf(field + ":", StringComparison.Ordinal);
 
@@ -146,7 +146,7 @@ namespace org.activiti.engine.impl.calendar
             return null;
         }
 
-        private string removeValueFrom(string field, string duedateDescription)
+        private string RemoveValueFrom(string field, string duedateDescription)
         {
             int fieldIndex = duedateDescription.IndexOf(field + ":", StringComparison.Ordinal);
 
@@ -167,5 +167,4 @@ namespace org.activiti.engine.impl.calendar
             return duedateDescription;
         }
     }
-
 }

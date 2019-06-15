@@ -21,24 +21,24 @@ namespace org.activiti.engine.impl.persistence.entity
     public interface IDeploymentEntityManager : IEntityManager<IDeploymentEntity>
     {
 
-        IDeploymentEntity findLatestDeploymentByName(string deploymentName);
+        IDeploymentEntity FindLatestDeploymentByName(string deploymentName);
 
-        IList<IDeployment> findDeploymentsByQueryCriteria(DeploymentQueryImpl deploymentQuery, Page page);
+        IList<IDeployment> FindDeploymentsByQueryCriteria(IDeploymentQuery deploymentQuery, Page page);
 
-        IList<string> getDeploymentResourceNames(string deploymentId);
+        IList<string> GetDeploymentResourceNames(string deploymentId);
 
-        IList<IDeployment> findDeploymentsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<IDeployment> FindDeploymentsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-        long findDeploymentCountByNativeQuery(IDictionary<string, object> parameterMap);
+        long FindDeploymentCountByNativeQuery(IDictionary<string, object> parameterMap);
 
-        long findDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery);
+        long FindDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery);
 
-        void deleteDeployment(string deploymentId, bool cascade);
+        void DeleteDeployment(string deploymentId, bool cascade);
 
-        IList<IDeployment> findDrafts(IDeploymentQuery deploymentQuery);
+        IList<IDeployment> FindDrafts(IDeploymentQuery deploymentQuery);
 
-        IDeploymentEntity saveDraft(IDeploymentEntity deployment);
+        IDeploymentEntity SaveDraft(IDeploymentEntity deployment);
 
-        void removeDrafts(string tenantId, string name);
+        void RemoveDrafts(string tenantId, string name);
     }
 }

@@ -10,18 +10,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System.IO;
+
 namespace org.activiti.bpmn.converter.util
 {
 
-	/// 
-	public interface IInputStreamProvider
-	{
+    /// 
+    public interface IInputStreamProvider
+    {
 
-	  /// <summary>
-	  /// Creates a <b>NEW</b> <seealso cref="InputStream"/> to the provided resource.
-	  /// </summary>
-	  System.IO.Stream InputStream {get;}
+        /// <summary>
+        /// Creates a <b>NEW</b> <seealso cref="InputStream"/> to the provided resource.
+        /// </summary>
+        Stream InputStream { get; }
 
-	}
+    }
 
 }

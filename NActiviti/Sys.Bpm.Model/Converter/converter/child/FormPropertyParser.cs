@@ -18,7 +18,7 @@ namespace org.activiti.bpmn.converter.child
     using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
-    using Sys.Bpm;
+    using Sys.Bpm.Model;
 
     public class FormPropertyParser : BaseChildElementParser
     {
@@ -32,52 +32,52 @@ namespace org.activiti.bpmn.converter.child
             }
         }
 
-        public override bool accepts(BaseElement element)
+        public override bool Accepts(BaseElement element)
         {
             return ((element is UserTask) || (element is StartEvent));
         }
 
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
-            if (!accepts(parentElement))
+            if (!Accepts(parentElement))
             {
                 return;
             }
             FormProperty property = new FormProperty();
-            BpmnXMLUtil.addXMLLocation(property, xtr);
-            property.Id = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_ID);
-            property.Name = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_NAME);
-            property.Type = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_TYPE);
-            property.Variable = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_VARIABLE);
-            property.Expression = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_EXPRESSION);
-            property.DefaultExpression = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_DEFAULT);
-            property.DatePattern = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_DATEPATTERN);
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_REQUIRED)))
+            BpmnXMLUtil.AddXMLLocation(property, xtr);
+            property.Id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_ID);
+            property.Name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_NAME);
+            property.Type = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_TYPE);
+            property.Variable = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_VARIABLE);
+            property.Expression = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_EXPRESSION);
+            property.DefaultExpression = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_DEFAULT);
+            property.DatePattern = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_DATEPATTERN);
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_REQUIRED)))
             {
-                property.Required = Convert.ToBoolean(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_REQUIRED));
+                property.Required = Convert.ToBoolean(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_REQUIRED));
             }
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_READABLE)))
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_READABLE)))
             {
-                property.Readable = Convert.ToBoolean(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_READABLE));
+                property.Readable = Convert.ToBoolean(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_READABLE));
             }
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_WRITABLE)))
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_WRITABLE)))
             {
-                property.Writeable = Convert.ToBoolean(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_WRITABLE));
+                property.Writeable = Convert.ToBoolean(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FORM_WRITABLE));
             }
 
             bool readyWithFormProperty = false;
             try
             {
-                while (!readyWithFormProperty && xtr.hasNext())
+                while (!readyWithFormProperty && xtr.HasNext())
                 {
                     //xtr.next();
 
                     if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_VALUE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         FormValue value = new FormValue();
-                        BpmnXMLUtil.addXMLLocation(value, xtr);
-                        value.Id = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
-                        value.Name = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
+                        BpmnXMLUtil.AddXMLLocation(value, xtr);
+                        value.Id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+                        value.Name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
                         property.FormValues.Add(value);
                     }
                     else if (xtr.EndElement && ElementName.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))

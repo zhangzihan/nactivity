@@ -16,7 +16,7 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.cmd
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.deploy;
@@ -25,6 +25,7 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.repository;
     using org.activiti.engine.runtime;
     using org.activiti.services.api.commands;
+    using Sys.Workflow;
 
     /// 
     /// 
@@ -41,8 +42,11 @@ namespace org.activiti.engine.impl.cmd
         protected internal string processInstanceName;
         protected internal ProcessInstanceHelper processInstanceHelper;
         protected internal string startForm;
+        protected string processName;
 
-        private IStartProcessInstanceCmd cmd;
+        private readonly IStartProcessInstanceCmd startCmd;
+
+        private readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<StartProcessInstanceCmd>();
 
         public StartProcessInstanceCmd(IStartProcessInstanceCmd cmd)
         {
@@ -53,8 +57,9 @@ namespace org.activiti.engine.impl.cmd
             tenantId = cmd.TenantId;
             processInstanceName = cmd.ProcessInstanceName;
             startForm = cmd.StartForm;
+            processName = cmd.ProcessName;
 
-            this.cmd = cmd;
+            this.startCmd = cmd;
         }
 
         public StartProcessInstanceCmd(string processDefinitionKey, string processDefinitionId, string businessKey, IDictionary<string, object> variables, string startForm = null)
@@ -63,11 +68,18 @@ namespace org.activiti.engine.impl.cmd
             this.processDefinitionId = processDefinitionId;
             this.businessKey = businessKey;
             this.variables = variables;
+            this.startForm = startForm;
         }
 
-        public StartProcessInstanceCmd(string processDefinitionKey, string processDefinitionId, string businessKey, IDictionary<string, object> variables, string tenantId, string startForm = null) : this(processDefinitionKey, processDefinitionId, businessKey, variables)
+        public StartProcessInstanceCmd(string processDefinitionKey, string processDefinitionId, string businessKey, IDictionary<string, object> variables, string tenantId, string startForm = null) : this(processDefinitionKey, processDefinitionId, businessKey, variables, startForm)
         {
             this.tenantId = tenantId;
+        }
+
+        public StartProcessInstanceCmd(string processDefinitionId, IDictionary<string, object> variables)
+        {
+            this.processDefinitionId = processDefinitionId;
+            this.variables = variables;
         }
 
         public StartProcessInstanceCmd(ProcessInstanceBuilderImpl processInstanceBuilder) : this(processInstanceBuilder.ProcessDefinitionKey, processInstanceBuilder.ProcessDefinitionId, processInstanceBuilder.BusinessKey, processInstanceBuilder.Variables, processInstanceBuilder.TenantId)
@@ -76,41 +88,40 @@ namespace org.activiti.engine.impl.cmd
             this.transientVariables = processInstanceBuilder.TransientVariables;
         }
 
-        public virtual IProcessInstance execute(ICommandContext commandContext)
+        public virtual IProcessInstance Execute(ICommandContext commandContext)
         {
-            if (this.cmd != null)
+            if (this.startCmd != null)
             {
-                return this.startFromCommand(commandContext);
+                return this.StartFromCommand(commandContext);
             }
             else
             {
                 DeploymentManager deploymentCache = commandContext.ProcessEngineConfiguration.DeploymentManager;
 
                 // Find the process definition
-                IProcessDefinition processDefinition = null;
+                IProcessDefinition processDefinition;
                 if (!string.IsNullOrWhiteSpace(processDefinitionId))
                 {
-                    processDefinition = deploymentCache.findDeployedProcessDefinitionById(processDefinitionId);
+                    processDefinition = deploymentCache.FindDeployedProcessDefinitionById(processDefinitionId);
                     if (processDefinition == null)
                     {
                         throw new ActivitiObjectNotFoundException("No process definition found for id = '" + processDefinitionId + "'", typeof(IProcessDefinition));
                     }
 
                 }
-                else if (!ReferenceEquals(processDefinitionKey, null) && (ReferenceEquals(tenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId)))
+                else if (!(processDefinitionKey is null) && (tenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId)))
                 {
-
-                    processDefinition = deploymentCache.findDeployedLatestProcessDefinitionByKey(processDefinitionKey);
+                    processDefinition = deploymentCache.FindDeployedLatestProcessDefinitionByKey(processDefinitionKey);
                     if (processDefinition == null)
                     {
                         throw new ActivitiObjectNotFoundException("No process definition found for key '" + processDefinitionKey + "'", typeof(IProcessDefinition));
                     }
 
                 }
-                else if (!ReferenceEquals(processDefinitionKey, null) && !ReferenceEquals(tenantId, null) && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
+                else if (!(processDefinitionKey is null) && !(tenantId is null) && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
                 {
 
-                    processDefinition = deploymentCache.findDeployedLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
+                    processDefinition = deploymentCache.FindDeployedLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
                     if (processDefinition == null)
                     {
                         throw new ActivitiObjectNotFoundException("No process definition found for key '" + processDefinitionKey + "' for tenant identifier " + tenantId, typeof(IProcessDefinition));
@@ -122,18 +133,18 @@ namespace org.activiti.engine.impl.cmd
                 }
 
                 processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
-                IProcessInstance processInstance = createAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables);
+                IProcessInstance processInstance = CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables);
 
                 return processInstance;
             }
         }
 
-        protected internal virtual IProcessInstance createAndStartProcessInstance(IProcessDefinition processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
+        protected internal virtual IProcessInstance CreateAndStartProcessInstance(IProcessDefinition processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
         {
-            return processInstanceHelper.createAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables);
+            return processInstanceHelper.CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables);
         }
 
-        protected internal virtual IDictionary<string, object> processDataObjects(ICollection<ValuedDataObject> dataObjects)
+        protected internal virtual IDictionary<string, object> ProcessDataObjects(ICollection<ValuedDataObject> dataObjects)
         {
             IDictionary<string, object> variablesMap = new Dictionary<string, object>();
             // convert data objects to process variables
@@ -147,63 +158,85 @@ namespace org.activiti.engine.impl.cmd
             return variablesMap;
         }
 
-        private IProcessInstance startFromCommand(ICommandContext commandContext)
+        private IProcessInstance StartFromCommand(ICommandContext commandContext)
         {
-            IProcessDefinition definition = null;
-            DeploymentManager deploymentCache = commandContext.ProcessEngineConfiguration.DeploymentManager;
+            _ = commandContext.ProcessEngineConfiguration.DeploymentManager;
             IRepositoryService repositoryService = commandContext.ProcessEngineConfiguration.RepositoryService;
             IRuntimeService runtimeService = commandContext.ProcessEngineConfiguration.RuntimeService;
-            string id = cmd.ProcessDefinitionId;
-            if (string.IsNullOrWhiteSpace(cmd.StartForm) == false)
+            string id = startCmd.ProcessDefinitionId;
+            IProcessDefinition definition;
+            if (string.IsNullOrWhiteSpace(startCmd.StartForm) == false)
             {
-                definition = repositoryService.createProcessDefinitionQuery()
-                    .processDefinitionStartForm(cmd.StartForm)
-                    .processDefinitionTenantId(cmd.TenantId)
-                    .latestVersion()
-                    .singleResult();
+                definition = repositoryService.CreateProcessDefinitionQuery()
+                    .SetProcessDefinitionStartForm(startCmd.StartForm)
+                    .SetProcessDefinitionTenantId(startCmd.TenantId)
+                    .SetLatestVersion()
+                    .SingleResult();
 
                 if (definition == null)
                 {
-                    throw new ActivitiObjectNotFoundException("Unable to find process definition for the given form key:'" + cmd.StartForm + "'");
+                    logger.LogError($"Unable to find process definition for the given start form key:'{startCmd.StartForm}' with tenantId:'{startCmd.TenantId}'");
+
+                    throw new ActivitiObjectNotFoundException("Unable to find process definition for the given start form key:'" + startCmd.StartForm + "'");
                 }
-                id = definition.Id;
+                processDefinitionId = definition.Id;
+            }
+            else if (string.IsNullOrWhiteSpace(processName) == false && string.IsNullOrWhiteSpace(tenantId) == false)
+            {
+                definition = repositoryService.CreateProcessDefinitionQuery()
+                    .SetProcessDefinitionName(startCmd.ProcessName)
+                    .SetProcessDefinitionTenantId(startCmd.TenantId)
+                    .SetLatestVersion()
+                    .SingleResult();
+
+                if (definition == null)
+                {
+                    logger.LogError($"Unable to find process definition for the given process name:'{startCmd.ProcessName}' with tenantid:'{tenantId}'");
+
+                    throw new ActivitiObjectNotFoundException($"Unable to find process definition for the given process name:'{startCmd.ProcessName}' with tenantid:'{tenantId}'");
+                }
+                processDefinitionId = definition.Id;
             }
             else if (string.IsNullOrWhiteSpace(processDefinitionKey) == false)
             {
-                definition = repositoryService.createProcessDefinitionQuery()
-                    .processDefinitionKey(processDefinitionKey)
-                    .processDefinitionTenantId(cmd.TenantId)
-                    .latestVersion()
-                    .singleResult();
+                definition = repositoryService.CreateProcessDefinitionQuery()
+                    .SetProcessDefinitionKey(processDefinitionKey)
+                    .SetProcessDefinitionTenantId(startCmd.TenantId)
+                    .SetLatestVersion()
+                    .SingleResult();
 
                 if (definition == null)
                 {
-                    throw new ActivitiObjectNotFoundException("Unable to find process definition for the given key:'" + processDefinitionKey + "'");
+                    logger.LogError($"Unable to find process definition for the given key:'{processDefinitionKey}'");
+
+                    throw new ActivitiObjectNotFoundException($"Unable to find process definition for the given key:'{processDefinitionKey}'");
                 }
-                id = definition.Id;
+                processDefinitionId = definition.Id;
             }
             else
             {
-                definition = repositoryService.getProcessDefinition(id);
+                definition = repositoryService.GetProcessDefinition(id);
                 if (definition == null)
                 {
-                    throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + id + "'");
+                    logger.LogError($"Unable to find process definition for the given id:'{id}'");
+
+                    throw new ActivitiObjectNotFoundException($"Unable to find process definition for the given id:'{id}'");
                 }
-                id = definition.Id;
+                processDefinitionId = definition.Id;
             }
 
-            IProcessInstanceBuilder builder = runtimeService.createProcessInstanceBuilder();
-            builder.processDefinitionId(definition.Id);
-            if (string.IsNullOrWhiteSpace(cmd.ProcessInstanceName))
+            IProcessInstanceBuilder builder = runtimeService.CreateProcessInstanceBuilder();
+            builder.SetProcessDefinitionId(definition.Id);
+            if (string.IsNullOrWhiteSpace(startCmd.ProcessInstanceName))
             {
-                cmd.ProcessInstanceName = definition.Name;
+                startCmd.ProcessInstanceName = definition.Name;
             }
-            builder.variables(cmd.Variables);
-            builder.businessKey(cmd.BusinessKey);
-            builder.name(cmd.ProcessInstanceName);
-            builder.tenantId(cmd.TenantId);
+            builder.SetVariables(startCmd.Variables);
+            builder.SetBusinessKey(startCmd.BusinessKey);
+            builder.SetName(startCmd.ProcessInstanceName);
+            builder.SetTenantId(startCmd.TenantId);
 
-            return builder.start();
+            return builder.Start();
         }
     }
 

@@ -72,10 +72,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            IOParameter clone = new IOParameter();
-            clone.Values = this;
+            IOParameter clone = new IOParameter
+            {
+                Values = this
+            };
             return clone;
         }
 

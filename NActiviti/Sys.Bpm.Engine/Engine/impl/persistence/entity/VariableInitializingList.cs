@@ -26,7 +26,7 @@ namespace org.activiti.engine.impl.persistence.entity
     /// </summary>
     public class VariableInitializingList : IList<IVariableInstanceEntity>
     {
-        private IList<IVariableInstanceEntity> variables = new List<IVariableInstanceEntity>();
+        private readonly IList<IVariableInstanceEntity> variables = new List<IVariableInstanceEntity>();
 
         private const long serialVersionUID = 1L;
 
@@ -36,38 +36,38 @@ namespace org.activiti.engine.impl.persistence.entity
             set => variables[index] = value;
         }
 
-        public int Count => throw new System.NotImplementedException();
+        public int Count => variables.Count;
 
-        public bool IsReadOnly => throw new System.NotImplementedException();
+        public bool IsReadOnly => variables.IsReadOnly;
 
-        public virtual void add(int index, IVariableInstanceEntity e)
+        public virtual void Add(int index, IVariableInstanceEntity e)
         {
             variables.Insert(index, e);
-            initializeVariable(e);
+            InitializeVariable(e);
         }
 
-        public virtual bool add(IVariableInstanceEntity e)
+        public virtual bool Add(IVariableInstanceEntity e)
         {
-            initializeVariable(e);
+            InitializeVariable(e);
             variables.Add(e);
             return true;
         }
 
-        public virtual bool addAll<T1>(ICollection<T1> c) where T1 : IVariableInstanceEntity
+        public virtual bool AddAll<T1>(ICollection<T1> c) where T1 : IVariableInstanceEntity
         {
             foreach (IVariableInstanceEntity e in c)
             {
-                initializeVariable(e);
+                InitializeVariable(e);
                 variables.Add(e);
             }
             return true;
         }
 
-        public virtual bool addAll<T1>(int index, ICollection<T1> c) where T1 : IVariableInstanceEntity
+        public virtual bool AddAll<T1>(int index, ICollection<T1> c) where T1 : IVariableInstanceEntity
         {
             foreach (IVariableInstanceEntity e in c)
             {
-                initializeVariable(e);
+                InitializeVariable(e);
                 variables.Add(e);
             }
             return true;
@@ -116,7 +116,7 @@ namespace org.activiti.engine.impl.persistence.entity
         /// <summary>
         /// If the passed <seealso cref="IVariableInstanceEntity"/> is a binary variable and the command-context is active, the variable value is fetched to ensure the byte-array is populated.
         /// </summary>
-        protected internal virtual void initializeVariable(IVariableInstanceEntity e)
+        protected internal virtual void InitializeVariable(IVariableInstanceEntity e)
         {
             if (Context.CommandContext != null && e != null && e.Type != null)
             {

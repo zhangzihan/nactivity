@@ -64,6 +64,25 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
+        public override int Revision
+        {
+            get
+            {
+                return base.Revision;
+            }
+            set
+            {
+                base.Revision = value;
+            }
+        }
+
+        public override int RevisionNext
+        {
+            get
+            {
+                return base.RevisionNext;
+            }
+        }
 
         public virtual DateTime? LockExpirationTime
         {

@@ -12,7 +12,7 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
@@ -24,23 +24,23 @@ namespace org.activiti.bpmn.converter.child
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_TIMERDEFINITION;
+                return BpmnXMLConstants.ELEMENT_EVENT_TIMERDEFINITION;
             }
         }
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
             if (!(parentElement is Event))
             {
                 return;
             }
             TimerEventDefinition eventDefinition = new TimerEventDefinition();
-            string calendarName = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_CALENDAR_NAME);
+            string calendarName = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALENDAR_NAME);
             if (!string.IsNullOrWhiteSpace(calendarName))
             {
                 eventDefinition.CalendarName = calendarName;
             }
-            BpmnXMLUtil.addXMLLocation(eventDefinition, xtr);
-            BpmnXMLUtil.parseChildElements(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_TIMERDEFINITION, eventDefinition, xtr, model);
+            BpmnXMLUtil.AddXMLLocation(eventDefinition, xtr);
+            BpmnXMLUtil.ParseChildElements(BpmnXMLConstants.ELEMENT_EVENT_TIMERDEFINITION, eventDefinition, xtr, model);
 
             ((Event)parentElement).EventDefinitions.Add(eventDefinition);
         }

@@ -10,10 +10,12 @@ namespace org.activiti.engine.impl.jobexecutor
         public const string PROPERTYNAME_END_DATE_EXPRESSION = "timerEndDate";
         public const string PROPERTYNAME_CALENDAR_NAME_EXPRESSION = "calendarName";
 
-        public static string createConfiguration(string id, string endDate, string calendarName)
+        public static string CreateConfiguration(string id, string endDate, string calendarName)
         {
-            JToken cfgJson = new JObject();
-            cfgJson[PROPERTYNAME_TIMER_ACTIVITY_ID] = id;
+            JToken cfgJson = new JObject
+            {
+                [PROPERTYNAME_TIMER_ACTIVITY_ID] = id
+            };
             if (!string.IsNullOrWhiteSpace(endDate))
             {
                 cfgJson[PROPERTYNAME_END_DATE_EXPRESSION] = endDate;
@@ -25,7 +27,7 @@ namespace org.activiti.engine.impl.jobexecutor
             return cfgJson.ToString();
         }
 
-        public static string setActivityIdToConfiguration(string jobHandlerConfiguration, string activityId)
+        public static string SetActivityIdToConfiguration(string jobHandlerConfiguration, string activityId)
         {
             try
             {
@@ -33,13 +35,13 @@ namespace org.activiti.engine.impl.jobexecutor
                 cfgJson[PROPERTYNAME_TIMER_ACTIVITY_ID] = activityId;
                 return cfgJson.ToString();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return jobHandlerConfiguration;
             }
         }
 
-        public static string getActivityIdFromConfiguration(string jobHandlerConfiguration)
+        public static string GetActivityIdFromConfiguration(string jobHandlerConfiguration)
         {
             try
             {
@@ -47,13 +49,13 @@ namespace org.activiti.engine.impl.jobexecutor
 
                 return cfgJson[PROPERTYNAME_TIMER_ACTIVITY_ID].ToString();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return jobHandlerConfiguration;
             }
         }
 
-        public static string geCalendarNameFromConfiguration(string jobHandlerConfiguration)
+        public static string GeCalendarNameFromConfiguration(string jobHandlerConfiguration)
         {
             try
             {
@@ -61,25 +63,27 @@ namespace org.activiti.engine.impl.jobexecutor
 
                 return cfgJson[PROPERTYNAME_CALENDAR_NAME_EXPRESSION].ToString();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // calendar name is not specified
                 return "";
             }
         }
 
-        public static string setEndDateToConfiguration(string jobHandlerConfiguration, string endDate)
+        public static string SetEndDateToConfiguration(string jobHandlerConfiguration, string endDate)
         {
-            JToken cfgJson = null;
+            JToken cfgJson;
             try
             {
                 cfgJson = JToken.FromObject(jobHandlerConfiguration);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // create the json config
-                cfgJson = new JObject();
-                cfgJson[PROPERTYNAME_TIMER_ACTIVITY_ID] = jobHandlerConfiguration;
+                cfgJson = new JObject
+                {
+                    [PROPERTYNAME_TIMER_ACTIVITY_ID] = jobHandlerConfiguration
+                };
             }
             if (!string.IsNullOrWhiteSpace(endDate))
             {
@@ -89,14 +93,14 @@ namespace org.activiti.engine.impl.jobexecutor
             return cfgJson.ToString();
         }
 
-        public static string getEndDateFromConfiguration(string jobHandlerConfiguration)
+        public static string GetEndDateFromConfiguration(string jobHandlerConfiguration)
         {
             try
             {
                 JToken cfgJson = JToken.FromObject(jobHandlerConfiguration);
                 return cfgJson[PROPERTYNAME_END_DATE_EXPRESSION].ToString();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

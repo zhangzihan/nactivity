@@ -2,6 +2,7 @@
 {
     using MassTransit;
     using org.activiti.engine.impl.cfg;
+    using org.activiti.engine.impl.persistence.entity;
     using System;
 
     /// <summary>
@@ -17,10 +18,10 @@
 
         public StrongUuidGenerator()
         {
-            ensureGeneratorInitialized();
+            EnsureGeneratorInitialized();
         }
 
-        protected internal virtual void ensureGeneratorInitialized()
+        protected internal virtual void EnsureGeneratorInitialized()
         {
             if (timeBasedGenerator == null)
             {
@@ -34,12 +35,9 @@
             }
         }
 
-        public virtual string NextId
+        public virtual string GetNextId()
         {
-            get
-            {
-                return timeBasedGenerator.ToString();
-            }
+            return timeBasedGenerator.ToString();
         }
 
     }

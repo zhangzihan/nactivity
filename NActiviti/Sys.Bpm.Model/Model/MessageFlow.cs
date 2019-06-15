@@ -88,10 +88,12 @@ namespace org.activiti.bpmn.model
             return sourceRef + " --> " + targetRef;
         }
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            MessageFlow clone = new MessageFlow();
-            clone.Values = this;
+            MessageFlow clone = new MessageFlow
+            {
+                Values = this
+            };
             return clone;
         }
 

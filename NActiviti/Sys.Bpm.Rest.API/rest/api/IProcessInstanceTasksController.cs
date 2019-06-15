@@ -11,11 +11,10 @@ namespace org.activiti.cloud.services.rest.api
     public interface IProcessInstanceTasksController
     {
         /// <summary>
-        /// 获取某个流程所有的任务
+        /// 获取某个流程所有的任务,默认不启用分页，返回当期流程实例下的所有任务.
         /// </summary>
-        /// <param name="processInstanceId">流程实例id</param>
         /// <param name="query">流程任务查询对象</param>
         /// <returns></returns>
-        Task<Resources<TaskModel>> getTasks(string processInstanceId, ProcessInstanceTaskQuery query);
+        Task<Resources<TaskModel>> GetTasks(ProcessInstanceTaskQuery query);
     }
 }

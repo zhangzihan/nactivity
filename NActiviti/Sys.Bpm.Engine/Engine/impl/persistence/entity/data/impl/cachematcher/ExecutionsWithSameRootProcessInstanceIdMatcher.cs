@@ -21,7 +21,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
 	public class ExecutionsWithSameRootProcessInstanceIdMatcher : ICachedEntityMatcher<IExecutionEntity>
 	{
 
-	  public virtual bool isRetained(ICollection<IExecutionEntity> databaseEntities, ICollection<CachedEntity> cachedEntities, IExecutionEntity entity, object param)
+	  public virtual bool IsRetained(ICollection<IExecutionEntity> databaseEntities, ICollection<CachedEntity> cachedEntities, IExecutionEntity entity, object param)
 	  {
 		IExecutionEntity executionEntity = getMatchingExecution(databaseEntities, cachedEntities, (string) param);
 		return (!ReferenceEquals(executionEntity.RootProcessInstanceId, null) && executionEntity.RootProcessInstanceId.Equals(entity.RootProcessInstanceId));

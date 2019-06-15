@@ -15,26 +15,24 @@
 namespace org.activiti.engine.impl.persistence.entity.data
 {
 
-	using org.activiti.engine.history;
+    using org.activiti.engine.history;
 
-	/// 
-	public interface IHistoricActivityInstanceDataManager : IDataManager<IHistoricActivityInstanceEntity>
-	{
+    /// 
+    public interface IHistoricActivityInstanceDataManager : IDataManager<IHistoricActivityInstanceEntity>
+    {
 
-	  IList<IHistoricActivityInstanceEntity> findUnfinishedHistoricActivityInstancesByExecutionAndActivityId(string executionId, string activityId);
+        IList<IHistoricActivityInstanceEntity> FindUnfinishedHistoricActivityInstancesByExecutionAndActivityId(string executionId, string activityId);
 
-	  IList<IHistoricActivityInstanceEntity> findUnfinishedHistoricActivityInstancesByProcessInstanceId(string processInstanceId);
+        IList<IHistoricActivityInstanceEntity> FindUnfinishedHistoricActivityInstancesByProcessInstanceId(string processInstanceId);
 
-	  void deleteHistoricActivityInstancesByProcessInstanceId(string historicProcessInstanceId);
+        void DeleteHistoricActivityInstancesByProcessInstanceId(string historicProcessInstanceId);
 
-	  long findHistoricActivityInstanceCountByQueryCriteria(IHistoricActivityInstanceQuery historicActivityInstanceQuery);
+        long FindHistoricActivityInstanceCountByQueryCriteria(IHistoricActivityInstanceQuery historicActivityInstanceQuery);
 
-	  IList<IHistoricActivityInstance> findHistoricActivityInstancesByQueryCriteria(IHistoricActivityInstanceQuery historicActivityInstanceQuery, Page page);
+        IList<IHistoricActivityInstance> FindHistoricActivityInstancesByQueryCriteria(IHistoricActivityInstanceQuery historicActivityInstanceQuery, Page page);
 
-	  IList<IHistoricActivityInstance> findHistoricActivityInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<IHistoricActivityInstance> FindHistoricActivityInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findHistoricActivityInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
-
-	}
-
+        long FindHistoricActivityInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
+    }
 }

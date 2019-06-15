@@ -13,33 +13,33 @@
  */
 namespace org.activiti.engine.impl.interceptor
 {
-	using org.activiti.engine.impl.cfg;
+    using org.activiti.engine.impl.cfg;
 
-	/// 
-	public class CommandContextFactory
-	{
+    /// 
+    public class CommandContextFactory
+    {
 
-	  protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
+        protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
 
-	  public virtual CommandContext<T1> createCommandContext<T1>(ICommand<T1> cmd)
-	  {
-		return new CommandContext<T1>(cmd, processEngineConfiguration);
-	  }
+        public virtual CommandContext<T1> CreateCommandContext<T1>(ICommand<T1> cmd)
+        {
+            return new CommandContext<T1>(cmd, processEngineConfiguration);
+        }
 
-	  // getters and setters
-	  // //////////////////////////////////////////////////////
+        // getters and setters
+        // //////////////////////////////////////////////////////
 
-	  public virtual ProcessEngineConfigurationImpl ProcessEngineConfiguration
-	  {
-		  get
-		  {
-			return processEngineConfiguration;
-		  }
-		  set
-		  {
-			this.processEngineConfiguration = value;
-		  }
-	  }
+        public virtual ProcessEngineConfigurationImpl ProcessEngineConfiguration
+        {
+            get
+            {
+                return processEngineConfiguration;
+            }
+            set
+            {
+                this.processEngineConfiguration = value;
+            }
+        }
 
-	}
+    }
 }

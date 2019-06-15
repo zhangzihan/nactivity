@@ -12,13 +12,22 @@
  */
 namespace org.activiti.engine.repository
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IDeploymentProperties
     {
 
     }
 
-    public static class DeploymentProperties_Fields
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class DeploymentPropertiesFields
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DEPLOY_AS_ACTIVITI5_PROCESS_DEFINITION = "deployAsActiviti5ProcessDefinition";
     }
 

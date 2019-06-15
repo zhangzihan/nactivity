@@ -7,7 +7,7 @@ namespace org.activiti.bpmn.converter
     using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
-    using Sys.Bpm;
+    using Sys.Bpm.Model;
     using System.Globalization;
     using System.Text.RegularExpressions;
 
@@ -18,7 +18,7 @@ namespace org.activiti.bpmn.converter
         private static readonly ILogger logger = BpmnModelLoggerFactory.LoggerService<ValuedDataObjectXMLConverter>();
 
         private readonly Regex xmlChars = new Regex("[<>&]");
-        private string sdf = "yyyy-MM-dd'T'HH:mm:ss";
+        private readonly string sdf = "yyyy-MM-dd'T'HH:mm:ss";
         protected internal bool didWriteExtensionStartElement = false;
 
         public override Type BpmnElementType
@@ -36,12 +36,12 @@ namespace org.activiti.bpmn.converter
                 return BpmnXMLConstants.ELEMENT_DATA_OBJECT;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             ValuedDataObject dataObject = null;
             ItemDefinition itemSubjectRef = new ItemDefinition();
 
-            string structureRef = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_ITEM_REF);
+            string structureRef = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_ITEM_REF);
             if (!string.IsNullOrWhiteSpace(structureRef) && structureRef.Contains(":"))
             {
                 string dataType = structureRef.Substring(structureRef.IndexOf(':') + 1);
@@ -72,7 +72,7 @@ namespace org.activiti.bpmn.converter
                 }
                 else
                 {
-                    logger.LogError($"Error converting {xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_NAME)}, invalid data type: {dataType}");
+                    logger.LogError($"Error converting {xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_NAME)}, invalid data type: {dataType}");
                 }
             }
             else
@@ -84,15 +84,15 @@ namespace org.activiti.bpmn.converter
 
             if (dataObject != null)
             {
-                dataObject.Id = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_ID);
-                dataObject.Name = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_NAME);
+                dataObject.Id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_ID);
+                dataObject.Name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_NAME);
 
-                BpmnXMLUtil.addXMLLocation(dataObject, xtr);
+                BpmnXMLUtil.AddXMLLocation(dataObject, xtr);
 
                 itemSubjectRef.StructureRef = structureRef;
                 dataObject.ItemSubjectRef = itemSubjectRef;
 
-                parseChildElements(XMLElementName, dataObject, model, xtr);
+                ParseChildElements(XMLElementName, dataObject, model, xtr);
 
                  dataObject.ExtensionElements.TryGetValue("value", out IList<ExtensionElement> valuesElement);
                 if (valuesElement != null && valuesElement.Count > 0)
@@ -127,15 +127,15 @@ namespace org.activiti.bpmn.converter
 
             return dataObject;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             ValuedDataObject dataObject = (ValuedDataObject)element;
             if (dataObject.ItemSubjectRef != null && !string.IsNullOrWhiteSpace(dataObject.ItemSubjectRef.StructureRef))
             {
-                writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_DATA_ITEM_REF, dataObject.ItemSubjectRef.StructureRef, xtw);
+                WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_DATA_ITEM_REF, dataObject.ItemSubjectRef.StructureRef, xtw);
             }
         }
-        protected internal override bool writeExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        protected internal override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             ValuedDataObject dataObject = (ValuedDataObject)element;
 
@@ -144,14 +144,14 @@ namespace org.activiti.bpmn.converter
 
                 if (!didWriteExtensionStartElement)
                 {
-                    xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EXTENSIONS);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                     didWriteExtensionStartElement = true;
                 }
 
-                xtw.writeStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_DATA_VALUE, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_DATA_VALUE, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
                 if (dataObject.Value != null)
                 {
-                    string value = null;
+                    string value;
                     if (dataObject is DateDataObject)
                     {
                         value = ((DateTime)dataObject.Value).ToString(sdf);
@@ -163,19 +163,19 @@ namespace org.activiti.bpmn.converter
 
                     if (dataObject is StringDataObject && xmlChars.IsMatch(value))
                     {
-                        xtw.writeCData(value);
+                        xtw.WriteCData(value);
                     }
                     else
                     {
-                        xtw.writeCharacters(value);
+                        xtw.WriteCharacters(value);
                     }
                 }
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
 
             return didWriteExtensionStartElement;
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
     }

@@ -32,14 +32,13 @@ namespace org.activiti.engine.impl.cmd
             this.taskId = taskId;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-
-            if (ReferenceEquals(taskId, null))
+            if (taskId is null)
             {
                 throw new ActivitiIllegalArgumentException("taskId is null");
             }
-            commandContext.HistoricTaskInstanceEntityManager.delete(new KeyValuePair<string, object>("id", taskId));
+            commandContext.HistoricTaskInstanceEntityManager.Delete(new KeyValuePair<string, object>("id", taskId));
 
             return null;
         }

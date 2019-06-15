@@ -52,9 +52,9 @@ namespace org.activiti.engine.impl.el
         /// <param name="base">
         ///            The bean to analyze. </param>
         /// <returns> null if base is null; otherwise Object.class. </returns>
-        public override Type getCommonPropertyType(ELContext context, object @base)
+        public override Type GetCommonPropertyType(ELContext context, object @base)
         {
-            return isResolvable(@base) ? typeof(object) : null;
+            return IsResolvable(@base) ? typeof(object) : null;
         }
 
         /// <summary>
@@ -79,14 +79,14 @@ namespace org.activiti.engine.impl.el
         ///             if an exception was thrown while performing the property or variable resolution.
         ///             The thrown exception must be included as the cause property of this exception, if
         ///             available. </exception>
-        public override Type getType(ELContext context, object @base, object property)
+        public override Type GetType(ELContext context, object @base, object property)
         {
             if (context == null)
             {
                 throw new System.NullReferenceException("context is null");
             }
             Type result = null;
-            if (isResolvable(@base))
+            if (IsResolvable(@base))
             {
                 result = typeof(object);
                 context.IsPropertyResolved = true;
@@ -121,14 +121,14 @@ namespace org.activiti.engine.impl.el
         ///             if an exception was thrown while performing the property or variable resolution.
         ///             The thrown exception must be included as the cause property of this exception, if
         ///             available. </exception>
-        public override object getValue(ELContext context, object @base, object property)
+        public override object GetValue(ELContext context, object @base, object property)
         {
             if (context == null)
             {
                 throw new System.NullReferenceException("context is null");
             }
             object result = null;
-            if (isResolvable(@base))
+            if (IsResolvable(@base))
             {
                 JToken resultNode = ((JToken)@base)[property.ToString()];
                 if (resultNode != null)
@@ -192,13 +192,13 @@ namespace org.activiti.engine.impl.el
         ///             if an exception was thrown while performing the property or variable resolution.
         ///             The thrown exception must be included as the cause property of this exception, if
         ///             available. </exception>
-        public override bool isReadOnly(ELContext context, object @base, object property)
+        public override bool IsReadOnly(ELContext context, object @base, object property)
         {
             if (context == null)
             {
                 throw new System.NullReferenceException("context is null");
             }
-            if (isResolvable(@base))
+            if (IsResolvable(@base))
             {
                 context.IsPropertyResolved = true;
             }
@@ -240,7 +240,7 @@ namespace org.activiti.engine.impl.el
         ///             if an exception was thrown while performing the property or variable resolution.
         ///             The thrown exception must be included as the cause property of this exception, if
         ///             available. </exception>
-        public override void setValue(ELContext context, object @base, object property, object value)
+        public override void SetValue(ELContext context, object @base, object property, object value)
         {
             if (context == null)
             {
@@ -294,7 +294,7 @@ namespace org.activiti.engine.impl.el
         /// <param name="property">
         ///            The name of the property to analyze. Will be coerced to a String. </param>
         /// <returns> base != null </returns>
-        private bool isResolvable(object @base)
+        private bool IsResolvable(object @base)
         {
             return @base is JToken;
         }

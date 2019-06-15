@@ -4,20 +4,16 @@
 
     /// 
     public class SubProcessVariableSnapshotter
-	{
+    {
+        public virtual void SetVariablesSnapshots(IExecutionEntity sourceExecution, IExecutionEntity snapshotHolder)
+        {
+            snapshotHolder.VariablesLocal = sourceExecution.VariablesLocal;
 
-		public virtual void setVariablesSnapshots(IExecutionEntity sourceExecution, IExecutionEntity snapshotHolder)
-		{
-			snapshotHolder.VariablesLocal = sourceExecution.VariablesLocal;
-
-			IExecutionEntity parentExecution = sourceExecution.Parent;
-			if (parentExecution != null && parentExecution.IsMultiInstanceRoot)
-			{
-				snapshotHolder.VariablesLocal = parentExecution.VariablesLocal;
-			}
-
-		}
-
-	}
-
+            IExecutionEntity parentExecution = sourceExecution.Parent;
+            if (parentExecution != null && parentExecution.IsMultiInstanceRoot)
+            {
+                snapshotHolder.VariablesLocal = parentExecution.VariablesLocal;
+            }
+        }
+    }
 }

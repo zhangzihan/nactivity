@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,12 +60,12 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public static IList<AssociationDirection> values()
+        public static IList<AssociationDirection> Values()
         {
             return valueList;
         }
 
-        public int ordinal()
+        public int Ordinal()
         {
             return ordinalValue;
         }
@@ -74,16 +75,16 @@ namespace org.activiti.bpmn.model
             return nameValue;
         }
 
-        public static AssociationDirection valueOf(string name)
+        public static AssociationDirection ValueOf(string name)
         {
-            foreach (AssociationDirection enumInstance in AssociationDirection.valueList)
+            foreach (AssociationDirection enumInstance in valueList)
             {
                 if (enumInstance.nameValue == name)
                 {
                     return enumInstance;
                 }
             }
-            throw new System.ArgumentException(name);
+            throw new ArgumentException(name);
         }
     }
 

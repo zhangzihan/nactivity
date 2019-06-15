@@ -15,21 +15,19 @@
 namespace org.activiti.engine.impl.persistence.entity
 {
 
-	/// 
-	public interface IByteArrayEntityManager : IEntityManager<IByteArrayEntity>
-	{
+    /// 
+    public interface IByteArrayEntityManager : IEntityManager<IByteArrayEntity>
+    {
+        /// <summary>
+        /// Returns all <seealso cref="IByteArrayEntity"/>. 
+        /// </summary>
+        IList<IByteArrayEntity> FindAll();
 
-	  /// <summary>
-	  /// Returns all <seealso cref="IByteArrayEntity"/>. 
-	  /// </summary>
-	  IList<IByteArrayEntity> findAll();
-
-	  /// <summary>
-	  /// Deletes the <seealso cref="IByteArrayEntity"/> with the given id from the database. 
-	  /// Important: this operation will NOT do any optimistic locking, to avoid loading the bytes in memory. So use this method
-	  /// only in conjunction with an entity that has optimistic locking!.
-	  /// </summary>
-	  void deleteByteArrayById(string byteArrayEntityId);
-
-	}
+        /// <summary>
+        /// Deletes the <seealso cref="IByteArrayEntity"/> with the given id from the database. 
+        /// Important: this operation will NOT do any optimistic locking, to avoid loading the bytes in memory. So use this method
+        /// only in conjunction with an entity that has optimistic locking!.
+        /// </summary>
+        void DeleteByteArrayById(string byteArrayEntityId);
+    }
 }

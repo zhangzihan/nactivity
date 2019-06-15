@@ -67,6 +67,10 @@ namespace org.activiti.engine.history
         string Assignee { get; }
 
         /// <summary>
+        /// Assignee in case of user task activity </summary>
+        string AssigneeUser { get; }
+
+        /// <summary>
         /// Time when the activity instance started </summary>
         DateTime? StartTime { get; }
 
@@ -75,7 +79,7 @@ namespace org.activiti.engine.history
         DateTime? EndTime { get; }
 
         /// <summary>
-        /// Difference between <seealso cref="#getEndTime()"/> and <seealso cref="#getStartTime()"/>. </summary>
+        /// Difference between <seealso cref="EndTime"/> and <seealso cref="StartTime"/>. </summary>
         long? DurationInMillis { get; }
 
         /// <summary>

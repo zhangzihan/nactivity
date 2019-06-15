@@ -31,12 +31,12 @@ namespace org.activiti.engine.impl.cfg.jta
             this.transactionManager = transactionManager;
         }
 
-        public virtual void commit()
+        public virtual void Commit()
         {
             // managed transaction, ignore
         }
 
-        public virtual void rollback()
+        public virtual void Rollback()
         {
             // managed transaction, mark rollback-only if not done so already.
             try
@@ -45,7 +45,7 @@ namespace org.activiti.engine.impl.cfg.jta
                 Status status = transaction.Status;
                 if (status != Status.STATUS_NO_TRANSACTION && status != Status.STATUS_ROLLEDBACK)
                 {
-                    transaction.setRollbackOnly();
+                    transaction.SetRollbackOnly();
                 }
             }
             catch (System.InvalidOperationException)
@@ -73,13 +73,13 @@ namespace org.activiti.engine.impl.cfg.jta
             }
         }
 
-        public virtual void addTransactionListener(TransactionState transactionState, ITransactionListener transactionListener)
+        public virtual void AddTransactionListener(TransactionState transactionState, ITransactionListener transactionListener)
         {
             Transaction transaction = Transaction;
             ICommandContext commandContext = Context.CommandContext;
             try
             {
-                transaction.registerSynchronization(new TransactionStateSynchronization(transactionState, transactionListener, commandContext));
+                transaction.RegisterSynchronization(new TransactionStateSynchronization(transactionState, transactionListener, commandContext));
             }
             catch (System.InvalidOperationException e)
             {
@@ -110,28 +110,26 @@ namespace org.activiti.engine.impl.cfg.jta
             }
 
             [MethodImpl(MethodImplOptions.Synchronized)]
-            public virtual void beforeCompletion()
+            public virtual void BeforeCompletion()
             {
                 if (TransactionState.COMMITTING.Equals(transactionState) || TransactionState.ROLLINGBACK.Equals(transactionState))
                 {
-                    transactionListener.execute(commandContext);
+                    transactionListener.Execute(commandContext);
                 }
             }
 
             [MethodImpl(MethodImplOptions.Synchronized)]
-            public virtual void afterCompletion(int status)
+            public virtual void AfterCompletion(int status)
             {
                 if (Status.STATUS_ROLLEDBACK == (Status)status && TransactionState.ROLLED_BACK.Equals(transactionState))
                 {
-                    transactionListener.execute(commandContext);
+                    transactionListener.Execute(commandContext);
                 }
                 else if (Status.STATUS_COMMITTED == (Status)status && TransactionState.COMMITTED.Equals(transactionState))
                 {
-                    transactionListener.execute(commandContext);
+                    transactionListener.Execute(commandContext);
                 }
             }
-
         }
-
     }
 }

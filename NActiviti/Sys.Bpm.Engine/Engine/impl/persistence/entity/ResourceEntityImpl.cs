@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Text;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,6 +71,20 @@ namespace org.activiti.engine.impl.persistence.entity
             set
             {
                 this.deploymentId = value;
+            }
+        }
+
+        [JsonIgnore]
+        public virtual string BpmnXml
+        {
+            get
+            {
+                if (bytes != null && bytes.Length > 0)
+                {
+                    return new UTF8Encoding(false).GetString(bytes);
+                }
+
+                return null;
             }
         }
 

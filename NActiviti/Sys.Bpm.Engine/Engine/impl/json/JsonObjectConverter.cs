@@ -19,22 +19,22 @@ namespace org.activiti.engine.impl.json
     public abstract class JsonObjectConverter<T>
     {
 
-        public virtual void toJson(T @object, StreamWriter writer)
+        public virtual void ToJson(T @object, StreamWriter writer)
         {
-            writer.Write(toJson(@object));
+            writer.Write(ToJson(@object));
         }
 
-        public virtual string toJson(T @object)
+        public virtual string ToJson(T @object)
         {
             if (@object == null)
             {
                 return "";
             }
 
-            return toJsonObject(@object).ToString();
+            return ToJsonObject(@object).ToString();
         }
 
-        public virtual string toJson(T @object, int indentFactor)
+        public virtual string ToJson(T @object, int indentFactor)
         {
             if (@object == null)
             {
@@ -44,10 +44,10 @@ namespace org.activiti.engine.impl.json
             return JToken.FromObject(@object).ToString(indentFactor > 0 ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None);
         }
 
-        public abstract JToken toJsonObject(T @object);
+        public abstract JToken ToJsonObject(T @object);
 
 
-        public abstract T toObject(StreamReader reader);
+        public abstract T ToObject(StreamReader reader);
     }
 
 }

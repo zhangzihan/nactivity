@@ -25,9 +25,12 @@ namespace org.activiti.engine.impl.transformer
         /// <summary>
         /// {@inheritDoc}
         /// </summary>
-        protected internal override object primTransform(object anObject)
+        protected internal override object PrimTransform(object anObject)
         {
-            return Convert.ToInt32(((long?)anObject).ToString());
+            if (int.TryParse(anObject?.ToString(), out var i))
+                return i;
+
+            return null;
         }
     }
 

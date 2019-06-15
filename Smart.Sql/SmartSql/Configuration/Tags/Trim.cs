@@ -18,5 +18,20 @@ namespace SmartSql.Configuration.Tags
         {
             return true;
         }
+
+        public override void BuildChildSql(RequestContext context)
+        {
+            if (ChildTags != null && ChildTags.Count > 0)
+            {
+                foreach (var childTag in ChildTags)
+                {
+                    //if (childTag.IsCondition(context))
+                    //{
+                    //    context.Sql.Append(" " + PrefixOverrides + " ");
+                    //}
+                    childTag.BuildSql(context);
+                }
+            }
+        }
     }
 }

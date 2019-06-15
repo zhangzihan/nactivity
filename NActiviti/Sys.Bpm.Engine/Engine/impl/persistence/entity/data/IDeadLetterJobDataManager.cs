@@ -15,19 +15,19 @@
 namespace org.activiti.engine.impl.persistence.entity.data
 {
 
-	using org.activiti.engine.runtime;
+    using org.activiti.engine.runtime;
 
-	/// 
-	public interface IDeadLetterJobDataManager : IDataManager<IDeadLetterJobEntity>
-	{
+    /// 
+    public interface IDeadLetterJobDataManager : IDataManager<IDeadLetterJobEntity>
+    {
 
-	  IList<IDeadLetterJobEntity> findJobsByExecutionId(string executionId);
+        IList<IDeadLetterJobEntity> FindJobsByExecutionId(string executionId);
 
-	  IList<IJob> findJobsByQueryCriteria(DeadLetterJobQueryImpl jobQuery, Page page);
+        IList<IJob> FindJobsByQueryCriteria(IDeadLetterJobQuery jobQuery, Page page);
 
-	  long findJobCountByQueryCriteria(DeadLetterJobQueryImpl jobQuery);
+        long FindJobCountByQueryCriteria(IDeadLetterJobQuery jobQuery);
 
-	  void updateJobTenantIdForDeployment(string deploymentId, string newTenantId);
-	}
+        void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId);
+    }
 
 }

@@ -20,27 +20,27 @@ namespace org.activiti.bpmn.converter.export
 
     public class ActivitiListenerExport : IBpmnXMLConstants
     {
-        public static bool writeListeners(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        public static bool WriteListeners(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             if (element is IHasExecutionListeners)
             {
-                didWriteExtensionStartElement = writeListeners(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EXECUTION_LISTENER, ((IHasExecutionListeners)element).ExecutionListeners, didWriteExtensionStartElement, xtw);
+                didWriteExtensionStartElement = WriteListeners(BpmnXMLConstants.ELEMENT_EXECUTION_LISTENER, ((IHasExecutionListeners)element).ExecutionListeners, didWriteExtensionStartElement, xtw);
             }
             // In case of a usertaks, also add task-listeners
             if (element is UserTask)
             {
-                didWriteExtensionStartElement = writeListeners(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_TASK_LISTENER, ((UserTask)element).TaskListeners, didWriteExtensionStartElement, xtw);
+                didWriteExtensionStartElement = WriteListeners(BpmnXMLConstants.ELEMENT_TASK_LISTENER, ((UserTask)element).TaskListeners, didWriteExtensionStartElement, xtw);
             }
 
             // In case of a process-element, write the event-listeners
             if (element is Process)
             {
-                didWriteExtensionStartElement = writeEventListeners(((Process)element).EventListeners, didWriteExtensionStartElement, xtw);
+                didWriteExtensionStartElement = WriteEventListeners(((Process)element).EventListeners, didWriteExtensionStartElement, xtw);
             }
 
             return didWriteExtensionStartElement;
         }
-        protected internal static bool writeEventListeners(IList<EventListener> eventListeners, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        protected internal static bool WriteEventListeners(IList<EventListener> eventListeners, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
 
             if (eventListeners != null && eventListeners.Count > 0)
@@ -49,55 +49,55 @@ namespace org.activiti.bpmn.converter.export
                 {
                     if (!didWriteExtensionStartElement)
                     {
-                        xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EXTENSIONS);
+                        xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                         didWriteExtensionStartElement = true;
                     }
 
-                    xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_LISTENER, org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-                    BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_EVENTS, eventListener.Events, xtw);
-                    BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_ENTITY_TYPE, eventListener.EntityType, xtw);
+                    xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_LISTENER, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                    BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_EVENTS, eventListener.Events, xtw);
+                    BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_ENTITY_TYPE, eventListener.EntityType, xtw);
 
                     if (ImplementationType.IMPLEMENTATION_TYPE_CLASS.Equals(eventListener.ImplementationType))
                     {
-                        BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS, eventListener.Implementation, xtw);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS, eventListener.Implementation, xtw);
 
                     }
                     else if (ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(eventListener.ImplementationType))
                     {
-                        BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_DELEGATEEXPRESSION, eventListener.Implementation, xtw);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_DELEGATEEXPRESSION, eventListener.Implementation, xtw);
 
                     }
                     else if (ImplementationType.IMPLEMENTATION_TYPE_THROW_SIGNAL_EVENT.Equals(eventListener.ImplementationType))
                     {
-                        BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_SIGNAL_EVENT_NAME, eventListener.Implementation, xtw);
-                        BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_SIGNAL, xtw);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_SIGNAL_EVENT_NAME, eventListener.Implementation, xtw);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE, BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_SIGNAL, xtw);
 
                     }
                     else if (ImplementationType.IMPLEMENTATION_TYPE_THROW_GLOBAL_SIGNAL_EVENT.Equals(eventListener.ImplementationType))
                     {
-                        BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_SIGNAL_EVENT_NAME, eventListener.Implementation, xtw);
-                        BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_GLOBAL_SIGNAL, xtw);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_SIGNAL_EVENT_NAME, eventListener.Implementation, xtw);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE, BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_GLOBAL_SIGNAL, xtw);
 
                     }
                     else if (ImplementationType.IMPLEMENTATION_TYPE_THROW_MESSAGE_EVENT.Equals(eventListener.ImplementationType))
                     {
-                        BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_MESSAGE_EVENT_NAME, eventListener.Implementation, xtw);
-                        BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_MESSAGE, xtw);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_MESSAGE_EVENT_NAME, eventListener.Implementation, xtw);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE, BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_MESSAGE, xtw);
 
                     }
                     else if (ImplementationType.IMPLEMENTATION_TYPE_THROW_ERROR_EVENT.Equals(eventListener.ImplementationType))
                     {
-                        BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_ERROR_EVENT_CODE, eventListener.Implementation, xtw);
-                        BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_ERROR, xtw);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_ERROR_EVENT_CODE, eventListener.Implementation, xtw);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE, BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_ERROR, xtw);
                     }
 
-                    xtw.writeEndElement();
+                    xtw.WriteEndElement();
                 }
             }
 
             return didWriteExtensionStartElement;
         }
-        private static bool writeListeners(string xmlElementName, IList<ActivitiListener> listenerList, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        private static bool WriteListeners(string xmlElementName, IList<ActivitiListener> listenerList, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             if (listenerList != null)
             {
@@ -110,44 +110,44 @@ namespace org.activiti.bpmn.converter.export
 
                         if (!didWriteExtensionStartElement)
                         {
-                            xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EXTENSIONS);
+                            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                             didWriteExtensionStartElement = true;
                         }
 
-                        xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, xmlElementName, org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-                        BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_EVENT, listener.Event, xtw);
+                        xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, xmlElementName, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_EVENT, listener.Event, xtw);
 
                         if (ImplementationType.IMPLEMENTATION_TYPE_CLASS.Equals(listener.ImplementationType))
                         {
-                            BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS, listener.Implementation, xtw);
+                            BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS, listener.Implementation, xtw);
                         }
                         else if (ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION.Equals(listener.ImplementationType))
                         {
-                            BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_EXPRESSION, listener.Implementation, xtw);
+                            BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_EXPRESSION, listener.Implementation, xtw);
                         }
                         else if (ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(listener.ImplementationType))
                         {
-                            BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_DELEGATEEXPRESSION, listener.Implementation, xtw);
+                            BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_DELEGATEEXPRESSION, listener.Implementation, xtw);
                         }
 
-                        BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_ON_TRANSACTION, listener.OnTransaction, xtw);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_ON_TRANSACTION, listener.OnTransaction, xtw);
 
                         if (ImplementationType.IMPLEMENTATION_TYPE_CLASS.Equals(listener.CustomPropertiesResolverImplementationType))
                         {
-                            BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_CUSTOM_PROPERTIES_RESOLVER_CLASS, listener.CustomPropertiesResolverImplementation, xtw);
+                            BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_CUSTOM_PROPERTIES_RESOLVER_CLASS, listener.CustomPropertiesResolverImplementation, xtw);
                         }
                         else if (ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION.Equals(listener.CustomPropertiesResolverImplementationType))
                         {
-                            BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_CUSTOM_PROPERTIES_RESOLVER_EXPRESSION, listener.CustomPropertiesResolverImplementation, xtw);
+                            BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_CUSTOM_PROPERTIES_RESOLVER_EXPRESSION, listener.CustomPropertiesResolverImplementation, xtw);
                         }
                         else if (ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(listener.CustomPropertiesResolverImplementationType))
                         {
-                            BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LISTENER_CUSTOM_PROPERTIES_RESOLVER_DELEGATEEXPRESSION, listener.CustomPropertiesResolverImplementation, xtw);
+                            BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_CUSTOM_PROPERTIES_RESOLVER_DELEGATEEXPRESSION, listener.CustomPropertiesResolverImplementation, xtw);
                         }
 
-                        FieldExtensionExport.writeFieldExtensions(listener.FieldExtensions, true, xtw);
+                        FieldExtensionExport.WriteFieldExtensions(listener.FieldExtensions, true, xtw);
 
-                        xtw.writeEndElement();
+                        xtw.WriteEndElement();
                     }
                 }
             }

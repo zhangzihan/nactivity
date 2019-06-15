@@ -29,7 +29,7 @@ namespace org.activiti.engine.impl.bpmn.listener
     public class ListenerNotificationHelper
     {
 
-        public virtual void executeExecutionListeners(IHasExecutionListeners elementWithExecutionListeners, IExecutionEntity execution, string eventType)
+        public virtual void ExecuteExecutionListeners(IHasExecutionListeners elementWithExecutionListeners, IExecutionEntity execution, string eventType)
         {
             IList<ActivitiListener> listeners = elementWithExecutionListeners.ExecutionListeners;
             if (listeners != null && listeners.Count > 0)
@@ -45,21 +45,21 @@ namespace org.activiti.engine.impl.bpmn.listener
 
                         if (ImplementationType.IMPLEMENTATION_TYPE_CLASS.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
                         {
-                            executionListener = listenerFactory.createClassDelegateExecutionListener(activitiListener);
+                            executionListener = listenerFactory.CreateClassDelegateExecutionListener(activitiListener);
                         }
                         else if (ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
                         {
-                            executionListener = listenerFactory.createExpressionExecutionListener(activitiListener);
+                            executionListener = listenerFactory.CreateExpressionExecutionListener(activitiListener);
                         }
                         else if (ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
                         {
-                            if (!ReferenceEquals(activitiListener.OnTransaction, null))
+                            if (!(activitiListener.OnTransaction is null))
                             {
-                                executionListener = listenerFactory.createTransactionDependentDelegateExpressionExecutionListener(activitiListener);
+                                executionListener = listenerFactory.CreateTransactionDependentDelegateExpressionExecutionListener(activitiListener);
                             }
                             else
                             {
-                                executionListener = listenerFactory.createDelegateExpressionExecutionListener(activitiListener);
+                                executionListener = listenerFactory.CreateDelegateExpressionExecutionListener(activitiListener);
                             }
                         }
                         else if (ImplementationType.IMPLEMENTATION_TYPE_INSTANCE.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
@@ -69,15 +69,15 @@ namespace org.activiti.engine.impl.bpmn.listener
 
                         if (executionListener != null)
                         {
-                            if (!ReferenceEquals(activitiListener.OnTransaction, null))
+                            if (!(activitiListener.OnTransaction is null))
                             {
-                                planTransactionDependentExecutionListener(listenerFactory, execution, (ITransactionDependentExecutionListener)executionListener, activitiListener);
+                                PlanTransactionDependentExecutionListener(listenerFactory, execution, (ITransactionDependentExecutionListener)executionListener, activitiListener);
                             }
                             else
                             {
                                 execution.EventName = eventType; // eventName is used to differentiate the event when reusing an execution listener for various events
                                 execution.CurrentActivitiListener = activitiListener;
-                                ((IExecutionListener)executionListener).notify(execution);
+                                ((IExecutionListener)executionListener).Notify(execution);
                                 execution.EventName = null;
                                 execution.CurrentActivitiListener = null;
                             }
@@ -87,43 +87,42 @@ namespace org.activiti.engine.impl.bpmn.listener
             }
         }
 
-        protected internal virtual void planTransactionDependentExecutionListener(IListenerFactory listenerFactory, IExecutionEntity execution, ITransactionDependentExecutionListener executionListener, ActivitiListener activitiListener)
+        protected internal virtual void PlanTransactionDependentExecutionListener(IListenerFactory listenerFactory, IExecutionEntity execution, ITransactionDependentExecutionListener executionListener, ActivitiListener activitiListener)
         {
             IDictionary<string, object> executionVariablesToUse = execution.Variables;
-            ICustomPropertiesResolver customPropertiesResolver = createCustomPropertiesResolver(activitiListener);
-            IDictionary<string, object> customPropertiesMapToUse = invokeCustomPropertiesResolver(execution, customPropertiesResolver);
+            ICustomPropertiesResolver customPropertiesResolver = CreateCustomPropertiesResolver(activitiListener);
+            IDictionary<string, object> customPropertiesMapToUse = InvokeCustomPropertiesResolver(execution, customPropertiesResolver);
 
             TransactionDependentExecutionListenerExecutionScope scope = new TransactionDependentExecutionListenerExecutionScope(execution.ProcessInstanceId, execution.Id, execution.CurrentFlowElement, executionVariablesToUse, customPropertiesMapToUse);
 
-            addTransactionListener(activitiListener, new ExecuteExecutionListenerTransactionListener(executionListener, scope));
+            AddTransactionListener(activitiListener, new ExecuteExecutionListenerTransactionListener(executionListener, scope));
         }
 
-        public virtual void executeTaskListeners(ITaskEntity taskEntity, string eventType)
+        public virtual void ExecuteTaskListeners(ITaskEntity taskEntity, string eventType)
         {
-            if (!ReferenceEquals(taskEntity.ProcessDefinitionId, null))
+            if (!(taskEntity.ProcessDefinitionId is null))
             {
-                org.activiti.bpmn.model.Process process = ProcessDefinitionUtil.getProcess(taskEntity.ProcessDefinitionId);
-                FlowElement flowElement = process.getFlowElement(taskEntity.TaskDefinitionKey, true);
-                if (flowElement is UserTask)
+                Process process = ProcessDefinitionUtil.GetProcess(taskEntity.ProcessDefinitionId);
+                FlowElement flowElement = process.GetFlowElement(taskEntity.TaskDefinitionKey, true);
+                if (flowElement is UserTask userTask)
                 {
-                    UserTask userTask = (UserTask)flowElement;
-                    executeTaskListeners(userTask, taskEntity, eventType);
+                    ExecuteTaskListeners(userTask, taskEntity, eventType);
                 }
             }
         }
 
-        public virtual void executeTaskListeners(UserTask userTask, ITaskEntity taskEntity, string eventType)
+        public virtual void ExecuteTaskListeners(UserTask userTask, ITaskEntity taskEntity, string eventType)
         {
             foreach (ActivitiListener activitiListener in userTask.TaskListeners)
             {
                 string @event = activitiListener.Event;
-                if (@event.Equals(eventType) || @event.Equals(BaseTaskListener_Fields.EVENTNAME_ALL_EVENTS))
+                if (@event.Equals(eventType) || @event.Equals(BaseTaskListenerFields.EVENTNAME_ALL_EVENTS))
                 {
-                    IBaseTaskListener taskListener = createTaskListener(activitiListener);
+                    IBaseTaskListener taskListener = CreateTaskListener(activitiListener);
 
-                    if (!ReferenceEquals(activitiListener.OnTransaction, null))
+                    if (!(activitiListener.OnTransaction is null))
                     {
-                        planTransactionDependentTaskListener(taskEntity.Execution, (ITransactionDependentTaskListener)taskListener, activitiListener);
+                        PlanTransactionDependentTaskListener(taskEntity.Execution, (ITransactionDependentTaskListener)taskListener, activitiListener);
                     }
                     else
                     {
@@ -131,7 +130,7 @@ namespace org.activiti.engine.impl.bpmn.listener
                         taskEntity.CurrentActivitiListener = activitiListener;
                         try
                         {
-                            Context.ProcessEngineConfiguration.DelegateInterceptor.handleInvocation(new TaskListenerInvocation((ITaskListener)taskListener, taskEntity));
+                            Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new TaskListenerInvocation((ITaskListener)taskListener, taskEntity));
                         }
                         catch (Exception e)
                         {
@@ -147,28 +146,28 @@ namespace org.activiti.engine.impl.bpmn.listener
             }
         }
 
-        protected internal virtual IBaseTaskListener createTaskListener(ActivitiListener activitiListener)
+        protected internal virtual IBaseTaskListener CreateTaskListener(ActivitiListener activitiListener)
         {
             IBaseTaskListener taskListener = null;
 
             IListenerFactory listenerFactory = Context.ProcessEngineConfiguration.ListenerFactory;
             if (ImplementationType.IMPLEMENTATION_TYPE_CLASS.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
             {
-                taskListener = listenerFactory.createClassDelegateTaskListener(activitiListener);
+                taskListener = listenerFactory.CreateClassDelegateTaskListener(activitiListener);
             }
             else if (ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
             {
-                taskListener = listenerFactory.createExpressionTaskListener(activitiListener);
+                taskListener = listenerFactory.CreateExpressionTaskListener(activitiListener);
             }
             else if (ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
             {
-                if (!ReferenceEquals(activitiListener.OnTransaction, null))
+                if (!(activitiListener.OnTransaction is null))
                 {
-                    taskListener = listenerFactory.createTransactionDependentDelegateExpressionTaskListener(activitiListener);
+                    taskListener = listenerFactory.CreateTransactionDependentDelegateExpressionTaskListener(activitiListener);
                 }
                 else
                 {
-                    taskListener = listenerFactory.createDelegateExpressionTaskListener(activitiListener);
+                    taskListener = listenerFactory.CreateDelegateExpressionTaskListener(activitiListener);
                 }
             }
             else if (ImplementationType.IMPLEMENTATION_TYPE_INSTANCE.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
@@ -178,65 +177,60 @@ namespace org.activiti.engine.impl.bpmn.listener
             return taskListener;
         }
 
-        protected internal virtual void planTransactionDependentTaskListener(IExecutionEntity execution, ITransactionDependentTaskListener taskListener, ActivitiListener activitiListener)
+        protected internal virtual void PlanTransactionDependentTaskListener(IExecutionEntity execution, ITransactionDependentTaskListener taskListener, ActivitiListener activitiListener)
         {
             IDictionary<string, object> executionVariablesToUse = execution.Variables;
-            ICustomPropertiesResolver customPropertiesResolver = createCustomPropertiesResolver(activitiListener);
-            IDictionary<string, object> customPropertiesMapToUse = invokeCustomPropertiesResolver(execution, customPropertiesResolver);
+            ICustomPropertiesResolver customPropertiesResolver = CreateCustomPropertiesResolver(activitiListener);
+            IDictionary<string, object> customPropertiesMapToUse = InvokeCustomPropertiesResolver(execution, customPropertiesResolver);
 
-            TransactionDependentTaskListenerExecutionScope scope = new TransactionDependentTaskListenerExecutionScope(execution.ProcessInstanceId, execution.Id, (Task)execution.CurrentFlowElement, executionVariablesToUse, customPropertiesMapToUse);
-            addTransactionListener(activitiListener, new ExecuteTaskListenerTransactionListener(taskListener, scope));
+            TransactionDependentTaskListenerExecutionScope scope = new TransactionDependentTaskListenerExecutionScope(execution.ProcessInstanceId, execution.Id, (TaskActivity)execution.CurrentFlowElement, executionVariablesToUse, customPropertiesMapToUse);
+            AddTransactionListener(activitiListener, new ExecuteTaskListenerTransactionListener(taskListener, scope));
         }
 
-        protected internal virtual ICustomPropertiesResolver createCustomPropertiesResolver(ActivitiListener activitiListener)
+        protected internal virtual ICustomPropertiesResolver CreateCustomPropertiesResolver(ActivitiListener activitiListener)
         {
             ICustomPropertiesResolver customPropertiesResolver = null;
             IListenerFactory listenerFactory = Context.ProcessEngineConfiguration.ListenerFactory;
             if (ImplementationType.IMPLEMENTATION_TYPE_CLASS.Equals(activitiListener.CustomPropertiesResolverImplementationType, StringComparison.CurrentCultureIgnoreCase))
             {
-                customPropertiesResolver = listenerFactory.createClassDelegateCustomPropertiesResolver(activitiListener);
+                customPropertiesResolver = listenerFactory.CreateClassDelegateCustomPropertiesResolver(activitiListener);
             }
             else if (ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION.Equals(activitiListener.CustomPropertiesResolverImplementationType, StringComparison.CurrentCultureIgnoreCase))
             {
-                customPropertiesResolver = listenerFactory.createExpressionCustomPropertiesResolver(activitiListener);
+                customPropertiesResolver = listenerFactory.CreateExpressionCustomPropertiesResolver(activitiListener);
             }
             else if (ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(activitiListener.CustomPropertiesResolverImplementationType, StringComparison.CurrentCultureIgnoreCase))
             {
-                customPropertiesResolver = listenerFactory.createDelegateExpressionCustomPropertiesResolver(activitiListener);
+                customPropertiesResolver = listenerFactory.CreateDelegateExpressionCustomPropertiesResolver(activitiListener);
             }
             return customPropertiesResolver;
         }
 
-        protected internal virtual IDictionary<string, object> invokeCustomPropertiesResolver(IExecutionEntity execution, ICustomPropertiesResolver customPropertiesResolver)
+        protected internal virtual IDictionary<string, object> InvokeCustomPropertiesResolver(IExecutionEntity execution, ICustomPropertiesResolver customPropertiesResolver)
         {
             IDictionary<string, object> customPropertiesMapToUse = null;
             if (customPropertiesResolver != null)
             {
-                customPropertiesMapToUse = customPropertiesResolver.getCustomPropertiesMap(execution);
+                customPropertiesMapToUse = customPropertiesResolver.GetCustomPropertiesMap(execution);
             }
             return customPropertiesMapToUse;
         }
 
-        protected internal virtual void addTransactionListener(ActivitiListener activitiListener, ITransactionListener transactionListener)
+        protected internal virtual void AddTransactionListener(ActivitiListener activitiListener, ITransactionListener transactionListener)
         {
             ITransactionContext transactionContext = Context.TransactionContext;
-            if (TransactionDependentExecutionListener_Fields.ON_TRANSACTION_BEFORE_COMMIT.Equals(activitiListener.OnTransaction))
+            if (TransactionDependentExecutionListenerFields.ON_TRANSACTION_BEFORE_COMMIT.Equals(activitiListener.OnTransaction))
             {
-                transactionContext.addTransactionListener(TransactionState.COMMITTING, transactionListener);
-
+                transactionContext.AddTransactionListener(TransactionState.COMMITTING, transactionListener);
             }
-            else if (TransactionDependentExecutionListener_Fields.ON_TRANSACTION_COMMITTED.Equals(activitiListener.OnTransaction))
+            else if (TransactionDependentExecutionListenerFields.ON_TRANSACTION_COMMITTED.Equals(activitiListener.OnTransaction))
             {
-                transactionContext.addTransactionListener(TransactionState.COMMITTED, transactionListener);
-
+                transactionContext.AddTransactionListener(TransactionState.COMMITTED, transactionListener);
             }
-            else if (TransactionDependentExecutionListener_Fields.ON_TRANSACTION_ROLLED_BACK.Equals(activitiListener.OnTransaction))
+            else if (TransactionDependentExecutionListenerFields.ON_TRANSACTION_ROLLED_BACK.Equals(activitiListener.OnTransaction))
             {
-                transactionContext.addTransactionListener(TransactionState.ROLLED_BACK, transactionListener);
-
+                transactionContext.AddTransactionListener(TransactionState.ROLLED_BACK, transactionListener);
             }
         }
-
     }
-
 }

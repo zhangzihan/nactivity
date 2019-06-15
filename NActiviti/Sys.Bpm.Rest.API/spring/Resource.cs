@@ -18,7 +18,7 @@ namespace org.springframework.hateoas
         /// </summary>
         protected Resource()
         {
-            this.content = default(T);
+            this.content = default;
         }
 
         /// <summary>

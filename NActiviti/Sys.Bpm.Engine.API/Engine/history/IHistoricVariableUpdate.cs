@@ -20,14 +20,24 @@ namespace org.activiti.engine.history
     /// </summary>
     public interface IHistoricVariableUpdate : IHistoricDetail
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         string VariableName { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         string VariableTypeName { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         object Value { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         int Revision { get; }
     }
-
 }

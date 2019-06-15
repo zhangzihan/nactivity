@@ -36,24 +36,24 @@ namespace org.activiti.engine.impl.jobexecutor
             }
         }
 
-        public virtual void execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
+        public virtual void Execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
         {
 
-            Context.Agenda.planTriggerExecutionOperation(execution);
+            Context.Agenda.PlanTriggerExecutionOperation(execution);
 
             if (commandContext.EventDispatcher.Enabled)
             {
-                commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TIMER_FIRED, job));
+                commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TIMER_FIRED, job));
             }
 
             if (execution.CurrentFlowElement is BoundaryEvent)
             {
                 IList<string> processedElements = new List<string>();
-                dispatchExecutionTimeOut(job, execution, processedElements, commandContext);
+                DispatchExecutionTimeOut(job, execution, processedElements, commandContext);
             }
         }
 
-        protected internal virtual void dispatchExecutionTimeOut(IJobEntity timerEntity, IExecutionEntity execution, IList<string> processedElements, ICommandContext commandContext)
+        protected internal virtual void DispatchExecutionTimeOut(IJobEntity timerEntity, IExecutionEntity execution, IList<string> processedElements, ICommandContext commandContext)
         {
             FlowElement currentElement = execution.CurrentFlowElement;
             if (currentElement is BoundaryEvent)
@@ -66,7 +66,7 @@ namespace org.activiti.engine.impl.jobexecutor
                     {
                         processedElements.Add(boundaryEvent.Id);
                         IExecutionEntity parentExecution = execution.Parent;
-                        dispatchExecutionTimeOut(timerEntity, parentExecution, processedElements, commandContext);
+                        DispatchExecutionTimeOut(timerEntity, parentExecution, processedElements, commandContext);
                     }
                 }
 
@@ -78,7 +78,7 @@ namespace org.activiti.engine.impl.jobexecutor
                 if (execution.CurrentFlowElement is FlowNode)
                 {
                     processedElements.Add(execution.CurrentActivityId);
-                    dispatchActivityTimeOut(timerEntity, (FlowNode)execution.CurrentFlowElement, execution, commandContext);
+                    DispatchActivityTimeOut(timerEntity, (FlowNode)execution.CurrentFlowElement, execution, commandContext);
                     if (execution.CurrentFlowElement is UserTask && !execution.IsMultiInstanceRoot)
                     {
                         IList<ITaskEntity> tasks = execution.Tasks;
@@ -96,7 +96,7 @@ namespace org.activiti.engine.impl.jobexecutor
                     {
                         if (!processedElements.Contains(subExecution.CurrentActivityId))
                         {
-                            dispatchExecutionTimeOut(timerEntity, subExecution, processedElements, commandContext);
+                            DispatchExecutionTimeOut(timerEntity, subExecution, processedElements, commandContext);
                         }
                     }
 
@@ -104,7 +104,7 @@ namespace org.activiti.engine.impl.jobexecutor
                 }
                 else if (execution.CurrentFlowElement is CallActivity)
                 {
-                    IExecutionEntity subProcessInstance = commandContext.ExecutionEntityManager.findSubProcessInstanceBySuperExecutionId(execution.Id);
+                    IExecutionEntity subProcessInstance = commandContext.ExecutionEntityManager.FindSubProcessInstanceBySuperExecutionId(execution.Id);
                     if (subProcessInstance != null)
                     {
                         IList<IExecutionEntity> childExecutions = subProcessInstance.Executions;
@@ -112,7 +112,7 @@ namespace org.activiti.engine.impl.jobexecutor
                         {
                             if (!processedElements.Contains(subExecution.CurrentActivityId))
                             {
-                                dispatchExecutionTimeOut(timerEntity, subExecution, processedElements, commandContext);
+                                DispatchExecutionTimeOut(timerEntity, subExecution, processedElements, commandContext);
                             }
                         }
                     }
@@ -120,12 +120,12 @@ namespace org.activiti.engine.impl.jobexecutor
             }
         }
 
-        protected internal virtual void dispatchActivityTimeOut(IJobEntity timerEntity, FlowNode flowNode, IExecutionEntity execution, ICommandContext commandContext)
+        protected internal virtual void DispatchActivityTimeOut(IJobEntity timerEntity, FlowNode flowNode, IExecutionEntity execution, ICommandContext commandContext)
         {
-            commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createActivityCancelledEvent(flowNode.Id, flowNode.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, parseActivityType(flowNode), timerEntity));
+            commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityCancelledEvent(flowNode.Id, flowNode.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, ParseActivityType(flowNode), timerEntity));
         }
 
-        protected internal virtual string parseActivityType(FlowNode flowNode)
+        protected internal virtual string ParseActivityType(FlowNode flowNode)
         {
             string elementType = flowNode.GetType().Name;
             elementType = elementType.Substring(0, 1).ToLower() + elementType.Substring(1);

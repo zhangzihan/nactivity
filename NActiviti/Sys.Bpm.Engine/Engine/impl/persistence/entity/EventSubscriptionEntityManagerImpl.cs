@@ -43,29 +43,29 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual ICompensateEventSubscriptionEntity createCompensateEventSubscription()
+        public virtual ICompensateEventSubscriptionEntity CreateCompensateEventSubscription()
         {
-            return eventSubscriptionDataManager.createCompensateEventSubscription();
+            return eventSubscriptionDataManager.CreateCompensateEventSubscription();
         }
 
-        public virtual IMessageEventSubscriptionEntity createMessageEventSubscription()
+        public virtual IMessageEventSubscriptionEntity CreateMessageEventSubscription()
         {
-            return eventSubscriptionDataManager.createMessageEventSubscription();
+            return eventSubscriptionDataManager.CreateMessageEventSubscription();
         }
 
-        public virtual ISignalEventSubscriptionEntity createSignalEventSubscription()
+        public virtual ISignalEventSubscriptionEntity CreateSignalEventSubscription()
         {
-            return eventSubscriptionDataManager.createSignalEventSubscription();
+            return eventSubscriptionDataManager.CreateSignalEventSubscription();
         }
 
-        public virtual ISignalEventSubscriptionEntity insertSignalEvent(string signalName, Signal signal, IExecutionEntity execution)
+        public virtual ISignalEventSubscriptionEntity InsertSignalEvent(string signalName, Signal signal, IExecutionEntity execution)
         {
-            ISignalEventSubscriptionEntity subscriptionEntity = createSignalEventSubscription();
+            ISignalEventSubscriptionEntity subscriptionEntity = CreateSignalEventSubscription();
             subscriptionEntity.Execution = execution;
             if (signal != null)
             {
                 subscriptionEntity.EventName = signal.Name;
-                if (!ReferenceEquals(signal.Scope, null))
+                if (!(signal.Scope is null))
                 {
                     subscriptionEntity.Configuration = signal.Scope;
                 }
@@ -77,86 +77,86 @@ namespace org.activiti.engine.impl.persistence.entity
 
             subscriptionEntity.ActivityId = execution.CurrentActivityId;
             subscriptionEntity.ProcessDefinitionId = execution.ProcessDefinitionId;
-            if (!ReferenceEquals(execution.TenantId, null))
+            if (!(execution.TenantId is null))
             {
                 subscriptionEntity.TenantId = execution.TenantId;
             }
-            insert(subscriptionEntity);
+            Insert(subscriptionEntity);
             execution.EventSubscriptions.Add(subscriptionEntity);
             return subscriptionEntity;
         }
 
-        public virtual IMessageEventSubscriptionEntity insertMessageEvent(string messageName, IExecutionEntity execution)
+        public virtual IMessageEventSubscriptionEntity InsertMessageEvent(string messageName, IExecutionEntity execution)
         {
-            IMessageEventSubscriptionEntity subscriptionEntity = createMessageEventSubscription();
+            IMessageEventSubscriptionEntity subscriptionEntity = CreateMessageEventSubscription();
             subscriptionEntity.Execution = execution;
             subscriptionEntity.EventName = messageName;
 
             subscriptionEntity.ActivityId = execution.CurrentActivityId;
             subscriptionEntity.ProcessDefinitionId = execution.ProcessDefinitionId;
-            if (!ReferenceEquals(execution.TenantId, null))
+            if (!(execution.TenantId is null))
             {
                 subscriptionEntity.TenantId = execution.TenantId;
             }
-            insert(subscriptionEntity);
+            Insert(subscriptionEntity);
             execution.EventSubscriptions.Add(subscriptionEntity);
             return subscriptionEntity;
         }
 
-        public virtual ICompensateEventSubscriptionEntity insertCompensationEvent(IExecutionEntity execution, string activityId)
+        public virtual ICompensateEventSubscriptionEntity InsertCompensationEvent(IExecutionEntity execution, string activityId)
         {
-            ICompensateEventSubscriptionEntity eventSubscription = createCompensateEventSubscription();
+            ICompensateEventSubscriptionEntity eventSubscription = CreateCompensateEventSubscription();
             eventSubscription.Execution = execution;
             eventSubscription.ActivityId = activityId;
-            if (!ReferenceEquals(execution.TenantId, null))
+            if (!(execution.TenantId is null))
             {
                 eventSubscription.TenantId = execution.TenantId;
             }
-            insert(eventSubscription);
+            Insert(eventSubscription);
             return eventSubscription;
         }
 
-        public override void insert(IEventSubscriptionEntity entity, bool fireCreateEvent)
+        public override void Insert(IEventSubscriptionEntity entity, bool fireCreateEvent)
         {
-            base.insert(entity, fireCreateEvent);
+            base.Insert(entity, fireCreateEvent);
 
-            if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!(entity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)entity.Execution;
-                if (isExecutionRelatedEntityCountEnabled(executionEntity))
+                if (IsExecutionRelatedEntityCountEnabled(executionEntity))
                 {
-                    executionEntity.EventSubscriptionCount = executionEntity.EventSubscriptionCount + 1;
+                    executionEntity.EventSubscriptionCount += 1;
                 }
             }
         }
 
-        public override void delete(IEventSubscriptionEntity entity, bool fireDeleteEvent)
+        public override void Delete(IEventSubscriptionEntity entity, bool fireDeleteEvent)
         {
-            if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!(entity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)entity.Execution;
-                if (isExecutionRelatedEntityCountEnabled(executionEntity))
+                if (IsExecutionRelatedEntityCountEnabled(executionEntity))
                 {
-                    executionEntity.EventSubscriptionCount = executionEntity.EventSubscriptionCount - 1;
+                    executionEntity.EventSubscriptionCount -= 1;
                 }
             }
-            base.delete(entity, fireDeleteEvent);
+            base.Delete(entity, fireDeleteEvent);
         }
 
-        public virtual IList<ICompensateEventSubscriptionEntity> findCompensateEventSubscriptionsByExecutionId(string executionId)
+        public virtual IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByExecutionId(string executionId)
         {
-            return findCompensateEventSubscriptionsByExecutionIdAndActivityId(executionId, null);
+            return FindCompensateEventSubscriptionsByExecutionIdAndActivityId(executionId, null);
         }
 
-        public virtual IList<ICompensateEventSubscriptionEntity> findCompensateEventSubscriptionsByExecutionIdAndActivityId(string executionId, string activityId)
+        public virtual IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByExecutionIdAndActivityId(string executionId, string activityId)
         {
-            IList<IEventSubscriptionEntity> eventSubscriptions = findEventSubscriptionsByExecutionAndType(executionId, "compensate");
+            IList<IEventSubscriptionEntity> eventSubscriptions = FindEventSubscriptionsByExecutionAndType(executionId, "compensate");
             IList<ICompensateEventSubscriptionEntity> result = new List<ICompensateEventSubscriptionEntity>();
             foreach (IEventSubscriptionEntity eventSubscriptionEntity in eventSubscriptions)
             {
-                if (eventSubscriptionEntity is ICompensateEventSubscriptionEntity)
+                if (eventSubscriptionEntity.EventType == CompensateEventSubscriptionEntityFields.EVENT_TYPE)
                 {
-                    if (ReferenceEquals(activityId, null) || activityId.Equals(eventSubscriptionEntity.ActivityId))
+                    if (activityId is null || activityId.Equals(eventSubscriptionEntity.ActivityId))
                     {
                         result.Add((ICompensateEventSubscriptionEntity)eventSubscriptionEntity);
                     }
@@ -165,9 +165,9 @@ namespace org.activiti.engine.impl.persistence.entity
             return result;
         }
 
-        public virtual IList<ICompensateEventSubscriptionEntity> findCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(string processInstanceId, string activityId)
+        public virtual IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(string processInstanceId, string activityId)
         {
-            IList<IEventSubscriptionEntity> eventSubscriptions = findEventSubscriptionsByProcessInstanceAndActivityId(processInstanceId, activityId, "compensate");
+            IList<IEventSubscriptionEntity> eventSubscriptions = FindEventSubscriptionsByProcessInstanceAndActivityId(processInstanceId, activityId, "compensate");
             IList<ICompensateEventSubscriptionEntity> result = new List<ICompensateEventSubscriptionEntity>();
             foreach (IEventSubscriptionEntity eventSubscriptionEntity in eventSubscriptions)
             {
@@ -176,7 +176,7 @@ namespace org.activiti.engine.impl.persistence.entity
             return result;
         }
 
-        protected internal virtual void addToExecution(IEventSubscriptionEntity eventSubscriptionEntity)
+        protected internal virtual void AddToExecution(IEventSubscriptionEntity eventSubscriptionEntity)
         {
             // add reference in execution
             IExecutionEntity execution = eventSubscriptionEntity.Execution;
@@ -186,116 +186,116 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual long findEventSubscriptionCountByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl)
+        public virtual long FindEventSubscriptionCountByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl)
         {
-            return eventSubscriptionDataManager.findEventSubscriptionCountByQueryCriteria(eventSubscriptionQueryImpl);
+            return eventSubscriptionDataManager.FindEventSubscriptionCountByQueryCriteria(eventSubscriptionQueryImpl);
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl, Page page)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl, Page page)
         {
-            return eventSubscriptionDataManager.findEventSubscriptionsByQueryCriteria(eventSubscriptionQueryImpl, page);
+            return eventSubscriptionDataManager.FindEventSubscriptionsByQueryCriteria(eventSubscriptionQueryImpl, page);
         }
 
-        public virtual IList<IMessageEventSubscriptionEntity> findMessageEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName)
+        public virtual IList<IMessageEventSubscriptionEntity> FindMessageEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName)
         {
-            return eventSubscriptionDataManager.findMessageEventSubscriptionsByProcessInstanceAndEventName(processInstanceId, eventName);
+            return eventSubscriptionDataManager.FindMessageEventSubscriptionsByProcessInstanceAndEventName(processInstanceId, eventName);
         }
 
-        public virtual IList<ISignalEventSubscriptionEntity> findSignalEventSubscriptionsByEventName(string eventName, string tenantId)
+        public virtual IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByEventName(string eventName, string tenantId)
         {
-            return eventSubscriptionDataManager.findSignalEventSubscriptionsByEventName(eventName, tenantId);
+            return eventSubscriptionDataManager.FindSignalEventSubscriptionsByEventName(eventName, tenantId);
         }
 
-        public virtual IList<ISignalEventSubscriptionEntity> findSignalEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName)
+        public virtual IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName)
         {
-            return eventSubscriptionDataManager.findSignalEventSubscriptionsByProcessInstanceAndEventName(processInstanceId, eventName);
+            return eventSubscriptionDataManager.FindSignalEventSubscriptionsByProcessInstanceAndEventName(processInstanceId, eventName);
         }
 
-        public virtual IList<ISignalEventSubscriptionEntity> findSignalEventSubscriptionsByNameAndExecution(string name, string executionId)
+        public virtual IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByNameAndExecution(string name, string executionId)
         {
-            return eventSubscriptionDataManager.findSignalEventSubscriptionsByNameAndExecution(name, executionId);
+            return eventSubscriptionDataManager.FindSignalEventSubscriptionsByNameAndExecution(name, executionId);
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByExecutionAndType(string executionId, string type)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByExecutionAndType(string executionId, string type)
         {
-            return eventSubscriptionDataManager.findEventSubscriptionsByExecutionAndType(executionId, type);
+            return eventSubscriptionDataManager.FindEventSubscriptionsByExecutionAndType(executionId, type);
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByProcessInstanceAndActivityId(string processInstanceId, string activityId, string type)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByProcessInstanceAndActivityId(string processInstanceId, string activityId, string type)
         {
-            return eventSubscriptionDataManager.findEventSubscriptionsByProcessInstanceAndActivityId(processInstanceId, activityId, type);
+            return eventSubscriptionDataManager.FindEventSubscriptionsByProcessInstanceAndActivityId(processInstanceId, activityId, type);
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByExecution(string executionId)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByExecution(string executionId)
         {
-            return eventSubscriptionDataManager.findEventSubscriptionsByExecution(executionId);
+            return eventSubscriptionDataManager.FindEventSubscriptionsByExecution(executionId);
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByTypeAndProcessDefinitionId(string type, string processDefinitionId, string tenantId)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByTypeAndProcessDefinitionId(string type, string processDefinitionId, string tenantId)
         {
-            return eventSubscriptionDataManager.findEventSubscriptionsByTypeAndProcessDefinitionId(type, processDefinitionId, tenantId);
+            return eventSubscriptionDataManager.FindEventSubscriptionsByTypeAndProcessDefinitionId(type, processDefinitionId, tenantId);
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByName(string type, string eventName, string tenantId)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByName(string type, string eventName, string tenantId)
         {
-            return eventSubscriptionDataManager.findEventSubscriptionsByName(type, eventName, tenantId);
+            return eventSubscriptionDataManager.FindEventSubscriptionsByName(type, eventName, tenantId);
         }
 
-        public virtual IList<IEventSubscriptionEntity> findEventSubscriptionsByNameAndExecution(string type, string eventName, string executionId)
+        public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByNameAndExecution(string type, string eventName, string executionId)
         {
-            return eventSubscriptionDataManager.findEventSubscriptionsByNameAndExecution(type, eventName, executionId);
+            return eventSubscriptionDataManager.FindEventSubscriptionsByNameAndExecution(type, eventName, executionId);
         }
 
-        public virtual IMessageEventSubscriptionEntity findMessageStartEventSubscriptionByName(string messageName, string tenantId)
+        public virtual IMessageEventSubscriptionEntity FindMessageStartEventSubscriptionByName(string messageName, string tenantId)
         {
-            return eventSubscriptionDataManager.findMessageStartEventSubscriptionByName(messageName, tenantId);
+            return eventSubscriptionDataManager.FindMessageStartEventSubscriptionByName(messageName, tenantId);
         }
 
-        public virtual void updateEventSubscriptionTenantId(string oldTenantId, string newTenantId)
+        public virtual void UpdateEventSubscriptionTenantId(string oldTenantId, string newTenantId)
         {
-            eventSubscriptionDataManager.updateEventSubscriptionTenantId(oldTenantId, newTenantId);
+            eventSubscriptionDataManager.UpdateEventSubscriptionTenantId(oldTenantId, newTenantId);
         }
 
-        public virtual void deleteEventSubscriptionsForProcessDefinition(string processDefinitionId)
+        public virtual void DeleteEventSubscriptionsForProcessDefinition(string processDefinitionId)
         {
-            eventSubscriptionDataManager.deleteEventSubscriptionsForProcessDefinition(processDefinitionId);
+            eventSubscriptionDataManager.DeleteEventSubscriptionsForProcessDefinition(processDefinitionId);
         }
 
         // Processing /////////////////////////////////////////////////////////////
 
-        public virtual void eventReceived(IEventSubscriptionEntity eventSubscriptionEntity, object payload, bool processASync)
+        public virtual void EventReceived(IEventSubscriptionEntity eventSubscriptionEntity, object payload, bool processASync)
         {
             if (processASync)
             {
-                scheduleEventAsync(eventSubscriptionEntity, payload);
+                ScheduleEventAsync(eventSubscriptionEntity, payload);
             }
             else
             {
-                processEventSync(eventSubscriptionEntity, payload);
+                ProcessEventSync(eventSubscriptionEntity, payload);
             }
         }
 
-        protected internal virtual void processEventSync(IEventSubscriptionEntity eventSubscriptionEntity, object payload)
+        protected internal virtual void ProcessEventSync(IEventSubscriptionEntity eventSubscriptionEntity, object payload)
         {
 
             // A compensate event needs to be deleted before the handlers are called
-            if (eventSubscriptionEntity is ICompensateEventSubscriptionEntity)
+            if (eventSubscriptionEntity.EventType == CompensateEventSubscriptionEntityFields.EVENT_TYPE)
             {
-                delete(eventSubscriptionEntity);
+                Delete(eventSubscriptionEntity);
             }
 
-            IEventHandler eventHandler = ProcessEngineConfiguration.getEventHandler(eventSubscriptionEntity.EventType);
+            IEventHandler eventHandler = ProcessEngineConfiguration.GetEventHandler(eventSubscriptionEntity.EventType);
             if (eventHandler == null)
             {
                 throw new ActivitiException("Could not find eventhandler for event of type '" + eventSubscriptionEntity.EventType + "'.");
             }
-            eventHandler.handleEvent(eventSubscriptionEntity, payload, CommandContext);
+            eventHandler.HandleEvent(eventSubscriptionEntity, payload, CommandContext);
         }
 
-        protected internal virtual void scheduleEventAsync(IEventSubscriptionEntity eventSubscriptionEntity, object payload)
+        protected internal virtual void ScheduleEventAsync(IEventSubscriptionEntity eventSubscriptionEntity, object payload)
         {
-            IJobEntity message = JobEntityManager.create();
-            message.JobType = Job_Fields.JOB_TYPE_MESSAGE;
+            IJobEntity message = JobEntityManager.Create();
+            message.JobType = JobFields.JOB_TYPE_MESSAGE;
             message.JobHandlerType = ProcessEventJobHandler.TYPE;
             message.JobHandlerConfiguration = eventSubscriptionEntity.Id;
             message.TenantId = eventSubscriptionEntity.TenantId;
@@ -305,10 +305,10 @@ namespace org.activiti.engine.impl.persistence.entity
             // message.setEventPayload(payload);
             // }
 
-            JobManager.scheduleAsyncJob(message);
+            JobManager.ScheduleAsyncJob(message);
         }
 
-        protected internal virtual IList<ISignalEventSubscriptionEntity> toSignalEventSubscriptionEntityList(IList<IEventSubscriptionEntity> result)
+        protected internal virtual IList<ISignalEventSubscriptionEntity> ToSignalEventSubscriptionEntityList(IList<IEventSubscriptionEntity> result)
         {
             IList<ISignalEventSubscriptionEntity> signalEventSubscriptionEntities = new List<ISignalEventSubscriptionEntity>(result.Count);
             foreach (IEventSubscriptionEntity eventSubscriptionEntity in result)
@@ -318,7 +318,7 @@ namespace org.activiti.engine.impl.persistence.entity
             return signalEventSubscriptionEntities;
         }
 
-        protected internal virtual IList<IMessageEventSubscriptionEntity> toMessageEventSubscriptionEntityList(IList<IEventSubscriptionEntity> result)
+        protected internal virtual IList<IMessageEventSubscriptionEntity> ToMessageEventSubscriptionEntityList(IList<IEventSubscriptionEntity> result)
         {
             IList<IMessageEventSubscriptionEntity> messageEventSubscriptionEntities = new List<IMessageEventSubscriptionEntity>(result.Count);
             foreach (IEventSubscriptionEntity eventSubscriptionEntity in result)

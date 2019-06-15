@@ -26,11 +26,9 @@ namespace org.activiti.engine.impl.cmd
 
         private const long serialVersionUID = 1L;
 
-        public virtual IModel execute(ICommandContext commandContext)
+        public virtual IModel Execute(ICommandContext commandContext)
         {
-            return commandContext.ModelEntityManager.create();
+            return commandContext.ModelEntityManager.Create();
         }
-
     }
-
 }

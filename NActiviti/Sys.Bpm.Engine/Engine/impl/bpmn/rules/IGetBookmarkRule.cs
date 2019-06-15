@@ -15,6 +15,7 @@ using System.IO;
 
 using Sys.Workflow.Engine.Bpmn.Rules;
 using org.activiti.engine.impl.interceptor;
+using org.activiti.engine.impl.persistence.entity;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
@@ -23,6 +24,11 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
     /// </summary>
     public interface IGetBookmarkRule : ICommand<IList<IUserInfo>>
     {
+        /// <summary>
+        /// 运行实例id
+        /// </summary>
+        IExecutionEntity Execution { get; set; }
+
         /// <summary>
         /// 会签角色查询条件
         /// </summary>

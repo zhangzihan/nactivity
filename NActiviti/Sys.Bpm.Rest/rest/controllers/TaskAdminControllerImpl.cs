@@ -15,6 +15,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using org.activiti.api.runtime.shared.query;
+using org.activiti.cloud.services.api.commands;
 using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.core;
 using org.activiti.cloud.services.rest.api;
@@ -32,7 +33,7 @@ namespace org.activiti.cloud.services.rest.controllers
     [ApiController]
     public class TaskAdminControllerImpl : ControllerBase, ITaskAdminController
     {
-        private ProcessEngineWrapper processEngine;
+        private readonly ProcessEngineWrapper processEngine;
 
         private readonly TaskResourceAssembler taskResourceAssembler;
 
@@ -44,12 +45,19 @@ namespace org.activiti.cloud.services.rest.controllers
             this.taskResourceAssembler = taskResourceAssembler;
         }
 
+        [HttpPost("reassign")]
+        public Task<TaskModel[]> ReassignTaskUser(ReassignTaskUserCmd cmd)
+        {
+            TaskModel[] tasks = processEngine.ReassignTaskUsers(cmd);
+
+            return Task.FromResult(tasks);
+        }
 
         /// <inheritdoc />
-        [HttpGet]
-        public virtual Task<Resources<TaskModel>> getAllTasks(Pageable pageable)
+        [HttpPost]
+        public virtual Task<Resources<TaskModel>> GetAllTasks(Pageable pageable)
         {
-            IPage<TaskModel> page = processEngine.getAllTasks(pageable);
+            IPage<TaskModel> page = processEngine.GetAllTasks(pageable);
 
             //return pagedResourcesAssembler.toResource(pageable, page, taskResourceAssembler);
 

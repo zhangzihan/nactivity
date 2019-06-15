@@ -38,38 +38,40 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override ISuspendedJobEntity create()
+        public override ISuspendedJobEntity Create()
         {
             return new SuspendedJobEntityImpl();
         }
 
-        public virtual IList<IJob> findJobsByQueryCriteria(SuspendedJobQueryImpl jobQuery, Page page)
+        public virtual IList<IJob> FindJobsByQueryCriteria(ISuspendedJobQuery jobQuery, Page page)
         {
             string query = "selectSuspendedJobByQueryCriteria";
-            return DbSqlSession.selectList<SuspendedJobEntityImpl, IJob>(query, jobQuery, page);
+            return DbSqlSession.SelectList<SuspendedJobEntityImpl, IJob>(query, jobQuery, page);
         }
 
-        public virtual long findJobCountByQueryCriteria(SuspendedJobQueryImpl jobQuery)
+        public virtual long FindJobCountByQueryCriteria(ISuspendedJobQuery jobQuery)
         {
-            return ((long?)DbSqlSession.selectOne<SuspendedJobEntityImpl, long?>("selectSuspendedJobCountByQueryCriteria", jobQuery)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<SuspendedJobEntityImpl, long?>("selectSuspendedJobCountByQueryCriteria", jobQuery).GetValueOrDefault();
         }
 
-        public virtual IList<ISuspendedJobEntity> findJobsByExecutionId(string executionId)
+        public virtual IList<ISuspendedJobEntity> FindJobsByExecutionId(string executionId)
         {
-            return (IList<ISuspendedJobEntity>)getList("selectSuspendedJobsByExecutionId", new { executionId }, suspendedJobsByExecutionIdMatcher, true);
+            return (IList<ISuspendedJobEntity>)GetList("selectSuspendedJobsByExecutionId", new { executionId }, suspendedJobsByExecutionIdMatcher, true);
         }
 
-        public virtual IList<ISuspendedJobEntity> findJobsByProcessInstanceId(string processInstanceId)
+        public virtual IList<ISuspendedJobEntity> FindJobsByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<SuspendedJobEntityImpl, ISuspendedJobEntity>("selectSuspendedJobsByProcessInstanceId", new { processInstanceId });
+            return DbSqlSession.SelectList<SuspendedJobEntityImpl, ISuspendedJobEntity>("selectSuspendedJobsByProcessInstanceId", new { processInstanceId });
         }
 
-        public virtual void updateJobTenantIdForDeployment(string deploymentId, string newTenantId)
+        public virtual void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId)
         {
-            Dictionary<string, object> @params = new Dictionary<string, object>();
-            @params["deploymentId"] = deploymentId;
-            @params["tenantId"] = newTenantId;
-            DbSqlSession.update<SuspendedJobEntityImpl>("updateSuspendedJobTenantIdForDeployment", @params);
+            Dictionary<string, object> @params = new Dictionary<string, object>
+            {
+                ["deploymentId"] = deploymentId,
+                ["tenantId"] = newTenantId
+            };
+            DbSqlSession.Update<SuspendedJobEntityImpl>("updateSuspendedJobTenantIdForDeployment", @params);
         }
     }
 

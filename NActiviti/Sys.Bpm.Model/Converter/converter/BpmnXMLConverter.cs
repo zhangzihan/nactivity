@@ -8,9 +8,11 @@ using org.activiti.bpmn.converter.util;
 using org.activiti.bpmn.exceptions;
 using org.activiti.bpmn.model;
 using Sys.Bpm;
+using Sys.Bpm.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -68,61 +70,61 @@ namespace org.activiti.bpmn.converter
         static BpmnXMLConverter()
         {
             // events
-            addConverter(new EndEventXMLConverter());
-            addConverter(new StartEventXMLConverter());
+            AddConverter(new EndEventXMLConverter());
+            AddConverter(new StartEventXMLConverter());
 
             // tasks
-            addConverter(new BusinessRuleTaskXMLConverter());
-            addConverter(new ManualTaskXMLConverter());
-            addConverter(new ReceiveTaskXMLConverter());
-            addConverter(new ScriptTaskXMLConverter());
-            addConverter(new ServiceTaskXMLConverter());
-            addConverter(new SendTaskXMLConverter());
-            addConverter(new UserTaskXMLConverter());
-            addConverter(new TaskXMLConverter());
-            addConverter(new CallActivityXMLConverter());
+            AddConverter(new BusinessRuleTaskXMLConverter());
+            AddConverter(new ManualTaskXMLConverter());
+            AddConverter(new ReceiveTaskXMLConverter());
+            AddConverter(new ScriptTaskXMLConverter());
+            AddConverter(new ServiceTaskXMLConverter());
+            AddConverter(new SendTaskXMLConverter());
+            AddConverter(new UserTaskXMLConverter());
+            AddConverter(new TaskXMLConverter());
+            AddConverter(new CallActivityXMLConverter());
 
             // gateways
-            addConverter(new EventGatewayXMLConverter());
-            addConverter(new ExclusiveGatewayXMLConverter());
-            addConverter(new InclusiveGatewayXMLConverter());
-            addConverter(new ParallelGatewayXMLConverter());
-            addConverter(new ComplexGatewayXMLConverter());
+            AddConverter(new EventGatewayXMLConverter());
+            AddConverter(new ExclusiveGatewayXMLConverter());
+            AddConverter(new InclusiveGatewayXMLConverter());
+            AddConverter(new ParallelGatewayXMLConverter());
+            AddConverter(new ComplexGatewayXMLConverter());
 
             // connectors
-            addConverter(new SequenceFlowXMLConverter());
+            AddConverter(new SequenceFlowXMLConverter());
 
             // catch, throw and boundary event
-            addConverter(new CatchEventXMLConverter());
-            addConverter(new ThrowEventXMLConverter());
-            addConverter(new BoundaryEventXMLConverter());
+            AddConverter(new CatchEventXMLConverter());
+            AddConverter(new ThrowEventXMLConverter());
+            AddConverter(new BoundaryEventXMLConverter());
 
             // artifacts
-            addConverter(new TextAnnotationXMLConverter());
-            addConverter(new AssociationXMLConverter());
+            AddConverter(new TextAnnotationXMLConverter());
+            AddConverter(new AssociationXMLConverter());
 
             // data store reference
-            addConverter(new DataStoreReferenceXMLConverter());
+            AddConverter(new DataStoreReferenceXMLConverter());
 
             // data objects
-            addConverter(new ValuedDataObjectXMLConverter(), typeof(StringDataObject));
-            addConverter(new ValuedDataObjectXMLConverter(), typeof(BooleanDataObject));
-            addConverter(new ValuedDataObjectXMLConverter(), typeof(IntegerDataObject));
-            addConverter(new ValuedDataObjectXMLConverter(), typeof(LongDataObject));
-            addConverter(new ValuedDataObjectXMLConverter(), typeof(DoubleDataObject));
-            addConverter(new ValuedDataObjectXMLConverter(), typeof(DateDataObject));
+            AddConverter(new ValuedDataObjectXMLConverter(), typeof(StringDataObject));
+            AddConverter(new ValuedDataObjectXMLConverter(), typeof(BooleanDataObject));
+            AddConverter(new ValuedDataObjectXMLConverter(), typeof(IntegerDataObject));
+            AddConverter(new ValuedDataObjectXMLConverter(), typeof(LongDataObject));
+            AddConverter(new ValuedDataObjectXMLConverter(), typeof(DoubleDataObject));
+            AddConverter(new ValuedDataObjectXMLConverter(), typeof(DateDataObject));
 
             // Alfresco types
-            addConverter(new AlfrescoStartEventXMLConverter());
-            addConverter(new AlfrescoUserTaskXMLConverter());
+            AddConverter(new AlfrescoStartEventXMLConverter());
+            AddConverter(new AlfrescoUserTaskXMLConverter());
         }
 
-        public static void addConverter(BaseBpmnXMLConverter converter)
+        public static void AddConverter(BaseBpmnXMLConverter converter)
         {
-            addConverter(converter, converter.BpmnElementType);
+            AddConverter(converter, converter.BpmnElementType);
         }
 
-        public static void addConverter(BaseBpmnXMLConverter converter, Type elementType)
+        public static void AddConverter(BaseBpmnXMLConverter converter, Type elementType)
         {
             convertersToBpmnMap[converter.XMLElementName] = converter;
             convertersToXMLMap[elementType] = converter;
@@ -144,23 +146,23 @@ namespace org.activiti.bpmn.converter
             }
         }
 
-        public virtual void validateModel(IInputStreamProvider inputStreamProvider)
+        public virtual void ValidateModel(IInputStreamProvider inputStreamProvider)
         {
-            Schema schema = createSchema();
+            Schema schema = CreateSchema();
 
             //Validator validator = schema.newValidator();
             //validator.validate(new StreamSource(inputStreamProvider.InputStream));
         }
 
-        public virtual void validateModel(XMLStreamReader xmlStreamReader)
+        public virtual void ValidateModel(XMLStreamReader xmlStreamReader)
         {
-            Schema schema = createSchema();
+            Schema schema = CreateSchema();
 
             //Validator validator = schema.newValidator();
             //validator.validate(new StAXSource(xmlStreamReader));
         }
 
-        protected internal virtual Schema createSchema()
+        protected internal virtual Schema CreateSchema()
         {
             throw new NotImplementedException();
             //SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -182,31 +184,37 @@ namespace org.activiti.bpmn.converter
             //return schema;
         }
 
-        public virtual BpmnModel convertToBpmnModel(IInputStreamProvider inputStreamProvider, bool validateSchema, bool enableSafeBpmnXml)
+        public virtual BpmnModel ConvertToBpmnModel(IInputStreamProvider inputStreamProvider, bool validateSchema, bool enableSafeBpmnXml)
         {
-            return convertToBpmnModel(inputStreamProvider, validateSchema, enableSafeBpmnXml, DEFAULT_ENCODING);
+            return ConvertToBpmnModel(inputStreamProvider, validateSchema, enableSafeBpmnXml, DEFAULT_ENCODING);
         }
 
-        public virtual BpmnModel convertToBpmnModel(IInputStreamProvider inputStreamProvider, bool validateSchema, bool enableSafeBpmnXml, string encoding)
+        public virtual BpmnModel ConvertToBpmnModel(IInputStreamProvider inputStreamProvider, bool validateSchema, bool enableSafeBpmnXml, string encoding)
         {
             inputStreamProvider.InputStream.Seek(0, System.IO.SeekOrigin.Begin);
 
-            return convertToBpmnModel(new XMLStreamReader(inputStreamProvider.InputStream));
+            return ConvertToBpmnModel(new XMLStreamReader(inputStreamProvider.InputStream));
         }
 
-        public virtual BpmnModel convertToBpmnModel(XMLStreamReader xtr)
+        public virtual BpmnModel ConvertToBpmnModel(Stream stream)
         {
-            BpmnModel model = new BpmnModel();
-            model.StartEventFormTypes = startEventFormTypes;
-            model.UserTaskFormTypes = userTaskFormTypes;
+            return ConvertToBpmnModel(new XMLStreamReader(stream));
+        }
+
+        public virtual BpmnModel ConvertToBpmnModel(XMLStreamReader xtr)
+        {
+            BpmnModel model = new BpmnModel
+            {
+                StartEventFormTypes = startEventFormTypes,
+                UserTaskFormTypes = userTaskFormTypes
+            };
             try
             {
                 Process activeProcess = null;
                 IList<SubProcess> activeSubProcessList = new List<SubProcess>();
-                while (xtr.hasNext())
+                while (xtr.HasNext())
                 {
                     // xtr.next();
-
                     if (xtr.EndElement && (BpmnXMLConstants.ELEMENT_SUBPROCESS.Equals(xtr.LocalName) || BpmnXMLConstants.ELEMENT_TRANSACTION.Equals(xtr.LocalName) || BpmnXMLConstants.ELEMENT_ADHOC_SUBPROCESS.Equals(xtr.LocalName)))
                     {
                         activeSubProcessList.RemoveAt(activeSubProcessList.Count - 1);
@@ -224,74 +232,74 @@ namespace org.activiti.bpmn.converter
                         }
                     }
 
-                    if (BpmnXMLConstants.ELEMENT_DEFINITIONS.Equals(xtr.LocalName))
+                    if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DEFINITIONS.Equals(xtr.LocalName))
                     {
-                        definitionsParser.parse(xtr, model);
+                        definitionsParser.Parse(xtr, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_RESOURCE.Equals(xtr.LocalName))
                     {
-                        resourceParser.parse(xtr, model);
+                        resourceParser.Parse(xtr, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_SIGNAL.Equals(xtr.LocalName))
                     {
-                        signalParser.parse(xtr, model);
+                        signalParser.Parse(xtr, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_MESSAGE.Equals(xtr.LocalName))
                     {
-                        messageParser.parse(xtr, model);
+                        messageParser.Parse(xtr, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_ERROR.Equals(xtr.LocalName))
                     {
 
-                        if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID)))
+                        if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID)))
                         {
-                            model.addError(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID), xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ERROR_CODE));
+                            model.AddError(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID), xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ERROR_CODE));
                         }
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_IMPORT.Equals(xtr.LocalName))
                     {
-                        importParser.parse(xtr, model);
+                        importParser.Parse(xtr, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_ITEM_DEFINITION.Equals(xtr.LocalName))
                     {
-                        itemDefinitionParser.parse(xtr, model);
+                        itemDefinitionParser.Parse(xtr, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_DATA_STORE.Equals(xtr.LocalName))
                     {
-                        dataStoreParser.parse(xtr, model);
+                        dataStoreParser.Parse(xtr, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_INTERFACE.Equals(xtr.LocalName))
                     {
-                        interfaceParser.parse(xtr, model);
+                        interfaceParser.Parse(xtr, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_IOSPECIFICATION.Equals(xtr.LocalName))
                     {
-                        ioSpecificationParser.parseChildElement(xtr, activeProcess, model);
+                        ioSpecificationParser.ParseChildElement(xtr, activeProcess, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_PARTICIPANT.Equals(xtr.LocalName))
                     {
-                        participantParser.parse(xtr, model);
+                        participantParser.Parse(xtr, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_MESSAGE_FLOW.Equals(xtr.LocalName))
                     {
-                        messageFlowParser.parse(xtr, model);
+                        messageFlowParser.Parse(xtr, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_PROCESS.Equals(xtr.LocalName))
                     {
 
-                        Process process = processParser.parse(xtr, model);
+                        Process process = processParser.Parse(xtr, model);
                         if (process != null)
                         {
                             activeProcess = process;
@@ -300,12 +308,12 @@ namespace org.activiti.bpmn.converter
                     }
                     else if (BpmnXMLConstants.ELEMENT_POTENTIAL_STARTER.Equals(xtr.LocalName))
                     {
-                        potentialStarterParser.parse(xtr, activeProcess);
+                        potentialStarterParser.Parse(xtr, activeProcess);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_LANE.Equals(xtr.LocalName))
                     {
-                        laneParser.parse(xtr, activeProcess, model);
+                        laneParser.Parse(xtr, activeProcess, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_DOCUMENTATION.Equals(xtr.LocalName))
@@ -320,33 +328,33 @@ namespace org.activiti.bpmn.converter
                         {
                             parentElement = activeProcess;
                         }
-                        documentationParser.parseChildElement(xtr, parentElement, model);
+                        documentationParser.ParseChildElement(xtr, parentElement, model);
 
                     }
                     else if (activeProcess == null && BpmnXMLConstants.ELEMENT_TEXT_ANNOTATION.Equals(xtr.LocalName))
                     {
-                        string elementId = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
-                        TextAnnotation textAnnotation = (TextAnnotation)(new TextAnnotationXMLConverter()).convertXMLToElement(xtr, model);
+                        string elementId = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+                        TextAnnotation textAnnotation = (TextAnnotation)(new TextAnnotationXMLConverter()).ConvertXMLToElement(xtr, model);
                         textAnnotation.Id = elementId;
                         model.GlobalArtifacts.Add(textAnnotation);
 
                     }
                     else if (activeProcess == null && BpmnXMLConstants.ELEMENT_ASSOCIATION.Equals(xtr.LocalName))
                     {
-                        string elementId = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
-                        Association association = (Association)(new AssociationXMLConverter()).convertXMLToElement(xtr, model);
+                        string elementId = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+                        Association association = (Association)(new AssociationXMLConverter()).ConvertXMLToElement(xtr, model);
                         association.Id = elementId;
                         model.GlobalArtifacts.Add(association);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_EXTENSIONS.Equals(xtr.LocalName))
                     {
-                        extensionElementsParser.parse(xtr, activeSubProcessList, activeProcess, model);
+                        extensionElementsParser.Parse(xtr, activeSubProcessList, activeProcess, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_SUBPROCESS.Equals(xtr.LocalName) || BpmnXMLConstants.ELEMENT_TRANSACTION.Equals(xtr.LocalName) || BpmnXMLConstants.ELEMENT_ADHOC_SUBPROCESS.Equals(xtr.LocalName))
                     {
-                        subProcessParser.parse(xtr, activeSubProcessList, activeProcess);
+                        subProcessParser.Parse(xtr, activeSubProcessList, activeProcess);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_COMPLETION_CONDITION.Equals(xtr.LocalName))
@@ -354,9 +362,8 @@ namespace org.activiti.bpmn.converter
                         if (activeSubProcessList.Count > 0)
                         {
                             SubProcess subProcess = activeSubProcessList[activeSubProcessList.Count - 1];
-                            if (subProcess is AdhocSubProcess)
+                            if (subProcess is AdhocSubProcess adhocSubProcess)
                             {
-                                AdhocSubProcess adhocSubProcess = (AdhocSubProcess)subProcess;
                                 adhocSubProcess.CompletionCondition = xtr.ElementText;
                             }
                         }
@@ -364,12 +371,12 @@ namespace org.activiti.bpmn.converter
                     }
                     else if (BpmnXMLConstants.ELEMENT_DI_SHAPE.Equals(xtr.LocalName))
                     {
-                        bpmnShapeParser.parse(xtr, model);
+                        bpmnShapeParser.Parse(xtr, model);
 
                     }
                     else if (BpmnXMLConstants.ELEMENT_DI_EDGE.Equals(xtr.LocalName))
                     {
-                        bpmnEdgeParser.parse(xtr, model);
+                        bpmnEdgeParser.Parse(xtr, model);
 
                     }
                     else
@@ -378,7 +385,7 @@ namespace org.activiti.bpmn.converter
                         if (activeSubProcessList.Count > 0 && BpmnXMLConstants.ELEMENT_MULTIINSTANCE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                         {
 
-                            multiInstanceParser.parseChildElement(xtr, activeSubProcessList[activeSubProcessList.Count - 1], model);
+                            multiInstanceParser.ParseChildElement(xtr, activeSubProcessList[activeSubProcessList.Count - 1], model);
 
                         }
                         else if (convertersToBpmnMap.ContainsKey(xtr.LocalName))
@@ -386,7 +393,7 @@ namespace org.activiti.bpmn.converter
                             if (activeProcess != null)
                             {
                                 BaseBpmnXMLConverter converter = convertersToBpmnMap[xtr.LocalName];
-                                converter.convertToBpmnModel(xtr, model, activeProcess, activeSubProcessList);
+                                converter.ConvertToBpmnModel(xtr, model, activeProcess, activeSubProcessList);
                             }
                         }
                     }
@@ -410,7 +417,7 @@ namespace org.activiti.bpmn.converter
                             pool.Executable = process.Executable;
                         }
                     }
-                    processFlowElements(process.FlowElements, process);
+                    ProcessFlowElements(process.FlowElements, process);
                 }
             }
             catch (Exception e)
@@ -421,26 +428,25 @@ namespace org.activiti.bpmn.converter
             return model;
         }
 
-        public virtual BpmnModel convertToBpmnModel(string docfile)
+        public virtual BpmnModel ConvertToBpmnModel(string docfile)
         {
-            return convertToBpmnModel(new XMLStreamReader(File.Open(docfile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)));
+            return ConvertToBpmnModel(new XMLStreamReader(File.Open(docfile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)));
         }
 
-        protected internal virtual void processFlowElements(ICollection<FlowElement> flowElementList, BaseElement parentScope)
+        protected internal virtual void ProcessFlowElements(ICollection<FlowElement> flowElementList, BaseElement parentScope)
         {
             foreach (FlowElement flowElement in flowElementList)
             {
-                if (flowElement is SequenceFlow)
+                if (flowElement is SequenceFlow sequenceFlow)
                 {
-                    SequenceFlow sequenceFlow = (SequenceFlow)flowElement;
-                    FlowNode sourceNode = getFlowNodeFromScope(sequenceFlow.SourceRef, parentScope);
+                    FlowNode sourceNode = GetFlowNodeFromScope(sequenceFlow.SourceRef, parentScope);
                     if (sourceNode != null)
                     {
                         sourceNode.OutgoingFlows.Add(sequenceFlow);
                         sequenceFlow.SourceFlowElement = sourceNode;
                     }
 
-                    FlowNode targetNode = getFlowNodeFromScope(sequenceFlow.TargetRef, parentScope);
+                    FlowNode targetNode = GetFlowNodeFromScope(sequenceFlow.TargetRef, parentScope);
                     if (targetNode != null)
                     {
                         targetNode.IncomingFlows.Add(sequenceFlow);
@@ -448,218 +454,213 @@ namespace org.activiti.bpmn.converter
                     }
 
                 }
-                else if (flowElement is BoundaryEvent)
+                else if (flowElement is BoundaryEvent boundaryEvent)
                 {
-                    BoundaryEvent boundaryEvent = (BoundaryEvent)flowElement;
-                    FlowElement attachedToElement = getFlowNodeFromScope(boundaryEvent.AttachedToRefId, parentScope);
-                    if (attachedToElement is Activity)
+                    FlowElement attachedToElement = GetFlowNodeFromScope(boundaryEvent.AttachedToRefId, parentScope);
+                    if (attachedToElement is Activity attachedActivity)
                     {
-                        Activity attachedActivity = (Activity)attachedToElement;
                         boundaryEvent.AttachedToRef = attachedActivity;
                         attachedActivity.BoundaryEvents.Add(boundaryEvent);
                     }
 
                 }
-                else if (flowElement is SubProcess)
+                else if (flowElement is SubProcess subProcess)
                 {
-                    SubProcess subProcess = (SubProcess)flowElement;
-                    processFlowElements(subProcess.FlowElements, subProcess);
+                    ProcessFlowElements(subProcess.FlowElements, subProcess);
                 }
             }
         }
 
-        protected internal virtual FlowNode getFlowNodeFromScope(string elementId, BaseElement scope)
+        protected internal virtual FlowNode GetFlowNodeFromScope(string elementId, BaseElement scope)
         {
             FlowNode flowNode = null;
             if (!string.IsNullOrWhiteSpace(elementId))
             {
                 if (scope is Process)
                 {
-                    flowNode = (FlowNode)((Process)scope).getFlowElement(elementId);
+                    flowNode = (FlowNode)((Process)scope).FindFlowElement(elementId);
                 }
                 else if (scope is SubProcess)
                 {
-                    flowNode = (FlowNode)((SubProcess)scope).getFlowElement(elementId);
+                    flowNode = (FlowNode)((SubProcess)scope).FindFlowElement(elementId);
                 }
             }
             return flowNode;
         }
 
-        public virtual byte[] convertToXML(BpmnModel model)
+        public virtual byte[] ConvertToXML(BpmnModel model)
         {
-            return convertToXML(model, DEFAULT_ENCODING);
+            return ConvertToXML(model, DEFAULT_ENCODING);
         }
 
-        public virtual byte[] convertToXML(BpmnModel model, string encoding)
+        public virtual byte[] ConvertToXML(BpmnModel model, string encoding)
         {
-            throw new NotImplementedException();
-                        
-//            try
-//            {
-//                XElement root = XElement.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-//"<bpmn2:definitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
-//" xmlns:bpmn2=\"http://www.omg.org/spec/BPMN/20100524/MODEL\"" +
-//" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\"" +
-//" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\"" +
-//" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\"" +
-//" xmlns:camunda=\"http://camunda.org/schema/1.0/bpmn\"" +
-//" id=\"\" targetNamespace=\"http://bpmn.io/schema/bpmn\"" +
-//" xsi:schemaLocation=\"http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd\"></bpmn2:definitions>", LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
-
-//                XMLStreamWriter writer = new XMLStreamWriter(root);
-//                XMLStreamWriter xtw = new IndentingXMLStreamWriter(writer);
-
-//                //DefinitionsRootExport.writeRootElement(model, xtw, encoding);
-//                CollaborationExport.writePools(model, xtw);
-//                DataStoreExport.writeDataStores(model, xtw);
-//                SignalAndMessageDefinitionExport.writeSignalsAndMessages(model, xtw);
-
-//                foreach (Process process in model.Processes)
-//                {
-
-//                    if (process.FlowElements?.Count == 0 && process.Lanes?.Count == 0)
-//                    {
-//                        // empty process, ignore it
-//                        continue;
-//                    }
-
-//                    ProcessExport.writeProcess(process, xtw);
-
-//                    foreach (FlowElement flowElement in process.FlowElements)
-//                    {
-//                        createXML(flowElement, model, xtw);
-//                    }
-
-//                    foreach (Artifact artifact in process.Artifacts)
-//                    {
-//                        createXML(artifact, model, xtw);
-//                    }
-
-//                    // end process element
-//                    xtw.writeEndElement();
-//                }
-
-//                BPMNDIExport.writeBPMNDI(model, xtw);
-
-//                // end definitions root element
-//                xtw.writeEndElement();
-//                xtw.writeEndDocument();
-
-//                xtw.flush();
-
-//                //outputStream.Close();
-
-//                xtw.close();
-
-//                //return outputStream.ToArray();
-
-//                return null;
-//            }
-//            catch (Exception e)
-//            {
-//                log.LogError("Error writing BPMN XML", e);
-//                throw new XMLException("Error writing BPMN XML", e);
-//            }
-        }
-
-        public virtual void createXML(FlowElement flowElement, BpmnModel model, XMLStreamWriter xtw)
-        {
-
-            if (flowElement is SubProcess)
+            try
             {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    XmlWriterSettings settings = new XmlWriterSettings
+                    {
+                        //要求缩进
+                        Indent = true,
+                        //注意如果不设置encoding默认将输出utf-16
+                        //注意这儿不能直接用Encoding.UTF8如果用Encoding.UTF8将在输出文本的最前面添加4个字节的非xml内容
+                        Encoding = new UTF8Encoding(false),
 
-                SubProcess subProcess = (SubProcess)flowElement;
+                        //设置换行符
+                        NewLineChars = Environment.NewLine,
+                        NamespaceHandling = NamespaceHandling.OmitDuplicates,
+                        OmitXmlDeclaration = true
+                    };
+
+                    using (XmlWriter xmlWriter = XmlWriter.Create(ms, settings))
+                    {
+                        XMLStreamWriter writer = new XMLStreamWriter(xmlWriter);
+
+                        DefinitionsRootExport.WriteRootElement(model, writer, encoding);
+                        CollaborationExport.WritePools(model, writer);
+                        DataStoreExport.WriteDataStores(model, writer);
+                        SignalAndMessageDefinitionExport.WriteSignalsAndMessages(model, writer);
+
+                        foreach (Process process in model.Processes)
+                        {
+                            if (process.FlowElements?.Count == 0 && process.Lanes?.Count == 0)
+                            {
+                                // empty process, ignore it
+                                continue;
+                            }
+
+                            ProcessExport.WriteProcess(process, writer);
+
+                            foreach (FlowElement flowElement in process.FlowElements)
+                            {
+                                CreateXML(flowElement, model, writer);
+                            }
+
+                            foreach (Artifact artifact in process.Artifacts)
+                            {
+                                CreateXML(artifact, model, writer);
+                            }
+
+                            // end process element
+                            writer.WriteEndElement();
+                        }
+
+                        try
+                        {
+                            BPMNDIExport.WriteBPMNDI(model, writer);
+                        }
+                        catch(Exception ex)
+                        {
+                            ///TODO: 不支持仅模型没有坐标位置的流程图
+                        }
+                        writer.WriteEndElement();
+                    }
+
+                    return ms.ToArray();
+                }
+            }
+            catch (Exception e)
+            {
+                log.LogError("Error writing BPMN XML", e);
+                throw new XMLException("Error writing BPMN XML", e);
+            }
+        }
+
+        public virtual void CreateXML(FlowElement flowElement, BpmnModel model, XMLStreamWriter xtw)
+        {
+
+            if (flowElement is SubProcess subProcess)
+            {
                 if (flowElement is Transaction)
                 {
-                    xtw.writeStartElement(BpmnXMLConstants.ELEMENT_TRANSACTION);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_TRANSACTION, BpmnXMLConstants.BPMN2_NAMESPACE);
                 }
                 else if (flowElement is AdhocSubProcess)
                 {
-                    xtw.writeStartElement(BpmnXMLConstants.ELEMENT_ADHOC_SUBPROCESS);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_ADHOC_SUBPROCESS, BpmnXMLConstants.BPMN2_NAMESPACE);
                 }
                 else
                 {
-                    xtw.writeStartElement(BpmnXMLConstants.ELEMENT_SUBPROCESS);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_SUBPROCESS, BpmnXMLConstants.BPMN2_NAMESPACE);
                 }
 
-                xtw.writeAttribute(BpmnXMLConstants.ATTRIBUTE_ID, subProcess.Id);
+                xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, subProcess.Id);
                 if (!string.IsNullOrWhiteSpace(subProcess.Name))
                 {
-                    xtw.writeAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, subProcess.Name);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, subProcess.Name);
                 }
                 else
                 {
-                    xtw.writeAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, "subProcess");
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, "subProcess");
                 }
 
                 if (subProcess is EventSubProcess)
                 {
-                    xtw.writeAttribute(BpmnXMLConstants.ATTRIBUTE_TRIGGERED_BY, BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_TRIGGERED_BY, BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE);
 
                 }
                 else if (!(subProcess is Transaction))
                 {
                     if (subProcess.Asynchronous)
                     {
-                        BpmnXMLUtil.writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ASYNCHRONOUS, BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE, xtw);
+                        BpmnXMLUtil.WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ASYNCHRONOUS, BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE, xtw);
                         if (subProcess.NotExclusive)
                         {
-                            BpmnXMLUtil.writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_EXCLUSIVE, BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE, xtw);
+                            BpmnXMLUtil.WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_EXCLUSIVE, BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE, xtw);
                         }
                     }
 
                 }
-                else if (subProcess is AdhocSubProcess)
+                else if (subProcess is AdhocSubProcess hocSubProcess)
                 {
-                    AdhocSubProcess adhocSubProcess = (AdhocSubProcess)subProcess;
-                    BpmnXMLUtil.writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_CANCEL_REMAINING_INSTANCES, adhocSubProcess.CancelRemainingInstances.ToString(), xtw);
-                    if (!string.IsNullOrWhiteSpace(adhocSubProcess.Ordering))
+                    BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_CANCEL_REMAINING_INSTANCES, hocSubProcess.CancelRemainingInstances.ToString(), xtw);
+                    if (!string.IsNullOrWhiteSpace(hocSubProcess.Ordering))
                     {
-                        BpmnXMLUtil.writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ORDERING, adhocSubProcess.Ordering, xtw);
+                        BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ORDERING, hocSubProcess.Ordering, xtw);
                     }
                 }
 
                 if (!string.IsNullOrWhiteSpace(subProcess.Documentation))
                 {
 
-                    xtw.writeStartElement(BpmnXMLConstants.ELEMENT_DOCUMENTATION);
-                    xtw.writeCharacters(subProcess.Documentation);
-                    xtw.writeEndElement();
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_DOCUMENTATION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteCharacters(subProcess.Documentation);
+                    xtw.WriteEndElement();
                 }
 
-                bool didWriteExtensionStartElement = ActivitiListenerExport.writeListeners(subProcess, false, xtw);
+                bool didWriteExtensionStartElement = ActivitiListenerExport.WriteListeners(subProcess, false, xtw);
 
-                didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(subProcess, didWriteExtensionStartElement, model.Namespaces, xtw);
+                didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(subProcess, didWriteExtensionStartElement, model.Namespaces, xtw);
                 if (didWriteExtensionStartElement)
                 {
                     // closing extensions element
-                    xtw.writeEndElement();
+                    xtw.WriteEndElement();
                 }
 
-                MultiInstanceExport.writeMultiInstance(subProcess, xtw);
+                MultiInstanceExport.WriteMultiInstance(subProcess, xtw);
 
-                if (subProcess is AdhocSubProcess)
+                if (subProcess is AdhocSubProcess adhocSubProcess)
                 {
-                    AdhocSubProcess adhocSubProcess = (AdhocSubProcess)subProcess;
                     if (!string.IsNullOrWhiteSpace(adhocSubProcess.CompletionCondition))
                     {
-                        xtw.writeStartElement(BpmnXMLConstants.ELEMENT_COMPLETION_CONDITION);
-                        xtw.writeCData(adhocSubProcess.CompletionCondition);
-                        xtw.writeEndElement();
+                        xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_COMPLETION_CONDITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                        xtw.WriteCData(adhocSubProcess.CompletionCondition);
+                        xtw.WriteEndElement();
                     }
                 }
 
                 foreach (FlowElement subElement in subProcess.FlowElements)
                 {
-                    createXML(subElement, model, xtw);
+                    CreateXML(subElement, model, xtw);
                 }
 
                 foreach (Artifact artifact in subProcess.Artifacts)
                 {
-                    createXML(artifact, model, xtw);
+                    CreateXML(artifact, model, xtw);
                 }
 
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
 
             }
             else
@@ -672,11 +673,11 @@ namespace org.activiti.bpmn.converter
                     throw new XMLException("No converter for " + flowElement.GetType() + " found");
                 }
 
-                converter.convertToXML(xtw, flowElement, model);
+                converter.ConvertToXML(xtw, flowElement, model);
             }
         }
 
-        protected internal virtual void createXML(Artifact artifact, BpmnModel model, XMLStreamWriter xtw)
+        protected internal virtual void CreateXML(Artifact artifact, BpmnModel model, XMLStreamWriter xtw)
         {
 
             BaseBpmnXMLConverter converter = convertersToXMLMap[artifact.GetType()];
@@ -686,7 +687,7 @@ namespace org.activiti.bpmn.converter
                 throw new XMLException("No converter for " + artifact.GetType() + " found");
             }
 
-            converter.convertToXML(xtw, artifact, model);
+            converter.ConvertToXML(xtw, artifact, model);
         }
     }
 }

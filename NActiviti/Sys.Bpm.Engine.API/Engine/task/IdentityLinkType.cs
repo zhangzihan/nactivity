@@ -13,28 +13,40 @@
 namespace org.activiti.engine.task
 {
 
-	/// <summary>
-	/// Contains constants for all types of identity links that can be used to involve a user or group with a certain task.
-	/// </summary>
-	/// <seealso cref= ITaskService#addUserIdentityLink(String, String, String) </seealso>
-	/// <seealso cref= TaskService#addGroupIdentityLink(String, String, String)
-	/// 
-	///  </seealso>
-	public class IdentityLinkType
-	{
+    /// <summary>
+    /// Contains constants for all types of identity links that can be used to involve a user or group with a certain task.
+    /// </summary>
+    /// <seealso cref= ITaskService.AddUserIdentityLink(String, String, String) </seealso>
+    /// <seealso cref= TaskService#addGroupIdentityLink(String, String, String)
+    /// 
+    ///  </seealso>
+    public class IdentityLinkType
+    {
 
-	  /* Activiti native roles */
+        /* Activiti native roles */
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string ASSIGNEE = "assignee";
 
-	  public const string ASSIGNEE = "assignee";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string CANDIDATE = "candidate";
 
-	  public const string CANDIDATE = "candidate";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string OWNER = "owner";
 
-	  public const string OWNER = "owner";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string STARTER = "starter";
 
-	  public const string STARTER = "starter";
-
-	  public const string PARTICIPANT = "participant";
-
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string PARTICIPANT = "participant";
+    }
 }

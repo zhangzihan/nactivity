@@ -36,25 +36,24 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.compensateEventDefinition = compensateEventDefinition;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             IExecutionEntity executionEntity = execution;
             BoundaryEvent boundaryEvent = (BoundaryEvent)execution.CurrentFlowElement;
 
-            Process process = ProcessDefinitionUtil.getProcess(execution.ProcessDefinitionId);
+            Process process = ProcessDefinitionUtil.GetProcess(execution.ProcessDefinitionId);
             if (process == null)
             {
                 throw new ActivitiException("Process model (id = " + execution.Id + ") could not be found");
             }
 
             Activity compensationActivity = null;
-            IList<Association> associations = process.findAssociationsWithSourceRefRecursive(boundaryEvent.Id);
+            IList<Association> associations = process.FindAssociationsWithSourceRefRecursive(boundaryEvent.Id);
             foreach (Association association in associations)
             {
-                FlowElement targetElement = process.getFlowElement(association.TargetRef, true);
-                if (targetElement is Activity)
+                FlowElement targetElement = process.GetFlowElement(association.TargetRef, true);
+                if (targetElement is Activity activity)
                 {
-                    Activity activity = (Activity)targetElement;
                     if (activity.ForCompensation)
                     {
                         compensationActivity = activity;
@@ -93,10 +92,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 throw new ActivitiException("Could not find a scope execution for compensation boundary event " + boundaryEvent.Id);
             }
 
-            Context.CommandContext.EventSubscriptionEntityManager.insertCompensationEvent(scopeExecution, compensationActivity.Id);
+            Context.CommandContext.EventSubscriptionEntityManager.InsertCompensationEvent(scopeExecution, compensationActivity.Id);
         }
 
-        public override void trigger(IExecutionEntity execution, string triggerName, object triggerData)
+        public override void Trigger(IExecutionEntity execution, string triggerName, object triggerData, bool throwError = true)
         {
             BoundaryEvent boundaryEvent = (BoundaryEvent)execution.CurrentFlowElement;
 
@@ -106,14 +105,14 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 IList<IEventSubscriptionEntity> eventSubscriptions = execution.EventSubscriptions;
                 foreach (IEventSubscriptionEntity eventSubscription in eventSubscriptions)
                 {
-                    if (eventSubscription is ICompensateEventSubscriptionEntity && eventSubscription.ActivityId.Equals(compensateEventDefinition.ActivityRef))
+                    if (eventSubscription.EventType == CompensateEventSubscriptionEntityFields.EVENT_TYPE && eventSubscription.ActivityId.Equals(compensateEventDefinition.ActivityRef))
                     {
-                        eventSubscriptionEntityManager.delete(eventSubscription);
+                        eventSubscriptionEntityManager.Delete(eventSubscription);
                     }
                 }
             }
 
-            base.trigger(execution, triggerName, triggerData);
+            base.Trigger(execution, triggerName, triggerData, throwError);
         }
     }
 

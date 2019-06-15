@@ -12,7 +12,7 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
@@ -23,10 +23,10 @@ namespace org.activiti.bpmn.converter.child
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_ERRORDEFINITION;
+                return BpmnXMLConstants.ELEMENT_EVENT_ERRORDEFINITION;
             }
         }
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
             if (!(parentElement is Event))
             {
@@ -34,10 +34,10 @@ namespace org.activiti.bpmn.converter.child
             }
 
             ErrorEventDefinition eventDefinition = new ErrorEventDefinition();
-            BpmnXMLUtil.addXMLLocation(eventDefinition, xtr);
-            eventDefinition.ErrorCode = xtr.getAttributeValue("errorRef");
+            BpmnXMLUtil.AddXMLLocation(eventDefinition, xtr);
+            eventDefinition.ErrorCode = xtr.GetAttributeValue("errorRef");
 
-            BpmnXMLUtil.parseChildElements(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_ERRORDEFINITION, eventDefinition, xtr, model);
+            BpmnXMLUtil.ParseChildElements(BpmnXMLConstants.ELEMENT_EVENT_ERRORDEFINITION, eventDefinition, xtr, model);
 
             ((Event)parentElement).EventDefinitions.Add(eventDefinition);
         }

@@ -46,12 +46,12 @@ namespace org.activiti.cloud.services.events.listeners
         /// 
         /// </summary>
         /// <param name="commandContext"></param>
-        public virtual void closed(ICommandContext commandContext)
+        public virtual void Closed(ICommandContext commandContext)
         {
-            IList<IProcessEngineEvent> events = commandContext.getGenericAttribute<IList<IProcessEngineEvent>>(PROCESS_ENGINE_EVENTS);
+            IList<IProcessEngineEvent> events = commandContext.GetGenericAttribute<IList<IProcessEngineEvent>>(PROCESS_ENGINE_EVENTS);
             if (events != null && events.Count > 0)
             {
-                producer.auditProducer().send(MessageBuilder<IList<IProcessEngineEvent>>.withPayload(events).build());
+                producer.AuditProducer().Send(MessageBuilder<IList<IProcessEngineEvent>>.WithPayload(events).Build());
             }
         }
 
@@ -59,7 +59,7 @@ namespace org.activiti.cloud.services.events.listeners
         /// 
         /// </summary>
         /// <param name="commandContext"></param>
-        public virtual void closing(ICommandContext commandContext)
+        public virtual void Closing(ICommandContext commandContext)
         {
             // No need to implement this method in this class
         }
@@ -68,7 +68,7 @@ namespace org.activiti.cloud.services.events.listeners
         /// 
         /// </summary>
         /// <param name="commandContext"></param>
-        public virtual void afterSessionsFlush(ICommandContext commandContext)
+        public virtual void AfterSessionsFlush(ICommandContext commandContext)
         {
             // No need to implement this method in this class
         }
@@ -77,7 +77,7 @@ namespace org.activiti.cloud.services.events.listeners
         /// 
         /// </summary>
         /// <param name="commandContext"></param>
-        public virtual void closeFailure(ICommandContext commandContext)
+        public virtual void CloseFailure(ICommandContext commandContext)
         {
             // No need to implement this method in this class
         }

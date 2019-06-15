@@ -26,14 +26,13 @@ namespace org.activiti.engine
         /// </summary>
         /// <param name="processEngine">
         ///          engine that was built </param>
-        void onProcessEngineBuilt(IProcessEngine processEngine);
+        void OnProcessEngineBuilt(IProcessEngine processEngine);
 
         /// <summary>
         /// Called right after the process-engine has been closed.
         /// </summary>
         /// <param name="processEngine">
         ///          engine that was closed </param>
-        void onProcessEngineClosed(IProcessEngine processEngine);
+        void OnProcessEngineClosed(IProcessEngine processEngine);
     }
-
 }

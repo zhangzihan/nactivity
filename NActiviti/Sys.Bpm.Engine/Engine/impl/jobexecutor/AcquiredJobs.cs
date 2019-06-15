@@ -32,22 +32,20 @@ namespace org.activiti.engine.impl.jobexecutor
             }
         }
 
-        public virtual void addJobIdBatch(IList<string> jobIds)
+        public virtual void AddJobIdBatch(IList<string> jobIds)
         {
             acquiredJobBatches.Add(jobIds);
             jobIds.ToList().ForEach(x => acquiredJobs.Add(x));
         }
 
-        public virtual bool contains(string jobId)
+        public virtual bool Contains(string jobId)
         {
             return acquiredJobs.Contains(jobId);
         }
 
-        public virtual int size()
+        public virtual int Size()
         {
             return acquiredJobs.Count;
         }
-
     }
-
 }

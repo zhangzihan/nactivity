@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     /// 
     public class EventSubscriptionsByNameMatcher : CachedEntityMatcherAdapter<IEventSubscriptionEntity>
     {
-        public override bool isRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
+        public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
         {
 
             IDictionary<string, object> @params = (IDictionary<string, object>)parameter ?? new Dictionary<string, object>();

@@ -15,7 +15,6 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.bpmn.data
 {
-
     /// <summary>
     /// Represents a simple in memory structure
     /// 
@@ -23,13 +22,25 @@ namespace org.activiti.engine.impl.bpmn.data
     /// </summary>
     public class SimpleStructureDefinition : IFieldBaseStructureDefinition
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string id;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<string> fieldNames;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<Type> fieldTypes;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
         public SimpleStructureDefinition(string id)
         {
             this.id = id;
@@ -37,6 +48,9 @@ namespace org.activiti.engine.impl.bpmn.data
             this.fieldTypes = new List<Type>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int FieldSize
         {
             get
@@ -45,6 +59,9 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Id
         {
             get
@@ -53,39 +70,59 @@ namespace org.activiti.engine.impl.bpmn.data
             }
         }
 
-        public virtual void setFieldName(int index, string fieldName, Type type)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="type"></param>
+        public virtual void SetFieldName(int index, string fieldName, Type type)
         {
-            this.growListToContain(index, this.fieldNames);
-            this.growListToContain(index, this.fieldTypes);
+            this.GrowListToContain(index, this.fieldNames);
+            this.GrowListToContain(index, this.fieldTypes);
             this.fieldNames[index] = fieldName;
             this.fieldTypes[index] = type;
         }
 
-        private void growListToContain<T1>(int index, IList<T1> list)
+        ///
+        private void GrowListToContain<T1>(int index, IList<T1> list)
         {
             if (!(list.Count - 1 >= index))
             {
                 for (int i = list.Count; i <= index; i++)
                 {
-                    list.Add(default(T1));
+                    list.Add(default);
                 }
             }
         }
 
-        public virtual string getFieldNameAt(int index)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public virtual string GetFieldNameAt(int index)
         {
             return this.fieldNames[index];
         }
 
-        public virtual Type getFieldTypeAt(int index)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public virtual Type GetFieldTypeAt(int index)
         {
             return this.fieldTypes[index];
         }
 
-        public virtual IStructureInstance createInstance()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual IStructureInstance CreateInstance()
         {
             return new FieldBaseStructureInstance(this);
         }
     }
-
 }

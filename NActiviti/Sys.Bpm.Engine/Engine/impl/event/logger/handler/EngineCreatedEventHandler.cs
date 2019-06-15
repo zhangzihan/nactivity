@@ -12,7 +12,7 @@ namespace org.activiti.engine.impl.@event.logger.handler
     public class EngineCreatedEventHandler : AbstractDatabaseEventLoggerEventHandler
     {
 
-        public override IEventLogEntryEntity generateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
+        public override IEventLogEntryEntity GenerateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
         {
             IDictionary<string, object> data = new Dictionary<string, object>();
             try
@@ -43,7 +43,7 @@ namespace org.activiti.engine.impl.@event.logger.handler
             {
                 // Best effort
             }
-            return createEventLogEntry(data);
+            return CreateEventLogEntry(data);
         }
 
     }

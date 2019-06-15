@@ -20,32 +20,32 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class DataStoreParser : IBpmnXMLConstants
     {
-        public virtual void parse(XMLStreamReader xtr, BpmnModel model)
+        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
         {
-            string id = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID);
+            string id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
             if (!string.IsNullOrWhiteSpace(id))
             {
 
                 DataStore dataStore = new DataStore();
-                dataStore.Id = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID);
+                dataStore.Id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
 
-                string name = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME);
+                string name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
                 if (!string.IsNullOrWhiteSpace(name))
                 {
                     dataStore.Name = name;
                 }
 
-                string itemSubjectRef = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ITEM_SUBJECT_REF);
+                string itemSubjectRef = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ITEM_SUBJECT_REF);
                 if (!string.IsNullOrWhiteSpace(itemSubjectRef))
                 {
                     dataStore.ItemSubjectRef = itemSubjectRef;
                 }
 
-                BpmnXMLUtil.addXMLLocation(dataStore, xtr);
+                BpmnXMLUtil.AddXMLLocation(dataStore, xtr);
 
-                model.addDataStore(dataStore.Id, dataStore);
+                model.AddDataStore(dataStore.Id, dataStore);
 
-                BpmnXMLUtil.parseChildElements(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DATA_STORE, dataStore, xtr, model);
+                BpmnXMLUtil.ParseChildElements(BpmnXMLConstants.ELEMENT_DATA_STORE, dataStore, xtr, model);
             }
         }
     }

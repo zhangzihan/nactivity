@@ -43,7 +43,7 @@ namespace org.activiti.engine.impl.cmd
             this.transientVariables = transientVariables;
         }
 
-        protected internal override object execute(ICommandContext commandContext, IExecutionEntity execution)
+        protected internal override object Execute(ICommandContext commandContext, IExecutionEntity execution)
         {
             if (processVariables != null)
             {
@@ -55,9 +55,9 @@ namespace org.activiti.engine.impl.cmd
                 execution.TransientVariables = transientVariables;
             }
 
-            Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createSignalEvent(ActivitiEventType.ACTIVITY_SIGNALED, execution.CurrentActivityId, null, null, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId));
+            Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateSignalEvent(ActivitiEventType.ACTIVITY_SIGNALED, execution.CurrentActivityId, null, null, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId));
 
-            Context.Agenda.planTriggerExecutionOperation(execution);
+            Context.Agenda.PlanTriggerExecutionOperation(execution);
 
             return null;
         }

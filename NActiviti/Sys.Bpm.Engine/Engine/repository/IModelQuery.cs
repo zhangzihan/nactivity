@@ -26,113 +26,113 @@ namespace org.activiti.engine.repository
 
         /// <summary>
         /// Only select model with the given id. </summary>
-        IModelQuery modelId(string modelId);
+        IModelQuery SetModelId(string modelId);
 
         /// <summary>
         /// Only select models with the given category. </summary>
-        IModelQuery modelCategory(string modelCategory);
+        IModelQuery SetModelCategory(string modelCategory);
 
         /// <summary>
         /// Only select models where the category matches the given parameter. The syntax that should be used is the same as in SQL, eg. %activiti%
         /// </summary>
-        IModelQuery modelCategoryLike(string modelCategoryLike);
+        IModelQuery SetModelCategoryLike(string modelCategoryLike);
 
         /// <summary>
         /// Only select models that have a different category then the given one. </summary>
-        IModelQuery modelCategoryNotEquals(string categoryNotEquals);
+        IModelQuery SetModelCategoryNotEquals(string categoryNotEquals);
 
         /// <summary>
         /// Only select models with the given name. </summary>
-        IModelQuery modelName(string modelName);
+        IModelQuery SetModelName(string modelName);
 
         /// <summary>
         /// Only select models where the name matches the given parameter. The syntax that should be used is the same as in SQL, eg. %activiti%
         /// </summary>
-        IModelQuery modelNameLike(string modelNameLike);
+        IModelQuery SetModelNameLike(string modelNameLike);
 
         /// <summary>
         /// Only selects models with the given key. </summary>
-        IModelQuery modelKey(string key);
+        IModelQuery SetModelKey(string key);
 
         /// <summary>
         /// Only select model with a certain version. </summary>
-        IModelQuery modelVersion(int? modelVersion);
+        IModelQuery SetModelVersion(int? modelVersion);
 
         /// <summary>
         /// Only select models which has the highest version.
         /// 
         /// Note: if modelKey(key) is not used in this query, all the models with the highest version for each key will be returned (similar to process definitions)
         /// </summary>
-        IModelQuery latestVersion();
+        IModelQuery SetLatestVersion();
 
         /// <summary>
         /// Only select models that are the source for the provided deployment </summary>
-        IModelQuery deploymentId(string deploymentId);
+        IModelQuery SetDeploymentId(string deploymentId);
 
         /// <summary>
         /// Only select models that are deployed (ie deploymentId != null) </summary>
-        IModelQuery deployed();
+        IModelQuery SetDeployed();
 
         /// <summary>
         /// Only select models that are not yet deployed </summary>
-        IModelQuery notDeployed();
+        IModelQuery SetNotDeployed();
 
         /// <summary>
         /// Only select models that have the given tenant id.
         /// </summary>
-        IModelQuery modelTenantId(string tenantId);
+        IModelQuery SetModelTenantId(string tenantId);
 
         /// <summary>
         /// Only select models with a tenant id like the given one.
         /// </summary>
-        IModelQuery modelTenantIdLike(string tenantIdLike);
+        IModelQuery SetModelTenantIdLike(string tenantIdLike);
 
         /// <summary>
         /// Only select models that do not have a tenant id.
         /// </summary>
-        IModelQuery modelWithoutTenantId();
+        IModelQuery SetModelWithoutTenantId();
 
         // ordering ////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Order by the category of the models (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IModelQuery orderByModelCategory();
+        IModelQuery OrderByModelCategory();
 
         /// <summary>
         /// Order by the id of the models (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IModelQuery orderByModelId();
+        IModelQuery OrderByModelId();
 
         /// <summary>
         /// Order by the key of the models (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IModelQuery orderByModelKey();
+        IModelQuery OrderByModelKey();
 
         /// <summary>
         /// Order by the version of the models (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IModelQuery orderByModelVersion();
+        IModelQuery OrderByModelVersion();
 
         /// <summary>
         /// Order by the name of the models (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IModelQuery orderByModelName();
+        IModelQuery OrderByModelName();
 
         /// <summary>
         /// Order by the creation time of the models (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IModelQuery orderByCreateTime();
+        IModelQuery OrderByCreateTime();
 
         /// <summary>
         /// Order by the last update time of the models (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IModelQuery orderByLastUpdateTime();
+        IModelQuery OrderByLastUpdateTime();
 
         /// <summary>
         /// Order by tenant id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IModelQuery orderByTenantId();
+        IModelQuery OrderByTenantId();
 
     }
 

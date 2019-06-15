@@ -64,9 +64,9 @@ namespace org.activiti.engine.impl
         {
         }
 
-        public virtual IDeadLetterJobQuery jobId(string jobId)
+        public virtual IDeadLetterJobQuery SetJobId(string jobId)
         {
-            if (ReferenceEquals(jobId, null))
+            if (jobId is null)
             {
                 throw new ActivitiIllegalArgumentException("Provided job id is null");
             }
@@ -74,9 +74,9 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeadLetterJobQuery processInstanceId(string processInstanceId)
+        public virtual IDeadLetterJobQuery SetProcessInstanceId(string processInstanceId)
         {
-            if (ReferenceEquals(processInstanceId, null))
+            if (processInstanceId is null)
             {
                 throw new ActivitiIllegalArgumentException("Provided process instance id is null");
             }
@@ -84,7 +84,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeadLetterJobQuery processDefinitionId(string processDefinitionId)
+        public virtual IDeadLetterJobQuery SetProcessDefinitionId(string processDefinitionId)
         {
             if (string.IsNullOrWhiteSpace(processDefinitionId))
             {
@@ -94,7 +94,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeadLetterJobQuery executionId(string executionId)
+        public virtual IDeadLetterJobQuery SetExecutionId(string executionId)
         {
             if (string.IsNullOrWhiteSpace(executionId))
             {
@@ -104,13 +104,13 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeadLetterJobQuery executable()
+        public virtual IDeadLetterJobQuery SetExecutable()
         {
             executable_Renamed = true;
             return this;
         }
 
-        public virtual IDeadLetterJobQuery timers()
+        public virtual IDeadLetterJobQuery SetTimers()
         {
             if (onlyMessages)
             {
@@ -120,7 +120,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeadLetterJobQuery messages()
+        public virtual IDeadLetterJobQuery SetMessages()
         {
             if (onlyTimers)
             {
@@ -130,7 +130,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeadLetterJobQuery duedateHigherThan(DateTime? date)
+        public virtual IDeadLetterJobQuery SetDuedateHigherThen(DateTime? date)
         {
             if (!date.HasValue)
             {
@@ -140,7 +140,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeadLetterJobQuery duedateLowerThan(DateTime? date)
+        public virtual IDeadLetterJobQuery SetDuedateLowerThan(DateTime? date)
         {
             if (!date.HasValue)
             {
@@ -150,12 +150,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeadLetterJobQuery duedateHigherThen(DateTime? date)
-        {
-            return duedateHigherThan(date);
-        }
-
-        public virtual IDeadLetterJobQuery duedateHigherThenOrEquals(DateTime? date)
+        public virtual IDeadLetterJobQuery SetDuedateHigherThenOrEquals(DateTime? date)
         {
             if (!date.HasValue)
             {
@@ -165,12 +160,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeadLetterJobQuery duedateLowerThen(DateTime? date)
-        {
-            return duedateLowerThan(date);
-        }
-
-        public virtual IDeadLetterJobQuery duedateLowerThenOrEquals(DateTime? date)
+        public virtual IDeadLetterJobQuery SetDuedateLowerThenOrEquals(DateTime? date)
         {
             if (!date.HasValue)
             {
@@ -180,15 +170,15 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeadLetterJobQuery withException()
+        public virtual IDeadLetterJobQuery SetWithException()
         {
             this.withException_Renamed = true;
             return this;
         }
 
-        public virtual IDeadLetterJobQuery exceptionMessage(string exceptionMessage)
+        public virtual IDeadLetterJobQuery SetExceptionMessage(string exceptionMessage)
         {
-            if (ReferenceEquals(exceptionMessage, null))
+            if (exceptionMessage is null)
             {
                 throw new ActivitiIllegalArgumentException("Provided exception message is null");
             }
@@ -196,9 +186,9 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeadLetterJobQuery jobTenantId(string tenantId)
+        public virtual IDeadLetterJobQuery SetJobTenantId(string tenantId)
         {
-            if (ReferenceEquals(tenantId, null))
+            if (tenantId is null)
             {
                 throw new ActivitiIllegalArgumentException("job is null");
             }
@@ -206,9 +196,9 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeadLetterJobQuery jobTenantIdLike(string tenantIdLike)
+        public virtual IDeadLetterJobQuery SetJobTenantIdLike(string tenantIdLike)
         {
-            if (ReferenceEquals(tenantIdLike, null))
+            if (tenantIdLike is null)
             {
                 throw new ActivitiIllegalArgumentException("job is null");
             }
@@ -216,7 +206,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeadLetterJobQuery jobWithoutTenantId()
+        public virtual IDeadLetterJobQuery SetJobWithoutTenantId()
         {
             this.withoutTenantId = true;
             return this;
@@ -224,48 +214,48 @@ namespace org.activiti.engine.impl
 
         // sorting //////////////////////////////////////////
 
-        public virtual IDeadLetterJobQuery orderByJobDuedate()
+        public virtual IDeadLetterJobQuery SetOrderByJobDuedate()
         {
-            return orderBy(JobQueryProperty.DUEDATE);
+            return SetOrderBy(JobQueryProperty.DUEDATE);
         }
 
-        public virtual IDeadLetterJobQuery orderByExecutionId()
+        public virtual IDeadLetterJobQuery SetOrderByExecutionId()
         {
-            return orderBy(JobQueryProperty.EXECUTION_ID);
+            return SetOrderBy(JobQueryProperty.EXECUTION_ID);
         }
 
-        public virtual IDeadLetterJobQuery orderByJobId()
+        public virtual IDeadLetterJobQuery SetOrderByJobId()
         {
-            return orderBy(JobQueryProperty.JOB_ID);
+            return SetOrderBy(JobQueryProperty.JOB_ID);
         }
 
-        public virtual IDeadLetterJobQuery orderByProcessInstanceId()
+        public virtual IDeadLetterJobQuery SetOrderByProcessInstanceId()
         {
-            return orderBy(JobQueryProperty.PROCESS_INSTANCE_ID);
+            return SetOrderBy(JobQueryProperty.PROCESS_INSTANCE_ID);
         }
 
-        public virtual IDeadLetterJobQuery orderByJobRetries()
+        public virtual IDeadLetterJobQuery SetOrderByJobRetries()
         {
-            return orderBy(JobQueryProperty.RETRIES);
+            return SetOrderBy(JobQueryProperty.RETRIES);
         }
 
-        public virtual IDeadLetterJobQuery orderByTenantId()
+        public virtual IDeadLetterJobQuery SetOrderByTenantId()
         {
-            return orderBy(JobQueryProperty.TENANT_ID);
+            return SetOrderBy(JobQueryProperty.TENANT_ID);
         }
 
         // results //////////////////////////////////////////
 
-        public  override long executeCount(ICommandContext  commandContext)
+        public  override long ExecuteCount(ICommandContext  commandContext)
         {
-            checkQueryOk();
-            return commandContext.DeadLetterJobEntityManager.findJobCountByQueryCriteria(this);
+            CheckQueryOk();
+            return commandContext.DeadLetterJobEntityManager.FindJobCountByQueryCriteria(this);
         }
 
-        public  override IList<IJob> executeList(ICommandContext  commandContext, Page page)
+        public  override IList<IJob> ExecuteList(ICommandContext  commandContext, Page page)
         {
-            checkQueryOk();
-            return commandContext.DeadLetterJobEntityManager.findJobsByQueryCriteria(this, page);
+            CheckQueryOk();
+            return commandContext.DeadLetterJobEntityManager.FindJobsByQueryCriteria(this, page);
         }
 
         // getters //////////////////////////////////////////

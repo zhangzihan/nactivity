@@ -27,7 +27,7 @@ namespace org.activiti.engine.impl.cfg.jta
             this.transactionManager = transactionManager;
         }
 
-        public virtual ITransactionContext openTransactionContext(ICommandContext commandContext)
+        public virtual ITransactionContext OpenTransactionContext(ICommandContext commandContext)
         {
             return new JtaTransactionContext(transactionManager);
         }

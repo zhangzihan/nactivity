@@ -29,15 +29,16 @@ namespace org.activiti.engine.impl.bpmn.helper
 
         protected internal string errorCode;
 
-        public override void onEvent(IActivitiEvent @event)
+        public override void OnEvent(IActivitiEvent @event)
         {
-            if (isValidEvent(@event))
+            if (IsValidEvent(@event))
             {
-                ICommandContext commandContext = Context.CommandContext;
+                //仅是为了执行一次退栈操作
+                _ = Context.CommandContext;
 
                 IExecutionEntity execution = null;
 
-                if (!ReferenceEquals(@event.ExecutionId, null))
+                if (!(@event.ExecutionId is null))
                 {
                     // Get the execution based on the event's execution ID instead execution = Context.CommandContext.ExecutionEntityManager.findById<instead>(new KeyValuePair<string, object>("id", @event.ExecutionId));
                 }
@@ -49,7 +50,7 @@ namespace org.activiti.engine.impl.bpmn.helper
 
                 try
                 {
-                    ErrorPropagation.propagateError(errorCode, execution);
+                    ErrorPropagation.PropagateError(errorCode, execution);
                 }
                 catch (Exception e)
                 {

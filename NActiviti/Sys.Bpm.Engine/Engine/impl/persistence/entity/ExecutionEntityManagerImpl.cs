@@ -16,16 +16,22 @@ using System.Collections.Generic;
 
 namespace org.activiti.engine.impl.persistence.entity
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
+    using org.activiti.engine.history;
     using org.activiti.engine.impl.cfg;
+    using org.activiti.engine.impl.cmd;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.identity;
     using org.activiti.engine.impl.persistence.entity.data;
     using org.activiti.engine.repository;
     using org.activiti.engine.runtime;
     using org.activiti.engine.task;
+    using Sys;
+    using Sys.Net.Http;
+    using Sys.Workflow;
+    using Sys.Workflow.Engine.Bpmn.Rules;
     using System.Globalization;
 
     /// 
@@ -33,6 +39,8 @@ namespace org.activiti.engine.impl.persistence.entity
     public class ExecutionEntityManagerImpl : AbstractEntityManager<IExecutionEntity>, IExecutionEntityManager
     {
         protected internal IExecutionDataManager executionDataManager;
+
+        private readonly ILogger<ExecutionEntityManagerImpl> logger = ProcessEngineServiceProvider.LoggerService<ExecutionEntityManagerImpl>();
 
         public ExecutionEntityManagerImpl(ProcessEngineConfigurationImpl processEngineConfiguration, IExecutionDataManager executionDataManager) : base(processEngineConfiguration)
         {
@@ -49,63 +57,63 @@ namespace org.activiti.engine.impl.persistence.entity
 
         // Overriding the default delete methods to set the 'isDeleted' flag
 
-        public override void delete(IExecutionEntity entity)
+        public override void Delete(IExecutionEntity entity)
         {
-            delete(entity, true);
+            Delete(entity, true);
         }
 
-        public override void delete(IExecutionEntity entity, bool fireDeleteEvent)
+        public override void Delete(IExecutionEntity entity, bool fireDeleteEvent)
         {
-            base.delete(entity, fireDeleteEvent);
+            base.Delete(entity, fireDeleteEvent);
             entity.Deleted = true;
         }
 
         // FIND METHODS
 
-        public virtual IExecutionEntity findSubProcessInstanceBySuperExecutionId(string superExecutionId)
+        public virtual IExecutionEntity FindSubProcessInstanceBySuperExecutionId(string superExecutionId)
         {
-            return executionDataManager.findSubProcessInstanceBySuperExecutionId(superExecutionId);
+            return executionDataManager.FindSubProcessInstanceBySuperExecutionId(superExecutionId);
         }
 
-        public virtual IList<IExecutionEntity> findChildExecutionsByParentExecutionId(string parentExecutionId)
+        public virtual IList<IExecutionEntity> FindChildExecutionsByParentExecutionId(string parentExecutionId)
         {
-            return executionDataManager.findChildExecutionsByParentExecutionId(parentExecutionId);
+            return executionDataManager.FindChildExecutionsByParentExecutionId(parentExecutionId);
         }
 
-        public virtual IList<IExecutionEntity> findChildExecutionsByProcessInstanceId(string processInstanceId)
+        public virtual IList<IExecutionEntity> FindChildExecutionsByProcessInstanceId(string processInstanceId)
         {
-            return executionDataManager.findChildExecutionsByProcessInstanceId(processInstanceId);
+            return executionDataManager.FindChildExecutionsByProcessInstanceId(processInstanceId);
         }
 
-        public virtual IList<IExecutionEntity> findExecutionsByParentExecutionAndActivityIds(string parentExecutionId, ICollection<string> activityIds)
+        public virtual IList<IExecutionEntity> FindExecutionsByParentExecutionAndActivityIds(string parentExecutionId, ICollection<string> activityIds)
         {
-            return executionDataManager.findExecutionsByParentExecutionAndActivityIds(parentExecutionId, activityIds);
+            return executionDataManager.FindExecutionsByParentExecutionAndActivityIds(parentExecutionId, activityIds);
         }
 
-        public virtual long findExecutionCountByQueryCriteria(ExecutionQueryImpl executionQuery)
+        public virtual long FindExecutionCountByQueryCriteria(IExecutionQuery executionQuery)
         {
-            return executionDataManager.findExecutionCountByQueryCriteria(executionQuery);
+            return executionDataManager.FindExecutionCountByQueryCriteria(executionQuery);
         }
 
-        public virtual IList<IExecutionEntity> findExecutionsByQueryCriteria(ExecutionQueryImpl executionQuery, Page page)
+        public virtual IList<IExecutionEntity> FindExecutionsByQueryCriteria(IExecutionQuery executionQuery, Page page)
         {
-            return executionDataManager.findExecutionsByQueryCriteria(executionQuery, page);
+            return executionDataManager.FindExecutionsByQueryCriteria(executionQuery, page);
         }
 
-        public virtual long findProcessInstanceCountByQueryCriteria(ProcessInstanceQueryImpl executionQuery)
+        public virtual long FindProcessInstanceCountByQueryCriteria(IProcessInstanceQuery executionQuery)
         {
-            return executionDataManager.findProcessInstanceCountByQueryCriteria(executionQuery);
+            return executionDataManager.FindProcessInstanceCountByQueryCriteria(executionQuery);
         }
 
-        public virtual IList<IProcessInstance> findProcessInstanceByQueryCriteria(ProcessInstanceQueryImpl executionQuery)
+        public virtual IList<IProcessInstance> FindProcessInstanceByQueryCriteria(IProcessInstanceQuery executionQuery)
         {
-            return executionDataManager.findProcessInstanceByQueryCriteria(executionQuery);
+            return executionDataManager.FindProcessInstanceByQueryCriteria(executionQuery);
         }
 
-        public virtual IExecutionEntity findByRootProcessInstanceId(string rootProcessInstanceId)
+        public virtual IExecutionEntity FindByRootProcessInstanceId(string rootProcessInstanceId)
         {
-            IList<IExecutionEntity> executions = executionDataManager.findExecutionsByRootProcessInstanceId(rootProcessInstanceId);
-            return processExecutionTree(rootProcessInstanceId, executions);
+            IList<IExecutionEntity> executions = executionDataManager.FindExecutionsByRootProcessInstanceId(rootProcessInstanceId);
+            return ProcessExecutionTree(rootProcessInstanceId, executions);
 
         }
 
@@ -115,7 +123,7 @@ namespace org.activiti.engine.impl.persistence.entity
         /// The return value will be the root <seealso cref="IExecutionEntity"/> instance, with all child <seealso cref="IExecutionEntity"/>
         /// instances populated and set using the <seealso cref="IExecutionEntity"/> instances from the provided collections
         /// </summary>
-        protected internal virtual IExecutionEntity processExecutionTree(string rootProcessInstanceId, IList<IExecutionEntity> executions)
+        protected internal virtual IExecutionEntity ProcessExecutionTree(string rootProcessInstanceId, IList<IExecutionEntity> executions)
         {
             IExecutionEntity rootExecution = null;
 
@@ -135,23 +143,23 @@ namespace org.activiti.engine.impl.persistence.entity
             {
 
                 // Root process instance relationship
-                if (!ReferenceEquals(executionEntity.RootProcessInstanceId, null))
+                if (!(executionEntity.RootProcessInstanceId is null))
                 {
                     executionEntity.RootProcessInstance = executionMap[executionEntity.RootProcessInstanceId];
                 }
 
                 // Process instance relationship
-                if (!ReferenceEquals(executionEntity.ProcessInstanceId, null))
+                if (!(executionEntity.ProcessInstanceId is null))
                 {
                     executionEntity.ProcessInstance = executionMap[executionEntity.ProcessInstanceId];
                 }
 
                 // Parent - child relationship
-                if (!ReferenceEquals(executionEntity.ParentId, null))
+                if (!(executionEntity.ParentId is null))
                 {
                     IExecutionEntity parentExecutionEntity = executionMap[executionEntity.ParentId];
                     executionEntity.Parent = parentExecutionEntity;
-                    parentExecutionEntity.addChildExecution(executionEntity);
+                    parentExecutionEntity.AddChildExecution(executionEntity);
                 }
 
                 // Super - sub execution relationship
@@ -166,41 +174,41 @@ namespace org.activiti.engine.impl.persistence.entity
             return rootExecution;
         }
 
-        public virtual IList<IProcessInstance> findProcessInstanceAndVariablesByQueryCriteria(ProcessInstanceQueryImpl executionQuery)
+        public virtual IList<IProcessInstance> FindProcessInstanceAndVariablesByQueryCriteria(ProcessInstanceQueryImpl executionQuery)
         {
-            return executionDataManager.findProcessInstanceAndVariablesByQueryCriteria(executionQuery);
+            return executionDataManager.FindProcessInstanceAndVariablesByQueryCriteria(executionQuery);
         }
 
-        public virtual ICollection<IExecutionEntity> findInactiveExecutionsByProcessInstanceId(string processInstanceId)
+        public virtual ICollection<IExecutionEntity> FindInactiveExecutionsByProcessInstanceId(string processInstanceId)
         {
-            return executionDataManager.findInactiveExecutionsByProcessInstanceId(processInstanceId);
+            return executionDataManager.FindInactiveExecutionsByProcessInstanceId(processInstanceId);
         }
 
-        public virtual ICollection<IExecutionEntity> findInactiveExecutionsByActivityIdAndProcessInstanceId(string activityId, string processInstanceId)
+        public virtual ICollection<IExecutionEntity> FindInactiveExecutionsByActivityIdAndProcessInstanceId(string activityId, string processInstanceId)
         {
-            return executionDataManager.findInactiveExecutionsByActivityIdAndProcessInstanceId(activityId, processInstanceId);
+            return executionDataManager.FindInactiveExecutionsByActivityIdAndProcessInstanceId(activityId, processInstanceId);
         }
 
-        public virtual IList<IExecution> findExecutionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IExecution> FindExecutionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return executionDataManager.findExecutionsByNativeQuery(parameterMap, firstResult, maxResults);
+            return executionDataManager.FindExecutionsByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public virtual IList<IProcessInstance> findProcessInstanceByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IProcessInstance> FindProcessInstanceByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return executionDataManager.findProcessInstanceByNativeQuery(parameterMap, firstResult, maxResults);
+            return executionDataManager.FindProcessInstanceByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findExecutionCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindExecutionCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return executionDataManager.findExecutionCountByNativeQuery(parameterMap);
+            return executionDataManager.FindExecutionCountByNativeQuery(parameterMap);
         }
 
         // CREATE METHODS
 
-        public virtual IExecutionEntity createProcessInstanceExecution(IProcessDefinition processDefinition, string businessKey, string tenantId, string initiatorVariableName)
+        public virtual IExecutionEntity CreateProcessInstanceExecution(IProcessDefinition processDefinition, string businessKey, string tenantId, string initiatorVariableName)
         {
-            IExecutionEntity processInstanceExecution = executionDataManager.create();
+            IExecutionEntity processInstanceExecution = executionDataManager.Create();
 
             if (ExecutionRelatedEntityCountEnabledGlobally)
             {
@@ -215,7 +223,7 @@ namespace org.activiti.engine.impl.persistence.entity
             processInstanceExecution.IsScope = true; // process instance is always a scope for all child executions
 
             // Inherit tenant id (if any)
-            if (!ReferenceEquals(tenantId, null))
+            if (!(tenantId is null))
             {
                 processInstanceExecution.TenantId = tenantId;
             }
@@ -224,27 +232,53 @@ namespace org.activiti.engine.impl.persistence.entity
 
             processInstanceExecution.StartTime = Context.ProcessEngineConfiguration.Clock.CurrentTime;
             processInstanceExecution.StartUserId = authenticatedUserId;
+            processInstanceExecution.StartUser = Authentication.AuthenticatedUser.FullName;
 
             // Store in database
-            insert(processInstanceExecution, false);
+            Insert(processInstanceExecution, false);
 
-            if (!ReferenceEquals(initiatorVariableName, null))
+            if (string.IsNullOrWhiteSpace(processInstanceExecution.StartUserId) == false)
             {
-                processInstanceExecution.setVariable(initiatorVariableName, authenticatedUserId);
+                IUserInfo starter = null;
+                IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
+                ExternalConnectorProvider externalConnector = ProcessEngineServiceProvider.Resolve<ExternalConnectorProvider>();
+
+                try
+                {
+                    starter = AsyncHelper.RunSync<IUserInfo>(() => userService.GetUser(processInstanceExecution.StartUserId));
+                    starter.TenantId = processInstanceExecution.TenantId;
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, ex.Message);
+                    starter = new UserInfo
+                    {
+                        Id = processInstanceExecution.StartUserId,
+                        FullName = processInstanceExecution.StartUserId
+                    };
+                }
+
+                //保存调用用户变量
+                processInstanceExecution.SetVariable(processInstanceExecution.StartUserId, starter);
+            }
+
+            if (!(initiatorVariableName is null))
+            {
+                processInstanceExecution.SetVariable(initiatorVariableName, authenticatedUserId);
             }
 
             // Need to be after insert, cause we need the id
             processInstanceExecution.ProcessInstanceId = processInstanceExecution.Id;
             processInstanceExecution.RootProcessInstanceId = processInstanceExecution.Id;
-            if (!ReferenceEquals(authenticatedUserId, null))
+            if (!(authenticatedUserId is null))
             {
-                IdentityLinkEntityManager.addIdentityLink(processInstanceExecution, authenticatedUserId, null, IdentityLinkType.STARTER);
+                IdentityLinkEntityManager.AddIdentityLink(processInstanceExecution, authenticatedUserId, null, IdentityLinkType.STARTER);
             }
 
             // Fire events
             if (EventDispatcher.Enabled)
             {
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_CREATED, processInstanceExecution));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_CREATED, processInstanceExecution));
             }
 
             return processInstanceExecution;
@@ -253,44 +287,45 @@ namespace org.activiti.engine.impl.persistence.entity
         /// <summary>
         /// Creates a new execution. properties processDefinition, processInstance and activity will be initialized.
         /// </summary>
-        public virtual IExecutionEntity createChildExecution(IExecutionEntity parentExecutionEntity)
+        public virtual IExecutionEntity CreateChildExecution(IExecutionEntity parentExecutionEntity)
         {
-            IExecutionEntity childExecution = executionDataManager.create();
-            inheritCommonProperties(parentExecutionEntity, childExecution);
+            IExecutionEntity childExecution = executionDataManager.Create();
+            childExecution.Name = parentExecutionEntity.Name;
+            InheritCommonProperties(parentExecutionEntity, childExecution);
             childExecution.Parent = parentExecutionEntity;
             childExecution.ProcessDefinitionId = parentExecutionEntity.ProcessDefinitionId;
             childExecution.ProcessDefinitionKey = parentExecutionEntity.ProcessDefinitionKey;
-            childExecution.ProcessInstanceId = !ReferenceEquals(parentExecutionEntity.ProcessInstanceId, null) ? parentExecutionEntity.ProcessInstanceId : parentExecutionEntity.Id;
+            childExecution.ProcessInstanceId = !(parentExecutionEntity.ProcessInstanceId is null) ? parentExecutionEntity.ProcessInstanceId : parentExecutionEntity.Id;
             childExecution.IsScope = false;
             childExecution.ActivityId = parentExecutionEntity.ActivityId;
             childExecution.BusinessKey = parentExecutionEntity.BusinessKey;
             childExecution.DeploymentId = parentExecutionEntity.DeploymentId;
             childExecution.TenantId = parentExecutionEntity.TenantId;
-            
+
             // manage the bidirectional parent-child relation
-            parentExecutionEntity.addChildExecution(childExecution);
+            parentExecutionEntity.AddChildExecution(childExecution);
 
             // Insert the child execution
-            insert(childExecution, false);
+            Insert(childExecution, false);
 
-            //if (logger.DebugEnabled)
-            //{
-            //    logger.debug("Child execution {} created with parent {}", childExecution, parentExecutionEntity.Id);
-            //}
+            if (logger.IsEnabled(LogLevel.Debug))
+            {
+                logger.LogDebug("Child execution {} created with parent {}", childExecution, parentExecutionEntity.Id);
+            }
 
             if (EventDispatcher.Enabled)
             {
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_CREATED, childExecution));
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, childExecution));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_CREATED, childExecution));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, childExecution));
             }
 
             return childExecution;
         }
 
-        public virtual IExecutionEntity createSubprocessInstance(IProcessDefinition processDefinition, IExecutionEntity superExecutionEntity, string businessKey)
+        public virtual IExecutionEntity CreateSubprocessInstance(IProcessDefinition processDefinition, IExecutionEntity superExecutionEntity, string businessKey)
         {
-            IExecutionEntity subProcessInstance = executionDataManager.create();
-            inheritCommonProperties(superExecutionEntity, subProcessInstance);
+            IExecutionEntity subProcessInstance = executionDataManager.Create();
+            InheritCommonProperties(superExecutionEntity, subProcessInstance);
             subProcessInstance.ProcessDefinitionId = processDefinition.Id;
             subProcessInstance.ProcessDefinitionKey = processDefinition.Key;
             subProcessInstance.SuperExecution = superExecutionEntity;
@@ -300,7 +335,7 @@ namespace org.activiti.engine.impl.persistence.entity
             subProcessInstance.BusinessKey = businessKey;
 
             // Store in database
-            insert(subProcessInstance, false);
+            Insert(subProcessInstance, false);
 
             //if (logger.DebugEnabled)
             //{
@@ -310,30 +345,31 @@ namespace org.activiti.engine.impl.persistence.entity
             subProcessInstance.ProcessInstanceId = subProcessInstance.Id;
             superExecutionEntity.SubProcessInstance = subProcessInstance;
 
-            if (Context.ProcessEngineConfiguration != null && Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
+            ProcessEngineConfigurationImpl processEngineConfiguration1 = Context.ProcessEngineConfiguration;
+            if (!(processEngineConfiguration1 is null) && processEngineConfiguration1.EventDispatcher.Enabled)
             {
-                Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_CREATED, subProcessInstance));
+                processEngineConfiguration1.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_CREATED, subProcessInstance));
             }
 
             return subProcessInstance;
         }
 
-        protected internal virtual void inheritCommonProperties(IExecutionEntity parentExecutionEntity, IExecutionEntity childExecution)
+        protected internal virtual void InheritCommonProperties(IExecutionEntity parentExecutionEntity, IExecutionEntity childExecution)
         {
 
             // Inherits the 'count' feature from the parent. 
             // If the parent was not 'counting', we can't make the child 'counting' again.
-            if (parentExecutionEntity is ICountingExecutionEntity)
+            if (parentExecutionEntity is ICountingExecutionEntity countingParentExecutionEntity)
             {
-                ICountingExecutionEntity countingParentExecutionEntity = (ICountingExecutionEntity)parentExecutionEntity;
                 ((ICountingExecutionEntity)childExecution).IsCountEnabled = countingParentExecutionEntity.IsCountEnabled;
             }
 
+            childExecution.Name = parentExecutionEntity.Name;
             childExecution.RootProcessInstanceId = parentExecutionEntity.RootProcessInstanceId;
             childExecution.IsActive = true;
             childExecution.StartTime = processEngineConfiguration.Clock.CurrentTime;
 
-            if (!ReferenceEquals(parentExecutionEntity.TenantId, null))
+            if (!(parentExecutionEntity.TenantId is null))
             {
                 childExecution.TenantId = parentExecutionEntity.TenantId;
             }
@@ -342,47 +378,47 @@ namespace org.activiti.engine.impl.persistence.entity
 
         // UPDATE METHODS
 
-        public virtual void updateExecutionTenantIdForDeployment(string deploymentId, string newTenantId)
+        public virtual void UpdateExecutionTenantIdForDeployment(string deploymentId, string newTenantId)
         {
-            executionDataManager.updateExecutionTenantIdForDeployment(deploymentId, newTenantId);
+            executionDataManager.UpdateExecutionTenantIdForDeployment(deploymentId, newTenantId);
         }
 
         // DELETE METHODS
 
-        public virtual void deleteProcessInstancesByProcessDefinition(string processDefinitionId, string deleteReason, bool cascade)
+        public virtual void DeleteProcessInstancesByProcessDefinition(string processDefinitionId, string deleteReason, bool cascade)
         {
-            IList<string> processInstanceIds = executionDataManager.findProcessInstanceIdsByProcessDefinitionId(processDefinitionId);
+            IList<string> processInstanceIds = executionDataManager.FindProcessInstanceIdsByProcessDefinitionId(processDefinitionId);
 
             foreach (string processInstanceId in processInstanceIds)
             {
-                deleteProcessInstance(processInstanceId, deleteReason, cascade);
+                DeleteProcessInstance(processInstanceId, deleteReason, cascade);
             }
 
             if (cascade)
             {
-                HistoricProcessInstanceEntityManager.deleteHistoricProcessInstanceByProcessDefinitionId(processDefinitionId);
+                HistoricProcessInstanceEntityManager.DeleteHistoricProcessInstanceByProcessDefinitionId(processDefinitionId);
             }
         }
 
-        public virtual void deleteProcessInstance(string processInstanceId, string deleteReason, bool cascade)
+        public virtual void DeleteProcessInstance(string processInstanceId, string deleteReason, bool cascade)
         {
-            IExecutionEntity execution = findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+            IExecutionEntity execution = FindById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
 
             if (execution == null)
             {
                 throw new ActivitiObjectNotFoundException("No process instance found for id '" + processInstanceId + "'", typeof(IProcessInstance));
             }
 
-            deleteProcessInstanceCascade(execution, deleteReason, cascade);
+            DeleteProcessInstanceCascade(execution, deleteReason, cascade);
         }
 
-        protected internal virtual void deleteProcessInstanceCascade(IExecutionEntity execution, string deleteReason, bool deleteHistory)
+        protected internal virtual void DeleteProcessInstanceCascade(IExecutionEntity execution, string deleteReason, bool deleteHistory)
         {
 
             // fill default reason if none provided
-            if (ReferenceEquals(deleteReason, null))
+            if (deleteReason is null)
             {
-                deleteReason = engine.history.DeleteReason_Fields.PROCESS_INSTANCE_DELETED;
+                deleteReason = DeleteReasonFields.PROCESS_INSTANCE_DELETED;
             }
 
             foreach (IExecutionEntity subExecutionEntity in execution.Executions)
@@ -393,22 +429,22 @@ namespace org.activiti.engine.impl.persistence.entity
                     {
                         if (miExecutionEntity.SubProcessInstance != null)
                         {
-                            deleteProcessInstanceCascade(miExecutionEntity.SubProcessInstance, deleteReason, deleteHistory);
+                            DeleteProcessInstanceCascade(miExecutionEntity.SubProcessInstance, deleteReason, deleteHistory);
                         }
                     }
 
                 }
                 else if (subExecutionEntity.SubProcessInstance != null)
                 {
-                    deleteProcessInstanceCascade(subExecutionEntity.SubProcessInstance, deleteReason, deleteHistory);
+                    DeleteProcessInstanceCascade(subExecutionEntity.SubProcessInstance, deleteReason, deleteHistory);
                 }
             }
 
-            TaskEntityManager.deleteTasksByProcessInstanceId(execution.Id, deleteReason, deleteHistory);
+            TaskEntityManager.DeleteTasksByProcessInstanceId(execution.Id, deleteReason, deleteHistory);
 
             if (EventDispatcher.Enabled)
             {
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createCancelledEvent(execution.ProcessInstanceId, execution.ProcessInstanceId, null, deleteReason));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateCancelledEvent(execution.ProcessInstanceId, execution.ProcessInstanceId, null, deleteReason));
             }
 
             // delete the execution BEFORE we delete the history, otherwise we will
@@ -420,35 +456,35 @@ namespace org.activiti.engine.impl.persistence.entity
                 return;
             }
 
-            IList<IExecutionEntity> childExecutions = collectChildren(execution.ProcessInstance);
+            IList<IExecutionEntity> childExecutions = CollectChildren(execution.ProcessInstance);
             for (int i = childExecutions.Count - 1; i >= 0; i--)
             {
                 IExecutionEntity childExecutionEntity = childExecutions[i];
-                deleteExecutionAndRelatedData(childExecutionEntity, deleteReason, false);
+                DeleteExecutionAndRelatedData(childExecutionEntity, deleteReason, false);
             }
 
-            deleteExecutionAndRelatedData(execution, deleteReason, false);
+            DeleteExecutionAndRelatedData(execution, deleteReason, false);
 
             if (deleteHistory)
             {
-                HistoricProcessInstanceEntityManager.delete(new KeyValuePair<string, object>("id", execution.Id));
+                HistoricProcessInstanceEntityManager.Delete(new KeyValuePair<string, object>("id", execution.Id));
             }
 
-            HistoryManager.recordProcessInstanceEnd(processInstanceExecutionEntity.Id, deleteReason, null);
+            HistoryManager.RecordProcessInstanceEnd(processInstanceExecutionEntity.Id, deleteReason, null);
             processInstanceExecutionEntity.Deleted = true;
         }
 
-        public virtual void deleteExecutionAndRelatedData(IExecutionEntity executionEntity, string deleteReason, bool cancel)
+        public virtual void DeleteExecutionAndRelatedData(IExecutionEntity executionEntity, string deleteReason, bool cancel)
         {
-            HistoryManager.recordActivityEnd(executionEntity, deleteReason);
-            deleteDataForExecution(executionEntity, deleteReason, cancel);
-            delete(executionEntity);
+            HistoryManager.RecordActivityEnd(executionEntity, deleteReason);
+            DeleteDataForExecution(executionEntity, deleteReason, cancel);
+            Delete(executionEntity);
         }
 
-        public virtual void deleteProcessInstanceExecutionEntity(string processInstanceId, string currentFlowElementId, string deleteReason, bool cascade, bool cancel)
+        public virtual void DeleteProcessInstanceExecutionEntity(string processInstanceId, string currentFlowElementId, string deleteReason, bool cascade, bool cancel)
         {
 
-            IExecutionEntity processInstanceEntity = findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+            IExecutionEntity processInstanceEntity = FindById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
 
             if (processInstanceEntity == null)
             {
@@ -465,7 +501,7 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 if (subExecutionEntity.SubProcessInstance != null && !subExecutionEntity.Ended)
                 {
-                    deleteProcessInstanceCascade(subExecutionEntity.SubProcessInstance, deleteReason, cascade);
+                    DeleteProcessInstanceCascade(subExecutionEntity.SubProcessInstance, deleteReason, cascade);
                 }
             }
 
@@ -474,57 +510,57 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 if (childExecution.IsEventScope)
                 {
-                    deleteExecutionAndRelatedData(childExecution, null, false);
+                    DeleteExecutionAndRelatedData(childExecution, null, false);
                 }
             }
 
-            deleteChildExecutions(processInstanceEntity, deleteReason, cancel);
-            deleteExecutionAndRelatedData(processInstanceEntity, deleteReason, cancel);
+            DeleteChildExecutions(processInstanceEntity, deleteReason, cancel);
+            DeleteExecutionAndRelatedData(processInstanceEntity, deleteReason, cancel);
 
             if (EventDispatcher.Enabled)
             {
                 if (!cancel)
                 {
-                    EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.PROCESS_COMPLETED, processInstanceEntity));
+                    EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.PROCESS_COMPLETED, processInstanceEntity));
                 }
                 else
                 {
-                    EventDispatcher.dispatchEvent(ActivitiEventBuilder.createCancelledEvent(processInstanceEntity.Id, processInstanceEntity.Id, processInstanceEntity.ProcessDefinitionId, deleteReason));
+                    EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateCancelledEvent(processInstanceEntity.Id, processInstanceEntity.Id, processInstanceEntity.ProcessDefinitionId, deleteReason));
                 }
             }
 
             // TODO: what about delete reason?
-            HistoryManager.recordProcessInstanceEnd(processInstanceEntity.Id, deleteReason, currentFlowElementId);
+            HistoryManager.RecordProcessInstanceEnd(processInstanceEntity.Id, deleteReason, currentFlowElementId);
             processInstanceEntity.Deleted = true;
         }
 
-        public virtual void deleteChildExecutions(IExecutionEntity executionEntity, string deleteReason, bool cancel)
+        public virtual void DeleteChildExecutions(IExecutionEntity executionEntity, string deleteReason, bool cancel)
         {
 
             // The children of an execution for a tree. For correct deletions
             // (taking care of foreign keys between child-parent)
             // the leafs of this tree must be deleted first before the parents elements.
-            IList<IExecutionEntity> childExecutions = collectChildren(executionEntity);
+            IList<IExecutionEntity> childExecutions = CollectChildren(executionEntity);
             for (int i = childExecutions.Count - 1; i >= 0; i--)
             {
                 IExecutionEntity childExecutionEntity = childExecutions[i];
                 if (!childExecutionEntity.Ended)
                 {
-                    deleteExecutionAndRelatedData(childExecutionEntity, deleteReason, cancel);
+                    DeleteExecutionAndRelatedData(childExecutionEntity, deleteReason, cancel);
                 }
             }
         }
 
-        public virtual IList<IExecutionEntity> collectChildren(IExecutionEntity executionEntity)
+        public virtual IList<IExecutionEntity> CollectChildren(IExecutionEntity executionEntity)
         {
             IList<IExecutionEntity> childExecutions = new List<IExecutionEntity>();
-            collectChildren(executionEntity, childExecutions);
+            CollectChildren(executionEntity, childExecutions);
             return childExecutions;
         }
 
-        protected internal virtual void collectChildren(IExecutionEntity executionEntity, IList<IExecutionEntity> collectedChildExecution)
+        protected internal virtual void CollectChildren(IExecutionEntity executionEntity, IList<IExecutionEntity> collectedChildExecution)
         {
-            IList<IExecutionEntity> childExecutions = (IList<IExecutionEntity>)executionEntity.Executions;
+            IList<IExecutionEntity> childExecutions = executionEntity.Executions;
             if (childExecutions != null && childExecutions.Count > 0)
             {
                 foreach (IExecutionEntity childExecution in childExecutions)
@@ -532,7 +568,7 @@ namespace org.activiti.engine.impl.persistence.entity
                     if (!childExecution.Deleted)
                     {
                         collectedChildExecution.Add(childExecution);
-                        collectChildren(childExecution, collectedChildExecution);
+                        CollectChildren(childExecution, collectedChildExecution);
                     }
                 }
             }
@@ -541,11 +577,11 @@ namespace org.activiti.engine.impl.persistence.entity
             if (subProcessInstance != null && !subProcessInstance.Deleted)
             {
                 collectedChildExecution.Add(subProcessInstance);
-                collectChildren(subProcessInstance, collectedChildExecution);
+                CollectChildren(subProcessInstance, collectedChildExecution);
             }
         }
 
-        public virtual IExecutionEntity findFirstScope(IExecutionEntity executionEntity)
+        public virtual IExecutionEntity FindFirstScope(IExecutionEntity executionEntity)
         {
             IExecutionEntity currentExecutionEntity = executionEntity;
             while (currentExecutionEntity != null)
@@ -565,7 +601,7 @@ namespace org.activiti.engine.impl.persistence.entity
             return null;
         }
 
-        public virtual IExecutionEntity findFirstMultiInstanceRoot(IExecutionEntity executionEntity)
+        public virtual IExecutionEntity FindFirstMultiInstanceRoot(IExecutionEntity executionEntity)
         {
             IExecutionEntity currentExecutionEntity = executionEntity;
             while (currentExecutionEntity != null)
@@ -585,22 +621,22 @@ namespace org.activiti.engine.impl.persistence.entity
             return null;
         }
 
-        public virtual void deleteDataForExecution(IExecutionEntity executionEntity, string deleteReason, bool cancel)
+        public virtual void DeleteDataForExecution(IExecutionEntity executionEntity, string deleteReason, bool cancel)
         {
 
             // To start, deactivate the current incoming execution
             executionEntity.Ended = true;
             executionEntity.IsActive = false;
 
-            bool enableExecutionRelationshipCounts = isExecutionRelatedEntityCountEnabled(executionEntity);
+            bool enableExecutionRelationshipCounts = IsExecutionRelatedEntityCountEnabled(executionEntity);
 
             if (executionEntity.Id.Equals(executionEntity.ProcessInstanceId) && (!enableExecutionRelationshipCounts || (enableExecutionRelationshipCounts && ((ICountingExecutionEntity)executionEntity).IdentityLinkCount > 0)))
             {
-                IdentityLinkEntityManager identityLinkEntityManager = IdentityLinkEntityManager;
-                ICollection<IIdentityLinkEntity> identityLinks = identityLinkEntityManager.findIdentityLinksByProcessInstanceId(executionEntity.ProcessInstanceId);
+                IIdentityLinkEntityManager identityLinkEntityManager = IdentityLinkEntityManager;
+                ICollection<IIdentityLinkEntity> identityLinks = identityLinkEntityManager.FindIdentityLinksByProcessInstanceId(executionEntity.ProcessInstanceId);
                 foreach (IIdentityLinkEntity identityLink in identityLinks)
                 {
-                    identityLinkEntityManager.delete(identityLink);
+                    identityLinkEntityManager.Delete(identityLink);
                 }
             }
 
@@ -610,15 +646,13 @@ namespace org.activiti.engine.impl.persistence.entity
                 ICollection<IVariableInstance> executionVariables = executionEntity.VariableInstancesLocal.Values;
                 foreach (IVariableInstance variableInstance in executionVariables)
                 {
-                    if (variableInstance is IVariableInstanceEntity)
+                    if (variableInstance is IVariableInstanceEntity variableInstanceEntity)
                     {
-                        IVariableInstanceEntity variableInstanceEntity = (IVariableInstanceEntity)variableInstance;
-
                         IVariableInstanceEntityManager variableInstanceEntityManager = VariableInstanceEntityManager;
-                        variableInstanceEntityManager.delete(variableInstanceEntity);
-                        if (variableInstanceEntity.ByteArrayRef != null && !ReferenceEquals(variableInstanceEntity.ByteArrayRef.Id, null))
+                        variableInstanceEntityManager.Delete(variableInstanceEntity);
+                        if (variableInstanceEntity.ByteArrayRef != null && !(variableInstanceEntity.ByteArrayRef.Id is null))
                         {
-                            ByteArrayEntityManager.deleteByteArrayById(variableInstanceEntity.ByteArrayRef.Id);
+                            ByteArrayEntityManager.DeleteByteArrayById(variableInstanceEntity.ByteArrayRef.Id);
                         }
                     }
                 }
@@ -628,10 +662,10 @@ namespace org.activiti.engine.impl.persistence.entity
             if (!enableExecutionRelationshipCounts || (enableExecutionRelationshipCounts && ((ICountingExecutionEntity)executionEntity).TaskCount > 0))
             {
                 ITaskEntityManager taskEntityManager = TaskEntityManager;
-                ICollection<ITaskEntity> tasksForExecution = taskEntityManager.findTasksByExecutionId(executionEntity.Id);
+                ICollection<ITaskEntity> tasksForExecution = taskEntityManager.FindTasksByExecutionId(executionEntity.Id);
                 foreach (ITaskEntity taskEntity in tasksForExecution)
                 {
-                    taskEntityManager.deleteTask(taskEntity, deleteReason, false, cancel);
+                    taskEntityManager.DeleteTask(taskEntity, deleteReason, false, cancel);
                 }
             }
 
@@ -640,13 +674,13 @@ namespace org.activiti.engine.impl.persistence.entity
             if (!enableExecutionRelationshipCounts || (enableExecutionRelationshipCounts && ((ICountingExecutionEntity)executionEntity).TimerJobCount > 0))
             {
                 ITimerJobEntityManager timerJobEntityManager = TimerJobEntityManager;
-                ICollection<ITimerJobEntity> timerJobsForExecution = timerJobEntityManager.findJobsByExecutionId(executionEntity.Id);
+                ICollection<ITimerJobEntity> timerJobsForExecution = timerJobEntityManager.FindJobsByExecutionId(executionEntity.Id);
                 foreach (ITimerJobEntity job in timerJobsForExecution)
                 {
-                    timerJobEntityManager.delete(job);
+                    timerJobEntityManager.Delete(job);
                     if (EventDispatcher.Enabled)
                     {
-                        EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_CANCELED, job));
+                        EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_CANCELED, job));
                     }
                 }
             }
@@ -654,13 +688,13 @@ namespace org.activiti.engine.impl.persistence.entity
             if (!enableExecutionRelationshipCounts || (enableExecutionRelationshipCounts && ((ICountingExecutionEntity)executionEntity).JobCount > 0))
             {
                 IJobEntityManager jobEntityManager = JobEntityManager;
-                ICollection<IJobEntity> jobsForExecution = jobEntityManager.findJobsByExecutionId(executionEntity.Id);
+                ICollection<IJobEntity> jobsForExecution = jobEntityManager.FindJobsByExecutionId(executionEntity.Id);
                 foreach (IJobEntity job in jobsForExecution)
                 {
-                    JobEntityManager.delete(job);
+                    JobEntityManager.Delete(job);
                     if (EventDispatcher.Enabled)
                     {
-                        EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_CANCELED, job));
+                        EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_CANCELED, job));
                     }
                 }
             }
@@ -668,13 +702,13 @@ namespace org.activiti.engine.impl.persistence.entity
             if (!enableExecutionRelationshipCounts || (enableExecutionRelationshipCounts && ((ICountingExecutionEntity)executionEntity).SuspendedJobCount > 0))
             {
                 ISuspendedJobEntityManager suspendedJobEntityManager = SuspendedJobEntityManager;
-                ICollection<ISuspendedJobEntity> suspendedJobsForExecution = suspendedJobEntityManager.findJobsByExecutionId(executionEntity.Id);
+                ICollection<ISuspendedJobEntity> suspendedJobsForExecution = suspendedJobEntityManager.FindJobsByExecutionId(executionEntity.Id);
                 foreach (ISuspendedJobEntity job in suspendedJobsForExecution)
                 {
-                    suspendedJobEntityManager.delete(job);
+                    suspendedJobEntityManager.Delete(job);
                     if (EventDispatcher.Enabled)
                     {
-                        EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_CANCELED, job));
+                        EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_CANCELED, job));
                     }
                 }
             }
@@ -682,13 +716,13 @@ namespace org.activiti.engine.impl.persistence.entity
             if (!enableExecutionRelationshipCounts || (enableExecutionRelationshipCounts && ((ICountingExecutionEntity)executionEntity).DeadLetterJobCount > 0))
             {
                 IDeadLetterJobEntityManager deadLetterJobEntityManager = DeadLetterJobEntityManager;
-                ICollection<IDeadLetterJobEntity> deadLetterJobsForExecution = deadLetterJobEntityManager.findJobsByExecutionId(executionEntity.Id);
+                ICollection<IDeadLetterJobEntity> deadLetterJobsForExecution = deadLetterJobEntityManager.FindJobsByExecutionId(executionEntity.Id);
                 foreach (IDeadLetterJobEntity job in deadLetterJobsForExecution)
                 {
-                    deadLetterJobEntityManager.delete(job);
+                    deadLetterJobEntityManager.Delete(job);
                     if (EventDispatcher.Enabled)
                     {
-                        EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_CANCELED, job));
+                        EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_CANCELED, job));
                     }
                 }
             }
@@ -697,10 +731,10 @@ namespace org.activiti.engine.impl.persistence.entity
             if (!enableExecutionRelationshipCounts || (enableExecutionRelationshipCounts && ((ICountingExecutionEntity)executionEntity).EventSubscriptionCount > 0))
             {
                 IEventSubscriptionEntityManager eventSubscriptionEntityManager = EventSubscriptionEntityManager;
-                IList<IEventSubscriptionEntity> eventSubscriptions = eventSubscriptionEntityManager.findEventSubscriptionsByExecution(executionEntity.Id);
+                IList<IEventSubscriptionEntity> eventSubscriptions = eventSubscriptionEntityManager.FindEventSubscriptionsByExecution(executionEntity.Id);
                 foreach (IEventSubscriptionEntity eventSubscription in eventSubscriptions)
                 {
-                    eventSubscriptionEntityManager.delete(eventSubscription);
+                    eventSubscriptionEntityManager.Delete(eventSubscription);
                 }
             }
 
@@ -708,7 +742,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         // OTHER METHODS
 
-        public virtual void updateProcessInstanceLockTime(string processInstanceId)
+        public virtual void UpdateProcessInstanceLockTime(string processInstanceId)
         {
             DateTime expirationTime = Clock.CurrentTime;
             int lockMillis = AsyncExecutor.AsyncJobLockTimeInMillis;
@@ -716,24 +750,24 @@ namespace org.activiti.engine.impl.persistence.entity
             DateTime lockCal = DateTime.Now;
             lockCal.AddMilliseconds(lockMillis);
 
-            executionDataManager.updateProcessInstanceLockTime(processInstanceId, lockCal, expirationTime);
+            executionDataManager.UpdateProcessInstanceLockTime(processInstanceId, lockCal, expirationTime);
         }
 
-        public virtual void clearProcessInstanceLockTime(string processInstanceId)
+        public virtual void ClearProcessInstanceLockTime(string processInstanceId)
         {
-            executionDataManager.clearProcessInstanceLockTime(processInstanceId);
+            executionDataManager.ClearProcessInstanceLockTime(processInstanceId);
         }
 
-        public virtual string updateProcessInstanceBusinessKey(IExecutionEntity executionEntity, string businessKey)
+        public virtual string UpdateProcessInstanceBusinessKey(IExecutionEntity executionEntity, string businessKey)
         {
-            if (executionEntity.ProcessInstanceType && !ReferenceEquals(businessKey, null))
+            if (executionEntity.ProcessInstanceType && !(businessKey is null))
             {
                 executionEntity.BusinessKey = businessKey;
-                HistoryManager.updateProcessBusinessKeyInHistory(executionEntity);
+                HistoryManager.UpdateProcessBusinessKeyInHistory(executionEntity);
 
                 if (EventDispatcher.Enabled)
                 {
-                    EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_UPDATED, executionEntity));
+                    EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_UPDATED, executionEntity));
                 }
 
                 return businessKey;

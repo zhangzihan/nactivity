@@ -30,7 +30,7 @@ namespace org.activiti.engine.impl.cmd
             this.@event = @event;
         }
 
-        public  virtual object  execute(ICommandContext commandContext)
+        public  virtual object  Execute(ICommandContext commandContext)
         {
             if (@event == null)
             {
@@ -39,7 +39,7 @@ namespace org.activiti.engine.impl.cmd
 
             if (commandContext.EventDispatcher.Enabled)
             {
-                commandContext.EventDispatcher.dispatchEvent(@event);
+                commandContext.EventDispatcher.DispatchEvent(@event);
             }
             else
             {

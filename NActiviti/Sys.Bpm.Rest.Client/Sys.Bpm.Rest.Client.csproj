@@ -1,7 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <OutputPath>bin</OutputPath>
+    <LangVersion>7.3</LangVersion>
+    <Version>1.0.0.1</Version>
+    <DocumentationFile>bin\Sys.Bpm.Rest.Client.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

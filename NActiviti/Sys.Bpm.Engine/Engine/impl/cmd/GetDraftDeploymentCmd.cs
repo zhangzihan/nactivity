@@ -32,9 +32,9 @@ namespace org.activiti.engine.impl.cmd
             this.query = query;
         }
 
-        public  virtual IList<IDeployment> execute(ICommandContext  commandContext)
+        public  virtual IList<IDeployment> Execute(ICommandContext  commandContext)
         {
-            return commandContext.ProcessEngineConfiguration.DeploymentEntityManager.findDrafts(this.query);
+            return commandContext.ProcessEngineConfiguration.DeploymentEntityManager.FindDrafts(this.query);
         }
     }
 

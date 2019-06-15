@@ -16,7 +16,7 @@ namespace org.activiti.engine.impl.el
         {
         }
 
-        public Object getContext(Type key)
+        public Object GetContext(Type key)
         {
             if (key == null)
             {
@@ -24,7 +24,7 @@ namespace org.activiti.engine.impl.el
             }
             else
             {
-                return this.context == null ? null : this.context[key];
+                return context?[key];
             }
         }
 
@@ -47,7 +47,7 @@ namespace org.activiti.engine.impl.el
             }
         }
 
-        public void putContext(Type key, Object contextObject)
+        public void PutContext(Type key, Object contextObject)
         {
             if (key == null)
             {

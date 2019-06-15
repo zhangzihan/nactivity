@@ -27,7 +27,7 @@ namespace org.activiti.cloud.services.events.converter
         /// 
         /// </summary>
 
-        public override IProcessEngineEvent from(IActivitiEvent @event)
+        public override IProcessEngineEvent From(IActivitiEvent @event)
         {
             return new TaskCandidateGroupAddedEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, 
                 RuntimeBundleProperties.ServiceName, 
@@ -37,14 +37,14 @@ namespace org.activiti.cloud.services.events.converter
                 @event.ExecutionId, 
                 @event.ProcessDefinitionId, 
                 @event.ProcessInstanceId, 
-                taskCandidateGroupConverter.from((IIdentityLink)((IActivitiEntityEvent)@event).Entity));
+                taskCandidateGroupConverter.From((IIdentityLink)((IActivitiEntityEvent)@event).Entity));
         }
 
         /// <summary>
         /// 
         /// </summary>
 
-        public override string handledType()
+        public override string HandledType()
         {
             return "TaskCandidateGroup:" + ActivitiEventType.ENTITY_CREATED.ToString();
         }

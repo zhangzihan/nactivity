@@ -22,7 +22,7 @@ namespace org.activiti.engine.impl.persistence.deploy
 	public interface IDeployer
 	{
 
-	  void deploy(IDeploymentEntity deployment, IDictionary<string, object> deploymentSettings);
+	  void Deploy(IDeploymentEntity deployment, IDictionary<string, object> deploymentSettings);
 	}
 
 }

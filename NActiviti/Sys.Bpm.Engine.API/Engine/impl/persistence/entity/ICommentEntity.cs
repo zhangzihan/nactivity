@@ -46,7 +46,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
     }
 
-    public static class CommentEntity_Fields
+    public static class CommentEntityFields
     {
         public const string TYPE_EVENT = "event";
         public const string TYPE_COMMENT = "comment";

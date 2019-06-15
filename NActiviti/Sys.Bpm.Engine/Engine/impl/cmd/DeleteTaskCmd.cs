@@ -43,17 +43,17 @@ namespace org.activiti.engine.impl.cmd
             this.deleteReason = deleteReason;
         }
 
-        public  virtual object  execute(ICommandContext commandContext)
+        public  virtual object  Execute(ICommandContext commandContext)
         {
-            if (!ReferenceEquals(taskId, null))
+            if (!(taskId is null))
             {
-                deleteTask(commandContext, taskId);
+                DeleteTask(commandContext, taskId);
             }
             else if (taskIds != null)
             {
                 foreach (string taskId in taskIds)
                 {
-                    deleteTask(commandContext, taskId);
+                    DeleteTask(commandContext, taskId);
                 }
             }
             else
@@ -64,9 +64,9 @@ namespace org.activiti.engine.impl.cmd
             return null;
         }
 
-        protected internal virtual void deleteTask(ICommandContext commandContext, string taskId)
+        protected internal virtual void DeleteTask(ICommandContext commandContext, string taskId)
         {
-            commandContext.TaskEntityManager.deleteTask(taskId, deleteReason, cascade);
+            commandContext.TaskEntityManager.DeleteTask(taskId, deleteReason, cascade);
         }
     }
 

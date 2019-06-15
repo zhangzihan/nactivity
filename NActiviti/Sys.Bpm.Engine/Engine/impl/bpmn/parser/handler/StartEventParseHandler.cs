@@ -30,37 +30,36 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, StartEvent element)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, StartEvent element)
         {
             if (element.SubProcess != null && element.SubProcess is EventSubProcess)
             {
                 if (CollectionUtil.IsNotEmpty(element.EventDefinitions))
                 {
                     EventDefinition eventDefinition = element.EventDefinitions[0];
-                    if (eventDefinition is MessageEventDefinition)
+                    if (eventDefinition is MessageEventDefinition messageDefinition)
                     {
-                        MessageEventDefinition messageDefinition = (MessageEventDefinition)eventDefinition;
                         BpmnModel bpmnModel = bpmnParse.BpmnModel;
                         string messageRef = messageDefinition.MessageRef;
-                        if (bpmnModel.containsMessageId(messageRef))
+                        if (bpmnModel.ContainsMessageId(messageRef))
                         {
-                            Message message = bpmnModel.getMessage(messageRef);
+                            Message message = bpmnModel.GetMessage(messageRef);
                             messageDefinition.MessageRef = message.Name;
                             messageDefinition.ExtensionElements = message.ExtensionElements;
                         }
-                        element.Behavior = bpmnParse.ActivityBehaviorFactory.createEventSubProcessMessageStartEventActivityBehavior(element, messageDefinition);
+                        element.Behavior = bpmnParse.ActivityBehaviorFactory.CreateEventSubProcessMessageStartEventActivityBehavior(element, messageDefinition);
 
                     }
                     else if (eventDefinition is ErrorEventDefinition)
                     {
-                        element.Behavior = bpmnParse.ActivityBehaviorFactory.createEventSubProcessErrorStartEventActivityBehavior(element);
+                        element.Behavior = bpmnParse.ActivityBehaviorFactory.CreateEventSubProcessErrorStartEventActivityBehavior(element);
                     }
                 }
 
             }
             else if (CollectionUtil.IsEmpty(element.EventDefinitions))
             {
-                element.Behavior = bpmnParse.ActivityBehaviorFactory.createNoneStartEventActivityBehavior(element);
+                element.Behavior = bpmnParse.ActivityBehaviorFactory.CreateNoneStartEventActivityBehavior(element);
             }
 
             if (element.SubProcess == null && (CollectionUtil.IsEmpty(element.EventDefinitions) || bpmnParse.CurrentProcess.InitialFlowElement == null))

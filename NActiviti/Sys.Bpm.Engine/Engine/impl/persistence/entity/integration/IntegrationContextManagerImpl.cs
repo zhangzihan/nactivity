@@ -40,9 +40,9 @@ namespace org.activiti.engine.impl.persistence.entity.integration
 			}
 		}
 
-		public virtual IList<IIntegrationContextEntity> findIntegrationContextByExecutionId(string executionId)
+		public virtual IList<IIntegrationContextEntity> FindIntegrationContextByExecutionId(string executionId)
 		{
-			return dataManager.findIntegrationContextByExecutionId(executionId);
+			return dataManager.FindIntegrationContextByExecutionId(executionId);
 		}
 
 	}

@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -176,8 +176,9 @@ namespace Spring.Expressions
             {
                 throw new InvalidPropertyException( evalContext.RootContextType,this.ToString(),"Invalid argument.",e );
             }
-            
         }
+
+        private object syncRoot = new object();
 
         /// <summary>
         /// Utility method that is needed by ObjectWrapper and AbstractAutowireCapableObjectFactory.
@@ -187,7 +188,7 @@ namespace Spring.Expressions
         /// <returns>PropertyInfo for this node.</returns>
         internal PropertyInfo GetPropertyInfo(object context, IDictionary<string, object> variables)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 EvaluationContext evalContext = new EvaluationContext(context, variables);
                 InitializeIndexerProperty(context, evalContext);
@@ -270,7 +271,7 @@ namespace Spring.Expressions
 
             if (indexer == null)
             {
-                lock (this)
+                lock (syncRoot)
                 {
                     if (indexer == null)
                     {

@@ -44,9 +44,11 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                PersistentState persistentState = new PersistentState();
-                persistentState["name"] = name;
-                persistentState["description"] = description;
+                PersistentState persistentState = new PersistentState
+                {
+                    ["name"] = name,
+                    ["description"] = description
+                };
                 return persistentState;
             }
         }

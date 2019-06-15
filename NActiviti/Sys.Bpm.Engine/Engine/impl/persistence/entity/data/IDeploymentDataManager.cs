@@ -20,18 +20,18 @@ namespace org.activiti.engine.impl.persistence.entity.data
     /// 
     public interface IDeploymentDataManager : IDataManager<IDeploymentEntity>
     {
-        IDeploymentEntity findLatestDeploymentByName(string deploymentName);
+        IDeploymentEntity FindLatestDeploymentByName(string deploymentName);
 
-        long findDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery);
+        long FindDeploymentCountByQueryCriteria(IDeploymentQuery deploymentQuery);
 
-        IList<IDeployment> findDeploymentsByQueryCriteria(IDeploymentQuery deploymentQuery, Page page);
+        IList<IDeployment> FindDeploymentsByQueryCriteria(IDeploymentQuery deploymentQuery, Page page);
 
-        IList<IDeployment> findDeploymentDrafts(IDeploymentQuery deploymentQuery);
+        IList<IDeployment> FindDeploymentDrafts(IDeploymentQuery deploymentQuery);
 
-        IList<string> getDeploymentResourceNames(string deploymentId);
+        IList<string> GetDeploymentResourceNames(string deploymentId);
 
-        IList<IDeployment> findDeploymentsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<IDeployment> FindDeploymentsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-        long findDeploymentCountByNativeQuery(IDictionary<string, object> parameterMap);
+        long FindDeploymentCountByNativeQuery(IDictionary<string, object> parameterMap);
     }
 }

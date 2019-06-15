@@ -39,15 +39,15 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.javaDelegate = javaDelegate;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
-            Context.ProcessEngineConfiguration.DelegateInterceptor.handleInvocation(new JavaDelegateInvocation(javaDelegate, execution));
-            leave(execution);
+            Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new JavaDelegateInvocation(javaDelegate, execution));
+            Leave(execution);
         }
 
-        public virtual void notify(IExecutionEntity execution)
+        public virtual void Notify(IExecutionEntity execution)
         {
-            execute(execution);
+            Execute(execution);
         }
     }
 

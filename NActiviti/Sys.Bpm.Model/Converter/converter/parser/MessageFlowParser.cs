@@ -19,39 +19,41 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class MessageFlowParser : IBpmnXMLConstants
     {
-        public virtual void parse(XMLStreamReader xtr, BpmnModel model)
+        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
         {
-            string id = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID);
+            string id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
             if (!string.IsNullOrWhiteSpace(id))
             {
-                MessageFlow messageFlow = new MessageFlow();
-                messageFlow.Id = id;
+                MessageFlow messageFlow = new MessageFlow
+                {
+                    Id = id
+                };
 
-                string name = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME);
+                string name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
                 if (!string.IsNullOrWhiteSpace(name))
                 {
                     messageFlow.Name = name;
                 }
 
-                string sourceRef = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF);
+                string sourceRef = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF);
                 if (!string.IsNullOrWhiteSpace(sourceRef))
                 {
                     messageFlow.SourceRef = sourceRef;
                 }
 
-                string targetRef = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FLOW_TARGET_REF);
+                string targetRef = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FLOW_TARGET_REF);
                 if (!string.IsNullOrWhiteSpace(targetRef))
                 {
                     messageFlow.TargetRef = targetRef;
                 }
 
-                string messageRef = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_MESSAGE_REF);
+                string messageRef = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_MESSAGE_REF);
                 if (!string.IsNullOrWhiteSpace(messageRef))
                 {
                     messageFlow.MessageRef = messageRef;
                 }
 
-                model.addMessageFlow(messageFlow);
+                model.AddMessageFlow(messageFlow);
             }
         }
     }

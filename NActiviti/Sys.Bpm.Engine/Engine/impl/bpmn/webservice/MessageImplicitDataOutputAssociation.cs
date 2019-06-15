@@ -38,13 +38,13 @@ namespace org.activiti.engine.impl.bpmn.webservice
         {
         }
 
-        public override void evaluate(IExecutionEntity execution)
+        public override void Evaluate(IExecutionEntity execution)
         {
-            MessageInstance message = (MessageInstance)execution.getVariable(WebServiceActivityBehavior.CURRENT_MESSAGE);
+            MessageInstance message = (MessageInstance)execution.GetVariable(WebServiceActivityBehavior.CURRENT_MESSAGE);
             if (message.StructureInstance is FieldBaseStructureInstance)
             {
                 FieldBaseStructureInstance structure = (FieldBaseStructureInstance)message.StructureInstance;
-                execution.setVariable(this.Target, structure.getFieldValue(this.Source));
+                execution.SetVariable(this.Target, structure.GetFieldValue(this.Source));
             }
         }
     }

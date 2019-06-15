@@ -21,22 +21,38 @@ namespace org.activiti.engine.impl.@delegate
     /// 
     public class ActivityBehaviorInvocation : DelegateInvocation
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal readonly IActivityBehavior behaviorInstance;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal readonly IExecutionEntity execution;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="behaviorInstance"></param>
+        /// <param name="execution"></param>
         public ActivityBehaviorInvocation(IActivityBehavior behaviorInstance, IExecutionEntity execution)
         {
             this.behaviorInstance = behaviorInstance;
             this.execution = execution;
         }
 
-        protected internal override void invoke()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal override void Invoke()
         {
-            behaviorInstance.execute(execution);
+            behaviorInstance.Execute(execution);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override object Target
         {
             get
@@ -44,7 +60,5 @@ namespace org.activiti.engine.impl.@delegate
                 return behaviorInstance;
             }
         }
-
     }
-
 }

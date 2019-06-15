@@ -20,6 +20,6 @@ namespace org.activiti.engine.impl.persistence.entity.integration
 {
     public interface IIntegrationContextManager : IEntityManager<IIntegrationContextEntity>
     {
-        IList<IIntegrationContextEntity> findIntegrationContextByExecutionId(string executionId);
+        IList<IIntegrationContextEntity> FindIntegrationContextByExecutionId(string executionId);
     }
 }

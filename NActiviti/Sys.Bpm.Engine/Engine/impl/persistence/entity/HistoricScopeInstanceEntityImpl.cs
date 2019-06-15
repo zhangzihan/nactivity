@@ -16,9 +16,7 @@
 
 namespace org.activiti.engine.impl.persistence.entity
 {
-    using Newtonsoft.Json.Linq;
     using org.activiti.engine.impl.context;
-    using System.Collections.Generic;
 
     /// 
     [Serializable]

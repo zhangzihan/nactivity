@@ -25,28 +25,31 @@ namespace org.activiti.bpmn.converter.parser
     {
         protected internal static readonly IList<ExtensionAttribute> defaultAttributes = new List<ExtensionAttribute>()
         {
-            new ExtensionAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.TYPE_LANGUAGE_ATTRIBUTE),
-            new ExtensionAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.EXPRESSION_LANGUAGE_ATTRIBUTE),
-            new ExtensionAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE)
+            new ExtensionAttribute(BpmnXMLConstants.TYPE_LANGUAGE_ATTRIBUTE),
+            new ExtensionAttribute(BpmnXMLConstants.EXPRESSION_LANGUAGE_ATTRIBUTE),
+            new ExtensionAttribute(BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE)
         };
-        public virtual void parse(XMLStreamReader xtr, BpmnModel model)
+
+        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
         {
-            model.TargetNamespace = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE);
+            model.TargetNamespace = xtr.GetAttributeValue(BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE);
             for (int i = 0; i < xtr.NamespaceCount; i++)
             {
-                string prefix = xtr.getNamespacePrefix(i);
+                string prefix = xtr.GetNamespacePrefix(i);
                 if (!string.IsNullOrWhiteSpace(prefix))
                 {
-                    model.addNamespace(prefix, xtr.getNamespaceURI(i));
+                    model.AddNamespace(prefix, xtr.GetNamespaceURI(i));
                 }
             }
 
             for (int i = 0; i < xtr.AttributeCount; i++)
             {
                 var attr = xtr.element.Attributes().ElementAt(i);
-                ExtensionAttribute extensionAttribute = new ExtensionAttribute();
-                extensionAttribute.Name = attr.Name.LocalName;
-                extensionAttribute.Value = attr.Value;
+                ExtensionAttribute extensionAttribute = new ExtensionAttribute
+                {
+                    Name = attr.Name.LocalName,
+                    Value = attr.Value
+                };
                 if (!string.IsNullOrWhiteSpace(attr.Name.NamespaceName))
                 {
                     extensionAttribute.Namespace = attr.Name.NamespaceName;
@@ -55,9 +58,9 @@ namespace org.activiti.bpmn.converter.parser
                 {
                     extensionAttribute.NamespacePrefix = xtr.element.GetPrefixOfNamespace(attr.Name.Namespace);
                 }
-                if (!BpmnXMLUtil.isBlacklisted(extensionAttribute, defaultAttributes))
+                if (!BpmnXMLUtil.IsBlacklisted(extensionAttribute, defaultAttributes))
                 {
-                    model.addDefinitionsAttribute(extensionAttribute);
+                    model.AddDefinitionsAttribute(extensionAttribute);
                 }
             }
         }

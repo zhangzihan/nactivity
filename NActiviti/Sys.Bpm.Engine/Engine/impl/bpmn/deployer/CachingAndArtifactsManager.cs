@@ -34,7 +34,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// deployment's collection of deployed artifacts and the deployment manager's cache, as well
         /// as caching any ProcessDefinitionInfos.
         /// </summary>
-        public virtual void updateCachingAndArtifacts(ParsedDeployment parsedDeployment)
+        public virtual void UpdateCachingAndArtifacts(ParsedDeployment parsedDeployment)
         {
             ICommandContext commandContext = Context.CommandContext;
 
@@ -44,20 +44,19 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
             foreach (IProcessDefinitionEntity processDefinition in parsedDeployment.AllProcessDefinitions)
             {
-                BpmnModel bpmnModel = parsedDeployment.getBpmnModelForProcessDefinition(processDefinition);
-                Process process = parsedDeployment.getProcessModelForProcessDefinition(processDefinition);
+                BpmnModel bpmnModel = parsedDeployment.GetBpmnModelForProcessDefinition(processDefinition);
+                Process process = parsedDeployment.GetProcessModelForProcessDefinition(processDefinition);
                 ProcessDefinitionCacheEntry cacheEntry = new ProcessDefinitionCacheEntry(processDefinition, bpmnModel, process);
-                processDefinitionCache.add(processDefinition.Id, cacheEntry);
-                addDefinitionInfoToCache(processDefinition, processEngineConfiguration, commandContext);
+                processDefinitionCache.Add(processDefinition.Id, cacheEntry);
+                AddDefinitionInfoToCache(processDefinition, processEngineConfiguration, commandContext);
 
                 // Add to deployment for further usage
-                deployment.addDeployedArtifact(processDefinition);
+                deployment.AddDeployedArtifact(processDefinition);
             }
         }
 
-        protected internal virtual void addDefinitionInfoToCache(IProcessDefinitionEntity processDefinition, ProcessEngineConfigurationImpl processEngineConfiguration, ICommandContext commandContext)
+        protected internal virtual void AddDefinitionInfoToCache(IProcessDefinitionEntity processDefinition, ProcessEngineConfigurationImpl processEngineConfiguration, ICommandContext commandContext)
         {
-
             if (!processEngineConfiguration.EnableProcessDefinitionInfoCache)
             {
                 return;
@@ -66,17 +65,17 @@ namespace org.activiti.engine.impl.bpmn.deployer
             DeploymentManager deploymentManager = processEngineConfiguration.DeploymentManager;
             IProcessDefinitionInfoEntityManager definitionInfoEntityManager = commandContext.ProcessDefinitionInfoEntityManager;
             ObjectMapper objectMapper = commandContext.ProcessEngineConfiguration.ObjectMapper;
-            IProcessDefinitionInfoEntity definitionInfoEntity = definitionInfoEntityManager.findProcessDefinitionInfoByProcessDefinitionId(processDefinition.Id);
+            IProcessDefinitionInfoEntity definitionInfoEntity = definitionInfoEntityManager.FindProcessDefinitionInfoByProcessDefinitionId(processDefinition.Id);
 
             JToken infoNode = null;
-            if (definitionInfoEntity != null && !ReferenceEquals(definitionInfoEntity.InfoJsonId, null))
+            if (definitionInfoEntity != null && !(definitionInfoEntity.InfoJsonId is null))
             {
-                byte[] infoBytes = definitionInfoEntityManager.findInfoJsonById(definitionInfoEntity.InfoJsonId);
+                byte[] infoBytes = definitionInfoEntityManager.FindInfoJsonById(definitionInfoEntity.InfoJsonId);
                 if (infoBytes != null)
                 {
                     try
                     {
-                        infoNode = objectMapper.readTree(infoBytes);
+                        infoNode = objectMapper.ReadTree(infoBytes);
                     }
                     catch (Exception)
                     {
@@ -98,11 +97,11 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
             if (infoNode == null)
             {
-                infoNode = objectMapper.createObjectNode();
+                infoNode = objectMapper.CreateObjectNode();
             }
             definitionCacheObject.InfoNode = infoNode;
 
-            deploymentManager.ProcessDefinitionInfoCache.add(processDefinition.Id, definitionCacheObject);
+            deploymentManager.ProcessDefinitionInfoCache.Add(processDefinition.Id, definitionCacheObject);
         }
     }
 

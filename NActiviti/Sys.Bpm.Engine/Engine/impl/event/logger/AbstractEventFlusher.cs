@@ -9,13 +9,13 @@ namespace org.activiti.engine.impl.@event.logger
     /// 
     public abstract class AbstractEventFlusher : IEventFlusher
     {
-        public abstract void closeFailure(ICommandContext commandContext);
-        public abstract void afterSessionsFlush(ICommandContext commandContext);
-        public abstract void closing(ICommandContext commandContext);
+        public abstract void CloseFailure(ICommandContext commandContext);
+        public abstract void AfterSessionsFlush(ICommandContext commandContext);
+        public abstract void Closing(ICommandContext commandContext);
 
         protected internal IList<IEventLoggerEventHandler> eventHandlers = new List<IEventLoggerEventHandler>();
 
-        public virtual void closed(ICommandContext commandContext)
+        public virtual void Closed(ICommandContext commandContext)
         {
             // Not interested in closed
         }
@@ -33,7 +33,7 @@ namespace org.activiti.engine.impl.@event.logger
         }
 
 
-        public virtual void addEventHandler(IEventLoggerEventHandler databaseEventLoggerEventHandler)
+        public virtual void AddEventHandler(IEventLoggerEventHandler databaseEventLoggerEventHandler)
         {
             eventHandlers.Add(databaseEventLoggerEventHandler);
         }

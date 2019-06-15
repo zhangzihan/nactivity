@@ -33,9 +33,9 @@ namespace org.activiti.engine.impl.cmd
             this.type = type;
         }
 
-        public override IList<IComment> execute(ICommandContext commandContext)
+        public override IList<IComment> Execute(ICommandContext commandContext)
         {
-            return commandContext.CommentEntityManager.findCommentsByTaskIdAndType(taskId, type);
+            return commandContext.CommentEntityManager.FindCommentsByTaskIdAndType(taskId, type);
         }
 
     }

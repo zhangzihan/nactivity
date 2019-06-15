@@ -40,83 +40,83 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual IHistoricTaskInstanceEntity create(ITaskEntity task, IExecutionEntity execution)
+        public virtual IHistoricTaskInstanceEntity Create(ITaskEntity task, IExecutionEntity execution)
         {
-            return historicTaskInstanceDataManager.create(task, execution);
+            return historicTaskInstanceDataManager.Create(task, execution);
         }
 
-        public virtual void deleteHistoricTaskInstancesByProcessInstanceId(string processInstanceId)
+        public virtual void DeleteHistoricTaskInstancesByProcessInstanceId(string processInstanceId)
         {
-            if (HistoryManager.isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (HistoryManager.IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IList<IHistoricTaskInstanceEntity> taskInstances = historicTaskInstanceDataManager.findHistoricTaskInstanceByProcessInstanceId(processInstanceId);
+                IList<IHistoricTaskInstanceEntity> taskInstances = historicTaskInstanceDataManager.FindHistoricTaskInstanceByProcessInstanceId(processInstanceId);
                 foreach (IHistoricTaskInstanceEntity historicTaskInstanceEntity in taskInstances)
                 {
-                    delete(new KeyValuePair<string, object>("id", historicTaskInstanceEntity.Id)); // Needs to be by id (since that method is overridden, see below !)
+                    Delete(new KeyValuePair<string, object>("id", historicTaskInstanceEntity.Id)); // Needs to be by id (since that method is overridden, see below !)
                 }
             }
         }
 
-        public virtual long findHistoricTaskInstanceCountByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery)
+        public virtual long FindHistoricTaskInstanceCountByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery)
         {
             if (HistoryManager.HistoryEnabled)
             {
-                return historicTaskInstanceDataManager.findHistoricTaskInstanceCountByQueryCriteria(historicTaskInstanceQuery);
+                return historicTaskInstanceDataManager.FindHistoricTaskInstanceCountByQueryCriteria(historicTaskInstanceQuery);
             }
             return 0;
         }
 
-        public virtual IList<IHistoricTaskInstance> findHistoricTaskInstancesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery)
+        public virtual IList<IHistoricTaskInstance> FindHistoricTaskInstancesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery)
         {
             if (HistoryManager.HistoryEnabled)
             {
-                return historicTaskInstanceDataManager.findHistoricTaskInstancesByQueryCriteria(historicTaskInstanceQuery);
+                return historicTaskInstanceDataManager.FindHistoricTaskInstancesByQueryCriteria(historicTaskInstanceQuery);
             }
             return new List<IHistoricTaskInstance>();
         }
 
-        public virtual IList<IHistoricTaskInstance> findHistoricTaskInstancesAndVariablesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery)
+        public virtual IList<IHistoricTaskInstance> FindHistoricTaskInstancesAndVariablesByQueryCriteria(IHistoricTaskInstanceQuery historicTaskInstanceQuery)
         {
             if (HistoryManager.HistoryEnabled)
             {
-                return historicTaskInstanceDataManager.findHistoricTaskInstancesAndVariablesByQueryCriteria(historicTaskInstanceQuery);
+                return historicTaskInstanceDataManager.FindHistoricTaskInstancesAndVariablesByQueryCriteria(historicTaskInstanceQuery);
             }
             return new List<IHistoricTaskInstance>();
         }
 
-        public override void delete(KeyValuePair<string, object> id)
+        public override void Delete(KeyValuePair<string, object> id)
         {
             if (HistoryManager.HistoryEnabled)
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", id.Value));
+                IHistoricTaskInstanceEntity historicTaskInstance = FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", id.Value));
                 if (historicTaskInstance != null)
                 {
-                    IList<IHistoricTaskInstanceEntity> subTasks = historicTaskInstanceDataManager.findHistoricTasksByParentTaskId(historicTaskInstance.Id);
+                    IList<IHistoricTaskInstanceEntity> subTasks = historicTaskInstanceDataManager.FindHistoricTasksByParentTaskId(historicTaskInstance.Id);
                     foreach (IHistoricTaskInstance subTask in subTasks)
                     {
-                        delete(new KeyValuePair<string, object>("id", subTask.Id));
+                        Delete(new KeyValuePair<string, object>("id", subTask.Id));
                     }
 
                     var sid = id.Value.ToString();
-                    HistoricDetailEntityManager.deleteHistoricDetailsByTaskId(sid);
-                    HistoricVariableInstanceEntityManager.deleteHistoricVariableInstancesByTaskId(sid);
-                    CommentEntityManager.deleteCommentsByTaskId(sid);
-                    AttachmentEntityManager.deleteAttachmentsByTaskId(sid);
-                    HistoricIdentityLinkEntityManager.deleteHistoricIdentityLinksByTaskId(sid);
+                    HistoricDetailEntityManager.DeleteHistoricDetailsByTaskId(sid);
+                    HistoricVariableInstanceEntityManager.DeleteHistoricVariableInstancesByTaskId(sid);
+                    CommentEntityManager.DeleteCommentsByTaskId(sid);
+                    AttachmentEntityManager.DeleteAttachmentsByTaskId(sid);
+                    HistoricIdentityLinkEntityManager.DeleteHistoricIdentityLinksByTaskId(sid);
 
-                    delete(historicTaskInstance);
+                    Delete(historicTaskInstance);
                 }
             }
         }
 
-        public virtual IList<IHistoricTaskInstance> findHistoricTaskInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IHistoricTaskInstance> FindHistoricTaskInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return historicTaskInstanceDataManager.findHistoricTaskInstancesByNativeQuery(parameterMap, firstResult, maxResults);
+            return historicTaskInstanceDataManager.FindHistoricTaskInstancesByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findHistoricTaskInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindHistoricTaskInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return historicTaskInstanceDataManager.findHistoricTaskInstanceCountByNativeQuery(parameterMap);
+            return historicTaskInstanceDataManager.FindHistoricTaskInstanceCountByNativeQuery(parameterMap);
         }
 
         public virtual IHistoricTaskInstanceDataManager HistoricTaskInstanceDataManager

@@ -29,45 +29,42 @@ namespace org.activiti.engine.impl.jobexecutor
             this.asyncExecutor = asyncExecutor;
         }
 
-        public virtual void closed(ICommandContext commandContext)
+        public virtual void Closed(ICommandContext commandContext)
         {
             ICommandExecutor commandExecutor = commandContext.ProcessEngineConfiguration.CommandExecutor;
             CommandConfig commandConfig = new CommandConfig(false, TransactionPropagation.REQUIRES_NEW);
-            commandExecutor.execute(commandConfig, new CommandAnonymousInnerClass(this, commandContext));
+            commandExecutor.Execute(commandConfig, new CommandAnonymousInnerClass(this));
         }
 
         private class CommandAnonymousInnerClass : ICommand<object>
         {
             private readonly AsyncJobAddedNotification outerInstance;
 
-            private ICommandContext commandContext;
-
-            public CommandAnonymousInnerClass(AsyncJobAddedNotification outerInstance, ICommandContext commandContext)
+            public CommandAnonymousInnerClass(AsyncJobAddedNotification outerInstance)
             {
                 this.outerInstance = outerInstance;
-                this.commandContext = commandContext;
             }
 
-            public virtual object execute(ICommandContext commandContext)
+            public virtual object Execute(ICommandContext commandContext)
             {
                 //if (log.TraceEnabled)
                 //{
                 //    log.trace("notifying job executor of new job");
                 //}
-                outerInstance.asyncExecutor.executeAsyncJob(outerInstance.job);
+                outerInstance.asyncExecutor.ExecuteAsyncJob(outerInstance.job);
                 return null;
             }
         }
 
-        public virtual void closing(ICommandContext commandContext)
+        public virtual void Closing(ICommandContext commandContext)
         {
         }
 
-        public virtual void afterSessionsFlush(ICommandContext commandContext)
+        public virtual void AfterSessionsFlush(ICommandContext commandContext)
         {
         }
 
-        public virtual void closeFailure(ICommandContext commandContext)
+        public virtual void CloseFailure(ICommandContext commandContext)
         {
         }
 

@@ -24,32 +24,32 @@ namespace org.activiti.engine.impl.bpmn.helper
     public class ClassDelegateUtil
     {
 
-        public static object instantiateDelegate(Type clazz, IList<FieldDeclaration> fieldDeclarations)
+        public static object InstantiateDelegate(Type clazz, IList<FieldDeclaration> fieldDeclarations)
         {
-            return instantiateDelegate(clazz.FullName, fieldDeclarations);
+            return InstantiateDelegate(clazz.FullName, fieldDeclarations);
         }
 
-        public static object instantiateDelegate(string className, IList<FieldDeclaration> fieldDeclarations)
+        public static object InstantiateDelegate(string className, IList<FieldDeclaration> fieldDeclarations)
         {
-            object @object = ReflectUtil.instantiate(className);
-            applyFieldDeclaration(fieldDeclarations, @object);
+            object @object = ReflectUtil.Instantiate(className);
+            ApplyFieldDeclaration(fieldDeclarations, @object);
             return @object;
         }
 
-        public static void applyFieldDeclaration(IList<FieldDeclaration> fieldDeclarations, object target)
+        public static void ApplyFieldDeclaration(IList<FieldDeclaration> fieldDeclarations, object target)
         {
             if (fieldDeclarations != null)
             {
                 foreach (FieldDeclaration declaration in fieldDeclarations)
                 {
-                    applyFieldDeclaration(declaration, target);
+                    ApplyFieldDeclaration(declaration, target);
                 }
             }
         }
 
-        public static void applyFieldDeclaration(FieldDeclaration declaration, object target)
+        public static void ApplyFieldDeclaration(FieldDeclaration declaration, object target)
         {
-            MethodInfo setterMethod = ReflectUtil.getSetter(declaration.Name, target.GetType(), declaration.Value.GetType());
+            MethodInfo setterMethod = ReflectUtil.GetSetter(declaration.Name, target.GetType(), declaration.Value.GetType());
 
             if (setterMethod != null)
             {
@@ -72,21 +72,21 @@ namespace org.activiti.engine.impl.bpmn.helper
             }
             else
             {
-                FieldInfo field = ReflectUtil.getField(declaration.Name, target);
+                FieldInfo field = ReflectUtil.GetField(declaration.Name, target);
                 if (field == null)
                 {
                     throw new ActivitiIllegalArgumentException("Field definition uses non-existing field '" + declaration.Name + "' on class " + target.GetType().FullName);
                 }
                 // Check if the delegate field's type is correct
-                if (!fieldTypeCompatible(declaration, field))
+                if (!FieldTypeCompatible(declaration, field))
                 {
                     throw new ActivitiIllegalArgumentException("Incompatible type set on field declaration '" + declaration.Name + "' for class " + target.GetType().FullName + ". Declared value has type " + declaration.Value.GetType().FullName + ", while expecting " + field.DeclaringType.Name);
                 }
-                ReflectUtil.setField(field, target, declaration.Value);
+                ReflectUtil.SetField(field, target, declaration.Value);
             }
         }
 
-        public static bool fieldTypeCompatible(FieldDeclaration declaration, FieldInfo field)
+        public static bool FieldTypeCompatible(FieldDeclaration declaration, FieldInfo field)
         {
             if (declaration.Value != null)
             {
@@ -98,7 +98,5 @@ namespace org.activiti.engine.impl.bpmn.helper
                 return true;
             }
         }
-
     }
-
 }

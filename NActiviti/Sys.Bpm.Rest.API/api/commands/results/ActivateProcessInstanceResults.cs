@@ -8,8 +8,8 @@ namespace org.activiti.cloud.services.api.commands.results
     /// </summary>
     public class ActivateProcessInstanceResults : ICommandResults
     {
-        private string id;
-        private string commandId;
+        private readonly string id;
+        private readonly string commandId;
 
 
         /// <summary>

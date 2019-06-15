@@ -76,7 +76,7 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public static TaskQueryProperty findByName(string propertyName)
+        public static TaskQueryProperty FindByName(string propertyName)
         {
             return properties[propertyName];
         }

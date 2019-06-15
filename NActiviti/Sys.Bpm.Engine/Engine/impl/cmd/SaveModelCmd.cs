@@ -31,7 +31,7 @@ namespace org.activiti.engine.impl.cmd
             this.model = model;
         }
 
-        public  virtual object  execute(ICommandContext commandContext)
+        public  virtual object  Execute(ICommandContext commandContext)
         {
             if (model == null)
             {
@@ -39,11 +39,11 @@ namespace org.activiti.engine.impl.cmd
             }
             if (ReferenceEquals(model.Id, null))
             {
-                commandContext.ModelEntityManager.insert(model);
+                commandContext.ModelEntityManager.Insert(model);
             }
             else
             {
-                commandContext.ModelEntityManager.updateModel(model);
+                commandContext.ModelEntityManager.UpdateModel(model);
             }
             return null;
         }

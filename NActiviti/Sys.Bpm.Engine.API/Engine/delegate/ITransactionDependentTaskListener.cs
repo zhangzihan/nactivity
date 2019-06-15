@@ -24,15 +24,35 @@ namespace org.activiti.engine.@delegate
     /// </summary>
     public interface ITransactionDependentTaskListener : IBaseTaskListener
     {
-
-        void notify(string processInstanceId, string executionId, Task task, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstanceId"></param>
+        /// <param name="executionId"></param>
+        /// <param name="task"></param>
+        /// <param name="executionVariables"></param>
+        /// <param name="customPropertiesMap"></param>
+        void Notify(string processInstanceId, string executionId, TaskActivity task, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap);
     }
 
-    public static class TransactionDependentTaskListener_Fields
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class TransactionDependentTaskListenerFields
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ON_TRANSACTION_COMMITTING = "before-commit";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ON_TRANSACTION_COMMITTED = "committed";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string ON_TRANSACTION_ROLLED_BACK = "rolled-back";
     }
-
 }

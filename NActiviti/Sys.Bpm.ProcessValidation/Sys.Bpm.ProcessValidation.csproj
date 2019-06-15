@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <RootNamespace>Sys.Bpm.ProcessValidation</RootNamespace>
+    <AssemblyName>Sys.Bpm.ProcessValidation</AssemblyName>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin</OutputPath>
+    <DocumentationFile>bin\Sys.Bpm.ProcessValidation.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sys.Bpm.Model\Sys.Bpm.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\ProcessValidatorResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProcessValidatorResource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\ProcessValidatorResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProcessValidatorResource.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>org.activiti.validation.validator</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

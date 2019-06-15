@@ -61,7 +61,7 @@ namespace org.activiti.engine.impl.webservice
         /// <summary>
         /// {@inheritDoc}
         /// </summary>
-        public virtual MessageInstance sendFor(MessageInstance message, Operation operation, ConcurrentDictionary<string, Uri> overridenEndpointAddresses)
+        public virtual MessageInstance SendFor(MessageInstance message, Operation operation, ConcurrentDictionary<string, Uri> overridenEndpointAddresses)
         {
             object[] arguments = this.getArguments(message);
             object[] results = this.safeSend(arguments, overridenEndpointAddresses);
@@ -70,7 +70,7 @@ namespace org.activiti.engine.impl.webservice
 
         private object[] getArguments(MessageInstance message)
         {
-            return message.StructureInstance.toArray();
+            return message.StructureInstance.ToArray();
         }
 
         private object[] safeSend(object[] arguments, ConcurrentDictionary<string, Uri> overridenEndpointAddresses)
@@ -92,8 +92,8 @@ namespace org.activiti.engine.impl.webservice
             MessageDefinition outMessage = operation.OutMessage;
             if (outMessage != null)
             {
-                message = outMessage.createInstance();
-                message.StructureInstance.loadFrom(results);
+                message = outMessage.CreateInstance();
+                message.StructureInstance.LoadFrom(results);
             }
             return message;
         }

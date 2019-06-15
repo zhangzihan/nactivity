@@ -17,9 +17,9 @@ namespace org.activiti.engine.impl.scripting
     public interface IResolver
     {
 
-        bool containsKey(object key);
+        bool ContainsKey(object key);
 
-        object get(object key);
+        object Get(object key);
     }
 
 }

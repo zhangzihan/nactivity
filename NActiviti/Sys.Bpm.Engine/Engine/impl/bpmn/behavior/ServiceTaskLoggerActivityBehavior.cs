@@ -15,16 +15,10 @@
 
 namespace org.activiti.engine.impl.bpmn.behavior
 {
-    using Microsoft.Extensions.FileProviders;
     using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json.Linq;
-    using org.activiti.engine.@delegate;
     using org.activiti.engine.impl.bpmn.helper;
-    using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.runtime;
-    using Sys;
-    using System.IO;
+    using Sys.Workflow;
 
     /// <summary>
     /// ActivityBehavior that evaluates an expression when executed. Optionally, it sets the result of the expression as a variable on the execution.
@@ -42,13 +36,13 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<ServiceTaskLoggerActivityBehavior>();
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             try
             {
                 execution.WriteDebugLog();
 
-                leave(execution);
+                Leave(execution);
             }
             catch (Exception exc)
             {

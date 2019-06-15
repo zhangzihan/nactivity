@@ -19,50 +19,50 @@ namespace org.activiti.bpmn.converter.child
     /// 
     public class ActivitiEventListenerParser : BaseChildElementParser
     {
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
             EventListener listener = new EventListener();
-            BpmnXMLUtil.addXMLLocation(listener, xtr);
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS)))
+            BpmnXMLUtil.AddXMLLocation(listener, xtr);
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS)))
             {
-                listener.Implementation = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS);
+                listener.Implementation = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS);
                 listener.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_CLASS;
             }
-            else if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_DELEGATEEXPRESSION)))
+            else if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_DELEGATEEXPRESSION)))
             {
-                listener.Implementation = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_DELEGATEEXPRESSION);
+                listener.Implementation = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_DELEGATEEXPRESSION);
                 listener.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION;
             }
-            else if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE)))
+            else if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE)))
             {
-                string eventType = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE);
+                string eventType = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE);
                 if (BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_SIGNAL.Equals(eventType))
                 {
                     listener.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_THROW_SIGNAL_EVENT;
-                    listener.Implementation = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_SIGNAL_EVENT_NAME);
+                    listener.Implementation = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_SIGNAL_EVENT_NAME);
                 }
                 else if (BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_GLOBAL_SIGNAL.Equals(eventType))
                 {
                     listener.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_THROW_GLOBAL_SIGNAL_EVENT;
-                    listener.Implementation = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_SIGNAL_EVENT_NAME);
+                    listener.Implementation = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_SIGNAL_EVENT_NAME);
                 }
                 else if (BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_MESSAGE.Equals(eventType))
                 {
                     listener.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_THROW_MESSAGE_EVENT;
-                    listener.Implementation = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_MESSAGE_EVENT_NAME);
+                    listener.Implementation = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_MESSAGE_EVENT_NAME);
                 }
                 else if (BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_ERROR.Equals(eventType))
                 {
                     listener.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_THROW_ERROR_EVENT;
-                    listener.Implementation = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_ERROR_EVENT_CODE);
+                    listener.Implementation = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_THROW_ERROR_EVENT_CODE);
                 }
                 else
                 {
                     listener.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_INVALID_THROW_EVENT;
                 }
             }
-            listener.Events = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_EVENTS);
-            listener.EntityType = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_ENTITY_TYPE);
+            listener.Events = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_EVENTS);
+            listener.EntityType = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_LISTENER_ENTITY_TYPE);
 
             Process parentProcess = (Process)parentElement;
             parentProcess.EventListeners.Add(listener);

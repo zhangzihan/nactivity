@@ -10,8 +10,8 @@ namespace org.activiti.engine.impl.@event.logger
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
-    using Sys;
     using Sys.Bpm;
+    using Sys.Workflow;
 
     /// 
     public class EventLogger : IActivitiEventListener
@@ -31,7 +31,7 @@ namespace org.activiti.engine.impl.@event.logger
 
         public EventLogger()
         {
-            initializeDefaultHandlers();
+            InitializeDefaultHandlers();
         }
 
         public EventLogger(IClock clock, ObjectMapper objectMapper) : this()
@@ -40,51 +40,51 @@ namespace org.activiti.engine.impl.@event.logger
             this.objectMapper = objectMapper;
         }
 
-        protected internal virtual void initializeDefaultHandlers()
+        protected internal virtual void InitializeDefaultHandlers()
         {
-            addEventHandler(ActivitiEventType.TASK_CREATED, typeof(TaskCreatedEventHandler));
-            addEventHandler(ActivitiEventType.TASK_COMPLETED, typeof(TaskCompletedEventHandler));
-            addEventHandler(ActivitiEventType.TASK_ASSIGNED, typeof(TaskAssignedEventHandler));
+            AddEventHandler(ActivitiEventType.TASK_CREATED, typeof(TaskCreatedEventHandler));
+            AddEventHandler(ActivitiEventType.TASK_COMPLETED, typeof(TaskCompletedEventHandler));
+            AddEventHandler(ActivitiEventType.TASK_ASSIGNED, typeof(TaskAssignedEventHandler));
 
-            addEventHandler(ActivitiEventType.SEQUENCEFLOW_TAKEN, typeof(SequenceFlowTakenEventHandler));
+            AddEventHandler(ActivitiEventType.SEQUENCEFLOW_TAKEN, typeof(SequenceFlowTakenEventHandler));
 
-            addEventHandler(ActivitiEventType.ACTIVITY_COMPLETED, typeof(ActivityCompletedEventHandler));
-            addEventHandler(ActivitiEventType.ACTIVITY_STARTED, typeof(ActivityStartedEventHandler));
-            addEventHandler(ActivitiEventType.ACTIVITY_SIGNALED, typeof(ActivitySignaledEventHandler));
-            addEventHandler(ActivitiEventType.ACTIVITY_MESSAGE_RECEIVED, typeof(ActivityMessageEventHandler));
-            addEventHandler(ActivitiEventType.ACTIVITY_COMPENSATE, typeof(ActivityCompensatedEventHandler));
-            addEventHandler(ActivitiEventType.ACTIVITY_ERROR_RECEIVED, typeof(ActivityErrorReceivedEventHandler));
+            AddEventHandler(ActivitiEventType.ACTIVITY_COMPLETED, typeof(ActivityCompletedEventHandler));
+            AddEventHandler(ActivitiEventType.ACTIVITY_STARTED, typeof(ActivityStartedEventHandler));
+            AddEventHandler(ActivitiEventType.ACTIVITY_SIGNALED, typeof(ActivitySignaledEventHandler));
+            AddEventHandler(ActivitiEventType.ACTIVITY_MESSAGE_RECEIVED, typeof(ActivityMessageEventHandler));
+            AddEventHandler(ActivitiEventType.ACTIVITY_COMPENSATE, typeof(ActivityCompensatedEventHandler));
+            AddEventHandler(ActivitiEventType.ACTIVITY_ERROR_RECEIVED, typeof(ActivityErrorReceivedEventHandler));
 
-            addEventHandler(ActivitiEventType.VARIABLE_CREATED, typeof(VariableCreatedEventHandler));
-            addEventHandler(ActivitiEventType.VARIABLE_DELETED, typeof(VariableDeletedEventHandler));
-            addEventHandler(ActivitiEventType.VARIABLE_UPDATED, typeof(VariableUpdatedEventHandler));
+            AddEventHandler(ActivitiEventType.VARIABLE_CREATED, typeof(VariableCreatedEventHandler));
+            AddEventHandler(ActivitiEventType.VARIABLE_DELETED, typeof(VariableDeletedEventHandler));
+            AddEventHandler(ActivitiEventType.VARIABLE_UPDATED, typeof(VariableUpdatedEventHandler));
         }
 
-        public virtual void onEvent(IActivitiEvent @event)
+        public virtual void OnEvent(IActivitiEvent @event)
         {
-            IEventLoggerEventHandler eventHandler = getEventHandler(@event);
+            IEventLoggerEventHandler eventHandler = GetEventHandler(@event);
             if (eventHandler != null)
             {
 
                 // Events are flushed when command context is closed
                 ICommandContext currentCommandContext = Context.CommandContext;
-                IEventFlusher eventFlusher = (IEventFlusher)currentCommandContext.getAttribute(EVENT_FLUSHER_KEY);
+                IEventFlusher eventFlusher = (IEventFlusher)currentCommandContext.GetAttribute(EVENT_FLUSHER_KEY);
 
                 if (eventFlusher == null)
                 {
 
-                    eventFlusher = createEventFlusher();
+                    eventFlusher = CreateEventFlusher();
                     if (eventFlusher == null)
                     {
                         eventFlusher = new DatabaseEventFlusher(); // Default
                     }
-                    currentCommandContext.addAttribute(EVENT_FLUSHER_KEY, eventFlusher);
+                    currentCommandContext.AddAttribute(EVENT_FLUSHER_KEY, eventFlusher);
 
-                    currentCommandContext.addCloseListener(eventFlusher);
-                    currentCommandContext.addCloseListener(new CommandContextCloseListenerAnonymousInnerClass(this));
+                    currentCommandContext.AddCloseListener(eventFlusher);
+                    currentCommandContext.AddCloseListener(new CommandContextCloseListenerAnonymousInnerClass(this));
                 }
 
-                eventFlusher.addEventHandler(eventHandler);
+                eventFlusher.AddEventHandler(eventHandler);
             }
         }
 
@@ -98,34 +98,34 @@ namespace org.activiti.engine.impl.@event.logger
             }
 
 
-            public virtual void closing(ICommandContext commandContext)
+            public virtual void Closing(ICommandContext commandContext)
             {
             }
 
-            public virtual void closed(ICommandContext commandContext)
+            public virtual void Closed(ICommandContext commandContext)
             {
                 // For those who are interested: we can now broadcast the events were added
                 if (outerInstance.listeners != null)
                 {
                     foreach (IEventLoggerListener listener in outerInstance.listeners)
                     {
-                        listener.eventsAdded(outerInstance);
+                        listener.EventsAdded(outerInstance);
                     }
                 }
             }
 
-            public virtual void afterSessionsFlush(ICommandContext commandContext)
+            public virtual void AfterSessionsFlush(ICommandContext commandContext)
             {
             }
 
-            public virtual void closeFailure(ICommandContext commandContext)
+            public virtual void CloseFailure(ICommandContext commandContext)
             {
             }
 
         }
 
         // Subclasses can override this if defaults are not ok
-        protected internal virtual IEventLoggerEventHandler getEventHandler(IActivitiEvent @event)
+        protected internal virtual IEventLoggerEventHandler GetEventHandler(IActivitiEvent @event)
         {
 
             Type eventHandlerClass = null;
@@ -159,13 +159,13 @@ namespace org.activiti.engine.impl.@event.logger
 
             if (eventHandlerClass != null)
             {
-                return instantiateEventHandler(@event, eventHandlerClass);
+                return InstantiateEventHandler(@event, eventHandlerClass);
             }
 
             return null;
         }
 
-        protected internal virtual IEventLoggerEventHandler instantiateEventHandler(IActivitiEvent @event, Type eventHandlerClass)
+        protected internal virtual IEventLoggerEventHandler InstantiateEventHandler(IActivitiEvent @event, Type eventHandlerClass)
         {
             try
             {
@@ -190,12 +190,12 @@ namespace org.activiti.engine.impl.@event.logger
             }
         }
 
-        public virtual void addEventHandler(ActivitiEventType eventType, Type eventHandlerClass)
+        public virtual void AddEventHandler(ActivitiEventType eventType, Type eventHandlerClass)
         {
             eventHandlers[eventType] = eventHandlerClass;
         }
 
-        public virtual void addEventLoggerListener(IEventLoggerListener listener)
+        public virtual void AddEventLoggerListener(IEventLoggerListener listener)
         {
             if (listeners == null)
             {
@@ -207,7 +207,7 @@ namespace org.activiti.engine.impl.@event.logger
         /// <summary>
         /// Subclasses that want something else than the database flusher should override this method
         /// </summary>
-        protected internal virtual IEventFlusher createEventFlusher()
+        protected internal virtual IEventFlusher CreateEventFlusher()
         {
             return null;
         }

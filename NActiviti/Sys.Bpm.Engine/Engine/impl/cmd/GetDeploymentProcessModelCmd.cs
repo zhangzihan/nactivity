@@ -41,12 +41,12 @@ namespace org.activiti.engine.impl.cmd
             this.processDefinitionId = processDefinitionId;
         }
 
-        public  virtual System.IO.Stream  execute(ICommandContext  commandContext)
+        public  virtual Stream Execute(ICommandContext  commandContext)
         {
-            IProcessDefinition processDefinition = commandContext.ProcessEngineConfiguration.DeploymentManager.findDeployedProcessDefinitionById(processDefinitionId);
+            IProcessDefinition processDefinition = commandContext.ProcessEngineConfiguration.DeploymentManager.FindDeployedProcessDefinitionById(processDefinitionId);
             string deploymentId = processDefinition.DeploymentId;
             string resourceName = processDefinition.ResourceName;
-            System.IO.Stream processModelStream = new GetDeploymentResourceCmd(deploymentId, resourceName).execute(commandContext);
+            Stream processModelStream = new GetDeploymentResourceCmd(deploymentId, resourceName).Execute(commandContext);
             return processModelStream;
         }
 

@@ -24,11 +24,11 @@ namespace org.activiti.engine.impl.util
     public class IoUtil
     {
 
-        public static byte[] readInputStream(System.IO.Stream inputStream, string inputStreamName)
+        public static byte[] ReadInputStream(System.IO.Stream inputStream, string inputStreamName)
         {
             try
             {
-                using (System.IO.MemoryStream outputStream = new System.IO.MemoryStream())
+                using (MemoryStream outputStream = new MemoryStream())
                 {
                     inputStream.CopyTo(outputStream);
                     outputStream.Seek(0, SeekOrigin.Begin);
@@ -41,11 +41,11 @@ namespace org.activiti.engine.impl.util
             }
         }
 
-        public static string readFileAsString(string filePath)
+        public static string ReadFileAsString(string filePath)
         {
             try
             {
-                using (FileStream fs = getFile(filePath))
+                using (FileStream fs = GetFile(filePath))
                 {
                     StreamReader sr = new StreamReader(fs);
 
@@ -58,7 +58,7 @@ namespace org.activiti.engine.impl.util
             }
         }
 
-        public static FileStream getFile(string filePath)
+        public static FileStream GetFile(string filePath)
         {
             //Uri url = typeof(IoUtil).ClassLoader.getResource(filePath);
             try
@@ -71,7 +71,7 @@ namespace org.activiti.engine.impl.util
             }
         }
 
-        public static void writeStringToFile(string content, string filePath)
+        public static void WriteStringToFile(string content, string filePath)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace org.activiti.engine.impl.util
         /// <summary>
         /// Closes the given stream. The same as calling <seealso cref="InputStream#close()"/>, but errors while closing are silently ignored.
         /// </summary>
-        public static void closeSilently(System.IO.Stream stream)
+        public static void CloseSilently(System.IO.Stream stream)
         {
             try
             {

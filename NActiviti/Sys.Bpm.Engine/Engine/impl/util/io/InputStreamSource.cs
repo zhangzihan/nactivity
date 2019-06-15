@@ -30,12 +30,12 @@ namespace org.activiti.engine.impl.util.io
         protected internal BufferedStream inputStream;
         protected internal byte[] bytes;
 
-        public InputStreamSource(System.IO.Stream inputStream)
+        public InputStreamSource(Stream inputStream)
         {
             this.inputStream = new BufferedStream(inputStream);
         }
 
-        public virtual System.IO.Stream InputStream
+        public virtual Stream InputStream
         {
             get
             {
@@ -43,7 +43,7 @@ namespace org.activiti.engine.impl.util.io
                 {
                     try
                     {
-                        bytes = getBytesFromInputStream(inputStream);
+                        bytes = GetBytesFromInputStream(inputStream);
                     }
                     catch (IOException e)
                     {
@@ -59,13 +59,13 @@ namespace org.activiti.engine.impl.util.io
             return "InputStream";
         }
 
-        public virtual byte[] getBytesFromInputStream(System.IO.Stream inStream)
+        public virtual byte[] GetBytesFromInputStream(System.IO.Stream inStream)
         {
             long length = inStream.Length;
             byte[] bytes = new byte[length];
 
             int offset = 0;
-            int numRead = 0;
+            int numRead;
             while (offset < bytes.Length && (numRead = inStream.Read(bytes, offset, bytes.Length - offset)) >= 0)
             {
                 offset += numRead;

@@ -27,9 +27,10 @@ namespace org.activiti.engine.@delegate
     /// </summary>
     public interface IJavaDelegate
     {
-
-        void execute(IExecutionEntity execution);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        void Execute(IExecutionEntity execution);
     }
-
 }

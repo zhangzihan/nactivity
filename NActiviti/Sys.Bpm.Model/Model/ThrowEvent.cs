@@ -15,10 +15,12 @@ namespace org.activiti.bpmn.model
     public class ThrowEvent : Event
     {
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            ThrowEvent clone = new ThrowEvent();
-            clone.Values = this;
+            ThrowEvent clone = new ThrowEvent
+            {
+                Values = this
+            };
             return clone;
         }
     }

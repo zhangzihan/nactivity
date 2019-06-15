@@ -44,22 +44,22 @@ namespace org.activiti.engine.impl.bpmn.diagram
             namespaceUris[OMGDI] = "http://www.omg.org/spec/DD/20100524/DC";
         }
 
-        public virtual string getNamespaceURI(string prefix)
+        public virtual string GetNamespaceURI(string prefix)
         {
             return namespaceUris[prefix];
         }
 
-        public virtual string getPrefix(string namespaceURI)
+        public virtual string GetPrefix(string namespaceURI)
         {
-            return getKeyByValue(namespaceUris, namespaceURI);
+            return GetKeyByValue(namespaceUris, namespaceURI);
         }
 
-        public virtual IEnumerator<string> getPrefixes(string namespaceURI)
+        public virtual IEnumerator<string> GetPrefixes(string namespaceURI)
         {
-            return getKeysByValue(namespaceUris, namespaceURI).GetEnumerator();
+            return GetKeysByValue(namespaceUris, namespaceURI).GetEnumerator();
         }
 
-        private static ISet<T> getKeysByValue<T, E>(IDictionary<T, E> map, E value)
+        private static ISet<T> GetKeysByValue<T, E>(IDictionary<T, E> map, E value)
         {
             ISet<T> keys = new HashSet<T>();
             foreach (KeyValuePair<T, E> entry in map.SetOfKeyValuePairs())
@@ -72,7 +72,7 @@ namespace org.activiti.engine.impl.bpmn.diagram
             return keys;
         }
 
-        private static T getKeyByValue<T, E>(IDictionary<T, E> map, E value)
+        private static T GetKeyByValue<T, E>(IDictionary<T, E> map, E value)
         {
             foreach (KeyValuePair<T, E> entry in map.SetOfKeyValuePairs())
             {
@@ -81,7 +81,7 @@ namespace org.activiti.engine.impl.bpmn.diagram
                     return entry.Key;
                 }
             }
-            return default(T);
+            return default;
         }
 
     }

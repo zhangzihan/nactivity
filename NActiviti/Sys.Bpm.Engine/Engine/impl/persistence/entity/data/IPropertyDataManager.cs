@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.persistence.entity.data
 	public interface IPropertyDataManager : IDataManager<IPropertyEntity>
 	{
 
-	  IList<IPropertyEntity> findAll();
+	  IList<IPropertyEntity> FindAll();
 
 	}
 

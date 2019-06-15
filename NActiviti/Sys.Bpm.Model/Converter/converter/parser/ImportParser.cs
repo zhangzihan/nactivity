@@ -20,13 +20,13 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class ImportParser : IBpmnXMLConstants
     {
-        public virtual void parse(XMLStreamReader xtr, BpmnModel model)
+        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
         {
             Import importObject = new Import();
-            BpmnXMLUtil.addXMLLocation(importObject, xtr);
-            importObject.ImportType = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_IMPORT_TYPE);
-            importObject.Namespace = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAMESPACE);
-            importObject.Location = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_LOCATION);
+            BpmnXMLUtil.AddXMLLocation(importObject, xtr);
+            importObject.ImportType = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_IMPORT_TYPE);
+            importObject.Namespace = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAMESPACE);
+            importObject.Location = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_LOCATION);
             model.Imports.Add(importObject);
         }
     }

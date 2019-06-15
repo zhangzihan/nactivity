@@ -66,16 +66,16 @@ namespace org.activiti.engine.impl.el
             this.beans = beans;
         }
 
-        public virtual engine.@delegate.IExpression createExpression(string expression)
+        public virtual engine.@delegate.IExpression CreateExpression(string expression)
         {
-            ValueExpression valueExpression = createValueExpression(expression.Trim(), typeof(object));
+            ValueExpression valueExpression = CreateValueExpression(expression.Trim(), typeof(object));
 
             var expr = new JuelExpression(valueExpression, expression);
 
             return expr;
         }
 
-        private ValueExpression createValueExpression(string expression, Type type)
+        private ValueExpression CreateValueExpression(string expression, Type type)
         {
             return new ValueExpression(expression, type);
         }
@@ -88,18 +88,17 @@ namespace org.activiti.engine.impl.el
             }
         }
 
-        public virtual ELContext getElContext(IVariableScope variableScope)
+        public virtual ELContext GetElContext(IVariableScope variableScope)
         {
             ELContext elContext = null;
-            if (variableScope is VariableScopeImpl)
+            if (variableScope is VariableScopeImpl variableScopeImpl)
             {
-                VariableScopeImpl variableScopeImpl = (VariableScopeImpl)variableScope;
                 elContext = variableScopeImpl.CachedElContext;
             }
 
             if (elContext == null)
             {
-                elContext = createElContext(variableScope as IVariableScope);
+                elContext = CreateElContext(variableScope as IVariableScope);
                 if (variableScope is VariableScopeImpl)
                 {
                     ((VariableScopeImpl)variableScope).CachedElContext = elContext;
@@ -109,16 +108,16 @@ namespace org.activiti.engine.impl.el
             return elContext;
         }
 
-        protected internal virtual ActivitiElContext createElContext(IVariableScope variableScope)
+        protected internal virtual ActivitiElContext CreateElContext(IVariableScope variableScope)
         {
-            ELResolver elResolver = createElResolver(variableScope);
+            ELResolver elResolver = CreateElResolver(variableScope);
             return new ActivitiElContext(elResolver);
         }
 
-        protected internal virtual ELResolver createElResolver(IVariableScope variableScope)
+        protected internal virtual ELResolver CreateElResolver(IVariableScope variableScope)
         {
             CompositeELResolver elResolver = new CompositeELResolver();
-            elResolver.add(new VariableScopeElResolver(variableScope));
+            elResolver.Add(new VariableScopeElResolver(variableScope));
 
             if (beans != null)
             {

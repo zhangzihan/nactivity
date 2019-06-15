@@ -26,7 +26,7 @@ namespace org.activiti.cloud.services.events
     public class ProcessCreatedEventImpl : AbstractProcessEngineEvent, IProcessCreatedEvent
     {
 
-        private ProcessInstance processInstance;
+        private readonly ProcessInstance processInstance;
 
 
         /// <summary>

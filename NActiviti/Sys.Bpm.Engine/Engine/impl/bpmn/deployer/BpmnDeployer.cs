@@ -25,7 +25,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.deploy;
     using org.activiti.engine.impl.persistence.entity;
-    using Sys;
+    using Sys.Workflow;
 
     public class BpmnDeployer : IDeployer
     {
@@ -36,17 +36,17 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
         private static readonly ILogger<BpmnDeployer> log = ProcessEngineServiceProvider.LoggerService<BpmnDeployer>();
 
-        public virtual void deploy(IDeploymentEntity deployment, IDictionary<string, object> deploymentSettings)
+        public virtual void Deploy(IDeploymentEntity deployment, IDictionary<string, object> deploymentSettings)
         {
             log.LogDebug($"Processing deployment {deployment.Name}");
 
             // The ParsedDeployment represents the deployment, the process definitions, and the BPMN
             // resource, parse, and model associated with each process definition.
-            ParsedDeployment parsedDeployment = parsedDeploymentBuilderFactory.getBuilderForDeploymentAndSettings(deployment, deploymentSettings).build();
+            ParsedDeployment parsedDeployment = parsedDeploymentBuilderFactory.GetBuilderForDeploymentAndSettings(deployment, deploymentSettings).Build(bpmnDeploymentHelper);
 
-            bpmnDeploymentHelper.verifyProcessDefinitionsDoNotShareKeys(parsedDeployment.AllProcessDefinitions);
+            bpmnDeploymentHelper.VerifyProcessDefinitionsDoNotShareKeys(parsedDeployment.AllProcessDefinitions);
 
-            bpmnDeploymentHelper.copyDeploymentValuesToProcessDefinitions(parsedDeployment.Deployment, parsedDeployment.AllProcessDefinitions);
+            bpmnDeploymentHelper.CopyDeploymentValuesToProcessDefinitions(parsedDeployment.Deployment, parsedDeployment.AllProcessDefinitions);
             bpmnDeploymentHelper.ResourceNamesOnProcessDefinitions(parsedDeployment);
 
             //    createAndPersistNewDiagramsIfNeeded(parsedDeployment);
@@ -54,23 +54,23 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
             if (deployment.New)
             {
-                IDictionary<IProcessDefinitionEntity, IProcessDefinitionEntity> mapOfNewProcessDefinitionToPreviousVersion = getPreviousVersionsOfProcessDefinitions(parsedDeployment);
-                setProcessDefinitionVersionsAndIds(parsedDeployment, mapOfNewProcessDefinitionToPreviousVersion);
-                persistProcessDefinitionsAndAuthorizations(parsedDeployment);
-                updateTimersAndEvents(parsedDeployment, mapOfNewProcessDefinitionToPreviousVersion);
-                dispatchProcessDefinitionEntityInitializedEvent(parsedDeployment);
+                IDictionary<IProcessDefinitionEntity, IProcessDefinitionEntity> mapOfNewProcessDefinitionToPreviousVersion = GetPreviousVersionsOfProcessDefinitions(parsedDeployment);
+                SetProcessDefinitionVersionsAndIds(parsedDeployment, mapOfNewProcessDefinitionToPreviousVersion);
+                PersistProcessDefinitionsAndAuthorizations(parsedDeployment);
+                UpdateTimersAndEvents(parsedDeployment, mapOfNewProcessDefinitionToPreviousVersion);
+                DispatchProcessDefinitionEntityInitializedEvent(parsedDeployment);
             }
             else
             {
-                makeProcessDefinitionsConsistentWithPersistedVersions(parsedDeployment);
+                MakeProcessDefinitionsConsistentWithPersistedVersions(parsedDeployment);
             }
 
-            cachingAndArtifactsManager.updateCachingAndArtifacts(parsedDeployment);
+            cachingAndArtifactsManager.UpdateCachingAndArtifacts(parsedDeployment);
 
             foreach (IProcessDefinitionEntity processDefinition in parsedDeployment.AllProcessDefinitions)
             {
-                BpmnModel bpmnModel = parsedDeployment.getBpmnModelForProcessDefinition(processDefinition);
-                createLocalizationValues(processDefinition.Id, bpmnModel.getProcessById(processDefinition.Key));
+                BpmnModel bpmnModel = parsedDeployment.GetBpmnModelForProcessDefinition(processDefinition);
+                CreateLocalizationValues(processDefinition.Id, bpmnModel.GetProcessById(processDefinition.Key));
             }
 
 
@@ -113,7 +113,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
             foreach (IProcessDefinitionEntity processDefinition in value.AllProcessDefinitions)
             {
-                string diagramResourceName = ResourceNameUtil.getProcessDiagramResourceNameFromDeployment(processDefinition, resources);
+                string diagramResourceName = ResourceNameUtil.GetProcessDiagramResourceNameFromDeployment(processDefinition, resources);
                 processDefinition.DiagramResourceName = diagramResourceName;
             }
 
@@ -124,13 +124,13 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// Constructs a map from new ProcessDefinitionEntities to the previous version by key and tenant.
         /// If no previous version exists, no map entry is created.
         /// </summary>
-        protected internal virtual IDictionary<IProcessDefinitionEntity, IProcessDefinitionEntity> getPreviousVersionsOfProcessDefinitions(ParsedDeployment parsedDeployment)
+        protected internal virtual IDictionary<IProcessDefinitionEntity, IProcessDefinitionEntity> GetPreviousVersionsOfProcessDefinitions(ParsedDeployment parsedDeployment)
         {
             IDictionary<IProcessDefinitionEntity, IProcessDefinitionEntity> result = new Dictionary<IProcessDefinitionEntity, IProcessDefinitionEntity>();
 
             foreach (IProcessDefinitionEntity newDefinition in parsedDeployment.AllProcessDefinitions)
             {
-                IProcessDefinitionEntity existingDefinition = bpmnDeploymentHelper.getMostRecentVersionOfProcessDefinition(newDefinition);
+                IProcessDefinitionEntity existingDefinition = bpmnDeploymentHelper.GetMostRecentVersionOfProcessDefinition(newDefinition);
 
                 if (existingDefinition != null)
                 {
@@ -146,7 +146,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// an older version for a process definition, then the version is set to that older entity's
         /// version plus one; otherwise it is set to 1.  Also dispatches an ENTITY_CREATED event.
         /// </summary>
-        protected internal virtual void setProcessDefinitionVersionsAndIds(ParsedDeployment parsedDeployment, IDictionary<IProcessDefinitionEntity, IProcessDefinitionEntity> mapNewToOldProcessDefinitions)
+        protected internal virtual void SetProcessDefinitionVersionsAndIds(ParsedDeployment parsedDeployment, IDictionary<IProcessDefinitionEntity, IProcessDefinitionEntity> mapNewToOldProcessDefinitions)
         {
             ICommandContext commandContext = Context.CommandContext;
 
@@ -161,11 +161,11 @@ namespace org.activiti.engine.impl.bpmn.deployer
                 }
 
                 processDefinition.Version = version;
-                processDefinition.Id = getIdForNewProcessDefinition(processDefinition);
+                processDefinition.Id = GetIdForNewProcessDefinition(processDefinition);
 
                 if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
                 {
-                    commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_CREATED, processDefinition));
+                    commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_CREATED, processDefinition));
                 }
             }
         }
@@ -174,37 +174,37 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// Saves each process definition.  It is assumed that the deployment is new, the definitions
         /// have never been saved before, and that they have all their values properly set up.
         /// </summary>
-        protected internal virtual void persistProcessDefinitionsAndAuthorizations(ParsedDeployment parsedDeployment)
+        protected internal virtual void PersistProcessDefinitionsAndAuthorizations(ParsedDeployment parsedDeployment)
         {
             ICommandContext commandContext = Context.CommandContext;
             IProcessDefinitionEntityManager processDefinitionManager = commandContext.ProcessDefinitionEntityManager;
 
             foreach (IProcessDefinitionEntity processDefinition in parsedDeployment.AllProcessDefinitions)
             {
-                processDefinitionManager.insert(processDefinition, false);
-                bpmnDeploymentHelper.addAuthorizationsForNewProcessDefinition(parsedDeployment.getProcessModelForProcessDefinition(processDefinition), processDefinition);
+                processDefinitionManager.Insert(processDefinition, false);
+                bpmnDeploymentHelper.AddAuthorizationsForNewProcessDefinition(parsedDeployment.GetProcessModelForProcessDefinition(processDefinition), processDefinition);
             }
         }
 
-        protected internal virtual void updateTimersAndEvents(ParsedDeployment parsedDeployment, IDictionary<IProcessDefinitionEntity, IProcessDefinitionEntity> mapNewToOldProcessDefinitions)
+        protected internal virtual void UpdateTimersAndEvents(ParsedDeployment parsedDeployment, IDictionary<IProcessDefinitionEntity, IProcessDefinitionEntity> mapNewToOldProcessDefinitions)
         {
             foreach (IProcessDefinitionEntity processDefinition in parsedDeployment.AllProcessDefinitions)
             {
                 if (mapNewToOldProcessDefinitions.TryGetValue(processDefinition, out var item))
                 {
-                    bpmnDeploymentHelper.updateTimersAndEvents(processDefinition, item, parsedDeployment);
+                    bpmnDeploymentHelper.UpdateTimersAndEvents(processDefinition, item, parsedDeployment);
                 }
             }
         }
 
-        protected internal virtual void dispatchProcessDefinitionEntityInitializedEvent(ParsedDeployment parsedDeployment)
+        protected internal virtual void DispatchProcessDefinitionEntityInitializedEvent(ParsedDeployment parsedDeployment)
         {
             ICommandContext commandContext = Context.CommandContext;
             foreach (IProcessDefinitionEntity processDefinitionEntity in parsedDeployment.AllProcessDefinitions)
             {
                 if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
                 {
-                    commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, processDefinitionEntity));
+                    commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, processDefinitionEntity));
                 }
             }
         }
@@ -216,9 +216,9 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// Process definition ids NEED to be unique accross the whole engine!
         /// </para>
         /// </summary>
-        protected internal virtual string getIdForNewProcessDefinition(IProcessDefinitionEntity processDefinition)
+        protected internal virtual string GetIdForNewProcessDefinition(IProcessDefinitionEntity processDefinition)
         {
-            string nextId = idGenerator.NextId;
+            string nextId = idGenerator.GetNextId();
 
             //string result = processDefinition.Key + ":" + processDefinition.Version + ":" + nextId; // ACT-505
             // ACT-115: maximum id length is 64 characters
@@ -234,11 +234,11 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// Loads the persisted version of each process definition and set values on the in-memory
         /// version to be consistent.
         /// </summary>
-        protected internal virtual void makeProcessDefinitionsConsistentWithPersistedVersions(ParsedDeployment parsedDeployment)
+        protected internal virtual void MakeProcessDefinitionsConsistentWithPersistedVersions(ParsedDeployment parsedDeployment)
         {
             foreach (IProcessDefinitionEntity processDefinition in parsedDeployment.AllProcessDefinitions)
             {
-                IProcessDefinitionEntity persistedProcessDefinition = bpmnDeploymentHelper.getPersistedInstanceOfProcessDefinition(processDefinition);
+                IProcessDefinitionEntity persistedProcessDefinition = bpmnDeploymentHelper.GetPersistedInstanceOfProcessDefinition(processDefinition);
 
                 if (persistedProcessDefinition != null)
                 {
@@ -249,7 +249,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
             }
         }
 
-        protected internal virtual void createLocalizationValues(string processDefinitionId, Process process)
+        protected internal virtual void CreateLocalizationValues(string processDefinitionId, Process process)
         {
             if (process == null)
             {
@@ -258,7 +258,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
             ICommandContext commandContext = Context.CommandContext;
             IDynamicBpmnService dynamicBpmnService = commandContext.ProcessEngineConfiguration.DynamicBpmnService;
-            JToken infoNode = dynamicBpmnService.getProcessDefinitionInfo(processDefinitionId);
+            JToken infoNode = dynamicBpmnService.GetProcessDefinitionInfo(processDefinitionId);
 
             bool localizationValuesChanged = false;
             process.ExtensionElements.TryGetValue("localization", out IList<ExtensionElement> localizationElements);
@@ -268,8 +268,8 @@ namespace org.activiti.engine.impl.bpmn.deployer
                 {
                     if (BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX.Equals(localizationElement.NamespacePrefix))
                     {
-                        string locale = localizationElement.getAttributeValue(null, "locale");
-                        string name = localizationElement.getAttributeValue(null, "name");
+                        string locale = localizationElement.GetAttributeValue(null, "locale");
+                        string name = localizationElement.GetAttributeValue(null, "name");
                         string documentation = null;
                         localizationElement.ChildElements.TryGetValue("documentation", out IList<ExtensionElement> documentationElements);
                         if (documentationElements != null)
@@ -282,15 +282,15 @@ namespace org.activiti.engine.impl.bpmn.deployer
                         }
 
                         string processId = process.Id;
-                        if (!isEqualToCurrentLocalizationValue(locale, processId, "name", name, infoNode))
+                        if (!IsEqualToCurrentLocalizationValue(locale, processId, "name", name, infoNode))
                         {
-                            dynamicBpmnService.changeLocalizationName(locale, processId, name, infoNode);
+                            dynamicBpmnService.ChangeLocalizationName(locale, processId, name, infoNode);
                             localizationValuesChanged = true;
                         }
 
-                        if (!ReferenceEquals(documentation, null) && !isEqualToCurrentLocalizationValue(locale, processId, "description", documentation, infoNode))
+                        if (!(documentation is null) && !IsEqualToCurrentLocalizationValue(locale, processId, "description", documentation, infoNode))
                         {
-                            dynamicBpmnService.changeLocalizationDescription(locale, processId, documentation, infoNode);
+                            dynamicBpmnService.ChangeLocalizationDescription(locale, processId, documentation, infoNode);
                             localizationValuesChanged = true;
                         }
 
@@ -299,8 +299,8 @@ namespace org.activiti.engine.impl.bpmn.deployer
                 }
             }
 
-            bool isFlowElementLocalizationChanged = localizeFlowElements(process.FlowElements, infoNode);
-            bool isDataObjectLocalizationChanged = localizeDataObjectElements(process.DataObjects, infoNode);
+            bool isFlowElementLocalizationChanged = LocalizeFlowElements(process.FlowElements, infoNode);
+            bool isDataObjectLocalizationChanged = LocalizeDataObjectElements(process.DataObjects, infoNode);
             if (isFlowElementLocalizationChanged || isDataObjectLocalizationChanged)
             {
                 localizationValuesChanged = true;
@@ -308,11 +308,11 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
             if (localizationValuesChanged)
             {
-                dynamicBpmnService.saveProcessDefinitionInfo(processDefinitionId, infoNode);
+                dynamicBpmnService.SaveProcessDefinitionInfo(processDefinitionId, infoNode);
             }
         }
 
-        protected internal virtual bool localizeFlowElements(ICollection<FlowElement> flowElements, JToken infoNode)
+        protected internal virtual bool LocalizeFlowElements(ICollection<FlowElement> flowElements, JToken infoNode)
         {
             bool localizationValuesChanged = false;
 
@@ -335,8 +335,8 @@ namespace org.activiti.engine.impl.bpmn.deployer
                         {
                             if (BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX.Equals(localizationElement.NamespacePrefix))
                             {
-                                string locale = localizationElement.getAttributeValue(null, "locale");
-                                string name = localizationElement.getAttributeValue(null, "name");
+                                string locale = localizationElement.GetAttributeValue(null, "locale");
+                                string name = localizationElement.GetAttributeValue(null, "name");
                                 string documentation = null;
                                 localizationElement.ChildElements.TryGetValue("documentation", out IList<ExtensionElement> documentationElements);
                                 if (documentationElements != null)
@@ -349,15 +349,15 @@ namespace org.activiti.engine.impl.bpmn.deployer
                                 }
 
                                 string flowElementId = flowElement.Id;
-                                if (isEqualToCurrentLocalizationValue(locale, flowElementId, "name", name, infoNode) == false)
+                                if (IsEqualToCurrentLocalizationValue(locale, flowElementId, "name", name, infoNode) == false)
                                 {
-                                    dynamicBpmnService.changeLocalizationName(locale, flowElementId, name, infoNode);
+                                    dynamicBpmnService.ChangeLocalizationName(locale, flowElementId, name, infoNode);
                                     localizationValuesChanged = true;
                                 }
 
-                                if (!ReferenceEquals(documentation, null) && isEqualToCurrentLocalizationValue(locale, flowElementId, "description", documentation, infoNode) == false)
+                                if (!(documentation is null) && IsEqualToCurrentLocalizationValue(locale, flowElementId, "description", documentation, infoNode) == false)
                                 {
-                                    dynamicBpmnService.changeLocalizationDescription(locale, flowElementId, documentation, infoNode);
+                                    dynamicBpmnService.ChangeLocalizationDescription(locale, flowElementId, documentation, infoNode);
                                     localizationValuesChanged = true;
                                 }
 
@@ -366,11 +366,10 @@ namespace org.activiti.engine.impl.bpmn.deployer
                         }
                     }
 
-                    if (flowElement is SubProcess)
+                    if (flowElement is SubProcess subprocess)
                     {
-                        SubProcess subprocess = (SubProcess)flowElement;
-                        bool isFlowElementLocalizationChanged = localizeFlowElements(subprocess.FlowElements, infoNode);
-                        bool isDataObjectLocalizationChanged = localizeDataObjectElements(subprocess.DataObjects, infoNode);
+                        bool isFlowElementLocalizationChanged = LocalizeFlowElements(subprocess.FlowElements, infoNode);
+                        bool isDataObjectLocalizationChanged = LocalizeDataObjectElements(subprocess.DataObjects, infoNode);
                         if (isFlowElementLocalizationChanged || isDataObjectLocalizationChanged)
                         {
                             localizationValuesChanged = true;
@@ -382,7 +381,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
             return localizationValuesChanged;
         }
 
-        protected internal virtual bool isEqualToCurrentLocalizationValue(string language, string id, string propertyName, string propertyValue, JToken infoNode)
+        protected internal virtual bool IsEqualToCurrentLocalizationValue(string language, string id, string propertyName, string propertyValue, JToken infoNode)
         {
             bool isEqual = false;
             JToken localizationNode = infoNode.SelectToken("localization.language.id.propertyName");
@@ -393,7 +392,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
             return isEqual;
         }
 
-        protected internal virtual bool localizeDataObjectElements(IList<ValuedDataObject> dataObjects, JToken infoNode)
+        protected internal virtual bool LocalizeDataObjectElements(IList<ValuedDataObject> dataObjects, JToken infoNode)
         {
             bool localizationValuesChanged = false;
             ICommandContext commandContext = Context.CommandContext;
@@ -408,8 +407,8 @@ namespace org.activiti.engine.impl.bpmn.deployer
                     {
                         if (BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX.Equals(localizationElement.NamespacePrefix))
                         {
-                            string locale = localizationElement.getAttributeValue(null, "locale");
-                            string name = localizationElement.getAttributeValue(null, "name");
+                            string locale = localizationElement.GetAttributeValue(null, "locale");
+                            string name = localizationElement.GetAttributeValue(null, "name");
                             string documentation = null;
 
                             localizationElement.ChildElements.TryGetValue("documentation", out IList<ExtensionElement> documentationElements);
@@ -422,16 +421,16 @@ namespace org.activiti.engine.impl.bpmn.deployer
                                 }
                             }
 
-                            if (!ReferenceEquals(name, null) && isEqualToCurrentLocalizationValue(locale, dataObject.Id, DynamicBpmnConstants_Fields.LOCALIZATION_NAME, name, infoNode) == false)
+                            if (!(name is null) && IsEqualToCurrentLocalizationValue(locale, dataObject.Id, DynamicBpmnConstants.LOCALIZATION_NAME, name, infoNode) == false)
                             {
-                                dynamicBpmnService.changeLocalizationName(locale, dataObject.Id, name, infoNode);
+                                dynamicBpmnService.ChangeLocalizationName(locale, dataObject.Id, name, infoNode);
                                 localizationValuesChanged = true;
                             }
 
-                            if (!ReferenceEquals(documentation, null) && isEqualToCurrentLocalizationValue(locale, dataObject.Id, DynamicBpmnConstants_Fields.LOCALIZATION_DESCRIPTION, documentation, infoNode) == false)
+                            if (!(documentation is null) && IsEqualToCurrentLocalizationValue(locale, dataObject.Id, DynamicBpmnConstants.LOCALIZATION_DESCRIPTION, documentation, infoNode) == false)
                             {
 
-                                dynamicBpmnService.changeLocalizationDescription(locale, dataObject.Id, documentation, infoNode);
+                                dynamicBpmnService.ChangeLocalizationDescription(locale, dataObject.Id, documentation, infoNode);
                                 localizationValuesChanged = true;
                             }
                         }

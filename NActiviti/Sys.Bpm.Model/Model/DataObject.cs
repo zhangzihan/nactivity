@@ -17,10 +17,12 @@
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            DataObject clone = new DataObject();
-            clone.Values = this;
+            DataObject clone = new DataObject
+            {
+                Values = this
+            };
             return clone;
         }
 

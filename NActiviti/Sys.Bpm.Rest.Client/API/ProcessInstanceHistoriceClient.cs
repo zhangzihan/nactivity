@@ -22,13 +22,23 @@ namespace Sys.Bpm.Rest.Client.API
         /// <inheritdoc />
         public async Task<Resources<HistoricInstance>> ProcessInstances(HistoricInstanceQuery query)
         {
-            return await httpProxy.PostAsync<Resources<HistoricInstance>>($"{serviceUrl}", query);
+            return await httpProxy.PostAsync<Resources<HistoricInstance>>($"{serviceUrl}", query).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
         public async Task<HistoricInstance> GetProcessInstanceById(string processInstanceId)
         {
-            return await httpProxy.GetAsync<HistoricInstance>($"{serviceUrl}/{processInstanceId}");
+            return await httpProxy.GetAsync<HistoricInstance>($"{serviceUrl}/{processInstanceId}").ConfigureAwait(false);
+        }
+
+        public async Task<Resources<HistoricVariableInstance>> GetVariables(string processInstanceId, string taskId)
+        {
+            return await httpProxy.GetAsync<Resources<HistoricVariableInstance>>($"{serviceUrl}/{processInstanceId}/variables/{taskId}").ConfigureAwait(false);
+        }
+
+        public async Task<Resources<HistoricVariableInstance>> GetVariables(ProcessVariablesQuery query)
+        {
+            return await httpProxy.PostAsync<Resources<HistoricVariableInstance>>($"{serviceUrl}/variables", query).ConfigureAwait(false);
         }
     }
 }

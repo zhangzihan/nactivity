@@ -14,7 +14,7 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
@@ -26,11 +26,11 @@ namespace org.activiti.bpmn.converter.child
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_MESSAGEDEFINITION;
+                return BpmnXMLConstants.ELEMENT_EVENT_MESSAGEDEFINITION;
             }
         }
 
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
             if (!(parentElement is Event))
             {
@@ -38,9 +38,9 @@ namespace org.activiti.bpmn.converter.child
             }
 
             MessageEventDefinition eventDefinition = new MessageEventDefinition();
-            BpmnXMLUtil.addXMLLocation(eventDefinition, xtr);
-            eventDefinition.MessageRef = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_MESSAGE_REF);
-            eventDefinition.MessageExpression = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_MESSAGE_EXPRESSION);
+            BpmnXMLUtil.AddXMLLocation(eventDefinition, xtr);
+            eventDefinition.MessageRef = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_MESSAGE_REF);
+            eventDefinition.MessageExpression = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_MESSAGE_EXPRESSION);
 
             if (!string.IsNullOrWhiteSpace(eventDefinition.MessageRef))
             {
@@ -49,10 +49,10 @@ namespace org.activiti.bpmn.converter.child
                 if (indexOfP != -1)
                 {
                     string prefix = eventDefinition.MessageRef.Substring(0, indexOfP);
-                    string resolvedNamespace = model.getNamespace(prefix);
+                    string resolvedNamespace = model.GetNamespace(prefix);
                     string messageRef = eventDefinition.MessageRef.Substring(indexOfP + 1);
 
-                    if (string.ReferenceEquals(resolvedNamespace, null))
+                    if (resolvedNamespace is null)
                     {
                         // if it's an invalid prefix will consider this is not a namespace prefix so will be used as part of the stringReference
                         messageRef = prefix + ":" + messageRef;
@@ -71,7 +71,7 @@ namespace org.activiti.bpmn.converter.child
                 }
             }
 
-            BpmnXMLUtil.parseChildElements(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_MESSAGEDEFINITION, eventDefinition, xtr, model);
+            BpmnXMLUtil.ParseChildElements(BpmnXMLConstants.ELEMENT_EVENT_MESSAGEDEFINITION, eventDefinition, xtr, model);
 
             ((Event)parentElement).EventDefinitions.Add(eventDefinition);
         }

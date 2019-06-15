@@ -23,7 +23,7 @@ namespace org.activiti.bpmn.model
         protected internal IList<Artifact> artifactList = new List<Artifact>();
         protected internal IList<ValuedDataObject> dataObjects = new List<ValuedDataObject>();
 
-        public virtual FlowElement getFlowElement(string id)
+        public virtual FlowElement FindFlowElement(string id)
         {
             FlowElement foundElement = null;
             if (!string.IsNullOrWhiteSpace(id))
@@ -33,7 +33,7 @@ namespace org.activiti.bpmn.model
             return foundElement;
         }
 
-        public virtual ICollection<FlowElement> FlowElements
+        public virtual IList<FlowElement> FlowElements
         {
             get
             {
@@ -41,51 +41,51 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual void addFlowElement(FlowElement element)
+        public virtual void AddFlowElement(FlowElement element)
         {
             flowElementList.Add(element);
             element.ParentContainer = this;
             if (element is IFlowElementsContainer)
             {
-                flowElementMap.putAll(((IFlowElementsContainer)element).FlowElementMap);
+                flowElementMap.PutAll(((IFlowElementsContainer)element).FlowElementMap);
             }
             if (!string.IsNullOrWhiteSpace(element.Id))
             {
                 flowElementMap[element.Id] = element;
                 if (ParentContainer != null)
                 {
-                    ParentContainer.addFlowElementToMap(element);
+                    ParentContainer.AddFlowElementToMap(element);
                 }
             }
         }
 
-        public virtual void addFlowElementToMap(FlowElement element)
+        public virtual void AddFlowElementToMap(FlowElement element)
         {
             if (element != null && !string.IsNullOrWhiteSpace(element.Id))
             {
                 flowElementMap[element.Id] = element;
                 if (ParentContainer != null)
                 {
-                    ParentContainer.addFlowElementToMap(element);
+                    ParentContainer.AddFlowElementToMap(element);
                 }
             }
         }
 
-        public virtual void removeFlowElement(string elementId)
+        public virtual void RemoveFlowElement(string elementId)
         {
-            FlowElement element = getFlowElement(elementId);
+            FlowElement element = FindFlowElement(elementId);
             if (element != null)
             {
                 flowElementList.Remove(element);
                 flowElementMap.Remove(elementId);
                 if (element.ParentContainer != null)
                 {
-                    element.ParentContainer.removeFlowElementFromMap(elementId);
+                    element.ParentContainer.RemoveFlowElementFromMap(elementId);
                 }
             }
         }
 
-        public virtual void removeFlowElementFromMap(string elementId)
+        public virtual void RemoveFlowElementFromMap(string elementId)
         {
             if (!string.IsNullOrWhiteSpace(elementId))
             {
@@ -106,12 +106,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual bool containsFlowElementId(string id)
+        public virtual bool ContainsFlowElementId(string id)
         {
             return flowElementMap.ContainsKey(id);
         }
 
-        public virtual Artifact getArtifact(string id)
+        public virtual Artifact GetArtifact(string id)
         {
             Artifact foundArtifact = null;
             foreach (Artifact artifact in artifactList)
@@ -125,7 +125,7 @@ namespace org.activiti.bpmn.model
             return foundArtifact;
         }
 
-        public virtual ICollection<Artifact> Artifacts
+        public virtual IList<Artifact> Artifacts
         {
             get
             {
@@ -133,24 +133,26 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual void addArtifact(Artifact artifact)
+        public virtual void AddArtifact(Artifact artifact)
         {
             artifactList.Add(artifact);
         }
 
-        public virtual void removeArtifact(string artifactId)
+        public virtual void RemoveArtifact(string artifactId)
         {
-            Artifact artifact = getArtifact(artifactId);
+            Artifact artifact = GetArtifact(artifactId);
             if (artifact != null)
             {
                 artifactList.Remove(artifact);
             }
         }
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            SubProcess clone = new SubProcess();
-            clone.Values = this;
+            SubProcess clone = new SubProcess
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -180,7 +182,7 @@ namespace org.activiti.bpmn.model
                     if (!exists)
                     {
                         // missing object
-                        removeFlowElement(thisObject.Id);
+                        RemoveFlowElement(thisObject.Id);
                     }
                 }
 
@@ -189,26 +191,26 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (ValuedDataObject dataObject in val.DataObjects)
                     {
-                        ValuedDataObject clone = dataObject.clone() as ValuedDataObject;
+                        ValuedDataObject clone = dataObject.Clone() as ValuedDataObject;
                         dataObjects.Add(clone);
                         // add it to the list of FlowElements
                         // if it is already there, remove it first so order is same as
                         // data object list
-                        removeFlowElement(clone.Id);
-                        addFlowElement(clone);
+                        RemoveFlowElement(clone.Id);
+                        AddFlowElement(clone);
                     }
                 }
 
                 flowElementList.Clear();
                 foreach (FlowElement flowElement in val.FlowElements)
                 {
-                    addFlowElement(flowElement);
+                    AddFlowElement(flowElement);
                 }
 
                 artifactList.Clear();
                 foreach (Artifact artifact in val.Artifacts)
                 {
-                    addArtifact(artifact);
+                    AddArtifact(artifact);
                 }
             }
         }

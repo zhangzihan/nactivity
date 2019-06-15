@@ -49,10 +49,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            Interface clone = new Interface();
-            clone.Values = this;
+            Interface clone = new Interface
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -71,7 +73,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (Operation operation in val.Operations)
                     {
-                        operations.Add(operation.clone() as Operation);
+                        operations.Add(operation.Clone() as Operation);
                     }
                 }
             }

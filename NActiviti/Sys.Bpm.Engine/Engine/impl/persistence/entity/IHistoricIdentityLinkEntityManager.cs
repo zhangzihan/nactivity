@@ -19,13 +19,13 @@ namespace org.activiti.engine.impl.persistence.entity
 	public interface IHistoricIdentityLinkEntityManager : IEntityManager<IHistoricIdentityLinkEntity>
 	{
 
-	  IList<IHistoricIdentityLinkEntity> findHistoricIdentityLinksByTaskId(string taskId);
+	  IList<IHistoricIdentityLinkEntity> FindHistoricIdentityLinksByTaskId(string taskId);
 
-	  IList<IHistoricIdentityLinkEntity> findHistoricIdentityLinksByProcessInstanceId(string processInstanceId);
+	  IList<IHistoricIdentityLinkEntity> FindHistoricIdentityLinksByProcessInstanceId(string processInstanceId);
 
-	  void deleteHistoricIdentityLinksByTaskId(string taskId);
+	  void DeleteHistoricIdentityLinksByTaskId(string taskId);
 
-	  void deleteHistoricIdentityLinksByProcInstance(string processInstanceId);
+	  void DeleteHistoricIdentityLinksByProcInstance(string processInstanceId);
 
 	}
 }

@@ -11,7 +11,7 @@ namespace org.activiti.engine.impl.@event.logger.handler
     public class TaskCompletedEventHandler : AbstractTaskEventHandler
     {
 
-        public override IEventLogEntryEntity generateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
+        public override IEventLogEntryEntity GenerateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
         {
 
             IActivitiEntityEvent activitiEntityEvent = (IActivitiEntityEvent)@event;
@@ -20,7 +20,7 @@ namespace org.activiti.engine.impl.@event.logger.handler
             IDictionary<string, object> data = handleCommonTaskFields(task);
 
             long duration = timeStamp.Value.Ticks - task.CreateTime.Value.Ticks;
-            putInMapIfNotNull(data, Fields_Fields.DURATION, duration);
+            PutInMapIfNotNull(data, FieldsFields.DURATION, duration);
 
             if (@event is IActivitiEntityWithVariablesEvent)
             {
@@ -30,21 +30,21 @@ namespace org.activiti.engine.impl.@event.logger.handler
                     IDictionary<string, object> variableMap = new Dictionary<string, object>();
                     foreach (object variableName in activitiEntityWithVariablesEvent.Variables.Keys)
                     {
-                        putInMapIfNotNull(variableMap, (string)variableName, activitiEntityWithVariablesEvent.Variables[variableName.ToString()]);
+                        PutInMapIfNotNull(variableMap, (string)variableName, activitiEntityWithVariablesEvent.Variables[variableName.ToString()]);
                     }
                     if (activitiEntityWithVariablesEvent.LocalScope)
                     {
-                        putInMapIfNotNull(data, Fields_Fields.LOCAL_VARIABLES, variableMap);
+                        PutInMapIfNotNull(data, FieldsFields.LOCAL_VARIABLES, variableMap);
                     }
                     else
                     {
-                        putInMapIfNotNull(data, Fields_Fields.VARIABLES, variableMap);
+                        PutInMapIfNotNull(data, FieldsFields.VARIABLES, variableMap);
                     }
                 }
 
             }
 
-            return createEventLogEntry(task.ProcessDefinitionId, task.ProcessInstanceId, task.ExecutionId, task.Id, data);
+            return CreateEventLogEntry(task.ProcessDefinitionId, task.ProcessInstanceId, task.ExecutionId, task.Id, data);
         }
 
     }

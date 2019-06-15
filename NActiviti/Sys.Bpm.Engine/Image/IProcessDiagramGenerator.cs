@@ -19,6 +19,7 @@ namespace org.activiti.image
 {
 
     using org.activiti.bpmn.model;
+    using System.IO;
 
     /// <summary>
     /// This interface declares methods to generate process diagram
@@ -33,7 +34,7 @@ namespace org.activiti.image
         /// <param name="highLightedFlows"> flows to highlight </param>
         /// <param name="activityFontName"> override the default activity font </param>
         /// <param name="labelFontName"> override the default label font </param>
-        System.IO.Stream generateDiagram(BpmnModel bpmnModel, IList<string> highLightedActivities, IList<string> highLightedFlows, string activityFontName, string labelFontName, string annotationFontName);
+        Stream GenerateDiagram(BpmnModel bpmnModel, IList<string> highLightedActivities, IList<string> highLightedFlows, string activityFontName, string labelFontName, string annotationFontName);
 
         /// <summary>
         /// Generates a diagram of the given process definition, using the diagram interchange information of the process,
@@ -44,7 +45,7 @@ namespace org.activiti.image
         /// <param name="activityFontName"> override the default activity font </param>
         /// <param name="labelFontName"> override the default label font </param>
         /// <param name="generateDefaultDiagram"> true if a default diagram should be generated if there is no graphic info available </param>
-        System.IO.Stream generateDiagram(BpmnModel bpmnModel, IList<string> highLightedActivities, IList<string> highLightedFlows, string activityFontName, string labelFontName, string annotationFontName, bool generateDefaultDiagram);
+        Stream GenerateDiagram(BpmnModel bpmnModel, IList<string> highLightedActivities, IList<string> highLightedFlows, string activityFontName, string labelFontName, string annotationFontName, bool generateDefaultDiagram);
 
         /// <summary>
         /// Generates a diagram of the given process definition, using the diagram interchange information of the process,
@@ -56,7 +57,7 @@ namespace org.activiti.image
         /// <param name="labelFontName"> override the default label font </param>
         /// <param name="generateDefaultDiagram"> true if a default diagram should be generated if there is no graphic info available </param>
         /// <param name="defaultDiagramImageFileName"> override the default diagram image file name </param>
-        System.IO.Stream generateDiagram(BpmnModel bpmnModel, IList<string> highLightedActivities, IList<string> highLightedFlows, string activityFontName, string labelFontName, string annotationFontName, bool generateDefaultDiagram, string defaultDiagramImageFileName);
+        Stream GenerateDiagram(BpmnModel bpmnModel, IList<string> highLightedActivities, IList<string> highLightedFlows, string activityFontName, string labelFontName, string annotationFontName, bool generateDefaultDiagram, string defaultDiagramImageFileName);
 
         /// <summary>
         /// Generates a diagram of the given process definition, using the diagram interchange information of the process.
@@ -64,20 +65,20 @@ namespace org.activiti.image
         /// <param name="bpmnModel"> bpmn model to get diagram for </param>
         /// <param name="highLightedActivities"> activities to highlight </param>
         /// <param name="highLightedFlows"> flows to highlight </param>
-        System.IO.Stream generateDiagram(BpmnModel bpmnModel, IList<string> highLightedActivities, IList<string> highLightedFlows);
+        Stream GenerateDiagram(BpmnModel bpmnModel, IList<string> highLightedActivities, IList<string> highLightedFlows);
 
         /// <summary>
         /// Generates a diagram of the given process definition, using the diagram interchange information of the process.
         /// If there is no interchange information available, an ActivitiInterchangeInfoNotFoundException is thrown. </summary>
         /// <param name="bpmnModel"> bpmn model to get diagram for </param>
         /// <param name="highLightedActivities"> activities to highlight </param>
-        System.IO.Stream generateDiagram(BpmnModel bpmnModel, IList<string> highLightedActivities);
+        Stream GenerateDiagram(BpmnModel bpmnModel, IList<string> highLightedActivities);
 
         /// <summary>
         /// Generates a diagram of the given process definition, using the diagram interchange information of the process.
         /// If there is no interchange information available, an ActivitiInterchangeInfoNotFoundException is thrown. </summary>
         /// <param name="bpmnModel"> bpmn model to get diagram for </param>
-        System.IO.Stream generateDiagram(BpmnModel bpmnModel, string activityFontName, string labelFontName, string annotationFontName);
+        Stream GenerateDiagram(BpmnModel bpmnModel, string activityFontName, string labelFontName, string annotationFontName);
 
         string DefaultActivityFontName { get; }
 

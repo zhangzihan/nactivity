@@ -17,9 +17,11 @@ using System.Collections.Generic;
 
 namespace org.activiti.engine.impl.persistence.entity
 {
-
+    using Newtonsoft.Json.Linq;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.db;
+    using Sys.Net.Http;
+    using Sys.Workflow;
 
     /// 
     /// 
@@ -64,10 +66,10 @@ namespace org.activiti.engine.impl.persistence.entity
             startTime = processInstance.StartTime;
             startUserId = processInstance.StartUserId;
             startActivityId = processInstance.ActivityId;
-            superProcessInstanceId = processInstance.SuperExecution != null ? processInstance.SuperExecution.ProcessInstanceId : null;
+            superProcessInstanceId = processInstance.SuperExecution?.ProcessInstanceId;
 
             // Inherit tenant id (if applicable)
-            if (!ReferenceEquals(processInstance.TenantId, null))
+            if (!(processInstance.TenantId is null))
             {
                 tenantId = processInstance.TenantId;
             }
@@ -77,19 +79,21 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                PersistentState persistentState = new PersistentState();
-                persistentState["endTime"] = endTime;
-                persistentState["businessKey"] = businessKey;
-                persistentState["name"] = name;
-                persistentState["durationInMillis"] = durationInMillis;
-                persistentState["deleteReason"] = deleteReason;
-                persistentState["endStateName"] = endActivityId;
-                persistentState["superProcessInstanceId"] = superProcessInstanceId;
-                persistentState["processDefinitionId"] = processDefinitionId;
-                persistentState["processDefinitionKey"] = processDefinitionKey;
-                persistentState["processDefinitionName"] = processDefinitionName;
-                persistentState["processDefinitionVersion"] = processDefinitionVersion;
-                persistentState["deploymentId"] = deploymentId;
+                PersistentState persistentState = new PersistentState
+                {
+                    ["endTime"] = endTime,
+                    ["businessKey"] = businessKey,
+                    ["name"] = name,
+                    ["durationInMillis"] = durationInMillis,
+                    ["deleteReason"] = deleteReason,
+                    ["endStateName"] = endActivityId,
+                    ["superProcessInstanceId"] = superProcessInstanceId,
+                    ["processDefinitionId"] = processDefinitionId,
+                    ["processDefinitionKey"] = processDefinitionKey,
+                    ["processDefinitionName"] = processDefinitionName,
+                    ["processDefinitionVersion"] = processDefinitionVersion,
+                    ["deploymentId"] = deploymentId
+                };
                 return persistentState;
             }
         }
@@ -131,6 +135,70 @@ namespace org.activiti.engine.impl.persistence.entity
             set
             {
                 this.startUserId = value;
+            }
+        }
+
+        public virtual string StartUser
+        {
+            get; set;
+        }
+
+        internal static IEnumerable<IHistoricProcessInstanceEntity> EnsureStarterInitialized(IEnumerable<HistoricProcessInstanceEntityImpl> insts)
+        {
+            foreach (var inst in insts ?? new HistoricProcessInstanceEntityImpl[0])
+            {
+                inst.EnsureStarterInitialized();
+
+                yield return inst;
+            }
+
+            yield break;
+        }
+
+        private IUserInfo EnsureStarterInitialized()
+        {
+            if (StartUser != null)
+            {
+                starter = new UserInfo
+                {
+                    Id = startUserId,
+                    FullName = StartUser
+                };
+                return starter;
+            }
+
+            if (Context.CommandContext != null && (starter == null || starter.Id != this.startUserId))
+            {
+                if (this.ProcessVariables.TryGetValue(this.startUserId, out var userInfo) && userInfo != null)
+                {
+                    starter = JToken.FromObject(userInfo).ToObject<UserInfo>();
+
+                    return starter;
+                }
+            }
+
+            starter = new UserInfo
+            {
+                Id = startUserId
+            };
+
+            return starter;
+        }
+
+        private IUserInfo starter = null;
+
+        public virtual IUserInfo Starter
+        {
+            get
+            {
+                if (starter == null)
+                {
+                    starter = EnsureStarterInitialized();
+                }
+
+                return starter;
+                //                throw new org.activiti.engine.exceptions.NotFoundAssigneeException(this.assignee);  
+                //#endif
             }
         }
 
@@ -178,7 +246,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                if (!ReferenceEquals(localizedName, null) && localizedName.Length > 0)
+                if (!(localizedName is null) && localizedName.Length > 0)
                 {
                     return localizedName;
                 }
@@ -211,7 +279,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                if (!ReferenceEquals(localizedDescription, null) && localizedDescription.Length > 0)
+                if (!(localizedDescription is null) && localizedDescription.Length > 0)
                 {
                     return localizedDescription;
                 }
@@ -301,7 +369,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (IHistoricVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!ReferenceEquals(variableInstance.Id, null) && ReferenceEquals(variableInstance.TaskId, null))
+                        if (!(variableInstance.Id is null) && variableInstance.TaskId is null)
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }

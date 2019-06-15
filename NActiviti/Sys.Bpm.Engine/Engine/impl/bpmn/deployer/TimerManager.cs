@@ -28,39 +28,38 @@ namespace org.activiti.engine.impl.bpmn.deployer
     /// </summary>
     public class TimerManager
     {
-        protected internal virtual void removeObsoleteTimers(IProcessDefinitionEntity processDefinition)
+        protected internal virtual void RemoveObsoleteTimers(IProcessDefinitionEntity processDefinition)
         {
-            IList<ITimerJobEntity> jobsToDelete = null;
-
-            if (!ReferenceEquals(processDefinition.TenantId, null) && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
+            IList<ITimerJobEntity> jobsToDelete;
+            if (!(processDefinition.TenantId is null) && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
             {
-                jobsToDelete = Context.CommandContext.TimerJobEntityManager.findJobsByTypeAndProcessDefinitionKeyAndTenantId(TimerStartEventJobHandler.TYPE, processDefinition.Key, processDefinition.TenantId);
+                jobsToDelete = Context.CommandContext.TimerJobEntityManager.FindJobsByTypeAndProcessDefinitionKeyAndTenantId(TimerStartEventJobHandler.TYPE, processDefinition.Key, processDefinition.TenantId);
             }
             else
             {
-                jobsToDelete = Context.CommandContext.TimerJobEntityManager.findJobsByTypeAndProcessDefinitionKeyNoTenantId(TimerStartEventJobHandler.TYPE, processDefinition.Key);
+                jobsToDelete = Context.CommandContext.TimerJobEntityManager.FindJobsByTypeAndProcessDefinitionKeyNoTenantId(TimerStartEventJobHandler.TYPE, processDefinition.Key);
             }
 
             if (jobsToDelete != null)
             {
                 foreach (ITimerJobEntity job in jobsToDelete)
                 {
-                    (new CancelJobsCmd(job.Id)).execute(Context.CommandContext);
+                    (new CancelJobsCmd(job.Id)).Execute(Context.CommandContext);
                 }
             }
         }
 
-        protected internal virtual void scheduleTimers(IProcessDefinitionEntity processDefinition, Process process)
+        protected internal virtual void ScheduleTimers(IProcessDefinitionEntity processDefinition, Process process)
         {
             IJobManager jobManager = Context.CommandContext.JobManager;
-            IList<ITimerJobEntity> timers = getTimerDeclarations(processDefinition, process);
+            IList<ITimerJobEntity> timers = GetTimerDeclarations(processDefinition, process);
             foreach (ITimerJobEntity timer in timers)
             {
-                jobManager.scheduleTimerJob(timer);
+                jobManager.ScheduleTimerJob(timer);
             }
         }
 
-        protected internal virtual IList<ITimerJobEntity> getTimerDeclarations(IProcessDefinitionEntity processDefinition, Process process)
+        protected internal virtual IList<ITimerJobEntity> GetTimerDeclarations(IProcessDefinitionEntity processDefinition, Process process)
         {
             IJobManager jobManager = Context.CommandContext.JobManager;
             IList<ITimerJobEntity> timers = new List<ITimerJobEntity>();
@@ -68,22 +67,20 @@ namespace org.activiti.engine.impl.bpmn.deployer
             {
                 foreach (FlowElement element in process.FlowElements)
                 {
-                    if (element is StartEvent)
+                    if (element is StartEvent startEvent)
                     {
-                        StartEvent startEvent = (StartEvent)element;
                         if (CollectionUtil.IsNotEmpty(startEvent.EventDefinitions))
                         {
                             EventDefinition eventDefinition = startEvent.EventDefinitions[0];
-                            if (eventDefinition is TimerEventDefinition)
+                            if (eventDefinition is TimerEventDefinition timerEventDefinition)
                             {
-                                TimerEventDefinition timerEventDefinition = (TimerEventDefinition)eventDefinition;
-                                ITimerJobEntity timerJob = jobManager.createTimerJob(timerEventDefinition, false, null, TimerStartEventJobHandler.TYPE, TimerEventHandler.createConfiguration(startEvent.Id, timerEventDefinition.EndDate, timerEventDefinition.CalendarName));
+                                ITimerJobEntity timerJob = jobManager.CreateTimerJob(timerEventDefinition, false, null, TimerStartEventJobHandler.TYPE, TimerEventHandler.CreateConfiguration(startEvent.Id, timerEventDefinition.EndDate, timerEventDefinition.CalendarName));
 
                                 if (timerJob != null)
                                 {
                                     timerJob.ProcessDefinitionId = processDefinition.Id;
 
-                                    if (!ReferenceEquals(processDefinition.TenantId, null))
+                                    if (!(processDefinition.TenantId is null))
                                     {
                                         timerJob.TenantId = processDefinition.TenantId;
                                     }
@@ -99,6 +96,4 @@ namespace org.activiti.engine.impl.bpmn.deployer
             return timers;
         }
     }
-
-
 }

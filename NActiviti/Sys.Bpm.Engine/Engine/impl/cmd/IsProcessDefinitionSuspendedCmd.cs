@@ -33,9 +33,9 @@ namespace org.activiti.engine.impl.cmd
             this.processDefinitionId = processDefinitionId;
         }
 
-        public  virtual bool  execute(ICommandContext  commandContext)
+        public  virtual bool  Execute(ICommandContext  commandContext)
         {
-            return ProcessDefinitionUtil.isProcessDefinitionSuspended(processDefinitionId);
+            return ProcessDefinitionUtil.IsProcessDefinitionSuspended(processDefinitionId);
         }
     }
 

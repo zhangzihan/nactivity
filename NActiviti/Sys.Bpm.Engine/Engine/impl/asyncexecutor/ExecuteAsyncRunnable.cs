@@ -25,48 +25,75 @@ namespace org.activiti.engine.impl.asyncexecutor
     using org.activiti.engine.impl.jobexecutor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
-    using Sys;
+    using Sys.Workflow;
     using System.Collections.Generic;
 
     /// 
     /// 
     public class ExecuteAsyncRunnable
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string jobId;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IJob job;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual ThreadStart Runable { get; private set; }
 
         private static readonly ILogger<ExecuteAsyncRunnable> log = ProcessEngineServiceProvider.LoggerService<ExecuteAsyncRunnable>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jobId"></param>
+        /// <param name="processEngineConfiguration"></param>
         public ExecuteAsyncRunnable(string jobId, ProcessEngineConfigurationImpl processEngineConfiguration)
         {
             this.jobId = jobId;
             this.processEngineConfiguration = processEngineConfiguration;
 
-            this.Runable += new ThreadStart(run);
+            this.Runable += new ThreadStart(Run);
         }
 
-        public ExecuteAsyncRunnable(IJob job, ProcessEngineConfigurationImpl processEngineConfiguration) 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="job"></param>
+        /// <param name="processEngineConfiguration"></param>
+        public ExecuteAsyncRunnable(IJob job, ProcessEngineConfigurationImpl processEngineConfiguration)
             : this(job.Id, processEngineConfiguration)
         {
             this.job = job;
         }
 
-
-        public virtual void run()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Run()
         {
             if (job == null)
             {
-                job = processEngineConfiguration.CommandExecutor.execute(new CommandAnonymousInnerClass(this));
+                job = processEngineConfiguration.CommandExecutor.Execute(new CommandAnonymousInnerClass(this));
             }
 
-            bool lockNotNeededOrSuccess = lockJobIfNeeded();
+            bool lockNotNeededOrSuccess = LockJobIfNeeded();
 
             if (lockNotNeededOrSuccess)
             {
-                executeJob();
-                unlockJobIfNeeded();
+                ExecuteJob();
+                UnlockJobIfNeeded();
             }
         }
 
@@ -79,9 +106,9 @@ namespace org.activiti.engine.impl.asyncexecutor
                 this.outerInstance = outerInstance;
             }
 
-            public virtual IJobEntity execute(ICommandContext commandContext)
+            public virtual IJobEntity Execute(ICommandContext commandContext)
             {
-                return commandContext.JobEntityManager.findById<IJobEntity>(new KeyValuePair<string, object>("id", outerInstance.jobId));
+                return commandContext.JobEntityManager.FindById<IJobEntity>(outerInstance.jobId);
             }
         }
 
@@ -94,7 +121,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                 this.outerInstance = outerInstance;
             }
 
-            public virtual bool execute(ICommandContext commandContext)
+            public virtual bool Execute(ICommandContext commandContext)
             {
                 bool.TryParse(commandContext.GetResult()?.ToString(), out var res);
 
@@ -102,17 +129,19 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-        protected internal virtual void executeJob()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal virtual void ExecuteJob()
         {
             try
             {
-                processEngineConfiguration.CommandExecutor.execute(new ExecuteAsyncJobCmd(jobId));
+                processEngineConfiguration.CommandExecutor.Execute(new ExecuteAsyncJobCmd(jobId));
             }
-
             catch (ActivitiOptimisticLockingException e)
             {
 
-                handleFailedJob(e);
+                HandleFailedJob(e);
 
                 if (log.IsEnabled(LogLevel.Debug))
                 {
@@ -122,7 +151,7 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
             catch (Exception exception)
             {
-                handleFailedJob(exception);
+                HandleFailedJob(exception);
 
                 // Finally, Throw the exception to indicate the ExecuteAsyncJobCmd failed
                 string message = "Job " + jobId + " failed";
@@ -130,13 +159,16 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-        protected internal virtual void unlockJobIfNeeded()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal virtual void UnlockJobIfNeeded()
         {
             try
             {
                 if (job.Exclusive)
                 {
-                    processEngineConfiguration.CommandExecutor.execute(new UnlockExclusiveJobCmd(job));
+                    processEngineConfiguration.CommandExecutor.Execute(new UnlockExclusiveJobCmd(job));
                 }
 
             }
@@ -159,13 +191,13 @@ namespace org.activiti.engine.impl.asyncexecutor
         /// Returns true if lock succeeded, or no lock was needed.
         /// Returns false if locking was unsuccessfull. 
         /// </summary>
-        protected internal virtual bool lockJobIfNeeded()
+        protected internal virtual bool LockJobIfNeeded()
         {
             try
             {
                 if (job.Exclusive)
                 {
-                    processEngineConfiguration.CommandExecutor.execute(new LockExclusiveJobCmd(job));
+                    processEngineConfiguration.CommandExecutor.Execute(new LockExclusiveJobCmd(job));
                 }
 
             }
@@ -177,7 +209,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                 }
 
                 // Release the job again so it can be acquired later or by another node
-                unacquireJob();
+                UnacquireJob();
 
                 return false;
             }
@@ -185,16 +217,19 @@ namespace org.activiti.engine.impl.asyncexecutor
             return true;
         }
 
-        protected internal virtual void unacquireJob()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal virtual void UnacquireJob()
         {
             ICommandContext commandContext = Context.CommandContext;
             if (commandContext != null)
             {
-                commandContext.JobManager.unacquire(job);
+                commandContext.JobManager.Unacquire(job);
             }
             else
             {
-                processEngineConfiguration.CommandExecutor.execute(new CommandAnonymousInnerClass3(this, commandContext));
+                processEngineConfiguration.CommandExecutor.Execute(new CommandAnonymousInnerClass3(this));
             }
         }
 
@@ -202,32 +237,33 @@ namespace org.activiti.engine.impl.asyncexecutor
         {
             private readonly ExecuteAsyncRunnable outerInstance;
 
-            private ICommandContext commandContext;
-
-            public CommandAnonymousInnerClass3(ExecuteAsyncRunnable outerInstance, ICommandContext commandContext)
+            public CommandAnonymousInnerClass3(ExecuteAsyncRunnable outerInstance)
             {
                 this.outerInstance = outerInstance;
-                this.commandContext = commandContext;
             }
 
-            public virtual object execute(ICommandContext commandContext)
+            public virtual object Execute(ICommandContext commandContext)
             {
-                commandContext.JobManager.unacquire(outerInstance.job);
+                commandContext.JobManager.Unacquire(outerInstance.job);
 
                 return commandContext.GetResult();
             }
         }
 
-        protected internal virtual void handleFailedJob(Exception exception)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="exception"></param>
+        protected internal virtual void HandleFailedJob(Exception exception)
         {
-            processEngineConfiguration.CommandExecutor.execute(new CommandAnonymousInnerClass4(this, exception));
+            processEngineConfiguration.CommandExecutor.Execute(new CommandAnonymousInnerClass4(this, exception));
         }
 
         private class CommandAnonymousInnerClass4 : ICommand<object>
         {
             private readonly ExecuteAsyncRunnable outerInstance;
 
-            private Exception exception;
+            private readonly Exception exception;
 
             public CommandAnonymousInnerClass4(ExecuteAsyncRunnable outerInstance, Exception exception)
             {
@@ -236,14 +272,14 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
 
 
-            public virtual object execute(ICommandContext commandContext)
+            public virtual object Execute(ICommandContext commandContext)
             {
-                CommandConfig commandConfig = outerInstance.processEngineConfiguration.CommandExecutor.DefaultConfig.transactionRequiresNew();
+                CommandConfig commandConfig = outerInstance.processEngineConfiguration.CommandExecutor.DefaultConfig.TransactionRequiresNew();
                 IFailedJobCommandFactory failedJobCommandFactory = commandContext.FailedJobCommandFactory;
-                ICommand<object> cmd = failedJobCommandFactory.getCommand(outerInstance.job.Id, exception);
+                ICommand<object> cmd = failedJobCommandFactory.GetCommand(outerInstance.job.Id, exception);
 
                 log.LogTrace($"Using FailedJobCommandFactory '{failedJobCommandFactory.GetType()}' and command of type '{cmd.GetType()}'");
-                outerInstance.processEngineConfiguration.CommandExecutor.execute(commandConfig, cmd);
+                outerInstance.processEngineConfiguration.CommandExecutor.Execute(commandConfig, cmd);
 
                 // Dispatch an event, indicating job execution failed in a
                 // try-catch block, to prevent the original exception to be swallowed
@@ -251,7 +287,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                 {
                     try
                     {
-                        commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityExceptionEvent(ActivitiEventType.JOB_EXECUTION_FAILURE, outerInstance.job, exception));
+                        commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityExceptionEvent(ActivitiEventType.JOB_EXECUTION_FAILURE, outerInstance.job, exception));
                     }
                     catch (Exception ignore)
                     {
@@ -261,9 +297,6 @@ namespace org.activiti.engine.impl.asyncexecutor
 
                 return commandContext.GetResult();
             }
-
         }
-
     }
-
 }

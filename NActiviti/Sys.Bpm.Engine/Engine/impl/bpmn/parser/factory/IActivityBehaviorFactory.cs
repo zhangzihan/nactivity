@@ -37,104 +37,106 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
     public interface IActivityBehaviorFactory
     {
 
-        NoneStartEventActivityBehavior createNoneStartEventActivityBehavior(StartEvent startEvent);
+        NoneStartEventActivityBehavior CreateNoneStartEventActivityBehavior(StartEvent startEvent);
 
-        TaskActivityBehavior createTaskActivityBehavior(Task task);
+        TaskActivityBehavior CreateTaskActivityBehavior(TaskActivity task);
 
-        ManualTaskActivityBehavior createManualTaskActivityBehavior(ManualTask manualTask);
+        ManualTaskActivityBehavior CreateManualTaskActivityBehavior(ManualTask manualTask);
 
-        ReceiveTaskActivityBehavior createReceiveTaskActivityBehavior(ReceiveTask receiveTask);
+        ReceiveTaskActivityBehavior CreateReceiveTaskActivityBehavior(ReceiveTask receiveTask);
 
-        UserTaskActivityBehavior createUserTaskActivityBehavior(UserTask userTask);
+        UserTaskActivityBehavior CreateUserTaskActivityBehavior(UserTask userTask);
 
-        ClassDelegate createClassDelegateServiceTask(ServiceTask serviceTask);
+        ClassDelegate CreateClassDelegateSendTask(SendTask serviceTask);
 
-        ServiceTaskDelegateExpressionActivityBehavior createServiceTaskDelegateExpressionActivityBehavior(ServiceTask serviceTask);
+        ClassDelegate CreateClassDelegateServiceTask(ServiceTask serviceTask);
 
-        IActivityBehavior createDefaultServiceTaskBehavior(ServiceTask serviceTask);
+        ServiceTaskDelegateExpressionActivityBehavior CreateServiceTaskDelegateExpressionActivityBehavior(ServiceTask serviceTask);
 
-        ServiceTaskExpressionActivityBehavior createServiceTaskExpressionActivityBehavior(ServiceTask serviceTask);
+        IActivityBehavior CreateDefaultServiceTaskBehavior(ServiceTask serviceTask);
 
-        WebServiceActivityBehavior createWebServiceActivityBehavior(ServiceTask serviceTask);
+        ServiceTaskExpressionActivityBehavior CreateServiceTaskExpressionActivityBehavior(ServiceTask serviceTask);
 
-        WebServiceActivityBehavior createWebServiceActivityBehavior(SendTask sendTask);
+        WebServiceActivityBehavior CreateWebServiceActivityBehavior(ServiceTask serviceTask);
 
-        MailActivityBehavior createMailActivityBehavior(ServiceTask serviceTask);
+        WebServiceActivityBehavior CreateWebServiceActivityBehavior(SendTask sendTask);
 
-        MailActivityBehavior createMailActivityBehavior(SendTask sendTask);
+        MailActivityBehavior CreateMailActivityBehavior(ServiceTask serviceTask);
+
+        MailActivityBehavior CreateMailActivityBehavior(SendTask sendTask);
 
         // We do not want a hard dependency on the Mule module, hence we return
         // ActivityBehavior and instantiate the delegate instance using a string instead of the Class itself.
-        IActivityBehavior createMuleActivityBehavior(ServiceTask serviceTask);
+        IActivityBehavior CreateMuleActivityBehavior(ServiceTask serviceTask);
 
-        IActivityBehavior createMuleActivityBehavior(SendTask sendTask);
+        IActivityBehavior CreateMuleActivityBehavior(SendTask sendTask);
 
-        IActivityBehavior createCamelActivityBehavior(ServiceTask serviceTask);
+        IActivityBehavior CreateCamelActivityBehavior(ServiceTask serviceTask);
 
-        IActivityBehavior createCamelActivityBehavior(SendTask sendTask);
+        IActivityBehavior CreateCamelActivityBehavior(SendTask sendTask);
 
-        ShellActivityBehavior createShellActivityBehavior(ServiceTask serviceTask);
+        ShellActivityBehavior CreateShellActivityBehavior(ServiceTask serviceTask);
 
-        IActivityBehavior createBusinessRuleTaskActivityBehavior(BusinessRuleTask businessRuleTask);
+        IActivityBehavior CreateBusinessRuleTaskActivityBehavior(BusinessRuleTask businessRuleTask);
 
-        ScriptTaskActivityBehavior createScriptTaskActivityBehavior(ScriptTask scriptTask);
+        ScriptTaskActivityBehavior CreateScriptTaskActivityBehavior(ScriptTask scriptTask);
 
-        ExclusiveGatewayActivityBehavior createExclusiveGatewayActivityBehavior(ExclusiveGateway exclusiveGateway);
+        ExclusiveGatewayActivityBehavior CreateExclusiveGatewayActivityBehavior(ExclusiveGateway exclusiveGateway);
 
-        ParallelGatewayActivityBehavior createParallelGatewayActivityBehavior(ParallelGateway parallelGateway);
+        ParallelGatewayActivityBehavior CreateParallelGatewayActivityBehavior(ParallelGateway parallelGateway);
 
-        InclusiveGatewayActivityBehavior createInclusiveGatewayActivityBehavior(InclusiveGateway inclusiveGateway);
+        InclusiveGatewayActivityBehavior CreateInclusiveGatewayActivityBehavior(InclusiveGateway inclusiveGateway);
 
-        EventBasedGatewayActivityBehavior createEventBasedGatewayActivityBehavior(EventGateway eventGateway);
+        EventBasedGatewayActivityBehavior CreateEventBasedGatewayActivityBehavior(EventGateway eventGateway);
 
-        SequentialMultiInstanceBehavior createSequentialMultiInstanceBehavior(Activity activity, AbstractBpmnActivityBehavior innerActivityBehavior);
+        SequentialMultiInstanceBehavior CreateSequentialMultiInstanceBehavior(Activity activity, AbstractBpmnActivityBehavior innerActivityBehavior);
 
-        ParallelMultiInstanceBehavior createParallelMultiInstanceBehavior(Activity activity, AbstractBpmnActivityBehavior innerActivityBehavior);
+        ParallelMultiInstanceBehavior CreateParallelMultiInstanceBehavior(Activity activity, AbstractBpmnActivityBehavior innerActivityBehavior);
 
-        SubProcessActivityBehavior createSubprocessActivityBehavior(SubProcess subProcess);
+        SubProcessActivityBehavior CreateSubprocessActivityBehavior(SubProcess subProcess);
 
-        EventSubProcessErrorStartEventActivityBehavior createEventSubProcessErrorStartEventActivityBehavior(StartEvent startEvent);
+        EventSubProcessErrorStartEventActivityBehavior CreateEventSubProcessErrorStartEventActivityBehavior(StartEvent startEvent);
 
-        EventSubProcessMessageStartEventActivityBehavior createEventSubProcessMessageStartEventActivityBehavior(StartEvent startEvent, MessageEventDefinition messageEventDefinition);
+        EventSubProcessMessageStartEventActivityBehavior CreateEventSubProcessMessageStartEventActivityBehavior(StartEvent startEvent, MessageEventDefinition messageEventDefinition);
 
-        AdhocSubProcessActivityBehavior createAdhocSubprocessActivityBehavior(SubProcess subProcess);
+        AdhocSubProcessActivityBehavior CreateAdhocSubprocessActivityBehavior(SubProcess subProcess);
 
-        CallActivityBehavior createCallActivityBehavior(CallActivity callActivity);
+        CallActivityBehavior CreateCallActivityBehavior(CallActivity callActivity);
 
-        TransactionActivityBehavior createTransactionActivityBehavior(Transaction transaction);
+        TransactionActivityBehavior CreateTransactionActivityBehavior(Transaction transaction);
 
-        IntermediateCatchEventActivityBehavior createIntermediateCatchEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent);
+        IntermediateCatchEventActivityBehavior CreateIntermediateCatchEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent);
 
-        IntermediateCatchMessageEventActivityBehavior createIntermediateCatchMessageEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent, MessageEventDefinition messageEventDefinition);
+        IntermediateCatchMessageEventActivityBehavior CreateIntermediateCatchMessageEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent, MessageEventDefinition messageEventDefinition);
 
-        IntermediateCatchTimerEventActivityBehavior createIntermediateCatchTimerEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent, TimerEventDefinition timerEventDefinition);
+        IntermediateCatchTimerEventActivityBehavior CreateIntermediateCatchTimerEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent, TimerEventDefinition timerEventDefinition);
 
-        IntermediateCatchSignalEventActivityBehavior createIntermediateCatchSignalEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent, SignalEventDefinition signalEventDefinition, Signal signal);
+        IntermediateCatchSignalEventActivityBehavior CreateIntermediateCatchSignalEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent, SignalEventDefinition signalEventDefinition, Signal signal);
 
-        IntermediateThrowNoneEventActivityBehavior createIntermediateThrowNoneEventActivityBehavior(ThrowEvent throwEvent);
+        IntermediateThrowNoneEventActivityBehavior CreateIntermediateThrowNoneEventActivityBehavior(ThrowEvent throwEvent);
 
-        IntermediateThrowSignalEventActivityBehavior createIntermediateThrowSignalEventActivityBehavior(ThrowEvent throwEvent, SignalEventDefinition signalEventDefinition, Signal signal);
+        IntermediateThrowSignalEventActivityBehavior CreateIntermediateThrowSignalEventActivityBehavior(ThrowEvent throwEvent, SignalEventDefinition signalEventDefinition, Signal signal);
 
-        IntermediateThrowCompensationEventActivityBehavior createIntermediateThrowCompensationEventActivityBehavior(ThrowEvent throwEvent, CompensateEventDefinition compensateEventDefinition);
+        IntermediateThrowCompensationEventActivityBehavior CreateIntermediateThrowCompensationEventActivityBehavior(ThrowEvent throwEvent, CompensateEventDefinition compensateEventDefinition);
 
-        NoneEndEventActivityBehavior createNoneEndEventActivityBehavior(EndEvent endEvent);
+        NoneEndEventActivityBehavior CreateNoneEndEventActivityBehavior(EndEvent endEvent);
 
-        ErrorEndEventActivityBehavior createErrorEndEventActivityBehavior(EndEvent endEvent, ErrorEventDefinition errorEventDefinition);
+        ErrorEndEventActivityBehavior CreateErrorEndEventActivityBehavior(EndEvent endEvent, ErrorEventDefinition errorEventDefinition);
 
-        CancelEndEventActivityBehavior createCancelEndEventActivityBehavior(EndEvent endEvent);
+        CancelEndEventActivityBehavior CreateCancelEndEventActivityBehavior(EndEvent endEvent);
 
-        TerminateEndEventActivityBehavior createTerminateEndEventActivityBehavior(EndEvent endEvent);
+        TerminateEndEventActivityBehavior CreateTerminateEndEventActivityBehavior(EndEvent endEvent);
 
-        BoundaryEventActivityBehavior createBoundaryEventActivityBehavior(BoundaryEvent boundaryEvent, bool interrupting);
+        BoundaryEventActivityBehavior CreateBoundaryEventActivityBehavior(BoundaryEvent boundaryEvent, bool interrupting);
 
-        BoundaryCancelEventActivityBehavior createBoundaryCancelEventActivityBehavior(CancelEventDefinition cancelEventDefinition);
+        BoundaryCancelEventActivityBehavior CreateBoundaryCancelEventActivityBehavior(CancelEventDefinition cancelEventDefinition);
 
-        BoundaryTimerEventActivityBehavior createBoundaryTimerEventActivityBehavior(BoundaryEvent boundaryEvent, TimerEventDefinition timerEventDefinition, bool interrupting);
+        BoundaryTimerEventActivityBehavior CreateBoundaryTimerEventActivityBehavior(BoundaryEvent boundaryEvent, TimerEventDefinition timerEventDefinition, bool interrupting);
 
-        BoundarySignalEventActivityBehavior createBoundarySignalEventActivityBehavior(BoundaryEvent boundaryEvent, SignalEventDefinition signalEventDefinition, Signal signal, bool interrupting);
+        BoundarySignalEventActivityBehavior CreateBoundarySignalEventActivityBehavior(BoundaryEvent boundaryEvent, SignalEventDefinition signalEventDefinition, Signal signal, bool interrupting);
 
-        BoundaryMessageEventActivityBehavior createBoundaryMessageEventActivityBehavior(BoundaryEvent boundaryEvent, MessageEventDefinition messageEventDefinition, bool interrupting);
+        BoundaryMessageEventActivityBehavior CreateBoundaryMessageEventActivityBehavior(BoundaryEvent boundaryEvent, MessageEventDefinition messageEventDefinition, bool interrupting);
 
-        BoundaryCompensateEventActivityBehavior createBoundaryCompensateEventActivityBehavior(BoundaryEvent boundaryEvent, CompensateEventDefinition compensateEventDefinition, bool interrupting);
+        BoundaryCompensateEventActivityBehavior CreateBoundaryCompensateEventActivityBehavior(BoundaryEvent boundaryEvent, CompensateEventDefinition compensateEventDefinition, bool interrupting);
     }
 }

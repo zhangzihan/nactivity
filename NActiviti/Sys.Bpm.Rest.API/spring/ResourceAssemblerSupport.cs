@@ -9,8 +9,8 @@ namespace org.springframework.hateoas.mvc
     /// </summary>
     public abstract class ResourceAssemblerSupport<T, D> : IResourceAssembler<T, D> where D : ResourceSupport
     {
-        private Type controllerClass;
-        private Type resourceType;
+        private readonly Type controllerClass;
+        private readonly Type resourceType;
 
         /**
          * Creates a new {@link ResourceAssemblerSupport} using the given controller class and resource type.
@@ -31,13 +31,13 @@ namespace org.springframework.hateoas.mvc
          * @param entities must not be {@literal null}.
          * @return
          */
-        public virtual IList<D> toResources(IEnumerable<T> entities)
+        public virtual IList<D> ToResources(IEnumerable<T> entities)
         {
             IList<D> result = new List<D>();
 
             foreach (T entity in entities)
             {
-                result.Add(toResource(entity));
+                result.Add(ToResource(entity));
             }
 
             return result;
@@ -50,18 +50,18 @@ namespace org.springframework.hateoas.mvc
          * @param id must not be {@literal null}.
          * @return
          */
-        protected D createResourceWithId(object id, T entity)
+        protected D CreateResourceWithId(object id, T entity)
         {
-            return createResourceWithId(id, entity, new object[0]);
+            return CreateResourceWithId(id, entity, new object[0]);
         }
 
 
         /// <summary>
         /// 
         /// </summary>
-        protected D createResourceWithId(object id, T entity, params object[] parameters)
+        protected D CreateResourceWithId(object id, T entity, params object[] parameters)
         {
-            D instance = instantiateResource(entity);
+            D instance = InstantiateResource(entity);
             //instance.add(linkTo(controllerClass, parameters).slash(id).withSelfRel());
             return instance;
         }
@@ -74,15 +74,15 @@ namespace org.springframework.hateoas.mvc
          * @param entity
          * @return
          */
-        protected D instantiateResource(T entity)
+        protected D InstantiateResource(T entity)
         {
-            return default(D); //BeanUtils.instantiateClass(resourceType);
+            return default; //BeanUtils.instantiateClass(resourceType);
         }
 
 
         /// <summary>
         /// 
         /// </summary>
-        public abstract D toResource(T entity);
+        public abstract D ToResource(T entity);
     }
 }

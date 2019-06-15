@@ -44,7 +44,7 @@ namespace SmartSql
             try
             {
                 sqlMapper.BeginTransaction();
-                await handler();
+                await handler().ConfigureAwait(false);
                 sqlMapper.CommitTransaction();
             }
             catch (Exception ex)
@@ -59,7 +59,7 @@ namespace SmartSql
             try
             {
                 sqlMapper.BeginTransaction(isolationLevel);
-                await handler();
+                await handler().ConfigureAwait(false);
                 sqlMapper.CommitTransaction();
             }
             catch (Exception ex)

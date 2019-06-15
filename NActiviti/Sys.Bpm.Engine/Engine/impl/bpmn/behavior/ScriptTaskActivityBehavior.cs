@@ -21,7 +21,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.scripting;
-    using Sys;
+    using Sys.Workflow;
 
     /// <summary>
     /// activity implementation of the BPMN 2.0 script task.
@@ -56,16 +56,16 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.storeScriptVariables = storeScriptVariables;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             ScriptingEngines scriptingEngines = Context.ProcessEngineConfiguration.ScriptingEngines;
 
             if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
             {
-                JToken taskElementProperties = Context.getBpmnOverrideElementProperties(scriptTaskId, execution.ProcessDefinitionId);
-                if (taskElementProperties != null && taskElementProperties[DynamicBpmnConstants_Fields.SCRIPT_TASK_SCRIPT] != null)
+                JToken taskElementProperties = Context.GetBpmnOverrideElementProperties(scriptTaskId, execution.ProcessDefinitionId);
+                if (taskElementProperties != null && taskElementProperties[DynamicBpmnConstants.SCRIPT_TASK_SCRIPT] != null)
                 {
-                    string overrideScript = taskElementProperties[DynamicBpmnConstants_Fields.SCRIPT_TASK_SCRIPT].ToString();
+                    string overrideScript = taskElementProperties[DynamicBpmnConstants.SCRIPT_TASK_SCRIPT].ToString();
                     if (!string.IsNullOrWhiteSpace(overrideScript) && !overrideScript.Equals(script))
                     {
                         script = overrideScript;
@@ -76,11 +76,11 @@ namespace org.activiti.engine.impl.bpmn.behavior
             bool noErrors = true;
             try
             {
-                object result = scriptingEngines.evaluate(script, execution);
+                object result = scriptingEngines.Evaluate(script, execution);
 
-                if (!string.ReferenceEquals(resultVariable, null))
+                if (!(resultVariable is null))
                 {
-                    execution.setVariable(resultVariable, result);
+                    execution.SetVariable(resultVariable, result);
                 }
 
             }
@@ -91,7 +91,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 noErrors = false;
                 if (e is BpmnError)
                 {
-                    ErrorPropagation.propagateError((BpmnError)e, execution);
+                    ErrorPropagation.PropagateError((BpmnError)e, execution);
                 }
                 else
                 {
@@ -100,7 +100,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
             if (noErrors)
             {
-                leave(execution);
+                Leave(execution);
             }
         }
     }

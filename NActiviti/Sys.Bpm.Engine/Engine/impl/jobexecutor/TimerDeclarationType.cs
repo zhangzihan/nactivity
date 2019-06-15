@@ -54,12 +54,12 @@ namespace org.activiti.engine.impl.jobexecutor
 		  innerEnumValue = innerEnum;
 	  }
 
-		public static IList<TimerDeclarationType> values()
+		public static IList<TimerDeclarationType> Values()
 		{
 			return valueList;
 		}
 
-		public int ordinal()
+		public int Ordinal()
 		{
 			return ordinalValue;
 		}
@@ -69,7 +69,7 @@ namespace org.activiti.engine.impl.jobexecutor
 			return nameValue;
 		}
 
-		public static TimerDeclarationType valueOf(string name)
+		public static TimerDeclarationType ValueOf(string name)
 		{
 			foreach (TimerDeclarationType enumInstance in valueList)
 			{

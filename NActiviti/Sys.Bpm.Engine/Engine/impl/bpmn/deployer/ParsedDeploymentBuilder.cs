@@ -18,7 +18,8 @@ namespace org.activiti.engine.impl.bpmn.deployer
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.bpmn.parser;
     using org.activiti.engine.impl.persistence.entity;
-    using Sys;
+    using Sys.Workflow;
+    using System.IO;
 
     public class ParsedDeploymentBuilder
     {
@@ -35,7 +36,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
             this.deploymentSettings = deploymentSettings;
         }
 
-        public virtual ParsedDeployment build()
+        public virtual ParsedDeployment Build(BpmnDeploymentHelper bpmnDeploymentHelper)
         {
             IList<IProcessDefinitionEntity> processDefinitions = new List<IProcessDefinitionEntity>();
             IDictionary<IProcessDefinitionEntity, BpmnParse> processDefinitionsToBpmnParseMap = new Dictionary<IProcessDefinitionEntity, BpmnParse>();
@@ -44,10 +45,10 @@ namespace org.activiti.engine.impl.bpmn.deployer
             var resources = deployment.GetResources().Values;
             foreach (IResourceEntity resource in resources)
             {
-                if (isBpmnResource(resource.Name))
+                if (IsBpmnResource(resource.Name))
                 {
                     log.LogDebug($"Processing BPMN resource {resource.Name}");
-                    BpmnParse parse = createBpmnParseFromResource(resource);
+                    BpmnParse parse = CreateBpmnParseFromResource(bpmnDeploymentHelper, resource);
                     foreach (IProcessDefinitionEntity processDefinition in parse.ProcessDefinitions)
                     {
                         processDefinition.BusinessKey = parse.Deployment.BusinessKey;
@@ -63,29 +64,34 @@ namespace org.activiti.engine.impl.bpmn.deployer
             return new ParsedDeployment(deployment, processDefinitions, processDefinitionsToBpmnParseMap, processDefinitionsToResourceMap);
         }
 
-        protected internal virtual BpmnParse createBpmnParseFromResource(IResourceEntity resource)
+        private BpmnParse CreateBpmnParseFromResource(BpmnDeploymentHelper helper, IResourceEntity resource)
         {
             string resourceName = resource.Name;
-            System.IO.MemoryStream inputStream = new System.IO.MemoryStream(resource.Bytes);
+            MemoryStream inputStream = new MemoryStream(resource.Bytes);
+            var changed = helper.AddCamundaNamespace(inputStream);
+            if (changed.Item1)
+            {
+                resource.Bytes = changed.Item2.ToArray();
+                inputStream = changed.Item2;
+            };
+            inputStream.Seek(0, SeekOrigin.Begin);
 
-            BpmnParse bpmnParse = bpmnParser.createParse().sourceInputStream(inputStream).setSourceSystemId(resourceName).SetName(resourceName);
+            BpmnParse bpmnParse = bpmnParser.CreateParse().SourceInputStream(inputStream).SetSourceSystemId(resourceName).SetName(resourceName);
             bpmnParse.Deployment = deployment;
 
             if (deploymentSettings != null)
             {
-
                 // Schema validation if needed
-                if (deploymentSettings.ContainsKey(cmd.DeploymentSettings_Fields.IS_BPMN20_XSD_VALIDATION_ENABLED))
+                if (deploymentSettings.ContainsKey(cmd.DeploymentSettingsFields.IS_BPMN20_XSD_VALIDATION_ENABLED))
                 {
-                    bpmnParse.ValidateSchema = Convert.ToBoolean(deploymentSettings[cmd.DeploymentSettings_Fields.IS_BPMN20_XSD_VALIDATION_ENABLED]);
+                    bpmnParse.ValidateSchema = Convert.ToBoolean(deploymentSettings[cmd.DeploymentSettingsFields.IS_BPMN20_XSD_VALIDATION_ENABLED]);
                 }
 
                 // Process validation if needed
-                if (deploymentSettings.ContainsKey(cmd.DeploymentSettings_Fields.IS_PROCESS_VALIDATION_ENABLED))
+                if (deploymentSettings.ContainsKey(cmd.DeploymentSettingsFields.IS_PROCESS_VALIDATION_ENABLED))
                 {
-                    bpmnParse.ValidateProcess = Convert.ToBoolean(deploymentSettings[cmd.DeploymentSettings_Fields.IS_PROCESS_VALIDATION_ENABLED]);
+                    bpmnParse.ValidateProcess = Convert.ToBoolean(deploymentSettings[cmd.DeploymentSettingsFields.IS_PROCESS_VALIDATION_ENABLED]);
                 }
-
             }
             else
             {
@@ -94,11 +100,11 @@ namespace org.activiti.engine.impl.bpmn.deployer
                 bpmnParse.ValidateProcess = false;
             }
 
-            bpmnParse.execute();
+            bpmnParse.Execute();
             return bpmnParse;
         }
 
-        protected internal virtual bool isBpmnResource(string resourceName)
+        protected internal virtual bool IsBpmnResource(string resourceName)
         {
             foreach (string suffix in ResourceNameUtil.BPMN_RESOURCE_SUFFIXES)
             {
@@ -110,6 +116,5 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
             return false;
         }
-
     }
 }

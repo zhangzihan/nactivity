@@ -7,19 +7,19 @@ namespace java.util.concurrent
     {
         private ThreadStart runnable;
 
-        public void execute(ThreadStart runnable)
+        public void Execute(ThreadStart runnable)
         {
             this.runnable = runnable;
 
             this.runnable.Invoke();
         }
 
-        internal void shutdown()
+        internal void Shutdown()
         {
             throw new NotImplementedException();
         }
 
-        internal bool awaitTermination(long secondsToWaitOnShutdown, TimeSpan timeout)
+        internal bool AwaitTermination(long secondsToWaitOnShutdown, TimeSpan timeout)
         {
             throw new NotImplementedException();
         }

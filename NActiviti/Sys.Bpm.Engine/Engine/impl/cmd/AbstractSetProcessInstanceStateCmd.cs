@@ -24,7 +24,6 @@ namespace org.activiti.engine.impl.cmd
     /// 
     public abstract class AbstractSetProcessInstanceStateCmd : ICommand<object>
     {
-
         protected internal readonly string processInstanceId;
 
         public AbstractSetProcessInstanceStateCmd(string processInstanceId)
@@ -32,15 +31,15 @@ namespace org.activiti.engine.impl.cmd
             this.processInstanceId = processInstanceId;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
 
-            if (ReferenceEquals(processInstanceId, null))
+            if (processInstanceId is null)
             {
                 throw new ActivitiIllegalArgumentException("ProcessInstanceId cannot be null.");
             }
 
-            IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
+            IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
             if (executionEntity == null)
             {
@@ -51,50 +50,50 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiException("Cannot set suspension state for execution '" + processInstanceId + "': not a process instance.");
             }
 
-            SuspensionStateUtil.setSuspensionState(executionEntity, NewState);
-            commandContext.ExecutionEntityManager.update(executionEntity, false);
+            SuspensionStateUtil.SetSuspensionState(executionEntity, NewState);
+            commandContext.ExecutionEntityManager.Update(executionEntity, false);
 
             // All child executions are suspended
-            ICollection<IExecutionEntity> childExecutions = commandContext.ExecutionEntityManager.findChildExecutionsByProcessInstanceId(processInstanceId);
+            ICollection<IExecutionEntity> childExecutions = commandContext.ExecutionEntityManager.FindChildExecutionsByProcessInstanceId(processInstanceId);
             foreach (IExecutionEntity childExecution in childExecutions)
             {
                 if (!childExecution.Id.Equals(processInstanceId))
                 {
-                    SuspensionStateUtil.setSuspensionState(childExecution, NewState);
-                    commandContext.ExecutionEntityManager.update(childExecution, false);
+                    SuspensionStateUtil.SetSuspensionState(childExecution, NewState);
+                    commandContext.ExecutionEntityManager.Update(childExecution, false);
                 }
             }
 
             // All tasks are suspended
-            IList<ITaskEntity> tasks = commandContext.TaskEntityManager.findTasksByProcessInstanceId(processInstanceId);
+            IList<ITaskEntity> tasks = commandContext.TaskEntityManager.FindTasksByProcessInstanceId(processInstanceId);
             foreach (ITaskEntity taskEntity in tasks)
             {
-                SuspensionStateUtil.setSuspensionState(taskEntity, NewState);
-                commandContext.TaskEntityManager.update(taskEntity, false);
+                SuspensionStateUtil.SetSuspensionState(taskEntity, NewState);
+                commandContext.TaskEntityManager.Update(taskEntity, false);
             }
 
             // All jobs are suspended
             if (NewState == SuspensionStateProvider.ACTIVE)
             {
-                IList<ISuspendedJobEntity> suspendedJobs = commandContext.SuspendedJobEntityManager.findJobsByProcessInstanceId(processInstanceId);
+                IList<ISuspendedJobEntity> suspendedJobs = commandContext.SuspendedJobEntityManager.FindJobsByProcessInstanceId(processInstanceId);
                 foreach (ISuspendedJobEntity suspendedJob in suspendedJobs)
                 {
-                    commandContext.JobManager.activateSuspendedJob(suspendedJob);
+                    commandContext.JobManager.ActivateSuspendedJob(suspendedJob);
                 }
 
             }
             else
             {
-                IList<ITimerJobEntity> timerJobs = commandContext.TimerJobEntityManager.findJobsByProcessInstanceId(processInstanceId);
+                IList<ITimerJobEntity> timerJobs = commandContext.TimerJobEntityManager.FindJobsByProcessInstanceId(processInstanceId);
                 foreach (ITimerJobEntity timerJob in timerJobs)
                 {
-                    commandContext.JobManager.moveJobToSuspendedJob(timerJob);
+                    commandContext.JobManager.MoveJobToSuspendedJob(timerJob);
                 }
 
-                IList<IJobEntity> jobs = commandContext.JobEntityManager.findJobsByProcessInstanceId(processInstanceId);
+                IList<IJobEntity> jobs = commandContext.JobEntityManager.FindJobsByProcessInstanceId(processInstanceId);
                 foreach (IJobEntity job in jobs)
                 {
-                    commandContext.JobManager.moveJobToSuspendedJob(job);
+                    commandContext.JobManager.MoveJobToSuspendedJob(job);
                 }
             }
 

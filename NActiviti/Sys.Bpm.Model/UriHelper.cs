@@ -10,7 +10,7 @@ namespace Sys
 {
     public static class UriHelper
     {
-        public static Stream openStream(this Uri uri)
+        public static Stream OpenStream(this Uri uri)
         {
             try
             {

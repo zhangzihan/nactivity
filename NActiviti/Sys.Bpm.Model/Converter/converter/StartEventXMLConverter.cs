@@ -38,9 +38,9 @@ namespace org.activiti.bpmn.converter
             }
         }
 
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
-            string formKey = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY);
+            string formKey = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY);
             StartEvent startEvent = null;
 
             if (!string.IsNullOrWhiteSpace(formKey) && model.StartEventFormTypes != null && model.StartEventFormTypes.Contains(formKey))
@@ -51,10 +51,10 @@ namespace org.activiti.bpmn.converter
             {
                 startEvent = new StartEvent();
             }
-            BpmnXMLUtil.addXMLLocation(startEvent, xtr);
-            startEvent.Initiator = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_EVENT_START_INITIATOR);
+            BpmnXMLUtil.AddXMLLocation(startEvent, xtr);
+            startEvent.Initiator = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_EVENT_START_INITIATOR);
             bool interrupting = true;
-            string interruptingAttribute = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_EVENT_START_INTERRUPTING);
+            string interruptingAttribute = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_EVENT_START_INTERRUPTING);
             if (BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE.Equals(interruptingAttribute, StringComparison.CurrentCultureIgnoreCase))
             {
                 interrupting = false;
@@ -62,34 +62,34 @@ namespace org.activiti.bpmn.converter
             startEvent.Interrupting = interrupting;
             startEvent.FormKey = formKey;
 
-            parseChildElements(XMLElementName, startEvent, model, xtr);
+            ParseChildElements(XMLElementName, startEvent, model, xtr);
 
             return startEvent;
         }
 
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             StartEvent startEvent = (StartEvent)element;
-            writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_EVENT_START_INITIATOR, startEvent.Initiator, xtw);
-            writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY, startEvent.FormKey, xtw);
+            WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_EVENT_START_INITIATOR, startEvent.Initiator, xtw);
+            WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY, startEvent.FormKey, xtw);
 
             if (startEvent.EventDefinitions != null && startEvent.EventDefinitions.Count > 0)
             {
-                writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_EVENT_START_INTERRUPTING, startEvent.Interrupting.ToString(), xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_EVENT_START_INTERRUPTING, startEvent.Interrupting.ToString(), xtw);
             }
         }
 
-        protected internal override bool writeExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        protected internal override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             StartEvent startEvent = (StartEvent)element;
-            didWriteExtensionStartElement = writeFormProperties(startEvent, didWriteExtensionStartElement, xtw);
+            didWriteExtensionStartElement = WriteFormProperties(startEvent, didWriteExtensionStartElement, xtw);
             return didWriteExtensionStartElement;
         }
 
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             StartEvent startEvent = (StartEvent)element;
-            writeEventDefinitions(startEvent, startEvent.EventDefinitions, model, xtw);
+            WriteEventDefinitions(startEvent, startEvent.EventDefinitions, model, xtw);
         }
     }
 

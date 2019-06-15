@@ -22,36 +22,35 @@ namespace org.activiti.engine.impl.cmd
     /// 
     /// 
     public class ActivateProcessDefinitionCmd : AbstractSetProcessDefinitionStateCmd
-	{
+    {
 
-	  public ActivateProcessDefinitionCmd(IProcessDefinitionEntity processDefinitionEntity, bool includeProcessInstances, DateTime? executionDate, string tenantId) : base(processDefinitionEntity, includeProcessInstances, executionDate, tenantId)
-	  {
-	  }
+        public ActivateProcessDefinitionCmd(IProcessDefinitionEntity processDefinitionEntity, bool includeProcessInstances, DateTime? executionDate, string tenantId) : base(processDefinitionEntity, includeProcessInstances, executionDate, tenantId)
+        {
+        }
 
-	  public ActivateProcessDefinitionCmd(string processDefinitionId, string processDefinitionKey, bool includeProcessInstances, DateTime executionDate, string tenantId) : base(processDefinitionId, processDefinitionKey, includeProcessInstances, executionDate, tenantId)
-	  {
-	  }
+        public ActivateProcessDefinitionCmd(string processDefinitionId, string processDefinitionKey, bool includeProcessInstances, DateTime executionDate, string tenantId) : base(processDefinitionId, processDefinitionKey, includeProcessInstances, executionDate, tenantId)
+        {
+        }
 
-	  protected internal override ISuspensionState ProcessDefinitionSuspensionState
-	  {
-		  get
-		  {
-			return SuspensionStateProvider.ACTIVE;
-		  }
-	  }
+        protected internal override ISuspensionState ProcessDefinitionSuspensionState
+        {
+            get
+            {
+                return SuspensionStateProvider.ACTIVE;
+            }
+        }
 
-	  protected internal override string DelayedExecutionJobHandlerType
-	  {
-		  get
-		  {
-			return TimerActivateProcessDefinitionHandler.TYPE;
-		  }
-	  }
+        protected internal override string DelayedExecutionJobHandlerType
+        {
+            get
+            {
+                return TimerActivateProcessDefinitionHandler.TYPE;
+            }
+        }
 
-	  protected internal override AbstractSetProcessInstanceStateCmd getProcessInstanceChangeStateCmd(IProcessInstance processInstance)
-	  {
-		return new ActivateProcessInstanceCmd(processInstance.Id);
-	  }
-	}
-
+        protected internal override AbstractSetProcessInstanceStateCmd GetProcessInstanceChangeStateCmd(IProcessInstance processInstance)
+        {
+            return new ActivateProcessInstanceCmd(processInstance.Id);
+        }
+    }
 }

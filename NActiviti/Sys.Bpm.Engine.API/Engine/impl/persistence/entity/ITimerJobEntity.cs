@@ -28,7 +28,5 @@ namespace org.activiti.engine.impl.persistence.entity
 
 
         DateTime? LockExpirationTime { get; set; }
-
     }
-
 }

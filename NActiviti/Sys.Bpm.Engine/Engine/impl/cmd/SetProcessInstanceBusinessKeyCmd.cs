@@ -18,7 +18,6 @@ namespace org.activiti.engine.impl.cmd
 
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
     using org.activiti.engine.runtime;
     using System.Collections.Generic;
 
@@ -38,11 +37,11 @@ namespace org.activiti.engine.impl.cmd
 
         public SetProcessInstanceBusinessKeyCmd(string processInstanceId, string businessKey)
         {
-            if (ReferenceEquals(processInstanceId, null) || processInstanceId.Length < 1)
+            if (processInstanceId is null || processInstanceId.Length < 1)
             {
                 throw new ActivitiIllegalArgumentException("The process instance id is mandatory, but '" + processInstanceId + "' has been provided.");
             }
-            if (ReferenceEquals(businessKey, null))
+            if (businessKey is null)
             {
                 throw new ActivitiIllegalArgumentException("The business key is mandatory, but 'null' has been provided.");
             }
@@ -51,10 +50,10 @@ namespace org.activiti.engine.impl.cmd
             this.businessKey = businessKey;
         }
 
-        public  virtual object  execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
             IExecutionEntityManager executionManager = commandContext.ExecutionEntityManager;
-            IExecutionEntity processInstance = executionManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+            IExecutionEntity processInstance = executionManager.FindById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
             if (processInstance == null)
             {
                 throw new ActivitiObjectNotFoundException("No process instance found for id = '" + processInstanceId + "'.", typeof(IProcessInstance));
@@ -64,7 +63,7 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiIllegalArgumentException("A process instance id is required, but the provided id " + "'" + processInstanceId + "' " + "points to a child execution of process instance " + "'" + processInstance.ProcessInstanceId + "'. " + "Please invoke the " + this.GetType().Name + " with a root execution id.");
             }
 
-            executionManager.updateProcessInstanceBusinessKey(processInstance, businessKey);
+            executionManager.UpdateProcessInstanceBusinessKey(processInstance, businessKey);
 
             return null;
         }

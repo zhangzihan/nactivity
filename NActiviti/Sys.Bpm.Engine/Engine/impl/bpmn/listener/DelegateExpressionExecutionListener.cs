@@ -37,16 +37,16 @@ namespace org.activiti.engine.impl.bpmn.listener
             this.fieldDeclarations = fieldDeclarations;
         }
 
-        public virtual void notify(IExecutionEntity execution)
+        public virtual void Notify(IExecutionEntity execution)
         {
-            object @delegate = DelegateExpressionUtil.resolveDelegateExpression(expression, execution, fieldDeclarations);
+            object @delegate = DelegateExpressionUtil.ResolveDelegateExpression(expression, execution, fieldDeclarations);
             if (@delegate is IExecutionListener)
             {
-                Context.ProcessEngineConfiguration.DelegateInterceptor.handleInvocation(new ExecutionListenerInvocation((IExecutionListener)@delegate, execution));
+                Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new ExecutionListenerInvocation((IExecutionListener)@delegate, execution));
             }
             else if (@delegate is IJavaDelegate)
             {
-                Context.ProcessEngineConfiguration.DelegateInterceptor.handleInvocation(new JavaDelegateInvocation((IJavaDelegate)@delegate, execution));
+                Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new JavaDelegateInvocation((IJavaDelegate)@delegate, execution));
             }
             else
             {

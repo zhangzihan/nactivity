@@ -14,6 +14,7 @@ namespace org.activiti.engine.impl.util.io
 {
 
     using org.activiti.bpmn.converter.util;
+    using System.IO;
 
     /// 
     /// 
@@ -23,7 +24,7 @@ namespace org.activiti.engine.impl.util.io
         /// <summary>
         /// Creates a <b>NEW</b> <seealso cref="InputStream"/> to the provided resource.
         /// </summary>
-        new System.IO.Stream InputStream { get; }
+        new Stream InputStream { get; }
 
     }
 

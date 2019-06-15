@@ -7,7 +7,7 @@ namespace org.activiti.engine.impl.jobexecutor
     public interface IFailedJobCommandFactory
     {
 
-        ICommand<object> getCommand(string jobId, Exception exception);
+        ICommand<object> GetCommand(string jobId, Exception exception);
 
     }
 

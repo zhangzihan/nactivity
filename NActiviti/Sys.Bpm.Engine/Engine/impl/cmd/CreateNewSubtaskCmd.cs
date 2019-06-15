@@ -13,18 +13,13 @@
 
 namespace org.activiti.engine.impl.cmd
 {
-
-
-    using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.@delegate.@event.impl;
-    using org.activiti.engine.impl.identity;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
-    using org.activiti.engine.runtime;
     using org.activiti.engine.task;
+    using Sys;
+    using Sys.Workflow;
+    using Sys.Workflow.Engine.Bpmn.Rules;
     using System;
-    using System.Collections.Generic;
 
     /// 
     /// 
@@ -39,6 +34,7 @@ namespace org.activiti.engine.impl.cmd
         protected internal string parentTaskId;
         protected internal string assignee;
         protected readonly string tenantId;
+        private readonly IUserServiceProxy userService;
 
         public CreateNewSubtaskCmd(string taskName, string description, DateTime? dueDate, int? priority, string parentTaskId, string assignee, string tenantId)
         {
@@ -49,26 +45,31 @@ namespace org.activiti.engine.impl.cmd
             this.priority = priority;
             this.assignee = assignee;
             this.tenantId = tenantId;
+            this.userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
         }
 
-        public virtual ITask execute(ICommandContext commandContext)
+        public virtual ITask Execute(ICommandContext commandContext)
         {
             ITaskService taskService = commandContext.ProcessEngineConfiguration.TaskService;
-            if (taskService.createTaskQuery().taskId(parentTaskId).singleResult() == null)
+            if (taskService.CreateTaskQuery().SetTaskId(parentTaskId).SingleResult() == null)
             {
                 throw new ActivitiObjectNotFoundException("Parent task with id " + parentTaskId + " was not found");
             }
 
-            string id = commandContext.ProcessEngineConfiguration.IdGenerator.NextId;
-            ITask task = taskService.newTask(id);
+            string id = commandContext.ProcessEngineConfiguration.IdGenerator.GetNextId();
+            ITask task = taskService.NewTask(id);
             task.Name = taskName;
             task.Description = description;
             task.DueDate = dueDate;
             task.Priority = priority;
             task.ParentTaskId = parentTaskId;
             task.Assignee = assignee;
+            if (string.IsNullOrWhiteSpace(assignee) == false)
+            {
+                task.AssigneeUser = AsyncHelper.RunSync(() => userService.GetUser(assignee))?.FullName;
+            }
             task.TenantId = tenantId;
-            taskService.saveTask(task);
+            taskService.SaveTask(task);
 
             return task;
         }

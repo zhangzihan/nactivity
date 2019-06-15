@@ -16,10 +16,9 @@
 namespace org.activiti.engine.impl.cmd
 {
 
-    
+
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
     using org.activiti.engine.repository;
     using System.Collections.Generic;
 
@@ -38,13 +37,13 @@ namespace org.activiti.engine.impl.cmd
 
         public DeleteIdentityLinkForProcessDefinitionCmd(string processDefinitionId, string userId, string groupId)
         {
-            validateParams(userId, groupId, processDefinitionId);
+            ValidateParams(userId, groupId, processDefinitionId);
             this.processDefinitionId = processDefinitionId;
             this.userId = userId;
             this.groupId = groupId;
         }
 
-        protected internal virtual void validateParams(string userId, string groupId, string processDefinitionId)
+        protected internal virtual void ValidateParams(string userId, string groupId, string processDefinitionId)
         {
             if (string.IsNullOrWhiteSpace(processDefinitionId))
             {
@@ -57,16 +56,16 @@ namespace org.activiti.engine.impl.cmd
             }
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            IProcessDefinitionEntity processDefinition = commandContext.ProcessDefinitionEntityManager.findById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("id", processDefinitionId));
+            IProcessDefinitionEntity processDefinition = commandContext.ProcessDefinitionEntityManager.FindById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("id", processDefinitionId));
 
             if (processDefinition == null)
             {
                 throw new ActivitiObjectNotFoundException("Cannot find process definition with id " + processDefinitionId, typeof(IProcessDefinition));
             }
 
-            commandContext.IdentityLinkEntityManager.deleteIdentityLink(processDefinition, userId, groupId);
+            commandContext.IdentityLinkEntityManager.DeleteIdentityLink(processDefinition, userId, groupId);
 
             return null;
         }

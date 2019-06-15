@@ -22,38 +22,38 @@ namespace org.activiti.engine.impl.bpmn.helper
 
     /// 
     public class DelegateExpressionUtil
-	{
+    {
 
-	  public static object resolveDelegateExpression(IExpression expression, IVariableScope variableScope)
-	  {
-		return resolveDelegateExpression(expression, variableScope, null);
-	  }
+        public static object ResolveDelegateExpression(IExpression expression, IVariableScope variableScope)
+        {
+            return ResolveDelegateExpression(expression, variableScope, null);
+        }
 
-	  public static object resolveDelegateExpression(IExpression expression, IVariableScope variableScope, IList<FieldDeclaration> fieldDeclarations)
-	  {
+        public static object ResolveDelegateExpression(IExpression expression, IVariableScope variableScope, IList<FieldDeclaration> fieldDeclarations)
+        {
 
-		// Note: we can't cache the result of the expression, because the
-		// execution can change: eg. delegateExpression='${mySpringBeanFactory.randomSpringBean()}'
-		object @delegate = expression.getValue(variableScope);
+            // Note: we can't cache the result of the expression, because the
+            // execution can change: eg. delegateExpression='${mySpringBeanFactory.randomSpringBean()}'
+            object @delegate = expression.GetValue(variableScope);
 
-		if (fieldDeclarations != null && fieldDeclarations.Count > 0)
-		{
+            if (fieldDeclarations != null && fieldDeclarations.Count > 0)
+            {
 
-		  DelegateExpressionFieldInjectionMode injectionMode = Context.ProcessEngineConfiguration.DelegateExpressionFieldInjectionMode;
-		  if (injectionMode.Equals(DelegateExpressionFieldInjectionMode.COMPATIBILITY))
-		  {
-			ClassDelegate.applyFieldDeclaration(fieldDeclarations, @delegate, true);
-		  }
-		  else if (injectionMode.Equals(DelegateExpressionFieldInjectionMode.MIXED))
-		  {
-			ClassDelegate.applyFieldDeclaration(fieldDeclarations, @delegate, false);
-		  }
+                DelegateExpressionFieldInjectionMode injectionMode = Context.ProcessEngineConfiguration.DelegateExpressionFieldInjectionMode;
+                if (injectionMode.Equals(DelegateExpressionFieldInjectionMode.COMPATIBILITY))
+                {
+                    ClassDelegate.ApplyFieldDeclaration(fieldDeclarations, @delegate, true);
+                }
+                else if (injectionMode.Equals(DelegateExpressionFieldInjectionMode.MIXED))
+                {
+                    ClassDelegate.ApplyFieldDeclaration(fieldDeclarations, @delegate, false);
+                }
 
-		}
+            }
 
-		return @delegate;
-	  }
+            return @delegate;
+        }
 
-	}
+    }
 
 }

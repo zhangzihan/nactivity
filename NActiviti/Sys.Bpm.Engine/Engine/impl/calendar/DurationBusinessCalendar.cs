@@ -27,7 +27,7 @@ namespace org.activiti.engine.impl.calendar
         {
         }
 
-        public override DateTime? resolveDuedate(string duedate, int maxIterations)
+        public override DateTime? ResolveDuedate(string duedate, int maxIterations)
         {
             try
             {

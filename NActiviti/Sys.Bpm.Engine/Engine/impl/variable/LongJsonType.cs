@@ -38,7 +38,7 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public override bool isAbleToStore(object value)
+        public override bool IsAbleToStore(object value)
         {
             if (value == null)
             {
@@ -52,7 +52,7 @@ namespace org.activiti.engine.impl.variable
             return false;
         }
 
-        public override byte[] serialize(object value, IValueFields valueFields)
+        public override byte[] Serialize(object value, IValueFields valueFields)
         {
             if (value == null)
             {
@@ -69,12 +69,12 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public override object deserialize(byte[] bytes, IValueFields valueFields)
+        public override object Deserialize(byte[] bytes, IValueFields valueFields)
         {
-            JToken valueNode = null;
+            JToken valueNode;
             try
             {
-                valueNode = objectMapper.readTree(bytes);
+                valueNode = objectMapper.ReadTree(bytes);
             }
             catch (Exception e)
             {

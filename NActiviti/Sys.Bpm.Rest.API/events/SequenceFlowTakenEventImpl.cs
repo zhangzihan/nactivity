@@ -23,13 +23,13 @@ namespace org.activiti.cloud.services.events
     /// </summary>
     public class SequenceFlowTakenEventImpl : AbstractProcessEngineEvent, ISequenceFlowTakenEvent
     {
-        private string sequenceFlowId;
-        private string sourceActivityId;
-        private string sourceActivityName;
-        private string sourceActivityType;
-        private string targetActivityId;
-        private string targetActivityName;
-        private string targetActivityType;
+        private readonly string sequenceFlowId;
+        private readonly string sourceActivityId;
+        private readonly string sourceActivityName;
+        private readonly string sourceActivityType;
+        private readonly string targetActivityId;
+        private readonly string targetActivityName;
+        private readonly string targetActivityType;
 
 
         /// <summary>

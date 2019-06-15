@@ -12,6 +12,6 @@
          * @param entity
          * @return
          */
-        D toResource(T entity);
+        D ToResource(T entity);
     }
 }

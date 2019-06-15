@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using org.activiti.bpmn.constants;
+using System.Collections.Generic;
+using System.Linq;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +16,26 @@
  */
 namespace org.activiti.bpmn.model
 {
-
-    public class UserTask : Task
+    public class UserTask : TaskActivity
     {
+        private string assignee;
+        private string owner;
+        private string priority;
+        private string formKey;
+        private string dueDate;
+        private string businessCalendarName;
+        private string category;
+        private string extensionId;
+        private IList<string> candidateUsers = new List<string>();
+        private IList<string> candidateGroups = new List<string>();
+        private IList<FormProperty> formProperties = new List<FormProperty>();
+        private IList<ActivitiListener> taskListeners = new List<ActivitiListener>();
+        private string skipExpression;
 
-        protected internal string assignee;
-        protected internal string owner;
-        protected internal string priority;
-        protected internal string formKey;
-        protected internal string dueDate;
-        protected internal string businessCalendarName;
-        protected internal string category;
-        protected internal string extensionId;
-        protected internal IList<string> candidateUsers = new List<string>();
-        protected internal IList<string> candidateGroups = new List<string>();
-        protected internal IList<FormProperty> formProperties = new List<FormProperty>();
-        protected internal IList<ActivitiListener> taskListeners = new List<ActivitiListener>();
-        protected internal string skipExpression;
+        private IDictionary<string, ISet<string>> customUserIdentityLinks = new Dictionary<string, ISet<string>>();
+        private IDictionary<string, ISet<string>> customGroupIdentityLinks = new Dictionary<string, ISet<string>>();
 
-        protected internal IDictionary<string, ISet<string>> customUserIdentityLinks = new Dictionary<string, ISet<string>>();
-        protected internal IDictionary<string, ISet<string>> customGroupIdentityLinks = new Dictionary<string, ISet<string>>();
-
-        protected internal IList<CustomProperty> customProperties = new List<CustomProperty>();
+        private IList<CustomProperty> customProperties = new List<CustomProperty>();
 
         public virtual string Assignee
         {
@@ -49,7 +49,6 @@ namespace org.activiti.bpmn.model
             }
         }
 
-
         public virtual string Owner
         {
             get
@@ -61,7 +60,6 @@ namespace org.activiti.bpmn.model
                 this.owner = value;
             }
         }
-
 
         public virtual string Priority
         {
@@ -75,7 +73,6 @@ namespace org.activiti.bpmn.model
             }
         }
 
-
         public virtual string FormKey
         {
             get
@@ -87,7 +84,6 @@ namespace org.activiti.bpmn.model
                 this.formKey = value;
             }
         }
-
 
         public virtual string DueDate
         {
@@ -101,7 +97,6 @@ namespace org.activiti.bpmn.model
             }
         }
 
-
         public virtual string BusinessCalendarName
         {
             get
@@ -113,7 +108,6 @@ namespace org.activiti.bpmn.model
                 this.businessCalendarName = value;
             }
         }
-
 
         public virtual string Category
         {
@@ -127,7 +121,6 @@ namespace org.activiti.bpmn.model
             }
         }
 
-
         public virtual string ExtensionId
         {
             get
@@ -140,14 +133,14 @@ namespace org.activiti.bpmn.model
             }
         }
 
-
         public virtual bool Extended
         {
             get
             {
-                return !string.ReferenceEquals(extensionId, null) && extensionId.Length > 0;
+                return !(extensionId is null) && extensionId.Length > 0;
             }
         }
+
         public virtual IList<string> CandidateUsers
         {
             get
@@ -159,7 +152,6 @@ namespace org.activiti.bpmn.model
                 this.candidateUsers = value ?? new List<string>();
             }
         }
-
 
         public virtual IList<string> CandidateGroups
         {
@@ -173,7 +165,6 @@ namespace org.activiti.bpmn.model
             }
         }
 
-
         public virtual IList<FormProperty> FormProperties
         {
             get
@@ -185,7 +176,6 @@ namespace org.activiti.bpmn.model
                 this.formProperties = value ?? new List<FormProperty>();
             }
         }
-
 
         public virtual IList<ActivitiListener> TaskListeners
         {
@@ -199,8 +189,7 @@ namespace org.activiti.bpmn.model
             }
         }
 
-
-        public virtual void addCustomUserIdentityLink(string userId, string type)
+        public virtual void AddCustomUserIdentityLink(string userId, string type)
         {
             ISet<string> userIdentitySet = customUserIdentityLinks[type];
 
@@ -213,7 +202,7 @@ namespace org.activiti.bpmn.model
             userIdentitySet.Add(userId);
         }
 
-        public virtual void addCustomGroupIdentityLink(string groupId, string type)
+        public virtual void AddCustomGroupIdentityLink(string groupId, string type)
         {
             ISet<string> groupIdentitySet = customGroupIdentityLinks[type];
 
@@ -238,7 +227,6 @@ namespace org.activiti.bpmn.model
             }
         }
 
-
         public virtual IDictionary<string, ISet<string>> CustomGroupIdentityLinks
         {
             get
@@ -251,7 +239,6 @@ namespace org.activiti.bpmn.model
             }
         }
 
-
         public virtual IList<CustomProperty> CustomProperties
         {
             get
@@ -261,6 +248,71 @@ namespace org.activiti.bpmn.model
             set
             {
                 this.customProperties = value ?? new List<CustomProperty>();
+            }
+        }
+
+        public virtual IEnumerable<FormField> FormFields
+        {
+            get
+            {
+                ExtensionElement formData = ExtensionElements.GetValueOrNull(BpmnXMLConstants.ELEMENT_EXTENSIONS_FORMDATA)?.FirstOrDefault();
+
+                if (formData == null)
+                {
+                    yield break;
+                }
+
+                IEnumerable<ExtensionElement> fields = formData.ChildElements.GetValueOrNull(BpmnXMLConstants.ELEMENT_EXTENSIONS_FORMFIELD) ?? new ExtensionElement[0];
+
+                foreach (ExtensionElement extField in fields)
+                {
+                    FormField field = new FormField()
+                    {
+                        Id = extField.Attributes["id"]?.FirstOrDefault().Value,
+                        Type = extField.Attributes["type"]?.FirstOrDefault().Value,
+                        Name = extField.Attributes["label"]?.FirstOrDefault().Value
+                    };
+
+                    IEnumerable<ExtensionElement> props = extField.ChildElements.GetValueOrNull(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY) ?? new ExtensionElement[0];
+
+                    foreach (var prop in props)
+                    {
+                        FormFieldProperty ffp = new FormFieldProperty()
+                        {
+                            Name = prop.Attributes["id"]?.FirstOrDefault().Value,
+                            Value = prop.Attributes["value"]?.FirstOrDefault().Value
+                        };
+                        field.FieldProperties.Add(ffp);
+                    }
+
+                    yield return field;
+                }
+            }
+        }
+
+        public virtual string GetUsersPolicy()
+        {
+            return this.GetExtensionElementAttributeValue(BpmnXMLConstants.ACTIVITI_COUNTERSIGNUSER_GETPOLICY);
+        }
+
+        public bool CanTransfer
+        {
+            get
+            {
+                if (bool.TryParse(this.GetExtensionElementAttributeValue("canTransfer"), out bool canTransfer))
+                {
+                    return canTransfer;
+                }
+
+                return false;
+            }
+        }
+
+        public bool OnlyAssignee
+        {
+            get
+            {
+                return string.Compare(constants.AssigneeType.ONE, AssigneeType?.Value, true) == 0;
             }
         }
 
@@ -276,11 +328,12 @@ namespace org.activiti.bpmn.model
             }
         }
 
-
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            UserTask clone = new UserTask();
-            clone.Values = this;
+            UserTask clone = new UserTask
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -311,7 +364,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (FormProperty property in val.FormProperties)
                     {
-                        formProperties.Add(property.clone() as FormProperty);
+                        formProperties.Add(property.Clone() as FormProperty);
                     }
                 }
 
@@ -320,7 +373,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (ActivitiListener listener in val.TaskListeners)
                     {
-                        taskListeners.Add(listener.clone() as ActivitiListener);
+                        taskListeners.Add(listener.Clone() as ActivitiListener);
                     }
                 }
             }

@@ -33,14 +33,14 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IProcessDefinitionInfoEntity create()
+        public override IProcessDefinitionInfoEntity Create()
         {
             return new ProcessDefinitionInfoEntityImpl();
         }
 
-        public virtual IProcessDefinitionInfoEntity findProcessDefinitionInfoByProcessDefinitionId(string processDefinitionId)
+        public virtual IProcessDefinitionInfoEntity FindProcessDefinitionInfoByProcessDefinitionId(string processDefinitionId)
         {
-            return DbSqlSession.selectOne<ProcessDefinitionInfoEntityImpl, IProcessDefinitionInfoEntity>("selectProcessDefinitionInfoByProcessDefinitionId", new { processDefinitionId });
+            return DbSqlSession.SelectOne<ProcessDefinitionInfoEntityImpl, IProcessDefinitionInfoEntity>("selectProcessDefinitionInfoByProcessDefinitionId", new { processDefinitionId });
         }
     }
 

@@ -40,29 +40,30 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.interrupting = interrupting;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             // Overridden by subclasses
         }
 
-        public override void trigger(IExecutionEntity execution, string triggerName, object triggerData)
+        public override void Trigger(IExecutionEntity execution, string triggerName, object triggerData, bool throwError = true)
         {
-
             IExecutionEntity executionEntity = execution;
 
             ICommandContext commandContext = Context.CommandContext;
 
             if (interrupting)
             {
-                executeInterruptingBehavior(executionEntity, commandContext);
+                ExecuteInterruptingBehavior(executionEntity, commandContext);
             }
             else
             {
-                executeNonInterruptingBehavior(executionEntity, commandContext);
+                ExecuteNonInterruptingBehavior(executionEntity, commandContext);
             }
         }
 
-        protected internal virtual void executeInterruptingBehavior(IExecutionEntity executionEntity, ICommandContext commandContext)
+        private static DateTime? cdate = null;
+
+        protected internal virtual void ExecuteInterruptingBehavior(IExecutionEntity executionEntity, ICommandContext commandContext)
         {
 
             // The destroy scope operation will look for the parent execution and
@@ -73,10 +74,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
             // Which is what we need here.
 
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
-            IExecutionEntity attachedRefScopeExecution = executionEntityManager.findById<IExecutionEntity>(executionEntity.ParentId);
+            IExecutionEntity attachedRefScopeExecution = executionEntityManager.FindById<IExecutionEntity>(executionEntity.ParentId);
 
             IExecutionEntity parentScopeExecution = null;
-            IExecutionEntity currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(attachedRefScopeExecution.ParentId);
+            IExecutionEntity currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(attachedRefScopeExecution.ParentId);
             while (currentlyExaminedExecution != null && parentScopeExecution == null)
             {
                 if (currentlyExaminedExecution.IsScope)
@@ -85,24 +86,19 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
                 else
                 {
-                    currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
+                    currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
                 }
             }
 
-            if (parentScopeExecution == null)
-            {
-                throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event");
-            }
-
-            deleteChildExecutions(attachedRefScopeExecution, executionEntity, commandContext);
+            DeleteChildExecutions(attachedRefScopeExecution, executionEntity, commandContext);
 
             // set new parent for boundary event execution
-            executionEntity.Parent = parentScopeExecution;
+            executionEntity.Parent = parentScopeExecution ?? throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event");
 
-            Context.Agenda.planTakeOutgoingSequenceFlowsOperation(executionEntity, true);
+            Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(executionEntity, true);
         }
 
-        protected internal virtual void executeNonInterruptingBehavior(IExecutionEntity executionEntity, ICommandContext commandContext)
+        protected internal virtual void ExecuteNonInterruptingBehavior(IExecutionEntity executionEntity, ICommandContext commandContext)
         {
 
             // Non-interrupting: the current execution is given the first parent
@@ -116,10 +112,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
 
-            IExecutionEntity parentExecutionEntity = executionEntityManager.findById<IExecutionEntity>(executionEntity.ParentId);
+            IExecutionEntity parentExecutionEntity = executionEntityManager.FindById<IExecutionEntity>(executionEntity.ParentId);
 
             IExecutionEntity scopeExecution = null;
-            IExecutionEntity currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>( parentExecutionEntity.ParentId);
+            IExecutionEntity currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(parentExecutionEntity.ParentId);
             while (currentlyExaminedExecution != null && scopeExecution == null)
             {
                 if (currentlyExaminedExecution.IsScope)
@@ -128,7 +124,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
                 else
                 {
-                    currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
+                    currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
                 }
             }
 
@@ -137,13 +133,13 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event");
             }
 
-            IExecutionEntity nonInterruptingExecution = executionEntityManager.createChildExecution(scopeExecution);
+            IExecutionEntity nonInterruptingExecution = executionEntityManager.CreateChildExecution(scopeExecution);
             nonInterruptingExecution.CurrentFlowElement = executionEntity.CurrentFlowElement;
 
-            Context.Agenda.planTakeOutgoingSequenceFlowsOperation(nonInterruptingExecution, true);
+            Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(nonInterruptingExecution, true);
         }
 
-        protected internal virtual void deleteChildExecutions(IExecutionEntity parentExecution, IExecutionEntity notToDeleteExecution, ICommandContext commandContext)
+        protected internal virtual void DeleteChildExecutions(IExecutionEntity parentExecution, IExecutionEntity notToDeleteExecution, ICommandContext commandContext)
         {
 
             // TODO: would be good if this deleteChildExecutions could be removed and the one on the executionEntityManager is used
@@ -152,29 +148,29 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             // Delete all child executions
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
-            ICollection<IExecutionEntity> childExecutions = executionEntityManager.findChildExecutionsByParentExecutionId(parentExecution.Id);
+            ICollection<IExecutionEntity> childExecutions = executionEntityManager.FindChildExecutionsByParentExecutionId(parentExecution.Id);
             if (CollectionUtil.IsNotEmpty(childExecutions))
             {
                 foreach (IExecutionEntity childExecution in childExecutions)
                 {
                     if (childExecution.Id.Equals(notToDeleteExecution.Id) == false)
                     {
-                        deleteChildExecutions(childExecution, notToDeleteExecution, commandContext);
+                        DeleteChildExecutions(childExecution, notToDeleteExecution, commandContext);
                     }
                 }
             }
 
-            string deleteReason = engine.history.DeleteReason_Fields.BOUNDARY_EVENT_INTERRUPTING + " (" + notToDeleteExecution.CurrentActivityId + ")";
+            string deleteReason = engine.history.DeleteReasonFields.BOUNDARY_EVENT_INTERRUPTING + " (" + notToDeleteExecution.CurrentActivityId + ")";
             if (parentExecution.CurrentFlowElement is CallActivity)
             {
-                IExecutionEntity subProcessExecution = executionEntityManager.findSubProcessInstanceBySuperExecutionId(parentExecution.Id);
+                IExecutionEntity subProcessExecution = executionEntityManager.FindSubProcessInstanceBySuperExecutionId(parentExecution.Id);
                 if (subProcessExecution != null)
                 {
-                    executionEntityManager.deleteProcessInstanceExecutionEntity(subProcessExecution.Id, subProcessExecution.CurrentActivityId, deleteReason, true, true);
+                    executionEntityManager.DeleteProcessInstanceExecutionEntity(subProcessExecution.Id, subProcessExecution.CurrentActivityId, deleteReason, true, true);
                 }
             }
 
-            executionEntityManager.deleteExecutionAndRelatedData(parentExecution, deleteReason, false);
+            executionEntityManager.DeleteExecutionAndRelatedData(parentExecution, deleteReason, false);
         }
 
         public virtual bool Interrupting
@@ -188,8 +184,5 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 this.interrupting = value;
             }
         }
-
-
     }
-
 }

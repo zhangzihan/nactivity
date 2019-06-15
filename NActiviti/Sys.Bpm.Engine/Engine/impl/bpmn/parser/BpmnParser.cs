@@ -49,9 +49,9 @@ namespace org.activiti.engine.impl.bpmn.parser
         /// <summary>
         /// Creates a new <seealso cref="BpmnParse"/> instance that can be used to parse only one BPMN 2.0 process definition.
         /// </summary>
-        public virtual BpmnParse createParse()
+        public virtual BpmnParse CreateParse()
         {
-            return bpmnParseFactory.createBpmnParse(this);
+            return bpmnParseFactory.CreateBpmnParse(this);
         }
 
         public virtual IActivityBehaviorFactory ActivityBehaviorFactory
@@ -104,7 +104,5 @@ namespace org.activiti.engine.impl.bpmn.parser
                 this.bpmnParserHandlers = value;
             }
         }
-
     }
-
 }

@@ -12,6 +12,7 @@
  */
 namespace org.activiti.engine.impl.json
 {
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.task;
@@ -21,12 +22,16 @@ namespace org.activiti.engine.impl.json
     public class JsonTaskConverter : JsonObjectConverter<ITask>
     {
 
-        public override ITask toObject(StreamReader reader)
+        public override ITask ToObject(StreamReader reader)
         {
-            throw new ActivitiException("not yet implemented");
+            string str = reader.ReadToEnd();
+            ITask task = JsonConvert.DeserializeObject<TaskEntityImpl>(str);
+
+            return task;
+            //throw new ActivitiException("not yet implemented");
         }
 
-        public override JToken toJsonObject(ITask task)
+        public override JToken ToJsonObject(ITask task)
         {
             ITaskEntity taskEntity = (ITaskEntity)task;
             JToken jsonObject = JToken.FromObject(new

@@ -20,13 +20,13 @@ namespace org.activiti.bpmn.converter.export
 
     public class BPMNDIExport : IBpmnXMLConstants
     {
-        public static void writeBPMNDI(BpmnModel model, XMLStreamWriter xtw)
+        public static void WriteBPMNDI(BpmnModel model, XMLStreamWriter xtw)
         {
             // BPMN DI information
-            xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.BPMNDI_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_DIAGRAM, org.activiti.bpmn.constants.BpmnXMLConstants.BPMNDI_NAMESPACE);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMNDI_PREFIX, BpmnXMLConstants.ELEMENT_DI_DIAGRAM, BpmnXMLConstants.BPMNDI_NAMESPACE);
 
-            string processId = null;
-            if (model.Pools?.Count > 0)
+            string processId;
+            if ((model.Pools?.Count).GetValueOrDefault() > 0)
             {
                 processId = "Collaboration";
             }
@@ -35,97 +35,100 @@ namespace org.activiti.bpmn.converter.export
                 processId = model.MainProcess.Id;
             }
 
-            xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID, "BPMNDiagram_" + processId);
+            xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, "BPMNDiagram_" + processId);
 
-            xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.BPMNDI_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_PLANE, org.activiti.bpmn.constants.BpmnXMLConstants.BPMNDI_NAMESPACE);
-            xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_BPMNELEMENT, processId);
-            xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID, "BPMNPlane_" + processId);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMNDI_PREFIX, BpmnXMLConstants.ELEMENT_DI_PLANE, BpmnXMLConstants.BPMNDI_NAMESPACE);
+            xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_BPMNELEMENT, processId);
+            xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, "BPMNPlane_" + processId);
 
             foreach (string elementId in model.LocationMap.Keys)
             {
 
-                if (model.getFlowElement(elementId) != null || model.getArtifact(elementId) != null || model.getPool(elementId) != null || model.getLane(elementId) != null)
+                if (model.GetFlowElement(elementId) != null || model.GetArtifact(elementId) != null || model.GetPool(elementId) != null || model.GetLane(elementId) != null)
                 {
 
-                    xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.BPMNDI_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_SHAPE, org.activiti.bpmn.constants.BpmnXMLConstants.BPMNDI_NAMESPACE);
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_BPMNELEMENT, elementId);
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID, "BPMNShape_" + elementId);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMNDI_PREFIX, BpmnXMLConstants.ELEMENT_DI_SHAPE, BpmnXMLConstants.BPMNDI_NAMESPACE);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_BPMNELEMENT, elementId);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, "BPMNShape_" + elementId);
 
-                    GraphicInfo graphicInfo = model.getGraphicInfo(elementId);
-                    FlowElement flowElement = model.getFlowElement(elementId);
+                    GraphicInfo graphicInfo = model.GetGraphicInfo(elementId);
+                    FlowElement flowElement = model.GetFlowElement(elementId);
                     if (flowElement is SubProcess && graphicInfo.Expanded != null)
                     {
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_IS_EXPANDED, graphicInfo.Expanded.ToString());
+                        xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_IS_EXPANDED, graphicInfo.Expanded.ToString());
                     }
 
-                    xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.OMGDC_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_BOUNDS, org.activiti.bpmn.constants.BpmnXMLConstants.OMGDC_NAMESPACE);
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_HEIGHT, "" + graphicInfo.Height);
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_WIDTH, "" + graphicInfo.Width);
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_X, "" + graphicInfo.X);
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_Y, "" + graphicInfo.Y);
-                    xtw.writeEndElement();
+                    xtw.WriteStartElement(BpmnXMLConstants.OMGDC_PREFIX, BpmnXMLConstants.ELEMENT_DI_BOUNDS, BpmnXMLConstants.OMGDC_NAMESPACE);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_HEIGHT, "" + graphicInfo.Height);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_WIDTH, "" + graphicInfo.Width);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_X, "" + graphicInfo.X);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_Y, "" + graphicInfo.Y);
+                    xtw.WriteEndElement();
 
-                    xtw.writeEndElement();
+                    xtw.WriteEndElement();
                 }
             }
 
             foreach (string elementId in model.FlowLocationMap.Keys)
             {
 
-                if (model.getFlowElement(elementId) != null || model.getArtifact(elementId) != null || model.getMessageFlow(elementId) != null)
+                if (model.GetFlowElement(elementId) != null || model.GetArtifact(elementId) != null || model.GetMessageFlow(elementId) != null)
                 {
 
-                    xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.BPMNDI_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_EDGE, org.activiti.bpmn.constants.BpmnXMLConstants.BPMNDI_NAMESPACE);
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_BPMNELEMENT, elementId);
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID, "BPMNEdge_" + elementId);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMNDI_PREFIX, BpmnXMLConstants.ELEMENT_DI_EDGE, BpmnXMLConstants.BPMNDI_NAMESPACE);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_BPMNELEMENT, elementId);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, "BPMNEdge_" + elementId);
 
-                    IList<GraphicInfo> graphicInfoList = model.getFlowLocationGraphicInfo(elementId);
+                    IList<GraphicInfo> graphicInfoList = model.GetFlowLocationGraphicInfo(elementId) ?? new List<GraphicInfo>();
                     foreach (GraphicInfo graphicInfo in graphicInfoList)
                     {
-                        xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.OMGDI_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_WAYPOINT, org.activiti.bpmn.constants.BpmnXMLConstants.OMGDI_NAMESPACE);
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_X, "" + graphicInfo.X);
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_Y, "" + graphicInfo.Y);
-                        xtw.writeEndElement();
+                        xtw.WriteStartElement(BpmnXMLConstants.OMGDI_PREFIX, BpmnXMLConstants.ELEMENT_DI_WAYPOINT, BpmnXMLConstants.OMGDI_NAMESPACE);
+                        xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_X, "" + graphicInfo.X);
+                        xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_Y, "" + graphicInfo.Y);
+                        xtw.WriteEndElement();
                     }
 
-                    GraphicInfo labelGraphicInfo = model.getLabelGraphicInfo(elementId);
-                    FlowElement flowElement = model.getFlowElement(elementId);
-                    MessageFlow messageFlow = null;
-                    if (flowElement == null)
+                    GraphicInfo labelGraphicInfo = model.GetLabelGraphicInfo(elementId);
+                    if (labelGraphicInfo != null)
                     {
-                        messageFlow = model.getMessageFlow(elementId);
+                        FlowElement flowElement = model.GetFlowElement(elementId);
+                        MessageFlow messageFlow = null;
+                        if (flowElement == null)
+                        {
+                            messageFlow = model.GetMessageFlow(elementId);
+                        }
+
+                        bool hasName = false;
+                        if (flowElement != null && !string.IsNullOrWhiteSpace(flowElement.Name))
+                        {
+                            hasName = true;
+
+                        }
+                        else if (messageFlow != null && !string.IsNullOrWhiteSpace(messageFlow.Name))
+                        {
+                            hasName = true;
+                        }
+
+                        if (labelGraphicInfo != null && hasName)
+                        {
+                            xtw.WriteStartElement(BpmnXMLConstants.BPMNDI_PREFIX, BpmnXMLConstants.ELEMENT_DI_LABEL, BpmnXMLConstants.BPMNDI_NAMESPACE);
+                            xtw.WriteStartElement(BpmnXMLConstants.OMGDC_PREFIX, BpmnXMLConstants.ELEMENT_DI_BOUNDS, BpmnXMLConstants.OMGDC_NAMESPACE);
+                            xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_HEIGHT, "" + labelGraphicInfo.Height);
+                            xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_WIDTH, "" + labelGraphicInfo.Width);
+                            xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_X, "" + labelGraphicInfo.X);
+                            xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_DI_Y, "" + labelGraphicInfo.Y);
+                            xtw.WriteEndElement();
+                            xtw.WriteEndElement();
+                        }
                     }
 
-                    bool hasName = false;
-                    if (flowElement != null && !string.IsNullOrWhiteSpace(flowElement.Name))
-                    {
-                        hasName = true;
-
-                    }
-                    else if (messageFlow != null && !string.IsNullOrWhiteSpace(messageFlow.Name))
-                    {
-                        hasName = true;
-                    }
-
-                    if (labelGraphicInfo != null && hasName)
-                    {
-                        xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.BPMNDI_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_LABEL, org.activiti.bpmn.constants.BpmnXMLConstants.BPMNDI_NAMESPACE);
-                        xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.OMGDC_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_BOUNDS, org.activiti.bpmn.constants.BpmnXMLConstants.OMGDC_NAMESPACE);
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_HEIGHT, "" + labelGraphicInfo.Height);
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_WIDTH, "" + labelGraphicInfo.Width);
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_X, "" + labelGraphicInfo.X);
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_Y, "" + labelGraphicInfo.Y);
-                        xtw.writeEndElement();
-                        xtw.writeEndElement();
-                    }
-
-                    xtw.writeEndElement();
+                    xtw.WriteEndElement();
                 }
             }
 
             // end BPMN DI elements
-            xtw.writeEndElement();
-            xtw.writeEndElement();
+            xtw.WriteEndElement();
+            xtw.WriteEndElement();
         }
     }
 }

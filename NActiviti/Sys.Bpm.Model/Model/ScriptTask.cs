@@ -12,7 +12,7 @@
  */
 namespace org.activiti.bpmn.model
 {
-    public class ScriptTask : Task
+    public class ScriptTask : TaskActivity
     {
 
         protected internal string scriptFormat;
@@ -73,10 +73,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            ScriptTask clone = new ScriptTask();
-            clone.Values = this;
+            ScriptTask clone = new ScriptTask
+            {
+                Values = this
+            };
             return clone;
         }
 

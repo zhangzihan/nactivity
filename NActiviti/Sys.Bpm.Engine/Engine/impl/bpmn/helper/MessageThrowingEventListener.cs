@@ -33,21 +33,21 @@ namespace org.activiti.engine.impl.bpmn.helper
         protected internal string messageName;
         protected internal new Type entityClass;
 
-        public override void onEvent(IActivitiEvent @event)
+        public override void OnEvent(IActivitiEvent @event)
         {
-            if (isValidEvent(@event))
+            if (IsValidEvent(@event))
             {
-                if (ReferenceEquals(@event.ProcessInstanceId, null))
+                if (@event.ProcessInstanceId is null)
                 {
                     throw new ActivitiIllegalArgumentException("Cannot throw process-instance scoped message, since the dispatched event is not part of an ongoing process instance");
                 }
 
                 IEventSubscriptionEntityManager eventSubscriptionEntityManager = Context.CommandContext.EventSubscriptionEntityManager;
-                IList<IMessageEventSubscriptionEntity> subscriptionEntities = eventSubscriptionEntityManager.findMessageEventSubscriptionsByProcessInstanceAndEventName(@event.ProcessInstanceId, messageName);
+                IList<IMessageEventSubscriptionEntity> subscriptionEntities = eventSubscriptionEntityManager.FindMessageEventSubscriptionsByProcessInstanceAndEventName(@event.ProcessInstanceId, messageName);
 
                 foreach (IEventSubscriptionEntity messageEventSubscriptionEntity in subscriptionEntities)
                 {
-                    eventSubscriptionEntityManager.eventReceived(messageEventSubscriptionEntity, null, false);
+                    eventSubscriptionEntityManager.EventReceived(messageEventSubscriptionEntity, null, false);
                 }
             }
         }

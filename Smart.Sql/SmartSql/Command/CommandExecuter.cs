@@ -39,7 +39,10 @@ namespace SmartSql.Command
         {
             return ExecuteWarp((dbCommand) =>
             {
-                _logger.LogInformation(dbCommand.CommandText);
+                if (_logger.IsEnabled(LogLevel.Debug))
+                {
+                    _logger.LogDebug(dbCommand.CommandText);
+                }
 
                 IDataReader reader = dbCommand.ExecuteReader();
 
@@ -118,9 +121,9 @@ namespace SmartSql.Command
         private async Task<T> ExecuteWarpAsync<T>(Func<DbCommand, Task<T>> excute, IDbConnectionSession dbSession, RequestContext context)
         {
             var dbCommand = _preparedCommand.Prepare(dbSession, context);
-            await dbSession.OpenConnectionAsync();
+            await dbSession.OpenConnectionAsync().ConfigureAwait(false);
             var dbCommandAsync = dbCommand as DbCommand;
-            T result = await excute(dbCommandAsync);
+            T result = await excute(dbCommandAsync).ConfigureAwait(false);
             OnExecuted?.Invoke(this, new OnExecutedEventArgs
             {
                 DbSession = dbSession,

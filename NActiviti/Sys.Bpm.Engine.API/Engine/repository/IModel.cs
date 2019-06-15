@@ -25,41 +25,63 @@ namespace org.activiti.engine.repository
     /// </summary>
     public interface IModel
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         string Id { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         string Name { get; set; }
 
-
+        /// <summary>
+        /// /
+        /// </summary>
         string Key { get; set; }
 
-
+        /// <summary>
+        /// /
+        /// </summary>
         string Category { get; set; }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         DateTime CreateTime { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         DateTime LastUpdateTime { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         int? Version { get; set; }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         string MetaInfo { get; set; }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         string DeploymentId { get; set; }
 
-
+        /// <summary>
+        /// /
+        /// </summary>
         string TenantId { set; get; }
 
 
         /// <summary>
         /// whether this model has editor source </summary>
-        bool hasEditorSource();
+        bool HasEditorSource();
 
         /// <summary>
         /// whether this model has editor source extra </summary>
-        bool hasEditorSourceExtra();
+        bool HasEditorSourceExtra();
     }
-
 }

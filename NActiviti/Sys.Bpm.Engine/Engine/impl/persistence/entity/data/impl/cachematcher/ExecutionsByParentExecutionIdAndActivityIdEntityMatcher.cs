@@ -22,7 +22,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class ExecutionsByParentExecutionIdAndActivityIdEntityMatcher : CachedEntityMatcherAdapter<IExecutionEntity>
     {
 
-        public override bool isRetained(IExecutionEntity executionEntity, object parameter)
+        public override bool IsRetained(IExecutionEntity executionEntity, object parameter)
         {
             IDictionary<string, object> paramMap = (IDictionary<string, object>)parameter ?? new Dictionary<string, object>();
             paramMap.TryGetValue("parentExecutionId", out object parentExecutionId);

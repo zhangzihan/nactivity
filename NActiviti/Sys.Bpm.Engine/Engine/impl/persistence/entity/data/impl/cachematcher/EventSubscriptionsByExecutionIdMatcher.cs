@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
 	public class EventSubscriptionsByExecutionIdMatcher : CachedEntityMatcherAdapter<IEventSubscriptionEntity>
 	{
 
-	  public override bool isRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
+	  public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
 	  {
             if (eventSubscriptionEntity == null || eventSubscriptionEntity.ExecutionId == null || parameter == null)
             {

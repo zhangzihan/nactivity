@@ -17,77 +17,77 @@ namespace org.activiti.engine.impl.bpmn.helper
     using org.activiti.engine.impl.persistence.entity;
 
     public class SkipExpressionUtil
-	{
+    {
 
-	  public static bool isSkipExpressionEnabled(IExecutionEntity execution, string skipExpression)
-	  {
-		if (ReferenceEquals(skipExpression, null))
-		{
-		  return false;
-		}
-		return checkSkipExpressionVariable(execution);
-	  }
+        public static bool IsSkipExpressionEnabled(IExecutionEntity execution, string skipExpression)
+        {
+            if (skipExpression is null)
+            {
+                return false;
+            }
+            return CheckSkipExpressionVariable(execution);
+        }
 
-	  public static bool isSkipExpressionEnabled(IExecutionEntity execution, IExpression skipExpression)
-	  {
-		if (skipExpression == null)
-		{
-		  return false;
-		}
-		return checkSkipExpressionVariable(execution);
-	  }
+        public static bool IsSkipExpressionEnabled(IExecutionEntity execution, IExpression skipExpression)
+        {
+            if (skipExpression == null)
+            {
+                return false;
+            }
+            return CheckSkipExpressionVariable(execution);
+        }
 
-	  private static bool checkSkipExpressionVariable(IExecutionEntity execution)
-	  {
-		const string skipExpressionEnabledVariable = "_ACTIVITI_SKIP_EXPRESSION_ENABLED";
-		object isSkipExpressionEnabled = execution.getVariable(skipExpressionEnabledVariable);
+        private static bool CheckSkipExpressionVariable(IExecutionEntity execution)
+        {
+            const string skipExpressionEnabledVariable = "_ACTIVITI_SKIP_EXPRESSION_ENABLED";
+            object isSkipExpressionEnabled = execution.GetVariable(skipExpressionEnabledVariable);
 
-		if (isSkipExpressionEnabled == null)
-		{
-		  return false;
+            if (isSkipExpressionEnabled == null)
+            {
+                return false;
 
-		}
-		else if (isSkipExpressionEnabled is bool?)
-		{
-		  return ((bool?) isSkipExpressionEnabled).Value;
+            }
+            else if (isSkipExpressionEnabled is bool?)
+            {
+                return ((bool?)isSkipExpressionEnabled).Value;
 
-		}
-		else
-		{
-		  throw new ActivitiIllegalArgumentException(skipExpressionEnabledVariable + " variable does not resolve to a boolean. " + isSkipExpressionEnabled);
-		}
-	  }
+            }
+            else
+            {
+                throw new ActivitiIllegalArgumentException(skipExpressionEnabledVariable + " variable does not resolve to a boolean. " + isSkipExpressionEnabled);
+            }
+        }
 
-	  public static bool shouldSkipFlowElement(ICommandContext commandContext, IExecutionEntity execution, string skipExpressionString)
-	  {
-		IExpression skipExpression = commandContext.ProcessEngineConfiguration.ExpressionManager.createExpression(skipExpressionString);
-		object value = skipExpression.getValue(execution);
+        public static bool ShouldSkipFlowElement(ICommandContext commandContext, IExecutionEntity execution, string skipExpressionString)
+        {
+            IExpression skipExpression = commandContext.ProcessEngineConfiguration.ExpressionManager.CreateExpression(skipExpressionString);
+            object value = skipExpression.GetValue(execution);
 
-		if (value is bool?)
-		{
-		  return ((bool?) value).Value;
+            if (value is bool?)
+            {
+                return ((bool?)value).Value;
 
-		}
-		else
-		{
-		  throw new ActivitiIllegalArgumentException("Skip expression does not resolve to a boolean: " + skipExpression.ExpressionText);
-		}
-	  }
+            }
+            else
+            {
+                throw new ActivitiIllegalArgumentException("Skip expression does not resolve to a boolean: " + skipExpression.ExpressionText);
+            }
+        }
 
-	  public static bool shouldSkipFlowElement(IExecutionEntity execution, IExpression skipExpression)
-	  {
-		object value = skipExpression.getValue(execution);
+        public static bool ShouldSkipFlowElement(IExecutionEntity execution, IExpression skipExpression)
+        {
+            object value = skipExpression.GetValue(execution);
 
-		if (value is bool?)
-		{
-		  return ((bool?) value).Value;
+            if (value is bool?)
+            {
+                return ((bool?)value).Value;
 
-		}
-		else
-		{
-		  throw new ActivitiIllegalArgumentException("Skip expression does not resolve to a boolean: " + skipExpression.ExpressionText);
-		}
-	  }
-	}
+            }
+            else
+            {
+                throw new ActivitiIllegalArgumentException("Skip expression does not resolve to a boolean: " + skipExpression.ExpressionText);
+            }
+        }
+    }
 
 }

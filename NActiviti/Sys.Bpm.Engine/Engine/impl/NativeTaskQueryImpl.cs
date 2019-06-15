@@ -39,14 +39,14 @@ namespace org.activiti.engine.impl
 
         // results ////////////////////////////////////////////////////////////////
 
-        public override IList<ITask> executeList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public override IList<ITask> ExecuteList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return commandContext.TaskEntityManager.findTasksByNativeQuery(parameterMap, firstResult, maxResults);
+            return commandContext.TaskEntityManager.FindTasksByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public override long executeCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
+        public override long ExecuteCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
         {
-            return commandContext.TaskEntityManager.findTaskCountByNativeQuery(parameterMap);
+            return commandContext.TaskEntityManager.FindTaskCountByNativeQuery(parameterMap);
         }
 
     }

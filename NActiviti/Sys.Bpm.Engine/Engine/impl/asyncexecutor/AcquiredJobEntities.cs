@@ -15,36 +15,54 @@
 namespace org.activiti.engine.impl.asyncexecutor
 {
 
-	using org.activiti.engine.impl.persistence.entity;
+    using org.activiti.engine.impl.persistence.entity;
+    using System.Collections.Concurrent;
 
-	/// 
-	public class AcquiredJobEntities
-	{
+    /// 
+    public class AcquiredJobEntities
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal ConcurrentDictionary<string, IJobEntity> acquiredJobs = new ConcurrentDictionary<string, IJobEntity>();
 
-	  protected internal IDictionary<string, IJobEntity> acquiredJobs = new Dictionary<string, IJobEntity>();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="job"></param>
+        public virtual void AddJob(IJobEntity job)
+        {
+            acquiredJobs.TryAdd(job.Id, job);
+        }
 
-	  public virtual void addJob(IJobEntity job)
-	  {
-		acquiredJobs[job.Id] = job;
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual ICollection<IJobEntity> Jobs
+        {
+            get
+            {
+                return acquiredJobs.Values;
+            }
+        }
 
-	  public virtual ICollection<IJobEntity> Jobs
-	  {
-		  get
-		  {
-			return acquiredJobs.Values;
-		  }
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jobId"></param>
+        /// <returns></returns>
+        public virtual bool Contains(string jobId)
+        {
+            return acquiredJobs.ContainsKey(jobId);
+        }
 
-	  public virtual bool contains(string jobId)
-	  {
-		return acquiredJobs.ContainsKey(jobId);
-	  }
-
-	  public virtual int size()
-	  {
-		return acquiredJobs.Count;
-	  }
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual int Size()
+        {
+            return acquiredJobs.Count;
+        }
+    }
 }

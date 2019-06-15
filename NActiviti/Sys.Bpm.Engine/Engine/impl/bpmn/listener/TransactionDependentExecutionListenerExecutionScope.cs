@@ -15,66 +15,65 @@
 namespace org.activiti.engine.impl.bpmn.listener
 {
 
-	using org.activiti.bpmn.model;
+    using org.activiti.bpmn.model;
 
-	/// 
-	public class TransactionDependentExecutionListenerExecutionScope
-	{
+    /// 
+    public class TransactionDependentExecutionListenerExecutionScope
+    {
 
-	  protected internal readonly string processInstanceId;
-	  protected internal readonly string executionId;
-	  protected internal readonly FlowElement flowElement;
-	  protected internal readonly IDictionary<string, object> executionVariables;
-	  protected internal readonly IDictionary<string, object> customPropertiesMap;
+        protected internal readonly string processInstanceId;
+        protected internal readonly string executionId;
+        protected internal readonly FlowElement flowElement;
+        protected internal readonly IDictionary<string, object> executionVariables;
+        protected internal readonly IDictionary<string, object> customPropertiesMap;
 
-	  public TransactionDependentExecutionListenerExecutionScope(string processInstanceId, string executionId, FlowElement flowElement, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap)
-	  {
-		this.processInstanceId = processInstanceId;
-		this.executionId = executionId;
-		this.flowElement = flowElement;
-		this.executionVariables = executionVariables;
-		this.customPropertiesMap = customPropertiesMap;
-	  }
+        public TransactionDependentExecutionListenerExecutionScope(string processInstanceId, string executionId, FlowElement flowElement, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap)
+        {
+            this.processInstanceId = processInstanceId;
+            this.executionId = executionId;
+            this.flowElement = flowElement;
+            this.executionVariables = executionVariables;
+            this.customPropertiesMap = customPropertiesMap;
+        }
 
-	  public virtual string ProcessInstanceId
-	  {
-		  get
-		  {
-			return processInstanceId;
-		  }
-	  }
+        public virtual string ProcessInstanceId
+        {
+            get
+            {
+                return processInstanceId;
+            }
+        }
 
-	  public virtual string ExecutionId
-	  {
-		  get
-		  {
-			return executionId;
-		  }
-	  }
+        public virtual string ExecutionId
+        {
+            get
+            {
+                return executionId;
+            }
+        }
 
-	  public virtual FlowElement FlowElement
-	  {
-		  get
-		  {
-			return flowElement;
-		  }
-	  }
+        public virtual FlowElement FlowElement
+        {
+            get
+            {
+                return flowElement;
+            }
+        }
 
-	  public virtual IDictionary<string, object> ExecutionVariables
-	  {
-		  get
-		  {
-			return executionVariables;
-		  }
-	  }
+        public virtual IDictionary<string, object> ExecutionVariables
+        {
+            get
+            {
+                return executionVariables;
+            }
+        }
 
-	  public virtual IDictionary<string, object> CustomPropertiesMap
-	  {
-		  get
-		  {
-			return customPropertiesMap;
-		  }
-	  }
-	}
-
+        public virtual IDictionary<string, object> CustomPropertiesMap
+        {
+            get
+            {
+                return customPropertiesMap;
+            }
+        }
+    }
 }

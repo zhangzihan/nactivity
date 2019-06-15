@@ -37,33 +37,32 @@ namespace org.activiti.engine.impl.cmd
             this.isLocal = isLocal;
         }
 
-        public  virtual bool  execute(ICommandContext  commandContext)
+        public  virtual bool  Execute(ICommandContext  commandContext)
         {
-            if (ReferenceEquals(executionId, null))
+            if (executionId is null)
             {
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }
-            if (ReferenceEquals(variableName, null))
+            if (variableName is null)
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
 
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
 
             if (execution == null)
             {
                 throw new ActivitiObjectNotFoundException("execution " + executionId + " doesn't exist", typeof(IExecution));
             }
 
-            bool hasVariable = false;
-
+            bool hasVariable;
             if (isLocal)
             {
-                hasVariable = execution.hasVariableLocal(variableName);
+                hasVariable = execution.HasVariableLocal(variableName);
             }
             else
             {
-                hasVariable = execution.hasVariable(variableName);
+                hasVariable = execution.HasVariable(variableName);
             }
 
             return hasVariable;

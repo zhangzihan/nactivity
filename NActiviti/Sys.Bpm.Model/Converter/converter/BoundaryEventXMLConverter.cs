@@ -14,7 +14,7 @@
  */
 namespace org.activiti.bpmn.converter
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
@@ -34,23 +34,23 @@ namespace org.activiti.bpmn.converter
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_BOUNDARY;
+                return BpmnXMLConstants.ELEMENT_EVENT_BOUNDARY;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             BoundaryEvent boundaryEvent = new BoundaryEvent();
-            BpmnXMLUtil.addXMLLocation(boundaryEvent, xtr);
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_BOUNDARY_CANCELACTIVITY)))
+            BpmnXMLUtil.AddXMLLocation(boundaryEvent, xtr);
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_BOUNDARY_CANCELACTIVITY)))
             {
-                string cancelActivity = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_BOUNDARY_CANCELACTIVITY);
-                if (org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE.Equals(cancelActivity, StringComparison.CurrentCultureIgnoreCase))
+                string cancelActivity = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_BOUNDARY_CANCELACTIVITY);
+                if (BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE.Equals(cancelActivity, StringComparison.CurrentCultureIgnoreCase))
                 {
                     boundaryEvent.CancelActivity = false;
                 }
             }
-            boundaryEvent.AttachedToRefId = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_BOUNDARY_ATTACHEDTOREF);
-            parseChildElements(XMLElementName, boundaryEvent, model, xtr);
+            boundaryEvent.AttachedToRefId = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_BOUNDARY_ATTACHEDTOREF);
+            ParseChildElements(XMLElementName, boundaryEvent, model, xtr);
 
             // Explicitly set cancel activity to false for error boundary events
             if (boundaryEvent.EventDefinitions.Count == 1)
@@ -65,12 +65,12 @@ namespace org.activiti.bpmn.converter
 
             return boundaryEvent;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             BoundaryEvent boundaryEvent = (BoundaryEvent)element;
             if (boundaryEvent.AttachedToRef != null)
             {
-                writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_BOUNDARY_ATTACHEDTOREF, boundaryEvent.AttachedToRef.Id, xtw);
+                WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_BOUNDARY_ATTACHEDTOREF, boundaryEvent.AttachedToRef.Id, xtw);
             }
 
             if (boundaryEvent.EventDefinitions.Count == 1)
@@ -79,14 +79,14 @@ namespace org.activiti.bpmn.converter
 
                 if (eventDef is ErrorEventDefinition == false)
                 {
-                    writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_BOUNDARY_CANCELACTIVITY, boundaryEvent.CancelActivity.ToString().ToLower(), xtw);
+                    WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_BOUNDARY_CANCELACTIVITY, boundaryEvent.CancelActivity ? "true" : "false", xtw);
                 }
             }
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             BoundaryEvent boundaryEvent = (BoundaryEvent)element;
-            writeEventDefinitions(boundaryEvent, boundaryEvent.EventDefinitions, model, xtw);
+            WriteEventDefinitions(boundaryEvent, boundaryEvent.EventDefinitions, model, xtw);
         }
     }
 

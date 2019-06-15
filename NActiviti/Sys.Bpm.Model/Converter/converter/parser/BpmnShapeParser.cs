@@ -23,45 +23,45 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class BpmnShapeParser : IBpmnXMLConstants
     {
-        public virtual void parse(XMLStreamReader xtr, BpmnModel model)
+        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
         {
-            string id = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_BPMNELEMENT);
+            string id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_BPMNELEMENT);
             GraphicInfo graphicInfo = new GraphicInfo();
 
-            string strIsExpanded = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_IS_EXPANDED);
+            string strIsExpanded = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_IS_EXPANDED);
             if ("true".Equals(strIsExpanded, StringComparison.CurrentCultureIgnoreCase))
             {
                 graphicInfo.Expanded = true;
             }
 
-            BpmnXMLUtil.addXMLLocation(graphicInfo, xtr);
-            while (xtr.hasNext())
+            BpmnXMLUtil.AddXMLLocation(graphicInfo, xtr);
+            while (xtr.HasNext())
             {
                 //xtr.next();
 
-                if (xtr.IsStartElement() && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_BOUNDS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_DI_BOUNDS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    graphicInfo.X = Convert.ToDouble(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_X));
-                    graphicInfo.Y = Convert.ToDouble(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_Y));
-                    graphicInfo.Width = Convert.ToDouble(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_WIDTH));
-                    graphicInfo.Height = Convert.ToDouble(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DI_HEIGHT));
+                    graphicInfo.X = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_X));
+                    graphicInfo.Y = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_Y));
+                    graphicInfo.Width = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_WIDTH));
+                    graphicInfo.Height = Convert.ToDouble(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DI_HEIGHT));
 
-                    model.addGraphicInfo(id, graphicInfo);
+                    model.AddGraphicInfo(id, graphicInfo);
                     break;
                 }
-                else if (xtr.EndElement && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_SHAPE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                else if (xtr.EndElement && BpmnXMLConstants.ELEMENT_DI_SHAPE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     break;
                 }
 
-                if (xtr.IsEmptyElement && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_DI_SHAPE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                if (xtr.IsEmptyElement && BpmnXMLConstants.ELEMENT_DI_SHAPE.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     break;
                 }
             }
         }
 
-        public virtual BaseElement parseElement()
+        public virtual BaseElement ParseElement()
         {
             return null;
         }

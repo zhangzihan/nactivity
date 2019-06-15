@@ -56,7 +56,7 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public static JobQueryProperty findByName(string propertyName)
+        public static JobQueryProperty FindByName(string propertyName)
         {
             return properties[propertyName];
         }

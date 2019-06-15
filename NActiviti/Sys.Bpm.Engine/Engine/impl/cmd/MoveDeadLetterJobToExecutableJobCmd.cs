@@ -17,7 +17,7 @@ namespace org.activiti.engine.impl.cmd
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using Sys;
+    using Sys.Workflow;
     using System.Collections.Generic;
 
     /// 
@@ -37,15 +37,15 @@ namespace org.activiti.engine.impl.cmd
             this.retries = retries;
         }
 
-        public  virtual IJobEntity  execute(ICommandContext  commandContext)
+        public  virtual IJobEntity  Execute(ICommandContext  commandContext)
         {
 
-            if (ReferenceEquals(jobId, null))
+            if (jobId is null)
             {
                 throw new ActivitiIllegalArgumentException("jobId and job is null");
             }
 
-            IDeadLetterJobEntity job = commandContext.DeadLetterJobEntityManager.findById<IDeadLetterJobEntity>(new KeyValuePair<string, object>("id", jobId));
+            IDeadLetterJobEntity job = commandContext.DeadLetterJobEntityManager.FindById<IDeadLetterJobEntity>(new KeyValuePair<string, object>("id", jobId));
             if (job == null)
             {
                 throw new JobNotFoundException(jobId);
@@ -56,7 +56,7 @@ namespace org.activiti.engine.impl.cmd
                 log.LogDebug($"Moving deadletter job to executable job table {job.Id}");
             }
 
-            return commandContext.JobManager.moveDeadLetterJobToExecutableJob(job, retries);
+            return commandContext.JobManager.MoveDeadLetterJobToExecutableJob(job, retries);
         }
 
         public virtual string JobId

@@ -19,13 +19,13 @@ namespace org.activiti.engine.impl.calendar
     public interface IBusinessCalendar
     {
 
-        DateTime? resolveDuedate(string duedateDescription);
+        DateTime? ResolveDuedate(string duedateDescription);
 
-        DateTime? resolveDuedate(string duedateDescription, int maxIterations);
+        DateTime? ResolveDuedate(string duedateDescription, int maxIterations);
 
-        bool? validateDuedate(string duedateDescription, int maxIterations, DateTime? endDate, DateTime? newTimer);
+        bool? ValidateDuedate(string duedateDescription, int maxIterations, DateTime? endDate, DateTime? newTimer);
 
-        DateTime? resolveEndDate(string endDateString);
+        DateTime? ResolveEndDate(string endDateString);
     }
 
 }

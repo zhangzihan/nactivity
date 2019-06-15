@@ -18,7 +18,7 @@ namespace org.activiti.engine.impl.bpmn.parser
     using Microsoft.Extensions.Logging;
     using org.activiti.bpmn.model;
     using org.activiti.engine.parse;
-    using Sys;
+    using Sys.Workflow;
 
     /// 
     public class BpmnParseHandlers
@@ -31,20 +31,20 @@ namespace org.activiti.engine.impl.bpmn.parser
             this.parseHandlers = new Dictionary<Type, IList<IBpmnParseHandler>>();
         }
 
-        public virtual IList<IBpmnParseHandler> getHandlersFor(Type clazz)
+        public virtual IList<IBpmnParseHandler> GetHandlersFor(Type clazz)
         {
             return parseHandlers[clazz];
         }
 
-        public virtual void addHandlers(IList<IBpmnParseHandler> bpmnParseHandlers)
+        public virtual void AddHandlers(IList<IBpmnParseHandler> bpmnParseHandlers)
         {
             foreach (IBpmnParseHandler bpmnParseHandler in bpmnParseHandlers)
             {
-                addHandler(bpmnParseHandler);
+                AddHandler(bpmnParseHandler);
             }
         }
 
-        public virtual void addHandler(IBpmnParseHandler bpmnParseHandler)
+        public virtual void AddHandler(IBpmnParseHandler bpmnParseHandler)
         {
             foreach (Type type in bpmnParseHandler.HandledTypes)
             {
@@ -57,9 +57,8 @@ namespace org.activiti.engine.impl.bpmn.parser
             }
         }
 
-        public virtual void parseElement(BpmnParse bpmnParse, BaseElement element)
+        public virtual void ParseElement(BpmnParse bpmnParse, BaseElement element)
         {
-
             if (element is DataObject)
             {
                 // ignore DataObject elements because they are processed on Process
@@ -83,11 +82,9 @@ namespace org.activiti.engine.impl.bpmn.parser
             {
                 foreach (IBpmnParseHandler handler in handlers)
                 {
-                    handler.parse(bpmnParse, element);
+                    handler.Parse(bpmnParse, element);
                 }
             }
         }
-
     }
-
 }

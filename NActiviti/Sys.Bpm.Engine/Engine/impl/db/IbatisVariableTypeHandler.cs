@@ -24,14 +24,25 @@ namespace org.activiti.engine.impl.db
     /// 
     public class IbatisVariableTypeHandler : ITypeHandler<IVariableType>, ITypeHandler
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IVariableTypes variableTypes;
 
-        public virtual IVariableType getResult(DbDataReader rs, string columnName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rs"></param>
+        /// <param name="columnName"></param>
+        /// <returns></returns>
+        public virtual IVariableType GetResult(DbDataReader rs, string columnName)
         {
-            return getResult(rs, rs.GetOrdinal(columnName));
+            return GetResult(rs, rs.GetOrdinal(columnName));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual IVariableTypes VariableTypes
         {
             get
@@ -44,10 +55,16 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        public virtual IVariableType getResult(DbDataReader rs, int columnIndex)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rs"></param>
+        /// <param name="columnIndex"></param>
+        /// <returns></returns>
+        public virtual IVariableType GetResult(DbDataReader rs, int columnIndex)
         {
             string typeName = rs.GetString(columnIndex);
-            IVariableType type = VariableTypes.getVariableType(typeName);
+            IVariableType type = VariableTypes.GetVariableType(typeName);
             if (type == null)
             {
                 throw new ActivitiException("unknown variable type name " + typeName);
@@ -55,29 +72,59 @@ namespace org.activiti.engine.impl.db
             return type;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataReader"></param>
+        /// <param name="columnName"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
         public virtual object GetValue(IDataReader dataReader, string columnName, Type targetType)
         {
             int ordinal = dataReader.GetOrdinal(columnName);
             return GetValue(dataReader, ordinal, targetType);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataReader"></param>
+        /// <param name="columnIndex"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
         public virtual object GetValue(IDataReader dataReader, int columnIndex, Type targetType)
         {
-            string type = dataReader.GetString(columnIndex);
-            if (string.IsNullOrWhiteSpace(type))
+            try
             {
-                return null;
-            }
+                string type = dataReader.GetString(columnIndex);
+                if (string.IsNullOrWhiteSpace(type))
+                {
+                    return null;
+                }
 
-            return VariableTypes.getVariableType(type);
+                return VariableTypes.GetVariableType(type);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataParameter"></param>
+        /// <param name="parameterValue"></param>
         public virtual void SetParameter(IDataParameter dataParameter, object parameterValue)
         {
             dataParameter.Value = ToParameterValue(parameterValue);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public object ToParameterValue(object value)
         {
             if (value == null)
@@ -93,5 +140,4 @@ namespace org.activiti.engine.impl.db
             return value;
         }
     }
-
 }

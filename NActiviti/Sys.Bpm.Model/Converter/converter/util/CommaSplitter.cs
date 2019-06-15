@@ -15,42 +15,42 @@
 namespace org.activiti.bpmn.converter.util
 {
 
-	public class CommaSplitter
-	{
+    public class CommaSplitter
+    {
 
-		// split the given spring using commas if they are not inside an expression
-		public static IList<string> splitCommas(string st)
-		{
-			IList<string> result = new List<string>();
-			int offset = 0;
+        // split the given spring using commas if they are not inside an expression
+        public static IList<string> SplitCommas(string st)
+        {
+            IList<string> result = new List<string>();
+            int offset = 0;
 
-			bool inExpression = false;
-			for (int i = 0; i < st.Length; i++)
-			{
-				if (!inExpression && st[i] == ',')
-				{
-					if ((i - offset) > 1)
-					{
-						result.Add(st.Substring(offset, i - offset));
-					}
-					offset = i + 1;
-				}
-				else if ((st[i] == '$' || st[i] == '#') && st[i + 1] == '{')
-				{
-					inExpression = true;
-				}
-				else if (st[i] == '}')
-				{
-					inExpression = false;
-				}
-			}
+            bool inExpression = false;
+            for (int i = 0; i < st.Length; i++)
+            {
+                if (!inExpression && st[i] == ',')
+                {
+                    if ((i - offset) > 1)
+                    {
+                        result.Add(st.Substring(offset, i - offset));
+                    }
+                    offset = i + 1;
+                }
+                else if ((st[i] == '$' || st[i] == '#') && st[i + 1] == '{')
+                {
+                    inExpression = true;
+                }
+                else if (st[i] == '}')
+                {
+                    inExpression = false;
+                }
+            }
 
-			if ((st.Length - offset) > 1)
-			{
-				result.Add(st.Substring(offset));
-			}
-			return result;
-		}
-	}
+            if ((st.Length - offset) > 1)
+            {
+                result.Add(st.Substring(offset));
+            }
+            return result;
+        }
+    }
 
 }

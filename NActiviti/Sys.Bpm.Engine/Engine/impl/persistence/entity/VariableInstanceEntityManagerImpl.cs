@@ -43,9 +43,9 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual IVariableInstanceEntity create(string name, IVariableType type, object value)
+        public virtual IVariableInstanceEntity Create(string name, IVariableType type, object value)
         {
-            IVariableInstanceEntity variableInstance = create();
+            IVariableInstanceEntity variableInstance = Create();
             variableInstance.Name = name;
             variableInstance.Type = type;
             variableInstance.TypeName = type.TypeName;
@@ -53,113 +53,112 @@ namespace org.activiti.engine.impl.persistence.entity
             return variableInstance;
         }
 
-        public override void insert(IVariableInstanceEntity entity, bool fireCreateEvent)
+        public override void Insert(IVariableInstanceEntity entity, bool fireCreateEvent)
         {
-            base.insert(entity, fireCreateEvent);
+            base.Insert(entity, fireCreateEvent);
 
-            if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!(entity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(entity.ExecutionId);
-                if (isExecutionRelatedEntityCountEnabled(executionEntity))
+                ICountingExecutionEntity executionEntity = ExecutionEntityManager.FindById<ICountingExecutionEntity>(entity.ExecutionId);
+                if (IsExecutionRelatedEntityCountEnabled(executionEntity))
                 {
-                    executionEntity.VariableCount = executionEntity.VariableCount + 1;
+                    executionEntity.VariableCount += 1;
                 }
             }
         }
 
-        public virtual IList<IVariableInstanceEntity> findVariableInstancesByTaskId(string taskId)
+        public virtual IList<IVariableInstanceEntity> FindVariableInstancesByTaskId(string taskId)
         {
-            return variableInstanceDataManager.findVariableInstancesByTaskId(taskId);
+            return variableInstanceDataManager.FindVariableInstancesByTaskId(taskId);
         }
 
-        public virtual IList<IVariableInstanceEntity> findVariableInstancesByTaskIds(ISet<string> taskIds)
+        public virtual IList<IVariableInstanceEntity> FindVariableInstancesByTaskIds(string[] taskIds)
         {
-            return variableInstanceDataManager.findVariableInstancesByTaskIds(taskIds);
+            return variableInstanceDataManager.FindVariableInstancesByTaskIds(taskIds);
         }
 
-        public virtual IList<IVariableInstanceEntity> findVariableInstancesByExecutionId(string executionId)
+        public virtual IList<IVariableInstanceEntity> FindVariableInstancesByExecutionId(string executionId)
         {
-            return variableInstanceDataManager.findVariableInstancesByExecutionId(executionId);
+            return variableInstanceDataManager.FindVariableInstancesByExecutionId(executionId);
         }
 
-        public virtual IList<IVariableInstanceEntity> findVariableInstancesByExecutionIds(ISet<string> executionIds)
+        public virtual IList<IVariableInstanceEntity> FindVariableInstancesByExecutionIds(string[] executionIds)
         {
-            return variableInstanceDataManager.findVariableInstancesByExecutionIds(executionIds);
+            return variableInstanceDataManager.FindVariableInstancesByExecutionIds(executionIds);
         }
 
-        public virtual IVariableInstanceEntity findVariableInstanceByExecutionAndName(string executionId, string variableName)
+        public virtual IVariableInstanceEntity FindVariableInstanceByExecutionAndName(string executionId, string variableName)
         {
-            return variableInstanceDataManager.findVariableInstanceByExecutionAndName(executionId, variableName);
+            return variableInstanceDataManager.FindVariableInstanceByExecutionAndName(executionId, variableName);
         }
 
-        public virtual IList<IVariableInstanceEntity> findVariableInstancesByExecutionAndNames(string executionId, ICollection<string> names)
+        public virtual IList<IVariableInstanceEntity> FindVariableInstancesByExecutionAndNames(string executionId, IEnumerable<string> names)
         {
-            return variableInstanceDataManager.findVariableInstancesByExecutionAndNames(executionId, names);
+            return variableInstanceDataManager.FindVariableInstancesByExecutionAndNames(executionId, names);
         }
 
-        public virtual IVariableInstanceEntity findVariableInstanceByTaskAndName(string taskId, string variableName)
+        public virtual IVariableInstanceEntity FindVariableInstanceByTaskAndName(string taskId, string variableName)
         {
-            return variableInstanceDataManager.findVariableInstanceByTaskAndName(taskId, variableName);
+            return variableInstanceDataManager.FindVariableInstanceByTaskAndName(taskId, variableName);
         }
 
-        public virtual IList<IVariableInstanceEntity> findVariableInstancesByTaskAndNames(string taskId, ICollection<string> names)
+        public virtual IList<IVariableInstanceEntity> FindVariableInstancesByTaskAndNames(string taskId, IEnumerable<string> names)
         {
-            return variableInstanceDataManager.findVariableInstancesByTaskAndNames(taskId, names);
+            return variableInstanceDataManager.FindVariableInstancesByTaskAndNames(taskId, names);
         }
 
-        public override void delete(IVariableInstanceEntity entity, bool fireDeleteEvent)
+        public override void Delete(IVariableInstanceEntity entity, bool fireDeleteEvent)
         {
-            base.delete(entity, false);
+            base.Delete(entity, false);
             IByteArrayRef byteArrayRef = entity.ByteArrayRef;
             if (byteArrayRef != null)
             {
-                byteArrayRef.delete();
+                byteArrayRef.Delete();
             }
             entity.Deleted = true;
 
-            if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!(entity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(entity.ExecutionId);
-                if (isExecutionRelatedEntityCountEnabled(executionEntity))
+                ICountingExecutionEntity executionEntity = ExecutionEntityManager.FindById<ICountingExecutionEntity>(entity.ExecutionId);
+                if (IsExecutionRelatedEntityCountEnabled(executionEntity))
                 {
-                    executionEntity.VariableCount = executionEntity.VariableCount - 1;
+                    executionEntity.VariableCount -= 1;
                 }
             }
 
             IActivitiEventDispatcher eventDispatcher = EventDispatcher;
             if (fireDeleteEvent && eventDispatcher.Enabled)
             {
-                eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_DELETED, entity));
+                eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, entity));
 
-                eventDispatcher.dispatchEvent(createVariableDeleteEvent(entity));
+                eventDispatcher.DispatchEvent(CreateVariableDeleteEvent(entity));
             }
 
         }
 
-        protected internal virtual IActivitiVariableEvent createVariableDeleteEvent(IVariableInstanceEntity variableInstance)
+        protected internal virtual IActivitiVariableEvent CreateVariableDeleteEvent(IVariableInstanceEntity variableInstance)
         {
-
             string processDefinitionId = null;
-            if (!ReferenceEquals(variableInstance.ProcessInstanceId, null))
+            if (!(variableInstance.ProcessInstanceId is null))
             {
-                IExecutionEntity executionEntity = ExecutionEntityManager.findById<IExecutionEntity>(variableInstance.ProcessInstanceId);
+                IExecutionEntity executionEntity = ExecutionEntityManager.FindById<IExecutionEntity>(variableInstance.ProcessInstanceId);
                 if (executionEntity != null)
                 {
                     processDefinitionId = executionEntity.ProcessDefinitionId;
                 }
             }
 
-            return ActivitiEventBuilder.createVariableEvent(ActivitiEventType.VARIABLE_DELETED, variableInstance.Name, null, variableInstance.Type, variableInstance.TaskId, variableInstance.ExecutionId, variableInstance.ProcessInstanceId, processDefinitionId);
+            return ActivitiEventBuilder.CreateVariableEvent(ActivitiEventType.VARIABLE_DELETED, variableInstance.Name, null, variableInstance.Type, variableInstance.TaskId, variableInstance.ExecutionId, variableInstance.ProcessInstanceId, processDefinitionId);
         }
 
-        public virtual void deleteVariableInstanceByTask(ITaskEntity task)
+        public virtual void DeleteVariableInstanceByTask(ITaskEntity task)
         {
             IDictionary<string, IVariableInstanceEntity> variableInstances = task.VariableInstanceEntities;
             if (variableInstances != null)
             {
                 foreach (IVariableInstanceEntity variableInstance in variableInstances.Values)
                 {
-                    delete(variableInstance);
+                    Delete(variableInstance);
                 }
             }
         }

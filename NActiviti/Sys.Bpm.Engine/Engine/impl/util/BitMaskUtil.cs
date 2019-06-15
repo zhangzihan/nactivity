@@ -35,7 +35,7 @@ namespace org.activiti.engine.impl.util
         private const int FLAG_BIT_7 = 64; // 000...01000000
         private const int FLAG_BIT_8 = 128; // 000...10000000
 
-        private static int[] MASKS = new int[] { FLAG_BIT_1, FLAG_BIT_2, FLAG_BIT_3, FLAG_BIT_4, FLAG_BIT_5, FLAG_BIT_6, FLAG_BIT_7, FLAG_BIT_8 };
+        private static readonly int[] MASKS = new int[] { FLAG_BIT_1, FLAG_BIT_2, FLAG_BIT_3, FLAG_BIT_4, FLAG_BIT_5, FLAG_BIT_6, FLAG_BIT_7, FLAG_BIT_8 };
 
         /// <summary>
         /// Set bit to '1' in the given int.
@@ -44,7 +44,7 @@ namespace org.activiti.engine.impl.util
         ///          integer value </param>
         /// <param name="bitNumber">
         ///          number of the bit to set to '1' (right first bit starting at 1). </param>
-        public static int setBitOn(int value, int bitNumber)
+        public static int SetBitOn(int value, int bitNumber)
         {
             if (bitNumber <= 0 || bitNumber > 8)
             {
@@ -62,7 +62,7 @@ namespace org.activiti.engine.impl.util
         ///          integer value </param>
         /// <param name="bitNumber">
         ///          number of the bit to set to '0' (right first bit starting at 1). </param>
-        public static int setBitOff(int value, int bitNumber)
+        public static int SetBitOff(int value, int bitNumber)
         {
             if (bitNumber <= 0 || bitNumber > 8)
             {
@@ -80,7 +80,7 @@ namespace org.activiti.engine.impl.util
         ///          integer to check bit </param>
         /// <param name="number">
         ///          of bit to check (right first bit starting at 1) </param>
-        public static bool isBitOn(int value, int bitNumber)
+        public static bool IsBitOn(int value, int bitNumber)
         {
             if (bitNumber <= 0 || bitNumber > 8)
             {
@@ -99,15 +99,15 @@ namespace org.activiti.engine.impl.util
         ///          number of the bit to set to '0' or '1' (right first bit starting at 1). </param>
         /// <param name="bitValue">
         ///          if true, bit set to '1'. If false, '0'. </param>
-        public static int setBit(int value, int bitNumber, bool bitValue)
+        public static int SetBit(int value, int bitNumber, bool bitValue)
         {
             if (bitValue)
             {
-                return setBitOn(value, bitNumber);
+                return SetBitOn(value, bitNumber);
             }
             else
             {
-                return setBitOff(value, bitNumber);
+                return SetBitOff(value, bitNumber);
             }
         }
     }

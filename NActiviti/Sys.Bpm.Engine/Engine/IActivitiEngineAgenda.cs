@@ -13,6 +13,7 @@
 namespace org.activiti.engine
 {
     using org.activiti.engine.impl.persistence.entity;
+    using System.Collections.Generic;
 
     /// <summary>
     /// This class extends <seealso cref="IAgenda"/> with activiti specific operations
@@ -20,23 +21,25 @@ namespace org.activiti.engine
     public interface IActivitiEngineAgenda : IAgenda
     {
 
-        void planContinueProcessOperation(IExecutionEntity execution);
+        void PlanContinueProcessOperation(IExecutionEntity execution);
 
-        void planContinueProcessSynchronousOperation(IExecutionEntity execution);
+        void PlanContinueProcessSynchronousOperation(IExecutionEntity execution);
 
-        void planContinueProcessInCompensation(IExecutionEntity execution);
+        void PlanContinueProcessInCompensation(IExecutionEntity execution);
 
-        void planContinueMultiInstanceOperation(IExecutionEntity execution);
+        void PlanContinueMultiInstanceOperation(IExecutionEntity execution);
 
-        void planTakeOutgoingSequenceFlowsOperation(IExecutionEntity execution, bool evaluateConditions);
+        void PlanTakeOutgoingSequenceFlowsOperation(IExecutionEntity execution, bool evaluateConditions);
 
-        void planEndExecutionOperation(IExecutionEntity execution);
+        void PlanEndExecutionOperation(IExecutionEntity execution);
 
-        void planTriggerExecutionOperation(IExecutionEntity execution);
+        void PlanTriggerExecutionOperation(IExecutionEntity execution);
 
-        void planDestroyScopeOperation(IExecutionEntity execution);
+        void PlanTriggerExecutionOperation(IExecutionEntity execution, object signalData);
 
-        void planExecuteInactiveBehaviorsOperation();
+        void PlanDestroyScopeOperation(IExecutionEntity execution);
+
+        void PlanExecuteInactiveBehaviorsOperation();
     }
 
 }

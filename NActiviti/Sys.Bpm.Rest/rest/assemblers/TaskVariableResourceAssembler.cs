@@ -24,7 +24,7 @@ namespace org.activiti.cloud.services.rest.assemblers
         /// </summary>
         /// <param name="taskVariable"></param>
         /// <returns></returns>
-        public override TaskVariableResource toResource(TaskVariable taskVariable)
+        public override TaskVariableResource ToResource(TaskVariable taskVariable)
         {
             throw new NotImplementedException();
             //Link globalVariables = linkTo(methodOn(typeof(TaskVariableControllerImpl)).getVariables(taskVariable.TaskId)).withRel("globalVariables");

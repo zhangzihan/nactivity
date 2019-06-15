@@ -58,10 +58,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            Association clone = new Association();
-            clone.Values = this;
+            Association clone = new Association
+            {
+                Values = this
+            };
             return clone;
         }
 

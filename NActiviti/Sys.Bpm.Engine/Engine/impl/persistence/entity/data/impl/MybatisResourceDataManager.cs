@@ -34,28 +34,28 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IResourceEntity create()
+        public override IResourceEntity Create()
         {
             return new ResourceEntityImpl();
         }
 
-        public virtual void deleteResourcesByDeploymentId(string deploymentId)
+        public virtual void DeleteResourcesByDeploymentId(string deploymentId)
         {
-            DbSqlSession.delete("deleteResourcesByDeploymentId", new { deploymentId }, typeof(ResourceEntityImpl));
+            DbSqlSession.Delete("deleteResourcesByDeploymentId", new { deploymentId }, typeof(ResourceEntityImpl));
         }
 
-        public virtual IResourceEntity findResourceByDeploymentIdAndResourceName(string deploymentId, string resourceName)
+        public virtual IResourceEntity FindResourceByDeploymentIdAndResourceName(string deploymentId, string resourceName)
         {
-            return (IResourceEntity)DbSqlSession.selectOne<ResourceEntityImpl, IResourceEntity>("selectResourceByDeploymentIdAndResourceName", new
+            return (IResourceEntity)DbSqlSession.SelectOne<ResourceEntityImpl, IResourceEntity>("selectResourceByDeploymentIdAndResourceName", new
             {
                 deploymentId,
                 resourceName
             });
         }
 
-        public virtual IList<IResourceEntity> findResourcesByDeploymentId(string deploymentId)
+        public virtual IList<IResourceEntity> FindResourcesByDeploymentId(string deploymentId)
         {
-            return DbSqlSession.selectList<ResourceEntityImpl, IResourceEntity>("selectResourcesByDeploymentId", new { deploymentId });
+            return DbSqlSession.SelectList<ResourceEntityImpl, IResourceEntity>("selectResourcesByDeploymentId", new { deploymentId });
         }
 
     }

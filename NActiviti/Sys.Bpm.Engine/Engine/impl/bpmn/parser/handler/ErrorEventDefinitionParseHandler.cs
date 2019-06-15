@@ -29,12 +29,11 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, ErrorEventDefinition eventDefinition)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, ErrorEventDefinition eventDefinition)
         {
-            if (bpmnParse.CurrentFlowElement is BoundaryEvent)
+            if (bpmnParse.CurrentFlowElement is BoundaryEvent boundaryEvent)
             {
-                BoundaryEvent boundaryEvent = (BoundaryEvent)bpmnParse.CurrentFlowElement;
-                boundaryEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createBoundaryEventActivityBehavior(boundaryEvent, true);
+                boundaryEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateBoundaryEventActivityBehavior(boundaryEvent, true);
             }
         }
     }

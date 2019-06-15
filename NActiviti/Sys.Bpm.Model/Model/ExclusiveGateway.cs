@@ -15,10 +15,12 @@ namespace org.activiti.bpmn.model
     public class ExclusiveGateway : Gateway
     {
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            ExclusiveGateway clone = new ExclusiveGateway();
-            clone.Values = this;
+            ExclusiveGateway clone = new ExclusiveGateway
+            {
+                Values = this
+            };
             return clone;
         }
     }

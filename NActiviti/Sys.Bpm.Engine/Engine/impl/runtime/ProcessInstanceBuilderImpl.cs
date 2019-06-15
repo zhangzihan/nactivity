@@ -21,120 +21,143 @@ namespace org.activiti.engine.impl.runtime
     /// 
     public class ProcessInstanceBuilderImpl : IProcessInstanceBuilder
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal RuntimeServiceImpl runtimeService;
-        protected internal string processDefinitionId_Renamed;
-        protected internal string processDefinitionKey_Renamed;
-        protected internal string messageName_Renamed;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal string _processDefinitionId;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal string _processDefinitionKey;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal string _messageName;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string processInstanceName;
-        protected internal string businessKey_Renamed;
-        protected internal string tenantId_Renamed;
-        protected internal IDictionary<string, object> variables_Renamed;
-        protected internal IDictionary<string, object> transientVariables_Renamed;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal string _businessKey;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal string _tenantId;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal IDictionary<string, object> _variables;
+        protected internal IDictionary<string, object> _transientVariables;
 
         public ProcessInstanceBuilderImpl(RuntimeServiceImpl runtimeService)
         {
             this.runtimeService = runtimeService;
         }
 
-        public virtual IProcessInstanceBuilder processDefinitionId(string processDefinitionId)
+        public virtual IProcessInstanceBuilder SetProcessDefinitionId(string processDefinitionId)
         {
-            this.processDefinitionId_Renamed = processDefinitionId;
+            this._processDefinitionId = processDefinitionId;
             return this;
         }
 
-        public virtual IProcessInstanceBuilder processDefinitionKey(string processDefinitionKey)
+        public virtual IProcessInstanceBuilder SetProcessDefinitionKey(string processDefinitionKey)
         {
-            this.processDefinitionKey_Renamed = processDefinitionKey;
+            this._processDefinitionKey = processDefinitionKey;
             return this;
         }
 
-        public virtual IProcessInstanceBuilder messageName(string messageName)
+        public virtual IProcessInstanceBuilder SetMessageName(string messageName)
         {
-            this.messageName_Renamed = messageName;
+            this._messageName = messageName;
             return this;
         }
 
-        public virtual IProcessInstanceBuilder name(string processInstanceName)
+        public virtual IProcessInstanceBuilder SetName(string processInstanceName)
         {
             this.processInstanceName = processInstanceName;
             return this;
         }
 
-        public virtual IProcessInstanceBuilder businessKey(string businessKey)
+        public virtual IProcessInstanceBuilder SetBusinessKey(string businessKey)
         {
-            this.businessKey_Renamed = businessKey;
+            this._businessKey = businessKey;
             return this;
         }
 
-        public virtual IProcessInstanceBuilder tenantId(string tenantId)
+        public virtual IProcessInstanceBuilder SetTenantId(string tenantId)
         {
-            this.tenantId_Renamed = tenantId;
+            this._tenantId = tenantId;
             return this;
         }
 
-        public virtual IProcessInstanceBuilder variables(IDictionary<string, object> variables)
+        public virtual IProcessInstanceBuilder SetVariables(IDictionary<string, object> variables)
         {
-            if (this.variables_Renamed == null)
+            if (this._variables == null)
             {
-                this.variables_Renamed = new Dictionary<string, object>();
+                this._variables = new Dictionary<string, object>();
             }
             if (variables != null)
             {
                 foreach (string variableName in variables.Keys)
                 {
-                    this.variables_Renamed[variableName] = variables[variableName];
+                    this._variables[variableName] = variables[variableName];
                 }
             }
             return this;
         }
 
-        public virtual IProcessInstanceBuilder variable(string variableName, object value)
+        public virtual IProcessInstanceBuilder SetVariable(string variableName, object value)
         {
-            if (this.variables_Renamed == null)
+            if (this._variables == null)
             {
-                this.variables_Renamed = new Dictionary<string, object>();
+                this._variables = new Dictionary<string, object>();
             }
-            this.variables_Renamed[variableName] = value;
+            this._variables[variableName] = value;
             return this;
         }
 
-        public virtual IProcessInstanceBuilder transientVariables(IDictionary<string, object> transientVariables)
+        public virtual IProcessInstanceBuilder SetTransientVariables(IDictionary<string, object> transientVariables)
         {
-            if (this.transientVariables_Renamed == null)
+            if (this._transientVariables == null)
             {
-                this.transientVariables_Renamed = new Dictionary<string, object>();
+                this._transientVariables = new Dictionary<string, object>();
             }
             if (transientVariables != null)
             {
                 foreach (string variableName in transientVariables.Keys)
                 {
-                    this.transientVariables_Renamed[variableName] = transientVariables[variableName];
+                    this._transientVariables[variableName] = transientVariables[variableName];
                 }
             }
             return this;
         }
 
-        public virtual IProcessInstanceBuilder transientVariable(string variableName, object value)
+        public virtual IProcessInstanceBuilder SetTransientVariable(string variableName, object value)
         {
-            if (this.transientVariables_Renamed == null)
+            if (this._transientVariables == null)
             {
-                this.transientVariables_Renamed = new Dictionary<string, object>();
+                this._transientVariables = new Dictionary<string, object>();
             }
-            this.transientVariables_Renamed[variableName] = value;
+            this._transientVariables[variableName] = value;
             return this;
         }
 
-        public virtual IProcessInstance start()
+        public virtual IProcessInstance Start()
         {
-            return runtimeService.startProcessInstance(this);
+            return runtimeService.StartProcessInstance(this);
         }
 
         public virtual string ProcessDefinitionId
         {
             get
             {
-                return processDefinitionId_Renamed;
+                return _processDefinitionId;
             }
         }
 
@@ -142,7 +165,7 @@ namespace org.activiti.engine.impl.runtime
         {
             get
             {
-                return processDefinitionKey_Renamed;
+                return _processDefinitionKey;
             }
         }
 
@@ -150,7 +173,7 @@ namespace org.activiti.engine.impl.runtime
         {
             get
             {
-                return messageName_Renamed;
+                return _messageName;
             }
         }
 
@@ -166,7 +189,7 @@ namespace org.activiti.engine.impl.runtime
         {
             get
             {
-                return businessKey_Renamed;
+                return _businessKey;
             }
         }
 
@@ -174,7 +197,7 @@ namespace org.activiti.engine.impl.runtime
         {
             get
             {
-                return tenantId_Renamed;
+                return _tenantId;
             }
         }
 
@@ -182,7 +205,7 @@ namespace org.activiti.engine.impl.runtime
         {
             get
             {
-                return variables_Renamed;
+                return _variables;
             }
         }
 
@@ -190,7 +213,7 @@ namespace org.activiti.engine.impl.runtime
         {
             get
             {
-                return transientVariables_Renamed;
+                return _transientVariables;
             }
         }
 

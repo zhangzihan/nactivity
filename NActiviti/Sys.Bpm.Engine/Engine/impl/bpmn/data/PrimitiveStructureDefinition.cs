@@ -14,44 +14,63 @@
  */
 namespace org.activiti.engine.impl.bpmn.data
 {
-	/// <summary>
-	/// Represents a structure based on a primitive class
-	/// 
-	/// 
-	/// </summary>
-	public class PrimitiveStructureDefinition : IStructureDefinition
-	{
+    /// <summary>
+    /// Represents a structure based on a primitive class
+    /// 
+    /// 
+    /// </summary>
+    public class PrimitiveStructureDefinition : IStructureDefinition
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal string id;
 
-	  protected internal string id;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal Type primitiveClass;
 
-	  protected internal Type primitiveClass;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="primitiveClass"></param>
+        public PrimitiveStructureDefinition(string id, Type primitiveClass)
+        {
+            this.id = id;
+            this.primitiveClass = primitiveClass;
+        }
 
-	  public PrimitiveStructureDefinition(string id, Type primitiveClass)
-	  {
-		this.id = id;
-		this.primitiveClass = primitiveClass;
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual string Id
+        {
+            get
+            {
+                return this.id;
+            }
+        }
 
-	  public virtual string Id
-	  {
-		  get
-		  {
-			return this.id;
-		  }
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual Type PrimitiveClass
+        {
+            get
+            {
+                return primitiveClass;
+            }
+        }
 
-	  public virtual Type PrimitiveClass
-	  {
-		  get
-		  {
-			return primitiveClass;
-		  }
-	  }
-
-	  public virtual IStructureInstance createInstance()
-	  {
-		return new PrimitiveStructureInstance(this);
-	  }
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual IStructureInstance CreateInstance()
+        {
+            return new PrimitiveStructureInstance(this);
+        }
+    }
 }

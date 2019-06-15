@@ -14,35 +14,34 @@
  */
 namespace org.activiti.engine.impl.bpmn.data
 {
-	/// <summary>
-	/// Represents a structure definition based on fields
-	/// 
-	/// 
-	/// </summary>
-	public interface IFieldBaseStructureDefinition : IStructureDefinition
-	{
+    /// <summary>
+    /// Represents a structure definition based on fields
+    /// 
+    /// 
+    /// </summary>
+    public interface IFieldBaseStructureDefinition : IStructureDefinition
+    {
 
-	  /// <summary>
-	  /// Obtains the number of fields that this structure has
-	  /// </summary>
-	  /// <returns> the number of fields that this structure has </returns>
-	  int FieldSize {get;}
+        /// <summary>
+        /// Obtains the number of fields that this structure has
+        /// </summary>
+        /// <returns> the number of fields that this structure has </returns>
+        int FieldSize { get; }
 
-	  /// <summary>
-	  /// Obtains the name of the field in the index position
-	  /// </summary>
-	  /// <param name="index">
-	  ///          the position of the field </param>
-	  /// <returns> the name of the field </returns>
-	  string getFieldNameAt(int index);
+        /// <summary>
+        /// Obtains the name of the field in the index position
+        /// </summary>
+        /// <param name="index">
+        ///          the position of the field </param>
+        /// <returns> the name of the field </returns>
+        string GetFieldNameAt(int index);
 
-	  /// <summary>
-	  /// Obtains the type of the field in the index position
-	  /// </summary>
-	  /// <param name="index">
-	  ///          the position of the field </param>
-	  /// <returns> the type of the field </returns>
-	  Type getFieldTypeAt(int index);
-	}
-
+        /// <summary>
+        /// Obtains the type of the field in the index position
+        /// </summary>
+        /// <param name="index">
+        ///          the position of the field </param>
+        /// <returns> the type of the field </returns>
+        Type GetFieldTypeAt(int index);
+    }
 }

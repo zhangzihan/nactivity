@@ -31,14 +31,14 @@ namespace org.activiti.engine.impl.cmd
             this.deploymentId = deploymentId;
         }
 
-        public virtual IList<string> execute(ICommandContext commandContext)
+        public virtual IList<string> Execute(ICommandContext commandContext)
         {
             if (ReferenceEquals(deploymentId, null))
             {
                 throw new ActivitiIllegalArgumentException("deploymentId is null");
             }
 
-            return commandContext.DeploymentEntityManager.getDeploymentResourceNames(deploymentId);
+            return commandContext.DeploymentEntityManager.GetDeploymentResourceNames(deploymentId);
         }
 
     }

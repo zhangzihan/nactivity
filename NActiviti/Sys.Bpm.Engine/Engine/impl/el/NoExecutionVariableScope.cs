@@ -67,54 +67,54 @@ namespace org.activiti.engine.impl.el
             }
         }
 
-        public virtual IDictionary<string, object> getVariables(ICollection<string> variableNames)
+        public virtual IDictionary<string, object> GetVariables(IEnumerable<string> variableNames)
         {
             return new Dictionary<string, object>();
         }
 
-        public virtual IDictionary<string, object> getVariables(ICollection<string> variableNames, bool fetchAllVariables)
+        public virtual IDictionary<string, object> GetVariables(IEnumerable<string> variableNames, bool fetchAllVariables)
         {
             return new Dictionary<string, object>();
         }
 
-        public virtual IDictionary<string, object> getVariablesLocal(ICollection<string> variableNames)
+        public virtual IDictionary<string, object> GetVariablesLocal(IEnumerable<string> variableNames)
         {
             return new Dictionary<string, object>();
         }
 
-        public virtual IDictionary<string, object> getVariablesLocal(ICollection<string> variableNames, bool fetchAllVariables)
+        public virtual IDictionary<string, object> GetVariablesLocal(IEnumerable<string> variableNames, bool fetchAllVariables)
         {
             return new Dictionary<string, object>();
         }
 
-        public virtual object getVariable(string variableName)
+        public virtual object GetVariable(string variableName)
         {
             return null;
         }
 
-        public virtual object getVariable(string variableName, bool fetchAllVariables)
+        public virtual object GetVariable(string variableName, bool fetchAllVariables)
         {
             return null;
         }
 
-        public virtual object getVariableLocal(string variableName)
+        public virtual object GetVariableLocal(string variableName)
         {
             return null;
         }
 
-        public virtual object getVariableLocal(string variableName, bool fetchAllVariables)
+        public virtual object GetVariableLocal(string variableName, bool fetchAllVariables)
         {
             return null;
         }
 
-        public virtual T getVariable<T>(string variableName)
+        public virtual T GetVariable<T>(string variableName)
         {
-            return default(T);
+            return default;
         }
 
-        public virtual T getVariableLocal<T>(string variableName)
+        public virtual T GetVariableLocal<T>(string variableName)
         {
-            return default(T);
+            return default;
         }
 
         public virtual IDictionary<string, IVariableInstance> VariableInstances
@@ -125,12 +125,12 @@ namespace org.activiti.engine.impl.el
             }
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstances(ICollection<string> variableNames)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstances(IEnumerable<string> variableNames)
         {
             return null;
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstances(ICollection<string> variableNames, bool fetchAllVariables)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstances(IEnumerable<string> variableNames, bool fetchAllVariables)
         {
             return null;
         }
@@ -143,32 +143,32 @@ namespace org.activiti.engine.impl.el
             }
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstancesLocal(ICollection<string> variableNames)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstancesLocal(IEnumerable<string> variableNames)
         {
             return null;
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstancesLocal(ICollection<string> variableNames, bool fetchAllVariables)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstancesLocal(IEnumerable<string> variableNames, bool fetchAllVariables)
         {
             return null;
         }
 
-        public virtual IVariableInstance getVariableInstance(string variableName)
+        public virtual IVariableInstance GetVariableInstance(string variableName)
         {
             return null;
         }
 
-        public virtual IVariableInstance getVariableInstance(string variableName, bool fetchAllVariables)
+        public virtual IVariableInstance GetVariableInstance(string variableName, bool fetchAllVariables)
         {
             return null;
         }
 
-        public virtual IVariableInstance getVariableInstanceLocal(string variableName)
+        public virtual IVariableInstance GetVariableInstanceLocal(string variableName)
         {
             return null;
         }
 
-        public virtual IVariableInstance getVariableInstanceLocal(string variableName, bool fetchAllVariables)
+        public virtual IVariableInstance GetVariableInstanceLocal(string variableName, bool fetchAllVariables)
         {
             return null;
         }
@@ -189,93 +189,93 @@ namespace org.activiti.engine.impl.el
             }
         }
 
-        public virtual void setVariable(string variableName, object value)
+        public virtual void SetVariable(string variableName, object value)
         {
             throw new System.NotSupportedException("No execution active, no variables can be set");
         }
 
-        public virtual void setVariable(string variableName, object value, bool fetchAllVariables)
+        public virtual void SetVariable(string variableName, object value, bool fetchAllVariables)
         {
             throw new System.NotSupportedException("No execution active, no variables can be set");
         }
 
-        public virtual object setVariableLocal(string variableName, object value)
+        public virtual object SetVariableLocal(string variableName, object value)
         {
             throw new System.NotSupportedException("No execution active, no variables can be set");
         }
 
-        public virtual object setVariableLocal(string variableName, object value, bool fetchAllVariables)
+        public virtual object SetVariableLocal(string variableName, object value, bool fetchAllVariables)
         {
             throw new System.NotSupportedException("No execution active, no variables can be set");
         }
 
 
 
-        public virtual bool hasVariables()
+        public virtual bool HasVariables()
         {
             return false;
         }
 
-        public virtual bool hasVariablesLocal()
+        public virtual bool HasVariablesLocal()
         {
             return false;
         }
 
-        public virtual bool hasVariable(string variableName)
+        public virtual bool HasVariable(string variableName)
         {
             return false;
         }
 
-        public virtual bool hasVariableLocal(string variableName)
+        public virtual bool HasVariableLocal(string variableName)
         {
             return false;
         }
 
-        public virtual void createVariableLocal(string variableName, object value)
+        public virtual void CreateVariableLocal(string variableName, object value)
         {
-            throw new System.NotSupportedException("No execution active, no variables can be created");
+            throw new NotSupportedException("No execution active, no variables can be created");
         }
 
-        public virtual void createVariablesLocal<T1>(IDictionary<string, T1> variables)
+        public virtual void CreateVariablesLocal<T1>(IDictionary<string, T1> variables)
         {
-            throw new System.NotSupportedException("No execution active, no variables can be created");
+            throw new NotSupportedException("No execution active, no variables can be created");
         }
 
-        public virtual void removeVariable(string variableName)
+        public virtual void RemoveVariable(string variableName)
         {
-            throw new System.NotSupportedException("No execution active, no variables can be removed");
+            throw new NotSupportedException("No execution active, no variables can be removed");
         }
 
-        public virtual void removeVariableLocal(string variableName)
+        public virtual void RemoveVariableLocal(string variableName)
         {
-            throw new System.NotSupportedException("No execution active, no variables can be removed");
+            throw new NotSupportedException("No execution active, no variables can be removed");
         }
 
-        public virtual void removeVariables()
+        public virtual void RemoveVariables()
         {
-            throw new System.NotSupportedException("No execution active, no variables can be removed");
+            throw new NotSupportedException("No execution active, no variables can be removed");
         }
 
-        public virtual void removeVariablesLocal()
+        public virtual void RemoveVariablesLocal()
         {
-            throw new System.NotSupportedException("No execution active, no variables can be removed");
+            throw new NotSupportedException("No execution active, no variables can be removed");
         }
 
-        public virtual void removeVariables(ICollection<string> variableNames)
+        public virtual void RemoveVariables(IEnumerable<string> variableNames)
         {
-            throw new System.NotSupportedException("No execution active, no variables can be removed");
+            throw new NotSupportedException("No execution active, no variables can be removed");
         }
 
-        public virtual void removeVariablesLocal(ICollection<string> variableNames)
+        public virtual void RemoveVariablesLocal(IEnumerable<string> variableNames)
         {
-            throw new System.NotSupportedException("No execution active, no variables can be removed");
+            throw new NotSupportedException("No execution active, no variables can be removed");
         }
 
         public virtual IDictionary<string, object> TransientVariablesLocal
         {
             set
             {
-                throw new System.NotSupportedException("No execution active, no variables can be set");
+                throw new NotSupportedException("No execution active, no variables can be set");
             }
             get
             {
@@ -283,16 +283,16 @@ namespace org.activiti.engine.impl.el
             }
         }
 
-        public virtual void setTransientVariableLocal(string variableName, object variableValue)
+        public virtual void SetTransientVariableLocal(string variableName, object variableValue)
         {
-            throw new System.NotSupportedException("No execution active, no variables can be set");
+            throw new NotSupportedException("No execution active, no variables can be set");
         }
 
         public virtual IDictionary<string, object> TransientVariables
         {
             set
             {
-                throw new System.NotSupportedException("No execution active, no variables can be set");
+                throw new NotSupportedException("No execution active, no variables can be set");
             }
             get
             {
@@ -300,41 +300,39 @@ namespace org.activiti.engine.impl.el
             }
         }
 
-        public virtual void setTransientVariable(string variableName, object variableValue)
+        public virtual void SetTransientVariable(string variableName, object variableValue)
         {
-            throw new System.NotSupportedException("No execution active, no variables can be set");
+            throw new NotSupportedException("No execution active, no variables can be set");
         }
 
-        public virtual object getTransientVariableLocal(string variableName)
+        public virtual object GetTransientVariableLocal(string variableName)
         {
             return null;
         }
 
-
-        public virtual object getTransientVariable(string variableName)
+        public virtual object GetTransientVariable(string variableName)
         {
             return null;
         }
 
-
-        public virtual void removeTransientVariableLocal(string variableName)
+        public virtual void RemoveTransientVariableLocal(string variableName)
         {
-            throw new System.NotSupportedException("No execution active, no variables can be removed");
+            throw new NotSupportedException("No execution active, no variables can be removed");
         }
 
-        public virtual void removeTransientVariablesLocal()
+        public virtual void RemoveTransientVariablesLocal()
         {
-            throw new System.NotSupportedException("No execution active, no variables can be removed");
+            throw new NotSupportedException("No execution active, no variables can be removed");
         }
 
-        public virtual void removeTransientVariable(string variableName)
+        public virtual void RemoveTransientVariable(string variableName)
         {
-            throw new System.NotSupportedException("No execution active, no variables can be removed");
+            throw new NotSupportedException("No execution active, no variables can be removed");
         }
 
-        public virtual void removeTransientVariables()
+        public virtual void RemoveTransientVariables()
         {
-            throw new System.NotSupportedException("No execution active, no variables can be removed");
+            throw new NotSupportedException("No execution active, no variables can be removed");
         }
     }
 

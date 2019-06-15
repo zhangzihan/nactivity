@@ -30,7 +30,7 @@ namespace org.activiti.engine.impl.el
     public class JuelExpression : IExpression
     {
         protected internal string expressionText;
-        private ValueExpression valueExpression;
+        private readonly ValueExpression valueExpression;
 
         public JuelExpression(ValueExpression valueExpression, string expressionText)
         {
@@ -38,13 +38,13 @@ namespace org.activiti.engine.impl.el
             this.expressionText = expressionText;
         }
 
-        public virtual object getValue(IVariableScope variableScope)
+        public virtual object GetValue(IVariableScope variableScope)
         {
-            ELContext elContext = Context.ProcessEngineConfiguration.ExpressionManager.getElContext(variableScope);
+            ELContext elContext = Context.ProcessEngineConfiguration.ExpressionManager.GetElContext(variableScope);
             try
             {
                 ExpressionGetInvocation invocation = new ExpressionGetInvocation(valueExpression, elContext);
-                Context.ProcessEngineConfiguration.DelegateInterceptor.handleInvocation(invocation);
+                Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(invocation);
                 return invocation.InvocationResult;
             }
             //catch (PropertyNotFoundException pnfe)
@@ -65,13 +65,13 @@ namespace org.activiti.engine.impl.el
             }
         }
 
-        public virtual void setValue(object value, IVariableScope variableScope)
+        public virtual void SetValue(object value, IVariableScope variableScope)
         {
-            ELContext elContext = Context.ProcessEngineConfiguration.ExpressionManager.getElContext(variableScope);
+            ELContext elContext = Context.ProcessEngineConfiguration.ExpressionManager.GetElContext(variableScope);
             try
             {
                 ExpressionSetInvocation invocation = new ExpressionSetInvocation(valueExpression, elContext, value);
-                Context.ProcessEngineConfiguration.DelegateInterceptor.handleInvocation(invocation);
+                Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(invocation);
             }
             catch (Exception e)
             {

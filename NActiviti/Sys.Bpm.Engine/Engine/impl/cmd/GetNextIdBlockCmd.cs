@@ -31,9 +31,9 @@ namespace org.activiti.engine.impl.cmd
             this.idBlockSize = idBlockSize;
         }
 
-        public  virtual IdBlock  execute(ICommandContext  commandContext)
+        public  virtual IdBlock  Execute(ICommandContext  commandContext)
         {
-            IPropertyEntity property = (IPropertyEntity)commandContext.PropertyEntityManager.findById<IPropertyEntity>(new KeyValuePair<string, object>("id", "next.dbid"));
+            IPropertyEntity property = commandContext.PropertyEntityManager.FindById<IPropertyEntity>("next.dbid");
             long oldValue = long.Parse(property.Value);
             long newValue = oldValue + idBlockSize;
             property.Value = Convert.ToString(newValue);

@@ -39,19 +39,19 @@ namespace org.activiti.engine.impl.persistence.entity
             this.jobDataManager = jobDataManager;
         }
 
-        public virtual ITimerJobEntity createAndCalculateNextTimer(IJobEntity timerEntity, IVariableScope variableScope)
+        public virtual ITimerJobEntity CreateAndCalculateNextTimer(IJobEntity timerEntity, IVariableScope variableScope)
         {
-            int repeatValue = calculateRepeatValue(timerEntity);
+            int repeatValue = CalculateRepeatValue(timerEntity);
             if (repeatValue != 0)
             {
                 if (repeatValue > 0)
                 {
-                    setNewRepeat(timerEntity, repeatValue);
+                    SetNewRepeat(timerEntity, repeatValue);
                 }
-                DateTime? newTimer = calculateNextTimer(timerEntity, variableScope);
-                if (newTimer != null && isValidTime(timerEntity, newTimer, variableScope))
+                DateTime? newTimer = CalculateNextTimer(timerEntity, variableScope);
+                if (newTimer != null && IsValidTime(timerEntity, newTimer, variableScope))
                 {
-                    ITimerJobEntity te = createTimer(timerEntity);
+                    ITimerJobEntity te = CreateTimer(timerEntity);
                     te.Duedate = newTimer;
                     return te;
                 }
@@ -59,86 +59,86 @@ namespace org.activiti.engine.impl.persistence.entity
             return null;
         }
 
-        public virtual IList<ITimerJobEntity> findTimerJobsToExecute(Page page)
+        public virtual IList<ITimerJobEntity> FindTimerJobsToExecute(Page page)
         {
-            return jobDataManager.findTimerJobsToExecute(page);
+            return jobDataManager.FindTimerJobsToExecute(page);
         }
 
-        public virtual IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionId(string jobHandlerType, string processDefinitionId)
+        public virtual IList<ITimerJobEntity> FindJobsByTypeAndProcessDefinitionId(string jobHandlerType, string processDefinitionId)
         {
-            return jobDataManager.findJobsByTypeAndProcessDefinitionId(jobHandlerType, processDefinitionId);
+            return jobDataManager.FindJobsByTypeAndProcessDefinitionId(jobHandlerType, processDefinitionId);
         }
 
-        public virtual IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionKeyNoTenantId(string jobHandlerType, string processDefinitionKey)
+        public virtual IList<ITimerJobEntity> FindJobsByTypeAndProcessDefinitionKeyNoTenantId(string jobHandlerType, string processDefinitionKey)
         {
-            return jobDataManager.findJobsByTypeAndProcessDefinitionKeyNoTenantId(jobHandlerType, processDefinitionKey);
+            return jobDataManager.FindJobsByTypeAndProcessDefinitionKeyNoTenantId(jobHandlerType, processDefinitionKey);
         }
 
-        public virtual IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionKeyAndTenantId(string jobHandlerType, string processDefinitionKey, string tenantId)
+        public virtual IList<ITimerJobEntity> FindJobsByTypeAndProcessDefinitionKeyAndTenantId(string jobHandlerType, string processDefinitionKey, string tenantId)
         {
-            return jobDataManager.findJobsByTypeAndProcessDefinitionKeyAndTenantId(jobHandlerType, processDefinitionKey, tenantId);
+            return jobDataManager.FindJobsByTypeAndProcessDefinitionKeyAndTenantId(jobHandlerType, processDefinitionKey, tenantId);
         }
 
-        public virtual IList<ITimerJobEntity> findJobsByExecutionId(string id)
+        public virtual IList<ITimerJobEntity> FindJobsByExecutionId(string id)
         {
-            return jobDataManager.findJobsByExecutionId(id);
+            return jobDataManager.FindJobsByExecutionId(id);
         }
 
-        public virtual IList<ITimerJobEntity> findJobsByProcessInstanceId(string id)
+        public virtual IList<ITimerJobEntity> FindJobsByProcessInstanceId(string id)
         {
-            return jobDataManager.findJobsByProcessInstanceId(id);
+            return jobDataManager.FindJobsByProcessInstanceId(id);
         }
 
-        public virtual IList<IJob> findJobsByQueryCriteria(TimerJobQueryImpl jobQuery, Page page)
+        public virtual IList<IJob> FindJobsByQueryCriteria(ITimerJobQuery jobQuery, Page page)
         {
-            return jobDataManager.findJobsByQueryCriteria(jobQuery, page);
+            return jobDataManager.FindJobsByQueryCriteria(jobQuery, page);
         }
 
-        public virtual long findJobCountByQueryCriteria(TimerJobQueryImpl jobQuery)
+        public virtual long FindJobCountByQueryCriteria(ITimerJobQuery jobQuery)
         {
-            return jobDataManager.findJobCountByQueryCriteria(jobQuery);
+            return jobDataManager.FindJobCountByQueryCriteria(jobQuery);
         }
 
-        public virtual void updateJobTenantIdForDeployment(string deploymentId, string newTenantId)
+        public virtual void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId)
         {
-            jobDataManager.updateJobTenantIdForDeployment(deploymentId, newTenantId);
+            jobDataManager.UpdateJobTenantIdForDeployment(deploymentId, newTenantId);
         }
 
-        public virtual bool insertTimerJobEntity(ITimerJobEntity timerJobEntity)
+        public virtual bool InsertTimerJobEntity(ITimerJobEntity timerJobEntity)
         {
-            return doInsert(timerJobEntity, true);
+            return DoInsert(timerJobEntity, true);
         }
 
-        public override void insert(ITimerJobEntity jobEntity)
+        public override void Insert(ITimerJobEntity jobEntity)
         {
-            insert(jobEntity, true);
+            Insert(jobEntity, true);
         }
 
-        public override void insert(ITimerJobEntity jobEntity, bool fireCreateEvent)
+        public override void Insert(ITimerJobEntity jobEntity, bool fireCreateEvent)
         {
-            doInsert(jobEntity, fireCreateEvent);
+            DoInsert(jobEntity, fireCreateEvent);
         }
 
-        protected internal virtual bool doInsert(ITimerJobEntity jobEntity, bool fireCreateEvent)
+        protected internal virtual bool DoInsert(ITimerJobEntity jobEntity, bool fireCreateEvent)
         {
             // add link to execution
-            if (!ReferenceEquals(jobEntity.ExecutionId, null))
+            if (!(jobEntity.ExecutionId is null))
             {
-                IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(jobEntity.ExecutionId);
+                IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
                 if (execution != null)
                 {
                     execution.TimerJobs.Add(jobEntity);
 
                     // Inherit tenant if (if applicable)
-                    if (!ReferenceEquals(execution.TenantId, null))
+                    if (!(execution.TenantId is null))
                     {
                         jobEntity.TenantId = execution.TenantId;
                     }
 
-                    if (isExecutionRelatedEntityCountEnabled(execution))
+                    if (IsExecutionRelatedEntityCountEnabled(execution))
                     {
                         ICountingExecutionEntity countingExecutionEntity = (ICountingExecutionEntity)execution;
-                        countingExecutionEntity.TimerJobCount = countingExecutionEntity.TimerJobCount + 1;
+                        countingExecutionEntity.TimerJobCount += 1;
                     }
                 }
                 else
@@ -150,30 +150,30 @@ namespace org.activiti.engine.impl.persistence.entity
                 }
             }
 
-            base.insert(jobEntity, fireCreateEvent);
+            base.Insert(jobEntity, fireCreateEvent);
             return true;
         }
 
-        public override void delete(ITimerJobEntity jobEntity)
+        public override void Delete(ITimerJobEntity jobEntity)
         {
-            base.delete(jobEntity);
+            base.Delete(jobEntity);
 
-            deleteExceptionByteArrayRef(jobEntity);
-            removeExecutionLink(jobEntity);
+            DeleteExceptionByteArrayRef(jobEntity);
+            RemoveExecutionLink(jobEntity);
 
-            if (!ReferenceEquals(jobEntity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!(jobEntity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(jobEntity.ExecutionId);
-                if (isExecutionRelatedEntityCountEnabled(executionEntity))
+                ICountingExecutionEntity executionEntity = ExecutionEntityManager.FindById<ICountingExecutionEntity>(jobEntity.ExecutionId);
+                if (IsExecutionRelatedEntityCountEnabled(executionEntity))
                 {
-                    executionEntity.TimerJobCount = executionEntity.TimerJobCount - 1;
+                    executionEntity.TimerJobCount -= 1;
                 }
             }
 
             // Send event
             if (EventDispatcher.Enabled)
             {
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_DELETED, this));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, this));
             }
         }
 
@@ -181,11 +181,11 @@ namespace org.activiti.engine.impl.persistence.entity
         /// Removes the job's execution's reference to this job, if the job has an associated execution.
         /// Subclasses may override to provide custom implementations.
         /// </summary>
-        protected internal virtual void removeExecutionLink(ITimerJobEntity jobEntity)
+        protected internal virtual void RemoveExecutionLink(ITimerJobEntity jobEntity)
         {
-            if (!ReferenceEquals(jobEntity.ExecutionId, null))
+            if (!(jobEntity.ExecutionId is null))
             {
-                IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(jobEntity.ExecutionId);
+                IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
                 if (execution != null)
                 {
                     execution.TimerJobs.Remove(jobEntity);
@@ -197,18 +197,17 @@ namespace org.activiti.engine.impl.persistence.entity
         /// Deletes a the byte array used to store the exception information.  Subclasses may override
         /// to provide custom implementations.
         /// </summary>
-        protected internal virtual void deleteExceptionByteArrayRef(ITimerJobEntity jobEntity)
+        protected internal virtual void DeleteExceptionByteArrayRef(ITimerJobEntity jobEntity)
         {
-            ByteArrayRef exceptionByteArrayRef = jobEntity.ExceptionByteArrayRef as ByteArrayRef;
-            if (exceptionByteArrayRef != null)
+            if (jobEntity.ExceptionByteArrayRef is ByteArrayRef exceptionByteArrayRef)
             {
-                exceptionByteArrayRef.delete();
+                exceptionByteArrayRef.Delete();
             }
         }
 
-        protected internal virtual ITimerJobEntity createTimer(IJobEntity te)
+        protected internal virtual ITimerJobEntity CreateTimer(IJobEntity te)
         {
-            ITimerJobEntity newTimerEntity = create();
+            ITimerJobEntity newTimerEntity = Create();
             newTimerEntity.JobHandlerConfiguration = te.JobHandlerConfiguration;
             newTimerEntity.JobHandlerType = te.JobHandlerType;
             newTimerEntity.Exclusive = te.Exclusive;
@@ -221,11 +220,11 @@ namespace org.activiti.engine.impl.persistence.entity
 
             // Inherit tenant
             newTimerEntity.TenantId = te.TenantId;
-            newTimerEntity.JobType = Job_Fields.JOB_TYPE_TIMER;
+            newTimerEntity.JobType = JobFields.JOB_TYPE_TIMER;
             return newTimerEntity;
         }
 
-        protected internal virtual void setNewRepeat(IJobEntity timerEntity, int newRepeatValue)
+        protected internal virtual void SetNewRepeat(IJobEntity timerEntity, int newRepeatValue)
         {
             IList<string> expression = new List<string>(timerEntity.Repeat.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries));
             expression = expression.Skip(1).Take(expression.Count).ToList();
@@ -239,19 +238,19 @@ namespace org.activiti.engine.impl.persistence.entity
             timerEntity.Repeat = repeatBuilder.ToString();
         }
 
-        protected internal virtual bool isValidTime(IJobEntity timerEntity, DateTime? newTimerDate, IVariableScope variableScope)
+        protected internal virtual bool IsValidTime(IJobEntity timerEntity, DateTime? newTimerDate, IVariableScope variableScope)
         {
-            IBusinessCalendar businessCalendar = ProcessEngineConfiguration.BusinessCalendarManager.getBusinessCalendar(getBusinessCalendarName(TimerEventHandler.geCalendarNameFromConfiguration(timerEntity.JobHandlerConfiguration), variableScope));
-            return businessCalendar.validateDuedate(timerEntity.Repeat, timerEntity.MaxIterations, timerEntity.EndDate, newTimerDate).Value;
+            IBusinessCalendar businessCalendar = ProcessEngineConfiguration.BusinessCalendarManager.GetBusinessCalendar(GetBusinessCalendarName(TimerEventHandler.GeCalendarNameFromConfiguration(timerEntity.JobHandlerConfiguration), variableScope));
+            return businessCalendar.ValidateDuedate(timerEntity.Repeat, timerEntity.MaxIterations, timerEntity.EndDate, newTimerDate).Value;
         }
 
-        protected internal virtual DateTime? calculateNextTimer(IJobEntity timerEntity, IVariableScope variableScope)
+        protected internal virtual DateTime? CalculateNextTimer(IJobEntity timerEntity, IVariableScope variableScope)
         {
-            IBusinessCalendar businessCalendar = ProcessEngineConfiguration.BusinessCalendarManager.getBusinessCalendar(getBusinessCalendarName(TimerEventHandler.geCalendarNameFromConfiguration(timerEntity.JobHandlerConfiguration), variableScope));
-            return businessCalendar.resolveDuedate(timerEntity.Repeat, timerEntity.MaxIterations);
+            IBusinessCalendar businessCalendar = ProcessEngineConfiguration.BusinessCalendarManager.GetBusinessCalendar(GetBusinessCalendarName(TimerEventHandler.GeCalendarNameFromConfiguration(timerEntity.JobHandlerConfiguration), variableScope));
+            return businessCalendar.ResolveDuedate(timerEntity.Repeat, timerEntity.MaxIterations);
         }
 
-        protected internal virtual int calculateRepeatValue(IJobEntity timerEntity)
+        protected internal virtual int CalculateRepeatValue(IJobEntity timerEntity)
         {
             int times = -1;
             IList<string> expression = new List<string>(timerEntity.Repeat.Split("/", true));
@@ -266,12 +265,12 @@ namespace org.activiti.engine.impl.persistence.entity
             return times;
         }
 
-        protected internal virtual string getBusinessCalendarName(string calendarName, IVariableScope variableScope)
+        protected internal virtual string GetBusinessCalendarName(string calendarName, IVariableScope variableScope)
         {
             string businessCalendarName = CycleBusinessCalendar.NAME;
             if (!string.IsNullOrWhiteSpace(calendarName))
             {
-                businessCalendarName = (string)Context.ProcessEngineConfiguration.ExpressionManager.createExpression(calendarName).getValue(variableScope);
+                businessCalendarName = (string)Context.ProcessEngineConfiguration.ExpressionManager.CreateExpression(calendarName).GetValue(variableScope);
             }
             return businessCalendarName;
         }

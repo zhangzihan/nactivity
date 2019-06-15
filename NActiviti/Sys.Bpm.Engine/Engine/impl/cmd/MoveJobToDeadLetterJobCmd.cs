@@ -17,7 +17,7 @@ namespace org.activiti.engine.impl.cmd
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using Sys;
+    using Sys.Workflow;
     using System.Collections.Generic;
 
     /// 
@@ -35,18 +35,18 @@ namespace org.activiti.engine.impl.cmd
             this.jobId = jobId;
         }
 
-        public virtual IDeadLetterJobEntity execute(ICommandContext commandContext)
+        public virtual IDeadLetterJobEntity Execute(ICommandContext commandContext)
         {
 
-            if (ReferenceEquals(jobId, null))
+            if (jobId is null)
             {
                 throw new ActivitiIllegalArgumentException("jobId and job is null");
             }
 
-            IAbstractJobEntity job = commandContext.TimerJobEntityManager.findById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
+            IAbstractJobEntity job = commandContext.TimerJobEntityManager.FindById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
             if (job == null)
             {
-                job = commandContext.JobEntityManager.findById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
+                job = commandContext.JobEntityManager.FindById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
             }
 
             if (job == null)
@@ -59,7 +59,7 @@ namespace org.activiti.engine.impl.cmd
                 log.LogDebug($"Moving job to deadletter job table {job.Id}");
             }
 
-            IDeadLetterJobEntity deadLetterJob = commandContext.JobManager.moveJobToDeadLetterJob(job);
+            IDeadLetterJobEntity deadLetterJob = commandContext.JobManager.MoveJobToDeadLetterJob(job);
 
             return deadLetterJob;
         }

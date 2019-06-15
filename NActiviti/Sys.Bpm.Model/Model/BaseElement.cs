@@ -83,14 +83,13 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual void addExtensionElement(ExtensionElement extensionElement)
+        public virtual void AddExtensionElement(ExtensionElement extensionElement)
         {
             if (extensionElement != null && !string.IsNullOrWhiteSpace(extensionElement.Name))
             {
-                IList<ExtensionElement> elementList = null;
                 if (!this.extensionElements.ContainsKey(extensionElement.Name))
                 {
-                    elementList = new List<ExtensionElement>();
+                    IList<ExtensionElement> elementList = new List<ExtensionElement>();
                     this.extensionElements[extensionElement.Name] = elementList;
                 }
                 this.extensionElements[extensionElement.Name].Add(extensionElement);
@@ -110,14 +109,13 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual string getAttributeValue(string @namespace, string name)
+        public virtual string GetAttributeValue(string @namespace, string name)
         {
-            IList<ExtensionAttribute> attributes = Attributes[name];
-            if (attributes != null && attributes.Count > 0)
+            if (Attributes.TryGetValue(name, out IList<ExtensionAttribute> attributes) && attributes.Count > 0)
             {
                 foreach (ExtensionAttribute attribute in attributes)
                 {
-                    if ((string.ReferenceEquals(@namespace, null) && string.ReferenceEquals(attribute.Namespace, null)) || @namespace.Equals(attribute.Namespace))
+                    if ((@namespace is null && attribute.Namespace is null) || @namespace.Equals(attribute.Namespace))
                     {
                         return attribute.Value;
                     }
@@ -126,14 +124,13 @@ namespace org.activiti.bpmn.model
             return null;
         }
 
-        public virtual void addAttribute(ExtensionAttribute attribute)
+        public virtual void AddAttribute(ExtensionAttribute attribute)
         {
             if (attribute != null && !string.IsNullOrWhiteSpace(attribute.Name))
             {
-                IList<ExtensionAttribute> attributeList = null;
                 if (!this.attributes.ContainsKey(attribute.Name))
                 {
-                    attributeList = new List<ExtensionAttribute>();
+                    IList<ExtensionAttribute> attributeList = new List<ExtensionAttribute>();
                     this.attributes[attribute.Name] = attributeList;
                 }
                 this.attributes[attribute.Name].Add(attribute);
@@ -158,7 +155,7 @@ namespace org.activiti.bpmn.model
                             IList<ExtensionElement> elementList = new List<ExtensionElement>();
                             foreach (ExtensionElement extensionElement in otherElementList)
                             {
-                                elementList.Add(extensionElement.clone() as ExtensionElement);
+                                elementList.Add(extensionElement.Clone() as ExtensionElement);
                             }
                             extensionElements[key] = elementList;
                         }
@@ -176,7 +173,7 @@ namespace org.activiti.bpmn.model
                             IList<ExtensionAttribute> attributeList = new List<ExtensionAttribute>();
                             foreach (ExtensionAttribute extensionAttribute in otherAttributeList)
                             {
-                                attributeList.Add(extensionAttribute.clone());
+                                attributeList.Add(extensionAttribute.Clone());
                             }
                             attributes[key] = attributeList;
                         }
@@ -185,7 +182,42 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public abstract BaseElement clone();
+        public abstract BaseElement Clone();
+
+        public static bool operator ==(BaseElement objA, BaseElement objB)
+        {
+            if (objA is null && objB is null)
+            {
+                return true;
+            }
+
+            if ((objA is null && !(objB is null)) || (!(objA is null) && objB is null))
+            {
+                return false;
+            }
+
+            return objA.Equals(objB);
+        }
+
+        public static bool operator !=(BaseElement objA, BaseElement objB)
+        {
+            return !(objA == objB);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is BaseElement == false || obj is null)
+            {
+                return false;
+            }
+
+            return this.Id == ((BaseElement)obj).Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode() >> 2;
+        }
     }
 
 }

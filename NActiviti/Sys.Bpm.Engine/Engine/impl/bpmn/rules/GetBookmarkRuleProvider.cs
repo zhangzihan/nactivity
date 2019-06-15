@@ -13,6 +13,7 @@ using System.Linq;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
+    /// <inheritdoc />
     public class GetBookmarkRuleProvider : IGetBookmarkRuleProvider
     {
         private static readonly ConcurrentDictionary<string, Type> types = new ConcurrentDictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
@@ -39,6 +40,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
             }
         }
 
+        /// <inheritdoc />
         public GetBookmarkRuleProvider()
         {
 
@@ -56,10 +58,13 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
             return Activator.CreateInstance(ruleType) as IGetBookmarkRule;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ruleName"></param>
+        /// <param name="ruleType"></param>
         public void Register(string ruleName, Type ruleType)
         {
-            types.TryGetValue(ruleName, out Type rt);
-
             types.AddOrUpdate(ruleName, ruleType, (rn, oldType) => ruleType);
         }
     }

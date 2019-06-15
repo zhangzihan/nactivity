@@ -25,47 +25,46 @@ namespace org.activiti.engine.impl.cmd
 
     /// 
     [Serializable]
-	public class SetJobRetriesCmd : ICommand<object>
-	{
+    public class SetJobRetriesCmd : ICommand<object>
+    {
 
-	  private const long serialVersionUID = 1L;
+        private const long serialVersionUID = 1L;
 
-	  private readonly string jobId;
-	  private readonly int retries;
+        private readonly string jobId;
+        private readonly int retries;
 
-	  public SetJobRetriesCmd(string jobId, int retries)
-	  {
-		if (ReferenceEquals(jobId, null) || jobId.Length < 1)
-		{
-		  throw new ActivitiIllegalArgumentException("The job id is mandatory, but '" + jobId + "' has been provided.");
-		}
-		if (retries < 0)
-		{
-		  throw new ActivitiIllegalArgumentException("The number of job retries must be a non-negative Integer, but '" + retries + "' has been provided.");
-		}
-		this.jobId = jobId;
-		this.retries = retries;
-	  }
+        public SetJobRetriesCmd(string jobId, int retries)
+        {
+            if (jobId is null || jobId.Length < 1)
+            {
+                throw new ActivitiIllegalArgumentException("The job id is mandatory, but '" + jobId + "' has been provided.");
+            }
+            if (retries < 0)
+            {
+                throw new ActivitiIllegalArgumentException("The number of job retries must be a non-negative Integer, but '" + retries + "' has been provided.");
+            }
+            this.jobId = jobId;
+            this.retries = retries;
+        }
 
-	  public  virtual object  execute(ICommandContext commandContext)
-	  {
-		IJobEntity job = commandContext.JobEntityManager.findById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
-		if (job != null)
-		{
+        public virtual object Execute(ICommandContext commandContext)
+        {
+            IJobEntity job = commandContext.JobEntityManager.FindById<IJobEntity>(jobId);
+            if (job != null)
+            {
+                job.Retries = retries;
 
-		  job.Retries = retries;
-
-		  if (commandContext.EventDispatcher.Enabled)
-		  {
-			commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_UPDATED, job));
-		  }
-		}
-		else
-		{
-		  throw new ActivitiObjectNotFoundException("No job found with id '" + jobId + "'.", typeof(IJob));
-		}
-		return null;
-	  }
-	}
+                if (commandContext.EventDispatcher.Enabled)
+                {
+                    commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_UPDATED, job));
+                }
+            }
+            else
+            {
+                throw new ActivitiObjectNotFoundException("No job found with id '" + jobId + "'.", typeof(IJob));
+            }
+            return null;
+        }
+    }
 
 }

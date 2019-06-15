@@ -19,37 +19,42 @@ namespace org.activiti.bpmn.converter.export
 
     public class MultiInstanceExport : IBpmnXMLConstants
     {
-        public static void writeMultiInstance(Activity activity, XMLStreamWriter xtw)
+        public static void WriteMultiInstance(Activity activity, XMLStreamWriter xtw)
         {
             if (activity.LoopCharacteristics != null)
             {
                 MultiInstanceLoopCharacteristics multiInstanceObject = activity.LoopCharacteristics;
                 if (!string.IsNullOrWhiteSpace(multiInstanceObject.LoopCardinality) || !string.IsNullOrWhiteSpace(multiInstanceObject.InputDataItem) || !string.IsNullOrWhiteSpace(multiInstanceObject.CompletionCondition))
                 {
-
-                    xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_MULTIINSTANCE);
-                    BpmnXMLUtil.writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_SEQUENTIAL, multiInstanceObject.Sequential.ToString().ToLower(), xtw);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_MULTIINSTANCE, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_SEQUENTIAL, multiInstanceObject.Sequential ? "true" : "false", xtw);
                     if (!string.IsNullOrWhiteSpace(multiInstanceObject.InputDataItem))
                     {
-                        BpmnXMLUtil.writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_COLLECTION, multiInstanceObject.InputDataItem, xtw);
+                        BpmnXMLUtil.WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_COLLECTION, multiInstanceObject.InputDataItem, xtw);
                     }
                     if (!string.IsNullOrWhiteSpace(multiInstanceObject.ElementVariable))
                     {
-                        BpmnXMLUtil.writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_VARIABLE, multiInstanceObject.ElementVariable, xtw);
+                        BpmnXMLUtil.WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_VARIABLE, multiInstanceObject.ElementVariable, xtw);
                     }
                     if (!string.IsNullOrWhiteSpace(multiInstanceObject.LoopCardinality))
                     {
-                        xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_MULTIINSTANCE_CARDINALITY);
-                        xtw.writeCharacters(multiInstanceObject.LoopCardinality);
-                        xtw.writeEndElement();
+                        xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_MULTIINSTANCE_CARDINALITY, BpmnXMLConstants.BPMN2_NAMESPACE);
+                        xtw.WriteCharacters(multiInstanceObject.LoopCardinality);
+                        xtw.WriteEndElement();
                     }
                     if (!string.IsNullOrWhiteSpace(multiInstanceObject.CompletionCondition))
                     {
-                        xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_MULTIINSTANCE_CONDITION);
-                        xtw.writeCharacters(multiInstanceObject.CompletionCondition);
-                        xtw.writeEndElement();
+                        xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_MULTIINSTANCE_CONDITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                        xtw.WriteCharacters(multiInstanceObject.CompletionCondition);
+                        xtw.WriteEndElement();
                     }
-                    xtw.writeEndElement();
+                    xtw.WriteEndElement();
+                }
+                else
+                {
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_MULTIINSTANCE, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    BpmnXMLUtil.WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_SEQUENTIAL, multiInstanceObject.Sequential ? "true" : "false", xtw);
+                    xtw.WriteEndElement();
                 }
             }
         }

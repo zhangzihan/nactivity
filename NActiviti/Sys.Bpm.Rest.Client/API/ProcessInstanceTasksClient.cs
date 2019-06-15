@@ -20,9 +20,9 @@ namespace Sys.Bpm.Rest.Client.API
         }
 
         /// <inheritdoc />
-        public async Task<Resources<TaskModel>> getTasks(string processInstanceId, ProcessInstanceTaskQuery query)
+        public async Task<Resources<TaskModel>> GetTasks(ProcessInstanceTaskQuery query)
         {
-            return await httpProxy.PostAsync<Resources<TaskModel>>($"{serviceUrl}/{processInstanceId}/tasks", query);
+            return await httpProxy.PostAsync<Resources<TaskModel>>($"{serviceUrl}/tasks", query).ConfigureAwait(false);
         }
     }
 }

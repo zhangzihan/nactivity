@@ -36,7 +36,7 @@ namespace org.activiti.cloud.services.rest.controllers
     [ApiController]
     public class ProcessInstanceAdminControllerImpl : ControllerBase, IProcessInstanceAdminController
     {
-        private ProcessEngineWrapper processEngine;
+        private readonly ProcessEngineWrapper processEngine;
         private readonly IRepositoryService repositoryService;
         private readonly IRuntimeService runtimeService;
         private readonly IHistoryService historyService;
@@ -67,20 +67,20 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpPost]
         public virtual Task<Resources<ProcessInstance>> GetAllProcessInstances(ProcessInstanceQuery query)
         {
-            IPage<ProcessInstance> instances = new QueryProcessInstanceCmd().loadPage(this.runtimeService, this.pageableProcessInstanceService, query);
+            IPage<ProcessInstance> instances = new QueryProcessInstanceCmd().LoadPage(this.runtimeService, this.pageableProcessInstanceService, query);
 
-            IList<ProcessInstanceResource> resources = resourceAssembler.toResources(instances.getContent());
+            IList<ProcessInstanceResource> resources = resourceAssembler.ToResources(instances.GetContent());
 
-            return Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.getTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
+            return Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.GetTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
         }
 
         /// <inheritdoc />
         [HttpPost("historices")]
         public Task<Resources<HistoricInstance>> GetAllProcessHistoriecs(HistoricInstanceQuery query)
         {
-            IPage<HistoricInstance> historices = new QueryProcessHistoriecsCmd().loadPage(historyService, pageableProcessHistoryService, query);
+            IPage<HistoricInstance> historices = new QueryProcessHistoriecsCmd().LoadPage(historyService, pageableProcessHistoryService, query);
 
-            return Task.FromResult<Resources<HistoricInstance>>(new Resources<HistoricInstance>(historices.getContent(), historices.getTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
+            return Task.FromResult<Resources<HistoricInstance>>(new Resources<HistoricInstance>(historices.GetContent(), historices.GetTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
         }
     }
 }

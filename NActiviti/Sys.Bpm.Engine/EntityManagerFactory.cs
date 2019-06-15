@@ -9,7 +9,7 @@ namespace Sys.Data
 {
     public class EntityManagerFactory : IEntityManagerFactory
     {
-        public IEntityManager createEntityManager()
+        public IEntityManager CreateEntityManager()
         {
             throw new NotImplementedException();
         }

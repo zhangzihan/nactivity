@@ -27,7 +27,7 @@ namespace org.activiti.bpmn.converter.child
             }
         }
 
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
             if (!(parentElement is SequenceFlow))
             {

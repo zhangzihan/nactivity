@@ -17,11 +17,14 @@ namespace org.activiti.engine.impl.cfg.standalone
     /// 
     public class StandaloneMybatisTransactionContextFactory : ITransactionContextFactory
     {
-
-        public virtual ITransactionContext openTransactionContext(ICommandContext commandContext)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <returns></returns>
+        public virtual ITransactionContext OpenTransactionContext(ICommandContext commandContext)
         {
             return new StandaloneMybatisTransactionContext(commandContext);
         }
     }
-
 }

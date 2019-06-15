@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class TimerJobsByExecutionIdMatcher : CachedEntityMatcherAdapter<ITimerJobEntity>
     {
 
-        public override bool isRetained(ITimerJobEntity jobEntity, object parameter)
+        public override bool IsRetained(ITimerJobEntity jobEntity, object parameter)
         {
             if (jobEntity == null || jobEntity.ExecutionId == null || parameter == null)
             {

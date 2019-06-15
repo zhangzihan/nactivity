@@ -14,6 +14,10 @@ using org.activiti.engine.impl.persistence.entity;
 using org.activiti.engine.impl.util;
 using org.activiti.engine.runtime;
 using org.activiti.engine.task;
+using Sys;
+using Sys.Net.Http;
+using Sys.Workflow;
+using Sys.Workflow.Engine.Bpmn.Rules;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -30,35 +34,59 @@ namespace org.activiti.engine.impl.cmd
         private readonly string taskId;
         private readonly string[] assignees;
         private readonly string tenantId;
+        private readonly IUserServiceProxy userService;
 
         public AddCountersignCmd(string taskId, string[] assignees, string tenantId)
         {
             this.taskId = taskId;
             this.assignees = assignees;
             this.tenantId = tenantId;
+
+            userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
         }
 
-        public ITask[] execute(ICommandContext commandContext)
+        private class CreateChildExecutionCmd : ICommand<IExecutionEntity>
+        {
+            private readonly IExecutionEntity parent;
+
+            public CreateChildExecutionCmd(IExecutionEntity parent)
+            {
+                this.parent = parent;
+            }
+
+            public IExecutionEntity Execute(ICommandContext commandContext)
+            {
+                IExecutionEntity newExecution = commandContext.ExecutionEntityManager.CreateChildExecution(parent);
+
+                return newExecution;
+            }
+        }
+
+        public ITask[] Execute(ICommandContext commandContext)
         {
             ProcessEngineConfigurationImpl pec = commandContext.ProcessEngineConfiguration;
             IRuntimeService runtimeService = pec.RuntimeService;
             ITaskService taskService = pec.TaskService;
             IIdGenerator idGenerator = pec.IdGenerator;
 
-            ITask task = taskService.createTaskQuery().taskId(taskId).singleResult();
-            IExecutionEntity execution = runtimeService.createExecutionQuery().executionId(task.ExecutionId).singleResult() as IExecutionEntity;
+            ITask task = taskService.CreateTaskQuery().SetTaskId(taskId).SingleResult();
+            IExecutionEntity execution = runtimeService.CreateExecutionQuery().SetExecutionId(task.ExecutionId).SingleResult() as IExecutionEntity;
             IExecutionEntity parent = execution.Parent;
 
-            IList<ITask> assignTasks = taskService.createTaskQuery().taskAssigneeIds(assignees).taskTenantId(execution.TenantId).list();
+            //查找当前待追加人员是否已经存在在任务列表中,proc_inst_id_
+            IList<ITask> assignTasks = taskService.CreateTaskQuery()
+                .SetProcessInstanceId(execution.ProcessInstanceId)
+                .SetTaskAssigneeIds(assignees)
+                .List();
 
-            var users = assignees.Where(x => assignTasks.Any(y => x == y.Assignee) == false);
+            var users = assignees.Where(x => assignTasks.Any(y => x == y.Assignee) == false).ToList();
 
-            if (users?.Count() == 0)
+            if (users.Count == 0)
             {
                 throw new NotFoundAssigneeException();
             }
 
-            if (parent.IsMultiInstanceRoot && parent.CurrentFlowElement is UserTask mTask && users.Count() > 0)
+            if (parent.IsMultiInstanceRoot && parent.CurrentFlowElement is UserTask mTask)
             {
                 string varName = mTask.LoopCharacteristics.InputDataItem;
                 var match = new Regex("\\$\\{(.*?)\\}").Match(varName);
@@ -69,11 +97,11 @@ namespace org.activiti.engine.impl.cmd
                 parent.SetLoopVariable(varName, users.Union(list).Distinct().ToArray());
             }
 
-            IList<ITask> tasks = new List<ITask>(users.Count());
+            IList<ITask> tasks = new List<ITask>(users.Count);
             foreach (var assignee in users)
             {
                 //创建父活动的子活动
-                IExecutionEntity newExecution = pec.ExecutionEntityManager.createChildExecution(parent);//.createExecution();
+                IExecutionEntity newExecution = pec.CommandExecutor.Execute(new CreateChildExecutionCmd(parent));
                 //设置为激活 状态
                 newExecution.IsActive = true;
                 newExecution.ActivityId = execution.ActivityId;
@@ -81,34 +109,40 @@ namespace org.activiti.engine.impl.cmd
                 //该属性表示创建的newExecution对象为分支，非常重要,不可缺少
                 newExecution.IsConcurrent = execution.IsConcurrent;
                 newExecution.IsScope = false;
-                ITaskEntity taskEntity = pec.CommandExecutor.execute(new NewTaskCmd(pec.IdGenerator.NextId));
+                ITaskEntity taskEntity = pec.CommandExecutor.Execute(new NewTaskCmd(pec.IdGenerator.GetNextId()));
                 taskEntity.ProcessDefinitionId = task.ProcessDefinitionId;
                 taskEntity.TaskDefinitionKey = task.TaskDefinitionKey;
                 taskEntity.ProcessInstanceId = task.ProcessInstanceId;
                 taskEntity.ExecutionId = newExecution.Id;
                 taskEntity.Name = task.Name;
 
-                string taskId = idGenerator.NextId;
-                taskEntity.Id = taskId;
+                if (string.IsNullOrWhiteSpace(taskEntity.Id))
+                {
+                    string taskId = idGenerator.GetNextId();
+                    taskEntity.Id = taskId;
+                }
                 taskEntity.Execution = newExecution;
                 taskEntity.Assignee = assignee;
+                if (string.IsNullOrWhiteSpace(assignee) == false)
+                {
+                    taskEntity.AssigneeUser = AsyncHelper.RunSync(() => userService.GetUser(assignee))?.FullName;
+                }
                 taskEntity.TenantId = task.TenantId;
                 taskEntity.FormKey = task.FormKey;
                 taskEntity.IsAppend = true;
 
-                taskService.saveTask(taskEntity);
+                taskService.SaveTask(taskEntity);
 
                 tasks.Add(taskEntity);
             }
 
-            if (users.Count() > 0)
-            {
-                //修改执行实例父级实例变量数和活动实例变量数
-                int loopCounter = parent.GetLoopVariable<int>(MultiInstanceActivityBehavior.NUMBER_OF_ACTIVE_INSTANCES);
-                int nrOfCompletedInstances = parent.GetLoopVariable<int>(MultiInstanceActivityBehavior.NUMBER_OF_COMPLETED_INSTANCES);
-                parent.SetLoopVariable(MultiInstanceActivityBehavior.NUMBER_OF_INSTANCES, loopCounter + 1);
-                parent.SetLoopVariable(MultiInstanceActivityBehavior.NUMBER_OF_ACTIVE_INSTANCES, loopCounter - nrOfCompletedInstances + users.Count());
-            }
+            //修改执行实例父级实例变量数和活动实例变量数
+            int nrOfInstances = parent.GetLoopVariable<int>(MultiInstanceActivityBehavior.NUMBER_OF_INSTANCES);
+            int nrOfActiveIntance = parent.GetLoopVariable<int>(MultiInstanceActivityBehavior.NUMBER_OF_ACTIVE_INSTANCES);
+            int nrOfCompletedInstances = parent.GetLoopVariable<int>(MultiInstanceActivityBehavior.NUMBER_OF_COMPLETED_INSTANCES);
+
+            parent.SetLoopVariable(MultiInstanceActivityBehavior.NUMBER_OF_INSTANCES, nrOfInstances + users.Count);
+            parent.SetLoopVariable(MultiInstanceActivityBehavior.NUMBER_OF_ACTIVE_INSTANCES, nrOfInstances - nrOfCompletedInstances + users.Count);
 
             return tasks.ToArray();
         }

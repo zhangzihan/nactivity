@@ -13,6 +13,7 @@
 namespace org.activiti.engine.impl.cfg
 {
     using org.activiti.engine.impl.db;
+    using org.activiti.engine.impl.persistence.entity;
 
     /// <summary>
     /// generates <seealso cref="IdBlock"/>s that are used to assign ids to new objects.
@@ -24,9 +25,9 @@ namespace org.activiti.engine.impl.cfg
     /// </summary>
     public interface IIdGenerator
     {
-
-        string NextId { get; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        string GetNextId();
     }
-
 }

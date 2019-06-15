@@ -39,9 +39,9 @@ namespace org.activiti.engine.impl.persistence.entity
 		  }
 	  }
 
-	  public virtual IList<IPropertyEntity> findAll()
+	  public virtual IList<IPropertyEntity> FindAll()
 	  {
-		return propertyDataManager.findAll();
+		return propertyDataManager.FindAll();
 	  }
 
 	}

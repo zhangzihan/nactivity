@@ -1,18 +1,17 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using SmartSql.Abstractions;
 using SmartSql.Abstractions.Command;
 using SmartSql.Abstractions.Config;
 using SmartSql.Abstractions.DataReaderDeserializer;
 using SmartSql.Abstractions.DataSource;
 using SmartSql.Abstractions.DbSession;
-using SmartSql.Abstractions.TypeHandler;
 using SmartSql.Cache;
 using SmartSql.Cahce;
 using SmartSql.Command;
 using SmartSql.Configuration;
 using SmartSql.DataReaderDeserializer;
 using SmartSql.DbSession;
-using SmartSql.Logging;
 using System;
 
 namespace SmartSql
@@ -41,7 +40,7 @@ namespace SmartSql
             }
             if (LoggerFactory == null)
             {
-                LoggerFactory = NoneLoggerFactory.Instance;
+                LoggerFactory = NullLoggerFactory.Instance;
             }
 
             if (ConfigLoader == null)

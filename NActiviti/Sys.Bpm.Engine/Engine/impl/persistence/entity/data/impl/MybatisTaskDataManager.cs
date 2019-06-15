@@ -39,52 +39,53 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override ITaskEntity create()
+        public override ITaskEntity Create()
         {
             return new TaskEntityImpl();
         }
 
-        public virtual IList<ITaskEntity> findTasksByExecutionId(string executionId)
+        public virtual IList<ITaskEntity> FindTasksByExecutionId(string executionId)
         {
-            return (IList<ITaskEntity>)getList("selectTasksByExecutionId", new { executionId }, tasksByExecutionIdMatcher, true);
+            return (IList<ITaskEntity>)GetList("selectTasksByExecutionId", new { executionId }, tasksByExecutionIdMatcher, true);
         }
 
-        public virtual IList<ITaskEntity> findTasksByProcessInstanceId(string processInstanceId)
+        public virtual IList<ITaskEntity> FindTasksByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<TaskEntityImpl, ITaskEntity>("selectTasksByProcessInstanceId", new { processInstanceId });
+            return DbSqlSession.SelectList<TaskEntityImpl, ITaskEntity>("selectTasksByProcessInstanceId", new { processInstanceId });
         }
 
-        public virtual IList<ITask> findTasksByQueryCriteria(TaskQueryImpl taskQuery)
+        public virtual IList<ITask> FindTasksByQueryCriteria(ITaskQuery taskQuery)
         {
             const string query = "selectTaskByQueryCriteria";
-            return DbSqlSession.selectList<TaskEntityImpl, ITask>(query, taskQuery);
+            return DbSqlSession.SelectList<TaskEntityImpl, ITask>(query, taskQuery);
         }
 
-        public virtual IList<ITask> findTasksAndVariablesByQueryCriteria(TaskQueryImpl taskQuery)
+        public virtual IList<ITask> FindTasksAndVariablesByQueryCriteria(ITaskQuery taskQuery)
         {
             const string query = "selectTaskWithVariablesByQueryCriteria";
+            TaskQueryImpl taskQueyImpl = taskQuery as TaskQueryImpl;
             // paging doesn't work for combining task instances and variables due to
             // an outer join, so doing it in-memory
-            if (taskQuery.FirstResult < 0 || taskQuery.MaxResults <= 0)
+            if (taskQueyImpl.FirstResult < 0 || taskQueyImpl.MaxResults <= 0)
             {
                 return new List<ITask>();
             }
 
-            int firstResult = taskQuery.FirstResult;
-            int maxResults = taskQuery.MaxResults;
+            int firstResult = taskQueyImpl.FirstResult;
+            int maxResults = taskQueyImpl.MaxResults;
 
             // setting max results, limit to 20000 results for performance reasons
-            if (taskQuery.TaskVariablesLimit != null)
+            if (taskQueyImpl.TaskVariablesLimit != null)
             {
-                taskQuery.MaxResults = taskQuery.TaskVariablesLimit.GetValueOrDefault();
+                taskQueyImpl.MaxResults = taskQueyImpl.TaskVariablesLimit.GetValueOrDefault();
             }
             else
             {
-                taskQuery.MaxResults = ProcessEngineConfiguration.TaskQueryLimit;
+                taskQueyImpl.MaxResults = ProcessEngineConfiguration.TaskQueryLimit;
             }
-            taskQuery.FirstResult = 0;
+            taskQueyImpl.FirstResult = 0;
 
-            IList<ITask> instanceList = DbSqlSession.selectListWithRawParameterWithoutFilter<TaskEntityImpl, ITask>(query, taskQuery, taskQuery.FirstResult, taskQuery.MaxResults);
+            IList<ITask> instanceList = DbSqlSession.SelectListWithRawParameterWithoutFilter<TaskEntityImpl, ITask>(query, taskQueyImpl, taskQueyImpl.FirstResult, taskQueyImpl.MaxResults);
 
             if (instanceList != null && instanceList.Count > 0)
             {
@@ -109,31 +110,29 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             return new List<ITask>();
         }
 
-        public virtual long findTaskCountByQueryCriteria(TaskQueryImpl taskQuery)
+        public virtual long FindTaskCountByQueryCriteria(ITaskQuery taskQuery)
         {
-            return ((long?)DbSqlSession.selectOne<TaskEntityImpl, long?>("selectTaskCountByQueryCriteria", taskQuery)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<TaskEntityImpl, long?>("selectTaskCountByQueryCriteria", taskQuery).GetValueOrDefault();
         }
 
-        public virtual IList<ITask> findTasksByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<ITask> FindTasksByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return DbSqlSession.selectListWithRawParameter<TaskEntityImpl, ITask>("selectTaskByNativeQuery", parameterMap, firstResult, maxResults);
+            return DbSqlSession.SelectListWithRawParameter<TaskEntityImpl, ITask>("selectTaskByNativeQuery", parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findTaskCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindTaskCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return ((long?)DbSqlSession.selectOne<TaskEntityImpl, long?>("selectTaskCountByNativeQuery", parameterMap)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<TaskEntityImpl, long?>("selectTaskCountByNativeQuery", parameterMap).GetValueOrDefault();
         }
 
-        public virtual IList<ITask> findTasksByParentTaskId(string parentTaskId)
+        public virtual IList<ITask> FindTasksByParentTaskId(string parentTaskId)
         {
-            return DbSqlSession.selectList<TaskEntityImpl, ITask>("selectTasksByParentTaskId", new { parentTaskId });
+            return DbSqlSession.SelectList<TaskEntityImpl, ITask>("selectTasksByParentTaskId", new { parentTaskId });
         }
 
-        public virtual void updateTaskTenantIdForDeployment(string deploymentId, string tenantId)
+        public virtual void UpdateTaskTenantIdForDeployment(string deploymentId, string tenantId)
         {
-            DbSqlSession.update<TaskEntityImpl>("updateTaskTenantIdForDeployment", new { deploymentId, tenantId });
+            DbSqlSession.Update<TaskEntityImpl>("updateTaskTenantIdForDeployment", new { deploymentId, tenantId });
         }
-
     }
-
 }

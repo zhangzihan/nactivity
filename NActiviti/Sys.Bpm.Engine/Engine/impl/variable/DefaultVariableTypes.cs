@@ -26,12 +26,12 @@ namespace org.activiti.engine.impl.variable
         private readonly IList<IVariableType> typesList = new List<IVariableType>();
         private readonly IDictionary<string, IVariableType> typesMap = new Dictionary<string, IVariableType>();
 
-        public virtual IVariableTypes addType(IVariableType type)
+        public virtual IVariableTypes AddType(IVariableType type)
         {
-            return addType(type, typesList.Count);
+            return AddType(type, typesList.Count);
         }
 
-        public virtual IVariableTypes addType(IVariableType type, int index)
+        public virtual IVariableTypes AddType(IVariableType type, int index)
         {
             typesList.Insert(index, type);
             typesMap[type.TypeName] = type;
@@ -53,16 +53,16 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public virtual IVariableType getVariableType(string typeName)
+        public virtual IVariableType GetVariableType(string typeName)
         {
             return typesMap[typeName];
         }
 
-        public virtual IVariableType findVariableType(object value)
+        public virtual IVariableType FindVariableType(object value)
         {
             foreach (IVariableType type in typesList)
             {
-                if (type.isAbleToStore(value))
+                if (type.IsAbleToStore(value))
                 {
                     return type;
                 }
@@ -70,17 +70,17 @@ namespace org.activiti.engine.impl.variable
             throw new ActivitiException("couldn't find a variable type that is able to serialize " + value);
         }
 
-        public virtual int getTypeIndex(IVariableType type)
+        public virtual int GetTypeIndex(IVariableType type)
         {
             return typesList.IndexOf(type);
         }
 
-        public virtual int getTypeIndex(string typeName)
+        public virtual int GetTypeIndex(string typeName)
         {
             IVariableType type = typesMap[typeName];
             if (type != null)
             {
-                return getTypeIndex(type);
+                return GetTypeIndex(type);
             }
             else
             {
@@ -88,7 +88,7 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public virtual IVariableTypes removeType(IVariableType type)
+        public virtual IVariableTypes RemoveType(IVariableType type)
         {
             typesList.Remove(type);
             typesMap.Remove(type.TypeName);

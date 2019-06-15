@@ -21,30 +21,44 @@ namespace org.activiti.engine.impl.@delegate.invocation
     /// 
     /// </summary>
     public class ExecutionListenerInvocation : DelegateInvocation
-	{
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal readonly IExecutionListener executionListenerInstance;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal readonly IExecutionEntity execution;
 
-	  protected internal readonly IExecutionListener executionListenerInstance;
-	  protected internal readonly IExecutionEntity execution;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionListenerInstance"></param>
+        /// <param name="execution"></param>
+        public ExecutionListenerInvocation(IExecutionListener executionListenerInstance, IExecutionEntity execution)
+        {
+            this.executionListenerInstance = executionListenerInstance;
+            this.execution = execution;
+        }
 
-	  public ExecutionListenerInvocation(IExecutionListener executionListenerInstance, IExecutionEntity execution)
-	  {
-		this.executionListenerInstance = executionListenerInstance;
-		this.execution = execution;
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal override void Invoke()
+        {
+            executionListenerInstance.Notify(execution);
+        }
 
-	  protected internal override void invoke()
-	  {
-		executionListenerInstance.notify(execution);
-	  }
-
-	  public override object Target
-	  {
-		  get
-		  {
-			return executionListenerInstance;
-		  }
-	  }
-
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public override object Target
+        {
+            get
+            {
+                return executionListenerInstance;
+            }
+        }
+    }
 }

@@ -31,13 +31,13 @@ namespace org.activiti.engine.impl.cmd
             this.tableName = tableName;
         }
 
-        public  virtual TableMetaData  execute(ICommandContext  commandContext)
+        public  virtual TableMetaData  Execute(ICommandContext  commandContext)
         {
             if (ReferenceEquals(tableName, null))
             {
                 throw new ActivitiIllegalArgumentException("tableName is null");
             }
-            return commandContext.TableDataManager.getTableMetaData(tableName);
+            return commandContext.TableDataManager.GetTableMetaData(tableName);
         }
 
     }

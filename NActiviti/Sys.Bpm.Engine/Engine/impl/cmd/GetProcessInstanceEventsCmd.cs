@@ -33,9 +33,9 @@ namespace org.activiti.engine.impl.cmd
             this.processInstanceId = processInstanceId;
         }
 
-        public virtual IList<IEvent> execute(ICommandContext commandContext)
+        public virtual IList<IEvent> Execute(ICommandContext commandContext)
         {
-            return commandContext.CommentEntityManager.findEventsByProcessInstanceId(processInstanceId);
+            return commandContext.CommentEntityManager.FindEventsByProcessInstanceId(processInstanceId);
         }
     }
 

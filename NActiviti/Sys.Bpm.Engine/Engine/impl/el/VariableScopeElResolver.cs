@@ -42,7 +42,7 @@ namespace org.activiti.engine.impl.el
 
         public IVariableScope VariableScope => variableScope;
 
-        public override object getValue(ELContext context, object @base, object property)
+        public override object GetValue(ELContext context, object @base, object property)
         {
             string variable = (string)property; // according to javadoc, can only be a String
 
@@ -66,19 +66,19 @@ namespace org.activiti.engine.impl.el
                 }
                 else
                 {
-                    if (variableScope.hasVariable(variable))
+                    if (variableScope.HasVariable(variable))
                     {
                         context.IsPropertyResolved = true; // if not set, the next elResolver in the CompositeElResolver will be called
-                        return variableScope.getVariable(variable);
+                        return variableScope.GetVariable(variable);
                     }
                 }
             }
             else
             {
-                if (variableScope.hasVariable(variable))
+                if (variableScope.HasVariable(variable))
                 {
                     context.IsPropertyResolved = true; // if not set, the next elResolver in the CompositeElResolver will be called
-                    return variableScope.getVariable(variable);
+                    return variableScope.GetVariable(variable);
                 }
             }
 
@@ -89,29 +89,29 @@ namespace org.activiti.engine.impl.el
             return null;
         }
 
-        public override bool isReadOnly(ELContext context, object @base, object property)
+        public override bool IsReadOnly(ELContext context, object @base, object property)
         {
             if (@base == null)
             {
                 string variable = (string)property;
-                return !variableScope.hasVariable(variable);
+                return !variableScope.HasVariable(variable);
             }
             return true;
         }
 
-        public override void setValue(ELContext context, object @base, object property, object value)
+        public override void SetValue(ELContext context, object @base, object property, object value)
         {
             if (@base == null)
             {
                 string variable = (string)property;
-                if (variableScope.hasVariable(variable))
+                if (variableScope.HasVariable(variable))
                 {
-                    variableScope.setVariable(variable, value);
+                    variableScope.SetVariable(variable, value);
                 }
             }
         }
 
-        public override Type getCommonPropertyType(ELContext arg0, object arg1)
+        public override Type GetCommonPropertyType(ELContext arg0, object arg1)
         {
             return typeof(object);
         }
@@ -121,7 +121,7 @@ namespace org.activiti.engine.impl.el
         //    return null;
         //}
 
-        public override Type getType(ELContext arg0, object arg1, object arg2)
+        public override Type GetType(ELContext arg0, object arg1, object arg2)
         {
             return typeof(object);
         }

@@ -28,7 +28,7 @@ namespace SmartSql.Utils
         {
             DataTable dataTable = new DataTable();
             InitDataTableColumns(dataReader, dataTable);
-            while (await dataReader.ReadAsync())
+            while (await dataReader.ReadAsync().ConfigureAwait(false))
             {
                 DataRow dataRow = dataTable.NewRow();
                 for (int i = 0; i < dataReader.FieldCount; i++)
@@ -55,7 +55,7 @@ namespace SmartSql.Utils
             DataSet dataSet = new DataSet();
             do
             {
-                DataTable dataTable = await ToDataTableAsync(dataReader);
+                DataTable dataTable = await ToDataTableAsync(dataReader).ConfigureAwait(false);
                 dataSet.Tables.Add(dataTable);
             }
             while (dataReader.NextResult());

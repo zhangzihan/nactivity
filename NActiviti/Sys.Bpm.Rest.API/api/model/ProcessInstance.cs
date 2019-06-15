@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Sys.Net.Http;
+using Sys.Workflow;
 using System;
 
 /*
@@ -61,7 +63,7 @@ namespace org.activiti.cloud.services.api.model
 
         public virtual string Id
         {
-            get;set;
+            get; set;
         }
 
         /// <summary>
@@ -70,7 +72,7 @@ namespace org.activiti.cloud.services.api.model
 
         public virtual string Name
         {
-            get;set;
+            get; set;
         }
 
         /// <summary>
@@ -79,7 +81,7 @@ namespace org.activiti.cloud.services.api.model
 
         public virtual string Description
         {
-            get;set;
+            get; set;
         }
 
         /// <summary>
@@ -88,7 +90,7 @@ namespace org.activiti.cloud.services.api.model
 
         public virtual DateTime? StartDate
         {
-            get;set;
+            get; set;
         }
 
         /// <summary>
@@ -97,7 +99,15 @@ namespace org.activiti.cloud.services.api.model
 
         public virtual string StartUserId
         {
-            get;set;
+            get; set;
+        }
+
+        /// <summary>
+        /// 提交人
+        /// </summary>
+        public virtual UserInfo Starter
+        {
+            get; set;
         }
 
 
@@ -106,7 +116,7 @@ namespace org.activiti.cloud.services.api.model
         /// </summary>
         public virtual string BusinessKey
         {
-            get;set;
+            get; set;
         }
 
         /// <summary>
@@ -115,7 +125,7 @@ namespace org.activiti.cloud.services.api.model
 
         public virtual string Status
         {
-            get;set;
+            get; set;
         }
 
         /// <summary>
@@ -124,7 +134,7 @@ namespace org.activiti.cloud.services.api.model
 
         public virtual string ProcessDefinitionId
         {
-            get;set;
+            get; set;
         }
 
         /// <summary>
@@ -133,7 +143,7 @@ namespace org.activiti.cloud.services.api.model
 
         public virtual string ProcessDefinitionKey
         {
-            get;set;
+            get; set;
         }
     }
 }

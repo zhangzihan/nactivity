@@ -35,14 +35,14 @@ namespace org.activiti.engine.impl.cmd
             this.processInstanceId = processInstanceId;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            if (ReferenceEquals(processInstanceId, null))
+            if (processInstanceId is null)
             {
                 throw new ActivitiIllegalArgumentException("processInstanceId is null");
             }
             // Check if process instance is still running
-            IHistoricProcessInstance instance = commandContext.HistoricProcessInstanceEntityManager.findById<IHistoricProcessInstance>(new KeyValuePair<string, object>("id", processInstanceId));
+            IHistoricProcessInstance instance = commandContext.HistoricProcessInstanceEntityManager.FindById<IHistoricProcessInstance>(new KeyValuePair<string, object>("id", processInstanceId));
 
             if (instance == null)
             {
@@ -53,7 +53,7 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiException("Process instance is still running, cannot delete historic process instance: " + processInstanceId);
             }
 
-            commandContext.HistoricProcessInstanceEntityManager.delete(new KeyValuePair<string, object>("id", processInstanceId));
+            commandContext.HistoricProcessInstanceEntityManager.Delete(new KeyValuePair<string, object>("id", processInstanceId));
 
             return null;
         }

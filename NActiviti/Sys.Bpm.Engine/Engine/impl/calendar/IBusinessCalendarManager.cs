@@ -12,12 +12,10 @@
  */
 namespace org.activiti.engine.impl.calendar
 {
-	/// 
-	public interface IBusinessCalendarManager
-	{
+    /// 
+    public interface IBusinessCalendarManager
+    {
 
-	  IBusinessCalendar getBusinessCalendar(string businessCalendarRef);
-
-	}
-
+        IBusinessCalendar GetBusinessCalendar(string businessCalendarRef);
+    }
 }

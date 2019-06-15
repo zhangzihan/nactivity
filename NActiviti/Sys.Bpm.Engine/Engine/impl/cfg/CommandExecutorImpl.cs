@@ -10,8 +10,14 @@
     /// </summary>
     public class CommandExecutorImpl : ICommandExecutor
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal CommandConfig defaultConfig;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ICommandInterceptor first;
 
         /// <summary>
@@ -25,6 +31,9 @@
             this.first = first;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ICommandInterceptor First
         {
             get
@@ -37,7 +46,9 @@
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual CommandConfig DefaultConfig
         {
             get
@@ -52,9 +63,9 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="command"></param>
         /// <returns></returns>
-        public virtual T execute<T>(ICommand<T> command)
+        public virtual T Execute<T>(ICommand<T> command)
         {
-            return execute(defaultConfig, command);
+            return Execute(defaultConfig, command);
         }
 
 
@@ -65,11 +76,9 @@
         /// <param name="config"></param>
         /// <param name="command"></param>
         /// <returns></returns>
-        public virtual T execute<T>(CommandConfig config, ICommand<T> command)
+        public virtual T Execute<T>(CommandConfig config, ICommand<T> command)
         {
-            return first.execute(config, command);
+            return first.Execute(config, command);
         }
-
     }
-
 }

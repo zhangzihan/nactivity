@@ -18,7 +18,7 @@ namespace org.activiti.bpmn.converter.child
     using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
-    using Sys.Bpm;
+    using Sys.Bpm.Model;
 
     public class MultiInstanceParser : BaseChildElementParser
     {
@@ -32,26 +32,26 @@ namespace org.activiti.bpmn.converter.child
             }
         }
 
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
             if (!(parentElement is Activity))
             {
                 return;
             }
             MultiInstanceLoopCharacteristics multiInstanceDef = new MultiInstanceLoopCharacteristics();
-            BpmnXMLUtil.addXMLLocation(multiInstanceDef, xtr);
-            if (xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_SEQUENTIAL) != null)
+            BpmnXMLUtil.AddXMLLocation(multiInstanceDef, xtr);
+            if (xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_SEQUENTIAL) != null)
             {
-                multiInstanceDef.Sequential = Convert.ToBoolean(xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_SEQUENTIAL));
+                multiInstanceDef.Sequential = Convert.ToBoolean(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_SEQUENTIAL));
             }
-            multiInstanceDef.InputDataItem = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_COLLECTION);
-            multiInstanceDef.ElementVariable = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_VARIABLE);
-            multiInstanceDef.ElementIndexVariable = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_INDEX_VARIABLE);
+            multiInstanceDef.InputDataItem = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_COLLECTION);
+            multiInstanceDef.ElementVariable = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_VARIABLE);
+            multiInstanceDef.ElementIndexVariable = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_INDEX_VARIABLE);
 
             bool readyWithMultiInstance = false;
             try
             {
-                while (!readyWithMultiInstance && xtr.hasNext())
+                while (!readyWithMultiInstance && xtr.HasNext())
                 {
                     //xtr.next();
 
@@ -65,9 +65,9 @@ namespace org.activiti.bpmn.converter.child
                     }
                     else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_MULTIINSTANCE_DATAITEM.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        if (xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME) != null)
+                        if (xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME) != null)
                         {
-                            multiInstanceDef.ElementVariable = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
+                            multiInstanceDef.ElementVariable = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
                         }
                     }
                     else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_MULTIINSTANCE_CONDITION.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))

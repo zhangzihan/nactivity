@@ -20,6 +20,9 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.task;
+    using Sys;
+    using Sys.Workflow;
+    using Sys.Workflow.Engine.Bpmn.Rules;
 
     /// 
     /// 
@@ -32,6 +35,8 @@ namespace org.activiti.engine.impl.cmd
         protected internal IDictionary<string, object> variables;
         protected internal IDictionary<string, object> transientVariables;
 
+        private readonly IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
+
         public ResolveTaskCmd(string taskId, IDictionary<string, object> variables) : base(taskId)
         {
             this.variables = variables;
@@ -42,7 +47,7 @@ namespace org.activiti.engine.impl.cmd
             this.transientVariables = transientVariables;
         }
 
-        protected internal override object execute(ICommandContext commandContext, ITaskEntity task)
+        protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
         {
             if (variables != null)
             {
@@ -54,7 +59,12 @@ namespace org.activiti.engine.impl.cmd
             }
 
             task.DelegationState = DelegationState.RESOLVED;
-            commandContext.TaskEntityManager.changeTaskAssignee(task, task.Owner);
+            string ownerName = null;
+            if (string.IsNullOrWhiteSpace(task.Owner) == false)
+            {
+                ownerName = AsyncHelper.RunSync(() => userService.GetUser(task.Owner))?.FullName;
+            }
+            commandContext.TaskEntityManager.ChangeTaskAssignee(task, task.Owner, ownerName);
 
             return null;
         }

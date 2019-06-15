@@ -14,7 +14,7 @@
             set { this.value = value; }
         }
 
-        public override abstract BaseElement clone();
+        public override abstract BaseElement Clone();
 
         public override BaseElement Values
         {
@@ -52,7 +52,7 @@
 
         public override bool Equals(object o)
         {
-            if (this == o)
+            if (this == o as BaseElement)
             {
                 return true;
             }

@@ -38,38 +38,40 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IDeadLetterJobEntity create()
+        public override IDeadLetterJobEntity Create()
         {
             return new DeadLetterJobEntityImpl();
         }
 
-        public override void delete(IDeadLetterJobEntity entity)
+        public override void Delete(IDeadLetterJobEntity entity)
         {
-            DbSqlSession.delete(entity);
+            DbSqlSession.Delete(entity);
         }
 
-        public virtual IList<IJob> findJobsByQueryCriteria(DeadLetterJobQueryImpl jobQuery, Page page)
+        public virtual IList<IJob> FindJobsByQueryCriteria(IDeadLetterJobQuery jobQuery, Page page)
         {
             string query = "selectDeadLetterJobByQueryCriteria";
-            return DbSqlSession.selectList<JobEntityImpl, IJob>(query, jobQuery, page);
+            return DbSqlSession.SelectList<JobEntityImpl, IJob>(query, jobQuery, page);
         }
 
-        public virtual long findJobCountByQueryCriteria(DeadLetterJobQueryImpl jobQuery)
+        public virtual long FindJobCountByQueryCriteria(IDeadLetterJobQuery jobQuery)
         {
-            return DbSqlSession.selectOne<DeadLetterJobEntityImpl, long?>("selectDeadLetterJobCountByQueryCriteria", jobQuery).GetValueOrDefault(0);
+            return DbSqlSession.SelectOne<DeadLetterJobEntityImpl, long?>("selectDeadLetterJobCountByQueryCriteria", jobQuery).GetValueOrDefault(0);
         }
 
-        public virtual IList<IDeadLetterJobEntity> findJobsByExecutionId(string executionId)
+        public virtual IList<IDeadLetterJobEntity> FindJobsByExecutionId(string executionId)
         {
-            return (IList<IDeadLetterJobEntity>)getList("selectDeadLetterJobsByExecutionId", new { executionId }, deadLetterByExecutionIdMatcher, true);
+            return (IList<IDeadLetterJobEntity>)GetList("selectDeadLetterJobsByExecutionId", new { executionId }, deadLetterByExecutionIdMatcher, true);
         }
 
-        public virtual void updateJobTenantIdForDeployment(string deploymentId, string newTenantId)
+        public virtual void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId)
         {
-            Dictionary<string, object> @params = new Dictionary<string, object>();
-            @params["deploymentId"] = deploymentId;
-            @params["tenantId"] = newTenantId;
-            DbSqlSession.update<DeadLetterJobEntityImpl>("updateDeadLetterJobTenantIdForDeployment", @params);
+            Dictionary<string, object> @params = new Dictionary<string, object>
+            {
+                ["deploymentId"] = deploymentId,
+                ["tenantId"] = newTenantId
+            };
+            DbSqlSession.Update<DeadLetterJobEntityImpl>("updateDeadLetterJobTenantIdForDeployment", @params);
         }
 
     }

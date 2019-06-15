@@ -32,18 +32,18 @@ namespace org.activiti.engine.impl.jobexecutor
             }
         }
 
-        public virtual void execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
+        public virtual void Execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
         {
 
             IEventSubscriptionEntityManager eventSubscriptionEntityManager = commandContext.EventSubscriptionEntityManager;
 
             // lookup subscription:
-            IEventSubscriptionEntity eventSubscriptionEntity = eventSubscriptionEntityManager.findById<IEventSubscriptionEntity>(new KeyValuePair<string, object>("id", configuration));
+            IEventSubscriptionEntity eventSubscriptionEntity = eventSubscriptionEntityManager.FindById<IEventSubscriptionEntity>(new KeyValuePair<string, object>("id", configuration));
 
             // if event subscription is null, ignore
             if (eventSubscriptionEntity != null)
             {
-                eventSubscriptionEntityManager.eventReceived(eventSubscriptionEntity, null, false);
+                eventSubscriptionEntityManager.EventReceived(eventSubscriptionEntity, null, false);
             }
 
         }

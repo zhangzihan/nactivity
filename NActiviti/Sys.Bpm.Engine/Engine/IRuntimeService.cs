@@ -33,7 +33,7 @@ namespace org.activiti.engine
         /// Create a <seealso cref="IProcessInstanceBuilder"/>, that allows to set various options for starting a process instance,
         /// as an alternative to the various startProcessInstanceByXX methods. 
         /// </summary>
-        IProcessInstanceBuilder createProcessInstanceBuilder();
+        IProcessInstanceBuilder CreateProcessInstanceBuilder();
 
         /// <summary>
         /// Starts a new process instance in the latest version of the process definition with the given key.
@@ -42,7 +42,7 @@ namespace org.activiti.engine
         ///          key of process definition, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no process definition is deployed with the given key. </exception>
-        IProcessInstance startProcessInstanceByKey(string processDefinitionKey);
+        IProcessInstance StartProcessInstanceByKey(string processDefinitionKey);
 
         /// <summary>
         /// Starts a new process instance in the latest version of the process definition with the given key.
@@ -57,7 +57,7 @@ namespace org.activiti.engine
         ///          a key that uniquely identifies the process instance in the context or the given process definition. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no process definition is deployed with the given key. </exception>
-        IProcessInstance startProcessInstanceByKey(string processDefinitionKey, string businessKey);
+        IProcessInstance StartProcessInstanceByKey(string processDefinitionKey, string businessKey);
 
         /// <summary>
         /// Starts a new process instance in the latest version of the process definition with the given key
@@ -68,14 +68,21 @@ namespace org.activiti.engine
         ///          the variables to pass, can be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no process definition is deployed with the given key. </exception>
-        IProcessInstance startProcessInstanceByKey(string processDefinitionKey, IDictionary<string, object> variables);
+        IProcessInstance StartProcessInstanceByKey(string processDefinitionKey, IDictionary<string, object> variables);
 
         /// <summary>
         /// 使用流程启动命令启动流程
         /// </summary>
-        /// <param name="cmd">流程启动命令</param>
+        /// <param name="cmds">批量启动流程命令</param>
         /// <returns></returns>
-        IProcessInstance startProcessInstanceByCmd(IStartProcessInstanceCmd cmd);
+        IProcessInstance[] StartProcessInstanceByCmd(IStartProcessInstanceCmd[] cmds);
+
+        /// <summary>
+        /// 使用流程启动命令启动流程
+        /// </summary>
+        /// <param name="cmd">启动流程命令</param>
+        /// <returns></returns>
+        IProcessInstance StartProcessInstanceByCmd(IStartProcessInstanceCmd cmd);
 
         /// <summary>
         /// Starts a new process instance in the latest version of the process definition with the given key.
@@ -94,27 +101,27 @@ namespace org.activiti.engine
         ///          a key that uniquely identifies the process instance in the context or the given process definition. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no process definition is deployed with the given key. </exception>
-        IProcessInstance startProcessInstanceByKey(string processDefinitionKey, string businessKey, IDictionary<string, object> variables);
+        IProcessInstance StartProcessInstanceByKey(string processDefinitionKey, string businessKey, IDictionary<string, object> variables);
 
         /// <summary>
         /// Similar to <seealso cref="#startProcessInstanceByKey(String)"/>, but using a specific tenant identifier.
         /// </summary>
-        IProcessInstance startProcessInstanceByKeyAndTenantId(string processDefinitionKey, string tenantId);
+        IProcessInstance StartProcessInstanceByKeyAndTenantId(string processDefinitionKey, string tenantId);
 
         /// <summary>
         /// Similar to <seealso cref="#startProcessInstanceByKey(String, String)"/>, but using a specific tenant identifier.
         /// </summary>
-        IProcessInstance startProcessInstanceByKeyAndTenantId(string processDefinitionKey, string businessKey, string tenantId);
+        IProcessInstance StartProcessInstanceByKeyAndTenantId(string processDefinitionKey, string businessKey, string tenantId);
 
         /// <summary>
         /// Similar to <seealso cref="#startProcessInstanceByKey(String, Map)"/>, but using a specific tenant identifier.
         /// </summary>
-        IProcessInstance startProcessInstanceByKeyAndTenantId(string processDefinitionKey, IDictionary<string, object> variables, string tenantId);
+        IProcessInstance StartProcessInstanceByKeyAndTenantId(string processDefinitionKey, IDictionary<string, object> variables, string tenantId);
 
         /// <summary>
         /// Similar to <seealso cref="#startProcessInstanceByKey(String, String, Map)"/>, but using a specific tenant identifier.
         /// </summary>
-        IProcessInstance startProcessInstanceByKeyAndTenantId(string processDefinitionKey, string businessKey, IDictionary<string, object> variables, string tenantId);
+        IProcessInstance StartProcessInstanceByKeyAndTenantId(string processDefinitionKey, string businessKey, IDictionary<string, object> variables, string tenantId);
 
         /// <summary>
         /// Starts a new process instance in the exactly specified version of the process definition with the given id.
@@ -123,7 +130,7 @@ namespace org.activiti.engine
         ///          the id of the process definition, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no process definition is deployed with the given key. </exception>
-        IProcessInstance startProcessInstanceById(string processDefinitionId);
+        IProcessInstance StartProcessInstanceById(string processDefinitionId);
 
         /// <summary>
         /// Starts a new process instance in the exactly specified version of the process definition with the given id.
@@ -138,7 +145,7 @@ namespace org.activiti.engine
         ///          a key that uniquely identifies the process instance in the context or the given process definition. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no process definition is deployed with the given key. </exception>
-        IProcessInstance startProcessInstanceById(string processDefinitionId, string businessKey);
+        IProcessInstance StartProcessInstanceById(string processDefinitionId, string businessKey);
 
         /// <summary>
         /// Starts a new process instance in the exactly specified version of the process definition with the given id.
@@ -149,7 +156,7 @@ namespace org.activiti.engine
         ///          variables to be passed, can be null </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no process definition is deployed with the given key. </exception>
-        IProcessInstance startProcessInstanceById(string processDefinitionId, IDictionary<string, object> variables);
+        IProcessInstance StartProcessInstanceById(string processDefinitionId, IDictionary<string, object> variables);
 
         /// <summary>
         /// Starts a new process instance in the exactly specified version of the process definition with the given id.
@@ -164,7 +171,7 @@ namespace org.activiti.engine
         ///          variables to be passed, can be null </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no process definition is deployed with the given key. </exception>
-        IProcessInstance startProcessInstanceById(string processDefinitionId, string businessKey, IDictionary<string, object> variables);
+        IProcessInstance StartProcessInstanceById(string processDefinitionId, string businessKey, IDictionary<string, object> variables);
 
         /// <summary>
         /// <para>
@@ -188,12 +195,12 @@ namespace org.activiti.engine
         ///           if no subscription to a message with the given name exists
         /// 
         /// @since 5.9 </exception>
-        IProcessInstance startProcessInstanceByMessage(string messageName);
+        IProcessInstance StartProcessInstanceByMessage(string messageName);
 
         /// <summary>
         /// Similar to <seealso cref="IRuntimeService#startProcessInstanceByMessage(String)"/>, but with tenant context.
         /// </summary>
-        IProcessInstance startProcessInstanceByMessageAndTenantId(string messageName, string tenantId);
+        IProcessInstance StartProcessInstanceByMessageAndTenantId(string messageName, string tenantId);
 
         /// <summary>
         /// <para>
@@ -211,12 +218,12 @@ namespace org.activiti.engine
         ///           if no subscription to a message with the given name exists
         /// 
         /// @since 5.10 </exception>
-        IProcessInstance startProcessInstanceByMessage(string messageName, string businessKey);
+        IProcessInstance StartProcessInstanceByMessage(string messageName, string businessKey);
 
         /// <summary>
         /// Similar to <seealso cref="IRuntimeService#startProcessInstanceByMessage(String, String)"/>, but with tenant context.
         /// </summary>
-        IProcessInstance startProcessInstanceByMessageAndTenantId(string messageName, string businessKey, string tenantId);
+        IProcessInstance StartProcessInstanceByMessageAndTenantId(string messageName, string businessKey, string tenantId);
 
         /// <summary>
         /// <para>
@@ -235,12 +242,12 @@ namespace org.activiti.engine
         ///           if no subscription to a message with the given name exists
         /// 
         /// @since 5.9 </exception>
-        IProcessInstance startProcessInstanceByMessage(string messageName, IDictionary<string, object> processVariables);
+        IProcessInstance StartProcessInstanceByMessage(string messageName, IDictionary<string, object> processVariables);
 
         /// <summary>
         /// Similar to <seealso cref="IRuntimeService#startProcessInstanceByMessage(String, Map<String, Object>)"/>, but with tenant context.
         /// </summary>
-        IProcessInstance startProcessInstanceByMessageAndTenantId(string messageName, IDictionary<string, object> processVariables, string tenantId);
+        IProcessInstance StartProcessInstanceByMessageAndTenantId(string messageName, IDictionary<string, object> processVariables, string tenantId);
 
         /// <summary>
         /// <para>
@@ -261,12 +268,12 @@ namespace org.activiti.engine
         ///           if no subscription to a message with the given name exists
         /// 
         /// @since 5.9 </exception>
-        IProcessInstance startProcessInstanceByMessage(string messageName, string businessKey, IDictionary<string, object> processVariables);
+        IProcessInstance StartProcessInstanceByMessage(string messageName, string businessKey, IDictionary<string, object> processVariables);
 
         /// <summary>
         /// Similar to <seealso cref="IRuntimeService#startProcessInstanceByMessage(String, String, Map<String, Object>)"/>, but with tenant context.
         /// </summary>
-        IProcessInstance startProcessInstanceByMessageAndTenantId(string messageName, string businessKey, IDictionary<string, object> processVariables, string tenantId);
+        IProcessInstance StartProcessInstanceByMessageAndTenantId(string messageName, string businessKey, IDictionary<string, object> processVariables, string tenantId);
 
         /// <summary>
         /// Delete an existing runtime process instance.
@@ -277,7 +284,7 @@ namespace org.activiti.engine
         ///          reason for deleting, can be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no process instance is found with the given id. </exception>
-        void deleteProcessInstance(string processInstanceId, string deleteReason);
+        void DeleteProcessInstance(string processInstanceId, string deleteReason);
 
         /// <summary>
         /// Finds the activity ids for all executions that are waiting in activities. This is a list because a single activity can be active multiple times.
@@ -286,7 +293,7 @@ namespace org.activiti.engine
         ///          id of the execution, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution exists with the given executionId. </exception>
-        IList<string> getActiveActivityIds(string executionId);
+        IList<string> GetActiveActivityIds(string executionId);
 
         /// <summary>
         /// Sends an external trigger to an activity instance that is waiting inside the given execution.
@@ -295,7 +302,7 @@ namespace org.activiti.engine
         ///          id of execution to signal, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        void trigger(string executionId);
+        void Trigger(string executionId);
 
         /// <summary>
         /// Sends an external trigger to an activity instance that is waiting inside the given execution.
@@ -306,14 +313,14 @@ namespace org.activiti.engine
         ///          a map of process variables </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        void trigger(string executionId, IDictionary<string, object> processVariables);
+        void Trigger(string executionId, IDictionary<string, object> processVariables);
 
 
         /// <summary>
         /// Similar to <seealso cref="#trigger(String, Map)"/>, but with an extra parameter that allows to pass
         /// transient variables.
         /// </summary>
-        void trigger(string executionId, IDictionary<string, object> processVariables, IDictionary<string, object> transientVariables);
+        void Trigger(string executionId, IDictionary<string, object> processVariables, IDictionary<string, object> transientVariables);
 
         /// <summary>
         /// Updates the business key for the provided process instance
@@ -322,7 +329,7 @@ namespace org.activiti.engine
         ///          id of the process instance to set the business key, cannot be null </param>
         /// <param name="businessKey">
         ///          new businessKey value </param>
-        void updateBusinessKey(string processInstanceId, string businessKey);
+        void UpdateBusinessKey(string processInstanceId, string businessKey);
 
         // Identity Links
         // ///////////////////////////////////////////////////////////////
@@ -338,7 +345,7 @@ namespace org.activiti.engine
         ///          type of identityLink, cannot be null (<seealso cref= <seealso cref="IdentityLinkType"/>). </seealso>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the process instance doesn't exist. </exception>
-        void addUserIdentityLink(string processInstanceId, string userId, string identityLinkType);
+        void AddUserIdentityLink(string processInstanceId, string userId, string identityLinkType);
 
         /// <summary>
         /// Involves a group with a process instance. The type of identityLink is defined by the given identityLink.
@@ -351,7 +358,7 @@ namespace org.activiti.engine
         ///          type of identity, cannot be null (<seealso cref= <seealso cref="IdentityLinkType"/>). </seealso>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the process instance or group doesn't exist. </exception>
-        void addGroupIdentityLink(string processInstanceId, string groupId, string identityLinkType);
+        void AddGroupIdentityLink(string processInstanceId, string groupId, string identityLinkType);
 
         /// <summary>
         /// Convenience shorthand for <seealso cref="#addUserIdentityLink(String, String, String)"/>; with type <seealso cref="IdentityLinkType#CANDIDATE"/>
@@ -362,7 +369,7 @@ namespace org.activiti.engine
         ///          id of the user to use as candidate, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task or user doesn't exist. </exception>
-        void addParticipantUser(string processInstanceId, string userId);
+        void AddParticipantUser(string processInstanceId, string userId);
 
         /// <summary>
         /// Convenience shorthand for <seealso cref="#addGroupIdentityLink(String, String, String)"/>; with type <seealso cref="IdentityLinkType#CANDIDATE"/>
@@ -373,7 +380,7 @@ namespace org.activiti.engine
         ///          id of the group to use as candidate, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task or group doesn't exist. </exception>
-        void addParticipantGroup(string processInstanceId, string groupId);
+        void AddParticipantGroup(string processInstanceId, string groupId);
 
         /// <summary>
         /// Convenience shorthand for <seealso cref="#deleteUserIdentityLink(String, String, String)"/>; with type <seealso cref="IdentityLinkType#CANDIDATE"/>
@@ -384,7 +391,7 @@ namespace org.activiti.engine
         ///          id of the user to use as candidate, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task or user doesn't exist. </exception>
-        void deleteParticipantUser(string processInstanceId, string userId);
+        void DeleteParticipantUser(string processInstanceId, string userId);
 
         /// <summary>
         /// Convenience shorthand for <seealso cref="#deleteGroupIdentityLink(String, String, String)"/>; with type <seealso cref="IdentityLinkType#CANDIDATE"/>
@@ -395,7 +402,7 @@ namespace org.activiti.engine
         ///          id of the group to use as candidate, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task or group doesn't exist. </exception>
-        void deleteParticipantGroup(string processInstanceId, string groupId);
+        void DeleteParticipantGroup(string processInstanceId, string groupId);
 
         /// <summary>
         /// Removes the association between a user and a process instance for the given identityLinkType.
@@ -408,7 +415,7 @@ namespace org.activiti.engine
         ///          type of identityLink, cannot be null (<seealso cref= <seealso cref="IdentityLinkType"/>). </seealso>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task or user doesn't exist. </exception>
-        void deleteUserIdentityLink(string processInstanceId, string userId, string identityLinkType);
+        void DeleteUserIdentityLink(string processInstanceId, string userId, string identityLinkType);
 
         /// <summary>
         /// Removes the association between a group and a process instance for the given identityLinkType.
@@ -421,12 +428,12 @@ namespace org.activiti.engine
         ///          type of identity, cannot be null (<seealso cref= <seealso cref="IdentityLinkType"/>). </seealso>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task or group doesn't exist. </exception>
-        void deleteGroupIdentityLink(string processInstanceId, string groupId, string identityLinkType);
+        void DeleteGroupIdentityLink(string processInstanceId, string groupId, string identityLinkType);
 
         /// <summary>
         /// Retrieves the <seealso cref="IIdentityLink"/>s associated with the given process instance. Such an <seealso cref="IIdentityLink"/> informs how a certain user is involved with a process instance.
         /// </summary>
-        IList<IIdentityLink> getIdentityLinksForProcessInstance(string instanceId);
+        IList<IIdentityLink> GetIdentityLinksForProcessInstance(string instanceId);
 
         // Variables
         // ////////////////////////////////////////////////////////////////////
@@ -439,7 +446,7 @@ namespace org.activiti.engine
         /// <returns> the variables or an empty map if no such variables are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, object> getVariables(string executionId);
+        IDictionary<string, object> GetVariables(string executionId);
 
         /// <summary>
         /// All variables visible from the given execution scope (including parent scopes).
@@ -449,7 +456,7 @@ namespace org.activiti.engine
         /// <returns> the variable instances or an empty map if no such variables are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, IVariableInstance> getVariableInstances(string executionId);
+        IDictionary<string, IVariableInstance> GetVariableInstances(string executionId);
 
         /// <summary>
         /// All variables visible from the given execution scope (including parent
@@ -458,7 +465,7 @@ namespace org.activiti.engine
         /// <param name="executionIds">
         ///          ids of execution, cannot be null. </param>
         /// <returns> the variables. </returns>
-        IList<IVariableInstance> getVariableInstancesByExecutionIds(ISet<string> executionIds);
+        IList<IVariableInstance> GetVariableInstancesByExecutionIds(string[] executionIds);
 
         /// <summary>
         /// All variable values that are defined in the execution scope, without taking outer scopes into account. If you have many task local variables and you only need a few, consider using
@@ -469,7 +476,7 @@ namespace org.activiti.engine
         /// <returns> the variables or an empty map if no such variables are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, object> getVariablesLocal(string executionId);
+        IDictionary<string, object> GetVariablesLocal(string executionId);
 
         /// <summary>
         /// All variable values that are defined in the execution scope, without taking outer scopes into account. If you have many task local variables and you only need a few, consider using
@@ -480,7 +487,7 @@ namespace org.activiti.engine
         /// <returns> the variables or an empty map if no such variables are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, IVariableInstance> getVariableInstancesLocal(string executionId);
+        IDictionary<string, IVariableInstance> GetVariableInstancesLocal(string executionId);
 
         /// <summary>
         /// The variable values for all given variableNames, takes all variables into account which are visible from the given execution scope (including parent scopes).
@@ -492,7 +499,7 @@ namespace org.activiti.engine
         /// <returns> the variables or an empty map if no such variables are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, object> getVariables(string executionId, ICollection<string> variableNames);
+        IDictionary<string, object> GetVariables(string executionId, IEnumerable<string> variableNames);
 
         /// <summary>
         /// The variable values for all given variableNames, takes all variables into account which are visible from the given execution scope (including parent scopes).
@@ -504,7 +511,7 @@ namespace org.activiti.engine
         /// <returns> the variables or an empty map if no such variables are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, IVariableInstance> getVariableInstances(string executionId, ICollection<string> variableNames);
+        IDictionary<string, IVariableInstance> GetVariableInstances(string executionId, IEnumerable<string> variableNames);
 
         /// <summary>
         /// The variable values for the given variableNames only taking the given execution scope into account, not looking in outer scopes.
@@ -516,7 +523,7 @@ namespace org.activiti.engine
         /// <returns> the variables or an empty map if no such variables are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, object> getVariablesLocal(string executionId, ICollection<string> variableNames);
+        IDictionary<string, object> GetVariablesLocal(string executionId, IEnumerable<string> variableNames);
 
         /// <summary>
         /// The variable values for the given variableNames only taking the given execution scope into account, not looking in outer scopes.
@@ -528,7 +535,7 @@ namespace org.activiti.engine
         /// <returns> the variables or an empty map if no such variables are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, IVariableInstance> getVariableInstancesLocal(string executionId, ICollection<string> variableNames);
+        IDictionary<string, IVariableInstance> GetVariableInstancesLocal(string executionId, IEnumerable<string> variableNames);
 
         /// <summary>
         /// The variable value. Searching for the variable is done in all scopes that are visible to the given execution (including parent scopes). Returns null when no variable value is found with the given
@@ -541,7 +548,7 @@ namespace org.activiti.engine
         /// <returns> the variable value or null if the variable is undefined or the value of the variable is null. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        object getVariable(string executionId, string variableName);
+        object GetVariable(string executionId, string variableName);
 
         /// <summary>
         /// The variable. Searching for the variable is done in all scopes that are visible to the given execution (including parent scopes). Returns null when no variable value is found with the given
@@ -554,7 +561,7 @@ namespace org.activiti.engine
         /// <returns> the variable or null if the variable is undefined. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IVariableInstance getVariableInstance(string executionId, string variableName);
+        IVariableInstance GetVariableInstance(string executionId, string variableName);
 
         /// <summary>
         /// The variable value. Searching for the variable is done in all scopes that are visible to the given execution (including parent scopes). Returns null when no variable value is found with the given
@@ -569,18 +576,18 @@ namespace org.activiti.engine
         /// <returns> the variable value or null if the variable is undefined or the value of the variable is null. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        T getVariable<T>(string executionId, string variableName);
+        T GetVariable<T>(string executionId, string variableName);
 
         /// <summary>
         /// Check whether or not this execution has variable set with the given name, Searching for the variable is done in all scopes that are visible to the given execution (including parent scopes).
         /// </summary>
-        bool hasVariable(string executionId, string variableName);
+        bool HasVariable(string executionId, string variableName);
 
         /// <summary>
         /// The variable value for an execution. Returns the value when the variable is set for the execution (and not searching parent scopes). Returns null when no variable value is found with the given
         /// name or when the value is set to null.
         /// </summary>
-        object getVariableLocal(string executionId, string variableName);
+        object GetVariableLocal(string executionId, string variableName);
 
         /// <summary>
         /// The variable for an execution. Returns the variable when it is set for the execution (and not searching parent scopes). Returns null when no variable is found with the given
@@ -593,18 +600,18 @@ namespace org.activiti.engine
         /// <returns> the variable or null if the variable is undefined. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IVariableInstance getVariableInstanceLocal(string executionId, string variableName);
+        IVariableInstance GetVariableInstanceLocal(string executionId, string variableName);
 
         /// <summary>
         /// The variable value for an execution. Returns the value casted to given class when the variable is set for the execution (and not searching parent scopes). Returns null when no variable value is
         /// found with the given name or when the value is set to null.
         /// </summary>
-        T getVariableLocal<T>(string executionId, string variableName);
+        T GetVariableLocal<T>(string executionId, string variableName);
 
         /// <summary>
         /// Check whether or not this execution has a local variable set with the given name.
         /// </summary>
-        bool hasVariableLocal(string executionId, string variableName);
+        bool HasVariableLocal(string executionId, string variableName);
 
         /// <summary>
         /// Update or create a variable for an execution.
@@ -624,7 +631,7 @@ namespace org.activiti.engine
         ///          value to set. When null is passed, the variable is not removed, only it's value will be set to null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        void setVariable(string executionId, string variableName, object value);
+        void SetVariable(string executionId, string variableName, object value);
 
         /// <summary>
         /// Update or create a variable for an execution (not considering parent scopes). If the variable is not already existing, it will be created in the given execution.
@@ -637,7 +644,7 @@ namespace org.activiti.engine
         ///          value to set. When null is passed, the variable is not removed, only it's value will be set to null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        void setVariableLocal(string executionId, string variableName, object value);
+        void SetVariableLocal(string executionId, string variableName, object value);
 
         /// <summary>
         /// Update or create given variables for an execution (including parent scopes).
@@ -654,7 +661,7 @@ namespace org.activiti.engine
         ///          map containing name (key) and value of variables, can be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        void setVariables<T1>(string executionId, IDictionary<string, T1> variables);
+        void SetVariables<T1>(string executionId, IDictionary<string, T1> variables);
 
         /// <summary>
         /// Update or create given variables for an execution (not considering parent scopes). If the variables are not already existing, it will be created in the given execution.
@@ -665,7 +672,7 @@ namespace org.activiti.engine
         ///          map containing name (key) and value of variables, can be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        void setVariablesLocal<T1>(string executionId, IDictionary<string, T1> variables);
+        void SetVariablesLocal<T1>(string executionId, IDictionary<string, T1> variables);
 
         /// <summary>
         /// Removes a variable for an execution.
@@ -674,7 +681,7 @@ namespace org.activiti.engine
         ///          id of execution to remove variable in. </param>
         /// <param name="variableName">
         ///          name of variable to remove. </param>
-        void removeVariable(string executionId, string variableName);
+        void RemoveVariable(string executionId, string variableName);
 
         /// <summary>
         /// Removes a variable for an execution (not considering parent scopes).
@@ -683,7 +690,7 @@ namespace org.activiti.engine
         ///          id of execution to remove variable in. </param>
         /// <param name="variableName">
         ///          name of variable to remove. </param>
-        void removeVariableLocal(string executionId, string variableName);
+        void RemoveVariableLocal(string executionId, string variableName);
 
         /// <summary>
         /// Removes variables for an execution.
@@ -692,7 +699,7 @@ namespace org.activiti.engine
         ///          id of execution to remove variable in. </param>
         /// <param name="variableNames">
         ///          collection containing name of variables to remove. </param>
-        void removeVariables(string executionId, ICollection<string> variableNames);
+        void RemoveVariables(string executionId, IEnumerable<string> variableNames);
 
         /// <summary>
         /// Remove variables for an execution (not considering parent scopes).
@@ -701,7 +708,7 @@ namespace org.activiti.engine
         ///          id of execution to remove variable in. </param>
         /// <param name="variableNames">
         ///          collection containing name of variables to remove. </param>
-        void removeVariablesLocal(string executionId, ICollection<string> variableNames);
+        void RemoveVariablesLocal(string executionId, IEnumerable<string> variableNames);
 
         /// <summary>
         /// All DataObjects visible from the given execution scope (including parent scopes).
@@ -711,7 +718,7 @@ namespace org.activiti.engine
         /// <returns> the DataObjects or an empty map if no such variables are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, IDataObject> getDataObjects(string executionId);
+        IDictionary<string, IDataObject> GetDataObjects(string executionId);
 
         /// <summary>
         /// All DataObjects visible from the given execution scope (including parent scopes).
@@ -725,7 +732,7 @@ namespace org.activiti.engine
         /// <returns> the DataObjects or an empty map if no DataObjects are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, IDataObject> getDataObjects(string executionId, string locale, bool withLocalizationFallback);
+        IDictionary<string, IDataObject> GetDataObjects(string executionId, string locale, bool withLocalizationFallback);
 
 
         /// <summary>
@@ -737,7 +744,7 @@ namespace org.activiti.engine
         /// <returns> the DataObjects or an empty map if no DataObjects are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, IDataObject> getDataObjectsLocal(string executionId);
+        IDictionary<string, IDataObject> GetDataObjectsLocal(string executionId);
 
         /// <summary>
         /// All IDataObject values that are defined in the execution scope, without taking outer scopes into account. If you have many local DataObjects and you only need a few, consider using
@@ -752,7 +759,7 @@ namespace org.activiti.engine
         /// <returns> the DataObjects or an empty map if no such variables are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, IDataObject> getDataObjectsLocal(string executionId, string locale, bool withLocalizationFallback);
+        IDictionary<string, IDataObject> GetDataObjectsLocal(string executionId, string locale, bool withLocalizationFallback);
 
         /// <summary>
         /// The DataObjects for all given dataObjectNames, takes all dataObjects into account which are visible from the given execution scope (including parent scopes).
@@ -764,7 +771,7 @@ namespace org.activiti.engine
         /// <returns> the IDataObject or an empty map if no DataObjects are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, IDataObject> getDataObjects(string executionId, ICollection<string> dataObjectNames);
+        IDictionary<string, IDataObject> GetDataObjects(string executionId, IEnumerable<string> dataObjectNames);
 
         /// <summary>
         /// The DataObjects for all given dataObjectNames, takes all dataObjects into account which are visible from the given execution scope (including parent scopes).
@@ -780,7 +787,7 @@ namespace org.activiti.engine
         /// <returns> the DataObjects or an empty map if no such dataObjects are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, IDataObject> getDataObjects(string executionId, ICollection<string> dataObjectNames, string locale, bool withLocalizationFallback);
+        IDictionary<string, IDataObject> GetDataObjects(string executionId, IEnumerable<string> dataObjectNames, string locale, bool withLocalizationFallback);
 
         /// <summary>
         /// The DataObjects for the given dataObjectNames only taking the given execution scope into account, not looking in outer scopes.
@@ -792,7 +799,7 @@ namespace org.activiti.engine
         /// <returns> the DataObjects or an empty map if no DataObjects are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, IDataObject> getDataObjectsLocal(string executionId, ICollection<string> dataObjects);
+        IDictionary<string, IDataObject> GetDataObjectsLocal(string executionId, IEnumerable<string> dataObjects);
 
         /// <summary>
         /// The DataObjects for the given dataObjectNames only taking the given execution scope into account, not looking in outer scopes.
@@ -808,7 +815,7 @@ namespace org.activiti.engine
         /// <returns> the DataObjects or an empty map if no DataObjects are found. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDictionary<string, IDataObject> getDataObjectsLocal(string executionId, ICollection<string> dataObjectNames, string locale, bool withLocalizationFallback);
+        IDictionary<string, IDataObject> GetDataObjectsLocal(string executionId, IEnumerable<string> dataObjectNames, string locale, bool withLocalizationFallback);
 
         /// <summary>
         /// The IDataObject. Searching for the IDataObject is done in all scopes that are visible to the given execution (including parent scopes). Returns null when no IDataObject value is found with the given
@@ -821,7 +828,7 @@ namespace org.activiti.engine
         /// <returns> the IDataObject or null if the variable is undefined. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDataObject getDataObject(string executionId, string dataObject);
+        IDataObject GetDataObject(string executionId, string dataObject);
 
         /// <summary>
         /// The IDataObject. Searching for the IDataObject is done in all scopes that are visible to the given execution (including parent scopes). Returns null when no IDataObject value is found with the given
@@ -838,7 +845,7 @@ namespace org.activiti.engine
         /// <returns> the IDataObject or null if the IDataObject is undefined. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDataObject getDataObject(string executionId, string dataObjectName, string locale, bool withLocalizationFallback);
+        IDataObject GetDataObject(string executionId, string dataObjectName, string locale, bool withLocalizationFallback);
 
         /// <summary>
         /// The IDataObject for an execution. Returns the IDataObject when it is set for the execution (and not searching parent scopes). Returns null when no IDataObject is found with the given
@@ -851,7 +858,7 @@ namespace org.activiti.engine
         /// <returns> the IDataObject or null if the IDataObject is undefined. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDataObject getDataObjectLocal(string executionId, string dataObjectName);
+        IDataObject GetDataObjectLocal(string executionId, string dataObjectName);
 
         /// <summary>
         /// The IDataObject for an execution. Returns the IDataObject when it is set for the execution (and not searching parent scopes). Returns null when no IDataObject is found with the given
@@ -868,7 +875,7 @@ namespace org.activiti.engine
         /// <returns> the IDataObject or null if the IDataObject is undefined. </returns>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no execution is found for the given executionId. </exception>
-        IDataObject getDataObjectLocal(string executionId, string dataObjectName, string locale, bool withLocalizationFallback);
+        IDataObject GetDataObjectLocal(string executionId, string dataObjectName, string locale, bool withLocalizationFallback);
 
 
         // Queries ////////////////////////////////////////////////////////
@@ -876,22 +883,22 @@ namespace org.activiti.engine
         /// <summary>
         /// Creates a new <seealso cref="IExecutionQuery"/> instance, that can be used to query the executions and process instances.
         /// </summary>
-        IExecutionQuery createExecutionQuery();
+        IExecutionQuery CreateExecutionQuery();
 
         /// <summary>
         /// creates a new <seealso cref="INativeExecutionQuery"/> to query <seealso cref="IExecution"/>s by SQL directly
         /// </summary>
-        INativeExecutionQuery createNativeExecutionQuery();
+        INativeExecutionQuery CreateNativeExecutionQuery();
 
         /// <summary>
         /// Creates a new <seealso cref="IProcessInstanceQuery"/> instance, that can be used to query process instances.
         /// </summary>
-        IProcessInstanceQuery createProcessInstanceQuery();
+        IProcessInstanceQuery CreateProcessInstanceQuery();
 
         /// <summary>
         /// creates a new <seealso cref="INativeProcessInstanceQuery"/> to query <seealso cref="IProcessInstance"/>s by SQL directly
         /// </summary>
-        INativeProcessInstanceQuery createNativeProcessInstanceQuery();
+        INativeProcessInstanceQuery CreateNativeProcessInstanceQuery();
 
         // Process instance state //////////////////////////////////////////
 
@@ -906,7 +913,7 @@ namespace org.activiti.engine
         ///           if no such processInstance can be found. </exception>
         /// <exception cref="ActivitiException">
         ///           the process instance is already in state suspended. </exception>
-        void suspendProcessInstanceById(string processInstanceId);
+        void SuspendProcessInstanceById(string processInstanceId);
 
         /// <summary>
         /// Activates the process instance with the given id.
@@ -917,7 +924,7 @@ namespace org.activiti.engine
         ///           if no such processInstance can be found. </exception>
         /// <exception cref="ActivitiException">
         ///           if the process instance is already in state active. </exception>
-        void activateProcessInstanceById(string processInstanceId);
+        void ActivateProcessInstanceById(string processInstanceId);
 
         // Events
         // ////////////////////////////////////////////////////////////////////////
@@ -930,12 +937,12 @@ namespace org.activiti.engine
         /// </summary>
         /// <param name="signalName">
         ///          the name of the signal event </param>
-        void signalEventReceived(string signalName);
+        void SignalEventReceived(string signalName);
 
         /// <summary>
         /// Similar to <seealso cref="#signalEventReceived(String)"/>, but within the context of one tenant.
         /// </summary>
-        void signalEventReceivedWithTenantId(string signalName, string tenantId);
+        void SignalEventReceivedWithTenantId(string signalName, string tenantId);
 
         /// <summary>
         /// Notifies the process engine that a signal event of name 'signalName' has been received. This method delivers the signal to all executions waiting on the signal.
@@ -943,12 +950,12 @@ namespace org.activiti.engine
         /// </summary>
         /// <param name="signalName">
         ///          the name of the signal event </param>
-        void signalEventReceivedAsync(string signalName);
+        void SignalEventReceivedAsync(string signalName);
 
         /// <summary>
         /// Similar to <seealso cref="#signalEventReceivedAsync(String)"/>, but within the context of one tenant.
         /// </summary>
-        void signalEventReceivedAsyncWithTenantId(string signalName, string tenantId);
+        void SignalEventReceivedAsyncWithTenantId(string signalName, string tenantId);
 
         /// <summary>
         /// Notifies the process engine that a signal event of name 'signalName' has been received. This method delivers the signal to all executions waiting on the signal.
@@ -960,12 +967,12 @@ namespace org.activiti.engine
         ///          the name of the signal event </param>
         /// <param name="processVariables">
         ///          a map of variables added to the execution(s) </param>
-        void signalEventReceived(string signalName, IDictionary<string, object> processVariables);
+        void SignalEventReceived(string signalName, IDictionary<string, object> processVariables);
 
         /// <summary>
         /// Similar to <seealso cref="#signalEventReceived(String, Map<String, Object>)"/>, but within the context of one tenant.
         /// </summary>
-        void signalEventReceivedWithTenantId(string signalName, IDictionary<string, object> processVariables, string tenantId);
+        void SignalEventReceivedWithTenantId(string signalName, IDictionary<string, object> processVariables, string tenantId);
 
         /// <summary>
         /// Notifies the process engine that a signal event of name 'signalName' has been received. This method delivers the signal to a single execution, being the execution referenced by 'executionId'. The
@@ -979,7 +986,7 @@ namespace org.activiti.engine
         ///           if no such execution exists. </exception>
         /// <exception cref="ActivitiException">
         ///           if the execution has not subscribed to the signal. </exception>
-        void signalEventReceived(string signalName, string executionId);
+        void SignalEventReceived(string signalName, string executionId);
 
         /// <summary>
         /// Notifies the process engine that a signal event of name 'signalName' has been received. This method delivers the signal to a single execution, being the execution referenced by 'executionId'. The
@@ -995,7 +1002,7 @@ namespace org.activiti.engine
         ///           if no such execution exists. </exception>
         /// <exception cref="ActivitiException">
         ///           if the execution has not subscribed to the signal </exception>
-        void signalEventReceived(string signalName, string executionId, IDictionary<string, object> processVariables);
+        void SignalEventReceived(string signalName, string executionId, IDictionary<string, object> processVariables);
 
         /// <summary>
         /// Notifies the process engine that a signal event of name 'signalName' has been received. This method delivers the signal to a single execution, being the execution referenced by 'executionId'. The
@@ -1009,7 +1016,7 @@ namespace org.activiti.engine
         ///           if no such execution exists. </exception>
         /// <exception cref="ActivitiException">
         ///           if the execution has not subscribed to the signal. </exception>
-        void signalEventReceivedAsync(string signalName, string executionId);
+        void SignalEventReceivedAsync(string signalName, string executionId);
 
         /// <summary>
         /// Notifies the process engine that a message event with name 'messageName' has been received and has been correlated to an execution with id 'executionId'.
@@ -1024,7 +1031,7 @@ namespace org.activiti.engine
         ///           if no such execution exists. </exception>
         /// <exception cref="ActivitiException">
         ///           if the execution has not subscribed to the signal </exception>
-        void messageEventReceived(string messageName, string executionId);
+        void MessageEventReceived(string messageName, string executionId);
 
         /// <summary>
         /// Notifies the process engine that a message event with the name 'messageName' has been received and has been correlated to an execution with id 'executionId'.
@@ -1056,7 +1063,7 @@ namespace org.activiti.engine
         ///           if no such execution exists. </exception>
         /// <exception cref="ActivitiException">
         ///           if the execution has not subscribed to the signal </exception>
-        void messageEventReceived(string messageName, string executionId, IDictionary<string, object> processVariables);
+        void MessageEventReceived(string messageName, string executionId, IDictionary<string, object> processVariables);
 
         /// <summary>
         /// Notifies the process engine that a message event with the name 'messageName' has been received and has been correlated to an execution with id 'executionId'.
@@ -1071,14 +1078,14 @@ namespace org.activiti.engine
         ///           if no such execution exists. </exception>
         /// <exception cref="ActivitiException">
         ///           if the execution has not subscribed to the signal </exception>
-        void messageEventReceivedAsync(string messageName, string executionId);
+        void MessageEventReceivedAsync(string messageName, string executionId);
 
         /// <summary>
         /// Adds an event-listener which will be notified of ALL events by the dispatcher.
         /// </summary>
         /// <param name="listenerToAdd">
         ///          the listener to add </param>
-        void addEventListener(IActivitiEventListener listenerToAdd);
+        void AddEventListener(IActivitiEventListener listenerToAdd);
 
         /// <summary>
         /// Adds an event-listener which will only be notified when an event occurs, which type is in the given types.
@@ -1087,14 +1094,14 @@ namespace org.activiti.engine
         ///          the listener to add </param>
         /// <param name="types">
         ///          types of events the listener should be notified for </param>
-        void addEventListener(IActivitiEventListener listenerToAdd, params ActivitiEventType[] types);
+        void AddEventListener(IActivitiEventListener listenerToAdd, params ActivitiEventType[] types);
 
         /// <summary>
         /// Removes the given listener from this dispatcher. The listener will no longer be notified, regardless of the type(s) it was registered for in the first place.
         /// </summary>
         /// <param name="listenerToRemove">
         ///          listener to remove </param>
-        void removeEventListener(IActivitiEventListener listenerToRemove);
+        void RemoveEventListener(IActivitiEventListener listenerToRemove);
 
         /// <summary>
         /// Dispatches the given event to any listeners that are registered.
@@ -1106,7 +1113,7 @@ namespace org.activiti.engine
         ///           if an exception occurs when dispatching the event or when the <seealso cref="IActivitiEventDispatcher"/> is disabled. </exception>
         /// <exception cref="ActivitiIllegalArgumentException">
         ///           when the given event is not suitable for dispatching. </exception>
-        void dispatchEvent(IActivitiEvent @event);
+        void DispatchEvent(IActivitiEvent @event);
 
         /// <summary>
         /// Sets the name for the process instance with the given id.
@@ -1117,7 +1124,7 @@ namespace org.activiti.engine
         ///          new name for the process instance </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the given process instance does not exist. </exception>
-        void setProcessInstanceName(string processInstanceId, string name);
+        void SetProcessInstanceName(string processInstanceId, string name);
 
         /// <summary>
         /// Gets enabled activities from ad-hoc sub process
@@ -1125,7 +1132,7 @@ namespace org.activiti.engine
         /// <param name="executionId">
         ///          id of the execution that has an ad-hoc sub process as current flow element </param>
         /// <returns> a list of enabled activities </returns>
-        IList<FlowNode> getEnabledActivitiesFromAdhocSubProcess(string executionId);
+        IList<FlowNode> GetEnabledActivitiesFromAdhocSubProcess(string executionId);
 
         /// <summary>
         /// Executes an activity in a ad-hoc sub process
@@ -1135,18 +1142,17 @@ namespace org.activiti.engine
         /// <param name="activityId">
         ///          id of the activity id to enable </param>
         /// <returns> the newly created execution of the enabled activity </returns>
-        IExecution executeActivityInAdhocSubProcess(string executionId, string activityId);
+        IExecution ExecuteActivityInAdhocSubProcess(string executionId, string activityId);
 
         /// <summary>
         /// Completes the ad-hoc sub process
         /// </summary>
         /// <param name="executionId">
         ///          id of the execution that has an ad-hoc sub process as current flow element </param>
-        void completeAdhocSubProcess(string executionId);
+        void CompleteAdhocSubProcess(string executionId);
 
         /// <summary>
         /// The all events related to the given Process Instance. </summary>
-        IList<Event> getProcessInstanceEvents(string processInstanceId);
-
+        IList<Event> GetProcessInstanceEvents(string processInstanceId);
     }
 }

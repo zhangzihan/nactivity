@@ -31,9 +31,9 @@ namespace org.activiti.engine.impl.jobexecutor
             }
         }
 
-        public virtual void execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
+        public virtual void Execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
         {
-            Context.Agenda.planContinueProcessSynchronousOperation(execution);
+            Context.Agenda.PlanContinueProcessSynchronousOperation(execution);
         }
 
     }

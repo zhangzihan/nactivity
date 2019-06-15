@@ -20,12 +20,13 @@ namespace org.activiti.engine.impl.bpmn.behavior
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate;
     using org.activiti.engine.impl.bpmn.helper;
+    using org.activiti.engine.impl.cmd;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.@delegate;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
-    using Sys;
-    using System.Linq;
+    using Sys.Workflow;
+    using System.Collections;
 
     /// <summary>
     /// Implementation of the multi-instance functionality as described in the BPMN 2.0 spec.
@@ -44,6 +45,8 @@ namespace org.activiti.engine.impl.bpmn.behavior
         private static readonly ILogger<MultiInstanceActivityBehavior> log = ProcessEngineServiceProvider.LoggerService<MultiInstanceActivityBehavior>();
 
         private const long serialVersionUID = 1L;
+
+        protected IMultiinstanceCompletedPolicy completedPolicy;
 
         // Variable names for outer instance(as described in spec)
         internal static readonly string NUMBER_OF_INSTANCES = "nrOfInstances";
@@ -69,52 +72,48 @@ namespace org.activiti.engine.impl.bpmn.behavior
         {
             this.activity = activity;
             InnerActivityBehavior = innerActivityBehavior;
+            completedPolicy = new DefaultMultiInstanceCompletedPolicy();
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
-            if (getLocalLoopVariable(execution, CollectionElementIndexVariable) == null)
+            if (!GetLocalLoopVariable(execution, CollectionElementIndexVariable).HasValue)
             {
-
                 int nrOfInstances = 0;
 
                 try
                 {
-                    nrOfInstances = createInstances(execution);
+                    nrOfInstances = CreateInstances(execution);
                 }
                 catch (BpmnError error)
                 {
-                    ErrorPropagation.propagateError(error, execution);
+                    ErrorPropagation.PropagateError(error, execution);
                 }
 
                 if (nrOfInstances == 0)
                 {
-                    base.leave(execution);
+                    base.Leave(execution);
                 }
-
             }
             else
             {
-                Context.CommandContext.HistoryManager.recordActivityStart(execution);
+                Context.CommandContext.HistoryManager.RecordActivityStart(execution);
 
-                innerActivityBehavior.execute(execution);
+                innerActivityBehavior.Execute(execution);
             }
         }
 
-        protected internal abstract int createInstances(IExecutionEntity execution);
+        protected internal abstract int CreateInstances(IExecutionEntity execution);
 
-        protected internal virtual void executeCompensationBoundaryEvents(FlowElement flowElement, IExecutionEntity execution)
+        protected internal virtual void ExecuteCompensationBoundaryEvents(FlowElement flowElement, IExecutionEntity execution)
         {
-
             //Execute compensation boundary events
-            ICollection<BoundaryEvent> boundaryEvents = findBoundaryEventsForFlowNode(execution.ProcessDefinitionId, flowElement);
+            ICollection<BoundaryEvent> boundaryEvents = FindBoundaryEventsForFlowNode(execution.ProcessDefinitionId, flowElement);
             if (CollectionUtil.IsNotEmpty(boundaryEvents))
             {
-
                 // The parent execution becomes a scope, and a child execution is created for each of the boundary events
                 foreach (BoundaryEvent boundaryEvent in boundaryEvents)
                 {
-
                     if (CollectionUtil.IsEmpty(boundaryEvent.EventDefinitions))
                     {
                         continue;
@@ -122,29 +121,29 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
                     if (boundaryEvent.EventDefinitions[0] is CompensateEventDefinition)
                     {
-                        IExecutionEntity childExecutionEntity = Context.CommandContext.ExecutionEntityManager.createChildExecution(execution);
+                        IExecutionEntity childExecutionEntity = Context.CommandContext.ExecutionEntityManager.CreateChildExecution(execution);
                         childExecutionEntity.ParentId = execution.Id;
                         childExecutionEntity.CurrentFlowElement = boundaryEvent;
                         childExecutionEntity.IsScope = false;
 
                         IActivityBehavior boundaryEventBehavior = ((IActivityBehavior)boundaryEvent.Behavior);
-                        boundaryEventBehavior.execute(childExecutionEntity);
+                        boundaryEventBehavior.Execute(childExecutionEntity);
                     }
                 }
             }
         }
 
 
-        protected internal override ICollection<BoundaryEvent> findBoundaryEventsForFlowNode(string processDefinitionId, FlowElement flowElement)
+        protected internal override ICollection<BoundaryEvent> FindBoundaryEventsForFlowNode(string processDefinitionId, FlowElement flowElement)
         {
-            Process process = getProcessDefinition(processDefinitionId);
+            Process process = GetProcessDefinition(processDefinitionId);
 
             // This could be cached or could be done at parsing time
             IList<BoundaryEvent> results = new List<BoundaryEvent>(1);
-            ICollection<BoundaryEvent> boundaryEvents = process.findFlowElementsOfType<BoundaryEvent>(true);
+            ICollection<BoundaryEvent> boundaryEvents = process.FindFlowElementsOfType<BoundaryEvent>(true);
             foreach (BoundaryEvent boundaryEvent in boundaryEvents)
             {
-                if (!ReferenceEquals(boundaryEvent.AttachedToRefId, null) && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
+                if (!(boundaryEvent.AttachedToRefId is null) && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
                 {
                     results.Add(boundaryEvent);
                 }
@@ -152,47 +151,47 @@ namespace org.activiti.engine.impl.bpmn.behavior
             return results;
         }
 
-        protected internal override Process getProcessDefinition(string processDefinitionId)
+        protected internal override Process GetProcessDefinition(string processDefinitionId)
         {
-            return ProcessDefinitionUtil.getProcess(processDefinitionId);
+            return ProcessDefinitionUtil.GetProcess(processDefinitionId);
         }
 
         // Intercepts signals, and delegates it to the wrapped {@link ActivityBehavior}.
-        public override void trigger(IExecutionEntity execution, string signalName, object signalData)
+        public override void Trigger(IExecutionEntity execution, string signalName, object signalData, bool throwError = true)
         {
-            innerActivityBehavior.trigger(execution, signalName, signalData);
+            innerActivityBehavior.Trigger(execution, signalName, signalData, throwError);
         }
 
         // required for supporting embedded subprocesses
-        public virtual void lastExecutionEnded(IExecutionEntity execution)
+        public virtual void LastExecutionEnded(IExecutionEntity execution)
         {
             //ScopeUtil.createEventScopeExecution((ExecutionEntity) execution);
-            leave(execution);
+            Leave(execution);
         }
 
         // required for supporting external subprocesses
-        public virtual void completing(IExecutionEntity execution, IExecutionEntity subProcessInstance)
+        public virtual void Completing(IExecutionEntity execution, IExecutionEntity subProcessInstance)
         {
         }
 
         // required for supporting external subprocesses
-        public virtual void completed(IExecutionEntity execution)
+        public virtual void Completed(IExecutionEntity execution)
         {
-            leave(execution);
+            Leave(execution);
         }
 
         // Helpers
         // //////////////////////////////////////////////////////////////////////
-        protected internal virtual int resolveNrOfInstances(IExecutionEntity execution)
+        protected internal virtual int ResolveNrOfInstances(IExecutionEntity execution)
         {
             if (loopCardinalityExpression != null)
             {
-                return resolveLoopCardinality(execution);
+                return ResolveLoopCardinality(execution);
 
             }
-            else if (usesCollection())
+            else if (UsesCollection())
             {
-                System.Collections.ICollection collection = resolveAndValidateCollection(execution);
+                ICollection collection = ResolveAndValidateCollection(execution);
                 return collection.Count;
 
             }
@@ -202,15 +201,15 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
         }
 
-        protected internal virtual void executeOriginalBehavior(IExecutionEntity execution, int loopCounter)
+        protected internal virtual void ExecuteOriginalBehavior(IExecutionEntity execution, int loopCounter)
         {
-            if (usesCollection() && !ReferenceEquals(collectionElementVariable, null))
+            if (UsesCollection() && !(collectionElementVariable is null))
             {
-                System.Collections.ICollection collection = (System.Collections.ICollection)resolveCollection(execution);
+                ICollection collection = (ICollection)ResolveCollection(execution);
 
                 object value = null;
                 int index = 0;
-                System.Collections.IEnumerator it = collection.GetEnumerator();
+                IEnumerator it = collection.GetEnumerator();
                 while (it.MoveNext())
                 {
                     value = it.Current;
@@ -220,32 +219,32 @@ namespace org.activiti.engine.impl.bpmn.behavior
                     }
                     index++;
                 }
-                setLoopVariable(execution, collectionElementVariable, value);
+                SetLoopVariable(execution, collectionElementVariable, value);
             }
 
             execution.CurrentFlowElement = activity;
-            Context.Agenda.planContinueMultiInstanceOperation(execution);
+            Context.Agenda.PlanContinueMultiInstanceOperation(execution);
         }
 
-        protected internal virtual System.Collections.ICollection resolveAndValidateCollection(IExecutionEntity execution)
+        protected internal virtual ICollection ResolveAndValidateCollection(IExecutionEntity execution)
         {
-            object obj = resolveCollection(execution);
-            if (collectionExpression != null)
+            object obj = ResolveCollection(execution);
+            if (!(collectionExpression is null))
             {
-                if (!(obj is System.Collections.ICollection))
+                if (!(obj is ICollection))
                 {
                     throw new ActivitiIllegalArgumentException(collectionExpression.ExpressionText + "' didn't resolve to a Collection");
                 }
 
             }
-            else if (!ReferenceEquals(collectionVariable, null))
+            else if (!(collectionVariable is null))
             {
-                if (obj == null)
+                if (obj is null)
                 {
                     throw new ActivitiIllegalArgumentException("Variable " + collectionVariable + " is not found");
                 }
 
-                if (!(obj is System.Collections.ICollection))
+                if (!(obj is ICollection))
                 {
                     throw new ActivitiIllegalArgumentException("Variable " + collectionVariable + "' is not a Collection");
                 }
@@ -255,47 +254,44 @@ namespace org.activiti.engine.impl.bpmn.behavior
             {
                 throw new ActivitiIllegalArgumentException("Couldn't resolve collection expression nor variable reference");
             }
-            return (System.Collections.ICollection)obj;
+            return (ICollection)obj;
         }
 
-        protected internal virtual object resolveCollection(IExecutionEntity execution)
+        protected internal virtual object ResolveCollection(IExecutionEntity execution)
         {
-            object collection = null;
             if (collectionExpression != null)
             {
-                collection = collectionExpression.getValue(execution);
-
+                return collectionExpression.GetValue(execution);
             }
-            else if (!ReferenceEquals(collectionVariable, null))
+            else if (!(collectionVariable is null))
             {
-                collection = execution.getVariable(collectionVariable);
+                return execution.GetVariable(collectionVariable);
             }
-            return collection;
+            return null;
         }
 
-        protected internal virtual bool usesCollection()
+        protected internal virtual bool UsesCollection()
         {
-            return collectionExpression != null || !ReferenceEquals(collectionVariable, null);
+            return collectionExpression != null || !(collectionVariable is null);
         }
 
-        protected internal virtual bool isExtraScopeNeeded(FlowNode flowNode)
+        protected internal virtual bool IsExtraScopeNeeded(FlowNode flowNode)
         {
             return flowNode.SubProcess != null;
         }
 
-        protected internal virtual int resolveLoopCardinality(IExecutionEntity execution)
+        protected internal virtual int ResolveLoopCardinality(IExecutionEntity execution)
         {
             // Using Number since expr can evaluate to eg. Long (which is also the default for Juel)
-            object value = loopCardinalityExpression.getValue(execution);
-            if (value is Int32 || value is Int16 || value is Int64)
+            object value = loopCardinalityExpression.GetValue(execution);
+            if (value is int || value is short || value is long)
             {
                 return (int)value;
 
             }
             else if (value is string)
             {
-                return Convert.ToInt32((string)value);
-
+                return Convert.ToInt32(value.ToString());
             }
             else
             {
@@ -303,63 +299,54 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
         }
 
-        protected internal virtual bool completionConditionSatisfied(IExecutionEntity execution)
+        protected internal virtual bool CompletionConditionSatisfied(IExecutionEntity execution, object signalData)
         {
-            if (completionConditionExpression != null)
-            {
-                object value = completionConditionExpression.getValue(execution);
-                if (!(value is bool?))
-                {
-                    throw new ActivitiIllegalArgumentException("completionCondition '" + completionConditionExpression.ExpressionText + "' does not evaluate to a boolean value");
-                }
-
-                bool? booleanValue = (bool?)value;
-                if (log.IsEnabled(LogLevel.Debug))
-                {
-                    log.LogDebug($"Completion condition of multi-instance satisfied: {booleanValue}");
-                }
-                return booleanValue.Value;
-            }
-            return false;
+            return completedPolicy.CompletionConditionSatisfied(execution, this, signalData);
         }
 
-        protected internal virtual void setLoopVariable(IExecutionEntity execution, string variableName, object value)
+        protected internal virtual void SetLoopVariable(IExecutionEntity execution, string variableName, object value)
         {
-            execution.setVariableLocal(variableName, value);
+            execution.SetVariableLocal(variableName, value);
         }
 
-        protected internal virtual int? getLoopVariable(IExecutionEntity execution, string variableName)
+        protected internal virtual int? GetLoopVariable(IExecutionEntity execution, string variableName)
         {
-            object value = execution.getVariableLocal(variableName);
+            object value = execution.GetVariableLocal(variableName);
             IExecutionEntity parent = execution.Parent;
             while (value == null && parent != null)
             {
-                value = parent.getVariableLocal(variableName);
+                value = parent.GetVariableLocal(variableName);
                 parent = parent.Parent;
             }
-            return (int?)(value != null ? value : 0);
+            return (int?)value;
         }
 
-        protected internal virtual int? getLocalLoopVariable(IExecutionEntity execution, string variableName)
+        protected internal virtual int? GetLocalLoopVariable(IExecutionEntity execution, string variableName)
         {
-            return (int?)execution.getVariableLocal(variableName);
+            object value = execution.GetVariableLocal(variableName);
+            if (!(value is int?))
+            {
+                return null;
+            }
+
+            return (int?)value;
         }
 
-        protected internal virtual void removeLocalLoopVariable(IExecutionEntity execution, string variableName)
+        protected internal virtual void RemoveLocalLoopVariable(IExecutionEntity execution, string variableName)
         {
-            execution.removeVariableLocal(variableName);
+            execution.RemoveVariableLocal(variableName);
         }
 
         /// <summary>
         /// Since no transitions are followed when leaving the inner activity, it is needed to call the end listeners yourself.
         /// </summary>
-        protected internal virtual void callActivityEndListeners(IExecutionEntity execution)
+        protected internal virtual void CallActivityEndListeners(IExecutionEntity execution)
         {
             Context.CommandContext.ProcessEngineConfiguration.ListenerNotificationHelper
-                .executeExecutionListeners(activity, execution, BaseExecutionListener_Fields.EVENTNAME_END);
+                .ExecuteExecutionListeners(activity, execution, BaseExecutionListenerFields.EVENTNAME_END);
         }
 
-        protected internal virtual void logLoopDetails(IExecutionEntity execution, string custom, int loopCounter, int nrOfCompletedInstances, int nrOfActiveInstances, int nrOfInstances)
+        protected internal virtual void LogLoopDetails(IExecutionEntity execution, string custom, int loopCounter, int nrOfCompletedInstances, int nrOfActiveInstances, int nrOfInstances)
         {
             if (log.IsEnabled(LogLevel.Debug))
             {
@@ -367,22 +354,9 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
         }
 
-        protected internal virtual IExecutionEntity getMultiInstanceRootExecution(IExecutionEntity executionEntity)
+        protected internal virtual IExecutionEntity GetMultiInstanceRootExecution(IExecutionEntity executionEntity)
         {
-            IExecutionEntity multiInstanceRootExecution = null;
-            IExecutionEntity currentExecution = executionEntity;
-            while (currentExecution != null && multiInstanceRootExecution == null && currentExecution.Parent != null)
-            {
-                if (currentExecution.IsMultiInstanceRoot)
-                {
-                    multiInstanceRootExecution = currentExecution;
-                }
-                else
-                {
-                    currentExecution = currentExecution.Parent;
-                }
-            }
-            return multiInstanceRootExecution;
+            return Context.ProcessEngineConfiguration.CommandExecutor.Execute(new GetMultiInstanceRootExecutionCmd(executionEntity));
         }
 
         // Getters and Setters
@@ -478,7 +452,5 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 return innerActivityBehavior;
             }
         }
-
     }
-
 }

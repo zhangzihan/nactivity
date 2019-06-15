@@ -29,9 +29,9 @@ namespace org.activiti.engine.impl.cmd.integration
             this.integrationContext = integrationContext;
         }
 
-        public  virtual IIntegrationContextEntity  execute(ICommandContext  commandContext)
+        public  virtual IIntegrationContextEntity  Execute(ICommandContext  commandContext)
         {
-            commandContext.ProcessEngineConfiguration.IntegrationContextManager.delete(integrationContext);
+            commandContext.ProcessEngineConfiguration.IntegrationContextManager.Delete(integrationContext);
             return integrationContext;
         }
     }

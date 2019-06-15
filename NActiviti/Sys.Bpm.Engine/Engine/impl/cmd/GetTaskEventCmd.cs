@@ -37,9 +37,9 @@ namespace org.activiti.engine.impl.cmd
             }
         }
 
-        public  virtual IEvent  execute(ICommandContext  commandContext)
+        public  virtual IEvent  Execute(ICommandContext  commandContext)
         {
-            return commandContext.CommentEntityManager.findEvent(eventId);
+            return commandContext.CommentEntityManager.FindEvent(eventId);
         }
     }
 

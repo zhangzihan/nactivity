@@ -15,9 +15,10 @@
 namespace org.activiti.bpmn.converter.child
 {
     using Microsoft.Extensions.Logging;
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
-    using Sys.Bpm;
+    using Sys.Bpm.Model;
 
     /// 
     public class FieldExtensionParser : BaseChildElementParser
@@ -28,34 +29,34 @@ namespace org.activiti.bpmn.converter.child
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_FIELD;
+                return BpmnXMLConstants.ELEMENT_FIELD;
             }
         }
 
-        public override bool accepts(BaseElement element)
+        public override bool Accepts(BaseElement element)
         {
             return ((element is ActivitiListener) || (element is ServiceTask) || (element is SendTask));
         }
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
 
-            if (!accepts(parentElement))
+            if (!Accepts(parentElement))
             {
                 return;
             }
 
             FieldExtension extension = new FieldExtension();
-            BpmnXMLUtil.addXMLLocation(extension, xtr);
-            extension.FieldName = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FIELD_NAME);
+            BpmnXMLUtil.AddXMLLocation(extension, xtr);
+            extension.FieldName = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FIELD_NAME);
 
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FIELD_STRING)))
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FIELD_STRING)))
             {
-                extension.StringValue = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FIELD_STRING);
+                extension.StringValue = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FIELD_STRING);
 
             }
-            else if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FIELD_EXPRESSION)))
+            else if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FIELD_EXPRESSION)))
             {
-                extension.Expression = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FIELD_EXPRESSION);
+                extension.Expression = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FIELD_EXPRESSION);
 
             }
             else
@@ -63,16 +64,16 @@ namespace org.activiti.bpmn.converter.child
                 bool readyWithFieldExtension = false;
                 try
                 {
-                    while (readyWithFieldExtension == false && xtr.hasNext())
+                    while (readyWithFieldExtension == false && xtr.HasNext())
                     {
                         //xtr.next();
 
-                        if (xtr.IsStartElement() && org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_FIELD_STRING.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                        if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_FIELD_STRING.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                         {
                             extension.StringValue = xtr.ElementText.Trim();
 
                         }
-                        else if (xtr.IsStartElement() && org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FIELD_EXPRESSION.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                        else if (xtr.IsStartElement() && BpmnXMLConstants.ATTRIBUTE_FIELD_EXPRESSION.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                         {
                             extension.Expression = xtr.ElementText.Trim();
 

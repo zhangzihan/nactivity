@@ -19,62 +19,62 @@ namespace org.activiti.engine.impl.bpmn.listener
 
     /// 
     public class TransactionDependentTaskListenerExecutionScope
-	{
+    {
 
-	  protected internal readonly string processInstanceId;
-	  protected internal readonly string executionId;
-	  protected internal readonly Task task;
-	  protected internal readonly IDictionary<string, object> executionVariables;
-	  protected internal readonly IDictionary<string, object> customPropertiesMap;
+        protected internal readonly string processInstanceId;
+        protected internal readonly string executionId;
+        protected internal readonly TaskActivity task;
+        protected internal readonly IDictionary<string, object> executionVariables;
+        protected internal readonly IDictionary<string, object> customPropertiesMap;
 
-	  public TransactionDependentTaskListenerExecutionScope(string processInstanceId, string executionId, Task task, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap)
-	  {
-		this.processInstanceId = processInstanceId;
-		this.executionId = executionId;
-		this.task = task;
-		this.executionVariables = executionVariables;
-		this.customPropertiesMap = customPropertiesMap;
-	  }
+        public TransactionDependentTaskListenerExecutionScope(string processInstanceId, string executionId, TaskActivity task, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap)
+        {
+            this.processInstanceId = processInstanceId;
+            this.executionId = executionId;
+            this.task = task;
+            this.executionVariables = executionVariables;
+            this.customPropertiesMap = customPropertiesMap;
+        }
 
-	  public virtual string ProcessInstanceId
-	  {
-		  get
-		  {
-			return processInstanceId;
-		  }
-	  }
+        public virtual string ProcessInstanceId
+        {
+            get
+            {
+                return processInstanceId;
+            }
+        }
 
-	  public virtual string ExecutionId
-	  {
-		  get
-		  {
-			return executionId;
-		  }
-	  }
+        public virtual string ExecutionId
+        {
+            get
+            {
+                return executionId;
+            }
+        }
 
-	  public virtual Task Task
-	  {
-		  get
-		  {
-			return task;
-		  }
-	  }
+        public virtual TaskActivity Task
+        {
+            get
+            {
+                return task;
+            }
+        }
 
-	  public virtual IDictionary<string, object> ExecutionVariables
-	  {
-		  get
-		  {
-			return executionVariables;
-		  }
-	  }
+        public virtual IDictionary<string, object> ExecutionVariables
+        {
+            get
+            {
+                return executionVariables;
+            }
+        }
 
-	  public virtual IDictionary<string, object> CustomPropertiesMap
-	  {
-		  get
-		  {
-			return customPropertiesMap;
-		  }
-	  }
-	}
+        public virtual IDictionary<string, object> CustomPropertiesMap
+        {
+            get
+            {
+                return customPropertiesMap;
+            }
+        }
+    }
 
 }

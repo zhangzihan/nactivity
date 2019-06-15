@@ -23,13 +23,13 @@ namespace org.activiti.engine.debug
     public class ExecutionTreeUtil
     {
 
-        public static ExecutionTree buildExecutionTree(IExecutionEntity executionEntity)
+        public static ExecutionTree BuildExecutionTree(IExecutionEntity executionEntity)
         {
             // Find highest parent
             IExecutionEntity parentExecution = executionEntity;
-            while (!ReferenceEquals(parentExecution.ParentId, null) || !ReferenceEquals(((IExecution)parentExecution).SuperExecutionId, null))
+            while (!(parentExecution.ParentId is null) || !(((IExecution)parentExecution).SuperExecutionId is null))
             {
-                if (!ReferenceEquals(parentExecution.ParentId, null))
+                if (!(parentExecution.ParentId is null))
                 {
                     parentExecution = parentExecution.Parent;
                 }
@@ -40,28 +40,30 @@ namespace org.activiti.engine.debug
             }
 
             // Collect all child executions now we have the parent
-            IList<IExecutionEntity> allExecutions = new List<IExecutionEntity>();
-            allExecutions.Add(parentExecution);
-            collectChildExecutions(parentExecution, allExecutions);
-            return buildExecutionTree(allExecutions);
+            IList<IExecutionEntity> allExecutions = new List<IExecutionEntity>
+            {
+                parentExecution
+            };
+            CollectChildExecutions(parentExecution, allExecutions);
+            return BuildExecutionTree(allExecutions);
         }
 
-        protected internal static void collectChildExecutions(IExecutionEntity rootExecutionEntity, IList<IExecutionEntity> allExecutions)
+        protected internal static void CollectChildExecutions(IExecutionEntity rootExecutionEntity, IList<IExecutionEntity> allExecutions)
         {
             foreach (IExecutionEntity childExecutionEntity in rootExecutionEntity.Executions)
             {
                 allExecutions.Add(childExecutionEntity);
-                collectChildExecutions(childExecutionEntity, allExecutions);
+                CollectChildExecutions(childExecutionEntity, allExecutions);
             }
 
             if (rootExecutionEntity.SubProcessInstance != null)
             {
                 allExecutions.Add(rootExecutionEntity.SubProcessInstance);
-                collectChildExecutions(rootExecutionEntity.SubProcessInstance, allExecutions);
+                CollectChildExecutions(rootExecutionEntity.SubProcessInstance, allExecutions);
             }
         }
 
-        public static ExecutionTree buildExecutionTree(ICollection<IExecutionEntity> executions)
+        public static ExecutionTree BuildExecutionTree(ICollection<IExecutionEntity> executions)
         {
             ExecutionTree executionTree = new ExecutionTree();
 
@@ -72,12 +74,12 @@ namespace org.activiti.engine.debug
                 string parentId = executionEntity.ParentId;
 
                 // Support for call activity
-                if (ReferenceEquals(parentId, null))
+                if (parentId is null)
                 {
                     parentId = ((IExecution)executionEntity).SuperExecutionId;
                 }
 
-                if (!ReferenceEquals(parentId, null))
+                if (!(parentId is null))
                 {
                     if (!parentMapping.ContainsKey(parentId))
                     {
@@ -85,17 +87,17 @@ namespace org.activiti.engine.debug
                     }
                     parentMapping[parentId].Add(executionEntity);
                 }
-                else if (ReferenceEquals(((IExecution)executionEntity).SuperExecutionId, null))
+                else if (((IExecution)executionEntity).SuperExecutionId is null)
                 {
                     executionTree.Root = new ExecutionTreeNode(executionEntity);
                 }
             }
 
-            fillExecutionTree(executionTree, parentMapping);
+            FillExecutionTree(executionTree, parentMapping);
             return executionTree;
         }
 
-        public static ExecutionTree buildExecutionTreeForProcessInstance(ICollection<IExecutionEntity> executions)
+        public static ExecutionTree BuildExecutionTreeForProcessInstance(ICollection<IExecutionEntity> executions)
         {
             ExecutionTree executionTree = new ExecutionTree();
             if (executions.Count == 0)
@@ -109,7 +111,7 @@ namespace org.activiti.engine.debug
             {
                 string parentId = executionEntity.ParentId;
 
-                if (!ReferenceEquals(parentId, null))
+                if (!(parentId is null))
                 {
                     if (!parentMapping.ContainsKey(parentId))
                     {
@@ -123,11 +125,11 @@ namespace org.activiti.engine.debug
                 }
             }
 
-            fillExecutionTree(executionTree, parentMapping);
+            FillExecutionTree(executionTree, parentMapping);
             return executionTree;
         }
 
-        private static void fillExecutionTree(ExecutionTreeNode parentNode, IDictionary<string, IList<IExecutionEntity>> parentMapping)
+        private static void FillExecutionTree(ExecutionTreeNode parentNode, IDictionary<string, IList<IExecutionEntity>> parentMapping)
         {
             string parentId = parentNode.ExecutionEntity.Id;
             if (parentMapping.ContainsKey(parentId))
@@ -137,25 +139,27 @@ namespace org.activiti.engine.debug
 
                 foreach (IExecutionEntity childExecutionEntity in childExecutions)
                 {
-                    ExecutionTreeNode childNode = new ExecutionTreeNode(childExecutionEntity);
-                    childNode.Parent = parentNode;
+                    ExecutionTreeNode childNode = new ExecutionTreeNode(childExecutionEntity)
+                    {
+                        Parent = parentNode
+                    };
                     childNodes.Add(childNode);
 
-                    fillExecutionTree(childNode, parentMapping);
+                    FillExecutionTree(childNode, parentMapping);
                 }
 
                 parentNode.Children = childNodes;
             }
         }
 
-        protected internal static void fillExecutionTree(ExecutionTree executionTree, IDictionary<string, IList<IExecutionEntity>> parentMapping)
+        protected internal static void FillExecutionTree(ExecutionTree executionTree, IDictionary<string, IList<IExecutionEntity>> parentMapping)
         {
             if (executionTree.Root == null)
             {
                 throw new ActivitiException("Programmatic error: the list of passed executions in the argument of the method should contain the process instance execution");
             }
 
-            fillExecutionTree(executionTree.Root, parentMapping);
+            FillExecutionTree(executionTree.Root, parentMapping);
         }
     }
 }

@@ -34,11 +34,11 @@ namespace org.activiti.engine.impl.cmd
             this.dueDate = dueDate;
         }
 
-        protected internal override object execute(ICommandContext commandContext, ITaskEntity task)
+        protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
         {
             task.DueDate = dueDate;
-            commandContext.HistoryManager.recordTaskDueDateChange(task.Id, task.DueDate.GetValueOrDefault());
-            commandContext.TaskEntityManager.update(task);
+            commandContext.HistoryManager.RecordTaskDueDateChange(task.Id, task.DueDate.GetValueOrDefault());
+            commandContext.TaskEntityManager.Update(task);
 
             return null;
         }

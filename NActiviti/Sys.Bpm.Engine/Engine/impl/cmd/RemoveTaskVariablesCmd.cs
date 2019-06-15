@@ -26,15 +26,15 @@ namespace org.activiti.engine.impl.cmd
             this.isLocal = isLocal;
         }
 
-        protected internal override object execute(ICommandContext commandContext, ITaskEntity task)
+        protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
         {
             if (isLocal)
             {
-                task.removeVariablesLocal(variableNames);
+                task.RemoveVariablesLocal(variableNames);
             }
             else
             {
-                task.removeVariables(variableNames);
+                task.RemoveVariables(variableNames);
             }
 
             return null;

@@ -133,10 +133,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            ActivitiListener clone = new ActivitiListener();
-            clone.Values = this;
+            ActivitiListener clone = new ActivitiListener
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -156,7 +158,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (FieldExtension extension in val.FieldExtensions)
                     {
-                        fieldExtensions.Add(extension.clone() as FieldExtension);
+                        fieldExtensions.Add(extension.Clone() as FieldExtension);
                     }
                 }
             }

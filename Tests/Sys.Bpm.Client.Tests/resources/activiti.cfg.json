@@ -6,19 +6,17 @@
   //数据库更新策略，true=update drop-create create
   "databaseSchemaUpdate": "false",
   //查询执行下一个异步作业作业等待时间（以毫秒为单位）
-  "asyncExecutorDefaultAsyncJobAcquireWaitTime": 1000000,
+  "asyncExecutorDefaultAsyncJobAcquireWaitTime": 5000,
   //查询执行下一个计时器作业等待时间（以毫秒为单位）
-  "asyncExecutorDefaultTimerJobAcquireWaitTime": 1000000,
+  "asyncExecutorDefaultTimerJobAcquireWaitTime": 5000,
   //用于执行异步作业在销毁之前必须保持活动状态的时间（以毫秒为单位）。
   //设置>0可以在许多作业执行的情况下避免始终创建新线程。
   //如果=0，则线程在用于执行作业后将被销毁。
   "asyncExecutorThreadKeepAliveTime": 5000,
   //是否启用异步作业执行功能,如果启用会定时轮询数据库查询定时任务
-  "asyncExecutorActivate": false,
+  "asyncExecutorActivate": true,
   //异步作业失败重试等待时间
   "asyncFailedJobWaitTime": 1,
-  //用户服务代理WEBAPI服务器地址
-  "userServiceProxyBaseUrl": "http://localhost:5005",
   //启用打印流程调用树
   "enableVerboseExecutionTreeLogging": true,
   "mailServerPort": "5025",

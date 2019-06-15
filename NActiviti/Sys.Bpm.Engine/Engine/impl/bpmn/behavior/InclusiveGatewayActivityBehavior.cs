@@ -16,13 +16,12 @@ using System.Collections.Generic;
 namespace org.activiti.engine.impl.bpmn.behavior
 {
     using Microsoft.Extensions.Logging;
-    using org.activiti.engine.@delegate;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.@delegate;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
-    using Sys;
+    using Sys.Workflow;
 
 
     /// <summary>
@@ -39,7 +38,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         private const long serialVersionUID = 1L;
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             // The join in the inclusive gateway works as follows:
             // When an execution enters it, it is inactivated.
@@ -49,23 +48,23 @@ namespace org.activiti.engine.impl.bpmn.behavior
             // This check is repeated on execution changes until the inactivated
             // executions leave the gateway.
 
-            execution.inactivate();
-            executeInclusiveGatewayLogic(execution);
+            execution.Inactivate();
+            ExecuteInclusiveGatewayLogic(execution);
         }
 
-        public virtual void executeInactive(IExecutionEntity executionEntity)
+        public virtual void ExecuteInactive(IExecutionEntity executionEntity)
         {
-            executeInclusiveGatewayLogic(executionEntity);
+            ExecuteInclusiveGatewayLogic(executionEntity);
         }
 
-        protected internal virtual void executeInclusiveGatewayLogic(IExecutionEntity execution)
+        protected internal virtual void ExecuteInclusiveGatewayLogic(IExecutionEntity execution)
         {
             ICommandContext commandContext = Context.CommandContext;
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
 
-            lockFirstParentScope(execution);
+            LockFirstParentScope(execution);
 
-            ICollection<IExecutionEntity> allExecutions = executionEntityManager.findChildExecutionsByProcessInstanceId(execution.ProcessInstanceId);
+            ICollection<IExecutionEntity> allExecutions = executionEntityManager.FindChildExecutionsByProcessInstanceId(execution.ProcessInstanceId);
             IEnumerator<IExecutionEntity> executionIterator = allExecutions.GetEnumerator();
             bool oneExecutionCanReachGateway = false;
             while (!oneExecutionCanReachGateway && executionIterator.MoveNext())
@@ -73,7 +72,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 IExecutionEntity executionEntity = executionIterator.Current;
                 if (!executionEntity.ActivityId.Equals(execution.CurrentActivityId))
                 {
-                    bool canReachGateway = ExecutionGraphUtil.isReachable(execution.ProcessDefinitionId, executionEntity.ActivityId, execution.CurrentActivityId);
+                    bool canReachGateway = ExecutionGraphUtil.IsReachable(execution.ProcessDefinitionId, executionEntity.ActivityId, execution.CurrentActivityId);
                     if (canReachGateway)
                     {
                         oneExecutionCanReachGateway = true;
@@ -92,18 +91,18 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 logger.LogDebug("Inclusive gateway cannot be reached by any execution and is activated");
 
                 // Kill all executions here (except the incoming)
-                ICollection<IExecutionEntity> executionsInGateway = executionEntityManager.findInactiveExecutionsByActivityIdAndProcessInstanceId(execution.CurrentActivityId, execution.ProcessInstanceId);
+                ICollection<IExecutionEntity> executionsInGateway = executionEntityManager.FindInactiveExecutionsByActivityIdAndProcessInstanceId(execution.CurrentActivityId, execution.ProcessInstanceId);
                 foreach (IExecutionEntity executionEntityInGateway in executionsInGateway)
                 {
                     if (!executionEntityInGateway.Id.Equals(execution.Id))
                     {
-                        commandContext.HistoryManager.recordActivityEnd(executionEntityInGateway, null);
-                        executionEntityManager.deleteExecutionAndRelatedData(executionEntityInGateway, null, false);
+                        commandContext.HistoryManager.RecordActivityEnd(executionEntityInGateway, null);
+                        executionEntityManager.DeleteExecutionAndRelatedData(executionEntityInGateway, null, false);
                     }
                 }
 
                 // Leave
-                commandContext.Agenda.planTakeOutgoingSequenceFlowsOperation(execution, true);
+                commandContext.Agenda.PlanTakeOutgoingSequenceFlowsOperation(execution, true);
             }
         }
     }

@@ -14,32 +14,43 @@ namespace org.activiti.engine.impl.db
 {
     /// 
     public class IdBlock
-	{
+    {
 
-	  internal long nextId;
-	  internal long lastId;
+        internal long nextId;
+        internal long lastId;
 
-	  public IdBlock(long nextId, long lastId)
-	  {
-		this.nextId = nextId;
-		this.lastId = lastId;
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nextId"></param>
+        /// <param name="lastId"></param>
+        public IdBlock(long nextId, long lastId)
+        {
+            this.nextId = nextId;
+            this.lastId = lastId;
+        }
 
-	  public virtual long NextId
-	  {
-		  get
-		  {
-			return nextId;
-		  }
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual long NextId
+        {
+            get
+            {
+                return nextId;
+            }
+        }
 
-	  public virtual long LastId
-	  {
-		  get
-		  {
-			return lastId;
-		  }
-	  }
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual long LastId
+        {
+            get
+            {
+                return lastId;
+            }
+        }
+    }
 
 }

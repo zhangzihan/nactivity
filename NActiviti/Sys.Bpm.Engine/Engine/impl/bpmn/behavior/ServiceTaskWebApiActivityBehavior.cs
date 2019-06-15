@@ -3,9 +3,6 @@ using org.activiti.bpmn.model;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
-using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,12 +20,18 @@ using System.Text.RegularExpressions;
 
 namespace org.activiti.engine.impl.bpmn.behavior
 {
+    using Microsoft.AspNetCore.Http;
     using Newtonsoft.Json.Linq;
+    using org.activiti.bpmn.constants;
     using org.activiti.engine.@delegate;
+    using org.activiti.engine.impl.bpmn.webservice;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.persistence.entity;
     using Sys;
+    using Sys.Net.Http;
+    using Sys.Workflow;
     using System.Net.Http;
+    using System.Threading;
 
     /// <summary>
     /// ActivityBehavior that evaluates an expression when executed. Optionally, it sets the result of the expression as a variable on the execution.
@@ -47,18 +50,13 @@ namespace org.activiti.engine.impl.bpmn.behavior
         /// </summary>
         private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
 
-        private readonly IHttpClientFactory httpClientFactory;
-
         public ServiceTaskWebApiActivityBehavior()
         {
-            httpClientFactory = ProcessEngineServiceProvider.Resolve<IHttpClientFactory>();
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
-            base.execute(execution);
-
-            execution.CurrentFlowElement.ExtensionElements.TryGetValue("property",
+            execution.CurrentFlowElement.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY,
                 out IList<ExtensionElement> pElements);
 
             if (pElements != null)
@@ -77,24 +75,70 @@ namespace org.activiti.engine.impl.bpmn.behavior
                     }
 
                     url = GetValue(contextObject, url, execution.Variables).ToString();
-                    taskRequest = GetValue(contextObject, taskRequest, execution.Variables).ToString();
+                    object parameter = GetValue(contextObject, taskRequest, execution.Variables);
 
-                    //调用外部服务
-                    HttpClient client = httpClientFactory.CreateClient();
-                    HttpRequestMessage message = new HttpRequestMessage("get".Equals(method, StringComparison.OrdinalIgnoreCase) ? HttpMethod.Get : HttpMethod.Post, url);
-                    if (string.IsNullOrWhiteSpace(taskRequest) == false)
+                    if (parameter?.GetType() == typeof(string))
                     {
-                        message.Content = new StringContent(taskRequest, Encoding.UTF8, "application/json");
-                    }
-                    HttpResponseMessage result = client.SendAsync(message).Result;
-                    if (result.EnsureSuccessStatusCode().IsSuccessStatusCode)
-                    {
-                        if (string.IsNullOrWhiteSpace(dataObj) == false)
+                        var reg = new Regex(@"(^\{(.*?)(.*?)(\})$)|(^\[(.*?)(.*?)(\])$)");
+                        if (reg.IsMatch(parameter.ToString()))
                         {
-                            JToken data = JsonConvert.DeserializeObject<JToken>(result.Content.ReadAsStringAsync().Result);
-                            execution.setVariable(dataObj, data);
+                            parameter = JsonConvert.DeserializeObject<JToken>(parameter.ToString());
+                        }
+                        else
+                        {
+                            parameter = JToken.FromObject(parameter.ToString());
                         }
                     }
+
+                    var httpProxy = ProcessEngineServiceProvider.Resolve<IServiceWebApiHttpProxy>();
+
+                    HttpContext httpContext = ProcessEngineServiceProvider.Resolve<IHttpContextAccessor>()?.HttpContext;
+
+                    if (httpContext == null)
+                    {
+                        IAccessTokenProvider accessTokenProvider = ProcessEngineServiceProvider.Resolve<IAccessTokenProvider>();
+
+                        accessTokenProvider.SetHttpClientRequestAccessToken(httpProxy.HttpClient, null, execution.TenantId);
+                    }
+
+                    switch (method?.ToLower())
+                    {
+                        default:
+                        case "get":
+                            if (string.IsNullOrWhiteSpace(dataObj))
+                            {
+                                AsyncHelper.RunSync(() => httpProxy.GetAsync(url));
+                            }
+                            else
+                            {
+                                HttpResponseMessage response = AsyncHelper.RunSync<HttpResponseMessage>(() => httpProxy.GetAsync<HttpResponseMessage>(url, CancellationToken.None));
+
+                                response.EnsureSuccessStatusCode();
+
+                                object data = JsonConvert.DeserializeObject<object>(AsyncHelper.RunSync<string>(() => response.Content.ReadAsStringAsync()));
+
+                                execution.SetVariable(dataObj, data);
+                            }
+                            break;
+                        case "post":
+                            if (string.IsNullOrWhiteSpace(dataObj))
+                            {
+                                AsyncHelper.RunSync(() => httpProxy.PostAsync(url, parameter));
+                            }
+                            else
+                            {
+                                HttpResponseMessage response = AsyncHelper.RunSync<HttpResponseMessage>(() => httpProxy.PostAsync<HttpResponseMessage>(url, parameter, CancellationToken.None));
+
+                                response.EnsureSuccessStatusCode();
+
+                                object data = JsonConvert.DeserializeObject<object>(AsyncHelper.RunSync<string>(() => response.Content.ReadAsStringAsync()));
+
+                                execution.SetVariable(dataObj, data);
+                            }
+                            break;
+                    }
+
+                    Leave(execution);
                 }
                 catch (Exception ex)
                 {
@@ -119,8 +163,8 @@ namespace org.activiti.engine.impl.bpmn.behavior
             if (EXPR_PATTERN.IsMatch(expstr))
             {
                 string vexpre = GetExpression(expstr);
-                expstr = Sys.Expressions.ExpressionManager
-                    .GetValue(contextObject, vexpre, variables).ToString();
+                return Sys.Expressions.ExpressionManager
+                    .GetValue(contextObject, vexpre, variables);
             }
 
             return expstr;
@@ -172,10 +216,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
         }
 
 
-        public override void trigger(IExecutionEntity execution, string signalEvent, object signalData)
+        public override void Trigger(IExecutionEntity execution, string signalEvent, object signalData, bool throwError = true)
         {
             //execution.setVariable();
-            base.trigger(execution, signalEvent, signalData);
+            base.Trigger(execution, signalEvent, signalData, throwError);
         }
 
     }

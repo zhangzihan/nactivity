@@ -35,32 +35,32 @@ namespace org.activiti.engine.impl.cmd
             this.executionId = executionId;
         }
 
-        public virtual IList<string> execute(ICommandContext commandContext)
+        public virtual IList<string> Execute(ICommandContext commandContext)
         {
-            if (ReferenceEquals(executionId, null))
+            if (executionId is null)
             {
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }
 
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
-            IExecutionEntity execution = executionEntityManager.findById<IExecutionEntity>(executionId);
+            IExecutionEntity execution = executionEntityManager.FindById<IExecutionEntity>(executionId);
 
             if (execution == null)
             {
                 throw new ActivitiObjectNotFoundException("execution " + executionId + " doesn't exist", typeof(IExecution));
             }
 
-            return findActiveActivityIds(execution);
+            return FindActiveActivityIds(execution);
         }
 
-        public virtual IList<string> findActiveActivityIds(IExecutionEntity executionEntity)
+        public virtual IList<string> FindActiveActivityIds(IExecutionEntity executionEntity)
         {
             IList<string> activeActivityIds = new List<string>();
-            collectActiveActivityIds(executionEntity, activeActivityIds);
+            CollectActiveActivityIds(executionEntity, activeActivityIds);
             return activeActivityIds;
         }
 
-        protected internal virtual void collectActiveActivityIds(IExecutionEntity executionEntity, IList<string> activeActivityIds)
+        protected internal virtual void CollectActiveActivityIds(IExecutionEntity executionEntity, IList<string> activeActivityIds)
         {
             if (executionEntity.IsActive && !ReferenceEquals(executionEntity.ActivityId, null))
             {
@@ -69,7 +69,7 @@ namespace org.activiti.engine.impl.cmd
 
             foreach (IExecutionEntity childExecution in executionEntity.Executions)
             {
-                collectActiveActivityIds(childExecution, activeActivityIds);
+                CollectActiveActivityIds(childExecution, activeActivityIds);
             }
         }
 

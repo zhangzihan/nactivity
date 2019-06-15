@@ -21,48 +21,46 @@ namespace org.activiti.engine.impl.persistence.entity.data
     /// 
     public interface IExecutionDataManager : IDataManager<IExecutionEntity>
     {
-        IExecutionEntity findSubProcessInstanceBySuperExecutionId(string superExecutionId);
+        IExecutionEntity FindSubProcessInstanceBySuperExecutionId(string superExecutionId);
 
-        IList<IExecutionEntity> findChildExecutionsByParentExecutionId(string parentExecutionId);
+        IList<IExecutionEntity> FindChildExecutionsByParentExecutionId(string parentExecutionId);
 
-        IList<IExecutionEntity> findChildExecutionsByProcessInstanceId(string processInstanceId);
+        IList<IExecutionEntity> FindChildExecutionsByProcessInstanceId(string processInstanceId);
 
-        IList<IExecutionEntity> findExecutionsByParentExecutionAndActivityIds(string parentExecutionId, ICollection<string> activityIds);
+        IList<IExecutionEntity> FindExecutionsByParentExecutionAndActivityIds(string parentExecutionId, ICollection<string> activityIds);
 
-        long findExecutionCountByQueryCriteria(ExecutionQueryImpl executionQuery);
+        long FindExecutionCountByQueryCriteria(IExecutionQuery executionQuery);
 
-        IList<IExecutionEntity> findExecutionsByQueryCriteria(ExecutionQueryImpl executionQuery, Page page);
+        IList<IExecutionEntity> FindExecutionsByQueryCriteria(IExecutionQuery executionQuery, Page page);
 
-        long findProcessInstanceCountByQueryCriteria(ProcessInstanceQueryImpl executionQuery);
+        long FindProcessInstanceCountByQueryCriteria(IProcessInstanceQuery executionQuery);
 
-        IList<IProcessInstance> findProcessInstanceByQueryCriteria(ProcessInstanceQueryImpl executionQuery);
+        IList<IProcessInstance> FindProcessInstanceByQueryCriteria(IProcessInstanceQuery executionQuery);
 
-        IList<IExecutionEntity> findExecutionsByRootProcessInstanceId(string rootProcessInstanceId);
+        IList<IExecutionEntity> FindExecutionsByRootProcessInstanceId(string rootProcessInstanceId);
 
-        IList<IExecutionEntity> findExecutionsByProcessInstanceId(string processInstanceId);
+        IList<IExecutionEntity> FindExecutionsByProcessInstanceId(string processInstanceId);
 
-        IList<IProcessInstance> findProcessInstanceAndVariablesByQueryCriteria(ProcessInstanceQueryImpl executionQuery);
+        IList<IProcessInstance> FindProcessInstanceAndVariablesByQueryCriteria(IProcessInstanceQuery executionQuery);
 
-        ICollection<IExecutionEntity> findInactiveExecutionsByProcessInstanceId(string processInstanceId);
+        ICollection<IExecutionEntity> FindInactiveExecutionsByProcessInstanceId(string processInstanceId);
 
-        ICollection<IExecutionEntity> findInactiveExecutionsByActivityIdAndProcessInstanceId(string activityId, string processInstanceId);
+        ICollection<IExecutionEntity> FindInactiveExecutionsByActivityIdAndProcessInstanceId(string activityId, string processInstanceId);
 
-        IList<string> findProcessInstanceIdsByProcessDefinitionId(string processDefinitionId);
+        IList<string> FindProcessInstanceIdsByProcessDefinitionId(string processDefinitionId);
 
-        IList<IExecution> findExecutionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<IExecution> FindExecutionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-        IList<IProcessInstance> findProcessInstanceByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<IProcessInstance> FindProcessInstanceByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-        long findExecutionCountByNativeQuery(IDictionary<string, object> parameterMap);
+        long FindExecutionCountByNativeQuery(IDictionary<string, object> parameterMap);
 
-        void updateExecutionTenantIdForDeployment(string deploymentId, string newTenantId);
+        void UpdateExecutionTenantIdForDeployment(string deploymentId, string newTenantId);
 
-        void updateProcessInstanceLockTime(string processInstanceId, DateTime lockDate, DateTime expirationTime);
+        void UpdateProcessInstanceLockTime(string processInstanceId, DateTime lockDate, DateTime expirationTime);
 
-        void updateAllExecutionRelatedEntityCountFlags(bool newValue);
+        void UpdateAllExecutionRelatedEntityCountFlags(bool newValue);
 
-        void clearProcessInstanceLockTime(string processInstanceId);
-
+        void ClearProcessInstanceLockTime(string processInstanceId);
     }
-
 }

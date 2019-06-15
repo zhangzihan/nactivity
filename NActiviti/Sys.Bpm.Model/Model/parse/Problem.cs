@@ -34,7 +34,7 @@
 
         public override string ToString()
         {
-            return errorMessage + (!string.ReferenceEquals(resource, null) ? " | " + resource : "") + " | line " + line + " | column " + column;
+            return errorMessage + (!(resource is null) ? " | " + resource : "") + " | line " + line + " | column " + column;
         }
     }
 

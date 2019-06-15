@@ -46,10 +46,12 @@
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            DataStoreReference clone = new DataStoreReference();
-            clone.Values = this;
+            DataStoreReference clone = new DataStoreReference
+            {
+                Values = this
+            };
             return clone;
         }
 

@@ -12,32 +12,30 @@
  */
 namespace org.activiti.engine.cfg
 {
-	using org.activiti.engine.impl.cfg;
+    using org.activiti.engine.impl.cfg;
 
-	/// 
-	public abstract class AbstractProcessEngineConfigurator : IProcessEngineConfigurator
-	{
+    /// 
+    public abstract class AbstractProcessEngineConfigurator : IProcessEngineConfigurator
+    {
 
-	  public static int DEFAULT_CONFIGURATOR_PRIORITY = 10000;
+        public static int DEFAULT_CONFIGURATOR_PRIORITY = 10000;
 
-	  public virtual int Priority
-	  {
-		  get
-		  {
-			return DEFAULT_CONFIGURATOR_PRIORITY;
-		  }
-	  }
+        public virtual int Priority
+        {
+            get
+            {
+                return DEFAULT_CONFIGURATOR_PRIORITY;
+            }
+        }
 
-	  public virtual void beforeInit(ProcessEngineConfigurationImpl processEngineConfiguration)
-	  {
+        public virtual void BeforeInit(ProcessEngineConfigurationImpl processEngineConfiguration)
+        {
 
-	  }
+        }
 
-	  public virtual void configure(ProcessEngineConfigurationImpl processEngineConfiguration)
-	  {
+        public virtual void Configure(ProcessEngineConfigurationImpl processEngineConfiguration)
+        {
 
-	  }
-
-	}
-
+        }
+    }
 }

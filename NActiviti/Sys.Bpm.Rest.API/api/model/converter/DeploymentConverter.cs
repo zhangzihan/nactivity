@@ -39,7 +39,7 @@ namespace org.activiti.cloud.services.api.model.converter
         /// <summary>
         /// 
         /// </summary>
-        public virtual Deployment from(IDeployment source)
+        public virtual Deployment From(IDeployment source)
         {
             Deployment deployment = null;
             if (source != null)
@@ -58,9 +58,9 @@ namespace org.activiti.cloud.services.api.model.converter
         /// 
         /// </summary>
 
-        public virtual IList<Deployment> from(IList<IDeployment> deployments)
+        public virtual IEnumerable<Deployment> From(IEnumerable<IDeployment> deployments)
         {
-            return listConverter.from(deployments, this);
+            return listConverter.From(deployments, this);
         }
     }
 }

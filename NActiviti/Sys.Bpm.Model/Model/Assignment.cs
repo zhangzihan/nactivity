@@ -32,10 +32,12 @@
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            Assignment clone = new Assignment();
-            clone.Values = this;
+            Assignment clone = new Assignment
+            {
+                Values = this
+            };
             return clone;
         }
 

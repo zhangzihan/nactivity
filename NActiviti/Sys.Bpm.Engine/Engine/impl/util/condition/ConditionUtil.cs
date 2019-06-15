@@ -12,13 +12,13 @@
     public class ConditionUtil
     {
 
-        public static bool hasTrueCondition(SequenceFlow sequenceFlow, IExecutionEntity execution)
+        public static bool HasTrueCondition(SequenceFlow sequenceFlow, IExecutionEntity execution)
         {
-            string conditionExpression = null;
+            string conditionExpression;
             if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
             {
-                JToken elementProperties = Context.getBpmnOverrideElementProperties(sequenceFlow.Id, execution.ProcessDefinitionId);
-                conditionExpression = getActiveValue(sequenceFlow.ConditionExpression, DynamicBpmnConstants_Fields.SEQUENCE_FLOW_CONDITION, elementProperties);
+                JToken elementProperties = Context.GetBpmnOverrideElementProperties(sequenceFlow.Id, execution.ProcessDefinitionId);
+                conditionExpression = GetActiveValue(sequenceFlow.ConditionExpression, DynamicBpmnConstants.SEQUENCE_FLOW_CONDITION, elementProperties);
             }
             else
             {
@@ -27,16 +27,14 @@
 
             if (!string.IsNullOrWhiteSpace(conditionExpression))
             {
-
-                IExpression expression = Context.ProcessEngineConfiguration.ExpressionManager.createExpression(conditionExpression);
+                IExpression expression = Context.ProcessEngineConfiguration.ExpressionManager.CreateExpression(conditionExpression);
                 ICondition condition = new UelExpressionCondition(expression);
-                if (condition.evaluate(sequenceFlow.Id, execution))
+                if (condition.Evaluate(sequenceFlow.Id, execution))
                 {
                     return true;
                 }
 
                 return false;
-
             }
             else
             {
@@ -45,7 +43,7 @@
 
         }
 
-        protected internal static string getActiveValue(string originalValue, string propertyName, JToken elementProperties)
+        protected internal static string GetActiveValue(string originalValue, string propertyName, JToken elementProperties)
         {
             string activeValue = originalValue;
             if (elementProperties != null)

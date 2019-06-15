@@ -23,14 +23,14 @@ namespace org.activiti.engine.impl
 
         // results ////////////////////////////////////////////////////////////////
 
-        public override IList<IModel> executeList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public override IList<IModel> ExecuteList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return commandContext.ModelEntityManager.findModelsByNativeQuery(parameterMap, firstResult, maxResults);
+            return commandContext.ModelEntityManager.FindModelsByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public override long executeCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
+        public override long ExecuteCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
         {
-            return commandContext.ModelEntityManager.findModelCountByNativeQuery(parameterMap);
+            return commandContext.ModelEntityManager.FindModelCountByNativeQuery(parameterMap);
         }
 
     }

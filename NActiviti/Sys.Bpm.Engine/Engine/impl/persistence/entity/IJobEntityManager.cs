@@ -32,7 +32,7 @@ namespace org.activiti.engine.impl.persistence.entity
         /// but returns a boolean in case the insert did not go through.
         /// This could happen if the execution related to the <seealso cref="IJobEntity"/> has been removed. 
         /// </summary>
-        bool insertJobEntity(IJobEntity timerJobEntity);
+        bool InsertJobEntity(IJobEntity timerJobEntity);
 
         /// <summary>
         /// Returns <seealso cref="IJobEntity"/> that are eligble to be executed.
@@ -41,56 +41,55 @@ namespace org.activiti.engine.impl.persistence.entity
         /// the default <seealso cref="AcquireTimerJobsRunnable"/> implementation to get async jobs 
         /// that can be executed.
         /// </summary>
-        IList<IJobEntity> findJobsToExecute(Page page);
+        IList<IJobEntity> FindJobsToExecute(Page page);
 
         /// <summary>
         /// Returns all <seealso cref="IJobEntity"/> instances related to on <seealso cref="IExecutionEntity"/>. 
         /// </summary>
-        IList<IJobEntity> findJobsByExecutionId(string executionId);
+        IList<IJobEntity> FindJobsByExecutionId(string executionId);
 
         /// <summary>
         /// Returns all <seealso cref="IJobEntity"/> instances related to on <seealso cref="IProcessDefinitionEntity"/>.
         /// </summary>
-        IList<IJobEntity> findJobsByProcessDefinitionId(string processDefinitionId);
+        IList<IJobEntity> FindJobsByProcessDefinitionId(string processDefinitionId);
 
         /// <summary>
         /// Returns all <seealso cref="IJobEntity"/> instances related to on <seealso cref="IProcessDefinitionEntity"/>.
         /// </summary>
-        IList<IJobEntity> findJobsByTypeAndProcessDefinitionId(string jobTypeTimer, string id);
+        IList<IJobEntity> FindJobsByTypeAndProcessDefinitionId(string jobTypeTimer, string id);
 
         /// <summary>
         /// Returns all <seealso cref="IJobEntity"/> instances related to one process instance <seealso cref="IExecutionEntity"/>. 
         /// </summary>
-        IList<IJobEntity> findJobsByProcessInstanceId(string processInstanceId);
+        IList<IJobEntity> FindJobsByProcessInstanceId(string processInstanceId);
 
         /// <summary>
         /// Returns all <seealso cref="IJobEntity"/> instance which are expired, which means 
         /// that the lock time of the <seealso cref="IJobEntity"/> is past a certain configurable
         /// date and is deemed to be in error. 
         /// </summary>
-        IList<IJobEntity> findExpiredJobs(Page page);
+        IList<IJobEntity> FindExpiredJobs(Page page);
 
         /// <summary>
-        /// Executes a <seealso cref="JobQueryImpl"/> and returns the matching <seealso cref="IJobEntity"/> instances.
+        /// Executes a <seealso cref="IJobQuery"/> and returns the matching <seealso cref="IJobEntity"/> instances.
         /// </summary>
-        IList<IJob> findJobsByQueryCriteria(JobQueryImpl jobQuery, Page page);
+        IList<IJob> FindJobsByQueryCriteria(IJobQuery jobQuery, Page page);
 
         /// <summary>
-        /// Same as <seealso cref="#findJobsByQueryCriteria(JobQueryImpl, Page)"/>, but only returns a count 
+        /// Same as <seealso cref="#FindJobsByQueryCriteria(IJobQuery, Page)"/>, but only returns a count 
         /// and not the instances itself.
         /// </summary>
-        long findJobCountByQueryCriteria(JobQueryImpl jobQuery);
+        long FindJobCountByQueryCriteria(IJobQuery jobQuery);
 
         /// <summary>
         /// Resets an expired job. These are jobs that were locked, but not completed.
         /// Resetting these will make them available for being picked up by other executors.
         /// </summary>
-        void resetExpiredJob(string jobId);
+        void ResetExpiredJob(string jobId);
 
         /// <summary>
         /// Changes the tenantId for all jobs related to a given <seealso cref="IDeploymentEntity"/>. 
         /// </summary>
-        void updateJobTenantIdForDeployment(string deploymentId, string newTenantId);
-
+        void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId);
     }
 }

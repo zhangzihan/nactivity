@@ -30,28 +30,28 @@ namespace org.activiti.services.connectors.model
     public class IntegrationRequestEvent
     {
 
-        private string id;
+        private readonly string id;
 
-        private string processInstanceId;
+        private readonly string processInstanceId;
 
-        private string processDefinitionId;
+        private readonly string processDefinitionId;
 
-        private string executionId;
+        private readonly string executionId;
 
-        private string integrationContextId;
+        private readonly string integrationContextId;
 
-        private string flowNodeId;
+        private readonly string flowNodeId;
 
-        private string connectorType;
+        private readonly string connectorType;
 
-        private string appName;
-        private string appVersion;
-        private string serviceName;
-        private string serviceFullName;
-        private string serviceType;
-        private string serviceVersion;
+        private readonly string appName;
+        private readonly string appVersion;
+        private readonly string serviceName;
+        private readonly string serviceFullName;
+        private readonly string serviceType;
+        private readonly string serviceVersion;
 
-        private IDictionary<string, object> variables;
+        private readonly IDictionary<string, object> variables;
 
 
         /// <summary>

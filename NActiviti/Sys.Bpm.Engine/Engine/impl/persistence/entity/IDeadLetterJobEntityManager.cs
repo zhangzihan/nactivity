@@ -15,31 +15,31 @@
 namespace org.activiti.engine.impl.persistence.entity
 {
 
-	using org.activiti.engine.runtime;
+    using org.activiti.engine.runtime;
 
-	/// 
-	public interface IDeadLetterJobEntityManager : IEntityManager<IDeadLetterJobEntity>
-	{
+    /// 
+    public interface IDeadLetterJobEntityManager : IEntityManager<IDeadLetterJobEntity>
+    {
 
-	  /// <summary>
-	  /// Returns all <seealso cref="IDeadLetterJobEntity"/> instances related to on <seealso cref="IExecutionEntity"/>.
-	  /// </summary>
-	  IList<IDeadLetterJobEntity> findJobsByExecutionId(string id);
+        /// <summary>
+        /// Returns all <seealso cref="IDeadLetterJobEntity"/> instances related to on <seealso cref="IExecutionEntity"/>.
+        /// </summary>
+        IList<IDeadLetterJobEntity> FindJobsByExecutionId(string id);
 
-	  /// <summary>
-	  /// Executes a <seealso cref="JobQueryImpl"/> and returns the matching <seealso cref="IDeadLetterJobEntity"/> instances.
-	  /// </summary>
-	  IList<IJob> findJobsByQueryCriteria(DeadLetterJobQueryImpl jobQuery, Page page);
+        /// <summary>
+        /// Executes a <seealso cref="JobQueryImpl"/> and returns the matching <seealso cref="IDeadLetterJobEntity"/> instances.
+        /// </summary>
+        IList<IJob> FindJobsByQueryCriteria(DeadLetterJobQueryImpl jobQuery, Page page);
 
-	  /// <summary>
-	  /// Same as <seealso cref="#findJobsByQueryCriteria(DeadLetterJobQueryImpl, Page)"/>, but only returns a count 
-	  /// and not the instances itself.
-	  /// </summary>
-	  long findJobCountByQueryCriteria(DeadLetterJobQueryImpl jobQuery);
+        /// <summary>
+        /// Same as <seealso cref="#findJobsByQueryCriteria(DeadLetterJobQueryImpl, Page)"/>, but only returns a count 
+        /// and not the instances itself.
+        /// </summary>
+        long FindJobCountByQueryCriteria(DeadLetterJobQueryImpl jobQuery);
 
-	  /// <summary>
-	  /// Changes the tenantId for all jobs related to a given <seealso cref="IDeploymentEntity"/>.
-	  /// </summary>
-	  void updateJobTenantIdForDeployment(string deploymentId, string newTenantId);
-	}
+        /// <summary>
+        /// Changes the tenantId for all jobs related to a given <seealso cref="IDeploymentEntity"/>.
+        /// </summary>
+        void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId);
+    }
 }

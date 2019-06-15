@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl.cmd
 
         public SetProcessDefinitionVersionCmd(string processInstanceId, int? processDefinitionVersion)
         {
-            if (ReferenceEquals(processInstanceId, null) || processInstanceId.Length < 1)
+            if (processInstanceId is null || processInstanceId.Length < 1)
             {
                 throw new ActivitiIllegalArgumentException("The process instance id is mandatory, but '" + processInstanceId + "' has been provided.");
             }
@@ -67,12 +67,12 @@ namespace org.activiti.engine.impl.cmd
             this.processDefinitionVersion = processDefinitionVersion;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
             // check that the new process definition is just another version of the same
             // process definition that the process instance is using
             IExecutionEntityManager executionManager = commandContext.ExecutionEntityManager;
-            IExecutionEntity processInstance = executionManager.findById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+            IExecutionEntity processInstance = executionManager.FindById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
             if (processInstance == null)
             {
                 throw new ActivitiObjectNotFoundException("No process instance found for id = '" + processInstanceId + "'.", typeof(IProcessInstance));
@@ -83,30 +83,30 @@ namespace org.activiti.engine.impl.cmd
             }
 
             DeploymentManager deploymentCache = commandContext.ProcessEngineConfiguration.DeploymentManager;
-            IProcessDefinition currentProcessDefinition = deploymentCache.findDeployedProcessDefinitionById(processInstance.ProcessDefinitionId);
+            IProcessDefinition currentProcessDefinition = deploymentCache.FindDeployedProcessDefinitionById(processInstance.ProcessDefinitionId);
 
-            IProcessDefinition newProcessDefinition = deploymentCache.findDeployedProcessDefinitionByKeyAndVersionAndTenantId(currentProcessDefinition.Key, processDefinitionVersion, currentProcessDefinition.TenantId);
+            IProcessDefinition newProcessDefinition = deploymentCache.FindDeployedProcessDefinitionByKeyAndVersionAndTenantId(currentProcessDefinition.Key, processDefinitionVersion, currentProcessDefinition.TenantId);
 
-            validateAndSwitchVersionOfExecution(commandContext, processInstance, newProcessDefinition);
+            ValidateAndSwitchVersionOfExecution(commandContext, processInstance, newProcessDefinition);
 
             // switch the historic process instance to the new process definition version
-            commandContext.HistoryManager.recordProcessDefinitionChange(processInstanceId, newProcessDefinition.Id);
+            commandContext.HistoryManager.RecordProcessDefinitionChange(processInstanceId, newProcessDefinition.Id);
 
             // switch all sub-executions of the process instance to the new process definition version
-            ICollection<IExecutionEntity> childExecutions = executionManager.findChildExecutionsByProcessInstanceId(processInstanceId);
+            ICollection<IExecutionEntity> childExecutions = executionManager.FindChildExecutionsByProcessInstanceId(processInstanceId);
             foreach (IExecutionEntity executionEntity in childExecutions)
             {
-                validateAndSwitchVersionOfExecution(commandContext, executionEntity, newProcessDefinition);
+                ValidateAndSwitchVersionOfExecution(commandContext, executionEntity, newProcessDefinition);
             }
 
             return null;
         }
 
-        protected internal virtual void validateAndSwitchVersionOfExecution(ICommandContext commandContext, IExecutionEntity execution, IProcessDefinition newProcessDefinition)
+        protected internal virtual void ValidateAndSwitchVersionOfExecution(ICommandContext commandContext, IExecutionEntity execution, IProcessDefinition newProcessDefinition)
         {
             // check that the new process definition version contains the current activity
-            org.activiti.bpmn.model.Process process = ProcessDefinitionUtil.getProcess(newProcessDefinition.Id);
-            if (!ReferenceEquals(execution.ActivityId, null) && process.getFlowElement(execution.ActivityId, true) == null)
+            activiti.bpmn.model.Process process = ProcessDefinitionUtil.GetProcess(newProcessDefinition.Id);
+            if (!(execution.ActivityId is null) && process.GetFlowElement(execution.ActivityId, true) == null)
             {
                 throw new ActivitiException("The new process definition " + "(key = '" + newProcessDefinition.Key + "') " + "does not contain the current activity " + "(id = '" + execution.ActivityId + "') " + "of the process instance " + "(id = '" + processInstanceId + "').");
             }
@@ -117,11 +117,11 @@ namespace org.activiti.engine.impl.cmd
             execution.ProcessDefinitionKey = newProcessDefinition.Key;
 
             // and change possible existing tasks (as the process definition id is stored there too)
-            IList<ITaskEntity> tasks = commandContext.TaskEntityManager.findTasksByExecutionId(execution.Id);
+            IList<ITaskEntity> tasks = commandContext.TaskEntityManager.FindTasksByExecutionId(execution.Id);
             foreach (ITaskEntity taskEntity in tasks)
             {
                 taskEntity.ProcessDefinitionId = newProcessDefinition.Id;
-                commandContext.HistoryManager.recordTaskProcessDefinitionChange(taskEntity.Id, newProcessDefinition.Id);
+                commandContext.HistoryManager.RecordTaskProcessDefinitionChange(taskEntity.Id, newProcessDefinition.Id);
             }
         }
 

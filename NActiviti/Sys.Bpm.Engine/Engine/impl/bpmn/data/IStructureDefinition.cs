@@ -12,22 +12,22 @@
  */
 namespace org.activiti.engine.impl.bpmn.data
 {
-	/// <summary>
-	/// Represents a definition of a structure used to exchange information
-	/// 
-	/// 
-	/// </summary>
-	public interface IStructureDefinition
-	{
+    /// <summary>
+    /// Represents a definition of a structure used to exchange information
+    /// 
+    /// 
+    /// </summary>
+    public interface IStructureDefinition
+    {
 
-	  /// <summary>
-	  /// Obtains the id of this structure
-	  /// </summary>
-	  /// <returns> the id of this structure </returns>
-	  string Id {get;}
+        /// <summary>
+        /// Obtains the id of this structure
+        /// </summary>
+        /// <returns> the id of this structure </returns>
+        string Id { get; }
 
-	  /// <returns> a new instance of this structure definition </returns>
-	  IStructureInstance createInstance();
-	}
+        /// <returns> a new instance of this structure definition </returns>
+        IStructureInstance CreateInstance();
+    }
 
 }

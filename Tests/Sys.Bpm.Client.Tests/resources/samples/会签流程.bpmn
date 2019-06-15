@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_9PoKARBVU" name="会签流程" isExecutable="true">
+    <bpmn2:extensionElements>
+      <camunda:properties>
+        <camunda:property />
+      </camunda:properties>
+    </bpmn2:extensionElements>
+    <bpmn2:startEvent id="Start_LyvmWffqX4">
+      <bpmn2:outgoing>SequenceFlow_1gi8lyw</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_1gi8lyw" sourceRef="Start_LyvmWffqX4" targetRef="Task_0kj32zf" />
+    <bpmn2:userTask id="Task_0kj32zf" name="service" camunda:assignee="${countersignUser}">
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="url" value="http://localhost:11015/process-test/timer-datetime" />
+          <camunda:property name="taskRequest" />
+          <camunda:property name="dataObj" value="timerDateTime" />
+          <camunda:property name="method" value="post" />
+          <camunda:property name="userPolicy" value="[{&#34;ruleType&#34;:&#34;GetUser&#34;,&#34;ruleName&#34;:&#34;GetUser&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;用户1&#34;,&#34;name&#34;:&#34;用户1&#34;}]},{&#34;ruleType&#34;:&#34;GetDept&#34;,&#34;ruleName&#34;:&#34;GetDept&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;部门1&#34;,&#34;name&#34;:&#34;部门1&#34;}]},{&#34;ruleType&#34;:&#34;GetDeptLeader&#34;,&#34;ruleName&#34;:&#34;GetDeptLeader&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;部门1&#34;,&#34;name&#34;:&#34;部门1&#34;}]},{&#34;ruleType&#34;:&#34;GetDirectReporter&#34;,&#34;ruleName&#34;:&#34;GetDirectReporter&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;部门1&#34;,&#34;name&#34;:&#34;部门1&#34;}]},{&#34;ruleType&#34;:&#34;GetDuty&#34;,&#34;ruleName&#34;:&#34;GetDuty&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;岗位1&#34;,&#34;name&#34;:&#34;岗位1&#34;}]},{&#34;ruleType&#34;:&#34;GetUnderling&#34;,&#34;ruleName&#34;:&#34;GetUnderling&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;领导1&#34;,&#34;name&#34;:&#34;领导1&#34;}]}]" />
+        </camunda:properties>
+        <camunda:executionListener class="org.activiti.engine.impl.bpmn.listener.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_1gi8lyw</bpmn2:incoming>
+      <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${countersignUsers}" camunda:elementVariable="countersignUser">
+        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${nrOfActiveInstances==0}</bpmn2:completionCondition>
+      </bpmn2:multiInstanceLoopCharacteristics>
+    </bpmn2:userTask>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_9PoKARBVU">
+      <bpmndi:BPMNShape id="_BPMNShape_Start_LyvmWffqX4" bpmnElement="Start_LyvmWffqX4">
+        <dc:Bounds x="220" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1gi8lyw_di" bpmnElement="SequenceFlow_1gi8lyw">
+        <di:waypoint x="256" y="177" />
+        <di:waypoint x="364" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1m1rzag_di" bpmnElement="Task_0kj32zf">
+        <dc:Bounds x="364" y="137" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

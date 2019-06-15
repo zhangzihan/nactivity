@@ -16,12 +16,15 @@ namespace org.activiti.engine.impl.cfg
 
     /// 
     public class DefaultBpmnParseFactory : IBpmnParseFactory
-	{
-
-	  public virtual BpmnParse createBpmnParse(BpmnParser bpmnParser)
-	  {
-		return new BpmnParse(bpmnParser);
-	  }
-	}
-
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bpmnParser"></param>
+        /// <returns></returns>
+        public virtual BpmnParse CreateBpmnParse(BpmnParser bpmnParser)
+        {
+            return new BpmnParse(bpmnParser);
+        }
+    }
 }

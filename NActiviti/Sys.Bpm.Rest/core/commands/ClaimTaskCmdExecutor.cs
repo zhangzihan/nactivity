@@ -9,10 +9,10 @@ namespace org.activiti.cloud.services.core.commands
     /// <summary>
     /// 
     /// </summary>
-    public class ClaimTaskCmdExecutor : CommandExecutor<ClaimTaskCmd>
+    public class ClaimTaskCmdExecutor : ICommandExecutor<ClaimTaskCmd>
     {
-        private ProcessEngineWrapper processEngine;
-        private IMessageChannel<ClaimTaskResults> commandResults;
+        private readonly ProcessEngineWrapper processEngine;
+        private readonly IMessageChannel<ClaimTaskResults> commandResults;
 
         /// <summary>
         /// 
@@ -37,11 +37,11 @@ namespace org.activiti.cloud.services.core.commands
         /// <summary>
         /// 
         /// </summary>
-        public virtual void execute(ClaimTaskCmd cmd)
+        public virtual void Execute(ClaimTaskCmd cmd)
         {
-            processEngine.claimTask(cmd);
+            processEngine.ClaimTask(cmd);
             ClaimTaskResults cmdResult = new ClaimTaskResults(cmd.Id);
-            commandResults.send(MessageBuilder<ClaimTaskResults>.withPayload(cmdResult).build());
+            commandResults.Send(MessageBuilder<ClaimTaskResults>.WithPayload(cmdResult).Build());
         }
     }
 

@@ -36,14 +36,14 @@ namespace org.activiti.engine.impl.bpmn.listener
 		this.fieldDeclarations = fieldDeclarations;
 	  }
 
-	  public virtual void notify(IDelegateTask delegateTask)
+	  public virtual void Notify(IDelegateTask delegateTask)
 	  {
-		object @delegate = DelegateExpressionUtil.resolveDelegateExpression(expression, delegateTask, fieldDeclarations);
+		object @delegate = DelegateExpressionUtil.ResolveDelegateExpression(expression, delegateTask, fieldDeclarations);
 		if (@delegate is ITaskListener)
 		{
 		  try
 		  {
-			Context.ProcessEngineConfiguration.DelegateInterceptor.handleInvocation(new TaskListenerInvocation((ITaskListener) @delegate, delegateTask));
+			Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new TaskListenerInvocation((ITaskListener) @delegate, delegateTask));
 		  }
 		  catch (Exception e)
 		  {

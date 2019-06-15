@@ -28,23 +28,17 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, TimerEventDefinition timerEventDefinition)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, TimerEventDefinition timerEventDefinition)
         {
 
-            if (bpmnParse.CurrentFlowElement is IntermediateCatchEvent)
+            if (bpmnParse.CurrentFlowElement is IntermediateCatchEvent intermediateCatchEvent)
             {
-
-                IntermediateCatchEvent intermediateCatchEvent = (IntermediateCatchEvent)bpmnParse.CurrentFlowElement;
-                intermediateCatchEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createIntermediateCatchTimerEventActivityBehavior(intermediateCatchEvent, timerEventDefinition);
-
+                intermediateCatchEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateCatchTimerEventActivityBehavior(intermediateCatchEvent, timerEventDefinition);
             }
-            else if (bpmnParse.CurrentFlowElement is BoundaryEvent)
+            else if (bpmnParse.CurrentFlowElement is BoundaryEvent boundaryEvent)
             {
-
-                BoundaryEvent boundaryEvent = (BoundaryEvent)bpmnParse.CurrentFlowElement;
-                boundaryEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createBoundaryTimerEventActivityBehavior(boundaryEvent, timerEventDefinition, boundaryEvent.CancelActivity);
+                boundaryEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateBoundaryTimerEventActivityBehavior(boundaryEvent, timerEventDefinition, boundaryEvent.CancelActivity);
             }
         }
     }
-
 }

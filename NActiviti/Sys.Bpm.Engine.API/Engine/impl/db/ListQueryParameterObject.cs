@@ -21,10 +21,19 @@ namespace org.activiti.engine.impl.db
         protected internal object parameter;
         protected internal string databaseType;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ListQueryParameterObject()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <param name="firstResult"></param>
+        /// <param name="maxResults"></param>
         public ListQueryParameterObject(object parameter, int firstResult, int maxResults)
         {
             this.parameter = parameter;
@@ -32,6 +41,9 @@ namespace org.activiti.engine.impl.db
             this.maxResults = maxResults;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int FirstResult
         {
             get
@@ -44,6 +56,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int FirstRow
         {
             get
@@ -52,6 +67,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int LastRow
         {
             get
@@ -64,6 +82,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int MaxResults
         {
             get
@@ -76,6 +97,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual object Parameter
         {
             get
@@ -88,6 +112,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string OrderBy
         {
             get
@@ -97,6 +124,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string OrderByColumns
         {
             get
@@ -105,6 +135,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DatabaseType
         {
             set
@@ -116,8 +149,5 @@ namespace org.activiti.engine.impl.db
                 return databaseType;
             }
         }
-
-
     }
-
 }

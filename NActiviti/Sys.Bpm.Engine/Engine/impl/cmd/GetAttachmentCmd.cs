@@ -33,9 +33,9 @@ namespace org.activiti.engine.impl.cmd
             this.attachmentId = attachmentId;
         }
 
-        public virtual IAttachment execute(ICommandContext commandContext)
+        public virtual IAttachment Execute(ICommandContext commandContext)
         {
-            return commandContext.AttachmentEntityManager.findById<IAttachment>(new KeyValuePair<string, object>("id", attachmentId));
+            return commandContext.AttachmentEntityManager.FindById<IAttachment>(new KeyValuePair<string, object>("id", attachmentId));
         }
 
     }

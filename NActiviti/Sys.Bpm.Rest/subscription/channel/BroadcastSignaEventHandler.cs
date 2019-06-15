@@ -11,23 +11,23 @@ namespace org.activiti.services.subscription.channel
     /// </summary>
     public class BroadcastSignaEventHandler
     {
-        private IBinderAwareChannelResolver resolver;
+        private readonly IBinderAwareChannelResolver resolver;
 
-        private IRuntimeService runtimeService;
+        private readonly IRuntimeService runtimeService;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="signalCmd"></param>
-        public virtual void receive(SignalCmd signalCmd)
+        public virtual void Receive(SignalCmd signalCmd)
         {
             if ((signalCmd.InputVariables == null) || (signalCmd.InputVariables.Count == 0))
             {
-                runtimeService.signalEventReceived(signalCmd.Name);
+                runtimeService.SignalEventReceived(signalCmd.Name);
             }
             else
             {
-                runtimeService.signalEventReceived(signalCmd.Name, signalCmd.InputVariables);
+                runtimeService.SignalEventReceived(signalCmd.Name, signalCmd.InputVariables);
             }
         }
 
@@ -35,10 +35,10 @@ namespace org.activiti.services.subscription.channel
         /// 
         /// </summary>
         /// <param name="signalCmd"></param>
-        public virtual void broadcastSignal(SignalCmd signalCmd)
+        public virtual void BroadcastSignal(SignalCmd signalCmd)
         {
-            IMessage<SignalCmd> message = MessageBuilder<SignalCmd>.withPayload(signalCmd).build();
-            resolver.resolveDestination("signalEvent").send<SignalCmd>(message);
+            IMessage<SignalCmd> message = MessageBuilder<SignalCmd>.WithPayload(signalCmd).Build();
+            resolver.ResolveDestination("signalEvent").Send<SignalCmd>(message);
         }
     }
 }

@@ -23,84 +23,84 @@ namespace org.activiti.engine
     public interface IDynamicBpmnService
     {
 
-        JToken getProcessDefinitionInfo(string processDefinitionId);
+        JToken GetProcessDefinitionInfo(string processDefinitionId);
 
-        void saveProcessDefinitionInfo(string processDefinitionId, JToken infoNode);
+        void SaveProcessDefinitionInfo(string processDefinitionId, JToken infoNode);
 
-        JToken changeServiceTaskClassName(string id, string className);
+        JToken ChangeServiceTaskClassName(string id, string className);
 
-        void changeServiceTaskClassName(string id, string className, JToken infoNode);
+        void ChangeServiceTaskClassName(string id, string className, JToken infoNode);
 
-        JToken changeServiceTaskExpression(string id, string expression);
+        JToken ChangeServiceTaskExpression(string id, string expression);
 
-        void changeServiceTaskExpression(string id, string expression, JToken infoNode);
+        void ChangeServiceTaskExpression(string id, string expression, JToken infoNode);
 
-        JToken changeServiceTaskDelegateExpression(string id, string expression);
+        JToken ChangeServiceTaskDelegateExpression(string id, string expression);
 
-        void changeServiceTaskDelegateExpression(string id, string expression, JToken infoNode);
+        void ChangeServiceTaskDelegateExpression(string id, string expression, JToken infoNode);
 
-        JToken changeScriptTaskScript(string id, string script);
+        JToken ChangeScriptTaskScript(string id, string script);
 
-        void changeScriptTaskScript(string id, string script, JToken infoNode);
+        void ChangeScriptTaskScript(string id, string script, JToken infoNode);
 
-        JToken changeUserTaskName(string id, string name);
+        JToken ChangeUserTaskName(string id, string name);
 
-        void changeUserTaskName(string id, string name, JToken infoNode);
+        void ChangeUserTaskName(string id, string name, JToken infoNode);
 
-        JToken changeUserTaskDescription(string id, string description);
+        JToken ChangeUserTaskDescription(string id, string description);
 
-        void changeUserTaskDescription(string id, string description, JToken infoNode);
+        void ChangeUserTaskDescription(string id, string description, JToken infoNode);
 
-        JToken changeUserTaskDueDate(string id, string dueDate);
+        JToken ChangeUserTaskDueDate(string id, string dueDate);
 
-        void changeUserTaskDueDate(string id, string dueDate, JToken infoNode);
+        void ChangeUserTaskDueDate(string id, string dueDate, JToken infoNode);
 
-        JToken changeUserTaskPriority(string id, string priority);
+        JToken ChangeUserTaskPriority(string id, string priority);
 
-        void changeUserTaskPriority(string id, string priority, JToken infoNode);
+        void ChangeUserTaskPriority(string id, string priority, JToken infoNode);
 
-        JToken changeUserTaskCategory(string id, string category);
+        JToken ChangeUserTaskCategory(string id, string category);
 
-        void changeUserTaskCategory(string id, string category, JToken infoNode);
+        void ChangeUserTaskCategory(string id, string category, JToken infoNode);
 
-        JToken changeUserTaskFormKey(string id, string formKey);
+        JToken ChangeUserTaskFormKey(string id, string formKey);
 
-        void changeUserTaskFormKey(string id, string formKey, JToken infoNode);
+        void ChangeUserTaskFormKey(string id, string formKey, JToken infoNode);
 
-        JToken changeUserTaskAssignee(string id, string assignee);
+        JToken ChangeUserTaskAssignee(string id, string assignee);
 
-        void changeUserTaskAssignee(string id, string assignee, JToken infoNode);
+        void ChangeUserTaskAssignee(string id, string assignee, JToken infoNode);
 
-        JToken changeUserTaskOwner(string id, string owner);
+        JToken ChangeUserTaskOwner(string id, string owner);
 
-        void changeUserTaskOwner(string id, string owner, JToken infoNode);
+        void ChangeUserTaskOwner(string id, string owner, JToken infoNode);
 
-        JToken changeUserTaskCandidateUser(string id, string candidateUser, bool overwriteOtherChangedEntries);
+        JToken ChangeUserTaskCandidateUser(string id, string candidateUser, bool overwriteOtherChangedEntries);
 
-        void changeUserTaskCandidateUser(string id, string candidateUser, bool overwriteOtherChangedEntries, JToken infoNode);
+        void ChangeUserTaskCandidateUser(string id, string candidateUser, bool overwriteOtherChangedEntries, JToken infoNode);
 
-        JToken changeUserTaskCandidateGroup(string id, string candidateGroup, bool overwriteOtherChangedEntries);
+        JToken ChangeUserTaskCandidateGroup(string id, string candidateGroup, bool overwriteOtherChangedEntries);
 
-        void changeUserTaskCandidateGroup(string id, string candidateGroup, bool overwriteOtherChangedEntries, JToken infoNode);
+        void ChangeUserTaskCandidateGroup(string id, string candidateGroup, bool overwriteOtherChangedEntries, JToken infoNode);
 
-        JToken changeDmnTaskDecisionTableKey(string id, string decisionTableKey);
+        JToken ChangeDmnTaskDecisionTableKey(string id, string decisionTableKey);
 
-        void changeDmnTaskDecisionTableKey(string id, string decisionTableKey, JToken infoNode);
+        void ChangeDmnTaskDecisionTableKey(string id, string decisionTableKey, JToken infoNode);
 
-        JToken changeSequenceFlowCondition(string id, string condition);
+        JToken ChangeSequenceFlowCondition(string id, string condition);
 
-        void changeSequenceFlowCondition(string id, string condition, JToken infoNode);
+        void ChangeSequenceFlowCondition(string id, string condition, JToken infoNode);
 
-        JToken getBpmnElementProperties(string id, JToken infoNode);
+        JToken GetBpmnElementProperties(string id, JToken infoNode);
 
-        JToken changeLocalizationName(string language, string id, string value);
+        JToken ChangeLocalizationName(string language, string id, string value);
 
-        void changeLocalizationName(string language, string id, string value, JToken infoNode);
+        void ChangeLocalizationName(string language, string id, string value, JToken infoNode);
 
-        JToken changeLocalizationDescription(string language, string id, string value);
+        JToken ChangeLocalizationDescription(string language, string id, string value);
 
-        void changeLocalizationDescription(string language, string id, string value, JToken infoNode);
+        void ChangeLocalizationDescription(string language, string id, string value, JToken infoNode);
 
-        JToken getLocalizationElementProperties(string language, string id, JToken infoNode);
+        JToken GetLocalizationElementProperties(string language, string id, JToken infoNode);
     }
 }

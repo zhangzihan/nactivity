@@ -15,11 +15,22 @@ namespace SmartSql.DbSession
     public class DbConnectionSession : IDbConnectionSession
     {
         private readonly ILogger _logger;
+        private IDbTransaction transaction;
+
         public Guid Id { get; private set; }
         public DbProviderFactory DbProviderFactory { get; }
         public IDataSource DataSource { get; }
         public IDbConnection Connection { get; private set; }
-        public IDbTransaction Transaction { get; private set; }
+
+        public IDbTransaction Transaction
+        {
+            get => transaction;
+            private set
+            {
+                transaction = value;
+            }
+        }
+
         public DbSessionLifeCycle LifeCycle { get; set; }
         public DbConnectionSession(ILogger<DbConnectionSession> logger, DbProviderFactory dbProviderFactory, IDataSource dataSource)
         {
@@ -150,7 +161,7 @@ namespace SmartSql.DbSession
                         _logger.LogDebug($"OpenConnection {Connection.GetHashCode()} to {DataSource.Name} .");
                     }
                     var connAsync = Connection as DbConnection;
-                    await connAsync.OpenAsync(cancellationToken);
+                    await connAsync.OpenAsync(cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

@@ -31,9 +31,9 @@ namespace org.activiti.cloud.services.core.pageable.sort
         /// 
         /// </summary>
         /// <param name="query"></param>
-        protected internal override void applyDefaultSort(IHistoricTaskInstanceQuery query)
+        protected internal override void ApplyDefaultSort(IHistoricTaskInstanceQuery query)
         {
-            query.orderByTaskId().asc();
+            query.OrderByTaskId().Asc();
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace org.activiti.cloud.services.core.pageable.sort
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        protected internal override IQueryProperty getOrderByProperty(Sort.Order order)
+        protected internal override IQueryProperty GetOrderByProperty(Sort.Order order)
         {
             orderByProperties.TryGetValue(order.Property, out IQueryProperty qp);
 

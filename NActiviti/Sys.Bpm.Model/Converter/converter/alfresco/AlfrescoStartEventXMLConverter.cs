@@ -18,17 +18,13 @@ namespace org.activiti.bpmn.converter.alfresco
 
     /// 
     public class AlfrescoStartEventXMLConverter : StartEventXMLConverter
-	{
-
-	  public override Type BpmnElementType
-	  {
-		  get
-		  {
-			return typeof(AlfrescoStartEvent);
-		  }
-	  }
-
-
-	}
-
+    {
+        public override Type BpmnElementType
+        {
+            get
+            {
+                return typeof(AlfrescoStartEvent);
+            }
+        }
+    }
 }

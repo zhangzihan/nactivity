@@ -53,8 +53,8 @@ namespace org.activiti.cloud.services.rest.controllers
 
         /// <inheritdoc />
         public ProcessInstanceVariableControllerImpl(IProcessEngine engine,
-            ProcessInstanceVariableResourceAssembler variableResourceBuilder, 
-            SecurityPoliciesApplicationService securityPoliciesApplicationService, 
+            ProcessInstanceVariableResourceAssembler variableResourceBuilder,
+            SecurityPoliciesApplicationService securityPoliciesApplicationService,
             ProcessEngineWrapper processEngine)
         {
             this.runtimeService = engine.RuntimeService;
@@ -66,61 +66,69 @@ namespace org.activiti.cloud.services.rest.controllers
 
         /// <inheritdoc />
         [HttpGet]
-        public virtual Task<Resources<ProcessVariableResource>> getVariables(string processInstanceId)
+        public virtual Task<Resources<ProcessInstanceVariable>> GetVariables(string processInstanceId)
         {
-            IList<IVariableInstance> variableInstances = runtimeService.getVariableInstancesByExecutionIds(new HashSet<string> { processInstanceId });
+            IList<IVariableInstance> variableInstances = runtimeService.GetVariableInstancesByExecutionIds(new string[] { processInstanceId });
 
-            IList<ProcessVariableResource> resourcesList = new List<ProcessVariableResource>();
+            IList<ProcessInstanceVariable> resourcesList = new List<ProcessInstanceVariable>();
             foreach (IVariableInstance variableInstance in variableInstances)
             {
-                resourcesList.Add(variableResourceBuilder.toResource(new ProcessInstanceVariable(variableInstance.ProcessInstanceId, variableInstance.Name, variableInstance.TypeName, variableInstance.Value, variableInstance.ExecutionId)));
+                resourcesList.Add(new ProcessInstanceVariable(variableInstance.ProcessInstanceId, variableInstance.Name, variableInstance.TypeName, variableInstance.Value, variableInstance.ExecutionId));
             }
 
-            Resources<ProcessVariableResource> resources = new Resources<ProcessVariableResource>(resourcesList);
+            Resources<ProcessInstanceVariable> resources = new Resources<ProcessInstanceVariable>(resourcesList);
 
             return Task.FromResult(resources);
         }
 
         /// <inheritdoc />
-
         [HttpGet("local")]
-        public virtual Task<Resources<ProcessVariableResource>> getVariablesLocal(string processInstanceId)
+        public virtual Task<Resources<ProcessInstanceVariable>> GetVariablesLocal(string processInstanceId)
         {
-            IDictionary<string, IVariableInstance> variableInstancesMap = runtimeService.getVariableInstancesLocal(processInstanceId);
+            IDictionary<string, IVariableInstance> variableInstancesMap = runtimeService.GetVariableInstancesLocal(processInstanceId);
             IList<IVariableInstance> variableInstances = new List<IVariableInstance>();
             if (variableInstancesMap != null)
             {
                 ((List<IVariableInstance>)variableInstances).AddRange(variableInstancesMap.Values);
             }
-            IList<ProcessVariableResource> resourcesList = new List<ProcessVariableResource>();
+            IList<ProcessInstanceVariable> resourcesList = new List<ProcessInstanceVariable>();
             foreach (IVariableInstance variableInstance in variableInstances)
             {
-                resourcesList.Add(variableResourceBuilder.toResource(new ProcessInstanceVariable(variableInstance.ProcessInstanceId, variableInstance.Name, variableInstance.TypeName, variableInstance.Value, variableInstance.ExecutionId)));
+                resourcesList.Add(new ProcessInstanceVariable(variableInstance.ProcessInstanceId, variableInstance.Name, variableInstance.TypeName, variableInstance.Value, variableInstance.ExecutionId));
             }
 
-            Resources<ProcessVariableResource> resources = new Resources<ProcessVariableResource>(resourcesList);
+            Resources<ProcessInstanceVariable> resources = new Resources<ProcessInstanceVariable>(resourcesList);
 
             return Task.FromResult(resources);
         }
 
         /// <inheritdoc />
-
         [HttpPost]
-        public virtual Task<IActionResult> setVariables(string processInstanceId, SetProcessVariablesCmd setProcessVariablesCmd)
+        public virtual Task<ActionResult> SetVariables(string processInstanceId, SetProcessVariablesCmd setProcessVariablesCmd)
         {
-            processEngine.ProcessVariables = setProcessVariablesCmd;
+            processEngine.SetProcessVariables(setProcessVariablesCmd);
 
-            return Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<ActionResult>(Ok());
         }
-
 
         /// <inheritdoc />
         [HttpPost("remove")]
-        public virtual Task<IActionResult> removeVariables(string processInstanceId, RemoveProcessVariablesCmd removeProcessVariablesCmd)
+        public virtual Task<ActionResult> RemoveVariables(string processInstanceId, RemoveProcessVariablesCmd removeProcessVariablesCmd)
         {
-            this.processEngine.removeProcessVariables(removeProcessVariablesCmd);
+            this.processEngine.RemoveProcessVariables(removeProcessVariablesCmd);
 
-            return Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<ActionResult>(Ok());
+        }
+
+        /// <inheritdoc />
+        [HttpGet("{variableName}")]
+        public Task<ProcessInstanceVariable> GetVariable(string processInstanceId, string variableName)
+        {
+            IVariableInstance variableInstance = runtimeService.GetVariableInstance(processInstanceId, variableName);
+
+            ProcessInstanceVariable variable = new ProcessInstanceVariable(variableInstance.ProcessInstanceId, variableInstance.Name, variableInstance.TypeName, variableInstance.Value, variableInstance.ExecutionId);
+
+            return Task.FromResult(variable);
         }
     }
 

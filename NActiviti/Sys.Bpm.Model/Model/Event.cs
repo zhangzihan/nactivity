@@ -33,7 +33,7 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual void addEventDefinition(EventDefinition eventDefinition)
+        public virtual void AddEventDefinition(EventDefinition eventDefinition)
         {
             eventDefinitions.Add(eventDefinition);
         }
@@ -51,7 +51,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (EventDefinition eventDef in val.EventDefinitions)
                     {
-                        eventDefinitions.Add(eventDef.clone() as EventDefinition);
+                        eventDefinitions.Add(eventDef.Clone() as EventDefinition);
                     }
                 }
             }

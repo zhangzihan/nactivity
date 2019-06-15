@@ -34,9 +34,9 @@ namespace org.activiti.engine.impl.cmd
             this.bytes = bytes;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            commandContext.ModelEntityManager.insertEditorSourceExtraForModel(modelId, bytes);
+            commandContext.ModelEntityManager.InsertEditorSourceExtraForModel(modelId, bytes);
 
             return null;
         }

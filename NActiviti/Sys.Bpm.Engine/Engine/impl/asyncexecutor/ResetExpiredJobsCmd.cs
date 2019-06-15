@@ -14,40 +14,48 @@
  */
 namespace org.activiti.engine.impl.asyncexecutor
 {
-
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
 
     /// 
     public class ResetExpiredJobsCmd : ICommand<object>
-	{
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal ICollection<string> jobIds;
 
-	  protected internal ICollection<string> jobIds;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jobsIds"></param>
+        public ResetExpiredJobsCmd(ICollection<string> jobsIds)
+        {
+            this.jobIds = jobsIds;
+        }
 
-	  public ResetExpiredJobsCmd(ICollection<string> jobsIds)
-	  {
-		this.jobIds = jobsIds;
-	  }
-
-	  public virtual object execute(ICommandContext commandContext)
-	  {
-		bool messageQueueMode = commandContext.ProcessEngineConfiguration.AsyncExecutorIsMessageQueueMode;
-		foreach (string jobId in jobIds)
-		{
-		  if (!messageQueueMode)
-		  {
-			IJob job = commandContext.JobEntityManager.findById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
-			commandContext.JobManager.unacquire(job);
-		  }
-		  else
-		  {
-			commandContext.JobEntityManager.resetExpiredJob(jobId);
-		  }
-		}
-		return null;
-	  }
-
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <returns></returns>
+        public virtual object Execute(ICommandContext commandContext)
+        {
+            bool messageQueueMode = commandContext.ProcessEngineConfiguration.AsyncExecutorIsMessageQueueMode;
+            foreach (string jobId in jobIds)
+            {
+                if (!messageQueueMode)
+                {
+                    IJob job = commandContext.JobEntityManager.FindById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
+                    commandContext.JobManager.Unacquire(job);
+                }
+                else
+                {
+                    commandContext.JobEntityManager.ResetExpiredJob(jobId);
+                }
+            }
+            return null;
+        }
+    }
 }

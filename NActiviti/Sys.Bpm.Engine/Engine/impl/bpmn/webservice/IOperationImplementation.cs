@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.bpmn.webservice
         /// <param name="overridenEndpointAddresses"> 
         ///          a not null map of overriden enpoint addresses. The key is the endpoint qualified name. </param>
         /// <returns> the resulting message </returns>
-        MessageInstance sendFor(MessageInstance message, Operation operation, ConcurrentDictionary<string, Uri> overridenEndpointAddresses);
+        MessageInstance SendFor(MessageInstance message, Operation operation, ConcurrentDictionary<string, Uri> overridenEndpointAddresses);
     }
 
 }

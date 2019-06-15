@@ -41,15 +41,15 @@ namespace org.activiti.engine.impl.bpmn.behavior
 		/// flow are selected, multiple, parallel paths of executions are created.
 		/// </para>
 		/// </summary>
-		public virtual void performDefaultOutgoingBehavior(IExecutionEntity activityExecution)
+		public virtual void PerformDefaultOutgoingBehavior(IExecutionEntity activityExecution)
 		{
-			performOutgoingBehavior(activityExecution, true, false);
+			PerformOutgoingBehavior(activityExecution, true, false);
 		}
 
 		/// <summary>
 		/// dispatch job canceled event for job associated with given execution entity </summary>
 		/// <param name="activityExecution"> </param>
-		protected internal virtual void dispatchJobCanceledEvents(IExecutionEntity activityExecution)
+		protected internal virtual void DispatchJobCanceledEvents(IExecutionEntity activityExecution)
 		{
 			if (activityExecution != null)
 			{
@@ -58,7 +58,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 				{
 					if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
 					{
-						Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_CANCELED, job));
+						Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_CANCELED, job));
 					}
 				}
 
@@ -67,7 +67,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 				{
 					if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
 					{
-						Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_CANCELED, job));
+						Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_CANCELED, job));
 					}
 				}
 			}
@@ -77,9 +77,9 @@ namespace org.activiti.engine.impl.bpmn.behavior
 		/// <para>
 		/// This means that every outgoing sequence flow is selected for continuing the process instance, regardless of having a condition or not. In case of multiple outgoing sequence flow, multiple
 		/// parallel paths of executions will be created. </seealso>
-		public virtual void performIgnoreConditionsOutgoingBehavior(IExecutionEntity activityExecution)
+		public virtual void PerformIgnoreConditionsOutgoingBehavior(IExecutionEntity activityExecution)
 		{
-			performOutgoingBehavior(activityExecution, false, false);
+			PerformOutgoingBehavior(activityExecution, false, false);
 		}
 
 		/// <summary>
@@ -87,9 +87,9 @@ namespace org.activiti.engine.impl.bpmn.behavior
 		/// <param name="execution"> The current execution context </param>
 		/// <param name="checkConditions"> Whether or not to check conditions before determining whether or not to take a transition. </param>
 		/// <param name="throwExceptionIfExecutionStuck"> If true, an <seealso cref="ActivitiException"/> will be thrown in case no transition could be found to leave the activity. </param>
-		protected internal virtual void performOutgoingBehavior(IExecutionEntity execution, bool checkConditions, bool throwExceptionIfExecutionStuck)
+		protected internal virtual void PerformOutgoingBehavior(IExecutionEntity execution, bool checkConditions, bool throwExceptionIfExecutionStuck)
 		{
-			Context.Agenda.planTakeOutgoingSequenceFlowsOperation(execution, true);
+			Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(execution, true);
 		}
 	}
 

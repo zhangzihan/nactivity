@@ -28,7 +28,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, ScriptTask scriptTask)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, ScriptTask scriptTask)
         {
 
             if (string.IsNullOrWhiteSpace(scriptTask.Script))
@@ -36,7 +36,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
                 logger.LogWarning("No script provided for scriptTask " + scriptTask.Id);
             }
 
-            scriptTask.Behavior = bpmnParse.ActivityBehaviorFactory.createScriptTaskActivityBehavior(scriptTask);
+            scriptTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateScriptTaskActivityBehavior(scriptTask);
 
         }
 

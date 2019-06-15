@@ -12,6 +12,7 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.model;
 
     /// 
@@ -22,11 +23,11 @@ namespace org.activiti.bpmn.converter.child
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_TASK_LISTENER;
+                return BpmnXMLConstants.ELEMENT_TASK_LISTENER;
             }
         }
 
-        public override void addListenerToParent(ActivitiListener listener, BaseElement parentElement)
+        public override void AddListenerToParent(ActivitiListener listener, BaseElement parentElement)
         {
             if (parentElement is UserTask)
             {

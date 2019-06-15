@@ -9,8 +9,15 @@ namespace Sys.Workflow
     [Serializable]
     public class NoneCountersignUsersException : Exception
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public string ExecutionName { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionName"></param>
         public NoneCountersignUsersException(string executionName) : base($"节点{executionName}没有会签人员")
         {
             this.ExecutionName = executionName;

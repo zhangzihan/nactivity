@@ -63,10 +63,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            DataAssociation clone = new DataAssociation();
-            clone.Values = this;
+            DataAssociation clone = new DataAssociation
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -85,7 +87,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (Assignment assignment in val.Assignments)
                     {
-                        assignments.Add(assignment.clone() as Assignment);
+                        assignments.Add(assignment.Clone() as Assignment);
                     }
                 }
             }

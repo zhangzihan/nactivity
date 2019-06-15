@@ -9,6 +9,6 @@ namespace Sys.Data
 
     public interface IEntityManagerFactory
     {
-        IEntityManager createEntityManager();
+        IEntityManager CreateEntityManager();
     }
 }

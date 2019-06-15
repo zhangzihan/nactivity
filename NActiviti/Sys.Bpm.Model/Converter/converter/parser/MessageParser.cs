@@ -19,21 +19,21 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class MessageParser : IBpmnXMLConstants
     {
-        public virtual void parse(XMLStreamReader xtr, BpmnModel model)
+        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
         {
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID)))
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID)))
             {
-                string messageId = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID);
-                string messageName = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME);
-                string itemRef = parseItemRef(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ITEM_REF), model);
+                string messageId = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+                string messageName = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
+                string itemRef = ParseItemRef(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ITEM_REF), model);
                 Message message = new Message(messageId, messageName, itemRef);
-                BpmnXMLUtil.addXMLLocation(message, xtr);
-                BpmnXMLUtil.parseChildElements(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_MESSAGE, message, xtr, model);
-                model.addMessage(message);
+                BpmnXMLUtil.AddXMLLocation(message, xtr);
+                BpmnXMLUtil.ParseChildElements(BpmnXMLConstants.ELEMENT_MESSAGE, message, xtr, model);
+                model.AddMessage(message);
             }
         }
 
-        protected internal virtual string parseItemRef(string itemRef, BpmnModel model)
+        protected internal virtual string ParseItemRef(string itemRef, BpmnModel model)
         {
             string result = null;
             if (!string.IsNullOrWhiteSpace(itemRef))
@@ -42,7 +42,7 @@ namespace org.activiti.bpmn.converter.parser
                 if (indexOfP != -1)
                 {
                     string prefix = itemRef.Substring(0, indexOfP);
-                    string resolvedNamespace = model.getNamespace(prefix);
+                    string resolvedNamespace = model.GetNamespace(prefix);
                     result = resolvedNamespace + ":" + itemRef.Substring(indexOfP + 1);
                 }
                 else

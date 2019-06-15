@@ -36,77 +36,77 @@ namespace org.activiti.engine.impl
 	  {
 	  }
 
-	  public virtual IHistoricProcessInstanceQuery createHistoricProcessInstanceQuery()
+	  public virtual IHistoricProcessInstanceQuery CreateHistoricProcessInstanceQuery()
 	  {
 		return new HistoricProcessInstanceQueryImpl(commandExecutor);
 	  }
 
-	  public virtual IHistoricActivityInstanceQuery createHistoricActivityInstanceQuery()
+	  public virtual IHistoricActivityInstanceQuery CreateHistoricActivityInstanceQuery()
 	  {
 		return new HistoricActivityInstanceQueryImpl(commandExecutor);
 	  }
 
-	  public virtual IHistoricTaskInstanceQuery createHistoricTaskInstanceQuery()
+	  public virtual IHistoricTaskInstanceQuery CreateHistoricTaskInstanceQuery()
 	  {
 		return new HistoricTaskInstanceQueryImpl(commandExecutor, processEngineConfiguration.DatabaseType);
 	  }
 
-	  public virtual IHistoricDetailQuery createHistoricDetailQuery()
+	  public virtual IHistoricDetailQuery CreateHistoricDetailQuery()
 	  {
 		return new HistoricDetailQueryImpl(commandExecutor);
 	  }
 
-	  public virtual INativeHistoricDetailQuery createNativeHistoricDetailQuery()
+	  public virtual INativeHistoricDetailQuery CreateNativeHistoricDetailQuery()
 	  {
 		return new NativeHistoricDetailQueryImpl(commandExecutor);
 	  }
 
-	  public virtual IHistoricVariableInstanceQuery createHistoricVariableInstanceQuery()
+	  public virtual IHistoricVariableInstanceQuery CreateHistoricVariableInstanceQuery()
 	  {
 		return new HistoricVariableInstanceQueryImpl(commandExecutor);
 	  }
 
-	  public virtual INativeHistoricVariableInstanceQuery createNativeHistoricVariableInstanceQuery()
+	  public virtual INativeHistoricVariableInstanceQuery CreateNativeHistoricVariableInstanceQuery()
 	  {
 		return new NativeHistoricVariableInstanceQueryImpl(commandExecutor);
 	  }
 
-	  public virtual void deleteHistoricTaskInstance(string taskId)
+	  public virtual void DeleteHistoricTaskInstance(string taskId)
 	  {
-		commandExecutor.execute(new DeleteHistoricTaskInstanceCmd(taskId));
+		commandExecutor.Execute(new DeleteHistoricTaskInstanceCmd(taskId));
 	  }
 
-	  public virtual void deleteHistoricProcessInstance(string processInstanceId)
+	  public virtual void DeleteHistoricProcessInstance(string processInstanceId)
 	  {
-		commandExecutor.execute(new DeleteHistoricProcessInstanceCmd(processInstanceId));
+		commandExecutor.Execute(new DeleteHistoricProcessInstanceCmd(processInstanceId));
 	  }
 
-	  public virtual INativeHistoricProcessInstanceQuery createNativeHistoricProcessInstanceQuery()
+	  public virtual INativeHistoricProcessInstanceQuery CreateNativeHistoricProcessInstanceQuery()
 	  {
 		return new NativeHistoricProcessInstanceQueryImpl(commandExecutor);
 	  }
 
-	  public virtual INativeHistoricTaskInstanceQuery createNativeHistoricTaskInstanceQuery()
+	  public virtual INativeHistoricTaskInstanceQuery CreateNativeHistoricTaskInstanceQuery()
 	  {
 		return new NativeHistoricTaskInstanceQueryImpl(commandExecutor);
 	  }
 
-	  public virtual INativeHistoricActivityInstanceQuery createNativeHistoricActivityInstanceQuery()
+	  public virtual INativeHistoricActivityInstanceQuery CreateNativeHistoricActivityInstanceQuery()
 	  {
 		return new NativeHistoricActivityInstanceQueryImpl(commandExecutor);
 	  }
 
-	  public virtual IList<IHistoricIdentityLink> getHistoricIdentityLinksForProcessInstance(string processInstanceId)
+	  public virtual IList<IHistoricIdentityLink> GetHistoricIdentityLinksForProcessInstance(string processInstanceId)
 	  {
-		return commandExecutor.execute(new GetHistoricIdentityLinksForTaskCmd(null, processInstanceId));
+		return commandExecutor.Execute(new GetHistoricIdentityLinksForTaskCmd(null, processInstanceId));
 	  }
 
-	  public virtual IList<IHistoricIdentityLink> getHistoricIdentityLinksForTask(string taskId)
+	  public virtual IList<IHistoricIdentityLink> GetHistoricIdentityLinksForTask(string taskId)
 	  {
-		return commandExecutor.execute(new GetHistoricIdentityLinksForTaskCmd(taskId, null));
+		return commandExecutor.Execute(new GetHistoricIdentityLinksForTaskCmd(taskId, null));
 	  }
 
-	  public virtual IProcessInstanceHistoryLogQuery createProcessInstanceHistoryLogQuery(string processInstanceId)
+	  public virtual IProcessInstanceHistoryLogQuery CreateProcessInstanceHistoryLogQuery(string processInstanceId)
 	  {
 		return new ProcessInstanceHistoryLogQueryImpl(commandExecutor, processInstanceId);
 	  }

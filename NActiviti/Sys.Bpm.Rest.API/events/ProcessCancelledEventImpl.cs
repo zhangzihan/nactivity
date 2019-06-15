@@ -27,7 +27,7 @@ namespace org.activiti.cloud.services.events
     public class ProcessCancelledEventImpl : AbstractProcessEngineEvent, IProcessCancelledEvent
     {
 
-        private string cause;
+        private readonly string cause;
 
 
         /// <summary>

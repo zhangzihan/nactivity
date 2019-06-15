@@ -19,17 +19,17 @@ namespace org.activiti.engine.impl.persistence.entity.data
     public interface IDataManager<EntityImpl> where EntityImpl : IEntity
     {
 
-        EntityImpl create();
+        EntityImpl Create();
 
-        TOut findById<TOut>(KeyValuePair<string, object> entityId);
+        TOut FindById<TOut>(KeyValuePair<string, object> entityId);
 
-        void insert(EntityImpl entity);
+        void Insert(EntityImpl entity);
 
-        EntityImpl update(EntityImpl entity);
+        EntityImpl Update(EntityImpl entity);
 
-        void delete(KeyValuePair<string, object> entityId);
+        void Delete(KeyValuePair<string, object> entityId);
 
-        void delete(EntityImpl entity);
+        void Delete(EntityImpl entity);
 
     }
 

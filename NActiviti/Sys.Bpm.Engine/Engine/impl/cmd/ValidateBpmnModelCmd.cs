@@ -18,7 +18,7 @@ namespace org.activiti.engine.impl.cmd
             this.bpmnModel = bpmnModel;
         }
 
-        public virtual IList<ValidationError> execute(ICommandContext commandContext)
+        public virtual IList<ValidationError> Execute(ICommandContext commandContext)
         {
             IProcessValidator processValidator = commandContext.ProcessEngineConfiguration.ProcessValidator;
             if (processValidator == null)
@@ -26,7 +26,7 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiException("No process validator defined");
             }
 
-            return processValidator.validate(bpmnModel);
+            return processValidator.Validate(bpmnModel);
         }
 
     }

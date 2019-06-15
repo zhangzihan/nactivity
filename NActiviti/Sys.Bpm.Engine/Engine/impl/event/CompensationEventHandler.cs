@@ -28,66 +28,58 @@ namespace org.activiti.engine.impl.@event
     /// 
     public class CompensationEventHandler : IEventHandler
     {
-
         public virtual string EventHandlerType
         {
             get
             {
-                return CompensateEventSubscriptionEntity_Fields.EVENT_TYPE;
+                return CompensateEventSubscriptionEntityFields.EVENT_TYPE;
             }
         }
 
-        public virtual void handleEvent(IEventSubscriptionEntity eventSubscription, object payload, ICommandContext commandContext)
+        public virtual void HandleEvent(IEventSubscriptionEntity eventSubscription, object payload, ICommandContext commandContext)
         {
-
             string configuration = eventSubscription.Configuration;
-            if (ReferenceEquals(configuration, null))
+            if (configuration is null)
             {
                 throw new ActivitiException("Compensating execution not set for compensate event subscription with id " + eventSubscription.Id);
             }
 
-            IExecutionEntity compensatingExecution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(configuration);
+            IExecutionEntity compensatingExecution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(configuration);
 
             string processDefinitionId = compensatingExecution.ProcessDefinitionId;
-            Process process = ProcessDefinitionUtil.getProcess(processDefinitionId);
+            Process process = ProcessDefinitionUtil.GetProcess(processDefinitionId);
             if (process == null)
             {
                 throw new ActivitiException("Cannot start process instance. Process model (id = " + processDefinitionId + ") could not be found");
             }
 
-            FlowElement flowElement = process.getFlowElement(eventSubscription.ActivityId, true);
+            FlowElement flowElement = process.GetFlowElement(eventSubscription.ActivityId, true);
 
             if (flowElement is SubProcess && !((SubProcess)flowElement).ForCompensation)
             {
 
                 // descend into scope:
                 compensatingExecution.IsScope = true;
-                IList<ICompensateEventSubscriptionEntity> eventsForThisScope = commandContext.EventSubscriptionEntityManager.findCompensateEventSubscriptionsByExecutionId(compensatingExecution.Id);
-                ScopeUtil.throwCompensationEvent(eventsForThisScope, compensatingExecution, false);
-
+                IList<ICompensateEventSubscriptionEntity> eventsForThisScope = commandContext.EventSubscriptionEntityManager.FindCompensateEventSubscriptionsByExecutionId(compensatingExecution.Id);
+                ScopeUtil.ThrowCompensationEvent(eventsForThisScope, compensatingExecution, false);
             }
             else
             {
-
                 try
                 {
-
                     if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
                     {
-                        commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createActivityEvent(ActivitiEventType.ACTIVITY_COMPENSATE, flowElement.Id, flowElement.Name, compensatingExecution.Id, compensatingExecution.ProcessInstanceId, compensatingExecution.ProcessDefinitionId, flowElement));
+                        commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityEvent(ActivitiEventType.ACTIVITY_COMPENSATE, flowElement.Id, flowElement.Name, compensatingExecution.Id, compensatingExecution.ProcessInstanceId, compensatingExecution.ProcessDefinitionId, flowElement));
                     }
                     compensatingExecution.CurrentFlowElement = flowElement;
-                    Context.Agenda.planContinueProcessInCompensation(compensatingExecution);
+                    Context.Agenda.PlanContinueProcessInCompensation(compensatingExecution);
 
                 }
                 catch (Exception e)
                 {
                     throw new ActivitiException("Error while handling compensation event " + eventSubscription, e);
                 }
-
             }
         }
-
     }
-
 }

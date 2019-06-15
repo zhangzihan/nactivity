@@ -15,14 +15,15 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.bpmn.parser.factory
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate;
     using org.activiti.engine.impl.bpmn.behavior;
     using org.activiti.engine.impl.bpmn.helper;
     using org.activiti.engine.impl.@delegate;
-    using org.activiti.engine.impl.scripting;
+    using org.activiti.engine.impl.persistence.entity;
     using System.Text.RegularExpressions;
+    using ExtensionAttribute = activiti.bpmn.model.ExtensionAttribute;
 
     /// <summary>
     /// Default implementation of the <seealso cref="IActivityBehaviorFactory"/>. Used when no custom <seealso cref="IActivityBehaviorFactory"/> is injected on the <seealso cref="ProcessEngineConfigurationImpl"/>.
@@ -45,123 +46,128 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
         // Start event
         public const string EXCEPTION_MAP_FIELD = "mapExceptions";
 
-        public virtual NoneStartEventActivityBehavior createNoneStartEventActivityBehavior(StartEvent startEvent)
+        public virtual NoneStartEventActivityBehavior CreateNoneStartEventActivityBehavior(StartEvent startEvent)
         {
             return new NoneStartEventActivityBehavior();
         }
 
         // Task
 
-        public virtual TaskActivityBehavior createTaskActivityBehavior(Task task)
+        public virtual TaskActivityBehavior CreateTaskActivityBehavior(TaskActivity task)
         {
             return new TaskActivityBehavior();
         }
 
-        public virtual ManualTaskActivityBehavior createManualTaskActivityBehavior(ManualTask manualTask)
+        public virtual ManualTaskActivityBehavior CreateManualTaskActivityBehavior(ManualTask manualTask)
         {
             return new ManualTaskActivityBehavior();
         }
 
-        public virtual ReceiveTaskActivityBehavior createReceiveTaskActivityBehavior(ReceiveTask receiveTask)
+        public virtual ReceiveTaskActivityBehavior CreateReceiveTaskActivityBehavior(ReceiveTask receiveTask)
         {
             return new ReceiveTaskActivityBehavior();
         }
 
-        public virtual UserTaskActivityBehavior createUserTaskActivityBehavior(UserTask userTask)
+        public virtual UserTaskActivityBehavior CreateUserTaskActivityBehavior(UserTask userTask)
         {
             return new UserTaskActivityBehavior(userTask);
         }
 
         // Service task
 
-        protected internal virtual IExpression getSkipExpressionFromServiceTask(ServiceTask serviceTask)
+        protected internal virtual IExpression GetSkipExpressionFromServiceTask(ServiceTask serviceTask)
         {
             IExpression result = null;
             if (!string.IsNullOrWhiteSpace(serviceTask.SkipExpression))
             {
-                result = expressionManager.createExpression(serviceTask.SkipExpression);
+                result = expressionManager.CreateExpression(serviceTask.SkipExpression);
             }
             return result;
         }
 
-        public virtual ClassDelegate createClassDelegateServiceTask(ServiceTask serviceTask)
+        public virtual ClassDelegate CreateClassDelegateSendTask(SendTask sendTask)
         {
-            return classDelegateFactory.create(serviceTask.Id, serviceTask.Implementation, createFieldDeclarations(serviceTask.FieldExtensions), getSkipExpressionFromServiceTask(serviceTask), serviceTask.MapExceptions);
+            return classDelegateFactory.Create(sendTask.Id, sendTask.Implementation, CreateFieldDeclarations(sendTask.FieldExtensions), null, sendTask.MapExceptions);
         }
 
-        public virtual ServiceTaskDelegateExpressionActivityBehavior createServiceTaskDelegateExpressionActivityBehavior(ServiceTask serviceTask)
+        public virtual ClassDelegate CreateClassDelegateServiceTask(ServiceTask serviceTask)
         {
-            IExpression delegateExpression = expressionManager.createExpression(serviceTask.Implementation);
-            return createServiceTaskBehavior(serviceTask, delegateExpression);
+            return classDelegateFactory.Create(serviceTask.Id, serviceTask.Implementation, CreateFieldDeclarations(serviceTask.FieldExtensions), GetSkipExpressionFromServiceTask(serviceTask), serviceTask.MapExceptions);
         }
 
-        public virtual IActivityBehavior createDefaultServiceTaskBehavior(ServiceTask serviceTask)
+        public virtual ServiceTaskDelegateExpressionActivityBehavior CreateServiceTaskDelegateExpressionActivityBehavior(ServiceTask serviceTask)
+        {
+            IExpression delegateExpression = expressionManager.CreateExpression(serviceTask.Implementation);
+            return CreateServiceTaskBehavior(serviceTask, delegateExpression);
+        }
+
+        public virtual IActivityBehavior CreateDefaultServiceTaskBehavior(ServiceTask serviceTask)
         {
             // this is covering the case where only the field `implementation` was defined in the process definition. I.e.
             // <serviceTask id="serviceTask" implementation="myServiceTaskImpl"/>
             // `myServiceTaskImpl` can be different things depending on the implementation of `defaultServiceTaskBehavior`
             // could be for instance a Spring bean or a target for a Spring Stream
-            IExpression delegateExpression = expressionManager.createExpression("${" + DEFAULT_SERVICE_TASK_BEAN_NAME + "}");
-            return createServiceTaskBehavior(serviceTask, delegateExpression);
+            IExpression delegateExpression = expressionManager.CreateExpression("${" + DEFAULT_SERVICE_TASK_BEAN_NAME + "}");
+            return CreateServiceTaskBehavior(serviceTask, delegateExpression);
         }
 
-        private ServiceTaskDelegateExpressionActivityBehavior createServiceTaskBehavior(ServiceTask serviceTask, IExpression delegateExpression)
+        private ServiceTaskDelegateExpressionActivityBehavior CreateServiceTaskBehavior(ServiceTask serviceTask, IExpression delegateExpression)
         {
-            return new ServiceTaskDelegateExpressionActivityBehavior(serviceTask.Id, delegateExpression, getSkipExpressionFromServiceTask(serviceTask), createFieldDeclarations(serviceTask.FieldExtensions));
+            return new ServiceTaskDelegateExpressionActivityBehavior(serviceTask.Id, delegateExpression, GetSkipExpressionFromServiceTask(serviceTask), CreateFieldDeclarations(serviceTask.FieldExtensions));
         }
 
-        public virtual ServiceTaskExpressionActivityBehavior createServiceTaskExpressionActivityBehavior(ServiceTask serviceTask)
+        public virtual ServiceTaskExpressionActivityBehavior CreateServiceTaskExpressionActivityBehavior(ServiceTask serviceTask)
         {
-            IExpression expression = expressionManager.createExpression(serviceTask.Implementation);
-            return new ServiceTaskExpressionActivityBehavior(serviceTask.Id, expression, getSkipExpressionFromServiceTask(serviceTask), serviceTask.ResultVariableName);
+            IExpression expression = expressionManager.CreateExpression(serviceTask.Implementation);
+            return new ServiceTaskExpressionActivityBehavior(serviceTask.Id, expression, GetSkipExpressionFromServiceTask(serviceTask), serviceTask.ResultVariableName);
         }
 
-        public virtual WebServiceActivityBehavior createWebServiceActivityBehavior(ServiceTask serviceTask)
-        {
-            return new WebServiceActivityBehavior();
-        }
-
-        public virtual WebServiceActivityBehavior createWebServiceActivityBehavior(SendTask sendTask)
+        public virtual WebServiceActivityBehavior CreateWebServiceActivityBehavior(ServiceTask serviceTask)
         {
             return new WebServiceActivityBehavior();
         }
 
-        public virtual MailActivityBehavior createMailActivityBehavior(ServiceTask serviceTask)
+        public virtual WebServiceActivityBehavior CreateWebServiceActivityBehavior(SendTask sendTask)
         {
-            return createMailActivityBehavior(serviceTask.Id, serviceTask.FieldExtensions);
+            return new WebServiceActivityBehavior();
         }
 
-        public virtual MailActivityBehavior createMailActivityBehavior(SendTask sendTask)
+        public virtual MailActivityBehavior CreateMailActivityBehavior(ServiceTask serviceTask)
         {
-            return createMailActivityBehavior(sendTask.Id, sendTask.FieldExtensions);
+            return CreateMailActivityBehavior(serviceTask.Id, serviceTask.FieldExtensions);
         }
 
-        protected internal virtual MailActivityBehavior createMailActivityBehavior(string taskId, IList<FieldExtension> fields)
+        public virtual MailActivityBehavior CreateMailActivityBehavior(SendTask sendTask)
         {
-            IList<FieldDeclaration> fieldDeclarations = createFieldDeclarations(fields);
-            return (MailActivityBehavior)ClassDelegate.defaultInstantiateDelegate(typeof(MailActivityBehavior), fieldDeclarations);
+            return CreateMailActivityBehavior(sendTask.Id, sendTask.FieldExtensions);
+        }
+
+        protected internal virtual MailActivityBehavior CreateMailActivityBehavior(string taskId, IList<FieldExtension> fields)
+        {
+            IList<FieldDeclaration> fieldDeclarations = CreateFieldDeclarations(fields);
+            return (MailActivityBehavior)ClassDelegate.DefaultInstantiateDelegate(typeof(MailActivityBehavior), fieldDeclarations);
         }
 
         // We do not want a hard dependency on Mule, hence we return
         // ActivityBehavior and instantiate the delegate instance using a string instead of the Class itself.
-        public virtual IActivityBehavior createMuleActivityBehavior(ServiceTask serviceTask)
+        public virtual IActivityBehavior CreateMuleActivityBehavior(ServiceTask serviceTask)
         {
-            return createMuleActivityBehavior(serviceTask, serviceTask.FieldExtensions);
+            return CreateMuleActivityBehavior(serviceTask, serviceTask.FieldExtensions);
         }
 
-        public virtual IActivityBehavior createMuleActivityBehavior(SendTask sendTask)
+        public virtual IActivityBehavior CreateMuleActivityBehavior(SendTask sendTask)
         {
-            return createMuleActivityBehavior(sendTask, sendTask.FieldExtensions);
+            return CreateMuleActivityBehavior(sendTask, sendTask.FieldExtensions);
         }
 
-        protected internal virtual IActivityBehavior createMuleActivityBehavior(TaskWithFieldExtensions task, IList<FieldExtension> fieldExtensions)
+        protected internal virtual IActivityBehavior CreateMuleActivityBehavior(TaskWithFieldExtensions task, IList<FieldExtension> fieldExtensions)
         {
             try
             {
 
                 Type theClass = Type.GetType("org.activiti.mule.MuleSendActivitiBehavior");
-                IList<FieldDeclaration> fieldDeclarations = createFieldDeclarations(fieldExtensions);
-                return (IActivityBehavior)ClassDelegate.defaultInstantiateDelegate(theClass, fieldDeclarations);
+                IList<FieldDeclaration> fieldDeclarations = CreateFieldDeclarations(fieldExtensions);
+                return (IActivityBehavior)ClassDelegate.DefaultInstantiateDelegate(theClass, fieldDeclarations);
             }
             catch (Exception e)
             {
@@ -171,17 +177,17 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
 
         // We do not want a hard dependency on Camel, hence we return
         // ActivityBehavior and instantiate the delegate instance using a string instead of the Class itself.
-        public virtual IActivityBehavior createCamelActivityBehavior(ServiceTask serviceTask)
+        public virtual IActivityBehavior CreateCamelActivityBehavior(ServiceTask serviceTask)
         {
-            return createCamelActivityBehavior(serviceTask, serviceTask.FieldExtensions);
+            return CreateCamelActivityBehavior(serviceTask, serviceTask.FieldExtensions);
         }
 
-        public virtual IActivityBehavior createCamelActivityBehavior(SendTask sendTask)
+        public virtual IActivityBehavior CreateCamelActivityBehavior(SendTask sendTask)
         {
-            return createCamelActivityBehavior(sendTask, sendTask.FieldExtensions);
+            return CreateCamelActivityBehavior(sendTask, sendTask.FieldExtensions);
         }
 
-        protected internal virtual IActivityBehavior createCamelActivityBehavior(TaskWithFieldExtensions task, IList<FieldExtension> fieldExtensions)
+        protected internal virtual IActivityBehavior CreateCamelActivityBehavior(TaskWithFieldExtensions task, IList<FieldExtension> fieldExtensions)
         {
             try
             {
@@ -208,9 +214,9 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
                     theClass = Type.GetType("org.activiti.camel.impl.CamelBehaviorDefaultImpl");
                 }
 
-                IList<FieldDeclaration> fieldDeclarations = createFieldDeclarations(fieldExtensions);
-                addExceptionMapAsFieldDeclaration(fieldDeclarations, task.MapExceptions);
-                return (IActivityBehavior)ClassDelegate.defaultInstantiateDelegate(theClass, fieldDeclarations);
+                IList<FieldDeclaration> fieldDeclarations = CreateFieldDeclarations(fieldExtensions);
+                AddExceptionMapAsFieldDeclaration(fieldDeclarations, task.MapExceptions);
+                return (IActivityBehavior)ClassDelegate.DefaultInstantiateDelegate(theClass, fieldDeclarations);
             }
             catch (Exception e)
             {
@@ -218,19 +224,19 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
             }
         }
 
-        private void addExceptionMapAsFieldDeclaration(IList<FieldDeclaration> fieldDeclarations, IList<MapExceptionEntry> mapExceptions)
+        private void AddExceptionMapAsFieldDeclaration(IList<FieldDeclaration> fieldDeclarations, IList<MapExceptionEntry> mapExceptions)
         {
             FieldDeclaration exceptionMapsFieldDeclaration = new FieldDeclaration(EXCEPTION_MAP_FIELD, mapExceptions.GetType().ToString(), mapExceptions);
             fieldDeclarations.Add(exceptionMapsFieldDeclaration);
         }
 
-        public virtual ShellActivityBehavior createShellActivityBehavior(ServiceTask serviceTask)
+        public virtual ShellActivityBehavior CreateShellActivityBehavior(ServiceTask serviceTask)
         {
-            IList<FieldDeclaration> fieldDeclarations = createFieldDeclarations(serviceTask.FieldExtensions);
-            return (ShellActivityBehavior)ClassDelegate.defaultInstantiateDelegate(typeof(ShellActivityBehavior), fieldDeclarations);
+            IList<FieldDeclaration> fieldDeclarations = CreateFieldDeclarations(serviceTask.FieldExtensions);
+            return (ShellActivityBehavior)ClassDelegate.DefaultInstantiateDelegate(typeof(ShellActivityBehavior), fieldDeclarations);
         }
 
-        public virtual IActivityBehavior createBusinessRuleTaskActivityBehavior(BusinessRuleTask businessRuleTask)
+        public virtual IActivityBehavior CreateBusinessRuleTaskActivityBehavior(BusinessRuleTask businessRuleTask)
         {
             IBusinessRuleTaskDelegate ruleActivity = null;
             if (!string.IsNullOrWhiteSpace(businessRuleTask.ClassName))
@@ -252,17 +258,17 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
 
             foreach (string ruleVariableInputObject in businessRuleTask.InputVariables)
             {
-                ruleActivity.addRuleVariableInputIdExpression(expressionManager.createExpression(ruleVariableInputObject.Trim()));
+                ruleActivity.AddRuleVariableInputIdExpression(expressionManager.CreateExpression(ruleVariableInputObject.Trim()));
             }
 
             foreach (string rule in businessRuleTask.RuleNames)
             {
-                ruleActivity.addRuleIdExpression(expressionManager.createExpression(rule.Trim()));
+                ruleActivity.AddRuleIdExpression(expressionManager.CreateExpression(rule.Trim()));
             }
 
             ruleActivity.Exclude = businessRuleTask.Exclude;
 
-            if (!ReferenceEquals(businessRuleTask.ResultVariableName, null) && businessRuleTask.ResultVariableName.Length > 0)
+            if (!(businessRuleTask.ResultVariableName is null) && businessRuleTask.ResultVariableName.Length > 0)
             {
                 ruleActivity.ResultVariable = businessRuleTask.ResultVariableName;
             }
@@ -276,10 +282,10 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
 
         // Script task
 
-        public virtual ScriptTaskActivityBehavior createScriptTaskActivityBehavior(ScriptTask scriptTask)
+        public virtual ScriptTaskActivityBehavior CreateScriptTaskActivityBehavior(ScriptTask scriptTask)
         {
             string language = scriptTask.ScriptFormat;
-            if (ReferenceEquals(language, null))
+            if (language is null)
             {
                 //language = ScriptingEngines.DEFAULT_SCRIPTING_LANGUAGE;
             }
@@ -288,70 +294,84 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
 
         // Gateways
 
-        public virtual ExclusiveGatewayActivityBehavior createExclusiveGatewayActivityBehavior(ExclusiveGateway exclusiveGateway)
+        public virtual ExclusiveGatewayActivityBehavior CreateExclusiveGatewayActivityBehavior(ExclusiveGateway exclusiveGateway)
         {
             return new ExclusiveGatewayActivityBehavior();
         }
 
-        public virtual ParallelGatewayActivityBehavior createParallelGatewayActivityBehavior(ParallelGateway parallelGateway)
+        public virtual ParallelGatewayActivityBehavior CreateParallelGatewayActivityBehavior(ParallelGateway parallelGateway)
         {
             return new ParallelGatewayActivityBehavior();
         }
 
-        public virtual InclusiveGatewayActivityBehavior createInclusiveGatewayActivityBehavior(InclusiveGateway inclusiveGateway)
+        public virtual InclusiveGatewayActivityBehavior CreateInclusiveGatewayActivityBehavior(InclusiveGateway inclusiveGateway)
         {
             return new InclusiveGatewayActivityBehavior();
         }
 
-        public virtual EventBasedGatewayActivityBehavior createEventBasedGatewayActivityBehavior(EventGateway eventGateway)
+        public virtual EventBasedGatewayActivityBehavior CreateEventBasedGatewayActivityBehavior(EventGateway eventGateway)
         {
             return new EventBasedGatewayActivityBehavior();
         }
 
         // Multi Instance
 
-        public virtual SequentialMultiInstanceBehavior createSequentialMultiInstanceBehavior(Activity activity, AbstractBpmnActivityBehavior innerActivityBehavior)
+        public virtual SequentialMultiInstanceBehavior CreateSequentialMultiInstanceBehavior(Activity activity, AbstractBpmnActivityBehavior innerActivityBehavior)
         {
             return new SequentialMultiInstanceBehavior(activity, innerActivityBehavior);
         }
 
-        public virtual ParallelMultiInstanceBehavior createParallelMultiInstanceBehavior(Activity activity, AbstractBpmnActivityBehavior innerActivityBehavior)
+        public virtual ParallelMultiInstanceBehavior CreateParallelMultiInstanceBehavior(Activity activity, AbstractBpmnActivityBehavior innerActivityBehavior)
         {
-            return new ParallelMultiInstanceBehavior(activity, innerActivityBehavior);
+            ExtensionAttribute assigneeType = activity.AssigneeType;
+
+            switch (assigneeType?.Value?.ToLower())
+            {
+                case AssigneeType.SINGLE:
+                default:
+                    return new ParallelMultiInstanceBehavior(activity, innerActivityBehavior);
+                case AssigneeType.ONE:
+                    return new OnePassParallelMultiInstanceBehavior(activity, innerActivityBehavior);
+                case AssigneeType.HALF_PASSED:
+                case AssigneeType.HALF_REJECT:
+                    return new HalfPassParallelMultiInstanceBehavior(activity, innerActivityBehavior);
+                case AssigneeType.ALL:
+                    return new AllPassParallelMultiInstanceBehavior(activity, innerActivityBehavior);
+            }
         }
 
         // Subprocess
 
-        public virtual SubProcessActivityBehavior createSubprocessActivityBehavior(SubProcess subProcess)
+        public virtual SubProcessActivityBehavior CreateSubprocessActivityBehavior(SubProcess subProcess)
         {
             return new SubProcessActivityBehavior();
         }
 
-        public virtual EventSubProcessErrorStartEventActivityBehavior createEventSubProcessErrorStartEventActivityBehavior(StartEvent startEvent)
+        public virtual EventSubProcessErrorStartEventActivityBehavior CreateEventSubProcessErrorStartEventActivityBehavior(StartEvent startEvent)
         {
             return new EventSubProcessErrorStartEventActivityBehavior();
         }
 
-        public virtual EventSubProcessMessageStartEventActivityBehavior createEventSubProcessMessageStartEventActivityBehavior(StartEvent startEvent, MessageEventDefinition messageEventDefinition)
+        public virtual EventSubProcessMessageStartEventActivityBehavior CreateEventSubProcessMessageStartEventActivityBehavior(StartEvent startEvent, MessageEventDefinition messageEventDefinition)
         {
             return new EventSubProcessMessageStartEventActivityBehavior(messageEventDefinition);
         }
 
-        public virtual AdhocSubProcessActivityBehavior createAdhocSubprocessActivityBehavior(SubProcess subProcess)
+        public virtual AdhocSubProcessActivityBehavior CreateAdhocSubprocessActivityBehavior(SubProcess subProcess)
         {
             return new AdhocSubProcessActivityBehavior();
         }
 
         // Call activity
 
-        public virtual CallActivityBehavior createCallActivityBehavior(CallActivity callActivity)
+        public virtual CallActivityBehavior CreateCallActivityBehavior(CallActivity callActivity)
         {
             string expressionRegex = "\\$+\\{+.+\\}";
 
-            CallActivityBehavior callActivityBehaviour = null;
+            CallActivityBehavior callActivityBehaviour;
             if (!string.IsNullOrWhiteSpace(callActivity.CalledElement) && new Regex(expressionRegex).IsMatch(callActivity.CalledElement))
             {
-                callActivityBehaviour = new CallActivityBehavior(expressionManager.createExpression(callActivity.CalledElement), callActivity.MapExceptions);
+                callActivityBehaviour = new CallActivityBehavior(expressionManager.CreateExpression(callActivity.CalledElement), callActivity.MapExceptions);
             }
             else
             {
@@ -363,68 +383,68 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
 
         // Transaction
 
-        public virtual TransactionActivityBehavior createTransactionActivityBehavior(Transaction transaction)
+        public virtual TransactionActivityBehavior CreateTransactionActivityBehavior(Transaction transaction)
         {
             return new TransactionActivityBehavior();
         }
 
         // Intermediate Events
 
-        public virtual IntermediateCatchEventActivityBehavior createIntermediateCatchEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent)
+        public virtual IntermediateCatchEventActivityBehavior CreateIntermediateCatchEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent)
         {
             return new IntermediateCatchEventActivityBehavior();
         }
 
-        public virtual IntermediateCatchMessageEventActivityBehavior createIntermediateCatchMessageEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent, MessageEventDefinition messageEventDefinition)
+        public virtual IntermediateCatchMessageEventActivityBehavior CreateIntermediateCatchMessageEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent, MessageEventDefinition messageEventDefinition)
         {
             return new IntermediateCatchMessageEventActivityBehavior(messageEventDefinition);
         }
 
-        public virtual IntermediateCatchTimerEventActivityBehavior createIntermediateCatchTimerEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent, TimerEventDefinition timerEventDefinition)
+        public virtual IntermediateCatchTimerEventActivityBehavior CreateIntermediateCatchTimerEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent, TimerEventDefinition timerEventDefinition)
         {
             return new IntermediateCatchTimerEventActivityBehavior(timerEventDefinition);
         }
 
-        public virtual IntermediateCatchSignalEventActivityBehavior createIntermediateCatchSignalEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent, SignalEventDefinition signalEventDefinition, Signal signal)
+        public virtual IntermediateCatchSignalEventActivityBehavior CreateIntermediateCatchSignalEventActivityBehavior(IntermediateCatchEvent intermediateCatchEvent, SignalEventDefinition signalEventDefinition, Signal signal)
         {
 
             return new IntermediateCatchSignalEventActivityBehavior(signalEventDefinition, signal);
         }
 
-        public virtual IntermediateThrowNoneEventActivityBehavior createIntermediateThrowNoneEventActivityBehavior(ThrowEvent throwEvent)
+        public virtual IntermediateThrowNoneEventActivityBehavior CreateIntermediateThrowNoneEventActivityBehavior(ThrowEvent throwEvent)
         {
             return new IntermediateThrowNoneEventActivityBehavior();
         }
 
-        public virtual IntermediateThrowSignalEventActivityBehavior createIntermediateThrowSignalEventActivityBehavior(ThrowEvent throwEvent, SignalEventDefinition signalEventDefinition, Signal signal)
+        public virtual IntermediateThrowSignalEventActivityBehavior CreateIntermediateThrowSignalEventActivityBehavior(ThrowEvent throwEvent, SignalEventDefinition signalEventDefinition, Signal signal)
         {
 
             return new IntermediateThrowSignalEventActivityBehavior(signalEventDefinition, signal);
         }
 
-        public virtual IntermediateThrowCompensationEventActivityBehavior createIntermediateThrowCompensationEventActivityBehavior(ThrowEvent throwEvent, CompensateEventDefinition compensateEventDefinition)
+        public virtual IntermediateThrowCompensationEventActivityBehavior CreateIntermediateThrowCompensationEventActivityBehavior(ThrowEvent throwEvent, CompensateEventDefinition compensateEventDefinition)
         {
             return new IntermediateThrowCompensationEventActivityBehavior(compensateEventDefinition);
         }
 
         // End events
 
-        public virtual NoneEndEventActivityBehavior createNoneEndEventActivityBehavior(EndEvent endEvent)
+        public virtual NoneEndEventActivityBehavior CreateNoneEndEventActivityBehavior(EndEvent endEvent)
         {
             return new NoneEndEventActivityBehavior();
         }
 
-        public virtual ErrorEndEventActivityBehavior createErrorEndEventActivityBehavior(EndEvent endEvent, ErrorEventDefinition errorEventDefinition)
+        public virtual ErrorEndEventActivityBehavior CreateErrorEndEventActivityBehavior(EndEvent endEvent, ErrorEventDefinition errorEventDefinition)
         {
             return new ErrorEndEventActivityBehavior(errorEventDefinition.ErrorCode);
         }
 
-        public virtual CancelEndEventActivityBehavior createCancelEndEventActivityBehavior(EndEvent endEvent)
+        public virtual CancelEndEventActivityBehavior CreateCancelEndEventActivityBehavior(EndEvent endEvent)
         {
             return new CancelEndEventActivityBehavior();
         }
 
-        public virtual TerminateEndEventActivityBehavior createTerminateEndEventActivityBehavior(EndEvent endEvent)
+        public virtual TerminateEndEventActivityBehavior CreateTerminateEndEventActivityBehavior(EndEvent endEvent)
         {
             bool terminateAll = false;
             bool terminateMultiInstance = false;
@@ -435,41 +455,43 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
                 terminateMultiInstance = ((TerminateEventDefinition)endEvent.EventDefinitions[0]).TerminateMultiInstance;
             }
 
-            TerminateEndEventActivityBehavior terminateEndEventActivityBehavior = new TerminateEndEventActivityBehavior();
-            terminateEndEventActivityBehavior.TerminateAll = terminateAll;
-            terminateEndEventActivityBehavior.TerminateMultiInstance = terminateMultiInstance;
+            TerminateEndEventActivityBehavior terminateEndEventActivityBehavior = new TerminateEndEventActivityBehavior
+            {
+                TerminateAll = terminateAll,
+                TerminateMultiInstance = terminateMultiInstance
+            };
             return terminateEndEventActivityBehavior;
         }
 
         // Boundary Events
 
-        public virtual BoundaryEventActivityBehavior createBoundaryEventActivityBehavior(BoundaryEvent boundaryEvent, bool interrupting)
+        public virtual BoundaryEventActivityBehavior CreateBoundaryEventActivityBehavior(BoundaryEvent boundaryEvent, bool interrupting)
         {
             return new BoundaryEventActivityBehavior(interrupting);
         }
 
-        public virtual BoundaryCancelEventActivityBehavior createBoundaryCancelEventActivityBehavior(CancelEventDefinition cancelEventDefinition)
+        public virtual BoundaryCancelEventActivityBehavior CreateBoundaryCancelEventActivityBehavior(CancelEventDefinition cancelEventDefinition)
         {
             return new BoundaryCancelEventActivityBehavior();
         }
 
-        public virtual BoundaryCompensateEventActivityBehavior createBoundaryCompensateEventActivityBehavior(BoundaryEvent boundaryEvent, CompensateEventDefinition compensateEventDefinition, bool interrupting)
+        public virtual BoundaryCompensateEventActivityBehavior CreateBoundaryCompensateEventActivityBehavior(BoundaryEvent boundaryEvent, CompensateEventDefinition compensateEventDefinition, bool interrupting)
         {
 
             return new BoundaryCompensateEventActivityBehavior(compensateEventDefinition, interrupting);
         }
 
-        public virtual BoundaryTimerEventActivityBehavior createBoundaryTimerEventActivityBehavior(BoundaryEvent boundaryEvent, TimerEventDefinition timerEventDefinition, bool interrupting)
+        public virtual BoundaryTimerEventActivityBehavior CreateBoundaryTimerEventActivityBehavior(BoundaryEvent boundaryEvent, TimerEventDefinition timerEventDefinition, bool interrupting)
         {
             return new BoundaryTimerEventActivityBehavior(timerEventDefinition, interrupting);
         }
 
-        public virtual BoundarySignalEventActivityBehavior createBoundarySignalEventActivityBehavior(BoundaryEvent boundaryEvent, SignalEventDefinition signalEventDefinition, Signal signal, bool interrupting)
+        public virtual BoundarySignalEventActivityBehavior CreateBoundarySignalEventActivityBehavior(BoundaryEvent boundaryEvent, SignalEventDefinition signalEventDefinition, Signal signal, bool interrupting)
         {
             return new BoundarySignalEventActivityBehavior(signalEventDefinition, signal, interrupting);
         }
 
-        public virtual BoundaryMessageEventActivityBehavior createBoundaryMessageEventActivityBehavior(BoundaryEvent boundaryEvent, MessageEventDefinition messageEventDefinition, bool interrupting)
+        public virtual BoundaryMessageEventActivityBehavior CreateBoundaryMessageEventActivityBehavior(BoundaryEvent boundaryEvent, MessageEventDefinition messageEventDefinition, bool interrupting)
         {
             return new BoundaryMessageEventActivityBehavior(messageEventDefinition, interrupting);
         }

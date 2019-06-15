@@ -25,15 +25,18 @@ namespace org.activiti.engine.impl.identity
 
         internal static ThreadLocal<IUserInfo> authenticatedUserIdThreadLocal = new ThreadLocal<IUserInfo>();
 
+        /// <summary>
+        /// 验证用户
+        /// </summary>
         public static IUserInfo AuthenticatedUser
         {
-            set
-            {
-                authenticatedUserIdThreadLocal.Value = value;
-            }
             get
             {
                 return authenticatedUserIdThreadLocal.Value;
+            }
+            set
+            {
+                authenticatedUserIdThreadLocal.Value = value;
             }
         }
 

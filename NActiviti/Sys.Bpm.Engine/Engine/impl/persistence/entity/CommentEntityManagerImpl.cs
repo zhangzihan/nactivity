@@ -42,122 +42,122 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public override void insert(ICommentEntity commentEntity)
+        public override void Insert(ICommentEntity commentEntity)
         {
-            checkHistoryEnabled();
+            CheckHistoryEnabled();
 
-            insert(commentEntity, false);
+            Insert(commentEntity, false);
 
-            IComment comment = (IComment)commentEntity;
+            IComment comment = commentEntity;
             if (EventDispatcher.Enabled)
             {
                 // Forced to fetch the process-instance to associate the right
                 // process definition
                 string processDefinitionId = null;
                 string processInstanceId = comment.ProcessInstanceId;
-                if (!ReferenceEquals(comment.ProcessInstanceId, null))
+                if (!(comment.ProcessInstanceId is null))
                 {
-                    IExecutionEntity process = ExecutionEntityManager.findById<IExecutionEntity>(comment.ProcessInstanceId);
+                    IExecutionEntity process = ExecutionEntityManager.FindById<IExecutionEntity>(comment.ProcessInstanceId);
                     if (process != null)
                     {
                         processDefinitionId = process.ProcessDefinitionId;
                     }
                 }
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_CREATED, commentEntity, processInstanceId, processInstanceId, processDefinitionId));
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, commentEntity, processInstanceId, processInstanceId, processDefinitionId));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_CREATED, commentEntity, processInstanceId, processInstanceId, processDefinitionId));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, commentEntity, processInstanceId, processInstanceId, processDefinitionId));
             }
         }
 
-        public virtual IList<IComment> findCommentsByTaskId(string taskId)
+        public virtual IList<IComment> FindCommentsByTaskId(string taskId)
         {
-            checkHistoryEnabled();
-            return commentDataManager.findCommentsByTaskId(taskId);
+            CheckHistoryEnabled();
+            return commentDataManager.FindCommentsByTaskId(taskId);
         }
 
-        public virtual IList<IComment> findCommentsByTaskIdAndType(string taskId, string type)
+        public virtual IList<IComment> FindCommentsByTaskIdAndType(string taskId, string type)
         {
-            checkHistoryEnabled();
-            return commentDataManager.findCommentsByTaskIdAndType(taskId, type);
+            CheckHistoryEnabled();
+            return commentDataManager.FindCommentsByTaskIdAndType(taskId, type);
         }
 
-        public virtual IList<IComment> findCommentsByType(string type)
+        public virtual IList<IComment> FindCommentsByType(string type)
         {
-            checkHistoryEnabled();
-            return commentDataManager.findCommentsByType(type);
+            CheckHistoryEnabled();
+            return commentDataManager.FindCommentsByType(type);
         }
 
-        public virtual IList<IEvent> findEventsByTaskId(string taskId)
+        public virtual IList<IEvent> FindEventsByTaskId(string taskId)
         {
-            checkHistoryEnabled();
-            return commentDataManager.findEventsByTaskId(taskId);
+            CheckHistoryEnabled();
+            return commentDataManager.FindEventsByTaskId(taskId);
         }
 
-        public virtual IList<IEvent> findEventsByProcessInstanceId(string processInstanceId)
+        public virtual IList<IEvent> FindEventsByProcessInstanceId(string processInstanceId)
         {
-            checkHistoryEnabled();
-            return commentDataManager.findEventsByProcessInstanceId(processInstanceId);
+            CheckHistoryEnabled();
+            return commentDataManager.FindEventsByProcessInstanceId(processInstanceId);
         }
 
-        public virtual void deleteCommentsByTaskId(string taskId)
+        public virtual void DeleteCommentsByTaskId(string taskId)
         {
-            checkHistoryEnabled();
-            commentDataManager.deleteCommentsByTaskId(taskId);
+            CheckHistoryEnabled();
+            commentDataManager.DeleteCommentsByTaskId(taskId);
         }
 
-        public virtual void deleteCommentsByProcessInstanceId(string processInstanceId)
+        public virtual void DeleteCommentsByProcessInstanceId(string processInstanceId)
         {
-            checkHistoryEnabled();
-            commentDataManager.deleteCommentsByProcessInstanceId(processInstanceId);
+            CheckHistoryEnabled();
+            commentDataManager.DeleteCommentsByProcessInstanceId(processInstanceId);
         }
 
-        public virtual IList<IComment> findCommentsByProcessInstanceId(string processInstanceId)
+        public virtual IList<IComment> FindCommentsByProcessInstanceId(string processInstanceId)
         {
-            checkHistoryEnabled();
-            return commentDataManager.findCommentsByProcessInstanceId(processInstanceId);
+            CheckHistoryEnabled();
+            return commentDataManager.FindCommentsByProcessInstanceId(processInstanceId);
         }
 
-        public virtual IList<IComment> findCommentsByProcessInstanceId(string processInstanceId, string type)
+        public virtual IList<IComment> FindCommentsByProcessInstanceId(string processInstanceId, string type)
         {
-            checkHistoryEnabled();
-            return commentDataManager.findCommentsByProcessInstanceId(processInstanceId, type);
+            CheckHistoryEnabled();
+            return commentDataManager.FindCommentsByProcessInstanceId(processInstanceId, type);
         }
 
-        public virtual IComment findComment(string commentId)
+        public virtual IComment FindComment(string commentId)
         {
-            return commentDataManager.findComment(commentId);
+            return commentDataManager.FindComment(commentId);
         }
 
-        public virtual IEvent findEvent(string commentId)
+        public virtual IEvent FindEvent(string commentId)
         {
-            return commentDataManager.findEvent(commentId);
+            return commentDataManager.FindEvent(commentId);
         }
 
-        public override void delete(ICommentEntity commentEntity)
+        public override void Delete(ICommentEntity commentEntity)
         {
-            checkHistoryEnabled();
+            CheckHistoryEnabled();
 
-            delete(commentEntity, false);
+            Delete(commentEntity, false);
 
-            IComment comment = (IComment)commentEntity;
+            IComment comment = commentEntity;
             if (EventDispatcher.Enabled)
             {
                 // Forced to fetch the process-instance to associate the right
                 // process definition
                 string processDefinitionId = null;
                 string processInstanceId = comment.ProcessInstanceId;
-                if (!ReferenceEquals(comment.ProcessInstanceId, null))
+                if (!(comment.ProcessInstanceId is null))
                 {
-                    IExecutionEntity process = ExecutionEntityManager.findById<IExecutionEntity>(comment.ProcessInstanceId);
+                    IExecutionEntity process = ExecutionEntityManager.FindById<IExecutionEntity>(comment.ProcessInstanceId);
                     if (process != null)
                     {
                         processDefinitionId = process.ProcessDefinitionId;
                     }
                 }
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_DELETED, commentEntity, processInstanceId, processInstanceId, processDefinitionId));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, commentEntity, processInstanceId, processInstanceId, processDefinitionId));
             }
         }
 
-        protected internal virtual void checkHistoryEnabled()
+        protected internal virtual void CheckHistoryEnabled()
         {
             if (!HistoryManager.HistoryEnabled)
             {

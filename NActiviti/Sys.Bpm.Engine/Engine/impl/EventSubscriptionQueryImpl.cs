@@ -22,17 +22,17 @@ namespace org.activiti.engine.impl
 
     /// 
     [Serializable]
-    public class EventSubscriptionQueryImpl : AbstractQuery<EventSubscriptionQueryImpl, IEventSubscriptionEntity>
+    public class EventSubscriptionQueryImpl : AbstractQuery<IEventSubscriptionQuery, IEventSubscriptionEntity>, IEventSubscriptionQuery
     {
 
         private const long serialVersionUID = 1L;
-        protected internal string eventSubscriptionId_Renamed;
-        protected internal string eventName_Renamed;
-        protected internal string eventType_Renamed;
-        protected internal string executionId_Renamed;
-        protected internal string processInstanceId_Renamed;
-        protected internal string activityId_Renamed;
-        protected internal string tenantId_Renamed;
+        protected internal string _eventSubscriptionId;
+        protected internal string _eventName;
+        protected internal string _eventType;
+        protected internal string _executionId;
+        protected internal string _processInstanceId;
+        protected internal string _activityId;
+        protected internal string _tenantId;
 
         public EventSubscriptionQueryImpl(ICommandContext commandContext) : base(commandContext)
         {
@@ -42,63 +42,39 @@ namespace org.activiti.engine.impl
         {
         }
 
-        public virtual EventSubscriptionQueryImpl eventSubscriptionId(string eventSubscriptionId)
+        public virtual IEventSubscriptionQuery SetEventSubscriptionId(string eventSubscriptionId)
         {
-            if (ReferenceEquals(eventSubscriptionId, null))
-            {
-                throw new ActivitiIllegalArgumentException("Provided event subscription id is null");
-            }
-            this.eventSubscriptionId_Renamed = eventSubscriptionId;
+            this._eventSubscriptionId = eventSubscriptionId;
             return this;
         }
 
-        public virtual EventSubscriptionQueryImpl eventName(string eventName)
+        public virtual IEventSubscriptionQuery SetEventName(string eventName)
         {
-            if (ReferenceEquals(eventName, null))
-            {
-                throw new ActivitiIllegalArgumentException("Provided event name is null");
-            }
-            this.eventName_Renamed = eventName;
+            this._eventName = eventName;
             return this;
         }
 
-        public virtual EventSubscriptionQueryImpl executionId(string executionId)
+        public virtual IEventSubscriptionQuery SetExecutionId(string executionId)
         {
-            if (ReferenceEquals(executionId, null))
-            {
-                throw new ActivitiIllegalArgumentException("Provided execution id is null");
-            }
-            this.executionId_Renamed = executionId;
+            this._executionId = executionId;
             return this;
         }
 
-        public virtual EventSubscriptionQueryImpl processInstanceId(string processInstanceId)
+        public virtual IEventSubscriptionQuery SetProcessInstanceId(string processInstanceId)
         {
-            if (ReferenceEquals(processInstanceId, null))
-            {
-                throw new ActivitiIllegalArgumentException("Provided process instance id is null");
-            }
-            this.processInstanceId_Renamed = processInstanceId;
+            this._processInstanceId = processInstanceId;
             return this;
         }
 
-        public virtual EventSubscriptionQueryImpl activityId(string activityId)
+        public virtual IEventSubscriptionQuery SetActivityId(string activityId)
         {
-            if (ReferenceEquals(activityId, null))
-            {
-                throw new ActivitiIllegalArgumentException("Provided activity id is null");
-            }
-            this.activityId_Renamed = activityId;
+            this._activityId = activityId;
             return this;
         }
 
-        public virtual EventSubscriptionQueryImpl eventType(string eventType)
+        public virtual IEventSubscriptionQuery SetEventType(string eventType)
         {
-            if (ReferenceEquals(eventType, null))
-            {
-                throw new ActivitiIllegalArgumentException("Provided event type is null");
-            }
-            this.eventType_Renamed = eventType;
+            this._eventType = eventType;
             return this;
         }
 
@@ -106,33 +82,33 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return tenantId_Renamed;
+                return _tenantId;
             }
         }
 
-        public virtual EventSubscriptionQueryImpl tenantId(string tenantId)
+        public virtual IEventSubscriptionQuery SetTenantId(string tenantId)
         {
-            this.tenantId_Renamed = tenantId;
+            this._tenantId = tenantId;
             return this;
         }
 
-        public virtual EventSubscriptionQueryImpl orderByCreated()
+        public virtual IEventSubscriptionQuery SetOrderByCreated()
         {
-            return orderBy(EventSubscriptionQueryProperty.CREATED);
+            return SetOrderBy(EventSubscriptionQueryProperty.CREATED);
         }
 
         // results //////////////////////////////////////////
 
-        public override long executeCount(ICommandContext commandContext)
+        public override long ExecuteCount(ICommandContext commandContext)
         {
-            checkQueryOk();
-            return commandContext.EventSubscriptionEntityManager.findEventSubscriptionCountByQueryCriteria(this);
+            CheckQueryOk();
+            return commandContext.EventSubscriptionEntityManager.FindEventSubscriptionCountByQueryCriteria(this);
         }
 
-        public override IList<IEventSubscriptionEntity> executeList(ICommandContext commandContext, Page page)
+        public override IList<IEventSubscriptionEntity> ExecuteList(ICommandContext commandContext, Page page)
         {
-            checkQueryOk();
-            return commandContext.EventSubscriptionEntityManager.findEventSubscriptionsByQueryCriteria(this, page);
+            CheckQueryOk();
+            return commandContext.EventSubscriptionEntityManager.FindEventSubscriptionsByQueryCriteria(this, page);
         }
 
         // getters //////////////////////////////////////////
@@ -141,7 +117,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return eventSubscriptionId_Renamed;
+                return _eventSubscriptionId;
             }
         }
 
@@ -149,7 +125,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return eventName_Renamed;
+                return _eventName;
             }
         }
 
@@ -157,7 +133,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return eventType_Renamed;
+                return _eventType;
             }
         }
 
@@ -165,7 +141,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return executionId_Renamed;
+                return _executionId;
             }
         }
 
@@ -173,7 +149,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processInstanceId_Renamed;
+                return _processInstanceId;
             }
         }
 
@@ -181,7 +157,7 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return activityId_Renamed;
+                return _activityId;
             }
         }
 

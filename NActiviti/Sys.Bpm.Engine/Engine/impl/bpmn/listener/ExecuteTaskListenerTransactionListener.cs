@@ -33,32 +33,27 @@ namespace org.activiti.engine.impl.bpmn.listener
             this.scope = scope;
         }
 
-        public virtual void execute(ICommandContext commandContext)
+        public virtual void Execute(ICommandContext commandContext)
         {
             ICommandExecutor commandExecutor = commandContext.ProcessEngineConfiguration.CommandExecutor;
             CommandConfig commandConfig = new CommandConfig(false, TransactionPropagation.REQUIRES_NEW);
-            commandExecutor.execute(commandConfig, new CommandAnonymousInnerClass(this, commandContext));
+            commandExecutor.Execute(commandConfig, new CommandAnonymousInnerClass(this));
         }
 
         private class CommandAnonymousInnerClass : ICommand<object>
         {
             private readonly ExecuteTaskListenerTransactionListener outerInstance;
 
-            private ICommandContext commandContext;
-
-            public CommandAnonymousInnerClass(ExecuteTaskListenerTransactionListener outerInstance, ICommandContext commandContext)
+            public CommandAnonymousInnerClass(ExecuteTaskListenerTransactionListener outerInstance)
             {
                 this.outerInstance = outerInstance;
-                this.commandContext = commandContext;
             }
 
-            public virtual object execute(ICommandContext commandContext)
+            public virtual object Execute(ICommandContext commandContext)
             {
-                outerInstance.listener.notify(outerInstance.scope.ProcessInstanceId, outerInstance.scope.ExecutionId, outerInstance.scope.Task, outerInstance.scope.ExecutionVariables, outerInstance.scope.CustomPropertiesMap);
+                outerInstance.listener.Notify(outerInstance.scope.ProcessInstanceId, outerInstance.scope.ExecutionId, outerInstance.scope.Task, outerInstance.scope.ExecutionVariables, outerInstance.scope.CustomPropertiesMap);
                 return commandContext.GetResult();
             }
         }
-
     }
-
 }

@@ -12,57 +12,82 @@
  */
 namespace org.activiti.engine.impl.bpmn.data
 {
-	/// <summary>
-	/// An instance of <seealso cref="ItemDefinition"/>
-	/// 
-	/// 
-	/// </summary>
-	public class ItemInstance
-	{
+    /// <summary>
+    /// An instance of <seealso cref="ItemDefinition"/>
+    /// 
+    /// 
+    /// </summary>
+    public class ItemInstance
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal ItemDefinition item;
 
-	  protected internal ItemDefinition item;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal IStructureInstance structureInstance;
 
-	  protected internal IStructureInstance structureInstance;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="structureInstance"></param>
+        public ItemInstance(ItemDefinition item, IStructureInstance structureInstance)
+        {
+            this.item = item;
+            this.structureInstance = structureInstance;
+        }
 
-	  public ItemInstance(ItemDefinition item, IStructureInstance structureInstance)
-	  {
-		this.item = item;
-		this.structureInstance = structureInstance;
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual ItemDefinition Item
+        {
+            get
+            {
+                return this.item;
+            }
+        }
 
-	  public virtual ItemDefinition Item
-	  {
-		  get
-		  {
-			return this.item;
-		  }
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IStructureInstance StructureInstance
+        {
+            get
+            {
+                return this.structureInstance;
+            }
+        }
 
-	  public virtual IStructureInstance StructureInstance
-	  {
-		  get
-		  {
-			return this.structureInstance;
-		  }
-	  }
+        private FieldBaseStructureInstance FieldBaseStructureInstance
+        {
+            get
+            {
+                return (FieldBaseStructureInstance)this.structureInstance;
+            }
+        }
 
-	  private FieldBaseStructureInstance FieldBaseStructureInstance
-	  {
-		  get
-		  {
-			return (FieldBaseStructureInstance) this.structureInstance;
-		  }
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <returns></returns>
+        public virtual object GetFieldValue(string fieldName)
+        {
+            return this.FieldBaseStructureInstance.GetFieldValue(fieldName);
+        }
 
-	  public virtual object getFieldValue(string fieldName)
-	  {
-		return this.FieldBaseStructureInstance.getFieldValue(fieldName);
-	  }
-
-	  public virtual void setFieldValue(string fieldName, object value)
-	  {
-		this.FieldBaseStructureInstance.setFieldValue(fieldName, value);
-	  }
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <param name="value"></param>
+        public virtual void SetFieldValue(string fieldName, object value)
+        {
+            this.FieldBaseStructureInstance.SetFieldValue(fieldName, value);
+        }
+    }
 }

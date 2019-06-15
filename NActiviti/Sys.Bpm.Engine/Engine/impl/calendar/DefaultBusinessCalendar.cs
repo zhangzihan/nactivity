@@ -22,8 +22,8 @@ namespace org.activiti.engine.impl.calendar
     /// 
     public class DefaultBusinessCalendar : IBusinessCalendar
     {
+        private static readonly IDictionary<string, int> units = new Dictionary<string, int>();
 
-        private static IDictionary<string, int> units = new Dictionary<string, int>();
         static DefaultBusinessCalendar()
         {
             units["millis"] = (int)DatePart.MILLISECOND;
@@ -43,35 +43,35 @@ namespace org.activiti.engine.impl.calendar
             units["years"] = (int)DatePart.YEAR;
         }
 
-        public virtual DateTime? resolveDuedate(string duedateDescription, int maxIterations)
+        public virtual DateTime? ResolveDuedate(string duedateDescription, int maxIterations)
         {
-            return resolveDuedate(duedateDescription);
+            return ResolveDuedate(duedateDescription);
         }
 
-        public virtual DateTime? resolveDuedate(string duedate)
+        public virtual DateTime? ResolveDuedate(string duedate)
         {
             DateTime resolvedDuedate = Context.ProcessEngineConfiguration.Clock.CurrentTime;
 
             string[] tokens = duedate.Split(" and ", true);
             foreach (string token in tokens)
             {
-                resolvedDuedate = addSingleUnitQuantity(resolvedDuedate, token);
+                resolvedDuedate = AddSingleUnitQuantity(resolvedDuedate, token);
             }
 
             return resolvedDuedate;
         }
 
-        public virtual bool? validateDuedate(string duedateDescription, int maxIterations, DateTime? endDate, DateTime? newTimer)
+        public virtual bool? ValidateDuedate(string duedateDescription, int maxIterations, DateTime? endDate, DateTime? newTimer)
         {
             return true;
         }
 
-        public virtual DateTime? resolveEndDate(string endDate)
+        public virtual DateTime? ResolveEndDate(string endDate)
         {
             return null;
         }
 
-        protected internal virtual DateTime addSingleUnitQuantity(DateTime startDate, string singleUnitQuantity)
+        protected internal virtual DateTime AddSingleUnitQuantity(DateTime startDate, string singleUnitQuantity)
         {
             int spaceIndex = singleUnitQuantity.IndexOf(" ", StringComparison.Ordinal);
             if (spaceIndex == -1 || singleUnitQuantity.Length < spaceIndex + 1)
@@ -86,7 +86,7 @@ namespace org.activiti.engine.impl.calendar
 
             int unit = units[unitText];
 
-            startDate.Add((DatePart)unit, quantity);
+            startDate = startDate.Add((DatePart)unit, quantity);
 
             return startDate;
         }

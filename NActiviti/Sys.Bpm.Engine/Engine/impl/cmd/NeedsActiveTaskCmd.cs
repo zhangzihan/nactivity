@@ -38,19 +38,25 @@ namespace org.activiti.engine.impl.cmd
             this.taskId = taskId;
         }
 
-        public virtual T execute(ICommandContext commandContext)
+        public virtual T Execute(ICommandContext commandContext)
         {
 
-            if (ReferenceEquals(taskId, null))
+            if (taskId is null)
             {
                 throw new ActivitiIllegalArgumentException("taskId is null");
             }
 
-            ITaskEntity task = commandContext.TaskEntityManager.findById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
+            ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(taskId);
 
             if (task == null)
             {
-                throw new ActivitiObjectNotFoundException("Cannot find task with id " + taskId, typeof(ITask));
+                var hisTask = commandContext.HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                if (hisTask == null)
+                {
+                    throw new ActivitiObjectNotFoundException("Cannot find task with id " + taskId, typeof(ITask));
+                }
+
+                return default;
             }
 
             if (task.Suspended)
@@ -58,13 +64,13 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiException(SuspendedTaskException);
             }
 
-            return execute(commandContext, task);
+            return Execute(commandContext, task);
         }
 
         /// <summary>
         /// Subclasses must implement in this method their normal command logic. The provided task is ensured to be active.
         /// </summary>
-        protected internal abstract T execute(ICommandContext commandContext, ITaskEntity task);
+        protected internal abstract T Execute(ICommandContext commandContext, ITaskEntity task);
 
         /// <summary>
         /// Subclasses can override this method to provide a customized exception message that will be thrown when the task is suspended.

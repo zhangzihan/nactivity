@@ -12,6 +12,7 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.exceptions;
     using org.activiti.bpmn.model;
 
@@ -24,18 +25,18 @@ namespace org.activiti.bpmn.converter.child
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.MAP_EXCEPTION;
+                return BpmnXMLConstants.MAP_EXCEPTION;
             }
         }
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
             if (!(parentElement is Activity))
             {
                 return;
             }
 
-            string errorCode = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.MAP_EXCEPTION_ERRORCODE);
-            string andChildren = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.MAP_EXCEPTION_ANDCHILDREN);
+            string errorCode = xtr.GetAttributeValue(BpmnXMLConstants.MAP_EXCEPTION_ERRORCODE);
+            string andChildren = xtr.GetAttributeValue(BpmnXMLConstants.MAP_EXCEPTION_ANDCHILDREN);
             string exceptionClass = xtr.ElementText;
             bool hasChildrenBool = false;
 

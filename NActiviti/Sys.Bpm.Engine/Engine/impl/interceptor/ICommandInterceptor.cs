@@ -17,7 +17,7 @@ namespace org.activiti.engine.impl.interceptor
 	public interface ICommandInterceptor
 	{
 
-	  T execute<T>(CommandConfig config, ICommand<T> command);
+	  T Execute<T>(CommandConfig config, ICommand<T> command);
 
 	  ICommandInterceptor Next {get;set;}
 

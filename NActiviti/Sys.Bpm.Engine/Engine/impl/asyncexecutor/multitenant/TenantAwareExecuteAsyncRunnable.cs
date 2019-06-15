@@ -13,34 +13,48 @@
 
 namespace org.activiti.engine.impl.asyncexecutor.multitenant
 {
-	using org.activiti.engine.impl.cfg;
-	using org.activiti.engine.impl.cfg.multitenant;
-	using org.activiti.engine.runtime;
+    using org.activiti.engine.impl.cfg;
+    using org.activiti.engine.impl.cfg.multitenant;
+    using org.activiti.engine.runtime;
 
-	/// <summary>
-	/// Extends the default <seealso cref="ExecuteAsyncRunnable"/> by setting the 'tenant' context before executing.
-	/// 
-	/// 
-	/// </summary>
-	public class TenantAwareExecuteAsyncRunnable : ExecuteAsyncRunnable
-	{
+    /// <summary>
+    /// Extends the default <seealso cref="ExecuteAsyncRunnable"/> by setting the 'tenant' context before executing.
+    /// 
+    /// 
+    /// </summary>
+    public class TenantAwareExecuteAsyncRunnable : ExecuteAsyncRunnable
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal ITenantInfoHolder tenantInfoHolder;
 
-	  protected internal ITenantInfoHolder tenantInfoHolder;
-	  protected internal string tenantId;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal string tenantId;
 
-	  public TenantAwareExecuteAsyncRunnable(IJob job, ProcessEngineConfigurationImpl processEngineConfiguration, ITenantInfoHolder tenantInfoHolder, string tenantId) : base(job, processEngineConfiguration)
-	  {
-		this.tenantInfoHolder = tenantInfoHolder;
-		this.tenantId = tenantId;
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="job"></param>
+        /// <param name="processEngineConfiguration"></param>
+        /// <param name="tenantInfoHolder"></param>
+        /// <param name="tenantId"></param>
+        public TenantAwareExecuteAsyncRunnable(IJob job, ProcessEngineConfigurationImpl processEngineConfiguration, ITenantInfoHolder tenantInfoHolder, string tenantId) : base(job, processEngineConfiguration)
+        {
+            this.tenantInfoHolder = tenantInfoHolder;
+            this.tenantId = tenantId;
+        }
 
-	  public override void run()
-	  {
-		tenantInfoHolder.CurrentTenantId = tenantId;
-		base.run();
-		tenantInfoHolder.clearCurrentTenantId();
-	  }
-
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Run()
+        {
+            tenantInfoHolder.CurrentTenantId = tenantId;
+            base.Run();
+            tenantInfoHolder.ClearCurrentTenantId();
+        }
+    }
 }

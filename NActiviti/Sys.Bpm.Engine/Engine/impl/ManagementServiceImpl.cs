@@ -34,30 +34,30 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return commandExecutor.execute(new GetTableCountCmd());
+                return commandExecutor.Execute(new GetTableCountCmd());
             }
         }
 
-        public virtual string getTableName(Type activitiEntityClass)
+        public virtual string GetTableName(Type activitiEntityClass)
         {
-            return commandExecutor.execute(new GetTableNameCmd(activitiEntityClass));
+            return commandExecutor.Execute(new GetTableNameCmd(activitiEntityClass));
         }
 
-        public virtual TableMetaData getTableMetaData(string tableName)
+        public virtual TableMetaData GetTableMetaData(string tableName)
         {
-            return commandExecutor.execute(new GetTableMetaDataCmd(tableName));
+            return commandExecutor.Execute(new GetTableMetaDataCmd(tableName));
         }
 
-        public virtual void executeJob(string jobId)
+        public virtual void ExecuteJob(string jobId)
         {
-            if (ReferenceEquals(jobId, null))
+            if (jobId is null)
             {
                 throw new ActivitiIllegalArgumentException("JobId is null");
             }
 
             try
             {
-                commandExecutor.execute(new ExecuteJobCmd(jobId));
+                commandExecutor.Execute(new ExecuteJobCmd(jobId));
 
             }
             catch (Exception e)
@@ -73,103 +73,103 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public virtual IJob moveTimerToExecutableJob(string jobId)
+        public virtual IJob MoveTimerToExecutableJob(string jobId)
         {
-            return commandExecutor.execute(new MoveTimerToExecutableJobCmd(jobId));
+            return commandExecutor.Execute(new MoveTimerToExecutableJobCmd(jobId));
         }
 
-        public virtual IJob moveJobToDeadLetterJob(string jobId)
+        public virtual IJob MoveJobToDeadLetterJob(string jobId)
         {
-            return commandExecutor.execute(new MoveJobToDeadLetterJobCmd(jobId));
+            return commandExecutor.Execute(new MoveJobToDeadLetterJobCmd(jobId));
         }
 
-        public virtual IJob moveDeadLetterJobToExecutableJob(string jobId, int retries)
+        public virtual IJob MoveDeadLetterJobToExecutableJob(string jobId, int retries)
         {
-            return commandExecutor.execute(new MoveDeadLetterJobToExecutableJobCmd(jobId, retries));
+            return commandExecutor.Execute(new MoveDeadLetterJobToExecutableJobCmd(jobId, retries));
         }
 
-        public virtual void deleteJob(string jobId)
+        public virtual void DeleteJob(string jobId)
         {
-            commandExecutor.execute(new DeleteJobCmd(jobId));
+            commandExecutor.Execute(new DeleteJobCmd(jobId));
         }
 
-        public virtual void deleteTimerJob(string jobId)
+        public virtual void DeleteTimerJob(string jobId)
         {
-            commandExecutor.execute(new DeleteTimerJobCmd(jobId));
+            commandExecutor.Execute(new DeleteTimerJobCmd(jobId));
         }
 
-        public virtual void deleteDeadLetterJob(string jobId)
+        public virtual void DeleteDeadLetterJob(string jobId)
         {
-            commandExecutor.execute(new DeleteDeadLetterJobCmd(jobId));
+            commandExecutor.Execute(new DeleteDeadLetterJobCmd(jobId));
         }
 
-        public virtual void setJobRetries(string jobId, int retries)
+        public virtual void SetJobRetries(string jobId, int retries)
         {
-            commandExecutor.execute(new SetJobRetriesCmd(jobId, retries));
+            commandExecutor.Execute(new SetJobRetriesCmd(jobId, retries));
         }
 
-        public virtual void setTimerJobRetries(string jobId, int retries)
+        public virtual void SetTimerJobRetries(string jobId, int retries)
         {
-            commandExecutor.execute(new SetTimerJobRetriesCmd(jobId, retries));
+            commandExecutor.Execute(new SetTimerJobRetriesCmd(jobId, retries));
         }
 
-        public virtual ITablePageQuery createTablePageQuery()
+        public virtual ITablePageQuery CreateTablePageQuery()
         {
             return new TablePageQueryImpl(commandExecutor);
         }
 
-        public virtual IJobQuery createJobQuery()
+        public virtual IJobQuery CreateJobQuery()
         {
             return new JobQueryImpl(commandExecutor);
         }
 
-        public virtual ITimerJobQuery createTimerJobQuery()
+        public virtual ITimerJobQuery CreateTimerJobQuery()
         {
             return new TimerJobQueryImpl(commandExecutor);
         }
 
-        public virtual ISuspendedJobQuery createSuspendedJobQuery()
+        public virtual ISuspendedJobQuery CreateSuspendedJobQuery()
         {
             return new SuspendedJobQueryImpl(commandExecutor);
         }
 
-        public virtual IDeadLetterJobQuery createDeadLetterJobQuery()
+        public virtual IDeadLetterJobQuery CreateDeadLetterJobQuery()
         {
             return new DeadLetterJobQueryImpl(commandExecutor);
         }
 
-        public virtual string getJobExceptionStacktrace(string jobId)
+        public virtual string GetJobExceptionStacktrace(string jobId)
         {
-            return commandExecutor.execute(new GetJobExceptionStacktraceCmd(jobId, JobType.ASYNC));
+            return commandExecutor.Execute(new GetJobExceptionStacktraceCmd(jobId, JobType.ASYNC));
         }
 
-        public virtual string getTimerJobExceptionStacktrace(string jobId)
+        public virtual string GetTimerJobExceptionStacktrace(string jobId)
         {
-            return commandExecutor.execute(new GetJobExceptionStacktraceCmd(jobId, JobType.TIMER));
+            return commandExecutor.Execute(new GetJobExceptionStacktraceCmd(jobId, JobType.TIMER));
         }
 
-        public virtual string getSuspendedJobExceptionStacktrace(string jobId)
+        public virtual string GetSuspendedJobExceptionStacktrace(string jobId)
         {
-            return commandExecutor.execute(new GetJobExceptionStacktraceCmd(jobId, JobType.SUSPENDED));
+            return commandExecutor.Execute(new GetJobExceptionStacktraceCmd(jobId, JobType.SUSPENDED));
         }
 
-        public virtual string getDeadLetterJobExceptionStacktrace(string jobId)
+        public virtual string GetDeadLetterJobExceptionStacktrace(string jobId)
         {
-            return commandExecutor.execute(new GetJobExceptionStacktraceCmd(jobId, JobType.DEADLETTER));
+            return commandExecutor.Execute(new GetJobExceptionStacktraceCmd(jobId, JobType.DEADLETTER));
         }
 
         public virtual IDictionary<string, string> Properties
         {
             get
             {
-                return commandExecutor.execute(new GetPropertiesCmd());
+                return commandExecutor.Execute(new GetPropertiesCmd());
             }
         }
 
-        public virtual string databaseSchemaUpgrade(IDbConnection connection, string catalog, string schema)
+        public virtual string DatabaseSchemaUpgrade(IDbConnection connection, string catalog, string schema)
         {
-            CommandConfig config = commandExecutor.DefaultConfig.transactionNotSupported();
-            return commandExecutor.execute(config, new CommandAnonymousInnerClass(this, connection, catalog, schema));
+            CommandConfig config = commandExecutor.DefaultConfig.TransactionNotSupported();
+            return commandExecutor.Execute(config, new CommandAnonymousInnerClass(this, connection, catalog, schema));
         }
 
         private class CommandAnonymousInnerClass : ICommand<string>
@@ -188,25 +188,25 @@ namespace org.activiti.engine.impl
                 this.schema = schema;
             }
 
-            public virtual string execute(ICommandContext commandContext)
+            public virtual string Execute(ICommandContext commandContext)
             {
                 DbSqlSessionFactory dbSqlSessionFactory = (DbSqlSessionFactory)commandContext.SessionFactories[typeof(DbSqlSession)];
                 DbSqlSession dbSqlSession = new DbSqlSession(dbSqlSessionFactory, commandContext.EntityCache, connection, catalog, schema);
                 commandContext.Sessions[typeof(DbSqlSession)] = dbSqlSession;
-                return dbSqlSession.dbSchemaUpdate();
+                return dbSqlSession.DbSchemaUpdate();
             }
         }
 
-        public virtual T executeCommand<T>(ICommand<T> command)
+        public virtual T ExecuteCommand<T>(ICommand<T> command)
         {
             if (command == null)
             {
                 throw new ActivitiIllegalArgumentException("The command is null");
             }
-            return commandExecutor.execute(command);
+            return commandExecutor.Execute(command);
         }
 
-        public virtual T executeCommand<T>(CommandConfig config, ICommand<T> command)
+        public virtual T ExecuteCommand<T>(CommandConfig config, ICommand<T> command)
         {
             if (config == null)
             {
@@ -216,28 +216,28 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("The command is null");
             }
-            return commandExecutor.execute(config, command);
+            return commandExecutor.Execute(config, command);
         }
 
-        public virtual ResultType executeCustomSql<MapperType, ResultType>(ICustomSqlExecution<MapperType, ResultType> customSqlExecution)
+        public virtual ResultType ExecuteCustomSql<MapperType, ResultType>(ICustomSqlExecution<MapperType, ResultType> customSqlExecution)
         {
             Type mapperClass = customSqlExecution.MapperClass;
-            return commandExecutor.execute(new ExecuteCustomSqlCmd<MapperType, ResultType>(mapperClass, customSqlExecution));
+            return commandExecutor.Execute(new ExecuteCustomSqlCmd<MapperType, ResultType>(mapperClass, customSqlExecution));
         }
 
-        public virtual IList<IEventLogEntry> getEventLogEntries(long? startLogNr, long? pageSize)
+        public virtual IList<IEventLogEntry> GetEventLogEntries(long? startLogNr, long? pageSize)
         {
-            return commandExecutor.execute(new GetEventLogEntriesCmd(startLogNr, pageSize));
+            return commandExecutor.Execute(new GetEventLogEntriesCmd(startLogNr, pageSize));
         }
 
-        public virtual IList<IEventLogEntry> getEventLogEntriesByProcessInstanceId(string processInstanceId)
+        public virtual IList<IEventLogEntry> GetEventLogEntriesByProcessInstanceId(string processInstanceId)
         {
-            return commandExecutor.execute(new GetEventLogEntriesCmd(processInstanceId));
+            return commandExecutor.Execute(new GetEventLogEntriesCmd(processInstanceId));
         }
 
-        public virtual void deleteEventLogEntry(long logNr)
+        public virtual void DeleteEventLogEntry(long logNr)
         {
-            commandExecutor.execute(new DeleteEventLogEntry(logNr));
+            commandExecutor.Execute(new DeleteEventLogEntry(logNr));
         }
     }
 

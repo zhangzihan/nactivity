@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.cmd
             this.task = (ITaskEntity)task;
         }
 
-        public  virtual object  execute(ICommandContext commandContext)
+        public  virtual object  Execute(ICommandContext commandContext)
         {
             if (task == null)
             {
@@ -49,14 +49,14 @@ namespace org.activiti.engine.impl.cmd
 
             if (task.Revision == 0)
             {
-                commandContext.TaskEntityManager.insert(task, null);
+                commandContext.TaskEntityManager.Insert(task, null);
 
                 if (commandContext.EventDispatcher.Enabled)
                 {
-                    commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TASK_CREATED, task));
-                    if (!ReferenceEquals(task.Assignee, null))
+                    commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_CREATED, task));
+                    if (!(task.Assignee is null))
                     {
-                        commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TASK_ASSIGNED, task));
+                        commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_ASSIGNED, task));
                     }
                 }
 
@@ -65,14 +65,14 @@ namespace org.activiti.engine.impl.cmd
             {
 
                 ITaskInfo originalTaskEntity = null;
-                if (commandContext.ProcessEngineConfiguration.HistoryLevel.isAtLeast(HistoryLevel.AUDIT))
+                if (commandContext.ProcessEngineConfiguration.HistoryLevel.IsAtLeast(HistoryLevel.AUDIT))
                 {
-                    originalTaskEntity = commandContext.HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", task.Id));
+                    originalTaskEntity = commandContext.HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", task.Id));
                 }
 
                 if (originalTaskEntity == null)
                 {
-                    originalTaskEntity = commandContext.TaskEntityManager.findById<ITaskEntity>(new KeyValuePair<string, object>("id", task.Id));
+                    originalTaskEntity = commandContext.TaskEntityManager.FindById<ITaskEntity>(task.Id);
                 }
 
                 string originalName = originalTaskEntity.Name;
@@ -87,71 +87,71 @@ namespace org.activiti.engine.impl.cmd
                 string originalTaskDefinitionKey = originalTaskEntity.TaskDefinitionKey;
 
                 // Only update history if history is enabled
-                if (commandContext.ProcessEngineConfiguration.HistoryLevel.isAtLeast(HistoryLevel.AUDIT))
+                if (commandContext.ProcessEngineConfiguration.HistoryLevel.IsAtLeast(HistoryLevel.AUDIT))
                 {
 
                     if (originalName != task.Name)
                     {
-                        commandContext.HistoryManager.recordTaskNameChange(task.Id, task.Name);
+                        commandContext.HistoryManager.RecordTaskNameChange(task.Id, task.Name);
                     }
                     if (originalDescription != task.Description)
                     {
-                        commandContext.HistoryManager.recordTaskDescriptionChange(task.Id, task.Description);
+                        commandContext.HistoryManager.RecordTaskDescriptionChange(task.Id, task.Description);
                     }
                     if ((!originalDueDate.HasValue && task.DueDate.HasValue) || (originalDueDate.HasValue && !task.DueDate.HasValue) || (originalDueDate.HasValue && !originalDueDate.Equals(task.DueDate)))
                     {
-                        commandContext.HistoryManager.recordTaskDueDateChange(task.Id, task.DueDate.Value);
+                        commandContext.HistoryManager.RecordTaskDueDateChange(task.Id, task.DueDate.Value);
                     }
                     if (originalPriority != task.Priority)
                     {
-                        commandContext.HistoryManager.recordTaskPriorityChange(task.Id, task.Priority);
+                        commandContext.HistoryManager.RecordTaskPriorityChange(task.Id, task.Priority);
                     }
                     if (originalCategory != task.Category)
                     {
-                        commandContext.HistoryManager.recordTaskCategoryChange(task.Id, task.Category);
+                        commandContext.HistoryManager.RecordTaskCategoryChange(task.Id, task.Category);
                     }
                     if (originalFormKey != task.FormKey)
                     {
-                        commandContext.HistoryManager.recordTaskFormKeyChange(task.Id, task.FormKey);
+                        commandContext.HistoryManager.RecordTaskFormKeyChange(task.Id, task.FormKey);
                     }
                     if (originalParentTaskId != task.ParentTaskId)
                     {
-                        commandContext.HistoryManager.recordTaskParentTaskIdChange(task.Id, task.ParentTaskId);
+                        commandContext.HistoryManager.RecordTaskParentTaskIdChange(task.Id, task.ParentTaskId);
                     }
                     if (originalTaskDefinitionKey != task.TaskDefinitionKey)
                     {
-                        commandContext.HistoryManager.recordTaskDefinitionKeyChange(task.Id, task.TaskDefinitionKey);
+                        commandContext.HistoryManager.RecordTaskDefinitionKeyChange(task.Id, task.TaskDefinitionKey);
                     }
 
                 }
 
                 if (originalOwner != task.Owner)
                 {
-                    if (!ReferenceEquals(task.ProcessInstanceId, null))
+                    if (!(task.ProcessInstanceId is null))
                     {
-                        commandContext.IdentityLinkEntityManager.involveUser(task.ProcessInstance, task.Owner, IdentityLinkType.PARTICIPANT);
+                        commandContext.IdentityLinkEntityManager.InvolveUser(task.ProcessInstance, task.Owner, IdentityLinkType.PARTICIPANT);
                     }
-                    commandContext.HistoryManager.recordTaskOwnerChange(task.Id, task.Owner);
+                    commandContext.HistoryManager.RecordTaskOwnerChange(task.Id, task.Owner);
                 }
                 if (originalAssignee != task.Assignee)
                 {
-                    if (!ReferenceEquals(task.ProcessInstanceId, null))
+                    if (!(task.ProcessInstanceId is null))
                     {
-                        commandContext.IdentityLinkEntityManager.involveUser(task.ProcessInstance, task.Assignee, IdentityLinkType.PARTICIPANT);
+                        commandContext.IdentityLinkEntityManager.InvolveUser(task.ProcessInstance, task.Assignee, IdentityLinkType.PARTICIPANT);
                     }
-                    commandContext.HistoryManager.recordTaskAssigneeChange(task.Id, task.Assignee);
+                    commandContext.HistoryManager.RecordTaskAssigneeChange(task.Id, task.Assignee, task.AssigneeUser);
 
-                    commandContext.ProcessEngineConfiguration.ListenerNotificationHelper.executeTaskListeners(task, BaseTaskListener_Fields.EVENTNAME_ASSIGNMENT);
-                    commandContext.HistoryManager.recordTaskAssignment(task);
+                    commandContext.ProcessEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(task, BaseTaskListenerFields.EVENTNAME_ASSIGNMENT);
+                    commandContext.HistoryManager.RecordTaskAssignment(task);
 
                     if (commandContext.EventDispatcher.Enabled)
                     {
-                        commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TASK_ASSIGNED, task));
+                        commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_ASSIGNED, task));
                     }
 
                 }
 
-                commandContext.TaskEntityManager.update(task);
+                commandContext.TaskEntityManager.Update(task);
 
             }
 

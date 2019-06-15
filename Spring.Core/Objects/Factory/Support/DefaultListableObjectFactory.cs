@@ -416,7 +416,7 @@ namespace Spring.Objects.Factory.Support
         ///</summary>
         /// <remarks>
         /// Called after an existing bean definition has been replaced or removed,
-        /// triggering <see cref="DefaultListableObjectFactory.ClearMergedObjectDefinition" />, <see cref="DestroySingleton" />
+        /// triggering 
         /// and <see cref="IMergedObjectDefinitionPostProcessor.ResetObjectDefinition" /> on the
         /// given bean and on all bean definitions that have the given bean as parent.
         /// </remarks>

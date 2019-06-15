@@ -1,8 +1,4 @@
-﻿using org.activiti.api.runtime.shared.query;
-using org.activiti.engine.impl.persistence.entity;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace org.activiti.cloud.services.api.model
 {
@@ -75,6 +71,11 @@ namespace org.activiti.cloud.services.api.model
         /// 在某个时间之前开始
         /// </summary>
         public DateTime? StartedBefore { get; set; }
+
+        /// <summary>
+        /// 是否仅查询被中止的流程.true:仅中止,false:不包括中止流程,null:全部
+        /// </summary>
+        public bool? IsTerminated { get; set; } = null;
 
         /// <summary>
         /// 启动用户

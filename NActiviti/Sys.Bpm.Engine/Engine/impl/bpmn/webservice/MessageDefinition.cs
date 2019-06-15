@@ -31,9 +31,9 @@ namespace org.activiti.engine.impl.bpmn.webservice
             this.id = id;
         }
 
-        public virtual MessageInstance createInstance()
+        public virtual MessageInstance CreateInstance()
         {
-            return new MessageInstance(this, this.itemDefinition.createInstance());
+            return new MessageInstance(this, this.itemDefinition.CreateInstance());
         }
 
         public virtual ItemDefinition ItemDefinition

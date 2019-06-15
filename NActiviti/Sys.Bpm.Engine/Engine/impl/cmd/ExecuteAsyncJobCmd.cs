@@ -20,7 +20,7 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
-    using Sys;
+    using Sys.Workflow;
     using System.Collections.Generic;
 
     /// 
@@ -39,10 +39,10 @@ namespace org.activiti.engine.impl.cmd
             this.jobId = jobId;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
 
-            if (ReferenceEquals(jobId, null))
+            if (jobId is null)
             {
                 throw new ActivitiIllegalArgumentException("jobId is null");
             }
@@ -53,7 +53,7 @@ namespace org.activiti.engine.impl.cmd
             // However, the async task jobs could already have been fetched and put in the queue.... while in reality they have been deleted. 
             // A refetch is thus needed here to be sure that it exists for this transaction.
 
-            IJob job = commandContext.JobEntityManager.findById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
+            IJob job = commandContext.JobEntityManager.FindById<IJobEntity>( jobId);
             if (job == null)
             {
                 log.LogDebug("Job does not exist anymore and will not be executed. It has most likely been deleted as part of another concurrent part of the process instance.");
@@ -65,11 +65,11 @@ namespace org.activiti.engine.impl.cmd
                 log.LogDebug($"Executing async job {job.Id}");
             }
 
-            commandContext.JobManager.execute(job);
+            commandContext.JobManager.Execute(job);
 
             if (commandContext.EventDispatcher.Enabled)
             {
-                commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_EXECUTION_SUCCESS, job));
+                commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_EXECUTION_SUCCESS, job));
             }
 
             return null;

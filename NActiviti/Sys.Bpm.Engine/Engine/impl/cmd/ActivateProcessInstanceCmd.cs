@@ -12,25 +12,23 @@
  */
 namespace org.activiti.engine.impl.cmd
 {
-	using org.activiti.engine.impl.persistence.entity;
+    using org.activiti.engine.impl.persistence.entity;
 
-	/// 
-	/// 
-	public class ActivateProcessInstanceCmd : AbstractSetProcessInstanceStateCmd
-	{
+    /// 
+    /// 
+    public class ActivateProcessInstanceCmd : AbstractSetProcessInstanceStateCmd
+    {
 
-	  public ActivateProcessInstanceCmd(string executionId) : base(executionId)
-	  {
-	  }
+        public ActivateProcessInstanceCmd(string executionId) : base(executionId)
+        {
+        }
 
-	  protected internal override ISuspensionState NewState
-	  {
-		  get
-		  {
-			return SuspensionStateProvider.ACTIVE;
-		  }
-	  }
-
-	}
-
+        protected internal override ISuspensionState NewState
+        {
+            get
+            {
+                return SuspensionStateProvider.ACTIVE;
+            }
+        }
+    }
 }

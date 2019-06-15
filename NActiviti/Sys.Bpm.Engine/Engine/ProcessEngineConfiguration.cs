@@ -16,22 +16,17 @@ namespace org.activiti.engine
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Options;
     using org.activiti.engine.cfg;
     using org.activiti.engine.impl.asyncexecutor;
     using org.activiti.engine.impl.history;
     using org.activiti.engine.impl.persistence.entity.integration;
-    using org.activiti.engine.impl.util;
     using org.activiti.engine.integration;
     using org.activiti.engine.runtime;
-    using SmartSql.Abstractions;
     using Sys;
     using Sys.Bpm;
     using Sys.Data;
+    using Sys.Workflow;
     using Sys.Workflow.Engine.Bpmn.Rules;
-    using System.IO;
-    using System.Linq;
-    using System.Security.Cryptography;
 
 
     /// <summary>
@@ -47,7 +42,7 @@ namespace org.activiti.engine
     /// </para>
     /// 
     /// <para>
-    /// To create a process engine programmatic, without a configuration file, the first option is <seealso cref="#createStandaloneProcessEngineConfiguration()"/>
+    /// To create a process engine programmatic, without a configuration file, the first option is <seealso cref="CreateStandaloneProcessEngineConfiguration()"/>
     /// 
     /// <pre>
     /// ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneProcessEngineConfiguration().buildProcessEngine();
@@ -58,7 +53,7 @@ namespace org.activiti.engine
     /// </para>
     /// 
     /// <para>
-    /// The second option is great for testing: <seealso cref="#createStandalonInMemeProcessEngineConfiguration()"/>
+    /// The second option is great for testing: <seealso cref="CreateStandalonInMemeProcessEngineConfiguration()"/>
     /// 
     /// <pre>
     /// ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration().buildProcessEngine();
@@ -69,7 +64,7 @@ namespace org.activiti.engine
     /// </para>
     /// 
     /// <para>
-    /// On all forms of creating a process engine, you can first customize the configuration before calling the <seealso cref="#buildProcessEngine()"/> method by calling any of the setters like this:
+    /// On all forms of creating a process engine, you can first customize the configuration before calling the <seealso cref="BuildProcessEngine()"/> method by calling any of the setters like this:
     /// 
     /// <pre>
     /// ProcessEngine processEngine = ProcessEngineConfiguration.createProcessEngineConfigurationFromResourceDefault().setMailServerHost(&quot;gmail.com&quot;).setJdbcUsername(&quot;mickey&quot;).setJdbcPassword(&quot;mouse&quot;)
@@ -78,8 +73,7 @@ namespace org.activiti.engine
     /// 
     /// </para>
     /// </summary>
-    /// <seealso cref= ProcessEngines
-    ///  </seealso>
+    /// <seealso></seealso>
     public abstract class ProcessEngineConfiguration
     {
         /// <summary>
@@ -98,34 +92,127 @@ namespace org.activiti.engine
         public const string DB_SCHEMA_UPDATE_TRUE = "true";
 
         /// <summary>
+        /// 
+        /// </summary>
+        public const string DB_SCHEMA_UPDATE_CREATE = "create";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string DB_SCHEMA_UPDATE_DROP_CREATE = "drop-create";
+
+        /// <summary>
         /// The tenant id indicating 'no tenant' </summary>
         public const string NO_TENANT_ID = "";
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string processEngineName = ProcessEngineFactory.NAME_DEFAULT;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int idBlockSize = 2500;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string history = HistoryLevel.AUDIT.Key;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool asyncExecutorActivate = false;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string mailServerHost = "localhost";
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string mailServerUsername; // by default no name and password are provided, which
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string mailServerPassword; // means no authentication for mail server
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int mailServerPort = 25;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool useSSL;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool useTLS;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string mailServerDefaultFrom = "activiti@localhost";
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string mailSessionJndi;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDictionary<string, MailServerInfo> mailServers = new Dictionary<string, MailServerInfo>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string databaseType = null;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string databaseSchemaUpdate = DB_SCHEMA_UPDATE_FALSE;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string connectionString = "";
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool isDbHistoryUsed = true;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal HistoryLevel historyLevel;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDataSource dataSource = ProcessEngineServiceProvider.Resolve<IDataSource>();
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool transactionsExternallyManaged;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IClock clock;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IAsyncExecutor asyncExecutor;
         /// <summary>
         /// Define the default lock time for an async job in seconds. The lock time is used when creating an async job and when it expires the async executor assumes that the job has failed. It will be
@@ -144,8 +231,8 @@ namespace org.activiti.engine
         /// in a table named 'PRE1.ACT_RU_EXECUTION_'.
         /// 
         /// <p />
-        /// <strong>NOTE: the prefix is not respected by automatic database schema management. If you use <seealso cref="ProcessEngineConfiguration#DB_SCHEMA_UPDATE_CREATE_DROP"/> or
-        /// <seealso cref="ProcessEngineConfiguration#DB_SCHEMA_UPDATE_TRUE"/>, activiti will create the database tables using the default names, regardless of the prefix configured here.</strong>
+        /// <strong>NOTE: the prefix is not respected by automatic database schema management. If you use <seealso cref="ProcessEngineConfiguration.DB_SCHEMA_UPDATE_CREATE_DROP"/> or
+        /// <seealso cref="ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE"/>, activiti will create the database tables using the default names, regardless of the prefix configured here.</strong>
         /// 
         /// @since 5.9
         /// </summary>
@@ -178,24 +265,53 @@ namespace org.activiti.engine
         /// </summary>
         protected internal bool tablePrefixIsSchema;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string xmlEncoding = "UTF-8";
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string defaultCamelContext = "camelContext";
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ClassLoader classLoader;
         /// <summary>
         /// Either use Class.forName or ClassLoader.loadClass for class loading. See http://forums.activiti.org/content/reflectutilloadclass-and-custom- classloader
         /// </summary>
         protected internal bool useClassForNameClassLoading = true;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IProcessEngineLifecycleListener processEngineLifecycleListener;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool enableProcessDefinitionInfoCache = false;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IActivitiEngineAgendaFactory engineAgendaFactory;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string webapiErrorCode = "-1000";
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected IConfiguration Configuration { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract Properties GetProperties();
 
         /// <summary>
@@ -207,7 +323,10 @@ namespace org.activiti.engine
             Configuration.Bind(this);
         }
 
-        public abstract IProcessEngine buildProcessEngine();
+        /// <summary>
+        /// 
+        /// </summary>
+        public abstract IProcessEngine BuildProcessEngine();
 
         // TODO add later when we have test coverage for this
         // public static ProcessEngineConfiguration
@@ -215,27 +334,57 @@ namespace org.activiti.engine
         // return new JtaProcessEngineConfiguration();
         // }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract IRepositoryService RepositoryService { get; protected set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract IRuntimeService RuntimeService { get; protected set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract ITaskService TaskService { get; protected set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public IGetBookmarkRuleProvider GetBookmarkRuleProvider { get; protected set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract IHistoryService HistoryService { get; protected set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract IManagementService ManagementService { get; protected set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract IUserGroupLookupProxy UserGroupLookupProxy { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract IIntegrationContextService IntegrationContextService { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract IIntegrationContextManager IntegrationContextManager { get; }
 
         // getters and setters
         // //////////////////////////////////////////////////////
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ProcessEngineName
         {
             get
@@ -248,6 +397,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int IdBlockSize
         {
             get
@@ -260,6 +412,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string History
         {
             get
@@ -272,6 +427,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string MailServerHost
         {
             get
@@ -284,6 +442,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string MailServerUsername
         {
             get
@@ -296,6 +457,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string MailServerPassword
         {
             get
@@ -308,6 +472,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string MailSessionJndi
         {
             get
@@ -320,6 +487,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int MailServerPort
         {
             get
@@ -332,6 +502,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool MailServerUseSSL
         {
             get
@@ -344,6 +517,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool MailServerUseTLS
         {
             get
@@ -356,6 +532,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string MailServerDefaultFrom
         {
             get
@@ -368,11 +547,17 @@ namespace org.activiti.engine
             }
         }
 
-        public virtual MailServerInfo getMailServer(string tenantId)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual MailServerInfo GetMailServer(string tenantId)
         {
             return mailServers[tenantId];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDictionary<string, MailServerInfo> MailServers
         {
             get
@@ -381,10 +566,13 @@ namespace org.activiti.engine
             }
             set
             {
-                this.mailServers.putAll(value);
+                this.mailServers.PutAll(value);
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DatabaseType
         {
             get
@@ -393,6 +581,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DatabaseSchemaUpdate
         {
             get
@@ -405,6 +596,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDataSource DataSource
         {
             get
@@ -413,6 +607,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool TransactionsExternallyManaged
         {
             get
@@ -425,6 +622,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual HistoryLevel HistoryLevel
         {
             get
@@ -437,6 +637,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool DbHistoryUsed
         {
             get
@@ -449,6 +652,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool AsyncExecutorActivate
         {
             get
@@ -461,6 +667,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ClassLoader ClassLoader
         {
             get
@@ -474,6 +683,9 @@ namespace org.activiti.engine
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool UseClassForNameClassLoading
         {
             get
@@ -487,6 +699,9 @@ namespace org.activiti.engine
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DefaultCamelContext
         {
             get
@@ -499,6 +714,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IProcessEngineLifecycleListener ProcessEngineLifecycleListener
         {
             get
@@ -511,6 +729,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DatabaseTablePrefix
         {
             get
@@ -523,6 +744,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool TablePrefixIsSchema
         {
             get
@@ -535,11 +759,17 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string WebApiErrorCode
         {
             get; set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DatabaseWildcardEscapeCharacter
         {
             get
@@ -552,6 +782,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DatabaseCatalog
         {
             get
@@ -564,6 +797,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DatabaseSchema
         {
             get
@@ -576,6 +812,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string XmlEncoding
         {
             get
@@ -588,6 +827,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IClock Clock
         {
             get
@@ -600,6 +842,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IAsyncExecutor AsyncExecutor
         {
             get
@@ -612,6 +857,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int LockTimeAsyncJobWaitTime
         {
             get
@@ -624,6 +872,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int DefaultFailedJobWaitTime
         {
             get
@@ -636,6 +887,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncFailedJobWaitTime
         {
             get
@@ -648,6 +902,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool EnableProcessDefinitionInfoCache
         {
             get
@@ -660,6 +917,9 @@ namespace org.activiti.engine
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IActivitiEngineAgendaFactory EngineAgendaFactory
         {
             set
@@ -670,50 +930,6 @@ namespace org.activiti.engine
             {
                 return engineAgendaFactory;
             }
-        }
-    }
-
-    internal class ProcessEngineOption
-    {
-        private static string s_configFileName;
-        private static byte[] hashByte;
-
-        internal static string ConfigFileName
-        {
-            get => s_configFileName;
-            set
-            {
-                s_configFileName = value;
-
-                hashByte = ComputeHash();
-            }
-        }
-
-        private static byte[] ComputeHash()
-        {
-            using (var fs = File.OpenRead(s_configFileName))
-            {
-                return SHA1.Create().ComputeHash(fs);
-            }
-        }
-
-        public static bool HasChanged()
-        {
-            var curr = ComputeHash();
-
-            bool changed = !hashByte.SequenceEqual(curr);
-
-            if (changed)
-            {
-                hashByte = curr;
-            }
-
-            return changed;
-        }
-
-        public ProcessEngineOption()
-        {
-
         }
     }
 }

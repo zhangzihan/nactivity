@@ -77,10 +77,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            Operation clone = new Operation();
-            clone.Values = this;
+            Operation clone = new Operation
+            {
+                Values = this
+            };
             return clone;
         }
 

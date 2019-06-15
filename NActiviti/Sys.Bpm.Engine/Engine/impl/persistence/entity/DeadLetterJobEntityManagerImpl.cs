@@ -32,36 +32,36 @@ namespace org.activiti.engine.impl.persistence.entity
             this.jobDataManager = jobDataManager;
         }
 
-        public virtual IList<IDeadLetterJobEntity> findJobsByExecutionId(string id)
+        public virtual IList<IDeadLetterJobEntity> FindJobsByExecutionId(string id)
         {
-            return jobDataManager.findJobsByExecutionId(id);
+            return jobDataManager.FindJobsByExecutionId(id);
         }
 
-        public virtual IList<IJob> findJobsByQueryCriteria(DeadLetterJobQueryImpl jobQuery, Page page)
+        public virtual IList<IJob> FindJobsByQueryCriteria(DeadLetterJobQueryImpl jobQuery, Page page)
         {
-            return jobDataManager.findJobsByQueryCriteria(jobQuery, page);
+            return jobDataManager.FindJobsByQueryCriteria(jobQuery, page);
         }
 
-        public virtual long findJobCountByQueryCriteria(DeadLetterJobQueryImpl jobQuery)
+        public virtual long FindJobCountByQueryCriteria(DeadLetterJobQueryImpl jobQuery)
         {
-            return jobDataManager.findJobCountByQueryCriteria(jobQuery);
+            return jobDataManager.FindJobCountByQueryCriteria(jobQuery);
         }
 
-        public virtual void updateJobTenantIdForDeployment(string deploymentId, string newTenantId)
+        public virtual void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId)
         {
-            jobDataManager.updateJobTenantIdForDeployment(deploymentId, newTenantId);
+            jobDataManager.UpdateJobTenantIdForDeployment(deploymentId, newTenantId);
         }
 
-        public override void insert(IDeadLetterJobEntity jobEntity, bool fireCreateEvent)
+        public override void Insert(IDeadLetterJobEntity jobEntity, bool fireCreateEvent)
         {
 
             // add link to execution
-            if (!ReferenceEquals(jobEntity.ExecutionId, null))
+            if (!(jobEntity.ExecutionId is null))
             {
-                IExecutionEntity execution = ExecutionEntityManager.findById<IExecutionEntity>(jobEntity.ExecutionId);
+                IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
 
                 // Inherit tenant if (if applicable)
-                if (!ReferenceEquals(execution.TenantId, null))
+                if (!(execution.TenantId is null))
                 {
                     jobEntity.TenantId = execution.TenantId;
                 }
@@ -69,40 +69,40 @@ namespace org.activiti.engine.impl.persistence.entity
                 if (ExecutionRelatedEntityCountEnabledGlobally)
                 {
                     ICountingExecutionEntity countingExecutionEntity = (ICountingExecutionEntity)execution;
-                    if (isExecutionRelatedEntityCountEnabled(countingExecutionEntity))
+                    if (IsExecutionRelatedEntityCountEnabled(countingExecutionEntity))
                     {
-                        countingExecutionEntity.DeadLetterJobCount = countingExecutionEntity.DeadLetterJobCount + 1;
+                        countingExecutionEntity.DeadLetterJobCount += 1;
                     }
                 }
             }
 
-            base.insert(jobEntity, fireCreateEvent);
+            base.Insert(jobEntity, fireCreateEvent);
         }
 
-        public override void insert(IDeadLetterJobEntity jobEntity)
+        public override void Insert(IDeadLetterJobEntity jobEntity)
         {
-            insert(jobEntity, true);
+            Insert(jobEntity, true);
         }
 
-        public override void delete(IDeadLetterJobEntity jobEntity)
+        public override void Delete(IDeadLetterJobEntity jobEntity)
         {
-            base.delete(jobEntity);
+            base.Delete(jobEntity);
 
-            deleteExceptionByteArrayRef(jobEntity);
+            DeleteExceptionByteArrayRef(jobEntity);
 
-            if (!ReferenceEquals(jobEntity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!(jobEntity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(jobEntity.ExecutionId);
-                if (isExecutionRelatedEntityCountEnabled(executionEntity))
+                ICountingExecutionEntity executionEntity = ExecutionEntityManager.FindById<ICountingExecutionEntity>(jobEntity.ExecutionId);
+                if (IsExecutionRelatedEntityCountEnabled(executionEntity))
                 {
-                    executionEntity.DeadLetterJobCount = executionEntity.DeadLetterJobCount - 1;
+                    executionEntity.DeadLetterJobCount -= 1;
                 }
             }
 
             // Send event
             if (EventDispatcher.Enabled)
             {
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_DELETED, this));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, this));
             }
         }
 
@@ -110,18 +110,17 @@ namespace org.activiti.engine.impl.persistence.entity
         /// Deletes a the byte array used to store the exception information.  Subclasses may override
         /// to provide custom implementations.
         /// </summary>
-        protected internal virtual void deleteExceptionByteArrayRef(IDeadLetterJobEntity jobEntity)
+        protected internal virtual void DeleteExceptionByteArrayRef(IDeadLetterJobEntity jobEntity)
         {
-            ByteArrayRef exceptionByteArrayRef = jobEntity.ExceptionByteArrayRef as ByteArrayRef;
-            if (exceptionByteArrayRef != null)
+            if (jobEntity.ExceptionByteArrayRef is ByteArrayRef exceptionByteArrayRef)
             {
-                exceptionByteArrayRef.delete();
+                exceptionByteArrayRef.Delete();
             }
         }
 
-        protected internal virtual IDeadLetterJobEntity createDeadLetterJob(IAbstractJobEntity job)
+        protected internal virtual IDeadLetterJobEntity CreateDeadLetterJob(IAbstractJobEntity job)
         {
-            IDeadLetterJobEntity newJobEntity = create();
+            IDeadLetterJobEntity newJobEntity = Create();
             newJobEntity.JobHandlerConfiguration = job.JobHandlerConfiguration;
             newJobEntity.JobHandlerType = job.JobHandlerType;
             newJobEntity.Exclusive = job.Exclusive;

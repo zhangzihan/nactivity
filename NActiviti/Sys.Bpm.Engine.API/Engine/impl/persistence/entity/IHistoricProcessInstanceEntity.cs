@@ -32,6 +32,8 @@ namespace org.activiti.engine.impl.persistence.entity
 
         new string StartUserId { get; set; }
 
+        new string StartUser { get; set; }
+
         new string StartActivityId { get; set; }
 
         new string SuperProcessInstanceId { get; set; }

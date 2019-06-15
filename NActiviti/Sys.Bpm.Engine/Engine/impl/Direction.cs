@@ -25,7 +25,7 @@ namespace org.activiti.engine.impl
         public static readonly Direction ASCENDING = new Direction("asc");
         public static readonly Direction DESCENDING = new Direction("desc");
 
-        private string name;
+        private readonly string name;
 
         public Direction(string name)
         {
@@ -41,7 +41,7 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public static Direction findByName(string directionName)
+        public static Direction FindByName(string directionName)
         {
             return directions[directionName];
         }

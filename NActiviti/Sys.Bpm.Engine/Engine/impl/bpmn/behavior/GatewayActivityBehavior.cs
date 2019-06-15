@@ -30,16 +30,16 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         private const long serialVersionUID = 1L;
 
-        protected internal virtual void lockFirstParentScope(IExecutionEntity execution)
+        protected internal virtual void LockFirstParentScope(IExecutionEntity execution)
         {
 
             IExecutionEntityManager executionEntityManager = Context.CommandContext.ExecutionEntityManager;
 
             bool found = false;
             IExecutionEntity parentScopeExecution = null;
-            while (!found && execution != null && !ReferenceEquals(execution.ParentId, null))
+            while (!found && execution != null && !(execution.ParentId is null))
             {
-                parentScopeExecution = executionEntityManager.findById<IExecutionEntity>(execution.ParentId);
+                parentScopeExecution = executionEntityManager.FindById<IExecutionEntity>(execution.ParentId);
                 if (parentScopeExecution != null && parentScopeExecution.IsScope)
                 {
                     found = true;
@@ -47,7 +47,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 execution = parentScopeExecution;
             }
 
-            parentScopeExecution.forceUpdate();
+            parentScopeExecution.ForceUpdate();
         }
 
     }

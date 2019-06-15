@@ -33,80 +33,78 @@ namespace org.activiti.engine
         /// <summary>
         /// Creates a new programmatic query to search for <seealso cref="IHistoricProcessInstance"/>s.
         /// </summary>
-        IHistoricProcessInstanceQuery createHistoricProcessInstanceQuery();
+        IHistoricProcessInstanceQuery CreateHistoricProcessInstanceQuery();
 
         /// <summary>
         /// Creates a new programmatic query to search for <seealso cref="IHistoricActivityInstance"/>s.
         /// </summary>
-        IHistoricActivityInstanceQuery createHistoricActivityInstanceQuery();
+        IHistoricActivityInstanceQuery CreateHistoricActivityInstanceQuery();
 
         /// <summary>
         /// Creates a new programmatic query to search for <seealso cref="IHistoricTaskInstance"/>s.
         /// </summary>
-        IHistoricTaskInstanceQuery createHistoricTaskInstanceQuery();
+        IHistoricTaskInstanceQuery CreateHistoricTaskInstanceQuery();
 
         /// <summary>
         /// Creates a new programmatic query to search for <seealso cref="IHistoricDetail"/>s. </summary>
-        IHistoricDetailQuery createHistoricDetailQuery();
+        IHistoricDetailQuery CreateHistoricDetailQuery();
 
         /// <summary>
         /// Returns a new <seealso cref="org.activiti.engine.query.NativeQuery"/> for process definitions.
         /// </summary>
-        INativeHistoricDetailQuery createNativeHistoricDetailQuery();
+        INativeHistoricDetailQuery CreateNativeHistoricDetailQuery();
 
         /// <summary>
         /// Creates a new programmatic query to search for <seealso cref="IHistoricVariableInstance"/>s.
         /// </summary>
-        IHistoricVariableInstanceQuery createHistoricVariableInstanceQuery();
+        IHistoricVariableInstanceQuery CreateHistoricVariableInstanceQuery();
 
         /// <summary>
         /// Returns a new <seealso cref="org.activiti.engine.query.NativeQuery"/> for process definitions.
         /// </summary>
-        INativeHistoricVariableInstanceQuery createNativeHistoricVariableInstanceQuery();
+        INativeHistoricVariableInstanceQuery CreateNativeHistoricVariableInstanceQuery();
 
         /// <summary>
         /// Deletes historic task instance. This might be useful for tasks that are <seealso cref="ITaskService#newTask() dynamically created"/> and then <seealso cref="ITaskService#complete(String) completed"/>. If the historic
         /// task instance doesn't exist, no exception is thrown and the method returns normal.
         /// </summary>
-        void deleteHistoricTaskInstance(string taskId);
+        void DeleteHistoricTaskInstance(string taskId);
 
         /// <summary>
         /// Deletes historic process instance. All historic activities, historic task and historic details (variable updates, form properties) are deleted as well.
         /// </summary>
-        void deleteHistoricProcessInstance(string processInstanceId);
+        void DeleteHistoricProcessInstance(string processInstanceId);
 
         /// <summary>
         /// creates a native query to search for <seealso cref="IHistoricProcessInstance"/>s via SQL
         /// </summary>
-        INativeHistoricProcessInstanceQuery createNativeHistoricProcessInstanceQuery();
+        INativeHistoricProcessInstanceQuery CreateNativeHistoricProcessInstanceQuery();
 
         /// <summary>
         /// creates a native query to search for <seealso cref="IHistoricTaskInstance"/>s via SQL
         /// </summary>
-        INativeHistoricTaskInstanceQuery createNativeHistoricTaskInstanceQuery();
+        INativeHistoricTaskInstanceQuery CreateNativeHistoricTaskInstanceQuery();
 
         /// <summary>
         /// creates a native query to search for <seealso cref="IHistoricActivityInstance"/>s via SQL
         /// </summary>
-        INativeHistoricActivityInstanceQuery createNativeHistoricActivityInstanceQuery();
+        INativeHistoricActivityInstanceQuery CreateNativeHistoricActivityInstanceQuery();
 
         /// <summary>
         /// Retrieves the <seealso cref="IHistoricIdentityLink"/>s associated with the given task. Such an <seealso cref="IdentityLink"/> informs how a certain identity (eg. group or user) is associated with a certain task (eg.
         /// as candidate, assignee, etc.), even if the task is completed as opposed to <seealso cref="IdentityLink"/>s which only exist for active tasks.
         /// </summary>
-        IList<IHistoricIdentityLink> getHistoricIdentityLinksForTask(string taskId);
+        IList<IHistoricIdentityLink> GetHistoricIdentityLinksForTask(string taskId);
 
         /// <summary>
         /// Retrieves the <seealso cref="IHistoricIdentityLink"/>s associated with the given process instance. Such an <seealso cref="IdentityLink"/> informs how a certain identity (eg. group or user) is associated with a
         /// certain process instance, even if the instance is completed as opposed to <seealso cref="IdentityLink"/>s which only exist for active instances.
         /// </summary>
-        IList<IHistoricIdentityLink> getHistoricIdentityLinksForProcessInstance(string processInstanceId);
+        IList<IHistoricIdentityLink> GetHistoricIdentityLinksForProcessInstance(string processInstanceId);
 
         /// <summary>
         /// Allows to retrieve the <seealso cref="IProcessInstanceHistoryLog"/> for one process instance.
         /// </summary>
-        IProcessInstanceHistoryLogQuery createProcessInstanceHistoryLogQuery(string processInstanceId);
-
+        IProcessInstanceHistoryLogQuery CreateProcessInstanceHistoryLogQuery(string processInstanceId);
     }
-
 }

@@ -11,12 +11,11 @@
  * limitations under the License.
  */
 
+using Microsoft.Extensions.Logging;
+using org.activiti.engine.impl.cfg.jta;
+using Sys.Workflow;
 using System;
 using System.Runtime.Serialization;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using org.activiti.engine.impl.cfg.jta;
-using Sys;
 
 namespace javax.transaction
 {
@@ -32,32 +31,32 @@ namespace javax.transaction
         public Transaction Transaction { get; set; }
         public Status Status { get; internal set; }
 
-        internal void begin()
+        internal void Begin()
         {
-            this.Transaction.begin();
+            this.Transaction.Begin();
         }
 
-        internal Transaction suspend()
+        internal Transaction Suspend()
         {
-            return this.Transaction.suspend();
+            return this.Transaction.Suspend();
         }
 
-        internal void resume(Transaction tx)
+        internal void Resume(Transaction tx)
         {
             log.LogWarning("mock java TransactionManager.resume!");
         }
 
-        internal void commit()
+        internal void Commit()
         {
             log.LogWarning("mock java TransactionManager.commit!");
         }
 
-        internal void rollback()
+        internal void Rollback()
         {
             log.LogWarning("mock java TransactionManager.rollback!");
         }
 
-        internal void setRollbackOnly()
+        internal void SetRollbackOnly()
         {
             log.LogWarning("mock java TransactionManager.setRollbackOnly!");
         }
@@ -85,34 +84,34 @@ namespace javax.transaction
         public Status Status { get; set; }
         public bool Active { get; internal set; }
 
-        internal void setRollbackOnly()
+        internal void SetRollbackOnly()
         {
             log.LogWarning("mock java Transaction.setRollbackOnly!");
         }
 
-        internal void registerSynchronization(JtaTransactionContext.TransactionStateSynchronization transactionStateSynchronization)
+        internal void RegisterSynchronization(JtaTransactionContext.TransactionStateSynchronization transactionStateSynchronization)
         {
             log.LogWarning("mock java Transaction.registerSynchronization!");
         }
 
-        internal void commit()
+        internal void Commit()
         {
             log.LogWarning("mock java Transaction.commit!");
         }
 
-        internal void rollback()
+        internal void Rollback()
         {
             log.LogWarning("mock java Transaction.rollback!");
         }
 
-        internal Transaction suspend()
+        internal Transaction Suspend()
         {
             log.LogWarning("mock java Transaction.suspend!");
 
             return this;
         }
 
-        internal void begin()
+        internal void Begin()
         {
             log.LogWarning("mock java Transaction.begin!");
         }

@@ -49,7 +49,9 @@ namespace org.activiti.bpmn.model
             }
         }
 
-
+        /// <summary>
+        /// 是否中断当前执行的边界任务,对应图节点，双实线终端类型，双虚实线非中断类型。
+        /// </summary>
         public virtual bool CancelActivity
         {
             get
@@ -63,10 +65,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            BoundaryEvent clone = new BoundaryEvent();
-            clone.Values = this;
+            BoundaryEvent clone = new BoundaryEvent
+            {
+                Values = this
+            };
             return clone;
         }
 

@@ -31,14 +31,14 @@ namespace org.activiti.engine.impl.persistence.entity
 
         public SignalEventSubscriptionEntityImpl()
         {
-            eventType = SignalEventSubscriptionEntity_Fields.EVENT_TYPE;
+            eventType = SignalEventSubscriptionEntityFields.EVENT_TYPE;
         }
 
         public override string Configuration
         {
             set
             {
-                if (!ReferenceEquals(value, null) && value.Contains("{\"scope\":"))
+                if (!(value is null) && value.Contains("{\"scope\":"))
                 {
                     this.configuration = value;
                 }
@@ -53,8 +53,8 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                string scope = extractScopeFormConfiguration();
-                return (!ReferenceEquals(scope, null)) && (Signal.SCOPE_PROCESS_INSTANCE.Equals(scope));
+                string scope = ExtractScopeFormConfiguration();
+                return (!(scope is null)) && (Signal.SCOPE_PROCESS_INSTANCE.Equals(scope));
             }
         }
 
@@ -62,14 +62,14 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                string scope = extractScopeFormConfiguration();
-                return (ReferenceEquals(scope, null)) || (Signal.SCOPE_GLOBAL.Equals(scope));
+                string scope = ExtractScopeFormConfiguration();
+                return (scope is null) || (Signal.SCOPE_GLOBAL.Equals(scope));
             }
         }
 
-        protected internal virtual string extractScopeFormConfiguration()
+        protected internal virtual string ExtractScopeFormConfiguration()
         {
-            if (ReferenceEquals(this.configuration, null))
+            if (this.configuration is null)
             {
                 return null;
             }
@@ -78,7 +78,5 @@ namespace org.activiti.engine.impl.persistence.entity
                 return this.configuration.Substring(10, (this.configuration.Length - 2) - 10); // 10 --> length of {"scope": and -2 for removing"}
             }
         }
-
     }
-
 }

@@ -15,10 +15,12 @@ namespace org.activiti.bpmn.model
     public class EventGateway : Gateway
     {
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            EventGateway clone = new EventGateway();
-            clone.Values = this;
+            EventGateway clone = new EventGateway
+            {
+                Values = this
+            };
             return clone;
         }
     }

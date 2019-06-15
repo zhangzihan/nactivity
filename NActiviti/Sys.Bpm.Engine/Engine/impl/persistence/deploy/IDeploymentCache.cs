@@ -20,16 +20,14 @@ namespace org.activiti.engine.impl.persistence.deploy
     public interface IDeploymentCache<T>
     {
 
-        T get(string id);
+        T Get(string id);
 
-        bool contains(string id);
+        bool Contains(string id);
 
-        void add(string id, T @object);
+        void Add(string id, T @object);
 
-        void remove(string id);
+        void Remove(string id);
 
-        void clear();
-
+        void Clear();
     }
-
 }

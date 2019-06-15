@@ -33,9 +33,9 @@ namespace org.activiti.engine.impl.cmd
             this.type = type;
         }
 
-        public virtual IList<IComment> execute(ICommandContext commandContext)
+        public virtual IList<IComment> Execute(ICommandContext commandContext)
         {
-            return commandContext.CommentEntityManager.findCommentsByType(type);
+            return commandContext.CommentEntityManager.FindCommentsByType(type);
         }
     }
 

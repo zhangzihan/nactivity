@@ -68,12 +68,14 @@ namespace Spring.Expressions
         {
         }
 
+        private object syncRoot = new object();
+
         /// <summary>
         /// Initializes the node. 
         /// </summary>
         private void InitializeNode()
         {
-            lock (this)
+            lock (syncRoot)
             {
                 if (args == null)
                 {

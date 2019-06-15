@@ -46,10 +46,12 @@
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            DataSpec clone = new DataSpec();
-            clone.Values = this;
+            DataSpec clone = new DataSpec
+            {
+                Values = this
+            };
             return clone;
         }
 

@@ -14,21 +14,21 @@
  */
 namespace org.activiti.engine.impl.persistence.entity
 {
-	/// <summary>
-	/// DeadLetterJob entity, necessary for persistence.
-	/// 
-	/// 
-	/// </summary>
-	[Serializable]
-	public class DeadLetterJobEntityImpl : AbstractJobEntityImpl, IDeadLetterJobEntity
-	{
+    /// <summary>
+    /// DeadLetterJob entity, necessary for persistence.
+    /// 
+    /// 
+    /// </summary>
+    [Serializable]
+    public class DeadLetterJobEntityImpl : AbstractJobEntityImpl, IDeadLetterJobEntity
+    {
 
-	  private const long serialVersionUID = 1L;
+        private const long serialVersionUID = 1L;
 
-	  public override string ToString()
-	  {
-		return "DeadLetterJobEntity [id=" + id + "]";
-	  }
-	}
+        public override string ToString()
+        {
+            return "DeadLetterJobEntity [id=" + id + "]";
+        }
+    }
 
 }

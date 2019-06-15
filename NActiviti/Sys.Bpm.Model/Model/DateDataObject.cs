@@ -14,10 +14,12 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            DateDataObject clone = new DateDataObject();
-            clone.Values = this;
+            DateDataObject clone = new DateDataObject
+            {
+                Values = this
+            };
             return clone;
         }
     }

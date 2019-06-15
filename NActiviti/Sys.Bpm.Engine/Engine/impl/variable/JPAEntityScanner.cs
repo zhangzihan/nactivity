@@ -26,7 +26,7 @@ namespace org.activiti.engine.impl.variable
     public class JPAEntityScanner
     {
 
-        public virtual EntityMetaData scanClass(Type clazz)
+        public virtual EntityMetaData ScanClass(Type clazz)
         {
             EntityMetaData metaData = new EntityMetaData();
             // in case with JPA Enhancement
@@ -36,14 +36,14 @@ namespace org.activiti.engine.impl.variable
             {
 
                 // Class should have @Entity annotation
-                bool isEntity = isEntityAnnotationPresent(clazz);
+                bool isEntity = IsEntityAnnotationPresent(clazz);
 
                 if (isEntity)
                 {
                     metaData.EntityClass = clazz;
                     metaData.JPAEntity = true;
                     // Try to find a field annotated with @Id
-                    FieldInfo idField = getIdField(clazz);
+                    FieldInfo idField = GetIdField(clazz);
                     if (idField != null)
                     {
                         metaData.IdField = idField;
@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl.variable
                     else
                     {
                         // Try to find a method annotated with @Id
-                        MethodInfo idMethod = getIdMethod(clazz);
+                        MethodInfo idMethod = GetIdMethod(clazz);
                         if (idMethod != null)
                         {
                             metaData.IdMethod = idMethod;
@@ -68,18 +68,16 @@ namespace org.activiti.engine.impl.variable
             return metaData;
         }
 
-        private MethodInfo getIdMethod(Type clazz)
+        private MethodInfo GetIdMethod(Type clazz)
         {
             MethodInfo idMethod = null;
             // Get all public declared methods on the class. According to spec, @Id
             // should only be
             // applied to fields and property get methods
             MethodInfo[] methods = clazz.GetMethods();
-            IdAttribute idAnnotation = null;
             foreach (MethodInfo method in methods)
             {
-                idAnnotation = method.GetCustomAttribute(typeof(IdAttribute)) as IdAttribute;
-                if (idAnnotation != null)
+                if (method.GetCustomAttribute(typeof(IdAttribute)) is IdAttribute idAnnotation)
                 {
                     idMethod = method;
                     break;
@@ -88,15 +86,13 @@ namespace org.activiti.engine.impl.variable
             return idMethod;
         }
 
-        private FieldInfo getIdField(Type clazz)
+        private FieldInfo GetIdField(Type clazz)
         {
             FieldInfo idField = null;
             FieldInfo[] fields = clazz.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
-            IdAttribute idAnnotation = null;
             foreach (FieldInfo field in fields)
             {
-                idAnnotation = field.GetCustomAttribute(typeof(IdAttribute)) as IdAttribute;
-                if (idAnnotation != null)
+                if (field.GetCustomAttribute(typeof(IdAttribute)) is IdAttribute idAnnotation)
                 {
                     idField = field;
                     break;
@@ -112,13 +108,13 @@ namespace org.activiti.engine.impl.variable
                 if (superClass != null && !superClass.Equals(typeof(object)))
                 {
                     // Recursively go up class hierarchy
-                    idField = getIdField(superClass);
+                    idField = GetIdField(superClass);
                 }
             }
             return idField;
         }
 
-        private bool isEntityAnnotationPresent(Type clazz)
+        private bool IsEntityAnnotationPresent(Type clazz)
         {
             return (clazz.GetCustomAttribute(typeof(EntityAttribute)) != null);
         }

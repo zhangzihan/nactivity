@@ -1,4 +1,5 @@
-﻿using org.activiti.cloud.services.events.configuration;
+﻿using org.activiti.cloud.services.api.events;
+using org.activiti.cloud.services.events.configuration;
 using org.activiti.engine.@delegate.@event;
 
 namespace org.activiti.cloud.services.events.converter
@@ -13,19 +14,19 @@ namespace org.activiti.cloud.services.events.converter
         /// <summary>
         /// 
         /// </summary>
-        public abstract string handledType();
+        public abstract string HandledType();
 
 
         /// <summary>
         /// 
         /// </summary>
-        public abstract org.activiti.cloud.services.api.events.IProcessEngineEvent from(IActivitiEvent @event);
+        public abstract IProcessEngineEvent From(IActivitiEvent @event);
 
 
         /// <summary>
         /// 
         /// </summary>
-        private RuntimeBundleProperties runtimeBundleProperties;
+        private readonly RuntimeBundleProperties runtimeBundleProperties;
 
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using Sys;
+using Sys.Workflow;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,19 +27,21 @@ namespace org.activiti.engine.@delegate.@event.impl
     public class ActivitiEventSupport
     {
         protected internal IList<IActivitiEventListener> eventListeners;
-        protected internal IDictionary<ActivitiEventType, IList<IActivitiEventListener>> typedListeners;
+        protected internal ConcurrentDictionary<ActivitiEventType, IList<IActivitiEventListener>> typedListeners;
 
-        private ILogger<ActivitiEventSupport> log = ProcessEngineServiceProvider.LoggerService<ActivitiEventSupport>();
+        private static readonly ILogger<ActivitiEventSupport> log = ProcessEngineServiceProvider.LoggerService<ActivitiEventSupport>();
 
         public ActivitiEventSupport()
         {
             eventListeners = new List<IActivitiEventListener>();
-            typedListeners = new Dictionary<ActivitiEventType, IList<IActivitiEventListener>>();
+            typedListeners = new ConcurrentDictionary<ActivitiEventType, IList<IActivitiEventListener>>();
         }
 
-        public virtual void addEventListener(IActivitiEventListener listenerToAdd)
+        private readonly object syncRoot = new object();
+
+        public virtual void AddEventListener(IActivitiEventListener listenerToAdd)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 if (listenerToAdd == null)
                 {
@@ -51,9 +54,9 @@ namespace org.activiti.engine.@delegate.@event.impl
             }
         }
 
-        public virtual void addEventListener(IActivitiEventListener listenerToAdd, params ActivitiEventType[] types)
+        public virtual void AddEventListener(IActivitiEventListener listenerToAdd, params ActivitiEventType[] types)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 if (listenerToAdd == null)
                 {
@@ -62,20 +65,20 @@ namespace org.activiti.engine.@delegate.@event.impl
 
                 if (types == null || types.Length == 0)
                 {
-                    addEventListener(listenerToAdd);
+                    AddEventListener(listenerToAdd);
 
                 }
                 else
                 {
                     foreach (ActivitiEventType type in types)
                     {
-                        addTypedEventListener(listenerToAdd, type);
+                        AddTypedEventListener(listenerToAdd, type);
                     }
                 }
             }
         }
 
-        public virtual void removeEventListener(IActivitiEventListener listenerToRemove)
+        public virtual void RemoveEventListener(IActivitiEventListener listenerToRemove)
         {
             eventListeners.Remove(listenerToRemove);
 
@@ -85,7 +88,7 @@ namespace org.activiti.engine.@delegate.@event.impl
             }
         }
 
-        public virtual void dispatchEvent(IActivitiEvent @event)
+        public virtual void DispatchEvent(IActivitiEvent @event)
         {
             if (@event == null)
             {
@@ -102,7 +105,7 @@ namespace org.activiti.engine.@delegate.@event.impl
             {
                 foreach (IActivitiEventListener listener in eventListeners)
                 {
-                    dispatchEvent(@event, listener);
+                    DispatchEvent(@event, listener);
                 }
             }
 
@@ -112,16 +115,16 @@ namespace org.activiti.engine.@delegate.@event.impl
             {
                 foreach (IActivitiEventListener listener in typed)
                 {
-                    dispatchEvent(@event, listener);
+                    DispatchEvent(@event, listener);
                 }
             }
         }
 
-        protected internal virtual void dispatchEvent(IActivitiEvent @event, IActivitiEventListener listener)
+        protected internal virtual void DispatchEvent(IActivitiEvent @event, IActivitiEventListener listener)
         {
             try
             {
-                listener.onEvent(@event);
+                listener.OnEvent(@event);
             }
             catch (Exception t)
             {
@@ -138,16 +141,16 @@ namespace org.activiti.engine.@delegate.@event.impl
             }
         }
 
-        protected internal virtual void addTypedEventListener(IActivitiEventListener listener, ActivitiEventType type)
+        protected internal virtual void AddTypedEventListener(IActivitiEventListener listener, ActivitiEventType type)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 typedListeners.TryGetValue(type, out IList<IActivitiEventListener> listeners);
                 if (listeners == null)
                 {
                     // Add an empty list of listeners for this type
                     listeners = new List<IActivitiEventListener>(); // SynchronizedCollection<IActivitiEventListener>();
-                    typedListeners[type] = listeners;
+                    typedListeners.TryAdd(type, listeners);
                 }
 
                 if (!listeners.Contains(listener))

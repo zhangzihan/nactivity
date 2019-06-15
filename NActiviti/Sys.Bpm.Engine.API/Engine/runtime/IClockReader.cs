@@ -16,20 +16,29 @@
 namespace org.activiti.engine.runtime
 {
 
-	/// <summary>
-	/// This interface provides clock reading functionality
-	/// </summary>
-	public interface IClockReader
-	{
+    /// <summary>
+    /// This interface provides clock reading functionality
+    /// </summary>
+    public interface IClockReader
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        DateTime CurrentTime { get; }
 
-	  DateTime CurrentTime {get;}
+        /// <summary>
+        /// 
+        /// </summary>
+        DateTime CurrentCalendar { get; }
 
-	  DateTime CurrentCalendar {get;}
+        /// <summary>
+        /// 
+        /// </summary>
+        DateTime GetCurrentCalendar(TimeZoneInfo timeZone);
 
-	  DateTime getCurrentCalendar(TimeZoneInfo timeZone);
-
-        TimeZoneInfo CurrentTimeZone {get;}
-
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        TimeZoneInfo CurrentTimeZone { get; }
+    }
 }

@@ -22,89 +22,89 @@ namespace org.activiti.bpmn.converter.parser
 
     /// 
     public class SubProcessParser : IBpmnXMLConstants
-	{
+    {
 
-	  public virtual void parse(XMLStreamReader xtr, IList<SubProcess> activeSubProcessList, Process activeProcess)
-	  {
-		SubProcess subProcess = null;
-		if (org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_TRANSACTION.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
-		{
-		  subProcess = new Transaction();
+        public virtual void Parse(XMLStreamReader xtr, IList<SubProcess> activeSubProcessList, Process activeProcess)
+        {
+            SubProcess subProcess;
+            if (BpmnXMLConstants.ELEMENT_TRANSACTION.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+            {
+                subProcess = new Transaction();
 
-		}
-		else if (org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_ADHOC_SUBPROCESS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
-		{
-		  AdhocSubProcess adhocSubProcess = new AdhocSubProcess();
-		  string orderingAttributeValue = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ORDERING);
-		  if (!string.IsNullOrWhiteSpace(orderingAttributeValue))
-		  {
-			adhocSubProcess.Ordering = orderingAttributeValue;
-		  }
+            }
+            else if (BpmnXMLConstants.ELEMENT_ADHOC_SUBPROCESS.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
+            {
+                AdhocSubProcess adhocSubProcess = new AdhocSubProcess();
+                string orderingAttributeValue = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ORDERING);
+                if (!string.IsNullOrWhiteSpace(orderingAttributeValue))
+                {
+                    adhocSubProcess.Ordering = orderingAttributeValue;
+                }
 
-		  if (org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE.Equals(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_CANCEL_REMAINING_INSTANCES), StringComparison.CurrentCultureIgnoreCase))
-		  {
-			adhocSubProcess.CancelRemainingInstances = false;
-		  }
+                if (BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE.Equals(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_CANCEL_REMAINING_INSTANCES), StringComparison.CurrentCultureIgnoreCase))
+                {
+                    adhocSubProcess.CancelRemainingInstances = false;
+                }
 
-		  subProcess = adhocSubProcess;
+                subProcess = adhocSubProcess;
 
-		}
-		else if (org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE.Equals(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TRIGGERED_BY), StringComparison.CurrentCultureIgnoreCase))
-		{
-		  subProcess = new EventSubProcess();
+            }
+            else if (BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE.Equals(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_TRIGGERED_BY), StringComparison.CurrentCultureIgnoreCase))
+            {
+                subProcess = new EventSubProcess();
 
-		}
-		else
-		{
-		  subProcess = new SubProcess();
-		}
+            }
+            else
+            {
+                subProcess = new SubProcess();
+            }
 
-		BpmnXMLUtil.addXMLLocation(subProcess, xtr);
-		activeSubProcessList.Add(subProcess);
+            BpmnXMLUtil.AddXMLLocation(subProcess, xtr);
+            activeSubProcessList.Add(subProcess);
 
-		subProcess.Id = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID);
-		subProcess.Name = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME);
+            subProcess.Id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+            subProcess.Name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
 
-		bool async = false;
-		string asyncString = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ASYNCHRONOUS);
-		if (org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE.Equals(asyncString, StringComparison.CurrentCultureIgnoreCase))
-		{
-		  async = true;
-		}
+            bool async = false;
+            string asyncString = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ASYNCHRONOUS);
+            if (BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE.Equals(asyncString, StringComparison.CurrentCultureIgnoreCase))
+            {
+                async = true;
+            }
 
-		bool notExclusive = false;
-		string exclusiveString = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ACTIVITY_EXCLUSIVE);
-		if (org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE.Equals(exclusiveString, StringComparison.CurrentCultureIgnoreCase))
-		{
-		  notExclusive = true;
-		}
+            bool notExclusive = false;
+            string exclusiveString = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_ACTIVITY_EXCLUSIVE);
+            if (BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE.Equals(exclusiveString, StringComparison.CurrentCultureIgnoreCase))
+            {
+                notExclusive = true;
+            }
 
-		bool forCompensation = false;
-		string compensationString = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ISFORCOMPENSATION);
-		if (org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE.Equals(compensationString, StringComparison.CurrentCultureIgnoreCase))
-		{
-		  forCompensation = true;
-		}
+            bool forCompensation = false;
+            string compensationString = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ISFORCOMPENSATION);
+            if (BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE.Equals(compensationString, StringComparison.CurrentCultureIgnoreCase))
+            {
+                forCompensation = true;
+            }
 
-		subProcess.Asynchronous = async;
-		subProcess.NotExclusive = notExclusive;
-		subProcess.ForCompensation = forCompensation;
-		if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DEFAULT)))
-		{
-		  subProcess.DefaultFlow = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_DEFAULT);
-		}
+            subProcess.Asynchronous = async;
+            subProcess.NotExclusive = notExclusive;
+            subProcess.ForCompensation = forCompensation;
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DEFAULT)))
+            {
+                subProcess.DefaultFlow = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DEFAULT);
+            }
 
-		if (activeSubProcessList.Count > 1)
-		{
-		  SubProcess parentSubProcess = activeSubProcessList[activeSubProcessList.Count - 2];
-		  parentSubProcess.addFlowElement(subProcess);
+            if (activeSubProcessList.Count > 1)
+            {
+                SubProcess parentSubProcess = activeSubProcessList[activeSubProcessList.Count - 2];
+                parentSubProcess.AddFlowElement(subProcess);
 
-		}
-		else
-		{
-		  activeProcess.addFlowElement(subProcess);
-		}
-	  }
-	}
+            }
+            else
+            {
+                activeProcess.AddFlowElement(subProcess);
+            }
+        }
+    }
 
 }

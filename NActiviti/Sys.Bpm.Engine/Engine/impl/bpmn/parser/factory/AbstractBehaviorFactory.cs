@@ -21,44 +21,44 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
 
     /// 
     public abstract class AbstractBehaviorFactory
-	{
+    {
 
-	  protected internal ExpressionManager expressionManager;
+        protected internal ExpressionManager expressionManager;
 
-	  public virtual IList<FieldDeclaration> createFieldDeclarations(IList<FieldExtension> fieldList)
-	  {
-		IList<FieldDeclaration> fieldDeclarations = new List<FieldDeclaration>();
+        public virtual IList<FieldDeclaration> CreateFieldDeclarations(IList<FieldExtension> fieldList)
+        {
+            IList<FieldDeclaration> fieldDeclarations = new List<FieldDeclaration>();
 
-		foreach (FieldExtension fieldExtension in fieldList)
-		{
-		  FieldDeclaration fieldDeclaration = null;
-		  if (!string.IsNullOrWhiteSpace(fieldExtension.Expression))
-		  {
-			fieldDeclaration = new FieldDeclaration(fieldExtension.FieldName, typeof(IExpression).FullName, expressionManager.createExpression(fieldExtension.Expression));
-		  }
-		  else
-		  {
-			fieldDeclaration = new FieldDeclaration(fieldExtension.FieldName, typeof(IExpression).FullName, new FixedValue(fieldExtension.StringValue));
-		  }
+            foreach (FieldExtension fieldExtension in fieldList)
+            {
+                FieldDeclaration fieldDeclaration = null;
+                if (!string.IsNullOrWhiteSpace(fieldExtension.Expression))
+                {
+                    fieldDeclaration = new FieldDeclaration(fieldExtension.FieldName, typeof(IExpression).FullName, expressionManager.CreateExpression(fieldExtension.Expression));
+                }
+                else
+                {
+                    fieldDeclaration = new FieldDeclaration(fieldExtension.FieldName, typeof(IExpression).FullName, new FixedValue(fieldExtension.StringValue));
+                }
 
-		  fieldDeclarations.Add(fieldDeclaration);
-		}
-		return fieldDeclarations;
-	  }
+                fieldDeclarations.Add(fieldDeclaration);
+            }
+            return fieldDeclarations;
+        }
 
-	  public virtual ExpressionManager ExpressionManager
-	  {
-		  get
-		  {
-			return expressionManager;
-		  }
-		  set
-		  {
-			this.expressionManager = value;
-		  }
-	  }
+        public virtual ExpressionManager ExpressionManager
+        {
+            get
+            {
+                return expressionManager;
+            }
+            set
+            {
+                this.expressionManager = value;
+            }
+        }
 
 
-	}
+    }
 
 }

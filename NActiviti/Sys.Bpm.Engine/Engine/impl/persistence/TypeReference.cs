@@ -13,7 +13,7 @@ namespace org.activiti.engine.impl.persistence
 
         public Type RawType => rawType;
 
-        Type getSuperclassTypeParameter()
+        Type GetSuperclassTypeParameter()
         {
             //            Type clazz = typeof(T);
             //            Type genericSuperclass = clazz.GetGenericTypeDefinition();//.getGenericSuperclass();

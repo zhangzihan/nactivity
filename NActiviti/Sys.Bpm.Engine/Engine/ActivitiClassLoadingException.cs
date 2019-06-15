@@ -26,7 +26,7 @@ namespace org.activiti.engine
         private const long serialVersionUID = 1L;
         protected internal string className;
 
-        public ActivitiClassLoadingException(string className, Exception cause) : base(getExceptionMessageMessage(className, cause), cause)
+        public ActivitiClassLoadingException(string className, Exception cause) : base(GetExceptionMessageMessage(className, cause), cause)
         {
             this.className = className;
         }
@@ -42,7 +42,7 @@ namespace org.activiti.engine
             }
         }
 
-        private static string getExceptionMessageMessage(string className, Exception cause)
+        private static string GetExceptionMessageMessage(string className, Exception cause)
         {
             if (cause is Exception)
             {

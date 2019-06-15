@@ -39,60 +39,62 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override ITimerJobEntity create()
+        public override ITimerJobEntity Create()
         {
             return new TimerJobEntityImpl();
         }
 
-        public virtual IList<IJob> findJobsByQueryCriteria(TimerJobQueryImpl jobQuery, Page page)
+        public virtual IList<IJob> FindJobsByQueryCriteria(ITimerJobQuery jobQuery, Page page)
         {
             string query = "selectTimerJobByQueryCriteria";
-            return DbSqlSession.selectList<TimerJobEntityImpl, IJob>(query, jobQuery, page);
+            return DbSqlSession.SelectList<TimerJobEntityImpl, IJob>(query, jobQuery, page);
         }
 
-        public virtual long findJobCountByQueryCriteria(TimerJobQueryImpl jobQuery)
+        public virtual long FindJobCountByQueryCriteria(ITimerJobQuery jobQuery)
         {
-            return ((long?)DbSqlSession.selectOne<TimerJobEntityImpl, long?>("selectTimerJobCountByQueryCriteria", jobQuery)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<TimerJobEntityImpl, long?>("selectTimerJobCountByQueryCriteria", jobQuery).GetValueOrDefault();
         }
 
-        public virtual IList<ITimerJobEntity> findTimerJobsToExecute(Page page)
+        public virtual IList<ITimerJobEntity> FindTimerJobsToExecute(Page page)
         {
             DateTime now = Clock.CurrentTime;
-            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobsToExecute", new { duedate = now }, page);
+            return DbSqlSession.SelectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobsToExecute", new { duedate = now }, page);
         }
 
-        public virtual IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionId(string handlerType, string processDefinitionId)
+        public virtual IList<ITimerJobEntity> FindJobsByTypeAndProcessDefinitionId(string handlerType, string processDefinitionId)
         {
-            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobByTypeAndProcessDefinitionId", new { handlerType, processDefinitionId });
+            return DbSqlSession.SelectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobByTypeAndProcessDefinitionId", new { handlerType, processDefinitionId });
 
         }
 
-        public virtual IList<ITimerJobEntity> findJobsByExecutionId(string executionId)
+        public virtual IList<ITimerJobEntity> FindJobsByExecutionId(string executionId)
         {
-            return (IList<ITimerJobEntity>)getList("selectTimerJobsByExecutionId", new { executionId }, timerJobsByExecutionIdMatcher, true);
+            return (IList<ITimerJobEntity>)GetList("selectTimerJobsByExecutionId", new { executionId }, timerJobsByExecutionIdMatcher, true);
         }
 
-        public virtual IList<ITimerJobEntity> findJobsByProcessInstanceId(string processInstanceId)
+        public virtual IList<ITimerJobEntity> FindJobsByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobsByProcessInstanceId", new { processInstanceId });
+            return DbSqlSession.SelectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobsByProcessInstanceId", new { processInstanceId });
         }
 
-        public virtual IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionKeyNoTenantId(string handlerType, string processDefinitionKey)
+        public virtual IList<ITimerJobEntity> FindJobsByTypeAndProcessDefinitionKeyNoTenantId(string handlerType, string processDefinitionKey)
         {
-            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobByTypeAndProcessDefinitionKeyNoTenantId", new { handlerType, processDefinitionKey });
+            return DbSqlSession.SelectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobByTypeAndProcessDefinitionKeyNoTenantId", new { handlerType, processDefinitionKey });
         }
 
-        public virtual IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionKeyAndTenantId(string handlerType, string processDefinitionKey, string tenantId)
+        public virtual IList<ITimerJobEntity> FindJobsByTypeAndProcessDefinitionKeyAndTenantId(string handlerType, string processDefinitionKey, string tenantId)
         {
-            return DbSqlSession.selectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobByTypeAndProcessDefinitionKeyAndTenantId", new { handlerType, processDefinitionKey, tenantId });
+            return DbSqlSession.SelectList<TimerJobEntityImpl, ITimerJobEntity>("selectTimerJobByTypeAndProcessDefinitionKeyAndTenantId", new { handlerType, processDefinitionKey, tenantId });
         }
 
-        public virtual void updateJobTenantIdForDeployment(string deploymentId, string newTenantId)
+        public virtual void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId)
         {
-            Dictionary<string, object> @params = new Dictionary<string, object>();
-            @params["deploymentId"] = deploymentId;
-            @params["tenantId"] = newTenantId;
-            DbSqlSession.update<TimerJobEntityImpl>("updateTimerJobTenantIdForDeployment", @params);
+            Dictionary<string, object> @params = new Dictionary<string, object>
+            {
+                ["deploymentId"] = deploymentId,
+                ["tenantId"] = newTenantId
+            };
+            DbSqlSession.Update<TimerJobEntityImpl>("updateTimerJobTenantIdForDeployment", @params);
         }
 
     }

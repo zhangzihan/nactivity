@@ -18,7 +18,9 @@ namespace org.activiti.engine.impl.cmd
 {
 
     using org.activiti.engine.impl.interceptor;
+    using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.task;
+    using System.Linq;
 
     /// 
     [Serializable]
@@ -33,11 +35,11 @@ namespace org.activiti.engine.impl.cmd
             this.parentTaskId = parentTaskId;
         }
 
-        public virtual IList<ITask> execute(ICommandContext commandContext)
+        public virtual IList<ITask> Execute(ICommandContext commandContext)
         {
-            return commandContext.TaskEntityManager.findTasksByParentTaskId(parentTaskId);
+            IList<ITask> tasks = commandContext.TaskEntityManager.FindTasksByParentTaskId(parentTaskId);
+
+            return TaskEntityImpl.EnsureAssignerInitialized(tasks.Cast<TaskEntityImpl>()).ToList();
         }
-
     }
-
 }

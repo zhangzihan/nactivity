@@ -20,11 +20,11 @@ namespace org.activiti.engine.impl.persistence.entity
     public interface IAttachmentEntityManager : IEntityManager<IAttachmentEntity>
     {
 
-        IList<IAttachmentEntity> findAttachmentsByProcessInstanceId(string processInstanceId);
+        IList<IAttachmentEntity> FindAttachmentsByProcessInstanceId(string processInstanceId);
 
-        IList<IAttachmentEntity> findAttachmentsByTaskId(string taskId);
+        IList<IAttachmentEntity> FindAttachmentsByTaskId(string taskId);
 
-        void deleteAttachmentsByTaskId(string taskId);
+        void DeleteAttachmentsByTaskId(string taskId);
 
     }
 }

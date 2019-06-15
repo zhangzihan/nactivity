@@ -11,12 +11,12 @@ namespace org.activiti.engine.impl.@event.logger.handler
     public class VariableUpdatedEventHandler : VariableEventHandler
     {
 
-        public override IEventLogEntryEntity generateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
+        public override IEventLogEntryEntity GenerateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
         {
             IActivitiVariableEvent variableEvent = (IActivitiVariableEvent)@event;
             IDictionary<string, object> data = createData(variableEvent);
 
-            return createEventLogEntry(variableEvent.ProcessDefinitionId, variableEvent.ProcessInstanceId, variableEvent.ExecutionId, variableEvent.TaskId, data);
+            return CreateEventLogEntry(variableEvent.ProcessDefinitionId, variableEvent.ProcessInstanceId, variableEvent.ExecutionId, variableEvent.TaskId, data);
         }
 
     }

@@ -21,7 +21,7 @@ namespace org.activiti.engine.impl.jobexecutor
 
         string Type { get; }
 
-        void execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext);
+        void Execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext);
     }
 
 }

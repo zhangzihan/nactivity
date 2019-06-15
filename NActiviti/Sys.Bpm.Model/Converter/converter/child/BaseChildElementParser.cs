@@ -22,19 +22,19 @@ namespace org.activiti.bpmn.converter.child
     {
         public abstract string ElementName { get; }
 
-        public abstract void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model);
+        public abstract void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model);
 
-        protected internal virtual void parseChildElements(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model, BaseChildElementParser parser)
+        protected internal virtual void ParseChildElements(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model, BaseChildElementParser parser)
         {
             bool readyWithChildElements = false;
-            while (!readyWithChildElements && xtr.hasNext())
+            while (!readyWithChildElements && xtr.HasNext())
             {
                 //xtr.next();
                 if (xtr.IsStartElement())
                 {
                     if (parser.ElementName.Equals(xtr.LocalName))
                     {
-                        parser.parseChildElement(xtr, parentElement, model);
+                        parser.ParseChildElement(xtr, parentElement, model);
                     }
 
                 }
@@ -50,7 +50,7 @@ namespace org.activiti.bpmn.converter.child
             } 
         }
 
-        public virtual bool accepts(BaseElement element)
+        public virtual bool Accepts(BaseElement element)
         {
             return element != null;
         }

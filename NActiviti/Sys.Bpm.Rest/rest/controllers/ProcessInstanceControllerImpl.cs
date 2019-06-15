@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Task = System.Threading.Tasks.Task;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +42,9 @@ namespace org.activiti.cloud.services.rest.controllers
     [ApiController]
     public class ProcessInstanceControllerImpl : ControllerBase, IProcessInstanceController
     {
-        private ProcessEngineWrapper processEngine;
+        private readonly ProcessEngineWrapper processEngineWrapper;
+
+        private readonly IProcessEngine processEngine;
 
         private readonly IRepositoryService repositoryService;
 
@@ -80,9 +81,10 @@ namespace org.activiti.cloud.services.rest.controllers
             IProcessEngine engine,
             SecurityPoliciesApplicationService securityPoliciesApplicationService)
         {
-            this.processEngine = processEngine;
+            this.processEngineWrapper = processEngine;
             this.repositoryService = engine.RepositoryService;
             this.runtimeService = engine.RuntimeService;
+            this.processEngine = engine;
             this.resourceAssembler = resourceAssembler;
             this.securityService = securityPoliciesApplicationService;
             this.pageableProcessInstanceService = pageableProcessInstanceService;
@@ -93,21 +95,28 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpPost]
         public virtual Task<Resources<ProcessInstance>> ProcessInstances(ProcessInstanceQuery query)
         {
-            IPage<ProcessInstance> instances = new QueryProcessInstanceCmd().loadPage(this.runtimeService, this.pageableProcessInstanceService, query);
+            IPage<ProcessInstance> instances = new QueryProcessInstanceCmd().LoadPage(this.runtimeService, this.pageableProcessInstanceService, query);
 
-            IList<ProcessInstanceResource> resources = resourceAssembler.toResources(instances.getContent());
+            IList<ProcessInstanceResource> resources = resourceAssembler.ToResources(instances.GetContent());
 
-            return Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.getTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
+            return Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.GetTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
         }
 
 
         /// <inheritdoc />
         [HttpPost("start")]
-        public virtual Task<ProcessInstance> Start(StartProcessInstanceCmd cmd)
+        public virtual Task<ProcessInstance[]> Start(StartProcessInstanceCmd[] cmds)
         {
-            ProcessInstance instance = processEngine.startProcess(cmd);
+            try
+            {
+                ProcessInstance[] instances = processEngineWrapper.StartProcess(cmds);
 
-            return Task.FromResult<ProcessInstance>(instance);
+                return Task.FromResult<ProcessInstance[]>(instances);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
 
@@ -117,7 +126,7 @@ namespace org.activiti.cloud.services.rest.controllers
         {
             try
             {
-                ProcessInstance processInstance = processEngine.getProcessInstanceById(processInstanceId);
+                ProcessInstance processInstance = processEngineWrapper.GetProcessInstanceById(processInstanceId);
                 if (processInstance == null)
                 {
                     throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + processInstanceId + "'");
@@ -140,15 +149,15 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpGet("{processInstanceId}/diagram")]
         public virtual Task<string> GetProcessDiagram(string processInstanceId)
         {
-            ProcessInstance processInstance = processEngine.getProcessInstanceById(processInstanceId);
+            ProcessInstance processInstance = processEngineWrapper.GetProcessInstanceById(processInstanceId);
             if (processInstance == null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find process instance for the given id:'" + processInstanceId + "'");
             }
 
-            IList<string> activityIds = processEngine.getActiveActivityIds(processInstanceId);
-            BpmnModel bpmnModel = repositoryService.getBpmnModel(processInstance.ProcessDefinitionId);
-            byte[] data = processDiagramGenerator.generateDiagram(bpmnModel, activityIds, new List<string>());
+            IList<string> activityIds = processEngineWrapper.GetActiveActivityIds(processInstanceId);
+            BpmnModel bpmnModel = repositoryService.GetBpmnModel(processInstance.ProcessDefinitionId);
+            byte[] data = processDiagramGenerator.GenerateDiagram(bpmnModel, activityIds, new List<string>());
 
             return Task.FromResult<string>(Encoding.UTF8.GetString(data));
         }
@@ -156,41 +165,49 @@ namespace org.activiti.cloud.services.rest.controllers
 
         /// <inheritdoc />
         [HttpPost("signal")]
-        public virtual Task<IActionResult> SendSignal(SignalCmd cmd)
+        public virtual Task<ActionResult> SendSignal(SignalCmd cmd)
         {
-            processEngine.signal(cmd);
+            processEngineWrapper.Signal(cmd);
 
-            return Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<ActionResult>(Ok());
         }
 
         /// <inheritdoc />
 
         [HttpGet("{processInstanceId}/suspend")]
-        public virtual Task<IActionResult> Suspend(string processInstanceId)
+        public virtual Task<ProcessInstance> Suspend(string processInstanceId)
         {
-            processEngine.suspend(new SuspendProcessInstanceCmd(processInstanceId));
+            ProcessInstance instance = processEngineWrapper.Suspend(new SuspendProcessInstanceCmd(processInstanceId));
 
-            return Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult(instance);
         }
 
 
         /// <inheritdoc />
         [HttpGet("{processInstanceId}/activate")]
-        public virtual Task<IActionResult> Activate(string processInstanceId)
+        public virtual Task<ProcessInstance> Activate(string processInstanceId)
         {
-            processEngine.activate(new ActivateProcessInstanceCmd(processInstanceId));
+            ProcessInstance instance = processEngineWrapper.Activate(new ActivateProcessInstanceCmd(processInstanceId));
 
-            return Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult(instance);
         }
 
 
         /// <inheritdoc />
         [HttpPost("terminate")]
-        public virtual Task<IActionResult> Terminate(TerminateProcessInstanceCmd cmd)
+        public virtual Task<ActionResult> Terminate(TerminateProcessInstanceCmd cmd)
         {
-            processEngine.terminateProcessInstance(cmd.ProcessInstanceId, cmd.Reason);
+            processEngineWrapper.TerminateProcessInstance(cmd.ProcessInstanceId, cmd.Reason);
 
-            return Task.FromResult<IActionResult>(Ok());
+            return Task.FromResult<ActionResult>(Ok());
+        }
+
+        /// <inheritdoc />
+        public Task<ProcessInstance> StartByActiviti(string processDefinitionId, string businessKey, string activityId, IDictionary<string, object> variables)
+        {
+            this.processEngine.ManagementService.ExecuteCommand<IProcessInstance>(new engine.impl.cmd.StartProcessInstanceByActivityCmd(processDefinitionId, businessKey, activityId, variables, securityService.User.TenantId, null));
+
+            return null;
         }
     }
 }

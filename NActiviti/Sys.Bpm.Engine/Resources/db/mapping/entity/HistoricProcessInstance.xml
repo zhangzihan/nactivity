@@ -31,6 +31,7 @@
     <Result Property="endTime" Column="END_TIME_" />
     <Result Property="durationInMillis" Column="DURATION_" />
     <Result Property="startUserId" Column="START_USER_ID_" />
+    <Result Property="startUser" Column="START_USER_" />
     <Result Property="startActivityId" Column="START_ACT_ID_" />
     <Result Property="endActivityId" Column="END_ACT_ID_" />
     <Result Property="superProcessInstanceId" Column="SUPER_PROCESS_INSTANCE_ID_" />
@@ -66,6 +67,7 @@
     <Result Property="endTime" Column="END_TIME_" />
     <Result Property="durationInMillis" Column="DURATION_" />
     <Result Property="startUserId" Column="START_USER_ID_" />
+    <Result Property="startUser" Column="START_USER_" />
     <Result Property="startActivityId" Column="START_ACT_ID_" />
     <Result Property="endActivityId" Column="END_ACT_ID_" />
     <Result Property="superProcessInstanceId" Column="SUPER_PROCESS_INSTANCE_ID_" />
@@ -86,6 +88,7 @@
     END_TIME_,
     DURATION_,
     START_USER_ID_,
+    START_USER_,
     START_ACT_ID_,
     END_ACT_ID_,
     SUPER_PROCESS_INSTANCE_ID_,
@@ -101,6 +104,7 @@
     #{endTime},
     #{durationInMillis},
     #{startUserId},
+    #{startUser},
     #{startActivityId},
     #{endActivityId},
     #{superProcessInstanceId},
@@ -120,6 +124,7 @@
     END_TIME_,
     DURATION_,
     START_USER_ID_,
+    START_USER_,
     START_ACT_ID_,
     END_ACT_ID_,
     SUPER_PROCESS_INSTANCE_ID_,
@@ -136,6 +141,7 @@
       #{endTime},
       #{durationInMillis},
       #{startUserId},
+      #{startUser},
       #{startActivityId},
       #{endActivityId},
       #{superProcessInstanceId},
@@ -177,14 +183,14 @@
 
   <Statement Id="executionVariableOperator">
     <Switch>
-      <Case Property="queryVariableValue.operator.equals('EQUALS')">=</Case>
-      <Case Property="queryVariableValue.operator.equals('EQUALS_IGNORE_CASE')">=</Case>
-      <Case Property="queryVariableValue.operator.equals('NOT_EQUALS')">&lt;&gt;</Case>
-      <Case Property="queryVariableValue.operator.equals('NOT_EQUALS_IGNORE_CASE')">&lt;&gt;</Case>
-      <Case Property="queryVariableValue.operator.equals('GREATER_THAN')">&gt;</Case>
-      <Case Property="queryVariableValue.operator.equals('GREATER_THAN_OR_EQUAL')">&gt;=</Case>
-      <Case Property="queryVariableValue.operator.equals('LESS_THAN')">&lt;</Case>
-      <Case Property="queryVariableValue.operator.equals('LESS_THAN_OR_EQUAL')">&lt;=</Case>
+      <Case Property="queryVariableValue.operator == 'EQUALS'">=</Case>
+      <Case Property="queryVariableValue.operator == 'EQUALS_IGNORE_CASE'">=</Case>
+      <Case Property="queryVariableValue.operator == 'NOT_EQUALS'">&lt;&gt;</Case>
+      <Case Property="queryVariableValue.operator == 'NOT_EQUALS_IGNORE_CASE'">&lt;&gt;</Case>
+      <Case Property="queryVariableValue.operator == 'GREATER_THAN'">&gt;</Case>
+      <Case Property="queryVariableValue.operator == 'GREATER_THAN_OR_EQUAL'">&gt;=</Case>
+      <Case Property="queryVariableValue.operator == 'LESS_THAN'">&lt;</Case>
+      <Case Property="queryVariableValue.operator == 'LESS_THAN_OR_EQUAL'">&lt;=</Case>
     </Switch>
   </Statement>
 
@@ -452,13 +458,13 @@
             <!-- Match-all variable-names when name is null -->
             and A_OR${orIndex}.NAME_= #{queryVariableValue.name}
           </IsTrue>
-          <IsTrue Property="!queryVariableValue.type.equals('null')">
+          <IsTrue Property="queryVariableValue.type != 'null'">
             <!-- When operator is not-equals or type of value is null, type doesn't matter! -->
             and A_OR${orIndex}.VAR_TYPE_ = #{queryVariableValue.type}
           </IsTrue>
           <IsTrue Property="queryVariableValue.textValue != null &amp;&amp; queryVariableValue.longValue == null &amp;&amp; queryVariableValue.doubleValue == null">
             <Switch>
-              <Case Property="queryVariableValue.operator.equals('EQUALS_IGNORE_CASE') || queryVariableValue.operator.equals('NOT_EQUALS_IGNORE_CASE') || queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">
+              <Case Property="queryVariableValue.operator == 'EQUALS_IGNORE_CASE' || queryVariableValue.operator == 'NOT_EQUALS_IGNORE_CASE' || queryVariableValue.operator == 'LIKE_IGNORE_CASE'">
                 and lower(A_OR${orIndex}.TEXT_)
               </Case>
               <Default>
@@ -466,27 +472,31 @@
               </Default>
             </Switch>
             <Switch>
-              <Case Property="queryVariableValue.operator.equals('LIKE') || queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">LIKE</Case>
+              <Case Property="queryVariableValue.operator == 'LIKE' || queryVariableValue.operator == 'LIKE_IGNORE_CASE'">LIKE</Case>
               <Default>
                 <Include RefId="executionVariableOperator" />
               </Default>
             </Switch>
             #{queryVariableValue.textValue}
             <Switch>
-              <Case Property="queryVariableValue.operator.equals('LIKE') || queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
+              <Case Property="queryVariableValue.operator == 'LIKE' || queryVariableValue.operator == 'LIKE_IGNORE_CASE'">
+                ${wildcardEscapeClause}
+              </Case>
             </Switch>
           </IsTrue>
           <IsTrue Property="queryVariableValue.textValue2 != null">
             and A_OR${orIndex}.TEXT2_
             <Switch>
-              <Case Property="queryVariableValue.operator.equals('LIKE')">LIKE</Case>
+              <Case Property="queryVariableValue.operator == 'LIKE'">LIKE</Case>
               <Default>
                 <Include RefId="executionVariableOperator" />
               </Default>
             </Switch>
             #{queryVariableValue.textValue2}
             <Switch>
-              <Case Property="queryVariableValue.operator.equals('LIKE')">${wildcardEscapeClause}</Case>
+              <Case Property="queryVariableValue.operator == 'LIKE'">
+                ${wildcardEscapeClause}
+              </Case>
             </Switch>
           </IsTrue>
           <IsTrue Property="queryVariableValue.longValue != null">
@@ -502,7 +512,7 @@
           <!-- Null variable type -->
           <IsTrue Property="queryVariableValue.textValue == null &amp;&amp; queryVariableValue.textValue2 == null &amp;&amp; queryVariableValue.longValue == null &amp;&amp; queryVariableValue.doubleValue == null">
             <Switch>
-              <Case Property="queryVariableValue.operator.equals('NOT_EQUALS')">
+              <Case Property="queryVariableValue.operator == 'NOT_EQUALS'">
                 and (A_OR${orIndex}.TEXT_ is not null or A_OR${orIndex}.TEXT2_ is not null or A_OR${orIndex}.LONG_ is not null or A_OR${orIndex}.DOUBLE_ is not null or A_OR${orIndex}.BYTEARRAY_ID_ is not null)
               </Case>
               <Default>
@@ -594,6 +604,7 @@
     TEMPRES_END_TIME_ as END_TIME_,
     TEMPRES_DURATION_ as DURATION_,
     TEMPRES_START_USER_ID_ as START_USER_ID_,
+    TEMPRES_START_USER_ as START_USER_,
     TEMPRES_START_ACT_ID_ as START_ACT_ID_,
     TEMPRES_END_ACT_ID_ as END_ACT_ID_,
     TEMPRES_SUPER_PROCESS_INSTANCE_ID_ as SUPER_PROCESS_INSTANCE_ID_,
@@ -626,6 +637,7 @@
     RES.END_TIME_ as TEMPRES_END_TIME_,
     RES.DURATION_ as TEMPRES_DURATION_,
     RES.START_USER_ID_ as TEMPRES_START_USER_ID_,
+    RES.START_USER_ as TEMPRES_START_USER_,
     RES.START_ACT_ID_ as TEMPRES_START_ACT_ID_,
     RES.END_ACT_ID_ as TEMPRES_END_ACT_ID_,
     RES.SUPER_PROCESS_INSTANCE_ID_ as TEMPRES_SUPER_PROCESS_INSTANCE_ID_,

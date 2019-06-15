@@ -20,23 +20,22 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class SignalParser : IBpmnXMLConstants
     {
-        public virtual void parse(XMLStreamReader xtr, BpmnModel model)
+        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
         {
-            string signalId = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID);
-            string signalName = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME);
+            string signalId = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+            string signalName = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
 
             Signal signal = new Signal(signalId, signalName);
 
-            string scope = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_SCOPE);
-            if (!string.ReferenceEquals(scope, null))
+            string scope = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_SCOPE);
+            if (!(scope is null))
             {
                 signal.Scope = scope;
             }
 
-            BpmnXMLUtil.addXMLLocation(signal, xtr);
-            BpmnXMLUtil.parseChildElements(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_SIGNAL, signal, xtr, model);
-            model.addSignal(signal);
+            BpmnXMLUtil.AddXMLLocation(signal, xtr);
+            BpmnXMLUtil.ParseChildElements(BpmnXMLConstants.ELEMENT_SIGNAL, signal, xtr, model);
+            model.AddSignal(signal);
         }
     }
-
 }

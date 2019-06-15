@@ -34,12 +34,12 @@ namespace org.activiti.engine.integration
 
         public virtual IList<IIntegrationContextEntity> findIntegrationContextByExecutionId(string executionId)
         {
-            return commandExecutor.execute(new RetrieveIntegrationContextsCmd(executionId));
+            return commandExecutor.Execute(new RetrieveIntegrationContextsCmd(executionId));
         }
 
         public virtual void deleteIntegrationContext(IIntegrationContextEntity integrationContextEntity)
         {
-            commandExecutor.execute(new DeleteIntegrationContextCmd(integrationContextEntity));
+            commandExecutor.Execute(new DeleteIntegrationContextCmd(integrationContextEntity));
         }
     }
 

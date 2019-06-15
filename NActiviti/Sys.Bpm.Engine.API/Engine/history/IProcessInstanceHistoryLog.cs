@@ -68,7 +68,5 @@ namespace org.activiti.engine.history
         /// The trail of data, ordered by date (ascending). Gives a replay of the process instance.
         /// </summary>
         IList<IHistoricData> HistoricData { get; }
-
     }
-
 }

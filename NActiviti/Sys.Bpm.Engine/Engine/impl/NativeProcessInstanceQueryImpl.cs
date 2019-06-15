@@ -23,14 +23,14 @@ namespace org.activiti.engine.impl
 
         // results ////////////////////////////////////////////////////////////////
 
-        public override IList<IProcessInstance> executeList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public override IList<IProcessInstance> ExecuteList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return commandContext.ExecutionEntityManager.findProcessInstanceByNativeQuery(parameterMap, firstResult, maxResults);
+            return commandContext.ExecutionEntityManager.FindProcessInstanceByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public override long executeCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
+        public override long ExecuteCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
         {
-            return commandContext.ExecutionEntityManager.findExecutionCountByNativeQuery(parameterMap);
+            return commandContext.ExecutionEntityManager.FindExecutionCountByNativeQuery(parameterMap);
             // can use execution count, since the result type doesn't matter
         }
 

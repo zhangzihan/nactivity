@@ -12,54 +12,61 @@
  */
 namespace org.activiti.engine.impl.@delegate.invocation
 {
-	using org.activiti.engine.impl.interceptor;
+    using org.activiti.engine.impl.interceptor;
+    using System;
 
-	/// <summary>
-	/// Provides context about the invocation of usercode and handles the actual invocation
-	/// 
-	/// </summary>
-	/// <seealso cref= IDelegateInterceptor </seealso>
-	public abstract class DelegateInvocation
-	{
+    /// <summary>
+    /// Provides context about the invocation of usercode and handles the actual invocation
+    /// 
+    /// </summary>
+    /// <seealso cref="IDelegateInterceptor" />
+    public abstract class DelegateInvocation
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal object invocationResult;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal object[] invocationParameters;
 
-	  protected internal object invocationResult;
-	  protected internal object[] invocationParameters;
+        /// <summary>
+        /// make the invocation proceed, performing the actual invocation of the user code.
+        /// </summary>
+        /// <exception cref="Exception">
+        ///           the exception thrown by the user code </exception>
+        public virtual void Proceed()
+        {
+            Invoke();
+        }
 
-	  /// <summary>
-	  /// make the invocation proceed, performing the actual invocation of the user code.
-	  /// </summary>
-	  /// <exception cref="Exception">
-	  ///           the exception thrown by the user code </exception>
-	  public virtual void proceed()
-	  {
-		invoke();
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal abstract void Invoke();
 
-	  protected internal abstract void invoke();
+        /// <returns> the result of the invocation (can be null if the invocation does not return a result) </returns>
+        public virtual object InvocationResult
+        {
+            get
+            {
+                return invocationResult;
+            }
+        }
 
-	  /// <returns> the result of the invocation (can be null if the invocation does not return a result) </returns>
-	  public virtual object InvocationResult
-	  {
-		  get
-		  {
-			return invocationResult;
-		  }
-	  }
+        /// <returns> an array of invocation parameters (null if the invocation takes no parameters) </returns>
+        public virtual object[] InvocationParameters
+        {
+            get
+            {
+                return invocationParameters;
+            }
+        }
 
-	  /// <returns> an array of invocation parameters (null if the invocation takes no parameters) </returns>
-	  public virtual object[] InvocationParameters
-	  {
-		  get
-		  {
-			return invocationParameters;
-		  }
-	  }
-
-	  /// <summary>
-	  /// returns the target of the current invocation, ie. JavaDelegate, ValueExpression ...
-	  /// </summary>
-	  public abstract object Target {get;}
-
-	}
-
+        /// <summary>
+        /// returns the target of the current invocation, ie. JavaDelegate, ValueExpression ...
+        /// </summary>
+        public abstract object Target { get; }
+    }
 }

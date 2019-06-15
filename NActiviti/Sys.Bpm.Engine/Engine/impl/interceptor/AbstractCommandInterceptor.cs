@@ -15,7 +15,7 @@ namespace org.activiti.engine.impl.interceptor
     /// 
     public abstract class AbstractCommandInterceptor : ICommandInterceptor
     {
-        public abstract T execute<T>(CommandConfig config, ICommand<T> command);
+        public abstract T Execute<T>(CommandConfig config, ICommand<T> command);
 
         /// <summary>
         /// will be initialized by the <seealso cref="org.activiti.engine.ProcessEngineConfiguration ProcessEngineConfiguration"/>

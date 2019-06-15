@@ -115,9 +115,11 @@ namespace Spring.Expressions
             }
         }
 
+        private object syncRoot = new object();
+
         private void InitializeLambda()
         {
-            lock (this)
+            lock (syncRoot)
             {
                 if (bodyExpression == null)
                 {

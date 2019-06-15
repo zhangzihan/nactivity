@@ -34,17 +34,17 @@ namespace org.activiti.engine.impl.cmd
             this.attachmentId = attachmentId;
         }
 
-        public  virtual System.IO.Stream  execute(ICommandContext  commandContext)
+        public  virtual Stream  Execute(ICommandContext  commandContext)
         {
-            IAttachmentEntity attachment = commandContext.AttachmentEntityManager.findById<IAttachmentEntity>(new KeyValuePair<string, object>("id", attachmentId));
+            IAttachmentEntity attachment = commandContext.AttachmentEntityManager.FindById<IAttachmentEntity>(new KeyValuePair<string, object>("id", attachmentId));
 
             string contentId = attachment.ContentId;
-            if (ReferenceEquals(contentId, null))
+            if (contentId is null)
             {
                 return null;
             }
 
-            IByteArrayEntity byteArray = commandContext.ByteArrayEntityManager.findById<IByteArrayEntity>(new KeyValuePair<string, object>("id", contentId));
+            IByteArrayEntity byteArray = commandContext.ByteArrayEntityManager.FindById<IByteArrayEntity>(new KeyValuePair<string, object>("id", contentId));
             byte[] bytes = byteArray.Bytes;
 
             return new System.IO.MemoryStream(bytes);

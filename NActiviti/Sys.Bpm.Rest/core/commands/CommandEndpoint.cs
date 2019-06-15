@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using org.activiti.cloud.services.api.commands;
-using Sys;
+using Sys.Workflow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,38 +12,41 @@ namespace org.activiti.cloud.services.core.commands
     /// </summary>
     public class CommandEndpoint
     {
-        private static readonly ILogger LOGGER = ProcessEngineServiceProvider.LoggerService<CommandEndpoint>();
+        private readonly ILogger logger = null;
 
-        private IDictionary<Type, CommandExecutor<ICommand>> commandExecutors;
+        private readonly IDictionary<Type, ICommandExecutor<ICommand>> commandExecutors;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="cmdExecutors"></param>
-        public CommandEndpoint(ISet<CommandExecutor<ICommand>> cmdExecutors)
+        /// <param name="loggerFactory"></param>
+        public CommandEndpoint(ISet<ICommandExecutor<ICommand>> cmdExecutors,
+            ILoggerFactory loggerFactory)
         {
             this.commandExecutors = cmdExecutors.ToDictionary(x => x.GetType());//.ToDictionary(CommandExecutor::getHandledType, System.Func.identity());
+            logger = loggerFactory.CreateLogger<CommandEndpoint>();
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="cmd"></param>
-        public virtual void consumeActivateProcessInstanceCmd(ICommand cmd)
+        public virtual void ConsumeActivateProcessInstanceCmd(ICommand cmd)
         {
-            processCommand(cmd);
+            ProcessCommand(cmd);
         }
 
-        private void processCommand(ICommand cmd)
+        private void ProcessCommand(ICommand cmd)
         {
-            CommandExecutor<ICommand> cmdExecutor = commandExecutors[cmd.GetType()];
+            ICommandExecutor<ICommand> cmdExecutor = commandExecutors[cmd.GetType()];
             if (cmdExecutor != null)
             {
-                cmdExecutor.execute(cmd);
+                cmdExecutor.Execute(cmd);
                 return;
             }
 
-            LOGGER.LogDebug(">>> No Command Found for type: " + cmd.GetType());
+            logger.LogDebug(">>> No Command Found for type: " + cmd.GetType());
         }
     }
 }

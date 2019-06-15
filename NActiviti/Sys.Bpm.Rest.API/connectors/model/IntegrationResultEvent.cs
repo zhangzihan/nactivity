@@ -25,16 +25,16 @@ namespace org.activiti.services.connectors.model
     /// </summary>
     public class IntegrationResultEvent
     {
-        private string id;
-        private string executionId;
-        private string flowNodeId;
-        private IDictionary<string, object> variables;
-        private string appName;
-        private string appVersion;
-        private string serviceName;
-        private string serviceFullName;
-        private string serviceType;
-        private string serviceVersion;
+        private readonly string id;
+        private readonly string executionId;
+        private readonly string flowNodeId;
+        private readonly IDictionary<string, object> variables;
+        private readonly string appName;
+        private readonly string appVersion;
+        private readonly string serviceName;
+        private readonly string serviceFullName;
+        private readonly string serviceType;
+        private readonly string serviceVersion;
 
 
         /// <summary>

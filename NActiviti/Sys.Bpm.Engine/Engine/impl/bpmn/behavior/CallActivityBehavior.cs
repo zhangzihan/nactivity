@@ -55,23 +55,23 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.mapExceptions = mapExceptions;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
 
-            string finalProcessDefinitonKey = null;
+            string finalProcessDefinitonKey;
             if (processDefinitionExpression != null)
             {
-                finalProcessDefinitonKey = (string)processDefinitionExpression.getValue(execution);
+                finalProcessDefinitonKey = (string)processDefinitionExpression.GetValue(execution);
             }
             else
             {
                 finalProcessDefinitonKey = processDefinitonKey;
             }
 
-            IProcessDefinition processDefinition = findProcessDefinition(finalProcessDefinitonKey, execution.TenantId);
+            IProcessDefinition processDefinition = FindProcessDefinition(finalProcessDefinitonKey, execution.TenantId);
 
             // Get model from cache
-            Process subProcess = ProcessDefinitionUtil.getProcess(processDefinition.Id);
+            Process subProcess = ProcessDefinitionUtil.GetProcess(processDefinition.Id);
             if (subProcess == null)
             {
                 throw new ActivitiException("Cannot start a sub process instance. Process model " + processDefinition.Name + " (id = " + processDefinition.Id + ") could not be found");
@@ -84,7 +84,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
 
             // Do not start a process instance if the process definition is suspended
-            if (ProcessDefinitionUtil.isProcessDefinitionSuspended(processDefinition.Id))
+            if (ProcessDefinitionUtil.IsProcessDefinitionSuspended(processDefinition.Id))
             {
                 throw new ActivitiException("Cannot start process instance. Process definition " + processDefinition.Name + " (id = " + processDefinition.Id + ") is suspended");
             }
@@ -99,21 +99,21 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             if (!string.IsNullOrWhiteSpace(callActivity.BusinessKey))
             {
-                IExpression expression = expressionManager.createExpression(callActivity.BusinessKey);
-                businessKey = expression.getValue(execution).ToString();
+                IExpression expression = expressionManager.CreateExpression(callActivity.BusinessKey);
+                businessKey = expression.GetValue(execution).ToString();
 
             }
             else if (callActivity.InheritBusinessKey)
             {
-                IExecutionEntity processInstance = executionEntityManager.findById<IExecutionEntity>(execution.ProcessInstanceId);
+                IExecutionEntity processInstance = executionEntityManager.FindById<IExecutionEntity>(execution.ProcessInstanceId);
                 businessKey = processInstance.BusinessKey;
             }
 
-            IExecutionEntity subProcessInstance = Context.CommandContext.ExecutionEntityManager.createSubprocessInstance(processDefinition, execution, businessKey);
-            Context.CommandContext.HistoryManager.recordSubProcessInstanceStart(execution, subProcessInstance, initialFlowElement);
+            IExecutionEntity subProcessInstance = Context.CommandContext.ExecutionEntityManager.CreateSubprocessInstance(processDefinition, execution, businessKey);
+            Context.CommandContext.HistoryManager.RecordSubProcessInstanceStart(execution, subProcessInstance, initialFlowElement);
 
             // process template-defined data objects
-            IDictionary<string, object> variables = processDataObjects(subProcess.DataObjects);
+            IDictionary<string, object> variables = ProcessDataObjects(subProcess.DataObjects);
 
             if (callActivity.InheritVariables)
             {
@@ -130,32 +130,32 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 object value = null;
                 if (!string.IsNullOrWhiteSpace(ioParameter.SourceExpression))
                 {
-                    IExpression expression = expressionManager.createExpression(ioParameter.SourceExpression.Trim());
-                    value = expression.getValue(execution);
+                    IExpression expression = expressionManager.CreateExpression(ioParameter.SourceExpression.Trim());
+                    value = expression.GetValue(execution);
                 }
                 else
                 {
-                    value = execution.getVariable(ioParameter.Source);
+                    value = execution.GetVariable(ioParameter.Source);
                 }
                 variables[ioParameter.Target] = value;
             }
 
             if (variables.Count > 0)
             {
-                initializeVariables(subProcessInstance, variables);
+                InitializeVariables(subProcessInstance, variables);
             }
 
             // Create the first execution that will visit all the process definition elements
-            IExecutionEntity subProcessInitialExecution = executionEntityManager.createChildExecution(subProcessInstance);
+            IExecutionEntity subProcessInitialExecution = executionEntityManager.CreateChildExecution(subProcessInstance);
             subProcessInitialExecution.CurrentFlowElement = initialFlowElement;
 
-            Context.Agenda.planContinueProcessOperation(subProcessInitialExecution);
+            Context.Agenda.PlanContinueProcessOperation(subProcessInitialExecution);
 
-            Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createProcessStartedEvent(subProcessInitialExecution, variables, false));
+            Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateProcessStartedEvent(subProcessInitialExecution, variables, false));
 
         }
 
-        public virtual void completing(IExecutionEntity execution, IExecutionEntity subProcessInstance)
+        public virtual void Completing(IExecutionEntity execution, IExecutionEntity subProcessInstance)
         {
             // only data. no control flow available on this execution.
 
@@ -168,37 +168,37 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 object value = null;
                 if (!string.IsNullOrWhiteSpace(ioParameter.SourceExpression))
                 {
-                    IExpression expression = expressionManager.createExpression(ioParameter.SourceExpression.Trim());
-                    value = expression.getValue(subProcessInstance);
+                    IExpression expression = expressionManager.CreateExpression(ioParameter.SourceExpression.Trim());
+                    value = expression.GetValue(subProcessInstance);
                 }
                 else
                 {
-                    value = subProcessInstance.getVariable(ioParameter.Source);
+                    value = subProcessInstance.GetVariable(ioParameter.Source);
                 }
-                execution.setVariable(ioParameter.Target, value);
+                execution.SetVariable(ioParameter.Target, value);
             }
         }
 
-        public virtual void completed(IExecutionEntity execution)
+        public virtual void Completed(IExecutionEntity execution)
         {
             // only control flow. no sub process instance data available
-            leave(execution);
+            Leave(execution);
         }
 
         // Allow subclass to determine which version of a process to start.
-        protected internal virtual IProcessDefinition findProcessDefinition(string processDefinitionKey, string tenantId)
+        protected internal virtual IProcessDefinition FindProcessDefinition(string processDefinitionKey, string tenantId)
         {
-            if (ReferenceEquals(tenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
+            if (tenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
             {
-                return Context.ProcessEngineConfiguration.DeploymentManager.findDeployedLatestProcessDefinitionByKey(processDefinitionKey);
+                return Context.ProcessEngineConfiguration.DeploymentManager.FindDeployedLatestProcessDefinitionByKey(processDefinitionKey);
             }
             else
             {
-                return Context.ProcessEngineConfiguration.DeploymentManager.findDeployedLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
+                return Context.ProcessEngineConfiguration.DeploymentManager.FindDeployedLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
             }
         }
 
-        protected internal override IDictionary<string, object> processDataObjects(ICollection<ValuedDataObject> dataObjects)
+        protected internal override IDictionary<string, object> ProcessDataObjects(ICollection<ValuedDataObject> dataObjects)
         {
             IDictionary<string, object> variablesMap = new Dictionary<string, object>();
             // convert data objects to process variables
@@ -214,7 +214,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
         }
 
         // Allow a subclass to override how variables are initialized.
-        protected internal virtual void initializeVariables(IExecutionEntity subProcessInstance, IDictionary<string, object> variables)
+        protected internal virtual void InitializeVariables(IExecutionEntity subProcessInstance, IDictionary<string, object> variables)
         {
             subProcessInstance.Variables = variables;
         }

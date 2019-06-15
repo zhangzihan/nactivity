@@ -15,36 +15,36 @@
 namespace org.activiti.engine.impl.bpmn.deployer
 {
 
-	using org.activiti.engine.impl.bpmn.parser;
-	using org.activiti.engine.impl.persistence.entity;
+    using org.activiti.engine.impl.bpmn.parser;
+    using org.activiti.engine.impl.persistence.entity;
 
-	public class ParsedDeploymentBuilderFactory
-	{
+    public class ParsedDeploymentBuilderFactory
+    {
 
-	  protected internal BpmnParser bpmnParser;
+        protected internal BpmnParser bpmnParser;
 
-	  public virtual BpmnParser BpmnParser
-	  {
-		  get
-		  {
-			return bpmnParser;
-		  }
-		  set
-		  {
-			this.bpmnParser = value;
-		  }
-	  }
+        public virtual BpmnParser BpmnParser
+        {
+            get
+            {
+                return bpmnParser;
+            }
+            set
+            {
+                this.bpmnParser = value;
+            }
+        }
 
 
-	  public virtual ParsedDeploymentBuilder getBuilderForDeployment(IDeploymentEntity deployment)
-	  {
-		return getBuilderForDeploymentAndSettings(deployment, null);
-	  }
+        public virtual ParsedDeploymentBuilder GetBuilderForDeployment(IDeploymentEntity deployment)
+        {
+            return GetBuilderForDeploymentAndSettings(deployment, null);
+        }
 
-	  public virtual ParsedDeploymentBuilder getBuilderForDeploymentAndSettings(IDeploymentEntity deployment, IDictionary<string, object> deploymentSettings)
-	  {
-		return new ParsedDeploymentBuilder(deployment, bpmnParser, deploymentSettings);
-	  }
+        public virtual ParsedDeploymentBuilder GetBuilderForDeploymentAndSettings(IDeploymentEntity deployment, IDictionary<string, object> deploymentSettings)
+        {
+            return new ParsedDeploymentBuilder(deployment, bpmnParser, deploymentSettings);
+        }
 
-	}
+    }
 }

@@ -19,13 +19,12 @@ namespace org.activiti.engine.@delegate.@event
     /// </summary>
     public interface IActivitiEventDispatcher
     {
-
         /// <summary>
         /// Adds an event-listener which will be notified of ALL events by the dispatcher.
         /// </summary>
         /// <param name="listenerToAdd">
         ///          the listener to add </param>
-        void addEventListener(IActivitiEventListener listenerToAdd);
+        void AddEventListener(IActivitiEventListener listenerToAdd);
 
         /// <summary>
         /// Adds an event-listener which will only be notified when an event of the given types occurs.
@@ -34,24 +33,25 @@ namespace org.activiti.engine.@delegate.@event
         ///          the listener to add </param>
         /// <param name="types">
         ///          types of events the listener should be notified for </param>
-        void addEventListener(IActivitiEventListener listenerToAdd, params ActivitiEventType[] types);
+        void AddEventListener(IActivitiEventListener listenerToAdd, params ActivitiEventType[] types);
 
         /// <summary>
         /// Removes the given listener from this dispatcher. The listener will no longer be notified, regardless of the type(s) it was registered for in the first place.
         /// </summary>
         /// <param name="listenerToRemove">
         ///          listener to remove </param>
-        void removeEventListener(IActivitiEventListener listenerToRemove);
+        void RemoveEventListener(IActivitiEventListener listenerToRemove);
 
         /// <summary>
         /// Dispatches the given event to any listeners that are registered.
         /// </summary>
         /// <param name="event">
         ///          event to dispatch. </param>
-        void dispatchEvent(IActivitiEvent @event);
+        void DispatchEvent(IActivitiEvent @event);
 
-        /// <param name="enabled">
-        ///          true, if event dispatching should be enabled. </param>
+        /// <summary>
+        /// true, if event dispatching should be enabled.
+        /// </summary>
         bool Enabled { set; get; }
 
     }

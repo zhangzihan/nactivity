@@ -26,24 +26,24 @@ namespace org.activiti.engine.impl.interceptor
             this.transactionContext = transactionContext;
         }
 
-        public virtual void closing(ICommandContext commandContext)
+        public virtual void Closing(ICommandContext commandContext)
         {
 
         }
 
-        public virtual void afterSessionsFlush(ICommandContext commandContext)
+        public virtual void AfterSessionsFlush(ICommandContext commandContext)
         {
-            transactionContext.commit();
+            transactionContext.Commit();
         }
 
-        public virtual void closed(ICommandContext commandContext)
+        public virtual void Closed(ICommandContext commandContext)
         {
 
         }
 
-        public virtual void closeFailure(ICommandContext commandContext)
+        public virtual void CloseFailure(ICommandContext commandContext)
         {
-            transactionContext.rollback();
+            transactionContext.Rollback();
         }
 
     }

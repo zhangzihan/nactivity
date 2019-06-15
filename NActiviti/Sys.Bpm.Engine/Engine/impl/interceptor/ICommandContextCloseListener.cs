@@ -20,7 +20,7 @@
         /// - The <seealso cref="ISession"/> instances will *not* be flushed
         /// - The <seealso cref="ITransactionContext"/> will be rolled back (if applicable) 
         /// </summary>
-        void closing(ICommandContext commandContext);
+        void Closing(ICommandContext commandContext);
 
         /// <summary>
         /// Called when the <seealso cref="ISession"/> have been successfully flushed.
@@ -30,7 +30,7 @@
         /// - The <seealso cref="ISession"/> instances will *not* be flushed
         /// - The <seealso cref="ITransactionContext"/> will be rolled back (if applicable) 
         /// </summary>
-        void afterSessionsFlush(ICommandContext commandContext);
+        void AfterSessionsFlush(ICommandContext commandContext);
 
         /// <summary>
         /// Called when the <seealso cref="CommandContext"/> is successfully closed.
@@ -41,7 +41,7 @@
         /// Note that throwing an exception here does *not* affect the transaction. 
         /// The <seealso cref="CommandContext"/> will log the exception though.
         /// </summary>
-        void closed(ICommandContext commandContext);
+        void Closed(ICommandContext commandContext);
 
         /// <summary>
         /// Called when the <seealso cref="CommandContext"/> has not been successully closed due to an exception that happened.
@@ -49,7 +49,7 @@
         /// Note that throwing an exception here does *not* affect the transaction. 
         /// The <seealso cref="CommandContext"/> will log the exception though.
         /// </summary>
-        void closeFailure(ICommandContext commandContext);
+        void CloseFailure(ICommandContext commandContext);
 
     }
 

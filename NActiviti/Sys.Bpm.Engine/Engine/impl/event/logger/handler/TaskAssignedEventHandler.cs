@@ -11,11 +11,11 @@ namespace org.activiti.engine.impl.@event.logger.handler
     public class TaskAssignedEventHandler : AbstractTaskEventHandler
     {
 
-        public override IEventLogEntryEntity generateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
+        public override IEventLogEntryEntity GenerateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
         {
             ITaskEntity task = (ITaskEntity)((IActivitiEntityEvent)@event).Entity;
             IDictionary<string, object> data = handleCommonTaskFields(task);
-            return createEventLogEntry(task.ProcessDefinitionId, task.ProcessInstanceId, task.ExecutionId, task.Id, data);
+            return CreateEventLogEntry(task.ProcessDefinitionId, task.ProcessInstanceId, task.ExecutionId, task.Id, data);
         }
 
     }

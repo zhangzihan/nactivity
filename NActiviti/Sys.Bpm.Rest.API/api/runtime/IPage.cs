@@ -12,12 +12,12 @@ namespace org.activiti.api.runtime.shared.query
         /// <summary>
         /// 
         /// </summary>
-        IList<T> getContent();
+        IEnumerable<T> GetContent();
 
 
         /// <summary>
         /// 
         /// </summary>
-        long getTotalItems();
+        long GetTotalItems();
     }
 }

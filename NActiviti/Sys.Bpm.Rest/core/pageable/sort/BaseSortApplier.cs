@@ -22,50 +22,50 @@ namespace org.activiti.cloud.services.core.pageable.sort
     /// <summary>
     /// 
     /// </summary>
-    public abstract class BaseSortApplier<T, U> : SortApplier<T> where T : IQuery<T, U>
+    public abstract class BaseSortApplier<T, U> : ISortApplier<T> where T : IQuery<T, U>
     {
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual void applySort(T query, Pageable pageable)
+        public virtual void ApplySort(T query, Pageable pageable)
         {
-            if (pageable.Sort != null && pageable.Sort != Sort.unsorted())
+            if (pageable.Sort != null && pageable.Sort != Sort.UnSorted())
             {
-                applyPageableSort(query, pageable.Sort);
+                ApplyPageableSort(query, pageable.Sort);
             }
             else
             {
-                applyDefaultSort(query);
+                ApplyDefaultSort(query);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        protected internal abstract void applyDefaultSort(T query);
+        protected internal abstract void ApplyDefaultSort(T query);
 
         /// <summary>
         /// 
         /// </summary>
-        private void applyPageableSort(T query, Sort sort)
+        private void ApplyPageableSort(T query, Sort sort)
         {
             foreach (Sort.Order order in sort)
             {
-                applyOrder(query, order);
-                applyDirection(query, order.Direction);
+                ApplyOrder(query, order);
+                ApplyDirection(query, order.Direction);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private void applyOrder(T query, Sort.Order order)
+        private void ApplyOrder(T query, Sort.Order order)
         {
-            IQueryProperty property = getOrderByProperty(order);
+            IQueryProperty property = GetOrderByProperty(order);
             if (property != null)
             {
-                query.orderBy(property);
+                query.SetOrderBy(property);
             }
             else
             {
@@ -78,19 +78,19 @@ namespace org.activiti.cloud.services.core.pageable.sort
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        protected internal abstract IQueryProperty getOrderByProperty(Sort.Order order);
+        protected internal abstract IQueryProperty GetOrderByProperty(Sort.Order order);
 
-        private void applyDirection(T query, Sort.Direction direction)
+        private void ApplyDirection(T query, Sort.Direction direction)
         {
             switch (direction)
             {
 
                 case Sort.Direction.ASC:
-                    query.asc();
+                    query.Asc();
                     break;
 
                 case Sort.Direction.DESC:
-                    query.desc();
+                    query.Desc();
                     break;
             }
         }

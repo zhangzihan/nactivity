@@ -33,20 +33,20 @@ namespace org.activiti.cloud.services.events.listeners
         /// </summary>
         /// <param name="element"></param>
 
-        public virtual void add(E element)
+        public virtual void Add(E element)
         {
             ICommandContext currentCommandContext = CurrentCommandContext;
-            IList<E> attributes = currentCommandContext.getGenericAttribute<IList<E>>(AttributeKey);
+            IList<E> attributes = currentCommandContext.GetGenericAttribute<IList<E>>(AttributeKey);
             if (attributes == null)
             {
                 attributes = new List<E>();
-                currentCommandContext.addAttribute(AttributeKey, attributes);
+                currentCommandContext.AddAttribute(AttributeKey, attributes);
             }
             attributes.Add(element);
 
-            if (!currentCommandContext.hasCloseListener(CloseListenerClass))
+            if (!currentCommandContext.HasCloseListener(CloseListenerClass))
             {
-                currentCommandContext.addCloseListener(CloseListener);
+                currentCommandContext.AddCloseListener(CloseListener);
             }
 
         }

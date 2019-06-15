@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class IdentityLinksByProcInstMatcher : CachedEntityMatcherAdapter<IIdentityLinkEntity>
     {
 
-        public override bool isRetained(IIdentityLinkEntity entity, object parameter)
+        public override bool IsRetained(IIdentityLinkEntity entity, object parameter)
         {
             if (entity == null || entity.ProcessInstanceId == null || parameter == null)
             {

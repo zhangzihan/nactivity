@@ -35,55 +35,55 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IHistoricDetailEntity create()
+        public override IHistoricDetailEntity Create()
         {
             // Superclass is abstract
             throw new System.NotSupportedException();
         }
 
-        public virtual IHistoricDetailAssignmentEntity createHistoricDetailAssignment()
+        public virtual IHistoricDetailAssignmentEntity CreateHistoricDetailAssignment()
         {
             return new HistoricDetailAssignmentEntityImpl();
         }
 
-        public virtual IHistoricDetailTransitionInstanceEntity createHistoricDetailTransitionInstance()
+        public virtual IHistoricDetailTransitionInstanceEntity CreateHistoricDetailTransitionInstance()
         {
             return new HistoricDetailTransitionInstanceEntityImpl();
         }
 
-        public virtual IHistoricDetailVariableInstanceUpdateEntity createHistoricDetailVariableInstanceUpdate()
+        public virtual IHistoricDetailVariableInstanceUpdateEntity CreateHistoricDetailVariableInstanceUpdate()
         {
             return new HistoricDetailVariableInstanceUpdateEntityImpl();
         }
 
-        public virtual IList<IHistoricDetailEntity> findHistoricDetailsByProcessInstanceId(string processInstanceId)
+        public virtual IList<IHistoricDetailEntity> FindHistoricDetailsByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<HistoricDetailEntityImpl, IHistoricDetailEntity>("selectHistoricDetailByProcessInstanceId", new { processInstanceId });
+            return DbSqlSession.SelectList<HistoricDetailEntityImpl, IHistoricDetailEntity>("selectHistoricDetailByProcessInstanceId", new { processInstanceId });
         }
 
-        public virtual IList<IHistoricDetailEntity> findHistoricDetailsByTaskId(string taskId)
+        public virtual IList<IHistoricDetailEntity> FindHistoricDetailsByTaskId(string taskId)
         {
-            return DbSqlSession.selectList<HistoricDetailEntityImpl, IHistoricDetailEntity>("selectHistoricDetailByTaskId", new { taskId });
+            return DbSqlSession.SelectList<HistoricDetailEntityImpl, IHistoricDetailEntity>("selectHistoricDetailByTaskId", new { taskId });
         }
 
-        public virtual long findHistoricDetailCountByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery)
+        public virtual long FindHistoricDetailCountByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery)
         {
-            return DbSqlSession.selectOne<HistoricDetailEntityImpl, long?>("selectHistoricDetailCountByQueryCriteria", historicVariableUpdateQuery).GetValueOrDefault();
+            return DbSqlSession.SelectOne<HistoricDetailEntityImpl, long?>("selectHistoricDetailCountByQueryCriteria", historicVariableUpdateQuery).GetValueOrDefault();
         }
 
-        public virtual IList<IHistoricDetail> findHistoricDetailsByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery, Page page)
+        public virtual IList<IHistoricDetail> FindHistoricDetailsByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery, Page page)
         {
-            return DbSqlSession.selectList<HistoricDetailEntityImpl, IHistoricDetail>("selectHistoricDetailsByQueryCriteria", historicVariableUpdateQuery, page);
+            return DbSqlSession.SelectList<HistoricDetailEntityImpl, IHistoricDetail>("selectHistoricDetailsByQueryCriteria", historicVariableUpdateQuery, page);
         }
 
-        public virtual IList<IHistoricDetail> findHistoricDetailsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IHistoricDetail> FindHistoricDetailsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return DbSqlSession.selectListWithRawParameter<HistoricDetailEntityImpl, IHistoricDetail>("selectHistoricDetailByNativeQuery", parameterMap, firstResult, maxResults);
+            return DbSqlSession.SelectListWithRawParameter<HistoricDetailEntityImpl, IHistoricDetail>("selectHistoricDetailByNativeQuery", parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findHistoricDetailCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindHistoricDetailCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return ((long?)DbSqlSession.selectOne<HistoricDetailEntityImpl, long?>("selectHistoricDetailCountByNativeQuery", parameterMap)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<HistoricDetailEntityImpl, long?>("selectHistoricDetailCountByNativeQuery", parameterMap).GetValueOrDefault();
         }
 
     }

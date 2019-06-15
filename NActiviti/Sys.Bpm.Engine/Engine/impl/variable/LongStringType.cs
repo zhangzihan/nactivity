@@ -31,7 +31,7 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public override bool isAbleToStore(object value)
+        public override bool IsAbleToStore(object value)
         {
             if (value == null)
             {

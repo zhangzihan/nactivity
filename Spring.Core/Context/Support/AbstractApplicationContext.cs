@@ -109,7 +109,7 @@ namespace Spring.Context.Support
         public static readonly string EventRegistryObjectName = "eventRegistry";
 
         /// <summary>
-        /// The <see cref="Common.Logging.ILog"/> instance for this class.
+        /// The log instance for this class.
         /// </summary>
         protected readonly ILogger log;
 

@@ -44,10 +44,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            MessageEventDefinition clone = new MessageEventDefinition();
-            clone.Values = this;
+            MessageEventDefinition clone = new MessageEventDefinition
+            {
+                Values = this
+            };
             return clone;
         }
 

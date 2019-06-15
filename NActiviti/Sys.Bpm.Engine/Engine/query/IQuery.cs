@@ -27,37 +27,37 @@ namespace org.activiti.engine.query
         /// <summary>
         /// Order the results ascending on the given property as defined in this class (needs to come after a call to one of the orderByXxxx methods).
         /// </summary>
-        T asc();
+        T Asc();
 
         /// <summary>
         /// Order the results descending on the given property as defined in this class (needs to come after a call to one of the orderByXxxx methods).
         /// </summary>
-        T desc();
+        T Desc();
 
         /// <summary>
         /// Order the results by the given <seealso cref="IQueryProperty"/> (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>) </summary>
         /// <param name="property"> the {@code QueryProperty} to be used to order the results </param>
         /// <returns> itself </returns>
-        T orderBy(IQueryProperty property);
+        T SetOrderBy(IQueryProperty property);
 
         /// <summary>
         /// Executes the query and returns the number of results </summary>
-        long count();
+        long Count();
 
         /// <summary>
         /// Executes the query and returns the resulting entity or null if no entity matches the query criteria.
         /// </summary>
         /// <exception cref="ActivitiException">
         ///           when the query results in more than one entities. </exception>
-        U singleResult();
+        U SingleResult();
 
         /// <summary>
         /// Executes the query and get a list of entities as the result. </summary>
-        IList<U> list();
+        IList<U> List();
 
         /// <summary>
         /// Executes the query and get a list of entities as the result. </summary>
-        IList<U> listPage(int firstResult, int maxResults);
+        IList<U> ListPage(int firstResult, int maxResults);
     }
 
 }

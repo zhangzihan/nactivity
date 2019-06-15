@@ -38,7 +38,7 @@ namespace org.activiti.cloud.services.rest.assemblers
         /// </summary>
         /// <param name="processDefinition"></param>
         /// <returns></returns>
-        public override ProcessDefinitionResource toResource(ProcessDefinition processDefinition)
+        public override ProcessDefinitionResource ToResource(ProcessDefinition processDefinition)
         {
 
             //         Link selfRel = linkTo(methodOn(typeof(ProcessDefinitionControllerImpl)).getProcessDefinition(processDefinition.Id)).withSelfRel();

@@ -18,37 +18,35 @@
         /// <summary>
         /// The <seealso cref="IProcessInstanceHistoryLog"/> will contain the <seealso cref="IHistoricTaskInstance"/> instances.
         /// </summary>
-        IProcessInstanceHistoryLogQuery includeTasks();
+        IProcessInstanceHistoryLogQuery IncludeTasks();
 
         /// <summary>
         /// The <seealso cref="IProcessInstanceHistoryLog"/> will contain the <seealso cref="IHistoricActivityInstance"/> instances.
         /// </summary>
-        IProcessInstanceHistoryLogQuery includeActivities();
+        IProcessInstanceHistoryLogQuery IncludeActivities();
 
         /// <summary>
         /// The <seealso cref="IProcessInstanceHistoryLog"/> will contain the <seealso cref="IHistoricVariableInstance"/> instances.
         /// </summary>
-        IProcessInstanceHistoryLogQuery includeVariables();
+        IProcessInstanceHistoryLogQuery IncludeVariables();
 
         /// <summary>
         /// The <seealso cref="IProcessInstanceHistoryLog"/> will contain the <seealso cref="IComment"/> instances.
         /// </summary>
-        IProcessInstanceHistoryLogQuery includeComments();
+        IProcessInstanceHistoryLogQuery IncludeComments();
 
         /// <summary>
         /// The <seealso cref="IProcessInstanceHistoryLog"/> will contain the <seealso cref="IHistoricVariableUpdate"/> instances.
         /// </summary>
-        IProcessInstanceHistoryLogQuery includeVariableUpdates();
+        IProcessInstanceHistoryLogQuery IncludeVariableUpdates();
 
         /// <summary>
         /// The <seealso cref="IProcessInstanceHistoryLog"/> will contain the <seealso cref="HistoricFormProperty"/> instances.
         /// </summary>
-        IProcessInstanceHistoryLogQuery includeFormProperties();
+        IProcessInstanceHistoryLogQuery IncludeFormProperties();
 
         /// <summary>
         /// Executes the query. </summary>
-        IProcessInstanceHistoryLog singleResult();
-
+        IProcessInstanceHistoryLog SingleResult();
     }
-
 }

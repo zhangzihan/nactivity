@@ -24,8 +24,12 @@ namespace org.activiti.engine.@delegate
     /// </summary>
     public interface ICustomPropertiesResolver
     {
-
-        IDictionary<string, object> getCustomPropertiesMap(IExecutionEntity execution);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <returns></returns>
+        IDictionary<string, object> GetCustomPropertiesMap(IExecutionEntity execution);
     }
 
 }

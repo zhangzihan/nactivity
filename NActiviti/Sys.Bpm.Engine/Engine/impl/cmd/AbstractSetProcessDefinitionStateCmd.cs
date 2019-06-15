@@ -52,27 +52,26 @@ namespace org.activiti.engine.impl.cmd
             this.tenantId = tenantId;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
 
-            IList<IProcessDefinitionEntity> processDefinitions = findProcessDefinition(commandContext);
+            IList<IProcessDefinitionEntity> processDefinitions = FindProcessDefinition(commandContext);
 
             if (executionDate.HasValue)
             {
                 // Process definition state change is delayed
-                createTimerForDelayedExecution(commandContext, processDefinitions);
+                CreateTimerForDelayedExecution(commandContext, processDefinitions);
             }
             else
             { // Process definition state is changed now
-                changeProcessDefinitionState(commandContext, processDefinitions);
+                ChangeProcessDefinitionState(commandContext, processDefinitions);
             }
 
             return null;
         }
 
-        protected internal virtual IList<IProcessDefinitionEntity> findProcessDefinition(ICommandContext commandContext)
+        protected internal virtual IList<IProcessDefinitionEntity> FindProcessDefinition(ICommandContext commandContext)
         {
-
             // If process definition is already provided (eg. when command is called through the DeployCmd)
             // we don't need to do an extra database fetch and we can simply return it, wrapped in a list
             if (processDefinitionEntity != null)
@@ -92,7 +91,7 @@ namespace org.activiti.engine.impl.cmd
             if (!string.IsNullOrWhiteSpace(processDefinitionId))
             {
 
-                IProcessDefinitionEntity processDefinitionEntity = processDefinitionManager.findById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("id", processDefinitionId));
+                IProcessDefinitionEntity processDefinitionEntity = processDefinitionManager.FindById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("id", processDefinitionId));
                 if (processDefinitionEntity == null)
                 {
                     throw new ActivitiObjectNotFoundException("Cannot find process definition for id '" + processDefinitionId + "'", typeof(IProcessDefinition));
@@ -103,18 +102,18 @@ namespace org.activiti.engine.impl.cmd
             else
             {
 
-                IProcessDefinitionQuery query = new ProcessDefinitionQueryImpl(commandContext).processDefinitionKey(processDefinitionKey);
+                IProcessDefinitionQuery query = new ProcessDefinitionQueryImpl(commandContext).SetProcessDefinitionKey(processDefinitionKey);
 
-                if (ReferenceEquals(tenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
+                if (tenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
                 {
-                    query.processDefinitionWithoutTenantId();
+                    query.SetProcessDefinitionWithoutTenantId();
                 }
                 else
                 {
-                    query.processDefinitionTenantId(tenantId);
+                    query.SetProcessDefinitionTenantId(tenantId);
                 }
 
-                IList<IProcessDefinition> processDefinitions = query.list();
+                IList<IProcessDefinition> processDefinitions = query.List();
                 if (processDefinitions.Count == 0)
                 {
                     throw new ActivitiException("Cannot find process definition for key '" + processDefinitionKey + "'");
@@ -129,12 +128,12 @@ namespace org.activiti.engine.impl.cmd
             return processDefinitionEntities;
         }
 
-        protected internal virtual void createTimerForDelayedExecution(ICommandContext commandContext, IList<IProcessDefinitionEntity> processDefinitions)
+        protected internal virtual void CreateTimerForDelayedExecution(ICommandContext commandContext, IList<IProcessDefinitionEntity> processDefinitions)
         {
             foreach (IProcessDefinitionEntity processDefinition in processDefinitions)
             {
-                ITimerJobEntity timer = commandContext.TimerJobEntityManager.create();
-                timer.JobType = Job_Fields.JOB_TYPE_TIMER;
+                ITimerJobEntity timer = commandContext.TimerJobEntityManager.Create();
+                timer.JobType = JobFields.JOB_TYPE_TIMER;
                 timer.ProcessDefinitionId = processDefinition.Id;
 
                 // Inherit tenant identifier (if applicable)
@@ -145,53 +144,53 @@ namespace org.activiti.engine.impl.cmd
 
                 timer.Duedate = executionDate;
                 timer.JobHandlerType = DelayedExecutionJobHandlerType;
-                timer.JobHandlerConfiguration = TimerChangeProcessDefinitionSuspensionStateJobHandler.createJobHandlerConfiguration(includeProcessInstances);
-                commandContext.JobManager.scheduleTimerJob(timer);
+                timer.JobHandlerConfiguration = TimerChangeProcessDefinitionSuspensionStateJobHandler.CreateJobHandlerConfiguration(includeProcessInstances);
+                commandContext.JobManager.ScheduleTimerJob(timer);
             }
         }
 
-        protected internal virtual void changeProcessDefinitionState(ICommandContext commandContext, IList<IProcessDefinitionEntity> processDefinitions)
+        protected internal virtual void ChangeProcessDefinitionState(ICommandContext commandContext, IList<IProcessDefinitionEntity> processDefinitions)
         {
             foreach (IProcessDefinitionEntity processDefinition in processDefinitions)
             {
-                SuspensionStateUtil.setSuspensionState(processDefinition, ProcessDefinitionSuspensionState);
+                SuspensionStateUtil.SetSuspensionState(processDefinition, ProcessDefinitionSuspensionState);
 
                 // Evict cache
-                commandContext.ProcessEngineConfiguration.DeploymentManager.ProcessDefinitionCache.remove(processDefinition.Id);
+                commandContext.ProcessEngineConfiguration.DeploymentManager.ProcessDefinitionCache.Remove(processDefinition.Id);
 
                 // Suspend process instances (if needed)
                 if (includeProcessInstances)
                 {
 
                     int currentStartIndex = 0;
-                    IList<IProcessInstance> processInstances = fetchProcessInstancesPage(commandContext, processDefinition, currentStartIndex);
+                    IList<IProcessInstance> processInstances = FetchProcessInstancesPage(commandContext, processDefinition, currentStartIndex);
                     while (processInstances.Count > 0)
                     {
 
                         foreach (IProcessInstance processInstance in processInstances)
                         {
-                            AbstractSetProcessInstanceStateCmd processInstanceCmd = getProcessInstanceChangeStateCmd(processInstance);
-                            processInstanceCmd.execute(commandContext);
+                            AbstractSetProcessInstanceStateCmd processInstanceCmd = GetProcessInstanceChangeStateCmd(processInstance);
+                            processInstanceCmd.Execute(commandContext);
                         }
 
                         // Fetch new batch of process instances
                         currentStartIndex += processInstances.Count;
-                        processInstances = fetchProcessInstancesPage(commandContext, processDefinition, currentStartIndex);
+                        processInstances = FetchProcessInstancesPage(commandContext, processDefinition, currentStartIndex);
                     }
                 }
             }
         }
 
-        protected internal virtual IList<IProcessInstance> fetchProcessInstancesPage(ICommandContext commandContext, IProcessDefinition processDefinition, int currentPageStartIndex)
+        protected internal virtual IList<IProcessInstance> FetchProcessInstancesPage(ICommandContext commandContext, IProcessDefinition processDefinition, int currentPageStartIndex)
         {
 
             if (SuspensionStateProvider.ACTIVE.Equals(ProcessDefinitionSuspensionState))
             {
-                return (new ProcessInstanceQueryImpl(commandContext)).processDefinitionId(processDefinition.Id).suspended().listPage(currentPageStartIndex, commandContext.ProcessEngineConfiguration.BatchSizeProcessInstances);
+                return (new ProcessInstanceQueryImpl(commandContext)).SetProcessDefinitionId(processDefinition.Id).Suspended().ListPage(currentPageStartIndex, commandContext.ProcessEngineConfiguration.BatchSizeProcessInstances);
             }
             else
             {
-                return (new ProcessInstanceQueryImpl(commandContext)).processDefinitionId(processDefinition.Id).active().listPage(currentPageStartIndex, commandContext.ProcessEngineConfiguration.BatchSizeProcessInstances);
+                return (new ProcessInstanceQueryImpl(commandContext)).SetProcessDefinitionId(processDefinition.Id).Active().ListPage(currentPageStartIndex, commandContext.ProcessEngineConfiguration.BatchSizeProcessInstances);
             }
         }
 
@@ -211,7 +210,7 @@ namespace org.activiti.engine.impl.cmd
         /// <summary>
         /// Subclasses should return a <seealso cref="Command"/> implementation that matches the process definition state change.
         /// </summary>
-        protected internal abstract AbstractSetProcessInstanceStateCmd getProcessInstanceChangeStateCmd(IProcessInstance processInstance);
+        protected internal abstract AbstractSetProcessInstanceStateCmd GetProcessInstanceChangeStateCmd(IProcessInstance processInstance);
 
     }
 

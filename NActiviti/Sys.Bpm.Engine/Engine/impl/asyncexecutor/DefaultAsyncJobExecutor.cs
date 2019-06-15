@@ -20,8 +20,8 @@ namespace org.activiti.engine.impl.asyncexecutor
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.runtime;
-    using Sys;
     using Sys.Concurrent;
+    using Sys.Workflow;
     using System;
     using System.Collections.Concurrent;
 
@@ -62,43 +62,134 @@ namespace org.activiti.engine.impl.asyncexecutor
         /// </summary>
         protected internal long secondsToWaitOnShutdown = 60L;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal Thread timerJobAcquisitionThread;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal Thread asyncJobAcquisitionThread;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal Thread resetExpiredJobThread;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal AcquireTimerJobsRunnable timerJobRunnable;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal AcquireAsyncJobsDueRunnable asyncJobsDueRunnable;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ResetExpiredJobsRunnable resetExpiredJobsRunnable;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExecuteAsyncRunnableFactory executeAsyncRunnableFactory;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool isAutoActivate;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool isActive;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool isMessageQueueMode;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int maxTimerJobsPerAcquisition = 1;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int maxAsyncJobsDuePerAcquisition = 1;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int defaultTimerJobAcquireWaitTimeInMillis = 10 * 1000;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int defaultAsyncJobAcquireWaitTimeInMillis = 10 * 1000;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int defaultQueueSizeFullWaitTime = 0;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string lockOwner = Guid.NewGuid().ToString();
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int timerLockTimeInMillis = 5 * 60 * 1000;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int asyncJobLockTimeInMillis = 5 * 60 * 1000;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int retryWaitTimeInMillis = 500;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int resetExpiredJobsInterval = 60 * 1000;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int resetExpiredJobsPageSize = 3;
 
-        // Job queue used when async executor is not yet started and jobs are already added.
-        // This is mainly used for testing purpose.
-        protected internal Queue<IJob> temporaryJobQueue = new Queue<IJob>();
+        /// <summary>
+        /// Job queue used when async executor is not yet started and jobs are already added.
+        /// This is mainly used for testing purpose.
+        /// </summary>
+        protected internal ConcurrentQueue<IJob> temporaryJobQueue = new ConcurrentQueue<IJob>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
 
-        private readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<DefaultAsyncJobExecutor>();
+        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<DefaultAsyncJobExecutor>();
 
-        public virtual bool executeAsyncJob(IJob job)
+        public DefaultAsyncJobExecutor()
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="job"></param>
+        /// <returns></returns>
+        public virtual bool ExecuteAsyncJob(IJob job)
         {
 
             if (isMessageQueueMode)
@@ -108,14 +199,13 @@ namespace org.activiti.engine.impl.asyncexecutor
                 return true;
             }
 
-            ThreadStart runnable = null;
             if (isActive)
             {
-                runnable = createRunnableForJob(job);
+                ThreadStart runnable = CreateRunnableForJob(job);
 
                 try
                 {
-                    executorService.execute(runnable);
+                    executorService.Execute(runnable);
                 }
                 catch (Exception e)
                 {
@@ -132,17 +222,16 @@ namespace org.activiti.engine.impl.asyncexecutor
                     ICommandContext commandContext = Context.CommandContext;
                     if (commandContext != null)
                     {
-                        commandContext.JobManager.unacquire(job);
+                        commandContext.JobManager.Unacquire(job);
                     }
                     else
                     {
-                        processEngineConfiguration.CommandExecutor.execute(new CommandAnonymousInnerClass(this, job, commandContext));
+                        processEngineConfiguration.CommandExecutor.Execute(new CommandAnonymousInnerClass(this, job));
                     }
 
                     // Job queue full, returning true so (if wanted) the acquiring can be throttled
                     return false;
                 }
-
             }
             else
             {
@@ -157,23 +246,26 @@ namespace org.activiti.engine.impl.asyncexecutor
             private readonly DefaultAsyncJobExecutor outerInstance;
 
             private readonly IJob job;
-            private readonly ICommandContext commandContext;
 
-            public CommandAnonymousInnerClass(DefaultAsyncJobExecutor outerInstance, IJob job, ICommandContext commandContext)
+            public CommandAnonymousInnerClass(DefaultAsyncJobExecutor outerInstance, IJob job)
             {
                 this.outerInstance = outerInstance;
                 this.job = job;
-                this.commandContext = commandContext;
             }
 
-            public virtual object execute(ICommandContext commandContext)
+            public virtual object Execute(ICommandContext commandContext)
             {
-                commandContext.JobManager.unacquire(job);
+                commandContext.JobManager.Unacquire(job);
                 return commandContext.GetResult();
             }
         }
 
-        protected internal virtual ThreadStart createRunnableForJob(IJob job)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="job"></param>
+        /// <returns></returns>
+        protected internal virtual ThreadStart CreateRunnableForJob(IJob job)
         {
             if (executeAsyncRunnableFactory == null)
             {
@@ -183,13 +275,13 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
             else
             {
-                return executeAsyncRunnableFactory.createExecuteAsyncRunnable(job, processEngineConfiguration);
+                return executeAsyncRunnableFactory.CreateExecuteAsyncRunnable(job, processEngineConfiguration);
             }
         }
 
         /// <summary>
         /// Starts the async executor </summary>
-        public virtual void start()
+        public virtual void Start()
         {
             if (isActive)
             {
@@ -215,32 +307,39 @@ namespace org.activiti.engine.impl.asyncexecutor
 
             if (!isMessageQueueMode)
             {
-                initAsyncJobExecutionThreadPool();
-                startJobAcquisitionThread();
+                InitAsyncJobExecutionThreadPool();
+                StartJobAcquisitionThread();
             }
 
-            startTimerAcquisitionThread();
-            startResetExpiredJobsThread();
+            StartTimerAcquisitionThread();
+            StartResetExpiredJobsThread();
 
             isActive = true;
 
-            executeTemporaryJobs();
-        }
-
-        protected internal virtual void executeTemporaryJobs()
-        {
-            while (temporaryJobQueue.Count > 0)
-            {
-                IJob job = temporaryJobQueue.Dequeue();
-                executeAsyncJob(job);
-            }
+            ExecuteTemporaryJobs();
         }
 
         /// <summary>
-        /// Shuts down the whole job executor </summary>
-        public virtual void shutdown()
+        /// 
+        /// </summary>
+        protected internal virtual void ExecuteTemporaryJobs()
         {
-            lock (this)
+            while (temporaryJobQueue.IsEmpty == false)
+            {
+                if (temporaryJobQueue.TryDequeue(out IJob job))
+                {
+                    ExecuteAsyncJob(job);
+                }
+            }
+        }
+
+        private readonly object syncRoot = new object();
+
+        /// <summary>
+        /// Shuts down the whole job executor </summary>
+        public virtual void Shutdown()
+        {
+            lock (syncRoot)
             {
                 if (!isActive)
                 {
@@ -251,21 +350,21 @@ namespace org.activiti.engine.impl.asyncexecutor
 
                 if (timerJobRunnable != null)
                 {
-                    timerJobRunnable.stop();
+                    timerJobRunnable.Stop();
                 }
                 if (asyncJobsDueRunnable != null)
                 {
-                    asyncJobsDueRunnable.stop();
+                    asyncJobsDueRunnable.Stop();
                 }
                 if (resetExpiredJobsRunnable != null)
                 {
-                    resetExpiredJobsRunnable.stop();
+                    resetExpiredJobsRunnable.Stop();
                 }
 
-                stopResetExpiredJobsThread();
-                stopTimerAcquisitionThread();
-                stopJobAcquisitionThread();
-                stopExecutingAsyncJobs();
+                StopResetExpiredJobsThread();
+                StopTimerAcquisitionThread();
+                StopJobAcquisitionThread();
+                StopExecutingAsyncJobs();
 
                 timerJobRunnable = null;
                 asyncJobsDueRunnable = null;
@@ -275,7 +374,10 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-        protected internal virtual void initAsyncJobExecutionThreadPool()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal virtual void InitAsyncJobExecutionThreadPool()
         {
             if (threadPoolQueue == null)
             {
@@ -292,17 +394,20 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-        protected internal virtual void stopExecutingAsyncJobs()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal virtual void StopExecutingAsyncJobs()
         {
             if (executorService != null)
             {
                 // Ask the thread pool to finish and exit
-                executorService.shutdown();
+                executorService.Shutdown();
 
                 // Waits for 1 minute to finish all currently executing jobs
                 try
                 {
-                    if (!executorService.awaitTermination(secondsToWaitOnShutdown, TimeSpan.FromSeconds(3000)))
+                    if (!executorService.AwaitTermination(secondsToWaitOnShutdown, TimeSpan.FromSeconds(3000)))
                     {
                         logger.LogWarning($"Timeout during shutdown of async job executor. The current running jobs could not end within {secondsToWaitOnShutdown} seconds after shutdown operation.");
                     }
@@ -318,7 +423,7 @@ namespace org.activiti.engine.impl.asyncexecutor
 
         /// <summary>
         /// Starts the acquisition thread </summary>
-        protected internal virtual void startJobAcquisitionThread()
+        protected internal virtual void StartJobAcquisitionThread()
         {
             if (asyncJobAcquisitionThread == null)
             {
@@ -327,7 +432,10 @@ namespace org.activiti.engine.impl.asyncexecutor
             asyncJobAcquisitionThread.Start();
         }
 
-        protected internal virtual void startTimerAcquisitionThread()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal virtual void StartTimerAcquisitionThread()
         {
             if (timerJobAcquisitionThread == null)
             {
@@ -338,7 +446,7 @@ namespace org.activiti.engine.impl.asyncexecutor
 
         /// <summary>
         /// Stops the acquisition thread </summary>
-        protected internal virtual void stopJobAcquisitionThread()
+        protected internal virtual void StopJobAcquisitionThread()
         {
             if (asyncJobAcquisitionThread != null)
             {
@@ -354,7 +462,10 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-        protected internal virtual void stopTimerAcquisitionThread()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal virtual void StopTimerAcquisitionThread()
         {
             if (timerJobAcquisitionThread != null)
             {
@@ -372,7 +483,7 @@ namespace org.activiti.engine.impl.asyncexecutor
 
         /// <summary>
         /// Starts the reset expired jobs thread </summary>
-        protected internal virtual void startResetExpiredJobsThread()
+        protected internal virtual void StartResetExpiredJobsThread()
         {
             if (resetExpiredJobThread == null)
             {
@@ -383,7 +494,7 @@ namespace org.activiti.engine.impl.asyncexecutor
 
         /// <summary>
         /// Stops the reset expired jobs thread </summary>
-        protected internal virtual void stopResetExpiredJobsThread()
+        protected internal virtual void StopResetExpiredJobsThread()
         {
             if (resetExpiredJobThread != null)
             {
@@ -402,6 +513,9 @@ namespace org.activiti.engine.impl.asyncexecutor
 
         /* getters and setters */
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ProcessEngineConfigurationImpl ProcessEngineConfiguration
         {
             get
@@ -414,8 +528,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Thread TimerJobAcquisitionThread
         {
             get
@@ -428,7 +543,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Thread AsyncJobAcquisitionThread
         {
             get
@@ -441,7 +558,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual Thread ResetExpiredJobThread
         {
             get
@@ -454,7 +573,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool AutoActivate
         {
             get
@@ -467,7 +588,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Active
         {
             get
@@ -476,6 +599,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool MessageQueueMode
         {
             get
@@ -488,7 +614,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int QueueSize
         {
             get
@@ -501,7 +629,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int CorePoolSize
         {
             get
@@ -514,7 +644,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int MaxPoolSize
         {
             get
@@ -527,7 +659,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual long KeepAliveTime
         {
             get
@@ -540,7 +674,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual long SecondsToWaitOnShutdown
         {
             get
@@ -553,7 +689,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ConcurrentQueue<ThreadStart> ThreadPoolQueue
         {
             get
@@ -566,7 +704,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecutorService ExecutorService
         {
             get
@@ -579,7 +719,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string LockOwner
         {
             get
@@ -592,7 +734,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int TimerLockTimeInMillis
         {
             get
@@ -605,7 +749,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncJobLockTimeInMillis
         {
             get
@@ -618,7 +764,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int MaxTimerJobsPerAcquisition
         {
             get
@@ -631,7 +779,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int MaxAsyncJobsDuePerAcquisition
         {
             get
@@ -644,7 +794,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int DefaultTimerJobAcquireWaitTimeInMillis
         {
             get
@@ -657,7 +809,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int DefaultAsyncJobAcquireWaitTimeInMillis
         {
             get
@@ -670,7 +824,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual AcquireTimerJobsRunnable TimerJobRunnable
         {
             set
@@ -679,6 +835,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int DefaultQueueSizeFullWaitTimeInMillis
         {
             get
@@ -691,7 +850,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual AcquireAsyncJobsDueRunnable AsyncJobsDueRunnable
         {
             set
@@ -700,6 +861,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ResetExpiredJobsRunnable ResetExpiredJobsRunnable
         {
             set
@@ -708,6 +872,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int RetryWaitTimeInMillis
         {
             get
@@ -720,6 +887,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual int ResetExpiredJobsInterval
         {
@@ -733,6 +903,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual int ResetExpiredJobsPageSize
         {
@@ -746,7 +919,9 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecuteAsyncRunnableFactory ExecuteAsyncRunnableFactory
         {
             get
@@ -758,8 +933,5 @@ namespace org.activiti.engine.impl.asyncexecutor
                 this.executeAsyncRunnableFactory = value;
             }
         }
-
-
     }
-
 }

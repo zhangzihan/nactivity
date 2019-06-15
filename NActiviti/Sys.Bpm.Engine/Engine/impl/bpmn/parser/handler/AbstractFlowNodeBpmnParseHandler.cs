@@ -15,7 +15,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
     using org.activiti.bpmn.model;
 
     /// 
-    public abstract class AbstractFlowNodeBpmnParseHandler<T> : AbstractBpmnParseHandler<T> where T : org.activiti.bpmn.model.FlowNode
+    public abstract class AbstractFlowNodeBpmnParseHandler<T> : AbstractBpmnParseHandler<T> where T : FlowNode
     {
 
     }

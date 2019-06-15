@@ -40,49 +40,49 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IHistoricVariableInstanceEntity create()
+        public override IHistoricVariableInstanceEntity Create()
         {
             return new HistoricVariableInstanceEntityImpl();
         }
 
-        public override void insert(IHistoricVariableInstanceEntity entity)
+        public override void Insert(IHistoricVariableInstanceEntity entity)
         {
-            base.insert(entity);
+            base.Insert(entity);
         }
 
-        public virtual IList<IHistoricVariableInstanceEntity> findHistoricVariableInstancesByProcessInstanceId(string processInstanceId)
+        public virtual IList<IHistoricVariableInstanceEntity> FindHistoricVariableInstancesByProcessInstanceId(string processInstanceId)
         {
-            return getList("selectHistoricVariableInstanceByProcessInstanceId", new { processInstanceId }, historicVariableInstanceByProcInstMatcher, true) as IList<IHistoricVariableInstanceEntity>;
+            return GetList("selectHistoricVariableInstanceByProcessInstanceId", new { processInstanceId }, historicVariableInstanceByProcInstMatcher, true) as IList<IHistoricVariableInstanceEntity>;
         }
 
-        public virtual IList<IHistoricVariableInstanceEntity> findHistoricVariableInstancesByTaskId(string taskId)
+        public virtual IList<IHistoricVariableInstanceEntity> FindHistoricVariableInstancesByTaskId(string taskId)
         {
-            return getList("selectHistoricVariableInstanceByTaskId", new { taskId }, historicVariableInstanceByTaskIdMatcher, true) as IList<IHistoricVariableInstanceEntity>;
+            return GetList("selectHistoricVariableInstanceByTaskId", new { taskId }, historicVariableInstanceByTaskIdMatcher, true) as IList<IHistoricVariableInstanceEntity>;
         }
 
-        public virtual long findHistoricVariableInstanceCountByQueryCriteria(IHistoricVariableInstanceQuery historicProcessVariableQuery)
+        public virtual long FindHistoricVariableInstanceCountByQueryCriteria(IHistoricVariableInstanceQuery historicProcessVariableQuery)
         {
-            return ((long?)DbSqlSession.selectOne<HistoricVariableInstanceEntityImpl, long?>("selectHistoricVariableInstanceCountByQueryCriteria", historicProcessVariableQuery)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<HistoricVariableInstanceEntityImpl, long?>("selectHistoricVariableInstanceCountByQueryCriteria", historicProcessVariableQuery).GetValueOrDefault();
         }
 
-        public virtual IList<IHistoricVariableInstance> findHistoricVariableInstancesByQueryCriteria(IHistoricVariableInstanceQuery historicProcessVariableQuery, Page page)
+        public virtual IList<IHistoricVariableInstance> FindHistoricVariableInstancesByQueryCriteria(IHistoricVariableInstanceQuery historicProcessVariableQuery, Page page)
         {
-            return DbSqlSession.selectList<HistoricVariableInstanceEntityImpl, IHistoricVariableInstance>("selectHistoricVariableInstanceByQueryCriteria", historicProcessVariableQuery, page);
+            return DbSqlSession.SelectList<HistoricVariableInstanceEntityImpl, IHistoricVariableInstance>("selectHistoricVariableInstanceByQueryCriteria", historicProcessVariableQuery, page);
         }
 
-        public virtual IHistoricVariableInstanceEntity findHistoricVariableInstanceByVariableInstanceId(string variableInstanceId)
+        public virtual IHistoricVariableInstanceEntity FindHistoricVariableInstanceByVariableInstanceId(string variableInstanceId)
         {
-            return (IHistoricVariableInstanceEntity)DbSqlSession.selectOne<HistoricVariableInstanceEntityImpl, IHistoricVariableInstanceEntity>("selectHistoricVariableInstanceByVariableInstanceId", new { variableInstanceId });
+            return (IHistoricVariableInstanceEntity)DbSqlSession.SelectOne<HistoricVariableInstanceEntityImpl, IHistoricVariableInstanceEntity>("selectHistoricVariableInstanceByVariableInstanceId", new { variableInstanceId });
         }
 
-        public virtual IList<IHistoricVariableInstance> findHistoricVariableInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IHistoricVariableInstance> FindHistoricVariableInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return DbSqlSession.selectListWithRawParameter<HistoricVariableInstanceEntityImpl, IHistoricVariableInstance>("selectHistoricVariableInstanceByNativeQuery", parameterMap, firstResult, maxResults);
+            return DbSqlSession.SelectListWithRawParameter<HistoricVariableInstanceEntityImpl, IHistoricVariableInstance>("selectHistoricVariableInstanceByNativeQuery", parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findHistoricVariableInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindHistoricVariableInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return ((long?)DbSqlSession.selectOne<HistoricVariableInstanceEntityImpl, long?>("selectHistoricVariableInstanceCountByNativeQuery", parameterMap)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<HistoricVariableInstanceEntityImpl, long?>("selectHistoricVariableInstanceCountByNativeQuery", parameterMap).GetValueOrDefault();
         }
 
     }

@@ -22,7 +22,7 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class PotentialStarterParser : IBpmnXMLConstants
     {
-        public virtual void parse(XMLStreamReader xtr, Process activeProcess)
+        public virtual void Parse(XMLStreamReader xtr, Process activeProcess)
         {
             string resourceElement = XMLStreamReaderUtil.moveDown(xtr);
             if (!string.IsNullOrWhiteSpace(resourceElement) && "resourceAssignmentExpression".Equals(resourceElement))
@@ -44,7 +44,7 @@ namespace org.activiti.bpmn.converter.parser
                     for (var idx = 0; idx < assignmentList.Count; idx++)
                     {
                         string assignmentValue = assignmentList[idx];
-                        if (string.ReferenceEquals(assignmentValue, null))
+                        if (assignmentValue is null)
                         {
                             continue;
                         }

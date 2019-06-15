@@ -56,62 +56,62 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
             ENTITY_MAPPING["task"] = typeof(ITask);
         }
 
-        public virtual ITaskListener createClassDelegateTaskListener(ActivitiListener activitiListener)
+        public virtual ITaskListener CreateClassDelegateTaskListener(ActivitiListener activitiListener)
         {
-            return classDelegateFactory.create(activitiListener.Implementation, createFieldDeclarations(activitiListener.FieldExtensions));
+            return classDelegateFactory.Create(activitiListener.Implementation, CreateFieldDeclarations(activitiListener.FieldExtensions));
         }
 
-        public virtual ITaskListener createExpressionTaskListener(ActivitiListener activitiListener)
+        public virtual ITaskListener CreateExpressionTaskListener(ActivitiListener activitiListener)
         {
-            return new ExpressionTaskListener(expressionManager.createExpression(activitiListener.Implementation));
+            return new ExpressionTaskListener(expressionManager.CreateExpression(activitiListener.Implementation));
         }
 
-        public virtual ITaskListener createDelegateExpressionTaskListener(ActivitiListener activitiListener)
+        public virtual ITaskListener CreateDelegateExpressionTaskListener(ActivitiListener activitiListener)
         {
-            return new DelegateExpressionTaskListener(expressionManager.createExpression(activitiListener.Implementation), createFieldDeclarations(activitiListener.FieldExtensions));
+            return new DelegateExpressionTaskListener(expressionManager.CreateExpression(activitiListener.Implementation), CreateFieldDeclarations(activitiListener.FieldExtensions));
         }
 
-        public virtual ITransactionDependentTaskListener createTransactionDependentDelegateExpressionTaskListener(ActivitiListener activitiListener)
+        public virtual ITransactionDependentTaskListener CreateTransactionDependentDelegateExpressionTaskListener(ActivitiListener activitiListener)
         {
-            return new DelegateExpressionTransactionDependentTaskListener(expressionManager.createExpression(activitiListener.Implementation));
+            return new DelegateExpressionTransactionDependentTaskListener(expressionManager.CreateExpression(activitiListener.Implementation));
         }
 
-        public virtual IExecutionListener createClassDelegateExecutionListener(ActivitiListener activitiListener)
+        public virtual IExecutionListener CreateClassDelegateExecutionListener(ActivitiListener activitiListener)
         {
-            return classDelegateFactory.create(activitiListener.Implementation, createFieldDeclarations(activitiListener.FieldExtensions));
+            return classDelegateFactory.Create(activitiListener.Implementation, CreateFieldDeclarations(activitiListener.FieldExtensions));
         }
 
-        public virtual IExecutionListener createExpressionExecutionListener(ActivitiListener activitiListener)
+        public virtual IExecutionListener CreateExpressionExecutionListener(ActivitiListener activitiListener)
         {
-            return new ExpressionExecutionListener(expressionManager.createExpression(activitiListener.Implementation));
+            return new ExpressionExecutionListener(expressionManager.CreateExpression(activitiListener.Implementation));
         }
 
-        public virtual IExecutionListener createDelegateExpressionExecutionListener(ActivitiListener activitiListener)
+        public virtual IExecutionListener CreateDelegateExpressionExecutionListener(ActivitiListener activitiListener)
         {
-            return new DelegateExpressionExecutionListener(expressionManager.createExpression(activitiListener.Implementation), createFieldDeclarations(activitiListener.FieldExtensions));
+            return new DelegateExpressionExecutionListener(expressionManager.CreateExpression(activitiListener.Implementation), CreateFieldDeclarations(activitiListener.FieldExtensions));
         }
 
-        public virtual ITransactionDependentExecutionListener createTransactionDependentDelegateExpressionExecutionListener(ActivitiListener activitiListener)
+        public virtual ITransactionDependentExecutionListener CreateTransactionDependentDelegateExpressionExecutionListener(ActivitiListener activitiListener)
         {
-            return new DelegateExpressionTransactionDependentExecutionListener(expressionManager.createExpression(activitiListener.Implementation));
+            return new DelegateExpressionTransactionDependentExecutionListener(expressionManager.CreateExpression(activitiListener.Implementation));
         }
 
-        public virtual IActivitiEventListener createClassDelegateEventListener(EventListener eventListener)
+        public virtual IActivitiEventListener CreateClassDelegateEventListener(EventListener eventListener)
         {
-            return new DelegateActivitiEventListener(eventListener.Implementation, getEntityType(eventListener.EntityType));
+            return new DelegateActivitiEventListener(eventListener.Implementation, GetEntityType(eventListener.EntityType));
         }
 
-        public virtual IActivitiEventListener createDelegateExpressionEventListener(EventListener eventListener)
+        public virtual IActivitiEventListener CreateDelegateExpressionEventListener(EventListener eventListener)
         {
-            return new DelegateExpressionActivitiEventListener(expressionManager.createExpression(eventListener.Implementation), getEntityType(eventListener.EntityType));
+            return new DelegateExpressionActivitiEventListener(expressionManager.CreateExpression(eventListener.Implementation), GetEntityType(eventListener.EntityType));
         }
 
-        public virtual IActivitiEventListener createCustomTaskCompletedEventListener()
+        public virtual IActivitiEventListener CreateCustomTaskCompletedEventListener()
         {
             return new CustomTaskCompletedEventListener();
         }
 
-        public virtual IActivitiEventListener createEventThrowingEventListener(EventListener eventListener)
+        public virtual IActivitiEventListener CreateEventThrowingEventListener(EventListener eventListener)
         {
             BaseDelegateEventListener result = null;
             if (ImplementationType.IMPLEMENTATION_TYPE_THROW_SIGNAL_EVENT.Equals(eventListener.ImplementationType))
@@ -142,23 +142,23 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
                 throw new ActivitiIllegalArgumentException("Cannot create an event-throwing event-listener, unknown implementation type: " + eventListener.ImplementationType);
             }
 
-            result.EntityClass = getEntityType(eventListener.EntityType);
+            result.EntityClass = GetEntityType(eventListener.EntityType);
             return result;
         }
 
-        public virtual ICustomPropertiesResolver createClassDelegateCustomPropertiesResolver(ActivitiListener activitiListener)
+        public virtual ICustomPropertiesResolver CreateClassDelegateCustomPropertiesResolver(ActivitiListener activitiListener)
         {
-            return classDelegateFactory.create(activitiListener.CustomPropertiesResolverImplementation, null);
+            return classDelegateFactory.Create(activitiListener.CustomPropertiesResolverImplementation, null);
         }
 
-        public virtual ICustomPropertiesResolver createExpressionCustomPropertiesResolver(ActivitiListener activitiListener)
+        public virtual ICustomPropertiesResolver CreateExpressionCustomPropertiesResolver(ActivitiListener activitiListener)
         {
-            return new ExpressionCustomPropertiesResolver(expressionManager.createExpression(activitiListener.CustomPropertiesResolverImplementation));
+            return new ExpressionCustomPropertiesResolver(expressionManager.CreateExpression(activitiListener.CustomPropertiesResolverImplementation));
         }
 
-        public virtual ICustomPropertiesResolver createDelegateExpressionCustomPropertiesResolver(ActivitiListener activitiListener)
+        public virtual ICustomPropertiesResolver CreateDelegateExpressionCustomPropertiesResolver(ActivitiListener activitiListener)
         {
-            return new DelegateExpressionCustomPropertiesResolver(expressionManager.createExpression(activitiListener.CustomPropertiesResolverImplementation));
+            return new DelegateExpressionCustomPropertiesResolver(expressionManager.CreateExpression(activitiListener.CustomPropertiesResolverImplementation));
         }
 
         /// <param name="entityType">
@@ -166,9 +166,9 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
         /// @return </param>
         /// <exception cref="ActivitiIllegalArgumentException">
         ///           when the given entity name </exception>
-        protected internal virtual Type getEntityType(string entityType)
+        protected internal virtual Type GetEntityType(string entityType)
         {
-            if (!ReferenceEquals(entityType, null))
+            if (!(entityType is null))
             {
                 Type entityClass = ENTITY_MAPPING[entityType.Trim()];
                 if (entityClass == null)

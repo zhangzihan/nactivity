@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using org.activiti.engine.history;
+using System.Collections.Generic;
 using System.Linq;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -130,21 +131,21 @@ namespace org.activiti.engine.@delegate.@event
         public static readonly ActivitiEventType ACTIVITY_MESSAGE_WAITING = new ActivitiEventType("ACTIVITY_MESSAGE_WAITING", InnerEnum.ACTIVITY_MESSAGE_WAITING);
 
         /// <summary>
-        /// An activity has received a message event. Dispatched before the actual message has been received by the activity. This event will be either followed by a <seealso cref="#ACTIVITY_SIGNALLED"/> event or
-        /// <seealso cref="#ACTIVITY_COMPLETE"/> for the involved activity, if the message was delivered successfully.
+        /// An activity has received a message event. Dispatched before the actual message has been received by the activity. This event will be either followed by a <seealso cref="ACTIVITY_SIGNALLED"/> event or
+        /// <seealso cref="ACTIVITY_COMPLETE"/> for the involved activity, if the message was delivered successfully.
         /// </summary>
         public static readonly ActivitiEventType ACTIVITY_MESSAGE_RECEIVED = new ActivitiEventType("ACTIVITY_MESSAGE_RECEIVED", InnerEnum.ACTIVITY_MESSAGE_RECEIVED);
 
         /// <summary>
-        /// An activity has received an error event. Dispatched before the actual error has been received by the activity. This event will be either followed by a <seealso cref="#ACTIVITY_SIGNALLED"/> event or
-        /// <seealso cref="#ACTIVITY_COMPLETE"/> for the involved activity, if the error was delivered successfully.
+        /// An activity has received an error event. Dispatched before the actual error has been received by the activity. This event will be either followed by a <seealso cref="ACTIVITY_SIGNALLED"/> event or
+        /// <seealso cref="ACTIVITY_COMPLETE"/> for the involved activity, if the error was delivered successfully.
         /// </summary>
         public static readonly ActivitiEventType ACTIVITY_ERROR_RECEIVED = new ActivitiEventType("ACTIVITY_ERROR_RECEIVED", InnerEnum.ACTIVITY_ERROR_RECEIVED);
 
         /// <summary>
         /// A event dispatched when a <seealso cref="IHistoricActivityInstance"/> is created. 
-        /// This is a specialized version of the <seealso cref="ActivitiEventType#ENTITY_CREATED"/> and <seealso cref="ActivitiEventType#ENTITY_INITIALIZED"/> event,
-        /// with the same use case as the <seealso cref="ActivitiEventType#ACTIVITY_STARTED"/>, but containing
+        /// This is a specialized version of the <seealso cref="ActivitiEventType.ENTITY_CREATED"/> and <seealso cref="ActivitiEventType.ENTITY_INITIALIZED"/> event,
+        /// with the same use case as the <seealso cref="ActivitiEventType.ACTIVITY_STARTED"/>, but containing
         /// slightly different data.
         /// 
         /// Note this will be an <seealso cref="IActivitiEntityEvent"/>, where the entity is the <seealso cref="IHistoricActivityInstance"/>.
@@ -155,8 +156,8 @@ namespace org.activiti.engine.@delegate.@event
 
         /// <summary>
         /// A event dispatched when a <seealso cref="IHistoricActivityInstance"/> is marked as ended. 
-        /// his is a specialized version of the <seealso cref="ActivitiEventType#ENTITY_UPDATED"/> event,
-        /// with the same use case as the <seealso cref="ActivitiEventType#ACTIVITY_COMPLETED"/>, but containing
+        /// his is a specialized version of the <seealso cref="ActivitiEventType.ENTITY_UPDATED"/> event,
+        /// with the same use case as the <seealso cref="ActivitiEventType.ACTIVITY_COMPLETED"/>, but containing
         /// slightly different data (e.g. the end time, the duration, etc.). 
         /// 
         /// Note that history (minimum level ACTIVITY) must be enabled to receive this event.  
@@ -200,19 +201,19 @@ namespace org.activiti.engine.@delegate.@event
 
         /// <summary>
         /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="#ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
-        /// result of the task completion. In that case, a <seealso cref="#ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
+        /// result of the task completion. In that case, a <seealso cref="ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
         /// </summary>
         public static readonly ActivitiEventType TASK_COMPLETED = new ActivitiEventType("TASK_COMPLETED", InnerEnum.TASK_COMPLETED);
 
         /// <summary>
-        /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="#ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
-        /// result of the task completion. In that case, a <seealso cref="#ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
+        /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
+        /// result of the task completion. In that case, a <seealso cref="ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
         /// </summary>
         public static readonly ActivitiEventType TASK_TERMINATED = new ActivitiEventType("TASK_TERMINATED", InnerEnum.TASK_TERMINATED);
 
         /// <summary>
-        /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="#ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
-        /// result of the task completion. In that case, a <seealso cref="#ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
+        /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
+        /// result of the task completion. In that case, a <seealso cref="ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
         /// </summary>
         public static readonly ActivitiEventType TASK_TRANSFERED = new ActivitiEventType("TASK_TERMINATED", InnerEnum.TASK_TRANSFERED); 
 
@@ -235,13 +236,13 @@ namespace org.activiti.engine.@delegate.@event
         /// <summary>
         /// A process has been cancelled. Dispatched when process instance is deleted by
         /// </summary>
-        /// <seealso cref= org.activiti.engine.impl.RuntimeServiceImpl#deleteProcessInstance(java.lang.String, java.lang.String), before DB delete. </seealso>
+        /// <seealso cref="IRuntimeService.DeleteProcessInstance(string, string)">, before DB delete. </seealso>
         public static readonly ActivitiEventType PROCESS_CANCELLED = new ActivitiEventType("PROCESS_CANCELLED", InnerEnum.PROCESS_CANCELLED);
 
         /// <summary>
         /// A event dispatched when a <seealso cref="IHistoricProcessInstance"/> is created. 
-        /// This is a specialized version of the <seealso cref="ActivitiEventType#ENTITY_CREATED"/> and <seealso cref="ActivitiEventType#ENTITY_INITIALIZED"/> event,
-        /// with the same use case as the <seealso cref="ActivitiEventType#PROCESS_STARTED"/>, but containing
+        /// This is a specialized version of the <seealso cref="ActivitiEventType.ENTITY_CREATED"/> and <seealso cref="ActivitiEventType.ENTITY_INITIALIZED"/> event,
+        /// with the same use case as the <seealso cref="ActivitiEventType.PROCESS_STARTED"/>, but containing
         /// slightly different data (e.g. the start time, the start user id, etc.). 
         /// 
         /// Note this will be an <seealso cref="IActivitiEntityEvent"/>, where the entity is the <seealso cref="IHistoricProcessInstance"/>.
@@ -252,8 +253,8 @@ namespace org.activiti.engine.@delegate.@event
 
         /// <summary>
         /// A event dispatched when a <seealso cref="IHistoricProcessInstance"/> is marked as ended. 
-        /// his is a specialized version of the <seealso cref="ActivitiEventType#ENTITY_UPDATED"/> event,
-        /// with the same use case as the <seealso cref="ActivitiEventType#PROCESS_COMPLETED"/>, but containing
+        /// his is a specialized version of the <seealso cref="ActivitiEventType.ENTITY_UPDATED"/> event,
+        /// with the same use case as the <seealso cref="ActivitiEventType.PROCESS_COMPLETED"/>, but containing
         /// slightly different data (e.g. the end time, the duration, etc.). 
         /// 
         /// Note that history (minimum level ACTIVITY) must be enabled to receive this event.  
@@ -271,7 +272,7 @@ namespace org.activiti.engine.@delegate.@event
         public static readonly ActivitiEventType MEMBERSHIP_DELETED = new ActivitiEventType("MEMBERSHIP_DELETED", InnerEnum.MEMBERSHIP_DELETED);
 
         /// <summary>
-        /// All memberships in the related group have been deleted. No individual <seealso cref="#MEMBERSHIP_DELETED"/> events will be dispatched due to possible performance reasons. The event is dispatched before the
+        /// All memberships in the related group have been deleted. No individual <seealso cref="MEMBERSHIP_DELETED"/> events will be dispatched due to possible performance reasons. The event is dispatched before the
         /// memberships are deleted, so they can still be accessed in the dispatch method of the listener.
         /// </summary>
         public static readonly ActivitiEventType MEMBERSHIPS_DELETED = new ActivitiEventType("MEMBERSHIPS_DELETED", InnerEnum.MEMBERSHIPS_DELETED);
@@ -393,16 +394,16 @@ namespace org.activiti.engine.@delegate.@event
         /// <returns> a list of <seealso cref="ActivitiEventType"/> based on the given list. </returns>
         /// <exception cref="ActivitiIllegalArgumentException">
         ///           when one of the given string is not a valid type name </exception>
-        public static ActivitiEventType[] getTypesFromString(string @string)
+        public static ActivitiEventType[] GetTypesFromString(string @string)
         {
             IList<ActivitiEventType> result = new List<ActivitiEventType>();
-            if (!ReferenceEquals(@string, null) && @string.Length > 0)
+            if (!(@string is null) && @string.Length > 0)
             {
                 string[] split = @string.Split(',');
                 foreach (string typeName in split)
                 {
                     bool found = false;
-                    foreach (ActivitiEventType type in values())
+                    foreach (ActivitiEventType type in Values())
                     {
                         if (typeName.Equals(type.nameValue))
                         {
@@ -421,12 +422,12 @@ namespace org.activiti.engine.@delegate.@event
             return result.ToArray();
         }
 
-        public static IList<ActivitiEventType> values()
+        public static IList<ActivitiEventType> Values()
         {
             return valueList;
         }
 
-        public int ordinal()
+        public int Ordinal()
         {
             return ordinalValue;
         }
@@ -436,7 +437,7 @@ namespace org.activiti.engine.@delegate.@event
             return nameValue;
         }
 
-        public static ActivitiEventType valueOf(string name)
+        public static ActivitiEventType ValueOf(string name)
         {
             foreach (ActivitiEventType enumInstance in valueList)
             {

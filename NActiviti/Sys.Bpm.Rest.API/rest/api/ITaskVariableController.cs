@@ -16,14 +16,22 @@ namespace org.activiti.cloud.services.rest.api
         /// </summary>
         /// <param name="taskId">任务id</param>
         /// <returns></returns>
-        Task<Resources<TaskVariableResource>> getVariables(string taskId);
+        Task<Resources<TaskVariableResource>> GetVariables(string taskId);
+
+        /// <summary>
+        /// 获取任务变量
+        /// </summary>
+        /// <param name="taskId">任务id</param>
+        /// <param name="variableName">变量名称</param>
+        /// <returns></returns>
+        Task<TaskVariableResource> GetVariable(string taskId, string variableName);
 
         /// <summary>
         /// 仅获取任务变量
         /// </summary>
         /// <param name="taskId">任务id</param>
         /// <returns></returns>
-        Task<Resources<TaskVariableResource>> getVariablesLocal(string taskId);
+        Task<Resources<TaskVariableResource>> GetVariablesLocal(string taskId);
 
         /// <summary>
         /// 设置任务变量
@@ -31,7 +39,7 @@ namespace org.activiti.cloud.services.rest.api
         /// <param name="taskId">任务id</param>
         /// <param name="setTaskVariablesCmd">任务变量命令</param>
         /// <returns></returns>
-        Task<IActionResult> setVariables(string taskId, SetTaskVariablesCmd setTaskVariablesCmd); //(required = true)
+        Task<ActionResult> SetVariables(string taskId, SetTaskVariablesCmd setTaskVariablesCmd); //(required = true)
 
         /// <summary>
         /// 设置任务本地变量
@@ -39,6 +47,6 @@ namespace org.activiti.cloud.services.rest.api
         /// <param name="taskId">任务id</param>
         /// <param name="setTaskVariablesCmd">任务变量命令</param>
         /// <returns></returns>
-        Task<IActionResult> setVariablesLocal(string taskId, SetTaskVariablesCmd setTaskVariablesCmd);
+        Task<ActionResult> SetVariablesLocal(string taskId, SetTaskVariablesCmd setTaskVariablesCmd);
     }
 }

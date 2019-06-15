@@ -29,25 +29,23 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, SignalEventDefinition signalDefinition)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, SignalEventDefinition signalDefinition)
         {
 
             Signal signal = null;
-            if (bpmnParse.BpmnModel.containsSignalId(signalDefinition.SignalRef))
+            if (bpmnParse.BpmnModel.ContainsSignalId(signalDefinition.SignalRef))
             {
-                signal = bpmnParse.BpmnModel.getSignal(signalDefinition.SignalRef);
+                signal = bpmnParse.BpmnModel.GetSignal(signalDefinition.SignalRef);
             }
 
-            if (bpmnParse.CurrentFlowElement is IntermediateCatchEvent)
+            if (bpmnParse.CurrentFlowElement is IntermediateCatchEvent intermediateCatchEvent)
             {
-                IntermediateCatchEvent intermediateCatchEvent = (IntermediateCatchEvent)bpmnParse.CurrentFlowElement;
-                intermediateCatchEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createIntermediateCatchSignalEventActivityBehavior(intermediateCatchEvent, signalDefinition, signal);
+                intermediateCatchEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateCatchSignalEventActivityBehavior(intermediateCatchEvent, signalDefinition, signal);
 
             }
-            else if (bpmnParse.CurrentFlowElement is BoundaryEvent)
+            else if (bpmnParse.CurrentFlowElement is BoundaryEvent boundaryEvent)
             {
-                BoundaryEvent boundaryEvent = (BoundaryEvent)bpmnParse.CurrentFlowElement;
-                boundaryEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createBoundarySignalEventActivityBehavior(boundaryEvent, signalDefinition, signal, boundaryEvent.CancelActivity);
+                boundaryEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateBoundarySignalEventActivityBehavior(boundaryEvent, signalDefinition, signal, boundaryEvent.CancelActivity);
             }
         }
     }

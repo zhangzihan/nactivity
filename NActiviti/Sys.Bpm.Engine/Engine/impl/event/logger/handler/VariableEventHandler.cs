@@ -6,8 +6,8 @@ namespace org.activiti.engine.impl.@event.logger.handler
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.impl.variable;
-    using Sys;
     using Sys.Bpm;
+    using Sys.Workflow;
 
     /// 
     public abstract class VariableEventHandler : AbstractDatabaseEventLoggerEventHandler
@@ -27,40 +27,40 @@ namespace org.activiti.engine.impl.@event.logger.handler
         protected internal virtual IDictionary<string, object> createData(IActivitiVariableEvent variableEvent)
         {
             IDictionary<string, object> data = new Dictionary<string, object>();
-            putInMapIfNotNull(data, Fields_Fields.NAME, variableEvent.VariableName);
-            putInMapIfNotNull(data, Fields_Fields.PROCESS_DEFINITION_ID, variableEvent.ProcessDefinitionId);
-            putInMapIfNotNull(data, Fields_Fields.PROCESS_INSTANCE_ID, variableEvent.ProcessInstanceId);
-            putInMapIfNotNull(data, Fields_Fields.EXECUTION_ID, variableEvent.ExecutionId);
-            putInMapIfNotNull(data, Fields_Fields.VALUE, variableEvent.VariableValue);
+            PutInMapIfNotNull(data, FieldsFields.NAME, variableEvent.VariableName);
+            PutInMapIfNotNull(data, FieldsFields.PROCESS_DEFINITION_ID, variableEvent.ProcessDefinitionId);
+            PutInMapIfNotNull(data, FieldsFields.PROCESS_INSTANCE_ID, variableEvent.ProcessInstanceId);
+            PutInMapIfNotNull(data, FieldsFields.EXECUTION_ID, variableEvent.ExecutionId);
+            PutInMapIfNotNull(data, FieldsFields.VALUE, variableEvent.VariableValue);
 
             IVariableType variableType = variableEvent.VariableType;
             if (variableType is BooleanType)
             {
 
-                putInMapIfNotNull(data, Fields_Fields.VALUE_BOOLEAN, (bool?)variableEvent.VariableValue);
-                putInMapIfNotNull(data, Fields_Fields.VALUE, variableEvent.VariableValue);
-                putInMapIfNotNull(data, Fields_Fields.VARIABLE_TYPE, TYPE_BOOLEAN);
+                PutInMapIfNotNull(data, FieldsFields.VALUE_BOOLEAN, (bool?)variableEvent.VariableValue);
+                PutInMapIfNotNull(data, FieldsFields.VALUE, variableEvent.VariableValue);
+                PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_BOOLEAN);
 
             }
             else if (variableType is StringType || variableType is LongStringType)
             {
 
-                putInMapIfNotNull(data, Fields_Fields.VALUE_STRING, (string)variableEvent.VariableValue);
-                putInMapIfNotNull(data, Fields_Fields.VARIABLE_TYPE, TYPE_STRING);
+                PutInMapIfNotNull(data, FieldsFields.VALUE_STRING, (string)variableEvent.VariableValue);
+                PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_STRING);
 
             }
             else if (variableType is ShortType)
             {
 
                 short? value = (short?)variableEvent.VariableValue;
-                putInMapIfNotNull(data, Fields_Fields.VALUE_SHORT, value);
-                putInMapIfNotNull(data, Fields_Fields.VARIABLE_TYPE, TYPE_SHORT);
+                PutInMapIfNotNull(data, FieldsFields.VALUE_SHORT, value);
+                PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_SHORT);
 
                 if (value != null)
                 {
-                    putInMapIfNotNull(data, Fields_Fields.VALUE_INTEGER, value.Value);
-                    putInMapIfNotNull(data, Fields_Fields.VALUE_LONG, value.Value);
-                    putInMapIfNotNull(data, Fields_Fields.VALUE_DOUBLE, value.Value);
+                    PutInMapIfNotNull(data, FieldsFields.VALUE_INTEGER, value.Value);
+                    PutInMapIfNotNull(data, FieldsFields.VALUE_LONG, value.Value);
+                    PutInMapIfNotNull(data, FieldsFields.VALUE_DOUBLE, value.Value);
                 }
 
             }
@@ -68,13 +68,13 @@ namespace org.activiti.engine.impl.@event.logger.handler
             {
 
                 int? value = (int?)variableEvent.VariableValue;
-                putInMapIfNotNull(data, Fields_Fields.VALUE_INTEGER, value);
-                putInMapIfNotNull(data, Fields_Fields.VARIABLE_TYPE, TYPE_INTEGER);
+                PutInMapIfNotNull(data, FieldsFields.VALUE_INTEGER, value);
+                PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_INTEGER);
 
                 if (value != null)
                 {
-                    putInMapIfNotNull(data, Fields_Fields.VALUE_LONG, value.Value);
-                    putInMapIfNotNull(data, Fields_Fields.VALUE_DOUBLE, value.Value);
+                    PutInMapIfNotNull(data, FieldsFields.VALUE_LONG, value.Value);
+                    PutInMapIfNotNull(data, FieldsFields.VALUE_DOUBLE, value.Value);
                 }
 
             }
@@ -82,12 +82,12 @@ namespace org.activiti.engine.impl.@event.logger.handler
             {
 
                 long? value = (long?)variableEvent.VariableValue;
-                putInMapIfNotNull(data, Fields_Fields.VALUE_LONG, value);
-                putInMapIfNotNull(data, Fields_Fields.VARIABLE_TYPE, TYPE_LONG);
+                PutInMapIfNotNull(data, FieldsFields.VALUE_LONG, value);
+                PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_LONG);
 
                 if (value != null)
                 {
-                    putInMapIfNotNull(data, Fields_Fields.VALUE_DOUBLE, value.Value);
+                    PutInMapIfNotNull(data, FieldsFields.VALUE_DOUBLE, value.Value);
                 }
 
             }
@@ -95,13 +95,13 @@ namespace org.activiti.engine.impl.@event.logger.handler
             {
 
                 double? value = (double?)variableEvent.VariableValue;
-                putInMapIfNotNull(data, Fields_Fields.VALUE_DOUBLE, value);
-                putInMapIfNotNull(data, Fields_Fields.VARIABLE_TYPE, TYPE_DOUBLE);
+                PutInMapIfNotNull(data, FieldsFields.VALUE_DOUBLE, value);
+                PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_DOUBLE);
 
                 if (value != null)
                 {
-                    putInMapIfNotNull(data, Fields_Fields.VALUE_INTEGER, value.Value);
-                    putInMapIfNotNull(data, Fields_Fields.VALUE_LONG, value.Value);
+                    PutInMapIfNotNull(data, FieldsFields.VALUE_INTEGER, value.Value);
+                    PutInMapIfNotNull(data, FieldsFields.VALUE_LONG, value.Value);
                 }
 
             }
@@ -109,8 +109,8 @@ namespace org.activiti.engine.impl.@event.logger.handler
             {
 
                 DateTime value = (DateTime)variableEvent.VariableValue;
-                putInMapIfNotNull(data, Fields_Fields.VALUE_DATE, value != null ? (long?)value.Ticks : null);
-                putInMapIfNotNull(data, Fields_Fields.VARIABLE_TYPE, TYPE_DATE);
+                PutInMapIfNotNull(data, FieldsFields.VALUE_DATE, value != null ? (long?)value.Ticks : null);
+                PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_DATE);
 
             }
             else if (variableType is UUIDType)
@@ -126,9 +126,9 @@ namespace org.activiti.engine.impl.@event.logger.handler
                     value = (string)variableEvent.VariableValue;
                 }
 
-                putInMapIfNotNull(data, Fields_Fields.VALUE_UUID, value);
-                putInMapIfNotNull(data, Fields_Fields.VALUE_STRING, value);
-                putInMapIfNotNull(data, Fields_Fields.VARIABLE_TYPE, TYPE_UUID);
+                PutInMapIfNotNull(data, FieldsFields.VALUE_UUID, value);
+                PutInMapIfNotNull(data, FieldsFields.VALUE_STRING, value);
+                PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_UUID);
 
             }
             else if (variableType is SerializableType || (variableEvent.VariableValue != null && (variableEvent.VariableValue is object)))
@@ -138,10 +138,10 @@ namespace org.activiti.engine.impl.@event.logger.handler
                 ObjectMapper objectMapper = new ObjectMapper();
                 try
                 {
-                    string value = objectMapper.writeValueAsString(variableEvent.VariableValue);
-                    putInMapIfNotNull(data, Fields_Fields.VALUE_JSON, value);
-                    putInMapIfNotNull(data, Fields_Fields.VARIABLE_TYPE, TYPE_JSON);
-                    putInMapIfNotNull(data, Fields_Fields.VALUE, value);
+                    string value = objectMapper.WriteValueAsString(variableEvent.VariableValue);
+                    PutInMapIfNotNull(data, FieldsFields.VALUE_JSON, value);
+                    PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_JSON);
+                    PutInMapIfNotNull(data, FieldsFields.VALUE, value);
                 }
                 catch (Exception)
                 {

@@ -6,7 +6,7 @@ namespace org.activiti.cloud.services.core.commands
     /// <summary>
     /// 
     /// </summary>
-    public interface CommandExecutor<T> where T : ICommand
+    public interface ICommandExecutor<T> where T : ICommand
     {
         /// <summary>
         /// 
@@ -16,6 +16,6 @@ namespace org.activiti.cloud.services.core.commands
         /// <summary>
         /// 
         /// </summary>
-        void execute(T cmd);
+        void Execute(T cmd);
     }
 }

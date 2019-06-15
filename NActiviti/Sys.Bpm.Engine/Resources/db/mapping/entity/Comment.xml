@@ -27,12 +27,16 @@
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />
     <Result Property="action" Column="ACTION_" />
     <Result Property="message" Column="MESSAGE_" />
-    <Result Property="fullMessageBytes" Column="FULL_MSG_" />
+    <Result Property="fullMessageBytes" Column="FULL_MSG_" TypeHandler="文件" />
   </ResultMap>
+
+  <ParameterMap Id="byteArrayParameterMap">
+    <Parameter Property="fullMessageBytes" TypeHandler="文件" />
+  </ParameterMap>
     
   <!-- COMMENT INSERT -->
 
-  <Insert Id="insertComment">
+  <Insert Id="insertComment" ParameterMap="byteArrayParameterMap">
     insert into ACT_HI_COMMENT (ID_, TYPE_, TIME_, USER_ID_, TASK_ID_, PROC_INST_ID_, ACTION_, MESSAGE_, FULL_MSG_)
     values (#{id},
       #{type},
@@ -45,7 +49,7 @@
       #{fullMessageBytes})
   </Insert>
 
-  <Insert Id="insertComment_postgres">
+  <Insert Id="insertComment_postgres" ParameterMap="byteArrayParameterMap">
     insert into ACT_HI_COMMENT (ID_, TYPE_, TIME_, USER_ID_, TASK_ID_, PROC_INST_ID_, ACTION_, MESSAGE_, FULL_MSG_)
     values (#{id},
       #{type},
@@ -58,7 +62,12 @@
       #{fullMessageBytes})
   </Insert>
 
-  <Insert Id="bulkInsertComment">
+
+  <ParameterMap Id="bulkByteArrayParameterMap">
+    <Parameter Property="(Items_)?bytes(_p\d)" TypeHandler="文件" />
+  </ParameterMap>
+
+  <Insert Id="bulkInsertComment" ParameterMap="bulkByteArrayParameterMap">
     insert into ACT_HI_COMMENT (ID_, TYPE_, TIME_, USER_ID_, TASK_ID_, PROC_INST_ID_, ACTION_, MESSAGE_, FULL_MSG_)
     values 
       <For  Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">

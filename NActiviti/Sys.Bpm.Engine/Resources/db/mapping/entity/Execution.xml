@@ -24,6 +24,7 @@
     <Result Property="name" Column="NAME_" />
     <Result Property="startTime" Column="START_TIME_" />
     <Result Property="startUserId" Column="START_USER_ID_" />
+    <Result Property="startUser" Column="START_USER_" />
     <Result Property="isCountEnabled" Column="IS_COUNT_ENABLED_" />
     <Result Property="eventSubscriptionCount" Column="EVT_SUBSCR_COUNT_" />
     <Result Property="taskCount" Column="TASK_COUNT_" />
@@ -63,6 +64,7 @@
     <Result Property="lockTime" Column="LOCK_TIME_" />
     <Result Property="startTime" Column="START_TIME_" />
     <Result Property="startUserId" Column="START_USER_ID_" />
+    <Result Property="startUser" Column="START_USER_" />
     <Result Property="isCountEnabled" Column="IS_COUNT_ENABLED_" />
     <Result Property="eventSubscriptionCount" Column="EVT_SUBSCR_COUNT_" />
     <Result Property="taskCount" Column="TASK_COUNT_" />
@@ -109,6 +111,7 @@
     <Result Property="name" Column="NAME_" />
     <Result Property="startTime" Column="START_TIME_" />
     <Result Property="startUserId" Column="START_USER_ID_" />
+    <Result Property="startUser" Column="START_USER_" />
     <Result Property="isCountEnabled" Column="IS_COUNT_ENABLED_" />
     <Result Property="eventSubscriptionCount" Column="EVT_SUBSCR_COUNT_" />
     <Result Property="taskCount" Column="TASK_COUNT_" />
@@ -161,6 +164,7 @@
     <Result Property="lockTime" Column="LOCK_TIME_" />
     <Result Property="startTime" Column="START_TIME_" />
     <Result Property="startUserId" Column="START_USER_ID_" />
+    <Result Property="startUser" Column="START_USER_" />
     <Result Property="isCountEnabled" Column="IS_COUNT_ENABLED_" />
     <Result Property="eventSubscriptionCount" Column="EVT_SUBSCR_COUNT_" />
     <Result Property="taskCount" Column="TASK_COUNT_" />
@@ -176,7 +180,7 @@
   <!-- EXECUTION INSERT -->
 
   <Insert Id="insertExecution" >
-    insert into ACT_RU_EXECUTION (ID_, REV_, PROC_INST_ID_, BUSINESS_KEY_, PROC_DEF_ID_, ACT_ID_, IS_ACTIVE_, IS_CONCURRENT_, IS_SCOPE_,IS_EVENT_SCOPE_, IS_MI_ROOT_, PARENT_ID_, SUPER_EXEC_, ROOT_PROC_INST_ID_, SUSPENSION_STATE_, TENANT_ID_, NAME_, START_TIME_, START_USER_ID_, IS_COUNT_ENABLED_, EVT_SUBSCR_COUNT_, TASK_COUNT_, JOB_COUNT_, TIMER_JOB_COUNT_, SUSP_JOB_COUNT_, DEADLETTER_JOB_COUNT_, VAR_COUNT_, ID_LINK_COUNT_)
+    insert into ACT_RU_EXECUTION (ID_, REV_, PROC_INST_ID_, BUSINESS_KEY_, PROC_DEF_ID_, ACT_ID_, IS_ACTIVE_, IS_CONCURRENT_, IS_SCOPE_,IS_EVENT_SCOPE_, IS_MI_ROOT_, PARENT_ID_, SUPER_EXEC_, ROOT_PROC_INST_ID_, SUSPENSION_STATE_, TENANT_ID_, NAME_, START_TIME_, START_USER_ID_, START_USER_, IS_COUNT_ENABLED_, EVT_SUBSCR_COUNT_, TASK_COUNT_, JOB_COUNT_, TIMER_JOB_COUNT_, SUSP_JOB_COUNT_, DEADLETTER_JOB_COUNT_, VAR_COUNT_, ID_LINK_COUNT_)
     values (
     #{id},
     1,
@@ -197,6 +201,7 @@
     #{name},
     #{startTime},
     #{startUserId},
+    #{startUser},
     #{isCountEnabled},
     #{eventSubscriptionCount},
     #{taskCount},
@@ -210,7 +215,7 @@
   </Insert>
 
   <Insert Id="bulkInsertExecution" >
-    insert into ACT_RU_EXECUTION (ID_, REV_, PROC_INST_ID_, BUSINESS_KEY_, PROC_DEF_ID_, ACT_ID_, IS_ACTIVE_, IS_CONCURRENT_, IS_SCOPE_,IS_EVENT_SCOPE_, IS_MI_ROOT_, PARENT_ID_, SUPER_EXEC_, ROOT_PROC_INST_ID_, SUSPENSION_STATE_, TENANT_ID_, NAME_, START_TIME_, START_USER_ID_, IS_COUNT_ENABLED_, EVT_SUBSCR_COUNT_, TASK_COUNT_, JOB_COUNT_, TIMER_JOB_COUNT_, SUSP_JOB_COUNT_, DEADLETTER_JOB_COUNT_, VAR_COUNT_, ID_LINK_COUNT_)
+    insert into ACT_RU_EXECUTION (ID_, REV_, PROC_INST_ID_, BUSINESS_KEY_, PROC_DEF_ID_, ACT_ID_, IS_ACTIVE_, IS_CONCURRENT_, IS_SCOPE_,IS_EVENT_SCOPE_, IS_MI_ROOT_, PARENT_ID_, SUPER_EXEC_, ROOT_PROC_INST_ID_, SUSPENSION_STATE_, TENANT_ID_, NAME_, START_TIME_, START_USER_ID_, START_USER_, IS_COUNT_ENABLED_, EVT_SUBSCR_COUNT_, TASK_COUNT_, JOB_COUNT_, TIMER_JOB_COUNT_, SUSP_JOB_COUNT_, DEADLETTER_JOB_COUNT_, VAR_COUNT_, ID_LINK_COUNT_)
     values
     <For Property="Items" Key="index" Separator=",">
       (#{id},
@@ -232,6 +237,7 @@
       #{name},
       #{startTime},
       #{startUserId},
+      #{startUser},
       #{isCountEnabled},
       #{eventSubscriptionCount},
       #{taskCount},
@@ -347,7 +353,7 @@
       </Switch>
     </For>
     <For Property="OrQueryObjects" Key="p">
-      <IsNotNull Test="orQueryObject.processDefinitionId != null or orQueryObject.processDefinitionKey != null or orQueryObject.processDefinitionVersion != null or orQueryObject.processDefinitionCategory != null or orQueryObject.processDefinitionName != null or (orQueryObject.processDefinitionIds != null and !orQueryObject.processDefinitionIds.isEmpty()) or (orQueryObject.processDefinitionKeys != null and !orQueryObject.processDefinitionKeys.isEmpty())">
+      <IsNotNull Test="orQueryObject.processDefinitionId != null or orQueryObject.processDefinitionKey != null or orQueryObject.processDefinitionVersion != null or orQueryObject.processDefinitionCategory != null or orQueryObject.processDefinitionName != null or (orQueryObject.processDefinitionIds != null and CollectionUtil.IsNotEmpty(orQueryObject.processDefinitionIds)) or (orQueryObject.processDefinitionKeys != null and !orQueryObject.processDefinitionKeys.isEmpty())">
         inner join ACT_RE_PROCDEF P_OR${orIndex} on RES.PROC_DEF_ID_ = P_OR${orIndex}.ID_
       </IsNotNull>
       <IsNotNull Test="orQueryObject.queryVariableValues != null and CollectionUtil.IsNotEmpty(orQueryObject.queryVariableValues)">
@@ -357,18 +363,18 @@
         left outer join ACT_RE_PROCDEF DEPLOY_P_OR${orIndex} ON RES.PROC_DEF_ID_ = DEPLOY_P_OR${orIndex}.ID_
       </IsNotNull>
     </For>
-    <IsNotNull Property="eventSubscriptions != null">
+    <IsTrue Property="CollectionUtil.IsNotEmpty(eventSubscriptions)">
       <For Property="eventSubscriptions" Index="index" Key="eventSubscriptionValue">
         inner join ACT_RU_EVENT_SUBSCR EVT${index} on RES.ID_ = EVT${index}.EXECUTION_ID_
       </For>
-    </IsNotNull>
+    </IsTrue>
     <IsNotEmpty Property="businessKey">
       <IsNotNull Property="includeChildExecutionsWithBusinessKeyQuery != null">
         inner join ACT_RU_EXECUTION INST on RES.PROC_INST_ID_ = INST.ID_
       </IsNotNull>
     </IsNotEmpty>
     <If Property="onlyProcessInstances and IsWithException">
-        left outer join ACT_RU_TIMER_JOB JOB ON RES.PROC_INST_ID_ = JOB.PROCESS_INSTANCE_ID_
+      left outer join ACT_RU_TIMER_JOB JOB ON RES.PROC_INST_ID_ = JOB.PROCESS_INSTANCE_ID_
     </If>
     <Where>
       <IsTrue Property="onlyProcessInstances">
@@ -508,13 +514,13 @@
           <!-- Match-all variable-names when name is null -->
           and A${index}.NAME_= #{queryVariableValue.name}
         </IsNotNull>
-        <IsNotNull Property="!queryVariableValue.type.equals('null')">
+        <IsNotNull Property="queryVariableValue.type != 'null'">
           <!-- When operator is not-equals or type of value is null, type doesn't matter! -->
           and A${index}.TYPE_ = #{queryVariableValue.type}
         </IsNotNull>
         <IsNotNull Property="queryVariableValue.textValue != null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
           <Switch>
-            <Case Property="queryVariableValue.operator.equals('EQUALS_IGNORE_CASE') or queryVariableValue.operator.equals('NOT_EQUALS_IGNORE_CASE') or queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">
+            <Case Property="queryVariableValue.operator == 'EQUALS_IGNORE_CASE' or queryVariableValue.operator == 'NOT_EQUALS_IGNORE_CASE' or queryVariableValue.operator == 'LIKE_IGNORE_CASE'">
               and lower(A${index}.TEXT_)
             </Case>
             <Default>
@@ -522,27 +528,31 @@
             </Default>
           </Switch>
           <Switch>
-            <Case Property="queryVariableValue.operator.equals('LIKE') or queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">LIKE</Case>
+            <Case Property="queryVariableValue.operator == 'LIKE' or queryVariableValue.operator == 'LIKE_IGNORE_CASE'">LIKE</Case>
             <Default>
               <Include RefId="executionVariableOperator" />
             </Default>
           </Switch>
           #{queryVariableValue.textValue}
           <Switch>
-            <Case Property="queryVariableValue.operator.equals('LIKE') or queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
+            <Case Property="queryVariableValue.operator == 'LIKE' or queryVariableValue.operator == 'LIKE_IGNORE_CASE'">
+              ${wildcardEscapeClause}
+            </Case>
           </Switch>
         </IsNotNull>
         <IsNotNull Property="queryVariableValue.textValue2 != null">
           and A${index}.TEXT2_
           <Switch>
-            <Case Property="queryVariableValue.operator.equals('LIKE')">LIKE</Case>
+            <Case Property="queryVariableValue.operator == 'LIKE'">LIKE</Case>
             <Default>
               <Include RefId="executionVariableOperator" />
             </Default>
           </Switch>
           #{queryVariableValue.textValue2}
           <Switch>
-            <Case Property="queryVariableValue.operator.equals('LIKE')">${wildcardEscapeClause}</Case>
+            <Case Property="queryVariableValue.operator == 'LIKE'">
+              ${wildcardEscapeClause}
+            </Case>
           </Switch>
         </IsNotNull>
         <IsNotNull Property="queryVariableValue.longValue != null">
@@ -558,7 +568,7 @@
         <!-- Null variable type -->
         <IsNotNull Property="queryVariableValue.textValue == null and queryVariableValue.textValue2 == null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
           <Switch>
-            <Case Property="queryVariableValue.operator.equals('NOT_EQUALS')">
+            <Case Property="queryVariableValue.operator == 'NOT_EQUALS'">
               and (A${index}.TEXT_ is not null or A${index}.TEXT2_ is not null or A${index}.LONG_ is not null or A${index}.DOUBLE_ is not null or A${index}.BYTEARRAY_ID_ is not null)
             </Case>
             <Default>
@@ -568,11 +578,11 @@
         </IsNotNull>
       </For>
       <!-- event subscriptions -->
-      <IsNotNull Property="eventSubscriptions">
+      <IsTrue Property="CollectionUtil.IsNotEmpty(eventSubscriptions)">
         <For Property="eventSubscriptions" Index="index" Key="eventSubscriptionValue">
-          and (EVT${index}.EVENT_TYPE_ = #{eventSubscriptionValue.eventType} and EVT${index}.EVENT_NAME_ = #{eventSubscriptionValue.eventName})
+          and (EVT${index}.EVENT_TYPE_ = #{eventSubscriptions[${index}].eventType} and EVT${index}.EVENT_NAME_ = #{eventSubscriptions[${index}].eventName})
         </For>
-      </IsNotNull>
+      </IsTrue>
       <For Key="orQueryObject" Index="orIndex" Property="orQueryObjects">
         and
         <If Test="orQueryObject.processDefinitionId != null">
@@ -608,7 +618,7 @@
         <If Test="orQueryObject.processInstanceId != null">
           or RES.PROC_INST_ID_ = #{orQueryObject.processInstanceId}
         </If>
-        <If Test="orQueryObject.processInstanceIds != null and !orQueryObject.processInstanceIds.isEmpty()">
+        <If Test="orQueryObject.processInstanceIds != null and CollectionUtil.IsNotEmpty(orQueryObject.processInstanceIds)">
           or RES.PROC_INST_ID_ in
           <For Key="item" Index="index" Property="orQueryObject.processInstanceIds" Open="(" Separator="," Close=")">
             #{item}
@@ -683,13 +693,13 @@
             <!-- Match-all variable-names when name is null -->
             and A_OR${orIndex}.NAME_= #{queryVariableValue.name}
           </IsNotNull>
-          <IsNotNull Property="!queryVariableValue.type.equals('null')">
+          <IsNotNull Property="queryVariableValue.type != 'null'">
             <!-- When operator is not-equals or type of value is null, type doesn't matter! -->
             and A_OR${orIndex}.TYPE_ = #{queryVariableValue.type}
           </IsNotNull>
           <IsNotNull Property="queryVariableValue.textValue != null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
             <Switch>
-              <Case Property="queryVariableValue.operator.equals('EQUALS_IGNORE_CASE') or queryVariableValue.operator.equals('NOT_EQUALS_IGNORE_CASE') or queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">
+              <Case Property="queryVariableValue.operator == 'EQUALS_IGNORE_CASE' or queryVariableValue.operator == 'NOT_EQUALS_IGNORE_CASE' or queryVariableValue.operator == 'LIKE_IGNORE_CASE'">
                 and lower(A_OR${orIndex}.TEXT_)
               </Case>
               <Default>
@@ -697,27 +707,29 @@
               </Default>
             </Switch>
             <Switch>
-              <Case Property="queryVariableValue.operator.equals('LIKE') or queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">LIKE</Case>
+              <Case Property="queryVariableValue.operator == 'LIKE' or queryVariableValue.operator == 'LIKE_IGNORE_CASE'">LIKE</Case>
               <Default>
                 <Include RefId="executionVariableOperator" />
               </Default>
             </Switch>
             #{queryVariableValue.textValue}
             <Switch>
-              <Case Property="queryVariableValue.operator.equals('LIKE') or queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">${wildcardEscapeClause}</Case>
+              <Case Property="queryVariableValue.operator == 'LIKE' or queryVariableValue.operator == 'LIKE_IGNORE_CASE'">
+                ${wildcardEscapeClause}
+              </Case>
             </Switch>
           </IsNotNull>
           <IsNotNull Property="queryVariableValue.textValue2 != null">
             and A_OR${orIndex}.TEXT2_
             <Switch>
-              <Case Property="queryVariableValue.operator.equals('LIKE')">LIKE</Case>
+              <Case Property="queryVariableValue.operator == 'LIKE'">LIKE</Case>
               <Default>
                 <Include RefId="executionVariableOperator" />
               </Default>
             </Switch>
             #{queryVariableValue.textValue2}
             <Switch>
-              <Case Property="queryVariableValue.operator.equals('LIKE')">${wildcardEscapeClause}</Case>
+              <Case Property="queryVariableValue.operator == 'LIKE'">${wildcardEscapeClause}</Case>
             </Switch>
           </IsNotNull>
           <IsNotNull Property="queryVariableValue.longValue != null">
@@ -733,7 +745,7 @@
           <!-- Null variable type -->
           <IsNotNull Property="queryVariableValue.textValue == null and queryVariableValue.textValue2 == null and queryVariableValue.longValue == null and queryVariableValue.doubleValue == null">
             <Switch>
-              <Case Property="queryVariableValue.operator.equals('NOT_EQUALS')">
+              <Case Property="queryVariableValue.operator == 'NOT_EQUALS'">
                 and (A_OR${orIndex}.TEXT_ is not null or A_OR${orIndex}.TEXT2_ is not null or A_OR${orIndex}.LONG_ is not null or A_OR${orIndex}.DOUBLE_ is not null or A_OR${orIndex}.BYTEARRAY_ID_ is not null)
               </Case>
               <Default>
@@ -744,7 +756,7 @@
         </For>
       </For>
       <If Test="onlyProcessInstances and IsWithException">
-          and (JOB.EXCEPTION_MSG_ is not null or JOB.EXCEPTION_STACK_ID_ is not null)
+        and (JOB.EXCEPTION_MSG_ is not null or JOB.EXCEPTION_STACK_ID_ is not null)
       </If>
       <IsNotNull Property="startedBefore">
         and RES.START_TIME_ &lt;= #{startedBefore}
@@ -796,6 +808,7 @@
       TEMPRES_NAME_ as NAME_, TEMPRES_TENANT_ID_ as TENANT_ID_,
       TEMPRES_SUSPENSION_STATE_ as SUSPENSION_STATE_,
       TEMPRES_START_TIME_ as START_TIME_, TEMPRES_START_USER_ID_ as START_USER_ID_,
+      TEMPRES_START_USER_ as START_USER_,
       TEMPRES_IS_COUNT_ENABLED_ as IS_COUNT_ENABLED_,
       TEMPRES_EVT_SUBSCR_COUNT_ as EVT_SUBSCR_COUNT_,
       TEMPRES_TASK_COUNT_ as TASK_COUNT_,
@@ -828,6 +841,7 @@
       RES.TENANT_ID_ as TEMPRES_TENANT_ID_,
       RES.START_TIME_ as TEMPRES_START_TIME_,
       RES.START_USER_ID_ as TEMPRES_START_USER_ID_,
+      RES.START_USER_ as TEMPRES_START_USER_,
 
       RES.IS_COUNT_ENABLED_ as TEMPRES_IS_COUNT_ENABLED_,
       RES.EVT_SUBSCR_COUNT_ as TEMPRES_EVT_SUBSCR_COUNT_,
@@ -911,7 +925,7 @@
 
   <Select Id="selectExecutionsByQueryCriteria" ResultMap="executionResultMap">
     ${limitBefore}
-    select distinct RES.ID_, RES.REV_, RES.PROC_INST_ID_, RES.BUSINESS_KEY_, RES.PROC_DEF_ID_, RES.ACT_ID_, RES.IS_ACTIVE_, RES.IS_CONCURRENT_, RES.IS_SCOPE_, RES.IS_EVENT_SCOPE_, RES.IS_MI_ROOT_, RES.PARENT_ID_, RES.SUPER_EXEC_, RES.ROOT_PROC_INST_ID_, RES.SUSPENSION_STATE_, RES.TENANT_ID_, RES.NAME_, RES.START_TIME_, RES.START_USER_ID_, RES.IS_COUNT_ENABLED_, RES.EVT_SUBSCR_COUNT_, RES.TASK_COUNT_, RES.JOB_COUNT_, RES.TIMER_JOB_COUNT_, RES.SUSP_JOB_COUNT_, RES.DEADLETTER_JOB_COUNT_, RES.VAR_COUNT_, RES.ID_LINK_COUNT_ ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId
+    select distinct RES.ID_, RES.REV_, RES.PROC_INST_ID_, RES.BUSINESS_KEY_, RES.PROC_DEF_ID_, RES.ACT_ID_, RES.IS_ACTIVE_, RES.IS_CONCURRENT_, RES.IS_SCOPE_, RES.IS_EVENT_SCOPE_, RES.IS_MI_ROOT_, RES.PARENT_ID_, RES.SUPER_EXEC_, RES.ROOT_PROC_INST_ID_, RES.SUSPENSION_STATE_, RES.TENANT_ID_, RES.NAME_, RES.START_TIME_, RES.START_USER_ID_, RES.START_USER_, RES.IS_COUNT_ENABLED_, RES.EVT_SUBSCR_COUNT_, RES.TASK_COUNT_, RES.JOB_COUNT_, RES.TIMER_JOB_COUNT_, RES.SUSP_JOB_COUNT_, RES.DEADLETTER_JOB_COUNT_, RES.VAR_COUNT_, RES.ID_LINK_COUNT_ ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId
     <Include RefId="selectExecutionsByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}
@@ -925,7 +939,7 @@
   <!--  same as selectExecutionsByQueryCriteria, but with different parameterType -->
   <Select Id="selectProcessInstanceByQueryCriteria" ResultMap="processInstanceResultMap" >
     ${limitBefore}
-    select distinct RES.ID_, RES.REV_, RES.PROC_INST_ID_, RES.BUSINESS_KEY_, RES.PROC_DEF_ID_, RES.ACT_ID_, RES.IS_ACTIVE_, RES.IS_CONCURRENT_, RES.IS_SCOPE_, RES.IS_EVENT_SCOPE_, RES.IS_MI_ROOT_, RES.PARENT_ID_, RES.SUPER_EXEC_, RES.ROOT_PROC_INST_ID_, RES.SUSPENSION_STATE_, RES.TENANT_ID_, RES.NAME_, RES.START_TIME_, RES.START_USER_ID_, RES.IS_COUNT_ENABLED_, RES.EVT_SUBSCR_COUNT_, RES.TASK_COUNT_, RES.JOB_COUNT_, RES.TIMER_JOB_COUNT_, RES.SUSP_JOB_COUNT_, RES.DEADLETTER_JOB_COUNT_, RES.VAR_COUNT_, RES.ID_LINK_COUNT_  ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId, P.NAME_ as ProcessDefinitionName, P.VERSION_ as ProcessDefinitionVersion, P.DEPLOYMENT_ID_ as DeploymentId
+    select distinct RES.ID_, RES.REV_, RES.PROC_INST_ID_, RES.BUSINESS_KEY_, RES.PROC_DEF_ID_, RES.ACT_ID_, RES.IS_ACTIVE_, RES.IS_CONCURRENT_, RES.IS_SCOPE_, RES.IS_EVENT_SCOPE_, RES.IS_MI_ROOT_, RES.PARENT_ID_, RES.SUPER_EXEC_, RES.ROOT_PROC_INST_ID_, RES.SUSPENSION_STATE_, RES.TENANT_ID_, RES.NAME_, RES.START_TIME_, RES.START_USER_ID_, RES.START_USER_, RES.IS_COUNT_ENABLED_, RES.EVT_SUBSCR_COUNT_, RES.TASK_COUNT_, RES.JOB_COUNT_, RES.TIMER_JOB_COUNT_, RES.SUSP_JOB_COUNT_, RES.DEADLETTER_JOB_COUNT_, RES.VAR_COUNT_, RES.ID_LINK_COUNT_  ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId, P.NAME_ as ProcessDefinitionName, P.VERSION_ as ProcessDefinitionVersion, P.DEPLOYMENT_ID_ as DeploymentId
     <Include RefId="selectExecutionsByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}
@@ -944,7 +958,7 @@
   </Select>
 
   <Select Id="selectSubProcessInstanceBySuperExecutionId" ResultMap="executionResultMap" >
-    select ID_, REV_, PROC_INST_ID_, BUSINESS_KEY_, PROC_DEF_ID_, ACT_ID_, IS_ACTIVE_, IS_CONCURRENT_, IS_SCOPE_, IS_EVENT_SCOPE_, IS_MI_ROOT_, PARENT_ID_, SUPER_EXEC_, ROOT_PROC_INST_ID_, SUSPENSION_STATE_, TENANT_ID_, NAME_, START_TIME_, START_USER_ID_, IS_COUNT_ENABLED_, EVT_SUBSCR_COUNT_, TASK_COUNT_, JOB_COUNT_, TIMER_JOB_COUNT_, SUSP_JOB_COUNT_, DEADLETTER_JOB_COUNT_, VAR_COUNT_, ID_LINK_COUNT_ 
+    select ID_, REV_, PROC_INST_ID_, BUSINESS_KEY_, PROC_DEF_ID_, ACT_ID_, IS_ACTIVE_, IS_CONCURRENT_, IS_SCOPE_, IS_EVENT_SCOPE_, IS_MI_ROOT_, PARENT_ID_, SUPER_EXEC_, ROOT_PROC_INST_ID_, SUSPENSION_STATE_, TENANT_ID_, NAME_, START_TIME_, START_USER_ID_, START_USER_, IS_COUNT_ENABLED_, EVT_SUBSCR_COUNT_, TASK_COUNT_, JOB_COUNT_, TIMER_JOB_COUNT_, SUSP_JOB_COUNT_, DEADLETTER_JOB_COUNT_, VAR_COUNT_, ID_LINK_COUNT_
     from ACT_RU_EXECUTION
     where SUPER_EXEC_ = #{superExecutionId}
   </Select>

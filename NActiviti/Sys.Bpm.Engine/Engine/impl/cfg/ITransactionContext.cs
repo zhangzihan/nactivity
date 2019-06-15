@@ -15,12 +15,21 @@ namespace org.activiti.engine.impl.cfg
     /// 
     public interface ITransactionContext
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        void Commit();
 
-        void commit();
+        /// <summary>
+        /// 
+        /// </summary>
+        void Rollback();
 
-        void rollback();
-
-        void addTransactionListener(TransactionState transactionState, ITransactionListener transactionListener);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transactionState"></param>
+        /// <param name="transactionListener"></param>
+        void AddTransactionListener(TransactionState transactionState, ITransactionListener transactionListener);
     }
-
 }

@@ -52,7 +52,7 @@ namespace org.activiti.engine.impl.variable
             this.trackDeserializedObjects = trackDeserializedObjects;
         }
 
-        public override object getValue(IValueFields valueFields)
+        public override object GetValue(IValueFields valueFields)
         {
             object cachedObject = valueFields.CachedValue;
             if (cachedObject != null)
@@ -60,15 +60,15 @@ namespace org.activiti.engine.impl.variable
                 return cachedObject;
             }
 
-            byte[] bytes = (byte[])base.getValue(valueFields);
+            byte[] bytes = (byte[])base.GetValue(valueFields);
             if (bytes != null)
             {
-                object deserializedObject = deserialize(bytes, valueFields);
+                object deserializedObject = Deserialize(bytes, valueFields);
                 valueFields.CachedValue = deserializedObject;
 
                 if (trackDeserializedObjects && valueFields is IVariableInstanceEntity)
                 {
-                    Context.CommandContext.addCloseListener(new VerifyDeserializedObjectCommandContextCloseListener(new DeserializedObject(this, valueFields.CachedValue, bytes, (IVariableInstanceEntity)valueFields)));
+                    Context.CommandContext.AddCloseListener(new VerifyDeserializedObjectCommandContextCloseListener(new DeserializedObject(this, valueFields.CachedValue, bytes, (IVariableInstanceEntity)valueFields)));
                 }
 
                 return deserializedObject;
@@ -76,21 +76,21 @@ namespace org.activiti.engine.impl.variable
             return null; // byte array is null
         }
 
-        public override void setValue(object value, IValueFields valueFields)
+        public override void SetValue(object value, IValueFields valueFields)
         {
-            byte[] bytes = serialize(value, valueFields);
+            byte[] bytes = Serialize(value, valueFields);
             valueFields.CachedValue = value;
 
-            base.setValue(bytes, valueFields);
+            base.SetValue(bytes, valueFields);
 
             if (trackDeserializedObjects && valueFields is IVariableInstanceEntity)
             {
-                Context.CommandContext.addCloseListener(new VerifyDeserializedObjectCommandContextCloseListener(new DeserializedObject(this, valueFields.CachedValue, bytes, (IVariableInstanceEntity)valueFields)));
+                Context.CommandContext.AddCloseListener(new VerifyDeserializedObjectCommandContextCloseListener(new DeserializedObject(this, valueFields.CachedValue, bytes, (IVariableInstanceEntity)valueFields)));
             }
 
         }
 
-        public virtual byte[] serialize(object value, IValueFields valueFields)
+        public virtual byte[] Serialize(object value, IValueFields valueFields)
         {
             if (value == null)
             {
@@ -106,15 +106,6 @@ namespace org.activiti.engine.impl.variable
                         TypeNameHandling = TypeNameHandling.All
                     });
                 return Encoding.UTF8.GetBytes(s);
-                //using (MemoryStream ms = new MemoryStream())
-                //{
-                //    using (BsonDataWriter datawriter = new BsonDataWriter(ms))
-                //    {
-                //JsonSerializer serializer = new JsonSerializer();
-                //serializer.Serialize(datawriter, value);
-                //return ms.ToArray();
-                //    }
-                //}
             }
             catch (Exception e)
             {
@@ -122,7 +113,7 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public virtual object deserialize(byte[] bytes, IValueFields valueFields)
+        public virtual object Deserialize(byte[] bytes, IValueFields valueFields)
         {
             try
             {
@@ -132,24 +123,6 @@ namespace org.activiti.engine.impl.variable
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                     TypeNameHandling = TypeNameHandling.All
                 });
-
-                //using (MemoryStream ms = new MemoryStream(bytes))
-                //{
-                //    using (BsonDataReader reader = new BsonDataReader(ms))
-                //    {
-                //        JsonSerializer serializer = new JsonSerializer();
-                //        return serializer.Deserialize(reader);
-                //    }
-                //}
-
-                //    string value = Encoding.UTF8.GetString(bytes);
-                //    object deserializedObject = JsonConvert.DeserializeObject(value, new JsonSerializerSettings
-                //    {
-                //        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                //        TypeNameHandling = TypeNameHandling.All
-                //    });
-
-                //    return deserializedObject;
             }
             catch (Exception e)
             {
@@ -157,7 +130,7 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public override bool isAbleToStore(object value)
+        public override bool IsAbleToStore(object value)
         {
             // TODO don't we need null support here?
             //return value is Serializable;

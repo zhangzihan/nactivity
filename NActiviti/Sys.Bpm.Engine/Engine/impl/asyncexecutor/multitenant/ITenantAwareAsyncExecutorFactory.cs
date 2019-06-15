@@ -13,21 +13,18 @@
 namespace org.activiti.engine.impl.asyncexecutor.multitenant
 {
 
-	/// <summary>
-	/// Factory used by the <seealso cref="ExecutorPerTenantAsyncExecutor"/> async executor.
-	/// This factory will be called when a new <seealso cref="IAsyncExecutor"/> for a tenant needs to be created
-	/// and can be used to create special implementations for specific tenants.
-	/// 
-	/// 
-	/// </summary>
-	public interface ITenantAwareAsyncExecutorFactory
-	{
-
-	  /// <summary>
-	  /// Allows to create an <seealso cref="IAsyncExecutor"/> specifically for a tenant. 
-	  /// </summary>
-	  IAsyncExecutor createAsyncExecutor(string tenantId);
-
-	}
-
+    /// <summary>
+    /// Factory used by the <seealso cref="ExecutorPerTenantAsyncExecutor"/> async executor.
+    /// This factory will be called when a new <seealso cref="IAsyncExecutor"/> for a tenant needs to be created
+    /// and can be used to create special implementations for specific tenants.
+    /// 
+    /// 
+    /// </summary>
+    public interface ITenantAwareAsyncExecutorFactory
+    {
+        /// <summary>
+        /// Allows to create an <seealso cref="IAsyncExecutor"/> specifically for a tenant. 
+        /// </summary>
+        IAsyncExecutor CreateAsyncExecutor(string tenantId);
+    }
 }

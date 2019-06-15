@@ -59,7 +59,7 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public static ModelQueryProperty findByName(string propertyName)
+        public static ModelQueryProperty FindByName(string propertyName)
         {
             return properties[propertyName];
         }

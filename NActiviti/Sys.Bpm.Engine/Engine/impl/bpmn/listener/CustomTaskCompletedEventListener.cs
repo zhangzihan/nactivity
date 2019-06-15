@@ -22,7 +22,7 @@ namespace org.activiti.engine.impl.bpmn.helper
     {
         public override bool FailOnException => true;
 
-        public override void onEvent(IActivitiEvent @event)
+        public override void OnEvent(IActivitiEvent @event)
         {
             if (@event is CustomTaskCompletedEntityEventImpl taskEvent)
             {
@@ -34,11 +34,11 @@ namespace org.activiti.engine.impl.bpmn.helper
 
                 UserTask userTask = execution.CurrentFlowElement as UserTask;
 
-                if (userTask.hasMultiInstanceLoopCharacteristics() &&
+                if (userTask.HasMultiInstanceLoopCharacteristics() &&
                     (taskEntity.IsAppend.GetValueOrDefault(false) ||
                     taskEntity.IsTransfer.GetValueOrDefault(false)))
                 {
-                    IExecutionEntity parent = execution.findMultiInstanceParentExecution();
+                    IExecutionEntity parent = execution.FindMultiInstanceParentExecution();
 
                     var collection = userTask.LoopCharacteristics.GetCollectionVarName();
 

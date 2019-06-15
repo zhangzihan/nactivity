@@ -58,10 +58,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            Pool clone = new Pool();
-            clone.Values = this;
+            Pool clone = new Pool
+            {
+                Values = this
+            };
             return clone;
         }
 

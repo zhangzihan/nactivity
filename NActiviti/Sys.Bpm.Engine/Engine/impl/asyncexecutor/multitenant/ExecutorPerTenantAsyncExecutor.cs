@@ -19,7 +19,9 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.cfg.multitenant;
     using org.activiti.engine.runtime;
-    using Sys;
+    using Sys.Workflow;
+    using System;
+    using System.Collections.Concurrent;
 
     /// <summary>
     /// An <seealso cref="IAsyncExecutor"/> that has one <seealso cref="IAsyncExecutor"/> per tenant.
@@ -31,25 +33,58 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
     {
         private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<ExecutorPerTenantAsyncExecutor>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ITenantInfoHolder tenantInfoHolder;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ITenantAwareAsyncExecutorFactory tenantAwareAyncExecutorFactory;
 
-        protected internal IDictionary<string, IAsyncExecutor> tenantExecutors = new Dictionary<string, IAsyncExecutor>();
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal ConcurrentDictionary<string, IAsyncExecutor> tenantExecutors = new ConcurrentDictionary<string, IAsyncExecutor>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool active;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool autoActivate;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantInfoHolder"></param>
         public ExecutorPerTenantAsyncExecutor(ITenantInfoHolder tenantInfoHolder) : this(tenantInfoHolder, null)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantInfoHolder"></param>
+        /// <param name="tenantAwareAyncExecutorFactory"></param>
         public ExecutorPerTenantAsyncExecutor(ITenantInfoHolder tenantInfoHolder, ITenantAwareAsyncExecutorFactory tenantAwareAyncExecutorFactory)
         {
             this.tenantInfoHolder = tenantInfoHolder;
             this.tenantAwareAyncExecutorFactory = tenantAwareAyncExecutorFactory;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ICollection<string> TenantIds
         {
             get
@@ -58,54 +93,75 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-        public virtual void addTenantAsyncExecutor(string tenantId, bool startExecutor)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <param name="startExecutor"></param>
+        public virtual void AddTenantAsyncExecutor(string tenantId, bool startExecutor)
         {
-            IAsyncExecutor tenantExecutor = null;
-
+            IAsyncExecutor tenantExecutor;
             if (tenantAwareAyncExecutorFactory == null)
             {
                 tenantExecutor = new DefaultAsyncJobExecutor();
             }
             else
             {
-                tenantExecutor = tenantAwareAyncExecutorFactory.createAsyncExecutor(tenantId);
+                tenantExecutor = tenantAwareAyncExecutorFactory.CreateAsyncExecutor(tenantId);
             }
 
             tenantExecutor.ProcessEngineConfiguration = processEngineConfiguration;
 
-            if (tenantExecutor is DefaultAsyncJobExecutor)
+            if (tenantExecutor is DefaultAsyncJobExecutor defaultAsyncJobExecutor)
             {
-                DefaultAsyncJobExecutor defaultAsyncJobExecutor = (DefaultAsyncJobExecutor)tenantExecutor;
                 defaultAsyncJobExecutor.AsyncJobsDueRunnable = new TenantAwareAcquireAsyncJobsDueRunnable(defaultAsyncJobExecutor, tenantInfoHolder, tenantId);
                 defaultAsyncJobExecutor.TimerJobRunnable = new TenantAwareAcquireTimerJobsRunnable(defaultAsyncJobExecutor, tenantInfoHolder, tenantId);
                 defaultAsyncJobExecutor.ExecuteAsyncRunnableFactory = new TenantAwareExecuteAsyncRunnableFactory(tenantInfoHolder, tenantId);
                 defaultAsyncJobExecutor.ResetExpiredJobsRunnable = new TenantAwareResetExpiredJobsRunnable(defaultAsyncJobExecutor, tenantInfoHolder, tenantId);
             }
 
-            tenantExecutors[tenantId] = tenantExecutor;
+            tenantExecutors.AddOrUpdate(tenantId, tenantExecutor, (key, old) => tenantExecutor);
 
             if (startExecutor)
             {
-                tenantExecutor.start();
+                tenantExecutor.Start();
             }
         }
 
-        public virtual void removeTenantAsyncExecutor(string tenantId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantId"></param>
+        public virtual void RemoveTenantAsyncExecutor(string tenantId)
         {
-            shutdownTenantExecutor(tenantId);
-            tenantExecutors.Remove(tenantId);
+            ShutdownTenantExecutor(tenantId);
+
+            tenantExecutors.TryRemove(tenantId, out _);
         }
 
-        protected internal virtual IAsyncExecutor determineAsyncExecutor()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected internal virtual IAsyncExecutor DetermineAsyncExecutor()
         {
-            return tenantExecutors[tenantInfoHolder.CurrentTenantId];
+            tenantExecutors.TryGetValue(tenantInfoHolder.CurrentTenantId, out var value);
+            return value;
         }
 
-        public virtual bool executeAsyncJob(IJob job)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="job"></param>
+        /// <returns></returns>
+        public virtual bool ExecuteAsyncJob(IJob job)
         {
-            return determineAsyncExecutor().executeAsyncJob(job);
+            return DetermineAsyncExecutor().ExecuteAsyncJob(job);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IJobManager JobManager
         {
             get
@@ -115,6 +171,9 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ProcessEngineConfigurationImpl ProcessEngineConfiguration
         {
             set
@@ -131,7 +190,9 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool AutoActivate
         {
             get
@@ -144,7 +205,9 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Active
         {
             get
@@ -153,46 +216,67 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-        public virtual void start()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Start()
         {
             foreach (IAsyncExecutor asyncExecutor in tenantExecutors.Values)
             {
-                asyncExecutor.start();
+                asyncExecutor.Start();
             }
             active = true;
         }
 
-        public virtual void shutdown()
+        private readonly object syncRoot = new object();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Shutdown()
         {
-            lock (this)
+            lock (syncRoot)
             {
                 foreach (string tenantId in tenantExecutors.Keys)
                 {
-                    shutdownTenantExecutor(tenantId);
+                    ShutdownTenantExecutor(tenantId);
                 }
                 active = false;
             }
         }
 
-        protected internal virtual void shutdownTenantExecutor(string tenantId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantId"></param>
+        protected internal virtual void ShutdownTenantExecutor(string tenantId)
         {
             logger.LogInformation("Shutting down async executor for tenant " + tenantId);
-            tenantExecutors[tenantId].shutdown();
+            if (tenantExecutors.TryGetValue(tenantId, out var value))
+            {
+                value.Shutdown();
+            }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string LockOwner
         {
             get
             {
-                return determineAsyncExecutor().LockOwner;
+                return DetermineAsyncExecutor().LockOwner;
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int TimerLockTimeInMillis
         {
             get
             {
-                return determineAsyncExecutor().TimerLockTimeInMillis;
+                return DetermineAsyncExecutor().TimerLockTimeInMillis;
             }
             set
             {
@@ -203,12 +287,14 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int AsyncJobLockTimeInMillis
         {
             get
             {
-                return determineAsyncExecutor().AsyncJobLockTimeInMillis;
+                return DetermineAsyncExecutor().AsyncJobLockTimeInMillis;
             }
             set
             {
@@ -219,12 +305,14 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int DefaultTimerJobAcquireWaitTimeInMillis
         {
             get
             {
-                return determineAsyncExecutor().DefaultTimerJobAcquireWaitTimeInMillis;
+                return DetermineAsyncExecutor().DefaultTimerJobAcquireWaitTimeInMillis;
             }
             set
             {
@@ -235,12 +323,14 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int DefaultAsyncJobAcquireWaitTimeInMillis
         {
             get
             {
-                return determineAsyncExecutor().DefaultAsyncJobAcquireWaitTimeInMillis;
+                return DetermineAsyncExecutor().DefaultAsyncJobAcquireWaitTimeInMillis;
             }
             set
             {
@@ -251,12 +341,14 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int DefaultQueueSizeFullWaitTimeInMillis
         {
             get
             {
-                return determineAsyncExecutor().DefaultQueueSizeFullWaitTimeInMillis;
+                return DetermineAsyncExecutor().DefaultQueueSizeFullWaitTimeInMillis;
             }
             set
             {
@@ -267,12 +359,14 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int MaxAsyncJobsDuePerAcquisition
         {
             get
             {
-                return determineAsyncExecutor().MaxAsyncJobsDuePerAcquisition;
+                return DetermineAsyncExecutor().MaxAsyncJobsDuePerAcquisition;
             }
             set
             {
@@ -283,12 +377,14 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int MaxTimerJobsPerAcquisition
         {
             get
             {
-                return determineAsyncExecutor().MaxTimerJobsPerAcquisition;
+                return DetermineAsyncExecutor().MaxTimerJobsPerAcquisition;
             }
             set
             {
@@ -299,12 +395,14 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int RetryWaitTimeInMillis
         {
             get
             {
-                return determineAsyncExecutor().RetryWaitTimeInMillis;
+                return DetermineAsyncExecutor().RetryWaitTimeInMillis;
             }
             set
             {
@@ -315,12 +413,14 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int ResetExpiredJobsInterval
         {
             get
             {
-                return determineAsyncExecutor().ResetExpiredJobsInterval;
+                return DetermineAsyncExecutor().ResetExpiredJobsInterval;
             }
             set
             {
@@ -331,12 +431,14 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int ResetExpiredJobsPageSize
         {
             get
             {
-                return determineAsyncExecutor().ResetExpiredJobsPageSize;
+                return DetermineAsyncExecutor().ResetExpiredJobsPageSize;
             }
             set
             {
@@ -346,8 +448,5 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
                 }
             }
         }
-
-
     }
-
 }

@@ -13,9 +13,9 @@ namespace org.activiti.engine.impl.calendar
     public class AdvancedSchedulerResolverWithoutTimeZone : IAdvancedSchedulerResolver
     {
 
-        public virtual DateTime? resolve(string duedateDescription, IClockReader clockReader, TimeZoneInfo timeZone)
+        public virtual DateTime? Resolve(string duedateDescription, IClockReader clockReader, TimeZoneInfo timeZone)
         {
-            return (new CycleBusinessCalendar(clockReader)).resolveDuedate(duedateDescription);
+            return (new CycleBusinessCalendar(clockReader)).ResolveDuedate(duedateDescription);
         }
 
     }

@@ -39,74 +39,80 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IJobEntity create()
+        public override IJobEntity Create()
         {
             return new JobEntityImpl();
         }
 
 
-        public virtual IList<IJobEntity> findJobsToExecute(Page page)
+        public virtual IList<IJobEntity> FindJobsToExecute(Page page)
         {
-            return DbSqlSession.selectList<JobEntityImpl, IJobEntity>("selectJobsToExecute", null, page);
+            return DbSqlSession.SelectList<JobEntityImpl, IJobEntity>("selectJobsToExecute", null, page);
         }
 
-        public virtual IList<IJobEntity> findJobsByExecutionId(string executionId)
+        public virtual IList<IJobEntity> FindJobsByExecutionId(string executionId)
         {
-            return (IList<IJobEntity>)getList("selectJobsByExecutionId", new { executionId }, jobsByExecutionIdMatcher, true);
+            return (IList<IJobEntity>)GetList("selectJobsByExecutionId", new { executionId }, jobsByExecutionIdMatcher, true);
         }
 
-        public virtual IList<IJobEntity> findJobsByProcessDefinitionId(string processDefinitionId)
+        public virtual IList<IJobEntity> FindJobsByProcessDefinitionId(string processDefinitionId)
         {
-            IDictionary<string, string> @params = new Dictionary<string, string>(1);
-            @params["processDefinitionId"] = processDefinitionId;
-            return DbSqlSession.selectList<JobEntityImpl, IJobEntity>("selectJobByProcessDefinitionId", @params);
+            IDictionary<string, string> @params = new Dictionary<string, string>(1)
+            {
+                ["processDefinitionId"] = processDefinitionId
+            };
+            return DbSqlSession.SelectList<JobEntityImpl, IJobEntity>("selectJobByProcessDefinitionId", @params);
         }
 
-        public virtual IList<IJobEntity> findJobsByTypeAndProcessDefinitionId(string jobHandlerType, string processDefinitionId)
+        public virtual IList<IJobEntity> FindJobsByTypeAndProcessDefinitionId(string jobHandlerType, string processDefinitionId)
         {
-            IDictionary<string, string> @params = new Dictionary<string, string>(2);
-            @params["handlerType"] = jobHandlerType;
-            @params["processDefinitionId"] = processDefinitionId;
-            return DbSqlSession.selectList<JobEntityImpl, IJobEntity>("selectJobByTypeAndProcessDefinitionId", @params);
+            IDictionary<string, string> @params = new Dictionary<string, string>(2)
+            {
+                ["handlerType"] = jobHandlerType,
+                ["processDefinitionId"] = processDefinitionId
+            };
+            return DbSqlSession.SelectList<JobEntityImpl, IJobEntity>("selectJobByTypeAndProcessDefinitionId", @params);
         }
 
-        public virtual IList<IJobEntity> findJobsByProcessInstanceId(string processInstanceId)
+        public virtual IList<IJobEntity> FindJobsByProcessInstanceId(string processInstanceId)
         {
-            return DbSqlSession.selectList<JobEntityImpl, IJobEntity>("selectJobsByProcessInstanceId", new { processInstanceId });
+            return DbSqlSession.SelectList<JobEntityImpl, IJobEntity>("selectJobsByProcessInstanceId", new { processInstanceId });
         }
 
-        public virtual IList<IJobEntity> findExpiredJobs(Page page)
+        public virtual IList<IJobEntity> FindExpiredJobs(Page page)
         {
             DateTime now = Clock.CurrentTime;
-            return DbSqlSession.selectList<JobEntityImpl, IJobEntity>("selectExpiredJobs", new { lockExpTime = now }, page);
+            return DbSqlSession.SelectList<JobEntityImpl, IJobEntity>("selectExpiredJobs", new { lockExpTime = now }, page);
         }
 
-        public virtual IList<IJob> findJobsByQueryCriteria(JobQueryImpl jobQuery, Page page)
+        public virtual IList<IJob> FindJobsByQueryCriteria(IJobQuery jobQuery, Page page)
         {
             const string query = "selectJobByQueryCriteria";
-            return DbSqlSession.selectList<JobEntityImpl, IJob>(query, jobQuery, page);
+            return DbSqlSession.SelectList<JobEntityImpl, IJob>(query, jobQuery, page);
         }
 
-        public virtual long findJobCountByQueryCriteria(JobQueryImpl jobQuery)
+        public virtual long FindJobCountByQueryCriteria(IJobQuery jobQuery)
         {
-            return ((long?)DbSqlSession.selectOne<JobEntityImpl, long?>("selectJobCountByQueryCriteria", jobQuery)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<JobEntityImpl, long?>("selectJobCountByQueryCriteria", jobQuery).GetValueOrDefault();
         }
 
-        public virtual void updateJobTenantIdForDeployment(string deploymentId, string newTenantId)
+        public virtual void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId)
         {
-            Dictionary<string, object> @params = new Dictionary<string, object>();
-            @params["deploymentId"] = deploymentId;
-            @params["tenantId"] = newTenantId;
-            DbSqlSession.update<JobEntityImpl>("updateJobTenantIdForDeployment", @params);
+            Dictionary<string, object> @params = new Dictionary<string, object>
+            {
+                ["deploymentId"] = deploymentId,
+                ["tenantId"] = newTenantId
+            };
+            DbSqlSession.Update<JobEntityImpl>("updateJobTenantIdForDeployment", @params);
         }
 
-        public virtual void resetExpiredJob(string jobId)
+        public virtual void ResetExpiredJob(string jobId)
         {
-            IDictionary<string, object> @params = new Dictionary<string, object>(2);
-            @params["id"] = jobId;
-            DbSqlSession.update<JobEntityImpl>("resetExpiredJob", @params);
+            IDictionary<string, object> @params = new Dictionary<string, object>(2)
+            {
+                ["id"] = jobId
+            };
+            DbSqlSession.Update<JobEntityImpl>("resetExpiredJob", @params);
         }
-
     }
-
 }

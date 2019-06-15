@@ -23,10 +23,10 @@ namespace org.activiti.cloud.services.events
     /// </summary>
     public class VariableUpdatedEventImpl : AbstractProcessEngineEvent, IVariableUpdatedEvent
     {
-        private string variableName;
-        private string variableValue;
-        private string variableType;
-        private string taskId;
+        private readonly string variableName;
+        private readonly string variableValue;
+        private readonly string variableType;
+        private readonly string taskId;
 
 
         /// <summary>

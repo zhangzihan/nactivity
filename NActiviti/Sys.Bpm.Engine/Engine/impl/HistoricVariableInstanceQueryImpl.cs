@@ -28,19 +28,18 @@ namespace org.activiti.engine.impl
     [Serializable]
     public class HistoricVariableInstanceQueryImpl : AbstractQuery<IHistoricVariableInstanceQuery, IHistoricVariableInstance>, IHistoricVariableInstanceQuery
     {
-
         private const long serialVersionUID = 1L;
-        protected internal string id_Renamed;
-        protected internal string taskId_Renamed;
-        protected internal ISet<string> taskIds_Renamed;
-        protected internal string executionId_Renamed;
-        protected internal ISet<string> executionIds_Renamed;
-        protected internal string processInstanceId_Renamed;
-        protected internal string activityInstanceId_Renamed;
-        protected internal string variableName_Renamed;
-        protected internal string variableNameLike_Renamed;
+        protected internal string id_;
+        protected internal string taskId_;
+        protected internal string[] taskIds_;
+        protected internal string executionId_;
+        protected internal string[] executionIds_;
+        protected internal string processInstanceId_;
+        protected internal string activityInstanceId_;
+        protected internal string variableName_;
+        protected internal string variableNameLike_;
         protected internal bool excludeTaskRelated;
-        protected internal bool excludeVariableInitialization_Renamed;
+        protected internal bool excludeVariableInitialization_;
         protected internal QueryVariableValue queryVariableValue;
 
         public HistoricVariableInstanceQueryImpl()
@@ -55,91 +54,63 @@ namespace org.activiti.engine.impl
         {
         }
 
-        public virtual IHistoricVariableInstanceQuery id(string id)
+        public virtual IHistoricVariableInstanceQuery SetId(string id)
         {
-            this.id_Renamed = id;
+            this.id_ = id;
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery processInstanceId(string processInstanceId)
+        public virtual IHistoricVariableInstanceQuery SetProcessInstanceId(string processInstanceId)
         {
-            if (ReferenceEquals(processInstanceId, null))
-            {
-                throw new ActivitiIllegalArgumentException("processInstanceId is null");
-            }
-            this.processInstanceId_Renamed = processInstanceId;
+            this.processInstanceId_ = processInstanceId;
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery executionId(string executionId)
+        public virtual IHistoricVariableInstanceQuery SetExecutionId(string executionId)
         {
-            if (ReferenceEquals(executionId, null))
-            {
-                throw new ActivitiIllegalArgumentException("Execution id is null");
-            }
-            this.executionId_Renamed = executionId;
+            this.executionId_ = executionId;
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery executionIds(ISet<string> executionIds)
+        public virtual IHistoricVariableInstanceQuery SetExecutionIds(string[] executionIds)
         {
-            if (executionIds == null)
-            {
-                throw new ActivitiIllegalArgumentException("executionIds is null");
-            }
-            if (executionIds.Count == 0)
-            {
-                throw new ActivitiIllegalArgumentException("Set of executionIds is empty");
-            }
-            this.executionIds_Renamed = executionIds;
+            this.executionIds_ = executionIds;
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery activityInstanceId(string activityInstanceId)
+        public virtual IHistoricVariableInstanceQuery SetActivityInstanceId(string activityInstanceId)
         {
-            this.activityInstanceId_Renamed = activityInstanceId;
+            this.activityInstanceId_ = activityInstanceId;
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery taskId(string taskId)
+        public virtual IHistoricVariableInstanceQuery SetTaskId(string taskId)
         {
-            if (ReferenceEquals(taskId, null))
-            {
-                throw new ActivitiIllegalArgumentException("taskId is null");
-            }
             if (excludeTaskRelated)
             {
                 throw new ActivitiIllegalArgumentException("Cannot use taskId together with excludeTaskVariables");
             }
-            this.taskId_Renamed = taskId;
+            this.taskId_ = taskId;
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery taskIds(ISet<string> taskIds)
+        public virtual IHistoricVariableInstanceQuery SetTaskIds(string[] taskIds)
         {
-            if (taskIds == null)
-            {
-                throw new ActivitiIllegalArgumentException("taskIds is null");
-            }
-            if (taskIds.Count == 0)
-            {
-                throw new ActivitiIllegalArgumentException("Set of taskIds is empty");
-            }
             if (excludeTaskRelated)
             {
                 throw new ActivitiIllegalArgumentException("Cannot use taskIds together with excludeTaskVariables");
             }
-            this.taskIds_Renamed = taskIds;
+            this.taskIds_ = taskIds;
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery excludeTaskVariables()
+        public virtual IHistoricVariableInstanceQuery SetExcludeTaskVariables()
         {
-            if (!ReferenceEquals(taskId_Renamed, null))
+            if (!(taskId_ is null))
             {
                 throw new ActivitiIllegalArgumentException("Cannot use taskId together with excludeTaskVariables");
             }
-            if (taskIds_Renamed != null)
+            if (!(taskIds_ is null))
             {
                 throw new ActivitiIllegalArgumentException("Cannot use taskIds together with excludeTaskVariables");
             }
@@ -147,25 +118,25 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery excludeVariableInitialization()
+        public virtual IHistoricVariableInstanceQuery SetExcludeVariableInitialization()
         {
-            excludeVariableInitialization_Renamed = true;
+            excludeVariableInitialization_ = true;
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery variableName(string variableName)
+        public virtual IHistoricVariableInstanceQuery SetVariableName(string variableName)
         {
-            if (ReferenceEquals(variableName, null))
-            {
-                throw new ActivitiIllegalArgumentException("variableName is null");
-            }
-            this.variableName_Renamed = variableName;
+            //if (ReferenceEquals(variableName, null))
+            //{
+            //    throw new ActivitiIllegalArgumentException("variableName is null");
+            //}
+            this.variableName_ = variableName;
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery variableValueEquals(string variableName, object variableValue)
+        public virtual IHistoricVariableInstanceQuery VariableValueEquals(string variableName, object variableValue)
         {
-            if (ReferenceEquals(variableName, null))
+            if (variableName is null)
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
@@ -173,14 +144,14 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("variableValue is null");
             }
-            this.variableName_Renamed = variableName;
+            this.variableName_ = variableName;
             queryVariableValue = new QueryVariableValue(variableName, variableValue, QueryOperator.EQUALS, true);
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery variableValueNotEquals(string variableName, object variableValue)
+        public virtual IHistoricVariableInstanceQuery VariableValueNotEquals(string variableName, object variableValue)
         {
-            if (ReferenceEquals(variableName, null))
+            if (variableName is null)
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
@@ -188,81 +159,80 @@ namespace org.activiti.engine.impl
             {
                 throw new ActivitiIllegalArgumentException("variableValue is null");
             }
-            this.variableName_Renamed = variableName;
+            this.variableName_ = variableName;
             queryVariableValue = new QueryVariableValue(variableName, variableValue, QueryOperator.NOT_EQUALS, true);
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery variableValueLike(string variableName, string variableValue)
+        public virtual IHistoricVariableInstanceQuery VariableValueLike(string variableName, string variableValue)
         {
-            if (ReferenceEquals(variableName, null))
+            if (variableName is null)
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
-            if (ReferenceEquals(variableValue, null))
+            if (variableValue is null)
             {
                 throw new ActivitiIllegalArgumentException("variableValue is null");
             }
-            this.variableName_Renamed = variableName;
+            this.variableName_ = variableName;
             queryVariableValue = new QueryVariableValue(variableName, variableValue, QueryOperator.LIKE, true);
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery variableValueLikeIgnoreCase(string variableName, string variableValue)
+        public virtual IHistoricVariableInstanceQuery VariableValueLikeIgnoreCase(string variableName, string variableValue)
         {
-            if (ReferenceEquals(variableName, null))
+            if (variableName is null)
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
-            if (ReferenceEquals(variableValue, null))
+            if (variableValue is null)
             {
                 throw new ActivitiIllegalArgumentException("variableValue is null");
             }
-            this.variableName_Renamed = variableName;
+            this.variableName_ = variableName;
             queryVariableValue = new QueryVariableValue(variableName, variableValue.ToLower(), QueryOperator.LIKE_IGNORE_CASE, true);
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery variableNameLike(string variableNameLike)
+        public virtual IHistoricVariableInstanceQuery SetVariableNameLike(string variableNameLike)
         {
-            if (ReferenceEquals(variableNameLike, null))
+            if (variableNameLike is null)
             {
                 throw new ActivitiIllegalArgumentException("variableNameLike is null");
             }
-            this.variableNameLike_Renamed = variableNameLike;
+            this.variableNameLike_ = variableNameLike;
             return this;
         }
 
-        protected internal virtual void ensureVariablesInitialized()
+        protected internal virtual void EnsureVariablesInitialized()
         {
             if (this.queryVariableValue != null)
             {
                 IVariableTypes variableTypes = Context.ProcessEngineConfiguration.VariableTypes;
-                queryVariableValue.initialize(variableTypes);
+                queryVariableValue.Initialize(variableTypes);
             }
         }
 
-        public override long executeCount(ICommandContext commandContext)
+        public override long ExecuteCount(ICommandContext commandContext)
         {
-            checkQueryOk();
-            ensureVariablesInitialized();
-            return commandContext.HistoricVariableInstanceEntityManager.findHistoricVariableInstanceCountByQueryCriteria(this);
+            CheckQueryOk();
+            EnsureVariablesInitialized();
+            return commandContext.HistoricVariableInstanceEntityManager.FindHistoricVariableInstanceCountByQueryCriteria(this);
         }
 
-        public override IList<IHistoricVariableInstance> executeList(ICommandContext commandContext, Page page)
+        public override IList<IHistoricVariableInstance> ExecuteList(ICommandContext commandContext, Page page)
         {
-            checkQueryOk();
-            ensureVariablesInitialized();
+            CheckQueryOk();
+            EnsureVariablesInitialized();
 
-            IList<IHistoricVariableInstance> historicVariableInstances = commandContext.HistoricVariableInstanceEntityManager.findHistoricVariableInstancesByQueryCriteria(this, page);
+            IList<IHistoricVariableInstance> historicVariableInstances = commandContext.HistoricVariableInstanceEntityManager.FindHistoricVariableInstancesByQueryCriteria(this, page);
 
-            if (!excludeVariableInitialization_Renamed)
+            if (!excludeVariableInitialization_)
             {
                 foreach (IHistoricVariableInstance historicVariableInstance in historicVariableInstances)
                 {
-                    if (historicVariableInstance is IHistoricVariableInstanceEntity)
+                    if (historicVariableInstance is IHistoricVariableInstanceEntity variableEntity)
                     {
-                        IHistoricVariableInstanceEntity variableEntity = (IHistoricVariableInstanceEntity)historicVariableInstance;
                         if (variableEntity != null && variableEntity.VariableType != null)
                         {
                             //variableEntity.Value;
@@ -282,43 +252,67 @@ namespace org.activiti.engine.impl
         // order by
         // /////////////////////////////////////////////////////////////////
 
-        public virtual IHistoricVariableInstanceQuery orderByProcessInstanceId()
+        public virtual IHistoricVariableInstanceQuery OrderByProcessInstanceId()
         {
-            orderBy(HistoricVariableInstanceQueryProperty.PROCESS_INSTANCE_ID);
+            SetOrderBy(HistoricVariableInstanceQueryProperty.PROCESS_INSTANCE_ID);
             return this;
         }
 
-        public virtual IHistoricVariableInstanceQuery orderByVariableName()
+        public virtual IHistoricVariableInstanceQuery OrderByVariableName()
         {
-            orderBy(HistoricVariableInstanceQueryProperty.VARIABLE_NAME);
+            SetOrderBy(HistoricVariableInstanceQueryProperty.VARIABLE_NAME);
             return this;
         }
 
         // getters and setters
         // //////////////////////////////////////////////////////
 
+        public string Id
+        {
+            get => id_;
+            set => id_ = value;
+        }
+
         public virtual string ProcessInstanceId
         {
             get
             {
-                return processInstanceId_Renamed;
+                return processInstanceId_;
             }
+            set => processInstanceId_ = value;
+        }
+
+        public virtual string ExecutionId
+        {
+            get => executionId_;
+            set => SetExecutionId(value);
+        }
+
+        public virtual string[] ExecutionIds
+        {
+            get => executionIds_;
+            set => SetExecutionIds(value);
         }
 
         public virtual string TaskId
         {
-            get
-            {
-                return taskId_Renamed;
-            }
+            get => taskId_;
+            set => SetTaskId(value);
+        }
+
+        public virtual string[] TaskIds
+        {
+            get => taskIds_;
+            set => SetTaskIds(value);
         }
 
         public virtual string ActivityInstanceId
         {
             get
             {
-                return activityInstanceId_Renamed;
+                return activityInstanceId_;
             }
+            set => activityInstanceId_ = value;
         }
 
         public virtual bool ExcludeTaskRelated
@@ -327,22 +321,25 @@ namespace org.activiti.engine.impl
             {
                 return excludeTaskRelated;
             }
+            set => excludeTaskRelated = value;
         }
 
         public virtual string VariableName
         {
             get
             {
-                return variableName_Renamed;
+                return variableName_;
             }
+            set => variableName_ = value;
         }
 
         public virtual string VariableNameLike
         {
             get
             {
-                return variableNameLike_Renamed;
+                return variableNameLike_;
             }
+            set => variableNameLike_ = value;
         }
 
         public virtual QueryVariableValue QueryVariableValue
@@ -351,8 +348,8 @@ namespace org.activiti.engine.impl
             {
                 return queryVariableValue;
             }
+            set => queryVariableValue = value;
         }
-
     }
 
 }

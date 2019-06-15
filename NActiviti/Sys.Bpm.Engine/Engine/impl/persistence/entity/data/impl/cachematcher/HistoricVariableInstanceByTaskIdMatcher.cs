@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class HistoricVariableInstanceByTaskIdMatcher : CachedEntityMatcherAdapter<IHistoricVariableInstanceEntity>
     {
 
-        public override bool isRetained(IHistoricVariableInstanceEntity historicVariableInstanceEntity, object parameter)
+        public override bool IsRetained(IHistoricVariableInstanceEntity historicVariableInstanceEntity, object parameter)
         {
             if (historicVariableInstanceEntity == null || historicVariableInstanceEntity.ProcessInstanceId == null || parameter == null)
             {

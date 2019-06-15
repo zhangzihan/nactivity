@@ -21,12 +21,12 @@ namespace org.activiti.engine.impl.variable
     /// 
     /// 
     /// </summary>
-    public class JPAEntityVariableType : AbstractVariableType, ICacheableVariable
+    public class JPAEntityVariableType : AbstractVariableType, ICacheableVariable, IJPAEntityVariableType
     {
 
         public const string TYPE_NAME = "jpa-entity";
 
-        private JPAEntityMappings mappings;
+        private readonly JPAEntityMappings mappings;
 
         private bool forceCacheable;
 
@@ -51,18 +51,18 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public override bool isAbleToStore(object value)
+        public override bool IsAbleToStore(object value)
         {
             if (value == null)
             {
                 return true;
             }
-            return mappings.isJPAEntity(value);
+            return mappings.IsJPAEntity(value);
         }
 
-        public override void setValue(object value, IValueFields valueFields)
+        public override void SetValue(object value, IValueFields valueFields)
         {
-            IEntityManagerSession entityManagerSession = Context.CommandContext.getSession<IEntityManagerSession>();
+            IEntityManagerSession entityManagerSession = Context.CommandContext.GetSession<IEntityManagerSession>();
             if (entityManagerSession == null)
             {
                 throw new ActivitiException("Cannot set JPA variable: " + typeof(IEntityManagerSession) + " not configured");
@@ -74,13 +74,13 @@ namespace org.activiti.engine.impl.variable
                 // If we don't do this, in some cases the primary key will not yet
                 // be set in the object
                 // which will cause exceptions down the road.
-                entityManagerSession.flush();
+                entityManagerSession.Flush();
             }
 
             if (value != null)
             {
-                string className = mappings.getJPAClassString(value);
-                string idString = mappings.getJPAIdString(value);
+                string className = mappings.GetJPAClassString(value);
+                string idString = mappings.GetJPAIdString(value);
                 valueFields.TextValue = className;
                 valueFields.TextValue2 = idString;
             }
@@ -91,11 +91,11 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public override object getValue(IValueFields valueFields)
+        public override object GetValue(IValueFields valueFields)
         {
-            if (!ReferenceEquals(valueFields.TextValue, null) && !ReferenceEquals(valueFields.TextValue2, null))
+            if (!(valueFields.TextValue is null) && !(valueFields.TextValue2 is null))
             {
-                return mappings.getJPAEntity(valueFields.TextValue, valueFields.TextValue2);
+                return mappings.GetJPAEntity(valueFields.TextValue, valueFields.TextValue2);
             }
             return null;
         }

@@ -19,8 +19,6 @@ namespace org.activiti.engine.impl.db
     using DatabaseSchemaReader;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.db.upgrade;
@@ -30,8 +28,9 @@ namespace org.activiti.engine.impl.db
     using org.activiti.engine.impl.util;
     using SmartSql.Abstractions;
     using SmartSql.Utils;
-    using Sys;
     using Sys.Data;
+    using Sys.Workflow;
+    using System.Collections.Concurrent;
     using System.Data;
     using System.IO;
     using System.Linq;
@@ -41,10 +40,19 @@ namespace org.activiti.engine.impl.db
     /// 
     public class DbSqlSession : ISession
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal static readonly Regex CLEAN_VERSION_REGEX = new Regex("\\d\\.\\d*");
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal static readonly IList<ActivitiVersion> ACTIVITI_VERSIONS = DbSqlSessionVersion.ACTIVITI_VERSIONS;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ISmartSqlMapper SqlMapper
         {
             get
@@ -61,17 +69,44 @@ namespace org.activiti.engine.impl.db
 
         private static readonly ILogger<DbSqlSession> log = ProcessEngineServiceProvider.LoggerService<DbSqlSession>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal DbSqlSessionFactory dbSqlSessionFactory;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IEntityCache entityCache;
 
-        protected internal Dictionary<Type, Dictionary<string, IEntity>> insertedObjects = new Dictionary<Type, Dictionary<string, IEntity>>();
-        protected internal Dictionary<Type, Dictionary<string, IEntity>> deletedObjects = new Dictionary<Type, Dictionary<string, IEntity>>();
-        protected internal Dictionary<Type, IList<BulkDeleteOperation>> bulkDeleteOperations = new Dictionary<Type, IList<BulkDeleteOperation>>();
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal ConcurrentDictionary<Type, Dictionary<string, IEntity>> insertedObjects = new ConcurrentDictionary<Type, Dictionary<string, IEntity>>();
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal ConcurrentDictionary<Type, Dictionary<string, IEntity>> deletedObjects = new ConcurrentDictionary<Type, Dictionary<string, IEntity>>();
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal ConcurrentDictionary<Type, IList<BulkDeleteOperation>> bulkDeleteOperations = new ConcurrentDictionary<Type, IList<BulkDeleteOperation>>();
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IEntity> updatedObjects = new List<IEntity>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string connectionMetadataDefaultCatalog;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string connectionMetadataDefaultSchema;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DbSqlSession(DbSqlSessionFactory dbSqlSessionFactory, IEntityCache entityCache)
         {
             this.dbSqlSessionFactory = dbSqlSessionFactory;
@@ -80,6 +115,9 @@ namespace org.activiti.engine.impl.db
             this.connectionMetadataDefaultSchema = dbSqlSessionFactory.DatabaseSchema;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DbSqlSession(DbSqlSessionFactory dbSqlSessionFactory, IEntityCache entityCache, IDbConnection connection, string catalog, string schema)
         {
             this.dbSqlSessionFactory = dbSqlSessionFactory;
@@ -90,39 +128,42 @@ namespace org.activiti.engine.impl.db
 
         // insert ///////////////////////////////////////////////////////////////////
 
-        public virtual void insert(IEntity entity, Type managedType = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Insert(IEntity entity, Type managedType = null)
         {
-            if (ReferenceEquals(entity.Id, null))
+            if (entity.Id is null)
             {
-                string id = dbSqlSessionFactory.IdGenerator.NextId;
+                string id = dbSqlSessionFactory.IdGenerator.GetNextId();
                 entity.Id = id;
             }
 
             Type clazz = managedType ?? entity.GetType();
-            insertedObjects.TryGetValue(clazz, out var insObjs);
-            if (insObjs == null)
-            {
-                insObjs = new Dictionary<string, IEntity>();
-                insertedObjects[clazz] = insObjs;
-            }
-
+            Dictionary<string, IEntity> insObjs = insertedObjects.GetOrAdd(clazz, new Dictionary<string, IEntity>());
             insObjs[entity.Id] = entity;
-            entityCache.put(entity, false); // False -> entity is inserted, so always changed
+            entityCache.Put(entity, false); // False -> entity is inserted, so always changed
             entity.Inserted = true;
         }
 
         // update
         // ///////////////////////////////////////////////////////////////////
 
-        public virtual void update(IEntity entity)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Update(IEntity entity)
         {
-            entityCache.put(entity, false); // false -> we don't store state, meaning it will always be seen as changed
+            entityCache.Put(entity, false); // false -> we don't store state, meaning it will always be seen as changed
             entity.Updated = true;
         }
 
-        public virtual int update<TEntityImpl>(string statement, object parameters)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual int Update<TEntityImpl>(string statement, object parameters)
         {
-            string updateStatement = dbSqlSessionFactory.mapStatement(statement);
+            string updateStatement = dbSqlSessionFactory.MapStatement(statement);
             return SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, updateStatement, parameters));//.update(updateStatement, parameters);
         }
 
@@ -134,23 +175,21 @@ namespace org.activiti.engine.impl.db
         /// The passed class determines when this operation will be executed: it will be executed
         /// when the particular class has passed in the <seealso cref="EntityDependencyOrder"/>.
         /// </summary>
-        public virtual void delete(string statement, object parameter, Type entityClass)
+        public virtual void Delete(string statement, object parameter, Type entityClass)
         {
-            if (!bulkDeleteOperations.ContainsKey(entityClass))
-            {
-                bulkDeleteOperations[entityClass] = new List<BulkDeleteOperation>(1);
-            }
-            bulkDeleteOperations[entityClass].Add(new BulkDeleteOperation(dbSqlSessionFactory.mapStatement(statement), parameter));
+            var lstBulkDel = bulkDeleteOperations.GetOrAdd(entityClass, new List<BulkDeleteOperation>());
+
+            lstBulkDel.Add(new BulkDeleteOperation(dbSqlSessionFactory.MapStatement(statement), parameter));
         }
 
-        public virtual object delete(IEntity entity)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual object Delete(IEntity entity)
         {
             Type clazz = entity.GetType();
-            if (!deletedObjects.ContainsKey(clazz))
-            {
-                deletedObjects[clazz] = new Dictionary<string, IEntity>(); // order of insert is important, hence LinkedHashMap
-            }
-            deletedObjects[clazz][entity.Id] = entity;
+            var dec = deletedObjects.GetOrAdd(clazz, new Dictionary<string, IEntity>()); // order of insert is important, hence LinkedHashMap
+            dec[entity.Id] = entity;
             entity.Deleted = true;
 
             return entity;
@@ -158,39 +197,57 @@ namespace org.activiti.engine.impl.db
 
         // select
         // ///////////////////////////////////////////////////////////////////
-        public virtual IList<TOut> selectList<TEntityImpl, TOut>(string statement)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IList<TOut> SelectList<TEntityImpl, TOut>(string statement)
         {
-            return selectList<TEntityImpl, TOut>(statement, null, 0, int.MaxValue);
+            return SelectList<TEntityImpl, TOut>(statement, null, 0, int.MaxValue);
         }
 
-        public virtual IList<TOut> selectList<TEntityImpl, TOut>(string statement, object parameter)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IList<TOut> SelectList<TEntityImpl, TOut>(string statement, object parameter)
         {
-            return selectList<TEntityImpl, TOut>(statement, parameter, 0, int.MaxValue);
+            return SelectList<TEntityImpl, TOut>(statement, parameter, 0, int.MaxValue);
         }
 
-        public virtual IList<TOut> selectList<TEntityImpl, TOut>(string statement, object parameter, bool useCache)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IList<TOut> SelectList<TEntityImpl, TOut>(string statement, object parameter, bool useCache)
         {
-            return selectList<TEntityImpl, TOut>(statement, parameter, 0, int.MaxValue, useCache);
+            return SelectList<TEntityImpl, TOut>(statement, parameter, 0, int.MaxValue, useCache);
         }
 
-        public virtual IList<TOut> selectList<TEntityImpl, TOut>(string statement, object parameter, Page page, bool useCache = true)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IList<TOut> SelectList<TEntityImpl, TOut>(string statement, object parameter, Page page, bool useCache = true)
         {
             if (page != null)
             {
-                return selectList<TEntityImpl, TOut>(statement, parameter, page.FirstResult, page.MaxResults, useCache);
+                return SelectList<TEntityImpl, TOut>(statement, parameter, page.FirstResult, page.MaxResults, useCache);
             }
             else
             {
-                return selectList<TEntityImpl, TOut>(statement, parameter, 0, int.MaxValue, useCache);
+                return SelectList<TEntityImpl, TOut>(statement, parameter, 0, int.MaxValue, useCache);
             }
         }
 
-        public virtual IList<TOut> selectList<TEntityImpl, TOut>(string statement, object parameter, int firstResult, int maxResults, bool useCache = true)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IList<TOut> SelectList<TEntityImpl, TOut>(string statement, object parameter, int firstResult, int maxResults, bool useCache = true)
         {
-            return selectList<TEntityImpl, TOut>(statement, new ListQueryParameterObject(parameter, firstResult, maxResults), useCache);
+            return SelectList<TEntityImpl, TOut>(statement, new ListQueryParameterObject(parameter, firstResult, maxResults), useCache);
         }
 
-        public virtual IList<TOut> selectList<TEntityImpl, TOut>(string statement, ListQueryParameterObject parameter, Page page, bool useCache = true)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IList<TOut> SelectList<TEntityImpl, TOut>(string statement, ListQueryParameterObject parameter, Page page, bool useCache = true)
         {
 
             ListQueryParameterObject parameterToUse = new ListQueryParameterObject()
@@ -204,17 +261,20 @@ namespace org.activiti.engine.impl.db
                 parameterToUse.MaxResults = page.MaxResults;
             }
 
-            return selectList<TEntityImpl, TOut>(statement, parameterToUse, useCache);
+            return SelectList<TEntityImpl, TOut>(statement, parameterToUse, useCache);
         }
 
-        private IList<TOut> selectList<TEntityImpl, TOut>(string statement, ListQueryParameterObject parameter, bool useCache = true)
+        private IList<TOut> SelectList<TEntityImpl, TOut>(string statement, ListQueryParameterObject parameter, bool useCache = true)
         {
-            return selectListWithRawParameter<TEntityImpl, TOut>(statement, parameter.Parameter, parameter.FirstResult, parameter.MaxResults, useCache);
+            return SelectListWithRawParameter<TEntityImpl, TOut>(statement, parameter.Parameter, parameter.FirstResult, parameter.MaxResults, useCache);
         }
 
-        public virtual IList<TOut> selectListWithRawParameter<TEntityImpl, TOut>(string statement, object parameter, int firstResult, int maxResults, bool useCache = true)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IList<TOut> SelectListWithRawParameter<TEntityImpl, TOut>(string statement, object parameter, int firstResult, int maxResults, bool useCache = true)
         {
-            statement = dbSqlSessionFactory.mapStatement(statement);
+            statement = dbSqlSessionFactory.MapStatement(statement);
             if (firstResult == -1 || maxResults == -1)
             {
                 return new List<TOut>();
@@ -238,7 +298,7 @@ namespace org.activiti.engine.impl.db
             if (useCache)
             {
                 var objs = loadedObjects.Cast<object>().ToList();
-                return cacheLoadOrStore(objs).Cast<TOut>().ToList();
+                return CacheLoadOrStore(objs).Cast<TOut>().ToList();
             }
             else
             {
@@ -246,52 +306,59 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        public virtual IList<TOut> selectListWithRawParameterWithoutFilter<TEntityImpl, TOut>(string statement, object parameter, int firstResult, int maxResults)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IList<TOut> SelectListWithRawParameterWithoutFilter<TEntityImpl, TOut>(string statement, object parameter, int firstResult, int maxResults)
         {
-            statement = dbSqlSessionFactory.mapStatement(statement);
+            statement = dbSqlSessionFactory.MapStatement(statement);
             if (firstResult == -1 || maxResults == -1)
             {
                 return new List<TOut>();
             }
-            return selectList<TEntityImpl, TOut>(statement, parameter);
+            return SelectList<TEntityImpl, TOut>(statement, parameter);
         }
 
-        public virtual TOut selectOne<TEntityImpl, TOut>(string statement, object parameter)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual TOut SelectOne<TEntityImpl, TOut>(string statement, object parameter)
         {
-            statement = dbSqlSessionFactory.mapStatement(statement);
+            statement = dbSqlSessionFactory.MapStatement(statement);
 
             var result = SqlMapper.QuerySingle<TOut>(dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, statement, parameter));
 
             if (result is IEntity)
             {
-                cacheLoadOrStore((IEntity)result);
+                CacheLoadOrStore((IEntity)result);
             }
 
             return result;
         }
 
-        public virtual TOut selectById<TEntityImpl, TOut>(KeyValuePair<string, object> id, bool useCache = true) where TEntityImpl : IEntity where TOut : IEntity
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual TOut SelectById<TEntityImpl, TOut>(KeyValuePair<string, object> id, bool useCache = true) where TEntityImpl : IEntity where TOut : IEntity
         {
             Type entityClass = typeof(TEntityImpl);
-
-            IEntity entity = null;
-
             if (id.Value == null)
             {
-                return default(TOut);
+                return default;
             }
 
+            IEntity entity;
             if (useCache)
             {
-                entity = entityCache.findInCache(entityClass, id.Value.ToString()) as IEntity;
+                entity = entityCache.FindInCache(entityClass, id.Value.ToString()) as IEntity;
                 if (entity != null)
                 {
                     return (TOut)entity;
                 }
             }
 
-            string selectStatement = dbSqlSessionFactory.getSelectStatement(ref entityClass);
-            selectStatement = dbSqlSessionFactory.mapStatement(selectStatement);
+            string selectStatement = dbSqlSessionFactory.GetSelectStatement(ref entityClass);
+            selectStatement = dbSqlSessionFactory.MapStatement(selectStatement);
 
             entity = SqlMapper.QuerySingle<TEntityImpl>(dbSqlSessionFactory.CreateRequestContext(entityClass.FullName, selectStatement, new Dictionary<string, object>()
             {
@@ -300,16 +367,19 @@ namespace org.activiti.engine.impl.db
 
             if (entity == null)
             {
-                return default(TOut);
+                return default;
             }
 
-            entityCache.put(entity, true); // true -> store state so we can see later if it is updated later on
+            entityCache.Put(entity, true); // true -> store state so we can see later if it is updated later on
             return (TOut)entity;
         }
 
         // internal session cache
         // ///////////////////////////////////////////////////
-        protected internal virtual IList<object> cacheLoadOrStore(IList<object> loadedObjects)
+        /// <summary>
+        /// 
+        /// </summary>
+        protected virtual IList<object> CacheLoadOrStore(IList<object> loadedObjects)
         {
             if (loadedObjects.Count == 0)
             {
@@ -323,7 +393,7 @@ namespace org.activiti.engine.impl.db
             IList<object> filteredObjects = new List<object>(loadedObjects.Count);
             foreach (object loadedObject in loadedObjects)
             {
-                IEntity cachedEntity = cacheLoadOrStore((IEntity)loadedObject);
+                IEntity cachedEntity = CacheLoadOrStore((IEntity)loadedObject);
                 filteredObjects.Add(cachedEntity);
             }
             return filteredObjects;
@@ -333,39 +403,73 @@ namespace org.activiti.engine.impl.db
         /// Returns the object in the cache. If this object was loaded before, then the original object is returned (the cached version is more recent).
         /// If this is the first time this object is loaded, then the loadedObject is added to the cache.
         /// </summary>
-        protected internal virtual IEntity cacheLoadOrStore(IEntity entity)
+        protected virtual IEntity CacheLoadOrStore(IEntity entity)
         {
             if (entity == null)
             {
                 return null;
             }
 
-            IEntity cachedEntity = entityCache.findInCache(entity.GetType(), entity.Id) as IEntity;
-
-            if (cachedEntity != null)
+            if (entityCache.FindInCache(entity.GetType(), entity.Id) is IEntity cachedEntity)
             {
                 return cachedEntity;
             }
-            entityCache.put(entity, true);
+            entityCache.Put(entity, true);
             return entity;
         }
 
         // flush
         // ////////////////////////////////////////////////////////////////////
-
-        public virtual void flush()
+        private readonly object syncFlush = new object();
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Flush()
         {
-            determineUpdatedObjects(); // Needs to be done before the removeUnnecessaryOperations, as removeUnnecessaryOperations will remove stuff from the cache
-            removeUnnecessaryOperations();
-
-            if (log.IsEnabled(LogLevel.Debug))
+            lock (syncFlush)
             {
-                debugFlush();
+                DetermineUpdatedObjects(); // Needs to be done before the removeUnnecessaryOperations, as removeUnnecessaryOperations will remove stuff from the cache
+                RemoveUnnecessaryOperations();
+
+                if (log.IsEnabled(LogLevel.Debug))
+                {
+                    DebugFlush();
+                }
+
+                if (SqlMapper.SessionStore.LocalSession == null && (insertedObjects.Count > 0 || updatedObjects.Count > 0 || deletedObjects.Count > 0))
+                {
+                    SqlMapper.BeginTransaction();// IsolationLevel.ReadUncommitted);
+
+                    RemoveInstanceIncludeHis();
+                }
+
+                FlushInserts();
+                FlushUpdates();
+                FlushDeletes();
+            }
+        }
+
+        private void RemoveInstanceIncludeHis()
+        {
+            if (insertedObjects.Count == 0)
+            {
+                return;
             }
 
-            flushInserts();
-            flushUpdates();
-            flushDeletes();
+            if (insertedObjects.TryGetValue(typeof(HistoricIdentityLinkEntityImpl), out Dictionary<string, IEntity> hisValues) &&
+                insertedObjects.TryGetValue(typeof(IdentityLinkEntityImpl), out Dictionary<string, IEntity> values))
+            {
+                for (int idx = values.Keys.Count - 1; idx >= 0; idx--)
+                {
+                    var key = values.Keys.ElementAt(idx);
+                    var val = values[key];
+
+                    if (hisValues.Values.Any(x => x.Id == val.Id))
+                    {
+                        values.Remove(key);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -375,14 +479,14 @@ namespace org.activiti.engine.impl.db
         /// Also removes deletes with duplicate ids.
         /// </para>
         /// </summary>
-        protected internal virtual void removeUnnecessaryOperations()
+        protected virtual void RemoveUnnecessaryOperations()
         {
             foreach (Type entityClass in deletedObjects.Keys)
             {
                 // Collect ids of deleted entities + remove duplicates
                 ISet<string> ids = new HashSet<string>();
 
-                var entities = deletedObjects[entityClass];
+                deletedObjects.TryGetValue(entityClass, out var entities);
                 for (var idx = entities.Keys.Count - 1; idx >= 0; idx--)
                 {
                     var key = entities.Keys.ElementAt(idx);
@@ -397,39 +501,30 @@ namespace org.activiti.engine.impl.db
                     }
                 }
 
-                //var entitiesToDeleteIterator = deletedObjects[entityClass].Values;
-                //for (var idx = entitiesToDeleteIterator.Count - 1; idx >= 0; idx--)
-                //{
-                //    IEntity entityToDelete = entitiesToDeleteIterator.ElementAt(idx);
-                //    if (!ids.Contains(entityToDelete.Id))
-                //    {
-                //        ids.Add(entityToDelete.Id);
-                //    }
-                //    else
-                //    {
-                //        entitiesToDeleteIterator.Remove(entityToDelete); // Removing duplicate deletes
-                //    }
-                //}
-
                 // Now we have the deleted ids, we can remove the inserted objects (as they cancel each other)
                 foreach (string id in ids)
                 {
-                    if (insertedObjects.ContainsKey(entityClass) && insertedObjects[entityClass].ContainsKey(id))
+                    if (insertedObjects.TryGetValue(entityClass, out var iec) && iec.ContainsKey(id))
                     {
-                        insertedObjects[entityClass].Remove(id);
-                        deletedObjects[entityClass].Remove(id);
+                        iec.Remove(id);
+                        if (deletedObjects.TryGetValue(entityClass, out var dec))
+                        {
+                            dec.Remove(id);
+                        }
                     }
                 }
             }
         }
 
-        public virtual void determineUpdatedObjects()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void DetermineUpdatedObjects()
         {
             updatedObjects = new List<IEntity>();
             IDictionary<Type, IDictionary<string, CachedEntity>> cachedObjects = entityCache.AllCachedEntities;
             foreach (Type clazz in cachedObjects.Keys)
             {
-
                 IDictionary<string, CachedEntity> classCache = cachedObjects[clazz];
                 foreach (CachedEntity cachedObject in classCache.Values)
                 {
@@ -440,7 +535,7 @@ namespace org.activiti.engine.impl.db
                     // even when the execution are deleted, as they can change the parent-child relationships.
                     // For the other entities, this is not applicable and an update can be discarded when an update follows.
 
-                    if (!isEntityInserted(cachedEntity) && (cachedEntity.GetType().IsAssignableFrom(typeof(IExecutionEntity)) || !isEntityToBeDeleted(cachedEntity)) && cachedObject.hasChanged())
+                    if (!IsEntityInserted(cachedEntity) && (cachedEntity.GetType().IsAssignableFrom(typeof(IExecutionEntity)) || !IsEntityToBeDeleted(cachedEntity)) && cachedObject.hasChanged())
                     {
                         updatedObjects.Add(cachedEntity);
                     }
@@ -448,7 +543,10 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        protected internal virtual void debugFlush()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected virtual void DebugFlush()
         {
             log.LogDebug("Flushing dbSqlSession");
             int nrOfInserts = 0, nrOfUpdates = 0, nrOfDeletes = 0;
@@ -485,17 +583,36 @@ namespace org.activiti.engine.impl.db
             log.LogDebug($"now executing flush...");
         }
 
-        public virtual bool isEntityInserted(IEntity entity)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual bool IsEntityInserted(IEntity entity)
         {
-            return insertedObjects.ContainsKey(entity.GetType()) && insertedObjects[entity.GetType()].ContainsKey(entity.Id);
+            if (insertedObjects.TryGetValue(entity.GetType(), out var ec))
+            {
+                return ec.ContainsKey(entity.Id);
+            }
+
+            return false;
         }
 
-        public virtual bool isEntityToBeDeleted(IEntity entity)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual bool IsEntityToBeDeleted(IEntity entity)
         {
-            return deletedObjects.ContainsKey(entity.GetType()) && deletedObjects[entity.GetType()].ContainsKey(entity.Id);
+            if (deletedObjects.TryGetValue(entity.GetType(), out var dec))
+            {
+                return dec.ContainsKey(entity.Id);
+            }
+
+            return false;
         }
 
-        protected internal virtual void flushInserts()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected virtual void FlushInserts()
         {
             if (insertedObjects.Count == 0)
             {
@@ -505,10 +622,10 @@ namespace org.activiti.engine.impl.db
             // Handle in entity dependency order
             foreach (Type entityClass in EntityDependencyOrder.INSERT_ORDER)
             {
-                if (insertedObjects.ContainsKey(entityClass))
+                if (insertedObjects.TryGetValue(entityClass, out var ec))
                 {
-                    flushInsertEntities(entityClass, insertedObjects[entityClass].Values);
-                    insertedObjects.Remove(entityClass);
+                    FlushInsertEntities(entityClass, ec.Values);
+                    insertedObjects.TryRemove(entityClass, out ec);
                 }
             }
 
@@ -517,33 +634,40 @@ namespace org.activiti.engine.impl.db
             {
                 foreach (Type entityClass in insertedObjects.Keys)
                 {
-                    flushInsertEntities(entityClass, insertedObjects[entityClass].Values);
+                    insertedObjects.TryGetValue(entityClass, out var ec);
+                    FlushInsertEntities(entityClass, ec.Values);
                 }
             }
 
             insertedObjects.Clear();
         }
 
-        protected internal virtual void flushInsertEntities(Type entityClass, ICollection<IEntity> entitiesToInsert)
+        /// <summary>
+        /// 
+        /// </summary>
+        protected virtual void FlushInsertEntities(Type entityClass, ICollection<IEntity> entitiesToInsert)
         {
             if (entitiesToInsert.Count == 1)
             {
-                flushRegularInsert(entitiesToInsert.ElementAt(0), entityClass);
+                FlushRegularInsert(entitiesToInsert.ElementAt(0), entityClass);
             }
-            else if (false.Equals(dbSqlSessionFactory.isBulkInsertable(entityClass)))
+            else if (false.Equals(dbSqlSessionFactory.IsBulkInsertable(entityClass)))
             {
                 foreach (IEntity entity in entitiesToInsert)
                 {
-                    flushRegularInsert(entity, entityClass);
+                    FlushRegularInsert(entity, entityClass);
                 }
             }
             else
             {
-                flushBulkInsert(entitiesToInsert, entityClass);
+                FlushBulkInsert(entitiesToInsert, entityClass);
             }
         }
 
-        protected internal virtual ICollection<IEntity> orderExecutionEntities(IDictionary<string, IEntity> executionEntities, bool parentBeforeChildExecution)
+        /// <summary>
+        /// 
+        /// </summary>
+        protected virtual ICollection<IEntity> OrderExecutionEntities(IDictionary<string, IEntity> executionEntities, bool parentBeforeChildExecution)
         {
             // For insertion: parent executions should go before child executions
 
@@ -559,7 +683,7 @@ namespace org.activiti.engine.impl.db
                 string parentId = currentExecutionEntity.ParentId;
                 string superExecutionId = currentExecutionEntity.SuperExecutionId;
 
-                string parentKey = !ReferenceEquals(parentId, null) ? parentId : superExecutionId;
+                string parentKey = string.IsNullOrWhiteSpace(parentId) ? superExecutionId : parentId;
                 childToParentExecutionMapping[currentExecutionEntity.Id] = parentKey;
 
                 if (!parentToChildrenMapping.ContainsKey(parentKey))
@@ -578,12 +702,12 @@ namespace org.activiti.engine.impl.db
                 if (!handledExecutionIds.Contains(executionId))
                 {
                     string parentId = childToParentExecutionMapping[executionId];
-                    if (!ReferenceEquals(parentId, null))
+                    if (!(parentId is null))
                     {
-                        while (!ReferenceEquals(parentId, null))
+                        while (!(parentId is null))
                         {
                             string newParentId = childToParentExecutionMapping[parentId];
-                            if (ReferenceEquals(newParentId, null))
+                            if (newParentId is null)
                             {
                                 break;
                             }
@@ -591,7 +715,7 @@ namespace org.activiti.engine.impl.db
                         }
                     }
 
-                    if (ReferenceEquals(parentId, null))
+                    if (parentId is null)
                     {
                         parentId = executionId;
                     }
@@ -609,14 +733,22 @@ namespace org.activiti.engine.impl.db
                         }
                     }
 
-                    collectChildExecutionsForInsertion(result, parentToChildrenMapping, handledExecutionIds, parentId, parentBeforeChildExecution);
+                    CollectChildExecutionsForInsertion(result, parentToChildrenMapping, handledExecutionIds, parentId, parentBeforeChildExecution);
                 }
             }
 
             return result;
         }
 
-        protected internal virtual void collectChildExecutionsForInsertion(IList<IEntity> result, IDictionary<string, IList<IExecutionEntity>> parentToChildrenMapping, ISet<string> handledExecutionIds, string parentId, bool parentBeforeChildExecution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="parentToChildrenMapping"></param>
+        /// <param name="handledExecutionIds"></param>
+        /// <param name="parentId"></param>
+        /// <param name="parentBeforeChildExecution"></param>
+        protected virtual void CollectChildExecutionsForInsertion(IList<IEntity> result, IDictionary<string, IList<IExecutionEntity>> parentToChildrenMapping, ISet<string> handledExecutionIds, string parentId, bool parentBeforeChildExecution)
         {
             IList<IExecutionEntity> childExecutionEntities = parentToChildrenMapping[parentId];
 
@@ -637,14 +769,19 @@ namespace org.activiti.engine.impl.db
                     result.Insert(0, childExecutionEntity);
                 }
 
-                collectChildExecutionsForInsertion(result, parentToChildrenMapping, handledExecutionIds, childExecutionEntity.Id, parentBeforeChildExecution);
+                CollectChildExecutionsForInsertion(result, parentToChildrenMapping, handledExecutionIds, childExecutionEntity.Id, parentBeforeChildExecution);
             }
         }
 
-        protected internal virtual void flushRegularInsert(IEntity entity, Type clazz)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="clazz"></param>
+        protected virtual void FlushRegularInsert(IEntity entity, Type clazz)
         {
             Type managedType = clazz;
-            string insertStatement = dbSqlSessionFactory.getInsertStatement(clazz, ref managedType);
+            string insertStatement = dbSqlSessionFactory.GetInsertStatement(clazz, ref managedType);
 
             if (string.IsNullOrWhiteSpace(insertStatement))
             {
@@ -657,14 +794,26 @@ namespace org.activiti.engine.impl.db
             // See https://activiti.atlassian.net/browse/ACT-1290
             if (entity is IHasRevision)
             {
-                incrementRevision(entity);
+                IncrementRevision(entity);
             }
         }
 
-        protected internal virtual void flushBulkInsert(ICollection<IEntity> entities, Type clazz)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <param name="clazz"></param>
+        protected virtual void FlushBulkInsert(ICollection<IEntity> entities, Type clazz)
         {
+            if ((entities?.Count).GetValueOrDefault() == 0)
+            {
+                return;
+            }
+
+            bool b = entities.Any(x => x.GetType() == typeof(TaskEntityImpl));
+
             Type managedType = clazz;
-            string insertStatement = dbSqlSessionFactory.getBulkInsertStatement(clazz, ref managedType);
+            string insertStatement = dbSqlSessionFactory.GetBulkInsertStatement(clazz, ref managedType);
 
             if (string.IsNullOrWhiteSpace(insertStatement))
             {
@@ -698,12 +847,16 @@ namespace org.activiti.engine.impl.db
                 entityIterator = entities.GetEnumerator();
                 while (entityIterator.MoveNext())
                 {
-                    incrementRevision(entityIterator.Current);
+                    IncrementRevision(entityIterator.Current);
                 }
             }
         }
 
-        protected internal virtual void incrementRevision(IEntity insertedObject)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="insertedObject"></param>
+        protected virtual void IncrementRevision(IEntity insertedObject)
         {
             IHasRevision revisionEntity = (IHasRevision)insertedObject;
             if (revisionEntity.Revision == 0)
@@ -712,13 +865,16 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        protected internal virtual void flushUpdates()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected virtual void FlushUpdates()
         {
             foreach (IEntity updatedObject in updatedObjects)
             {
                 Type managedType = updatedObject.GetType();
-                string updateStatement = dbSqlSessionFactory.getUpdateStatement(managedType, ref managedType);
-                updateStatement = dbSqlSessionFactory.mapStatement(updateStatement);
+                string updateStatement = dbSqlSessionFactory.GetUpdateStatement(managedType, ref managedType);
+                updateStatement = dbSqlSessionFactory.MapStatement(updateStatement);
 
                 if (string.IsNullOrWhiteSpace(updateStatement))
                 {
@@ -743,7 +899,10 @@ namespace org.activiti.engine.impl.db
             updatedObjects.Clear();
         }
 
-        protected internal virtual void flushDeletes()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected virtual void FlushDeletes()
         {
             if (deletedObjects.Count == 0 && bulkDeleteOperations.Count == 0)
             {
@@ -753,12 +912,12 @@ namespace org.activiti.engine.impl.db
             // Handle in entity dependency order
             foreach (Type entityClass in EntityDependencyOrder.DELETE_ORDER)
             {
-                if (deletedObjects.ContainsKey(entityClass))
+                if (deletedObjects.TryGetValue(entityClass, out var dec))
                 {
-                    flushDeleteEntities(entityClass, deletedObjects[entityClass].Values);
-                    deletedObjects.Remove(entityClass);
+                    FlushDeleteEntities(entityClass, dec.Values);
+                    deletedObjects.TryRemove(entityClass, out dec);
                 }
-                flushBulkDeletes(entityClass);
+                FlushBulkDeletes(entityClass);
             }
 
             // Next, in case of custom entities or we've screwed up and forgotten some entity
@@ -766,32 +925,43 @@ namespace org.activiti.engine.impl.db
             {
                 foreach (Type entityClass in deletedObjects.Keys)
                 {
-                    flushDeleteEntities(entityClass, deletedObjects[entityClass].Values);
-                    flushBulkDeletes(entityClass);
+                    deletedObjects.TryGetValue(entityClass, out var dec);
+                    FlushDeleteEntities(entityClass, dec.Values);
+                    FlushBulkDeletes(entityClass);
                 }
             }
 
             deletedObjects.Clear();
         }
 
-        protected internal virtual void flushBulkDeletes(Type entityClass)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityClass"></param>
+        protected virtual void FlushBulkDeletes(Type entityClass)
         {
             // Bulk deletes
-            if (bulkDeleteOperations.ContainsKey(entityClass))
+            if (bulkDeleteOperations.TryGetValue(entityClass, out var lstBukDel))
             {
-                foreach (BulkDeleteOperation bulkDeleteOperation in bulkDeleteOperations[entityClass])
+                foreach (BulkDeleteOperation bulkDeleteOperation in lstBukDel)
                 {
-                    bulkDeleteOperation.execute(entityClass, SqlMapper);
+                    bulkDeleteOperation.Execute(entityClass, SqlMapper);
                 }
             }
         }
 
-        protected internal virtual void flushDeleteEntities(Type entityClass, ICollection<IEntity> entitiesToDelete)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityClass"></param>
+        /// <param name="entitiesToDelete"></param>
+        protected virtual void FlushDeleteEntities(Type entityClass, IEnumerable<IEntity> entities)
         {
+            IList<IEntity> entitiesToDelete = entities.ToList();
             foreach (IEntity entity in entitiesToDelete)
             {
                 Type managedType = entity.GetType();
-                string deleteStatement = dbSqlSessionFactory.getDeleteStatement(managedType, ref managedType);
+                string deleteStatement = dbSqlSessionFactory.GetDeleteStatement(managedType, ref managedType);
 
                 if (string.IsNullOrWhiteSpace(deleteStatement))
                 {
@@ -811,11 +981,18 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        public virtual void close()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Close()
         {
+
         }
 
-        public virtual void commit()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Commit()
         {
             if (SqlMapper.SessionStore?.LocalSession != null)
             {
@@ -823,7 +1000,10 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        public virtual void rollback()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Rollback()
         {
             if (SqlMapper.SessionStore?.LocalSession != null)
             {
@@ -834,125 +1014,168 @@ namespace org.activiti.engine.impl.db
         // schema operations
         // ////////////////////////////////////////////////////////
 
-        public virtual void dbSchemaCheckVersion()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void DbSchemaCheckVersion()
         {
             try
             {
-                string dbVersion = DbVersion ?? ProcessEngine_Fields.VERSION;
-                if (!ProcessEngine_Fields.VERSION.Equals(dbVersion))
+                string dbVersion = DbVersion ?? ProcessEngineConstants.VERSION;
+                if (!ProcessEngineConstants.VERSION.Equals(dbVersion))
                 {
-                    throw new ActivitiWrongDbException(ProcessEngine_Fields.VERSION, dbVersion);
+                    throw new ActivitiWrongDbException(ProcessEngineConstants.VERSION, dbVersion);
                 }
 
                 string errorMessage = null;
                 if (!IsEngineTablePresent())
                 {
-                    errorMessage = addMissingComponent(errorMessage, "engine");
+                    errorMessage = AddMissingComponent(errorMessage, "engine");
                 }
                 if (dbSqlSessionFactory.DbHistoryUsed && !IsHistoryTablePresent())
                 {
-                    errorMessage = addMissingComponent(errorMessage, "history");
+                    errorMessage = AddMissingComponent(errorMessage, "history");
                 }
 
-                if (!ReferenceEquals(errorMessage, null))
+                if (!(errorMessage is null))
                 {
                     throw new ActivitiException("Activiti database problem: " + errorMessage);
                 }
             }
             catch (Exception e)
             {
-                if (isMissingTablesException(e))
+                if (IsMissingTablesException(e))
                 {
                     throw new ActivitiException("no activiti tables in db. set <property name=\"databaseSchemaUpdate\" to value=\"true\" or value=\"create-drop\" (use create-drop for testing only!) in bean processEngineConfiguration in activiti.cfg.xml for automatic schema creation", e);
                 }
                 else
                 {
-                    if (e is Exception)
-                    {
-                        throw (Exception)e;
-                    }
-                    else
-                    {
-                        throw new ActivitiException("couldn't get db schema version", e);
-                    }
+                    throw new ActivitiException("couldn't get db schema version", e);
                 }
             }
 
             log.LogDebug($"activiti db schema check successful");
         }
 
-        protected internal virtual string addMissingComponent(string missingComponents, string component)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="missingComponents"></param>
+        /// <param name="component"></param>
+        /// <returns></returns>
+        protected virtual string AddMissingComponent(string missingComponents, string component)
         {
-            if (ReferenceEquals(missingComponents, null))
+            if (missingComponents is null)
             {
                 return "Tables missing for component(s) " + component;
             }
             return missingComponents + ", " + component;
         }
 
-        protected internal virtual string DbVersion
+        /// <summary>
+        /// 
+        /// </summary>
+        protected virtual string DbVersion
         {
             get
             {
-                string selectSchemaVersionStatement = dbSqlSessionFactory.mapStatement("selectDbSchemaVersion");
+                string selectSchemaVersionStatement = dbSqlSessionFactory.MapStatement("selectDbSchemaVersion");
                 return SqlMapper.QuerySingle<string>(dbSqlSessionFactory.CreateRequestContext(typeof(PropertyEntityImpl).FullName, selectSchemaVersionStatement, null));
             }
         }
 
-        public virtual void dbSchemaCreate()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void DbSchemaCreate()
         {
             if (IsEngineTablePresent())
             {
                 string dbVersion = DbVersion;
-                if (!ProcessEngine_Fields.VERSION.Equals(dbVersion))
+                if (!ProcessEngineConstants.VERSION.Equals(dbVersion))
                 {
-                    throw new ActivitiWrongDbException(ProcessEngine_Fields.VERSION, dbVersion);
+                    throw new ActivitiWrongDbException(ProcessEngineConstants.VERSION, dbVersion);
                 }
             }
             else
             {
-                dbSchemaCreateEngine();
+                DbSchemaCreateEngine();
             }
 
             if (dbSqlSessionFactory.DbHistoryUsed)
             {
-                dbSchemaCreateHistory();
+                DbSchemaCreateHistory();
             }
         }
 
-        protected internal virtual void dbSchemaCreateHistory()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected virtual void DbSchemaCreateHistory()
         {
-            executeMandatorySchemaResource("create", "history");
+            ExecuteMandatorySchemaResource("create", "history");
         }
 
-        protected internal virtual void dbSchemaCreateEngine()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected virtual void DbSchemaCreateEngine()
         {
-            executeMandatorySchemaResource("create", "engine");
+            ExecuteMandatorySchemaResource("create", "engine");
         }
 
-        public virtual void dbSchemaDrop()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void DbSchemaDrop()
         {
-            executeMandatorySchemaResource("drop", "engine");
+            try
+            {
+                ExecuteMandatorySchemaResource("drop", "engine");
+            }
+            catch
+            {
+                // ignore 
+            }
             if (dbSqlSessionFactory.DbHistoryUsed)
             {
-                executeMandatorySchemaResource("drop", "history");
+                try
+                {
+                    ExecuteMandatorySchemaResource("drop", "history");
+                }
+                catch
+                {
+                    // ignore
+                }
             }
         }
 
-        public virtual void dbSchemaPrune()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void DbSchemaPrune()
         {
             if (IsHistoryTablePresent() && !dbSqlSessionFactory.DbHistoryUsed)
             {
-                executeMandatorySchemaResource("drop", "history");
+                ExecuteMandatorySchemaResource("drop", "history");
             }
         }
 
-        public virtual void executeMandatorySchemaResource(string operation, string component)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="operation"></param>
+        /// <param name="component"></param>
+        public virtual void ExecuteMandatorySchemaResource(string operation, string component)
         {
-            executeSchemaResource(operation, component, getResourceForDbOperation(operation, operation, component), false);
+            ExecuteSchemaResource(operation, component, GetResourceForDbOperation(operation, operation, component), false);
         }
 
-        public virtual string dbSchemaUpdate()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual string DbSchemaUpdate()
         {
             string feedback = null;
             bool isUpgradeNeeded = false;
@@ -961,11 +1184,11 @@ namespace org.activiti.engine.impl.db
             if (IsEngineTablePresent())
             {
 
-                IPropertyEntity dbVersionProperty = selectById<PropertyEntityImpl, IPropertyEntity>(new KeyValuePair<string, object>("name", "schema.version"));
+                IPropertyEntity dbVersionProperty = SelectById<PropertyEntityImpl, IPropertyEntity>(new KeyValuePair<string, object>("name", "schema.version"));
                 string dbVersion = dbVersionProperty.Value;
 
                 // Determine index in the sequence of Activiti releases
-                matchingVersionIndex = findMatchingVersionIndex(dbVersion);
+                matchingVersionIndex = FindMatchingVersionIndex(dbVersion);
 
                 // Exception when no match was found: unknown/unsupported version
                 if (matchingVersionIndex < 0)
@@ -977,49 +1200,49 @@ namespace org.activiti.engine.impl.db
 
                 if (isUpgradeNeeded)
                 {
-                    dbVersionProperty.Value = ProcessEngine_Fields.VERSION;
+                    dbVersionProperty.Value = ProcessEngineConstants.VERSION;
 
-                    IPropertyEntity dbHistoryProperty = selectById<PropertyEntityImpl, IPropertyEntity>(new KeyValuePair<string, object>("name", "schema.history"));
+                    IPropertyEntity dbHistoryProperty = SelectById<PropertyEntityImpl, IPropertyEntity>(new KeyValuePair<string, object>("name", "schema.history"));
 
                     // Set upgrade history
-                    string dbHistoryValue = dbHistoryProperty.Value + " upgrade(" + dbVersion + "->" + ProcessEngine_Fields.VERSION + ")";
+                    string dbHistoryValue = dbHistoryProperty.Value + " upgrade(" + dbVersion + "->" + ProcessEngineConstants.VERSION + ")";
                     dbHistoryProperty.Value = dbHistoryValue;
 
                     // Engine upgrade
-                    dbSchemaUpgrade("engine", matchingVersionIndex);
-                    feedback = "upgraded Activiti from " + dbVersion + " to " + ProcessEngine_Fields.VERSION;
+                    DbSchemaUpgrade("engine", matchingVersionIndex);
+                    feedback = "upgraded Activiti from " + dbVersion + " to " + ProcessEngineConstants.VERSION;
                 }
             }
             else
             {
-                dbSchemaCreateEngine();
+                DbSchemaCreateEngine();
             }
             if (IsHistoryTablePresent())
             {
                 if (isUpgradeNeeded)
                 {
-                    dbSchemaUpgrade("history", matchingVersionIndex);
+                    DbSchemaUpgrade("history", matchingVersionIndex);
                 }
             }
             else if (dbSqlSessionFactory.DbHistoryUsed)
             {
-                dbSchemaCreateHistory();
+                DbSchemaCreateHistory();
             }
 
             return feedback;
         }
 
         /// <summary>
-        /// Returns the index in the list of <seealso cref="#ACTIVITI_VERSIONS"/> matching the provided string version.
+        /// Returns the index in the list of <seealso cref="ACTIVITI_VERSIONS"/> matching the provided string version.
         /// Returns -1 if no match can be found.
         /// </summary>
-        protected internal virtual int findMatchingVersionIndex(string dbVersion)
+        protected virtual int FindMatchingVersionIndex(string dbVersion)
         {
             int index = 0;
             int matchingVersionIndex = -1;
             while (matchingVersionIndex < 0 && index < ACTIVITI_VERSIONS.Count)
             {
-                if (ACTIVITI_VERSIONS[index].matches(dbVersion))
+                if (ACTIVITI_VERSIONS[index].Matches(dbVersion))
                 {
                     matchingVersionIndex = index;
                 }
@@ -1031,35 +1254,48 @@ namespace org.activiti.engine.impl.db
             return matchingVersionIndex;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual bool IsEngineTablePresent()
         {
-            return isTablePresent("ACT_RU_EXECUTION");
+            return IsTablePresent("ACT_RU_EXECUTION");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual bool IsHistoryTablePresent()
         {
-            return isTablePresent("ACT_HI_PROCINST");
+            return IsTablePresent("ACT_HI_PROCINST");
         }
 
-        public virtual bool isTablePresent(string tableName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public virtual bool IsTablePresent(string tableName)
         {
             // ACT-1610: in case the prefix IS the schema itself, we don't add the
             // prefix, since the check is already aware of the schema
             if (!dbSqlSessionFactory.TablePrefixIsSchema)
             {
-                tableName = prependDatabaseTablePrefix(tableName);
+                tableName = PrependDatabaseTablePrefix(tableName);
             }
 
             try
             {
                 string catalog = this.connectionMetadataDefaultCatalog;
-                if (!ReferenceEquals(dbSqlSessionFactory.DatabaseCatalog, null) && dbSqlSessionFactory.DatabaseCatalog.Length > 0)
+                if (!(dbSqlSessionFactory.DatabaseCatalog is null) && dbSqlSessionFactory.DatabaseCatalog.Length > 0)
                 {
                     catalog = dbSqlSessionFactory.DatabaseCatalog;
                 }
 
                 string schema = this.connectionMetadataDefaultSchema;
-                if (!ReferenceEquals(dbSqlSessionFactory.DatabaseSchema, null) && dbSqlSessionFactory.DatabaseSchema.Length > 0)
+                if (!(dbSqlSessionFactory.DatabaseSchema is null) && dbSqlSessionFactory.DatabaseSchema.Length > 0)
                 {
                     schema = dbSqlSessionFactory.DatabaseSchema;
                 }
@@ -1071,12 +1307,12 @@ namespace org.activiti.engine.impl.db
                     tableName = tableName.ToLower();
                 }
 
-                if (!ReferenceEquals(schema, null) && "oracle".Equals(databaseType))
+                if (!(schema is null) && "oracle".Equals(databaseType))
                 {
                     schema = schema.ToUpper();
                 }
 
-                if (!ReferenceEquals(catalog, null) && catalog.Length == 0)
+                if (!(catalog is null) && catalog.Length == 0)
                 {
                     catalog = null;
                 }
@@ -1091,37 +1327,47 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        protected internal virtual bool isUpgradeNeeded(string versionInDatabase)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="versionInDatabase"></param>
+        /// <returns></returns>
+        protected virtual bool IsUpgradeNeeded(string versionInDatabase)
         {
-            if (ProcessEngine_Fields.VERSION.Equals(versionInDatabase))
+            if (ProcessEngineConstants.VERSION.Equals(versionInDatabase))
             {
                 return false;
             }
 
-            string cleanDbVersion = getCleanVersion(versionInDatabase);
+            string cleanDbVersion = GetCleanVersion(versionInDatabase);
             string[] cleanDbVersionSplitted = cleanDbVersion.Split("\\.", true);
             int dbMajorVersion = Convert.ToInt32(cleanDbVersionSplitted[0]);
             int dbMinorVersion = Convert.ToInt32(cleanDbVersionSplitted[1]);
 
-            string cleanEngineVersion = getCleanVersion(ProcessEngine_Fields.VERSION);
+            string cleanEngineVersion = GetCleanVersion(ProcessEngineConstants.VERSION);
             string[] cleanEngineVersionSplitted = cleanEngineVersion.Split("\\.", true);
             int engineMajorVersion = Convert.ToInt32(cleanEngineVersionSplitted[0]);
             int engineMinorVersion = Convert.ToInt32(cleanEngineVersionSplitted[1]);
 
             if ((dbMajorVersion > engineMajorVersion) || ((dbMajorVersion <= engineMajorVersion) && (dbMinorVersion > engineMinorVersion)))
             {
-                throw new ActivitiException("Version of activiti database (" + versionInDatabase + ") is more recent than the engine (" + ProcessEngine_Fields.VERSION + ")");
+                throw new ActivitiException("Version of activiti database (" + versionInDatabase + ") is more recent than the engine (" + ProcessEngineConstants.VERSION + ")");
             }
             else if (cleanDbVersion.CompareTo(cleanEngineVersion) == 0)
             {
                 // Versions don't match exactly, possibly snapshot is being used
-                log.LogWarning($"Engine-version is the same, but not an exact match: {versionInDatabase} vs. {ProcessEngine_Fields.VERSION}. Not performing database-upgrade.");
+                log.LogWarning($"Engine-version is the same, but not an exact match: {versionInDatabase} vs. {ProcessEngineConstants.VERSION}. Not performing database-upgrade.");
                 return false;
             }
             return true;
         }
 
-        protected internal virtual string getCleanVersion(string versionString)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="versionString"></param>
+        /// <returns></returns>
+        protected virtual string GetCleanVersion(string versionString)
         {
             if (!CLEAN_VERSION_REGEX.IsMatch(versionString))
             {
@@ -1141,16 +1387,26 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        protected internal virtual string prependDatabaseTablePrefix(string tableName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        protected virtual string PrependDatabaseTablePrefix(string tableName)
         {
             return dbSqlSessionFactory.DatabaseTablePrefix + tableName;
         }
 
-        protected internal virtual void dbSchemaUpgrade(string component, int currentDatabaseVersionsIndex)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="component"></param>
+        /// <param name="currentDatabaseVersionsIndex"></param>
+        protected virtual void DbSchemaUpgrade(string component, int currentDatabaseVersionsIndex)
         {
             ActivitiVersion activitiVersion = ACTIVITI_VERSIONS[currentDatabaseVersionsIndex];
             string dbVersion = activitiVersion.MainVersion;
-            log.LogInformation($"upgrading activiti {component} schema from {dbVersion} to {ProcessEngine_Fields.VERSION}");
+            log.LogInformation($"upgrading activiti {component} schema from {dbVersion} to {ProcessEngineConstants.VERSION}");
 
             // Actual execution of schema DDL SQL
             for (int i = currentDatabaseVersionsIndex + 1; i < ACTIVITI_VERSIONS.Count; i++)
@@ -1166,21 +1422,35 @@ namespace org.activiti.engine.impl.db
                 dbVersion = dbVersion.Replace(".", "");
                 nextVersion = nextVersion.Replace(".", "");
                 log.LogInformation($"Upgrade needed: {dbVersion} -> {nextVersion}. Looking for schema update resource for component '{component}'");
-                executeSchemaResource("upgrade", component, getResourceForDbOperation("upgrade", "upgradestep." + dbVersion + ".to." + nextVersion, component), true);
+                ExecuteSchemaResource("upgrade", component, GetResourceForDbOperation("upgrade", "upgradestep." + dbVersion + ".to." + nextVersion, component), true);
                 dbVersion = nextVersion;
             }
         }
 
-        public virtual string getResourceForDbOperation(string directory, string operation, string component)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <param name="operation"></param>
+        /// <param name="component"></param>
+        /// <returns></returns>
+        public virtual string GetResourceForDbOperation(string directory, string operation, string component)
         {
             string databaseType = dbSqlSessionFactory.DatabaseType;
             return $"resources/db/{directory}/activiti.{databaseType}.{operation}.{component}.sql";
             //"org/activiti/db/" + directory + "/activiti." + databaseType + "." + operation + "." + component + ".sql";
         }
 
-        public virtual void executeSchemaResource(string operation, string component, string resourceName, bool isOptional)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="operation"></param>
+        /// <param name="component"></param>
+        /// <param name="resourceName"></param>
+        /// <param name="isOptional"></param>
+        public virtual void ExecuteSchemaResource(string operation, string component, string resourceName, bool isOptional)
         {
-            using (Stream inputStream = ReflectUtil.getResourceAsStream(resourceName))
+            using (Stream inputStream = ReflectUtil.GetResourceAsStream(resourceName))
             {
                 if (inputStream == null)
                 {
@@ -1195,12 +1465,12 @@ namespace org.activiti.engine.impl.db
                 }
                 else
                 {
-                    executeSchemaResource(operation, component, resourceName, inputStream);
+                    ExecuteSchemaResource(operation, component, resourceName, inputStream);
                 }
             }
         }
 
-        private void executeSchemaResource(string operation, string component, string resourceName, Stream inputStream)
+        private void ExecuteSchemaResource(string operation, string component, string resourceName, Stream inputStream)
         {
             log.LogInformation($"performing {operation} on {component} with resource {resourceName}");
             string sqlStatement = null;
@@ -1208,7 +1478,7 @@ namespace org.activiti.engine.impl.db
             try
             {
                 Exception exception = null;
-                byte[] bytes = IoUtil.readInputStream(inputStream, resourceName);
+                byte[] bytes = IoUtil.ReadInputStream(inputStream, resourceName);
                 string ddlStatements = StringHelper.NewString(bytes);
 
                 // Special DDL handling for certain databases
@@ -1236,10 +1506,10 @@ namespace org.activiti.engine.impl.db
                 IDataSource ds = ProcessEngineServiceProvider.Resolve<IDataSource>();
 
                 StringReader reader = new StringReader(ddlStatements);
-                string line = readNextTrimmedLine(reader);
+                string line = ReadNextTrimmedLine(reader);
                 bool inOraclePlsqlBlock = false;
 
-                while (!string.ReferenceEquals(line, null))
+                while (!(line is null))
                 {
                     if (line.StartsWith("# ", StringComparison.Ordinal))
                     {
@@ -1255,7 +1525,7 @@ namespace org.activiti.engine.impl.db
                         IDbUpgradeStep dbUpgradeStep = null;
                         try
                         {
-                            dbUpgradeStep = (IDbUpgradeStep)ReflectUtil.instantiate(upgradestepClassName);
+                            dbUpgradeStep = (IDbUpgradeStep)ReflectUtil.Instantiate(upgradestepClassName);
                         }
                         catch (ActivitiException e)
                         {
@@ -1264,7 +1534,7 @@ namespace org.activiti.engine.impl.db
                         try
                         {
                             log.LogDebug($"executing upgrade step java class {upgradestepClassName}");
-                            dbUpgradeStep.execute(this);
+                            dbUpgradeStep.Execute(this);
                         }
                         catch (Exception e)
                         {
@@ -1276,7 +1546,7 @@ namespace org.activiti.engine.impl.db
                         if (Oracle && line.StartsWith("begin", StringComparison.Ordinal))
                         {
                             inOraclePlsqlBlock = true;
-                            sqlStatement = addSqlStatementPiece(sqlStatement, line);
+                            sqlStatement = AddSqlStatementPiece(sqlStatement, line);
                         }
                         else if ((line.EndsWith(";", StringComparison.Ordinal) && !inOraclePlsqlBlock) || (line.StartsWith("/", StringComparison.Ordinal) && inOraclePlsqlBlock))
                         {
@@ -1287,7 +1557,7 @@ namespace org.activiti.engine.impl.db
                             }
                             else
                             {
-                                sqlStatement = addSqlStatementPiece(sqlStatement, line.Substring(0, line.Length - 1));
+                                sqlStatement = AddSqlStatementPiece(sqlStatement, line.Substring(0, line.Length - 1));
                             }
 
                             IDbCommand command = ds.Connection.CreateCommand();
@@ -1317,11 +1587,11 @@ namespace org.activiti.engine.impl.db
                         }
                         else
                         {
-                            sqlStatement = addSqlStatementPiece(sqlStatement, line);
+                            sqlStatement = AddSqlStatementPiece(sqlStatement, line);
                         }
                     }
 
-                    line = readNextTrimmedLine(reader);
+                    line = ReadNextTrimmedLine(reader);
                 }
 
                 if (exception != null)
@@ -1337,26 +1607,42 @@ namespace org.activiti.engine.impl.db
             }
         }
 
-        protected internal virtual string addSqlStatementPiece(string sqlStatement, string line)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sqlStatement"></param>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        protected virtual string AddSqlStatementPiece(string sqlStatement, string line)
         {
-            if (ReferenceEquals(sqlStatement, null))
+            if (sqlStatement is null)
             {
                 return line;
             }
             return sqlStatement + " \n" + line;
         }
 
-        protected internal virtual string readNextTrimmedLine(StringReader reader)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        protected virtual string ReadNextTrimmedLine(StringReader reader)
         {
             string line = reader.ReadLine();
-            if (!ReferenceEquals(line, null))
+            if (!string.IsNullOrWhiteSpace(line))
             {
                 line = line.Trim();
             }
             return line;
         }
 
-        protected internal virtual bool isMissingTablesException(Exception e)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        protected virtual bool IsMissingTablesException(Exception e)
         {
             string exceptionMessage = e.Message;
             if (e.Message != null)
@@ -1382,44 +1668,57 @@ namespace org.activiti.engine.impl.db
             return false;
         }
 
-        public virtual void performSchemaOperationsProcessEngineBuild()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void PerformSchemaOperationsProcessEngineBuild()
         {
             string databaseSchemaUpdate = Context.ProcessEngineConfiguration.DatabaseSchemaUpdate;
             log.LogDebug("Executing performSchemaOperationsProcessEngineBuild with setting " + databaseSchemaUpdate);
+#if DEBUG
             if (ProcessEngineConfigurationImpl.DB_SCHEMA_UPDATE_DROP_CREATE.Equals(databaseSchemaUpdate))
             {
                 try
                 {
-                    dbSchemaDrop();
+                    DbSchemaDrop();
                 }
                 catch (Exception)
                 {
                     // ignore
                 }
             }
-            if (ProcessEngineConfiguration.DB_SCHEMA_UPDATE_CREATE_DROP.Equals(databaseSchemaUpdate) || ProcessEngineConfigurationImpl.DB_SCHEMA_UPDATE_DROP_CREATE.Equals(databaseSchemaUpdate) || ProcessEngineConfigurationImpl.DB_SCHEMA_UPDATE_CREATE.Equals(databaseSchemaUpdate))
+#endif
+            if (ProcessEngineConfiguration.DB_SCHEMA_UPDATE_CREATE_DROP.Equals(databaseSchemaUpdate) ||
+                ProcessEngineConfigurationImpl.DB_SCHEMA_UPDATE_DROP_CREATE.Equals(databaseSchemaUpdate) ||
+                ProcessEngineConfigurationImpl.DB_SCHEMA_UPDATE_CREATE.Equals(databaseSchemaUpdate))
             {
-                dbSchemaCreate();
+                DbSchemaCreate();
             }
             else if (ProcessEngineConfiguration.DB_SCHEMA_UPDATE_FALSE.Equals(databaseSchemaUpdate))
             {
-                dbSchemaCheckVersion();
+                DbSchemaCheckVersion();
             }
             else if (ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE.Equals(databaseSchemaUpdate))
             {
-                dbSchemaUpdate();
+                DbSchemaUpdate();
             }
         }
 
-        public virtual void performSchemaOperationsProcessEngineClose()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void PerformSchemaOperationsProcessEngineClose()
         {
             string databaseSchemaUpdate = Context.ProcessEngineConfiguration.DatabaseSchemaUpdate;
             if (ProcessEngineConfiguration.DB_SCHEMA_UPDATE_CREATE_DROP.Equals(databaseSchemaUpdate))
             {
-                dbSchemaDrop();
+                DbSchemaDrop();
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Mysql
         {
             get
@@ -1428,6 +1727,9 @@ namespace org.activiti.engine.impl.db
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Oracle
         {
             get
@@ -1439,71 +1741,127 @@ namespace org.activiti.engine.impl.db
         // query factory methods
         // ////////////////////////////////////////////////////
 
-        public virtual DeploymentQueryImpl createDeploymentQuery()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual DeploymentQueryImpl CreateDeploymentQuery()
         {
             return new DeploymentQueryImpl();
         }
 
-        public virtual ModelQueryImpl createModelQueryImpl()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual ModelQueryImpl CreateModelQueryImpl()
         {
             return new ModelQueryImpl();
         }
 
-        public virtual ProcessDefinitionQueryImpl createProcessDefinitionQuery()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual ProcessDefinitionQueryImpl CreateProcessDefinitionQuery()
         {
             return new ProcessDefinitionQueryImpl();
         }
 
-        public virtual ProcessInstanceQueryImpl createProcessInstanceQuery()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual ProcessInstanceQueryImpl CreateProcessInstanceQuery()
         {
             return new ProcessInstanceQueryImpl();
         }
 
-        public virtual ExecutionQueryImpl createExecutionQuery()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual ExecutionQueryImpl CreateExecutionQuery()
         {
             return new ExecutionQueryImpl();
         }
 
-        public virtual TaskQueryImpl createTaskQuery()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual TaskQueryImpl CreateTaskQuery()
         {
             return new TaskQueryImpl();
         }
 
-        public virtual JobQueryImpl createJobQuery()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual JobQueryImpl CreateJobQuery()
         {
             return new JobQueryImpl();
         }
 
-        public virtual HistoricProcessInstanceQueryImpl createHistoricProcessInstanceQuery()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual HistoricProcessInstanceQueryImpl CreateHistoricProcessInstanceQuery()
         {
             return new HistoricProcessInstanceQueryImpl();
         }
 
-        public virtual HistoricActivityInstanceQueryImpl createHistoricActivityInstanceQuery()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual HistoricActivityInstanceQueryImpl CreateHistoricActivityInstanceQuery()
         {
             return new HistoricActivityInstanceQueryImpl();
         }
 
-        public virtual HistoricTaskInstanceQueryImpl createHistoricTaskInstanceQuery()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual HistoricTaskInstanceQueryImpl CreateHistoricTaskInstanceQuery()
         {
             return new HistoricTaskInstanceQueryImpl();
         }
 
-        public virtual HistoricDetailQueryImpl createHistoricDetailQuery()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual HistoricDetailQueryImpl CreateHistoricDetailQuery()
         {
             return new HistoricDetailQueryImpl();
         }
 
-        public virtual HistoricVariableInstanceQueryImpl createHistoricVariableInstanceQuery()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual HistoricVariableInstanceQueryImpl CreateHistoricVariableInstanceQuery()
         {
             return new HistoricVariableInstanceQueryImpl();
         }
 
-        internal object getMapper(Type mapperClass)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mapperClass"></param>
+        /// <returns></returns>
+        internal object GetMapper(Type mapperClass)
         {
             return Activator.CreateInstance(mapperClass);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DbSqlSessionFactory DbSqlSessionFactory
         {
             get
@@ -1513,6 +1871,9 @@ namespace org.activiti.engine.impl.db
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     internal static class DbSqlSessionVersion
     {
         public static ActivitiVersion VERSION { get; private set; }
@@ -1520,9 +1881,9 @@ namespace org.activiti.engine.impl.db
 
         internal static void InitVersion(IConfiguration configuration)
         {
-            ProcessEngine_Fields.VERSION = configuration.GetSection("currentVersion").Value;
+            ProcessEngineConstants.VERSION = configuration.GetSection("currentVersion").Value;
 
-            VERSION = new ActivitiVersion(ProcessEngine_Fields.VERSION);
+            VERSION = new ActivitiVersion(ProcessEngineConstants.VERSION);
 
             IEnumerable<IConfigurationSection> historyVersions = configuration.GetSection("historyVersions")?.GetChildren();
 

@@ -94,7 +94,7 @@ public static class StringHelper
         return sbytes;
     }
 
-    public static string replaceFirst(this string str, string regex, string replacement)
+    public static string ReplaceFirst(this string str, string regex, string replacement)
     {
         var idx = str.IndexOf(regex);
 

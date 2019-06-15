@@ -24,14 +24,26 @@ namespace org.activiti.engine
         private const long serialVersionUID = 1L;
         private string _code;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="cause"></param>
         public ActivitiException(string message, Exception cause) : base(message, cause)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public ActivitiException(string message) : base(message)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Code
         {
             get
@@ -46,5 +58,4 @@ namespace org.activiti.engine
             set => _code = value;
         }
     }
-
 }

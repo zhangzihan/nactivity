@@ -19,6 +19,7 @@ namespace org.activiti.engine.@delegate
     using org.activiti.bpmn.model;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.task;
+    using Sys.Workflow;
 
     /// 
     public interface IDelegateTask : IVariableScope
@@ -91,6 +92,9 @@ namespace org.activiti.engine.@delegate
         /// </summary>
         string EventName { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         ActivitiListener CurrentActivitiListener { get; }
 
         /// <summary>
@@ -100,29 +104,35 @@ namespace org.activiti.engine.@delegate
 
         /// <summary>
         /// Adds the given user as a candidate user to this task. </summary>
-        void addCandidateUser(string userId);
+        void AddCandidateUser(string userId);
 
         /// <summary>
         /// Adds multiple users as candidate user to this task. </summary>
-        void addCandidateUsers(ICollection<string> candidateUsers);
+        void AddCandidateUsers(IEnumerable<string> candidateUsers);
 
         /// <summary>
         /// Adds the given group as candidate group to this task </summary>
-        void addCandidateGroup(string groupId);
+        void AddCandidateGroup(string groupId);
 
         /// <summary>
         /// Adds multiple groups as candidate group to this task. </summary>
-        void addCandidateGroups(ICollection<string> candidateGroups);
+        void AddCandidateGroups(IEnumerable<string> candidateGroups);
 
         /// <summary>
-        /// The <seealso cref="User.getId() userId"/> of the person responsible for this task. </summary>
+        /// The <seealso cref="IUserInfo.Id"/> of the person responsible for this task. </summary>
         string Owner { get; set; }
 
 
         /// <summary>
-        /// The <seealso cref="User.getId() userId"/> of the person to which this task is delegated.
+        /// The <seealso cref="IUserInfo.Id"/> of the person to which this task is delegated.
         /// </summary>
         string Assignee { get; set; }
+
+
+        /// <summary>
+        /// The <seealso cref="IUserInfo.Id"/> of the person to which this task is delegated.
+        /// </summary>
+        string AssigneeUser { get; set; }
 
 
         /// <summary>
@@ -142,10 +152,10 @@ namespace org.activiti.engine.@delegate
         /// <param name="userId">
         ///          id of the user involve, cannot be null. </param>
         /// <param name="identityLinkType"> </param>
-        ///          type of identityLink, cannot be null (<seealso cref= <seealso cref="IdentityLinkType"/>). </seealso>
+        ///          type of identityLink, cannot be null (<seealso cref="IdentityLinkType"/>)
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task or user doesn't exist. </exception>
-        void addUserIdentityLink(string userId, string identityLinkType);
+        void AddUserIdentityLink(string userId, string identityLinkType);
 
         /// <summary>
         /// Involves a group with group task. The type of identityLink is defined by the given identityLink.
@@ -156,25 +166,25 @@ namespace org.activiti.engine.@delegate
         ///          type of identity, cannot be null (<seealso cref= <seealso cref="IdentityLinkType"/>). </seealso>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task or group doesn't exist. </exception>
-        void addGroupIdentityLink(string groupId, string identityLinkType);
+        void AddGroupIdentityLink(string groupId, string identityLinkType);
 
         /// <summary>
-        /// Convenience shorthand for <seealso cref="#deleteUserIdentityLink(String, String)"/> ; with type <seealso cref="IdentityLinkType#CANDIDATE"/>
+        /// Convenience shorthand for <seealso cref="DeleteUserIdentityLink(String, String)"/> ; with type <seealso cref="IdentityLinkType.CANDIDATE"/>
         /// </summary>
         /// <param name="userId">
         ///          id of the user to use as candidate, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task or user doesn't exist. </exception>
-        void deleteCandidateUser(string userId);
+        void DeleteCandidateUser(string userId);
 
         /// <summary>
-        /// Convenience shorthand for <seealso cref="#deleteGroupIdentityLink(String, String, String)"/>; with type <seealso cref="IdentityLinkType#CANDIDATE"/>
+        /// Convenience shorthand for <seealso cref="DeleteGroupIdentityLink(String, String)"/>; with type <seealso cref="IdentityLinkType.CANDIDATE"/>
         /// </summary>
         /// <param name="groupId">
         ///          id of the group to use as candidate, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task or group doesn't exist. </exception>
-        void deleteCandidateGroup(string groupId);
+        void DeleteCandidateGroup(string groupId);
 
         /// <summary>
         /// Removes the association between a user and a task for the given identityLinkType.
@@ -182,10 +192,10 @@ namespace org.activiti.engine.@delegate
         /// <param name="userId">
         ///          id of the user involve, cannot be null. </param>
         /// <param name="identityLinkType"> </param>
-        ///          type of identityLink, cannot be null (<seealso cref= <seealso cref="IdentityLinkType"/>). </seealso>
+        ///          type of identityLink, cannot be null (<seealso cref="IdentityLinkType"/>).
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task or user doesn't exist. </exception>
-        void deleteUserIdentityLink(string userId, string identityLinkType);
+        void DeleteUserIdentityLink(string userId, string identityLinkType);
 
         /// <summary>
         /// Removes the association between a group and a task for the given identityLinkType.
@@ -196,12 +206,12 @@ namespace org.activiti.engine.@delegate
         ///          type of identity, cannot be null (<seealso cref= <seealso cref="IdentityLinkType"/>). </seealso>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the task or group doesn't exist. </exception>
-        void deleteGroupIdentityLink(string groupId, string identityLinkType);
+        void DeleteGroupIdentityLink(string groupId, string identityLinkType);
 
         /// <summary>
         /// Retrieves the candidate users and groups associated with the task.
         /// </summary>
-        /// <returns> set of <seealso cref="IIdentityLink"/>s of type <seealso cref="IdentityLinkType#CANDIDATE"/>. </returns>
+        /// <returns> set of <seealso cref="IIdentityLink"/>s of type <seealso cref="IdentityLinkType.CANDIDATE"/>. </returns>
         ISet<IIdentityLink> Candidates { get; }
     }
 

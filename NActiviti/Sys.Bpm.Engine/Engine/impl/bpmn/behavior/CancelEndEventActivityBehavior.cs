@@ -32,7 +32,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         private const long serialVersionUID = 1L;
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             IExecutionEntity executionEntity = execution;
             ICommandContext commandContext = Context.CommandContext;
@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             // find cancel boundary event:
             IExecutionEntity parentScopeExecution = null;
-            IExecutionEntity currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(executionEntity.ParentId);
+            IExecutionEntity currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(executionEntity.ParentId);
             while (currentlyExaminedExecution != null && parentScopeExecution == null)
             {
                 if (currentlyExaminedExecution.CurrentFlowElement is SubProcess)
@@ -60,7 +60,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
                 else
                 {
-                    currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
+                    currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
                 }
             }
 
@@ -91,7 +91,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
 
                 IExecutionEntity newParentScopeExecution = null;
-                currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(parentScopeExecution.ParentId);
+                currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(parentScopeExecution.ParentId);
                 while (currentlyExaminedExecution != null && newParentScopeExecution == null)
                 {
                     if (currentlyExaminedExecution.IsScope)
@@ -100,16 +100,11 @@ namespace org.activiti.engine.impl.bpmn.behavior
                     }
                     else
                     {
-                        currentlyExaminedExecution = executionEntityManager.findById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
+                        currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
                     }
                 }
 
-                if (newParentScopeExecution == null)
-                {
-                    throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event " + cancelBoundaryEvent.Id);
-                }
-
-                ScopeUtil.createCopyOfSubProcessExecutionForCompensation(parentScopeExecution);
+                ScopeUtil.CreateCopyOfSubProcessExecutionForCompensation(parentScopeExecution);
 
                 if (subProcess.LoopCharacteristics != null)
                 {
@@ -119,53 +114,53 @@ namespace org.activiti.engine.impl.bpmn.behavior
                     {
                         if (!multiInstanceExecution.Id.Equals(parentScopeExecution.Id))
                         {
-                            ScopeUtil.createCopyOfSubProcessExecutionForCompensation(multiInstanceExecution);
+                            ScopeUtil.CreateCopyOfSubProcessExecutionForCompensation(multiInstanceExecution);
 
                             // end all executions in the scope of the transaction
                             executionsToDelete.Add(multiInstanceExecution);
-                            deleteChildExecutions(multiInstanceExecution, executionEntity, commandContext, engine.history.DeleteReason_Fields.TRANSACTION_CANCELED);
+                            DeleteChildExecutions(multiInstanceExecution, executionEntity, commandContext, engine.history.DeleteReasonFields.TRANSACTION_CANCELED);
 
                         }
                     }
 
                     foreach (IExecutionEntity executionEntityToDelete in executionsToDelete)
                     {
-                        deleteChildExecutions(executionEntityToDelete, executionEntity, commandContext, engine.history.DeleteReason_Fields.TRANSACTION_CANCELED);
+                        DeleteChildExecutions(executionEntityToDelete, executionEntity, commandContext, engine.history.DeleteReasonFields.TRANSACTION_CANCELED);
                     }
                 }
 
                 // The current activity is finished (and will not be ended in the deleteChildExecutions)
-                commandContext.HistoryManager.recordActivityEnd(executionEntity, null);
+                commandContext.HistoryManager.RecordActivityEnd(executionEntity, null);
 
                 // set new parent for boundary event execution
-                executionEntity.Parent = newParentScopeExecution;
+                executionEntity.Parent = newParentScopeExecution ?? throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event " + cancelBoundaryEvent.Id);
                 executionEntity.CurrentFlowElement = cancelBoundaryEvent;
 
                 // end all executions in the scope of the transaction
-                deleteChildExecutions(parentScopeExecution, executionEntity, commandContext, engine.history.DeleteReason_Fields.TRANSACTION_CANCELED);
-                commandContext.HistoryManager.recordActivityEnd(parentScopeExecution, engine.history.DeleteReason_Fields.TRANSACTION_CANCELED);
+                DeleteChildExecutions(parentScopeExecution, executionEntity, commandContext, engine.history.DeleteReasonFields.TRANSACTION_CANCELED);
+                commandContext.HistoryManager.RecordActivityEnd(parentScopeExecution, engine.history.DeleteReasonFields.TRANSACTION_CANCELED);
 
-                Context.Agenda.planTriggerExecutionOperation(executionEntity);
+                Context.Agenda.PlanTriggerExecutionOperation(executionEntity);
             }
         }
 
-        protected internal virtual void deleteChildExecutions(IExecutionEntity parentExecution, IExecutionEntity notToDeleteExecution, ICommandContext commandContext, string deleteReason)
+        protected internal virtual void DeleteChildExecutions(IExecutionEntity parentExecution, IExecutionEntity notToDeleteExecution, ICommandContext commandContext, string deleteReason)
         {
             // Delete all child executions
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
-            ICollection<IExecutionEntity> childExecutions = executionEntityManager.findChildExecutionsByParentExecutionId(parentExecution.Id);
+            ICollection<IExecutionEntity> childExecutions = executionEntityManager.FindChildExecutionsByParentExecutionId(parentExecution.Id);
             if (CollectionUtil.IsNotEmpty(childExecutions))
             {
                 foreach (IExecutionEntity childExecution in childExecutions)
                 {
                     if (!(childExecution.Id.Equals(notToDeleteExecution.Id)))
                     {
-                        deleteChildExecutions(childExecution, notToDeleteExecution, commandContext, deleteReason);
+                        DeleteChildExecutions(childExecution, notToDeleteExecution, commandContext, deleteReason);
                     }
                 }
             }
 
-            executionEntityManager.deleteExecutionAndRelatedData(parentExecution, deleteReason, false);
+            executionEntityManager.DeleteExecutionAndRelatedData(parentExecution, deleteReason, false);
         }
 
     }

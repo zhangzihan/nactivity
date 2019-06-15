@@ -42,34 +42,33 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public override ITaskEntity create()
+        public override ITaskEntity Create()
         {
-            ITaskEntity taskEntity = base.create();
+            ITaskEntity taskEntity = base.Create();
             taskEntity.CreateTime = Clock.CurrentTime;
             return taskEntity;
         }
 
-        public override void insert(ITaskEntity taskEntity, bool fireCreateEvent)
+        public override void Insert(ITaskEntity taskEntity, bool fireCreateEvent)
         {
-
-            if (!ReferenceEquals(taskEntity.Owner, null))
+            if (!(taskEntity.Owner is null))
             {
-                addOwnerIdentityLink(taskEntity, taskEntity.Owner);
+                AddOwnerIdentityLink(taskEntity, taskEntity.Owner);
             }
-            if (!ReferenceEquals(taskEntity.Assignee, null))
+            if (!(taskEntity.Assignee is null))
             {
-                addAssigneeIdentityLinks(taskEntity);
+                AddAssigneeIdentityLinks(taskEntity);
             }
 
-            base.insert(taskEntity, fireCreateEvent);
+            base.Insert(taskEntity, fireCreateEvent);
 
         }
 
-        public virtual void insert(ITaskEntity taskEntity, IExecutionEntity execution)
+        public virtual void Insert(ITaskEntity taskEntity, IExecutionEntity execution)
         {
 
             // Inherit tenant id (if applicable)
-            if (execution != null && !ReferenceEquals(execution.TenantId, null))
+            if (execution != null && !(execution.TenantId is null))
             {
                 taskEntity.TenantId = execution.TenantId;
             }
@@ -77,251 +76,252 @@ namespace org.activiti.engine.impl.persistence.entity
             if (execution != null)
             {
                 execution.Tasks.Add(taskEntity);
-                taskEntity.ExecutionId = execution.Id;
                 taskEntity.ProcessInstanceId = execution.ProcessInstanceId;
                 taskEntity.ProcessDefinitionId = execution.ProcessDefinitionId;
+                taskEntity.ExecutionId = execution.Id;
 
-                HistoryManager.recordTaskExecutionIdChange(taskEntity.Id, taskEntity.ExecutionId);
+                HistoryManager.RecordTaskExecutionIdChange(taskEntity.Id, taskEntity.ExecutionId);
             }
 
-            insert(taskEntity, true);
+            Insert(taskEntity, true);
 
-            if (execution != null && isExecutionRelatedEntityCountEnabled(execution))
+            if (execution != null && IsExecutionRelatedEntityCountEnabled(execution))
             {
                 ICountingExecutionEntity countingExecutionEntity = (ICountingExecutionEntity)execution;
-                countingExecutionEntity.TaskCount = countingExecutionEntity.TaskCount + 1;
+                countingExecutionEntity.TaskCount += 1;
             }
 
-            HistoryManager.recordTaskCreated(taskEntity, execution);
-            HistoryManager.recordTaskId(taskEntity);
-            if (!ReferenceEquals(taskEntity.FormKey, null))
+            HistoryManager.RecordTaskCreated(taskEntity, execution);
+            HistoryManager.RecordTaskId(taskEntity);
+            if (!(taskEntity.FormKey is null))
             {
-                HistoryManager.recordTaskFormKeyChange(taskEntity.Id, taskEntity.FormKey);
+                HistoryManager.RecordTaskFormKeyChange(taskEntity.Id, taskEntity.FormKey);
             }
         }
 
 
-        public virtual void changeTaskAssignee(ITaskEntity taskEntity, string assignee)
+        public virtual void ChangeTaskAssignee(ITaskEntity taskEntity, string assignee, string assigneeUser)
         {
-            changeTaskAssignee(taskEntity, assignee, true);
+            ChangeTaskAssignee(taskEntity, assignee, true, assigneeUser);
         }
 
-        public virtual void changeTaskAssigneeNoEvents(ITaskEntity taskEntity, string assignee)
+        public virtual void ChangeTaskAssigneeNoEvents(ITaskEntity taskEntity, string assignee, string assigneeUser)
         {
-            changeTaskAssignee(taskEntity, assignee, false);
+            ChangeTaskAssignee(taskEntity, assignee, false, assigneeUser);
         }
 
-        private void changeTaskAssignee(ITaskEntity taskEntity, string assignee, bool fireEvents)
+        private void ChangeTaskAssignee(ITaskEntity taskEntity, string assignee, bool fireEvents, string assigneeUser)
         {
-            if ((!ReferenceEquals(taskEntity.Assignee, null) && !taskEntity.Assignee.Equals(assignee)) || (ReferenceEquals(taskEntity.Assignee, null) && !ReferenceEquals(assignee, null)))
+            if ((!(taskEntity.Assignee is null) && !taskEntity.Assignee.Equals(assignee)) || (taskEntity.Assignee is null && !(assignee is null)))
             {
                 taskEntity.Assignee = assignee;
+                taskEntity.AssigneeUser = assigneeUser;
                 if (fireEvents)
                 {
-                    fireAssignmentEvents(taskEntity);
+                    FireAssignmentEvents(taskEntity);
                 }
                 else
                 {
-                    recordTaskAssignment(taskEntity);
+                    RecordTaskAssignment(taskEntity);
                 }
 
-                if (!ReferenceEquals(taskEntity.Id, null))
+                if (!(taskEntity.Id is null))
                 {
-                    HistoryManager.recordTaskAssigneeChange(taskEntity.Id, taskEntity.Assignee);
-                    addAssigneeIdentityLinks(taskEntity);
-                    update(taskEntity);
+                    HistoryManager.RecordTaskAssigneeChange(taskEntity.Id, taskEntity.Assignee, taskEntity.AssigneeUser);
+                    AddAssigneeIdentityLinks(taskEntity);
+                    Update(taskEntity);
                 }
             }
         }
 
-        public virtual void changeTaskOwner(ITaskEntity taskEntity, string owner)
+        public virtual void ChangeTaskOwner(ITaskEntity taskEntity, string owner)
         {
-            if ((!ReferenceEquals(taskEntity.Owner, null) && !taskEntity.Owner.Equals(owner)) || (ReferenceEquals(taskEntity.Owner, null) && !ReferenceEquals(owner, null)))
+            if ((!(taskEntity.Owner is null) && !taskEntity.Owner.Equals(owner)) || (taskEntity.Owner is null && !(owner is null)))
             {
                 taskEntity.Owner = owner;
 
-                if (!ReferenceEquals(taskEntity.Id, null))
+                if (!(taskEntity.Id is null))
                 {
-                    HistoryManager.recordTaskOwnerChange(taskEntity.Id, taskEntity.Owner);
-                    addOwnerIdentityLink(taskEntity, taskEntity.Owner);
-                    update(taskEntity);
+                    HistoryManager.RecordTaskOwnerChange(taskEntity.Id, taskEntity.Owner);
+                    AddOwnerIdentityLink(taskEntity, taskEntity.Owner);
+                    Update(taskEntity);
                 }
             }
         }
 
-        protected internal virtual void fireAssignmentEvents(ITaskEntity taskEntity)
+        protected internal virtual void FireAssignmentEvents(ITaskEntity taskEntity)
         {
-            recordTaskAssignment(taskEntity);
+            RecordTaskAssignment(taskEntity);
             if (EventDispatcher.Enabled)
             {
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TASK_ASSIGNED, taskEntity));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_ASSIGNED, taskEntity));
             }
 
         }
 
-        protected internal virtual void recordTaskAssignment(ITaskEntity taskEntity)
+        protected internal virtual void RecordTaskAssignment(ITaskEntity taskEntity)
         {
-            ProcessEngineConfiguration.ListenerNotificationHelper.executeTaskListeners(taskEntity, BaseTaskListener_Fields.EVENTNAME_ASSIGNMENT);
-            HistoryManager.recordTaskAssignment(taskEntity);
+            ProcessEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(taskEntity, BaseTaskListenerFields.EVENTNAME_ASSIGNMENT);
+            HistoryManager.RecordTaskAssignment(taskEntity);
 
         }
 
-        private void addAssigneeIdentityLinks(ITaskEntity taskEntity)
+        private void AddAssigneeIdentityLinks(ITaskEntity taskEntity)
         {
-            if (!ReferenceEquals(taskEntity.Assignee, null) && taskEntity.ProcessInstance != null)
+            if (!(taskEntity.Assignee is null) && taskEntity.ProcessInstance != null)
             {
-                IdentityLinkEntityManager.involveUser(taskEntity.ProcessInstance, taskEntity.Assignee, IdentityLinkType.PARTICIPANT);
+                IdentityLinkEntityManager.InvolveUser(taskEntity.ProcessInstance, taskEntity.Assignee, IdentityLinkType.PARTICIPANT);
             }
         }
 
-        protected internal virtual void addOwnerIdentityLink(ITaskEntity taskEntity, string owner)
+        protected internal virtual void AddOwnerIdentityLink(ITaskEntity taskEntity, string owner)
         {
-            if (ReferenceEquals(owner, null) && ReferenceEquals(taskEntity.Owner, null))
+            if (owner is null && taskEntity.Owner is null)
             {
                 return;
             }
 
-            if (!ReferenceEquals(owner, null) && !ReferenceEquals(taskEntity.ProcessInstanceId, null))
+            if (!(owner is null) && !(taskEntity.ProcessInstanceId is null))
             {
-                IdentityLinkEntityManager.involveUser(taskEntity.ProcessInstance, owner, IdentityLinkType.PARTICIPANT);
+                IdentityLinkEntityManager.InvolveUser(taskEntity.ProcessInstance, owner, IdentityLinkType.PARTICIPANT);
             }
         }
 
-        public virtual void deleteTasksByProcessInstanceId(string processInstanceId, string deleteReason, bool cascade)
+        public virtual void DeleteTasksByProcessInstanceId(string processInstanceId, string deleteReason, bool cascade)
         {
-            IList<ITaskEntity> tasks = findTasksByProcessInstanceId(processInstanceId);
+            IList<ITaskEntity> tasks = FindTasksByProcessInstanceId(processInstanceId);
 
             foreach (ITaskEntity task in tasks)
             {
                 if (EventDispatcher.Enabled && !task.Canceled)
                 {
                     task.Canceled = true;
-                    EventDispatcher.dispatchEvent(ActivitiEventBuilder.createActivityCancelledEvent(task.Execution.ActivityId, task.Name, task.ExecutionId, task.ProcessInstanceId, task.ProcessDefinitionId, "userTask", deleteReason));
+                    EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityCancelledEvent(task.Execution.ActivityId, task.Name, task.ExecutionId, task.ProcessInstanceId, task.ProcessDefinitionId, "userTask", deleteReason));
                 }
 
-                deleteTask(task, deleteReason, cascade, false);
+                DeleteTask(task, deleteReason, cascade, false);
             }
         }
 
-        public virtual void deleteTask(ITaskEntity task, string deleteReason, bool cascade, bool cancel)
+        public virtual void DeleteTask(ITaskEntity task, string deleteReason, bool cascade, bool cancel)
         {
             if (!task.Deleted)
             {
-                ProcessEngineConfiguration.ListenerNotificationHelper.executeTaskListeners(task, BaseTaskListener_Fields.EVENTNAME_DELETE);
+                ProcessEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(task, BaseTaskListenerFields.EVENTNAME_DELETE);
                 task.Deleted = true;
 
                 string taskId = task.Id;
 
-                IList<ITask> subTasks = findTasksByParentTaskId(taskId);
+                IList<ITask> subTasks = FindTasksByParentTaskId(taskId);
                 foreach (ITask subTask in subTasks)
                 {
-                    deleteTask((ITaskEntity)subTask, deleteReason, cascade, cancel);
+                    DeleteTask((ITaskEntity)subTask, deleteReason, cascade, cancel);
                 }
 
-                IdentityLinkEntityManager.deleteIdentityLinksByTaskId(taskId);
-                VariableInstanceEntityManager.deleteVariableInstanceByTask(task);
+                IdentityLinkEntityManager.DeleteIdentityLinksByTaskId(taskId);
+                VariableInstanceEntityManager.DeleteVariableInstanceByTask(task);
 
                 if (cascade)
                 {
-                    HistoricTaskInstanceEntityManager.delete(new KeyValuePair<string, object>("id", taskId));
+                    HistoricTaskInstanceEntityManager.Delete(new KeyValuePair<string, object>("id", taskId));
                 }
                 else
                 {
-                    HistoryManager.recordTaskEnd(taskId, deleteReason);
+                    HistoryManager.RecordTaskEnd(taskId, deleteReason);
                 }
 
-                delete(task, false);
+                Delete(task, false);
 
                 if (EventDispatcher.Enabled)
                 {
                     if (cancel && !task.Canceled)
                     {
                         task.Canceled = true;
-                        EventDispatcher.dispatchEvent(ActivitiEventBuilder.createActivityCancelledEvent(task.Execution != null ? task.Execution.ActivityId : null, task.Name, task.ExecutionId, task.ProcessInstanceId, task.ProcessDefinitionId, "userTask", deleteReason));
+                        EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityCancelledEvent(task.Execution?.ActivityId, task.Name, task.ExecutionId, task.ProcessInstanceId, task.ProcessDefinitionId, "userTask", deleteReason));
                     }
 
-                    EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_DELETED, task));
+                    EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, task));
                 }
             }
         }
 
-        public override void delete(ITaskEntity entity, bool fireDeleteEvent)
+        public override void Delete(ITaskEntity entity, bool fireDeleteEvent)
         {
-            base.delete(entity, fireDeleteEvent);
+            base.Delete(entity, fireDeleteEvent);
 
-            if (!ReferenceEquals(entity.ExecutionId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!(entity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity countingExecutionEntity = (ICountingExecutionEntity)entity.Execution;
-                if (isExecutionRelatedEntityCountEnabled(countingExecutionEntity))
+                if (IsExecutionRelatedEntityCountEnabled(countingExecutionEntity))
                 {
-                    countingExecutionEntity.TaskCount = countingExecutionEntity.TaskCount - 1;
+                    countingExecutionEntity.TaskCount -= 1;
                 }
             }
         }
 
-        public virtual IList<ITaskEntity> findTasksByExecutionId(string executionId)
+        public virtual IList<ITaskEntity> FindTasksByExecutionId(string executionId)
         {
-            return taskDataManager.findTasksByExecutionId(executionId);
+            return taskDataManager.FindTasksByExecutionId(executionId);
         }
 
-        public virtual IList<ITaskEntity> findTasksByProcessInstanceId(string processInstanceId)
+        public virtual IList<ITaskEntity> FindTasksByProcessInstanceId(string processInstanceId)
         {
-            return taskDataManager.findTasksByProcessInstanceId(processInstanceId);
+            return taskDataManager.FindTasksByProcessInstanceId(processInstanceId);
         }
 
-        public virtual IList<ITask> findTasksByQueryCriteria(TaskQueryImpl taskQuery)
+        public virtual IList<ITask> FindTasksByQueryCriteria(ITaskQuery taskQuery)
         {
-            return taskDataManager.findTasksByQueryCriteria(taskQuery);
+            return taskDataManager.FindTasksByQueryCriteria(taskQuery);
         }
 
-        public virtual IList<ITask> findTasksAndVariablesByQueryCriteria(TaskQueryImpl taskQuery)
+        public virtual IList<ITask> FindTasksAndVariablesByQueryCriteria(ITaskQuery taskQuery)
         {
-            return taskDataManager.findTasksAndVariablesByQueryCriteria(taskQuery);
+            return taskDataManager.FindTasksAndVariablesByQueryCriteria(taskQuery);
         }
 
-        public virtual long findTaskCountByQueryCriteria(TaskQueryImpl taskQuery)
+        public virtual long FindTaskCountByQueryCriteria(ITaskQuery taskQuery)
         {
-            return taskDataManager.findTaskCountByQueryCriteria(taskQuery);
+            return taskDataManager.FindTaskCountByQueryCriteria(taskQuery);
         }
 
-        public virtual IList<ITask> findTasksByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<ITask> FindTasksByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return taskDataManager.findTasksByNativeQuery(parameterMap, firstResult, maxResults);
+            return taskDataManager.FindTasksByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findTaskCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindTaskCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return taskDataManager.findTaskCountByNativeQuery(parameterMap);
+            return taskDataManager.FindTaskCountByNativeQuery(parameterMap);
         }
 
-        public virtual IList<ITask> findTasksByParentTaskId(string parentTaskId)
+        public virtual IList<ITask> FindTasksByParentTaskId(string parentTaskId)
         {
-            return taskDataManager.findTasksByParentTaskId(parentTaskId);
+            return taskDataManager.FindTasksByParentTaskId(parentTaskId);
         }
 
-        public virtual void deleteTask(string taskId, string deleteReason, bool cascade)
+        public virtual void DeleteTask(string taskId, string deleteReason, bool cascade)
         {
 
-            ITaskEntity task = findById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
+            ITaskEntity task = FindById<ITaskEntity>(taskId);
 
             if (task != null)
             {
-                if (!ReferenceEquals(task.ExecutionId, null))
+                if (!(task.ExecutionId is null))
                 {
                     throw new ActivitiException("The task cannot be deleted because is part of a running process");
                 }
 
-                deleteTask(task, deleteReason, cascade, false);
+                DeleteTask(task, deleteReason, cascade, false);
             }
             else if (cascade)
             {
-                HistoricTaskInstanceEntityManager.delete(new KeyValuePair<string, object>("id", taskId));
+                HistoricTaskInstanceEntityManager.Delete(new KeyValuePair<string, object>("id", taskId));
             }
         }
 
-        public virtual void updateTaskTenantIdForDeployment(string deploymentId, string newTenantId)
+        public virtual void UpdateTaskTenantIdForDeployment(string deploymentId, string newTenantId)
         {
-            taskDataManager.updateTaskTenantIdForDeployment(deploymentId, newTenantId);
+            taskDataManager.UpdateTaskTenantIdForDeployment(deploymentId, newTenantId);
         }
 
         public virtual ITaskDataManager TaskDataManager

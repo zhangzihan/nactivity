@@ -12,18 +12,18 @@ namespace org.activiti.engine.impl.@event.logger.handler
 
         private const string TYPE = "PROCESSINSTANCE_END";
 
-        public override IEventLogEntryEntity generateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
+        public override IEventLogEntryEntity GenerateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
         {
-            IExecutionEntity processInstanceEntity = getEntityFromEvent<IExecutionEntity>();
+            IExecutionEntity processInstanceEntity = GetEntityFromEvent<IExecutionEntity>();
 
             IDictionary<string, object> data = new Dictionary<string, object>();
-            putInMapIfNotNull(data, Fields_Fields.ID, processInstanceEntity.Id);
-            putInMapIfNotNull(data, Fields_Fields.BUSINESS_KEY, processInstanceEntity.BusinessKey);
-            putInMapIfNotNull(data, Fields_Fields.PROCESS_DEFINITION_ID, processInstanceEntity.ProcessDefinitionId);
-            putInMapIfNotNull(data, Fields_Fields.NAME, processInstanceEntity.Name);
-            putInMapIfNotNull(data, Fields_Fields.END_TIME, timeStamp);
+            PutInMapIfNotNull(data, FieldsFields.ID, processInstanceEntity.Id);
+            PutInMapIfNotNull(data, FieldsFields.BUSINESS_KEY, processInstanceEntity.BusinessKey);
+            PutInMapIfNotNull(data, FieldsFields.PROCESS_DEFINITION_ID, processInstanceEntity.ProcessDefinitionId);
+            PutInMapIfNotNull(data, FieldsFields.NAME, processInstanceEntity.Name);
+            PutInMapIfNotNull(data, FieldsFields.END_TIME, timeStamp);
 
-            return createEventLogEntry(TYPE, processInstanceEntity.ProcessDefinitionId, processInstanceEntity.Id, null, null, data);
+            return CreateEventLogEntry(TYPE, processInstanceEntity.ProcessDefinitionId, processInstanceEntity.Id, null, null, data);
         }
 
     }

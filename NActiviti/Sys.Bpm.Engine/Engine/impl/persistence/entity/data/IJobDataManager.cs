@@ -21,25 +21,25 @@ namespace org.activiti.engine.impl.persistence.entity.data
     public interface IJobDataManager : IDataManager<IJobEntity>
     {
 
-        IList<IJobEntity> findJobsToExecute(Page page);
+        IList<IJobEntity> FindJobsToExecute(Page page);
 
-        IList<IJobEntity> findJobsByExecutionId(string executionId);
+        IList<IJobEntity> FindJobsByExecutionId(string executionId);
 
-        IList<IJobEntity> findJobsByProcessDefinitionId(string processDefinitionId);
+        IList<IJobEntity> FindJobsByProcessDefinitionId(string processDefinitionId);
 
-        IList<IJobEntity> findJobsByTypeAndProcessDefinitionId(string jobTypeTimer, string id);
+        IList<IJobEntity> FindJobsByTypeAndProcessDefinitionId(string jobTypeTimer, string id);
 
-        IList<IJobEntity> findJobsByProcessInstanceId(string processInstanceId);
+        IList<IJobEntity> FindJobsByProcessInstanceId(string processInstanceId);
 
-        IList<IJobEntity> findExpiredJobs(Page page);
+        IList<IJobEntity> FindExpiredJobs(Page page);
 
-        IList<IJob> findJobsByQueryCriteria(JobQueryImpl jobQuery, Page page);
+        IList<IJob> FindJobsByQueryCriteria(IJobQuery jobQuery, Page page);
 
-        long findJobCountByQueryCriteria(JobQueryImpl jobQuery);
+        long FindJobCountByQueryCriteria(IJobQuery jobQuery);
 
-        void updateJobTenantIdForDeployment(string deploymentId, string newTenantId);
+        void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId);
 
-        void resetExpiredJob(string jobId);
+        void ResetExpiredJob(string jobId);
 
     }
 

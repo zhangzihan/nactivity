@@ -17,48 +17,48 @@ using System.Collections.Generic;
 namespace org.activiti.engine.impl
 {
 
-	using org.activiti.engine.history;
-	using org.activiti.engine.query;
+    using org.activiti.engine.history;
+    using org.activiti.engine.query;
 
-	/// <summary>
-	/// Contains the possible properties which can be used in a <seealso cref="IHistoricDetailQuery"/>.
-	/// 
-	/// 
-	/// </summary>
-	[Serializable]
-	public class HistoricDetailQueryProperty : IQueryProperty
-	{
+    /// <summary>
+    /// Contains the possible properties which can be used in a <seealso cref="IHistoricDetailQuery"/>.
+    /// 
+    /// 
+    /// </summary>
+    [Serializable]
+    public class HistoricDetailQueryProperty : IQueryProperty
+    {
 
-	  private const long serialVersionUID = 1L;
+        private const long serialVersionUID = 1L;
 
-	  private static readonly IDictionary<string, HistoricDetailQueryProperty> properties = new Dictionary<string, HistoricDetailQueryProperty>();
+        private static readonly IDictionary<string, HistoricDetailQueryProperty> properties = new Dictionary<string, HistoricDetailQueryProperty>();
 
-	  public static readonly HistoricDetailQueryProperty PROCESS_INSTANCE_ID = new HistoricDetailQueryProperty("PROC_INST_ID_");
-	  public static readonly HistoricDetailQueryProperty VARIABLE_NAME = new HistoricDetailQueryProperty("NAME_");
-	  public static readonly HistoricDetailQueryProperty VARIABLE_TYPE = new HistoricDetailQueryProperty("TYPE_");
-	  public static readonly HistoricDetailQueryProperty VARIABLE_REVISION = new HistoricDetailQueryProperty("REV_");
-	  public static readonly HistoricDetailQueryProperty TIME = new HistoricDetailQueryProperty("TIME_");
+        public static readonly HistoricDetailQueryProperty PROCESS_INSTANCE_ID = new HistoricDetailQueryProperty("PROC_INST_ID_");
+        public static readonly HistoricDetailQueryProperty VARIABLE_NAME = new HistoricDetailQueryProperty("NAME_");
+        public static readonly HistoricDetailQueryProperty VARIABLE_TYPE = new HistoricDetailQueryProperty("TYPE_");
+        public static readonly HistoricDetailQueryProperty VARIABLE_REVISION = new HistoricDetailQueryProperty("REV_");
+        public static readonly HistoricDetailQueryProperty TIME = new HistoricDetailQueryProperty("TIME_");
 
-	  private string name;
+        private string name;
 
-	  public HistoricDetailQueryProperty(string name)
-	  {
-		this.name = name;
-		properties[name] = this;
-	  }
+        public HistoricDetailQueryProperty(string name)
+        {
+            this.name = name;
+            properties[name] = this;
+        }
 
-	  public virtual string Name
-	  {
-		  get
-		  {
-			return name;
-		  }
-	  }
+        public virtual string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
 
-	  public static HistoricDetailQueryProperty findByName(string propertyName)
-	  {
-		return properties[propertyName];
-	  }
-	}
+        public static HistoricDetailQueryProperty FindByName(string propertyName)
+        {
+            return properties[propertyName];
+        }
+    }
 
 }

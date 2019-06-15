@@ -22,23 +22,35 @@ namespace org.activiti.engine.impl.bpmn.data
     /// </summary>
     public class Assignment
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExpression fromExpression;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExpression toExpression;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fromExpression"></param>
+        /// <param name="toExpression"></param>
         public Assignment(IExpression fromExpression, IExpression toExpression)
         {
             this.fromExpression = fromExpression;
             this.toExpression = toExpression;
         }
 
-        public virtual void evaluate(IExecutionEntity execution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        public virtual void Evaluate(IExecutionEntity execution)
         {
-            IVariableScope variableScope = (IVariableScope)execution;
-            object value = this.fromExpression.getValue(variableScope);
-            this.toExpression.setValue(value, variableScope);
+            object value = this.fromExpression.GetValue(execution);
+            this.toExpression.SetValue(value, execution);
         }
     }
-
 }

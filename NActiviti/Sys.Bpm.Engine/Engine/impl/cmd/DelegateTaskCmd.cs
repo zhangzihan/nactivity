@@ -18,6 +18,9 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.task;
+    using Sys;
+    using Sys.Workflow;
+    using Sys.Workflow.Engine.Bpmn.Rules;
 
     /// 
     /// 
@@ -27,20 +30,26 @@ namespace org.activiti.engine.impl.cmd
 
         private const long serialVersionUID = 1L;
         protected internal string userId;
+        private readonly IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
         public DelegateTaskCmd(string taskId, string userId) : base(taskId)
         {
             this.userId = userId;
         }
 
-        protected internal override object execute(ICommandContext commandContext, ITaskEntity task)
+        protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
         {
             task.DelegationState = DelegationState.PENDING;
-            if (ReferenceEquals(task.Owner, null))
+            if (task.Owner is null)
             {
                 task.Owner = task.Assignee;
             }
-            commandContext.TaskEntityManager.changeTaskAssignee(task, userId);
+            string userName = null;
+            if (string.IsNullOrWhiteSpace(userId) == false)
+            {
+                userName = AsyncHelper.RunSync(() => userService.GetUser(userId))?.FullName;
+            }
+            commandContext.TaskEntityManager.ChangeTaskAssignee(task, userId, userName);
             return null;
         }
 

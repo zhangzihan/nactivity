@@ -32,9 +32,9 @@ namespace org.activiti.engine.impl.cmd
             this.processDefinitionId = processDefinitionId;
         }
 
-        public  virtual IProcessDefinition  execute(ICommandContext  commandContext)
+        public  virtual IProcessDefinition  Execute(ICommandContext  commandContext)
         {
-            return commandContext.ProcessEngineConfiguration.DeploymentManager.findDeployedProcessDefinitionById(processDefinitionId);
+            return commandContext.ProcessEngineConfiguration.DeploymentManager.FindDeployedProcessDefinitionById(processDefinitionId);
         }
     }
 

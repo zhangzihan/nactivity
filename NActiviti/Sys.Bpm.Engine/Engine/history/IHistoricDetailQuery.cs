@@ -25,49 +25,50 @@ namespace org.activiti.engine.history
 
         /// <summary>
         /// Only select historic info with the given id. </summary>
-        IHistoricDetailQuery id(string id);
+        IHistoricDetailQuery SetId(string id);
 
         /// <summary>
         /// Only select historic variable updates with the given process instance. {@link ProcessInstance) ids and <seealso cref="IHistoricProcessInstance"/> ids match.
         /// </summary>
-        IHistoricDetailQuery processInstanceId(string processInstanceId);
+        IHistoricDetailQuery SetProcessInstanceId(string processInstanceId);
 
         /// <summary>
         /// Only select historic variable updates with the given execution. Note that <seealso cref="IExecution"/> ids are not stored in the history as first class citizen, only process instances are.
         /// </summary>
-        IHistoricDetailQuery executionId(string executionId);
+        IHistoricDetailQuery SetExecutionId(string executionId);
 
         /// <summary>
         /// Only select historic variable updates associated to the given <seealso cref="IHistoricActivityInstance activity instance"/>.
         /// </summary>
-        IHistoricDetailQuery activityInstanceId(string activityInstanceId);
+        IHistoricDetailQuery SetActivityInstanceId(string activityInstanceId);
+
+        IHistoricDetailQuery SetActivityId(string activityId);
 
         /// <summary>
         /// Only select historic variable updates associated to the given <seealso cref="IHistoricTaskInstance historic task instance"/>.
         /// </summary>
-        IHistoricDetailQuery taskId(string taskId);
+        IHistoricDetailQuery SetTaskId(string taskId);
 
         /// <summary>
         /// Only select <seealso cref="IHistoricVariableUpdate"/>s. </summary>
-        IHistoricDetailQuery variableUpdates();
+        IHistoricDetailQuery SetVariableUpdates();
 
         /// <summary>
         /// Exclude all task-related <seealso cref="IHistoricDetail"/>s, so only items which have no task-id set will be selected. When used together with <seealso cref="#taskId(String)"/>, this call is ignored task details are
         /// NOT excluded.
         /// </summary>
-        IHistoricDetailQuery excludeTaskDetails();
+        IHistoricDetailQuery SetExcludeTaskDetails();
 
-        IHistoricDetailQuery orderByProcessInstanceId();
+        IHistoricDetailQuery OrderByProcessInstanceId();
 
-        IHistoricDetailQuery orderByVariableName();
+        IHistoricDetailQuery OrderByVariableName();
 
-        IHistoricDetailQuery orderByFormPropertyId();
+        IHistoricDetailQuery OrderByFormPropertyId();
 
-        IHistoricDetailQuery orderByVariableType();
+        IHistoricDetailQuery OrderByVariableType();
 
-        IHistoricDetailQuery orderByVariableRevision();
+        IHistoricDetailQuery OrderByVariableRevision();
 
-        IHistoricDetailQuery orderByTime();
+        IHistoricDetailQuery OrderByTime();
     }
-
 }

@@ -35,10 +35,12 @@
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            AlfrescoUserTask clone = new AlfrescoUserTask();
-            clone.Values = this;
+            AlfrescoUserTask clone = new AlfrescoUserTask
+            {
+                Values = this
+            };
             return clone;
         }
 

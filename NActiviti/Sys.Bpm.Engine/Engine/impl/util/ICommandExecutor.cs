@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.util
     /// 
     public interface ICommandExecutor
     {
-        void executeCommand(IExecutionEntity execution);
+        void ExecuteCommand(IExecutionEntity execution);
     }
 
 }

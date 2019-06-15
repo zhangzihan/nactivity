@@ -45,12 +45,12 @@ namespace org.activiti.cloud.services.events.listeners
         /// 
         /// </summary>
         /// <param name="event"></param>
-        public virtual void onEvent(IActivitiEvent @event)
+        public virtual void OnEvent(IActivitiEvent @event)
         {
-            IProcessEngineEvent newEvent = converterContext.from(@event);
+            IProcessEngineEvent newEvent = converterContext.From(@event);
             if (newEvent != null)
             {
-                eventsAggregator.add(newEvent);
+                eventsAggregator.Add(newEvent);
             }
         }
 

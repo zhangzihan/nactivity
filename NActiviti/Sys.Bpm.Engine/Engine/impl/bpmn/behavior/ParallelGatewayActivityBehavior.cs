@@ -20,7 +20,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
     using org.activiti.bpmn.model;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.persistence.entity;
-    using Sys;
+    using Sys.Workflow;
 
 
     /// <summary>
@@ -47,15 +47,15 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         private const long serialVersionUID = 1840892471343975524L;
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
 
             // First off all, deactivate the execution
-            execution.inactivate();
+            execution.Inactivate();
 
             // Join
             FlowElement flowElement = execution.CurrentFlowElement;
-            ParallelGateway parallelGateway = null;
+            ParallelGateway parallelGateway;
             if (flowElement is ParallelGateway)
             {
                 parallelGateway = (ParallelGateway)flowElement;
@@ -65,19 +65,19 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 throw new ActivitiException("Programmatic error: parallel gateway behaviour can only be applied" + " to a ParallelGateway instance, but got an instance of " + flowElement);
             }
 
-            lockFirstParentScope(execution);
+            LockFirstParentScope(execution);
 
             IExecutionEntity multiInstanceExecution = null;
-            if (hasMultiInstanceParent(parallelGateway))
+            if (HasMultiInstanceParent(parallelGateway))
             {
-                multiInstanceExecution = findMultiInstanceParentExecution(execution);
+                multiInstanceExecution = FindMultiInstanceParentExecution(execution);
             }
 
             IExecutionEntityManager executionEntityManager = Context.CommandContext.ExecutionEntityManager;
-            ICollection<IExecutionEntity> joinedExecutions = executionEntityManager.findInactiveExecutionsByActivityIdAndProcessInstanceId(execution.CurrentActivityId, execution.ProcessInstanceId);
+            ICollection<IExecutionEntity> joinedExecutions = executionEntityManager.FindInactiveExecutionsByActivityIdAndProcessInstanceId(execution.CurrentActivityId, execution.ProcessInstanceId);
             if (multiInstanceExecution != null)
             {
-                joinedExecutions = cleanJoinedExecutions(joinedExecutions, multiInstanceExecution);
+                joinedExecutions = CleanJoinedExecutions(joinedExecutions, multiInstanceExecution);
             }
 
             int nbrOfExecutionsToJoin = parallelGateway.IncomingFlows.Count;
@@ -86,7 +86,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             // Fork
 
             // Is needed to set the endTime for all historic activity joins
-            Context.CommandContext.HistoryManager.recordActivityEnd(execution, null);
+            Context.CommandContext.HistoryManager.RecordActivityEnd(execution, null);
 
             if (nbrOfExecutionsCurrentlyJoined == nbrOfExecutionsToJoin)
             {
@@ -105,14 +105,14 @@ namespace org.activiti.engine.impl.bpmn.behavior
                         // The current execution will be reused and not deleted
                         if (!joinedExecution.Id.Equals(execution.Id))
                         {
-                            executionEntityManager.deleteExecutionAndRelatedData(joinedExecution, null, false);
+                            executionEntityManager.DeleteExecutionAndRelatedData(joinedExecution, null, false);
                         }
 
                     }
                 }
 
                 // TODO: potential optimization here: reuse more then 1 execution, only 1 currently
-                Context.Agenda.planTakeOutgoingSequenceFlowsOperation(execution, false); // false -> ignoring conditions on parallel gw
+                Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(execution, false); // false -> ignoring conditions on parallel gw
 
             }
             else if (log.IsEnabled(LogLevel.Debug))
@@ -122,12 +122,12 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         }
 
-        protected internal virtual ICollection<IExecutionEntity> cleanJoinedExecutions(ICollection<IExecutionEntity> joinedExecutions, IExecutionEntity multiInstanceExecution)
+        protected internal virtual ICollection<IExecutionEntity> CleanJoinedExecutions(ICollection<IExecutionEntity> joinedExecutions, IExecutionEntity multiInstanceExecution)
         {
             IList<IExecutionEntity> cleanedExecutions = new List<IExecutionEntity>();
             foreach (IExecutionEntity executionEntity in joinedExecutions)
             {
-                if (isChildOfMultiInstanceExecution(executionEntity, multiInstanceExecution))
+                if (IsChildOfMultiInstanceExecution(executionEntity, multiInstanceExecution))
                 {
                     cleanedExecutions.Add(executionEntity);
                 }
@@ -135,7 +135,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             return cleanedExecutions;
         }
 
-        protected internal virtual bool isChildOfMultiInstanceExecution(IExecutionEntity executionEntity, IExecutionEntity multiInstanceExecution)
+        protected internal virtual bool IsChildOfMultiInstanceExecution(IExecutionEntity executionEntity, IExecutionEntity multiInstanceExecution)
         {
             bool isChild = false;
             IExecutionEntity parentExecution = executionEntity.Parent;
@@ -147,7 +147,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
                 else
                 {
-                    bool isNestedChild = isChildOfMultiInstanceExecution(parentExecution, multiInstanceExecution);
+                    bool isNestedChild = IsChildOfMultiInstanceExecution(parentExecution, multiInstanceExecution);
                     if (isNestedChild)
                     {
                         isChild = true;
@@ -158,7 +158,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             return isChild;
         }
 
-        protected internal virtual bool hasMultiInstanceParent(FlowNode flowNode)
+        protected internal virtual bool HasMultiInstanceParent(FlowNode flowNode)
         {
             bool hasMultiInstanceParent = false;
             if (flowNode.SubProcess != null)
@@ -169,7 +169,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
                 else
                 {
-                    bool hasNestedMultiInstanceParent = this.hasMultiInstanceParent(flowNode.SubProcess);
+                    bool hasNestedMultiInstanceParent = this.HasMultiInstanceParent(flowNode.SubProcess);
                     if (hasNestedMultiInstanceParent)
                     {
                         hasMultiInstanceParent = true;
@@ -180,16 +180,15 @@ namespace org.activiti.engine.impl.bpmn.behavior
             return hasMultiInstanceParent;
         }
 
-        protected internal virtual IExecutionEntity findMultiInstanceParentExecution(IExecutionEntity execution)
+        protected internal virtual IExecutionEntity FindMultiInstanceParentExecution(IExecutionEntity execution)
         {
             IExecutionEntity multiInstanceExecution = null;
             IExecutionEntity parentExecution = execution.Parent;
             if (parentExecution != null && parentExecution.CurrentFlowElement != null)
             {
                 FlowElement flowElement = parentExecution.CurrentFlowElement;
-                if (flowElement is Activity)
+                if (flowElement is Activity activity)
                 {
-                    Activity activity = (Activity)flowElement;
                     if (activity.LoopCharacteristics != null)
                     {
                         multiInstanceExecution = parentExecution;
@@ -198,7 +197,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
                 if (multiInstanceExecution == null)
                 {
-                    IExecutionEntity potentialMultiInstanceExecution = findMultiInstanceParentExecution(parentExecution);
+                    IExecutionEntity potentialMultiInstanceExecution = FindMultiInstanceParentExecution(parentExecution);
                     if (potentialMultiInstanceExecution != null)
                     {
                         multiInstanceExecution = potentialMultiInstanceExecution;

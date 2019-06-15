@@ -14,12 +14,16 @@
  */
 namespace org.activiti.engine.impl.bpmn.deployer
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.model;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.task;
+    using System;
+    using System.IO;
+    using System.Xml;
+    using System.Xml.Linq;
 
     /// <summary>
     /// Methods for working with deployments.  Much of the actual work of <seealso cref="BpmnDeployer"/> is
@@ -37,7 +41,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// index violation.
         /// </summary>
         /// <exception cref="ActivitiException"> if any two processes have the same key </exception>
-        public virtual void verifyProcessDefinitionsDoNotShareKeys(ICollection<IProcessDefinitionEntity> processDefinitions)
+        public virtual void VerifyProcessDefinitionsDoNotShareKeys(ICollection<IProcessDefinitionEntity> processDefinitions)
         {
             IList<string> keySet = new List<string>();
             foreach (IProcessDefinitionEntity processDefinition in processDefinitions)
@@ -54,7 +58,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// Updates all the process definition entities to match the deployment's values for tenant,
         /// engine version, and deployment id.
         /// </summary>
-        public virtual void copyDeploymentValuesToProcessDefinitions(IDeploymentEntity deployment, IList<IProcessDefinitionEntity> processDefinitions)
+        public virtual void CopyDeploymentValuesToProcessDefinitions(IDeploymentEntity deployment, IList<IProcessDefinitionEntity> processDefinitions)
         {
             string engineVersion = deployment.EngineVersion;
             string tenantId = deployment.TenantId;
@@ -64,13 +68,13 @@ namespace org.activiti.engine.impl.bpmn.deployer
             {
 
                 // Backwards compatibility
-                if (!ReferenceEquals(engineVersion, null))
+                if (!(engineVersion is null))
                 {
                     processDefinition.EngineVersion = engineVersion;
                 }
 
                 // process definition inherits the tenant id
-                if (!ReferenceEquals(tenantId, null))
+                if (!(tenantId is null))
                 {
                     processDefinition.TenantId = tenantId;
                 }
@@ -86,7 +90,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
         {
             foreach (IProcessDefinitionEntity processDefinition in value.AllProcessDefinitions)
             {
-                string resourceName = value.getResourceForProcessDefinition(processDefinition).Name;
+                string resourceName = value.GetResourceForProcessDefinition(processDefinition).Name;
                 processDefinition.ResourceName = resourceName;
                 processDefinition.Name = value.Deployment.Name;
             }
@@ -99,21 +103,20 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// If none is found, returns null.  This method assumes that the tenant and key are properly
         /// set on the process definition entity.
         /// </summary>
-        public virtual IProcessDefinitionEntity getMostRecentVersionOfProcessDefinition(IProcessDefinitionEntity processDefinition)
+        public virtual IProcessDefinitionEntity GetMostRecentVersionOfProcessDefinition(IProcessDefinitionEntity processDefinition)
         {
             string key = processDefinition.Key;
             string tenantId = processDefinition.TenantId;
             IProcessDefinitionEntityManager processDefinitionManager = Context.CommandContext.ProcessEngineConfiguration.ProcessDefinitionEntityManager;
 
-            IProcessDefinitionEntity existingDefinition = null;
-
-            if (!ReferenceEquals(tenantId, null) && !tenantId.Equals(ProcessEngineConfiguration.NO_TENANT_ID))
+            IProcessDefinitionEntity existingDefinition;
+            if (!(tenantId is null) && !tenantId.Equals(ProcessEngineConfiguration.NO_TENANT_ID))
             {
-                existingDefinition = processDefinitionManager.findLatestProcessDefinitionByKeyAndTenantId(key, tenantId);
+                existingDefinition = processDefinitionManager.FindLatestProcessDefinitionByKeyAndTenantId(key, tenantId);
             }
             else
             {
-                existingDefinition = processDefinitionManager.findLatestProcessDefinitionByKey(key);
+                existingDefinition = processDefinitionManager.FindLatestProcessDefinitionByKey(key);
             }
 
             return existingDefinition;
@@ -125,23 +128,23 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// a process definition that is already persisted and attached to a particular deployment,
         /// rather than the latest version across all deployments.
         /// </summary>
-        public virtual IProcessDefinitionEntity getPersistedInstanceOfProcessDefinition(IProcessDefinitionEntity processDefinition)
+        public virtual IProcessDefinitionEntity GetPersistedInstanceOfProcessDefinition(IProcessDefinitionEntity processDefinition)
         {
             string deploymentId = processDefinition.DeploymentId;
             if (string.IsNullOrWhiteSpace(processDefinition.DeploymentId))
             {
-                throw new System.InvalidOperationException("Provided process definition must have a deployment id.");
+                throw new InvalidOperationException("Provided process definition must have a deployment id.");
             }
 
             IProcessDefinitionEntityManager processDefinitionManager = Context.CommandContext.ProcessEngineConfiguration.ProcessDefinitionEntityManager;
-            IProcessDefinitionEntity persistedProcessDefinition = null;
-            if (ReferenceEquals(processDefinition.TenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
+            IProcessDefinitionEntity persistedProcessDefinition;
+            if (processDefinition.TenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
             {
-                persistedProcessDefinition = processDefinitionManager.findProcessDefinitionByDeploymentAndKey(deploymentId, processDefinition.Key);
+                persistedProcessDefinition = processDefinitionManager.FindProcessDefinitionByDeploymentAndKey(deploymentId, processDefinition.Key);
             }
             else
             {
-                persistedProcessDefinition = processDefinitionManager.findProcessDefinitionByDeploymentAndKeyAndTenantId(deploymentId, processDefinition.Key, processDefinition.TenantId);
+                persistedProcessDefinition = processDefinitionManager.FindProcessDefinitionByDeploymentAndKeyAndTenantId(deploymentId, processDefinition.Key, processDefinition.TenantId);
             }
 
             return persistedProcessDefinition;
@@ -151,20 +154,47 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// Updates all timers and events for the process definition.  This removes obsolete message and signal
         /// subscriptions and timers, and adds new ones.
         /// </summary>
-        public virtual void updateTimersAndEvents(IProcessDefinitionEntity processDefinition, IProcessDefinitionEntity previousProcessDefinition, ParsedDeployment parsedDeployment)
+        public virtual void UpdateTimersAndEvents(IProcessDefinitionEntity processDefinition, IProcessDefinitionEntity previousProcessDefinition, ParsedDeployment parsedDeployment)
         {
 
-            Process process = parsedDeployment.getProcessModelForProcessDefinition(processDefinition);
-            BpmnModel bpmnModel = parsedDeployment.getBpmnModelForProcessDefinition(processDefinition);
+            Process process = parsedDeployment.GetProcessModelForProcessDefinition(processDefinition);
+            BpmnModel bpmnModel = parsedDeployment.GetBpmnModelForProcessDefinition(processDefinition);
 
-            eventSubscriptionManager.removeObsoleteMessageEventSubscriptions(previousProcessDefinition);
-            eventSubscriptionManager.addMessageEventSubscriptions(processDefinition, process, bpmnModel);
+            eventSubscriptionManager.RemoveObsoleteMessageEventSubscriptions(previousProcessDefinition);
+            eventSubscriptionManager.AddMessageEventSubscriptions(processDefinition, process, bpmnModel);
 
-            eventSubscriptionManager.removeObsoleteSignalEventSubScription(previousProcessDefinition);
-            eventSubscriptionManager.addSignalEventSubscriptions(Context.CommandContext, processDefinition, process, bpmnModel);
+            eventSubscriptionManager.RemoveObsoleteSignalEventSubScription(previousProcessDefinition);
+            eventSubscriptionManager.AddSignalEventSubscriptions(Context.CommandContext, processDefinition, process, bpmnModel);
 
-            timerManager.removeObsoleteTimers(processDefinition);
-            timerManager.scheduleTimers(processDefinition, process);
+            timerManager.RemoveObsoleteTimers(processDefinition);
+            timerManager.ScheduleTimers(processDefinition, process);
+        }
+
+        public Tuple<bool, MemoryStream> AddCamundaNamespace(MemoryStream ms)
+        {
+            XDocument doc = XDocument.Load(ms);
+
+            XmlNameTable nameTable = doc.CreateReader(ReaderOptions.OmitDuplicateNamespaces).NameTable;
+            var namespaceManager = new XmlNamespaceManager(nameTable);
+            namespaceManager.AddNamespace(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+
+            bool changed = false;
+            var attr = doc.Root.Attribute(XName.Get(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.XMLNS_NAMESPACE));
+            if (attr == null)
+            {
+                doc.Root.Add(new XAttribute(XName.Get(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.XMLNS_NAMESPACE), BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE));
+                changed = true;
+            }
+
+            MemoryStream save = null;
+            if (changed)
+            {
+                save = new MemoryStream();
+                doc.Save(save);
+                save.Seek(0, SeekOrigin.Begin);
+            }
+
+            return new Tuple<bool, MemoryStream>(changed, save);
         }
 
         public enum ExpressionType
@@ -174,24 +204,21 @@ namespace org.activiti.engine.impl.bpmn.deployer
         }
 
         /// <param name="processDefinition"> </param>
-        public virtual void addAuthorizationsForNewProcessDefinition(Process process, IProcessDefinitionEntity processDefinition)
+        public virtual void AddAuthorizationsForNewProcessDefinition(Process process, IProcessDefinitionEntity processDefinition)
         {
             ICommandContext commandContext = Context.CommandContext;
 
-            addAuthorizationsFromIterator(commandContext, process.CandidateStarterUsers, processDefinition, ExpressionType.USER);
-            addAuthorizationsFromIterator(commandContext, process.CandidateStarterGroups, processDefinition, ExpressionType.GROUP);
+            AddAuthorizationsFromIterator(commandContext, process.CandidateStarterUsers, processDefinition, ExpressionType.USER);
+            AddAuthorizationsFromIterator(commandContext, process.CandidateStarterGroups, processDefinition, ExpressionType.GROUP);
         }
 
-        protected internal virtual void addAuthorizationsFromIterator(ICommandContext commandContext, IList<string> expressions, IProcessDefinitionEntity processDefinition, ExpressionType expressionType)
+        protected internal virtual void AddAuthorizationsFromIterator(ICommandContext commandContext, IList<string> expressions, IProcessDefinitionEntity processDefinition, ExpressionType expressionType)
         {
-
             if (expressions != null)
             {
-                IEnumerator<string> iterator = expressions.GetEnumerator();
-                while (iterator.MoveNext())
+                foreach (string expression in expressions)
                 {
-                    string expression = iterator.Current;
-                    IIdentityLinkEntity identityLink = commandContext.IdentityLinkEntityManager.create();
+                    IIdentityLinkEntity identityLink = commandContext.IdentityLinkEntityManager.Create();
                     identityLink.ProcessDef = processDefinition;
                     if (expressionType.Equals(ExpressionType.USER))
                     {
@@ -202,10 +229,9 @@ namespace org.activiti.engine.impl.bpmn.deployer
                         identityLink.GroupId = expression;
                     }
                     identityLink.Type = IdentityLinkType.CANDIDATE;
-                    commandContext.IdentityLinkEntityManager.insert(identityLink);
+                    commandContext.IdentityLinkEntityManager.Insert(identityLink);
                 }
             }
-
         }
 
         public virtual TimerManager TimerManager
@@ -220,7 +246,6 @@ namespace org.activiti.engine.impl.bpmn.deployer
             }
         }
 
-
         public virtual EventSubscriptionManager EventSubscriptionManager
         {
             get
@@ -232,8 +257,5 @@ namespace org.activiti.engine.impl.bpmn.deployer
                 this.eventSubscriptionManager = value;
             }
         }
-
     }
-
-
 }

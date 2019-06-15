@@ -58,15 +58,15 @@ namespace org.activiti.engine.impl.cmd
             this.async = async;
         }
 
-        protected internal override object execute(ICommandContext commandContext, IExecutionEntity execution)
+        protected internal override object Execute(ICommandContext commandContext, IExecutionEntity execution)
         {
-            if (ReferenceEquals(messageName, null))
+            if (messageName is null)
             {
                 throw new ActivitiIllegalArgumentException("messageName cannot be null");
             }
 
             IEventSubscriptionEntityManager eventSubscriptionEntityManager = commandContext.EventSubscriptionEntityManager;
-            IList<IEventSubscriptionEntity> eventSubscriptions = eventSubscriptionEntityManager.findEventSubscriptionsByNameAndExecution(MessageEventHandler.EVENT_HANDLER_TYPE, messageName, executionId);
+            IList<IEventSubscriptionEntity> eventSubscriptions = eventSubscriptionEntityManager.FindEventSubscriptionsByNameAndExecution(MessageEventHandler.EVENT_HANDLER_TYPE, messageName, executionId);
 
             if (eventSubscriptions.Count == 0)
             {
@@ -75,7 +75,7 @@ namespace org.activiti.engine.impl.cmd
 
             // there can be only one:
             IEventSubscriptionEntity eventSubscriptionEntity = eventSubscriptions[0];
-            eventSubscriptionEntityManager.eventReceived(eventSubscriptionEntity, payload, async);
+            eventSubscriptionEntityManager.EventReceived(eventSubscriptionEntity, payload, async);
 
             return null;
         }

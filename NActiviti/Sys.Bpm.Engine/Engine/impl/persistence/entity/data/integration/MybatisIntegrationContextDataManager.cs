@@ -29,7 +29,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.integration
         {
         }
 
-        public override IIntegrationContextEntity create()
+        public override IIntegrationContextEntity Create()
         {
             return new IntegrationContextEntityImpl();
         }
@@ -42,9 +42,9 @@ namespace org.activiti.engine.impl.persistence.entity.data.integration
             }
         }
 
-        public virtual IList<IIntegrationContextEntity> findIntegrationContextByExecutionId(string executionId)
+        public virtual IList<IIntegrationContextEntity> FindIntegrationContextByExecutionId(string executionId)
         {
-            return DbSqlSession.selectList<IntegrationContextEntityImpl, IIntegrationContextEntity>("selectIntegrationContextByExecutionId", executionId);
+            return DbSqlSession.SelectList<IntegrationContextEntityImpl, IIntegrationContextEntity>("selectIntegrationContextByExecutionId", executionId);
 
         }
     }

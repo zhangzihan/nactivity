@@ -13,10 +13,12 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            BooleanDataObject clone = new BooleanDataObject();
-            clone.Values = this;
+            BooleanDataObject clone = new BooleanDataObject
+            {
+                Values = this
+            };
             return clone;
         }
     }

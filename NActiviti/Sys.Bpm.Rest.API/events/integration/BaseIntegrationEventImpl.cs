@@ -21,7 +21,7 @@ namespace org.activiti.cloud.services.events.integration
     /// <summary>
     /// 
     /// </summary>
-    public abstract class BaseIntegrationEventImpl : AbstractProcessEngineEvent, IntegrationEvent
+    public abstract class BaseIntegrationEventImpl : AbstractProcessEngineEvent, IIntegrationEvent
     {
 
         /// <summary>
@@ -29,8 +29,8 @@ namespace org.activiti.cloud.services.events.integration
         /// </summary>
         public override abstract string EventType { get; }
 
-        private string integrationContextId;
-        private string flowNodeId;
+        private readonly string integrationContextId;
+        private readonly string flowNodeId;
 
 
         /// <summary>

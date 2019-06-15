@@ -30,6 +30,11 @@ namespace org.activiti.bpmn.model
         protected internal IList<CustomProperty> customProperties = new List<CustomProperty>();
         protected internal string skipExpression;
 
+        public ServiceTask() : base()
+        {
+
+        }
+
         public virtual string Implementation
         {
             get
@@ -125,7 +130,7 @@ namespace org.activiti.bpmn.model
         {
             get
             {
-                return !string.ReferenceEquals(extensionId, null) && extensionId.Length > 0;
+                return !(extensionId is null) && extensionId.Length > 0;
             }
         }
 
@@ -142,10 +147,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            ServiceTask clone = new ServiceTask();
-            clone.Values = this;
+            ServiceTask clone = new ServiceTask
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -170,7 +177,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (FieldExtension extension in val.FieldExtensions)
                     {
-                        fieldExtensions.Add(extension.clone() as FieldExtension);
+                        fieldExtensions.Add(extension.Clone() as FieldExtension);
                     }
                 }
 
@@ -179,7 +186,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (CustomProperty property in val.CustomProperties)
                     {
-                        customProperties.Add(property.clone() as CustomProperty);
+                        customProperties.Add(property.Clone() as CustomProperty);
                     }
                 }
             }

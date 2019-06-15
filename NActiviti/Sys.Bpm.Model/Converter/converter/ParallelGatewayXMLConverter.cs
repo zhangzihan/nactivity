@@ -14,42 +14,45 @@
  */
 namespace org.activiti.bpmn.converter
 {
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
     /// 
     public class ParallelGatewayXMLConverter : BaseBpmnXMLConverter
-	{
+    {
 
-	  public override Type BpmnElementType
-	  {
-		  get
-		  {
-			return typeof(ParallelGateway);
-		  }
-	  }
+        public override Type BpmnElementType
+        {
+            get
+            {
+                return typeof(ParallelGateway);
+            }
+        }
 
-	  public override string XMLElementName
-	  {
-		  get
-		  {
-			return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_GATEWAY_PARALLEL;
-		  }
-	  }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
-	  {
-		ParallelGateway gateway = new ParallelGateway();
-		BpmnXMLUtil.addXMLLocation(gateway, xtr);
-		parseChildElements(XMLElementName, gateway, model, xtr);
-		return gateway;
-	  }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
-	  {
-	  }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
-	  {
+        public override string XMLElementName
+        {
+            get
+            {
+                return BpmnXMLConstants.ELEMENT_GATEWAY_PARALLEL;
+            }
+        }
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        {
+            ParallelGateway gateway = new ParallelGateway();
+            BpmnXMLUtil.AddXMLLocation(gateway, xtr);
+            ParseChildElements(XMLElementName, gateway, model, xtr);
+            return gateway;
+        }
 
-	  }
-	}
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        {
+        }
+
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        {
+
+        }
+    }
 
 }

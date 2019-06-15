@@ -25,7 +25,7 @@ namespace org.activiti.engine.impl.cmd
 
         private const long serialVersionUID = 1L;
 
-        public virtual IDictionary<string, long> execute(ICommandContext commandContext)
+        public virtual IDictionary<string, long> Execute(ICommandContext commandContext)
         {
             return commandContext.TableDataManager.TableCount;
         }

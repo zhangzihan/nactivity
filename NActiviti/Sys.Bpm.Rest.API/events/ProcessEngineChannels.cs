@@ -15,26 +15,26 @@ namespace org.activiti.cloud.services.events
         /// <summary>
         /// 
         /// </summary>
-        ISubscribableChannel commandConsumer();
+        ISubscribableChannel CommandConsumer();
 
 
         /// <summary>
         /// 
         /// </summary>
-        IMessageChannel<IList<IProcessEngineEvent>> commandResults();
+        IMessageChannel<IList<IProcessEngineEvent>> CommandResults();
 
 
         /// <summary>
         /// 
         /// </summary>
-        IMessageChannel<IList<IProcessEngineEvent>> auditProducer();
+        IMessageChannel<IList<IProcessEngineEvent>> AuditProducer();
     }
 
 
     /// <summary>
     /// 
     /// </summary>
-    public static class ProcessEngineChannels_Fields
+    public static class ProcessEngineChannelsFields
     {
 
         /// <summary>

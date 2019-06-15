@@ -9,11 +9,11 @@ namespace org.activiti.cloud.services.core.commands
     /// <summary>
     /// 
     /// </summary>
-    public class ActivateProcessInstanceCmdExecutor : CommandExecutor<ActivateProcessInstanceCmd>
+    public class ActivateProcessInstanceCmdExecutor : ICommandExecutor<ActivateProcessInstanceCmd>
     {
 
-        private ProcessEngineWrapper processEngine;
-        private IMessageChannel<ActivateProcessInstanceResults> commandResults;
+        private readonly ProcessEngineWrapper processEngine;
+        private readonly IMessageChannel<ActivateProcessInstanceResults> commandResults;
 
         /// <summary>
         /// 
@@ -38,11 +38,11 @@ namespace org.activiti.cloud.services.core.commands
         /// <summary>
         /// 
         /// </summary>
-        public virtual void execute(ActivateProcessInstanceCmd cmd)
+        public virtual void Execute(ActivateProcessInstanceCmd cmd)
         {
-            processEngine.activate(cmd);
+            processEngine.Activate(cmd);
             ActivateProcessInstanceResults cmdResult = new ActivateProcessInstanceResults(cmd.Id);
-            commandResults.send(MessageBuilder<ActivateProcessInstanceResults>.withPayload(cmdResult).build());
+            commandResults.Send(MessageBuilder<ActivateProcessInstanceResults>.WithPayload(cmdResult).Build());
         }
     }
 }

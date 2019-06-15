@@ -34,10 +34,10 @@ namespace org.activiti.engine.impl.bpmn.listener
 		this.expression = expression;
 	  }
 
-	  public virtual void notify(IExecutionEntity execution)
+	  public virtual void Notify(IExecutionEntity execution)
 	  {
 		// Return value of expression is ignored
-		expression.getValue(execution);
+		expression.GetValue(execution);
 	  }
 
 	  /// <summary>

@@ -15,6 +15,7 @@
 
 namespace org.activiti.engine.impl.persistence.deploy
 {
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
     using org.activiti.engine.impl.cfg;
@@ -22,8 +23,7 @@ namespace org.activiti.engine.impl.persistence.deploy
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.repository;
-    using org.activiti.engine.runtime;
-    using System.Linq;
+    using Sys.Workflow;
 
     /// 
     /// 
@@ -39,21 +39,21 @@ namespace org.activiti.engine.impl.persistence.deploy
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
         protected internal IProcessDefinitionEntityManager processDefinitionEntityManager;
         protected internal IDeploymentEntityManager deploymentEntityManager;
-
-        public virtual void deploy(IDeploymentEntity deployment)
+        
+        public virtual void Deploy(IDeploymentEntity deployment)
         {
-            deploy(deployment, null);
+            Deploy(deployment, null);
         }
 
-        public virtual void deploy(IDeploymentEntity deployment, IDictionary<string, object> deploymentSettings)
+        public virtual void Deploy(IDeploymentEntity deployment, IDictionary<string, object> deploymentSettings)
         {
             foreach (IDeployer deployer in deployers)
             {
-                deployer.deploy(deployment, deploymentSettings);
+                deployer.Deploy(deployment, deploymentSettings);
             }
         }
 
-        public virtual IProcessDefinition findDeployedProcessDefinitionById(string processDefinitionId)
+        public virtual IProcessDefinition FindDeployedProcessDefinitionById(string processDefinitionId)
         {
             if (string.IsNullOrWhiteSpace(processDefinitionId))
             {
@@ -61,72 +61,71 @@ namespace org.activiti.engine.impl.persistence.deploy
             }
 
             // first try the cache
-            ProcessDefinitionCacheEntry cacheEntry = processDefinitionCache.get(processDefinitionId);
-            IProcessDefinition processDefinition = cacheEntry != null ? cacheEntry.ProcessDefinition : null;
+            ProcessDefinitionCacheEntry cacheEntry = processDefinitionCache.Get(processDefinitionId);
+            IProcessDefinition processDefinition = cacheEntry?.ProcessDefinition;
 
             if (processDefinition == null)
             {
-                processDefinition = processDefinitionEntityManager.findById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("processDefinitionId", processDefinitionId));
+                processDefinition = processDefinitionEntityManager.FindById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("processDefinitionId", processDefinitionId));
                 if (processDefinition == null)
                 {
                     throw new ActivitiObjectNotFoundException("no deployed process definition found with id '" + processDefinitionId + "'", typeof(IProcessDefinition));
                 }
-                processDefinition = resolveProcessDefinition(processDefinition).ProcessDefinition;
+                processDefinition = ResolveProcessDefinition(processDefinition).ProcessDefinition;
             }
             return processDefinition;
         }
 
-        public virtual IProcessDefinition findDeployedLatestProcessDefinitionByKey(string processDefinitionKey)
+        public virtual IProcessDefinition FindDeployedLatestProcessDefinitionByKey(string processDefinitionKey)
         {
-            IProcessDefinition processDefinition = processDefinitionEntityManager.findLatestProcessDefinitionByKey(processDefinitionKey);
+            IProcessDefinition processDefinition = processDefinitionEntityManager.FindLatestProcessDefinitionByKey(processDefinitionKey);
 
             if (processDefinition == null)
             {
                 throw new ActivitiObjectNotFoundException("no processes deployed with key '" + processDefinitionKey + "'", typeof(IProcessDefinition));
             }
-            processDefinition = resolveProcessDefinition(processDefinition).ProcessDefinition;
+            processDefinition = ResolveProcessDefinition(processDefinition).ProcessDefinition;
             return processDefinition;
         }
 
-        public virtual IProcessDefinition findDeployedLatestProcessDefinitionByKeyAndTenantId(string processDefinitionKey, string tenantId)
+        public virtual IProcessDefinition FindDeployedLatestProcessDefinitionByKeyAndTenantId(string processDefinitionKey, string tenantId)
         {
-            IProcessDefinition processDefinition = processDefinitionEntityManager.findLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
+            IProcessDefinition processDefinition = processDefinitionEntityManager.FindLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
             if (processDefinition == null)
             {
                 throw new ActivitiObjectNotFoundException("no processes deployed with key '" + processDefinitionKey + "' for tenant identifier '" + tenantId + "'", typeof(IProcessDefinition));
             }
-            processDefinition = resolveProcessDefinition(processDefinition).ProcessDefinition;
+            processDefinition = ResolveProcessDefinition(processDefinition).ProcessDefinition;
             return processDefinition;
         }
 
-        public virtual IProcessDefinition findDeployedProcessDefinitionByKeyAndVersionAndTenantId(string processDefinitionKey, int? processDefinitionVersion, string tenantId)
+        public virtual IProcessDefinition FindDeployedProcessDefinitionByKeyAndVersionAndTenantId(string processDefinitionKey, int? processDefinitionVersion, string tenantId)
         {
-            IProcessDefinition processDefinition = (IProcessDefinitionEntity)processDefinitionEntityManager.findProcessDefinitionByKeyAndVersionAndTenantId(processDefinitionKey, processDefinitionVersion, tenantId);
+            IProcessDefinition processDefinition = (IProcessDefinitionEntity)processDefinitionEntityManager.FindProcessDefinitionByKeyAndVersionAndTenantId(processDefinitionKey, processDefinitionVersion, tenantId);
             if (processDefinition == null)
             {
                 throw new ActivitiObjectNotFoundException("no processes deployed with key = '" + processDefinitionKey + "' and version = '" + processDefinitionVersion + "'", typeof(IProcessDefinition));
             }
-            processDefinition = resolveProcessDefinition(processDefinition).ProcessDefinition;
+            processDefinition = ResolveProcessDefinition(processDefinition).ProcessDefinition;
             return processDefinition;
         }
 
         /// <summary>
         /// Resolving the process definition will fetch the BPMN 2.0, parse it and store the <seealso cref="BpmnModel"/> in memory.
         /// </summary>
-        public virtual ProcessDefinitionCacheEntry resolveProcessDefinition(IProcessDefinition processDefinition)
+        public virtual ProcessDefinitionCacheEntry ResolveProcessDefinition(IProcessDefinition processDefinition)
         {
             string processDefinitionId = processDefinition.Id;
             string deploymentId = processDefinition.DeploymentId;
 
-            ProcessDefinitionCacheEntry cachedProcessDefinition = processDefinitionCache.get(processDefinitionId);
+            ProcessDefinitionCacheEntry cachedProcessDefinition = processDefinitionCache.Get(processDefinitionId);
 
             if (cachedProcessDefinition == null)
             {
-                ICommandContext commandContext = Context.CommandContext;
-                IDeploymentEntity deployment = deploymentEntityManager.findById<IDeploymentEntity>(new KeyValuePair<string, object>("id", deploymentId));
+                IDeploymentEntity deployment = deploymentEntityManager.FindById<IDeploymentEntity>(new KeyValuePair<string, object>("id", deploymentId));
                 deployment.New = false;
-                deploy(deployment, null);
-                cachedProcessDefinition = processDefinitionCache.get(processDefinitionId);
+                Deploy(deployment, null);
+                cachedProcessDefinition = processDefinitionCache.Get(processDefinitionId);
 
                 if (cachedProcessDefinition == null)
                 {
@@ -136,41 +135,40 @@ namespace org.activiti.engine.impl.persistence.deploy
             return cachedProcessDefinition;
         }
 
-        public virtual void removeDeployment(string deploymentId, bool cascade)
+        public virtual void RemoveDeployment(string deploymentId, bool cascade)
         {
 
-            IDeploymentEntity deployment = deploymentEntityManager.findById<IDeploymentEntity>(new KeyValuePair<string, object>("id", deploymentId));
+            IDeploymentEntity deployment = deploymentEntityManager.FindById<IDeploymentEntity>(new KeyValuePair<string, object>("id", deploymentId));
             if (deployment == null)
             {
                 throw new ActivitiObjectNotFoundException("Could not find a deployment with id '" + deploymentId + "'.", typeof(IDeploymentEntity));
             }
 
             // Remove any process definition from the cache
-            IList<IProcessDefinition> processDefinitions = (new ProcessDefinitionQueryImpl()).deploymentId(deploymentId).list();
+            IList<IProcessDefinition> processDefinitions = (new ProcessDefinitionQueryImpl()).SetDeploymentId(deploymentId).List();
             IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
 
             foreach (IProcessDefinition processDefinition in processDefinitions)
             {
-
                 // Since all process definitions are deleted by a single query, we should dispatch the events in this loop
                 if (eventDispatcher.Enabled)
                 {
-                    eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_DELETED, processDefinition));
+                    eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, processDefinition));
                 }
             }
 
             // Delete data
-            deploymentEntityManager.deleteDeployment(deploymentId, cascade);
+            deploymentEntityManager.DeleteDeployment(deploymentId, cascade);
 
             // Since we use a delete by query, delete-events are not automatically dispatched
             if (eventDispatcher.Enabled)
             {
-                eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_DELETED, deployment));
+                eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, deployment));
             }
 
             foreach (IProcessDefinition processDefinition in processDefinitions)
             {
-                processDefinitionCache.remove(processDefinition.Id);
+                processDefinitionCache.Remove(processDefinition.Id);
             }
         }
 
@@ -266,8 +264,5 @@ namespace org.activiti.engine.impl.persistence.deploy
                 this.deploymentEntityManager = value;
             }
         }
-
-
     }
-
 }

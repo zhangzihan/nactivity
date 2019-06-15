@@ -27,16 +27,16 @@ namespace org.activiti.cloud.services.events.converter
         /// 
         /// </summary>
 
-        public override IProcessEngineEvent from(IActivitiEvent @event)
+        public override IProcessEngineEvent From(IActivitiEvent @event)
         {
-            return new TaskCandidateUserAddedEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, RuntimeBundleProperties.ServiceName, RuntimeBundleProperties.ServiceFullName, RuntimeBundleProperties.ServiceType, RuntimeBundleProperties.ServiceVersion, @event.ExecutionId, @event.ProcessDefinitionId, @event.ProcessInstanceId, taskCandidateUserConverter.from((IIdentityLink)((IActivitiEntityEvent)@event).Entity));
+            return new TaskCandidateUserAddedEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, RuntimeBundleProperties.ServiceName, RuntimeBundleProperties.ServiceFullName, RuntimeBundleProperties.ServiceType, RuntimeBundleProperties.ServiceVersion, @event.ExecutionId, @event.ProcessDefinitionId, @event.ProcessInstanceId, taskCandidateUserConverter.From((IIdentityLink)((IActivitiEntityEvent)@event).Entity));
         }
 
         /// <summary>
         /// 
         /// </summary>
 
-        public override string handledType()
+        public override string HandledType()
         {
             return "TaskCandidateUser:" + ActivitiEventType.ENTITY_CREATED.ToString();
         }

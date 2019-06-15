@@ -14,7 +14,7 @@
  */
 namespace org.activiti.bpmn.converter
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.export;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
@@ -35,94 +35,94 @@ namespace org.activiti.bpmn.converter
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_TASK_SERVICE;
+                return BpmnXMLConstants.ELEMENT_TASK_SERVICE;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             ServiceTask serviceTask = new ServiceTask();
-            BpmnXMLUtil.addXMLLocation(serviceTask, xtr);
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_CLASS)))
+            BpmnXMLUtil.AddXMLLocation(serviceTask, xtr);
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_CLASS)))
             {
                 serviceTask.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_CLASS;
-                serviceTask.Implementation = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_CLASS);
+                serviceTask.Implementation = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_CLASS);
 
             }
-            else if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXPRESSION)))
+            else if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXPRESSION)))
             {
                 serviceTask.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION;
-                serviceTask.Implementation = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXPRESSION);
+                serviceTask.Implementation = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXPRESSION);
 
             }
-            else if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_DELEGATEEXPRESSION)))
+            else if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_DELEGATEEXPRESSION)))
             {
                 serviceTask.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION;
-                serviceTask.Implementation = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_DELEGATEEXPRESSION);
+                serviceTask.Implementation = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_DELEGATEEXPRESSION);
 
             }
-            else if ("##WebService".Equals(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_IMPLEMENTATION)))
+            else if ("##WebService".Equals(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_TASK_IMPLEMENTATION)))
             {
                 serviceTask.ImplementationType = ImplementationType.IMPLEMENTATION_TYPE_WEBSERVICE;
-                serviceTask.OperationRef = parseOperationRef(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_OPERATION_REF), model);
+                serviceTask.OperationRef = ParseOperationRef(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_TASK_OPERATION_REF), model);
             }
             else
             {
-                serviceTask.Implementation = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_IMPLEMENTATION);
+                serviceTask.Implementation = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_TASK_IMPLEMENTATION);
             }
 
-            serviceTask.ResultVariableName = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_RESULTVARIABLE);
+            serviceTask.ResultVariableName = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_RESULTVARIABLE);
             if (string.IsNullOrWhiteSpace(serviceTask.ResultVariableName))
             {
-                serviceTask.ResultVariableName = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, "resultVariable");
+                serviceTask.ResultVariableName = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, "resultVariable");
             }
 
-            serviceTask.Type = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TYPE);
-            serviceTask.ExtensionId = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXTENSIONID);
+            serviceTask.Type = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TYPE);
+            serviceTask.ExtensionId = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXTENSIONID);
 
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_SKIP_EXPRESSION)))
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_SKIP_EXPRESSION)))
             {
-                serviceTask.SkipExpression = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_SKIP_EXPRESSION);
+                serviceTask.SkipExpression = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_SKIP_EXPRESSION);
             }
-            parseChildElements(XMLElementName, serviceTask, model, xtr);
+            ParseChildElements(XMLElementName, serviceTask, model, xtr);
 
             return serviceTask;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
 
             ServiceTask serviceTask = (ServiceTask)element;
 
             if (ImplementationType.IMPLEMENTATION_TYPE_CLASS.Equals(serviceTask.ImplementationType))
             {
-                writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_CLASS, serviceTask.Implementation, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_CLASS, serviceTask.Implementation, xtw);
             }
             else if (ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION.Equals(serviceTask.ImplementationType))
             {
-                writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXPRESSION, serviceTask.Implementation, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXPRESSION, serviceTask.Implementation, xtw);
             }
             else if (ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(serviceTask.ImplementationType))
             {
-                writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_DELEGATEEXPRESSION, serviceTask.Implementation, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_DELEGATEEXPRESSION, serviceTask.Implementation, xtw);
             }
 
             if (!string.IsNullOrWhiteSpace(serviceTask.ResultVariableName))
             {
-                writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_RESULTVARIABLE, serviceTask.ResultVariableName, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_RESULTVARIABLE, serviceTask.ResultVariableName, xtw);
             }
             if (!string.IsNullOrWhiteSpace(serviceTask.Type))
             {
-                writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TYPE, serviceTask.Type, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TYPE, serviceTask.Type, xtw);
             }
             if (!string.IsNullOrWhiteSpace(serviceTask.ExtensionId))
             {
-                writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXTENSIONID, serviceTask.ExtensionId, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXTENSIONID, serviceTask.ExtensionId, xtw);
             }
             if (!string.IsNullOrWhiteSpace(serviceTask.SkipExpression))
             {
-                writeQualifiedAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_SKIP_EXPRESSION, serviceTask.SkipExpression, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_SKIP_EXPRESSION, serviceTask.SkipExpression, xtw);
             }
         }
-        protected internal override bool writeExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        protected internal override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             ServiceTask serviceTask = (ServiceTask)element;
 
@@ -138,37 +138,37 @@ namespace org.activiti.bpmn.converter
 
                     if (!didWriteExtensionStartElement)
                     {
-                        xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EXTENSIONS);
+                        xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                         didWriteExtensionStartElement = true;
                     }
-                    xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_FIELD, org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FIELD_NAME, customProperty.Name);
+                    xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_FIELD, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_FIELD_NAME, customProperty.Name);
                     if ((customProperty.SimpleValue.Contains("${") || customProperty.SimpleValue.Contains("#{")) && customProperty.SimpleValue.Contains("}"))
                     {
 
-                        xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FIELD_EXPRESSION, org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                        xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ATTRIBUTE_FIELD_EXPRESSION, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
                     }
                     else
                     {
-                        xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_FIELD_STRING, org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                        xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_FIELD_STRING, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
                     }
-                    xtw.writeCharacters(customProperty.SimpleValue);
-                    xtw.writeEndElement();
-                    xtw.writeEndElement();
+                    xtw.WriteCharacters(customProperty.SimpleValue);
+                    xtw.WriteEndElement();
+                    xtw.WriteEndElement();
                 }
             }
             else
             {
-                didWriteExtensionStartElement = FieldExtensionExport.writeFieldExtensions(serviceTask.FieldExtensions, didWriteExtensionStartElement, xtw);
+                didWriteExtensionStartElement = FieldExtensionExport.WriteFieldExtensions(serviceTask.FieldExtensions, didWriteExtensionStartElement, xtw);
             }
 
             return didWriteExtensionStartElement;
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
 
-        protected internal virtual string parseOperationRef(string operationRef, BpmnModel model)
+        protected internal virtual string ParseOperationRef(string operationRef, BpmnModel model)
         {
             string result = null;
             if (!string.IsNullOrWhiteSpace(operationRef))
@@ -177,7 +177,7 @@ namespace org.activiti.bpmn.converter
                 if (indexOfP != -1)
                 {
                     string prefix = operationRef.Substring(0, indexOfP);
-                    string resolvedNamespace = model.getNamespace(prefix);
+                    string resolvedNamespace = model.GetNamespace(prefix);
                     result = resolvedNamespace + ":" + operationRef.Substring(indexOfP + 1);
                 }
                 else

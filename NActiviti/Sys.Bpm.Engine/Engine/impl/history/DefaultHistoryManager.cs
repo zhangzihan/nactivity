@@ -26,7 +26,7 @@ namespace org.activiti.engine.impl.history
     using org.activiti.engine.impl.persistence.cache;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.task;
-    using Sys;
+    using Sys.Workflow;
 
     /// <summary>
     /// Manager class that centralises recording of all history-related operations that are originated from inside the engine.
@@ -48,7 +48,7 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# isHistoryLevelAtLeast(org.activiti.engine.impl.history.HistoryLevel)
          */
-        public virtual bool isHistoryLevelAtLeast(HistoryLevel level)
+        public virtual bool IsHistoryLevelAtLeast(HistoryLevel level)
         {
             if (log.IsEnabled(LogLevel.Debug))
             {
@@ -56,7 +56,7 @@ namespace org.activiti.engine.impl.history
             }
             // Comparing enums actually compares the location of values declared in
             // the enum
-            return historyLevel.isAtLeast(level);
+            return historyLevel.IsAtLeast(level);
         }
 
         /*
@@ -83,12 +83,12 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordProcessInstanceEnd(java.lang.String, java.lang.String, java.lang.String)
          */
-        public virtual void recordProcessInstanceEnd(string processInstanceId, string deleteReason, string activityId)
+        public virtual void RecordProcessInstanceEnd(string processInstanceId, string deleteReason, string activityId)
         {
 
-            if (isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.findById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("processInstanceId", processInstanceId));
+                IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.FindById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("processInstanceId", processInstanceId));
 
                 if (historicProcessInstance != null)
                 {
@@ -99,18 +99,18 @@ namespace org.activiti.engine.impl.history
                     IActivitiEventDispatcher activitiEventDispatcher = EventDispatcher;
                     if (activitiEventDispatcher != null && activitiEventDispatcher.Enabled)
                     {
-                        activitiEventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.HISTORIC_PROCESS_INSTANCE_ENDED, historicProcessInstance));
+                        activitiEventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.HISTORIC_PROCESS_INSTANCE_ENDED, historicProcessInstance));
                     }
 
                 }
             }
         }
 
-        public virtual void recordProcessInstanceNameChange(string processInstanceId, string newName)
+        public virtual void RecordProcessInstanceNameChange(string processInstanceId, string newName)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.findById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+                IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.FindById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("processInstanceId", processInstanceId));
 
                 if (historicProcessInstance != null)
                 {
@@ -124,21 +124,21 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordProcessInstanceStart (org.activiti.engine.impl.persistence.entity.ExecutionEntity)
          */
-        public virtual void recordProcessInstanceStart(IExecutionEntity processInstance, FlowElement startElement)
+        public virtual void RecordProcessInstanceStart(IExecutionEntity processInstance, FlowElement startElement)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.create(processInstance);
+                IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.Create(processInstance);
                 historicProcessInstance.StartActivityId = startElement.Id;
 
                 // Insert historic process-instance
-                HistoricProcessInstanceEntityManager.insert(historicProcessInstance, false);
+                HistoricProcessInstanceEntityManager.Insert(historicProcessInstance, false);
 
                 // Fire event
                 IActivitiEventDispatcher activitiEventDispatcher = EventDispatcher;
                 if (activitiEventDispatcher != null && activitiEventDispatcher.Enabled)
                 {
-                    activitiEventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.HISTORIC_PROCESS_INSTANCE_CREATED, historicProcessInstance));
+                    activitiEventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.HISTORIC_PROCESS_INSTANCE_CREATED, historicProcessInstance));
                 }
 
             }
@@ -150,28 +150,28 @@ namespace org.activiti.engine.impl.history
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordSubProcessInstanceStart (org.activiti.engine.impl.persistence.entity.ExecutionEntity,
          * org.activiti.engine.impl.persistence.entity.ExecutionEntity)
          */
-        public virtual void recordSubProcessInstanceStart(IExecutionEntity parentExecution, IExecutionEntity subProcessInstance, FlowElement initialElement)
+        public virtual void RecordSubProcessInstanceStart(IExecutionEntity parentExecution, IExecutionEntity subProcessInstance, FlowElement initialElement)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
 
-                IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.create(subProcessInstance);
+                IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.Create(subProcessInstance);
 
                 // Fix for ACT-1728: startActivityId not initialized with subprocess instance
-                if (ReferenceEquals(historicProcessInstance.StartActivityId, null))
+                if (historicProcessInstance.StartActivityId is null)
                 {
                     historicProcessInstance.StartActivityId = initialElement.Id;
                 }
-                HistoricProcessInstanceEntityManager.insert(historicProcessInstance, false);
+                HistoricProcessInstanceEntityManager.Insert(historicProcessInstance, false);
 
                 // Fire event
                 IActivitiEventDispatcher activitiEventDispatcher = EventDispatcher;
                 if (activitiEventDispatcher != null && activitiEventDispatcher.Enabled)
                 {
-                    activitiEventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.HISTORIC_PROCESS_INSTANCE_CREATED, historicProcessInstance));
+                    activitiEventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.HISTORIC_PROCESS_INSTANCE_CREATED, historicProcessInstance));
                 }
 
-                IHistoricActivityInstanceEntity activitiyInstance = findActivityInstance(parentExecution, false, true);
+                IHistoricActivityInstanceEntity activitiyInstance = FindActivityInstance(parentExecution, false, true);
                 if (activitiyInstance != null)
                 {
                     activitiyInstance.CalledProcessInstanceId = subProcessInstance.ProcessInstanceId;
@@ -187,31 +187,31 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordActivityStart (org.activiti.engine.impl.persistence.entity.ExecutionEntity)
          */
-        public virtual void recordActivityStart(IExecutionEntity executionEntity)
+        public virtual void RecordActivityStart(IExecutionEntity executionEntity)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
                 if (executionEntity.ActivityId != null && executionEntity.CurrentFlowElement != null)
                 {
-                    IHistoricActivityInstanceEntity historicActivityInstanceEntity = null;
 
                     // Historic activity instance could have been created (but only in cache, never persisted)
                     // for example when submitting form properties
-                    IHistoricActivityInstanceEntity historicActivityInstanceEntityFromCache = getHistoricActivityInstanceFromCache(executionEntity.Id, executionEntity.ActivityId, true);
+                    IHistoricActivityInstanceEntity historicActivityInstanceEntityFromCache = GetHistoricActivityInstanceFromCache(executionEntity.Id, executionEntity.ActivityId, true);
+                    IHistoricActivityInstanceEntity historicActivityInstanceEntity;
                     if (historicActivityInstanceEntityFromCache != null)
                     {
                         historicActivityInstanceEntity = historicActivityInstanceEntityFromCache;
                     }
                     else
                     {
-                        historicActivityInstanceEntity = createHistoricActivityInstanceEntity(executionEntity);
+                        historicActivityInstanceEntity = CreateHistoricActivityInstanceEntity(executionEntity);
                     }
 
                     // Fire event
                     IActivitiEventDispatcher activitiEventDispatcher = EventDispatcher;
                     if (activitiEventDispatcher != null && activitiEventDispatcher.Enabled)
                     {
-                        activitiEventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_CREATED, historicActivityInstanceEntity));
+                        activitiEventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_CREATED, historicActivityInstanceEntity));
                     }
 
                 }
@@ -223,11 +223,11 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordActivityEnd (org.activiti.engine.impl.persistence.entity.ExecutionEntity)
          */
-        public virtual void recordActivityEnd(IExecutionEntity executionEntity, string deleteReason)
+        public virtual void RecordActivityEnd(IExecutionEntity executionEntity, string deleteReason)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                IHistoricActivityInstanceEntity historicActivityInstance = findActivityInstance(executionEntity, false, true);
+                IHistoricActivityInstanceEntity historicActivityInstance = FindActivityInstance(executionEntity, false, true);
                 if (historicActivityInstance != null)
                 {
                     historicActivityInstance.markEnded(deleteReason);
@@ -236,13 +236,13 @@ namespace org.activiti.engine.impl.history
                     IActivitiEventDispatcher activitiEventDispatcher = EventDispatcher;
                     if (activitiEventDispatcher != null && activitiEventDispatcher.Enabled)
                     {
-                        activitiEventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_ENDED, historicActivityInstance));
+                        activitiEventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_ENDED, historicActivityInstance));
                     }
                 }
             }
         }
 
-        public virtual IHistoricActivityInstanceEntity findActivityInstance(IExecutionEntity execution, bool createOnNotFound, bool endTimeMustBeNull)
+        public virtual IHistoricActivityInstanceEntity FindActivityInstance(IExecutionEntity execution, bool createOnNotFound, bool endTimeMustBeNull)
         {
             string activityId = null;
             if (execution.CurrentFlowElement is FlowNode)
@@ -254,20 +254,20 @@ namespace org.activiti.engine.impl.history
                 activityId = ((SequenceFlow)(execution.CurrentFlowElement)).SourceFlowElement.Id;
             }
 
-            if (!ReferenceEquals(activityId, null))
+            if (!(activityId is null))
             {
-                return findActivityInstance(execution, activityId, createOnNotFound, endTimeMustBeNull);
+                return FindActivityInstance(execution, activityId, createOnNotFound, endTimeMustBeNull);
             }
 
             return null;
         }
 
 
-        public virtual IHistoricActivityInstanceEntity findActivityInstance(IExecutionEntity execution, string activityId, bool createOnNotFound, bool endTimeMustBeNull)
+        public virtual IHistoricActivityInstanceEntity FindActivityInstance(IExecutionEntity execution, string activityId, bool createOnNotFound, bool endTimeMustBeNull)
         {
 
             // No use looking for the HistoricActivityInstance when no activityId is provided.
-            if (ReferenceEquals(activityId, null))
+            if (activityId is null)
             {
                 return null;
             }
@@ -275,7 +275,7 @@ namespace org.activiti.engine.impl.history
             string executionId = execution.Id;
 
             // Check the cache
-            IHistoricActivityInstanceEntity historicActivityInstanceEntityFromCache = getHistoricActivityInstanceFromCache(executionId, activityId, endTimeMustBeNull);
+            IHistoricActivityInstanceEntity historicActivityInstanceEntityFromCache = GetHistoricActivityInstanceFromCache(executionId, activityId, endTimeMustBeNull);
             if (historicActivityInstanceEntityFromCache != null)
             {
                 return historicActivityInstanceEntityFromCache;
@@ -285,40 +285,38 @@ namespace org.activiti.engine.impl.history
             // there can never be an entry for a historic activity instance with this execution id.
             if (!execution.Inserted && !execution.ProcessInstanceType)
             {
-
                 // Check the database
-                IList<IHistoricActivityInstanceEntity> historicActivityInstances = HistoricActivityInstanceEntityManager.findUnfinishedHistoricActivityInstancesByExecutionAndActivityId(executionId, activityId);
+                IList<IHistoricActivityInstanceEntity> historicActivityInstances = HistoricActivityInstanceEntityManager.FindUnfinishedHistoricActivityInstancesByExecutionAndActivityId(executionId, activityId);
 
                 if (historicActivityInstances.Count > 0)
                 {
                     return historicActivityInstances[0];
                 }
-
             }
 
-            if (!ReferenceEquals(execution.ParentId, null))
+            if (!(execution.ParentId is null))
             {
-                IHistoricActivityInstanceEntity historicActivityInstanceFromParent = findActivityInstance(execution.Parent, activityId, false, endTimeMustBeNull); // always false for create, we only check if it can be found
+                IHistoricActivityInstanceEntity historicActivityInstanceFromParent = FindActivityInstance(execution.Parent, activityId, false, endTimeMustBeNull); // always false for create, we only check if it can be found
                 if (historicActivityInstanceFromParent != null)
                 {
                     return historicActivityInstanceFromParent;
                 }
             }
 
-            if (createOnNotFound && !ReferenceEquals(activityId, null) && ((execution.CurrentFlowElement != null && execution.CurrentFlowElement is FlowNode) || execution.CurrentFlowElement == null))
+            if (createOnNotFound && !(activityId is null) && ((execution.CurrentFlowElement != null && execution.CurrentFlowElement is FlowNode) || execution.CurrentFlowElement == null))
             {
-                return createHistoricActivityInstanceEntity(execution);
+                return CreateHistoricActivityInstanceEntity(execution);
             }
 
             return null;
         }
 
-        protected internal virtual IHistoricActivityInstanceEntity getHistoricActivityInstanceFromCache(string executionId, string activityId, bool endTimeMustBeNull)
+        protected internal virtual IHistoricActivityInstanceEntity GetHistoricActivityInstanceFromCache(string executionId, string activityId, bool endTimeMustBeNull)
         {
-            IList<IHistoricActivityInstanceEntity> cachedHistoricActivityInstances = EntityCache.findInCache(typeof(HistoricActivityInstanceEntityImpl)) as IList<IHistoricActivityInstanceEntity>;
+            IList<IHistoricActivityInstanceEntity> cachedHistoricActivityInstances = EntityCache.FindInCache(typeof(HistoricActivityInstanceEntityImpl)) as IList<IHistoricActivityInstanceEntity>;
             foreach (IHistoricActivityInstanceEntity cachedHistoricActivityInstance in cachedHistoricActivityInstances ?? new List<IHistoricActivityInstanceEntity>())
             {
-                if (!ReferenceEquals(activityId, null) && activityId.Equals(cachedHistoricActivityInstance.ActivityId) && (!endTimeMustBeNull || cachedHistoricActivityInstance.EndTime == null))
+                if (!(activityId is null) && activityId.Equals(cachedHistoricActivityInstance.ActivityId) && (!endTimeMustBeNull || cachedHistoricActivityInstance.EndTime == null))
                 {
                     if (executionId.Equals(cachedHistoricActivityInstance.ExecutionId))
                     {
@@ -330,15 +328,15 @@ namespace org.activiti.engine.impl.history
             return null;
         }
 
-        protected internal virtual IHistoricActivityInstanceEntity createHistoricActivityInstanceEntity(IExecutionEntity execution)
+        protected internal virtual IHistoricActivityInstanceEntity CreateHistoricActivityInstanceEntity(IExecutionEntity execution)
         {
             IIdGenerator idGenerator = ProcessEngineConfiguration.IdGenerator;
 
             string processDefinitionId = execution.ProcessDefinitionId;
             string processInstanceId = execution.ProcessInstanceId;
 
-            IHistoricActivityInstanceEntity historicActivityInstance = HistoricActivityInstanceEntityManager.create();
-            historicActivityInstance.Id = idGenerator.NextId;
+            IHistoricActivityInstanceEntity historicActivityInstance = HistoricActivityInstanceEntityManager.Create();
+            historicActivityInstance.Id = idGenerator.GetNextId();
             historicActivityInstance.ProcessDefinitionId = processDefinitionId;
             historicActivityInstance.ProcessInstanceId = processInstanceId;
             historicActivityInstance.ExecutionId = execution.Id;
@@ -346,18 +344,18 @@ namespace org.activiti.engine.impl.history
             if (execution.CurrentFlowElement != null)
             {
                 historicActivityInstance.ActivityName = execution.CurrentFlowElement.Name;
-                historicActivityInstance.ActivityType = parseActivityType(execution.CurrentFlowElement);
+                historicActivityInstance.ActivityType = ParseActivityType(execution.CurrentFlowElement);
             }
             DateTime now = Clock.CurrentTime;
             historicActivityInstance.StartTime = now;
 
             // Inherit tenant id (if applicable)
-            if (!ReferenceEquals(execution.TenantId, null))
+            if (!(execution.TenantId is null))
             {
                 historicActivityInstance.TenantId = execution.TenantId;
             }
 
-            HistoricActivityInstanceEntityManager.insert(historicActivityInstance);
+            HistoricActivityInstanceEntityManager.Insert(historicActivityInstance);
             return historicActivityInstance;
         }
 
@@ -366,11 +364,11 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordProcessDefinitionChange(java.lang.String, java.lang.String)
          */
-        public virtual void recordProcessDefinitionChange(string processInstanceId, string processDefinitionId)
+        public virtual void RecordProcessDefinitionChange(string processInstanceId, string processDefinitionId)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.findById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+                IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.FindById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("id", processInstanceId));
                 if (historicProcessInstance != null)
                 {
                     historicProcessInstance.ProcessDefinitionId = processDefinitionId;
@@ -386,15 +384,15 @@ namespace org.activiti.engine.impl.history
          * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskCreated (org.activiti.engine.impl.persistence.entity.TaskEntity,
          * org.activiti.engine.impl.persistence.entity.ExecutionEntity)
          */
-        public virtual void recordTaskCreated(ITaskEntity task, IExecutionEntity execution)
+        public virtual void RecordTaskCreated(ITaskEntity task, IExecutionEntity execution)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.create(task, execution);
-                HistoricTaskInstanceEntityManager.insert(historicTaskInstance, false);
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.Create(task, execution);
+                HistoricTaskInstanceEntityManager.Insert(historicTaskInstance, false);
             }
 
-            recordTaskId(task);
+            RecordTaskId(task);
         }
 
         /*
@@ -402,17 +400,18 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskAssignment (org.activiti.engine.impl.persistence.entity.TaskEntity)
          */
-        public virtual void recordTaskAssignment(ITaskEntity task)
+        public virtual void RecordTaskAssignment(ITaskEntity task)
         {
             IExecutionEntity executionEntity = task.Execution;
-            if (isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
                 if (executionEntity != null)
                 {
-                    IHistoricActivityInstanceEntity historicActivityInstance = findActivityInstance(executionEntity, false, true);
+                    IHistoricActivityInstanceEntity historicActivityInstance = FindActivityInstance(executionEntity, false, true);
                     if (historicActivityInstance != null)
                     {
                         historicActivityInstance.Assignee = task.Assignee;
+                        historicActivityInstance.AssigneeUser = task.AssigneeUser;
                     }
                 }
             }
@@ -424,11 +423,11 @@ namespace org.activiti.engine.impl.history
          * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskClaim (org.activiti.engine.impl.persistence.entity.TaskEntity)
          */
 
-        public virtual void recordTaskClaim(ITaskEntity task)
+        public virtual void RecordTaskClaim(ITaskEntity task)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", task.Id));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", task.Id));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.ClaimTime = task.ClaimTime;
@@ -441,14 +440,14 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskId (org.activiti.engine.impl.persistence.entity.TaskEntity)
          */
-        public virtual void recordTaskId(ITaskEntity task)
+        public virtual void RecordTaskId(ITaskEntity task)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
                 IExecutionEntity execution = task.Execution;
                 if (execution != null)
                 {
-                    IHistoricActivityInstanceEntity historicActivityInstance = findActivityInstance(execution, false, true);
+                    IHistoricActivityInstanceEntity historicActivityInstance = FindActivityInstance(execution, false, true);
                     if (historicActivityInstance != null)
                     {
                         historicActivityInstance.TaskId = task.Id;
@@ -462,11 +461,11 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskEnd (java.lang.String, java.lang.String)
          */
-        public virtual void recordTaskEnd(string taskId, string deleteReason)
+        public virtual void RecordTaskEnd(string taskId, string deleteReason)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.markEnded(deleteReason);
@@ -479,14 +478,15 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskAssigneeChange(java.lang.String, java.lang.String)
          */
-        public virtual void recordTaskAssigneeChange(string taskId, string assignee)
+        public virtual void RecordTaskAssigneeChange(string taskId, string assignee, string assigneeUser)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.Assignee = assignee;
+                    historicTaskInstance.AssigneeUser = assigneeUser;
                 }
             }
         }
@@ -496,11 +496,11 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskOwnerChange(java.lang.String, java.lang.String)
          */
-        public virtual void recordTaskOwnerChange(string taskId, string owner)
+        public virtual void RecordTaskOwnerChange(string taskId, string owner)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.Owner = owner;
@@ -513,11 +513,11 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskNameChange (java.lang.String, java.lang.String)
          */
-        public virtual void recordTaskNameChange(string taskId, string taskName)
+        public virtual void RecordTaskNameChange(string taskId, string taskName)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.Name = taskName;
@@ -530,11 +530,11 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskDescriptionChange(java.lang.String, java.lang.String)
          */
-        public virtual void recordTaskDescriptionChange(string taskId, string description)
+        public virtual void RecordTaskDescriptionChange(string taskId, string description)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.Description = description;
@@ -547,11 +547,11 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskDueDateChange(java.lang.String, java.util.Date)
          */
-        public virtual void recordTaskDueDateChange(string taskId, DateTime dueDate)
+        public virtual void RecordTaskDueDateChange(string taskId, DateTime dueDate)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.DueDate = dueDate;
@@ -564,11 +564,11 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskPriorityChange(java.lang.String, int)
          */
-        public virtual void recordTaskPriorityChange(string taskId, int? priority)
+        public virtual void RecordTaskPriorityChange(string taskId, int? priority)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.Priority = priority;
@@ -581,11 +581,11 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskCategoryChange(java.lang.String, java.lang.String)
          */
-        public virtual void recordTaskCategoryChange(string taskId, string category)
+        public virtual void RecordTaskCategoryChange(string taskId, string category)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.Category = category;
@@ -593,11 +593,11 @@ namespace org.activiti.engine.impl.history
             }
         }
 
-        public virtual void recordTaskFormKeyChange(string taskId, string formKey)
+        public virtual void RecordTaskFormKeyChange(string taskId, string formKey)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.FormKey = formKey;
@@ -610,11 +610,11 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskParentTaskIdChange(java.lang.String, java.lang.String)
          */
-        public virtual void recordTaskParentTaskIdChange(string taskId, string parentTaskId)
+        public virtual void RecordTaskParentTaskIdChange(string taskId, string parentTaskId)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.ParentTaskId = parentTaskId;
@@ -627,11 +627,11 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskExecutionIdChange(java.lang.String, java.lang.String)
          */
-        public virtual void recordTaskExecutionIdChange(string taskId, string executionId)
+        public virtual void RecordTaskExecutionIdChange(string taskId, string executionId)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.ExecutionId = executionId;
@@ -644,11 +644,11 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskDefinitionKeyChange (org.activiti.engine.impl.persistence.entity.TaskEntity, java.lang.String)
          */
-        public virtual void recordTaskDefinitionKeyChange(string taskId, string taskDefinitionKey)
+        public virtual void RecordTaskDefinitionKeyChange(string taskId, string taskDefinitionKey)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.TaskDefinitionKey = taskDefinitionKey;
@@ -659,11 +659,11 @@ namespace org.activiti.engine.impl.history
         /* (non-Javadoc)
          * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskProcessDefinitionChange(java.lang.String, java.lang.String)
          */
-        public virtual void recordTaskProcessDefinitionChange(string taskId, string processDefinitionId)
+        public virtual void RecordTaskProcessDefinitionChange(string taskId, string processDefinitionId)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.findById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
+                IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
                     historicTaskInstance.ProcessDefinitionId = processDefinitionId;
@@ -678,12 +678,12 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordVariableCreate (org.activiti.engine.impl.persistence.entity.VariableInstanceEntity)
          */
-        public virtual void recordVariableCreate(IVariableInstanceEntity variable)
+        public virtual void RecordVariableCreate(IVariableInstanceEntity variable)
         {
             // Historic variables
-            if (isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                HistoricVariableInstanceEntityManager.copyAndInsert(variable);
+                HistoricVariableInstanceEntityManager.CopyAndInsert(variable);
             }
         }
 
@@ -693,16 +693,16 @@ namespace org.activiti.engine.impl.history
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordHistoricDetailVariableCreate (org.activiti.engine.impl.persistence.entity.VariableInstanceEntity,
          * org.activiti.engine.impl.persistence.entity.ExecutionEntity, boolean)
          */
-        public virtual void recordHistoricDetailVariableCreate(IVariableInstanceEntity variable, IExecutionEntity sourceActivityExecution, bool useActivityId)
+        public virtual void RecordHistoricDetailVariableCreate(IVariableInstanceEntity variable, IExecutionEntity sourceActivityExecution, bool useActivityId)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.FULL))
+            if (IsHistoryLevelAtLeast(HistoryLevel.FULL))
             {
 
-                IHistoricDetailVariableInstanceUpdateEntity historicVariableUpdate = HistoricDetailEntityManager.copyAndInsertHistoricDetailVariableInstanceUpdateEntity(variable);
+                IHistoricDetailVariableInstanceUpdateEntity historicVariableUpdate = HistoricDetailEntityManager.CopyAndInsertHistoricDetailVariableInstanceUpdateEntity(variable);
 
                 if (useActivityId && sourceActivityExecution != null)
                 {
-                    IHistoricActivityInstanceEntity historicActivityInstance = findActivityInstance(sourceActivityExecution, false, false);
+                    IHistoricActivityInstanceEntity historicActivityInstance = FindActivityInstance(sourceActivityExecution, false, false);
                     if (historicActivityInstance != null)
                     {
                         historicVariableUpdate.ActivityInstanceId = historicActivityInstance.Id;
@@ -716,23 +716,22 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordVariableUpdate (org.activiti.engine.impl.persistence.entity.VariableInstanceEntity)
          */
-        public virtual void recordVariableUpdate(IVariableInstanceEntity variable)
+        public virtual void RecordVariableUpdate(IVariableInstanceEntity variable)
         {
-            if (variable != null && isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (variable != null && IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                IHistoricVariableInstanceEntity historicProcessVariable = EntityCache.findInCache(variable.GetType(), variable.Id) as IHistoricVariableInstanceEntity;
-                if (historicProcessVariable == null)
+                if (!(EntityCache.FindInCache(variable.GetType(), variable.Id) is IHistoricVariableInstanceEntity historicProcessVariable))
                 {
-                    historicProcessVariable = HistoricVariableInstanceEntityManager.findHistoricVariableInstanceByVariableInstanceId(variable.Id);
+                    historicProcessVariable = HistoricVariableInstanceEntityManager.FindHistoricVariableInstanceByVariableInstanceId(variable.Id);
                 }
 
                 if (historicProcessVariable != null)
                 {
-                    HistoricVariableInstanceEntityManager.copyVariableValue(historicProcessVariable, variable);
+                    HistoricVariableInstanceEntityManager.CopyVariableValue(historicProcessVariable, variable);
                 }
                 else
                 {
-                    HistoricVariableInstanceEntityManager.copyAndInsert(variable);
+                    HistoricVariableInstanceEntityManager.CopyAndInsert(variable);
                 }
             }
         }
@@ -746,24 +745,24 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# createIdentityLinkComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)
          */
-        public virtual void createIdentityLinkComment(string taskId, string userId, string groupId, string type, bool create)
+        public virtual void CreateIdentityLinkComment(string taskId, string userId, string groupId, string type, bool create)
         {
-            createIdentityLinkComment(taskId, userId, groupId, type, create, false);
+            CreateIdentityLinkComment(taskId, userId, groupId, type, create, false);
         }
 
-        public virtual void createUserIdentityLinkComment(string taskId, string userId, string type, bool create)
+        public virtual void CreateUserIdentityLinkComment(string taskId, string userId, string type, bool create)
         {
-            createIdentityLinkComment(taskId, userId, null, type, create, false);
+            CreateIdentityLinkComment(taskId, userId, null, type, create, false);
         }
 
-        public virtual void createGroupIdentityLinkComment(string taskId, string groupId, string type, bool create)
+        public virtual void CreateGroupIdentityLinkComment(string taskId, string groupId, string type, bool create)
         {
-            createIdentityLinkComment(taskId, null, groupId, type, create, false);
+            CreateIdentityLinkComment(taskId, null, groupId, type, create, false);
         }
 
-        public virtual void createUserIdentityLinkComment(string taskId, string userId, string type, bool create, bool forceNullUserId)
+        public virtual void CreateUserIdentityLinkComment(string taskId, string userId, string type, bool create, bool forceNullUserId)
         {
-            createIdentityLinkComment(taskId, userId, null, type, create, forceNullUserId);
+            CreateIdentityLinkComment(taskId, userId, null, type, create, forceNullUserId);
         }
 
         /*
@@ -771,25 +770,25 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# createIdentityLinkComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
          */
-        public virtual void createIdentityLinkComment(string taskId, string userId, string groupId, string type, bool create, bool forceNullUserId)
+        public virtual void CreateIdentityLinkComment(string taskId, string userId, string groupId, string type, bool create, bool forceNullUserId)
         {
             if (HistoryEnabled)
             {
                 string authenticatedUserId = Authentication.AuthenticatedUser.Id;
-                ICommentEntity comment = CommentEntityManager.create();
+                ICommentEntity comment = CommentEntityManager.Create();
                 comment.UserId = authenticatedUserId;
-                comment.Type = CommentEntity_Fields.TYPE_EVENT;
+                comment.Type = CommentEntityFields.TYPE_EVENT;
                 comment.Time = Clock.CurrentTime;
                 comment.TaskId = taskId;
-                if (!ReferenceEquals(userId, null) || forceNullUserId)
+                if (!(userId is null) || forceNullUserId)
                 {
                     if (create)
                     {
-                        comment.Action = Event_Fields.ACTION_ADD_USER_LINK;
+                        comment.Action = EventFields.ACTION_ADD_USER_LINK;
                     }
                     else
                     {
-                        comment.Action = Event_Fields.ACTION_DELETE_USER_LINK;
+                        comment.Action = EventFields.ACTION_DELETE_USER_LINK;
                     }
                     comment.MessageParts = new string[] { userId, type };
                 }
@@ -797,43 +796,43 @@ namespace org.activiti.engine.impl.history
                 {
                     if (create)
                     {
-                        comment.Action = Event_Fields.ACTION_ADD_GROUP_LINK;
+                        comment.Action = EventFields.ACTION_ADD_GROUP_LINK;
                     }
                     else
                     {
-                        comment.Action = Event_Fields.ACTION_DELETE_GROUP_LINK;
+                        comment.Action = EventFields.ACTION_DELETE_GROUP_LINK;
                     }
                     comment.MessageParts = new string[] { groupId, type };
                 }
 
-                CommentEntityManager.insert(comment);
+                CommentEntityManager.Insert(comment);
             }
         }
 
-        public virtual void createProcessInstanceIdentityLinkComment(string processInstanceId, string userId, string groupId, string type, bool create)
+        public virtual void CreateProcessInstanceIdentityLinkComment(string processInstanceId, string userId, string groupId, string type, bool create)
         {
-            createProcessInstanceIdentityLinkComment(processInstanceId, userId, groupId, type, create, false);
+            CreateProcessInstanceIdentityLinkComment(processInstanceId, userId, groupId, type, create, false);
         }
 
-        public virtual void createProcessInstanceIdentityLinkComment(string processInstanceId, string userId, string groupId, string type, bool create, bool forceNullUserId)
+        public virtual void CreateProcessInstanceIdentityLinkComment(string processInstanceId, string userId, string groupId, string type, bool create, bool forceNullUserId)
         {
             if (HistoryEnabled)
             {
                 string authenticatedUserId = Authentication.AuthenticatedUser.Id;
-                ICommentEntity comment = CommentEntityManager.create();
+                ICommentEntity comment = CommentEntityManager.Create();
                 comment.UserId = authenticatedUserId;
-                comment.Type = CommentEntity_Fields.TYPE_EVENT;
+                comment.Type = CommentEntityFields.TYPE_EVENT;
                 comment.Time = Clock.CurrentTime;
                 comment.ProcessInstanceId = processInstanceId;
-                if (!ReferenceEquals(userId, null) || forceNullUserId)
+                if (!(userId is null) || forceNullUserId)
                 {
                     if (create)
                     {
-                        comment.Action = Event_Fields.ACTION_ADD_USER_LINK;
+                        comment.Action = EventFields.ACTION_ADD_USER_LINK;
                     }
                     else
                     {
-                        comment.Action = Event_Fields.ACTION_DELETE_USER_LINK;
+                        comment.Action = EventFields.ACTION_DELETE_USER_LINK;
                     }
                     comment.MessageParts = new string[] { userId, type };
                 }
@@ -841,15 +840,15 @@ namespace org.activiti.engine.impl.history
                 {
                     if (create)
                     {
-                        comment.Action = Event_Fields.ACTION_ADD_GROUP_LINK;
+                        comment.Action = EventFields.ACTION_ADD_GROUP_LINK;
                     }
                     else
                     {
-                        comment.Action = Event_Fields.ACTION_DELETE_GROUP_LINK;
+                        comment.Action = EventFields.ACTION_DELETE_GROUP_LINK;
                     }
                     comment.MessageParts = new string[] { groupId, type };
                 }
-                CommentEntityManager.insert(comment);
+                CommentEntityManager.Insert(comment);
             }
         }
 
@@ -858,27 +857,27 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# createAttachmentComment(java.lang.String, java.lang.String, java.lang.String, boolean)
          */
-        public virtual void createAttachmentComment(string taskId, string processInstanceId, string attachmentName, bool create)
+        public virtual void CreateAttachmentComment(string taskId, string processInstanceId, string attachmentName, bool create)
         {
             if (HistoryEnabled)
             {
                 string userId = Authentication.AuthenticatedUser.Id;
-                ICommentEntity comment = CommentEntityManager.create();
+                ICommentEntity comment = CommentEntityManager.Create();
                 comment.UserId = userId;
-                comment.Type = CommentEntity_Fields.TYPE_EVENT;
+                comment.Type = CommentEntityFields.TYPE_EVENT;
                 comment.Time = Clock.CurrentTime;
                 comment.TaskId = taskId;
                 comment.ProcessInstanceId = processInstanceId;
                 if (create)
                 {
-                    comment.Action = Event_Fields.ACTION_ADD_ATTACHMENT;
+                    comment.Action = EventFields.ACTION_ADD_ATTACHMENT;
                 }
                 else
                 {
-                    comment.Action = Event_Fields.ACTION_DELETE_ATTACHMENT;
+                    comment.Action = EventFields.ACTION_DELETE_ATTACHMENT;
                 }
                 comment.MessageParts = new string[] { attachmentName };
-                CommentEntityManager.insert(comment);
+                CommentEntityManager.Insert(comment);
             }
         }
 
@@ -888,21 +887,21 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordIdentityLinkCreated (org.activiti.engine.impl.persistence.entity.IdentityLinkEntity)
          */
-        public virtual void recordIdentityLinkCreated(IIdentityLinkEntity identityLink)
+        public virtual void RecordIdentityLinkCreated(IIdentityLinkEntity identityLink)
         {
             // It makes no sense storing historic counterpart for an identity-link
             // that is related
             // to a process-definition only as this is never kept in history
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT) && (!ReferenceEquals(identityLink.ProcessInstanceId, null) || !ReferenceEquals(identityLink.TaskId, null)))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT) && (!(identityLink.ProcessInstanceId is null) || !(identityLink.TaskId is null)))
             {
-                IHistoricIdentityLinkEntity historicIdentityLinkEntity = HistoricIdentityLinkEntityManager.create();
+                IHistoricIdentityLinkEntity historicIdentityLinkEntity = HistoricIdentityLinkEntityManager.Create();
                 historicIdentityLinkEntity.Id = identityLink.Id;
                 historicIdentityLinkEntity.GroupId = identityLink.GroupId;
                 historicIdentityLinkEntity.ProcessInstanceId = identityLink.ProcessInstanceId;
                 historicIdentityLinkEntity.TaskId = identityLink.TaskId;
                 historicIdentityLinkEntity.Type = identityLink.Type;
                 historicIdentityLinkEntity.UserId = identityLink.UserId;
-                HistoricIdentityLinkEntityManager.insert(historicIdentityLinkEntity, false);
+                HistoricIdentityLinkEntityManager.Insert(historicIdentityLinkEntity, false);
             }
         }
 
@@ -911,11 +910,11 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# deleteHistoricIdentityLink(java.lang.String)
          */
-        public virtual void deleteHistoricIdentityLink(string id)
+        public virtual void DeleteHistoricIdentityLink(string id)
         {
-            if (isHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                HistoricIdentityLinkEntityManager.delete(new KeyValuePair<string, object>("id", id));
+                HistoricIdentityLinkEntityManager.Delete(new KeyValuePair<string, object>("id", id));
             }
         }
 
@@ -924,7 +923,7 @@ namespace org.activiti.engine.impl.history
          * 
          * @see org.activiti.engine.impl.history.HistoryManagerInterface# updateProcessBusinessKeyInHistory (org.activiti.engine.impl.persistence.entity.ExecutionEntity)
          */
-        public virtual void updateProcessBusinessKeyInHistory(IExecutionEntity processInstance)
+        public virtual void UpdateProcessBusinessKeyInHistory(IExecutionEntity processInstance)
         {
             if (HistoryEnabled)
             {
@@ -934,34 +933,33 @@ namespace org.activiti.engine.impl.history
                 //}
                 if (processInstance != null)
                 {
-                    IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.findById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", processInstance.Id));
+                    IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.FindById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", processInstance.Id));
                     if (historicProcessInstance != null)
                     {
                         historicProcessInstance.BusinessKey = processInstance.ProcessInstanceBusinessKey;
-                        HistoricProcessInstanceEntityManager.update(historicProcessInstance, false);
+                        HistoricProcessInstanceEntityManager.Update(historicProcessInstance, false);
                     }
                 }
             }
         }
 
-        public virtual void recordVariableRemoved(IVariableInstanceEntity variable)
+        public virtual void RecordVariableRemoved(IVariableInstanceEntity variable)
         {
-            if (variable != null && isHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (variable != null && IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                IHistoricVariableInstanceEntity historicProcessVariable = EntityCache.findInCache(variable.GetType(), variable.Id) as IHistoricVariableInstanceEntity;
-                if (historicProcessVariable == null)
+                if (!(EntityCache.FindInCache(variable.GetType(), variable.Id) is IHistoricVariableInstanceEntity historicProcessVariable))
                 {
-                    historicProcessVariable = HistoricVariableInstanceEntityManager.findHistoricVariableInstanceByVariableInstanceId(variable.Id);
+                    historicProcessVariable = HistoricVariableInstanceEntityManager.FindHistoricVariableInstanceByVariableInstanceId(variable.Id);
                 }
 
                 if (historicProcessVariable != null)
                 {
-                    HistoricVariableInstanceEntityManager.delete(historicProcessVariable);
+                    HistoricVariableInstanceEntityManager.Delete(historicProcessVariable);
                 }
             }
         }
 
-        protected internal virtual string parseActivityType(FlowElement element)
+        protected internal virtual string ParseActivityType(FlowElement element)
         {
             string elementType = element.GetType().Name;
             elementType = elementType.Substring(0, 1).ToLower() + elementType.Substring(1);
@@ -972,7 +970,7 @@ namespace org.activiti.engine.impl.history
         {
             get
             {
-                return getSession<IEntityCache>();
+                return GetSession<IEntityCache>();
             }
         }
 

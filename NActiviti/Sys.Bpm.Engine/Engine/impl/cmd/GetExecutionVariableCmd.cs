@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.cmd
             this.isLocal = isLocal;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
             if (ReferenceEquals(executionId, null))
             {
@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
 
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
 
             if (execution == null)
             {
@@ -62,11 +62,11 @@ namespace org.activiti.engine.impl.cmd
 
             if (isLocal)
             {
-                value = execution.getVariableLocal(variableName, false);
+                value = execution.GetVariableLocal(variableName, false);
             }
             else
             {
-                value = execution.getVariable(variableName, false);
+                value = execution.GetVariable(variableName, false);
             }
 
             return value;

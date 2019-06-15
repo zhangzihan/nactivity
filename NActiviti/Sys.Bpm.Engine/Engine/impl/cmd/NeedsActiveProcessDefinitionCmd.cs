@@ -34,9 +34,9 @@ namespace org.activiti.engine.impl.cmd
             this.processDefinitionId = processDefinitionId;
         }
 
-        public  virtual T  execute(ICommandContext  commandContext)
+        public  virtual T  Execute(ICommandContext  commandContext)
         {
-            IProcessDefinitionEntity processDefinition = ProcessDefinitionUtil.getProcessDefinitionFromDatabase(processDefinitionId);
+            IProcessDefinitionEntity processDefinition = ProcessDefinitionUtil.GetProcessDefinitionFromDatabase(processDefinitionId);
 
             if (processDefinition == null)
             {
@@ -48,13 +48,13 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiException("Cannot execute operation because process definition '" + processDefinition.Name + "' (id=" + processDefinition.Id + ") is suspended");
             }
 
-            return execute(commandContext, processDefinition);
+            return Execute(commandContext, processDefinition);
         }
 
         /// <summary>
         /// Subclasses should implement this. The provided <seealso cref="IProcessDefinition"/> is guaranteed to be an active process definition (ie. not suspended).
         /// </summary>
-        protected  internal abstract T  execute(ICommandContext  commandContext, IProcessDefinitionEntity processDefinition);
+        protected  internal abstract T  Execute(ICommandContext  commandContext, IProcessDefinitionEntity processDefinition);
 
     }
 

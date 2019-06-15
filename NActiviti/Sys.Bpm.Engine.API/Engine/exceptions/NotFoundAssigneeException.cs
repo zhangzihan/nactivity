@@ -15,7 +15,7 @@ namespace org.activiti.engine.exceptions
     [Serializable]
     public class NotFoundAssigneeException : ActivitiException
     {
-        public NotFoundAssigneeException() : base("找不到待分配的人员")
+        public NotFoundAssigneeException(string assignee = "") : base($"找不到{assignee}待分配的人员")
         {
         }
     }

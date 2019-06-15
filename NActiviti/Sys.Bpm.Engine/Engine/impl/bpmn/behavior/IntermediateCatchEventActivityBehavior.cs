@@ -29,14 +29,14 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         private const long serialVersionUID = 1L;
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             // Do nothing: waitstate behavior
         }
 
-        public override void trigger(IExecutionEntity execution, string signalName, object signalData)
+        public override void Trigger(IExecutionEntity execution, string signalName, object signalData, bool throwError = true)
         {
-            leaveIntermediateCatchEvent(execution);
+            LeaveIntermediateCatchEvent(execution);
         }
 
         /// <summary>
@@ -45,32 +45,31 @@ namespace org.activiti.engine.impl.bpmn.behavior
         /// (we're only supporting the exclusive event based gateway type currently).
         /// and the process instance is continued through the triggered event. 
         /// </summary>
-        public virtual void leaveIntermediateCatchEvent(IExecutionEntity execution)
+        public virtual void LeaveIntermediateCatchEvent(IExecutionEntity execution)
         {
-            EventGateway eventGateway = getPrecedingEventBasedGateway(execution);
+            EventGateway eventGateway = GetPrecedingEventBasedGateway(execution);
             if (eventGateway != null)
             {
-                deleteOtherEventsRelatedToEventBasedGateway(execution, eventGateway);
+                DeleteOtherEventsRelatedToEventBasedGateway(execution, eventGateway);
             }
 
-            leave(execution); // Normal leave
+            Leave(execution); // Normal leave
         }
 
         /// <summary>
         /// Should be subclassed by the more specific types.
         /// For an intermediate catch without type, it's simply leaving the event. 
         /// </summary>
-        public virtual void eventCancelledByEventGateway(IExecutionEntity execution)
+        public virtual void EventCancelledByEventGateway(IExecutionEntity execution)
         {
-            Context.CommandContext.ExecutionEntityManager.deleteExecutionAndRelatedData(execution, DeleteReason_Fields.EVENT_BASED_GATEWAY_CANCEL, false);
+            Context.CommandContext.ExecutionEntityManager.DeleteExecutionAndRelatedData(execution, DeleteReasonFields.EVENT_BASED_GATEWAY_CANCEL, false);
         }
 
-        protected internal virtual EventGateway getPrecedingEventBasedGateway(IExecutionEntity execution)
+        protected internal virtual EventGateway GetPrecedingEventBasedGateway(IExecutionEntity execution)
         {
             FlowElement currentFlowElement = execution.CurrentFlowElement;
-            if (currentFlowElement is IntermediateCatchEvent)
+            if (currentFlowElement is IntermediateCatchEvent intermediateCatchEvent)
             {
-                IntermediateCatchEvent intermediateCatchEvent = (IntermediateCatchEvent)currentFlowElement;
                 IList<SequenceFlow> incomingSequenceFlow = intermediateCatchEvent.IncomingFlows;
 
                 // If behind an event based gateway, there is only one incoming sequence flow that originates from said gateway
@@ -88,7 +87,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             return null;
         }
 
-        protected internal virtual void deleteOtherEventsRelatedToEventBasedGateway(IExecutionEntity execution, EventGateway eventGateway)
+        protected internal virtual void DeleteOtherEventsRelatedToEventBasedGateway(IExecutionEntity execution, EventGateway eventGateway)
         {
 
             // To clean up the other events behind the event based gateway, we must gather the 
@@ -112,7 +111,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
 
             // Find the executions
-            IList<IExecutionEntity> executionEntities = executionEntityManager.findExecutionsByParentExecutionAndActivityIds(execution.ParentId, eventActivityIds);
+            IList<IExecutionEntity> executionEntities = executionEntityManager.FindExecutionsByParentExecutionAndActivityIds(execution.ParentId, eventActivityIds);
 
             // Execute the cancel behaviour of the IntermediateCatchEvent
             foreach (IExecutionEntity executionEntity in executionEntities)
@@ -122,7 +121,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                     IntermediateCatchEvent intermediateCatchEvent = (IntermediateCatchEvent)execution.CurrentFlowElement;
                     if (intermediateCatchEvent.Behavior is IntermediateCatchEventActivityBehavior)
                     {
-                        ((IntermediateCatchEventActivityBehavior)intermediateCatchEvent.Behavior).eventCancelledByEventGateway(executionEntity);
+                        ((IntermediateCatchEventActivityBehavior)intermediateCatchEvent.Behavior).EventCancelledByEventGateway(executionEntity);
                         eventActivityIds.Remove(executionEntity.ActivityId); // We only need to delete ONE execution at the event.
                     }
                 }

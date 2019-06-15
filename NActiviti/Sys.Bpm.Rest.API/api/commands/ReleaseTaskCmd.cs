@@ -25,19 +25,25 @@ namespace org.activiti.cloud.services.api.commands
     /// </summary>
     public class ReleaseTaskCmd : ICommand
     {
-
         private readonly string id = "releaseTaskCmd";
-        private string taskId;
+        private readonly string taskId;
+        private string reason;
 
+        public ReleaseTaskCmd()
+        {
+
+        }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="taskId">任务id</param>
         ////[JsonConstructor]
-        public ReleaseTaskCmd([JsonProperty("TaskId")] string taskId)
+        public ReleaseTaskCmd([JsonProperty("TaskId")] string taskId,
+            [JsonProperty("Reason")]string reason)
         {
             this.taskId = taskId;
+            this.reason = reason;
         }
 
 
@@ -49,6 +55,22 @@ namespace org.activiti.cloud.services.api.commands
             get => id;
         }
 
+        /// <summary>
+        /// 任务关联的业务主键,需要和Assignee同时使用
+        /// </summary>
+        public virtual string BusinessKey
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// 任务执行者,需要和BusinessKey同时使用
+        /// </summary>
+        public virtual string Assignee
+        {
+            get; set;
+        }
+
 
         /// <summary>
         /// 任务id
@@ -56,6 +78,16 @@ namespace org.activiti.cloud.services.api.commands
         public virtual string TaskId
         {
             get => taskId;
+        }
+
+
+        /// <summary>
+        /// 任务id
+        /// </summary>
+        public virtual string Reason
+        {
+            get => taskId;
+            set => reason = value;
         }
     }
 

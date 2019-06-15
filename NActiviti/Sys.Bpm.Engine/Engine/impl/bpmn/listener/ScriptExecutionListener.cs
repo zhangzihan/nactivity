@@ -16,9 +16,7 @@
 namespace org.activiti.engine.impl.bpmn.listener
 {
     using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.scripting;
 
     [Serializable]
     public class ScriptExecutionListener : IExecutionListener
@@ -32,10 +30,10 @@ namespace org.activiti.engine.impl.bpmn.listener
 
         protected internal IExpression resultVariable;
 
-        public virtual void notify(IExecutionEntity execution)
+        public virtual void Notify(IExecutionEntity execution)
         {
             //validateParameters();
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
 
             //ScriptingEngines scriptingEngines = Context.ProcessEngineConfiguration.ScriptingEngines;
             //object result = scriptingEngines.evaluate(script.ExpressionText, language.ExpressionText, execution);
@@ -46,16 +44,16 @@ namespace org.activiti.engine.impl.bpmn.listener
             //}
         }
 
-        protected internal virtual void validateParameters()
+        protected internal virtual void ValidateParameters()
         {
             if (script == null)
             {
-                throw new System.ArgumentException("The field 'script' should be set on the ExecutionListener");
+                throw new ArgumentException("The field 'script' should be set on the ExecutionListener");
             }
 
             if (language == null)
             {
-                throw new System.ArgumentException("The field 'language' should be set on the ExecutionListener");
+                throw new ArgumentException("The field 'language' should be set on the ExecutionListener");
             }
         }
 

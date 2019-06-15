@@ -30,14 +30,14 @@ namespace org.activiti.engine.impl.cmd
             this.listener = listener;
         }
 
-        public  virtual object  execute(ICommandContext commandContext)
+        public  virtual object  Execute(ICommandContext commandContext)
         {
             if (listener == null)
             {
                 throw new ActivitiIllegalArgumentException("listener is null.");
             }
 
-            commandContext.ProcessEngineConfiguration.EventDispatcher.removeEventListener(listener);
+            commandContext.ProcessEngineConfiguration.EventDispatcher.RemoveEventListener(listener);
 
             return null;
         }

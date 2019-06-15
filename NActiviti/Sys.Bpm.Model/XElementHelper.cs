@@ -8,26 +8,26 @@ namespace Sys.Bpm
 {
     public static class XElementHelper
     {
-        public static XElement writeEndElement(this XElement elem)
+        public static XElement WriteEndElement(this XElement elem)
         {
             elem.CreateWriter().WriteEndElement();
 
             return elem;
         }
 
-        public static void writeEndDocument(this XElement elem)
+        public static void WriteEndDocument(this XElement elem)
         {
         }
 
-        public static void close(this XElement elem)
+        public static void Close(this XElement elem)
         {
         }
 
-        public static void flush(this XElement elem)
+        public static void Flush(this XElement elem)
         {
         }
 
-        public static XElement writeNamespace(this XElement elem, string prefix, string namespaceUri)
+        public static XElement WriteNamespace(this XElement elem, string prefix, string namespaceUri)
         {
             if (elem.GetNamespaceOfPrefix(prefix).NamespaceName == namespaceUri)
             {
@@ -36,12 +36,12 @@ namespace Sys.Bpm
 
             XNamespace ns = namespaceUri;
 
-            elem.writeAttribute($"{XNamespace.Xmlns}{prefix}", ns);
+            elem.WriteAttribute($"{XNamespace.Xmlns}{prefix}", ns);
 
             return elem;
         }
 
-        public static XElement writeDefaultNamespace(this XElement elem, string namespaceUri)
+        public static XElement WriteDefaultNamespace(this XElement elem, string namespaceUri)
         {
             if (elem.GetPrefixOfNamespace(namespaceUri) == XNamespace.Xmlns)
             {
@@ -50,12 +50,12 @@ namespace Sys.Bpm
 
             XNamespace ns = namespaceUri;
 
-            elem.writeAttribute($"{XNamespace.Xmlns}", ns);
+            elem.WriteAttribute($"{XNamespace.Xmlns}", ns);
 
             return elem;
         }
 
-        public static XComment writeComment(this XElement elem, string data)
+        public static XComment WriteComment(this XElement elem, string data)
         {
             XComment c = new XComment(data);
 
@@ -64,36 +64,36 @@ namespace Sys.Bpm
             return c;
         }
 
-        public static XElement writeEmptyElement(this XElement writer, string prefix, string namespaceURI, string localName)
+        public static XElement WriteEmptyElement(this XElement writer, string prefix, string namespaceURI, string localName)
         {
-            return writer.writeStartElement(prefix, localName, namespaceURI);
+            return writer.WriteStartElement(prefix, localName, namespaceURI);
         }
 
-        public static XElement writeEmptyElement(this XElement writer, string localName)
+        public static XElement WriteEmptyElement(this XElement writer, string localName)
         {
-            return writer.writeStartElement(localName, "");
+            return writer.WriteStartElement(localName, "");
         }
 
-        public static XElement writeEmptyElement(this XElement writer, string namespaceURI, string localName)
+        public static XElement WriteEmptyElement(this XElement writer, string namespaceURI, string localName)
         {
-            return writer.writeStartElement(localName, namespaceURI);
+            return writer.WriteStartElement(localName, namespaceURI);
         }
 
-        public static XElement writeStartElement(this XElement parent, string localName, string namespaceURI = "")
+        public static XElement WriteStartElement(this XElement parent, string localName, string namespaceURI = "")
         {
             var xname = XName.Get($"{localName}", namespaceURI);
 
             return new XElement(xname);
         }
 
-        public static XElement writeStartElement(this XElement parent, string prefix, string localName, string namespaceURI = "")
+        public static XElement WriteStartElement(this XElement parent, string prefix, string localName, string namespaceURI = "")
         {
             var xname = XName.Get($"{prefix}:{localName}", namespaceURI);
 
             return new XElement(xname);
         }
 
-        public static XAttribute writeAttribute(this XElement element, string namespaceUri, string name, object value)
+        public static XAttribute WriteAttribute(this XElement element, string namespaceUri, string name, object value)
         {
             var attr = new XAttribute(XName.Get($"{name}", namespaceUri), value);
 
@@ -102,7 +102,7 @@ namespace Sys.Bpm
             return attr;
         }
 
-        public static XAttribute writeAttribute(this XElement element, string prefix, string namespaceUri, string name, object value)
+        public static XAttribute WriteAttribute(this XElement element, string prefix, string namespaceUri, string name, object value)
         {
             var attr = new XAttribute(XName.Get($"{prefix}{(string.IsNullOrWhiteSpace(prefix) ? "" : ":")}{name}", namespaceUri), value);
 
@@ -111,7 +111,7 @@ namespace Sys.Bpm
             return attr;
         }
 
-        public static XAttribute writeAttribute(this XElement element, string name, object value)
+        public static XAttribute WriteAttribute(this XElement element, string name, object value)
         {
             var attr = new XAttribute(name, value);
 
@@ -120,12 +120,12 @@ namespace Sys.Bpm
             return attr;
         }
 
-        public static XCData writeCharacters(this XElement parent, string data)
+        public static XCData WriteCharacters(this XElement parent, string data)
         {
-            return parent.writeCData(data);
+            return parent.WriteCData(data);
         }
 
-        public static XCData writeCData(this XElement parent, string data)
+        public static XCData WriteCData(this XElement parent, string data)
         {
             var cdata = new XCData(data);
 
@@ -134,12 +134,12 @@ namespace Sys.Bpm
             return cdata;
         }
 
-        public static XElement writeProcessingInstruction(this XElement elem, string target)
+        public static XElement WriteProcessingInstruction(this XElement elem, string target)
         {
-            return elem.writeProcessingInstruction(target, "");
+            return elem.WriteProcessingInstruction(target, "");
         }
 
-        public static XElement writeProcessingInstruction(this XElement elem, string target, string data)
+        public static XElement WriteProcessingInstruction(this XElement elem, string target, string data)
         {
             XProcessingInstruction xpi = new XProcessingInstruction(target, data);
 
@@ -148,14 +148,14 @@ namespace Sys.Bpm
             return elem;
         }
 
-        public static XElement writeDTD(this XElement elem, string dtd)
+        public static XElement WriteDTD(this XElement elem, string dtd)
         {
             elem.CreateWriter().WriteDocType(dtd, "", "", "");
 
             return elem;
         }
 
-        public static XElement writeEntityRef(this XElement elem, string entityRef)
+        public static XElement WriteEntityRef(this XElement elem, string entityRef)
         {
             XEntity entity = new XEntity(entityRef);
 
@@ -164,17 +164,17 @@ namespace Sys.Bpm
             return elem;
         }
 
-        public static XElement writeStartDocument(this XElement elem)
+        public static XElement WriteStartDocument(this XElement elem)
         {
-            return elem.writeStartDocument("");
+            return elem.WriteStartDocument("");
         }
 
-        public static XElement writeStartDocument(this XElement elem, string version)
+        public static XElement WriteStartDocument(this XElement elem, string version)
         {
-            return elem.writeStartDocument("utf-8", "");
+            return elem.WriteStartDocument("utf-8", "");
         }
 
-        public static XElement writeStartDocument(this XElement elem, string encoding, string version)
+        public static XElement WriteStartDocument(this XElement elem, string encoding, string version)
         {
             var writer = elem.CreateWriter();
 
@@ -185,7 +185,7 @@ namespace Sys.Bpm
             return elem;
         }
 
-        public static XElement writeCharacters(this XElement elem, char[] text, int start, int len)
+        public static XElement WriteCharacters(this XElement elem, char[] text, int start, int len)
         {
             var writer = elem.CreateWriter();
 
@@ -194,12 +194,12 @@ namespace Sys.Bpm
             return elem;
         }
 
-        public static string getPrefix(this XElement elem, string uri)
+        public static string GetPrefix(this XElement elem, string uri)
         {
             return elem.GetPrefixOfNamespace(uri);
         }
 
-        public static XElement setPrefix(this XElement elem, string prefix, string uri)
+        public static XElement SetPrefix(this XElement elem, string prefix, string uri)
         {
             //var writer = elem.CreateWriter();
 

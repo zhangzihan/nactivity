@@ -24,7 +24,7 @@ namespace org.activiti.engine.impl.bpmn.helper
     public abstract class BaseDelegateEventListener : IActivitiEventListener
     {
         public abstract bool FailOnException { get; }
-        public abstract void onEvent(IActivitiEvent @event);
+        public abstract void OnEvent(IActivitiEvent @event);
 
         protected internal Type entityClass;
 
@@ -36,7 +36,7 @@ namespace org.activiti.engine.impl.bpmn.helper
             }
         }
 
-        protected internal virtual bool isValidEvent(IActivitiEvent @event)
+        protected internal virtual bool IsValidEvent(IActivitiEvent @event)
         {
             bool valid = false;
             if (entityClass != null)
@@ -57,7 +57,5 @@ namespace org.activiti.engine.impl.bpmn.helper
             }
             return valid;
         }
-
     }
-
 }

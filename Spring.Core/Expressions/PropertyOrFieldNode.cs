@@ -142,6 +142,14 @@ namespace Spring.Expressions
                         {
                             accessor = new IDictionaryValueAccessor(memberName);
                         }
+                        else if (evalContext != null && evalContext.Variables != null && evalContext.Variables.ContainsKey(memberName))
+                        {
+                            accessor = new IDictionaryValueAccessor(memberName);
+                        }
+                        else if ((contextType?.IsValueType).GetValueOrDefault(false))
+                        {
+                            accessor = new ValueTypeAccessor();
+                        }
                         else
                         {
                             accessor = new TypeValueAccessor(TypeResolutionUtils.ResolveType(memberName));
@@ -228,6 +236,8 @@ namespace Spring.Expressions
             return null;
         }
 
+        private EvaluationContext evalContext;
+
         /// <summary>
         /// Returns node's value for the given context.
         /// </summary>
@@ -238,6 +248,7 @@ namespace Spring.Expressions
         {
             lock (syncObject)
             {
+                this.evalContext = evalContext;
                 InitializeNode(context);
 
                 if (context == null && accessor.RequiresContext)
@@ -257,6 +268,8 @@ namespace Spring.Expressions
             }
         }
 
+        private object syncRoot = new object();
+
         /// <summary>
         /// Sets node's value for the given context.
         /// </summary>
@@ -265,8 +278,9 @@ namespace Spring.Expressions
         /// <param name="newValue">New value for this node.</param>
         protected override void Set(object context, EvaluationContext evalContext, object newValue)
         {
-            lock (this)
+            lock (syncRoot)
             {
+                this.evalContext = evalContext;
                 InitializeNode(context);
 
                 if (context == null && accessor.RequiresContext)
@@ -493,7 +507,7 @@ namespace Spring.Expressions
         /// <returns>PropertyInfo for this node.</returns>
         internal MemberInfo GetMemberInfo(object context)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 InitializeNode(context);
             }
@@ -807,6 +821,39 @@ namespace Spring.Expressions
             }
         }
 
+        #endregion
+
+        #region ValueTypeAccessor implementation
+
+        private class ValueTypeAccessor : BaseValueAccessor
+        {
+            public override bool IsWriteable => false;
+
+            public override object Get(object context)
+            {
+                return context;
+            }
+
+            public override void Set(object context, object value)
+            {
+                throw new NotImplementedException();
+            }
+        }
+        #endregion
+
+        #region NullValueAccessor
+        private class NullValueAccessor : BaseValueAccessor
+        {
+            public override object Get(object context)
+            {
+                return null;
+            }
+
+            public override void Set(object context, object value)
+            {
+                throw new NotImplementedException();
+            }
+        }
         #endregion
     }
 }

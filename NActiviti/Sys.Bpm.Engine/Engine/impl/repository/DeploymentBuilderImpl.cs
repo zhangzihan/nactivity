@@ -50,46 +50,46 @@ namespace org.activiti.engine.impl.repository
         protected internal DateTime? processDefinitionsActivationDate;
         protected internal IDictionary<string, object> deploymentProperties = new Dictionary<string, object>();
 
-        private object syncRoot = new object();
+        private readonly object syncRoot = new object();
 
         public DeploymentBuilderImpl(RepositoryServiceImpl repositoryService)
         {
             this.repositoryService = repositoryService;
-            this.deployment = Context.ProcessEngineConfiguration.DeploymentEntityManager.create();
+            this.deployment = Context.ProcessEngineConfiguration.DeploymentEntityManager.Create();
             this.resourceEntityManager = Context.ProcessEngineConfiguration.ResourceEntityManager;
         }
 
-        public virtual IDeploymentBuilder addInputStream(string resourceName, System.IO.Stream inputStream)
+        public virtual IDeploymentBuilder AddInputStream(string resourceName, Stream inputStream)
         {
             if (inputStream == null)
             {
                 throw new ActivitiIllegalArgumentException("inputStream for resource '" + resourceName + "' is null");
             }
-            byte[] bytes = IoUtil.readInputStream(inputStream, resourceName);
-            IResourceEntity resource = resourceEntityManager.create();
+            byte[] bytes = IoUtil.ReadInputStream(inputStream, resourceName);
+            IResourceEntity resource = resourceEntityManager.Create();
             resource.Name = resourceName;
             resource.Bytes = bytes;
-            deployment.addResource(resource);
+            deployment.AddResource(resource);
             return this;
         }
 
-        public virtual IDeploymentBuilder addClasspathResource(string resource)
+        public virtual IDeploymentBuilder AddClasspathResource(string resource)
         {
-            System.IO.Stream inputStream = ReflectUtil.getResourceAsStream(resource);
+            System.IO.Stream inputStream = ReflectUtil.GetResourceAsStream(resource);
             if (inputStream == null)
             {
                 throw new ActivitiIllegalArgumentException("resource '" + resource + "' not found");
             }
-            return addInputStream(resource, inputStream);
+            return AddInputStream(resource, inputStream);
         }
 
-        public virtual IDeploymentBuilder addString(string resourceName, string text)
+        public virtual IDeploymentBuilder AddString(string resourceName, string text)
         {
-            if (ReferenceEquals(text, null))
+            if (text is null)
             {
                 throw new ActivitiIllegalArgumentException("text is null");
             }
-            IResourceEntity resource = resourceEntityManager.create();
+            IResourceEntity resource = resourceEntityManager.Create();
             resource.Name = resourceName;
             try
             {
@@ -99,25 +99,20 @@ namespace org.activiti.engine.impl.repository
             {
                 throw new ActivitiException("Unable to get process bytes.", e);
             }
-            deployment.addResource(resource);
+            deployment.AddResource(resource);
             return this;
         }
 
-        public virtual IDeploymentBuilder addBytes(string resourceName, byte[] bytes)
+        public virtual IDeploymentBuilder AddBytes(string resourceName, byte[] bytes)
         {
-            if (bytes == null)
-            {
-                throw new ActivitiIllegalArgumentException("bytes is null");
-            }
-
-            IResourceEntity resource = resourceEntityManager.create();
+            IResourceEntity resource = resourceEntityManager.Create();
             resource.Name = resourceName;
-            resource.Bytes = bytes;
-            deployment.addResource(resource);
+            resource.Bytes = bytes ?? throw new ActivitiIllegalArgumentException("bytes is null");
+            deployment.AddResource(resource);
             return this;
         }
 
-        public virtual IDeploymentBuilder addZipInputStream(ZipInputStream zipInputStream)
+        public virtual IDeploymentBuilder AddZipInputStream(ZipInputStream zipInputStream)
         {
             throw new NotImplementedException();
             //try
@@ -144,13 +139,13 @@ namespace org.activiti.engine.impl.repository
             //return this;
         }
 
-        public virtual IDeploymentBuilder addBpmnModel(string resourceName, BpmnModel bpmnModel)
+        public virtual IDeploymentBuilder AddBpmnModel(string resourceName, BpmnModel bpmnModel)
         {
             BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
             try
             {
-                string bpmn20Xml = StringHelper.NewString(bpmnXMLConverter.convertToXML(bpmnModel), "UTF-8");
-                addString(resourceName, bpmn20Xml);
+                string bpmn20Xml = StringHelper.NewString(bpmnXMLConverter.ConvertToXML(bpmnModel), "UTF-8");
+                AddString(resourceName, bpmn20Xml);
             }
             catch (Exception e)
             {
@@ -159,25 +154,25 @@ namespace org.activiti.engine.impl.repository
             return this;
         }
 
-        public virtual IDeploymentBuilder name(string name)
+        public virtual IDeploymentBuilder Name(string name)
         {
             deployment.Name = name;
             return this;
         }
 
-        public virtual IDeploymentBuilder category(string category)
+        public virtual IDeploymentBuilder Category(string category)
         {
             deployment.Category = category;
             return this;
         }
 
-        public virtual IDeploymentBuilder businessKey(string businessKey)
+        public virtual IDeploymentBuilder BusinessKey(string businessKey)
         {
             deployment.BusinessKey = businessKey;
             return this;
         }
 
-        public virtual IDeploymentBuilder businessPath(string businessPath)
+        public virtual IDeploymentBuilder BusinessPath(string businessPath)
         {
             deployment.BusinessPath = businessPath;
             return this;
@@ -188,20 +183,21 @@ namespace org.activiti.engine.impl.repository
         {
             if (this.isDuplicateStartFormEnabled)
             {
-                IList<IProcessDefinition> processes = repositoryService.createProcessDefinitionQuery()
-                    .processDefinitionStartForm(startForm)
-                    .latestVersion()
-                    .list();
+                IList<IProcessDefinition> processes = repositoryService.CreateProcessDefinitionQuery()
+                    .SetProcessDefinitionStartForm(startForm)
+                    .SetLatestVersion()
+                    .List();
 
-                return processes.FirstOrDefault(x => string.IsNullOrWhiteSpace(x.StartForm) == false &&
-                    x.StartForm.Trim().ToLower() == startForm.Trim().ToLower() &&
-                    x.Name.Trim() != name.Trim().ToLower())?.Name;
+                return processes.FirstOrDefault(x =>
+                    string.IsNullOrWhiteSpace(x.StartForm) == false &&
+                    !string.Equals(x.Name.Trim(), name, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(x.StartForm, startForm, StringComparison.OrdinalIgnoreCase))?.Name;
             }
 
             return null;
         }
 
-        public virtual IDeploymentBuilder startForm(string startForm, string bpmnXML)
+        public virtual IDeploymentBuilder StartForm(string startForm, string bpmnXML)
         {
             lock (syncRoot)
             {
@@ -234,15 +230,16 @@ namespace org.activiti.engine.impl.repository
                     }
                 }
 
-                if (string.IsNullOrWhiteSpace(deployment.StartForm) == false)
-                {
-                    string procName = VerifyStartForm(deployment.Name, deployment.StartForm);
+                //校验启动表单唯一性
+                //if (string.IsNullOrWhiteSpace(deployment.StartForm) == false)
+                //{
+                //    string procName = VerifyStartForm(deployment.Name, deployment.StartForm);
 
-                    if (string.IsNullOrWhiteSpace(procName) == false)
-                    {
-                        throw new StartFormUniqueException(procName, deployment.StartForm);
-                    }
-                }
+                //    if (string.IsNullOrWhiteSpace(procName) == false)
+                //    {
+                //        throw new StartFormUniqueException(procName, deployment.StartForm);
+                //    }
+                //}
 
                 //if (string.IsNullOrWhiteSpace(deployment.StartForm))
                 //{
@@ -252,69 +249,69 @@ namespace org.activiti.engine.impl.repository
             }
         }
 
-        public virtual IDeploymentBuilder disableDuplicateStartForm()
+        public virtual IDeploymentBuilder DisableDuplicateStartForm()
         {
             this.isDuplicateStartFormEnabled = false;
             return this;
         }
 
-        public virtual IDeploymentBuilder key(string key)
+        public virtual IDeploymentBuilder Key(string key)
         {
             deployment.Key = key;
             return this;
         }
 
-        public virtual IDeploymentBuilder disableBpmnValidation()
+        public virtual IDeploymentBuilder DisableBpmnValidation()
         {
             this.isProcessValidationEnabled = false;
             return this;
         }
 
-        public virtual IDeploymentBuilder disableSchemaValidation()
+        public virtual IDeploymentBuilder DisableSchemaValidation()
         {
             this.isBpmn20XsdValidationEnabled = false;
             return this;
         }
 
-        public virtual IDeploymentBuilder tenantId(string tenantId)
+        public virtual IDeploymentBuilder TenantId(string tenantId)
         {
             deployment.TenantId = tenantId;
             return this;
         }
 
-        public virtual IDeploymentBuilder enableDuplicateFiltering()
+        public virtual IDeploymentBuilder EnableDuplicateFiltering()
         {
             this.isDuplicateFilterEnabled = true;
             return this;
         }
 
-        public virtual IDeploymentBuilder activateProcessDefinitionsOn(DateTime date)
+        public virtual IDeploymentBuilder ActivateProcessDefinitionsOn(DateTime date)
         {
             this.processDefinitionsActivationDate = date;
             return this;
         }
 
-        public virtual IDeploymentBuilder deploymentProperty(string propertyKey, object propertyValue)
+        public virtual IDeploymentBuilder DeploymentProperty(string propertyKey, object propertyValue)
         {
             deploymentProperties[propertyKey] = propertyValue;
             return this;
         }
 
-        public virtual IDeployment deploy()
+        public virtual IDeployment Deploy()
         {
-            return repositoryService.deploy(this);
+            return repositoryService.Deploy(this);
         }
 
-        public virtual IDeployment save()
+        public virtual IDeployment Save()
         {
-            return repositoryService.save(this);
+            return repositoryService.Save(this);
         }
 
-        public string copy(string id, bool fullCopy)
+        public string Copy(string id, bool fullCopy)
         {
-            IList<string> names = repositoryService.getDeploymentResourceNames(id);
+            IList<string> names = repositoryService.GetDeploymentResourceNames(id);
 
-            Stream resourceStream = repositoryService.getResourceAsStream(id, names[0]);
+            Stream resourceStream = repositoryService.GetResourceAsStream(id, names[0]);
 
             if (fullCopy)
             {
@@ -322,12 +319,12 @@ namespace org.activiti.engine.impl.repository
                 byte[] data = new byte[resourceStream.Length];
                 resourceStream.Read(data, 0, data.Length);
 
-                return Encoding.UTF8.GetString(data);
+                return new UTF8Encoding(false).GetString(data);
             }
 
             BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
 
-            BpmnModel model = bpmnXMLConverter.convertToBpmnModel(new XMLStreamReader(resourceStream));
+            BpmnModel model = bpmnXMLConverter.ConvertToBpmnModel(new XMLStreamReader(resourceStream));
 
             //return bpmnXMLConverter.convertToXML(model);
             return null;
@@ -383,7 +380,5 @@ namespace org.activiti.engine.impl.repository
                 return deploymentProperties;
             }
         }
-
     }
-
 }

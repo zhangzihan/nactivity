@@ -21,13 +21,13 @@ namespace org.activiti.engine.impl.persistence.entity.data
 	public interface IModelDataManager : IDataManager<IModelEntity>
 	{
 
-	  IList<IModel> findModelsByQueryCriteria(ModelQueryImpl query, Page page);
+	  IList<IModel> FindModelsByQueryCriteria(IModelQuery query, Page page);
 
-	  long findModelCountByQueryCriteria(ModelQueryImpl query);
+	  long FindModelCountByQueryCriteria(IModelQuery query);
 
-	  IList<IModel> findModelsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+	  IList<IModel> FindModelsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findModelCountByNativeQuery(IDictionary<string, object> parameterMap);
+	  long FindModelCountByNativeQuery(IDictionary<string, object> parameterMap);
 
 
 	}

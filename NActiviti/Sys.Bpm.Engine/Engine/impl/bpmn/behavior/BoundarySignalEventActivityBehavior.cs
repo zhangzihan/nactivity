@@ -27,7 +27,6 @@ namespace org.activiti.engine.impl.bpmn.behavior
     [Serializable]
     public class BoundarySignalEventActivityBehavior : BoundaryEventActivityBehavior
     {
-
         private const long serialVersionUID = 1L;
 
         protected internal SignalEventDefinition signalEventDefinition;
@@ -39,33 +38,32 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.signal = signal;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             ICommandContext commandContext = Context.CommandContext;
-            IExecutionEntity executionEntity = (IExecutionEntity)execution;
 
-            string signalName = null;
+            string signalName;
             if (!string.IsNullOrWhiteSpace(signalEventDefinition.SignalRef))
             {
                 signalName = signalEventDefinition.SignalRef;
             }
             else
             {
-                IExpression signalExpression = commandContext.ProcessEngineConfiguration.ExpressionManager.createExpression(signalEventDefinition.SignalExpression);
-                signalName = signalExpression.getValue(execution).ToString();
+                IExpression signalExpression = commandContext.ProcessEngineConfiguration.ExpressionManager.CreateExpression(signalEventDefinition.SignalExpression);
+                signalName = signalExpression.GetValue(execution).ToString();
             }
 
-            commandContext.EventSubscriptionEntityManager.insertSignalEvent(signalName, signal, executionEntity);
+            commandContext.EventSubscriptionEntityManager.InsertSignalEvent(signalName, signal, execution);
         }
 
-        public override void trigger(IExecutionEntity execution, string triggerName, object triggerData)
+        public override void Trigger(IExecutionEntity execution, string triggerName, object triggerData, bool throwError = true)
         {
             IExecutionEntity executionEntity = execution;
             BoundaryEvent boundaryEvent = (BoundaryEvent)execution.CurrentFlowElement;
 
             if (boundaryEvent.CancelActivity)
             {
-                string eventName = null;
+                string eventName;
                 if (signal != null)
                 {
                     eventName = signal.Name;
@@ -79,15 +77,14 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 IList<IEventSubscriptionEntity> eventSubscriptions = executionEntity.EventSubscriptions;
                 foreach (IEventSubscriptionEntity eventSubscription in eventSubscriptions)
                 {
-                    if (eventSubscription is ISignalEventSubscriptionEntity && eventSubscription.EventName.Equals(eventName))
+                    if (eventSubscription.EventType == SignalEventSubscriptionEntityFields.EVENT_TYPE && eventSubscription.EventName.Equals(eventName))
                     {
-
-                        eventSubscriptionEntityManager.delete(eventSubscription);
+                        eventSubscriptionEntityManager.Delete(eventSubscription);
                     }
                 }
             }
 
-            base.trigger(executionEntity, triggerName, triggerData);
+            base.Trigger(executionEntity, triggerName, triggerData, throwError);
         }
     }
 }

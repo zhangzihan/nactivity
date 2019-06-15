@@ -31,15 +31,15 @@ namespace org.activiti.cloud.services.api.commands
         /// <param name="pageableRepositoryService">分页仓储服务</param>
         /// <param name="qo">查询对象</param>
         /// <returns></returns>
-        public IPage<ProcessDefinition> loadPage(IRepositoryService repositoryService, PageableProcessDefinitionRepositoryService pageableRepositoryService, ProcessDefinitionQuery qo)
+        public IPage<ProcessDefinition> LoadPage(IRepositoryService repositoryService, PageableProcessDefinitionRepositoryService pageableRepositoryService, ProcessDefinitionQuery qo)
         {
-            ProcessDefinitionQueryImpl query = repositoryService.createProcessDefinitionQuery() as ProcessDefinitionQueryImpl;
+            ProcessDefinitionQueryImpl query = repositoryService.CreateProcessDefinitionQuery() as ProcessDefinitionQueryImpl;
 
             FastCopy.Copy<ProcessDefinitionQuery, ProcessDefinitionQueryImpl>(qo, query);
 
-            pageableRepositoryService.SortApplier.applySort(query, qo.Pageable);
+            pageableRepositoryService.SortApplier.ApplySort(query, qo.Pageable);
 
-            IPage<ProcessDefinition> defs = pageableRepositoryService.PageRetriever.loadPage(query, qo.Pageable, pageableRepositoryService.ProcessDefinitionConverter);
+            IPage<ProcessDefinition> defs = pageableRepositoryService.PageRetriever.LoadPage(query, qo.Pageable, pageableRepositoryService.ProcessDefinitionConverter);
 
             return defs;
         }

@@ -38,57 +38,57 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual void insertProcessDefinitionInfo(IProcessDefinitionInfoEntity processDefinitionInfo)
+        public virtual void InsertProcessDefinitionInfo(IProcessDefinitionInfoEntity processDefinitionInfo)
         {
-            insert(processDefinitionInfo);
+            Insert(processDefinitionInfo);
         }
 
-        public virtual void updateProcessDefinitionInfo(IProcessDefinitionInfoEntity updatedProcessDefinitionInfo)
+        public virtual void UpdateProcessDefinitionInfo(IProcessDefinitionInfoEntity updatedProcessDefinitionInfo)
         {
-            update(updatedProcessDefinitionInfo, true);
+            Update(updatedProcessDefinitionInfo, true);
         }
 
-        public virtual void deleteProcessDefinitionInfo(string processDefinitionId)
+        public virtual void DeleteProcessDefinitionInfo(string processDefinitionId)
         {
-            IProcessDefinitionInfoEntity processDefinitionInfo = findProcessDefinitionInfoByProcessDefinitionId(processDefinitionId);
+            IProcessDefinitionInfoEntity processDefinitionInfo = FindProcessDefinitionInfoByProcessDefinitionId(processDefinitionId);
             if (processDefinitionInfo != null)
             {
-                delete(processDefinitionInfo);
-                deleteInfoJson(processDefinitionInfo);
+                Delete(processDefinitionInfo);
+                DeleteInfoJson(processDefinitionInfo);
             }
         }
 
-        public virtual void updateInfoJson(string id, byte[] json)
+        public virtual void UpdateInfoJson(string id, byte[] json)
         {
-            IProcessDefinitionInfoEntity processDefinitionInfo = findById<IProcessDefinitionInfoEntity>(new KeyValuePair<string, object>("id", id));
+            IProcessDefinitionInfoEntity processDefinitionInfo = FindById<IProcessDefinitionInfoEntity>(id);
             if (processDefinitionInfo != null)
             {
                 ByteArrayRef @ref = new ByteArrayRef(processDefinitionInfo.InfoJsonId);
-                @ref.setValue("json", json);
+                @ref.SetValue("json", json);
 
-                if (ReferenceEquals(processDefinitionInfo.InfoJsonId, null))
+                if (processDefinitionInfo.InfoJsonId is null)
                 {
                     processDefinitionInfo.InfoJsonId = @ref.Id;
-                    updateProcessDefinitionInfo(processDefinitionInfo);
+                    UpdateProcessDefinitionInfo(processDefinitionInfo);
                 }
             }
         }
 
-        public virtual void deleteInfoJson(IProcessDefinitionInfoEntity processDefinitionInfo)
+        public virtual void DeleteInfoJson(IProcessDefinitionInfoEntity processDefinitionInfo)
         {
-            if (!ReferenceEquals(processDefinitionInfo.InfoJsonId, null))
+            if (!(processDefinitionInfo.InfoJsonId is null))
             {
                 ByteArrayRef @ref = new ByteArrayRef(processDefinitionInfo.InfoJsonId);
-                @ref.delete();
+                @ref.Delete();
             }
         }
 
-        public virtual IProcessDefinitionInfoEntity findProcessDefinitionInfoByProcessDefinitionId(string processDefinitionId)
+        public virtual IProcessDefinitionInfoEntity FindProcessDefinitionInfoByProcessDefinitionId(string processDefinitionId)
         {
-            return processDefinitionInfoDataManager.findProcessDefinitionInfoByProcessDefinitionId(processDefinitionId);
+            return processDefinitionInfoDataManager.FindProcessDefinitionInfoByProcessDefinitionId(processDefinitionId);
         }
 
-        public virtual byte[] findInfoJsonById(string infoJsonId)
+        public virtual byte[] FindInfoJsonById(string infoJsonId)
         {
             ByteArrayRef @ref = new ByteArrayRef(infoJsonId);
             return @ref.Bytes;

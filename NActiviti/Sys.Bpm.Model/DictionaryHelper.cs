@@ -8,7 +8,7 @@ namespace Sys.Bpm
 {
     public static class DictionaryHelper
     {
-        public static IDictionary<TKey, TValue> putAll<TKey, TValue>(this IDictionary<TKey, TValue> target, IDictionary<TKey, TValue> source)
+        public static IDictionary<TKey, TValue> PutAll<TKey, TValue>(this IDictionary<TKey, TValue> target, IDictionary<TKey, TValue> source)
         {
             if (source != null)
             {
@@ -24,7 +24,7 @@ namespace Sys.Bpm
             return target;
         }
 
-        public static ConcurrentDictionary<TKey, TValue> putAll<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> target, ConcurrentDictionary<TKey, TValue> source)
+        public static ConcurrentDictionary<TKey, TValue> PutAll<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> target, ConcurrentDictionary<TKey, TValue> source)
         {
             if (source != null)
             {
@@ -32,7 +32,8 @@ namespace Sys.Bpm
                 {
                     if (!target.ContainsKey(key))
                     {
-                        target.TryAdd(key, source[key]);
+                        source.TryGetValue(key, out var value);
+                        target.TryAdd(key, value);
                     }
                 }
             }

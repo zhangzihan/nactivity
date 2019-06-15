@@ -1,23 +1,22 @@
-﻿using SmartSql.Abstractions;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Newtonsoft.Json.Linq;
+using SmartSql.Abstractions;
+using SmartSql.Abstractions.Cache;
+using SmartSql.Abstractions.Command;
+using SmartSql.Abstractions.Config;
+using SmartSql.Abstractions.DataReaderDeserializer;
+using SmartSql.Abstractions.DataSource;
+using SmartSql.Abstractions.DbSession;
+using SmartSql.Exceptions;
+using SmartSql.Utils;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Data;
-using SmartSql.Abstractions.DbSession;
-using SmartSql.Abstractions.DataSource;
-using SmartSql.Abstractions.Config;
-using Microsoft.Extensions.Logging;
-using SmartSql.Logging;
-using SmartSql.Abstractions.Command;
-using SmartSql.Abstractions.DataReaderDeserializer;
-using SmartSql.Exceptions;
-using System.Linq;
-using SmartSql.Abstractions.Cache;
 using System.Data.Common;
-using SmartSql.Utils;
+using System.Linq;
 using System.Reflection;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace SmartSql
 {
@@ -49,7 +48,7 @@ namespace SmartSql
             set => variables = value ?? throw new ArgumentNullException("variables");
         }
 
-        public SmartSqlMapper(String sqlMapConfigFilePath = "SmartSqlMapConfig.xml") : this(NoneLoggerFactory.Instance, sqlMapConfigFilePath)
+        public SmartSqlMapper(String sqlMapConfigFilePath = "SmartSqlMapConfig.xml") : this(NullLoggerFactory.Instance, sqlMapConfigFilePath)
         {
 
         }
@@ -70,10 +69,12 @@ namespace SmartSql
             _smartSqlOptions.Setup();
             _logger = LoggerFactory.CreateLogger<SmartSqlMapper>();
         }
+
         private void SetupRequestContext(RequestContext context)
         {
             context.Setup(_smartSqlOptions.SmartSqlContext, SqlBuilder);
         }
+
         #region Sync
         public T ExecuteWrap<T>(Func<IDbConnectionSession, T> execute, RequestContext context)
         {
@@ -211,7 +212,7 @@ namespace SmartSql
             var dbSession = SessionStore.GetOrAddDbSession(dataSource);
             try
             {
-                var result = await execute(dbSession);
+                var result = await execute(dbSession).ConfigureAwait(false);
                 CacheManager.RequestExecuted(dbSession, context);
                 CacheManager.TryAdd<T>(context, result);
                 return result;
@@ -233,34 +234,34 @@ namespace SmartSql
         {
             return await ExecuteWrapAsync(async (dbSession) =>
            {
-               return await CommandExecuter.ExecuteNonQueryAsync(dbSession, context);
-           }, context);
+               return await CommandExecuter.ExecuteNonQueryAsync(dbSession, context).ConfigureAwait(false);
+           }, context).ConfigureAwait(false);
         }
         public async Task<T> ExecuteScalarAsync<T>(RequestContext context)
         {
             return await ExecuteWrapAsync(async (dbSession) =>
             {
-                var result = await CommandExecuter.ExecuteScalarAsync(dbSession, context);
+                var result = await CommandExecuter.ExecuteScalarAsync(dbSession, context).ConfigureAwait(false);
                 return (T)Convert.ChangeType(result, typeof(T));
-            }, context);
+            }, context).ConfigureAwait(false);
         }
         public async Task<IEnumerable<T>> QueryAsync<T>(RequestContext context)
         {
             return await ExecuteWrapAsync(async (dbSession) =>
             {
-                var dataReader = await CommandExecuter.ExecuteReaderAsync(dbSession, context);
+                var dataReader = await CommandExecuter.ExecuteReaderAsync(dbSession, context).ConfigureAwait(false);
                 var deser = DeserializerFactory.Create();
                 return await deser.ToEnumerableAsync<T>(context, dataReader);
-            }, context);
+            }, context).ConfigureAwait(false);
         }
         public async Task<T> QuerySingleAsync<T>(RequestContext context)
         {
             return await ExecuteWrapAsync(async (dbSession) =>
             {
-                var dataReader = await CommandExecuter.ExecuteReaderAsync(dbSession, context);
+                var dataReader = await CommandExecuter.ExecuteReaderAsync(dbSession, context).ConfigureAwait(false);
                 var deser = DeserializerFactory.Create();
-                return await deser.ToSingleAsync<T>(context, dataReader);
-            }, context);
+                return await deser.ToSingleAsync<T>(context, dataReader).ConfigureAwait(false);
+            }, context).ConfigureAwait(false);
         }
 
         public async Task<DataTable> GetDataTableAsync(RequestContext context)
@@ -270,8 +271,8 @@ namespace SmartSql
                 DbDataReader dataReader = null;
                 try
                 {
-                    dataReader = await CommandExecuter.ExecuteReaderAsync(dbSession, context);
-                    return await DataReaderConvert.ToDataTableAsync(dataReader);
+                    dataReader = await CommandExecuter.ExecuteReaderAsync(dbSession, context).ConfigureAwait(false);
+                    return await DataReaderConvert.ToDataTableAsync(dataReader).ConfigureAwait(false);
                 }
                 finally
                 {
@@ -281,7 +282,7 @@ namespace SmartSql
                     }
                 }
 
-            }, context);
+            }, context).ConfigureAwait(false);
         }
 
         public async Task<DataSet> GetDataSetAsync(RequestContext context)
@@ -291,8 +292,8 @@ namespace SmartSql
                 DbDataReader dataReader = null;
                 try
                 {
-                    dataReader = await CommandExecuter.ExecuteReaderAsync(dbSession, context);
-                    return await DataReaderConvert.ToDataSetAsync(dataReader);
+                    dataReader = await CommandExecuter.ExecuteReaderAsync(dbSession, context).ConfigureAwait(false);
+                    return await DataReaderConvert.ToDataSetAsync(dataReader).ConfigureAwait(false);
                 }
                 finally
                 {
@@ -301,7 +302,7 @@ namespace SmartSql
                         dataReader.Dispose();
                     }
                 }
-            }, context);
+            }, context).ConfigureAwait(false);
         }
         #endregion
         #region Transaction

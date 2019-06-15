@@ -35,37 +35,41 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IEventLogEntryEntity create()
+        public override IEventLogEntryEntity Create()
         {
             return new EventLogEntryEntityImpl();
         }
 
-        public virtual IList<IEventLogEntry> findAllEventLogEntries()
+        public virtual IList<IEventLogEntry> FindAllEventLogEntries()
         {
-            return DbSqlSession.selectList<EventLogEntryEntityImpl, IEventLogEntry>("selectAllEventLogEntries");
+            return DbSqlSession.SelectList<EventLogEntryEntityImpl, IEventLogEntry>("selectAllEventLogEntries");
         }
 
-        public virtual IList<IEventLogEntry> findEventLogEntries(long startLogNr, long pageSize)
+        public virtual IList<IEventLogEntry> FindEventLogEntries(long startLogNr, long pageSize)
         {
-            IDictionary<string, object> @params = new Dictionary<string, object>(2);
-            @params["startLogNr"] = startLogNr;
+            IDictionary<string, object> @params = new Dictionary<string, object>(2)
+            {
+                ["startLogNr"] = startLogNr
+            };
             if (pageSize > 0)
             {
                 @params["endLogNr"] = startLogNr + pageSize + 1;
             }
-            return DbSqlSession.selectList<EventLogEntryEntityImpl, IEventLogEntry>("selectEventLogEntries", @params);
+            return DbSqlSession.SelectList<EventLogEntryEntityImpl, IEventLogEntry>("selectEventLogEntries", @params);
         }
 
-        public virtual IList<IEventLogEntry> findEventLogEntriesByProcessInstanceId(string processInstanceId)
+        public virtual IList<IEventLogEntry> FindEventLogEntriesByProcessInstanceId(string processInstanceId)
         {
-            IDictionary<string, object> @params = new Dictionary<string, object>(2);
-            @params["processInstanceId"] = processInstanceId;
-            return DbSqlSession.selectList<EventLogEntryEntityImpl, IEventLogEntry>("selectEventLogEntriesByProcessInstanceId", @params);
+            IDictionary<string, object> @params = new Dictionary<string, object>(2)
+            {
+                ["processInstanceId"] = processInstanceId
+            };
+            return DbSqlSession.SelectList<EventLogEntryEntityImpl, IEventLogEntry>("selectEventLogEntriesByProcessInstanceId", @params);
         }
 
-        public virtual void deleteEventLogEntry(long logNr)
+        public virtual void DeleteEventLogEntry(long logNr)
         {
-            DbSqlSession.delete("deleteEventLogEntry", new { logNr }, typeof(EventLogEntryEntityImpl));
+            DbSqlSession.Delete("deleteEventLogEntry", new { logNr }, typeof(EventLogEntryEntityImpl));
         }
     }
 

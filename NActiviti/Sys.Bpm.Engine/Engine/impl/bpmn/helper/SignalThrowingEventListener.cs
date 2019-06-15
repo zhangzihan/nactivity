@@ -32,37 +32,37 @@ namespace org.activiti.engine.impl.bpmn.helper
         protected internal string signalName;
         protected internal bool processInstanceScope = true;
 
-        public override void onEvent(IActivitiEvent @event)
+        public override void OnEvent(IActivitiEvent @event)
         {
-            if (isValidEvent(@event))
+            if (IsValidEvent(@event))
             {
 
-                if (ReferenceEquals(@event.ProcessInstanceId, null) && processInstanceScope)
+                if (@event.ProcessInstanceId is null && processInstanceScope)
                 {
                     throw new ActivitiIllegalArgumentException("Cannot throw process-instance scoped signal, since the dispatched event is not part of an ongoing process instance");
                 }
 
                 ICommandContext commandContext = Context.CommandContext;
                 IEventSubscriptionEntityManager eventSubscriptionEntityManager = commandContext.EventSubscriptionEntityManager;
-                IList<ISignalEventSubscriptionEntity> subscriptionEntities = null;
+                IList<ISignalEventSubscriptionEntity> subscriptionEntities;
                 if (processInstanceScope)
                 {
-                    subscriptionEntities = eventSubscriptionEntityManager.findSignalEventSubscriptionsByProcessInstanceAndEventName(@event.ProcessInstanceId, signalName);
+                    subscriptionEntities = eventSubscriptionEntityManager.FindSignalEventSubscriptionsByProcessInstanceAndEventName(@event.ProcessInstanceId, signalName);
                 }
                 else
                 {
                     string tenantId = null;
-                    if (!ReferenceEquals(@event.ProcessDefinitionId, null))
+                    if (!(@event.ProcessDefinitionId is null))
                     {
-                        IProcessDefinition processDefinition = commandContext.ProcessEngineConfiguration.DeploymentManager.findDeployedProcessDefinitionById(@event.ProcessDefinitionId);
+                        IProcessDefinition processDefinition = commandContext.ProcessEngineConfiguration.DeploymentManager.FindDeployedProcessDefinitionById(@event.ProcessDefinitionId);
                         tenantId = processDefinition.TenantId;
                     }
-                    subscriptionEntities = eventSubscriptionEntityManager.findSignalEventSubscriptionsByEventName(signalName, tenantId);
+                    subscriptionEntities = eventSubscriptionEntityManager.FindSignalEventSubscriptionsByEventName(signalName, tenantId);
                 }
 
                 foreach (ISignalEventSubscriptionEntity signalEventSubscriptionEntity in subscriptionEntities)
                 {
-                    eventSubscriptionEntityManager.eventReceived(signalEventSubscriptionEntity, null, false);
+                    eventSubscriptionEntityManager.EventReceived(signalEventSubscriptionEntity, null, false);
                 }
             }
         }

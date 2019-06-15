@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +19,11 @@ namespace org.activiti.engine.impl.bpmn.behavior
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
     using org.activiti.engine.impl.bpmn.helper;
+    using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util.condition;
-    using Sys;
+    using Sys.Workflow;
 
     /// <summary>
     /// implementation of the Exclusive Gateway/XOR gateway/exclusive data-based gateway as defined in the BPMN specification.
@@ -47,7 +47,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
         /// 
         /// If no sequence flow is selected (ie all conditions evaluate to false), then the default sequence flow is taken (if defined).
         /// </summary>
-        public override void leave(IExecutionEntity execution)
+        public override void Leave(IExecutionEntity execution)
         {
             if (log.IsEnabled(LogLevel.Debug))
             {
@@ -56,9 +56,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             ExclusiveGateway exclusiveGateway = (ExclusiveGateway)execution.CurrentFlowElement;
 
-            if (Context.ProcessEngineConfiguration != null && Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
+            ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
+            if (!(processEngineConfiguration is null) && processEngineConfiguration.EventDispatcher.Enabled)
             {
-                Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createActivityEvent(ActivitiEventType.ACTIVITY_COMPLETED, exclusiveGateway.Id, exclusiveGateway.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, exclusiveGateway));
+                processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityEvent(ActivitiEventType.ACTIVITY_COMPLETED, exclusiveGateway.Id, exclusiveGateway.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, exclusiveGateway));
             }
 
             SequenceFlow outgoingSequenceFlow = null;
@@ -69,10 +70,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
             foreach (SequenceFlow sequenceFlow in exclusiveGateway.OutgoingFlows)
             {
                 string skipExpressionString = sequenceFlow.SkipExpression;
-                if (!SkipExpressionUtil.isSkipExpressionEnabled(execution, skipExpressionString))
+                if (!SkipExpressionUtil.IsSkipExpressionEnabled(execution, skipExpressionString))
                 {
-                    bool conditionEvaluatesToTrue = ConditionUtil.hasTrueCondition(sequenceFlow, execution);
-                    if (conditionEvaluatesToTrue && (ReferenceEquals(defaultSequenceFlowId, null) || !defaultSequenceFlowId.Equals(sequenceFlow.Id)))
+                    bool conditionEvaluatesToTrue = ConditionUtil.HasTrueCondition(sequenceFlow, execution);
+                    if (conditionEvaluatesToTrue && (defaultSequenceFlowId is null || !defaultSequenceFlowId.Equals(sequenceFlow.Id)))
                     {
                         if (log.IsEnabled(LogLevel.Debug))
                         {
@@ -82,14 +83,14 @@ namespace org.activiti.engine.impl.bpmn.behavior
                         break;
                     }
                 }
-                else if (SkipExpressionUtil.shouldSkipFlowElement(Context.CommandContext, execution, skipExpressionString))
+                else if (SkipExpressionUtil.ShouldSkipFlowElement(Context.CommandContext, execution, skipExpressionString))
                 {
                     outgoingSequenceFlow = sequenceFlow;
                     break;
                 }
 
                 // Already store it, if we would need it later. Saves one for loop.
-                if (!ReferenceEquals(defaultSequenceFlowId, null) && defaultSequenceFlowId.Equals(sequenceFlow.Id))
+                if (!(defaultSequenceFlowId is null) && defaultSequenceFlowId.Equals(sequenceFlow.Id))
                 {
                     defaultSequenceFlow = sequenceFlow;
                 }
@@ -97,7 +98,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
 
             // We have to record the end here, or else we're already past it
-            Context.CommandContext.HistoryManager.recordActivityEnd(execution, null);
+            Context.CommandContext.HistoryManager.RecordActivityEnd(execution, null);
 
             // Leave the gateway
             if (outgoingSequenceFlow != null)
@@ -118,7 +119,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
             }
 
-            base.leave(execution);
+            base.Leave(execution);
         }
     }
 

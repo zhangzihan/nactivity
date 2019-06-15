@@ -6,11 +6,6 @@
 //  Original author: 张楠
 ///////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
     /// <summary>
@@ -36,6 +31,6 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         /// <summary>
         /// 查询条件
         /// </summary>
-        public QueryCondition[] Value { get; set; }
+        public QueryCondition[] QueryCondition { get; set; }
     }
 }

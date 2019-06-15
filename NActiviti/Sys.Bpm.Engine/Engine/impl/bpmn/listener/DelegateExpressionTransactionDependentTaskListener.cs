@@ -32,7 +32,7 @@ namespace org.activiti.engine.impl.bpmn.listener
             this.expression = expression;
         }
 
-        public virtual void notify(string processInstanceId, string executionId, Task task, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap)
+        public virtual void Notify(string processInstanceId, string executionId, TaskActivity task, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap)
         {
             throw new System.NotImplementedException();
             //NoExecutionVariableScope scope = new NoExecutionVariableScope();

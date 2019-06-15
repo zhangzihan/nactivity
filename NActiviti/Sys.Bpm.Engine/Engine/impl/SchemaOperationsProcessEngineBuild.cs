@@ -20,12 +20,12 @@ namespace org.activiti.engine.impl
     public sealed class SchemaOperationsProcessEngineBuild : ICommand<object>
     {
 
-        public object execute(ICommandContext commandContext)
+        public object Execute(ICommandContext commandContext)
         {
             DbSqlSession dbSqlSession = commandContext.DbSqlSession;
             if (dbSqlSession != null)
             {
-                dbSqlSession.performSchemaOperationsProcessEngineBuild();
+                dbSqlSession.PerformSchemaOperationsProcessEngineBuild();
             }
 
             return commandContext.GetResult();

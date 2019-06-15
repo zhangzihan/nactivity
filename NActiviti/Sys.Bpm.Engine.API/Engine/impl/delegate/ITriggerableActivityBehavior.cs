@@ -13,13 +13,18 @@
 namespace org.activiti.engine.impl.@delegate
 {
     using org.activiti.engine.impl.persistence.entity;
+    using System.Collections.Generic;
 
     /// 
     public interface ITriggerableActivityBehavior : IActivityBehavior
     {
-
-        void trigger(IExecutionEntity execution, string signalEvent, object signalData);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="signalEvent"></param>
+        /// <param name="signalData"></param>
+        /// <param name="throwError"></param>
+        void Trigger(IExecutionEntity execution, string signalEvent, object signalData, bool throwError = true);
     }
-
 }

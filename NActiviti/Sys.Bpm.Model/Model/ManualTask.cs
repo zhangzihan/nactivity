@@ -12,13 +12,15 @@
  */
 namespace org.activiti.bpmn.model
 {
-    public class ManualTask : Task
+    public class ManualTask : TaskActivity
     {
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            ManualTask clone = new ManualTask();
-            clone.Values = this;
+            ManualTask clone = new ManualTask
+            {
+                Values = this
+            };
             return clone;
         }
     }

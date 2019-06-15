@@ -36,7 +36,7 @@ namespace org.activiti.engine.impl.cmd
             this.resourceName = resourceName;
         }
 
-        public  virtual System.IO.Stream  execute(ICommandContext  commandContext)
+        public virtual Stream Execute(ICommandContext commandContext)
         {
             if (ReferenceEquals(deploymentId, null))
             {
@@ -47,10 +47,10 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiIllegalArgumentException("resourceName is null");
             }
 
-            IResourceEntity resource = commandContext.ResourceEntityManager.findResourceByDeploymentIdAndResourceName(deploymentId, resourceName);
+            IResourceEntity resource = commandContext.ResourceEntityManager.FindResourceByDeploymentIdAndResourceName(deploymentId, resourceName);
             if (resource == null)
             {
-                if (commandContext.DeploymentEntityManager.findById<IDeployment>(new KeyValuePair<string, object>("id", deploymentId)) == null)
+                if (commandContext.DeploymentEntityManager.FindById<IDeployment>(new KeyValuePair<string, object>("id", deploymentId)) == null)
                 {
                     throw new ActivitiObjectNotFoundException("deployment does not exist: " + deploymentId, typeof(IDeployment));
                 }
@@ -59,7 +59,7 @@ namespace org.activiti.engine.impl.cmd
                     throw new ActivitiObjectNotFoundException("no resource found with name '" + resourceName + "' in deployment '" + deploymentId + "'", typeof(System.IO.Stream));
                 }
             }
-            return new System.IO.MemoryStream(resource.Bytes);
+            return new MemoryStream(resource.Bytes);
         }
 
     }

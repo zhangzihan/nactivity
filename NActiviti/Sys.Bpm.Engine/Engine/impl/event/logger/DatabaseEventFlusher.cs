@@ -4,7 +4,7 @@
     using org.activiti.engine.impl.@event.logger.handler;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using Sys;
+    using Sys.Workflow;
     using System;
 
     /// 
@@ -12,7 +12,7 @@
     {
         private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<DatabaseEventFlusher>();
         
-        public override void closing(ICommandContext commandContext)
+        public override void Closing(ICommandContext commandContext)
         {
             if (commandContext.Exception != null)
             {
@@ -24,7 +24,7 @@
             {
                 try
                 {
-                    eventLogEntryEntityManager.insert(eventHandler.generateEventLogEntry(null), false);
+                    eventLogEntryEntityManager.Insert(eventHandler.GenerateEventLogEntry(null), false);
                 }
                 catch (Exception e)
                 {
@@ -33,12 +33,12 @@
             }
         }
 
-        public override void afterSessionsFlush(ICommandContext commandContext)
+        public override void AfterSessionsFlush(ICommandContext commandContext)
         {
 
         }
 
-        public override void closeFailure(ICommandContext commandContext)
+        public override void CloseFailure(ICommandContext commandContext)
         {
 
         }

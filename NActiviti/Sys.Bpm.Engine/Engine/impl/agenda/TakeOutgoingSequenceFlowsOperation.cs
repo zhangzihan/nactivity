@@ -9,12 +9,13 @@ namespace org.activiti.engine.impl.agenda
     using org.activiti.engine.@delegate.@event.impl;
     using org.activiti.engine.impl.bpmn.helper;
     using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.el;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
     using org.activiti.engine.impl.util.condition;
-    using Sys;
+    using Sys.Expressions;
+    using Sys.Workflow;
+    using System;
 
     /// <summary>
     /// Operation that leaves the <seealso cref="FlowElement"/> where the <seealso cref="IExecutionEntity"/> is currently at
@@ -24,83 +25,111 @@ namespace org.activiti.engine.impl.agenda
     {
         private static readonly ILogger<TakeOutgoingSequenceFlowsOperation> log = ProcessEngineServiceProvider.LoggerService<TakeOutgoingSequenceFlowsOperation>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool evaluateConditions;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <param name="executionEntity"></param>
+        /// <param name="evaluateConditions"></param>
         public TakeOutgoingSequenceFlowsOperation(ICommandContext commandContext, IExecutionEntity executionEntity, bool evaluateConditions) : base(commandContext, executionEntity)
         {
             this.evaluateConditions = evaluateConditions;
         }
 
-        protected override void run()
+        /// <inheritdoc />
+        protected override void RunOperation()
         {
-            FlowElement currentFlowElement = getCurrentFlowElement(execution);
-
-            // Compensation check
-            if ((currentFlowElement is Activity) && (((Activity)currentFlowElement)).ForCompensation)
+            try
             {
-                /*
-                 * If the current flow element is part of a compensation, we don't always
-                 * want to follow the regular rules of leaving an activity.
-                 * More specifically, if there are no outgoing sequenceflow, we simply must stop
-                 * the execution there and don't go up in the scopes as we usually do
-                 * to find the outgoing sequenceflow
-                 */
+                FlowElement currentFlowElement = GetCurrentFlowElement(execution);
 
-                cleanupCompensation();
+                // Compensation check
+                if ((currentFlowElement is Activity) && (((Activity)currentFlowElement)).ForCompensation)
+                {
+                    /*
+                     * If the current flow element is part of a compensation, we don't always
+                     * want to follow the regular rules of leaving an activity.
+                     * More specifically, if there are no outgoing sequenceflow, we simply must stop
+                     * the execution there and don't go up in the scopes as we usually do
+                     * to find the outgoing sequenceflow
+                     */
 
-                return;
+                    CleanupCompensation();
+
+                    return;
+                }
+
+                // When leaving the current activity, we need to delete any related execution (eg active boundary events)
+                CleanupExecutions(currentFlowElement);
+
+                if (currentFlowElement is FlowNode)
+                {
+                    HandleFlowNode((FlowNode)currentFlowElement);
+                }
+                else if (currentFlowElement is SequenceFlow)
+                {
+                    HandleSequenceFlow();
+                }
             }
-
-            // When leaving the current activity, we need to delete any related execution (eg active boundary events)
-            cleanupExecutions(currentFlowElement);
-
-            if (currentFlowElement is FlowNode)
+            catch (Exception ex)
             {
-                handleFlowNode((FlowNode)currentFlowElement);
-            }
-            else if (currentFlowElement is SequenceFlow)
-            {
-                handleSequenceFlow();
+                log.LogError(ex, ex.Message);
+                throw;
             }
         }
 
-        protected internal virtual void handleFlowNode(FlowNode flowNode)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="flowNode"></param>
+        protected internal virtual void HandleFlowNode(FlowNode flowNode)
         {
-            handleActivityEnd(flowNode);
+            HandleActivityEnd(flowNode);
             if (flowNode.ParentContainer != null && flowNode.ParentContainer is AdhocSubProcess)
             {
-                handleAdhocSubProcess(flowNode);
+                HandleAdhocSubProcess(flowNode);
             }
             else
             {
-                leaveFlowNode(flowNode);
+                LeaveFlowNode(flowNode);
             }
         }
 
-        protected internal virtual void handleActivityEnd(FlowNode flowNode)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="flowNode"></param>
+        protected internal virtual void HandleActivityEnd(FlowNode flowNode)
         {
             // a process instance execution can never leave a flow node, but it can pass here whilst cleaning up
             // hence the check for NOT being a process instance
             if (!execution.ProcessInstanceType)
             {
-
                 if (CollectionUtil.IsNotEmpty(flowNode.ExecutionListeners))
                 {
-                    executeExecutionListeners(flowNode, BaseExecutionListener_Fields.EVENTNAME_END);
+                    ExecuteExecutionListeners(flowNode, BaseExecutionListenerFields.EVENTNAME_END);
                 }
 
-                commandContext.HistoryManager.recordActivityEnd(execution, null);
+                commandContext.HistoryManager.RecordActivityEnd(execution, null);
 
                 if (!(execution.CurrentFlowElement is SubProcess))
                 {
-                    Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createActivityEvent(ActivitiEventType.ACTIVITY_COMPLETED, flowNode.Id, flowNode.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, flowNode));
+                    Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityEvent(ActivitiEventType.ACTIVITY_COMPLETED, flowNode.Id, flowNode.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, flowNode));
                 }
             }
         }
 
-        protected internal virtual void leaveFlowNode(FlowNode flowNode)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="flowNode"></param>
+        protected internal virtual void LeaveFlowNode(FlowNode flowNode)
         {
-
             log.LogDebug($"Leaving flow node {flowNode.GetType()} with id '{flowNode.Id}' by following it's {flowNode.OutgoingFlows.Count} outgoing sequenceflow");
 
             // Get default sequence flow (if set)
@@ -118,17 +147,15 @@ namespace org.activiti.engine.impl.agenda
             IList<SequenceFlow> outgoingSequenceFlows = new List<SequenceFlow>();
             foreach (SequenceFlow sequenceFlow in flowNode.OutgoingFlows)
             {
-
                 string skipExpressionString = sequenceFlow.SkipExpression;
-                if (!SkipExpressionUtil.isSkipExpressionEnabled(execution, skipExpressionString))
+                if (!SkipExpressionUtil.IsSkipExpressionEnabled(execution, skipExpressionString))
                 {
-
-                    if (!evaluateConditions || (evaluateConditions && ConditionUtil.hasTrueCondition(sequenceFlow, execution) && (ReferenceEquals(defaultSequenceFlowId, null) || !defaultSequenceFlowId.Equals(sequenceFlow.Id))))
+                    if (!evaluateConditions || (evaluateConditions && ConditionUtil.HasTrueCondition(sequenceFlow, execution) && (defaultSequenceFlowId is null || !defaultSequenceFlowId.Equals(sequenceFlow.Id))))
                     {
                         outgoingSequenceFlows.Add(sequenceFlow);
                     }
                 }
-                else if (flowNode.OutgoingFlows.Count == 1 || SkipExpressionUtil.shouldSkipFlowElement(commandContext, execution, skipExpressionString))
+                else if (flowNode.OutgoingFlows.Count == 1 || SkipExpressionUtil.ShouldSkipFlowElement(commandContext, execution, skipExpressionString))
                 {
                     // The 'skip' for a sequence flow means that we skip the condition, not the sequence flow.
                     outgoingSequenceFlows.Add(sequenceFlow);
@@ -138,7 +165,7 @@ namespace org.activiti.engine.impl.agenda
             // Check if there is a default sequence flow
             if (outgoingSequenceFlows.Count == 0 && evaluateConditions)
             { // The elements that set this to false also have no support for default sequence flow
-                if (!ReferenceEquals(defaultSequenceFlowId, null))
+                if (!(defaultSequenceFlowId is null))
                 {
                     foreach (SequenceFlow sequenceFlow in flowNode.OutgoingFlows)
                     {
@@ -157,7 +184,7 @@ namespace org.activiti.engine.impl.agenda
                 if (flowNode.OutgoingFlows == null || flowNode.OutgoingFlows.Count == 0)
                 {
                     log.LogDebug($"No outgoing sequence flow found for flow node '{flowNode.Id}'.");
-                    Context.Agenda.planEndExecutionOperation(execution);
+                    Context.Agenda.PlanEndExecutionOperation(execution);
                 }
                 else
                 {
@@ -185,13 +212,13 @@ namespace org.activiti.engine.impl.agenda
                     for (int i = 1; i < outgoingSequenceFlows.Count; i++)
                     {
 
-                        IExecutionEntity parent = !ReferenceEquals(execution.ParentId, null) ? execution.Parent : execution;
-                        IExecutionEntity outgoingExecutionEntity = commandContext.ExecutionEntityManager.createChildExecution(parent);
+                        IExecutionEntity parent = !(execution.ParentId is null) ? execution.Parent : execution;
+                        IExecutionEntity outgoingExecutionEntity = commandContext.ExecutionEntityManager.CreateChildExecution(parent);
 
                         SequenceFlow outgoingSequenceFlow = outgoingSequenceFlows[i];
                         outgoingExecutionEntity.CurrentFlowElement = outgoingSequenceFlow;
 
-                        executionEntityManager.insert(outgoingExecutionEntity);
+                        executionEntityManager.Insert(outgoingExecutionEntity);
                         outgoingExecutions.Add(outgoingExecutionEntity);
                     }
                 }
@@ -199,18 +226,27 @@ namespace org.activiti.engine.impl.agenda
                 // Leave (only done when all executions have been made, since some queries depend on this)
                 foreach (IExecutionEntity outgoingExecution in outgoingExecutions)
                 {
-                    Context.Agenda.planContinueProcessOperation(outgoingExecution);
+                    Context.Agenda.PlanContinueProcessOperation(outgoingExecution);
                 }
             }
         }
 
-        protected internal virtual void handleAdhocSubProcess(FlowNode flowNode)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="flowNode"></param>
+        protected internal virtual void HandleAdhocSubProcess(FlowNode flowNode)
         {
             bool completeAdhocSubProcess = false;
             AdhocSubProcess adhocSubProcess = (AdhocSubProcess)flowNode.ParentContainer;
-            if (!ReferenceEquals(adhocSubProcess.CompletionCondition, null))
+            if (!(adhocSubProcess.CompletionCondition is null))
             {
-                IExpression expression = Context.ProcessEngineConfiguration.ExpressionManager.createExpression(adhocSubProcess.CompletionCondition);
+                IExpression expr = Context.ProcessEngineConfiguration.ExpressionManager.CreateExpression(adhocSubProcess.CompletionCondition);
+                bool adHoc = (bool)expr.GetValue(execution);
+                if (adHoc)
+                {
+                    completeAdhocSubProcess = true;
+                }
                 //ICondition condition = new UelExpressionCondition(expression);
                 //if (condition.evaluate(adhocSubProcess.Id, execution))
                 //{
@@ -220,11 +256,11 @@ namespace org.activiti.engine.impl.agenda
 
             if (flowNode.OutgoingFlows.Count > 0)
             {
-                leaveFlowNode(flowNode);
+                LeaveFlowNode(flowNode);
             }
             else
             {
-                commandContext.ExecutionEntityManager.deleteExecutionAndRelatedData(execution, null, false);
+                commandContext.ExecutionEntityManager.DeleteExecutionAndRelatedData(execution, null, false);
             }
 
             if (completeAdhocSubProcess)
@@ -232,7 +268,7 @@ namespace org.activiti.engine.impl.agenda
                 bool endAdhocSubProcess = true;
                 if (!adhocSubProcess.CancelRemainingInstances)
                 {
-                    IList<IExecutionEntity> childExecutions = commandContext.ExecutionEntityManager.findChildExecutionsByParentExecutionId(execution.ParentId);
+                    IList<IExecutionEntity> childExecutions = commandContext.ExecutionEntityManager.FindChildExecutionsByParentExecutionId(execution.ParentId);
                     foreach (IExecutionEntity executionEntity in childExecutions)
                     {
                         if (!executionEntity.Id.Equals(execution.Id))
@@ -245,75 +281,77 @@ namespace org.activiti.engine.impl.agenda
 
                 if (endAdhocSubProcess)
                 {
-                    Context.Agenda.planEndExecutionOperation(execution.Parent);
+                    Context.Agenda.PlanEndExecutionOperation(execution.Parent);
                 }
             }
         }
 
-        protected internal virtual void handleSequenceFlow()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal virtual void HandleSequenceFlow()
         {
-            commandContext.HistoryManager.recordActivityEnd(execution, null);
-            Context.Agenda.planContinueProcessOperation(execution);
+            commandContext.HistoryManager.RecordActivityEnd(execution, null);
+            Context.Agenda.PlanContinueProcessOperation(execution);
         }
 
-        protected internal virtual void cleanupCompensation()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal virtual void CleanupCompensation()
         {
-
             // The compensation is at the end here. Simply stop the execution.
-
-            commandContext.HistoryManager.recordActivityEnd(execution, null);
-            commandContext.ExecutionEntityManager.deleteExecutionAndRelatedData(execution, null, false);
+            commandContext.HistoryManager.RecordActivityEnd(execution, null);
+            commandContext.ExecutionEntityManager.DeleteExecutionAndRelatedData(execution, null, false);
 
             IExecutionEntity parentExecutionEntity = execution.Parent;
             if (parentExecutionEntity.IsScope && !parentExecutionEntity.ProcessInstanceType)
             {
 
-                if (allChildExecutionsEnded(parentExecutionEntity, null))
+                if (AllChildExecutionsEnded(parentExecutionEntity, null))
                 {
-
                     // Go up the hierarchy to check if the next scope is ended too.
                     // This could happen if only the compensation activity is still active, but the
                     // main process is already finished.
 
                     IExecutionEntity executionEntityToEnd = parentExecutionEntity;
-                    IExecutionEntity scopeExecutionEntity = findNextParentScopeExecutionWithAllEndedChildExecutions(parentExecutionEntity, parentExecutionEntity);
+                    IExecutionEntity scopeExecutionEntity = FindNextParentScopeExecutionWithAllEndedChildExecutions(parentExecutionEntity, parentExecutionEntity);
                     while (scopeExecutionEntity != null)
                     {
                         executionEntityToEnd = scopeExecutionEntity;
-                        scopeExecutionEntity = findNextParentScopeExecutionWithAllEndedChildExecutions(scopeExecutionEntity, parentExecutionEntity);
+                        scopeExecutionEntity = FindNextParentScopeExecutionWithAllEndedChildExecutions(scopeExecutionEntity, parentExecutionEntity);
                     }
 
                     if (executionEntityToEnd.ProcessInstanceType)
                     {
-                        Context.Agenda.planEndExecutionOperation(executionEntityToEnd);
+                        Context.Agenda.PlanEndExecutionOperation(executionEntityToEnd);
                     }
                     else
                     {
-                        Context.Agenda.planDestroyScopeOperation(executionEntityToEnd);
+                        Context.Agenda.PlanDestroyScopeOperation(executionEntityToEnd);
                     }
                 }
             }
         }
 
-        protected internal virtual void cleanupExecutions(FlowElement currentFlowElement)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="currentFlowElement"></param>
+        protected internal virtual void CleanupExecutions(FlowElement currentFlowElement)
         {
-            if (!ReferenceEquals(execution.ParentId, null) && execution.IsScope)
+            if (!(execution.ParentId is null) && execution.IsScope)
             {
-
                 // If the execution is a scope (and not a process instance), the scope must first be
                 // destroyed before we can continue and follow the sequence flow
-
-                Context.Agenda.planDestroyScopeOperation(execution);
+                Context.Agenda.PlanDestroyScopeOperation(execution);
             }
-            else if (currentFlowElement is Activity)
+            else if (currentFlowElement is Activity activity)
             {
-
                 // If the current activity is an activity, we need to remove any currently active boundary events
 
-                Activity activity = (Activity)currentFlowElement;
                 if (CollectionUtil.IsNotEmpty(activity.BoundaryEvents))
                 {
-
                     // Cancel events are not removed
                     IList<string> notToDeleteEvents = new List<string>();
                     foreach (BoundaryEvent @event in activity.BoundaryEvents)
@@ -325,12 +363,12 @@ namespace org.activiti.engine.impl.agenda
                     }
 
                     // Delete all child executions
-                    ICollection<IExecutionEntity> childExecutions = commandContext.ExecutionEntityManager.findChildExecutionsByParentExecutionId(execution.Id);
+                    ICollection<IExecutionEntity> childExecutions = commandContext.ExecutionEntityManager.FindChildExecutionsByParentExecutionId(execution.Id);
                     foreach (IExecutionEntity childExecution in childExecutions)
                     {
                         if (childExecution.CurrentFlowElement == null || !notToDeleteEvents.Contains(childExecution.CurrentFlowElement.Id))
                         {
-                            commandContext.ExecutionEntityManager.deleteExecutionAndRelatedData(childExecution, null, false);
+                            commandContext.ExecutionEntityManager.DeleteExecutionAndRelatedData(childExecution, null, false);
                         }
                     }
                 }
@@ -339,11 +377,14 @@ namespace org.activiti.engine.impl.agenda
 
         // Compensation helper methods
 
+        ///<summary>
+        /// <param name="executionEntity">The execution entity</param>
         /// <param name="executionEntityToIgnore"> The execution entity which we can ignore to be ended,
         /// as it's the execution currently being handled in this operation. </param>
-        protected internal virtual IExecutionEntity findNextParentScopeExecutionWithAllEndedChildExecutions(IExecutionEntity executionEntity, IExecutionEntity executionEntityToIgnore)
+        /// </summary>
+        protected internal virtual IExecutionEntity FindNextParentScopeExecutionWithAllEndedChildExecutions(IExecutionEntity executionEntity, IExecutionEntity executionEntityToIgnore)
         {
-            if (!ReferenceEquals(executionEntity.ParentId, null))
+            if (!(executionEntity.ParentId is null))
             {
                 IExecutionEntity scopeExecutionEntity = executionEntity.Parent;
 
@@ -354,7 +395,7 @@ namespace org.activiti.engine.impl.agenda
                 }
 
                 // Return when all child executions for it are ended
-                if (allChildExecutionsEnded(scopeExecutionEntity, executionEntityToIgnore))
+                if (AllChildExecutionsEnded(scopeExecutionEntity, executionEntityToIgnore))
                 {
                     return scopeExecutionEntity;
                 }
@@ -362,7 +403,13 @@ namespace org.activiti.engine.impl.agenda
             return null;
         }
 
-        protected internal virtual bool allChildExecutionsEnded(IExecutionEntity parentExecutionEntity, IExecutionEntity executionEntityToIgnore)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parentExecutionEntity"></param>
+        /// <param name="executionEntityToIgnore"></param>
+        /// <returns></returns>
+        protected internal virtual bool AllChildExecutionsEnded(IExecutionEntity parentExecutionEntity, IExecutionEntity executionEntityToIgnore)
         {
             foreach (IExecutionEntity childExecutionEntity in parentExecutionEntity.Executions)
             {
@@ -374,7 +421,7 @@ namespace org.activiti.engine.impl.agenda
                     }
                     if (childExecutionEntity.Executions != null && childExecutionEntity.Executions.Count > 0)
                     {
-                        if (!allChildExecutionsEnded(childExecutionEntity, executionEntityToIgnore))
+                        if (!AllChildExecutionsEnded(childExecutionEntity, executionEntityToIgnore))
                         {
                             return false;
                         }
@@ -384,5 +431,4 @@ namespace org.activiti.engine.impl.agenda
             return true;
         }
     }
-
 }

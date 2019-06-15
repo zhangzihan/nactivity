@@ -12,19 +12,21 @@
  */
 namespace org.activiti.engine.impl.db
 {
-	/// <summary>
-	/// Entities that are using revisions for optimistic locking, need to implement this interface.
-	/// 
-	/// 
-	/// </summary>
-	public interface IHasRevision
-	{
+    /// <summary>
+    /// Entities that are using revisions for optimistic locking, need to implement this interface.
+    /// 
+    /// 
+    /// </summary>
+    public interface IHasRevision
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        int Revision { set; get; }
 
-	  int Revision {set;get;}
-
-
-	  int RevisionNext {get;}
-
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        int RevisionNext { get; }
+    }
 }

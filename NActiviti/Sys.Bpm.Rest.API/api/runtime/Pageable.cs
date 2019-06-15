@@ -25,11 +25,11 @@ namespace org.activiti.api.runtime.shared.query
         /// <summary>
         /// 页编号
         /// </summary>
-        public int PageNo { get; set; }
+        public int PageNo { get; set; } = 1;
 
         /// <summary>
         /// 每页大小
         /// </summary>
-        public int PageSize { get; set; }
+        public int PageSize { get; set; } = 10;
     }
 }

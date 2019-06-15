@@ -481,6 +481,8 @@ namespace Spring.Objects.Factory.Attributes
                 this.required = required;
             }
 
+            private object syncRoot = new object();
+
             public override void Inject(object instance, string objectName, IPropertyValues pvs)
             {
                 var property = (PropertyInfo)Member;
@@ -496,7 +498,7 @@ namespace Spring.Objects.Factory.Attributes
                         var descriptor = new DependencyDescriptor(property, required);
                         var autowiredObjectNames = new List<string>();
                         value = processor.objectFactory.ResolveDependency(descriptor, objectName, autowiredObjectNames);
-                        lock (this)
+                        lock (syncRoot)
                         {
                             if (!cached)
                             {
@@ -553,6 +555,8 @@ namespace Spring.Objects.Factory.Attributes
                 this.required = required;
             }
 
+            private object syncRoot = new object();
+
             public override void Inject(object instance, string objectName, IPropertyValues pvs)
             {
                 var field = (FieldInfo)Member;
@@ -568,7 +572,7 @@ namespace Spring.Objects.Factory.Attributes
                         var descriptor = new DependencyDescriptor(field, required);
                         var autowiredObjectNames = new List<string>();
                         value = processor.objectFactory.ResolveDependency(descriptor, objectName, autowiredObjectNames);
-                        lock (this)
+                        lock (syncRoot)
                         {
                             if (!cached)
                             {
@@ -625,6 +629,8 @@ namespace Spring.Objects.Factory.Attributes
                 this.required = required;
             }
 
+            private object syncRoot = new object();
+
             public override void Inject(object target, string objectName, IPropertyValues pvs)
             {
                 MethodInfo method = Member as MethodInfo;
@@ -652,7 +658,7 @@ namespace Spring.Objects.Factory.Attributes
                                 break;
                             }
                         }
-                        lock (this)
+                        lock (syncRoot)
                         {
                             if (!cached)
                             {

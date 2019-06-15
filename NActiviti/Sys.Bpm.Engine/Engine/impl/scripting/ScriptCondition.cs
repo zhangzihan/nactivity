@@ -32,11 +32,11 @@ namespace org.activiti.engine.impl.scripting
             this.language = language;
         }
 
-        public virtual bool evaluate(string sequenceFlowId, IExecutionEntity execution)
+        public virtual bool Evaluate(string sequenceFlowId, IExecutionEntity execution)
         {
             ScriptingEngines scriptingEngines = Context.ProcessEngineConfiguration.ScriptingEngines;
 
-            object result = scriptingEngines.evaluate(expression, execution);
+            object result = scriptingEngines.Evaluate(expression, execution);
             if (result == null)
             {
                 throw new ActivitiException("condition script returns null: " + expression);

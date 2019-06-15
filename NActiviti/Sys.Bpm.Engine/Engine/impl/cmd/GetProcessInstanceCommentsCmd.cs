@@ -40,16 +40,16 @@ namespace org.activiti.engine.impl.cmd
             this.type = type;
         }
 
-        public virtual IList<IComment> execute(ICommandContext commandContext)
+        public virtual IList<IComment> Execute(ICommandContext commandContext)
         {
             if (!string.IsNullOrWhiteSpace(type))
             {
-                IList<IComment> commentsByProcessInstanceId = commandContext.CommentEntityManager.findCommentsByProcessInstanceId(processInstanceId, type);
+                IList<IComment> commentsByProcessInstanceId = commandContext.CommentEntityManager.FindCommentsByProcessInstanceId(processInstanceId, type);
                 return commentsByProcessInstanceId;
             }
             else
             {
-                return commandContext.CommentEntityManager.findCommentsByProcessInstanceId(processInstanceId);
+                return commandContext.CommentEntityManager.FindCommentsByProcessInstanceId(processInstanceId);
             }
         }
     }

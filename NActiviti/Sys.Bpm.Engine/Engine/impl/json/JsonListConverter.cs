@@ -29,17 +29,17 @@ namespace org.activiti.engine.impl.json
             this.jsonObjectConverter = jsonObjectConverter;
         }
 
-        public virtual void toJson(IList<T> list, StreamWriter writer)
+        public virtual void ToJson(IList<T> list, StreamWriter writer)
         {
-            writer.Write(toJson(list, 1));
+            writer.Write(ToJson(list, 1));
         }
 
-        public virtual string toJson(IList<T> list)
+        public virtual string ToJson(IList<T> list)
         {
-            return toJsonArray(list).ToString();
+            return ToJsonArray(list).ToString();
         }
 
-        public virtual string toJson(IList<T> list, int indentFactor = 0)
+        public virtual string ToJson(IList<T> list, int indentFactor = 0)
         {
             if (list == null)
             {
@@ -49,17 +49,17 @@ namespace org.activiti.engine.impl.json
             return JsonConvert.SerializeObject(list, indentFactor > 0 ? Formatting.Indented : Formatting.None);//.ToString(indentFactor);
         }
 
-        private JArray toJsonArray(IList<T> objects)
+        private JArray ToJsonArray(IList<T> objects)
         {
             JArray jsonArray = new JArray();
             foreach (T @object in objects)
             {
-                jsonArray.Add(jsonObjectConverter.toJsonObject(@object));
+                jsonArray.Add(jsonObjectConverter.ToJsonObject(@object));
             }
             return jsonArray;
         }
 
-        public virtual IList<T> toObject(StreamReader reader)
+        public virtual IList<T> ToObject(StreamReader reader)
         {
             string str = reader.ReadToEnd();
 

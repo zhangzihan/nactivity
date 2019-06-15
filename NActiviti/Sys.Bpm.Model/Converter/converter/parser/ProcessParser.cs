@@ -23,34 +23,36 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class ProcessParser : IBpmnXMLConstants
     {
-        public virtual Process parse(XMLStreamReader xtr, BpmnModel model)
+        public virtual Process Parse(XMLStreamReader xtr, BpmnModel model)
         {
             Process process = null;
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID)))
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID)))
             {
-                string processId = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID);
-                process = new Process();
-                process.Id = processId;
-                BpmnXMLUtil.addXMLLocation(process, xtr);
-                process.Name = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME);
-                if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_PROCESS_EXECUTABLE)))
+                string processId = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+                process = new Process
                 {
-                    process.Executable = bool.Parse(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_PROCESS_EXECUTABLE));
+                    Id = processId
+                };
+                BpmnXMLUtil.AddXMLLocation(process, xtr);
+                process.Name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
+                if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_PROCESS_EXECUTABLE)))
+                {
+                    process.Executable = bool.Parse(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_PROCESS_EXECUTABLE));
                 }
-                string candidateUsersString = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_PROCESS_CANDIDATE_USERS);
+                string candidateUsersString = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_PROCESS_CANDIDATE_USERS);
                 if (!string.IsNullOrWhiteSpace(candidateUsersString))
                 {
-                    IList<string> candidateUsers = BpmnXMLUtil.parseDelimitedList(candidateUsersString);
+                    IList<string> candidateUsers = BpmnXMLUtil.ParseDelimitedList(candidateUsersString);
                     process.CandidateStarterUsers = candidateUsers;
                 }
-                string candidateGroupsString = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_PROCESS_CANDIDATE_GROUPS);
+                string candidateGroupsString = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_PROCESS_CANDIDATE_GROUPS);
                 if (!string.IsNullOrWhiteSpace(candidateGroupsString))
                 {
-                    IList<string> candidateGroups = BpmnXMLUtil.parseDelimitedList(candidateGroupsString);
+                    IList<string> candidateGroups = BpmnXMLUtil.ParseDelimitedList(candidateGroupsString);
                     process.CandidateStarterGroups = candidateGroups;
                 }
 
-                BpmnXMLUtil.addCustomAttributes(xtr, process, ProcessExport.defaultProcessAttributes);
+                BpmnXMLUtil.AddCustomAttributes(xtr, process, ProcessExport.defaultProcessAttributes);
 
                 model.Processes.Add(process);
 

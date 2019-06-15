@@ -2,7 +2,7 @@
 {
 
 
-    using TaskCandidateGroup = org.activiti.cloud.services.api.model.TaskCandidateGroup;
+    using TaskCandidateGroup = api.model.TaskCandidateGroup;
 
 
     /// <summary>
@@ -11,7 +11,7 @@
     public class TaskCandidateGroupAddedEventImpl : AbstractProcessEngineEvent, ITaskCandidateGroupAddedEvent
     {
 
-        private TaskCandidateGroup taskCandidateGroup;
+        private readonly TaskCandidateGroup taskCandidateGroup;
 
 
         /// <summary>

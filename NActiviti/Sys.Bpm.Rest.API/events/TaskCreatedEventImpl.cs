@@ -19,7 +19,7 @@ namespace org.activiti.cloud.services.events
 {
 
 
-    using TaskModel = org.activiti.cloud.services.api.model.TaskModel;
+    using TaskModel = api.model.TaskModel;
 
 
     /// <summary>
@@ -28,7 +28,7 @@ namespace org.activiti.cloud.services.events
     public class TaskCreatedEventImpl : AbstractProcessEngineEvent, ITaskCreatedEvent
     {
 
-        private TaskModel task;
+        private readonly TaskModel task;
 
 
         /// <summary>

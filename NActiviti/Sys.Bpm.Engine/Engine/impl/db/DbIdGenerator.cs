@@ -18,44 +18,67 @@ namespace org.activiti.engine.impl.db
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.cmd;
     using org.activiti.engine.impl.interceptor;
+    using org.activiti.engine.impl.persistence.entity;
 
     /// 
     public class DbIdGenerator : IIdGenerator
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int idBlockSize;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal long nextId;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal long lastId = -1;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ICommandExecutor commandExecutor;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal CommandConfig commandConfig;
 
-        public virtual string NextId
+        private readonly object syncRoot = new object();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual string GetNextId()
         {
-            get
+            lock (syncRoot)
             {
-                lock (this)
+                if (lastId < nextId)
                 {
-                    if (lastId < nextId)
-                    {
-                        getNewBlock();
-                    }
-                    long _nextId = nextId++;
-                    return Convert.ToString(_nextId);
+                    GetNewBlock();
                 }
+                long _nextId = nextId++;
+                return Convert.ToString(_nextId);
             }
         }
 
-        protected internal virtual void getNewBlock()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal virtual void GetNewBlock()
         {
-            lock (this)
+            lock (syncRoot)
             {
-                IdBlock idBlock = commandExecutor.execute(commandConfig, new GetNextIdBlockCmd(idBlockSize));
+                IdBlock idBlock = commandExecutor.Execute(commandConfig, new GetNextIdBlockCmd(idBlockSize));
                 this.nextId = idBlock.NextId;
                 this.lastId = idBlock.LastId;
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int IdBlockSize
         {
             get
@@ -69,6 +92,9 @@ namespace org.activiti.engine.impl.db
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ICommandExecutor CommandExecutor
         {
             get
@@ -82,6 +108,9 @@ namespace org.activiti.engine.impl.db
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual CommandConfig CommandConfig
         {
             get
@@ -93,7 +122,5 @@ namespace org.activiti.engine.impl.db
                 this.commandConfig = value;
             }
         }
-
     }
-
 }

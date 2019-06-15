@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using org.activiti.engine.impl.db;
+using Sys.Workflow;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,24 +13,24 @@ namespace Sys
 {
     public class ClassLoader
     {
-        private Regex regex = new Regex("^(http|https):", RegexOptions.IgnoreCase);
+        private static readonly Regex regex = new Regex("^(http|https):", RegexOptions.IgnoreCase);
 
-        public IEnumerator<Uri> getResources(string v)
+        public IEnumerator<Uri> GetResources(string v)
         {
             return new List<Uri>()
             {
-                getResource(v)
+                GetResource(v)
             }.GetEnumerator();
         }
 
-        public Stream getResourceAsStream(string name)
+        public Stream GetResourceAsStream(string name)
         {
-            var uri = getResource(name);
+            var uri = GetResource(name);
 
-            return uri.openStream();
+            return uri.OpenStream();
         }
 
-        public Uri getResource(string name)
+        public Uri GetResource(string name)
         {
             if (regex.IsMatch(name))
             {
@@ -41,8 +42,7 @@ namespace Sys
                 return new Uri(name);
             }
 
-            var dir = Path.GetDirectoryName(new Uri(this.GetType().Assembly.CodeBase).LocalPath);
-            return new Uri(Path.Combine(dir, name));
+            return new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, name));
         }
     }
 
@@ -50,14 +50,14 @@ namespace Sys
     {
         private static ILogger<Properties> log = ProcessEngineServiceProvider.LoggerService<Properties>();
 
-        public string getProperty(string key)
+        public string GetProperty(string key)
         {
             this.TryGetValue(key ?? "", out var val);
 
             return val?.ToString();
         }
 
-        public void load(string fileName)
+        public void Load(string fileName)
         {
             if (!File.Exists(fileName))
             {
@@ -66,11 +66,11 @@ namespace Sys
 
             using (FileStream fs = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                load(fs);
+                Load(fs);
             }
         }
 
-        public void load(FileStream propertiesFile)
+        public void Load(FileStream propertiesFile)
         {
             propertiesFile.Seek(0, SeekOrigin.Begin);
             var sr = new StreamReader(propertiesFile);
@@ -84,8 +84,8 @@ namespace Sys
 
     public class Environment
     {
-        private string v;
-        private ITransactionFactory transactionFactory;
+        private readonly string v;
+        private readonly ITransactionFactory transactionFactory;
 
         public Environment(string v, ITransactionFactory transactionFactory)
         {
@@ -96,9 +96,9 @@ namespace Sys
 
     public class TypeHandlerRegistry
     {
-        private static ILogger<TypeHandlerRegistry> log = ProcessEngineServiceProvider.LoggerService<TypeHandlerRegistry>();
+        private static readonly ILogger<TypeHandlerRegistry> log = ProcessEngineServiceProvider.LoggerService<TypeHandlerRegistry>();
 
-        internal void register(Type type, object vARCHAR, IbatisVariableTypeHandler ibatisVariableTypeHandler)
+        internal void Register(Type type, object vARCHAR, IbatisVariableTypeHandler ibatisVariableTypeHandler)
         {
             log.LogError("mock class TypeHandlerRegistry.register");
         }
@@ -106,7 +106,7 @@ namespace Sys
 
     public class Configuration
     {
-        private static ILogger<Configuration> log = ProcessEngineServiceProvider.LoggerService<Configuration>();
+        private static readonly ILogger<Configuration> log = ProcessEngineServiceProvider.LoggerService<Configuration>();
 
         public string DatabaseId { get; internal set; }
 
@@ -114,7 +114,7 @@ namespace Sys
 
         public TypeHandlerRegistry TypeHandlerRegistry { get; internal set; }
 
-        public void addMapper(Type clazz)
+        public void AddMapper(Type clazz)
         {
             log.LogError("mock class Configuration.register");
         }
@@ -127,11 +127,11 @@ namespace Sys
     {
         private static ILogger<ServiceLoader> log = ProcessEngineServiceProvider.LoggerService<ServiceLoader>();
 
-        public static T load<T>(ClassLoader classLoader)
+        public static T Load<T>(ClassLoader classLoader)
         {
             log.LogError("mock class ServiceLoader.load");
 
-            return default(T);
+            return default;
         }
     }
 
@@ -139,10 +139,10 @@ namespace Sys
     {
         private static ILogger<XMLMapperBuilder> log = ProcessEngineServiceProvider.LoggerService<XMLMapperBuilder>();
 
-        private Stream stream;
-        private Configuration configuration;
-        private string resource;
-        private Dictionary<string, XNode> sqlFragments;
+        private readonly Stream stream;
+        private readonly Configuration configuration;
+        private readonly string resource;
+        private readonly Dictionary<string, XNode> sqlFragments;
 
         public XMLMapperBuilder(Stream stream, Configuration configuration, string resource, Dictionary<string, XNode> sqlFragments)
         {
@@ -152,7 +152,7 @@ namespace Sys
             this.sqlFragments = sqlFragments;
         }
 
-        public void parse()
+        public void Parse()
         {
             log.LogError("mock class XMLMapperBuilder.parse");
         }
@@ -162,9 +162,9 @@ namespace Sys
     {
         private static ILogger<XMLConfigBuilder> log = ProcessEngineServiceProvider.LoggerService<XMLConfigBuilder>();
 
-        private StreamReader reader;
-        private string v;
-        private Properties properties;
+        private readonly StreamReader reader;
+        private readonly string v;
+        private readonly Properties properties;
 
         public XMLConfigBuilder(StreamReader reader, string v, Properties properties)
         {
@@ -175,7 +175,7 @@ namespace Sys
 
         public Configuration Configuration { get; internal set; }
 
-        public Configuration parse()
+        public Configuration Parse()
         {
             log.LogError("mock class XMLConfigBuilder.parse");
 

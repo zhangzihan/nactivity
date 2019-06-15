@@ -19,9 +19,9 @@ namespace org.activiti.engine.impl.persistence.entity.data
 	public interface IByteArrayDataManager : IDataManager<IByteArrayEntity>
 	{
 
-	  IList<IByteArrayEntity> findAll();
+	  IList<IByteArrayEntity> FindAll();
 
-	  void deleteByteArrayNoRevisionCheck(string byteArrayEntityId);
+	  void DeleteByteArrayNoRevisionCheck(string byteArrayEntityId);
 
 	}
 

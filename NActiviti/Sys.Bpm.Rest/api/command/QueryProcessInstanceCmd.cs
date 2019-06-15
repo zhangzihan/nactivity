@@ -5,6 +5,7 @@ using org.activiti.cloud.services.api.utils;
 using org.activiti.cloud.services.core.pageable;
 using org.activiti.engine;
 using org.activiti.engine.impl;
+using org.activiti.engine.impl.cmd;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,16 +30,20 @@ namespace org.activiti.cloud.services.api.commands
         /// <param name="pageableRepositoryService">分页仓储服务</param>
         /// <param name="qo">查询对象</param>
         /// <returns></returns>
-        public IPage<ProcessInstance> loadPage(IRuntimeService runtimeService,
+        public IPage<ProcessInstance> LoadPage(IRuntimeService runtimeService,
             PageableProcessInstanceRepositoryService pageableRepositoryService, ProcessInstanceQuery qo)
         {
-            ProcessInstanceQueryImpl query = runtimeService.createProcessInstanceQuery() as ProcessInstanceQueryImpl;
-            
+            ProcessInstanceQueryImpl query = runtimeService.CreateProcessInstanceQuery() as ProcessInstanceQueryImpl;
+
             FastCopy.Copy<ProcessInstanceQuery, ProcessInstanceQueryImpl>(qo, query);
+            query.OnlyProcessInstances = true;
 
-            pageableRepositoryService.SortApplier.applySort(query, qo.Pageable);
+            pageableRepositoryService.SortApplier.ApplySort(query, qo.Pageable);
 
-            IPage<ProcessInstance> defs = pageableRepositoryService.PageRetriever.loadPage(query, qo.Pageable, pageableRepositoryService.ProcessDefinitionConverter);
+            IPage<ProcessInstance> defs = pageableRepositoryService.PageRetriever.LoadPage(runtimeService as ServiceImpl, query, qo.Pageable, pageableRepositoryService.ProcessDefinitionConverter, (q, firstResult, pageSize) =>
+            {
+                return new GetProcessInstancesCmd(q, firstResult, pageSize);
+            });
 
             return defs;
         }

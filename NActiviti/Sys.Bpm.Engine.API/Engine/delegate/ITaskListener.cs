@@ -16,8 +16,10 @@ namespace org.activiti.engine.@delegate
     /// 
     public interface ITaskListener : IBaseTaskListener
     {
-
-        void notify(IDelegateTask delegateTask);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="delegateTask"></param>
+        void Notify(IDelegateTask delegateTask);
     }
-
 }

@@ -47,13 +47,13 @@ namespace org.activiti.cloud.services.rest.controllers
         [HttpGet]
         public virtual ProcessDefinitionMetaResource GetProcessDefinitionMetadata(string id)
         {
-            IProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(id).singleResult();
+            IProcessDefinition processDefinition = repositoryService.CreateProcessDefinitionQuery().SetProcessDefinitionId(id).SingleResult();
             if (processDefinition == null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + id + "'");
             }
 
-            IList<Process> processes = repositoryService.getBpmnModel(id).Processes;
+            IList<Process> processes = repositoryService.GetBpmnModel(id).Processes;
             ISet<ProcessDefinitionVariable> variables = new HashSet<ProcessDefinitionVariable>();
             ISet<string> users = new HashSet<string>();
             ISet<string> groups = new HashSet<string>();
@@ -62,7 +62,7 @@ namespace org.activiti.cloud.services.rest.controllers
 
             foreach (Process process in processes)
             {
-                var vs = getVariables(process).ToList();
+                var vs = GetVariables(process).ToList();
                 vs.ForEach(v => variables.Add(v));
                 IList<FlowElement> flowElementList = (IList<FlowElement>)process.FlowElements;
                 foreach (FlowElement flowElement in flowElementList)
@@ -84,12 +84,12 @@ namespace org.activiti.cloud.services.rest.controllers
                 }
             }
 
-            return resourceAssembler.toResource(new ProcessDefinitionMeta(processDefinition.Id, processDefinition.Name, processDefinition.Description, processDefinition.Version, users, groups, variables, userTasks, serviceTasks));
+            return resourceAssembler.ToResource(new ProcessDefinitionMeta(processDefinition.Id, processDefinition.Name, processDefinition.Description, processDefinition.Version, users, groups, variables, userTasks, serviceTasks));
         }
 
 
         /// <inheritdoc />
-        private IList<ProcessDefinitionVariable> getVariables(Process process)
+        private IList<ProcessDefinitionVariable> GetVariables(Process process)
         {
             IList<ProcessDefinitionVariable> variables = new List<ProcessDefinitionVariable>();
             if (process.ExtensionElements.Count > 0)
@@ -102,8 +102,8 @@ namespace org.activiti.cloud.services.rest.controllers
                     while (it2.MoveNext())
                     {
                         ExtensionElement ee = it2.Current;
-                        string name = ee.getAttributeValue(ee.Namespace, "variableName");
-                        string type = ee.getAttributeValue(ee.Namespace, "variableType");
+                        string name = ee.GetAttributeValue(ee.Namespace, "variableName");
+                        string type = ee.GetAttributeValue(ee.Namespace, "variableType");
                         ProcessDefinitionVariable variable = new ProcessDefinitionVariable(name, type);
                         variables.Add(variable);
                     }

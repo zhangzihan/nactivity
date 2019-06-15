@@ -23,9 +23,9 @@ namespace org.activiti.engine.impl.bpmn.helper
     /// Constructs <seealso cref="ClassDelegate"/>s. </summary>
     public interface IClassDelegateFactory
     {
-        ClassDelegate create(string id, string className, IList<FieldDeclaration> fieldDeclarations, IExpression skipExpression, IList<MapExceptionEntry> mapExceptions);
+        ClassDelegate Create(string id, string className, IList<FieldDeclaration> fieldDeclarations, IExpression skipExpression, IList<MapExceptionEntry> mapExceptions);
 
-        ClassDelegate create(string className, IList<FieldDeclaration> fieldDeclarations);
+        ClassDelegate Create(string className, IList<FieldDeclaration> fieldDeclarations);
     }
 
 }

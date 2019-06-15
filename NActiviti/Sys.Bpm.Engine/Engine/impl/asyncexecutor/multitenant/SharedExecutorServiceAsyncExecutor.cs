@@ -19,8 +19,9 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.cfg.multitenant;
     using org.activiti.engine.runtime;
-    using Sys;
+    using Sys.Workflow;
     using System;
+    using System.Collections.Concurrent;
 
     /// <summary>
     /// Multi tenant <seealso cref="IAsyncExecutor"/>.
@@ -34,17 +35,27 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
     {
         private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<SharedExecutorServiceAsyncExecutor>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ITenantInfoHolder tenantInfoHolder;
 
-        protected internal IDictionary<string, Thread> timerJobAcquisitionThreads = new Dictionary<string, Thread>();
-        protected internal IDictionary<string, TenantAwareAcquireTimerJobsRunnable> timerJobAcquisitionRunnables = new Dictionary<string, TenantAwareAcquireTimerJobsRunnable>();
+        private readonly ConcurrentDictionary<string, Thread> timerJobAcquisitionThreads = new ConcurrentDictionary<string, Thread>();
 
-        protected internal IDictionary<string, Thread> asyncJobAcquisitionThreads = new Dictionary<string, Thread>();
-        protected internal IDictionary<string, TenantAwareAcquireAsyncJobsDueRunnable> asyncJobAcquisitionRunnables = new Dictionary<string, TenantAwareAcquireAsyncJobsDueRunnable>();
+        private readonly ConcurrentDictionary<string, TenantAwareAcquireTimerJobsRunnable> timerJobAcquisitionRunnables = new ConcurrentDictionary<string, TenantAwareAcquireTimerJobsRunnable>();
 
-        protected internal IDictionary<string, Thread> resetExpiredJobsThreads = new Dictionary<string, Thread>();
-        protected internal IDictionary<string, TenantAwareResetExpiredJobsRunnable> resetExpiredJobsRunnables = new Dictionary<string, TenantAwareResetExpiredJobsRunnable>();
+        private readonly ConcurrentDictionary<string, Thread> asyncJobAcquisitionThreads = new ConcurrentDictionary<string, Thread>();
 
+        private readonly ConcurrentDictionary<string, TenantAwareAcquireAsyncJobsDueRunnable> asyncJobAcquisitionRunnables = new ConcurrentDictionary<string, TenantAwareAcquireAsyncJobsDueRunnable>();
+
+        private readonly ConcurrentDictionary<string, Thread> resetExpiredJobsThreads = new ConcurrentDictionary<string, Thread>();
+
+        private readonly ConcurrentDictionary<string, TenantAwareResetExpiredJobsRunnable> resetExpiredJobsRunnables = new ConcurrentDictionary<string, TenantAwareResetExpiredJobsRunnable>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantInfoHolder"></param>
         public SharedExecutorServiceAsyncExecutor(ITenantInfoHolder tenantInfoHolder)
         {
             this.tenantInfoHolder = tenantInfoHolder;
@@ -61,8 +72,7 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
                 this.outerInstance = outerInstance;
             }
 
-
-            public virtual ThreadStart createExecuteAsyncRunnable(IJob job, ProcessEngineConfigurationImpl processEngineConfiguration)
+            public virtual ThreadStart CreateExecuteAsyncRunnable(IJob job, ProcessEngineConfigurationImpl processEngineConfiguration)
             {
 
                 // Here, the runnable will be created by for example the acquire thread, which has already set the current id.
@@ -74,6 +84,9 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ICollection<string> TenantIds
         {
             get
@@ -82,76 +95,118 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
             }
         }
 
-        public virtual void addTenantAsyncExecutor(string tenantId, bool startExecutor)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <param name="startExecutor"></param>
+        public virtual void AddTenantAsyncExecutor(string tenantId, bool startExecutor)
         {
-
             TenantAwareAcquireTimerJobsRunnable timerRunnable = new TenantAwareAcquireTimerJobsRunnable(this, tenantInfoHolder, tenantId);
-            timerJobAcquisitionRunnables[tenantId] = timerRunnable;
-            timerJobAcquisitionThreads[tenantId] = new Thread(timerRunnable.Runable);
+            timerJobAcquisitionRunnables.AddOrUpdate(tenantId, timerRunnable, (key, old) => timerRunnable);
+            Thread run = new Thread(timerRunnable.Runable);
+            timerJobAcquisitionThreads.AddOrUpdate(tenantId, run, (key, old) => run);
 
             TenantAwareAcquireAsyncJobsDueRunnable asyncJobsRunnable = new TenantAwareAcquireAsyncJobsDueRunnable(this, tenantInfoHolder, tenantId);
-            asyncJobAcquisitionRunnables[tenantId] = asyncJobsRunnable;
-            asyncJobAcquisitionThreads[tenantId] = new Thread(asyncJobsRunnable.Runable);
+            asyncJobAcquisitionRunnables.AddOrUpdate(tenantId, asyncJobsRunnable, (key, old) => asyncJobsRunnable);
+            Thread run1 = new Thread(asyncJobsRunnable.Runable);
+            asyncJobAcquisitionThreads.AddOrUpdate(tenantId, run1, (key, old) => run1);
 
             TenantAwareResetExpiredJobsRunnable resetExpiredJobsRunnable = new TenantAwareResetExpiredJobsRunnable(this, tenantInfoHolder, tenantId);
-            resetExpiredJobsRunnables[tenantId] = resetExpiredJobsRunnable;
-            resetExpiredJobsThreads[tenantId] = new Thread(resetExpiredJobsRunnable.Runable);
+            resetExpiredJobsRunnables.AddOrUpdate(tenantId, resetExpiredJobsRunnable, (key, old) => resetExpiredJobsRunnable);
+            Thread run2 = new Thread(resetExpiredJobsRunnable.Runable);
+            resetExpiredJobsThreads.AddOrUpdate(tenantId, run2, (key, old) => run2);
 
             if (startExecutor)
             {
-                startTimerJobAcquisitionForTenant(tenantId);
-                startAsyncJobAcquisitionForTenant(tenantId);
-                startResetExpiredJobsForTenant(tenantId);
+                StartTimerJobAcquisitionForTenant(tenantId);
+                StartAsyncJobAcquisitionForTenant(tenantId);
+                StartResetExpiredJobsForTenant(tenantId);
             }
         }
 
-        public virtual void removeTenantAsyncExecutor(string tenantId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantId"></param>
+        public virtual void RemoveTenantAsyncExecutor(string tenantId)
         {
-            stopThreadsForTenant(tenantId);
+            StopThreadsForTenant(tenantId);
         }
 
-        public override void start()
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Start()
         {
             foreach (string tenantId in timerJobAcquisitionRunnables.Keys)
             {
-                startTimerJobAcquisitionForTenant(tenantId);
-                startAsyncJobAcquisitionForTenant(tenantId);
-                startResetExpiredJobsForTenant(tenantId);
+                StartTimerJobAcquisitionForTenant(tenantId);
+                StartAsyncJobAcquisitionForTenant(tenantId);
+                StartResetExpiredJobsForTenant(tenantId);
             }
         }
 
-        protected internal virtual void startTimerJobAcquisitionForTenant(string tenantId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantId"></param>
+        protected internal virtual void StartTimerJobAcquisitionForTenant(string tenantId)
         {
-            timerJobAcquisitionThreads[tenantId].Start();
+            timerJobAcquisitionThreads.TryGetValue(tenantId, out Thread runable);
+            runable.Start();
         }
 
-        protected internal virtual void startAsyncJobAcquisitionForTenant(string tenantId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantId"></param>
+        protected internal virtual void StartAsyncJobAcquisitionForTenant(string tenantId)
         {
-            asyncJobAcquisitionThreads[tenantId].Start();
+            asyncJobAcquisitionThreads.TryGetValue(tenantId, out Thread runable);
+            runable.Start();
         }
 
-        protected internal virtual void startResetExpiredJobsForTenant(string tenantId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantId"></param>
+        protected internal virtual void StartResetExpiredJobsForTenant(string tenantId)
         {
-            resetExpiredJobsThreads[tenantId].Start();
+            resetExpiredJobsThreads.TryGetValue(tenantId, out Thread runable);
+            runable.Start();
         }
 
-        protected internal override void stopJobAcquisitionThread()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal override void StopJobAcquisitionThread()
         {
             foreach (string tenantId in timerJobAcquisitionRunnables.Keys)
             {
-                stopThreadsForTenant(tenantId);
+                StopThreadsForTenant(tenantId);
             }
         }
 
-        protected internal virtual void stopThreadsForTenant(string tenantId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantId"></param>
+        protected internal virtual void StopThreadsForTenant(string tenantId)
         {
-            timerJobAcquisitionRunnables[tenantId].stop();
-            asyncJobAcquisitionRunnables[tenantId].stop();
-            resetExpiredJobsRunnables[tenantId].stop();
+            timerJobAcquisitionRunnables.TryGetValue(tenantId, out TenantAwareAcquireTimerJobsRunnable timerJobRunnable);
+            timerJobRunnable.Stop();
+
+            asyncJobAcquisitionRunnables.TryGetValue(tenantId, out TenantAwareAcquireAsyncJobsDueRunnable asyncJobRunnable);
+            asyncJobRunnable.Stop();
+
+            resetExpiredJobsRunnables.TryGetValue(tenantId, out TenantAwareResetExpiredJobsRunnable resetExpiredRunable);
+            resetExpiredRunable.Stop();
 
             try
             {
-                timerJobAcquisitionThreads[tenantId].Join();
+                timerJobAcquisitionThreads.TryGetValue(tenantId, out Thread timerJobThread);
+                timerJobThread.Join();
             }
             catch (Exception e)
             {
@@ -160,7 +215,8 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
 
             try
             {
-                asyncJobAcquisitionThreads[tenantId].Join();
+                asyncJobAcquisitionThreads.TryGetValue(tenantId, out Thread asyncJobThread);
+                asyncJobThread.Join();
             }
             catch (Exception e)
             {
@@ -169,14 +225,13 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
 
             try
             {
-                resetExpiredJobsThreads[tenantId].Join();
+                resetExpiredJobsThreads.TryGetValue(tenantId, out Thread resetJobThread);
+                resetJobThread.Join();
             }
             catch (Exception e)
             {
                 logger.LogWarning($"Interrupted while waiting for the reset expired jobs thread to terminate {e.Message}");
             }
         }
-
     }
-
 }

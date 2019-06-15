@@ -28,7 +28,7 @@ namespace org.activiti.engine.impl.cmd
     /// 
     /// 
     [Serializable]
-    public class DeploySaveCmd<T> : ICommand<IDeployment>
+    public class DeploySaveCmd : ICommand<IDeployment>
     {
 
         private const long serialVersionUID = 1L;
@@ -37,23 +37,23 @@ namespace org.activiti.engine.impl.cmd
         public DeploySaveCmd(DeploymentBuilderImpl deploymentBuilder)
         {
             this.deploymentBuilder = deploymentBuilder;
-            this.deploymentBuilder.disableDuplicateStartForm();
+            this.deploymentBuilder.DisableDuplicateStartForm();
         }
 
-        public virtual IDeployment execute(ICommandContext commandContext)
+        public virtual IDeployment Execute(ICommandContext commandContext)
         {
-            return executeSave(commandContext);
+            return ExecuteSave(commandContext);
         }
 
-        protected internal virtual IDeployment executeSave(ICommandContext commandContext)
+        protected internal virtual IDeployment ExecuteSave(ICommandContext commandContext)
         {
             IDeploymentEntity deployment = deploymentBuilder.Deployment;
 
-            deployment.unrunable();
+            deployment.Unrunable();
 
             deployment.DeploymentTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
 
-            commandContext.DeploymentEntityManager.saveDraft(deployment);
+            commandContext.DeploymentEntityManager.SaveDraft(deployment);
 
             //if (deploymentBuilder.DuplicateFilterEnabled)
             //{
@@ -97,31 +97,33 @@ namespace org.activiti.engine.impl.cmd
 
             if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_CREATED, deployment));
+                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_CREATED, deployment));
             }
 
             // Deployment settings
-            IDictionary<string, object> deploymentSettings = new Dictionary<string, object>();
-            deploymentSettings[DeploymentSettings_Fields.IS_BPMN20_XSD_VALIDATION_ENABLED] = deploymentBuilder.Bpmn20XsdValidationEnabled;
-            deploymentSettings[DeploymentSettings_Fields.IS_PROCESS_VALIDATION_ENABLED] = deploymentBuilder.ProcessValidationEnabled;
+            IDictionary<string, object> deploymentSettings = new Dictionary<string, object>
+            {
+                [DeploymentSettingsFields.IS_BPMN20_XSD_VALIDATION_ENABLED] = deploymentBuilder.Bpmn20XsdValidationEnabled,
+                [DeploymentSettingsFields.IS_PROCESS_VALIDATION_ENABLED] = deploymentBuilder.ProcessValidationEnabled
+            };
 
             // Actually deploy
-            commandContext.ProcessEngineConfiguration.DeploymentManager.deploy(deployment, deploymentSettings);
+            commandContext.ProcessEngineConfiguration.DeploymentManager.Deploy(deployment, deploymentSettings);
 
             if (deploymentBuilder.ProcessDefinitionsActivationDate != null)
             {
-                scheduleProcessDefinitionActivation(commandContext, deployment);
+                ScheduleProcessDefinitionActivation(commandContext, deployment);
             }
 
             if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, deployment));
+                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, deployment));
             }
 
             return deployment;
         }
 
-        protected internal virtual bool deploymentsDiffer(IDeploymentEntity deployment, IDeploymentEntity saved)
+        protected internal virtual bool DeploymentsDiffer(IDeploymentEntity deployment, IDeploymentEntity saved)
         {
 
             if (deployment.GetResources() == null || saved.GetResources() == null)
@@ -156,19 +158,19 @@ namespace org.activiti.engine.impl.cmd
             return false;
         }
 
-        protected internal virtual void scheduleProcessDefinitionActivation(ICommandContext commandContext, IDeploymentEntity deployment)
+        protected internal virtual void ScheduleProcessDefinitionActivation(ICommandContext commandContext, IDeploymentEntity deployment)
         {
-            foreach (IProcessDefinitionEntity processDefinitionEntity in deployment.getDeployedArtifacts<IProcessDefinitionEntity>())
+            foreach (IProcessDefinitionEntity processDefinitionEntity in deployment.GetDeployedArtifacts<IProcessDefinitionEntity>())
             {
 
                 // If activation date is set, we first suspend all the process
                 // definition
                 SuspendProcessDefinitionCmd suspendProcessDefinitionCmd = new SuspendProcessDefinitionCmd(processDefinitionEntity, false, null, deployment.TenantId);
-                suspendProcessDefinitionCmd.execute(commandContext);
+                suspendProcessDefinitionCmd.Execute(commandContext);
 
                 // And we schedule an activation at the provided date
                 ActivateProcessDefinitionCmd activateProcessDefinitionCmd = new ActivateProcessDefinitionCmd(processDefinitionEntity, false, deploymentBuilder.ProcessDefinitionsActivationDate, deployment.TenantId);
-                activateProcessDefinitionCmd.execute(commandContext);
+                activateProcessDefinitionCmd.Execute(commandContext);
             }
         }
 

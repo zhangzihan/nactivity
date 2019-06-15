@@ -20,6 +20,7 @@ namespace org.activiti.engine.impl.bpmn.helper
     using org.activiti.engine.@delegate;
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
+    using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
@@ -35,52 +36,53 @@ namespace org.activiti.engine.impl.bpmn.helper
     public class ErrorPropagation
     {
 
-        public static void propagateError(BpmnError error, IExecutionEntity execution)
+        public static void PropagateError(BpmnError error, IExecutionEntity execution)
         {
-            propagateError(error.ErrorCode, execution);
+            PropagateError(error.ErrorCode, execution);
         }
 
-        public static void propagateError(string errorCode, IExecutionEntity execution)
+        public static void PropagateError(string errorCode, IExecutionEntity execution)
         {
-            IDictionary<string, IList<Event>> eventMap = findCatchingEventsForProcess(execution.ProcessDefinitionId, errorCode);
+            IDictionary<string, IList<Event>> eventMap = FindCatchingEventsForProcess(execution.ProcessDefinitionId, errorCode);
             if (eventMap.Count > 0)
             {
-                executeCatch(eventMap, execution, errorCode);
+                ExecuteCatch(eventMap, execution, errorCode);
             }
             else if (!execution.ProcessInstanceId.Equals(execution.RootProcessInstanceId))
             { // Call activity
 
                 IExecutionEntityManager executionEntityManager = Context.CommandContext.ExecutionEntityManager;
-                IExecutionEntity processInstanceExecution = executionEntityManager.findById<IExecutionEntity>(execution.ProcessInstanceId);
+                IExecutionEntity processInstanceExecution = executionEntityManager.FindById<IExecutionEntity>(execution.ProcessInstanceId);
                 if (processInstanceExecution != null)
                 {
-
                     IExecutionEntity parentExecution = processInstanceExecution.SuperExecution;
 
-                    ISet<string> toDeleteProcessInstanceIds = new HashSet<string>();
-                    toDeleteProcessInstanceIds.Add(execution.ProcessInstanceId);
+                    IList<string> toDeleteProcessInstanceIds = new List<string>
+                    {
+                        execution.ProcessInstanceId
+                    };
 
                     while (parentExecution != null && eventMap.Count == 0)
                     {
-                        eventMap = findCatchingEventsForProcess(parentExecution.ProcessDefinitionId, errorCode);
+                        eventMap = FindCatchingEventsForProcess(parentExecution.ProcessDefinitionId, errorCode);
                         if (eventMap.Count > 0)
                         {
 
                             foreach (string processInstanceId in toDeleteProcessInstanceIds)
                             {
-                                IExecutionEntity processInstanceEntity = executionEntityManager.findById<IExecutionEntity>(processInstanceId);
+                                IExecutionEntity processInstanceEntity = executionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
                                 // Delete
-                                executionEntityManager.deleteProcessInstanceExecutionEntity(processInstanceEntity.Id, execution.CurrentFlowElement != null ? execution.CurrentFlowElement.Id : null, "ERROR_EVENT " + errorCode, false, false);
+                                executionEntityManager.DeleteProcessInstanceExecutionEntity(processInstanceEntity.Id, execution.CurrentFlowElement?.Id, "ERROR_EVENT " + errorCode, false, false);
 
                                 // Event
-                                if (Context.ProcessEngineConfiguration != null && Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
+                                ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
+                                if (!(processEngineConfiguration is null) && Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
                                 {
-                                    Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.PROCESS_COMPLETED_WITH_ERROR_END_EVENT, processInstanceEntity));
+                                    processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.PROCESS_COMPLETED_WITH_ERROR_END_EVENT, processInstanceEntity));
                                 }
                             }
-                            executeCatch(eventMap, parentExecution, errorCode);
-
+                            ExecuteCatch(eventMap, parentExecution, errorCode);
                         }
                         else
                         {
@@ -100,9 +102,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                             }
                         }
                     }
-
                 }
-
             }
 
             if (eventMap.Count == 0)
@@ -111,18 +111,17 @@ namespace org.activiti.engine.impl.bpmn.helper
             }
         }
 
-        protected internal static void executeCatch(IDictionary<string, IList<Event>> eventMap, IExecutionEntity delegateExecution, string errorId)
+        protected internal static void ExecuteCatch(IDictionary<string, IList<Event>> eventMap, IExecutionEntity delegateExecution, string errorId)
         {
             Event matchingEvent = null;
             IExecutionEntity currentExecution = delegateExecution;
-            IExecutionEntity parentExecution = null;
-
+            IExecutionEntity parentExecution;
             if ((eventMap?.ContainsKey(currentExecution.ActivityId)).GetValueOrDefault(false))
             {
                 matchingEvent = eventMap[currentExecution.ActivityId][0];
 
                 // Check for multi instance
-                if (!ReferenceEquals(currentExecution.ParentId, null) && currentExecution.Parent.IsMultiInstanceRoot)
+                if (!(currentExecution.ParentId is null) && currentExecution.Parent.IsMultiInstanceRoot)
                 {
                     parentExecution = currentExecution.Parent;
                 }
@@ -146,7 +145,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                     }
                     else if (parentExecution.Id.Equals(parentExecution.ProcessInstanceId))
                     {
-                        currentContainer = ProcessDefinitionUtil.getProcess(parentExecution.ProcessDefinitionId);
+                        currentContainer = ProcessDefinitionUtil.GetProcess(parentExecution.ProcessDefinitionId);
                     }
 
                     foreach (string refId in eventMap.Keys)
@@ -154,7 +153,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                         IList<Event> events = eventMap[refId];
                         if (CollectionUtil.IsNotEmpty(events) && events[0] is StartEvent)
                         {
-                            if (currentContainer.getFlowElement(refId) != null)
+                            if (currentContainer.FindFlowElement(refId) != null)
                             {
                                 matchingEvent = events[0];
                             }
@@ -168,7 +167,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                             matchingEvent = eventMap[parentExecution.ActivityId][0];
 
                             // Check for multi instance
-                            if (!ReferenceEquals(parentExecution.ParentId, null) && parentExecution.Parent.IsMultiInstanceRoot)
+                            if (!(parentExecution.ParentId is null) && parentExecution.Parent.IsMultiInstanceRoot)
                             {
                                 parentExecution = parentExecution.Parent;
                             }
@@ -188,7 +187,7 @@ namespace org.activiti.engine.impl.bpmn.helper
 
             if (matchingEvent != null && parentExecution != null)
             {
-                executeEventHandler(matchingEvent, parentExecution, currentExecution, errorId);
+                ExecuteEventHandler(matchingEvent, parentExecution, currentExecution, errorId);
             }
             else
             {
@@ -196,21 +195,21 @@ namespace org.activiti.engine.impl.bpmn.helper
             }
         }
 
-        protected internal static void executeEventHandler(Event @event, IExecutionEntity parentExecution, IExecutionEntity currentExecution, string errorId)
+        protected internal static void ExecuteEventHandler(Event @event, IExecutionEntity parentExecution, IExecutionEntity currentExecution, string errorId)
         {
-            if (Context.ProcessEngineConfiguration != null && Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
+            ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
+            if (!(processEngineConfiguration is null) && processEngineConfiguration.EventDispatcher.Enabled)
             {
-                BpmnModel bpmnModel = ProcessDefinitionUtil.getBpmnModel(parentExecution.ProcessDefinitionId);
+                BpmnModel bpmnModel = ProcessDefinitionUtil.GetBpmnModel(parentExecution.ProcessDefinitionId);
                 if (bpmnModel != null)
                 {
-
                     bpmnModel.Errors.TryGetValue(errorId, out string errorCode);
-                    if (ReferenceEquals(errorCode, null))
+                    if (errorCode is null)
                     {
                         errorCode = errorId;
                     }
 
-                    Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createErrorEvent(ActivitiEventType.ACTIVITY_ERROR_RECEIVED, @event.Id, errorId, errorCode, parentExecution.Id, parentExecution.ProcessInstanceId, parentExecution.ProcessDefinitionId));
+                    processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateErrorEvent(ActivitiEventType.ACTIVITY_ERROR_RECEIVED, @event.Id, errorId, errorCode, parentExecution.Id, parentExecution.ProcessInstanceId, parentExecution.ProcessDefinitionId));
                 }
             }
 
@@ -220,17 +219,16 @@ namespace org.activiti.engine.impl.bpmn.helper
 
                 if (!currentExecution.ParentId.Equals(parentExecution.Id))
                 {
-                    Context.Agenda.planDestroyScopeOperation(currentExecution);
+                    Context.Agenda.PlanDestroyScopeOperation(currentExecution);
                 }
                 else
                 {
-                    executionEntityManager.deleteExecutionAndRelatedData(currentExecution, null, false);
+                    executionEntityManager.DeleteExecutionAndRelatedData(currentExecution, null, false);
                 }
 
-                IExecutionEntity eventSubProcessExecution = executionEntityManager.createChildExecution(parentExecution);
+                IExecutionEntity eventSubProcessExecution = executionEntityManager.CreateChildExecution(parentExecution);
                 eventSubProcessExecution.CurrentFlowElement = @event;
-                Context.Agenda.planContinueProcessOperation(eventSubProcessExecution);
-
+                Context.Agenda.PlanContinueProcessOperation(eventSubProcessExecution);
             }
             else
             {
@@ -244,35 +242,36 @@ namespace org.activiti.engine.impl.bpmn.helper
                     }
                 }
 
-                Context.Agenda.planTriggerExecutionOperation(boundaryExecution);
+                Context.Agenda.PlanTriggerExecutionOperation(boundaryExecution);
             }
         }
 
-        protected internal static IDictionary<string, IList<Event>> findCatchingEventsForProcess(string processDefinitionId, string errorCode)
+        protected internal static IDictionary<string, IList<Event>> FindCatchingEventsForProcess(string processDefinitionId, string errorCode)
         {
             IDictionary<string, IList<Event>> eventMap = new Dictionary<string, IList<Event>>();
-            Process process = ProcessDefinitionUtil.getProcess(processDefinitionId);
-            BpmnModel bpmnModel = ProcessDefinitionUtil.getBpmnModel(processDefinitionId);
+            Process process = ProcessDefinitionUtil.GetProcess(processDefinitionId);
+            BpmnModel bpmnModel = ProcessDefinitionUtil.GetBpmnModel(processDefinitionId);
 
-            string compareErrorCode = retrieveErrorCode(bpmnModel, errorCode);
+            string compareErrorCode = RetrieveErrorCode(bpmnModel, errorCode);
 
-            IList<EventSubProcess> subProcesses = process.findFlowElementsOfType<EventSubProcess>(true);
+            IList<EventSubProcess> subProcesses = process.FindFlowElementsOfType<EventSubProcess>(true);
             foreach (EventSubProcess eventSubProcess in subProcesses)
             {
                 foreach (FlowElement flowElement in eventSubProcess.FlowElements)
                 {
-                    if (flowElement is StartEvent)
+                    if (flowElement is StartEvent startEvent)
                     {
-                        StartEvent startEvent = (StartEvent)flowElement;
                         if (CollectionUtil.IsNotEmpty(startEvent.EventDefinitions) && startEvent.EventDefinitions[0] is ErrorEventDefinition)
                         {
                             ErrorEventDefinition errorEventDef = (ErrorEventDefinition)startEvent.EventDefinitions[0];
-                            string eventErrorCode = retrieveErrorCode(bpmnModel, errorEventDef.ErrorCode);
+                            string eventErrorCode = RetrieveErrorCode(bpmnModel, errorEventDef.ErrorCode);
 
-                            if (ReferenceEquals(eventErrorCode, null) || ReferenceEquals(compareErrorCode, null) || eventErrorCode.Equals(compareErrorCode))
+                            if (eventErrorCode is null || compareErrorCode is null || eventErrorCode.Equals(compareErrorCode))
                             {
-                                IList<Event> startEvents = new List<Event>();
-                                startEvents.Add(startEvent);
+                                IList<Event> startEvents = new List<Event>
+                                {
+                                    startEvent
+                                };
                                 eventMap[eventSubProcess.Id] = startEvents;
                             }
                         }
@@ -280,16 +279,16 @@ namespace org.activiti.engine.impl.bpmn.helper
                 }
             }
 
-            IList<BoundaryEvent> boundaryEvents = process.findFlowElementsOfType<BoundaryEvent>(true);
+            IList<BoundaryEvent> boundaryEvents = process.FindFlowElementsOfType<BoundaryEvent>(true);
             foreach (BoundaryEvent boundaryEvent in boundaryEvents)
             {
-                if (!ReferenceEquals(boundaryEvent.AttachedToRefId, null) && CollectionUtil.IsNotEmpty(boundaryEvent.EventDefinitions) && boundaryEvent.EventDefinitions[0] is ErrorEventDefinition)
+                if (!(boundaryEvent.AttachedToRefId is null) && CollectionUtil.IsNotEmpty(boundaryEvent.EventDefinitions) && boundaryEvent.EventDefinitions[0] is ErrorEventDefinition)
                 {
 
                     ErrorEventDefinition errorEventDef = (ErrorEventDefinition)boundaryEvent.EventDefinitions[0];
-                    string eventErrorCode = retrieveErrorCode(bpmnModel, errorEventDef.ErrorCode);
+                    string eventErrorCode = RetrieveErrorCode(bpmnModel, errorEventDef.ErrorCode);
 
-                    if (ReferenceEquals(eventErrorCode, null) || ReferenceEquals(compareErrorCode, null) || eventErrorCode.Equals(compareErrorCode))
+                    if (eventErrorCode is null || compareErrorCode is null || eventErrorCode.Equals(compareErrorCode))
                     {
                         IList<Event> elementBoundaryEvents = null;
                         if (!eventMap.ContainsKey(boundaryEvent.AttachedToRefId))
@@ -308,12 +307,12 @@ namespace org.activiti.engine.impl.bpmn.helper
             return eventMap;
         }
 
-        public static bool mapException(Exception e, IExecutionEntity execution, IList<MapExceptionEntry> exceptionMap)
+        public static bool MapException(Exception e, IExecutionEntity execution, IList<MapExceptionEntry> exceptionMap)
         {
-            string errorCode = findMatchingExceptionMapping(e, exceptionMap);
-            if (!ReferenceEquals(errorCode, null))
+            string errorCode = FindMatchingExceptionMapping(e, exceptionMap);
+            if (!(errorCode is null))
             {
-                propagateError(errorCode, execution);
+                PropagateError(errorCode, execution);
                 return true;
             }
             else
@@ -344,10 +343,10 @@ namespace org.activiti.engine.impl.bpmn.helper
                     CallActivity callActivity = (CallActivity)callActivityExecution.CurrentFlowElement;
                     if (CollectionUtil.IsNotEmpty(callActivity.MapExceptions))
                     {
-                        errorCode = findMatchingExceptionMapping(e, callActivity.MapExceptions);
-                        if (!ReferenceEquals(errorCode, null))
+                        errorCode = FindMatchingExceptionMapping(e, callActivity.MapExceptions);
+                        if (!(errorCode is null))
                         {
-                            propagateError(errorCode, callActivityExecution);
+                            PropagateError(errorCode, callActivityExecution);
                             return true;
                         }
                     }
@@ -357,7 +356,7 @@ namespace org.activiti.engine.impl.bpmn.helper
             }
         }
 
-        protected internal static string findMatchingExceptionMapping(Exception e, IList<MapExceptionEntry> exceptionMap)
+        protected internal static string FindMatchingExceptionMapping(Exception e, IList<MapExceptionEntry> exceptionMap)
         {
             string defaultExceptionMapping = null;
 
@@ -367,7 +366,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                 string errorCode = me.ErrorCode;
 
                 // save the first mapping with no exception class as default map
-                if (!string.IsNullOrWhiteSpace(errorCode) && string.IsNullOrWhiteSpace(exceptionClass) && ReferenceEquals(defaultExceptionMapping, null))
+                if (!string.IsNullOrWhiteSpace(errorCode) && string.IsNullOrWhiteSpace(exceptionClass) && defaultExceptionMapping is null)
                 {
                     defaultExceptionMapping = errorCode;
                     continue;
@@ -385,7 +384,7 @@ namespace org.activiti.engine.impl.bpmn.helper
                 }
                 if (me.AndChildren)
                 {
-                    Type exceptionClassClass = ReflectUtil.loadClass(exceptionClass);
+                    Type exceptionClassClass = ReflectUtil.LoadClass(exceptionClass);
                     if (exceptionClassClass.IsAssignableFrom(e.GetType()))
                     {
                         return errorCode;
@@ -396,10 +395,10 @@ namespace org.activiti.engine.impl.bpmn.helper
             return defaultExceptionMapping;
         }
 
-        protected internal static string retrieveErrorCode(BpmnModel bpmnModel, string errorCode)
+        protected internal static string RetrieveErrorCode(BpmnModel bpmnModel, string errorCode)
         {
             string finalErrorCode = null;
-            if (!ReferenceEquals(errorCode, null) && bpmnModel.containsErrorRef(errorCode))
+            if (!(errorCode is null) && bpmnModel.ContainsErrorRef(errorCode))
             {
                 finalErrorCode = bpmnModel.Errors[errorCode];
             }
@@ -410,5 +409,4 @@ namespace org.activiti.engine.impl.bpmn.helper
             return finalErrorCode;
         }
     }
-
 }

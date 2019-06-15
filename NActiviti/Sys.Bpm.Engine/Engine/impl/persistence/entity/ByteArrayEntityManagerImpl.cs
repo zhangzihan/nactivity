@@ -23,46 +23,43 @@ namespace org.activiti.engine.impl.persistence.entity
     /// 
     /// 
     public class ByteArrayEntityManagerImpl : AbstractEntityManager<IByteArrayEntity>, IByteArrayEntityManager
-	{
+    {
 
-	  protected internal IByteArrayDataManager byteArrayDataManager;
+        protected internal IByteArrayDataManager byteArrayDataManager;
 
-	  public ByteArrayEntityManagerImpl(ProcessEngineConfigurationImpl processEngineConfiguration, IByteArrayDataManager byteArrayDataManager) : base(processEngineConfiguration)
-	  {
-		this.byteArrayDataManager = byteArrayDataManager;
-	  }
+        public ByteArrayEntityManagerImpl(ProcessEngineConfigurationImpl processEngineConfiguration, IByteArrayDataManager byteArrayDataManager) : base(processEngineConfiguration)
+        {
+            this.byteArrayDataManager = byteArrayDataManager;
+        }
 
-	  protected internal override IDataManager<IByteArrayEntity> DataManager
-	  {
-		  get
-		  {
-			return byteArrayDataManager;
-		  }
-	  }
+        protected internal override IDataManager<IByteArrayEntity> DataManager
+        {
+            get
+            {
+                return byteArrayDataManager;
+            }
+        }
 
-	  public virtual IList<IByteArrayEntity> findAll()
-	  {
-		return byteArrayDataManager.findAll();
-	  }
+        public virtual IList<IByteArrayEntity> FindAll()
+        {
+            return byteArrayDataManager.FindAll();
+        }
 
-	  public virtual void deleteByteArrayById(string byteArrayEntityId)
-	  {
-		byteArrayDataManager.deleteByteArrayNoRevisionCheck(byteArrayEntityId);
-	  }
+        public virtual void DeleteByteArrayById(string byteArrayEntityId)
+        {
+            byteArrayDataManager.DeleteByteArrayNoRevisionCheck(byteArrayEntityId);
+        }
 
-	  public virtual IByteArrayDataManager ByteArrayDataManager
-	  {
-		  get
-		  {
-			return byteArrayDataManager;
-		  }
-		  set
-		  {
-			this.byteArrayDataManager = value;
-		  }
-	  }
-
-
-	}
-
+        public virtual IByteArrayDataManager ByteArrayDataManager
+        {
+            get
+            {
+                return byteArrayDataManager;
+            }
+            set
+            {
+                this.byteArrayDataManager = value;
+            }
+        }
+    }
 }

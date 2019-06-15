@@ -29,13 +29,13 @@ namespace org.activiti.cloud.services.api.model.converter
         /// <summary>
         /// 
         /// </summary>
-        TARGET from(SOURCE source);
+        TARGET From(SOURCE source);
 
 
         /// <summary>
         /// 
         /// </summary>
-        IList<TARGET> from(IList<SOURCE> sources);
+        IEnumerable<TARGET> From(IEnumerable<SOURCE> sources);
 	}
 
 }

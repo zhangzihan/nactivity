@@ -36,7 +36,7 @@ namespace org.activiti.engine.impl.cmd
             this.infoNode = infoNode;
         }
 
-        public  virtual object  execute(ICommandContext commandContext)
+        public  virtual object  Execute(ICommandContext commandContext)
         {
             if (string.IsNullOrWhiteSpace(processDefinitionId))
             {
@@ -49,12 +49,12 @@ namespace org.activiti.engine.impl.cmd
             }
 
             IProcessDefinitionInfoEntityManager definitionInfoEntityManager = commandContext.ProcessDefinitionInfoEntityManager;
-            IProcessDefinitionInfoEntity definitionInfoEntity = definitionInfoEntityManager.findProcessDefinitionInfoByProcessDefinitionId(processDefinitionId);
+            IProcessDefinitionInfoEntity definitionInfoEntity = definitionInfoEntityManager.FindProcessDefinitionInfoByProcessDefinitionId(processDefinitionId);
             if (definitionInfoEntity == null)
             {
-                definitionInfoEntity = definitionInfoEntityManager.create();
+                definitionInfoEntity = definitionInfoEntityManager.Create();
                 definitionInfoEntity.ProcessDefinitionId = processDefinitionId;
-                commandContext.ProcessDefinitionInfoEntityManager.insertProcessDefinitionInfo(definitionInfoEntity);
+                commandContext.ProcessDefinitionInfoEntityManager.InsertProcessDefinitionInfo(definitionInfoEntity);
             }
 
             if (infoNode != null)
@@ -62,7 +62,7 @@ namespace org.activiti.engine.impl.cmd
                 try
                 {
                     ObjectMapper writer = commandContext.ProcessEngineConfiguration.ObjectMapper;
-                    commandContext.ProcessDefinitionInfoEntityManager.updateInfoJson(definitionInfoEntity.Id, writer.writeValueAsBytes(infoNode));
+                    commandContext.ProcessDefinitionInfoEntityManager.UpdateInfoJson(definitionInfoEntity.Id, writer.WriteValueAsBytes(infoNode));
                 }
                 catch (Exception)
                 {

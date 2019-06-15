@@ -59,20 +59,19 @@ namespace org.activiti.engine.impl.cmd
             this.tenantId = tenantId;
         }
 
-        public  virtual object  execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-
-            IList<ISignalEventSubscriptionEntity> signalEvents = null;
-
             IEventSubscriptionEntityManager eventSubscriptionEntityManager = commandContext.EventSubscriptionEntityManager;
-            if (ReferenceEquals(executionId, null))
+
+            IList<ISignalEventSubscriptionEntity> signalEvents;
+            if (executionId is null)
             {
-                signalEvents = eventSubscriptionEntityManager.findSignalEventSubscriptionsByEventName(eventName, tenantId);
+                signalEvents = eventSubscriptionEntityManager.FindSignalEventSubscriptionsByEventName(eventName, tenantId);
             }
             else
             {
 
-                IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
+                IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
 
                 if (execution == null)
                 {
@@ -83,7 +82,7 @@ namespace org.activiti.engine.impl.cmd
                 {
                     throw new ActivitiException("Cannot throw signal event '" + eventName + "' because execution '" + executionId + "' is suspended");
                 }
-                signalEvents = eventSubscriptionEntityManager.findSignalEventSubscriptionsByNameAndExecution(eventName, executionId);
+                signalEvents = eventSubscriptionEntityManager.FindSignalEventSubscriptionsByNameAndExecution(eventName, executionId);
 
                 if (signalEvents.Count == 0)
                 {
@@ -97,15 +96,13 @@ namespace org.activiti.engine.impl.cmd
                 // Process instance scoped signals must be thrown within the process itself
                 if (signalEventSubscriptionEntity.GlobalScoped)
                 {
-                    Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createSignalEvent(ActivitiEventType.ACTIVITY_SIGNALED, signalEventSubscriptionEntity.ActivityId, eventName, payload, signalEventSubscriptionEntity.ExecutionId, signalEventSubscriptionEntity.ProcessInstanceId, signalEventSubscriptionEntity.ProcessDefinitionId));
+                    Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateSignalEvent(ActivitiEventType.ACTIVITY_SIGNALED, signalEventSubscriptionEntity.ActivityId, eventName, payload, signalEventSubscriptionEntity.ExecutionId, signalEventSubscriptionEntity.ProcessInstanceId, signalEventSubscriptionEntity.ProcessDefinitionId));
 
-                    eventSubscriptionEntityManager.eventReceived(signalEventSubscriptionEntity, payload, async);
+                    eventSubscriptionEntityManager.EventReceived(signalEventSubscriptionEntity, payload, async);
                 }
             }
 
             return null;
         }
-
     }
-
 }

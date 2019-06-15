@@ -15,7 +15,7 @@
 namespace org.activiti.bpmn.model
 {
 
-    public abstract class TaskWithFieldExtensions : Task
+    public abstract class TaskWithFieldExtensions : TaskActivity
     {
 
         protected internal IList<FieldExtension> fieldExtensions = new List<FieldExtension>();

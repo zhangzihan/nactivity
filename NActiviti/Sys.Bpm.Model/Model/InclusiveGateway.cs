@@ -15,10 +15,12 @@ namespace org.activiti.bpmn.model
     public class InclusiveGateway : Gateway
     {
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            InclusiveGateway clone = new InclusiveGateway();
-            clone.Values = this;
+            InclusiveGateway clone = new InclusiveGateway
+            {
+                Values = this
+            };
             return clone;
         }
     }

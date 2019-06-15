@@ -43,7 +43,7 @@ namespace org.activiti.cloud.services.core.commands
         /// <param name="cmd"></param>
         public virtual void execute(StartProcessInstanceCmd cmd)
         {
-            ProcessInstance processInstance = processEngine.startProcess(cmd);
+            ProcessInstance[] processInstance = processEngine.startProcess(new StartProcessInstanceCmd[] { cmd });
             if (processInstance != null)
             {
                 StartProcessInstanceResults cmdResult = new StartProcessInstanceResults(cmd.Id, processInstance);

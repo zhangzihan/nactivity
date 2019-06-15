@@ -24,29 +24,27 @@ namespace org.activiti.engine.impl.persistence.entity
         /// <summary>
         /// Returns all <seealso cref="ISuspendedJobEntity"/> instances related to on <seealso cref="IExecutionEntity"/>.
         /// </summary>
-        IList<ISuspendedJobEntity> findJobsByExecutionId(string id);
+        IList<ISuspendedJobEntity> FindJobsByExecutionId(string id);
 
         /// <summary>
         /// Returns all <seealso cref="ISuspendedJobEntity"/> instances related to on <seealso cref="IExecutionEntity"/>. 
         /// </summary>
-        IList<ISuspendedJobEntity> findJobsByProcessInstanceId(string id);
+        IList<ISuspendedJobEntity> FindJobsByProcessInstanceId(string id);
 
         /// <summary>
-        /// Executes a <seealso cref="JobQueryImpl"/> and returns the matching <seealso cref="ISuspendedJobEntity"/> instances.
+        /// Executes a <seealso cref="ISuspendedJobQuery"/> and returns the matching <seealso cref="ISuspendedJobEntity"/> instances.
         /// </summary>
-        IList<IJob> findJobsByQueryCriteria(SuspendedJobQueryImpl jobQuery, Page page);
+        IList<IJob> FindJobsByQueryCriteria(ISuspendedJobQuery jobQuery, Page page);
 
         /// <summary>
-        /// Same as <seealso cref="#findJobsByQueryCriteria(SuspendedJobQueryImpl, Page)"/>, but only returns a count 
+        /// Same as <seealso cref="#FindJobsByQueryCriteria(ISuspendedJobQuery, Page)"/>, but only returns a count 
         /// and not the instances itself.
         /// </summary>
-        long findJobCountByQueryCriteria(SuspendedJobQueryImpl jobQuery);
+        long FindJobCountByQueryCriteria(ISuspendedJobQuery jobQuery);
 
         /// <summary>
         /// Changes the tenantId for all jobs related to a given <seealso cref="IDeploymentEntity"/>.
         /// </summary>
-        void updateJobTenantIdForDeployment(string deploymentId, string newTenantId);
-
+        void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId);
     }
-
 }

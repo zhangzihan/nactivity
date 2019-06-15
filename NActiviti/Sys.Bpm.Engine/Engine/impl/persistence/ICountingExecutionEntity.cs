@@ -12,27 +12,27 @@
  */
 namespace org.activiti.engine.impl.persistence
 {
-	/// 
-	public interface ICountingExecutionEntity
-	{
+    /// 
+    public interface ICountingExecutionEntity
+    {
 
-	  bool IsCountEnabled {get;set;}
+        bool IsCountEnabled { get; set; }
 
-	  int EventSubscriptionCount {set;get;}
+        int EventSubscriptionCount { set; get; }
 
-	  int TaskCount {set;get;}
+        int TaskCount { set; get; }
 
-	  int JobCount {set;get;}
+        int JobCount { set; get; }
 
-	  int TimerJobCount {set;get;}
+        int TimerJobCount { set; get; }
 
-	  int SuspendedJobCount {set;get;}
+        int SuspendedJobCount { set; get; }
 
-	  int DeadLetterJobCount {set;get;}
+        int DeadLetterJobCount { set; get; }
 
-	  int VariableCount {set;get;}
+        int VariableCount { set; get; }
 
-	  int IdentityLinkCount {set;get;}
+        int IdentityLinkCount { set; get; }
 
-	}
+    }
 }

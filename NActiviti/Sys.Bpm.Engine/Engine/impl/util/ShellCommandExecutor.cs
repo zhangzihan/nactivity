@@ -45,7 +45,7 @@ namespace org.activiti.engine.impl.util
         {
         }
 
-        public virtual void executeCommand(IExecutionEntity execution)
+        public virtual void ExecuteCommand(IExecutionEntity execution)
         {
             if (argList != null && argList.Count > 0)
             {
@@ -72,15 +72,15 @@ namespace org.activiti.engine.impl.util
 
                     process.WaitForExit();
 
-                    if (!ReferenceEquals(ResultVariableStr, null))
+                    if (!(ResultVariableStr is null))
                     {
                         string result = process.StandardOutput.ReadToEnd(); //convertStreamToStr(process.StandardOutput);
-                        execution.setVariable(ResultVariableStr, result);
+                        execution.SetVariable(ResultVariableStr, result);
                     }
 
-                    if (!ReferenceEquals(ErrorCodeVariableStr, null))
+                    if (!(ErrorCodeVariableStr is null))
                     {
-                        execution.setVariable(ErrorCodeVariableStr, Convert.ToString(errorCode));
+                        execution.SetVariable(ErrorCodeVariableStr, Convert.ToString(errorCode));
 
                     }
 
@@ -88,7 +88,7 @@ namespace org.activiti.engine.impl.util
             }
         }
 
-        private string convertStreamToStr(System.IO.Stream @is)
+        private string ConvertStreamToStr(System.IO.Stream @is)
         {
 
             if (@is != null)

@@ -38,7 +38,7 @@ namespace org.activiti.cloud.services.events.converter
         /// 
         /// </summary>
 
-        public override IProcessEngineEvent from(IActivitiEvent @event)
+        public override IProcessEngineEvent From(IActivitiEvent @event)
         {
             return new ActivityStartedEventImpl(RuntimeBundleProperties.AppName,
                 RuntimeBundleProperties.AppVersion, 
@@ -58,7 +58,7 @@ namespace org.activiti.cloud.services.events.converter
         /// 
         /// </summary>
 
-        public override string handledType()
+        public override string HandledType()
         {
             return ActivitiEventType.ACTIVITY_STARTED.ToString();
         }

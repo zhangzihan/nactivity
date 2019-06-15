@@ -28,14 +28,13 @@ namespace org.activiti.engine.impl.calendar
     /// </summary>
     public class DurationHelper
     {
-
-        private DateTime? start;
-        private DateTime? end;
-        private TimeSpan period;
-        private bool isRepeat;
-        private int times;
-        private int maxIterations = -1;
-        private bool repeatWithNoBounds;
+        private readonly DateTime? start;
+        private readonly DateTime? end;
+        private readonly TimeSpan period;
+        private readonly bool isRepeat;
+        private readonly int times;
+        private readonly int maxIterations = -1;
+        private readonly bool repeatWithNoBounds;
 
         public virtual DateTime? Start
         {
@@ -103,29 +102,48 @@ namespace org.activiti.engine.impl.calendar
                 expression = expression.Skip(1).Take(expression.Count).ToList();
             }
 
-            if (isDuration(expression[0]))
+            if (IsDuration(expression[0]))
             {
-                period = XmlConvert.ToTimeSpan(expression[0]);
-                end = expression.Count == 1 ? null : (DateTime?)parseDate(expression[1]);
+                period = ParsePeriod(expression[0]);
+                end = expression.Count == 1 ? null : (DateTime?)ParseDate(expression[1]);
             }
             else
             {
-                start = expression.Count == 1 ? DateTime.Now : parseDate(expression[0]);
-                if (isDuration(expression[1]))
+                start = ParseDate(expression[0]);
+                if (IsDuration(expression[1]))
                 {
-                    period = XmlConvert.ToTimeSpan(expression[1]);
-                }
-                else if (expression.Count > 1)
-                {
-                    end = parseDate(expression[1]);
-                    period = end.Value.Subtract(start.Value);
+                    period = ParsePeriod(expression[1]);
                 }
                 else
                 {
-                    end = parseDate(expression[0]);
-                    period = end.Value.Subtract(start.Value);
+                    end = ParseDate(expression[1]);
+                    period = end.Value.Subtract(start.Value);// datatypeFactory.newDuration(end.getTimeInMillis() - start.getTimeInMillis());
                 }
             }
+
+            //if (isDuration(expression[0]))
+            //{
+            //    period = XmlConvert.ToTimeSpan(expression[0]);
+            //    end = expression.Count == 1 ? null : (DateTime?)parseDate(expression[1]);
+            //}
+            //else
+            //{
+            //    start = expression.Count == 0 ? DateTime.Now : parseDate(expression[0]);
+            //    if (isDuration(expression[0]))
+            //    {
+            //        period = XmlConvert.ToTimeSpan(expression[0]);
+            //    }
+            //    else if (expression.Count > 1)
+            //    {
+            //        end = parseDate(expression[1]);
+            //        period = end.Value.Subtract(start.Value);
+            //    }
+            //    else
+            //    {
+            //        end = parseDate(expression[0]);
+            //        period = end.Value.Subtract(start.Value);
+            //    }
+            //}
             if (start == null)
             {
                 start = clockReader.CurrentCalendar;
@@ -140,25 +158,25 @@ namespace org.activiti.engine.impl.calendar
         {
             get
             {
-                return getCalendarAfter(clockReader.CurrentCalendar);
+                return GetCalendarAfter(clockReader.CurrentCalendar);
             }
         }
 
-        public virtual DateTime getCalendarAfter(DateTime time)
+        public virtual DateTime GetCalendarAfter(DateTime time)
         {
             if (isRepeat)
             {
-                return getDateAfterRepeat(time);
+                return GetDateAfterRepeat(time);
             }
             // TODO: is this correct?
             if (end != null)
             {
                 return end.Value;
             }
-            return add(start, period);
+            return Add(start, period);
         }
 
-        public virtual bool? isValidDate(DateTime? newTimer)
+        public virtual bool? IsValidDate(DateTime? newTimer)
         {
             return end == null || end > newTimer || end.Equals(newTimer);
         }
@@ -173,15 +191,15 @@ namespace org.activiti.engine.impl.calendar
             }
         }
 
-        private DateTime getDateAfterRepeat(DateTime date)
+        private DateTime GetDateAfterRepeat(DateTime date)
         {
-            DateTime current = TimeZoneUtil.convertToTimeZone(start.Value, TimeZoneInfo.Local);
+            DateTime current = TimeZoneUtil.ConvertToTimeZone(start.Value, TimeZoneInfo.Local);
 
             if (repeatWithNoBounds)
             {
                 while (current < date || current.Equals(date))
                 { // As long as current date is not past the engine date, we keep looping
-                    DateTime newTime = add(current, period);
+                    DateTime newTime = Add(current, period);
                     if (newTime.Equals(current) || newTime < current)
                     {
                         break;
@@ -199,13 +217,13 @@ namespace org.activiti.engine.impl.calendar
                 }
                 for (int i = 0; i < maxLoops + 1 && current > date; i++)
                 {
-                    current = add(current, period);
+                    current = Add(current, period);
                 }
             }
-            return current < date ? date : TimeZoneUtil.convertToTimeZone(current, clockReader.CurrentTimeZone);
+            return current < date ? date : TimeZoneUtil.ConvertToTimeZone(current, clockReader.CurrentTimeZone);
         }
 
-        protected internal virtual DateTime add(DateTime? date, TimeSpan duration)
+        protected internal virtual DateTime Add(DateTime? date, TimeSpan duration)
         {
             DateTime calendar = new DateTime(date.Value.Ticks);
 
@@ -221,9 +239,9 @@ namespace org.activiti.engine.impl.calendar
             return calendar;
         }
 
-        protected internal virtual DateTime parseDate(string date)
+        protected internal virtual DateTime ParseDate(string date)
         {
-            DateTime? dateCalendar = null;
+            DateTime? dateCalendar;
             try
             {
                 dateCalendar = DateTime.Parse(date).ToLocalTime();//ISODateTimeFormat.dateTimeParser().withZone(DateTimeZone.forTimeZone(clockReader.CurrentTimeZone)).parseDateTime(date).toCalendar(null);
@@ -246,15 +264,14 @@ namespace org.activiti.engine.impl.calendar
             return dateCalendar.Value;
         }
 
-        protected internal virtual TimeSpan parsePeriod(string period)
+        protected internal virtual TimeSpan ParsePeriod(string period)
         {
-            return TimeSpan.Parse(period);
+            return XmlConvert.ToTimeSpan(period);
         }
 
-        protected internal virtual bool isDuration(string time)
+        protected internal virtual bool IsDuration(string time)
         {
             return time.StartsWith("P", StringComparison.Ordinal);
         }
     }
-
 }

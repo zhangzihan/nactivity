@@ -14,11 +14,13 @@ namespace org.activiti.bpmn.model
 {
     public class ParallelGateway : Gateway
     {
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            ParallelGateway clone = new ParallelGateway();
-            clone.Values = this;
+            ParallelGateway clone = new ParallelGateway
+            {
+                Values = this
+            };
             return clone;
         }
     }
-}
+}   

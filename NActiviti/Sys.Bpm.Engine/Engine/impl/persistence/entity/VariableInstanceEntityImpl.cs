@@ -65,15 +65,15 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     persistentState["doubleValue"] = doubleValue;
                 }
-                if (!ReferenceEquals(textValue, null))
+                if (!(textValue is null))
                 {
                     persistentState["textValue"] = textValue;
                 }
-                if (!ReferenceEquals(textValue2, null))
+                if (!(textValue2 is null))
                 {
                     persistentState["textValue2"] = textValue2;
                 }
-                if (byteArrayRef != null && !ReferenceEquals(byteArrayRef.Id, null))
+                if (byteArrayRef != null && !(byteArrayRef.Id is null))
                 {
                     persistentState["byteArrayValueId"] = byteArrayRef.Id;
                 }
@@ -91,11 +91,11 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 this.executionId = value.Id;
                 this.processInstanceId = value.ProcessInstanceId;
-                forceUpdate();
+                ForceUpdate();
             }
         }
 
-        public virtual void forceUpdate()
+        public virtual void ForceUpdate()
         {
             forcedUpdate = true;
         }
@@ -130,13 +130,13 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                ensureByteArrayRefInitialized();
+                EnsureByteArrayRefInitialized();
                 return byteArrayRef.Bytes;
             }
             set
             {
-                ensureByteArrayRefInitialized();
-                byteArrayRef.setValue("var-" + name, value);
+                EnsureByteArrayRefInitialized();
+                byteArrayRef.SetValue("var-" + name, value);
             }
         }
 
@@ -153,7 +153,7 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        protected internal virtual void ensureByteArrayRefInitialized()
+        protected internal virtual void EnsureByteArrayRefInitialized()
         {
             if (byteArrayRef == null)
             {
@@ -169,13 +169,13 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 if (!type.Cachable || cachedValue == null)
                 {
-                    cachedValue = type.getValue(this);
+                    cachedValue = type.GetValue(this);
                 }
                 return cachedValue;
             }
             set
             {
-                type.setValue(value, this);
+                type.SetValue(value, this);
                 typeName = type.TypeName;
                 cachedValue = value;
             }
@@ -201,7 +201,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                if (!ReferenceEquals(typeName, null))
+                if (!(typeName is null))
                 {
                     return typeName;
                 }
@@ -330,15 +330,15 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 sb.Append(", doubleValue=").Append(doubleValue);
             }
-            if (!ReferenceEquals(textValue, null))
+            if (!(textValue is null))
             {
                 sb.Append(", textValue=").Append(textValue.PadLeft(40, ' '));
             }
-            if (!ReferenceEquals(textValue2, null))
+            if (!(textValue2 is null))
             {
                 sb.Append(", textValue2=").Append(textValue2.PadLeft(40, ' '));
             }
-            if (byteArrayRef != null && !ReferenceEquals(byteArrayRef.Id, null))
+            if (byteArrayRef != null && !(byteArrayRef.Id is null))
             {
                 sb.Append(", byteArrayValueId=").Append(byteArrayRef.Id);
             }

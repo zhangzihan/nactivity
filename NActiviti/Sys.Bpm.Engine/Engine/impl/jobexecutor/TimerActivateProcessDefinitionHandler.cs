@@ -32,14 +32,14 @@ namespace org.activiti.engine.impl.jobexecutor
             }
         }
 
-        public override void execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
+        public override void Execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
         {
             JToken cfgJson = JToken.FromObject(configuration);
             string processDefinitionId = job.ProcessDefinitionId;
-            bool activateProcessInstances = getIncludeProcessInstances(cfgJson);
+            bool activateProcessInstances = GetIncludeProcessInstances(cfgJson);
 
             ActivateProcessDefinitionCmd activateProcessDefinitionCmd = new ActivateProcessDefinitionCmd(processDefinitionId, null, activateProcessInstances, DateTime.Now, job.TenantId);
-            activateProcessDefinitionCmd.execute(commandContext);
+            activateProcessDefinitionCmd.Execute(commandContext);
         }
 
     }

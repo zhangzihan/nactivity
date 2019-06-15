@@ -64,6 +64,11 @@ namespace SmartSql.Configuration.Tags
                         {
                             reqValStr = reqVal.GetHashCode().ToString();
                         }
+                        else if (reqVal is bool)
+                        {
+                            bool.TryParse(reqVal.ToString(), out bool ret);
+                            return ret;
+                        }
                         else
                         {
                             reqValStr = reqVal.ToString();

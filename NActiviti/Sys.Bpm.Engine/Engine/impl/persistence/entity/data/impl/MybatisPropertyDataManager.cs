@@ -34,14 +34,14 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IPropertyEntity create()
+        public override IPropertyEntity Create()
         {
             return new PropertyEntityImpl();
         }
 
-        public virtual IList<IPropertyEntity> findAll()
+        public virtual IList<IPropertyEntity> FindAll()
         {
-            return DbSqlSession.selectList<PropertyEntityImpl, IPropertyEntity>("selectProperties");
+            return DbSqlSession.SelectList<PropertyEntityImpl, IPropertyEntity>("selectProperties");
         }
 
     }

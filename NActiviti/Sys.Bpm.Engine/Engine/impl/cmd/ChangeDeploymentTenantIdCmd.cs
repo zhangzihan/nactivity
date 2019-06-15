@@ -35,16 +35,16 @@ namespace org.activiti.engine.impl.cmd
             this.newTenantId = newTenantId;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            if (ReferenceEquals(deploymentId, null))
+            if (deploymentId is null)
             {
                 throw new ActivitiIllegalArgumentException("deploymentId is null");
             }
 
             // Update all entities
 
-            IDeploymentEntity deployment = commandContext.DeploymentEntityManager.findById<IDeploymentEntity>(new KeyValuePair<string, object>("id", deploymentId));
+            IDeploymentEntity deployment = commandContext.DeploymentEntityManager.FindById<IDeploymentEntity>(new KeyValuePair<string, object>("id", deploymentId));
             if (deployment == null)
             {
                 throw new ActivitiObjectNotFoundException("Could not find deployment with id " + deploymentId, typeof(IDeployment));
@@ -55,24 +55,24 @@ namespace org.activiti.engine.impl.cmd
 
             // Doing process instances, executions and tasks with direct SQL updates
             // (otherwise would not be performant)
-            commandContext.ProcessDefinitionEntityManager.updateProcessDefinitionTenantIdForDeployment(deploymentId, newTenantId);
-            commandContext.ExecutionEntityManager.updateExecutionTenantIdForDeployment(deploymentId, newTenantId);
-            commandContext.TaskEntityManager.updateTaskTenantIdForDeployment(deploymentId, newTenantId);
-            commandContext.JobEntityManager.updateJobTenantIdForDeployment(deploymentId, newTenantId);
-            commandContext.TimerJobEntityManager.updateJobTenantIdForDeployment(deploymentId, newTenantId);
-            commandContext.SuspendedJobEntityManager.updateJobTenantIdForDeployment(deploymentId, newTenantId);
-            commandContext.DeadLetterJobEntityManager.updateJobTenantIdForDeployment(deploymentId, newTenantId);
-            commandContext.EventSubscriptionEntityManager.updateEventSubscriptionTenantId(oldTenantId, newTenantId);
+            commandContext.ProcessDefinitionEntityManager.UpdateProcessDefinitionTenantIdForDeployment(deploymentId, newTenantId);
+            commandContext.ExecutionEntityManager.UpdateExecutionTenantIdForDeployment(deploymentId, newTenantId);
+            commandContext.TaskEntityManager.UpdateTaskTenantIdForDeployment(deploymentId, newTenantId);
+            commandContext.JobEntityManager.UpdateJobTenantIdForDeployment(deploymentId, newTenantId);
+            commandContext.TimerJobEntityManager.UpdateJobTenantIdForDeployment(deploymentId, newTenantId);
+            commandContext.SuspendedJobEntityManager.UpdateJobTenantIdForDeployment(deploymentId, newTenantId);
+            commandContext.DeadLetterJobEntityManager.UpdateJobTenantIdForDeployment(deploymentId, newTenantId);
+            commandContext.EventSubscriptionEntityManager.UpdateEventSubscriptionTenantId(oldTenantId, newTenantId);
 
             // Doing process definitions in memory, cause we need to clear the process definition cache
-            IList<IProcessDefinition> processDefinitions = (new ProcessDefinitionQueryImpl()).deploymentId(deploymentId).list();
+            IList<IProcessDefinition> processDefinitions = (new ProcessDefinitionQueryImpl()).SetDeploymentId(deploymentId).List();
             foreach (IProcessDefinition processDefinition in processDefinitions)
             {
-                commandContext.ProcessEngineConfiguration.ProcessDefinitionCache.remove(processDefinition.Id);
+                commandContext.ProcessEngineConfiguration.ProcessDefinitionCache.Remove(processDefinition.Id);
             }
 
             // Clear process definition cache
-            commandContext.ProcessEngineConfiguration.ProcessDefinitionCache.clear();
+            commandContext.ProcessEngineConfiguration.ProcessDefinitionCache.Clear();
 
             return null;
 

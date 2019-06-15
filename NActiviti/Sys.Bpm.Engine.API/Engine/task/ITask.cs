@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sys.Workflow;
+using System;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,9 +55,14 @@ namespace org.activiti.engine.task
         new string Owner { get; set; }
 
         /// <summary>
-        /// The <seealso cref="User.getId() userId"/> of the person to which this task is delegated.
+        /// The <seealso cref="IUserInfo.Id"/> of the person to which this task is delegated.
         /// </summary>
         new string Assignee { get; set; }
+
+        /// <summary>
+        /// The <seealso cref="IUserInfo.Id"/> of the person to which this task is delegated.
+        /// </summary>
+        new string AssigneeUser { get; set; }
 
         /// <summary>
         /// The current <seealso cref="DelegationState"/> for this task. </summary>
@@ -91,6 +97,12 @@ namespace org.activiti.engine.task
         new bool? IsAppend { get; set; }
 
         /// <inheritdoc />
+        new bool? CanTransfer { get; set; }
+
+        /// <inheritdoc />
+        new bool? OnlyAssignee { get; set; }
+
+        /// <inheritdoc />
         new bool? IsTransfer { get; set; }
 
         /// <inheritdoc />
@@ -98,8 +110,14 @@ namespace org.activiti.engine.task
 
     }
 
-    public static class Task_Fields
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class TaskFields
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const int DEFAULT_PRIORITY = 50;
     }
 

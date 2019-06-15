@@ -32,7 +32,7 @@ namespace org.activiti.engine.impl.bpmn.parser
         /// </summary>
         /// <param name="element">
         ///          the declarations to be imported </param>
-        void importFrom(Import theImport, string sourceSystemId);
+        void ImportFrom(Import theImport, string sourceSystemId);
 
         IDictionary<string, IStructureDefinition> Structures { get; }
 
@@ -40,5 +40,4 @@ namespace org.activiti.engine.impl.bpmn.parser
 
         IDictionary<string, WSOperation> Operations { get; }
     }
-
 }

@@ -13,33 +13,33 @@
 namespace org.activiti.engine.@delegate.@event.impl
 {
 
-	/// <summary>
-	/// An <seealso cref="org.activiti.engine.delegate.event.ActivitiCancelledEvent"/> implementation.
-	/// 
-	/// 
-	/// </summary>
-	public class ActivitiProcessCancelledEventImpl : ActivitiEventImpl, IActivitiCancelledEvent
-	{
+    /// <summary>
+    /// An <seealso cref="org.activiti.engine.delegate.event.ActivitiCancelledEvent"/> implementation.
+    /// 
+    /// 
+    /// </summary>
+    public class ActivitiProcessCancelledEventImpl : ActivitiEventImpl, IActivitiCancelledEvent
+    {
 
-	  protected internal object cause;
+        protected internal object cause;
 
-	  public ActivitiProcessCancelledEventImpl() : base(ActivitiEventType.PROCESS_CANCELLED)
-	  {
-	  }
+        public ActivitiProcessCancelledEventImpl() : base(ActivitiEventType.PROCESS_CANCELLED)
+        {
+        }
 
-	  public virtual object Cause
-	  {
-		  set
-		  {
-			this.cause = value;
-		  }
-		  get
-		  {
-			return cause;
-		  }
-	  }
+        public virtual object Cause
+        {
+            set
+            {
+                this.cause = value;
+            }
+            get
+            {
+                return cause;
+            }
+        }
 
 
-	}
+    }
 
 }

@@ -35,7 +35,7 @@ namespace org.activiti.cloud.services.events.converter
         /// <summary>
         /// 
         /// </summary>
-        public override IProcessEngineEvent from(IActivitiEvent @event)
+        public override IProcessEngineEvent From(IActivitiEvent @event)
         {
             IActivitiVariableEvent variableEvent = (IActivitiVariableEvent)@event;
 
@@ -45,7 +45,7 @@ namespace org.activiti.cloud.services.events.converter
         /// <summary>
         /// 
         /// </summary>
-        public override string handledType()
+        public override string HandledType()
         {
             return ActivitiEventType.VARIABLE_UPDATED.ToString();
         }

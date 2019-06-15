@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class SuspendedJobsByExecutionIdMatcher : CachedEntityMatcherAdapter<ISuspendedJobEntity>
     {
 
-        public override bool isRetained(ISuspendedJobEntity jobEntity, object parameter)
+        public override bool IsRetained(ISuspendedJobEntity jobEntity, object parameter)
         {
             if (jobEntity == null || jobEntity.ExecutionId == null || parameter == null)
             {

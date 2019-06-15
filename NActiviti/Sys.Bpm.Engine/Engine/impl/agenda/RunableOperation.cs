@@ -14,14 +14,22 @@ namespace org.activiti.engine.impl.agenda
 {
     using System;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class RunableOperation : AbstractOperation
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="run"></param>
         public RunableOperation(Action run)
         {
             this.Run = run;
         }
 
-        protected override void run()
+        /// <inheritdoc />
+        protected override void RunOperation()
         {
 
         }

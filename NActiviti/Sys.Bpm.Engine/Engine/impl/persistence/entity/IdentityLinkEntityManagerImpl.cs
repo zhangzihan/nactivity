@@ -26,12 +26,12 @@ namespace org.activiti.engine.impl.persistence.entity
     /// 
     /// 
     /// 
-    public class IdentityLinkEntityManagerImpl : AbstractEntityManager<IIdentityLinkEntity>, IdentityLinkEntityManager
+    public class IdentityLinkEntityManagerImpl : AbstractEntityManager<IIdentityLinkEntity>, IIdentityLinkEntityManager
     {
 
-        protected internal IdentityLinkDataManager identityLinkDataManager;
+        protected internal IIdentityLinkDataManager identityLinkDataManager;
 
-        public IdentityLinkEntityManagerImpl(ProcessEngineConfigurationImpl processEngineConfiguration, IdentityLinkDataManager identityLinkDataManager) : base(processEngineConfiguration)
+        public IdentityLinkEntityManagerImpl(ProcessEngineConfigurationImpl processEngineConfiguration, IIdentityLinkDataManager identityLinkDataManager) : base(processEngineConfiguration)
         {
             this.identityLinkDataManager = identityLinkDataManager;
         }
@@ -44,111 +44,111 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public override void insert(IIdentityLinkEntity entity, bool fireCreateEvent)
+        public override void Insert(IIdentityLinkEntity entity, bool fireCreateEvent)
         {
-            base.insert(entity, fireCreateEvent);
-            HistoryManager.recordIdentityLinkCreated(entity);
+            base.Insert(entity, fireCreateEvent);
+            HistoryManager.RecordIdentityLinkCreated(entity);
 
-            if (!ReferenceEquals(entity.ProcessInstanceId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!(entity.ProcessInstanceId is null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(entity.ProcessInstanceId);
-                if (isExecutionRelatedEntityCountEnabled(executionEntity))
+                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.FindById<ICountingExecutionEntity>(entity.ProcessInstanceId);
+                if (IsExecutionRelatedEntityCountEnabled(executionEntity))
                 {
-                    executionEntity.IdentityLinkCount = executionEntity.IdentityLinkCount + 1;
+                    executionEntity.IdentityLinkCount += 1;
                 }
             }
         }
 
-        public virtual void deleteIdentityLink(IIdentityLinkEntity identityLink, bool cascadeHistory)
+        public virtual void DeleteIdentityLink(IIdentityLinkEntity identityLink, bool cascadeHistory)
         {
-            delete(identityLink, false);
+            Delete(identityLink, false);
             if (cascadeHistory)
             {
-                HistoryManager.deleteHistoricIdentityLink(identityLink.Id);
+                HistoryManager.DeleteHistoricIdentityLink(identityLink.Id);
             }
 
-            if (!ReferenceEquals(identityLink.ProcessInstanceId, null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (!(identityLink.ProcessInstanceId is null) && ExecutionRelatedEntityCountEnabledGlobally)
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.findById<ICountingExecutionEntity>(identityLink.ProcessInstanceId);
-                if (isExecutionRelatedEntityCountEnabled(executionEntity))
+                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.FindById<ICountingExecutionEntity>(identityLink.ProcessInstanceId);
+                if (IsExecutionRelatedEntityCountEnabled(executionEntity))
                 {
-                    executionEntity.IdentityLinkCount = executionEntity.IdentityLinkCount - 1;
+                    executionEntity.IdentityLinkCount -= 1;
                 }
             }
 
             if (EventDispatcher.Enabled)
             {
-                EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_DELETED, identityLink));
+                EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, identityLink));
             }
         }
 
-        public virtual IList<IIdentityLinkEntity> findIdentityLinksByTaskId(string taskId)
+        public virtual IList<IIdentityLinkEntity> FindIdentityLinksByTaskId(string taskId)
         {
-            return identityLinkDataManager.findIdentityLinksByTaskId(taskId);
+            return identityLinkDataManager.FindIdentityLinksByTaskId(taskId);
         }
 
-        public virtual IList<IIdentityLinkEntity> findIdentityLinksByProcessInstanceId(string processInstanceId)
+        public virtual IList<IIdentityLinkEntity> FindIdentityLinksByProcessInstanceId(string processInstanceId)
         {
-            return identityLinkDataManager.findIdentityLinksByProcessInstanceId(processInstanceId);
+            return identityLinkDataManager.FindIdentityLinksByProcessInstanceId(processInstanceId);
         }
 
-        public virtual IList<IIdentityLinkEntity> findIdentityLinksByProcessDefinitionId(string processDefinitionId)
+        public virtual IList<IIdentityLinkEntity> FindIdentityLinksByProcessDefinitionId(string processDefinitionId)
         {
-            return identityLinkDataManager.findIdentityLinksByProcessDefinitionId(processDefinitionId);
+            return identityLinkDataManager.FindIdentityLinksByProcessDefinitionId(processDefinitionId);
         }
 
-        public virtual IList<IIdentityLinkEntity> findIdentityLinkByTaskUserGroupAndType(string taskId, string userId, string groupId, string type)
+        public virtual IList<IIdentityLinkEntity> FindIdentityLinkByTaskUserGroupAndType(string taskId, string userId, string groupId, string type)
         {
-            return identityLinkDataManager.findIdentityLinkByTaskUserGroupAndType(taskId, userId, groupId, type);
+            return identityLinkDataManager.FindIdentityLinkByTaskUserGroupAndType(taskId, userId, groupId, type);
         }
 
-        public virtual IList<IIdentityLinkEntity> findIdentityLinkByProcessInstanceUserGroupAndType(string processInstanceId, string userId, string groupId, string type)
+        public virtual IList<IIdentityLinkEntity> FindIdentityLinkByProcessInstanceUserGroupAndType(string processInstanceId, string userId, string groupId, string type)
         {
-            return identityLinkDataManager.findIdentityLinkByProcessInstanceUserGroupAndType(processInstanceId, userId, groupId, type);
+            return identityLinkDataManager.FindIdentityLinkByProcessInstanceUserGroupAndType(processInstanceId, userId, groupId, type);
         }
 
-        public virtual IList<IIdentityLinkEntity> findIdentityLinkByProcessDefinitionUserAndGroup(string processDefinitionId, string userId, string groupId)
+        public virtual IList<IIdentityLinkEntity> FindIdentityLinkByProcessDefinitionUserAndGroup(string processDefinitionId, string userId, string groupId)
         {
-            return identityLinkDataManager.findIdentityLinkByProcessDefinitionUserAndGroup(processDefinitionId, userId, groupId);
+            return identityLinkDataManager.FindIdentityLinkByProcessDefinitionUserAndGroup(processDefinitionId, userId, groupId);
         }
 
-        public virtual IIdentityLinkEntity addIdentityLink(IExecutionEntity executionEntity, string userId, string groupId, string type)
+        public virtual IIdentityLinkEntity AddIdentityLink(IExecutionEntity executionEntity, string userId, string groupId, string type)
         {
-            IIdentityLinkEntity identityLinkEntity = identityLinkDataManager.create();
+            IIdentityLinkEntity identityLinkEntity = identityLinkDataManager.Create();
             executionEntity.IdentityLinks.Add(identityLinkEntity);
-            identityLinkEntity.ProcessInstance = executionEntity.ProcessInstance != null ? executionEntity.ProcessInstance : executionEntity;
+            identityLinkEntity.ProcessInstance = executionEntity.ProcessInstance ?? executionEntity;
             identityLinkEntity.UserId = userId;
             identityLinkEntity.GroupId = groupId;
             identityLinkEntity.Type = type;
-            insert(identityLinkEntity);
+            Insert(identityLinkEntity);
             return identityLinkEntity;
         }
 
-        public virtual IIdentityLinkEntity addIdentityLink(ITaskEntity taskEntity, string userId, string groupId, string type)
+        public virtual IIdentityLinkEntity AddIdentityLink(ITaskEntity taskEntity, string userId, string groupId, string type)
         {
-            IIdentityLinkEntity identityLinkEntity = identityLinkDataManager.create();
+            IIdentityLinkEntity identityLinkEntity = identityLinkDataManager.Create();
             taskEntity.IdentityLinks.Add(identityLinkEntity);
             identityLinkEntity.Task = taskEntity;
             identityLinkEntity.UserId = userId;
             identityLinkEntity.GroupId = groupId;
             identityLinkEntity.Type = type;
-            insert(identityLinkEntity);
-            if (!ReferenceEquals(userId, null) && !ReferenceEquals(taskEntity.ProcessInstanceId, null))
+            Insert(identityLinkEntity);
+            if (!(userId is null) && !(taskEntity.ProcessInstanceId is null))
             {
-                involveUser(taskEntity.ProcessInstance, userId, IdentityLinkType.PARTICIPANT);
+                InvolveUser(taskEntity.ProcessInstance, userId, IdentityLinkType.PARTICIPANT);
             }
             return identityLinkEntity;
         }
 
-        public virtual IIdentityLinkEntity addIdentityLink(IProcessDefinitionEntity processDefinitionEntity, string userId, string groupId)
+        public virtual IIdentityLinkEntity AddIdentityLink(IProcessDefinitionEntity processDefinitionEntity, string userId, string groupId)
         {
-            IIdentityLinkEntity identityLinkEntity = identityLinkDataManager.create();
+            IIdentityLinkEntity identityLinkEntity = identityLinkDataManager.Create();
             processDefinitionEntity.IdentityLinks.Add(identityLinkEntity);
             identityLinkEntity.ProcessDef = processDefinitionEntity;
             identityLinkEntity.UserId = userId;
             identityLinkEntity.GroupId = groupId;
             identityLinkEntity.Type = IdentityLinkType.CANDIDATE;
-            insert(identityLinkEntity);
+            Insert(identityLinkEntity);
             return identityLinkEntity;
         }
 
@@ -157,7 +157,7 @@ namespace org.activiti.engine.impl.persistence.entity
         /// but only if the user is not associated with the execution entity yet.
         /// 
         /// </summary>
-        public virtual IIdentityLinkEntity involveUser(IExecutionEntity executionEntity, string userId, string type)
+        public virtual IIdentityLinkEntity InvolveUser(IExecutionEntity executionEntity, string userId, string type)
         {
             foreach (IIdentityLinkEntity identityLink in executionEntity.IdentityLinks)
             {
@@ -166,53 +166,53 @@ namespace org.activiti.engine.impl.persistence.entity
                     return identityLink;
                 }
             }
-            return addIdentityLink(executionEntity, userId, null, type);
+            return AddIdentityLink(executionEntity, userId, null, type);
         }
 
-        public virtual void addCandidateUser(ITaskEntity taskEntity, string userId)
+        public virtual void AddCandidateUser(ITaskEntity taskEntity, string userId)
         {
-            addIdentityLink(taskEntity, userId, null, IdentityLinkType.CANDIDATE);
+            AddIdentityLink(taskEntity, userId, null, IdentityLinkType.CANDIDATE);
         }
 
-        public virtual void addCandidateUsers(ITaskEntity taskEntity, ICollection<string> candidateUsers)
+        public virtual void AddCandidateUsers(ITaskEntity taskEntity, IEnumerable<string> candidateUsers)
         {
             foreach (string candidateUser in candidateUsers)
             {
-                addCandidateUser(taskEntity, candidateUser);
+                AddCandidateUser(taskEntity, candidateUser);
             }
         }
 
-        public virtual void addCandidateGroup(ITaskEntity taskEntity, string groupId)
+        public virtual void AddCandidateGroup(ITaskEntity taskEntity, string groupId)
         {
-            addIdentityLink(taskEntity, null, groupId, IdentityLinkType.CANDIDATE);
+            AddIdentityLink(taskEntity, null, groupId, IdentityLinkType.CANDIDATE);
         }
 
-        public virtual void addCandidateGroups(ITaskEntity taskEntity, ICollection<string> candidateGroups)
+        public virtual void AddCandidateGroups(ITaskEntity taskEntity, IEnumerable<string> candidateGroups)
         {
             foreach (string candidateGroup in candidateGroups)
             {
-                addCandidateGroup(taskEntity, candidateGroup);
+                AddCandidateGroup(taskEntity, candidateGroup);
             }
         }
 
-        public virtual void addGroupIdentityLink(ITaskEntity taskEntity, string groupId, string identityLinkType)
+        public virtual void AddGroupIdentityLink(ITaskEntity taskEntity, string groupId, string identityLinkType)
         {
-            addIdentityLink(taskEntity, null, groupId, identityLinkType);
+            AddIdentityLink(taskEntity, null, groupId, identityLinkType);
         }
 
-        public virtual void addUserIdentityLink(ITaskEntity taskEntity, string userId, string identityLinkType)
+        public virtual void AddUserIdentityLink(ITaskEntity taskEntity, string userId, string identityLinkType)
         {
-            addIdentityLink(taskEntity, userId, null, identityLinkType);
+            AddIdentityLink(taskEntity, userId, null, identityLinkType);
         }
 
-        public virtual void deleteIdentityLink(IExecutionEntity executionEntity, string userId, string groupId, string type)
+        public virtual void DeleteIdentityLink(IExecutionEntity executionEntity, string userId, string groupId, string type)
         {
-            string id = !ReferenceEquals(executionEntity.ProcessInstanceId, null) ? executionEntity.ProcessInstanceId : executionEntity.Id;
-            IList<IIdentityLinkEntity> identityLinks = findIdentityLinkByProcessInstanceUserGroupAndType(id, userId, groupId, type);
+            string id = !(executionEntity.ProcessInstanceId is null) ? executionEntity.ProcessInstanceId : executionEntity.Id;
+            IList<IIdentityLinkEntity> identityLinks = FindIdentityLinkByProcessInstanceUserGroupAndType(id, userId, groupId, type);
 
             foreach (IIdentityLinkEntity identityLink in identityLinks)
             {
-                deleteIdentityLink(identityLink, true);
+                DeleteIdentityLink(identityLink, true);
             }
 
             foreach (var il in identityLinks)
@@ -225,14 +225,14 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual void deleteIdentityLink(ITaskEntity taskEntity, string userId, string groupId, string type)
+        public virtual void DeleteIdentityLink(ITaskEntity taskEntity, string userId, string groupId, string type)
         {
-            IList<IIdentityLinkEntity> identityLinks = findIdentityLinkByTaskUserGroupAndType(taskEntity.Id, userId, groupId, type);
+            IList<IIdentityLinkEntity> identityLinks = FindIdentityLinkByTaskUserGroupAndType(taskEntity.Id, userId, groupId, type);
 
             IList<string> identityLinkIds = new List<string>();
             foreach (IIdentityLinkEntity identityLink in identityLinks)
             {
-                deleteIdentityLink(identityLink, true);
+                DeleteIdentityLink(identityLink, true);
                 identityLinkIds.Add(identityLink.Id);
             }
 
@@ -243,10 +243,10 @@ namespace org.activiti.engine.impl.persistence.entity
                 if (IdentityLinkType.CANDIDATE.Equals(identityLinkEntity.Type) && identityLinkIds.Contains(identityLinkEntity.Id) == false)
                 {
 
-                    if ((!ReferenceEquals(userId, null) && userId.Equals(identityLinkEntity.UserId)) || (!ReferenceEquals(groupId, null) && groupId.Equals(identityLinkEntity.GroupId)))
+                    if ((!(userId is null) && userId.Equals(identityLinkEntity.UserId)) || (!(groupId is null) && groupId.Equals(identityLinkEntity.GroupId)))
                     {
 
-                        deleteIdentityLink(identityLinkEntity, true);
+                        DeleteIdentityLink(identityLinkEntity, true);
                         removedIdentityLinkEntities.Add(identityLinkEntity);
 
                     }
@@ -263,30 +263,30 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual void deleteIdentityLink(IProcessDefinitionEntity processDefinitionEntity, string userId, string groupId)
+        public virtual void DeleteIdentityLink(IProcessDefinitionEntity processDefinitionEntity, string userId, string groupId)
         {
-            IList<IIdentityLinkEntity> identityLinks = findIdentityLinkByProcessDefinitionUserAndGroup(processDefinitionEntity.Id, userId, groupId);
+            IList<IIdentityLinkEntity> identityLinks = FindIdentityLinkByProcessDefinitionUserAndGroup(processDefinitionEntity.Id, userId, groupId);
             foreach (IIdentityLinkEntity identityLink in identityLinks)
             {
-                deleteIdentityLink(identityLink, false);
+                DeleteIdentityLink(identityLink, false);
             }
         }
 
-        public virtual void deleteIdentityLinksByTaskId(string taskId)
+        public virtual void DeleteIdentityLinksByTaskId(string taskId)
         {
-            IList<IIdentityLinkEntity> identityLinks = findIdentityLinksByTaskId(taskId);
+            IList<IIdentityLinkEntity> identityLinks = FindIdentityLinksByTaskId(taskId);
             foreach (IIdentityLinkEntity identityLink in identityLinks)
             {
-                deleteIdentityLink(identityLink, false);
+                DeleteIdentityLink(identityLink, false);
             }
         }
 
-        public virtual void deleteIdentityLinksByProcDef(string processDefId)
+        public virtual void DeleteIdentityLinksByProcDef(string processDefId)
         {
-            identityLinkDataManager.deleteIdentityLinksByProcDef(processDefId);
+            identityLinkDataManager.DeleteIdentityLinksByProcDef(processDefId);
         }
 
-        public virtual IdentityLinkDataManager IdentityLinkDataManager
+        public virtual IIdentityLinkDataManager IdentityLinkDataManager
         {
             get
             {

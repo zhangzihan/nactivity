@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class ExecutionsByParentExecutionIdEntityMatcher : CachedEntityMatcherAdapter<IExecutionEntity>
     {
 
-        public override bool isRetained(IExecutionEntity entity, object parameter)
+        public override bool IsRetained(IExecutionEntity entity, object parameter)
         {
             if (entity == null || entity.ParentId == null || parameter == null)
             {

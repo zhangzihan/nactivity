@@ -132,7 +132,7 @@ namespace org.activiti.engine.impl.persistence.entity
         /// <summary>
         /// Inactivates this execution. This is useful for example in a join: the execution still exists, but it is not longer active.
         /// </summary>
-        void inactivate();
+        void Inactivate();
 
         /// <summary>
         /// Returns whether this execution is a scope.
@@ -162,7 +162,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         IExecutionEntity RootProcessInstance { get; set; }
 
-        void addChildExecution(IExecutionEntity executionEntity);
+        void AddChildExecution(IExecutionEntity executionEntity);
 
         IList<ITaskEntity> Tasks { get; }
 
@@ -192,9 +192,11 @@ namespace org.activiti.engine.impl.persistence.entity
 
         new bool Deleted { get; set; }
 
-        void forceUpdate();
+        void ForceUpdate();
 
         new string StartUserId { get; set; }
+
+        new string StartUser { get; set; }
 
         new DateTime StartTime { get; set; }
     }

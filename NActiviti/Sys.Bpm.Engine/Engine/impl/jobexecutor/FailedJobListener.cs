@@ -18,7 +18,7 @@ namespace org.activiti.engine.impl.jobexecutor
     using org.activiti.engine.@delegate.@event.impl;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.runtime;
-    using Sys;
+    using Sys.Workflow;
 
     /// 
     /// 
@@ -36,35 +36,35 @@ namespace org.activiti.engine.impl.jobexecutor
             this.job = job;
         }
 
-        public virtual void closing(ICommandContext commandContext)
+        public virtual void Closing(ICommandContext commandContext)
         {
         }
 
-        public virtual void afterSessionsFlush(ICommandContext commandContext)
+        public virtual void AfterSessionsFlush(ICommandContext commandContext)
         {
         }
 
-        public virtual void closed(ICommandContext context)
+        public virtual void Closed(ICommandContext context)
         {
             if (context.EventDispatcher.Enabled)
             {
-                context.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_EXECUTION_SUCCESS, job));
+                context.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_EXECUTION_SUCCESS, job));
             }
         }
 
-        public virtual void closeFailure(ICommandContext commandContext)
+        public virtual void CloseFailure(ICommandContext commandContext)
         {
             if (commandContext.EventDispatcher.Enabled)
             {
-                commandContext.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityExceptionEvent(ActivitiEventType.JOB_EXECUTION_FAILURE, job, commandContext.Exception));
+                commandContext.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityExceptionEvent(ActivitiEventType.JOB_EXECUTION_FAILURE, job, commandContext.Exception));
             }
 
-            CommandConfig commandConfig = commandExecutor.DefaultConfig.transactionRequiresNew();
+            CommandConfig commandConfig = commandExecutor.DefaultConfig.TransactionRequiresNew();
             IFailedJobCommandFactory failedJobCommandFactory = commandContext.FailedJobCommandFactory;
-            ICommand<object> cmd = failedJobCommandFactory.getCommand(job.Id, commandContext.Exception);
+            ICommand<object> cmd = failedJobCommandFactory.GetCommand(job.Id, commandContext.Exception);
 
             log.LogTrace("Using FailedJobCommandFactory '" + failedJobCommandFactory.GetType() + "' and command of type '" + cmd.GetType() + "'");
-            commandExecutor.execute(commandConfig, cmd);
+            commandExecutor.Execute(commandConfig, cmd);
         }
 
     }

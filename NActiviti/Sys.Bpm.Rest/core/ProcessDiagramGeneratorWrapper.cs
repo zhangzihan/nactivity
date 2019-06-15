@@ -2,7 +2,7 @@
 using org.activiti.bpmn.model;
 using org.activiti.engine;
 using org.activiti.image;
-using Sys;
+using Sys.Workflow;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,31 +30,34 @@ namespace org.activiti.cloud.services.core
     /// </summary>
     public class ProcessDiagramGeneratorWrapper
     {
-        private static readonly ILogger LOGGER = ProcessEngineServiceProvider.LoggerService<ProcessDiagramGeneratorWrapper>();
+        private readonly ILogger logger = null;
 
         private readonly IProcessDiagramGenerator processDiagramGenerator;
-        private string activityFontName;
-        private string labelFontName;
-        private string annotationFontName;
-        private string defaultDiagramImageFileName;
-        private bool generateDefaultDiagram;
+        private readonly string activityFontName;
+        private readonly string labelFontName;
+        private readonly string annotationFontName;
+        private readonly string defaultDiagramImageFileName;
+        private readonly bool generateDefaultDiagram;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="processDiagramGenerator"></param>
-        public ProcessDiagramGeneratorWrapper(IProcessDiagramGenerator processDiagramGenerator)
+        /// <param name="loggerFactory"></param>
+        public ProcessDiagramGeneratorWrapper(IProcessDiagramGenerator processDiagramGenerator,
+            ILoggerFactory loggerFactory)
         {
             this.processDiagramGenerator = processDiagramGenerator;
+            logger = loggerFactory.CreateLogger<ProcessDiagramGeneratorWrapper>();
         }
 
         /// <summary>
         /// Generate the diagram for a BPNM model </summary>
         /// <param name="bpmnModel"> the BPNM model </param>
         /// <returns> the diagram for the given model </returns>
-        public virtual byte[] generateDiagram(BpmnModel bpmnModel)
+        public virtual byte[] GenerateDiagram(BpmnModel bpmnModel)
         {
-            return generateDiagram(bpmnModel, new List<string>(), new List<string>());
+            return GenerateDiagram(bpmnModel, new List<string>(), new List<string>());
         }
 
         /// <summary>
@@ -63,11 +66,11 @@ namespace org.activiti.cloud.services.core
         /// <param name="highLightedActivities"> the activity ids to highlight in diagram </param>
         /// <param name="highLightedFlows"> the flow ids to highlight in diagram </param>
         /// <returns> the diagram for the given model </returns>
-        public virtual byte[] generateDiagram(BpmnModel bpmnModel, IList<string> highLightedActivities, IList<string> highLightedFlows)
+        public virtual byte[] GenerateDiagram(BpmnModel bpmnModel, IList<string> highLightedActivities, IList<string> highLightedFlows)
         {
             try
             {
-                using (Stream imageStream = processDiagramGenerator.generateDiagram(bpmnModel, highLightedActivities, highLightedFlows, ActivityFontName, LabelFontName, AnnotationFontName, GenerateDefaultDiagram, DiagramImageFileName))
+                using (Stream imageStream = processDiagramGenerator.GenerateDiagram(bpmnModel, highLightedActivities, highLightedFlows, ActivityFontName, LabelFontName, AnnotationFontName, GenerateDefaultDiagram, DiagramImageFileName))
                 {
                     byte[] data = new byte[imageStream.Length];
                     imageStream.Read(data, 0, data.Length);
@@ -76,6 +79,10 @@ namespace org.activiti.cloud.services.core
             }
             catch (Exception e)
             {
+                if (logger.IsEnabled(LogLevel.Debug))
+                {
+                    logger.LogDebug("Error occurred while getting process diagram for model: " + bpmnModel);
+                }
                 throw new ActivitiException("Error occurred while getting process diagram for model: " + bpmnModel, e);
             }
         }
@@ -120,7 +127,7 @@ namespace org.activiti.cloud.services.core
         {
             get
             {
-                return isFontAvailable(activityFontName) ? activityFontName : processDiagramGenerator.DefaultActivityFontName;
+                return IsFontAvailable(activityFontName) ? activityFontName : processDiagramGenerator.DefaultActivityFontName;
             }
         }
 
@@ -131,7 +138,7 @@ namespace org.activiti.cloud.services.core
         {
             get
             {
-                return isFontAvailable(labelFontName) ? labelFontName : processDiagramGenerator.DefaultLabelFontName;
+                return IsFontAvailable(labelFontName) ? labelFontName : processDiagramGenerator.DefaultLabelFontName;
             }
         }
 
@@ -142,7 +149,7 @@ namespace org.activiti.cloud.services.core
         {
             get
             {
-                return isFontAvailable(annotationFontName) ? annotationFontName : processDiagramGenerator.DefaultAnnotationFontName;
+                return IsFontAvailable(annotationFontName) ? annotationFontName : processDiagramGenerator.DefaultAnnotationFontName;
             }
         }
 
@@ -150,7 +157,7 @@ namespace org.activiti.cloud.services.core
         /// Check if a given font is available in the current system </summary>
         /// <param name="fontName"> the font name to check </param>
         /// <returns> true if the specified font name exists </returns>
-        private bool isFontAvailable(string fontName)
+        private bool IsFontAvailable(string fontName)
         {
             if (string.IsNullOrWhiteSpace(fontName))
             {

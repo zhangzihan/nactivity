@@ -15,70 +15,104 @@
 namespace org.activiti.engine.impl.bpmn.data
 {
 
-	/// <summary>
-	/// An instance of <seealso cref="IFieldBaseStructureDefinition"/>
-	/// 
-	/// 
-	/// </summary>
-	public class FieldBaseStructureInstance : IStructureInstance
-	{
+    /// <summary>
+    /// An instance of <seealso cref="IFieldBaseStructureDefinition"/>
+    /// 
+    /// 
+    /// </summary>
+    public class FieldBaseStructureInstance : IStructureInstance
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal IFieldBaseStructureDefinition structureDefinition;
 
-	  protected internal IFieldBaseStructureDefinition structureDefinition;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal IDictionary<string, object> fieldValues;
 
-	  protected internal IDictionary<string, object> fieldValues;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="structureDefinition"></param>
+        public FieldBaseStructureInstance(IFieldBaseStructureDefinition structureDefinition)
+        {
+            this.structureDefinition = structureDefinition;
+            this.fieldValues = new Dictionary<string, object>();
+        }
 
-	  public FieldBaseStructureInstance(IFieldBaseStructureDefinition structureDefinition)
-	  {
-		this.structureDefinition = structureDefinition;
-		this.fieldValues = new Dictionary<string, object>();
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <returns></returns>
+        public virtual object GetFieldValue(string fieldName)
+        {
+            return this.fieldValues[fieldName];
+        }
 
-	  public virtual object getFieldValue(string fieldName)
-	  {
-		return this.fieldValues[fieldName];
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <param name="value"></param>
+        public virtual void SetFieldValue(string fieldName, object value)
+        {
+            this.fieldValues[fieldName] = value;
+        }
 
-	  public virtual void setFieldValue(string fieldName, object value)
-	  {
-		this.fieldValues[fieldName] = value;
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual int FieldSize
+        {
+            get
+            {
+                return this.structureDefinition.FieldSize;
+            }
+        }
 
-	  public virtual int FieldSize
-	  {
-		  get
-		  {
-			return this.structureDefinition.FieldSize;
-		  }
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public virtual string GetFieldNameAt(int index)
+        {
+            return this.structureDefinition.GetFieldNameAt(index);
+        }
 
-	  public virtual string getFieldNameAt(int index)
-	  {
-		return this.structureDefinition.getFieldNameAt(index);
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual object[] ToArray()
+        {
+            int fieldSize = this.FieldSize;
+            object[] arguments = new object[fieldSize];
+            for (int i = 0; i < fieldSize; i++)
+            {
+                string fieldName = this.GetFieldNameAt(i);
+                object argument = this.GetFieldValue(fieldName);
+                arguments[i] = argument;
+            }
+            return arguments;
+        }
 
-	  public virtual object[] toArray()
-	  {
-		int fieldSize = this.FieldSize;
-		object[] arguments = new object[fieldSize];
-		for (int i = 0; i < fieldSize; i++)
-		{
-		  string fieldName = this.getFieldNameAt(i);
-		  object argument = this.getFieldValue(fieldName);
-		  arguments[i] = argument;
-		}
-		return arguments;
-	  }
-
-	  public virtual void loadFrom(object[] array)
-	  {
-		int fieldSize = this.FieldSize;
-		for (int i = 0; i < fieldSize; i++)
-		{
-		  string fieldName = this.getFieldNameAt(i);
-		  object fieldValue = array[i];
-		  this.setFieldValue(fieldName, fieldValue);
-		}
-	  }
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="array"></param>
+        public virtual void LoadFrom(object[] array)
+        {
+            int fieldSize = this.FieldSize;
+            for (int i = 0; i < fieldSize; i++)
+            {
+                string fieldName = this.GetFieldNameAt(i);
+                object fieldValue = array[i];
+                this.SetFieldValue(fieldName, fieldValue);
+            }
+        }
+    }
 }

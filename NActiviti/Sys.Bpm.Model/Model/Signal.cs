@@ -58,10 +58,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            Signal clone = new Signal();
-            clone.Values = this;
+            Signal clone = new Signal
+            {
+                Values = this
+            };
             return clone;
         }
 

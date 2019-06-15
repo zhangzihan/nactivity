@@ -44,8 +44,7 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         /// <param name="objectDefinition">The merged object definition for the object</param>
         /// <param name="objectType">The actual type of the managed object instance</param>
-        /// <param name="objectName">The name of the object</param>
-        /// <see cref="AbstractAutowireCapableObjectFactory.ApplyMergedObjectDefinitionPostProcessors" />
+        /// <param name="objectName">The name of the object</param>        /// 
         void PostProcessMergedObjectDefinition(RootObjectDefinition objectDefinition, Type objectType, string objectName);
         
         /// <summary>

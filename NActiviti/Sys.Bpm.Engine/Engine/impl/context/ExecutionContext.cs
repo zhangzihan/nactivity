@@ -21,14 +21,20 @@ namespace org.activiti.engine.impl.context
     /// 
     public class ExecutionContext
     {
+        private readonly IExecutionEntity execution;
 
-        protected internal IExecutionEntity execution;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
         public ExecutionContext(IExecutionEntity execution)
         {
             this.execution = execution;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecutionEntity Execution
         {
             get
@@ -37,6 +43,9 @@ namespace org.activiti.engine.impl.context
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecutionEntity ProcessInstance
         {
             get
@@ -45,14 +54,20 @@ namespace org.activiti.engine.impl.context
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IProcessDefinition ProcessDefinition
         {
             get
             {
-                return ProcessDefinitionUtil.getProcessDefinition(execution.ProcessDefinitionId);
+                return ProcessDefinitionUtil.GetProcessDefinition(execution.ProcessDefinitionId);
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDeploymentEntity Deployment
         {
             get
@@ -61,7 +76,7 @@ namespace org.activiti.engine.impl.context
                 var ctx = Context.CommandContext;
                 if (ctx != null)
                 {
-                    IDeploymentEntity deployment = ctx.DeploymentEntityManager.findById<IDeploymentEntity>(new KeyValuePair<string, object>("id", deploymentId));
+                    IDeploymentEntity deployment = ctx.DeploymentEntityManager.FindById<IDeploymentEntity>(deploymentId);
                     return deployment;
                 }
 
@@ -69,5 +84,4 @@ namespace org.activiti.engine.impl.context
             }
         }
     }
-
 }

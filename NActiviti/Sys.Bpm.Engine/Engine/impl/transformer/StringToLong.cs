@@ -21,9 +21,14 @@ namespace org.activiti.engine.impl.transformer
     /// </summary>
     public class StringToLong : AbstractTransformer
     {
-        protected internal override object primTransform(object anObject)
+        protected internal override object PrimTransform(object anObject)
         {
-            return Convert.ToInt64((string)anObject);
+            if (long.TryParse(anObject?.ToString(), out var l))
+            {
+                return l;
+            }
+
+            return null;
         }
     }
 

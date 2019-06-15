@@ -20,14 +20,14 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class MessageEventSubscriptionsByProcInstAndEventNameMatcher : CachedEntityMatcherAdapter<IEventSubscriptionEntity>
     {
 
-        public override bool isRetained(IEventSubscriptionEntity eventSubscriptionEntity, object param)
+        public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object param)
         {
             IDictionary<string, object> paramMap = (IDictionary<string, object>)param ?? new Dictionary<string, object>();
             paramMap.TryGetValue("processInstanceId", out object processInstanceId);
             paramMap.TryGetValue("eventName", out object eventName);
 
             return eventSubscriptionEntity.EventType != null &&
-                string.Compare(eventSubscriptionEntity.EventType, MessageEventSubscriptionEntity_Fields.EVENT_TYPE, true) ==0 &&
+                string.Compare(eventSubscriptionEntity.EventType, MessageEventSubscriptionEntityFields.EVENT_TYPE, true) ==0 &&
                 eventSubscriptionEntity.EventName != null &&
                 string.Compare(eventSubscriptionEntity.EventName, eventName?.ToString(), true) == 0 &&
                 eventSubscriptionEntity.ProcessInstanceId != null && 

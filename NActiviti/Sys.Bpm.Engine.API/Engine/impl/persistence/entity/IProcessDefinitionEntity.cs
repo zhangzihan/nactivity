@@ -18,54 +18,64 @@ namespace org.activiti.engine.impl.persistence.entity
     using org.activiti.engine.impl.db;
     using org.activiti.engine.repository;
 
-    /// 
-    /// 
+    /// <inheritdoc />
     public interface IProcessDefinitionEntity : IProcessDefinition, IEntity, IHasRevision
     {
-
+        /// <inheritdoc />
         IList<IIdentityLinkEntity> IdentityLinks { get; }
 
+        /// <inheritdoc />
         new string Id { get; set; }
 
+        /// <inheritdoc />
         new string Key { get; set; }
 
+        /// <inheritdoc />
         new string BusinessKey { get; set; }
 
+        /// <inheritdoc />
         new string BusinessPath { get; set; }
 
+        /// <inheritdoc />
         new string StartForm { get; set; }
 
+        /// <inheritdoc />
         new string Name { get; set; }
 
+        /// <inheritdoc />
         new string Description { get; set; }
 
+        /// <inheritdoc />
         new string DeploymentId { get; set; }
 
+        /// <inheritdoc />
         new int Version { get; set; }
 
+        /// <inheritdoc />
         new string ResourceName { get; set; }
 
+        /// <inheritdoc />
         new string TenantId { get; set; }
 
+        /// <inheritdoc />
         int? HistoryLevel { get; set; }
 
-
+        /// <inheritdoc />
         new string Category { get; set; }
 
+        /// <inheritdoc />
         new string DiagramResourceName { get; set; }
 
+        /// <inheritdoc />
         new bool HasStartFormKey { get; set; }
 
-
+        /// <inheritdoc />
         new bool IsGraphicalNotationDefined { get; set; }
 
-
+        /// <inheritdoc />
         int SuspensionState { get; set; }
 
-
+        /// <inheritdoc />
         new string EngineVersion { get; set; }
-
-
     }
-
 }

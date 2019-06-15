@@ -17,9 +17,11 @@ namespace org.activiti.engine.impl.cfg
     /// 
     public interface IBpmnParseFactory
     {
-
-        BpmnParse createBpmnParse(BpmnParser bpmnParser);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bpmnParser"></param>
+        /// <returns></returns>
+        BpmnParse CreateBpmnParse(BpmnParser bpmnParser);
     }
-
 }

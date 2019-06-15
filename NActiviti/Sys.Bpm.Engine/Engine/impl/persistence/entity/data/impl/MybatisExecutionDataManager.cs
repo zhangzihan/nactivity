@@ -62,35 +62,34 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IExecutionEntity create()
+        public override IExecutionEntity Create()
         {
-            return ExecutionEntityImpl.createWithEmptyRelationshipCollections();
+            return ExecutionEntityImpl.CreateWithEmptyRelationshipCollections();
         }
 
-        public override IExecutionEntity findById<IExecutionEntity>(KeyValuePair<string, object> id)
+        public override IExecutionEntity FindById<IExecutionEntity>(KeyValuePair<string, object> id)
         {
             if (performanceSettings.EnableEagerExecutionTreeFetching)
             {
-                return (IExecutionEntity)findByIdAndFetchExecutionTree(id.Value?.ToString());
+                return (IExecutionEntity)FindByIdAndFetchExecutionTree(id.Value?.ToString());
             }
             else
             {
-                return base.findById<IExecutionEntity>(id);
+                return base.FindById<IExecutionEntity>(id);
             }
         }
 
-        protected internal virtual IExecutionEntity findByIdAndFetchExecutionTree(string executionId)
+        protected internal virtual IExecutionEntity FindByIdAndFetchExecutionTree(string executionId)
         {
-
             // If it's in the cache, the tree must have been fetched before
-            IExecutionEntity cachedEntity = (IExecutionEntity)EntityCache.findInCache(ManagedEntityClass, executionId);
+            IExecutionEntity cachedEntity = (IExecutionEntity)EntityCache.FindInCache(ManagedEntityClass, executionId);
             if (cachedEntity != null)
             {
                 return cachedEntity;
             }
 
             // Fetches execution tree. This will store them in the cache.
-            IList<IExecutionEntity> executionEntities = (IList<IExecutionEntity>)getList("selectExecutionsWithSameRootProcessInstanceId", new { executionId }, executionsWithSameRootProcessInstanceIdMatcher, true);
+            IList<IExecutionEntity> executionEntities = (IList<IExecutionEntity>)GetList("selectExecutionsWithSameRootProcessInstanceId", new { executionId }, executionsWithSameRootProcessInstanceIdMatcher, true);
 
             foreach (IExecutionEntity executionEntity in executionEntities)
             {
@@ -102,149 +101,157 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             return null;
         }
 
-        public virtual IExecutionEntity findSubProcessInstanceBySuperExecutionId(string superExecutionId)
+        public virtual IExecutionEntity FindSubProcessInstanceBySuperExecutionId(string superExecutionId)
         {
             if (performanceSettings.EnableEagerExecutionTreeFetching)
             {
-                findByIdAndFetchExecutionTree(superExecutionId);
+                FindByIdAndFetchExecutionTree(superExecutionId);
             }
 
-            return getEntity("selectSubProcessInstanceBySuperExecutionId", new { superExecutionId }, subProcessInstanceBySuperExecutionIdMatcher, !performanceSettings.EnableEagerExecutionTreeFetching);
+            return GetEntity("selectSubProcessInstanceBySuperExecutionId", new { superExecutionId }, subProcessInstanceBySuperExecutionIdMatcher, !performanceSettings.EnableEagerExecutionTreeFetching);
         }
 
-        public virtual IList<IExecutionEntity> findChildExecutionsByParentExecutionId(string parentExecutionId)
+        public virtual IList<IExecutionEntity> FindChildExecutionsByParentExecutionId(string parentExecutionId)
         {
             if (performanceSettings.EnableEagerExecutionTreeFetching)
             {
-                findByIdAndFetchExecutionTree(parentExecutionId);
-                return getListFromCache(executionsByParentIdMatcher, parentExecutionId);
+                FindByIdAndFetchExecutionTree(parentExecutionId);
+                return GetListFromCache(executionsByParentIdMatcher, parentExecutionId);
             }
             else
             {
-                return (IList<IExecutionEntity>)getList("selectExecutionsByParentExecutionId", new { parentExecutionId }, executionsByParentIdMatcher, true);
+                return (IList<IExecutionEntity>)GetList("selectExecutionsByParentExecutionId", new { parentExecutionId }, executionsByParentIdMatcher, true);
             }
         }
 
-        public virtual IList<IExecutionEntity> findChildExecutionsByProcessInstanceId(string processInstanceId)
+        public virtual IList<IExecutionEntity> FindChildExecutionsByProcessInstanceId(string processInstanceId)
         {
             if (performanceSettings.EnableEagerExecutionTreeFetching)
             {
-                findByIdAndFetchExecutionTree(processInstanceId);
-                return getListFromCache(executionsByProcessInstanceIdMatcher, processInstanceId);
+                FindByIdAndFetchExecutionTree(processInstanceId);
+                return GetListFromCache(executionsByProcessInstanceIdMatcher, processInstanceId);
             }
             else
             {
-                return (IList<IExecutionEntity>)getList("selectChildExecutionsByProcessInstanceId", new { processInstanceId }, executionsByProcessInstanceIdMatcher, true);
+                return (IList<IExecutionEntity>)GetList("selectChildExecutionsByProcessInstanceId", new { processInstanceId }, executionsByProcessInstanceIdMatcher, true);
             }
         }
 
-        public virtual IList<IExecutionEntity> findExecutionsByParentExecutionAndActivityIds(string parentExecutionId, ICollection<string> activityIds)
+        public virtual IList<IExecutionEntity> FindExecutionsByParentExecutionAndActivityIds(string parentExecutionId, ICollection<string> activityIds)
         {
-            IDictionary<string, object> parameters = new Dictionary<string, object>(2);
-            parameters["parentExecutionId"] = parentExecutionId;
-            parameters["activityIds"] = activityIds;
+            IDictionary<string, object> parameters = new Dictionary<string, object>(2)
+            {
+                ["parentExecutionId"] = parentExecutionId,
+                ["activityIds"] = activityIds
+            };
 
             if (performanceSettings.EnableEagerExecutionTreeFetching)
             {
-                findByIdAndFetchExecutionTree(parentExecutionId);
-                return getListFromCache(executionsByParentExecutionIdAndActivityIdEntityMatcher, parameters);
+                FindByIdAndFetchExecutionTree(parentExecutionId);
+                return GetListFromCache(executionsByParentExecutionIdAndActivityIdEntityMatcher, parameters);
             }
             else
             {
-                return (IList<IExecutionEntity>)getList("selectExecutionsByParentExecutionAndActivityIds", parameters, executionsByParentExecutionIdAndActivityIdEntityMatcher, true);
+                return (IList<IExecutionEntity>)GetList("selectExecutionsByParentExecutionAndActivityIds", parameters, executionsByParentExecutionIdAndActivityIdEntityMatcher, true);
             }
         }
 
-        public virtual IList<IExecutionEntity> findExecutionsByRootProcessInstanceId(string rootProcessInstanceId)
+        public virtual IList<IExecutionEntity> FindExecutionsByRootProcessInstanceId(string rootProcessInstanceId)
         {
             if (performanceSettings.EnableEagerExecutionTreeFetching)
             {
-                findByIdAndFetchExecutionTree(rootProcessInstanceId);
-                return getListFromCache(executionsByRootProcessInstanceMatcher, rootProcessInstanceId);
+                FindByIdAndFetchExecutionTree(rootProcessInstanceId);
+                return GetListFromCache(executionsByRootProcessInstanceMatcher, rootProcessInstanceId);
             }
             else
             {
-                return (IList<IExecutionEntity>)getList("selectExecutionsByRootProcessInstanceId", new { rootProcessInstanceId }, executionsByRootProcessInstanceMatcher, true);
+                return (IList<IExecutionEntity>)GetList("selectExecutionsByRootProcessInstanceId", new { rootProcessInstanceId }, executionsByRootProcessInstanceMatcher, true);
             }
         }
 
-        public virtual IList<IExecutionEntity> findExecutionsByProcessInstanceId(string processInstanceId)
+        public virtual IList<IExecutionEntity> FindExecutionsByProcessInstanceId(string processInstanceId)
         {
             if (performanceSettings.EnableEagerExecutionTreeFetching)
             {
-                findByIdAndFetchExecutionTree(processInstanceId);
-                return getListFromCache(executionByProcessInstanceMatcher, processInstanceId);
+                FindByIdAndFetchExecutionTree(processInstanceId);
+                return GetListFromCache(executionByProcessInstanceMatcher, processInstanceId);
             }
             else
             {
-                return (IList<IExecutionEntity>)getList("selectExecutionsByProcessInstanceId", new { processInstanceId }, executionByProcessInstanceMatcher, true);
+                return (IList<IExecutionEntity>)GetList("selectExecutionsByProcessInstanceId", new { processInstanceId }, executionByProcessInstanceMatcher, true);
             }
         }
 
-        public virtual ICollection<IExecutionEntity> findInactiveExecutionsByProcessInstanceId(string processInstanceId)
+        public virtual ICollection<IExecutionEntity> FindInactiveExecutionsByProcessInstanceId(string processInstanceId)
         {
-            Dictionary<string, object> @params = new Dictionary<string, object>(2);
-            @params["processInstanceId"] = processInstanceId;
-            @params["isActive"] = false;
+            Dictionary<string, object> @params = new Dictionary<string, object>(2)
+            {
+                ["processInstanceId"] = processInstanceId,
+                ["isActive"] = false
+            };
 
             if (performanceSettings.EnableEagerExecutionTreeFetching)
             {
-                findByIdAndFetchExecutionTree(processInstanceId);
-                return getListFromCache(inactiveExecutionsByProcInstMatcher, @params);
+                FindByIdAndFetchExecutionTree(processInstanceId);
+                return GetListFromCache(inactiveExecutionsByProcInstMatcher, @params);
             }
             else
             {
-                return getList("selectInactiveExecutionsForProcessInstance", @params, inactiveExecutionsByProcInstMatcher, true);
+                return GetList("selectInactiveExecutionsForProcessInstance", @params, inactiveExecutionsByProcInstMatcher, true);
             }
         }
 
-        public virtual ICollection<IExecutionEntity> findInactiveExecutionsByActivityIdAndProcessInstanceId(string activityId, string processInstanceId)
+        public virtual ICollection<IExecutionEntity> FindInactiveExecutionsByActivityIdAndProcessInstanceId(string activityId, string processInstanceId)
         {
-            Dictionary<string, object> @params = new Dictionary<string, object>(3);
-            @params["activityId"] = activityId;
-            @params["processInstanceId"] = processInstanceId;
-            @params["isActive"] = false;
+            Dictionary<string, object> @params = new Dictionary<string, object>(3)
+            {
+                ["activityId"] = activityId,
+                ["processInstanceId"] = processInstanceId,
+                ["isActive"] = false
+            };
 
             if (performanceSettings.EnableEagerExecutionTreeFetching)
             {
-                findByIdAndFetchExecutionTree(processInstanceId);
-                return getListFromCache(inactiveExecutionsInActivityAndProcInstMatcher, @params);
+                FindByIdAndFetchExecutionTree(processInstanceId);
+                return GetListFromCache(inactiveExecutionsInActivityAndProcInstMatcher, @params);
             }
             else
             {
-                return getList("selectInactiveExecutionsInActivityAndProcessInstance", @params, inactiveExecutionsInActivityAndProcInstMatcher, true);
+                return GetList("selectInactiveExecutionsInActivityAndProcessInstance", @params, inactiveExecutionsInActivityAndProcInstMatcher, true);
             }
         }
 
-        public virtual IList<string> findProcessInstanceIdsByProcessDefinitionId(string processDefinitionId)
+        public virtual IList<string> FindProcessInstanceIdsByProcessDefinitionId(string processDefinitionId)
         {
-            return DbSqlSession.selectList<ExecutionEntityImpl, string>("selectProcessInstanceIdsByProcessDefinitionId", new { processDefinitionId }, false);
+            return DbSqlSession.SelectList<ExecutionEntityImpl, string>("selectProcessInstanceIdsByProcessDefinitionId", new { processDefinitionId }, false);
         }
 
-        public virtual long findExecutionCountByQueryCriteria(ExecutionQueryImpl executionQuery)
+        public virtual long FindExecutionCountByQueryCriteria(IExecutionQuery executionQuery)
         {
-            return DbSqlSession.selectOne<ExecutionEntityImpl, long?>("selectExecutionCountByQueryCriteria", executionQuery).GetValueOrDefault();
+            return DbSqlSession.SelectOne<ExecutionEntityImpl, long?>("selectExecutionCountByQueryCriteria", executionQuery).GetValueOrDefault();
 
 
         }
 
-        public virtual IList<IExecutionEntity> findExecutionsByQueryCriteria(ExecutionQueryImpl executionQuery, Page page)
+        public virtual IList<IExecutionEntity> FindExecutionsByQueryCriteria(IExecutionQuery executionQuery, Page page)
         {
-            return DbSqlSession.selectList<ExecutionEntityImpl, IExecutionEntity>("selectExecutionsByQueryCriteria", executionQuery, page, !performanceSettings.EnableEagerExecutionTreeFetching); // False -> executions should not be cached if using executionTreeFetching
+            return DbSqlSession.SelectList<ExecutionEntityImpl, IExecutionEntity>("selectExecutionsByQueryCriteria", executionQuery, page, !performanceSettings.EnableEagerExecutionTreeFetching); // False -> executions should not be cached if using executionTreeFetching
         }
 
-        public virtual long findProcessInstanceCountByQueryCriteria(ProcessInstanceQueryImpl executionQuery)
+        public virtual long FindProcessInstanceCountByQueryCriteria(IProcessInstanceQuery executionQuery)
         {
-            return DbSqlSession.selectOne<ExecutionEntityImpl, long?>("selectProcessInstanceCountByQueryCriteria", executionQuery).GetValueOrDefault();
+            return DbSqlSession.SelectOne<ExecutionEntityImpl, long?>("selectProcessInstanceCountByQueryCriteria", executionQuery).GetValueOrDefault();
         }
 
-        public virtual IList<IProcessInstance> findProcessInstanceByQueryCriteria(ProcessInstanceQueryImpl executionQuery)
+        public virtual IList<IProcessInstance> FindProcessInstanceByQueryCriteria(IProcessInstanceQuery executionQuery)
         {
-            return DbSqlSession.selectList<ExecutionEntityImpl, IProcessInstance>("selectProcessInstanceByQueryCriteria", executionQuery, !performanceSettings.EnableEagerExecutionTreeFetching); // False -> executions should not be cached if using executionTreeFetching
+            return DbSqlSession.SelectList<ExecutionEntityImpl, IProcessInstance>("selectProcessInstanceByQueryCriteria", executionQuery, !performanceSettings.EnableEagerExecutionTreeFetching); // False -> executions should not be cached if using executionTreeFetching
         }
 
-        public virtual IList<IProcessInstance> findProcessInstanceAndVariablesByQueryCriteria(ProcessInstanceQueryImpl executionQuery)
+        public virtual IList<IProcessInstance> FindProcessInstanceAndVariablesByQueryCriteria(IProcessInstanceQuery query)
         {
+            ProcessInstanceQueryImpl executionQuery = query as ProcessInstanceQueryImpl;
+
             // paging doesn't work for combining process instances and variables due
             // to an outer join, so doing it in-memory
             if (executionQuery.FirstResult < 0 || executionQuery.MaxResults <= 0)
@@ -266,7 +273,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
             executionQuery.FirstResult = 0;
 
-            IList<IProcessInstance> instanceList = DbSqlSession.selectListWithRawParameterWithoutFilter<ExecutionEntityImpl, IProcessInstance>("selectProcessInstanceWithVariablesByQueryCriteria", executionQuery, executionQuery.FirstResult, executionQuery.MaxResults);
+            IList<IProcessInstance> instanceList = DbSqlSession.SelectListWithRawParameterWithoutFilter<ExecutionEntityImpl, IProcessInstance>("selectProcessInstanceWithVariablesByQueryCriteria", executionQuery, executionQuery.FirstResult, executionQuery.MaxResults);
 
             if (instanceList != null && instanceList.Count > 0)
             {
@@ -291,53 +298,58 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             return new List<IProcessInstance>();
         }
 
-        public virtual IList<IExecution> findExecutionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IExecution> FindExecutionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return DbSqlSession.selectListWithRawParameter<ExecutionEntityImpl, IExecution>("selectExecutionByNativeQuery", parameterMap, firstResult, maxResults);
+            return DbSqlSession.SelectListWithRawParameter<ExecutionEntityImpl, IExecution>("selectExecutionByNativeQuery", parameterMap, firstResult, maxResults);
         }
 
-        public virtual IList<IProcessInstance> findProcessInstanceByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IProcessInstance> FindProcessInstanceByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return DbSqlSession.selectListWithRawParameter<ExecutionEntityImpl, IProcessInstance>("selectExecutionByNativeQuery", parameterMap, firstResult, maxResults);
+            return DbSqlSession.SelectListWithRawParameter<ExecutionEntityImpl, IProcessInstance>("selectExecutionByNativeQuery", parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findExecutionCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindExecutionCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return DbSqlSession.selectOne<ExecutionEntityImpl, long?>("selectExecutionCountByNativeQuery", parameterMap).GetValueOrDefault();
+            return DbSqlSession.SelectOne<ExecutionEntityImpl, long?>("selectExecutionCountByNativeQuery", parameterMap).GetValueOrDefault();
         }
 
-        public virtual void updateExecutionTenantIdForDeployment(string deploymentId, string newTenantId)
+        public virtual void UpdateExecutionTenantIdForDeployment(string deploymentId, string newTenantId)
         {
-            Dictionary<string, object> @params = new Dictionary<string, object>();
-            @params["deploymentId"] = deploymentId;
-            @params["tenantId"] = newTenantId;
-            DbSqlSession.update<ExecutionEntityImpl>("updateExecutionTenantIdForDeployment", @params);
+            Dictionary<string, object> @params = new Dictionary<string, object>
+            {
+                ["deploymentId"] = deploymentId,
+                ["tenantId"] = newTenantId
+            };
+            DbSqlSession.Update<ExecutionEntityImpl>("updateExecutionTenantIdForDeployment", @params);
         }
 
-        public virtual void updateProcessInstanceLockTime(string processInstanceId, DateTime lockDate, DateTime expirationTime)
+        public virtual void UpdateProcessInstanceLockTime(string processInstanceId, DateTime lockDate, DateTime expirationTime)
         {
-            Dictionary<string, object> @params = new Dictionary<string, object>();
-            @params["id"] = processInstanceId;
-            @params["lockTime"] = lockDate;
-            @params["expirationTime"] = expirationTime;
+            Dictionary<string, object> @params = new Dictionary<string, object>
+            {
+                ["id"] = processInstanceId,
+                ["lockTime"] = lockDate,
+                ["expirationTime"] = expirationTime
+            };
 
-            int result = DbSqlSession.update<ExecutionEntityImpl>("updateProcessInstanceLockTime", @params);
+            int result = DbSqlSession.Update<ExecutionEntityImpl>("updateProcessInstanceLockTime", @params);
             if (result == 0)
             {
                 throw new ActivitiOptimisticLockingException("Could not lock process instance");
             }
         }
 
-        public virtual void updateAllExecutionRelatedEntityCountFlags(bool newValue)
+        public virtual void UpdateAllExecutionRelatedEntityCountFlags(bool newValue)
         {
-            DbSqlSession.update<ExecutionEntityImpl>("updateExecutionRelatedEntityCountEnabled", new { isCountEnabled = newValue });
+            DbSqlSession.Update<ExecutionEntityImpl>("updateExecutionRelatedEntityCountEnabled", new { isCountEnabled = newValue });
         }
 
-        public virtual void clearProcessInstanceLockTime(string processInstanceId)
+        public virtual void ClearProcessInstanceLockTime(string processInstanceId)
         {
-            Dictionary<string, object> @params = new Dictionary<string, object>();
-            @params["id"] = processInstanceId;
-            DbSqlSession.update<ExecutionEntityImpl>("clearProcessInstanceLockTime", @params);
+            DbSqlSession.Update<ExecutionEntityImpl>("clearProcessInstanceLockTime", new
+            {
+                id = processInstanceId
+            });
         }
     }
 

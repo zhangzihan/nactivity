@@ -18,20 +18,22 @@ namespace org.activiti.engine.impl.jobexecutor
     /// 
     public abstract class TimerChangeProcessDefinitionSuspensionStateJobHandler : IJobHandler
     {
-        public abstract void execute(org.activiti.engine.impl.persistence.entity.IJobEntity job, string configuration, org.activiti.engine.impl.persistence.entity.IExecutionEntity execution, ICommandContext commandContext);
+        public abstract void Execute(org.activiti.engine.impl.persistence.entity.IJobEntity job, string configuration, org.activiti.engine.impl.persistence.entity.IExecutionEntity execution, ICommandContext commandContext);
         public abstract string Type { get; }
 
         private const string JOB_HANDLER_CFG_INCLUDE_PROCESS_INSTANCES = "includeProcessInstances";
 
-        public static string createJobHandlerConfiguration(bool includeProcessInstances)
+        public static string CreateJobHandlerConfiguration(bool includeProcessInstances)
         {
-            JToken json = new JObject();
-            json[JOB_HANDLER_CFG_INCLUDE_PROCESS_INSTANCES] = includeProcessInstances;
+            JToken json = new JObject
+            {
+                [JOB_HANDLER_CFG_INCLUDE_PROCESS_INSTANCES] = includeProcessInstances
+            };
 
             return json.ToString();
         }
 
-        public static bool getIncludeProcessInstances(JToken jobHandlerCfgJson)
+        public static bool GetIncludeProcessInstances(JToken jobHandlerCfgJson)
         {
             if (bool.TryParse(jobHandlerCfgJson[JOB_HANDLER_CFG_INCLUDE_PROCESS_INSTANCES]?.ToString(), out var b))
             {

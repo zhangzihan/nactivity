@@ -59,33 +59,27 @@ namespace org.activiti.engine.impl.bpmn.behavior
             itemDefinitionMap["http://www.w3.org/2001/XMLSchema:string"] = new data.ItemDefinition("http://www.w3.org/2001/XMLSchema:string", new ClassStructureDefinition(typeof(string)));
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
-            BpmnModel bpmnModel = ProcessDefinitionUtil.getBpmnModel(execution.ProcessDefinitionId);
+            BpmnModel bpmnModel = ProcessDefinitionUtil.GetBpmnModel(execution.ProcessDefinitionId);
             FlowElement flowElement = execution.CurrentFlowElement;
-
-            activiti.bpmn.model.IOSpecification ioSpecification = null;
-            string operationRef = null;
-            IList<DataAssociation> dataInputAssociations = null;
-            IList<DataAssociation> dataOutputAssociations = null;
-
-            if (flowElement is SendTask)
+            activiti.bpmn.model.IOSpecification ioSpecification;
+            string operationRef;
+            IList<DataAssociation> dataInputAssociations;
+            IList<DataAssociation> dataOutputAssociations;
+            if (flowElement is SendTask sendTask)
             {
-                SendTask sendTask = (SendTask)flowElement;
                 ioSpecification = sendTask.IoSpecification;
                 operationRef = sendTask.OperationRef;
                 dataInputAssociations = sendTask.DataInputAssociations;
                 dataOutputAssociations = sendTask.DataOutputAssociations;
-
             }
-            else if (flowElement is ServiceTask)
+            else if (flowElement is ServiceTask serviceTask)
             {
-                ServiceTask serviceTask = (ServiceTask)flowElement;
                 ioSpecification = serviceTask.IoSpecification;
                 operationRef = serviceTask.OperationRef;
                 dataInputAssociations = serviceTask.DataInputAssociations;
                 dataOutputAssociations = serviceTask.DataOutputAssociations;
-
             }
             else
             {
@@ -94,7 +88,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             MessageInstance message = null;
 
-            fillDefinitionMaps(bpmnModel);
+            FillDefinitionMaps(bpmnModel);
 
             webservice.Operation operation = operationMap[operationRef];
 
@@ -103,43 +97,43 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
                 if (ioSpecification != null)
                 {
-                    initializeIoSpecification(ioSpecification, execution, bpmnModel);
+                    InitializeIoSpecification(ioSpecification, execution, bpmnModel);
                     if (ioSpecification.DataInputRefs.Count > 0)
                     {
                         string firstDataInputName = ioSpecification.DataInputRefs[0];
-                        ItemInstance inputItem = (ItemInstance)execution.getVariable(firstDataInputName);
+                        ItemInstance inputItem = (ItemInstance)execution.GetVariable(firstDataInputName);
                         message = new MessageInstance(operation.InMessage, inputItem);
                     }
 
                 }
                 else
                 {
-                    message = operation.InMessage.createInstance();
+                    message = operation.InMessage.CreateInstance();
                 }
 
-                execution.setVariable(CURRENT_MESSAGE, message);
+                execution.SetVariable(CURRENT_MESSAGE, message);
 
-                fillMessage(dataInputAssociations, execution);
+                FillMessage(dataInputAssociations, execution);
 
                 ProcessEngineConfigurationImpl processEngineConfig = Context.ProcessEngineConfiguration;
-                MessageInstance receivedMessage = operation.sendMessage(message, processEngineConfig.WsOverridenEndpointAddresses);
+                MessageInstance receivedMessage = operation.SendMessage(message, processEngineConfig.WsOverridenEndpointAddresses);
 
-                execution.setVariable(CURRENT_MESSAGE, receivedMessage);
+                execution.SetVariable(CURRENT_MESSAGE, receivedMessage);
 
                 if (ioSpecification != null && ioSpecification.DataOutputRefs.Count > 0)
                 {
                     string firstDataOutputName = ioSpecification.DataOutputRefs[0];
-                    if (!ReferenceEquals(firstDataOutputName, null))
+                    if (!(firstDataOutputName is null))
                     {
-                        ItemInstance outputItem = (ItemInstance)execution.getVariable(firstDataOutputName);
-                        outputItem.StructureInstance.loadFrom(receivedMessage.StructureInstance.toArray());
+                        ItemInstance outputItem = (ItemInstance)execution.GetVariable(firstDataOutputName);
+                        outputItem.StructureInstance.LoadFrom(receivedMessage.StructureInstance.ToArray());
                     }
                 }
 
-                returnMessage(dataOutputAssociations, execution);
+                ReturnMessage(dataOutputAssociations, execution);
 
-                execution.setVariable(CURRENT_MESSAGE, null);
-                leave(execution);
+                execution.SetVariable(CURRENT_MESSAGE, null);
+                Leave(execution);
             }
             catch (Exception exc)
             {
@@ -158,7 +152,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
                 if (error != null)
                 {
-                    ErrorPropagation.propagateError(error, execution);
+                    ErrorPropagation.PropagateError(error, execution);
                 }
                 else if (exc is Exception)
                 {
@@ -167,38 +161,35 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
         }
 
-        protected internal virtual void initializeIoSpecification(activiti.bpmn.model.IOSpecification activityIoSpecification, IExecutionEntity execution, BpmnModel bpmnModel)
+        protected internal virtual void InitializeIoSpecification(activiti.bpmn.model.IOSpecification activityIoSpecification, IExecutionEntity execution, BpmnModel bpmnModel)
         {
-
             foreach (DataSpec dataSpec in activityIoSpecification.DataInputs)
             {
                 data.ItemDefinition itemDefinition = itemDefinitionMap[dataSpec.ItemSubjectRef];
-                execution.setVariable(dataSpec.Id, itemDefinition.createInstance());
+                execution.SetVariable(dataSpec.Id, itemDefinition.CreateInstance());
             }
 
             foreach (DataSpec dataSpec in activityIoSpecification.DataOutputs)
             {
                 data.ItemDefinition itemDefinition = itemDefinitionMap[dataSpec.ItemSubjectRef];
-                execution.setVariable(dataSpec.Id, itemDefinition.createInstance());
+                execution.SetVariable(dataSpec.Id, itemDefinition.CreateInstance());
             }
         }
 
-        protected internal virtual void fillDefinitionMaps(BpmnModel bpmnModel)
+        protected internal virtual void FillDefinitionMaps(BpmnModel bpmnModel)
         {
-
             foreach (Import theImport in bpmnModel.Imports)
             {
-                fillImporterInfo(theImport, bpmnModel.SourceSystemId);
+                FillImporterInfo(theImport, bpmnModel.SourceSystemId);
             }
 
-            createItemDefinitions(bpmnModel);
-            createMessages(bpmnModel);
-            createOperations(bpmnModel);
+            CreateItemDefinitions(bpmnModel);
+            CreateMessages(bpmnModel);
+            CreateOperations(bpmnModel);
         }
 
-        protected internal virtual void createItemDefinitions(BpmnModel bpmnModel)
+        protected internal virtual void CreateItemDefinitions(BpmnModel bpmnModel)
         {
-
             foreach (org.activiti.bpmn.model.ItemDefinition itemDefinitionElement in bpmnModel.ItemDefinitions.Values)
             {
 
@@ -209,7 +200,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                     try
                     {
                         // it is a class
-                        Type classStructure = ReflectUtil.loadClass(itemDefinitionElement.StructureRef);
+                        Type classStructure = ReflectUtil.LoadClass(itemDefinitionElement.StructureRef);
                         structure = new ClassStructureDefinition(classStructure);
                     }
                     catch (ActivitiException)
@@ -229,7 +220,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
         }
 
-        public virtual void createMessages(BpmnModel bpmnModel)
+        public virtual void CreateMessages(BpmnModel bpmnModel)
         {
             foreach (Message messageElement in bpmnModel.Messages)
             {
@@ -250,21 +241,24 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
         }
 
-        protected internal virtual void createOperations(BpmnModel bpmnModel)
+        protected internal virtual void CreateOperations(BpmnModel bpmnModel)
         {
             foreach (Interface interfaceObject in bpmnModel.Interfaces)
             {
-                BpmnInterface bpmnInterface = new BpmnInterface(interfaceObject.Id, interfaceObject.Name);
-                bpmnInterface.Implementation = wsServiceMap[interfaceObject.ImplementationRef];
+                BpmnInterface bpmnInterface = new BpmnInterface(interfaceObject.Id, interfaceObject.Name)
+                {
+                    Implementation = wsServiceMap[interfaceObject.ImplementationRef]
+                };
 
                 foreach (org.activiti.bpmn.model.Operation operationObject in interfaceObject.Operations)
                 {
-
                     if (!operationMap.ContainsKey(operationObject.Id))
                     {
                         MessageDefinition inMessage = messageDefinitionMap[operationObject.InMessageRef];
-                        webservice.Operation operation = new webservice.Operation(operationObject.Id, operationObject.Name, bpmnInterface, inMessage);
-                        operation.Implementation = wsOperationMap[operationObject.ImplementationRef];
+                        webservice.Operation operation = new webservice.Operation(operationObject.Id, operationObject.Name, bpmnInterface, inMessage)
+                        {
+                            Implementation = wsOperationMap[operationObject.ImplementationRef]
+                        };
 
                         if (!string.IsNullOrWhiteSpace(operationObject.OutMessageRef))
                         {
@@ -281,7 +275,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
         }
 
-        protected internal virtual void fillImporterInfo(Import theImport, string sourceSystemId)
+        protected internal virtual void FillImporterInfo(Import theImport, string sourceSystemId)
         {
             if (!xmlImporterMap.ContainsKey(theImport.ImportType))
             {
@@ -294,13 +288,13 @@ namespace org.activiti.engine.impl.bpmn.behavior
                         wsdlImporterClass = Type.GetType("org.activiti.engine.impl.webservice.CxfWSDLImporter", true);
                         IXMLImporter importerInstance = (IXMLImporter)Activator.CreateInstance(wsdlImporterClass);
                         xmlImporterMap[theImport.ImportType] = importerInstance;
-                        importerInstance.importFrom(theImport, sourceSystemId);
+                        importerInstance.ImportFrom(theImport, sourceSystemId);
 
-                        structureDefinitionMap.putAll(importerInstance.Structures);
+                        structureDefinitionMap.PutAll(importerInstance.Structures);
 
-                        wsServiceMap.putAll(importerInstance.Services);
+                        wsServiceMap.PutAll(importerInstance.Services);
 
-                        wsOperationMap.putAll(importerInstance.Operations);
+                        wsOperationMap.PutAll(importerInstance.Operations);
 
                     }
                     catch (Exception)
@@ -316,25 +310,25 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
         }
 
-        protected internal virtual void returnMessage(IList<DataAssociation> dataOutputAssociations, IExecutionEntity execution)
+        protected internal virtual void ReturnMessage(IList<DataAssociation> dataOutputAssociations, IExecutionEntity execution)
         {
             foreach (DataAssociation dataAssociationElement in dataOutputAssociations)
             {
-                AbstractDataAssociation dataAssociation = createDataOutputAssociation(dataAssociationElement);
-                dataAssociation.evaluate(execution);
+                AbstractDataAssociation dataAssociation = CreateDataOutputAssociation(dataAssociationElement);
+                dataAssociation.Evaluate(execution);
             }
         }
 
-        protected internal virtual void fillMessage(IList<DataAssociation> dataInputAssociations, IExecutionEntity execution)
+        protected internal virtual void FillMessage(IList<DataAssociation> dataInputAssociations, IExecutionEntity execution)
         {
             foreach (DataAssociation dataAssociationElement in dataInputAssociations)
             {
-                AbstractDataAssociation dataAssociation = createDataInputAssociation(dataAssociationElement);
-                dataAssociation.evaluate(execution);
+                AbstractDataAssociation dataAssociation = CreateDataInputAssociation(dataAssociationElement);
+                dataAssociation.Evaluate(execution);
             }
         }
 
-        protected internal virtual AbstractDataAssociation createDataInputAssociation(DataAssociation dataAssociationElement)
+        protected internal virtual AbstractDataAssociation CreateDataInputAssociation(DataAssociation dataAssociationElement)
         {
             if (dataAssociationElement.Assignments.Count == 0)
             {
@@ -349,17 +343,17 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 {
                     if (!string.IsNullOrWhiteSpace(assignmentElement.From) && !string.IsNullOrWhiteSpace(assignmentElement.To))
                     {
-                        IExpression from = expressionManager.createExpression(assignmentElement.From);
-                        IExpression to = expressionManager.createExpression(assignmentElement.To);
+                        IExpression from = expressionManager.CreateExpression(assignmentElement.From);
+                        IExpression to = expressionManager.CreateExpression(assignmentElement.To);
                         data.Assignment assignment = new data.Assignment(from, to);
-                        dataAssociation.addAssignment(assignment);
+                        dataAssociation.AddAssignment(assignment);
                     }
                 }
                 return dataAssociation;
             }
         }
 
-        protected internal virtual AbstractDataAssociation createDataOutputAssociation(DataAssociation dataAssociationElement)
+        protected internal virtual AbstractDataAssociation CreateDataOutputAssociation(DataAssociation dataAssociationElement)
         {
             if (!string.IsNullOrWhiteSpace(dataAssociationElement.SourceRef))
             {
@@ -368,11 +362,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
             else
             {
                 ExpressionManager expressionManager = Context.ProcessEngineConfiguration.ExpressionManager;
-                IExpression transformation = expressionManager.createExpression(dataAssociationElement.Transformation);
+                IExpression transformation = expressionManager.CreateExpression(dataAssociationElement.Transformation);
                 AbstractDataAssociation dataOutputAssociation = new TransformationDataOutputAssociation(null, dataAssociationElement.TargetRef, transformation);
                 return dataOutputAssociation;
             }
         }
     }
-
 }

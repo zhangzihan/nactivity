@@ -46,10 +46,13 @@ namespace SmartSql
             }
             throw new SmartSqlException($"StatementMap could not find statement:{fullSqlId}");
         }
+
+        private object syncRoot = new object();
+
         public void InitStatementMap()
         {
             IEnumerable<SmartSqlMap> smartSqlMaps = SqlMapConfig.SmartSqlMaps;
-            lock (this)
+            lock (syncRoot)
             {
                 if (_logger.IsEnabled(LogLevel.Debug))
                 {

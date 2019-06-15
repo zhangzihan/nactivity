@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Sys.Workflow;
+using Sys.Workflow.Cache;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
@@ -23,13 +26,15 @@ namespace org.activiti.engine.impl.persistence.deploy
     /// </summary>
     public class DefaultDeploymentCache<T> : IDeploymentCache<T>
     {
-        protected internal ConcurrentDictionary<string, T> cache;
+        private IMemoryCache cache = null;
+
+        private readonly int sizeLimit = -1;
 
         /// <summary>
         /// Cache with no limit </summary>
-        public DefaultDeploymentCache()
+        public DefaultDeploymentCache() : this(-1)
         {
-            this.cache = new ConcurrentDictionary<string, T>();
+
         }
 
         /// <summary>
@@ -37,76 +42,45 @@ namespace org.activiti.engine.impl.persistence.deploy
         /// </summary>
         public DefaultDeploymentCache(int limit)
         {
-            this.cache = new LinkedHashMapAnonymousInnerClass(this, limit + 1);
+            this.sizeLimit = limit;
+            cache = ProcessEngineServiceProvider.Resolve<MemoryCacheProvider>().Create(limit);
         }
 
-        private class LinkedHashMapAnonymousInnerClass : ConcurrentDictionary<string, T>
-        {
-            private readonly DefaultDeploymentCache<T> outerInstance;
-
-            private int limit;
-
-            // 0.75 is the default (see javadocs)
-            // true will keep the 'access-order', which is needed to have a real LRU cache
-            private long serialVersionUID;
-
-            public LinkedHashMapAnonymousInnerClass(DefaultDeploymentCache<T> outerInstance, int limit) : base(StringComparer.OrdinalIgnoreCase)
-            {
-                this.outerInstance = outerInstance;
-                this.limit = limit;
-                serialVersionUID = 1L;
-            }
-
-            protected internal virtual bool removeEldestEntry(KeyValuePair<string, T> eldest)
-            {
-                bool removeEldest = outerInstance.size() > limit;
-                //if (removeEldest && logger.TraceEnabled)
-                //{
-                //    logger.trace("Cache limit is reached, {} will be evicted", eldest.Key);
-                //}
-                return removeEldest;
-            }
-
-        }
-
-        public virtual T get(string id)
+        public virtual T Get(string id)
         {
             cache.TryGetValue(id, out T obj);
 
             return obj;
         }
 
-        public virtual void add(string id, T obj)
+        public virtual void Add(string id, T obj)
         {
-            cache.GetOrAdd(id, (key) => obj);
+            _ = cache.Set(id, obj);
         }
 
-        public virtual void remove(string id)
+        public virtual void Remove(string id)
         {
             if (id == null)
             {
                 return;
             }
-            if (contains(id))
-            {
-                cache.TryRemove(id, out T value);
-            }
+            cache.Remove(id);
         }
 
-        public virtual bool contains(string id)
+        public virtual bool Contains(string id)
         {
-            return cache.ContainsKey(id);
+            return cache.TryGetValue(id, out _);
         }
 
-        public virtual void clear()
+        public virtual void Clear()
         {
-            cache.Clear();
+            cache.Dispose();
+            cache = ProcessEngineServiceProvider.Resolve<MemoryCacheProvider>().Create(sizeLimit);
         }
 
-        // For testing purposes only
-        public virtual int size()
+        public virtual int Size()
         {
-            return cache.Count;
+            return (cache as MemoryCache).Count;
         }
     }
 }

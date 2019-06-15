@@ -20,6 +20,7 @@ namespace org.activiti.engine.impl
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.repository;
+    using System.Linq;
 
     /// 
     /// 
@@ -42,8 +43,9 @@ namespace org.activiti.engine.impl
         protected internal bool withoutTenantId;
         protected internal string processDefinitionKey_;
         protected internal string processDefinitionKeyLike_;
-        protected internal bool latest_Renamed;
+        protected internal bool latest_;
         protected internal bool latestDeployment_;
+        protected internal bool onlyDrafts_;
 
         public DeploymentQueryImpl()
         {
@@ -57,7 +59,7 @@ namespace org.activiti.engine.impl
         {
         }
 
-        public virtual IDeploymentQuery deploymentId(string deploymentId)
+        public virtual IDeploymentQuery SetDeploymentId(string deploymentId)
         {
             if (string.IsNullOrWhiteSpace(deploymentId))
             {
@@ -68,7 +70,19 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeploymentQuery deploymentName(string deploymentName)
+        /// <inheritdoc />
+        public virtual IDeploymentQuery SetDeploymentIds(string[] ids)
+        {
+            if ((ids?.Length).GetValueOrDefault(0) == 0 || ids.Any(x => string.IsNullOrWhiteSpace(x) == false))
+            {
+                this.Ids = null;
+                return this;
+            }
+            this.Ids = ids;
+            return this;
+        }
+
+        public virtual IDeploymentQuery SetDeploymentName(string deploymentName)
         {
             if (string.IsNullOrWhiteSpace(deploymentName))
             {
@@ -79,7 +93,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeploymentQuery deploymentNameLike(string nameLike)
+        public virtual IDeploymentQuery SetDeploymentNameLike(string nameLike)
         {
             if (string.IsNullOrWhiteSpace(nameLike))
             {
@@ -90,7 +104,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeploymentQuery deploymentCategory(string deploymentCategory)
+        public virtual IDeploymentQuery SetDeploymentCategory(string deploymentCategory)
         {
             if (string.IsNullOrWhiteSpace(deploymentCategory))
             {
@@ -101,7 +115,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeploymentQuery deploymentCategoryLike(string categoryLike)
+        public virtual IDeploymentQuery SetDeploymentCategoryLike(string categoryLike)
         {
             if (string.IsNullOrWhiteSpace(categoryLike))
             {
@@ -112,7 +126,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeploymentQuery deploymentCategoryNotEquals(string deploymentCategoryNotEquals)
+        public virtual IDeploymentQuery SetDeploymentCategoryNotEquals(string deploymentCategoryNotEquals)
         {
             if (string.IsNullOrWhiteSpace(deploymentCategoryNotEquals))
             {
@@ -123,7 +137,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeploymentQuery deploymentKey(string deploymentKey)
+        public virtual IDeploymentQuery SetDeploymentKey(string deploymentKey)
         {
             if (string.IsNullOrWhiteSpace(deploymentKey))
             {
@@ -134,7 +148,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeploymentQuery deploymentKeyLike(string deploymentKeyLike)
+        public virtual IDeploymentQuery SetDeploymentKeyLike(string deploymentKeyLike)
         {
             if (string.IsNullOrWhiteSpace(deploymentKeyLike))
             {
@@ -145,7 +159,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeploymentQuery deploymentBusinessKey(string businessKey)
+        public virtual IDeploymentQuery SetDeploymentBusinessKey(string businessKey)
         {
             if (string.IsNullOrWhiteSpace(businessKey))
             {
@@ -156,7 +170,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeploymentQuery deploymentTenantId(string tenantId)
+        public virtual IDeploymentQuery SetDeploymentTenantId(string tenantId)
         {
             if (string.IsNullOrWhiteSpace(tenantId))
             {
@@ -167,7 +181,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeploymentQuery deploymentTenantIdLike(string tenantIdLike)
+        public virtual IDeploymentQuery SetDeploymentTenantIdLike(string tenantIdLike)
         {
             if (string.IsNullOrWhiteSpace(tenantIdLike))
             {
@@ -178,13 +192,13 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeploymentQuery deploymentWithoutTenantId()
+        public virtual IDeploymentQuery SetDeploymentWithoutTenantId()
         {
             this.withoutTenantId = true;
             return this;
         }
 
-        public virtual IDeploymentQuery processDefinitionKey(string key)
+        public virtual IDeploymentQuery SetProcessDefinitionKey(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -195,7 +209,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeploymentQuery processDefinitionKeyLike(string keyLike)
+        public virtual IDeploymentQuery SetProcessDefinitionKeyLike(string keyLike)
         {
             if (string.IsNullOrWhiteSpace(keyLike))
             {
@@ -206,11 +220,11 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IDeploymentQuery latest()
+        public virtual IDeploymentQuery SetLatest()
         {
             if (string.IsNullOrWhiteSpace(key))
             {
-                this.latest_Renamed = false;
+                this.latest_ = false;
                 return this;
             }
             //if (ReferenceEquals(key, null))
@@ -218,52 +232,63 @@ namespace org.activiti.engine.impl
             //    throw new ActivitiIllegalArgumentException("latest can only be used together with a deployment key");
             //}
 
-            this.latest_Renamed = true;
+            this.latest_ = true;
+            return this;
+        }
+
+        public virtual IDeploymentQuery SetOnlyDrafts()
+        {
+            this.onlyDrafts_ = true;
             return this;
         }
 
         // sorting ////////////////////////////////////////////////////////
 
-        public virtual IDeploymentQuery orderByDeploymentId()
+        public virtual IDeploymentQuery SetOrderByDeploymentId()
         {
-            return orderBy(DeploymentQueryProperty.DEPLOYMENT_ID);
+            return SetOrderBy(DeploymentQueryProperty.DEPLOYMENT_ID);
         }
 
-        public virtual IDeploymentQuery orderByDeploymenTime()
+        public virtual IDeploymentQuery SetOrderByDeploymenTime()
         {
-            return orderBy(DeploymentQueryProperty.DEPLOY_TIME);
+            return SetOrderBy(DeploymentQueryProperty.DEPLOY_TIME);
         }
 
-        public virtual IDeploymentQuery orderByDeploymentName()
+        public virtual IDeploymentQuery SetOrderByDeploymentName()
         {
-            return orderBy(DeploymentQueryProperty.DEPLOYMENT_NAME);
+            return SetOrderBy(DeploymentQueryProperty.DEPLOYMENT_NAME);
         }
 
-        public virtual IDeploymentQuery orderByTenantId()
+        public virtual IDeploymentQuery SetOrderByTenantId()
         {
-            return orderBy(DeploymentQueryProperty.DEPLOYMENT_TENANT_ID);
+            return SetOrderBy(DeploymentQueryProperty.DEPLOYMENT_TENANT_ID);
         }
 
         // results ////////////////////////////////////////////////////////
 
-        public override long executeCount(ICommandContext commandContext)
+        public override long ExecuteCount(ICommandContext commandContext)
         {
-            checkQueryOk();
-            return commandContext.DeploymentEntityManager.findDeploymentCountByQueryCriteria(this);
+            CheckQueryOk();
+            return commandContext.DeploymentEntityManager.FindDeploymentCountByQueryCriteria(this);
         }
 
-        public override IList<IDeployment> executeList(ICommandContext commandContext, Page page)
+        public override IList<IDeployment> ExecuteList(ICommandContext commandContext, Page page)
         {
-            checkQueryOk();
-            return commandContext.DeploymentEntityManager.findDeploymentsByQueryCriteria(this, page);
+            CheckQueryOk();
+            return commandContext.DeploymentEntityManager.FindDeploymentsByQueryCriteria(this, page);
         }
 
-        public virtual IList<IDeployment> findDrafts()
+        public virtual IList<IDeployment> FindDrafts()
         {
-            return commandExecutor.execute<IList<IDeployment>>(new GetDraftDeploymentCmd(this));
+            return commandExecutor.Execute<IList<IDeployment>>(new GetDraftDeploymentCmd(this));
         }
 
         // getters ////////////////////////////////////////////////////////
+
+        public virtual string[] Ids
+        {
+            get; set;
+        }
 
         public virtual string DeploymentId
         {
@@ -271,7 +296,7 @@ namespace org.activiti.engine.impl
             {
                 return deploymentId_;
             }
-            set => deploymentId(value);
+            set => SetDeploymentId(value);
         }
 
         public virtual string Name
@@ -280,7 +305,7 @@ namespace org.activiti.engine.impl
             {
                 return name;
             }
-            set => deploymentName(value);
+            set => SetDeploymentName(value);
         }
 
         public virtual string NameLike
@@ -289,7 +314,7 @@ namespace org.activiti.engine.impl
             {
                 return nameLike;
             }
-            set => deploymentNameLike(value);
+            set => SetDeploymentNameLike(value);
         }
 
         public virtual string BusinessKey
@@ -298,7 +323,7 @@ namespace org.activiti.engine.impl
             {
                 return businessKey;
             }
-            set => deploymentBusinessKey(value);
+            set => SetDeploymentBusinessKey(value);
         }
 
         public virtual string Category
@@ -307,7 +332,7 @@ namespace org.activiti.engine.impl
             {
                 return category;
             }
-            set => deploymentCategory(value);
+            set => SetDeploymentCategory(value);
         }
 
         public virtual string CategoryNotEquals
@@ -316,7 +341,7 @@ namespace org.activiti.engine.impl
             {
                 return categoryNotEquals;
             }
-            set => deploymentCategoryNotEquals(value);
+            set => SetDeploymentCategoryNotEquals(value);
         }
 
         public virtual string TenantId
@@ -325,7 +350,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantId;
             }
-            set => deploymentTenantId(value);
+            set => SetDeploymentTenantId(value);
         }
 
         public virtual string TenantIdLike
@@ -334,7 +359,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantIdLike;
             }
-            set => deploymentTenantIdLike(value);
+            set => SetDeploymentTenantIdLike(value);
         }
 
         public virtual bool WithoutTenantId
@@ -352,7 +377,7 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionKey_;
             }
-            set => processDefinitionKey(value);
+            set => SetProcessDefinitionKey(value);
         }
 
         public virtual string ProcessDefinitionKeyLike
@@ -361,11 +386,11 @@ namespace org.activiti.engine.impl
             {
                 return processDefinitionKeyLike_;
             }
-            set => processDefinitionKeyLike(value);
+            set => SetProcessDefinitionKeyLike(value);
         }
 
 
-        public virtual IDeploymentQuery latestDeployment()
+        public virtual IDeploymentQuery SetLatestDeployment()
         {
             latestDeployment_ = true;
             return this;
@@ -378,11 +403,27 @@ namespace org.activiti.engine.impl
             {
                 if (value)
                 {
-                    latestDeployment();
+                    SetLatestDeployment();
                 }
                 else
                 {
                     latestDeployment_ = value;
+                }
+            }
+        }
+
+        public bool OnlyDrafts
+        {
+            get => onlyDrafts_;
+            set
+            {
+                if (value)
+                {
+                    SetOnlyDrafts();
+                }
+                else
+                {
+                    onlyDrafts_ = false;
                 }
             }
         }

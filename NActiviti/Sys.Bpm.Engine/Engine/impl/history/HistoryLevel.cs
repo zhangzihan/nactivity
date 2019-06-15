@@ -51,7 +51,7 @@ namespace org.activiti.engine.impl.history
         private readonly int ordinalValue;
         private static int nextOrdinal = 0;
 
-        private string key;
+        private readonly string key;
 
         private HistoryLevel(string name, InnerEnum innerEnum, string key)
         {
@@ -67,9 +67,9 @@ namespace org.activiti.engine.impl.history
         /// <returns> <seealso cref="HistoryLevel"/> for the given key </returns>
         /// <exception cref="ActivitiException">
         ///           when passed in key doesn't correspond to existing level </exception>
-        public static HistoryLevel getHistoryLevelForKey(string key)
+        public static HistoryLevel GetHistoryLevelForKey(string key)
         {
-            foreach (HistoryLevel level in values())
+            foreach (HistoryLevel level in Values())
             {
                 if (level.key.Equals(key))
                 {
@@ -93,19 +93,19 @@ namespace org.activiti.engine.impl.history
         /// <summary>
         /// Checks if the given level is the same as, or higher in order than the level this method is executed on.
         /// </summary>
-        public bool isAtLeast(HistoryLevel level)
+        public bool IsAtLeast(HistoryLevel level)
         {
             // Comparing enums actually compares the location of values declared in
             // the enum
             return Compare(this, level) >= 0;
         }
 
-        public static IList<HistoryLevel> values()
+        public static IList<HistoryLevel> Values()
         {
             return valueList;
         }
 
-        public int ordinal()
+        public int Ordinal()
         {
             return ordinalValue;
         }
@@ -115,7 +115,7 @@ namespace org.activiti.engine.impl.history
             return nameValue;
         }
 
-        public static HistoryLevel valueOf(string name)
+        public static HistoryLevel ValueOf(string name)
         {
             foreach (HistoryLevel enumInstance in valueList)
             {

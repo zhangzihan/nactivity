@@ -34,9 +34,9 @@ namespace org.activiti.engine.impl.cmd
             this.taskId = taskId;
         }
 
-        public virtual IList<IIdentityLink> execute(ICommandContext commandContext)
+        public virtual IList<IIdentityLink> Execute(ICommandContext commandContext)
         {
-            ITaskEntity task = commandContext.TaskEntityManager.findById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
+            ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
 
             IList<IIdentityLink> identityLinks = (IList<IIdentityLink>)task.IdentityLinks;
 
@@ -51,17 +51,17 @@ namespace org.activiti.engine.impl.cmd
             // since the task.delete cascaded to all associated identityLinks
             // and of course this leads to exception while trying to delete a
             // non-existing identityLink
-            if (!ReferenceEquals(task.Assignee, null))
+            if (!(task.Assignee is null))
             {
-                IIdentityLinkEntity identityLink = commandContext.IdentityLinkEntityManager.create();
+                IIdentityLinkEntity identityLink = commandContext.IdentityLinkEntityManager.Create();
                 identityLink.UserId = task.Assignee;
                 identityLink.Type = IdentityLinkType.ASSIGNEE;
                 identityLink.TaskId = task.Id;
                 identityLinks.Add(identityLink);
             }
-            if (!ReferenceEquals(task.Owner, null))
+            if (!(task.Owner is null))
             {
-                IIdentityLinkEntity identityLink = commandContext.IdentityLinkEntityManager.create();
+                IIdentityLinkEntity identityLink = commandContext.IdentityLinkEntityManager.Create();
                 identityLink.UserId = task.Owner;
                 identityLink.TaskId = task.Id;
                 identityLink.Type = IdentityLinkType.OWNER;

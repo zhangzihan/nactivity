@@ -42,22 +42,22 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public virtual IList<IAttachmentEntity> findAttachmentsByProcessInstanceId(string processInstanceId)
+        public virtual IList<IAttachmentEntity> FindAttachmentsByProcessInstanceId(string processInstanceId)
         {
-            checkHistoryEnabled();
-            return attachmentDataManager.findAttachmentsByProcessInstanceId(processInstanceId);
+            CheckHistoryEnabled();
+            return attachmentDataManager.FindAttachmentsByProcessInstanceId(processInstanceId);
         }
 
-        public virtual IList<IAttachmentEntity> findAttachmentsByTaskId(string taskId)
+        public virtual IList<IAttachmentEntity> FindAttachmentsByTaskId(string taskId)
         {
-            checkHistoryEnabled();
-            return attachmentDataManager.findAttachmentsByTaskId(taskId);
+            CheckHistoryEnabled();
+            return attachmentDataManager.FindAttachmentsByTaskId(taskId);
         }
 
-        public virtual void deleteAttachmentsByTaskId(string taskId)
+        public virtual void DeleteAttachmentsByTaskId(string taskId)
         {
-            checkHistoryEnabled();
-            IList<IAttachmentEntity> attachments = findAttachmentsByTaskId(taskId);
+            CheckHistoryEnabled();
+            IList<IAttachmentEntity> attachments = FindAttachmentsByTaskId(taskId);
             bool dispatchEvents = EventDispatcher.Enabled;
 
             string processInstanceId = null;
@@ -68,7 +68,7 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 // Forced to fetch the task to get hold of the process definition
                 // for event-dispatching, if available
-                ITask task = TaskEntityManager.findById<ITask>(new KeyValuePair<string, object>("id", taskId));
+                ITask task = TaskEntityManager.FindById<ITask>(new KeyValuePair<string, object>("id", taskId));
                 if (task != null)
                 {
                     processDefinitionId = task.ProcessDefinitionId;
@@ -80,21 +80,21 @@ namespace org.activiti.engine.impl.persistence.entity
             foreach (IAttachment attachment in attachments)
             {
                 string contentId = attachment.ContentId;
-                if (!ReferenceEquals(contentId, null))
+                if (!(contentId is null))
                 {
-                    ByteArrayEntityManager.deleteByteArrayById(contentId);
+                    ByteArrayEntityManager.DeleteByteArrayById(contentId);
                 }
 
-                attachmentDataManager.delete((IAttachmentEntity)attachment);
+                attachmentDataManager.Delete((IAttachmentEntity)attachment);
 
                 if (dispatchEvents)
                 {
-                    EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_DELETED, attachment, executionId, processInstanceId, processDefinitionId));
+                    EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, attachment, executionId, processInstanceId, processDefinitionId));
                 }
             }
         }
 
-        protected internal virtual void checkHistoryEnabled()
+        protected internal virtual void CheckHistoryEnabled()
         {
             if (!HistoryManager.HistoryEnabled)
             {

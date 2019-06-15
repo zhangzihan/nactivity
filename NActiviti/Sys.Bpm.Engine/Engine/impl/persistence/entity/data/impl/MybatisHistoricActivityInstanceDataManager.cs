@@ -38,49 +38,53 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IHistoricActivityInstanceEntity create()
+        public override IHistoricActivityInstanceEntity Create()
         {
             return new HistoricActivityInstanceEntityImpl();
         }
 
-        public virtual IList<IHistoricActivityInstanceEntity> findUnfinishedHistoricActivityInstancesByExecutionAndActivityId(string executionId, string activityId)
+        public virtual IList<IHistoricActivityInstanceEntity> FindUnfinishedHistoricActivityInstancesByExecutionAndActivityId(string executionId, string activityId)
         {
-            IDictionary<string, object> @params = new Dictionary<string, object>();
-            @params["executionId"] = executionId;
-            @params["activityId"] = activityId;
-            return (IList<IHistoricActivityInstanceEntity>)getList("selectUnfinishedHistoricActivityInstanceExecutionIdAndActivityId", @params, unfinishedHistoricActivityInstanceMatcher, true);
+            IDictionary<string, object> @params = new Dictionary<string, object>
+            {
+                ["executionId"] = executionId,
+                ["activityId"] = activityId
+            };
+            return (IList<IHistoricActivityInstanceEntity>)GetList("selectUnfinishedHistoricActivityInstanceExecutionIdAndActivityId", @params, unfinishedHistoricActivityInstanceMatcher, true);
         }
 
-        public virtual IList<IHistoricActivityInstanceEntity> findUnfinishedHistoricActivityInstancesByProcessInstanceId(string processInstanceId)
+        public virtual IList<IHistoricActivityInstanceEntity> FindUnfinishedHistoricActivityInstancesByProcessInstanceId(string processInstanceId)
         {
-            IDictionary<string, object> @params = new Dictionary<string, object>();
-            @params["processInstanceId"] = processInstanceId;
-            return (IList<IHistoricActivityInstanceEntity>)getList("selectUnfinishedHistoricActivityInstanceExecutionIdAndActivityId", @params, unfinishedHistoricActivityInstanceMatcher, true);
+            IDictionary<string, object> @params = new Dictionary<string, object>
+            {
+                ["processInstanceId"] = processInstanceId
+            };
+            return (IList<IHistoricActivityInstanceEntity>)GetList("selectUnfinishedHistoricActivityInstanceExecutionIdAndActivityId", @params, unfinishedHistoricActivityInstanceMatcher, true);
         }
 
-        public virtual void deleteHistoricActivityInstancesByProcessInstanceId(string historicProcessInstanceId)
+        public virtual void DeleteHistoricActivityInstancesByProcessInstanceId(string historicProcessInstanceId)
         {
-            DbSqlSession.delete("deleteHistoricActivityInstancesByProcessInstanceId", new { historicProcessInstanceId }, typeof(HistoricActivityInstanceEntityImpl));
+            DbSqlSession.Delete("deleteHistoricActivityInstancesByProcessInstanceId", new { historicProcessInstanceId }, typeof(HistoricActivityInstanceEntityImpl));
         }
 
-        public virtual long findHistoricActivityInstanceCountByQueryCriteria(IHistoricActivityInstanceQuery historicActivityInstanceQuery)
+        public virtual long FindHistoricActivityInstanceCountByQueryCriteria(IHistoricActivityInstanceQuery historicActivityInstanceQuery)
         {
-            return DbSqlSession.selectOne<HistoricActivityInstanceEntityImpl, long?>("selectHistoricActivityInstanceCountByQueryCriteria", historicActivityInstanceQuery).GetValueOrDefault();
+            return DbSqlSession.SelectOne<HistoricActivityInstanceEntityImpl, long?>("selectHistoricActivityInstanceCountByQueryCriteria", historicActivityInstanceQuery).GetValueOrDefault();
         }
 
-        public virtual IList<IHistoricActivityInstance> findHistoricActivityInstancesByQueryCriteria(IHistoricActivityInstanceQuery historicActivityInstanceQuery, Page page)
+        public virtual IList<IHistoricActivityInstance> FindHistoricActivityInstancesByQueryCriteria(IHistoricActivityInstanceQuery historicActivityInstanceQuery, Page page)
         {
-            return DbSqlSession.selectList<HistoricActivityInstanceEntityImpl, IHistoricActivityInstance>("selectHistoricActivityInstancesByQueryCriteria", historicActivityInstanceQuery, page);
+            return DbSqlSession.SelectList<HistoricActivityInstanceEntityImpl, IHistoricActivityInstance>("selectHistoricActivityInstancesByQueryCriteria", historicActivityInstanceQuery, page);
         }
 
-        public virtual IList<IHistoricActivityInstance> findHistoricActivityInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IHistoricActivityInstance> FindHistoricActivityInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return DbSqlSession.selectListWithRawParameter<HistoricActivityInstanceEntityImpl, IHistoricActivityInstance>("selectHistoricActivityInstanceByNativeQuery", parameterMap, firstResult, maxResults);
+            return DbSqlSession.SelectListWithRawParameter<HistoricActivityInstanceEntityImpl, IHistoricActivityInstance>("selectHistoricActivityInstanceByNativeQuery", parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findHistoricActivityInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindHistoricActivityInstanceCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return DbSqlSession.selectOne<EventSubscriptionEntityImpl, long?>("selectHistoricActivityInstanceCountByNativeQuery", parameterMap).GetValueOrDefault();
+            return DbSqlSession.SelectOne<EventSubscriptionEntityImpl, long?>("selectHistoricActivityInstanceCountByNativeQuery", parameterMap).GetValueOrDefault();
         }
     }
 

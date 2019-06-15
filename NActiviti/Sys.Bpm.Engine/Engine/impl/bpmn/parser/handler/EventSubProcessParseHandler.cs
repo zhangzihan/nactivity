@@ -27,7 +27,5 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
                 return typeof(EventSubProcess);
             }
         }
-
     }
-
 }

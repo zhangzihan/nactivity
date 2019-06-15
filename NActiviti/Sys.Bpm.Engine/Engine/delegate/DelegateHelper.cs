@@ -34,24 +34,24 @@ namespace org.activiti.engine.@delegate
         /// according to the default BPMN 2.0 rules: all sequenceflow with a condition
         /// that evaluates to true are followed.
         /// </summary>
-        public static void leaveDelegate(IExecutionEntity delegateExecution)
+        public static void LeaveDelegate(IExecutionEntity delegateExecution)
         {
-            Context.Agenda.planTakeOutgoingSequenceFlowsOperation(delegateExecution, true);
+            Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(delegateExecution, true);
         }
 
         /// <summary>
         /// To be used in an <seealso cref="ActivityBehavior"/> or <seealso cref="IJavaDelegate"/>: leaves
         /// the current activity via one specific sequenceflow.
         /// </summary>
-        public static void leaveDelegate(IExecutionEntity delegateExecution, string sequenceFlowId)
+        public static void LeaveDelegate(IExecutionEntity delegateExecution, string sequenceFlowId)
         {
             string processDefinitionId = delegateExecution.ProcessDefinitionId;
-            Process process = ProcessDefinitionUtil.getProcess(processDefinitionId);
-            FlowElement flowElement = process.getFlowElement(sequenceFlowId);
+            Process process = ProcessDefinitionUtil.GetProcess(processDefinitionId);
+            FlowElement flowElement = process.FindFlowElement(sequenceFlowId);
             if (flowElement is SequenceFlow)
             {
                 delegateExecution.CurrentFlowElement = flowElement;
-                Context.Agenda.planTakeOutgoingSequenceFlowsOperation(delegateExecution, false);
+                Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(delegateExecution, false);
             }
             else
             {
@@ -63,22 +63,22 @@ namespace org.activiti.engine.@delegate
         /// Returns the <seealso cref="BpmnModel"/> matching the process definition bpmn model
         /// for the process definition of the passed <seealso cref="IDelegateExecution"/>.
         /// </summary>
-        public static BpmnModel getBpmnModel(IExecutionEntity execution)
+        public static BpmnModel GetBpmnModel(IExecutionEntity execution)
         {
             if (execution == null)
             {
                 throw new ActivitiException("Null execution passed");
             }
-            return ProcessDefinitionUtil.getBpmnModel(execution.ProcessDefinitionId);
+            return ProcessDefinitionUtil.GetBpmnModel(execution.ProcessDefinitionId);
         }
 
         /// <summary>
         /// Returns the current <seealso cref="FlowElement"/> where the <seealso cref="IDelegateExecution"/> is currently at.
         /// </summary>
-        public static FlowElement getFlowElement(IExecutionEntity execution)
+        public static FlowElement GetFlowElement(IExecutionEntity execution)
         {
-            BpmnModel bpmnModel = getBpmnModel(execution);
-            FlowElement flowElement = bpmnModel.getFlowElement(execution.CurrentActivityId);
+            BpmnModel bpmnModel = GetBpmnModel(execution);
+            FlowElement flowElement = bpmnModel.GetFlowElement(execution.CurrentActivityId);
             if (flowElement == null)
             {
                 throw new ActivitiException("Could not find a FlowElement for activityId " + execution.CurrentActivityId);
@@ -89,7 +89,7 @@ namespace org.activiti.engine.@delegate
         /// <summary>
         /// Returns whether or not the provided execution is being use for executing an <seealso cref="IExecutionListener"/>.
         /// </summary>
-        public static bool isExecutingExecutionListener(IExecutionEntity execution)
+        public static bool IsExecutingExecutionListener(IExecutionEntity execution)
         {
             return execution.CurrentActivitiListener != null;
         }
@@ -108,24 +108,24 @@ namespace org.activiti.engine.@delegate
         /// listener.
         /// </para>
         /// </summary>
-        public static IDictionary<string, IList<ExtensionElement>> getExtensionElements(IExecutionEntity execution)
+        public static IDictionary<string, IList<ExtensionElement>> GetExtensionElements(IExecutionEntity execution)
         {
-            if (isExecutingExecutionListener(execution))
+            if (IsExecutingExecutionListener(execution))
             {
-                return getListenerExtensionElements(execution);
+                return GetListenerExtensionElements(execution);
             }
             else
             {
-                return getFlowElementExtensionElements(execution);
+                return GetFlowElementExtensionElements(execution);
             }
         }
 
-        public static IDictionary<string, IList<ExtensionElement>> getFlowElementExtensionElements(IExecutionEntity execution)
+        public static IDictionary<string, IList<ExtensionElement>> GetFlowElementExtensionElements(IExecutionEntity execution)
         {
-            return getFlowElement(execution).ExtensionElements;
+            return GetFlowElement(execution).ExtensionElements;
         }
 
-        public static IDictionary<string, IList<ExtensionElement>> getListenerExtensionElements(IExecutionEntity execution)
+        public static IDictionary<string, IList<ExtensionElement>> GetListenerExtensionElements(IExecutionEntity execution)
         {
             return execution.CurrentActivitiListener.ExtensionElements;
         }
@@ -142,21 +142,21 @@ namespace org.activiti.engine.@delegate
         /// of listener fields specifically.
         /// </para>
         /// </summary>
-        public static IList<FieldExtension> getFields(IExecutionEntity execution)
+        public static IList<FieldExtension> GetFields(IExecutionEntity execution)
         {
-            if (isExecutingExecutionListener(execution))
+            if (IsExecutingExecutionListener(execution))
             {
-                return getListenerFields(execution);
+                return GetListenerFields(execution);
             }
             else
             {
-                return getFlowElementFields(execution);
+                return GetFlowElementFields(execution);
             }
         }
 
-        public static IList<FieldExtension> getFlowElementFields(IExecutionEntity execution)
+        public static IList<FieldExtension> GetFlowElementFields(IExecutionEntity execution)
         {
-            FlowElement flowElement = getFlowElement(execution);
+            FlowElement flowElement = GetFlowElement(execution);
             if (flowElement is TaskWithFieldExtensions)
             {
                 return ((TaskWithFieldExtensions)flowElement).FieldExtensions;
@@ -164,7 +164,7 @@ namespace org.activiti.engine.@delegate
             return new List<FieldExtension>();
         }
 
-        public static IList<FieldExtension> getListenerFields(IExecutionEntity execution)
+        public static IList<FieldExtension> GetListenerFields(IExecutionEntity execution)
         {
             return execution.CurrentActivitiListener.FieldExtensions;
         }
@@ -184,28 +184,28 @@ namespace org.activiti.engine.@delegate
         /// getting the field from either the flow element or the listener.
         /// </para>
         /// </summary>
-        public static FieldExtension getField(IExecutionEntity execution, string fieldName)
+        public static FieldExtension GetField(IExecutionEntity execution, string fieldName)
         {
-            if (isExecutingExecutionListener(execution))
+            if (IsExecutingExecutionListener(execution))
             {
-                return getListenerField(execution, fieldName);
+                return GetListenerField(execution, fieldName);
             }
             else
             {
-                return getFlowElementField(execution, fieldName);
+                return GetFlowElementField(execution, fieldName);
             }
         }
 
-        public static FieldExtension getFlowElementField(IExecutionEntity execution, string fieldName)
+        public static FieldExtension GetFlowElementField(IExecutionEntity execution, string fieldName)
         {
-            IList<FieldExtension> fieldExtensions = getFlowElementFields(execution);
+            IList<FieldExtension> fieldExtensions = GetFlowElementFields(execution);
             if (fieldExtensions == null || fieldExtensions.Count == 0)
             {
                 return null;
             }
             foreach (FieldExtension fieldExtension in fieldExtensions)
             {
-                if (!ReferenceEquals(fieldExtension.FieldName, null) && fieldExtension.FieldName.Equals(fieldName))
+                if (!(fieldExtension.FieldName is null) && fieldExtension.FieldName.Equals(fieldName))
                 {
                     return fieldExtension;
                 }
@@ -213,16 +213,16 @@ namespace org.activiti.engine.@delegate
             return null;
         }
 
-        public static FieldExtension getListenerField(IExecutionEntity execution, string fieldName)
+        public static FieldExtension GetListenerField(IExecutionEntity execution, string fieldName)
         {
-            IList<FieldExtension> fieldExtensions = getListenerFields(execution);
+            IList<FieldExtension> fieldExtensions = GetListenerFields(execution);
             if (fieldExtensions == null || fieldExtensions.Count == 0)
             {
                 return null;
             }
             foreach (FieldExtension fieldExtension in fieldExtensions)
             {
-                if (!ReferenceEquals(fieldExtension.FieldName, null) && fieldExtension.FieldName.Equals(fieldName))
+                if (!(fieldExtension.FieldName is null) && fieldExtension.FieldName.Equals(fieldName))
                 {
                     return fieldExtension;
                 }
@@ -233,12 +233,12 @@ namespace org.activiti.engine.@delegate
         /// <summary>
         /// Creates an <seealso cref="IExpression"/> for the <seealso cref="FieldExtension"/>.
         /// </summary>
-        public static IExpression createExpressionForField(FieldExtension fieldExtension)
+        public static IExpression CreateExpressionForField(FieldExtension fieldExtension)
         {
             if (!string.IsNullOrWhiteSpace(fieldExtension.Expression))
             {
                 ExpressionManager expressionManager = Context.ProcessEngineConfiguration.ExpressionManager;
-                return expressionManager.createExpression(fieldExtension.Expression);
+                return expressionManager.CreateExpression(fieldExtension.Expression);
             }
             else
             {
@@ -261,22 +261,22 @@ namespace org.activiti.engine.@delegate
         /// specifically getting the flow element or listener field expression.
         /// </para>
         /// </summary>
-        public static IExpression getFieldExpression(IExecutionEntity execution, string fieldName)
+        public static IExpression GetFieldExpression(IExecutionEntity execution, string fieldName)
         {
-            if (isExecutingExecutionListener(execution))
+            if (IsExecutingExecutionListener(execution))
             {
-                return getListenerFieldExpression(execution, fieldName);
+                return GetListenerFieldExpression(execution, fieldName);
             }
             else
             {
-                return getFlowElementFieldExpression(execution, fieldName);
+                return GetFlowElementFieldExpression(execution, fieldName);
             }
         }
 
         /// <summary>
         /// Similar to <seealso cref="#getFieldExpression(DelegateExecution, String)"/>, but for use within a <seealso cref="ITaskListener"/>.
         /// </summary>
-        public static IExpression getFieldExpression(IDelegateTask task, string fieldName)
+        public static IExpression GetFieldExpression(IDelegateTask task, string fieldName)
         {
             if (task.CurrentActivitiListener != null)
             {
@@ -287,7 +287,7 @@ namespace org.activiti.engine.@delegate
                     {
                         if (fieldName.Equals(fieldExtension.FieldName))
                         {
-                            return createExpressionForField(fieldExtension);
+                            return CreateExpressionForField(fieldExtension);
                         }
                     }
                 }
@@ -295,22 +295,22 @@ namespace org.activiti.engine.@delegate
             return null;
         }
 
-        public static IExpression getFlowElementFieldExpression(IExecutionEntity execution, string fieldName)
+        public static IExpression GetFlowElementFieldExpression(IExecutionEntity execution, string fieldName)
         {
-            FieldExtension fieldExtension = getFlowElementField(execution, fieldName);
+            FieldExtension fieldExtension = GetFlowElementField(execution, fieldName);
             if (fieldExtension != null)
             {
-                return createExpressionForField(fieldExtension);
+                return CreateExpressionForField(fieldExtension);
             }
             return null;
         }
 
-        public static IExpression getListenerFieldExpression(IExecutionEntity execution, string fieldName)
+        public static IExpression GetListenerFieldExpression(IExecutionEntity execution, string fieldName)
         {
-            FieldExtension fieldExtension = getListenerField(execution, fieldName);
+            FieldExtension fieldExtension = GetListenerField(execution, fieldName);
             if (fieldExtension != null)
             {
-                return createExpressionForField(fieldExtension);
+                return CreateExpressionForField(fieldExtension);
             }
             return null;
         }

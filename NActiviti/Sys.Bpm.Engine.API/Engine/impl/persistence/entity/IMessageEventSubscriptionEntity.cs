@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
     }
 
-    public static class MessageEventSubscriptionEntity_Fields
+    public static class MessageEventSubscriptionEntityFields
     {
         public const string EVENT_TYPE = "message";
     }

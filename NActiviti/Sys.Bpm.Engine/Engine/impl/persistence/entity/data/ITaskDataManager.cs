@@ -20,23 +20,23 @@ namespace org.activiti.engine.impl.persistence.entity.data
     /// 
     public interface ITaskDataManager : IDataManager<ITaskEntity>
     {
-        IList<ITaskEntity> findTasksByExecutionId(string executionId);
+        IList<ITaskEntity> FindTasksByExecutionId(string executionId);
 
-        IList<ITaskEntity> findTasksByProcessInstanceId(string processInstanceId);
+        IList<ITaskEntity> FindTasksByProcessInstanceId(string processInstanceId);
 
-        IList<ITask> findTasksByQueryCriteria(TaskQueryImpl taskQuery);
+        IList<ITask> FindTasksByQueryCriteria(ITaskQuery taskQuery);
 
-        IList<ITask> findTasksAndVariablesByQueryCriteria(TaskQueryImpl taskQuery);
+        IList<ITask> FindTasksAndVariablesByQueryCriteria(ITaskQuery taskQuery);
 
-        long findTaskCountByQueryCriteria(TaskQueryImpl taskQuery);
+        long FindTaskCountByQueryCriteria(ITaskQuery taskQuery);
 
-        IList<ITask> findTasksByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<ITask> FindTasksByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-        long findTaskCountByNativeQuery(IDictionary<string, object> parameterMap);
+        long FindTaskCountByNativeQuery(IDictionary<string, object> parameterMap);
 
-        IList<ITask> findTasksByParentTaskId(string parentTaskId);
+        IList<ITask> FindTasksByParentTaskId(string parentTaskId);
 
-        void updateTaskTenantIdForDeployment(string deploymentId, string newTenantId);
+        void UpdateTaskTenantIdForDeployment(string deploymentId, string newTenantId);
     }
 
 }

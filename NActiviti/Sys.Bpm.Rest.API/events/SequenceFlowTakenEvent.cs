@@ -17,7 +17,7 @@
 
 namespace org.activiti.cloud.services.events
 {
-    using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
+    using IProcessEngineEvent = api.events.IProcessEngineEvent;
 
     /// <summary>
     /// 

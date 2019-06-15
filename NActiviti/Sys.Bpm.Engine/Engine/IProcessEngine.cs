@@ -46,7 +46,10 @@ namespace org.activiti.engine
         /// </summary>
         string Name { get; }
 
-        void close();
+        /// <summary>
+        /// 关闭当前工作流引擎，释放所有资源
+        /// </summary>
+        void Close();
 
         IRepositoryService RepositoryService { get; }
 
@@ -63,10 +66,4 @@ namespace org.activiti.engine
         ProcessEngineConfiguration ProcessEngineConfiguration { get; }
 
     }
-
-    public static class ProcessEngine_Fields
-    {
-        public static string VERSION { get; internal set; } = "7.0.0.1";
-    }
-
 }

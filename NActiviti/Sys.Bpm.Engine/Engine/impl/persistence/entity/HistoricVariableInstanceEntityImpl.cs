@@ -56,12 +56,13 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                PersistentState persistentState = new PersistentState();
-
-                persistentState["textValue"] = textValue;
-                persistentState["textValue2"] = textValue2;
-                persistentState["doubleValue"] = doubleValue;
-                persistentState["longValue"] = longValue;
+                PersistentState persistentState = new PersistentState
+                {
+                    ["textValue"] = textValue,
+                    ["textValue2"] = textValue2,
+                    ["doubleValue"] = doubleValue,
+                    ["longValue"] = longValue
+                };
 
                 if (byteArrayRef != null)
                 {
@@ -81,7 +82,7 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 if (!variableType.Cachable || cachedValue == null)
                 {
-                    cachedValue = variableType.getValue(this);
+                    cachedValue = variableType.GetValue(this);
                 }
                 return cachedValue;
             }
@@ -105,7 +106,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     byteArrayRef = new ByteArrayRef();
                 }
-                byteArrayRef.setValue("hist.var-" + name, value);
+                byteArrayRef.SetValue("hist.var-" + name, value);
             }
         }
 
@@ -116,7 +117,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                return (variableType != null ? variableType.TypeName : null);
+                return (variableType?.TypeName);
             }
         }
 
@@ -323,15 +324,15 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 sb.Append(", doubleValue=").Append(doubleValue);
             }
-            if (!ReferenceEquals(textValue, null))
+            if (!(textValue is null))
             {
                 sb.Append(", textValue=").Append(textValue.PadLeft(40, ' '));
             }
-            if (!ReferenceEquals(textValue2, null))
+            if (!(textValue2 is null))
             {
                 sb.Append(", textValue2=").Append(textValue2.PadLeft(40, ' '));
             }
-            if (byteArrayRef != null && !ReferenceEquals(byteArrayRef.Id, null))
+            if (byteArrayRef != null && !(byteArrayRef.Id is null))
             {
                 sb.Append(", byteArrayValueId=").Append(byteArrayRef.Id);
             }

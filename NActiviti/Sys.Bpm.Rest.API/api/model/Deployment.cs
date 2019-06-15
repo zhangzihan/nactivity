@@ -88,5 +88,34 @@ namespace org.activiti.cloud.services.api.model
         /// 部署时间
         /// </summary>
         public DateTime DeployTime { get => deployTime; set => deployTime = value; }
+
+        /// <summary>
+        /// equals
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(obj, null))
+            {
+                return false;
+            }
+
+            if (!(obj is Deployment deploy))
+            {
+                return false;
+            }
+
+            return deploy.name == this.name && deploy.tenantId == this.tenantId;
+        }
+
+        /// <summary>
+        /// get hash code
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return this.GetType().GetHashCode() >> 2;
+        }
     }
 }

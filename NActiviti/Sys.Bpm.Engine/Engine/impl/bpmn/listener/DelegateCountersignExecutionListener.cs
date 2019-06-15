@@ -38,41 +38,42 @@ namespace org.activiti.engine.impl.bpmn.listener
     /// </summary>
     public class DelegateCountersignExecutionListener : IExecutionListener
     {
-        private readonly ILogger<DelegateCountersignExecutionListener> logger =
-            ProcessEngineServiceProvider.LoggerService<DelegateCountersignExecutionListener>();
-
         /// <summary>
         /// 侦听接收通知处理
         /// </summary>
         /// <param name="execution"></param>
-        public void notify(IExecutionEntity execution)
+        public void Notify(IExecutionEntity execution)
         {
-            if (execution.getVariable(BpmnXMLConstants.ACTIVITI_COUNTERSIGNUSER_ATTRIBUTE) == null)
+            if (execution.CurrentFlowElement is UserTask userTask && userTask.HasMultiInstanceLoopCharacteristics())
             {
-                List<IUserInfo> users = new List<IUserInfo>();
-                IList<ExtensionElement> exActors = null;
-                if ((execution.CurrentFlowElement?.ExtensionElements.TryGetValue("property", out exActors)).GetValueOrDefault(false))
+                var varName = userTask.LoopCharacteristics.GetCollectionVarName();
+
+                if (execution.GetVariable(varName) == null)
                 {
-                    string str = exActors.GetAttributeValue(BpmnXMLConstants.ACTIVITI_COUNTERSIGNUSER_GETPOLICY);
-
-                    QueryBookmark[] actors = JsonConvert.DeserializeObject<QueryBookmark[]>(str);
-
-                    IGetBookmarkRuleProvider ruleProvider = ProcessEngineServiceProvider.Resolve<IGetBookmarkRuleProvider>();
-
-                    foreach (QueryBookmark query in actors)
+                    List<IUserInfo> users = new List<IUserInfo>();
+                    string getUserPolicy = userTask.GetUsersPolicy();
+                    if (string.IsNullOrWhiteSpace(getUserPolicy) == false)
                     {
-                        IGetBookmarkRule rule = ruleProvider.CreateBookmarkRule(query.RuleName.ToString());
-                        rule.Condition = query;
-                        users.AddRange(Context.ProcessEngineConfiguration.CommandExecutor.execute(rule));
+                        QueryBookmark[] actors = JsonConvert.DeserializeObject<QueryBookmark[]>(getUserPolicy);
+
+                        IGetBookmarkRuleProvider ruleProvider = ProcessEngineServiceProvider.Resolve<IGetBookmarkRuleProvider>();
+
+                        foreach (QueryBookmark query in actors)
+                        {
+                            IGetBookmarkRule rule = ruleProvider.CreateBookmarkRule(query.RuleType.ToString());
+                            rule.Execution = execution;
+                            rule.Condition = query;
+                            users.AddRange(Context.ProcessEngineConfiguration.CommandExecutor.Execute(rule));
+                        }
                     }
-                }
 
-                if (users.Count == 0)
-                {
-                    throw new NoneCountersignUsersException(execution.CurrentFlowElement.Name);
-                }
+                    if (users.Count == 0)
+                    {
+                        throw new NoneCountersignUsersException(execution.CurrentFlowElement.Name);
+                    }
 
-                execution.setVariable(BpmnXMLConstants.ACTIVITI_COUNTERSIGNUSER_ATTRIBUTE, users.Select(x => x.Id).Distinct().ToArray());
+                    execution.SetVariable(varName, users.Select(x => x.Id).Distinct().ToArray());
+                }
             }
         }
     }

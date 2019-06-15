@@ -25,7 +25,7 @@ namespace org.activiti.engine.impl.interceptor
     using org.activiti.engine.impl.persistence.cache;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.logging;
-    using Sys;
+    using Sys.Workflow;
     using System.Collections.Concurrent;
 
     public class CommandContext<T1> : ICommandContext
@@ -34,31 +34,31 @@ namespace org.activiti.engine.impl.interceptor
 
         protected internal ICommand<T1> command;
 
-        protected internal IDictionary<Type, ISessionFactory> sessionFactories;
+        protected internal ConcurrentDictionary<Type, ISessionFactory> sessionFactories;
 
-        protected internal IDictionary<Type, ISession> sessions = new Dictionary<Type, ISession>();
+        protected internal ConcurrentDictionary<Type, ISession> sessions = new ConcurrentDictionary<Type, ISession>();
 
-        protected internal Exception exception_Renamed;
+        protected internal Exception exception_;
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
         protected internal IFailedJobCommandFactory failedJobCommandFactory;
         protected internal IList<ICommandContextCloseListener> closeListeners;
-        protected internal IDictionary<string, object> attributes; // General-purpose storing of anything during the lifetime of a command context
+        protected internal ConcurrentDictionary<string, object> attributes; // General-purpose storing of anything during the lifetime of a command context
         protected internal bool reused;
 
         protected internal IActivitiEngineAgenda agenda;
         protected internal ConcurrentDictionary<string, IExecutionEntity> involvedExecutions = new ConcurrentDictionary<string, IExecutionEntity>(StringComparer.OrdinalIgnoreCase); // The executions involved with the command
-        protected internal LinkedList<object> resultStack = new LinkedList<object>(); // needs to be a stack, as JavaDelegates can do api calls again
+        protected internal ConcurrentQueue<object> resultStack = new ConcurrentQueue<object>(); // needs to be a stack, as JavaDelegates can do api calls again
 
         public CommandContext(ICommand<T1> command, ProcessEngineConfigurationImpl processEngineConfiguration)
         {
             this.command = command;
             this.processEngineConfiguration = processEngineConfiguration;
             this.failedJobCommandFactory = processEngineConfiguration.FailedJobCommandFactory;
-            this.sessionFactories = processEngineConfiguration.SessionFactories ?? new Dictionary<Type, ISessionFactory>();
-            this.agenda = processEngineConfiguration.EngineAgendaFactory.createAgenda(this);
+            this.sessionFactories = processEngineConfiguration.SessionFactories ?? new ConcurrentDictionary<Type, ISessionFactory>();
+            this.agenda = processEngineConfiguration.EngineAgendaFactory.CreateAgenda(this);
         }
 
-        public virtual void close()
+        public virtual void Close()
         {
 
             // The intention of this method is that all resources are closed properly, even if exceptions occur
@@ -70,102 +70,104 @@ namespace org.activiti.engine.impl.interceptor
                 {
                     try
                     {
-                        executeCloseListenersClosing();
-                        if (exception_Renamed == null)
+                        ExecuteCloseListenersClosing();
+                        if (exception_ == null)
                         {
-                            flushSessions();
+                            FlushSessions();
                         }
                     }
                     catch (Exception exception)
                     {
-                        this.exception(exception);
+                        this.SetException(exception);
                     }
                     finally
                     {
-
                         try
                         {
-                            if (exception_Renamed == null)
+                            if (exception_ == null)
                             {
-                                executeCloseListenersAfterSessionFlushed();
+                                ExecuteCloseListenersAfterSessionFlushed();
                             }
                         }
                         catch (Exception exception)
                         {
-                            this.exception(exception);
+                            this.SetException(exception);
                         }
 
-                        if (exception_Renamed != null)
+                        if (exception_ != null)
                         {
-                            logException();
-                            executeCloseListenersCloseFailure();
+                            LogException();
+                            ExecuteCloseListenersCloseFailure();
                         }
                         else
                         {
-                            executeCloseListenersClosed();
+                            ExecuteCloseListenersClosed();
                         }
                     }
                 }
                 catch (Exception exception)
                 {
                     // Catch exceptions during rollback
-                    this.exception(exception);
+                    this.SetException(exception);
                 }
                 finally
                 {
                     // Sessions need to be closed, regardless of exceptions/commit/rollback
-                    closeSessions();
+                    CloseSessions();
                 }
             }
             catch (Exception exception)
             {
                 // Catch exceptions during session closing
-                this.exception(exception);
+                this.SetException(exception);
             }
 
-            if (exception_Renamed != null)
+            if (exception_ != null)
             {
-                rethrowExceptionIfNeeded();
+                RethrowExceptionIfNeeded();
             }
         }
 
-        protected internal virtual void logException()
+        protected virtual void LogException()
         {
-            if (exception_Renamed is JobNotFoundException || exception_Renamed is ActivitiTaskAlreadyClaimedException)
+            if (exception_ is JobNotFoundException || exception_ is ActivitiTaskAlreadyClaimedException)
             {
                 // reduce log level, because this may have been caused because of job deletion due to cancelActiviti="true"
-                log.LogInformation("Error while closing command context", exception_Renamed);
+                log.LogInformation("Error while closing command context", exception_);
             }
-            else if (exception_Renamed is ActivitiOptimisticLockingException)
+            else if (exception_ is ActivitiOptimisticLockingException)
             {
                 // reduce log level, as normally we're not interested in logging this exception
-                log.LogError(exception_Renamed, $"Optimistic locking exception : {exception_Renamed}");
+                log.LogError(exception_, $"Optimistic locking exception : {exception_}");
             }
             else
             {
-                log.LogError(exception_Renamed, $"Error while closing command context: {exception_Renamed}");
+                log.LogError(exception_, $"Error while closing command context: {exception_}");
             }
         }
 
-        protected internal virtual void rethrowExceptionIfNeeded()
+        protected virtual void RethrowExceptionIfNeeded()
         {
-            if (exception_Renamed is Exception)
+            if (exception_ is Exception)
             {
-                throw (Exception)exception_Renamed;
+                throw exception_;
             }
             else
             {
-                throw new ActivitiException("exception while executing command " + command, exception_Renamed);
+                throw new ActivitiException("exception while executing command " + command, exception_);
             }
         }
 
-        public virtual void addCloseListener(ICommandContextCloseListener commandContextCloseListener)
+        public virtual void AddCloseListener(ICommandContextCloseListener commandContextCloseListener)
         {
-            if (closeListeners == null)
+            lock (syncRoot)
             {
-                closeListeners = new List<ICommandContextCloseListener>(1);
+                if (closeListeners == null)
+                {
+                    closeListeners = new List<ICommandContextCloseListener>(1);
+                }
+                closeListeners.Add(commandContextCloseListener);
             }
-            closeListeners.Add(commandContextCloseListener);
         }
 
         public virtual IList<ICommandContextCloseListener> CloseListeners
@@ -176,7 +178,7 @@ namespace org.activiti.engine.impl.interceptor
             }
         }
 
-        public virtual bool hasCloseListener(Type type)
+        public virtual bool HasCloseListener(Type type)
         {
             if (closeListeners != null && closeListeners.Count != 0)
             {
@@ -191,7 +193,72 @@ namespace org.activiti.engine.impl.interceptor
             return false;
         }
 
-        protected internal virtual void executeCloseListenersClosing()
+        protected virtual void ExecuteCloseListenersClosing()
+        {
+            lock (syncRoot)
+            {
+                if (closeListeners != null)
+                {
+                    try
+                    {
+                        foreach (ICommandContextCloseListener listener in closeListeners)
+                        {
+                            listener.Closing(this);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        this.SetException(exception);
+                    }
+                }
+            }
+        }
+
+        private readonly object syncRoot = new object();
+
+        protected virtual void ExecuteCloseListenersAfterSessionFlushed()
+        {
+            lock (syncRoot)
+            {
+                if (closeListeners != null)
+                {
+                    try
+                    {
+                        foreach (ICommandContextCloseListener listener in closeListeners)
+                        {
+                            listener.AfterSessionsFlush(this);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        this.SetException(exception);
+                    }
+                }
+            }
+        }
+
+        protected virtual void ExecuteCloseListenersClosed()
+        {
+            lock (syncRoot)
+            {
+                if (closeListeners != null)
+                {
+                    try
+                    {
+                        foreach (ICommandContextCloseListener listener in closeListeners)
+                        {
+                            listener.Closed(this);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        this.SetException(exception);
+                    }
+                }
+            }
+        }
+
+        protected virtual void ExecuteCloseListenersCloseFailure()
         {
             if (closeListeners != null)
             {
@@ -199,89 +266,35 @@ namespace org.activiti.engine.impl.interceptor
                 {
                     foreach (ICommandContextCloseListener listener in closeListeners)
                     {
-                        listener.closing(this);
+                        listener.CloseFailure(this);
                     }
                 }
                 catch (Exception exception)
                 {
-                    this.exception(exception);
+                    this.SetException(exception);
                 }
             }
         }
 
-        protected internal virtual void executeCloseListenersAfterSessionFlushed()
-        {
-            if (closeListeners != null)
-            {
-                try
-                {
-                    foreach (ICommandContextCloseListener listener in closeListeners)
-                    {
-                        listener.afterSessionsFlush(this);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    this.exception(exception);
-                }
-            }
-        }
-
-        protected internal virtual void executeCloseListenersClosed()
-        {
-            if (closeListeners != null)
-            {
-                try
-                {
-                    foreach (ICommandContextCloseListener listener in closeListeners)
-                    {
-                        listener.closed(this);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    this.exception(exception);
-                }
-            }
-        }
-
-        protected internal virtual void executeCloseListenersCloseFailure()
-        {
-            if (closeListeners != null)
-            {
-                try
-                {
-                    foreach (ICommandContextCloseListener listener in closeListeners)
-                    {
-                        listener.closeFailure(this);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    this.exception(exception);
-                }
-            }
-        }
-
-        protected internal virtual void flushSessions()
+        protected virtual void FlushSessions()
         {
             foreach (ISession session in sessions.Values)
             {
-                session.flush();
+                session.Flush();
             }
         }
 
-        protected internal virtual void closeSessions()
+        protected virtual void CloseSessions()
         {
             foreach (ISession session in sessions.Values)
             {
                 try
                 {
-                    session.close();
+                    session.Close();
                 }
                 catch (Exception exception)
                 {
-                    this.exception(exception);
+                    this.SetException(exception);
                 }
             }
         }
@@ -293,47 +306,48 @@ namespace org.activiti.engine.impl.interceptor
         /// If there is already an exception being stored, a 'masked exception' message will be logged.
         /// </para>
         /// </summary>
-        public virtual void exception(Exception exception)
+        public virtual void SetException(Exception exception)
         {
-            if (this.exception_Renamed == null)
+            if (this.exception_ == null)
             {
-                this.exception_Renamed = exception;
+                this.exception_ = exception;
             }
             else
             {
                 log.LogError("masked exception in command context. for root cause, see below as it will be rethrown later.", exception);
-                LogMDC.clear();
+                LogMDC.Clear();
             }
         }
 
-        public virtual void addAttribute(string key, object value)
+        public virtual void AddAttribute(string key, object value)
         {
             if (attributes == null)
             {
-                attributes = new Dictionary<string, object>(1);
+                attributes = new ConcurrentDictionary<string, object>();
             }
-            attributes[key] = value;
+            attributes.AddOrUpdate(key, value, (attr, old) => value);
         }
 
-        public virtual object getAttribute(string key)
+        public virtual object GetAttribute(string key)
         {
             if (attributes != null)
             {
-                return attributes[key];
+                attributes.TryGetValue(key, out var value);
+                return value;
             }
             return null;
         }
 
-        public virtual T getGenericAttribute<T>(string key)
+        public virtual T GetGenericAttribute<T>(string key)
         {
             if (attributes != null)
             {
-                return (T)getAttribute(key);
+                return (T)GetAttribute(key);
             }
-            return default(T);
+            return default;
         }
 
-        public virtual T getSession<T>() where T : ISession
+        public virtual T GetSession<T>() where T : ISession
         {
             Type sessionClass = typeof(T);
             sessions.TryGetValue(sessionClass, out ISession session);
@@ -344,11 +358,11 @@ namespace org.activiti.engine.impl.interceptor
                 {
                     throw new ActivitiException("no session factory configured for " + sessionClass.FullName);
                 }
-                session = sessionFactory.openSession(this);
-                sessions[sessionClass] = session;
+                session = sessionFactory.OpenSession(this);
+                sessions.AddOrUpdate(sessionClass, session, (key, old) => session);
             }
 
-            return session == null ? default(T) : (T)session;
+            return (T)session;
         }
 
         public virtual IDictionary<Type, ISessionFactory> SessionFactories
@@ -363,7 +377,7 @@ namespace org.activiti.engine.impl.interceptor
         {
             get
             {
-                return getSession<DbSqlSession>();
+                return GetSession<DbSqlSession>();
             }
         }
 
@@ -371,7 +385,7 @@ namespace org.activiti.engine.impl.interceptor
         {
             get
             {
-                return getSession<IEntityCache>();
+                return GetSession<IEntityCache>();
             }
         }
 
@@ -439,7 +453,7 @@ namespace org.activiti.engine.impl.interceptor
             }
         }
 
-        public virtual IdentityLinkEntityManager IdentityLinkEntityManager
+        public virtual IIdentityLinkEntityManager IdentityLinkEntityManager
         {
             get
             {
@@ -601,15 +615,15 @@ namespace org.activiti.engine.impl.interceptor
 
         // Involved executions ////////////////////////////////////////////////////////
 
-        public virtual void addInvolvedExecution(IExecutionEntity executionEntity)
+        public virtual void AddInvolvedExecution(IExecutionEntity executionEntity)
         {
             if (!string.IsNullOrWhiteSpace(executionEntity.Id))
             {
-                involvedExecutions.TryAdd(executionEntity.Id, executionEntity);
+                involvedExecutions.AddOrUpdate(executionEntity.Id, executionEntity, (key, old) => executionEntity);
             }
         }
 
-        public virtual bool hasInvolvedExecutions()
+        public virtual bool HasInvolvedExecutions()
         {
             return involvedExecutions.Count > 0;
         }
@@ -644,7 +658,7 @@ namespace org.activiti.engine.impl.interceptor
         {
             get
             {
-                return exception_Renamed;
+                return exception_;
             }
         }
 
@@ -687,16 +701,17 @@ namespace org.activiti.engine.impl.interceptor
                 return null;
             }
 
-            var value = resultStack.Last.Value;
+            if (resultStack.TryDequeue(out object value))
+            {
+                return value;
+            }
 
-            resultStack.RemoveLast();
-
-            return value;
+            return null;
         }
 
         public virtual void SetResult(object value)
         {
-            resultStack.AddLast(value);
+            resultStack.Enqueue(value);
         }
 
 

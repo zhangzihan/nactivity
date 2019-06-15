@@ -15,33 +15,32 @@
 namespace org.activiti.engine.impl.persistence.entity
 {
 
-	using org.activiti.engine.repository;
+    using org.activiti.engine.repository;
 
-	/// 
-	public interface IProcessDefinitionEntityManager : IEntityManager<IProcessDefinitionEntity>
-	{
+    /// 
+    public interface IProcessDefinitionEntityManager : IEntityManager<IProcessDefinitionEntity>
+    {
 
-	  IProcessDefinitionEntity findLatestProcessDefinitionByKey(string processDefinitionKey);
+        IProcessDefinitionEntity FindLatestProcessDefinitionByKey(string processDefinitionKey);
 
-	  IProcessDefinitionEntity findLatestProcessDefinitionByKeyAndTenantId(string processDefinitionKey, string tenantId);
+        IProcessDefinitionEntity FindLatestProcessDefinitionByKeyAndTenantId(string processDefinitionKey, string tenantId);
 
-	  IList<IProcessDefinition> findProcessDefinitionsByQueryCriteria(ProcessDefinitionQueryImpl processDefinitionQuery, Page page);
+        IList<IProcessDefinition> FindProcessDefinitionsByQueryCriteria(IProcessDefinitionQuery processDefinitionQuery, Page page);
 
-	  long findProcessDefinitionCountByQueryCriteria(ProcessDefinitionQueryImpl processDefinitionQuery);
+        long FindProcessDefinitionCountByQueryCriteria(IProcessDefinitionQuery processDefinitionQuery);
 
-	  IProcessDefinitionEntity findProcessDefinitionByDeploymentAndKey(string deploymentId, string processDefinitionKey);
+        IProcessDefinitionEntity FindProcessDefinitionByDeploymentAndKey(string deploymentId, string processDefinitionKey);
 
-	  IProcessDefinitionEntity findProcessDefinitionByDeploymentAndKeyAndTenantId(string deploymentId, string processDefinitionKey, string tenantId);
+        IProcessDefinitionEntity FindProcessDefinitionByDeploymentAndKeyAndTenantId(string deploymentId, string processDefinitionKey, string tenantId);
 
-	  IProcessDefinition findProcessDefinitionByKeyAndVersionAndTenantId(string processDefinitionKey, int? processDefinitionVersion, string tenantId);
+        IProcessDefinition FindProcessDefinitionByKeyAndVersionAndTenantId(string processDefinitionKey, int? processDefinitionVersion, string tenantId);
 
-	  IList<IProcessDefinition> findProcessDefinitionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<IProcessDefinition> FindProcessDefinitionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findProcessDefinitionCountByNativeQuery(IDictionary<string, object> parameterMap);
+        long FindProcessDefinitionCountByNativeQuery(IDictionary<string, object> parameterMap);
 
-	  void updateProcessDefinitionTenantIdForDeployment(string deploymentId, string newTenantId);
+        void UpdateProcessDefinitionTenantIdForDeployment(string deploymentId, string newTenantId);
 
-	  void deleteProcessDefinitionsByDeploymentId(string deploymentId);
-
-	}
+        void DeleteProcessDefinitionsByDeploymentId(string deploymentId);
+    }
 }

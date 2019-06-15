@@ -15,11 +15,11 @@
 namespace org.activiti.engine.impl.persistence.entity
 {
 
-	/// 
-	public interface IPropertyEntityManager : IEntityManager<IPropertyEntity>
-	{
+    /// 
+    public interface IPropertyEntityManager : IEntityManager<IPropertyEntity>
+    {
 
-	  IList<IPropertyEntity> findAll();
+        IList<IPropertyEntity> FindAll();
 
-	}
+    }
 }

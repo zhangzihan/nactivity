@@ -22,119 +22,118 @@ namespace org.activiti.engine.impl.persistence.entity
     using org.activiti.engine.impl.persistence.entity.data;
 
     public class HistoricDetailEntityManagerImpl : AbstractEntityManager<IHistoricDetailEntity>, IHistoricDetailEntityManager
-	{
+    {
 
-	  protected internal IHistoricDetailDataManager historicDetailDataManager;
+        protected internal IHistoricDetailDataManager historicDetailDataManager;
 
-	  public HistoricDetailEntityManagerImpl(ProcessEngineConfigurationImpl processEngineConfiguration, IHistoricDetailDataManager historicDetailDataManager) : base(processEngineConfiguration)
-	  {
-		this.historicDetailDataManager = historicDetailDataManager;
-	  }
+        public HistoricDetailEntityManagerImpl(ProcessEngineConfigurationImpl processEngineConfiguration, IHistoricDetailDataManager historicDetailDataManager) : base(processEngineConfiguration)
+        {
+            this.historicDetailDataManager = historicDetailDataManager;
+        }
 
-	  protected internal override IDataManager<IHistoricDetailEntity> DataManager
-	  {
-		  get
-		  {
-			return historicDetailDataManager;
-		  }
-	  }
+        protected internal override IDataManager<IHistoricDetailEntity> DataManager
+        {
+            get
+            {
+                return historicDetailDataManager;
+            }
+        }
 
-	  public virtual IHistoricDetailVariableInstanceUpdateEntity copyAndInsertHistoricDetailVariableInstanceUpdateEntity(IVariableInstanceEntity variableInstance)
-	  {
-		IHistoricDetailVariableInstanceUpdateEntity historicVariableUpdate = historicDetailDataManager.createHistoricDetailVariableInstanceUpdate();
-		historicVariableUpdate.ProcessInstanceId = variableInstance.ProcessInstanceId;
-		historicVariableUpdate.ExecutionId = variableInstance.ExecutionId;
-		historicVariableUpdate.TaskId = variableInstance.TaskId;
-		historicVariableUpdate.Time = Clock.CurrentTime;
-		historicVariableUpdate.Revision = variableInstance.Revision;
-		historicVariableUpdate.Name = variableInstance.Name;
-		historicVariableUpdate.VariableType = variableInstance.Type;
-		historicVariableUpdate.TextValue = variableInstance.TextValue;
-		historicVariableUpdate.TextValue2 = variableInstance.TextValue2;
-		historicVariableUpdate.DoubleValue = variableInstance.DoubleValue;
-		historicVariableUpdate.LongValue = variableInstance.LongValue;
+        public virtual IHistoricDetailVariableInstanceUpdateEntity CopyAndInsertHistoricDetailVariableInstanceUpdateEntity(IVariableInstanceEntity variableInstance)
+        {
+            IHistoricDetailVariableInstanceUpdateEntity historicVariableUpdate = historicDetailDataManager.CreateHistoricDetailVariableInstanceUpdate();
+            historicVariableUpdate.ProcessInstanceId = variableInstance.ProcessInstanceId;
+            historicVariableUpdate.ExecutionId = variableInstance.ExecutionId;
+            historicVariableUpdate.TaskId = variableInstance.TaskId;
+            historicVariableUpdate.Time = Clock.CurrentTime;
+            historicVariableUpdate.Revision = variableInstance.Revision;
+            historicVariableUpdate.Name = variableInstance.Name;
+            historicVariableUpdate.VariableType = variableInstance.Type;
+            historicVariableUpdate.TextValue = variableInstance.TextValue;
+            historicVariableUpdate.TextValue2 = variableInstance.TextValue2;
+            historicVariableUpdate.DoubleValue = variableInstance.DoubleValue;
+            historicVariableUpdate.LongValue = variableInstance.LongValue;
 
-		if (variableInstance.Bytes != null)
-		{
-		  historicVariableUpdate.Bytes = variableInstance.Bytes;
-		}
+            if (variableInstance.Bytes != null)
+            {
+                historicVariableUpdate.Bytes = variableInstance.Bytes;
+            }
 
-		insert(historicVariableUpdate);
-		return historicVariableUpdate;
-	  }
+            Insert(historicVariableUpdate);
+            return historicVariableUpdate;
+        }
 
-	  public override void delete(IHistoricDetailEntity entity, bool fireDeleteEvent)
-	  {
-		base.delete(entity, fireDeleteEvent);
+        public override void Delete(IHistoricDetailEntity entity, bool fireDeleteEvent)
+        {
+            base.Delete(entity, fireDeleteEvent);
 
-		if (entity is IHistoricDetailVariableInstanceUpdateEntity)
-		{
-		  IHistoricDetailVariableInstanceUpdateEntity historicDetailVariableInstanceUpdateEntity = ((IHistoricDetailVariableInstanceUpdateEntity) entity);
-		  if (historicDetailVariableInstanceUpdateEntity.ByteArrayRef != null)
-		  {
-			historicDetailVariableInstanceUpdateEntity.ByteArrayRef.delete();
-		  }
-		}
-	  }
+            if (entity is IHistoricDetailVariableInstanceUpdateEntity historicDetailVariableInstanceUpdateEntity)
+            {
+                if (historicDetailVariableInstanceUpdateEntity.ByteArrayRef != null)
+                {
+                    historicDetailVariableInstanceUpdateEntity.ByteArrayRef.Delete();
+                }
+            }
+        }
 
-	  public virtual void deleteHistoricDetailsByProcessInstanceId(string historicProcessInstanceId)
-	  {
-		if (HistoryManager.isHistoryLevelAtLeast(HistoryLevel.AUDIT))
-		{
-		  IList<IHistoricDetailEntity> historicDetails = historicDetailDataManager.findHistoricDetailsByProcessInstanceId(historicProcessInstanceId);
+        public virtual void DeleteHistoricDetailsByProcessInstanceId(string historicProcessInstanceId)
+        {
+            if (HistoryManager.IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
+            {
+                IList<IHistoricDetailEntity> historicDetails = historicDetailDataManager.FindHistoricDetailsByProcessInstanceId(historicProcessInstanceId);
 
-		  foreach (IHistoricDetailEntity historicDetail in historicDetails)
-		  {
-			delete(historicDetail);
-		  }
-		}
-	  }
+                foreach (IHistoricDetailEntity historicDetail in historicDetails)
+                {
+                    Delete(historicDetail);
+                }
+            }
+        }
 
-	  public virtual long findHistoricDetailCountByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery)
-	  {
-		return historicDetailDataManager.findHistoricDetailCountByQueryCriteria(historicVariableUpdateQuery);
-	  }
+        public virtual long FindHistoricDetailCountByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery)
+        {
+            return historicDetailDataManager.FindHistoricDetailCountByQueryCriteria(historicVariableUpdateQuery);
+        }
 
-	  public virtual IList<IHistoricDetail> findHistoricDetailsByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery, Page page)
-	  {
-		return historicDetailDataManager.findHistoricDetailsByQueryCriteria(historicVariableUpdateQuery, page);
-	  }
+        public virtual IList<IHistoricDetail> FindHistoricDetailsByQueryCriteria(IHistoricDetailQuery historicVariableUpdateQuery, Page page)
+        {
+            return historicDetailDataManager.FindHistoricDetailsByQueryCriteria(historicVariableUpdateQuery, page);
+        }
 
-	  public virtual void deleteHistoricDetailsByTaskId(string taskId)
-	  {
-		if (HistoryManager.isHistoryLevelAtLeast(HistoryLevel.FULL))
-		{
-		  IList<IHistoricDetailEntity> details = historicDetailDataManager.findHistoricDetailsByTaskId(taskId);
-		  foreach (IHistoricDetail detail in details)
-		  {
-			delete((IHistoricDetailEntity) detail);
-		  }
-		}
-	  }
+        public virtual void DeleteHistoricDetailsByTaskId(string taskId)
+        {
+            if (HistoryManager.IsHistoryLevelAtLeast(HistoryLevel.FULL))
+            {
+                IList<IHistoricDetailEntity> details = historicDetailDataManager.FindHistoricDetailsByTaskId(taskId);
+                foreach (IHistoricDetail detail in details)
+                {
+                    Delete((IHistoricDetailEntity)detail);
+                }
+            }
+        }
 
-	  public virtual IList<IHistoricDetail> findHistoricDetailsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
-	  {
-		return historicDetailDataManager.findHistoricDetailsByNativeQuery(parameterMap, firstResult, maxResults);
-	  }
+        public virtual IList<IHistoricDetail> FindHistoricDetailsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        {
+            return historicDetailDataManager.FindHistoricDetailsByNativeQuery(parameterMap, firstResult, maxResults);
+        }
 
-	  public virtual long findHistoricDetailCountByNativeQuery(IDictionary<string, object> parameterMap)
-	  {
-		return historicDetailDataManager.findHistoricDetailCountByNativeQuery(parameterMap);
-	  }
+        public virtual long FindHistoricDetailCountByNativeQuery(IDictionary<string, object> parameterMap)
+        {
+            return historicDetailDataManager.FindHistoricDetailCountByNativeQuery(parameterMap);
+        }
 
-	  public virtual IHistoricDetailDataManager HistoricDetailDataManager
-	  {
-		  get
-		  {
-			return historicDetailDataManager;
-		  }
-		  set
-		  {
-			this.historicDetailDataManager = value;
-		  }
-	  }
+        public virtual IHistoricDetailDataManager HistoricDetailDataManager
+        {
+            get
+            {
+                return historicDetailDataManager;
+            }
+            set
+            {
+                this.historicDetailDataManager = value;
+            }
+        }
 
 
-	}
+    }
 
 }

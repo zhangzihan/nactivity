@@ -25,9 +25,9 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         private const long serialVersionUID = 1L;
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
-            Context.Agenda.planTakeOutgoingSequenceFlowsOperation(execution, true);
+            Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(execution, true);
         }
 
     }

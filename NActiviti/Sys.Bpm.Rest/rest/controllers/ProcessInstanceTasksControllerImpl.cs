@@ -23,6 +23,7 @@ using org.activiti.cloud.services.rest.api;
 using org.activiti.cloud.services.rest.api.resources;
 using org.activiti.cloud.services.rest.assemblers;
 using org.springframework.hateoas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,21 +49,28 @@ namespace org.activiti.cloud.services.rest.controllers
         }
 
         /// <inheritdoc />
-        [HttpPost("{processInstanceId}/tasks")]
-        public virtual Task<Resources<TaskModel>> getTasks(string processInstanceId, [FromBody]ProcessInstanceTaskQuery query)
+        [HttpPost("tasks")]
+        public virtual Task<Resources<TaskModel>> GetTasks([FromBody]ProcessInstanceTaskQuery query)
         {
-            IPage<TaskModel> page = pageableTaskService.getTasks(processInstanceId, query.Pageable);
+            if (query == null)
+            {
+                throw new ArgumentNullException("query");
+            }
 
-            List<TaskResource> res = taskResourceAssembler.toResources(page.getContent()).ToList();
+            IPage<TaskModel> page = pageableTaskService.GetTasks(query.ProcessInstanceId, query.BusinessKey, query.TenantId, query.Pageable);
+
+            List<TaskResource> res = taskResourceAssembler.ToResources(page.GetContent()).ToList();
+
+            IPage<TaskModel> historics = null;
 
             if (query.IncludeCompleted)
             {
-                IPage<TaskModel> historics = pageableTaskService.getHistoryTasks(processInstanceId, query.Pageable);
+                historics = pageableTaskService.GetHistoryTasks(query.ProcessInstanceId, query.BusinessKey, query.TenantId, query.Pageable);
 
-                res.AddRange(taskResourceAssembler.toResources(historics.getContent()));
+                res.AddRange(taskResourceAssembler.ToResources(historics.GetContent()));
             }
 
-            Resources<TaskModel> tasks = new Resources<TaskModel>(res.Select(x => x.Content), page.getTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize);
+            Resources<TaskModel> tasks = new Resources<TaskModel>(res.Select(x => x.Content), page.GetTotalItems() + (query.IncludeCompleted ? historics.GetTotalItems() : 0), query.Pageable.PageNo, query.Pageable.PageSize);
 
             return Task.FromResult<Resources<TaskModel>>(tasks);
         }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using org.activiti.services.connectors.model;
 using org.springframework.messaging;
 
 namespace org.activiti.services.connectors.channel
@@ -28,13 +27,13 @@ namespace org.activiti.services.connectors.channel
         /// 
         /// </summary>
         /// <returns></returns>
-        ISubscribableChannel integrationResultsConsumer();
+        ISubscribableChannel IntegrationResultsConsumer();
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public static class ProcessEngineIntegrationChannels_Fields
+    public static class ProcessEngineIntegrationChannelsFields
     {
         /// <summary>
         /// integrationResultsConsumer

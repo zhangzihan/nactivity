@@ -1,5 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Sys.Net.Http;
+using Sys.Workflow;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -68,7 +70,6 @@ namespace org.activiti.cloud.services.api.model
         private string status;
         private string formKey;
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -95,6 +96,9 @@ namespace org.activiti.cloud.services.api.model
         /// <param name="formKey">表单key</param>
         /// <param name="status">任务状态</param>
         /// <param name="deleteReason">任务取消原因</param>
+        /// <param name="isTransfer">是否是转派任务</param>
+        /// <param name="canTransfer">是否允许转派</param>
+        /// <param name="onlyAssignee">仅允许一人执行该任务</param>
         //[JsonConstructor]
         public TaskModel([JsonProperty("Id")]string id,
             [JsonProperty("Owner")]string owner,
@@ -111,7 +115,11 @@ namespace org.activiti.cloud.services.api.model
             [JsonProperty("ParentTaskId")]string parentTaskId,
             [JsonProperty("FormKey")]string formKey,
             [JsonProperty("Status")]string status,
-            [JsonProperty("DeleteReason")]string deleteReason)
+            [JsonProperty("DeleteReason")]string deleteReason,
+            [JsonProperty("isTransfer")]bool? isTransfer,
+            [JsonProperty("CanTransfer")]bool? canTransfer,
+            [JsonProperty("OnlyAssignee")]bool? onlyAssignee,
+            [JsonProperty("BusinessKey")]string businessKey)
         {
             this.id = id;
             this.owner = owner;
@@ -129,6 +137,10 @@ namespace org.activiti.cloud.services.api.model
             this.formKey = formKey;
             this.status = status;
             this.DeleteReason = deleteReason;
+            this.IsTransfer = isTransfer;
+            this.CanTransfer = canTransfer;
+            this.OnlyAssignee = onlyAssignee;
+            this.BusinessKey = businessKey;
         }
 
 
@@ -141,6 +153,10 @@ namespace org.activiti.cloud.services.api.model
             set => id = value;
         }
 
+        public virtual string BusinessKey
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 任务所有者
@@ -269,7 +285,6 @@ namespace org.activiti.cloud.services.api.model
             set => parentTaskId = value;
         }
 
-
         /// <summary>
         ///表单key
         /// </summary>
@@ -280,11 +295,34 @@ namespace org.activiti.cloud.services.api.model
         }
 
         /// <summary>
+        /// 是否转派任务
+        /// </summary>
+        public bool? IsTransfer { get; set; }
+
+        /// <summary>
+        /// 是否允许转派
+        /// </summary>
+        public bool? CanTransfer { get; set; }
+
+        /// <summary>
+        /// 只能单人执行该任务
+        /// </summary>
+        public bool? OnlyAssignee { get; set; }
+
+        /// <summary>
+        /// 执行人信息
+        /// </summary>
+        public UserInfo Assigner
+        {
+            get; set;
+        }
+
+        /// <summary>
         /// 任务取消原因
         /// </summary>
         public virtual string DeleteReason
         {
-            get;set;
+            get; set;
         }
     }
 }

@@ -26,12 +26,12 @@ namespace org.activiti.engine.impl.interceptor
 	  /// <summary>
 	  /// Execute a command with the specified <seealso cref="CommandConfig"/>.
 	  /// </summary>
-	  T execute<T>(CommandConfig config, ICommand<T> command);
+	  T Execute<T>(CommandConfig config, ICommand<T> command);
 
 	  /// <summary>
 	  /// Execute a command with the default <seealso cref="CommandConfig"/>.
 	  /// </summary>
-	  T execute<T>(ICommand<T> command);
+	  T Execute<T>(ICommand<T> command);
 
 	}
 

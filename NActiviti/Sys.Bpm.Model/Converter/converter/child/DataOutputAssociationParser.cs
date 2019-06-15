@@ -12,7 +12,7 @@
  */
 namespace org.activiti.bpmn.converter.child
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
@@ -24,10 +24,10 @@ namespace org.activiti.bpmn.converter.child
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_OUTPUT_ASSOCIATION;
+                return BpmnXMLConstants.ELEMENT_OUTPUT_ASSOCIATION;
             }
         }
-        public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+        public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
         {
 
             if (!(parentElement is Activity))
@@ -35,7 +35,7 @@ namespace org.activiti.bpmn.converter.child
                 return;
             }
             DataAssociation dataAssociation = new DataAssociation();
-            BpmnXMLUtil.addXMLLocation(dataAssociation, xtr);
+            BpmnXMLUtil.AddXMLLocation(dataAssociation, xtr);
             DataAssociationParser.parseDataAssociation(dataAssociation, ElementName, xtr);
 
             ((Activity)parentElement).DataOutputAssociations.Add(dataAssociation);

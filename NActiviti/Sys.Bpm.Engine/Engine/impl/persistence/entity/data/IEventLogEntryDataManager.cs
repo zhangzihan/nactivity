@@ -15,20 +15,17 @@
 namespace org.activiti.engine.impl.persistence.entity.data
 {
 
-	using org.activiti.engine.@event;
+    using org.activiti.engine.@event;
 
-	/// 
-	public interface IEventLogEntryDataManager : IDataManager<IEventLogEntryEntity>
-	{
+    /// 
+    public interface IEventLogEntryDataManager : IDataManager<IEventLogEntryEntity>
+    {
+        IList<IEventLogEntry> FindAllEventLogEntries();
 
-	  IList<IEventLogEntry> findAllEventLogEntries();
+        IList<IEventLogEntry> FindEventLogEntries(long startLogNr, long pageSize);
 
-	  IList<IEventLogEntry> findEventLogEntries(long startLogNr, long pageSize);
+        IList<IEventLogEntry> FindEventLogEntriesByProcessInstanceId(string processInstanceId);
 
-	  IList<IEventLogEntry> findEventLogEntriesByProcessInstanceId(string processInstanceId);
-
-	  void deleteEventLogEntry(long logNr);
-
-	}
-
+        void DeleteEventLogEntry(long logNr);
+    }
 }

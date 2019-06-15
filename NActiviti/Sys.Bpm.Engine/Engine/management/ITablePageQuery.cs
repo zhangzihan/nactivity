@@ -23,22 +23,22 @@ namespace org.activiti.engine.management
         /// <summary>
         /// The name of the table of which a page must be fetched.
         /// </summary>
-        ITablePageQuery tableName(string tableName);
+        ITablePageQuery SetTableName(string tableName);
 
         /// <summary>
         /// Orders the resulting table page rows by the given column in ascending order.
         /// </summary>
-        ITablePageQuery orderAsc(string column);
+        ITablePageQuery OrderAsc(string column);
 
         /// <summary>
         /// Orders the resulting table page rows by the given column in descending order.
         /// </summary>
-        ITablePageQuery orderDesc(string column);
+        ITablePageQuery OrderDesc(string column);
 
         /// <summary>
         /// Executes the query and returns the <seealso cref="TablePage"/>.
         /// </summary>
-        TablePage listPage(int firstResult, int maxResults);
+        TablePage ListPage(int firstResult, int maxResults);
     }
 
 }

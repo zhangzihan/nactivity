@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.asyncexecutor
     using org.activiti.engine.impl.cmd;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
-    using Sys;
+    using Sys.Workflow;
 
     /// 
     /// 
@@ -27,42 +27,69 @@ namespace org.activiti.engine.impl.asyncexecutor
     {
         private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<AcquireAsyncJobsDueRunnable>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal readonly IAsyncExecutor asyncExecutor;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal volatile bool isInterrupted;
-        protected internal readonly object MONITOR = new object();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly object MONITOR = new object();
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool isWaiting = false;// new AtomicBoolean(false);
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal long millisToWait;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ThreadStart Runable { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="asyncExecutor"></param>
         public AcquireAsyncJobsDueRunnable(IAsyncExecutor asyncExecutor)
         {
             this.asyncExecutor = asyncExecutor;
 
-            this.Runable += new ThreadStart(run);
+            this.Runable += new ThreadStart(Run);
         }
 
-        public virtual void run()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Run()
         {
-            lock (this)
+            Thread.CurrentThread.Name = "activiti-acquire-async-jobs";
+            log.LogInformation($"{Thread.CurrentThread.Name} starting to acquire async jobs due");
+
+            ICommandExecutor commandExecutor = asyncExecutor.ProcessEngineConfiguration.CommandExecutor;
+
+            while (!isInterrupted)
             {
-                Thread.CurrentThread.Name = "activiti-acquire-async-jobs";
-                log.LogInformation($"{Thread.CurrentThread.Name} starting to acquire async jobs due");
-
-                ICommandExecutor commandExecutor = asyncExecutor.ProcessEngineConfiguration.CommandExecutor;
-
-                while (!isInterrupted)
+                try
                 {
-                    try
-                    {
-                        AcquiredJobEntities acquiredJobs = commandExecutor.execute(new AcquireJobsCmd(asyncExecutor));
+                    AcquiredJobEntities acquiredJobs = commandExecutor.Execute(new AcquireJobsCmd(asyncExecutor));
 
+                    if (!(acquiredJobs is null))
+                    {
                         bool allJobsSuccessfullyOffered = true;
                         foreach (IJobEntity job in acquiredJobs.Jobs)
                         {
-                            bool jobSuccessFullyOffered = asyncExecutor.executeAsyncJob(job);
+                            bool jobSuccessFullyOffered = asyncExecutor.ExecuteAsyncJob(job);
                             if (!jobSuccessFullyOffered)
                             {
                                 allJobsSuccessfullyOffered = false;
@@ -73,7 +100,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                         // If not, we will wait, as to not query the database needlessly. 
                         // Otherwise, we set the wait time to 0, as to query again immediately.
                         millisToWait = asyncExecutor.DefaultAsyncJobAcquireWaitTimeInMillis;
-                        int jobsAcquired = acquiredJobs.size();
+                        int jobsAcquired = acquiredJobs.Size();
                         if (jobsAcquired >= asyncExecutor.MaxAsyncJobsDuePerAcquisition)
                         {
                             millisToWait = 0;
@@ -84,66 +111,68 @@ namespace org.activiti.engine.impl.asyncexecutor
                         {
                             millisToWait = asyncExecutor.DefaultQueueSizeFullWaitTimeInMillis;
                         }
-
                     }
-                    catch (ActivitiOptimisticLockingException optimisticLockingException)
+                }
+                catch (ActivitiOptimisticLockingException optimisticLockingException)
+                {
+                    if (log.IsEnabled(LogLevel.Debug))
                     {
-                        if (log.IsEnabled(LogLevel.Debug))
-                        {
-                            log.LogDebug($@"Optimistic locking exception during async job acquisition. 
+                        log.LogDebug($@"Optimistic locking exception during async job acquisition. 
 If you have multiple async executors running against the same database, this exception means that this thread tried to acquire a due async job, 
 which already was acquired by another async executor acquisition thread.
 This is expected behavior in a clustered environment. 
 You can ignore this message if you indeed have multiple async executor acquisition threads running against the same database. Exception message: {optimisticLockingException.Message}");
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        log.LogError($"exception during async job acquisition: {e.Message}");
-                        millisToWait = asyncExecutor.DefaultAsyncJobAcquireWaitTimeInMillis;
-                    }
-
-                    if (millisToWait > 0)
-                    {
-                        try
-                        {
-                            if (log.IsEnabled(LogLevel.Debug))
-                            {
-                                log.LogDebug($"async job acquisition thread sleeping for {millisToWait} millis");
-                            }
-                            lock (MONITOR)
-                            {
-                                if (!isInterrupted)
-                                {
-                                    isWaiting = true;//.set(true);
-                                    Monitor.Wait(MONITOR, TimeSpan.FromMilliseconds(millisToWait));
-                                }
-                            }
-
-                            if (log.IsEnabled(LogLevel.Debug))
-                            {
-                                log.LogDebug("async job acquisition thread woke up");
-                            }
-                        }
-                        catch (ThreadInterruptedException e)
-                        {
-                            if (log.IsEnabled(LogLevel.Debug))
-                            {
-                                log.LogDebug("async job acquisition wait interrupted");
-                            }
-                        }
-                        finally
-                        {
-                            isWaiting = false;//.set(false);
-                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    log.LogDebug($"exception during async job acquisition: {e.Message}");
+                    millisToWait = asyncExecutor.DefaultAsyncJobAcquireWaitTimeInMillis;
+                }
 
-                log.LogInformation("stopped async job due acquisition");
+                if (millisToWait > 0)
+                {
+                    try
+                    {
+                        if (log.IsEnabled(LogLevel.Debug))
+                        {
+                            log.LogDebug($"async job acquisition thread sleeping for {millisToWait} millis");
+                        }
+                        lock (MONITOR)
+                        {
+                            if (!isInterrupted)
+                            {
+                                isWaiting = true;//.set(true);
+                                Monitor.Wait(MONITOR, TimeSpan.FromMilliseconds(millisToWait));
+                            }
+                        }
+
+                        if (log.IsEnabled(LogLevel.Debug))
+                        {
+                            log.LogDebug("async job acquisition thread woke up");
+                        }
+                    }
+                    catch (ThreadInterruptedException e)
+                    {
+                        if (log.IsEnabled(LogLevel.Debug))
+                        {
+                            log.LogDebug("async job acquisition wait interrupted");
+                        }
+                    }
+                    finally
+                    {
+                        isWaiting = false;//.set(false);
+                    }
+                }
             }
+
+            log.LogInformation("stopped async job due acquisition");
         }
 
-        public virtual void stop()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Stop()
         {
             lock (MONITOR)
             {
@@ -155,6 +184,9 @@ You can ignore this message if you indeed have multiple async executor acquisiti
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual long MillisToWait
         {
             get
@@ -166,7 +198,5 @@ You can ignore this message if you indeed have multiple async executor acquisiti
                 this.millisToWait = value;
             }
         }
-
     }
-
 }

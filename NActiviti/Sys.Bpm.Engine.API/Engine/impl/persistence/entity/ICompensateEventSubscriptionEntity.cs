@@ -21,7 +21,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
 	}
 
-	public static class CompensateEventSubscriptionEntity_Fields
+	public static class CompensateEventSubscriptionEntityFields
 	{
 	  public const string EVENT_TYPE = "compensate";
 	}

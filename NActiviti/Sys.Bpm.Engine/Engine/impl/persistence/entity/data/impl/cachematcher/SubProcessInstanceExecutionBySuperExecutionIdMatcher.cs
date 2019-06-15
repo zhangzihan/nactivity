@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
     public class SubProcessInstanceExecutionBySuperExecutionIdMatcher : ISingleCachedEntityMatcher<IExecutionEntity>
     {
 
-        public virtual bool isRetained(IExecutionEntity executionEntity, object parameter)
+        public virtual bool IsRetained(IExecutionEntity executionEntity, object parameter)
         {
             if (executionEntity == null || executionEntity.SuperExecutionId == null || parameter == null)
             {

@@ -16,7 +16,7 @@
 namespace org.activiti.engine.impl.cmd
 {
 
-    
+
     using org.activiti.engine.@delegate.@event;
     using org.activiti.engine.@delegate.@event.impl;
     using org.activiti.engine.impl.interceptor;
@@ -38,40 +38,38 @@ namespace org.activiti.engine.impl.cmd
             this.attachmentId = attachmentId;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            IAttachmentEntity attachment = commandContext.AttachmentEntityManager.findById<IAttachmentEntity>(new KeyValuePair<string, object>("id", attachmentId));
+            IAttachmentEntity attachment = commandContext.AttachmentEntityManager.FindById<IAttachmentEntity>(new KeyValuePair<string, object>("id", attachmentId));
 
             string processInstanceId = attachment.ProcessInstanceId;
             string processDefinitionId = null;
-            if (!ReferenceEquals(attachment.ProcessInstanceId, null))
+            if (!(attachment.ProcessInstanceId is null))
             {
-                IExecutionEntity process = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
+                IExecutionEntity process = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
                 if (process != null)
                 {
                     processDefinitionId = process.ProcessDefinitionId;
                 }
             }
 
-            commandContext.AttachmentEntityManager.delete(attachment, false);
+            commandContext.AttachmentEntityManager.Delete(attachment, false);
 
-            if (!ReferenceEquals(attachment.ContentId, null))
+            if (!(attachment.ContentId is null))
             {
-                commandContext.ByteArrayEntityManager.deleteByteArrayById(attachment.ContentId);
+                commandContext.ByteArrayEntityManager.DeleteByteArrayById(attachment.ContentId);
             }
 
-            if (!ReferenceEquals(attachment.TaskId, null))
+            if (!(attachment.TaskId is null))
             {
-                commandContext.HistoryManager.createAttachmentComment(attachment.TaskId, attachment.ProcessInstanceId, attachment.Name, false);
+                commandContext.HistoryManager.CreateAttachmentComment(attachment.TaskId, attachment.ProcessInstanceId, attachment.Name, false);
             }
 
             if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_DELETED, attachment, processInstanceId, processInstanceId, processDefinitionId));
+                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_DELETED, attachment, processInstanceId, processInstanceId, processDefinitionId));
             }
             return null;
         }
-
     }
-
 }

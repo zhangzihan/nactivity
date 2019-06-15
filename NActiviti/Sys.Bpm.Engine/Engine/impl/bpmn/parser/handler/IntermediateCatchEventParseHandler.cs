@@ -29,7 +29,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, IntermediateCatchEvent @event)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, IntermediateCatchEvent @event)
         {
             EventDefinition eventDefinition = null;
             if (@event.EventDefinitions.Count > 0)
@@ -39,7 +39,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
 
             if (eventDefinition == null)
             {
-                @event.Behavior = bpmnParse.ActivityBehaviorFactory.createIntermediateCatchEventActivityBehavior(@event);
+                @event.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateCatchEventActivityBehavior(@event);
 
             }
             else
@@ -47,7 +47,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
                 if (eventDefinition is TimerEventDefinition || eventDefinition is SignalEventDefinition || eventDefinition is MessageEventDefinition)
                 {
 
-                    bpmnParse.BpmnParserHandlers.parseElement(bpmnParse, eventDefinition);
+                    bpmnParse.BpmnParserHandlers.ParseElement(bpmnParse, eventDefinition);
 
                 }
                 else

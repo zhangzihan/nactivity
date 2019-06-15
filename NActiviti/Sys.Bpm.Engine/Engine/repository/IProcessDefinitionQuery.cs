@@ -27,109 +27,109 @@ namespace org.activiti.engine.repository
         /// <summary>
         /// Only select process definition with the given id.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionId(string processDefinitionId);
+        IProcessDefinitionQuery SetProcessDefinitionId(string processDefinitionId);
 
         /// <summary>
         /// Only select process definitions with the given ids.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionIds(string[] processDefinitionIds);
+        IProcessDefinitionQuery SetProcessDefinitionIds(string[] processDefinitionIds);
 
         /// <summary>
         /// Only select process definitions with the given category.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionCategory(string processDefinitionCategory);
+        IProcessDefinitionQuery SetProcessDefinitionCategory(string processDefinitionCategory);
 
         /// <summary>
         /// Only select process definitions where the category matches the given parameter. The syntax that should be used is the same as in SQL, eg. %activiti%
         /// </summary>
-        IProcessDefinitionQuery processDefinitionCategoryLike(string processDefinitionCategoryLike);
+        IProcessDefinitionQuery SetProcessDefinitionCategoryLike(string processDefinitionCategoryLike);
 
         /// <summary>
         /// Only select deployments that have a different category then the given one.
         /// </summary>
         /// <seealso cref= IDeploymentBuilder#category(String) </seealso>
-        IProcessDefinitionQuery processDefinitionCategoryNotEquals(string categoryNotEquals);
+        IProcessDefinitionQuery SetProcessDefinitionCategoryNotEquals(string categoryNotEquals);
 
         /// <summary>
         /// Only select process definitions with the given name.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionName(string processDefinitionName);
+        IProcessDefinitionQuery SetProcessDefinitionName(string processDefinitionName);
 
         /// <summary>
         /// Only select process definitions where the name matches the given parameter. The syntax that should be used is the same as in SQL, eg. %activiti%
         /// </summary>
-        IProcessDefinitionQuery processDefinitionNameLike(string processDefinitionNameLike);
+        IProcessDefinitionQuery SetProcessDefinitionNameLike(string processDefinitionNameLike);
 
         /// <summary>
         /// Only select process definitions that are deployed in a deployment with the given deployment id
         /// </summary>
-        IProcessDefinitionQuery deploymentId(string deploymentId);
+        IProcessDefinitionQuery SetDeploymentId(string deploymentId);
 
         /// <summary>
         /// Select process definitions that are deployed in deployments with the given set of ids
         /// </summary>
-        IProcessDefinitionQuery deploymentIds(string[] deploymentIds);
+        IProcessDefinitionQuery SetDeploymentIds(string[] deploymentIds);
 
         /// <summary>
         /// Only select process definition with the given key.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionKey(string processDefinitionKey);
+        IProcessDefinitionQuery SetProcessDefinitionKey(string processDefinitionKey);
 
         /// <summary>
         /// 业务键值
         /// </summary>
         /// <param name="businessKey"></param>
         /// <returns></returns>
-        IProcessDefinitionQuery processDefinitionBusinessKey(string businessKey);
+        IProcessDefinitionQuery SetProcessDefinitionBusinessKey(string businessKey);
 
         /// <summary>
         /// 业务路径
         /// </summary>
         /// <param name="businessPath"></param>
         /// <returns></returns>
-        IProcessDefinitionQuery processDefinitionBusinessPath(string businessPath);
+        IProcessDefinitionQuery SetProcessDefinitionBusinessPath(string businessPath);
 
         /// <summary>
         /// 开始表单
         /// </summary>
         /// <param name="startForm"></param>
         /// <returns></returns>
-        IProcessDefinitionQuery processDefinitionStartForm(string startForm);
+        IProcessDefinitionQuery SetProcessDefinitionStartForm(string startForm);
 
         /// <summary>
         /// Only select process definition with the given keys.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionKeys(string[] processDefinitionKeys);
+        IProcessDefinitionQuery SetProcessDefinitionKeys(string[] processDefinitionKeys);
 
         /// <summary>
         /// Only select process definitions where the key matches the given parameter. The syntax that should be used is the same as in SQL, eg. %activiti%
         /// </summary>
-        IProcessDefinitionQuery processDefinitionKeyLike(string processDefinitionKeyLike);
+        IProcessDefinitionQuery SetProcessDefinitionKeyLike(string processDefinitionKeyLike);
 
         /// <summary>
         /// Only select process definition with a certain version. Particulary useful when used in combination with <seealso cref="#processDefinitionKey(String)"/>
         /// </summary>
-        IProcessDefinitionQuery processDefinitionVersion(int? processDefinitionVersion);
+        IProcessDefinitionQuery SetProcessDefinitionVersion(int? processDefinitionVersion);
 
         /// <summary>
         /// Only select process definitions which version are greater than a certain version.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionVersionGreaterThan(int? processDefinitionVersion);
+        IProcessDefinitionQuery SetProcessDefinitionVersionGreaterThan(int? processDefinitionVersion);
 
         /// <summary>
         /// Only select process definitions which version are greater than or equals a certain version.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionVersionGreaterThanOrEquals(int? processDefinitionVersion);
+        IProcessDefinitionQuery SetProcessDefinitionVersionGreaterThanOrEquals(int? processDefinitionVersion);
 
         /// <summary>
         /// Only select process definitions which version are lower than a certain version.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionVersionLowerThan(int? processDefinitionVersion);
+        IProcessDefinitionQuery SetProcessDefinitionVersionLowerThan(int? processDefinitionVersion);
 
         /// <summary>
         /// Only select process definitions which version are lower than or equals a certain version.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionVersionLowerThanOrEquals(int? processDefinitionVersion);
+        IProcessDefinitionQuery SetProcessDefinitionVersionLowerThanOrEquals(int? processDefinitionVersion);
 
         /// <summary>
         /// Only select the process definitions which are the latest deployed (ie. which have the highest version number for the given key).
@@ -140,99 +140,97 @@ namespace org.activiti.engine.repository
         /// </para>
         /// </summary>
         /// <exception cref="ActivitiIllegalArgumentException"> if used in combination with <seealso cref="#groupId(string)"/>, <seealso cref="#processDefinitionVersion(int)"/> or <seealso cref="#deploymentId(String)"/> </exception>
-        IProcessDefinitionQuery latestVersion();
+        IProcessDefinitionQuery SetLatestVersion();
 
         /// <summary>
         /// Only select process definition with the given resource name.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionResourceName(string resourceName);
+        IProcessDefinitionQuery SetProcessDefinitionResourceName(string resourceName);
 
         /// <summary>
         /// Only select process definition with a resource name like the given .
         /// </summary>
-        IProcessDefinitionQuery processDefinitionResourceNameLike(string resourceNameLike);
+        IProcessDefinitionQuery SetProcessDefinitionResourceNameLike(string resourceNameLike);
 
         /// <summary>
         /// select process definition with procDefId
         /// </summary>
         /// <param name="procDefId"></param>
         /// <returns></returns>
-        IProcessDefinitionQuery processDefinitionStarter(string procDefId);
+        IProcessDefinitionQuery SetProcessDefinitionStarter(string procDefId);
 
         /// <summary>
         /// Only selects process definitions which given userId is authoriezed to start
         /// </summary>
-        IProcessDefinitionQuery startableByUser(string userId);
+        IProcessDefinitionQuery SetStartableByUser(string userId);
 
         /// <summary>
         /// Only selects process definitions which are suspended
         /// </summary>
-        IProcessDefinitionQuery suspended();
+        IProcessDefinitionQuery SetSuspended();
 
         /// <summary>
         /// Only selects process definitions which are active
         /// </summary>
-        IProcessDefinitionQuery active();
+        IProcessDefinitionQuery SetActive();
 
         /// <summary>
         /// Only select process definitions that have the given tenant id.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionTenantId(string tenantId);
+        IProcessDefinitionQuery SetProcessDefinitionTenantId(string tenantId);
 
         /// <summary>
         /// Only select process definitions with a tenant id like the given one.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionTenantIdLike(string tenantIdLike);
+        IProcessDefinitionQuery SetProcessDefinitionTenantIdLike(string tenantIdLike);
 
         /// <summary>
         /// Only select process definitions that do not have a tenant id.
         /// </summary>
-        IProcessDefinitionQuery processDefinitionWithoutTenantId();
+        IProcessDefinitionQuery SetProcessDefinitionWithoutTenantId();
 
         // Support for event subscriptions /////////////////////////////////////
 
         /// <summary>
         /// Selects the single process definition which has a start message event with the messageName.
         /// </summary>
-        IProcessDefinitionQuery messageEventSubscriptionName(string messageName);
+        IProcessDefinitionQuery SetMessageEventSubscriptionName(string messageName);
 
         // ordering ////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Order by the category of the process definitions (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IProcessDefinitionQuery orderByProcessDefinitionCategory();
+        IProcessDefinitionQuery OrderByProcessDefinitionCategory();
 
         /// <summary>
         /// Order by process definition key (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IProcessDefinitionQuery orderByProcessDefinitionKey();
+        IProcessDefinitionQuery OrderByProcessDefinitionKey();
 
         /// <summary>
         /// Order by the id of the process definitions (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IProcessDefinitionQuery orderByProcessDefinitionId();
+        IProcessDefinitionQuery OrderByProcessDefinitionId();
 
         /// <summary>
         /// Order by the version of the process definitions (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IProcessDefinitionQuery orderByProcessDefinitionVersion();
+        IProcessDefinitionQuery OrderByProcessDefinitionVersion();
 
         /// <summary>
         /// Order by the name of the process definitions (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IProcessDefinitionQuery orderByProcessDefinitionName();
+        IProcessDefinitionQuery OrderByProcessDefinitionName();
 
         /// <summary>
         /// Order by deployment id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IProcessDefinitionQuery orderByDeploymentId();
+        IProcessDefinitionQuery OrderByDeploymentId();
 
         /// <summary>
         /// Order by tenant id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IProcessDefinitionQuery orderByTenantId();
-
+        IProcessDefinitionQuery OrderByTenantId();
     }
-
 }

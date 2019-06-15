@@ -2,29 +2,30 @@
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using org.activiti.bpmn.constants;
 using Sys.Bpm;
 
 namespace org.activiti.bpmn.converter
 {
-    public class XMLStreamWriter : XElement
+    public class XMLStreamWriter
     {
-        protected XElement element;
-        protected XmlWriter writer;
+        private readonly XmlWriter writer;
 
-        public XMLStreamWriter(XMLStreamWriter writer, XElement element) : this(element)
+        public XMLStreamWriter(XmlWriter writer)
         {
-            this.writer = writer.writer;
+            this.writer = writer;
         }
 
-        public XMLStreamWriter(XElement element) : base(element)
-        {
-            this.element = element;
-            this.writer = element.CreateWriter();
-        }
+        public XmlWriter XmlWriter => writer;
 
         public virtual WriteState WriteState => writer.WriteState;
 
         public string DefaultNamespace { get; set; }
+
+        public virtual void Close()
+        {
+            writer.Close();
+        }
 
         public virtual void Flush()
         {
@@ -41,11 +42,6 @@ namespace org.activiti.bpmn.converter
             writer.WriteBase64(buffer, index, count);
         }
 
-        public virtual void WriteCData(string text)
-        {
-            writer.WriteCData(text);
-        }
-
         public virtual void WriteCharEntity(char ch)
         {
             writer.WriteCharEntity(ch);
@@ -54,11 +50,6 @@ namespace org.activiti.bpmn.converter
         public virtual void WriteChars(char[] buffer, int index, int count)
         {
             writer.WriteChars(buffer, index, count);
-        }
-
-        public virtual void WriteComment(string text)
-        {
-            writer.WriteComment(text);
         }
 
         public virtual void WriteDocType(string name, string pubid, string sysid, string subset)
@@ -76,62 +67,37 @@ namespace org.activiti.bpmn.converter
             writer.WriteEndDocument();
         }
 
-        public virtual void writeEndDocument()
-        {
-            WriteEndDocument();
-        }
-
-        public virtual void WriteEndElement()
-        {
-            writer.WriteEndElement();
-        }
-
-        public virtual void setPrefix(string prefix, string uri)
-        {
-            element.setPrefix(prefix, uri);
-        }
-
-        public virtual string getPrefix(string uri)
-        {
-            return element.GetPrefixOfNamespace(uri);
-        }
-
-        public virtual void writeCharacters(char[] text, int start, int len)
+        public virtual void WriteCharacters(char[] text, int start, int len)
         {
             writer.WriteChars(text, start, len);
         }
 
-        public virtual void writeStartDocument(string version)
+        public virtual void WriteStartDocument(string version)
         {
             writer.WriteStartDocument(true);
         }
 
-        public virtual void writeStartDocument()
+        public virtual void WriteStartDocument()
         {
             writer.WriteStartDocument(true);
         }
 
-        public virtual void writeEntityRef(string name)
-        {
-            element.writeEntityRef(name);
-        }
-
-        public virtual void writeDTD(string dtd)
+        public virtual void WriteDTD(string dtd)
         {
             writer.WriteDocType(dtd, "", "", "");
         }
 
-        public virtual void writeProcessingInstruction(string target, string data)
+        public virtual void WriteProcessingInstruction(string target, string data)
         {
             writer.WriteProcessingInstruction(target, data);
         }
 
-        public virtual void writeProcessingInstruction(string target)
+        public virtual void WriteProcessingInstruction(string target)
         {
             writer.WriteProcessingInstruction(target, "");
         }
 
-        public virtual void writeComment(string data)
+        public virtual void WriteComment(string data)
         {
             this.writer.WriteComment(data);
         }
@@ -144,11 +110,6 @@ namespace org.activiti.bpmn.converter
         public virtual void WriteFullEndElement()
         {
             writer.WriteFullEndElement();
-        }
-
-        public virtual void WriteProcessingInstruction(string name, string text)
-        {
-            writer.WriteProcessingInstruction(name, text);
         }
 
         public virtual void WriteRaw(char[] buffer, int index, int count)
@@ -166,29 +127,24 @@ namespace org.activiti.bpmn.converter
             writer.WriteStartAttribute(prefix, localName, ns);
         }
 
-        public virtual void writeStartDocument(string encoding, string v)
+        public virtual void WriteStartDocument(string encoding, string v)
         {
             writer.WriteStartDocument(true);
         }
 
-        public virtual void writeAttribute(string namespaceUri, string name, string value)
+        public virtual void WriteAttribute(string namespaceUri, string name, string value)
         {
             writer.WriteAttributeString(name, namespaceUri, value);
         }
 
-        public virtual void writeDefaultNamespace(string namespaceUri)
+        public virtual void WriteDefaultNamespace(string namespaceUri)
         {
-            writer.WriteAttributeString(constants.BpmnXMLConstants.TARGET_NAMESPACE_ATTRIBUTE, namespaceUri);
+            WriteNamespace(BpmnXMLConstants.BPMN_PREFIX, namespaceUri);
         }
 
-        public virtual void writeAttribute(string prefix, string namespaceUri, string name, object value)
+        public virtual void WriteAttribute(string prefix, string namespaceUri, string name, object value)
         {
             writer.WriteAttributeString(prefix, name, namespaceUri, value?.ToString());
-        }
-
-        public virtual void WriteStartDocument()
-        {
-            writer.WriteStartDocument();
         }
 
         public virtual void WriteStartDocument(bool standalone)
@@ -216,22 +172,22 @@ namespace org.activiti.bpmn.converter
             writer.WriteWhitespace(ws);
         }
 
-        public virtual void writeStartElement(string localName)
+        public virtual void WriteStartElement(string localName)
         {
             writer.WriteStartElement(localName);
         }
 
-        public virtual void writeAttribute(string localName, object value)
+        public virtual void WriteAttribute(string localName, object value)
         {
             writer.WriteAttributeString(localName, value?.ToString());
         }
 
-        public virtual void writeEndElement()
+        public virtual void WriteEndElement()
         {
             writer.WriteEndElement();
         }
 
-        public virtual void writeCharacters(string documentation)
+        public virtual void WriteCharacters(string documentation)
         {
             if (string.IsNullOrWhiteSpace(documentation))
                 return;
@@ -241,39 +197,40 @@ namespace org.activiti.bpmn.converter
             writer.WriteChars(data, 0, data.Length);
         }
 
-        public virtual void writeCData(string completionCondition)
+        public virtual void WriteCData(string completionCondition)
         {
             writer.WriteCData(completionCondition);
         }
 
-        public virtual void writeNamespace(string prefix, string namespaceUri)
+        public virtual void WriteNamespace(string prefix, string namespaceUri)
         {
-            element.writeNamespace(prefix, namespaceUri);
+            writer.WriteAttributeString("xmlns", prefix, null, namespaceUri);
         }
 
-        public virtual void writeStartElement(string prefix, string localname, string ns)
-        {
-            writer.WriteStartElement(prefix, localname, ns);
-        }
-
-        public virtual void writeStartElement(string namespaceUri, string localName)
+        public virtual void WriteStartElement(string namespaceUri, string localName)
         {
             writer.WriteStartElement(localName, namespaceUri);
         }
 
-        public virtual void writeEmptyElement(string namespaceURI, string localName)
+        public virtual void WriteEmptyElement(string namespaceURI, string localName)
         {
-            element.writeEmptyElement(namespaceURI, localName);
+            writer.WriteStartElement(localName, namespaceURI);
+            writer.WriteEndElement();
+            //element.WriteEmptyElement(namespaceURI, localName);
         }
 
-        public virtual void writeEmptyElement(string prefix, string localName, string namespaceURI)
+        public virtual void WriteEmptyElement(string prefix, string localName, string namespaceURI)
         {
-            element.writeEmptyElement(prefix, localName, namespaceURI);
+            writer.WriteStartElement(prefix, localName, namespaceURI);
+            writer.WriteEndElement();
+            //element.WriteEmptyElement(prefix, localName, namespaceURI);
         }
 
-        public virtual void writeEmptyElement(string localName)
+        public virtual void WriteEmptyElement(string localName)
         {
-            element.writeEmptyElement(localName);
+            //element.WriteEmptyElement(localName);
+            writer.WriteStartElement(localName);
+            writer.WriteEndElement();
         }
     }
 }

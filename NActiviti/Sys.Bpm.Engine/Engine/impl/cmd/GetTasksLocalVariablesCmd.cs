@@ -27,26 +27,26 @@ namespace org.activiti.engine.impl.cmd
 
 
         private const long serialVersionUID = 1L;
-        protected internal ISet<string> taskIds;
+        protected internal string[] taskIds;
 
-        public GetTasksLocalVariablesCmd(ISet<string> taskIds)
+        public GetTasksLocalVariablesCmd(string[] taskIds)
         {
             this.taskIds = taskIds;
         }
 
-        public virtual IList<IVariableInstance> execute(ICommandContext commandContext)
+        public virtual IList<IVariableInstance> Execute(ICommandContext commandContext)
         {
             if (taskIds == null)
             {
                 throw new ActivitiIllegalArgumentException("taskIds is null");
             }
-            if (taskIds.Count == 0)
+            if ((taskIds?.Length).GetValueOrDefault(0) == 0)
             {
                 throw new ActivitiIllegalArgumentException("Set of taskIds is empty");
             }
 
             IList<IVariableInstance> instances = new List<IVariableInstance>();
-            IList<IVariableInstanceEntity> entities = commandContext.VariableInstanceEntityManager.findVariableInstancesByTaskIds(taskIds);
+            IList<IVariableInstanceEntity> entities = commandContext.VariableInstanceEntityManager.FindVariableInstancesByTaskIds(taskIds);
             foreach (IVariableInstanceEntity entity in entities)
             {
                 instances.Add(entity);

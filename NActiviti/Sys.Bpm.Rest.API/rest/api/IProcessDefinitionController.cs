@@ -42,11 +42,18 @@ namespace org.activiti.cloud.services.rest.api
         Task<string> GetProcessModel(string id);
 
         /// <summary>
+        /// 查找流程定义XML描述
+        /// </summary>
+        /// <param name="query">查询对象</param>
+        /// <returns></returns>
+        Task<string> GetProcessModel(ProcessDefinitionQuery query);
+
+        /// <summary>
         /// 查找流程定义模型
         /// </summary>
         /// <param name="id">流程模型id</param>
         /// <returns></returns>
-        Task<BpmnModel> GetBpmnModel(string id);
+        Task<ActionResult<BpmnModel>> GetBpmnModel(string id);
 
         /// <summary>
         /// 获取工作流图表,未实现.

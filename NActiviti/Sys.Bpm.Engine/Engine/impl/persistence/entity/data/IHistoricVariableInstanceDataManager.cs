@@ -21,19 +21,19 @@ namespace org.activiti.engine.impl.persistence.entity.data
 	public interface IHistoricVariableInstanceDataManager : IDataManager<IHistoricVariableInstanceEntity>
 	{
 
-	  IList<IHistoricVariableInstanceEntity> findHistoricVariableInstancesByProcessInstanceId(string processInstanceId);
+	  IList<IHistoricVariableInstanceEntity> FindHistoricVariableInstancesByProcessInstanceId(string processInstanceId);
 
-	  IList<IHistoricVariableInstanceEntity> findHistoricVariableInstancesByTaskId(string taskId);
+	  IList<IHistoricVariableInstanceEntity> FindHistoricVariableInstancesByTaskId(string taskId);
 
-	  long findHistoricVariableInstanceCountByQueryCriteria(IHistoricVariableInstanceQuery historicProcessVariableQuery);
+	  long FindHistoricVariableInstanceCountByQueryCriteria(IHistoricVariableInstanceQuery historicProcessVariableQuery);
 
-	  IList<IHistoricVariableInstance> findHistoricVariableInstancesByQueryCriteria(IHistoricVariableInstanceQuery historicProcessVariableQuery, Page page);
+	  IList<IHistoricVariableInstance> FindHistoricVariableInstancesByQueryCriteria(IHistoricVariableInstanceQuery historicProcessVariableQuery, Page page);
 
-	  IHistoricVariableInstanceEntity findHistoricVariableInstanceByVariableInstanceId(string variableInstanceId);
+	  IHistoricVariableInstanceEntity FindHistoricVariableInstanceByVariableInstanceId(string variableInstanceId);
 
-	  IList<IHistoricVariableInstance> findHistoricVariableInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+	  IList<IHistoricVariableInstance> FindHistoricVariableInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-	  long findHistoricVariableInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
+	  long FindHistoricVariableInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
 
 	}
 

@@ -10,6 +10,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
+
 namespace org.activiti.engine.impl.variable
 {
 
@@ -35,17 +37,17 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public override object getValue(IValueFields valueFields)
+        public override object GetValue(IValueFields valueFields)
         {
             string textValue = valueFields.TextValue;
-            if (ReferenceEquals(textValue, null))
+            if (textValue is null)
             {
                 return null;
             }
-            return System.Guid.Parse(textValue);
+            return new Guid(textValue);
         }
 
-        public override void setValue(object value, IValueFields valueFields)
+        public override void SetValue(object value, IValueFields valueFields)
         {
             if (value != null)
             {
@@ -57,7 +59,7 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public override bool isAbleToStore(object value)
+        public override bool IsAbleToStore(object value)
         {
             if (value == null)
             {

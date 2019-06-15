@@ -27,126 +27,124 @@ namespace org.activiti.engine.history
         /// <summary>
         /// Only select historic activity instances with the given id (primary key within history tables).
         /// </summary>
-        IHistoricActivityInstanceQuery activityInstanceId(string activityInstanceId);
+        IHistoricActivityInstanceQuery SetActivityInstanceId(string activityInstanceId);
 
         /// <summary>
         /// Only select historic activity instances with the given process instance. {@link ProcessInstance) ids and <seealso cref="IHistoricProcessInstance"/> ids match.
         /// </summary>
-        IHistoricActivityInstanceQuery processInstanceId(string processInstanceId);
+        IHistoricActivityInstanceQuery SetProcessInstanceId(string processInstanceId);
 
         /// <summary>
         /// Only select historic activity instances for the given process definition </summary>
-        IHistoricActivityInstanceQuery processDefinitionId(string processDefinitionId);
+        IHistoricActivityInstanceQuery SetProcessDefinitionId(string processDefinitionId);
 
         /// <summary>
         /// Only select historic activity instances for the given execution </summary>
-        IHistoricActivityInstanceQuery executionId(string executionId);
+        IHistoricActivityInstanceQuery SetExecutionId(string executionId);
 
         /// <summary>
         /// Only select historic activity instances for the given activity (id from BPMN 2.0 XML)
         /// </summary>
-        IHistoricActivityInstanceQuery activityId(string activityId);
+        IHistoricActivityInstanceQuery SetActivityId(string activityId);
 
         /// <summary>
         /// Only select historic activity instances for activities with the given name
         /// </summary>
-        IHistoricActivityInstanceQuery activityName(string activityName);
+        IHistoricActivityInstanceQuery SetActivityName(string activityName);
 
         /// <summary>
         /// Only select historic activity instances for activities with the given activity type
         /// </summary>
-        IHistoricActivityInstanceQuery activityType(string activityType);
+        IHistoricActivityInstanceQuery SetActivityType(string activityType);
 
         /// <summary>
         /// Only select historic activity instances for userTask activities assigned to the given user
         /// </summary>
-        IHistoricActivityInstanceQuery taskAssignee(string userId);
+        IHistoricActivityInstanceQuery SetTaskAssignee(string userId);
 
         /// <summary>
         /// Only select historic activity instances that are finished. </summary>
-        IHistoricActivityInstanceQuery finished();
+        IHistoricActivityInstanceQuery SetFinished();
 
         /// <summary>
         /// Only select historic activity instances that are not finished yet. </summary>
-        IHistoricActivityInstanceQuery unfinished();
+        IHistoricActivityInstanceQuery SetUnfinished();
 
         /// <summary>
         /// Obly select historic activity instances with a specific delete reason. </summary>
-        IHistoricActivityInstanceQuery deleteReason(string deleteReason);
+        IHistoricActivityInstanceQuery SetDeleteReason(string deleteReason);
 
         /// <summary>
         /// Obly select historic activity instances with a delete reason that matches the provided parameter. </summary>
-        IHistoricActivityInstanceQuery deleteReasonLike(string deleteReasonLike);
+        IHistoricActivityInstanceQuery SetDeleteReasonLike(string deleteReasonLike);
 
         /// <summary>
         /// Only select historic activity instances that have the given tenant id. </summary>
-        IHistoricActivityInstanceQuery activityTenantId(string tenantId);
+        IHistoricActivityInstanceQuery SetActivityTenantId(string tenantId);
 
         /// <summary>
         /// Only select historic activity instances with a tenant id like the given one.
         /// </summary>
-        IHistoricActivityInstanceQuery activityTenantIdLike(string tenantIdLike);
+        IHistoricActivityInstanceQuery SetActivityTenantIdLike(string tenantIdLike);
 
         /// <summary>
         /// Only select historic activity instances that do not have a tenant id. </summary>
-        IHistoricActivityInstanceQuery activityWithoutTenantId();
+        IHistoricActivityInstanceQuery SetActivityWithoutTenantId();
 
         // ordering
         // /////////////////////////////////////////////////////////////////
         /// <summary>
         /// Order by id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>). </summary>
-        IHistoricActivityInstanceQuery orderByHistoricActivityInstanceId();
+        IHistoricActivityInstanceQuery OrderByHistoricActivityInstanceId();
 
         /// <summary>
         /// Order by processInstanceId (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricActivityInstanceQuery orderByProcessInstanceId();
+        IHistoricActivityInstanceQuery OrderByProcessInstanceId();
 
         /// <summary>
         /// Order by executionId (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricActivityInstanceQuery orderByExecutionId();
+        IHistoricActivityInstanceQuery OrderByExecutionId();
 
         /// <summary>
         /// Order by activityId (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricActivityInstanceQuery orderByActivityId();
+        IHistoricActivityInstanceQuery OrderByActivityId();
 
         /// <summary>
         /// Order by activityName (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricActivityInstanceQuery orderByActivityName();
+        IHistoricActivityInstanceQuery OrderByActivityName();
 
         /// <summary>
         /// Order by activityType (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricActivityInstanceQuery orderByActivityType();
+        IHistoricActivityInstanceQuery OrderByActivityType();
 
         /// <summary>
         /// Order by start (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/> ).
         /// </summary>
-        IHistoricActivityInstanceQuery orderByHistoricActivityInstanceStartTime();
+        IHistoricActivityInstanceQuery OrderByHistoricActivityInstanceStartTime();
 
         /// <summary>
         /// Order by end (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricActivityInstanceQuery orderByHistoricActivityInstanceEndTime();
+        IHistoricActivityInstanceQuery OrderByHistoricActivityInstanceEndTime();
 
         /// <summary>
         /// Order by duration (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricActivityInstanceQuery orderByHistoricActivityInstanceDuration();
+        IHistoricActivityInstanceQuery OrderByHistoricActivityInstanceDuration();
 
         /// <summary>
         /// Order by processDefinitionId (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricActivityInstanceQuery orderByProcessDefinitionId();
+        IHistoricActivityInstanceQuery OrderByProcessDefinitionId();
 
         /// <summary>
         /// Order by tenant id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricActivityInstanceQuery orderByTenantId();
-
+        IHistoricActivityInstanceQuery OrderByTenantId();
     }
-
 }

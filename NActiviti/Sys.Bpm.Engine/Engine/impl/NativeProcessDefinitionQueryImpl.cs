@@ -23,14 +23,14 @@ namespace org.activiti.engine.impl
 
         // results ////////////////////////////////////////////////////////////////
 
-        public override IList<IProcessDefinition> executeList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public override IList<IProcessDefinition> ExecuteList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return commandContext.ProcessDefinitionEntityManager.findProcessDefinitionsByNativeQuery(parameterMap, firstResult, maxResults);
+            return commandContext.ProcessDefinitionEntityManager.FindProcessDefinitionsByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public override long executeCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
+        public override long ExecuteCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
         {
-            return commandContext.ProcessDefinitionEntityManager.findProcessDefinitionCountByNativeQuery(parameterMap);
+            return commandContext.ProcessDefinitionEntityManager.FindProcessDefinitionCountByNativeQuery(parameterMap);
         }
 
     }

@@ -15,10 +15,12 @@ namespace org.activiti.bpmn.model
     public class ComplexGateway : Gateway
     {
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            ComplexGateway clone = new ComplexGateway();
-            clone.Values = this;
+            ComplexGateway clone = new ComplexGateway
+            {
+                Values = this
+            };
             return clone;
         }
 

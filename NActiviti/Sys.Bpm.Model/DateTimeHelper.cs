@@ -9,61 +9,133 @@ using System;
 
 public static class DateTimeHelper
 {
-    private static readonly System.DateTime Jan1st1970 = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+    private static readonly DateTime Jan1st1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
     public static long CurrentUnixTimeMillis()
     {
-        return (long)(System.DateTime.UtcNow - Jan1st1970).TotalMilliseconds;
+        return (long)(DateTime.UtcNow - Jan1st1970).TotalMilliseconds;
     }
 
-    public static void Add(this DateTime date, DatePart part, int value)
+    public static DateTime AddYears(long value)
+    {
+        return Add(DatePart.YEAR, value);
+    }
+
+    public static DateTime AddYears(this DateTime date, long value)
+    {
+        return date.Add(DatePart.YEAR, value);
+    }
+
+    public static DateTime AddMonths(long value)
+    {
+        return Add(DatePart.MONTH, value);
+    }
+
+    public static DateTime AddMonths(this DateTime date, long value)
+    {
+        return date.Add(DatePart.MONTH, value);
+    }
+
+    public static DateTime AddDays(long value)
+    {
+        return Add(DatePart.DAY, value);
+    }
+
+    public static DateTime AddDays(this DateTime date, long value)
+    {
+        return date.Add(DatePart.DAY, value);
+    }
+
+    public static DateTime AddWeeks(long value)
+    {
+        return Add(DatePart.WEEK, value);
+    }
+
+    public static DateTime AddWeeks(this DateTime date, long value)
+    {
+        return date.Add(DatePart.WEEK, value);
+    }
+
+    public static DateTime AddHours(long value)
+    {
+        return Add(DatePart.HOUR, value);
+    }
+
+    public static DateTime AddHours(this DateTime date, long value)
+    {
+        return date.Add(DatePart.HOUR, value);
+    }
+
+    public static DateTime AddMinutes(long value)
+    {
+        return Add(DatePart.MINUTE, value);
+    }
+
+    public static DateTime AddMinutes(this DateTime date, long value)
+    {
+        return date.Add(DatePart.MINUTE, value);
+    }
+
+    public static DateTime AddSeconds(long value)
+    {
+        return Add(DatePart.SECOND, value);
+    }
+
+    public static DateTime AddSeconds(this DateTime date, long value)
+    {
+        return date.Add(DatePart.SECOND, value);
+    }
+
+    public static DateTime Add(DatePart part, long value)
+    {
+        return DateTime.Now.Add(part, value);
+    }
+
+    public static DateTime Add(this DateTime date, DatePart part, long value)
     {
         switch (part)
         {
             case DatePart.ERA:
             case DatePart.YEAR:
-                date.AddYears(value);
-                break;
+                return date.AddYears(value);
             case DatePart.MONTH:
-                date.AddMonths(value);
-                break;
+                return date.AddMonths(value);
             case DatePart.DATE:
             case DatePart.DAY:
-                date.AddDays(value);
-                break;
+                return date.AddDays(value);
             case DatePart.HOUR:
             case DatePart.HOUR_OF_DAY:
-                date.AddHours(value);
-                break;
+                return date.AddHours(value);
             case DatePart.MINUTE:
-                date.AddMinutes(value);
-                break;
+                return date.AddMinutes(value);
             case DatePart.SECOND:
-                date.AddSeconds(value);
-                break;
+                return date.AddSeconds(value);
             case DatePart.MILLISECOND:
-                date.AddMilliseconds(value);
-                break;
+                return date.AddMilliseconds(value);
+            case DatePart.WEEK:
+                return date.AddDays(value * 7);
+            default:
+                return date;
         }
     }
 
-    public static DateTime Set(this DateTime date, DatePart part, int value)
+    public static DateTime Set(this DateTime date, DatePart part, long value)
     {
         switch (part)
         {
             case DatePart.YEAR:
-                return new DateTime(value, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond);
+                return new DateTime((int)value, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond);
             case DatePart.MONTH:
-                return new DateTime(date.Year, value, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond);
+                return new DateTime(date.Year, (int)value, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond);
             case DatePart.DAY:
-                return new DateTime(date.Year, date.Month, value, date.Hour, date.Minute, date.Second, date.Millisecond);
+                return new DateTime(date.Year, date.Month, (int)value, date.Hour, date.Minute, date.Second, date.Millisecond);
             case DatePart.HOUR:
-                return new DateTime(date.Year, date.Month, date.Day, value, date.Minute, date.Second, date.Millisecond);
+                return new DateTime(date.Year, date.Month, date.Day, (int)value, date.Minute, date.Second, date.Millisecond);
             case DatePart.MINUTE:
-                return new DateTime(date.Year, date.Month, date.Day, date.Hour, value, date.Second, date.Millisecond);
+                return new DateTime(date.Year, date.Month, date.Day, date.Hour, (int)value, date.Second, date.Millisecond);
             case DatePart.SECOND:
-                return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, value, date.Millisecond);
+                return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, (int)value, date.Millisecond);
             case DatePart.MILLISECOND:
-                return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, value);
+                return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, (int)value);
             default:
                 return date;
         }
@@ -75,6 +147,7 @@ public enum DatePart
     ERA = 0,
     YEAR = 1,
     MONTH = 2,
+    WEEK = 3,
     WEEK_OF_YEAR = 3,
     WEEK_OF_MONTH = 4,
     DATE = 5,

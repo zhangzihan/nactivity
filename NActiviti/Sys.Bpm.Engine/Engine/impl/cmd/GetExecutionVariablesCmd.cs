@@ -18,6 +18,7 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
+    using System.Linq;
 
     /// 
     /// 
@@ -27,37 +28,35 @@ namespace org.activiti.engine.impl.cmd
 
         private const long serialVersionUID = 1L;
         protected internal string executionId;
-        protected internal ICollection<string> variableNames;
+        protected internal IEnumerable<string> variableNames;
         protected internal bool isLocal;
 
-        public GetExecutionVariablesCmd(string executionId, ICollection<string> variableNames, bool isLocal)
+        public GetExecutionVariablesCmd(string executionId, IEnumerable<string> variableNames, bool isLocal)
         {
             this.executionId = executionId;
             this.variableNames = variableNames;
             this.isLocal = isLocal;
         }
 
-        public virtual IDictionary<string, object> execute(ICommandContext commandContext)
+        public virtual IDictionary<string, object> Execute(ICommandContext commandContext)
         {
 
             // Verify existance of execution
-            if (ReferenceEquals(executionId, null))
+            if (executionId is null)
             {
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }
 
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
 
             if (execution == null)
             {
                 throw new ActivitiObjectNotFoundException("execution " + executionId + " doesn't exist", typeof(IExecution));
             }
 
-            if (variableNames == null || variableNames.Count == 0)
+            if ((variableNames?.Count()).GetValueOrDefault(0) == 0)
             {
-
                 // Fetch all
-
                 if (isLocal)
                 {
                     return execution.VariablesLocal;
@@ -70,15 +69,14 @@ namespace org.activiti.engine.impl.cmd
             }
             else
             {
-
                 // Fetch specific collection of variables
                 if (isLocal)
                 {
-                    return execution.getVariablesLocal(variableNames, false);
+                    return execution.GetVariablesLocal(variableNames, false);
                 }
                 else
                 {
-                    return execution.getVariables(variableNames, false);
+                    return execution.GetVariables(variableNames, false);
                 }
 
             }

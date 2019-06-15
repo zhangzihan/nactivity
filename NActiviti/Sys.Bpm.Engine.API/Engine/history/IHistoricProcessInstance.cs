@@ -67,7 +67,7 @@ namespace org.activiti.engine.history
         DateTime? EndTime { get; }
 
         /// <summary>
-        /// The difference between <seealso cref="#getEndTime()"/> and <seealso cref="#getStartTime()"/> .
+        /// The difference between <seealso cref="EndTime"/> and <seealso cref="StartTime"/> .
         /// </summary>
         long? DurationInMillis { get; }
 
@@ -81,8 +81,14 @@ namespace org.activiti.engine.history
         /// <summary>
         /// The authenticated user that started this process instance.
         /// </summary>
-        /// <seealso cref= IdentityService#setAuthenticatedUserId(String) </seealso>
+        /// <seealso cref="IdentityService.SetAuthenticatedUserId(string)"> </seealso>
         string StartUserId { get; }
+
+        /// <summary>
+        /// The authenticated user that started this process instance.
+        /// </summary>
+        /// <seealso cref="IdentityService.SetAuthenticatedUserId(String)"></seealso>
+        string StartUser { get; }
 
         /// <summary>
         /// The start activity. </summary>

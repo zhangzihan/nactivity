@@ -20,59 +20,60 @@ namespace org.activiti.engine.impl.variable
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.util;
     using Sys.Data;
+    using System.Numerics;
 
     /// 
     public class JPAEntityMappings
     {
 
-        private IDictionary<string, EntityMetaData> classMetaDatamap;
+        private readonly IDictionary<string, EntityMetaData> classMetaDatamap;
 
-        private JPAEntityScanner enitityScanner;
+        private readonly JPAEntityScanner enitityScanner;
 
         public JPAEntityMappings()
         {
-            classMetaDatamap = new Dictionary<string, EntityMetaData>();
+            classMetaDatamap = new Dictionary<string, EntityMetaData>(StringComparer.OrdinalIgnoreCase);
             enitityScanner = new JPAEntityScanner();
         }
 
-        public virtual bool isJPAEntity(object value)
+        public virtual bool IsJPAEntity(object value)
         {
             if (value != null)
             {
                 // EntityMetaData will be added for all classes, even those who are
                 // not
                 // JPA-entities to prevent unneeded annotation scanning
-                return getEntityMetaData(value.GetType()).JPAEntity;
+                return GetEntityMetaData(value.GetType()).JPAEntity;
             }
             return false;
         }
 
-        public virtual EntityMetaData getEntityMetaData(Type clazz)
+        public virtual EntityMetaData GetEntityMetaData(Type clazz)
         {
             EntityMetaData metaData = classMetaDatamap[clazz.FullName];
             if (metaData == null)
             {
                 // Class not present in meta-data map, create metaData for it and
                 // add
-                metaData = scanClass(clazz);
+                metaData = ScanClass(clazz);
                 classMetaDatamap[clazz.FullName] = metaData;
             }
             return metaData;
         }
 
-        private EntityMetaData scanClass(Type clazz)
+        private EntityMetaData ScanClass(Type clazz)
         {
-            return enitityScanner.scanClass(clazz);
+            return enitityScanner.ScanClass(clazz);
         }
 
-        public virtual string getJPAClassString(object value)
+        public virtual string GetJPAClassString(object value)
         {
             if (value == null)
             {
                 throw new ActivitiIllegalArgumentException("null value cannot be saved");
             }
 
-            EntityMetaData metaData = getEntityMetaData(value.GetType());
+            EntityMetaData metaData = GetEntityMetaData(value.GetType());
             if (!metaData.JPAEntity)
             {
                 throw new ActivitiIllegalArgumentException("Object is not a JPA Entity: class='" + value.GetType() + "', " + value);
@@ -82,18 +83,18 @@ namespace org.activiti.engine.impl.variable
             return metaData.EntityClass.FullName;
         }
 
-        public virtual string getJPAIdString(object value)
+        public virtual string GetJPAIdString(object value)
         {
-            EntityMetaData metaData = getEntityMetaData(value.GetType());
+            EntityMetaData metaData = GetEntityMetaData(value.GetType());
             if (!metaData.JPAEntity)
             {
                 throw new ActivitiIllegalArgumentException("Object is not a JPA Entity: class='" + value.GetType() + "', " + value);
             }
-            object idValue = getIdValue(value, metaData);
-            return getIdString(idValue);
+            object idValue = GetIdValue(value, metaData);
+            return GetIdString(idValue);
         }
 
-        public virtual object getIdValue(object value, EntityMetaData metaData)
+        public virtual object GetIdValue(object value, EntityMetaData metaData)
         {
             try
             {
@@ -106,7 +107,7 @@ namespace org.activiti.engine.impl.variable
                     return metaData.IdField.GetValue(value);
                 }
             }
-            catch (System.ArgumentException iae)
+            catch (ArgumentException iae)
             {
                 throw new ActivitiException("Illegal argument exception when getting value from id method/field on JPAEntity", iae);
             }
@@ -123,31 +124,30 @@ namespace org.activiti.engine.impl.variable
             throw new ActivitiException("Cannot get id from JPA Entity, no id method/field set");
         }
 
-        public virtual object getJPAEntity(string className, string idString)
+        public virtual object GetJPAEntity(string className, string idString)
         {
-            Type entityClass = null;
-            entityClass = ReflectUtil.loadClass(className);
+            Type entityClass = ReflectUtil.LoadClass(className);
 
-            EntityMetaData metaData = getEntityMetaData(entityClass);
+            EntityMetaData metaData = GetEntityMetaData(entityClass);
 
             // Create primary key of right type
-            object primaryKey = createId(metaData, idString);
-            return findEntity(entityClass, primaryKey);
+            object primaryKey = CreateId(metaData, idString);
+            return FindEntity(entityClass, primaryKey);
         }
 
-        private object findEntity(Type entityClass, object primaryKey)
+        private object FindEntity(Type entityClass, object primaryKey)
         {
-            IEntityManager em = Context.CommandContext.getSession<IEntityManagerSession>().EntityManager;
+            IEntityManager em = Context.CommandContext.GetSession<IEntityManagerSession>().EntityManager;
 
-            object entity = em.find(entityClass, primaryKey);
-            if (entity == null)
+            object entity = em.Find(entityClass, primaryKey);
+            if (entity is null)
             {
                 throw new ActivitiException("Entity does not exist: " + entityClass.FullName + " - " + primaryKey);
             }
             return entity;
         }
 
-        public virtual object createId(EntityMetaData metaData, string @string)
+        public virtual object CreateId(EntityMetaData metaData, string @string)
         {
             Type type = metaData.IdType;
             // According to JPA-spec all primitive types (and wrappers) are
@@ -155,31 +155,31 @@ namespace org.activiti.engine.impl.variable
             // BigDecimal and BigInteger
             if (type == typeof(long) || type == typeof(long))
             {
-                return long.Parse(@string);
+                return long.TryParse(@string, out var l) ? l : throw new ArgumentException();
             }
             else if (type == typeof(string))
             {
                 return @string;
             }
-            else if (type == typeof(Byte) || type == typeof(sbyte))
+            else if (type == typeof(byte) || type == typeof(sbyte))
             {
-                return sbyte.Parse(@string);
+                return sbyte.TryParse(@string, out var sb) ? sb : throw new ArgumentException();
             }
             else if (type == typeof(short) || type == typeof(short))
             {
-                return short.Parse(@string);
+                return short.TryParse(@string, out var sh) ? sh : throw new ArgumentException();
             }
             else if (type == typeof(int) || type == typeof(int))
             {
-                return int.Parse(@string);
+                return int.TryParse(@string, out var i) ? i : throw new ArgumentException();
             }
             else if (type == typeof(float) || type == typeof(float))
             {
-                return float.Parse(@string);
+                return float.TryParse(@string, out var f) ? f : throw new ArgumentException();
             }
-            else if (type == typeof(Double) || type == typeof(double))
+            else if (type == typeof(double) || type == typeof(double))
             {
-                return double.Parse(@string);
+                return double.TryParse(@string, out var d) ? d : throw new ArgumentException();
             }
             else if (type == typeof(char) || type == typeof(char))
             {
@@ -187,23 +187,20 @@ namespace org.activiti.engine.impl.variable
             }
             else if (type == typeof(DateTime))
             {
-                return new DateTime(long.Parse(@string));
-            }
-            else if (type == typeof(DateTime))
-            {
-                return new DateTime(long.Parse(@string));
+                long.TryParse(@string, out var ticks);
+                return new DateTime(ticks);
             }
             else if (type == typeof(decimal))
             {
-                return decimal.Parse(@string);
+                return decimal.TryParse(@string, out var dec) ? dec : throw new ArgumentException();
             }
-            else if (type == typeof(System.Numerics.BigInteger))
+            else if (type == typeof(BigInteger))
             {
-                return Int64.Parse(@string);
+                return long.TryParse(@string, out var bi) ? bi : throw new ArgumentException();
             }
-            else if (type == typeof(System.Guid))
+            else if (type == typeof(Guid))
             {
-                return Guid.Parse(@string);
+                return new Guid(@string);
             }
             else
             {
@@ -211,7 +208,7 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public virtual string getIdString(object value)
+        public virtual string GetIdString(object value)
         {
             if (value == null)
             {

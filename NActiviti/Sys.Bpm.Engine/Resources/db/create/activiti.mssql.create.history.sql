@@ -7,6 +7,7 @@ create table ACT_HI_PROCINST (
     END_TIME_ datetime,
     DURATION_ numeric(19,0),
     START_USER_ID_ nvarchar(255),
+    START_USER_ nvarchar(255),
     START_ACT_ID_ nvarchar(255),
     END_ACT_ID_ nvarchar(255),
     SUPER_PROCESS_INSTANCE_ID_ nvarchar(64),
@@ -28,6 +29,7 @@ create table ACT_HI_ACTINST (
     ACT_NAME_ nvarchar(255),
     ACT_TYPE_ nvarchar(255) not null,
     ASSIGNEE_ nvarchar(255),
+    ASSIGNEE_USER_ nvarchar(255),
     START_TIME_ datetime not null,
     END_TIME_ datetime,
     DURATION_ numeric(19,0),
@@ -47,6 +49,7 @@ create table ACT_HI_TASKINST (
     DESCRIPTION_ nvarchar(4000),
     OWNER_ nvarchar(255),
     ASSIGNEE_ nvarchar(255),
+    ASSIGNEE_USER_ nvarchar(255),
     START_TIME_ datetime not null,
     CLAIM_TIME_ datetime,
     END_TIME_ datetime,
@@ -59,6 +62,8 @@ create table ACT_HI_TASKINST (
     TENANT_ID_ nvarchar(255) default '',
 	IS_APPEND_ tinyint,
 	IS_TRANSFER_ tinyint,
+	CAN_TRANSFER_ tinyint,
+	ONLY_ASSIGNEE_ tinyint,
 	IS_RUNTIME_ tinyint,
     primary key (ID_)
 );
@@ -157,3 +162,8 @@ create index ACT_IDX_HI_IDENT_LNK_USER on ACT_HI_IDENTITYLINK(USER_ID_);
 create index ACT_IDX_HI_IDENT_LNK_TASK on ACT_HI_IDENTITYLINK(TASK_ID_);
 create index ACT_IDX_HI_IDENT_LNK_PROCINST on ACT_HI_IDENTITYLINK(PROC_INST_ID_);
 create index ACT_IDX_HI_TASK_INST_PROCINST on ACT_HI_TASKINST(PROC_INST_ID_);
+
+create index ACT_IDX_HI_PROCINST_TENANT_ID on ACT_HI_PROCINST(TENANT_ID_);
+create index ACT_IDX_HI_INST_TENANT_ID on ACT_HI_ACTINST(TENANT_ID_);
+create index ACT_IDX_HI_TASK_TENANT_ID on ACT_HI_TASKINST(TENANT_ID_);
+

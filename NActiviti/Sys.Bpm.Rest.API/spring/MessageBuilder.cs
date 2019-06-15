@@ -10,7 +10,7 @@
         /// <summary>
         /// 
         /// </summary>
-        public static MessageBuilder<T> withPayload(T value)
+        public static MessageBuilder<T> WithPayload(T value)
         {
             return new MessageBuilder<T>();
         }
@@ -19,16 +19,16 @@
         /// 
         /// </summary>
 
-        public IMessage<T> build()
+        public IMessage<T> Build()
         {
-            return default(IMessage<T>);
+            return default;
         }
 
         /// <summary>
         /// 
         /// </summary>
 
-        public MessageBuilder<T> setHeader(string cONNECTOR_TYPE, string connectorType)
+        public MessageBuilder<T> SetHeader(string cONNECTOR_TYPE, string connectorType)
         {
             return this;
         }

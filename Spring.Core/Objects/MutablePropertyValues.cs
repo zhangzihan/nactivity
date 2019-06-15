@@ -24,7 +24,7 @@ using Spring.Util;
 namespace Spring.Objects
 {
     /// <summary>
-    /// Default implementation of the <see cref="Spring.Objects.IPropertyValues"/>
+    /// Default implementation of the <see cref="IPropertyValues"/>
     /// interface.
     /// </summary>
     /// <remarks>
@@ -45,35 +45,35 @@ namespace Spring.Objects
         private List<PropertyValue> propertyValuesList;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Spring.Objects.MutablePropertyValues"/>
+        /// Creates a new instance of the <see cref="MutablePropertyValues"/>
         /// class.
         /// </summary>
         /// <remarks>
         /// <p>
         /// The returned instance is initially empty...
-        /// <see cref="Spring.Objects.PropertyValue"/>s can be added with the various
-        /// overloaded <see cref="Spring.Objects.MutablePropertyValues.Add(PropertyValue)"/>,
-        /// <see cref="Spring.Objects.MutablePropertyValues.Add(string, object)"/>,
-        /// <see cref="Spring.Objects.MutablePropertyValues.AddAll(IDictionary{string, object})"/>,
-        /// and <see cref="Spring.Objects.MutablePropertyValues.AddAll(IList{PropertyValue})"/>
+        /// <see cref="PropertyValue"/>s can be added with the various
+        /// overloaded <see cref="MutablePropertyValues.Add(PropertyValue)"/>,
+        /// <see cref="MutablePropertyValues.Add(string, object)"/>,
+        /// <see cref="MutablePropertyValues.AddAll(IDictionary{string, object})"/>,
+        /// and <see cref="MutablePropertyValues.AddAll(IReadOnlyList{PropertyValue})"/>
         /// methods.
         /// </p>
         /// </remarks>
-        /// <seealso cref="Spring.Objects.MutablePropertyValues.Add (PropertyValue)"/>
-        /// <seealso cref="Spring.Objects.MutablePropertyValues.Add (string, object)"/>
+        /// <seealso cref="MutablePropertyValues.Add (PropertyValue)"/>
+        /// <seealso cref="MutablePropertyValues.Add (string, object)"/>
         public MutablePropertyValues()
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Spring.Objects.MutablePropertyValues"/>
+        /// Creates a new instance of the <see cref="MutablePropertyValues"/>
         /// class.
         /// </summary>
         /// <remarks>
         /// <p>
-        /// Deep copy constructor. Guarantees <see cref="Spring.Objects.PropertyValue"/>
+        /// Deep copy constructor. Guarantees <see cref="PropertyValue"/>
         /// references are independent, although it can't deep copy objects currently
-        /// referenced by individual <see cref="Spring.Objects.PropertyValue"/> objects.
+        /// referenced by individual <see cref="PropertyValue"/> objects.
         /// </p>
         /// </remarks>
         public MutablePropertyValues(IPropertyValues other)
@@ -85,7 +85,7 @@ namespace Spring.Objects
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="Spring.Objects.MutablePropertyValues"/>
+        /// Creates a new instance of the <see cref="MutablePropertyValues"/>
         /// class.
         /// </summary>
         /// <param name="map">
@@ -117,11 +117,11 @@ namespace Spring.Objects
         }
 
         /// <summary>
-        /// Add the supplied <see cref="Spring.Objects.PropertyValue"/> object,
+        /// Add the supplied <see cref="PropertyValue"/> object,
         /// replacing any existing one for the respective property.
         /// </summary>
         /// <param name="pv">
-        /// The <see cref="Spring.Objects.PropertyValue"/> object to add.
+        /// The <see cref="PropertyValue"/> object to add.
         /// </param>
         public void Add(PropertyValue pv)
         {
@@ -182,7 +182,7 @@ namespace Spring.Objects
                 }
             }
         }
-        
+
         /// <summary>
         /// Add all property values from the given
         /// <see cref="System.Collections.IDictionary"/>.
@@ -208,7 +208,7 @@ namespace Spring.Objects
         /// <see cref="System.Collections.IList"/>.
         /// </summary>
         /// <param name="values">
-        /// The list of <see cref="Spring.Objects.PropertyValue"/>s to be added.
+        /// The list of <see cref="PropertyValue"/>s to be added.
         /// </param>
         public void AddAll(IReadOnlyList<PropertyValue> values)
         {
@@ -222,10 +222,10 @@ namespace Spring.Objects
         }
 
         /// <summary>
-        /// Remove the given <see cref="Spring.Objects.PropertyValue"/>, if contained.
+        /// Remove the given <see cref="PropertyValue"/>, if contained.
         /// </summary>
         /// <param name="pv">
-        /// The <see cref="Spring.Objects.PropertyValue"/> to remove.
+        /// The <see cref="PropertyValue"/> to remove.
         /// </param>
         public void Remove(PropertyValue pv)
         {
@@ -233,7 +233,7 @@ namespace Spring.Objects
         }
 
         /// <summary>
-        /// Removes the named <see cref="Spring.Objects.PropertyValue"/>, if contained.
+        /// Removes the named <see cref="PropertyValue"/>, if contained.
         /// </summary>
         /// <param name="propertyName">
         /// The name of the property.
@@ -244,7 +244,7 @@ namespace Spring.Objects
         }
 
         /// <summary>
-        /// Modify a <see cref="Spring.Objects.PropertyValue"/> object held in this object. Indexed from 0.
+        /// Modify a <see cref="PropertyValue"/> object held in this object. Indexed from 0.
         /// </summary>
         public void SetPropertyValueAt(PropertyValue pv, int i)
         {
@@ -270,7 +270,7 @@ namespace Spring.Objects
             {
                 return null;
             }
-            
+
             string propertyNameLowered = propertyName.ToLower(CultureInfo.CurrentCulture);
             for (var i = 0; i < propertyValuesList.Count; i++)
             {
@@ -340,7 +340,7 @@ namespace Spring.Objects
         /// <p>
         /// The returned <see cref="System.Collections.IEnumerator"/> is the
         /// <see cref="System.Collections.IEnumerator"/> exposed by the
-        /// <see cref="Spring.Objects.MutablePropertyValues.PropertyValues"/>
+        /// <see cref="MutablePropertyValues.PropertyValues"/>
         /// property.
         /// </p>
         /// </remarks>

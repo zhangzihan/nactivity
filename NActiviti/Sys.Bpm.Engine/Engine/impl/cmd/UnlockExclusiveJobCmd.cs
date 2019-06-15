@@ -18,8 +18,7 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
-    using Sys;
-    using System.Collections.Generic;
+    using Sys.Workflow;
 
     /// 
     /// 
@@ -37,7 +36,7 @@ namespace org.activiti.engine.impl.cmd
             this.job = job;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
 
             if (job == null)
@@ -52,12 +51,12 @@ namespace org.activiti.engine.impl.cmd
 
             if (job.Exclusive)
             {
-                if (!ReferenceEquals(job.ProcessInstanceId, null))
+                if (!(job.ProcessInstanceId is null))
                 {
-                    IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(job.ProcessInstanceId);
+                    IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(job.ProcessInstanceId);
                     if (execution != null)
                     {
-                        commandContext.ExecutionEntityManager.clearProcessInstanceLockTime(execution.Id);
+                        commandContext.ExecutionEntityManager.ClearProcessInstanceLockTime(execution.Id);
                     }
                 }
             }

@@ -21,15 +21,15 @@ namespace org.activiti.engine.impl.persistence.entity.data
     public interface ISuspendedJobDataManager : IDataManager<ISuspendedJobEntity>
     {
 
-        IList<ISuspendedJobEntity> findJobsByExecutionId(string executionId);
+        IList<ISuspendedJobEntity> FindJobsByExecutionId(string executionId);
 
-        IList<ISuspendedJobEntity> findJobsByProcessInstanceId(string processInstanceId);
+        IList<ISuspendedJobEntity> FindJobsByProcessInstanceId(string processInstanceId);
 
-        IList<IJob> findJobsByQueryCriteria(SuspendedJobQueryImpl jobQuery, Page page);
+        IList<IJob> FindJobsByQueryCriteria(ISuspendedJobQuery jobQuery, Page page);
 
-        long findJobCountByQueryCriteria(SuspendedJobQueryImpl jobQuery);
+        long FindJobCountByQueryCriteria(ISuspendedJobQuery jobQuery);
 
-        void updateJobTenantIdForDeployment(string deploymentId, string newTenantId);
+        void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId);
     }
 
 }

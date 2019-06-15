@@ -30,31 +30,31 @@ namespace org.activiti.engine.impl.util
     public class ProcessInstanceHelper
     {
 
-        public virtual IProcessInstance createProcessInstance(IProcessDefinitionEntity processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
+        public virtual IProcessInstance CreateProcessInstance(IProcessDefinitionEntity processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
         {
 
-            return createAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables, false);
+            return CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables, false);
         }
 
-        public virtual IProcessInstance createAndStartProcessInstance(IProcessDefinition processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
+        public virtual IProcessInstance CreateAndStartProcessInstance(IProcessDefinition processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
         {
 
-            return createAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables, true);
+            return CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables, true);
         }
 
-        protected internal virtual IProcessInstance createAndStartProcessInstance(IProcessDefinition processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, bool startProcessInstance)
+        protected internal virtual IProcessInstance CreateAndStartProcessInstance(IProcessDefinition processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, bool startProcessInstance)
         {
-
-            ICommandContext commandContext = Context.CommandContext; // Todo: ideally, context should be passed here
+            // Todo: ideally, context should be passed here
+            _ = Context.CommandContext;
 
             // Do not start process a process instance if the process definition is suspended
-            if (ProcessDefinitionUtil.isProcessDefinitionSuspended(processDefinition.Id))
+            if (ProcessDefinitionUtil.IsProcessDefinitionSuspended(processDefinition.Id))
             {
                 throw new ActivitiException("Cannot start process instance. Process definition " + processDefinition.Name + " (id = " + processDefinition.Id + ") is suspended");
             }
 
             // Get model from cache
-            Process process = ProcessDefinitionUtil.getProcess(processDefinition.Id);
+            Process process = ProcessDefinitionUtil.GetProcess(processDefinition.Id);
             if (process == null)
             {
                 throw new ActivitiException("Cannot start process instance. Process model " + processDefinition.Name + " (id = " + processDefinition.Id + ") could not be found");
@@ -66,21 +66,20 @@ namespace org.activiti.engine.impl.util
                 throw new ActivitiException("No start element found for process definition " + processDefinition.Id);
             }
 
-            return createAndStartProcessInstanceWithInitialFlowElement(processDefinition, businessKey, processInstanceName, initialFlowElement, process, variables, transientVariables, startProcessInstance);
+            return CreateAndStartProcessInstanceWithInitialFlowElement(processDefinition, businessKey, processInstanceName, initialFlowElement, process, variables, transientVariables, startProcessInstance);
         }
 
-        public virtual IProcessInstance createAndStartProcessInstanceByMessage(IProcessDefinition processDefinition, string messageName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
+        public virtual IProcessInstance CreateAndStartProcessInstanceByMessage(IProcessDefinition processDefinition, string messageName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
         {
-
-            ICommandContext commandContext = Context.CommandContext;
+            _ = Context.CommandContext;
             // Do not start process a process instance if the process definition is suspended
-            if (ProcessDefinitionUtil.isProcessDefinitionSuspended(processDefinition.Id))
+            if (ProcessDefinitionUtil.IsProcessDefinitionSuspended(processDefinition.Id))
             {
                 throw new ActivitiException("Cannot start process instance. Process definition " + processDefinition.Name + " (id = " + processDefinition.Id + ") is suspended");
             }
 
             // Get model from cache
-            Process process = ProcessDefinitionUtil.getProcess(processDefinition.Id);
+            Process process = ProcessDefinitionUtil.GetProcess(processDefinition.Id);
             if (process == null)
             {
                 throw new ActivitiException("Cannot start process instance. Process model " + processDefinition.Name + " (id = " + processDefinition.Id + ") could not be found");
@@ -89,12 +88,10 @@ namespace org.activiti.engine.impl.util
             FlowElement initialFlowElement = null;
             foreach (FlowElement flowElement in process.FlowElements)
             {
-                if (flowElement is StartEvent)
+                if (flowElement is StartEvent startEvent)
                 {
-                    StartEvent startEvent = (StartEvent)flowElement;
                     if (CollectionUtil.IsNotEmpty(startEvent.EventDefinitions) && startEvent.EventDefinitions[0] is MessageEventDefinition)
                     {
-
                         MessageEventDefinition messageEventDefinition = (MessageEventDefinition)startEvent.EventDefinitions[0];
                         if (messageEventDefinition.MessageRef.Equals(messageName))
                         {
@@ -109,10 +106,10 @@ namespace org.activiti.engine.impl.util
                 throw new ActivitiException("No message start event found for process definition " + processDefinition.Id + " and message name " + messageName);
             }
 
-            return createAndStartProcessInstanceWithInitialFlowElement(processDefinition, null, null, initialFlowElement, process, variables, transientVariables, true);
+            return CreateAndStartProcessInstanceWithInitialFlowElement(processDefinition, null, null, initialFlowElement, process, variables, transientVariables, true);
         }
 
-        public virtual IProcessInstance createAndStartProcessInstanceWithInitialFlowElement(IProcessDefinition processDefinition, string businessKey, string processInstanceName, FlowElement initialFlowElement, Process process, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, bool startProcessInstance)
+        public virtual IProcessInstance CreateAndStartProcessInstanceWithInitialFlowElement(IProcessDefinition processDefinition, string businessKey, string processInstanceName, FlowElement initialFlowElement, Process process, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, bool startProcessInstance)
         {
 
             ICommandContext commandContext = Context.CommandContext;
@@ -124,86 +121,84 @@ namespace org.activiti.engine.impl.util
                 initiatorVariableName = ((StartEvent)initialFlowElement).Initiator;
             }
 
-            IExecutionEntity processInstance = commandContext.ExecutionEntityManager.createProcessInstanceExecution(processDefinition, businessKey, processDefinition.TenantId, initiatorVariableName);
+            IExecutionEntity processInstance = commandContext.ExecutionEntityManager.CreateProcessInstanceExecution(processDefinition, businessKey, processDefinition.TenantId, initiatorVariableName);
 
-            commandContext.HistoryManager.recordProcessInstanceStart(processInstance, initialFlowElement);
+            commandContext.HistoryManager.RecordProcessInstanceStart(processInstance, initialFlowElement);
 
-            processInstance.Variables = processDataObjects(process.DataObjects);
+            processInstance.Variables = ProcessDataObjects(process.DataObjects);
 
             // Set the variables passed into the start command
             if (variables != null)
             {
                 foreach (string varName in variables.Keys)
                 {
-                    processInstance.setVariable(varName, variables[varName]);
+                    processInstance.SetVariable(varName, variables[varName]);
                 }
             }
+
             if (transientVariables != null)
             {
                 foreach (string varName in transientVariables.Keys)
                 {
-                    processInstance.setTransientVariable(varName, transientVariables[varName]);
+                    processInstance.SetTransientVariable(varName, transientVariables[varName]);
                 }
             }
 
             // Set processInstance name
-            if (!ReferenceEquals(processInstanceName, null))
+            if (!(processInstanceName is null))
             {
                 processInstance.Name = processInstanceName;
-                commandContext.HistoryManager.recordProcessInstanceNameChange(processInstance.Id, processInstanceName);
+                commandContext.HistoryManager.RecordProcessInstanceNameChange(processInstance.Id, processInstanceName);
             }
 
             // Fire events
             if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                Context.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityWithVariablesEvent(ActivitiEventType.ENTITY_INITIALIZED, processInstance, variables, false));
+                Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityWithVariablesEvent(ActivitiEventType.ENTITY_INITIALIZED, processInstance, variables, false));
             }
 
             // Create the first execution that will visit all the process definition elements
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.createChildExecution(processInstance);
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.CreateChildExecution(processInstance);
             execution.CurrentFlowElement = initialFlowElement;
 
             if (startProcessInstance)
             {
-                this.startProcessInstance(processInstance, commandContext, variables);
+                this.StartProcessInstance(processInstance, commandContext, variables);
             }
 
             return processInstance;
         }
 
-        public virtual void startProcessInstance(IExecutionEntity processInstance, ICommandContext commandContext, IDictionary<string, object> variables)
+        public virtual void StartProcessInstance(IExecutionEntity processInstance, ICommandContext commandContext, IDictionary<string, object> variables)
         {
 
-            Process process = ProcessDefinitionUtil.getProcess(processInstance.ProcessDefinitionId);
+            Process process = ProcessDefinitionUtil.GetProcess(processInstance.ProcessDefinitionId);
 
 
             // Event sub process handling
             IList<IMessageEventSubscriptionEntity> messageEventSubscriptions = new List<IMessageEventSubscriptionEntity>();
             foreach (FlowElement flowElement in process.FlowElements)
             {
-                if (flowElement is EventSubProcess)
+                if (flowElement is EventSubProcess eventSubProcess)
                 {
-                    EventSubProcess eventSubProcess = (EventSubProcess)flowElement;
                     foreach (FlowElement subElement in eventSubProcess.FlowElements)
                     {
-                        if (subElement is StartEvent)
+                        if (subElement is StartEvent startEvent)
                         {
-                            StartEvent startEvent = (StartEvent)subElement;
                             if (CollectionUtil.IsNotEmpty(startEvent.EventDefinitions))
                             {
                                 EventDefinition eventDefinition = startEvent.EventDefinitions[0];
-                                if (eventDefinition is MessageEventDefinition)
+                                if (eventDefinition is MessageEventDefinition messageEventDefinition)
                                 {
-                                    MessageEventDefinition messageEventDefinition = (MessageEventDefinition)eventDefinition;
-                                    BpmnModel bpmnModel = ProcessDefinitionUtil.getBpmnModel(processInstance.ProcessDefinitionId);
-                                    if (bpmnModel.containsMessageId(messageEventDefinition.MessageRef))
+                                    BpmnModel bpmnModel = ProcessDefinitionUtil.GetBpmnModel(processInstance.ProcessDefinitionId);
+                                    if (bpmnModel.ContainsMessageId(messageEventDefinition.MessageRef))
                                     {
-                                        messageEventDefinition.MessageRef = bpmnModel.getMessage(messageEventDefinition.MessageRef).Name;
+                                        messageEventDefinition.MessageRef = bpmnModel.GetMessage(messageEventDefinition.MessageRef).Name;
                                     }
-                                    IExecutionEntity messageExecution = commandContext.ExecutionEntityManager.createChildExecution(processInstance);
+                                    IExecutionEntity messageExecution = commandContext.ExecutionEntityManager.CreateChildExecution(processInstance);
                                     messageExecution.CurrentFlowElement = startEvent;
                                     messageExecution.IsEventScope = true;
-                                    messageEventSubscriptions.Add(commandContext.EventSubscriptionEntityManager.insertMessageEvent(messageEventDefinition.MessageRef, messageExecution));
+                                    messageEventSubscriptions.Add(commandContext.EventSubscriptionEntityManager.InsertMessageEvent(messageEventDefinition.MessageRef, messageExecution));
                                 }
                             }
                         }
@@ -212,21 +207,21 @@ namespace org.activiti.engine.impl.util
             }
 
             IExecutionEntity execution = processInstance.Executions[0]; // There will always be one child execution created
-            commandContext.Agenda.planContinueProcessOperation(execution);
+            commandContext.Agenda.PlanContinueProcessOperation(execution);
 
             if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
                 IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
-                eventDispatcher.dispatchEvent(ActivitiEventBuilder.createProcessStartedEvent(execution, variables, false));
+                eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateProcessStartedEvent(execution, variables, false));
 
                 foreach (IMessageEventSubscriptionEntity messageEventSubscription in messageEventSubscriptions)
                 {
-                    commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createMessageEvent(ActivitiEventType.ACTIVITY_MESSAGE_WAITING, messageEventSubscription.ActivityId, messageEventSubscription.EventName, null, messageEventSubscription.Execution.Id, messageEventSubscription.ProcessInstanceId, messageEventSubscription.ProcessDefinitionId));
+                    commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateMessageEvent(ActivitiEventType.ACTIVITY_MESSAGE_WAITING, messageEventSubscription.ActivityId, messageEventSubscription.EventName, null, messageEventSubscription.Execution.Id, messageEventSubscription.ProcessInstanceId, messageEventSubscription.ProcessDefinitionId));
                 }
             }
         }
 
-        protected internal virtual IDictionary<string, object> processDataObjects(ICollection<ValuedDataObject> dataObjects)
+        protected internal virtual IDictionary<string, object> ProcessDataObjects(ICollection<ValuedDataObject> dataObjects)
         {
             IDictionary<string, object> variablesMap = new Dictionary<string, object>();
             // convert data objects to process variables

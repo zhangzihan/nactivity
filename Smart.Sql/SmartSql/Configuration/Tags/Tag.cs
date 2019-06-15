@@ -49,8 +49,10 @@ namespace SmartSql.Configuration.Tags
                     context.Sql.Append(" ");
                     if (context.IsFirstDyChild)
                     {
-                        var dyParent = Parent as Dynamic;
-                        context.Sql.Append(dyParent.Prepend);
+                        if (Parent is Dynamic dyParent)
+                        {
+                            context.Sql.Append(dyParent.Prepend);
+                        }
                         context.IsFirstDyChild = false;
                     }
                     else

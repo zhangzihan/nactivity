@@ -86,10 +86,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            TimerEventDefinition clone = new TimerEventDefinition();
-            clone.Values = this;
+            TimerEventDefinition clone = new TimerEventDefinition
+            {
+                Values = this
+            };
             return clone;
         }
 

@@ -12,21 +12,22 @@
  */
 namespace org.activiti.engine.impl.@delegate.invocation
 {
-	using org.activiti.engine.impl.interceptor;
+    using org.activiti.engine.impl.interceptor;
 
-	/// <summary>
-	/// Default implementation, simply proceeding the call.
-	/// 
-	/// 
-	/// </summary>
-	public class DefaultDelegateInterceptor : IDelegateInterceptor
-	{
-
-	  public virtual void handleInvocation(DelegateInvocation invocation)
-	  {
-		invocation.proceed();
-	  }
-
-	}
-
+    /// <summary>
+    /// Default implementation, simply proceeding the call.
+    /// 
+    /// 
+    /// </summary>
+    public class DefaultDelegateInterceptor : IDelegateInterceptor
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="invocation"></param>
+        public virtual void HandleInvocation(DelegateInvocation invocation)
+        {
+            invocation.Proceed();
+        }
+    }
 }

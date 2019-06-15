@@ -42,66 +42,66 @@ namespace org.activiti.engine.impl.persistence.entity
 		  }
 	  }
 
-	  public virtual IProcessDefinitionEntity findLatestProcessDefinitionByKey(string processDefinitionKey)
+	  public virtual IProcessDefinitionEntity FindLatestProcessDefinitionByKey(string processDefinitionKey)
 	  {
-		return processDefinitionDataManager.findLatestProcessDefinitionByKey(processDefinitionKey);
+		return processDefinitionDataManager.FindLatestProcessDefinitionByKey(processDefinitionKey);
 	  }
 
-	  public virtual IProcessDefinitionEntity findLatestProcessDefinitionByKeyAndTenantId(string processDefinitionKey, string tenantId)
+	  public virtual IProcessDefinitionEntity FindLatestProcessDefinitionByKeyAndTenantId(string processDefinitionKey, string tenantId)
 	  {
-	   return processDefinitionDataManager.findLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
+	   return processDefinitionDataManager.FindLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
 	  }
 
-	  public virtual void deleteProcessDefinitionsByDeploymentId(string deploymentId)
+	  public virtual void DeleteProcessDefinitionsByDeploymentId(string deploymentId)
 	  {
-		processDefinitionDataManager.deleteProcessDefinitionsByDeploymentId(deploymentId);
+		processDefinitionDataManager.DeleteProcessDefinitionsByDeploymentId(deploymentId);
 	  }
 
-	  public virtual IList<IProcessDefinition> findProcessDefinitionsByQueryCriteria(ProcessDefinitionQueryImpl processDefinitionQuery, Page page)
+	  public virtual IList<IProcessDefinition> FindProcessDefinitionsByQueryCriteria(IProcessDefinitionQuery processDefinitionQuery, Page page)
 	  {
-	   return processDefinitionDataManager.findProcessDefinitionsByQueryCriteria(processDefinitionQuery, page);
+	   return processDefinitionDataManager.FindProcessDefinitionsByQueryCriteria(processDefinitionQuery, page);
 	  }
 
-	  public virtual long findProcessDefinitionCountByQueryCriteria(ProcessDefinitionQueryImpl processDefinitionQuery)
+	  public virtual long FindProcessDefinitionCountByQueryCriteria(IProcessDefinitionQuery processDefinitionQuery)
 	  {
-		return processDefinitionDataManager.findProcessDefinitionCountByQueryCriteria(processDefinitionQuery);
+		return processDefinitionDataManager.FindProcessDefinitionCountByQueryCriteria(processDefinitionQuery);
 	  }
 
-	  public virtual IProcessDefinitionEntity findProcessDefinitionByDeploymentAndKey(string deploymentId, string processDefinitionKey)
+	  public virtual IProcessDefinitionEntity FindProcessDefinitionByDeploymentAndKey(string deploymentId, string processDefinitionKey)
 	  {
-		return processDefinitionDataManager.findProcessDefinitionByDeploymentAndKey(deploymentId, processDefinitionKey);
+		return processDefinitionDataManager.FindProcessDefinitionByDeploymentAndKey(deploymentId, processDefinitionKey);
 	  }
 
-	  public virtual IProcessDefinitionEntity findProcessDefinitionByDeploymentAndKeyAndTenantId(string deploymentId, string processDefinitionKey, string tenantId)
+	  public virtual IProcessDefinitionEntity FindProcessDefinitionByDeploymentAndKeyAndTenantId(string deploymentId, string processDefinitionKey, string tenantId)
 	  {
-	   return processDefinitionDataManager.findProcessDefinitionByDeploymentAndKeyAndTenantId(deploymentId, processDefinitionKey, tenantId);
+	   return processDefinitionDataManager.FindProcessDefinitionByDeploymentAndKeyAndTenantId(deploymentId, processDefinitionKey, tenantId);
 	  }
 
-	  public virtual IProcessDefinition findProcessDefinitionByKeyAndVersionAndTenantId(string processDefinitionKey, int? processDefinitionVersion, string tenantId)
+	  public virtual IProcessDefinition FindProcessDefinitionByKeyAndVersionAndTenantId(string processDefinitionKey, int? processDefinitionVersion, string tenantId)
 	  {
-		if (ReferenceEquals(tenantId, null) || engine.ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
+		if (tenantId is null || engine.ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
 		{
-		  return processDefinitionDataManager.findProcessDefinitionByKeyAndVersion(processDefinitionKey, processDefinitionVersion);
+		  return processDefinitionDataManager.FindProcessDefinitionByKeyAndVersion(processDefinitionKey, processDefinitionVersion);
 		}
 		else
 		{
-		  return processDefinitionDataManager.findProcessDefinitionByKeyAndVersionAndTenantId(processDefinitionKey, processDefinitionVersion, tenantId);
+		  return processDefinitionDataManager.FindProcessDefinitionByKeyAndVersionAndTenantId(processDefinitionKey, processDefinitionVersion, tenantId);
 		}
 	  }
 
-	  public virtual IList<IProcessDefinition> findProcessDefinitionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+	  public virtual IList<IProcessDefinition> FindProcessDefinitionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
 	  {
-		return processDefinitionDataManager.findProcessDefinitionsByNativeQuery(parameterMap, firstResult, maxResults);
+		return processDefinitionDataManager.FindProcessDefinitionsByNativeQuery(parameterMap, firstResult, maxResults);
 	  }
 
-	  public virtual long findProcessDefinitionCountByNativeQuery(IDictionary<string, object> parameterMap)
+	  public virtual long FindProcessDefinitionCountByNativeQuery(IDictionary<string, object> parameterMap)
 	  {
-		return processDefinitionDataManager.findProcessDefinitionCountByNativeQuery(parameterMap);
+		return processDefinitionDataManager.FindProcessDefinitionCountByNativeQuery(parameterMap);
 	  }
 
-	  public virtual void updateProcessDefinitionTenantIdForDeployment(string deploymentId, string newTenantId)
+	  public virtual void UpdateProcessDefinitionTenantIdForDeployment(string deploymentId, string newTenantId)
 	  {
-		processDefinitionDataManager.updateProcessDefinitionTenantIdForDeployment(deploymentId, newTenantId);
+		processDefinitionDataManager.UpdateProcessDefinitionTenantIdForDeployment(deploymentId, newTenantId);
 	  }
 
 	  public virtual IProcessDefinitionDataManager ProcessDefinitionDataManager

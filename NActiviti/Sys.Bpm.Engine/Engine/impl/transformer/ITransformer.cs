@@ -29,6 +29,6 @@ namespace org.activiti.engine.impl.transformer
         /// <returns> the transformed object </returns>
         /// <exception cref="ActivitiException">
         ///           if the transformation could not be applied </exception>
-        object transform(object anObject);
+        object Transform(object anObject);
     }
 }

@@ -21,6 +21,7 @@ namespace org.activiti.engine
     using org.activiti.engine.repository;
     using org.activiti.engine.task;
     using org.activiti.validation;
+    using System.IO;
 
     /// <summary>
     /// Service providing access to the repository of process definitions and deployments.
@@ -36,7 +37,7 @@ namespace org.activiti.engine
 
         /// <summary>
         /// Starts creating a new deployment </summary>
-        IDeploymentBuilder createDeployment();
+        IDeploymentBuilder CreateDeployment();
 
         /// <summary>
         /// Deletes the given deployment.
@@ -44,35 +45,35 @@ namespace org.activiti.engine
         /// <param name="deploymentId">
         ///          id of the deployment, cannot be null.
         /// @throwns RuntimeException if there are still runtime or history process instances or jobs. </param>
-        void deleteDeployment(string deploymentId);
+        void DeleteDeployment(string deploymentId);
 
         /// <summary>
         /// Deletes the given deployment and cascade deletion to process instances, history process instances and jobs.
         /// </summary>
         /// <param name="deploymentId">
         ///          id of the deployment, cannot be null. </param>
-        void deleteDeployment(string deploymentId, bool cascade);
+        void DeleteDeployment(string deploymentId, bool cascade);
 
         /// <summary>
         /// Sets the category of the deployment. Deployments can be queried by category: see <seealso cref="IDeploymentQuery#deploymentCategory(String)"/>.
         /// </summary>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           if no deployment with the provided id can be found. </exception>
-        void setDeploymentCategory(string deploymentId, string category);
+        void SetDeploymentCategory(string deploymentId, string category);
 
         /// <summary>
         /// Sets the key of the deployment. Deployments can be queried by key: see <seealso cref="IDeploymentQuery#deploymentKey(String)"/>.
         /// </summary>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           if no deployment with the provided id can be found. </exception>
-        void setDeploymentKey(string deploymentId, string key);
+        void SetDeploymentKey(string deploymentId, string key);
 
         /// <summary>
         /// Retrieves a list of deployment resources for the given deployment, ordered alphabetically.
         /// </summary>
         /// <param name="deploymentId">
         ///          id of the deployment, cannot be null. </param>
-        IList<string> getDeploymentResourceNames(string deploymentId);
+        IList<string> GetDeploymentResourceNames(string deploymentId);
 
         /// <summary>
         /// Gives access to a deployment resource through a stream of bytes.
@@ -83,7 +84,7 @@ namespace org.activiti.engine
         ///          name of the resource, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the resource doesn't exist in the given deployment or when no deployment exists for the given deploymentId. </exception>
-        System.IO.Stream getResourceAsStream(string deploymentId, string resourceName);
+        Stream GetResourceAsStream(string deploymentId, string resourceName);
 
         /// 
         /// <summary>
@@ -108,25 +109,25 @@ namespace org.activiti.engine
         ///          The id of the deployment of which the tenant identifier will be changed. </param>
         /// <param name="newTenantId">
         ///          The new tenant identifier. </param>
-        void changeDeploymentTenantId(string deploymentId, string newTenantId);
+        void ChangeDeploymentTenantId(string deploymentId, string newTenantId);
 
         /// <summary>
         /// Query process definitions. </summary>
-        IProcessDefinitionQuery createProcessDefinitionQuery();
+        IProcessDefinitionQuery CreateProcessDefinitionQuery();
 
         /// <summary>
         /// Returns a new <seealso cref="org.activiti.engine.query.NativeQuery"/> for process definitions.
         /// </summary>
-        INativeProcessDefinitionQuery createNativeProcessDefinitionQuery();
+        INativeProcessDefinitionQuery CreateNativeProcessDefinitionQuery();
 
         /// <summary>
         /// Query deployment. </summary>
-        IDeploymentQuery createDeploymentQuery();
+        IDeploymentQuery CreateDeploymentQuery();
 
         /// <summary>
         /// Returns a new <seealso cref="org.activiti.engine.query.NativeQuery"/> for deployment.
         /// </summary>
-        INativeDeploymentQuery createNativeDeploymentQuery();
+        INativeDeploymentQuery CreateNativeDeploymentQuery();
 
         /// <summary>
         /// Suspends the process definition with the given id.
@@ -139,7 +140,7 @@ namespace org.activiti.engine
         ///           if no such processDefinition can be found </exception>
         /// <exception cref="ActivitiException">
         ///           if the process definition is already in state suspended. </exception>
-        void suspendProcessDefinitionById(string processDefinitionId);
+        void SuspendProcessDefinitionById(string processDefinitionId);
 
         /// <summary>
         /// Suspends the process definition with the given id.
@@ -155,7 +156,7 @@ namespace org.activiti.engine
         ///           if no such processDefinition can be found. </exception>
         /// <exception cref="ActivitiException">
         ///           if the process definition is already in state suspended. </exception>
-        void suspendProcessDefinitionById(string processDefinitionId, bool suspendProcessInstances, DateTime suspensionDate);
+        void SuspendProcessDefinitionById(string processDefinitionId, bool suspendProcessInstances, DateTime suspensionDate);
 
         /// <summary>
         /// Suspends the <strong>all</strong> process definitions with the given key (= id in the bpmn20.xml file).
@@ -168,7 +169,7 @@ namespace org.activiti.engine
         ///           if no such processDefinition can be found </exception>
         /// <exception cref="ActivitiException">
         ///           if the process definition is already in state suspended. </exception>
-        void suspendProcessDefinitionByKey(string processDefinitionKey);
+        void SuspendProcessDefinitionByKey(string processDefinitionKey);
 
         /// <summary>
         /// Suspends the <strong>all</strong> process definitions with the given key (= id in the bpmn20.xml file).
@@ -183,24 +184,24 @@ namespace org.activiti.engine
         ///           if no such processDefinition can be found </exception>
         /// <exception cref="ActivitiException">
         ///           if the process definition is already in state suspended. </exception>
-        void suspendProcessDefinitionByKey(string processDefinitionKey, bool suspendProcessInstances, DateTime suspensionDate);
+        void SuspendProcessDefinitionByKey(string processDefinitionKey, bool suspendProcessInstances, DateTime suspensionDate);
 
         /// <summary>
         /// Similar to <seealso cref="#suspendProcessDefinitionByKey(String)"/>, but only applicable for the given tenant identifier.
         /// </summary>
-        void suspendProcessDefinitionByKey(string processDefinitionKey, string tenantId);
+        void SuspendProcessDefinitionByKey(string processDefinitionKey, string tenantId);
 
         /// <summary>
         /// Similar to <seealso cref="#suspendProcessDefinitionByKey(String, boolean, Date)"/>, but only applicable for the given tenant identifier.
         /// </summary>
-        void suspendProcessDefinitionByKey(string processDefinitionKey, bool suspendProcessInstances, DateTime suspensionDate, string tenantId);
+        void SuspendProcessDefinitionByKey(string processDefinitionKey, bool suspendProcessInstances, DateTime suspensionDate, string tenantId);
 
         /// <summary>
         /// Activates the process definition with the given id.
         /// </summary>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           if no such processDefinition can be found or if the process definition is already in state active. </exception>
-        void activateProcessDefinitionById(string processDefinitionId);
+        void ActivateProcessDefinitionById(string processDefinitionId);
 
         /// <summary>
         /// Activates the process definition with the given id.
@@ -212,7 +213,7 @@ namespace org.activiti.engine
         ///           if no such processDefinition can be found. </exception>
         /// <exception cref="ActivitiException">
         ///           if the process definition is already in state active. </exception>
-        void activateProcessDefinitionById(string processDefinitionId, bool activateProcessInstances, DateTime activationDate);
+        void ActivateProcessDefinitionById(string processDefinitionId, bool activateProcessInstances, DateTime activationDate);
 
         /// <summary>
         /// Activates the process definition with the given key (=id in the bpmn20.xml file).
@@ -221,7 +222,7 @@ namespace org.activiti.engine
         ///           if no such processDefinition can be found. </exception>
         /// <exception cref="ActivitiException">
         ///           if the process definition is already in state active. </exception>
-        void activateProcessDefinitionByKey(string processDefinitionKey);
+        void ActivateProcessDefinitionByKey(string processDefinitionKey);
 
         /// <summary>
         /// Activates the process definition with the given key (=id in the bpmn20.xml file).
@@ -233,24 +234,24 @@ namespace org.activiti.engine
         ///           if no such processDefinition can be found. </exception>
         /// <exception cref="ActivitiException">
         ///           if the process definition is already in state active. </exception>
-        void activateProcessDefinitionByKey(string processDefinitionKey, bool activateProcessInstances, DateTime activationDate);
+        void ActivateProcessDefinitionByKey(string processDefinitionKey, bool activateProcessInstances, DateTime activationDate);
 
         /// <summary>
         /// Similar to <seealso cref="#activateProcessDefinitionByKey(String)"/>, but only applicable for the given tenant identifier.
         /// </summary>
-        void activateProcessDefinitionByKey(string processDefinitionKey, string tenantId);
+        void ActivateProcessDefinitionByKey(string processDefinitionKey, string tenantId);
 
         /// <summary>
         /// Similar to <seealso cref="#activateProcessDefinitionByKey(String, boolean, Date)"/> , but only applicable for the given tenant identifier.
         /// </summary>
-        void activateProcessDefinitionByKey(string processDefinitionKey, bool activateProcessInstances, DateTime activationDate, string tenantId);
+        void ActivateProcessDefinitionByKey(string processDefinitionKey, bool activateProcessInstances, DateTime activationDate, string tenantId);
 
         /// <summary>
         /// Sets the category of the process definition. Process definitions can be queried by category: see <seealso cref="IProcessDefinitionQuery#processDefinitionCategory(String)"/>.
         /// </summary>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           if no process definition with the provided id can be found. </exception>
-        void setProcessDefinitionCategory(string processDefinitionId, string category);
+        void SetProcessDefinitionCategory(string processDefinitionId, string category);
 
         /// <summary>
         /// Gives access to a deployed process model, e.g., a BPMN 2.0 XML file, through a stream of bytes.
@@ -259,83 +260,83 @@ namespace org.activiti.engine
         ///          id of a <seealso cref="IProcessDefinition"/>, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the process model doesn't exist. </exception>
-        System.IO.Stream getProcessModel(string processDefinitionId);
+        System.IO.Stream GetProcessModel(string processDefinitionId);
 
         /// <summary>
         /// Returns the <seealso cref="IProcessDefinition"/> including all BPMN information like additional Properties (e.g. documentation).
         /// </summary>
-        IProcessDefinition getProcessDefinition(string processDefinitionId);
+        IProcessDefinition GetProcessDefinition(string processDefinitionId);
 
         /// <summary>
         /// Checks if the process definition is suspended.
         /// </summary>
-        bool isProcessDefinitionSuspended(string processDefinitionId);
+        bool IsProcessDefinitionSuspended(string processDefinitionId);
 
         /// <summary>
         /// Returns the <seealso cref="BpmnModel"/> corresponding with the process definition with the provided process definition id. The <seealso cref="BpmnModel"/> is a pojo versions of the BPMN 2.0 xml and can be used to
         /// introspect the process definition using regular Java.
         /// </summary>
-        BpmnModel getBpmnModel(string processDefinitionId);
+        BpmnModel GetBpmnModel(string processDefinitionId);
 
         /// <summary>
         /// Creates a new model. The model is transient and must be saved using <seealso cref="#saveModel(Model)"/>.
         /// </summary>
-        IModel newModel();
+        IModel NewModel();
 
         /// <summary>
         /// Saves the model. If the model already existed, the model is updated otherwise a new model is created.
         /// </summary>
         /// <param name="model">
         ///          model to save, cannot be null. </param>
-        void saveModel(IModel model);
+        void SaveModel(IModel model);
 
         /// <param name="modelId">
         ///          id of model to delete, cannot be null. When an id is passed for an unexisting model, this operation is ignored. </param>
-        void deleteModel(string modelId);
+        void DeleteModel(string modelId);
 
         /// <summary>
         /// Saves the model editor source for a model
         /// </summary>
         /// <param name="modelId">
         ///          id of model to delete, cannot be null. When an id is passed for an unexisting model, this operation is ignored. </param>
-        void addModelEditorSource(string modelId, byte[] bytes);
+        void AddModelEditorSource(string modelId, byte[] bytes);
 
         /// <summary>
         /// Saves the model editor source extra for a model
         /// </summary>
         /// <param name="modelId">
         ///          id of model to delete, cannot be null. When an id is passed for an unexisting model, this operation is ignored. </param>
-        void addModelEditorSourceExtra(string modelId, byte[] bytes);
+        void AddModelEditorSourceExtra(string modelId, byte[] bytes);
 
         /// <summary>
         /// Query models. </summary>
-        IModelQuery createModelQuery();
+        IModelQuery CreateModelQuery();
 
         /// <summary>
         /// Returns a new <seealso cref="org.activiti.engine.query.NativeQuery"/> for process definitions.
         /// </summary>
-        INativeModelQuery createNativeModelQuery();
+        INativeModelQuery CreateNativeModelQuery();
 
         /// <summary>
         /// Returns the <seealso cref="IModel"/>
         /// </summary>
         /// <param name="modelId">
         ///          id of model </param>
-        IModel getModel(string modelId);
+        IModel GetModel(string modelId);
 
         /// <summary>
         /// Returns the model editor source as a byte array
         /// </summary>
         /// <param name="modelId">
         ///          id of model </param>
-        byte[] getModelEditorSource(string modelId);
+        byte[] GetModelEditorSource(string modelId);
 
         /// <summary>
         /// Returns the model editor source extra as a byte array
         /// </summary>
         /// <param name="modelId">
         ///          id of model </param>
-        byte[] getModelEditorSourceExtra(string modelId);
+        byte[] GetModelEditorSourceExtra(string modelId);
 
         /// <summary>
         /// Authorizes a candidate user for a process definition.
@@ -346,7 +347,7 @@ namespace org.activiti.engine
         ///          id of the user involve, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the process definition or user doesn't exist. </exception>
-        void addCandidateStarterUser(string processDefinitionId, string userId);
+        void AddCandidateStarterUser(string processDefinitionId, string userId);
 
         /// <summary>
         /// Authorizes a candidate group for a process definition.
@@ -357,7 +358,7 @@ namespace org.activiti.engine
         ///          id of the group involve, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the process definition or group doesn't exist. </exception>
-        void addCandidateStarterGroup(string processDefinitionId, string groupId);
+        void AddCandidateStarterGroup(string processDefinitionId, string groupId);
 
         /// <summary>
         /// Removes the authorization of a candidate user for a process definition.
@@ -368,7 +369,7 @@ namespace org.activiti.engine
         ///          id of the user involve, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the process definition or user doesn't exist. </exception>
-        void deleteCandidateStarterUser(string processDefinitionId, string userId);
+        void DeleteCandidateStarterUser(string processDefinitionId, string userId);
 
         /// <summary>
         /// Removes the authorization of a candidate group for a process definition.
@@ -379,13 +380,13 @@ namespace org.activiti.engine
         ///          id of the group involve, cannot be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when the process definition or group doesn't exist. </exception>
-        void deleteCandidateStarterGroup(string processDefinitionId, string groupId);
+        void DeleteCandidateStarterGroup(string processDefinitionId, string groupId);
 
         /// <summary>
         /// Retrieves the <seealso cref="IIdentityLink"/>s associated with the given process definition. Such an <seealso cref="IIdentityLink"/> informs how a certain identity (eg. group or user) is authorized for a certain
         /// process definition
         /// </summary>
-        IList<IIdentityLink> getIdentityLinksForProcessDefinition(string processDefinitionId);
+        IList<IIdentityLink> GetIdentityLinksForProcessDefinition(string processDefinitionId);
 
         /// <summary>
         /// Validates the given process definition against the rules for executing a process definition on the Activiti engine.
@@ -396,7 +397,7 @@ namespace org.activiti.engine
         /// classpath XElement xtr = xif.createXElement(in); bpmnModel = new BpmnXMLConverter().convertToBpmnModel(xtr);
         /// 
         /// </summary>
-        IList<ValidationError> validateProcess(BpmnModel bpmnModel);
+        IList<ValidationError> ValidateProcess(BpmnModel bpmnModel);
 
     }
 

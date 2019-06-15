@@ -32,15 +32,15 @@ namespace org.activiti.engine.impl.cmd
             this.cascade = cascade;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            if (ReferenceEquals(deploymentId, null))
+            if (deploymentId is null)
             {
                 throw new ActivitiIllegalArgumentException("deploymentId is null");
             }
 
             // Remove process definitions from cache:
-            commandContext.ProcessEngineConfiguration.DeploymentManager.removeDeployment(deploymentId, cascade);
+            commandContext.ProcessEngineConfiguration.DeploymentManager.RemoveDeployment(deploymentId, cascade);
 
             return null;
         }

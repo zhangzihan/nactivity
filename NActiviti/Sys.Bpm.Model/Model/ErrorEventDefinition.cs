@@ -30,10 +30,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            ErrorEventDefinition clone = new ErrorEventDefinition();
-            clone.Values = this;
+            ErrorEventDefinition clone = new ErrorEventDefinition
+            {
+                Values = this
+            };
             return clone;
         }
 

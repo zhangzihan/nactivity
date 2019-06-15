@@ -1,7 +1,4 @@
 ﻿using org.activiti.api.runtime.shared.query;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace org.activiti.cloud.services.api.model
 {
@@ -31,21 +28,21 @@ namespace org.activiti.cloud.services.api.model
         /// <summary>
         /// 实体id
         /// </summary>
-        public string Id { get; set; }
+        public virtual string Id { get; set; }
 
         /// <summary>
         /// 租户id
         /// </summary>
-        public string TenantId { get; set; }
+        public virtual string TenantId { get; set; }
 
         /// <summary>
         /// 实例对象名称
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// 包含实例对象名称
         /// </summary>
-        public string NameLike { get; set; }
+        public virtual string NameLike { get; set; }
     }
 }

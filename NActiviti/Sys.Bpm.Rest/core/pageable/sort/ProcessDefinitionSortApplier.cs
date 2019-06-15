@@ -28,7 +28,7 @@ namespace org.activiti.cloud.services.core.pageable.sort
     public class ProcessDefinitionSortApplier : BaseSortApplier<IProcessDefinitionQuery, IProcessDefinition>
     {
 
-        private IDictionary<string, IQueryProperty> orderByProperties = new Dictionary<string, IQueryProperty>(StringComparer.OrdinalIgnoreCase);
+        private readonly IDictionary<string, IQueryProperty> orderByProperties = new Dictionary<string, IQueryProperty>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// 
@@ -44,16 +44,16 @@ namespace org.activiti.cloud.services.core.pageable.sort
         /// <summary>
         /// 
         /// </summary>
-        protected internal override void applyDefaultSort(IProcessDefinitionQuery query)
+        protected internal override void ApplyDefaultSort(IProcessDefinitionQuery query)
         {
-            query.orderByProcessDefinitionId().asc();
+            query.OrderByProcessDefinitionId().Asc();
         }
 
         /// <summary>
         /// 
         /// </summary>
 
-        protected internal override IQueryProperty getOrderByProperty(Sort.Order order)
+        protected internal override IQueryProperty GetOrderByProperty(Sort.Order order)
         {
             orderByProperties.TryGetValue(order.Property, out IQueryProperty qp);
 

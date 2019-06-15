@@ -36,11 +36,13 @@ namespace SmartSql.DyRepository
             _moduleBuilder = _assemblyBuilder.DefineDynamicModule(assemblyName + ".dll");
         }
 
+        private object syncRoot = new object();
+
         public object CreateInstance(Type interfaceType, ISmartSqlMapper smartSqlMapper)
         {
             if (!_cachedRepository.ContainsKey(interfaceType))
             {
-                lock (this)
+                lock (syncRoot)
                 {
                     if (!_cachedRepository.ContainsKey(interfaceType))
                     {

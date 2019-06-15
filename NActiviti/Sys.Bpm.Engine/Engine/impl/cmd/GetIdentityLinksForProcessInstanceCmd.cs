@@ -34,9 +34,9 @@ namespace org.activiti.engine.impl.cmd
             this.processInstanceId = processInstanceId;
         }
 
-        public virtual IList<IIdentityLink> execute(ICommandContext commandContext)
+        public virtual IList<IIdentityLink> Execute(ICommandContext commandContext)
         {
-            IExecutionEntity processInstance = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
+            IExecutionEntity processInstance = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
             if (processInstance == null)
             {

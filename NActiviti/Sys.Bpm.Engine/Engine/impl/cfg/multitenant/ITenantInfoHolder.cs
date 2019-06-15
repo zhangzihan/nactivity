@@ -14,37 +14,33 @@
  */
 namespace org.activiti.engine.impl.cfg.multitenant
 {
+    /// <summary>
+    /// Interface to be implemented when using the <seealso cref="MultiSchemaMultiTenantProcessEngineConfiguration"/> and used 
+    /// to set/get the current user and tenant identifier. 
+    /// 
+    /// The engine will call the <seealso cref="#getCurrentTenantId()"/> method when it needs to know which database to use.
+    /// 
+    /// Typically used with <seealso cref="ThreadLocal"/>'s in the implementation.
+    /// 
+    /// 
+    /// </summary>
+    public interface ITenantInfoHolder
+    {
+
+        /// <summary>
+        /// Returns all known tenant identifiers.
+        /// </summary>
+        ICollection<string> AllTenants { get; }
+
+        /// <summary>
+        /// Sets the current tenant identifier.
+        /// </summary>
+        string CurrentTenantId { set; get; }
 
 
-	/// <summary>
-	/// Interface to be implemented when using the <seealso cref="MultiSchemaMultiTenantProcessEngineConfiguration"/> and used 
-	/// to set/get the current user and tenant identifier. 
-	/// 
-	/// The engine will call the <seealso cref="#getCurrentTenantId()"/> method when it needs to know which database to use.
-	/// 
-	/// Typically used with <seealso cref="ThreadLocal"/>'s in the implementation.
-	/// 
-	/// 
-	/// </summary>
-	public interface ITenantInfoHolder
-	{
-
-	  /// <summary>
-	  /// Returns all known tenant identifiers.
-	  /// </summary>
-	  ICollection<string> AllTenants {get;}
-
-	  /// <summary>
-	  /// Sets the current tenant identifier.
-	  /// </summary>
-	  string CurrentTenantId {set;get;}
-
-
-	  /// <summary>
-	  /// Clears the current tenant identifier settings.
-	  /// </summary>
-	  void clearCurrentTenantId();
-
-	}
-
+        /// <summary>
+        /// Clears the current tenant identifier settings.
+        /// </summary>
+        void ClearCurrentTenantId();
+    }
 }

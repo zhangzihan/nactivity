@@ -38,30 +38,30 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.messageEventDefinition = messageEventDefinition;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             ICommandContext commandContext = Context.CommandContext;
 
-            string messageName = null;
+            string messageName;
             if (!string.IsNullOrWhiteSpace(messageEventDefinition.MessageRef))
             {
                 messageName = messageEventDefinition.MessageRef;
             }
             else
             {
-                IExpression messageExpression = commandContext.ProcessEngineConfiguration.ExpressionManager.createExpression(messageEventDefinition.MessageExpression);
-                messageName = messageExpression.getValue(execution).ToString();
+                IExpression messageExpression = commandContext.ProcessEngineConfiguration.ExpressionManager.CreateExpression(messageEventDefinition.MessageExpression);
+                messageName = messageExpression.GetValue(execution).ToString();
             }
 
-            commandContext.EventSubscriptionEntityManager.insertMessageEvent(messageName, execution);
+            commandContext.EventSubscriptionEntityManager.InsertMessageEvent(messageName, execution);
 
             if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createMessageEvent(ActivitiEventType.ACTIVITY_MESSAGE_WAITING, execution.ActivityId, messageName, null, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId));
+                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateMessageEvent(ActivitiEventType.ACTIVITY_MESSAGE_WAITING, execution.ActivityId, messageName, null, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId));
             }
         }
 
-        public override void trigger(IExecutionEntity execution, string triggerName, object triggerData)
+        public override void Trigger(IExecutionEntity execution, string triggerName, object triggerData, bool throwError = true)
         {
             IExecutionEntity executionEntity = execution;
             BoundaryEvent boundaryEvent = (BoundaryEvent)execution.CurrentFlowElement;
@@ -72,15 +72,15 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 IList<IEventSubscriptionEntity> eventSubscriptions = executionEntity.EventSubscriptions;
                 foreach (IEventSubscriptionEntity eventSubscription in eventSubscriptions)
                 {
-                    if (eventSubscription is IMessageEventSubscriptionEntity && eventSubscription.EventName.Equals(messageEventDefinition.MessageRef))
+                    if (eventSubscription.EventType == MessageEventSubscriptionEntityFields.EVENT_TYPE && eventSubscription.EventName.Equals(messageEventDefinition.MessageRef))
                     {
 
-                        eventSubscriptionEntityManager.delete(eventSubscription);
+                        eventSubscriptionEntityManager.Delete(eventSubscription);
                     }
                 }
             }
 
-            base.trigger(executionEntity, triggerName, triggerData);
+            base.Trigger(executionEntity, triggerName, triggerData, throwError);
         }
     }
 }

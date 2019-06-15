@@ -11,6 +11,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using org.activiti.engine.impl.interceptor;
+using Microsoft.Extensions.Options;
+using org.activiti.engine.impl.persistence.entity;
+using org.activiti.engine.repository;
+using org.activiti.bpmn.model;
+using System.Linq;
+using org.activiti.engine.task;
+using org.activiti.engine.history;
+using Sys.Net.Http;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
@@ -18,20 +26,44 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
     /// 获取当前执行人的用户信息
     /// </summary>
     [GetBookmarkDescriptor("GetExecutor")]
-	public class GetExecutorBookmarkRuleCmd : IGetBookmarkRule
+    public class GetExecutorBookmarkRuleCmd : BaseGetBookmarkRule
     {
-
+        private readonly ExternalConnectorProvider externalConnector;
+        /// <inheritdoc />
         public GetExecutorBookmarkRuleCmd()
         {
-
+            externalConnector = ProcessEngineServiceProvider.Resolve<ExternalConnectorProvider>();
         }
-
-        public QueryBookmark Condition { get; set; }
-
-        public IList<IUserInfo> execute(ICommandContext commandContext)
+        /// <inheritdoc />
+        public override IList<IUserInfo> Execute(ICommandContext commandContext)
         {
-            IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
-            return proxy.GetUsers(Condition).Result;
+            IList<IHistoricTaskInstance> hisTasks = commandContext.ProcessEngineConfiguration.HistoryService
+                .CreateHistoricTaskInstanceQuery()
+                .SetExecutionId(this.Execution.Id)
+                .List();
+
+            IList<IUserInfo> users = hisTasks.Where(x => Condition.QueryCondition.Any(y => y.Id == x.TaskDefinitionKey))
+               .Select(x => new UserInfo
+               {
+                   Id = x.Assignee
+               })
+               .ToList<IUserInfo>();
+
+            if (Condition.QueryCondition.Any(x => string.Equals("startuserid", x.Id, StringComparison.OrdinalIgnoreCase)))
+            {
+                var hisInst = commandContext.ProcessEngineConfiguration.HistoryService
+                    .CreateHistoricProcessInstanceQuery()
+                    .SetProcessInstanceId(this.Execution.ProcessInstanceId)
+                    .SingleResult();
+
+                string uid = hisInst == null ? this.Execution.Parent.StartUserId : hisInst.StartUserId;
+                users.Add(new UserInfo
+                {
+                    Id = uid
+                });
+            }
+
+            return users;
         }
     }
 }

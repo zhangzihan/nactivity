@@ -24,9 +24,9 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class ExtensionElementsParser : IBpmnXMLConstants
     {
-        public virtual void parse(XMLStreamReader xtr, IList<SubProcess> activeSubProcessList, Process activeProcess, BpmnModel model)
+        public virtual void Parse(XMLStreamReader xtr, IList<SubProcess> activeSubProcessList, Process activeProcess, BpmnModel model)
         {
-            BaseElement parentElement = null;
+            BaseElement parentElement;
             if (activeSubProcessList.Count > 0)
             {
                 parentElement = activeSubProcessList[activeSubProcessList.Count - 1];
@@ -38,28 +38,28 @@ namespace org.activiti.bpmn.converter.parser
             }
 
             bool readyWithChildElements = false;
-            while (readyWithChildElements == false && xtr.hasNext())
+            while (readyWithChildElements == false && xtr.HasNext())
             {
                 //xtr.next();
 
                 if (xtr.IsStartElement())
                 {
-                    if (org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EXECUTION_LISTENER.Equals(xtr.LocalName))
+                    if (BpmnXMLConstants.ELEMENT_EXECUTION_LISTENER.Equals(xtr.LocalName))
                     {
-                        (new ExecutionListenerParser()).parseChildElement(xtr, parentElement, model);
+                        (new ExecutionListenerParser()).ParseChildElement(xtr, parentElement, model);
                     }
-                    else if (org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_LISTENER.Equals(xtr.LocalName))
+                    else if (BpmnXMLConstants.ELEMENT_EVENT_LISTENER.Equals(xtr.LocalName))
                     {
-                        (new ActivitiEventListenerParser()).parseChildElement(xtr, parentElement, model);
+                        (new ActivitiEventListenerParser()).ParseChildElement(xtr, parentElement, model);
                     }
-                    else if (org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_POTENTIAL_STARTER.Equals(xtr.LocalName))
+                    else if (BpmnXMLConstants.ELEMENT_POTENTIAL_STARTER.Equals(xtr.LocalName))
                     {
-                        (new PotentialStarterParser()).parse(xtr, activeProcess);
+                        (new PotentialStarterParser()).Parse(xtr, activeProcess);
                     }
                     else
                     {
-                        ExtensionElement extensionElement = BpmnXMLUtil.parseExtensionElement(xtr);
-                        parentElement.addExtensionElement(extensionElement);
+                        ExtensionElement extensionElement = BpmnXMLUtil.ParseExtensionElement(xtr);
+                        parentElement.AddExtensionElement(extensionElement);
                     }
 
                 }

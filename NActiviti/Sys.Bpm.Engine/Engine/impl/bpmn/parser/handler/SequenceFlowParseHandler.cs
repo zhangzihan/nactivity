@@ -31,11 +31,11 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, SequenceFlow sequenceFlow)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, SequenceFlow sequenceFlow)
         {
-            org.activiti.bpmn.model.Process process = bpmnParse.CurrentProcess;
-            sequenceFlow.SourceFlowElement = process.getFlowElement(sequenceFlow.SourceRef, true);
-            sequenceFlow.TargetFlowElement = process.getFlowElement(sequenceFlow.TargetRef, true);
+            Process process = bpmnParse.CurrentProcess;
+            sequenceFlow.SourceFlowElement = process.GetFlowElement(sequenceFlow.SourceRef, true);
+            sequenceFlow.TargetFlowElement = process.GetFlowElement(sequenceFlow.TargetRef, true);
         }
 
     }

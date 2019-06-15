@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sys.Workflow;
+using System;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +16,6 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.task
 {
-
     /// 
     public interface ITaskInfo
     {
@@ -35,19 +35,34 @@ namespace org.activiti.engine.task
         string Description { get; }
 
         /// <summary>
+        /// 业务键值
+        /// </summary>
+        string BusinessKey { get; }
+
+        /// <summary>
         /// Indication of how important/urgent this task is
         /// </summary>
         int? Priority { get; }
 
         /// <summary>
-        /// The <seealso cref="User.getId() userId"/> of the person that is responsible for this task.
+        /// The <seealso cref="IUserInfo.Id"/> of the person that is responsible for this task.
         /// </summary>
         string Owner { get; }
 
         /// <summary>
-        /// The <seealso cref="User.getId() userId"/> of the person to which this task is delegated.
+        /// The <seealso cref="IUserInfo.Id"/> of the person to which this task is delegated.
         /// </summary>
         string Assignee { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string AssigneeUser { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IUserInfo Assigner { get; }
 
         /// <summary>
         /// Reference to the process instance or null if it is not related to a process instance.
@@ -124,9 +139,18 @@ namespace org.activiti.engine.task
         bool? IsTransfer { get; }
 
         /// <summary>
+        /// 是否允许任务执行人转给其他人员
+        /// </summary>
+        bool? CanTransfer { get; }
+
+        /// <summary>
+        /// 该任务只允许一个人执行
+        /// </summary>
+        bool? OnlyAssignee { get; }
+
+        /// <summary>
         /// 是否是其他节点指定的人员
         /// </summary>
         bool? IsRuntime { get; }
     }
-
 }

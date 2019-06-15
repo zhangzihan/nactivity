@@ -14,6 +14,7 @@
  */
 namespace org.activiti.bpmn.converter
 {
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
@@ -33,20 +34,23 @@ namespace org.activiti.bpmn.converter
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_TASK_RECEIVE;
+                return BpmnXMLConstants.ELEMENT_TASK_RECEIVE;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             ReceiveTask receiveTask = new ReceiveTask();
-            BpmnXMLUtil.addXMLLocation(receiveTask, xtr);
-            parseChildElements(XMLElementName, receiveTask, model, xtr);
+            BpmnXMLUtil.AddXMLLocation(receiveTask, xtr);
+            ParseChildElements(XMLElementName, receiveTask, model, xtr);
             return receiveTask;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
     }

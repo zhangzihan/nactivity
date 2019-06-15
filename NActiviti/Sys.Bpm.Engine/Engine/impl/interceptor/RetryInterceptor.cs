@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Sys;
+using Sys.Workflow;
 using System.Threading;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,9 +27,9 @@ namespace org.activiti.engine.impl.interceptor
 
         protected internal int numOfRetries = 3;
         protected internal int waitTimeInMs = 50;
-        protected internal int waitIncreaseFactor = 5;       
+        protected internal int waitIncreaseFactor = 5;
 
-        public override T execute<T>(CommandConfig config, ICommand<T> command)
+        public override T Execute<T>(CommandConfig config, ICommand<T> command)
         {
             long waitTime = waitTimeInMs;
             int failedAttempts = 0;
@@ -39,14 +39,14 @@ namespace org.activiti.engine.impl.interceptor
                 if (failedAttempts > 0)
                 {
                     log.LogInformation($"Waiting for {waitTime}ms before retrying the command.");
-                    waitBeforeRetry(waitTime);
+                    WaitBeforeRetry(waitTime);
                     waitTime *= waitIncreaseFactor;
                 }
 
                 try
                 {
                     // try to execute the command
-                    return next.execute(config, command);
+                    return next.Execute(config, command);
                 }
                 catch (ActivitiOptimisticLockingException e)
                 {
@@ -59,13 +59,13 @@ namespace org.activiti.engine.impl.interceptor
             throw new ActivitiException(numOfRetries + " retries failed with ActivitiOptimisticLockingException. Giving up.");
         }
 
-        protected internal virtual void waitBeforeRetry(long waitTime)
+        protected internal virtual void WaitBeforeRetry(long waitTime)
         {
             try
             {
                 Thread.Sleep((int)waitTime);
             }
-            catch (ThreadInterruptedException e)
+            catch (ThreadInterruptedException)
             {
                 log.LogDebug("I am interrupted while waiting for a retry.");
             }

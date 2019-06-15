@@ -17,6 +17,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 {
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json.Linq;
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate;
     using org.activiti.engine.@delegate.@event;
@@ -29,61 +30,70 @@ namespace org.activiti.engine.impl.bpmn.behavior
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using Sys;
+    using Sys.Workflow;
+    using Sys.Workflow.Engine.Bpmn.Rules;
+    using System.Collections;
 
     /// 
     [Serializable]
     public class UserTaskActivityBehavior : TaskActivityBehavior
     {
-        private static readonly ILogger<MultiInstanceActivityBehavior> log = ProcessEngineServiceProvider.LoggerService<MultiInstanceActivityBehavior>();
+        private static readonly ILogger<UserTaskActivityBehavior> log = ProcessEngineServiceProvider.LoggerService<UserTaskActivityBehavior>();
 
         private const long serialVersionUID = 1L;
 
         protected internal UserTask userTask;
+
+        private readonly IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
         public UserTaskActivityBehavior(UserTask userTask)
         {
             this.userTask = userTask;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             ICommandContext commandContext = Context.CommandContext;
             ITaskEntityManager taskEntityManager = commandContext.TaskEntityManager;
 
-            ITaskEntity task = taskEntityManager.create();
+            ITaskEntity task = taskEntityManager.Create();
             task.Execution = execution;
             task.TaskDefinitionKey = userTask.Id;
             task.IsRuntimeAssignee();
 
-            string activeTaskName = null;
-            string activeTaskDescription = null;
-            string activeTaskDueDate = null;
-            string activeTaskPriority = null;
-            string activeTaskCategory = null;
-            string activeTaskFormKey = null;
-            string activeTaskSkipExpression = null;
-            string activeTaskAssignee = null;
-            string activeTaskOwner = null;
-            IList<string> activeTaskCandidateUsers = null;
-            IList<string> activeTaskCandidateGroups = null;
+            task.CanTransfer = userTask.CanTransfer;
+            task.OnlyAssignee = task.OnlyAssignee;
 
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
             ExpressionManager expressionManager = processEngineConfiguration.ExpressionManager;
 
+
+            string activeTaskName;
+            string activeTaskDescription;
+            string activeTaskDueDate;
+            string activeTaskCategory;
+            string activeTaskSkipExpression;
+            string activeTaskPriority;
+            string activeTaskFormKey;
+            string activeTaskAssignee;
+            string activeTaskOwner;
+            IList<string> activeTaskCandidateUsers;
+            IList<string> activeTaskCandidateGroups;
+
             if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
             {
-                JToken taskElementProperties = Context.getBpmnOverrideElementProperties(userTask.Id, execution.ProcessDefinitionId);
-                activeTaskName = getActiveValue(userTask.Name, DynamicBpmnConstants_Fields.USER_TASK_NAME, taskElementProperties);
-                activeTaskDescription = getActiveValue(userTask.Documentation, DynamicBpmnConstants_Fields.USER_TASK_DESCRIPTION, taskElementProperties);
-                activeTaskDueDate = getActiveValue(userTask.DueDate, DynamicBpmnConstants_Fields.USER_TASK_DUEDATE, taskElementProperties);
-                activeTaskPriority = getActiveValue(userTask.Priority, DynamicBpmnConstants_Fields.USER_TASK_PRIORITY, taskElementProperties);
-                activeTaskCategory = getActiveValue(userTask.Category, DynamicBpmnConstants_Fields.USER_TASK_CATEGORY, taskElementProperties);
-                activeTaskFormKey = getActiveValue(userTask.FormKey, DynamicBpmnConstants_Fields.USER_TASK_FORM_KEY, taskElementProperties);
-                activeTaskSkipExpression = getActiveValue(userTask.SkipExpression, DynamicBpmnConstants_Fields.TASK_SKIP_EXPRESSION, taskElementProperties);
-                activeTaskAssignee = getActiveValue(userTask.Assignee, DynamicBpmnConstants_Fields.USER_TASK_ASSIGNEE, taskElementProperties);
-                activeTaskOwner = getActiveValue(userTask.Owner, DynamicBpmnConstants_Fields.USER_TASK_OWNER, taskElementProperties);
-                activeTaskCandidateUsers = getActiveValueList(userTask.CandidateUsers, DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_USERS, taskElementProperties);
-                activeTaskCandidateGroups = getActiveValueList(userTask.CandidateGroups, DynamicBpmnConstants_Fields.USER_TASK_CANDIDATE_GROUPS, taskElementProperties);
+                JToken taskElementProperties = Context.GetBpmnOverrideElementProperties(userTask.Id, execution.ProcessDefinitionId);
+                activeTaskName = GetActiveValue(userTask.Name, DynamicBpmnConstants.USER_TASK_NAME, taskElementProperties);
+                activeTaskDescription = GetActiveValue(userTask.Documentation, DynamicBpmnConstants.USER_TASK_DESCRIPTION, taskElementProperties);
+                activeTaskDueDate = GetActiveValue(userTask.DueDate, DynamicBpmnConstants.USER_TASK_DUEDATE, taskElementProperties);
+                activeTaskPriority = GetActiveValue(userTask.Priority, DynamicBpmnConstants.USER_TASK_PRIORITY, taskElementProperties);
+                activeTaskCategory = GetActiveValue(userTask.Category, DynamicBpmnConstants.USER_TASK_CATEGORY, taskElementProperties);
+                activeTaskFormKey = GetActiveValue(userTask.FormKey, DynamicBpmnConstants.USER_TASK_FORM_KEY, taskElementProperties);
+                activeTaskSkipExpression = GetActiveValue(userTask.SkipExpression, DynamicBpmnConstants.TASK_SKIP_EXPRESSION, taskElementProperties);
+                activeTaskAssignee = GetActiveValue(userTask.Assignee, DynamicBpmnConstants.USER_TASK_ASSIGNEE, taskElementProperties);
+                activeTaskOwner = GetActiveValue(userTask.Owner, DynamicBpmnConstants.USER_TASK_OWNER, taskElementProperties);
+                activeTaskCandidateUsers = GetActiveValueList(userTask.CandidateUsers, DynamicBpmnConstants.USER_TASK_CANDIDATE_USERS, taskElementProperties);
+                activeTaskCandidateGroups = GetActiveValueList(userTask.CandidateGroups, DynamicBpmnConstants.USER_TASK_CANDIDATE_GROUPS, taskElementProperties);
 
             }
             else
@@ -103,10 +113,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             if (!string.IsNullOrWhiteSpace(activeTaskName))
             {
-                string name = null;
+                string name;
                 try
                 {
-                    name = (string)expressionManager.createExpression(activeTaskName).getValue(execution);
+                    name = (string)expressionManager.CreateExpression(activeTaskName).GetValue(execution);
                 }
                 catch (ActivitiException e)
                 {
@@ -118,10 +128,10 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             if (!string.IsNullOrWhiteSpace(activeTaskDescription))
             {
-                string description = null;
+                string description;
                 try
                 {
-                    description = (string)expressionManager.createExpression(activeTaskDescription).getValue(execution);
+                    description = (string)expressionManager.CreateExpression(activeTaskDescription).GetValue(execution);
                 }
                 catch (ActivitiException e)
                 {
@@ -133,27 +143,27 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             if (!string.IsNullOrWhiteSpace(activeTaskDueDate))
             {
-                object dueDate = expressionManager.createExpression(activeTaskDueDate).getValue(execution);
+                object dueDate = expressionManager.CreateExpression(activeTaskDueDate).GetValue(execution);
                 if (dueDate != null)
                 {
                     if (dueDate is DateTime)
                     {
-                        ((task.ITask)task).DueDate = (DateTime)dueDate;
+                        task.DueDate = (DateTime)dueDate;
                     }
                     else if (dueDate is string)
                     {
-                        string businessCalendarName = null;
+                        string businessCalendarName;
                         if (!string.IsNullOrWhiteSpace(userTask.BusinessCalendarName))
                         {
-                            businessCalendarName = expressionManager.createExpression(userTask.BusinessCalendarName).getValue(execution).ToString();
+                            businessCalendarName = expressionManager.CreateExpression(userTask.BusinessCalendarName).GetValue(execution).ToString();
                         }
                         else
                         {
                             businessCalendarName = DueDateBusinessCalendar.NAME;
                         }
 
-                        IBusinessCalendar businessCalendar = Context.ProcessEngineConfiguration.BusinessCalendarManager.getBusinessCalendar(businessCalendarName);
-                        ((task.ITask)task).DueDate = businessCalendar.resolveDuedate((string)dueDate);
+                        IBusinessCalendar businessCalendar = Context.ProcessEngineConfiguration.BusinessCalendarManager.GetBusinessCalendar(businessCalendarName);
+                        task.DueDate = businessCalendar.ResolveDuedate((string)dueDate);
 
                     }
                     else
@@ -165,23 +175,23 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             if (!string.IsNullOrWhiteSpace(activeTaskPriority))
             {
-                object priority = expressionManager.createExpression(activeTaskPriority).getValue(execution);
+                object priority = expressionManager.CreateExpression(activeTaskPriority).GetValue(execution);
                 if (priority != null)
                 {
                     if (priority is string)
                     {
                         try
                         {
-                            ((task.ITask)task).Priority = Convert.ToInt32((string)priority);
+                            task.Priority = Convert.ToInt32((string)priority);
                         }
-                        catch (System.FormatException e)
+                        catch (FormatException e)
                         {
                             throw new ActivitiIllegalArgumentException("Priority does not resolve to a number: " + priority, e);
                         }
                     }
-                    else if (priority is Int32 || priority is Int64)
+                    else if (priority is int || priority is long)
                     {
-                        ((task.ITask)task).Priority = ((int)priority);
+                        task.Priority = ((int)priority);
                     }
                     else
                     {
@@ -192,12 +202,12 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             if (!string.IsNullOrWhiteSpace(activeTaskCategory))
             {
-                object category = expressionManager.createExpression(activeTaskCategory).getValue(execution);
+                object category = expressionManager.CreateExpression(activeTaskCategory).GetValue(execution);
                 if (category != null)
                 {
                     if (category is string)
                     {
-                        ((task.ITask)task).Category = category.ToString();
+                        task.Category = category.ToString();
                     }
                     else
                     {
@@ -208,12 +218,12 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             if (!string.IsNullOrWhiteSpace(activeTaskFormKey))
             {
-                object formKey = expressionManager.createExpression(activeTaskFormKey).getValue(execution);
+                object formKey = expressionManager.CreateExpression(activeTaskFormKey).GetValue(execution);
                 if (formKey != null)
                 {
                     if (formKey is string)
                     {
-                        ((task.ITask)task).FormKey = formKey.ToString();
+                        task.FormKey = formKey.ToString();
                     }
                     else
                     {
@@ -222,98 +232,105 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 }
             }
 
-            taskEntityManager.insert(task, execution);
+            taskEntityManager.Insert(task, execution);
 
             bool skipUserTask = false;
             if (!string.IsNullOrWhiteSpace(activeTaskSkipExpression))
             {
-                IExpression skipExpression = expressionManager.createExpression(activeTaskSkipExpression);
-                skipUserTask = SkipExpressionUtil.isSkipExpressionEnabled(execution, skipExpression) && SkipExpressionUtil.shouldSkipFlowElement(execution, skipExpression);
+                IExpression skipExpression = expressionManager.CreateExpression(activeTaskSkipExpression);
+                skipUserTask = SkipExpressionUtil.IsSkipExpressionEnabled(execution, skipExpression) && SkipExpressionUtil.ShouldSkipFlowElement(execution, skipExpression);
             }
 
             // Handling assignments need to be done after the task is inserted, to have an id
             if (!skipUserTask)
             {
-                handleAssignments(taskEntityManager, activeTaskAssignee, activeTaskOwner, activeTaskCandidateUsers, activeTaskCandidateGroups, task, expressionManager, execution);
+                HandleAssignments(taskEntityManager, activeTaskAssignee, activeTaskOwner, activeTaskCandidateUsers, activeTaskCandidateGroups, task, expressionManager, execution);
             }
 
-            processEngineConfiguration.ListenerNotificationHelper.executeTaskListeners(task, BaseTaskListener_Fields.EVENTNAME_CREATE);
+            processEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(task, BaseTaskListenerFields.EVENTNAME_CREATE);
 
             // All properties set, now fire events
             if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
                 IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
-                eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TASK_CREATED, task));
-                if (!ReferenceEquals(((task.ITask)task).Assignee, null))
+                eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_CREATED, task));
+                if (!(task.Assignee is null))
                 {
-                    eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.TASK_ASSIGNED, task));
+                    eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_ASSIGNED, task));
                 }
             }
 
             if (skipUserTask)
             {
-                taskEntityManager.deleteTask(task, null, false, false);
-                leave(execution);
+                taskEntityManager.DeleteTask(task, null, false, false);
+                Leave(execution);
             }
         }
 
-        public override void trigger(IExecutionEntity execution, string signalName, object signalData)
+        public override void Trigger(IExecutionEntity execution, string signalName, object signalData, bool throwError = true)
         {
             ICommandContext commandContext = Context.CommandContext;
             ITaskEntityManager taskEntityManager = commandContext.TaskEntityManager;
-            IList<ITaskEntity> taskEntities = taskEntityManager.findTasksByExecutionId(execution.Id); // Should be only one
+            IList<ITaskEntity> taskEntities = taskEntityManager.FindTasksByExecutionId(execution.Id); // Should be only one
             foreach (ITaskEntity taskEntity in taskEntities)
             {
                 if (!taskEntity.Deleted)
                 {
-                    throw new ActivitiException("UserTask should not be signalled before complete");
+                    if (throwError)
+                    {
+                        throw new ActivitiException("UserTask should not be signalled before complete");
+                    }
                 }
             }
 
-            leave(execution);
+            Leave(execution, signalData);
         }
 
-        protected internal virtual void handleAssignments(ITaskEntityManager taskEntityManager, string assignee, string owner, IList<string> candidateUsers, IList<string> candidateGroups, ITaskEntity task, ExpressionManager expressionManager, IExecutionEntity execution)
+        protected internal virtual void HandleAssignments(ITaskEntityManager taskEntityManager, string assignee, string owner, IList<string> candidateUsers, IList<string> candidateGroups, ITaskEntity task, ExpressionManager expressionManager, IExecutionEntity execution)
         {
 
             if (!string.IsNullOrWhiteSpace(assignee))
             {
-                object assigneeExpressionValue = expressionManager.createExpression(assignee).getValue(execution);
+                object assigneeExpressionValue = expressionManager.CreateExpression(assignee).GetValue(execution);
                 string assigneeValue = null;
                 if (assigneeExpressionValue != null)
                 {
                     assigneeValue = assigneeExpressionValue.ToString();
                 }
-
-                taskEntityManager.changeTaskAssigneeNoEvents(task, assigneeValue);
+                string assigneeUser = null;
+                if (string.IsNullOrWhiteSpace(assigneeValue) == false)
+                {
+                    assigneeUser = AsyncHelper.RunSync(() => userService.GetUser(assigneeValue))?.FullName;
+                }
+                taskEntityManager.ChangeTaskAssigneeNoEvents(task, assigneeValue, assigneeUser);
             }
 
             if (!string.IsNullOrWhiteSpace(owner))
             {
-                object ownerExpressionValue = expressionManager.createExpression(owner).getValue(execution);
+                object ownerExpressionValue = expressionManager.CreateExpression(owner).GetValue(execution);
                 string ownerValue = null;
                 if (ownerExpressionValue != null)
                 {
                     ownerValue = ownerExpressionValue.ToString();
                 }
 
-                taskEntityManager.changeTaskOwner(task, ownerValue);
+                taskEntityManager.ChangeTaskOwner(task, ownerValue);
             }
 
             if (candidateGroups != null && candidateGroups.Count > 0)
             {
                 foreach (string candidateGroup in candidateGroups)
                 {
-                    IExpression groupIdExpr = expressionManager.createExpression(candidateGroup);
-                    object value = groupIdExpr.getValue(execution);
+                    IExpression groupIdExpr = expressionManager.CreateExpression(candidateGroup);
+                    object value = groupIdExpr.GetValue(execution);
                     if (value is string)
                     {
-                        IList<string> candidates = extractCandidates((string)value);
-                        task.addCandidateGroups(candidates);
+                        IList<string> candidates = ExtractCandidates((string)value);
+                        task.AddCandidateGroups(candidates);
                     }
-                    else if (value is System.Collections.ICollection)
+                    else if (value is ICollection)
                     {
-                        task.addCandidateGroups((ICollection<string>)value);
+                        task.AddCandidateGroups((ICollection<string>)value);
                     }
                     else
                     {
@@ -326,16 +343,16 @@ namespace org.activiti.engine.impl.bpmn.behavior
             {
                 foreach (string candidateUser in candidateUsers)
                 {
-                    IExpression userIdExpr = expressionManager.createExpression(candidateUser);
-                    object value = userIdExpr.getValue(execution);
+                    IExpression userIdExpr = expressionManager.CreateExpression(candidateUser);
+                    object value = userIdExpr.GetValue(execution);
                     if (value is string)
                     {
-                        IList<string> candidates = extractCandidates((string)value);
-                        task.addCandidateUsers(candidates);
+                        IList<string> candidates = ExtractCandidates((string)value);
+                        task.AddCandidateUsers(candidates);
                     }
-                    else if (value is System.Collections.ICollection)
+                    else if (value is ICollection)
                     {
-                        task.addCandidateUsers((ICollection<string>)value);
+                        task.AddCandidateUsers((ICollection<string>)value);
                     }
                     else
                     {
@@ -351,22 +368,22 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 {
                     foreach (string userIdentityLink in userTask.CustomUserIdentityLinks[customUserIdentityLinkType])
                     {
-                        IExpression idExpression = expressionManager.createExpression(userIdentityLink);
-                        object value = idExpression.getValue(execution);
+                        IExpression idExpression = expressionManager.CreateExpression(userIdentityLink);
+                        object value = idExpression.GetValue(execution);
                         if (value is string)
                         {
-                            IList<string> userIds = extractCandidates((string)value);
+                            IList<string> userIds = ExtractCandidates((string)value);
                             foreach (string userId in userIds)
                             {
-                                task.addUserIdentityLink(userId, customUserIdentityLinkType);
+                                task.AddUserIdentityLink(userId, customUserIdentityLinkType);
                             }
                         }
-                        else if (value is System.Collections.ICollection)
+                        else if (value is ICollection)
                         {
-                            System.Collections.IEnumerator userIdSet = ((System.Collections.ICollection)value).GetEnumerator();
+                            IEnumerator userIdSet = ((ICollection)value).GetEnumerator();
                             while (userIdSet.MoveNext())
                             {
-                                task.addUserIdentityLink((string)userIdSet.Current, customUserIdentityLinkType);
+                                task.AddUserIdentityLink((string)userIdSet.Current, customUserIdentityLinkType);
                             }
                         }
                         else
@@ -387,22 +404,22 @@ namespace org.activiti.engine.impl.bpmn.behavior
                     foreach (string groupIdentityLink in userTask.CustomGroupIdentityLinks[customGroupIdentityLinkType])
                     {
 
-                        IExpression idExpression = expressionManager.createExpression(groupIdentityLink);
-                        object value = idExpression.getValue(execution);
+                        IExpression idExpression = expressionManager.CreateExpression(groupIdentityLink);
+                        object value = idExpression.GetValue(execution);
                         if (value is string)
                         {
-                            IList<string> groupIds = extractCandidates((string)value);
+                            IList<string> groupIds = ExtractCandidates((string)value);
                             foreach (string groupId in groupIds)
                             {
-                                task.addGroupIdentityLink(groupId, customGroupIdentityLinkType);
+                                task.AddGroupIdentityLink(groupId, customGroupIdentityLinkType);
                             }
                         }
-                        else if (value is System.Collections.ICollection)
+                        else if (value is ICollection)
                         {
-                            System.Collections.IEnumerator groupIdSet = ((System.Collections.ICollection)value).GetEnumerator();
+                            IEnumerator groupIdSet = ((ICollection)value).GetEnumerator();
                             while (groupIdSet.MoveNext())
                             {
-                                task.addGroupIdentityLink((string)groupIdSet.Current, customGroupIdentityLinkType);
+                                task.AddGroupIdentityLink((string)groupIdSet.Current, customGroupIdentityLinkType);
                             }
                         }
                         else
@@ -422,7 +439,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
         /// </summary>
         /// <param name="str">
         /// @return </param>
-        protected internal virtual IList<string> extractCandidates(string str)
+        protected internal virtual IList<string> ExtractCandidates(string str)
         {
             return new List<string>(str.Split(new string[] { "[\\s]*,[\\s]*" }, StringSplitOptions.RemoveEmptyEntries));
         }

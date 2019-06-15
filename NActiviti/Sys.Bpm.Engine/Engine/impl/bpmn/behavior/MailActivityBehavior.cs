@@ -46,7 +46,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
         protected internal IExpression exceptionVariableName;
         protected internal IExpression attachments;
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             throw new NotImplementedException();
             //bool doIgnoreException = bool.Parse(getStringFromField(ignoreException, execution));
@@ -91,13 +91,13 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //leave(execution);
         }
 
-        private bool attachmentsExist(IList<File> files, IList<IDataSource> dataSources)
+        private bool AttachmentsExist(IList<File> files, IList<IDataSource> dataSources)
         {
             throw new NotImplementedException();
             //return !((files == null || files.Count == 0) && (dataSources == null || dataSources.Count == 0));
         }
 
-        protected internal virtual Email createEmail(string text, string html, bool attachmentsExist)
+        protected internal virtual Email CreateEmail(string text, string html, bool attachmentsExist)
         {
             throw new NotImplementedException();
             //if (!string.ReferenceEquals(html, null))
@@ -121,7 +121,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //}
         }
 
-        protected internal virtual HtmlEmail createHtmlEmail(string text, string html)
+        protected internal virtual HtmlEmail CreateHtmlEmail(string text, string html)
         {
             throw new NotImplementedException();
             //HtmlEmail email = new HtmlEmail();
@@ -140,7 +140,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //}
         }
 
-        protected internal virtual SimpleEmail createTextOnlyEmail(string text)
+        protected internal virtual SimpleEmail CreateTextOnlyEmail(string text)
         {
             throw new NotImplementedException();
             //SimpleEmail email = new SimpleEmail();
@@ -155,7 +155,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //}
         }
 
-        protected internal virtual MultiPartEmail createMultiPartEmail(string text)
+        protected internal virtual MultiPartEmail CreateMultiPartEmail(string text)
         {
             throw new NotImplementedException();
             //MultiPartEmail email = new MultiPartEmail();
@@ -170,7 +170,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //}
         }
 
-        protected internal virtual void addTo(Email email, string to)
+        protected internal virtual void AddTo(Email email, string to)
         {
             throw new NotImplementedException();
             //string[] tos = splitAndTrim(to);
@@ -194,7 +194,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //    }
         }
 
-        protected internal virtual void setFrom(Email email, string from, string tenantId)
+        protected internal virtual void SetFrom(Email email, string from, string tenantId)
         {
             throw new NotImplementedException();
             //string fromAddress = null;
@@ -231,7 +231,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //}
         }
 
-        protected internal virtual void addCc(Email email, string cc)
+        protected internal virtual void AddCc(Email email, string cc)
         {
             throw new NotImplementedException();
             //string[] ccs = splitAndTrim(cc);
@@ -251,7 +251,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //}
         }
 
-        protected internal virtual void addBcc(Email email, string bcc)
+        protected internal virtual void AddBcc(Email email, string bcc)
         {
             throw new NotImplementedException();
             //string[] bccs = splitAndTrim(bcc);
@@ -271,7 +271,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //}
         }
 
-        protected internal virtual void attach(Email email, IList<File> files, IList<IDataSource> dataSources)
+        protected internal virtual void Attach(Email email, IList<File> files, IList<IDataSource> dataSources)
         {
             throw new NotImplementedException();
             //if (!(email is MultiPartEmail && attachmentsExist(files, dataSources)))
@@ -292,13 +292,13 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //}
         }
 
-        protected internal virtual void setSubject(Email email, string subject)
+        protected internal virtual void SetSubject(Email email, string subject)
         {
             throw new NotImplementedException();
             //email.Subject = !string.ReferenceEquals(subject, null) ? subject : "";
         }
 
-        protected internal virtual void setMailServerProperties(Email email, string tenantId)
+        protected internal virtual void SetMailServerProperties(Email email, string tenantId)
         {
             throw new NotImplementedException();
             //ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
@@ -371,7 +371,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //}
         }
 
-        protected internal virtual void setEmailSession(Email email, string mailSessionJndi)
+        protected internal virtual void SetEmailSession(Email email, string mailSessionJndi)
         {
             throw new NotImplementedException();
             //try
@@ -384,7 +384,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //}
         }
 
-        protected internal virtual void setCharset(Email email, string charSetStr)
+        protected internal virtual void SetCharset(Email email, string charSetStr)
         {
             throw new NotImplementedException();
             //if (charset != null)
@@ -393,7 +393,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //}
         }
 
-        protected internal virtual string[] splitAndTrim(string str)
+        protected internal virtual string[] SplitAndTrim(string str)
         {
             throw new NotImplementedException();
             //if (!string.ReferenceEquals(str, null))
@@ -408,7 +408,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //return null;
         }
 
-        protected internal virtual string getStringFromField(IExpression expression, IExecutionEntity execution)
+        protected internal virtual string GetStringFromField(IExpression expression, IExecutionEntity execution)
         {
             throw new NotImplementedException();
             //if (expression != null)
@@ -422,7 +422,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //return null;
         }
 
-        private void getFilesFromFields(IExpression expression, IExecutionEntity execution, IList<File> files, IList<IDataSource> dataSources)
+        private void GetFilesFromFields(IExpression expression, IExecutionEntity execution, IList<File> files, IList<IDataSource> dataSources)
         {
             throw new NotImplementedException();
             //object value = checkAllowedTypes(expression, execution);
@@ -473,7 +473,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //}
         }
 
-        private object checkAllowedTypes(IExpression expression, IExecutionEntity execution)
+        private object CheckAllowedTypes(IExpression expression, IExecutionEntity execution)
         {
             throw new NotImplementedException();
             //if (expression == null)
@@ -495,20 +495,20 @@ namespace org.activiti.engine.impl.bpmn.behavior
             //throw new ActivitiException("Invalid attachment type: " + value.GetType());
         }
 
-        protected internal virtual bool fileExists(File file)
+        protected internal virtual bool FileExists(File file)
         {
             throw new NotImplementedException();
             //return file != null && file.exists() && file.File && file.canRead();
         }
 
-        protected internal virtual IExpression getExpression(IExecutionEntity execution, IExpression var)
+        protected internal virtual IExpression GetExpression(IExecutionEntity execution, IExpression var)
         {
             throw new NotImplementedException();
             //string variable = (string)execution.getVariable(var.ExpressionText);
             //return Context.ProcessEngineConfiguration.ExpressionManager.createExpression(variable);
         }
 
-        protected internal virtual void handleException(IExecutionEntity execution, string msg, Exception e, bool doIgnoreException, string exceptionVariable)
+        protected internal virtual void HandleException(IExecutionEntity execution, string msg, Exception e, bool doIgnoreException, string exceptionVariable)
         {
             throw new NotImplementedException();
             //if (doIgnoreException)

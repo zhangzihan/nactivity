@@ -22,7 +22,7 @@ namespace org.activiti.engine.impl.jobexecutor
 	public class DefaultFailedJobCommandFactory : IFailedJobCommandFactory
 	{
 
-	  public virtual ICommand<object> getCommand(string jobId, Exception exception)
+	  public virtual ICommand<object> GetCommand(string jobId, Exception exception)
 	  {
 		return new JobRetryCmd(jobId, exception);
 	  }

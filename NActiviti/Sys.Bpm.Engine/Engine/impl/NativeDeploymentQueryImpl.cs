@@ -23,14 +23,14 @@ namespace org.activiti.engine.impl
 
         // results ////////////////////////////////////////////////////////////////
 
-        public override IList<IDeployment> executeList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public override IList<IDeployment> ExecuteList(ICommandContext commandContext, IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return commandContext.DeploymentEntityManager.findDeploymentsByNativeQuery(parameterMap, firstResult, maxResults);
+            return commandContext.DeploymentEntityManager.FindDeploymentsByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public override long executeCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
+        public override long ExecuteCount(ICommandContext commandContext, IDictionary<string, object> parameterMap)
         {
-            return commandContext.DeploymentEntityManager.findDeploymentCountByNativeQuery(parameterMap);
+            return commandContext.DeploymentEntityManager.FindDeploymentCountByNativeQuery(parameterMap);
         }
 
     }

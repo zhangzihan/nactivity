@@ -28,18 +28,30 @@ namespace org.activiti.engine.impl.bpmn.data
 
         private const long serialVersionUID = 1L;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExpression transformation;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceRef"></param>
+        /// <param name="targetRef"></param>
+        /// <param name="transformation"></param>
         public TransformationDataOutputAssociation(string sourceRef, string targetRef, IExpression transformation) : base(sourceRef, targetRef)
         {
             this.transformation = transformation;
         }
 
-        public override void evaluate(IExecutionEntity execution)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        public override void Evaluate(IExecutionEntity execution)
         {
-            object value = this.transformation.getValue(execution);
-            execution.setVariable(this.Target, value);
+            object value = this.transformation.GetValue(execution);
+            execution.SetVariable(this.Target, value);
         }
     }
-
 }

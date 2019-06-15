@@ -20,23 +20,23 @@ namespace org.activiti.bpmn.converter.parser
     /// 
     public class ItemDefinitionParser : IBpmnXMLConstants
     {
-        public virtual void parse(XMLStreamReader xtr, BpmnModel model)
+        public virtual void Parse(XMLStreamReader xtr, BpmnModel model)
         {
-            if (!string.IsNullOrWhiteSpace(xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID)))
+            if (!string.IsNullOrWhiteSpace(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID)))
             {
-                string itemDefinitionId = model.TargetNamespace + ":" + xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID);
-                string structureRef = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_STRUCTURE_REF);
+                string itemDefinitionId = model.TargetNamespace + ":" + xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+                string structureRef = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_STRUCTURE_REF);
                 if (!string.IsNullOrWhiteSpace(structureRef))
                 {
                     ItemDefinition item = new ItemDefinition();
                     item.Id = itemDefinitionId;
-                    BpmnXMLUtil.addXMLLocation(item, xtr);
+                    BpmnXMLUtil.AddXMLLocation(item, xtr);
 
                     int indexOfP = structureRef.IndexOf(':');
                     if (indexOfP != -1)
                     {
                         string prefix = structureRef.Substring(0, indexOfP);
-                        string resolvedNamespace = model.getNamespace(prefix);
+                        string resolvedNamespace = model.GetNamespace(prefix);
                         structureRef = resolvedNamespace + ":" + structureRef.Substring(indexOfP + 1);
                     }
                     else
@@ -45,9 +45,9 @@ namespace org.activiti.bpmn.converter.parser
                     }
 
                     item.StructureRef = structureRef;
-                    item.ItemKind = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ITEM_KIND);
-                    BpmnXMLUtil.parseChildElements(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_ITEM_DEFINITION, item, xtr, model);
-                    model.addItemDefinition(itemDefinitionId, item);
+                    item.ItemKind = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ITEM_KIND);
+                    BpmnXMLUtil.ParseChildElements(BpmnXMLConstants.ELEMENT_ITEM_DEFINITION, item, xtr, model);
+                    model.AddItemDefinition(itemDefinitionId, item);
                 }
             }
         }

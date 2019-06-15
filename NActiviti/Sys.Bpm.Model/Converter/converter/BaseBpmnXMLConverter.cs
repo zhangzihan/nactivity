@@ -19,6 +19,7 @@ using org.activiti.bpmn.model;
 using Sys.Bpm;
 using System;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace org.activiti.bpmn.converter
 {
@@ -38,17 +39,17 @@ namespace org.activiti.bpmn.converter
             new ExtensionAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ISFORCOMPENSATION)
         };
 
-        public virtual void convertToBpmnModel(XMLStreamReader xtr, BpmnModel model, Process activeProcess, IList<SubProcess> activeSubProcessList)
+        public virtual void ConvertToBpmnModel(XMLStreamReader xtr, BpmnModel model, Process activeProcess, IList<SubProcess> activeSubProcessList)
         {
 
-            string elementId = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
-            string elementName = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
-            bool async = parseAsync(xtr);
-            bool notExclusive = parseNotExclusive(xtr);
-            string defaultFlow = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_DEFAULT);
-            bool isForCompensation = parseForCompensation(xtr);
+            string elementId = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
+            string elementName = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
+            bool async = ParseAsync(xtr);
+            bool notExclusive = ParseNotExclusive(xtr);
+            string defaultFlow = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DEFAULT);
+            bool isForCompensation = ParseForCompensation(xtr);
 
-            BaseElement parsedElement = convertXMLToElement(xtr, model);
+            BaseElement parsedElement = ConvertXMLToElement(xtr, model);
 
             if (parsedElement is Artifact currentArtifact)
             {
@@ -56,12 +57,12 @@ namespace org.activiti.bpmn.converter
 
                 if (activeSubProcessList.Count > 0)
                 {
-                    activeSubProcessList[activeSubProcessList.Count - 1].addArtifact(currentArtifact);
+                    activeSubProcessList[activeSubProcessList.Count - 1].AddArtifact(currentArtifact);
 
                 }
                 else
                 {
-                    activeProcess.addArtifact(currentArtifact);
+                    activeProcess.AddArtifact(currentArtifact);
                 }
             }
 
@@ -110,34 +111,34 @@ namespace org.activiti.bpmn.converter
                 {
 
                     SubProcess subProcess = activeSubProcessList[activeSubProcessList.Count - 1];
-                    subProcess.addFlowElement(currentFlowElement);
+                    subProcess.AddFlowElement(currentFlowElement);
 
                 }
                 else
                 {
-                    activeProcess.addFlowElement(currentFlowElement);
+                    activeProcess.AddFlowElement(currentFlowElement);
                 }
             }
         }
 
-        public virtual void convertToXML(XMLStreamWriter xtw, BaseElement baseElement, BpmnModel model)
+        public virtual void ConvertToXML(XMLStreamWriter xtw, BaseElement baseElement, BpmnModel model)
         {
-            xtw.writeStartElement(XMLElementName);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, XMLElementName, BpmnXMLConstants.BPMN2_NAMESPACE);
             bool didWriteExtensionStartElement = false;
-            writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ID, baseElement.Id, xtw);
+            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ID, baseElement.Id, xtw);
             if (baseElement is FlowElement)
             {
-                writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, ((FlowElement)baseElement).Name, xtw);
+                WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, ((FlowElement)baseElement).Name, xtw);
             }
 
             if (baseElement is FlowNode flowNode)
             {
                 if (flowNode.Asynchronous)
                 {
-                    writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ASYNCHRONOUS, BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE, xtw);
+                    WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ASYNCHRONOUS, BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE, xtw);
                     if (flowNode.NotExclusive)
                     {
-                        writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_EXCLUSIVE, BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE, xtw);
+                        WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_EXCLUSIVE, BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE, xtw);
                     }
                 }
 
@@ -145,14 +146,14 @@ namespace org.activiti.bpmn.converter
                 {
                     if (activity.ForCompensation)
                     {
-                        writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ISFORCOMPENSATION, BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE, xtw);
+                        WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ISFORCOMPENSATION, BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE, xtw);
                     }
                     if (!string.IsNullOrWhiteSpace(activity.DefaultFlow))
                     {
-                        FlowElement defaultFlowElement = model.getFlowElement(activity.DefaultFlow);
+                        FlowElement defaultFlowElement = model.GetFlowElement(activity.DefaultFlow);
                         if (defaultFlowElement is SequenceFlow)
                         {
-                            writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_DEFAULT, activity.DefaultFlow, xtw);
+                            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_DEFAULT, activity.DefaultFlow, xtw);
                         }
                     }
                 }
@@ -161,88 +162,89 @@ namespace org.activiti.bpmn.converter
                 {
                     if (!string.IsNullOrWhiteSpace(gateway.DefaultFlow))
                     {
-                        FlowElement defaultFlowElement = model.getFlowElement(gateway.DefaultFlow);
+                        FlowElement defaultFlowElement = model.GetFlowElement(gateway.DefaultFlow);
                         if (defaultFlowElement is SequenceFlow)
                         {
-                            writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_DEFAULT, gateway.DefaultFlow, xtw);
+                            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_DEFAULT, gateway.DefaultFlow, xtw);
                         }
                     }
                 }
             }
 
-            writeAdditionalAttributes(baseElement, model, xtw);
+            WriteAdditionalAttributes(baseElement, model, xtw);
 
             if (baseElement is FlowElement flowElement)
             {
                 if (!string.IsNullOrWhiteSpace(flowElement.Documentation))
                 {
 
-                    xtw.writeStartElement(BpmnXMLConstants.ELEMENT_DOCUMENTATION);
-                    xtw.writeCharacters(flowElement.Documentation);
-                    xtw.writeEndElement();
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_DOCUMENTATION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteCharacters(flowElement.Documentation);
+                    xtw.WriteEndElement();
                 }
             }
 
-            didWriteExtensionStartElement = writeExtensionChildElements(baseElement, didWriteExtensionStartElement, xtw);
-            didWriteExtensionStartElement = writeListeners(baseElement, didWriteExtensionStartElement, xtw);
-            didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(baseElement, didWriteExtensionStartElement, model.Namespaces, xtw);
+            didWriteExtensionStartElement = WriteExtensionChildElements(baseElement, didWriteExtensionStartElement, xtw);
+            didWriteExtensionStartElement = WriteListeners(baseElement, didWriteExtensionStartElement, xtw);
+            didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(baseElement, didWriteExtensionStartElement, model.Namespaces, xtw);
             if (baseElement is Activity)
             {
-                FailedJobRetryCountExport.writeFailedJobRetryCount(baseElement as Activity, xtw);
+                FailedJobRetryCountExport.WriteFailedJobRetryCount(baseElement as Activity, xtw);
             }
 
             if (didWriteExtensionStartElement)
             {
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
 
             if (baseElement is Activity)
             {
-                MultiInstanceExport.writeMultiInstance(baseElement as Activity, xtw);
-
+                MultiInstanceExport.WriteMultiInstance(baseElement as Activity, xtw);
             }
 
-            writeAdditionalChildElements(baseElement, model, xtw);
+            WriteAdditionalChildElements(baseElement, model, xtw);
 
-            xtw.writeEndElement();
+            xtw.WriteEndElement();
         }
 
         public abstract Type BpmnElementType { get; }
 
-        protected internal abstract BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model);
+        protected internal abstract BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model);
 
         public abstract string XMLElementName { get; }
 
-        protected internal abstract void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw);
+        protected internal abstract void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw);
 
-        protected internal virtual bool writeExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        protected internal virtual bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             return didWriteExtensionStartElement;
         }
 
-        protected internal abstract void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw);
+        protected internal abstract void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw);
 
         // To BpmnModel converter convenience methods
-        protected internal virtual void parseChildElements(string elementName, BaseElement parentElement, BpmnModel model, XMLStreamReader xtr)
+        protected internal virtual void ParseChildElements(string elementName, BaseElement parentElement, BpmnModel model, XMLStreamReader xtr)
         {
-            parseChildElements(elementName, parentElement, null, model, xtr);
+            ParseChildElements(elementName, parentElement, null, model, xtr);
         }
 
-        protected internal virtual void parseChildElements(string elementName, BaseElement parentElement, IDictionary<string, BaseChildElementParser> additionalParsers, BpmnModel model, XMLStreamReader xtr)
+        protected internal virtual void ParseChildElements(string elementName, BaseElement parentElement, IDictionary<string, BaseChildElementParser> additionalParsers, BpmnModel model, XMLStreamReader xtr)
         {
 
             IDictionary<string, BaseChildElementParser> childParsers = new Dictionary<string, BaseChildElementParser>();
             if (additionalParsers != null)
             {
-                childParsers.putAll(additionalParsers);
+                childParsers.PutAll(additionalParsers);
             }
-            BpmnXMLUtil.parseChildElements(elementName, parentElement, xtr, childParsers, model);
+            BpmnXMLUtil.ParseChildElements(elementName, parentElement, xtr, childParsers, model);
         }
 
-        protected internal virtual ExtensionElement parseExtensionElement(XMLStreamReader xtr)
+        protected internal virtual ExtensionElement ParseExtensionElement(XMLStreamReader xtr)
         {
-            ExtensionElement extensionElement = new ExtensionElement();
-            extensionElement.Name = xtr.LocalName;
+            ExtensionElement extensionElement = new ExtensionElement
+            {
+                Name = xtr.LocalName
+            };
             if (!string.IsNullOrWhiteSpace(xtr.NamespaceURI))
             {
                 extensionElement.Namespace = xtr.NamespaceURI;
@@ -252,14 +254,14 @@ namespace org.activiti.bpmn.converter
                 extensionElement.NamespacePrefix = xtr.Prefix;
             }
 
-            BpmnXMLUtil.addCustomAttributes(xtr, extensionElement, defaultElementAttributes);
+            BpmnXMLUtil.AddCustomAttributes(xtr, extensionElement, defaultElementAttributes);
 
             bool readyWithExtensionElement = false;
-            while (!readyWithExtensionElement && xtr.hasNext())
+            while (!readyWithExtensionElement && xtr.HasNext())
             {
                 //xtr.next();
 
-                if (xtr.NodeType == System.Xml.XmlNodeType.CDATA)
+                if (xtr.NodeType == XmlNodeType.CDATA)
                 {
                     if (!string.IsNullOrWhiteSpace(xtr.Value?.Trim()))
                     {
@@ -268,8 +270,8 @@ namespace org.activiti.bpmn.converter
                 }
                 else if (xtr.IsStartElement())
                 {
-                    ExtensionElement childExtensionElement = parseExtensionElement(xtr);
-                    extensionElement.addChildElement(childExtensionElement);
+                    ExtensionElement childExtensionElement = ParseExtensionElement(xtr);
+                    extensionElement.AddChildElement(childExtensionElement);
                 }
                 else if (xtr.EndElement && string.Compare(extensionElement.Name, xtr.LocalName, true) == 0)
                 {
@@ -284,10 +286,10 @@ namespace org.activiti.bpmn.converter
             return extensionElement;
         }
 
-        protected internal virtual bool parseAsync(XMLStreamReader xtr)
+        protected internal virtual bool ParseAsync(XMLStreamReader xtr)
         {
             bool async = false;
-            string asyncString = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ASYNCHRONOUS);
+            string asyncString = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ASYNCHRONOUS);
             if (BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE.Equals(asyncString, StringComparison.CurrentCultureIgnoreCase))
             {
                 async = true;
@@ -295,10 +297,10 @@ namespace org.activiti.bpmn.converter
             return async;
         }
 
-        protected internal virtual bool parseNotExclusive(XMLStreamReader xtr)
+        protected internal virtual bool ParseNotExclusive(XMLStreamReader xtr)
         {
             bool notExclusive = false;
-            string exclusiveString = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_ACTIVITY_EXCLUSIVE);
+            string exclusiveString = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_ACTIVITY_EXCLUSIVE);
             if (BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE.Equals(exclusiveString, StringComparison.CurrentCultureIgnoreCase))
             {
                 notExclusive = true;
@@ -306,10 +308,10 @@ namespace org.activiti.bpmn.converter
             return notExclusive;
         }
 
-        protected internal virtual bool parseForCompensation(XMLStreamReader xtr)
+        protected internal virtual bool ParseForCompensation(XMLStreamReader xtr)
         {
             bool isForCompensation = false;
-            string compensationString = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ISFORCOMPENSATION);
+            string compensationString = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ISFORCOMPENSATION);
             if (BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE.Equals(compensationString, StringComparison.CurrentCultureIgnoreCase))
             {
                 isForCompensation = true;
@@ -317,19 +319,19 @@ namespace org.activiti.bpmn.converter
             return isForCompensation;
         }
 
-        protected internal virtual IList<string> parseDelimitedList(string expression)
+        protected internal virtual IList<string> ParseDelimitedList(string expression)
         {
-            return BpmnXMLUtil.parseDelimitedList(expression);
+            return BpmnXMLUtil.ParseDelimitedList(expression);
         }
 
         // To XML converter convenience methods
 
-        protected internal virtual string convertToDelimitedString(IList<string> stringList)
+        protected internal virtual string ConvertToDelimitedString(IList<string> stringList)
         {
-            return BpmnXMLUtil.convertToDelimitedString(stringList);
+            return BpmnXMLUtil.ConvertToDelimitedString(stringList);
         }
 
-        protected internal virtual bool writeFormProperties(FlowElement flowElement, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        protected internal virtual bool WriteFormProperties(FlowElement flowElement, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
 
             IList<FormProperty> propertyList = null;
@@ -353,44 +355,44 @@ namespace org.activiti.bpmn.converter
 
                         if (!didWriteExtensionStartElement)
                         {
-                            xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EXTENSIONS);
+                            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                             didWriteExtensionStartElement = true;
                         }
 
-                        xtw.writeStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_FORMPROPERTY, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-                        writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_ID, property.Id, xtw);
+                        xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_FORMPROPERTY, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                        WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_ID, property.Id, xtw);
 
-                        writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_NAME, property.Name, xtw);
-                        writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_TYPE, property.Type, xtw);
-                        writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_EXPRESSION, property.Expression, xtw);
-                        writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_VARIABLE, property.Variable, xtw);
-                        writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_DEFAULT, property.DefaultExpression, xtw);
-                        writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_DATEPATTERN, property.DatePattern, xtw);
+                        WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_NAME, property.Name, xtw);
+                        WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_TYPE, property.Type, xtw);
+                        WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_EXPRESSION, property.Expression, xtw);
+                        WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_VARIABLE, property.Variable, xtw);
+                        WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_DEFAULT, property.DefaultExpression, xtw);
+                        WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_DATEPATTERN, property.DatePattern, xtw);
                         if (!property.Readable)
                         {
-                            writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_READABLE, BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE, xtw);
+                            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_READABLE, BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE, xtw);
                         }
                         if (!property.Writeable)
                         {
-                            writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_WRITABLE, BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE, xtw);
+                            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_WRITABLE, BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE, xtw);
                         }
                         if (property.Required)
                         {
-                            writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_REQUIRED, BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE, xtw);
+                            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_REQUIRED, BpmnXMLConstants.ATTRIBUTE_VALUE_TRUE, xtw);
                         }
 
                         foreach (FormValue formValue in property.FormValues)
                         {
                             if (!string.IsNullOrWhiteSpace(formValue.Id))
                             {
-                                xtw.writeStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_VALUE, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-                                xtw.writeAttribute(BpmnXMLConstants.ATTRIBUTE_ID, formValue.Id);
-                                xtw.writeAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, formValue.Name);
-                                xtw.writeEndElement();
+                                xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_VALUE, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                                xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, formValue.Id);
+                                xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, formValue.Name);
+                                xtw.WriteEndElement();
                             }
                         }
 
-                        xtw.writeEndElement();
+                        xtw.WriteEndElement();
                     }
                 }
             }
@@ -398,131 +400,131 @@ namespace org.activiti.bpmn.converter
             return didWriteExtensionStartElement;
         }
 
-        protected internal virtual bool writeListeners(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        protected internal virtual bool WriteListeners(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
-            return ActivitiListenerExport.writeListeners(element, didWriteExtensionStartElement, xtw);
+            return ActivitiListenerExport.WriteListeners(element, didWriteExtensionStartElement, xtw);
         }
 
-        protected internal virtual void writeEventDefinitions(Event parentEvent, IList<EventDefinition> eventDefinitions, BpmnModel model, XMLStreamWriter xtw)
+        protected internal virtual void WriteEventDefinitions(Event parentEvent, IList<EventDefinition> eventDefinitions, BpmnModel model, XMLStreamWriter xtw)
         {
             foreach (EventDefinition eventDefinition in eventDefinitions)
             {
                 if (eventDefinition is TimerEventDefinition)
                 {
-                    writeTimerDefinition(parentEvent, (TimerEventDefinition)eventDefinition, xtw);
+                    WriteTimerDefinition(parentEvent, (TimerEventDefinition)eventDefinition, xtw);
                 }
                 else if (eventDefinition is SignalEventDefinition)
                 {
-                    writeSignalDefinition(parentEvent, (SignalEventDefinition)eventDefinition, xtw);
+                    WriteSignalDefinition(parentEvent, (SignalEventDefinition)eventDefinition, xtw);
                 }
                 else if (eventDefinition is MessageEventDefinition)
                 {
-                    writeMessageDefinition(parentEvent, (MessageEventDefinition)eventDefinition, model, xtw);
+                    WriteMessageDefinition(parentEvent, (MessageEventDefinition)eventDefinition, model, xtw);
                 }
                 else if (eventDefinition is ErrorEventDefinition)
                 {
-                    writeErrorDefinition(parentEvent, (ErrorEventDefinition)eventDefinition, xtw);
+                    WriteErrorDefinition(parentEvent, (ErrorEventDefinition)eventDefinition, xtw);
                 }
                 else if (eventDefinition is TerminateEventDefinition)
                 {
-                    writeTerminateDefinition(parentEvent, (TerminateEventDefinition)eventDefinition, xtw);
+                    WriteTerminateDefinition(parentEvent, (TerminateEventDefinition)eventDefinition, xtw);
                 }
                 else if (eventDefinition is CancelEventDefinition)
                 {
-                    writeCancelDefinition(parentEvent, (CancelEventDefinition)eventDefinition, xtw);
+                    WriteCancelDefinition(parentEvent, (CancelEventDefinition)eventDefinition, xtw);
                 }
                 else if (eventDefinition is CompensateEventDefinition)
                 {
-                    writeCompensateDefinition(parentEvent, (CompensateEventDefinition)eventDefinition, xtw);
+                    WriteCompensateDefinition(parentEvent, (CompensateEventDefinition)eventDefinition, xtw);
                 }
             }
         }
 
 
-        protected internal virtual void writeTimerDefinition(Event parentEvent, TimerEventDefinition timerDefinition, XMLStreamWriter xtw)
+        protected internal virtual void WriteTimerDefinition(Event parentEvent, TimerEventDefinition timerDefinition, XMLStreamWriter xtw)
         {
-            xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EVENT_TIMERDEFINITION);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_TIMERDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
             if (!string.IsNullOrWhiteSpace(timerDefinition.CalendarName))
             {
-                writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_CALENDAR_NAME, timerDefinition.CalendarName, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_CALENDAR_NAME, timerDefinition.CalendarName, xtw);
             }
-            bool didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(timerDefinition, false, xtw);
+            bool didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(timerDefinition, false, xtw);
             if (didWriteExtensionStartElement)
             {
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
             if (!string.IsNullOrWhiteSpace(timerDefinition.TimeDate))
             {
-                xtw.writeStartElement(BpmnXMLConstants.ATTRIBUTE_TIMER_DATE);
-                xtw.writeCharacters(timerDefinition.TimeDate);
-                xtw.writeEndElement();
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ATTRIBUTE_TIMER_DATE, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteCharacters(timerDefinition.TimeDate);
+                xtw.WriteEndElement();
 
             }
             else if (!string.IsNullOrWhiteSpace(timerDefinition.TimeCycle))
             {
-                xtw.writeStartElement(BpmnXMLConstants.ATTRIBUTE_TIMER_CYCLE);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX,  BpmnXMLConstants.ATTRIBUTE_TIMER_CYCLE, BpmnXMLConstants.BPMN2_NAMESPACE);
 
                 if (!string.IsNullOrWhiteSpace(timerDefinition.EndDate))
                 {
-                    xtw.writeAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_END_DATE, timerDefinition.EndDate);
+                    xtw.WriteAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_END_DATE, timerDefinition.EndDate);
                 }
 
-                xtw.writeCharacters(timerDefinition.TimeCycle);
-                xtw.writeEndElement();
+                xtw.WriteCharacters(timerDefinition.TimeCycle);
+                xtw.WriteEndElement();
 
             }
             else if (!string.IsNullOrWhiteSpace(timerDefinition.TimeDuration))
             {
-                xtw.writeStartElement(BpmnXMLConstants.ATTRIBUTE_TIMER_DURATION);
-                xtw.writeCharacters(timerDefinition.TimeDuration);
-                xtw.writeEndElement();
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ATTRIBUTE_TIMER_DURATION, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteCharacters(timerDefinition.TimeDuration);
+                xtw.WriteEndElement();
             }
 
-            xtw.writeEndElement();
+            xtw.WriteEndElement();
         }
 
-        protected internal virtual void writeSignalDefinition(Event parentEvent, SignalEventDefinition signalDefinition, XMLStreamWriter xtw)
+        protected internal virtual void WriteSignalDefinition(Event parentEvent, SignalEventDefinition signalDefinition, XMLStreamWriter xtw)
         {
-            xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EVENT_SIGNALDEFINITION);
-            writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_SIGNAL_REF, signalDefinition.SignalRef, xtw);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_SIGNALDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_SIGNAL_REF, signalDefinition.SignalRef, xtw);
             if (parentEvent is ThrowEvent && signalDefinition.Async)
             {
-                BpmnXMLUtil.writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ASYNCHRONOUS, "true", xtw);
+                BpmnXMLUtil.WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_ACTIVITY_ASYNCHRONOUS, "true", xtw);
             }
-            bool didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(signalDefinition, false, xtw);
+            bool didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(signalDefinition, false, xtw);
             if (didWriteExtensionStartElement)
             {
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
-            xtw.writeEndElement();
+            xtw.WriteEndElement();
         }
 
-        protected internal virtual void writeCancelDefinition(Event parentEvent, CancelEventDefinition cancelEventDefinition, XMLStreamWriter xtw)
+        protected internal virtual void WriteCancelDefinition(Event parentEvent, CancelEventDefinition cancelEventDefinition, XMLStreamWriter xtw)
         {
-            xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EVENT_CANCELDEFINITION);
-            bool didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(cancelEventDefinition, false, xtw);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_CANCELDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+            bool didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(cancelEventDefinition, false, xtw);
             if (didWriteExtensionStartElement)
             {
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
-            xtw.writeEndElement();
+            xtw.WriteEndElement();
         }
 
-        protected internal virtual void writeCompensateDefinition(Event parentEvent, CompensateEventDefinition compensateEventDefinition, XMLStreamWriter xtw)
+        protected internal virtual void WriteCompensateDefinition(Event parentEvent, CompensateEventDefinition compensateEventDefinition, XMLStreamWriter xtw)
         {
-            xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EVENT_COMPENSATEDEFINITION);
-            writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_COMPENSATE_ACTIVITYREF, compensateEventDefinition.ActivityRef, xtw);
-            bool didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(compensateEventDefinition, false, xtw);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_COMPENSATEDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_COMPENSATE_ACTIVITYREF, compensateEventDefinition.ActivityRef, xtw);
+            bool didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(compensateEventDefinition, false, xtw);
             if (didWriteExtensionStartElement)
             {
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
-            xtw.writeEndElement();
+            xtw.WriteEndElement();
         }
 
-        protected internal virtual void writeMessageDefinition(Event parentEvent, MessageEventDefinition messageDefinition, BpmnModel model, XMLStreamWriter xtw)
+        protected internal virtual void WriteMessageDefinition(Event parentEvent, MessageEventDefinition messageDefinition, BpmnModel model, XMLStreamWriter xtw)
         {
-            xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EVENT_MESSAGEDEFINITION);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_MESSAGEDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
 
             string messageRef = messageDefinition.MessageRef;
             if (!string.IsNullOrWhiteSpace(messageRef))
@@ -531,13 +533,13 @@ namespace org.activiti.bpmn.converter
                 if (messageRef.StartsWith(model.TargetNamespace, StringComparison.Ordinal))
                 {
                     messageRef = messageRef.Replace(model.TargetNamespace, "");
-                    messageRef = messageRef.replaceFirst(":", "");
+                    messageRef = messageRef.ReplaceFirst(":", "");
                 }
                 else
                 {
                     foreach (string prefix in model.Namespaces.Keys)
                     {
-                        string @namespace = model.getNamespace(prefix);
+                        string @namespace = model.GetNamespace(prefix);
                         if (messageRef.StartsWith(@namespace, StringComparison.Ordinal))
                         {
                             messageRef = messageRef.Replace(model.TargetNamespace, "");
@@ -546,57 +548,57 @@ namespace org.activiti.bpmn.converter
                     }
                 }
             }
-            writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_MESSAGE_REF, messageRef, xtw);
-            bool didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(messageDefinition, false, xtw);
+            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_MESSAGE_REF, messageRef, xtw);
+            bool didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(messageDefinition, false, xtw);
             if (didWriteExtensionStartElement)
             {
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
-            xtw.writeEndElement();
+            xtw.WriteEndElement();
         }
 
-        protected internal virtual void writeErrorDefinition(Event parentEvent, ErrorEventDefinition errorDefinition, XMLStreamWriter xtw)
+        protected internal virtual void WriteErrorDefinition(Event parentEvent, ErrorEventDefinition errorDefinition, XMLStreamWriter xtw)
         {
-            xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EVENT_ERRORDEFINITION);
-            writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ERROR_REF, errorDefinition.ErrorCode, xtw);
-            bool didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(errorDefinition, false, xtw);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_ERRORDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
+            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ERROR_REF, errorDefinition.ErrorCode, xtw);
+            bool didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(errorDefinition, false, xtw);
             if (didWriteExtensionStartElement)
             {
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
-            xtw.writeEndElement();
+            xtw.WriteEndElement();
         }
 
-        protected internal virtual void writeTerminateDefinition(Event parentEvent, TerminateEventDefinition terminateDefinition, XMLStreamWriter xtw)
+        protected internal virtual void WriteTerminateDefinition(Event parentEvent, TerminateEventDefinition terminateDefinition, XMLStreamWriter xtw)
         {
-            xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EVENT_TERMINATEDEFINITION);
+            xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EVENT_TERMINATEDEFINITION, BpmnXMLConstants.BPMN2_NAMESPACE);
 
             if (terminateDefinition.TerminateAll)
             {
-                writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TERMINATE_ALL, "true", xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TERMINATE_ALL, "true", xtw);
             }
 
             if (terminateDefinition.TerminateMultiInstance)
             {
-                writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TERMINATE_MULTI_INSTANCE, "true", xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TERMINATE_MULTI_INSTANCE, "true", xtw);
             }
 
-            bool didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(terminateDefinition, false, xtw);
+            bool didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(terminateDefinition, false, xtw);
             if (didWriteExtensionStartElement)
             {
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
-            xtw.writeEndElement();
+            xtw.WriteEndElement();
         }
 
-        protected internal virtual void writeDefaultAttribute(string attributeName, string value, XMLStreamWriter xtw)
+        protected internal virtual void WriteDefaultAttribute(string attributeName, string value, XMLStreamWriter xtw)
         {
-            BpmnXMLUtil.writeDefaultAttribute(attributeName, value, xtw);
+            BpmnXMLUtil.WriteDefaultAttribute(attributeName, value, xtw);
         }
 
-        protected internal virtual void writeQualifiedAttribute(string attributeName, string value, XMLStreamWriter xtw)
+        protected internal virtual void WriteQualifiedAttribute(string attributeName, string value, XMLStreamWriter xtw)
         {
-            BpmnXMLUtil.writeQualifiedAttribute(attributeName, value, xtw);
+            BpmnXMLUtil.WriteQualifiedAttribute(attributeName, value, xtw);
         }
     }
 

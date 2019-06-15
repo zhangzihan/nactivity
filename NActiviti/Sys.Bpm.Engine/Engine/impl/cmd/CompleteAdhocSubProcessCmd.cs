@@ -36,10 +36,10 @@ namespace org.activiti.engine.impl.cmd
             this.executionId = executionId;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
-            IExecutionEntity execution = executionEntityManager.findById<IExecutionEntity>(executionId);
+            IExecutionEntity execution = executionEntityManager.FindById<IExecutionEntity>(executionId);
             if (execution == null)
             {
                 throw new ActivitiObjectNotFoundException("No execution found for id '" + executionId + "'", typeof(IExecutionEntity));
@@ -56,12 +56,12 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiException("Ad-hoc sub process has running child executions that need to be completed first");
             }
 
-            IExecutionEntity outgoingFlowExecution = executionEntityManager.createChildExecution(execution.Parent);
+            IExecutionEntity outgoingFlowExecution = executionEntityManager.CreateChildExecution(execution.Parent);
             outgoingFlowExecution.CurrentFlowElement = execution.CurrentFlowElement;
 
-            executionEntityManager.deleteExecutionAndRelatedData(execution, null, false);
+            executionEntityManager.DeleteExecutionAndRelatedData(execution, null, false);
 
-            Context.Agenda.planTakeOutgoingSequenceFlowsOperation(outgoingFlowExecution, true);
+            Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(outgoingFlowExecution, true);
 
             return null;
         }

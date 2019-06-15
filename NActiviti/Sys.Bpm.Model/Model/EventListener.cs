@@ -75,10 +75,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            EventListener clone = new EventListener();
-            clone.Values = this;
+            EventListener clone = new EventListener
+            {
+                Values = this
+            };
             return clone;
         }
 

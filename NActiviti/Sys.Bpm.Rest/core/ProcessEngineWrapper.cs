@@ -9,13 +9,12 @@ using org.activiti.cloud.services.events.listeners;
 using org.activiti.engine;
 using org.activiti.engine.history;
 using org.activiti.engine.impl;
-using org.activiti.engine.impl.persistence.entity;
 using org.activiti.engine.repository;
 using org.activiti.engine.runtime;
 using org.activiti.engine.task;
 using org.activiti.services.api.commands;
 using org.springframework.context;
-using Sys;
+using Sys.Workflow;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,7 +25,7 @@ namespace org.activiti.cloud.services.core
     /// </summary>
     public class ProcessEngineWrapper
     {
-        private static readonly ILogger LOGGER = ProcessEngineServiceProvider.LoggerService<ProcessEngineWrapper>();
+        private readonly ILogger logger = null;
 
         private readonly ProcessInstanceConverter processInstanceConverter;
         private readonly IRuntimeService runtimeService;
@@ -54,7 +53,8 @@ namespace org.activiti.cloud.services.core
             AuthenticationWrapper authenticationWrapper,
             IApplicationEventPublisher eventPublisher,
             IProcessEngine processEngine,
-            HistoricInstanceConverter historicInstanceConverter)
+            HistoricInstanceConverter historicInstanceConverter,
+            ILoggerFactory loggerFactory)
         {
             this.processEngine = processEngine;
             this.processInstanceConverter = processInstanceConverter;
@@ -71,28 +71,29 @@ namespace org.activiti.cloud.services.core
             this.authenticationWrapper = authenticationWrapper;
             this.eventPublisher = eventPublisher;
             this.historicInstanceConverter = historicInstanceConverter;
+            logger = loggerFactory.CreateLogger<ProcessEngineWrapper>();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<ProcessInstance> getProcessInstances(Pageable pageable)
+        public virtual IPage<ProcessInstance> GetProcessInstances(Pageable pageable)
         {
-            return pageableProcessInstanceService.getProcessInstances(pageable);
+            return pageableProcessInstanceService.GetProcessInstances(pageable);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<ProcessInstance> getAllProcessInstances(Pageable pageable)
+        public virtual IPage<ProcessInstance> GetAllProcessInstances(Pageable pageable)
         {
-            return pageableProcessInstanceService.getAllProcessInstances(pageable);
+            return pageableProcessInstanceService.GetAllProcessInstances(pageable);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual ProcessInstance startProcess(IStartProcessInstanceCmd cmd)
+        public virtual ProcessInstance[] StartProcess(IStartProcessInstanceCmd[] cmds)
         {
             //if (!securityService.canWrite(processDefinitionKey))
             //{
@@ -100,41 +101,43 @@ namespace org.activiti.cloud.services.core
             //    throw new ActivitiForbiddenException("Operation not permitted for " + processDefinitionKey);
             //}
 
-            IProcessInstance processInstance = runtimeService.startProcessInstanceByCmd(cmd);
+            IProcessInstance[] processInstance = runtimeService.StartProcessInstanceByCmd(cmds);
 
-            return processInstanceConverter.from(processInstance);
+            return processInstanceConverter.From(processInstance).ToArray();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual void signal(SignalCmd signalCmd)
+        public virtual void Signal(SignalCmd signalCmd)
         {
             //TODO: plan is to restrict access to events using a new security policy on events
             // - that's another piece of work though so for now no security here
 
-            runtimeService.signalEventReceived(signalCmd.Name, signalCmd.InputVariables);
-            eventPublisher.publishEvent(signalCmd);
+            runtimeService.SignalEventReceived(signalCmd.Name, signalCmd.InputVariables);
+            eventPublisher.PublishEvent(signalCmd);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual void suspend(SuspendProcessInstanceCmd suspendProcessInstanceCmd)
+        public virtual ProcessInstance Suspend(SuspendProcessInstanceCmd suspendProcessInstanceCmd)
         {
-            verifyCanWriteToProcessInstance(suspendProcessInstanceCmd.ProcessInstanceId);
-            runtimeService.suspendProcessInstanceById(suspendProcessInstanceCmd.ProcessInstanceId);
+            VerifyCanWriteToProcessInstance(suspendProcessInstanceCmd.ProcessInstanceId);
+            runtimeService.SuspendProcessInstanceById(suspendProcessInstanceCmd.ProcessInstanceId);
+
+            return GetProcessInstanceById(suspendProcessInstanceCmd.ProcessInstanceId);
         }
 
-        private void verifyCanWriteToProcessInstance(string processInstanceId)
+        private void VerifyCanWriteToProcessInstance(string processInstanceId)
         {
-            ProcessInstance processInstance = getProcessInstanceById(processInstanceId);
+            ProcessInstance processInstance = GetProcessInstanceById(processInstanceId);
             if (processInstance == null)
             {
                 throw new ActivitiException("Unable to find process instance for the given id: " + processInstanceId);
             }
 
-            IProcessDefinition processDefinition = repositoryService.getProcessDefinition(processInstance.ProcessDefinitionId);
+            IProcessDefinition processDefinition = repositoryService.GetProcessDefinition(processInstance.ProcessDefinitionId);
             if (processDefinition == null)
             {
                 throw new ActivitiException("Unable to find process definition for the given id: " + processInstance.ProcessDefinitionId);
@@ -150,178 +153,243 @@ namespace org.activiti.cloud.services.core
         /// <summary>
         /// 
         /// </summary>
-        public virtual void activate(ActivateProcessInstanceCmd activateProcessInstanceCmd)
+        public virtual ProcessInstance Activate(ActivateProcessInstanceCmd activateProcessInstanceCmd)
         {
-            verifyCanWriteToProcessInstance(activateProcessInstanceCmd.ProcessInstanceId);
-            runtimeService.activateProcessInstanceById(activateProcessInstanceCmd.ProcessInstanceId);
+            VerifyCanWriteToProcessInstance(activateProcessInstanceCmd.ProcessInstanceId);
+            runtimeService.ActivateProcessInstanceById(activateProcessInstanceCmd.ProcessInstanceId);
+
+            return GetProcessInstanceById(activateProcessInstanceCmd.ProcessInstanceId);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual ProcessInstance getProcessInstanceById(string processInstanceId)
+        public virtual ProcessInstance GetProcessInstanceById(string processInstanceId)
         {
-            IProcessInstanceQuery query = runtimeService.createProcessInstanceQuery();
-            query = query.processInstanceId(processInstanceId);
-            IProcessInstance processInstance = query.singleResult();
-            return processInstanceConverter.from(processInstance);
+            IProcessInstance processInstance = (runtimeService as ServiceImpl).CommandExecutor.Execute(new engine.impl.cmd.GetProcessInstanceByIdCmd(processInstanceId));
+
+            return processInstanceConverter.From(processInstance);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual HistoricInstance getHistoryProcessInstanceById(string processInstanceId)
+        public virtual HistoricInstance GetHistoryProcessInstanceById(string processInstanceId)
         {
-            IHistoricProcessInstanceQuery query = this.historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId);
+            IHistoricProcessInstance processInstance = (this.historyService as ServiceImpl).CommandExecutor.Execute(new engine.impl.cmd.GetHistoricProcessInstanceByIdCmd(processInstanceId));
 
-            IHistoricProcessInstance processInstance = query.singleResult();
-
-            return historicInstanceConverter.from(processInstance);
+            return historicInstanceConverter.From(processInstance);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual IList<string> getActiveActivityIds(string executionId)
+        /// <param name="processInstanceId"></param>
+        /// <param name="taskId"></param>
+        /// <returns></returns>
+        public IList<HistoricVariableInstance> GetHistoricVariables(string processInstanceId, string taskId)
         {
-            return runtimeService.getActiveActivityIds(executionId);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IPage<TaskModel> getTasks(Pageable pageable)
-        {
-            return pageableTaskService.getTasks(pageable);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-
-        public virtual IPage<TaskModel> getAllTasks(Pageable pageable)
-        {
-            return pageableTaskService.getAllTasks(pageable);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual TaskModel getTaskById(string taskId)
-        {
-            ITask task = taskService.createTaskQuery().taskId(taskId).singleResult();
-
-            return taskConverter.from(task);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual TaskModel claimTask(ClaimTaskCmd claimTaskCmd)
-        {
-            taskService.claim(claimTaskCmd.TaskId, claimTaskCmd.Assignee);
-
-            return taskConverter.from(taskService.createTaskQuery().taskId(claimTaskCmd.TaskId).singleResult());
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual TaskModel releaseTask(ReleaseTaskCmd releaseTaskCmd)
-        {
-            taskService.unclaim(releaseTaskCmd.TaskId);
-
-            return taskConverter.from(taskService.createTaskQuery().taskId(releaseTaskCmd.TaskId).singleResult());
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void completeTask(CompleteTaskCmd completeTaskCmd)
-        {
-            if (completeTaskCmd != null)
+            return GetHistoricVariables(new ProcessVariablesQuery
             {
-                IDictionary<string, object> variables = new Dictionary<string, object>(completeTaskCmd.OutputVariables);
-                if (completeTaskCmd.RuntimeAssigneeUser != null && completeTaskCmd.RuntimeAssigneeUser.Users?.Length > 0)
+                ProcessInstanceId = processInstanceId,
+                TaskId = taskId
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstanceId"></param>
+        /// <param name="taskId"></param>
+        /// <returns></returns>
+        public IList<HistoricVariableInstance> GetHistoricVariables(ProcessVariablesQuery qo)
+        {
+            var query = this.historyService.CreateHistoricVariableInstanceQuery()
+                .SetProcessInstanceId(qo.ProcessInstanceId)
+                .SetTaskId(qo.TaskId)
+                .SetVariableName(qo.VariableName);
+
+            if (qo.ExcludeTaskVariables)
+            {
+                query.SetExcludeTaskVariables();
+            }
+
+            IList<IHistoricVariableInstance> variableInstances = query.List();
+
+            IList<HistoricVariableInstance> resourcesList = new List<HistoricVariableInstance>();
+            foreach (IHistoricVariableInstance variableInstance in variableInstances)
+            {
+                resourcesList.Add(new HistoricVariableInstance(variableInstance.ProcessInstanceId, variableInstance.VariableName, variableInstance.VariableTypeName, variableInstance.Value, variableInstance.TaskId));
+            }
+
+            return resourcesList;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IList<string> GetActiveActivityIds(string executionId)
+        {
+            return runtimeService.GetActiveActivityIds(executionId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IPage<TaskModel> GetTasks(Pageable pageable)
+        {
+            return pageableTaskService.GetTasks(pageable);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+
+        public virtual IPage<TaskModel> GetAllTasks(Pageable pageable)
+        {
+            return pageableTaskService.GetAllTasks(pageable);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual TaskModel GetTaskById(string taskId)
+        {
+            ITask task = (taskService as ServiceImpl).CommandExecutor.Execute(new engine.impl.cmd.GetTaskByIdCmd(taskId));
+
+            return taskConverter.From(task);
+        }
+
+        public virtual TaskModel[] ReassignTaskUsers(ReassignTaskUserCmd cmd)
+        {
+            ITask[] tasks = taskService.ReassignTaskUsers(cmd.Assignees);
+
+            return taskConverter.From(tasks).ToArray();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual TaskModel ClaimTask(ClaimTaskCmd claimTaskCmd)
+        {
+            taskService.Claim(claimTaskCmd.TaskId, claimTaskCmd.Assignee);
+
+            return taskConverter.From(taskService.CreateTaskQuery().SetTaskId(claimTaskCmd.TaskId).SingleResult());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual TaskModel ReleaseTask(ReleaseTaskCmd cmd)
+        {
+            ITask task = (taskService as ServiceImpl).CommandExecutor.Execute(new engine.impl.cmd.AssigneeReleaseTaskCmd(cmd.TaskId, cmd.BusinessKey, cmd.Assignee, cmd.Reason));
+
+            return taskConverter.From(taskService.CreateTaskQuery()
+                .SetTaskId(task.Id)
+                .SingleResult());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void CompleteTask(CompleteTaskCmd cmd)
+        {
+            if (cmd != null)
+            {
+                IDictionary<string, object> variables = new Dictionary<string, object>(cmd.OutputVariables);
+                if (cmd.RuntimeAssigneeUser != null && (cmd.RuntimeAssigneeUser.Users?.Length).GetValueOrDefault() > 0)
                 {
-                    variables.Add(BpmnXMLConstants.RUNTIME_ASSIGNEE_USER_VARIABLE_NAME, completeTaskCmd.RuntimeAssigneeUser);
+                    variables.Add(BpmnXMLConstants.RUNTIME_ASSIGNEE_USER_VARIABLE_NAME, cmd.RuntimeAssigneeUser);
                 }
-                taskService.complete(completeTaskCmd.TaskId, variables);
-            }
-        }
-        /// <summary>
-        /// 
-        /// </summary>
 
-        public virtual SetTaskVariablesCmd TaskVariables
-        {
-            set
-            {
-                taskService.setVariables(value.TaskId, value.Variables);
+                if (string.IsNullOrWhiteSpace(cmd.TaskId) == false)
+                {
+                    taskService.Complete(cmd.TaskId, variables, cmd.LocalScope);
+                }
+                else if (string.IsNullOrWhiteSpace(cmd.BusinessKey) == false && string.IsNullOrWhiteSpace(cmd.Assignee) == false)
+                {
+                    taskService.Complete(cmd.BusinessKey, cmd.Assignee, cmd.Comment, variables, cmd.LocalScope);
+                }
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual SetTaskVariablesCmd TaskVariablesLocal
+        public virtual void CompleteApprovalTask(CompleteTaskCmd completeTaskCmd)
         {
-            set
-            {
-                taskService.setVariablesLocal(value.TaskId, value.Variables);
-            }
+            IDictionary<string, object> variables = new Dictionary<string, object>(completeTaskCmd.OutputVariables);
+
+            variables.TryGetValue(WorkflowVariable.GLOBAL_APPROVALED_COMMENTS, out var comment);
+
+            taskService.Complete(completeTaskCmd.TaskId, comment?.ToString(), variables, completeTaskCmd.LocalScope);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual SetProcessVariablesCmd ProcessVariables
+
+        public void SetTaskVariables(SetTaskVariablesCmd value)
         {
-            set
-            {
-                ProcessInstance processInstance = getProcessInstanceById(value.ProcessId);
-                verifyCanWriteToProcessInstance(processInstance.Id);
-                runtimeService.setVariables(value.ProcessId, value.Variables);
-            }
+            taskService.SetVariables(value.TaskId, value.Variables);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual void removeProcessVariables(RemoveProcessVariablesCmd removeProcessVariablesCmd)
+        public void SetTaskVariablesLocal(SetTaskVariablesCmd value)
         {
-            ProcessInstance processInstance = getProcessInstanceById(removeProcessVariablesCmd.ProcessId);
-            verifyCanWriteToProcessInstance(processInstance.Id);
-            runtimeService.removeVariables(removeProcessVariablesCmd.ProcessId, removeProcessVariablesCmd.VariableNames);
+            taskService.SetVariablesLocal(value.TaskId, value.Variables);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SetProcessVariables(SetProcessVariablesCmd value)
+        {
+            ProcessInstance processInstance = GetProcessInstanceById(value.ProcessId);
+            VerifyCanWriteToProcessInstance(processInstance.Id);
+            runtimeService.SetVariables(value.ProcessId, value.Variables);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void RemoveProcessVariables(RemoveProcessVariablesCmd removeProcessVariablesCmd)
+        {
+            ProcessInstance processInstance = GetProcessInstanceById(removeProcessVariablesCmd.ProcessId);
+            VerifyCanWriteToProcessInstance(processInstance.Id);
+            runtimeService.RemoveVariables(removeProcessVariablesCmd.ProcessId, removeProcessVariablesCmd.VariableNames);
         }
 
         /// <summary>
         /// Delete task by id. </summary>
         /// <param name="taskId"> the task id to delete </param>
-        public virtual void deleteTask(string taskId)
+        public virtual void DeleteTask(string taskId)
         {
-            deleteTask(taskId, "Cancelled by " + authenticationWrapper.AuthenticatedUser.Id);
+            DeleteTask(taskId, "Cancelled by " + authenticationWrapper.AuthenticatedUser.Id);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual void deleteTask(string taskId, string reason, bool cascade = false)
+        public virtual void DeleteTask(string taskId, string reason, bool cascade = false)
         {
-            TaskModel task = getTaskById(taskId);
+            TaskModel task = GetTaskById(taskId);
             if (task == null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find task for the given id: " + taskId);
             }
 
-            checkWritePermissionsOnTask(task);
+            CheckWritePermissionsOnTask(task);
 
-            taskService.deleteTask(taskId, reason, cascade);
+            taskService.DeleteTask(taskId, reason, cascade);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual void checkWritePermissionsOnTask(TaskModel task)
+        public virtual void CheckWritePermissionsOnTask(TaskModel task)
         {
             //TODO: to check the user write permissions on task
         }
@@ -329,11 +397,11 @@ namespace org.activiti.cloud.services.core
         /// <summary>
         /// 
         /// </summary>
-        public virtual TaskModel createNewTask(CreateTaskCmd createTaskCmd)
+        public virtual TaskModel CreateNewTask(CreateTaskCmd createTaskCmd)
         {
-            ITask task = taskService.createNewTask(createTaskCmd.Name, createTaskCmd.Description, createTaskCmd.DueDate, createTaskCmd.Priority, createTaskCmd.ParentTaskId, createTaskCmd.Assignee, securityService.User.TenantId);
+            ITask task = taskService.CreateNewTask(createTaskCmd.Name, createTaskCmd.Description, createTaskCmd.DueDate, createTaskCmd.Priority, createTaskCmd.ParentTaskId, createTaskCmd.Assignee, securityService.User.TenantId);
 
-            return taskConverter.from(task);
+            return taskConverter.From(task);
         }
 
         /// <summary>
@@ -341,20 +409,20 @@ namespace org.activiti.cloud.services.core
         /// </summary>
         /// <param name="cmd"></param>
         /// <returns></returns>
-        public virtual TaskModel[] appendCountersign(AppendCountersignCmd cmd)
+        public virtual TaskModel[] AppendCountersign(AppendCountersignCmd cmd)
         {
-            ITask[] tasks = taskService.addCountersign(cmd.TaskId, cmd.Assignees, securityService.User.TenantId);
+            ITask[] tasks = taskService.AddCountersign(cmd.TaskId, cmd.Assignees, securityService.User.TenantId);
 
-            return tasks.Select(x => taskConverter.from(x)).ToArray();
+            return tasks.Select(x => taskConverter.From(x)).ToArray();
         }
 
         /// <summary>
         /// 终止任务
         /// </summary>
         /// <param name="cmd">终止任务命令</param>
-        public virtual void terminateTask(TerminateTaskCmd cmd)
+        public virtual void TerminateTask(TerminateTaskCmd cmd)
         {
-            taskService.terminateTask(cmd.TaskId, cmd.TerminateReason, true);
+            taskService.TerminateTask(cmd.TaskId, cmd.TerminateReason, true);
         }
 
         /// <summary>
@@ -362,56 +430,56 @@ namespace org.activiti.cloud.services.core
         /// </summary>
         /// <param name="cmd">任务转办命令</param>
         /// <returns></returns>
-        public virtual TaskModel[] transferTask(ITransferTaskCmd cmd)
+        public virtual TaskModel[] TransferTask(ITransferTaskCmd cmd)
         {
-            ITask[] tasks = taskService.transfer(cmd);
+            ITask[] tasks = taskService.Transfer(cmd);
 
-            return tasks.Select(x => taskConverter.from(x)).ToArray();
+            return tasks.Select(x => taskConverter.From(x)).ToArray();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual TaskModel createNewSubtask(string parentTaskId, CreateTaskCmd createSubtaskCmd)
+        public virtual TaskModel CreateNewSubtask(CreateTaskCmd createSubtaskCmd)
         {
-            ITask task = taskService.createNewSubtask(createSubtaskCmd.Name, createSubtaskCmd.Description, createSubtaskCmd.DueDate, createSubtaskCmd.Priority, parentTaskId, createSubtaskCmd.Assignee, securityService.User.TenantId);
+            ITask task = taskService.CreateNewSubtask(createSubtaskCmd.Name, createSubtaskCmd.Description, createSubtaskCmd.DueDate, createSubtaskCmd.Priority, createSubtaskCmd.ParentTaskId, createSubtaskCmd.Assignee, securityService.User.TenantId);
 
-            return taskConverter.from(task);
+            return taskConverter.From(task);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual void terminateProcessInstance(string processInstanceId)
+        public virtual void TerminateProcessInstance(string processInstanceId)
         {
-            terminateProcessInstance(processInstanceId, "Cancelled by " + authenticationWrapper.AuthenticatedUser.Id);
+            TerminateProcessInstance(processInstanceId, "Cancelled by " + authenticationWrapper.AuthenticatedUser.Id);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual void terminateProcessInstance(string processInstanceId, string reason)
+        public virtual void TerminateProcessInstance(string processInstanceId, string reason)
         {
-            verifyCanWriteToProcessInstance(processInstanceId);
-            runtimeService.deleteProcessInstance(processInstanceId, reason ?? "Cancelled");
+            VerifyCanWriteToProcessInstance(processInstanceId);
+            runtimeService.DeleteProcessInstance(processInstanceId, reason ?? "Cancelled");
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual IList<ITask> getSubtasks(string parentTaskId)
+        public virtual IList<ITask> GetSubtasks(string parentTaskId)
         {
-            return taskService.getSubTasks(parentTaskId);
+            return taskService.GetSubTasks(parentTaskId);
         }
 
         /// <summary>
         /// 更新任务
         /// </summary>
-        public virtual TaskModel updateTask(string taskId, IUpdateTaskCmd updateTaskCmd)
+        public virtual TaskModel UpdateTask(IUpdateTaskCmd updateTaskCmd)
         {
-            ITask task = taskService.updateTask(updateTaskCmd);
+            ITask task = taskService.UpdateTask(updateTaskCmd);
 
-            return taskConverter.from(task);
+            return taskConverter.From(task);
         }
     }
 }

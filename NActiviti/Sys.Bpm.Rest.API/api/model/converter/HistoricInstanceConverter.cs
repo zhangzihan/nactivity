@@ -41,7 +41,7 @@ namespace org.activiti.cloud.services.api.model.converter
         /// <summary>
         /// 
         /// </summary>
-        public virtual HistoricInstance from(IHistoricProcessInstance source)
+        public virtual HistoricInstance From(IHistoricProcessInstance source)
         {
             HistoricInstance processInstance = null;
             if (source != null)
@@ -56,7 +56,7 @@ namespace org.activiti.cloud.services.api.model.converter
                     StartDate = source.StartTime,
                     EndDate = source.EndTime,
                     BusinessKey = source.BusinessKey,
-                    Status = calculateStatus(source),
+                    Status = CalculateStatus(source),
                     ProcessDefinitionKey = source.ProcessDefinitionKey,
                     DeleteReason = source.DeleteReason
                 };
@@ -68,7 +68,7 @@ namespace org.activiti.cloud.services.api.model.converter
         /// <summary>
         /// 
         /// </summary>
-        private string calculateStatus(IHistoricProcessInstance source)
+        private string CalculateStatus(IHistoricProcessInstance source)
         {
             if (string.IsNullOrWhiteSpace(source.DeleteReason))
             {
@@ -84,9 +84,9 @@ namespace org.activiti.cloud.services.api.model.converter
         /// <summary>
         /// 
         /// </summary>
-        public virtual IList<HistoricInstance> from(IList<IHistoricProcessInstance> processInstances)
+        public virtual IEnumerable<HistoricInstance> From(IEnumerable<IHistoricProcessInstance> processInstances)
         {
-            return listConverter.from(processInstances, this);
+            return listConverter.From(processInstances, this);
         }
     }
 

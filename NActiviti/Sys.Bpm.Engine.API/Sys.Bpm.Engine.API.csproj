@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <OutputPath>bin</OutputPath>
+    <DocumentationFile>bin\Sys.Bpm.Engine.API.xml</DocumentationFile>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Sys.Bpm.ProcessValidtion\Sys.Bpm.ProcessValidtion.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Engine\impl\db\upgrade\" />
@@ -16,6 +16,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Spring.Core\Spring.Core.csproj" />
+    <ProjectReference Include="..\Sys.Bpm.ProcessValidation\Sys.Bpm.ProcessValidation.csproj" />
   </ItemGroup>
 
 </Project>

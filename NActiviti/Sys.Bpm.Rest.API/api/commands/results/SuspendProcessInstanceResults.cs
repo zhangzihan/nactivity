@@ -10,8 +10,8 @@ namespace org.activiti.cloud.services.api.commands.results
     public class SuspendProcessInstanceResults : ICommandResults
     {
 
-        private string id;
-        private string commandId;
+        private readonly string id;
+        private readonly string commandId;
 
 
         /// <summary>

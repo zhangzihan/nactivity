@@ -15,64 +15,64 @@ namespace org.activiti.engine.impl
         protected internal ICommandExecutor commandExecutor;
 
         protected internal string processInstanceId;
-        protected internal bool includeTasks_Renamed;
-        protected internal bool includeActivities_Renamed;
-        protected internal bool includeVariables_Renamed;
-        protected internal bool includeComments_Renamed;
-        protected internal bool includeVariableUpdates_Renamed;
-        protected internal bool includeFormProperties_Renamed;
+        protected internal bool _includeTasks;
+        protected internal bool _includeActivities;
+        protected internal bool _includeVariables;
+        protected internal bool _includeComments;
+        protected internal bool _includeVariableUpdates;
+        protected internal bool _includeFormProperties;
         public ProcessInstanceHistoryLogQueryImpl(ICommandExecutor commandExecutor, string processInstanceId)
         {
             this.commandExecutor = commandExecutor;
             this.processInstanceId = processInstanceId;
         }
 
-        public virtual IProcessInstanceHistoryLogQuery includeTasks()
+        public virtual IProcessInstanceHistoryLogQuery IncludeTasks()
         {
-            this.includeTasks_Renamed = true;
+            this._includeTasks = true;
             return this;
         }
 
-        public virtual IProcessInstanceHistoryLogQuery includeComments()
+        public virtual IProcessInstanceHistoryLogQuery IncludeComments()
         {
-            this.includeComments_Renamed = true;
+            this._includeComments = true;
             return this;
         }
 
-        public virtual IProcessInstanceHistoryLogQuery includeActivities()
+        public virtual IProcessInstanceHistoryLogQuery IncludeActivities()
         {
-            this.includeActivities_Renamed = true;
+            this._includeActivities = true;
             return this;
         }
 
-        public virtual IProcessInstanceHistoryLogQuery includeVariables()
+        public virtual IProcessInstanceHistoryLogQuery IncludeVariables()
         {
-            this.includeVariables_Renamed = true;
+            this._includeVariables = true;
             return this;
         }
 
-        public virtual IProcessInstanceHistoryLogQuery includeVariableUpdates()
+        public virtual IProcessInstanceHistoryLogQuery IncludeVariableUpdates()
         {
-            this.includeVariableUpdates_Renamed = true;
+            this._includeVariableUpdates = true;
             return this;
         }
 
-        public virtual IProcessInstanceHistoryLogQuery includeFormProperties()
+        public virtual IProcessInstanceHistoryLogQuery IncludeFormProperties()
         {
-            this.includeFormProperties_Renamed = true;
+            this._includeFormProperties = true;
             return this;
         }
 
-        public virtual IProcessInstanceHistoryLog singleResult()
+        public virtual IProcessInstanceHistoryLog SingleResult()
         {
-            return commandExecutor.execute(this);
+            return commandExecutor.Execute(this);
         }
 
-        public virtual IProcessInstanceHistoryLog execute(ICommandContext commandContext)
+        public virtual IProcessInstanceHistoryLog Execute(ICommandContext commandContext)
         {
 
             // Fetch historic process instance
-            IHistoricProcessInstanceEntity historicProcessInstance = commandContext.HistoricProcessInstanceEntityManager.findById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("id", processInstanceId));
+            IHistoricProcessInstanceEntity historicProcessInstance = commandContext.HistoricProcessInstanceEntityManager.FindById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("id", processInstanceId));
 
             if (historicProcessInstance == null)
             {
@@ -85,23 +85,23 @@ namespace org.activiti.engine.impl
             // Add events, based on query settings
 
             // Tasks
-            if (includeTasks_Renamed)
+            if (_includeTasks)
             {
-                IList<IHistoricData> tasks = commandContext.HistoricTaskInstanceEntityManager.findHistoricTaskInstancesByQueryCriteria((new HistoricTaskInstanceQueryImpl(commandExecutor)).processInstanceId(processInstanceId)) as IList<IHistoricData>;
+                IList<IHistoricData> tasks = commandContext.HistoricTaskInstanceEntityManager.FindHistoricTaskInstancesByQueryCriteria((new HistoricTaskInstanceQueryImpl(commandExecutor)).SetProcessInstanceId(processInstanceId)) as IList<IHistoricData>;
                 processInstanceHistoryLog.addHistoricData(tasks);
             }
 
             // Activities
-            if (includeActivities_Renamed)
+            if (_includeActivities)
             {
-                IList<IHistoricActivityInstance> activities = commandContext.HistoricActivityInstanceEntityManager.findHistoricActivityInstancesByQueryCriteria((new HistoricActivityInstanceQueryImpl(commandExecutor)).processInstanceId(processInstanceId), null);
+                IList<IHistoricActivityInstance> activities = commandContext.HistoricActivityInstanceEntityManager.FindHistoricActivityInstancesByQueryCriteria((new HistoricActivityInstanceQueryImpl(commandExecutor)).SetProcessInstanceId(processInstanceId), null);
                 processInstanceHistoryLog.addHistoricData(activities);
             }
 
             // Variables
-            if (includeVariables_Renamed)
+            if (_includeVariables)
             {
-                IList<IHistoricVariableInstance> variables = commandContext.HistoricVariableInstanceEntityManager.findHistoricVariableInstancesByQueryCriteria((new HistoricVariableInstanceQueryImpl(commandExecutor)).processInstanceId(processInstanceId), null);
+                IList<IHistoricVariableInstance> variables = commandContext.HistoricVariableInstanceEntityManager.FindHistoricVariableInstancesByQueryCriteria((new HistoricVariableInstanceQueryImpl(commandExecutor)).SetProcessInstanceId(processInstanceId), null);
 
                 // Make sure all variables values are fetched (similar to the HistoricVariableInstance query)
                 foreach (IHistoricVariableInstance historicVariableInstance in variables)
@@ -120,16 +120,16 @@ namespace org.activiti.engine.impl
             }
 
             // Comment
-            if (includeComments_Renamed)
+            if (_includeComments)
             {
-                IList<IHistoricData> comments = commandContext.CommentEntityManager.findCommentsByProcessInstanceId(processInstanceId) as IList<IHistoricData>;
+                IList<IHistoricData> comments = commandContext.CommentEntityManager.FindCommentsByProcessInstanceId(processInstanceId) as IList<IHistoricData>;
                 processInstanceHistoryLog.addHistoricData(comments);
             }
 
             // Details: variables
-            if (includeVariableUpdates_Renamed)
+            if (_includeVariableUpdates)
             {
-                IList<IHistoricData> variableUpdates = commandContext.HistoricDetailEntityManager.findHistoricDetailsByQueryCriteria((new HistoricDetailQueryImpl(commandExecutor)).variableUpdates(), null) as IList<IHistoricData>;
+                IList<IHistoricData> variableUpdates = commandContext.HistoricDetailEntityManager.FindHistoricDetailsByQueryCriteria((new HistoricDetailQueryImpl(commandExecutor)).SetVariableUpdates(), null) as IList<IHistoricData>;
 
                 // Make sure all variables values are fetched (similar to the HistoricVariableInstance query)
                 foreach (IHistoricData historicData in variableUpdates)
@@ -142,9 +142,9 @@ namespace org.activiti.engine.impl
             }
 
             // Details: form properties
-            if (includeFormProperties_Renamed)
+            if (_includeFormProperties)
             {
-                IList<IHistoricData> formProperties = commandContext.HistoricDetailEntityManager.findHistoricDetailsByQueryCriteria((new HistoricDetailQueryImpl(commandExecutor)).formProperties(), null) as IList<IHistoricData>;
+                IList<IHistoricData> formProperties = commandContext.HistoricDetailEntityManager.FindHistoricDetailsByQueryCriteria((new HistoricDetailQueryImpl(commandExecutor)).FormProperties(), null) as IList<IHistoricData>;
                 processInstanceHistoryLog.addHistoricData(formProperties);
             }
 

@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <NoWarn>1701;1702;CS1591;CS1572;CS1658;CS1574;CS1584;CS1570;CS1573;CS1587</NoWarn>
+    <WarningsAsErrors>CA2007</WarningsAsErrors>
+  </PropertyGroup>
+</Project>

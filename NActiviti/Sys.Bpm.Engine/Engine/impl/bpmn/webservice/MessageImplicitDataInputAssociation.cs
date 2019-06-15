@@ -34,16 +34,15 @@ namespace org.activiti.engine.impl.bpmn.webservice
         {
         }
 
-        public override void evaluate(IExecutionEntity execution)
+        public override void Evaluate(IExecutionEntity execution)
         {
             if (!string.IsNullOrWhiteSpace(this.source))
             {
-                object value = execution.getVariable(this.source);
-                MessageInstance message = (MessageInstance)execution.getVariable(WebServiceActivityBehavior.CURRENT_MESSAGE);
-                if (message.StructureInstance is FieldBaseStructureInstance)
+                object value = execution.GetVariable(this.source);
+                MessageInstance message = (MessageInstance)execution.GetVariable(WebServiceActivityBehavior.CURRENT_MESSAGE);
+                if (message.StructureInstance is FieldBaseStructureInstance structure)
                 {
-                    FieldBaseStructureInstance structure = (FieldBaseStructureInstance)message.StructureInstance;
-                    structure.setFieldValue(this.target, value);
+                    structure.SetFieldValue(this.target, value);
                 }
             }
         }

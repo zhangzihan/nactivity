@@ -59,7 +59,7 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public static HistoricProcessInstanceQueryProperty findByName(string propertyName)
+        public static HistoricProcessInstanceQueryProperty FindByName(string propertyName)
         {
             return properties[propertyName];
         }

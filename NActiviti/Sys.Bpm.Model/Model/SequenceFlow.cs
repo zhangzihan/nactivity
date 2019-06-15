@@ -144,10 +144,12 @@ namespace org.activiti.bpmn.model
             return sourceRef + " --> " + targetRef;
         }
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            SequenceFlow clone = new SequenceFlow();
-            clone.Values = this;
+            SequenceFlow clone = new SequenceFlow
+            {
+                Values = this
+            };
             return clone;
         }
 

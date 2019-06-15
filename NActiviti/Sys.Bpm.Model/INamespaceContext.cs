@@ -73,7 +73,7 @@ namespace Sys.Bpm
          * @throws IllegalArgumentException When <code>prefix</code> is
          *   <code>null</code>
          */
-        string getNamespaceURI(string prefix);
+        string GetNamespaceURI(string prefix);
 
         /**
          * <p>Get prefix bound to Namespace URI in the current scope.</p>
@@ -139,7 +139,7 @@ namespace Sys.Bpm
          * @throws IllegalArgumentException When <code>namespaceURI</code> is
          *   <code>null</code>
          */
-        string getPrefix(string namespaceURI);
+        string GetPrefix(string namespaceURI);
 
         /**
          * <p>Get all prefixes bound to a Namespace URI in the current
@@ -211,8 +211,6 @@ namespace Sys.Bpm
          * @throws IllegalArgumentException When <code>namespaceURI</code> is
          *   <code>null</code>
          */
-        IEnumerator<string> getPrefixes(string namespaceURI);
-
-
+        IEnumerator<string> GetPrefixes(string namespaceURI);
     }
 }

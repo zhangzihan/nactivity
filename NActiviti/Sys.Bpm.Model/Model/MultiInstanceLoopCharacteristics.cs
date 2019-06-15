@@ -114,10 +114,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            MultiInstanceLoopCharacteristics clone = new MultiInstanceLoopCharacteristics();
-            clone.Values = this;
+            MultiInstanceLoopCharacteristics clone = new MultiInstanceLoopCharacteristics
+            {
+                Values = this
+            };
             return clone;
         }
 

@@ -30,7 +30,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, ThrowEvent intermediateEvent)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, ThrowEvent intermediateEvent)
         {
 
             EventDefinition eventDefinition = null;
@@ -39,21 +39,19 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
                 eventDefinition = intermediateEvent.EventDefinitions[0];
             }
 
-            if (eventDefinition is SignalEventDefinition)
+            if (eventDefinition is SignalEventDefinition signalEventDefinition)
             {
-                SignalEventDefinition signalEventDefinition = (SignalEventDefinition)eventDefinition;
-                intermediateEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createIntermediateThrowSignalEventActivityBehavior(intermediateEvent, signalEventDefinition, bpmnParse.BpmnModel.getSignal(signalEventDefinition.SignalRef));
+                intermediateEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateThrowSignalEventActivityBehavior(intermediateEvent, signalEventDefinition, bpmnParse.BpmnModel.GetSignal(signalEventDefinition.SignalRef));
 
             }
-            else if (eventDefinition is CompensateEventDefinition)
+            else if (eventDefinition is CompensateEventDefinition compensateEventDefinition)
             {
-                CompensateEventDefinition compensateEventDefinition = (CompensateEventDefinition)eventDefinition;
-                intermediateEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createIntermediateThrowCompensationEventActivityBehavior(intermediateEvent, compensateEventDefinition);
+                intermediateEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateThrowCompensationEventActivityBehavior(intermediateEvent, compensateEventDefinition);
 
             }
             else if (eventDefinition == null)
             {
-                intermediateEvent.Behavior = bpmnParse.ActivityBehaviorFactory.createIntermediateThrowNoneEventActivityBehavior(intermediateEvent);
+                intermediateEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateThrowNoneEventActivityBehavior(intermediateEvent);
             }
             else
             {

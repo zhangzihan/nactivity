@@ -13,10 +13,12 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            IntegerDataObject clone = new IntegerDataObject();
-            clone.Values = this;
+            IntegerDataObject clone = new IntegerDataObject
+            {
+                Values = this
+            };
             return clone;
         }
     }

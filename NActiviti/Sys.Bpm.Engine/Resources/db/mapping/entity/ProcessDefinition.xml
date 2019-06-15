@@ -48,7 +48,7 @@
     </Insert>
 
     <Insert Id="bulkInsertProcessDefinition">
-      INSERT INTO ACT_RE_PROCDEF(ID_, REV_, CATEGORY_, NAME_, KEY_, BUSINESS_KEY_, BUSINESS_PATH_, START_FROM_, VERSION_, DEPLOYMENT_ID_, RESOURCE_NAME_, DGRM_RESOURCE_NAME_, DESCRIPTION_, HAS_START_FORM_KEY_, HAS_GRAPHICAL_NOTATION_ , SUSPENSION_STATE_, TENANT_ID_)
+      INSERT INTO ACT_RE_PROCDEF(ID_, REV_, CATEGORY_, NAME_, KEY_, BUSINESS_KEY_, BUSINESS_PATH_, START_FORM_, VERSION_, DEPLOYMENT_ID_, RESOURCE_NAME_, DGRM_RESOURCE_NAME_, DESCRIPTION_, HAS_START_FORM_KEY_, HAS_GRAPHICAL_NOTATION_ , SUSPENSION_STATE_, TENANT_ID_)
       VALUES
       <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
         (#{id},
@@ -106,9 +106,29 @@
       <IsTrue Property="eventSubscriptionType != null">
         inner join ACT_RU_EVENT_SUBSCR EVT on RES.ID_ = EVT.CONFIGURATION_
       </IsTrue>
+      <IsTrue Property="latest">
+        inner join (select max(VERSION_) VERSION_, NAME_, TENANT_ID_ from ACT_RE_PROCDEF
+        <Where>
+          <IsTrue Property="tenantId != null">
+            TENANT_ID_ = #{tenantId}
+          </IsTrue>
+          <IsTrue Property="name != null">
+            and NAME_ = #{name}
+          </IsTrue>
+          <IsTrue Property="deploymentId != null">
+            and DEPLOYMENT_ID_ = #{deploymentId}
+          </IsTrue>
+          <IsTrue Property="startForm != null">
+            and START_FORM_ = #{startForm}
+          </IsTrue>
+        </Where> group by NAME_, TENANT_ID_) v on RES.VERSION_ = v.VERSION_ and  v.NAME_ = RES.NAME_ and v.TENANT_ID_ = RES.TENANT_ID_
+      </IsTrue>
       <Where>
         <IsTrue Property="id != null">
           RES.ID_ = #{id}
+        </IsTrue>
+        <IsTrue Property="startForm != null">
+          RES.START_FORM_ = #{startForm}
         </IsTrue>
         <IsTrue Property="ids != null and ids">
           and RES.ID_ in
@@ -167,27 +187,11 @@
         <IsTrue Property="deploymentId != null">
           and RES.DEPLOYMENT_ID_ = #{deploymentId}
         </IsTrue>
-        <IsTrue Property="deploymentIds != null and !deploymentIds.isEmpty()">
+        <IsTrue Property="deploymentIds != null and CollectionUtil.IsNotEmpty(deploymentIds)">
           and RES.DEPLOYMENT_ID_ in
           <For Prepend="" Key="item" Property="deploymentIds" Open="(" Separator="," Close=")">
             #{item}
           </For>
-        </IsTrue>
-        <IsTrue Property="latest">
-          and RES.VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = RES.KEY_
-          <IsTrue Property="tenantId != null">
-            and TENANT_ID_ = #{tenantId}
-          </IsTrue>
-          <IsTrue Property="tenantIdLike != null">
-            and TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}
-          </IsTrue>
-          <IsTrue Property="withoutTenantId">
-            and (TENANT_ID_ = '' or TENANT_ID_ is null)
-          </IsTrue>
-          <IsTrue Property="tenantId == null and tenantIdLike == null and !withoutTenantId">
-            and ( (TENANT_ID_ IS NOT NULL and TENANT_ID_ = RES.TENANT_ID_) or (TENANT_ID_ IS NULL and RES.TENANT_ID_ IS NULL) )
-          </IsTrue>
-          )
         </IsTrue>
         <IsTrue Property="suspensionState != null">
           and (RES.SUSPENSION_STATE_ = #{suspensionState.stateCode})

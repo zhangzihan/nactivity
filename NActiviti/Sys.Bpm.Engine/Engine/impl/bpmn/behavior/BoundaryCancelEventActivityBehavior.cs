@@ -31,7 +31,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         private const long serialVersionUID = 1L;
 
-        public override void trigger(IExecutionEntity execution, string triggerName, object triggerData)
+        public override void Trigger(IExecutionEntity execution, string triggerName, object triggerData, bool throwError = true)
         {
             BoundaryEvent boundaryEvent = (BoundaryEvent)execution.CurrentFlowElement;
 
@@ -40,7 +40,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
             IExecutionEntity subProcessExecution = null;
             // TODO: this can be optimized. A full search in the all executions shouldn't be needed
-            IList<IExecutionEntity> processInstanceExecutions = executionEntityManager.findChildExecutionsByProcessInstanceId(execution.ProcessInstanceId);
+            IList<IExecutionEntity> processInstanceExecutions = executionEntityManager.FindChildExecutionsByProcessInstanceId(execution.ProcessInstanceId);
             foreach (IExecutionEntity childExecution in processInstanceExecutions)
             {
                 if (childExecution.CurrentFlowElement != null && childExecution.CurrentFlowElement.Id.Equals(boundaryEvent.AttachedToRefId))
@@ -56,37 +56,36 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
 
             IEventSubscriptionEntityManager eventSubscriptionEntityManager = commandContext.EventSubscriptionEntityManager;
-            IList<ICompensateEventSubscriptionEntity> eventSubscriptions = eventSubscriptionEntityManager.findCompensateEventSubscriptionsByExecutionId(subProcessExecution.ParentId);
+            IList<ICompensateEventSubscriptionEntity> eventSubscriptions = eventSubscriptionEntityManager.FindCompensateEventSubscriptionsByExecutionId(subProcessExecution.ParentId);
 
             if (eventSubscriptions.Count == 0)
             {
-                leave(execution);
+                Leave(execution);
             }
             else
             {
 
-                string deleteReason = engine.history.DeleteReason_Fields.BOUNDARY_EVENT_INTERRUPTING + "(" + boundaryEvent.Id + ")";
+                string deleteReason = engine.history.DeleteReasonFields.BOUNDARY_EVENT_INTERRUPTING + "(" + boundaryEvent.Id + ")";
 
                 // cancel boundary is always sync
-                ScopeUtil.throwCompensationEvent(eventSubscriptions, execution, false);
-                executionEntityManager.deleteExecutionAndRelatedData(subProcessExecution, deleteReason, false);
-                if (subProcessExecution.CurrentFlowElement is Activity)
+                ScopeUtil.ThrowCompensationEvent(eventSubscriptions, execution, false);
+                executionEntityManager.DeleteExecutionAndRelatedData(subProcessExecution, deleteReason, false);
+                if (subProcessExecution.CurrentFlowElement is Activity activity)
                 {
-                    Activity activity = (Activity)subProcessExecution.CurrentFlowElement;
                     if (activity.LoopCharacteristics != null)
                     {
                         IExecutionEntity miExecution = subProcessExecution.Parent;
-                        IList<IExecutionEntity> miChildExecutions = executionEntityManager.findChildExecutionsByParentExecutionId(miExecution.Id);
+                        IList<IExecutionEntity> miChildExecutions = executionEntityManager.FindChildExecutionsByParentExecutionId(miExecution.Id);
                         foreach (IExecutionEntity miChildExecution in miChildExecutions)
                         {
                             if (subProcessExecution.Id.Equals(miChildExecution.Id) == false && activity.Id.Equals(miChildExecution.CurrentActivityId))
                             {
-                                executionEntityManager.deleteExecutionAndRelatedData(miChildExecution, deleteReason, false);
+                                executionEntityManager.DeleteExecutionAndRelatedData(miChildExecution, deleteReason, false);
                             }
                         }
                     }
                 }
-                leave(execution);
+                Leave(execution);
             }
         }
     }

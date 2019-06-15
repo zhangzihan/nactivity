@@ -1,6 +1,8 @@
-﻿using org.activiti.engine.history;
+﻿using Newtonsoft.Json.Linq;
+using org.activiti.engine.history;
 using org.activiti.engine.impl.persistence.entity;
 using org.activiti.engine.task;
+using Sys.Net.Http;
 using System;
 using System.Collections.Generic;
 using static org.activiti.cloud.services.api.model.HistoricInstance;
@@ -45,7 +47,7 @@ namespace org.activiti.cloud.services.api.model.converter
         /// 
         /// </summary>
 
-        public virtual TaskModel from(IHistoricTaskInstance source)
+        public virtual TaskModel From(IHistoricTaskInstance source)
         {
             TaskModel task = null;
             if (source != null)
@@ -64,8 +66,17 @@ namespace org.activiti.cloud.services.api.model.converter
                     source.ProcessInstanceId,
                     source.ParentTaskId,
                     source.FormKey,
-                    calculateStatus(source),
-                    source.DeleteReason);
+                    CalculateStatus(source),
+                    source.DeleteReason,
+                    source.IsTransfer,
+                    source.CanTransfer,
+                    source.OnlyAssignee,
+                    source.BusinessKey);
+
+                if (source.Assigner != null)
+                {
+                    task.Assigner = JToken.FromObject(source.Assigner).ToObject<UserInfo>();
+                }
             }
             return task;
         }
@@ -74,7 +85,7 @@ namespace org.activiti.cloud.services.api.model.converter
         /// 
         /// </summary>
 
-        private string calculateStatus(IHistoricTaskInstance source)
+        private string CalculateStatus(IHistoricTaskInstance source)
         {
             if (source is IHistoricTaskInstanceEntity hs && hs.Deleted)
             {
@@ -88,9 +99,9 @@ namespace org.activiti.cloud.services.api.model.converter
         /// 
         /// </summary>
 
-        public virtual IList<TaskModel> from(IList<IHistoricTaskInstance> tasks)
+        public virtual IEnumerable<TaskModel> From(IEnumerable<IHistoricTaskInstance> tasks)
         {
-            return listConverter.from(tasks, this);
+            return listConverter.From(tasks, this);
         }
     }
 

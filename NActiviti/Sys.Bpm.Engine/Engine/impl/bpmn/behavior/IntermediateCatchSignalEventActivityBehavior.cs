@@ -38,42 +38,39 @@ namespace org.activiti.engine.impl.bpmn.behavior
             this.signal = signal;
         }
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             ICommandContext commandContext = Context.CommandContext;
-            IExecutionEntity executionEntity = (IExecutionEntity)execution;
 
-            string signalName = null;
+            string signalName;
             if (!string.IsNullOrWhiteSpace(signalEventDefinition.SignalRef))
             {
                 signalName = signalEventDefinition.SignalRef;
             }
             else
             {
-                IExpression signalExpression = commandContext.ProcessEngineConfiguration.ExpressionManager.createExpression(signalEventDefinition.SignalExpression);
-                signalName = signalExpression.getValue(execution).ToString();
+                IExpression signalExpression = commandContext.ProcessEngineConfiguration.ExpressionManager.CreateExpression(signalEventDefinition.SignalExpression);
+                signalName = signalExpression.GetValue(execution).ToString();
             }
 
-            commandContext.EventSubscriptionEntityManager.insertSignalEvent(signalName, signal, executionEntity);
+            commandContext.EventSubscriptionEntityManager.InsertSignalEvent(signalName, signal, execution);
         }
 
-        public override void trigger(IExecutionEntity execution, string triggerName, object triggerData)
+        public override void Trigger(IExecutionEntity execution, string triggerName, object triggerData, bool throwError = true)
         {
-            IExecutionEntity executionEntity = deleteSignalEventSubscription(execution);
-            leaveIntermediateCatchEvent(executionEntity);
+            IExecutionEntity executionEntity = DeleteSignalEventSubscription(execution);
+            LeaveIntermediateCatchEvent(executionEntity);
         }
 
-        public override void eventCancelledByEventGateway(IExecutionEntity execution)
+        public override void EventCancelledByEventGateway(IExecutionEntity execution)
         {
-            deleteSignalEventSubscription(execution);
-            Context.CommandContext.ExecutionEntityManager.deleteExecutionAndRelatedData(execution, DeleteReason_Fields.EVENT_BASED_GATEWAY_CANCEL, false);
+            DeleteSignalEventSubscription(execution);
+            Context.CommandContext.ExecutionEntityManager.DeleteExecutionAndRelatedData(execution, DeleteReasonFields.EVENT_BASED_GATEWAY_CANCEL, false);
         }
 
-        protected internal virtual IExecutionEntity deleteSignalEventSubscription(IExecutionEntity execution)
+        protected internal virtual IExecutionEntity DeleteSignalEventSubscription(IExecutionEntity execution)
         {
-            IExecutionEntity executionEntity = (IExecutionEntity)execution;
-
-            string eventName = null;
+            string eventName;
             if (signal != null)
             {
                 eventName = signal.Name;
@@ -84,16 +81,16 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
 
             IEventSubscriptionEntityManager eventSubscriptionEntityManager = Context.CommandContext.EventSubscriptionEntityManager;
-            IList<IEventSubscriptionEntity> eventSubscriptions = executionEntity.EventSubscriptions;
+            IList<IEventSubscriptionEntity> eventSubscriptions = execution.EventSubscriptions;
             foreach (IEventSubscriptionEntity eventSubscription in eventSubscriptions)
             {
-                if (eventSubscription is ISignalEventSubscriptionEntity && eventSubscription.EventName.Equals(eventName))
+                if (eventSubscription.EventType == SignalEventSubscriptionEntityFields.EVENT_TYPE && eventSubscription.EventName.Equals(eventName))
                 {
 
-                    eventSubscriptionEntityManager.delete(eventSubscription);
+                    eventSubscriptionEntityManager.Delete(eventSubscription);
                 }
             }
-            return executionEntity;
+            return execution;
         }
     }
 

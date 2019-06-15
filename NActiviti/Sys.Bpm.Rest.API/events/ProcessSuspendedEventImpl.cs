@@ -18,7 +18,7 @@
 namespace org.activiti.cloud.services.events
 {
 
-    using ProcessInstance = org.activiti.cloud.services.api.model.ProcessInstance;
+    using ProcessInstance = api.model.ProcessInstance;
 
 
 

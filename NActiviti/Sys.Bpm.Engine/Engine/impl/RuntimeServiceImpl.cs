@@ -17,551 +17,559 @@ namespace org.activiti.engine.impl
 
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.cmd;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.runtime;
     using org.activiti.engine.runtime;
     using org.activiti.engine.task;
     using org.activiti.services.api.commands;
+    using System.Linq;
 
     public class RuntimeServiceImpl : ServiceImpl, IRuntimeService
     {
-        public virtual IProcessInstance startProcessInstanceByKey(string processDefinitionKey)
+        public virtual IProcessInstance StartProcessInstanceByKey(string processDefinitionKey)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, null, null));
+            return commandExecutor.Execute(new StartProcessInstanceCmd(processDefinitionKey, null, null, null));
         }
 
-        public virtual IProcessInstance startProcessInstanceByKey(string processDefinitionKey, string businessKey)
+        public virtual IProcessInstance StartProcessInstanceByKey(string processDefinitionKey, string businessKey)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, businessKey, null));
+            return commandExecutor.Execute(new StartProcessInstanceCmd(processDefinitionKey, null, businessKey, null));
         }
 
-        public virtual IProcessInstance startProcessInstanceByKey(string processDefinitionKey, IDictionary<string, object> variables)
+        public virtual IProcessInstance StartProcessInstanceByKey(string processDefinitionKey, IDictionary<string, object> variables)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, null, variables));
+            return commandExecutor.Execute(new StartProcessInstanceCmd(processDefinitionKey, null, null, variables));
         }
 
-        public virtual IProcessInstance startProcessInstanceByKey(string processDefinitionKey, string businessKey, IDictionary<string, object> variables)
+        public virtual IProcessInstance StartProcessInstanceByKey(string processDefinitionKey, string businessKey, IDictionary<string, object> variables)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, businessKey, variables));
+            return commandExecutor.Execute(new StartProcessInstanceCmd(processDefinitionKey, null, businessKey, variables));
         }
 
-        public virtual IProcessInstance startProcessInstanceByKeyAndTenantId(string processDefinitionKey, string tenantId)
+        public virtual IProcessInstance StartProcessInstanceByKeyAndTenantId(string processDefinitionKey, string tenantId)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, null, null, tenantId));
+            return commandExecutor.Execute(new StartProcessInstanceCmd(processDefinitionKey, null, null, null, tenantId));
         }
 
-        public virtual IProcessInstance startProcessInstanceByKeyAndTenantId(string processDefinitionKey, string businessKey, string tenantId)
+        public virtual IProcessInstance StartProcessInstanceByKeyAndTenantId(string processDefinitionKey, string businessKey, string tenantId)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, businessKey, null, tenantId));
+            return commandExecutor.Execute(new StartProcessInstanceCmd(processDefinitionKey, null, businessKey, null, tenantId));
         }
 
-        public virtual IProcessInstance startProcessInstanceByKeyAndTenantId(string processDefinitionKey, IDictionary<string, object> variables, string tenantId)
+        public virtual IProcessInstance StartProcessInstanceByKeyAndTenantId(string processDefinitionKey, IDictionary<string, object> variables, string tenantId)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, null, variables, tenantId));
+            return commandExecutor.Execute(new StartProcessInstanceCmd(processDefinitionKey, null, null, variables, tenantId));
         }
 
-        public virtual IProcessInstance startProcessInstanceByKeyAndTenantId(string processDefinitionKey, string businessKey, IDictionary<string, object> variables, string tenantId)
+        public virtual IProcessInstance StartProcessInstanceByKeyAndTenantId(string processDefinitionKey, string businessKey, IDictionary<string, object> variables, string tenantId)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd(processDefinitionKey, null, businessKey, variables, tenantId));
+            return commandExecutor.Execute(new StartProcessInstanceCmd(processDefinitionKey, null, businessKey, variables, tenantId));
         }
 
-        public virtual IProcessInstance startProcessInstanceById(string processDefinitionId)
+        public virtual IProcessInstance StartProcessInstanceById(string processDefinitionId)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd(null, processDefinitionId, null, null));
+            return commandExecutor.Execute(new StartProcessInstanceCmd(null, processDefinitionId, null, null));
         }
 
-        public virtual IProcessInstance startProcessInstanceById(string processDefinitionId, string businessKey)
+        public virtual IProcessInstance StartProcessInstanceById(string processDefinitionId, string businessKey)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd(null, processDefinitionId, businessKey, null));
+            return commandExecutor.Execute(new StartProcessInstanceCmd(null, processDefinitionId, businessKey, null));
         }
 
-        public virtual IProcessInstance startProcessInstanceById(string processDefinitionId, IDictionary<string, object> variables)
+        public virtual IProcessInstance StartProcessInstanceById(string processDefinitionId, IDictionary<string, object> variables)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd(null, processDefinitionId, null, variables));
+            return commandExecutor.Execute(new StartProcessInstanceCmd(null, processDefinitionId, null, variables));
         }
 
-        public virtual IProcessInstance startProcessInstanceById(string processDefinitionId, string businessKey, IDictionary<string, object> variables)
+        public virtual IProcessInstance StartProcessInstanceById(string processDefinitionId, string businessKey, IDictionary<string, object> variables)
         {
-            return commandExecutor.execute(new StartProcessInstanceCmd(null, processDefinitionId, businessKey, variables));
+            return commandExecutor.Execute(new StartProcessInstanceCmd(null, processDefinitionId, businessKey, variables));
         }
 
-        public virtual void deleteProcessInstance(string processInstanceId, string deleteReason)
+        public virtual void DeleteProcessInstance(string processInstanceId, string deleteReason)
         {
-            commandExecutor.execute(new DeleteProcessInstanceCmd(processInstanceId, deleteReason));
+            commandExecutor.Execute(new DeleteProcessInstanceCmd(processInstanceId, deleteReason));
         }
 
-        public virtual IExecutionQuery createExecutionQuery()
+        public virtual IExecutionQuery CreateExecutionQuery()
         {
             return new ExecutionQueryImpl(commandExecutor);
         }
 
-        public virtual INativeExecutionQuery createNativeExecutionQuery()
+        public virtual INativeExecutionQuery CreateNativeExecutionQuery()
         {
             return new NativeExecutionQueryImpl(commandExecutor);
         }
 
-        public virtual INativeProcessInstanceQuery createNativeProcessInstanceQuery()
+        public virtual INativeProcessInstanceQuery CreateNativeProcessInstanceQuery()
         {
             return new NativeProcessInstanceQueryImpl(commandExecutor);
         }
 
-        public virtual void updateBusinessKey(string processInstanceId, string businessKey)
+        public virtual void UpdateBusinessKey(string processInstanceId, string businessKey)
         {
-            commandExecutor.execute(new SetProcessInstanceBusinessKeyCmd(processInstanceId, businessKey));
+            commandExecutor.Execute(new SetProcessInstanceBusinessKeyCmd(processInstanceId, businessKey));
         }
 
-        public virtual IDictionary<string, object> getVariables(string executionId)
+        public virtual IDictionary<string, object> GetVariables(string executionId)
         {
-            return commandExecutor.execute(new GetExecutionVariablesCmd(executionId, null, false));
+            return commandExecutor.Execute(new GetExecutionVariablesCmd(executionId, null, false));
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstances(string executionId)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstances(string executionId)
         {
-            return commandExecutor.execute(new GetExecutionVariableInstancesCmd(executionId, null, false));
+            return commandExecutor.Execute(new GetExecutionVariableInstancesCmd(executionId, null, false));
         }
 
-        public virtual IList<IVariableInstance> getVariableInstancesByExecutionIds(ISet<string> executionIds)
+        public virtual IList<IVariableInstance> GetVariableInstancesByExecutionIds(string[] executionIds)
         {
-            return commandExecutor.execute(new GetExecutionsVariablesCmd(executionIds));
+            return commandExecutor.Execute(new GetExecutionsVariablesCmd(executionIds));
         }
 
-        public virtual IDictionary<string, object> getVariablesLocal(string executionId)
+        public virtual IDictionary<string, object> GetVariablesLocal(string executionId)
         {
-            return commandExecutor.execute(new GetExecutionVariablesCmd(executionId, null, true));
+            return commandExecutor.Execute(new GetExecutionVariablesCmd(executionId, null, true));
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstancesLocal(string executionId)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstancesLocal(string executionId)
         {
-            return commandExecutor.execute(new GetExecutionVariableInstancesCmd(executionId, null, true));
+            return commandExecutor.Execute(new GetExecutionVariableInstancesCmd(executionId, null, true));
         }
 
-        public virtual IDictionary<string, object> getVariables(string executionId, ICollection<string> variableNames)
+        public virtual IDictionary<string, object> GetVariables(string executionId, IEnumerable<string> variableNames)
         {
-            return commandExecutor.execute(new GetExecutionVariablesCmd(executionId, variableNames, false));
+            return commandExecutor.Execute(new GetExecutionVariablesCmd(executionId, variableNames, false));
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstances(string executionId, ICollection<string> variableNames)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstances(string executionId, IEnumerable<string> variableNames)
         {
-            return commandExecutor.execute(new GetExecutionVariableInstancesCmd(executionId, variableNames, false));
+            return commandExecutor.Execute(new GetExecutionVariableInstancesCmd(executionId, variableNames, false));
         }
 
-        public virtual IDictionary<string, object> getVariablesLocal(string executionId, ICollection<string> variableNames)
+        public virtual IDictionary<string, object> GetVariablesLocal(string executionId, IEnumerable<string> variableNames)
         {
-            return commandExecutor.execute(new GetExecutionVariablesCmd(executionId, variableNames, true));
+            return commandExecutor.Execute(new GetExecutionVariablesCmd(executionId, variableNames, true));
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstancesLocal(string executionId, ICollection<string> variableNames)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstancesLocal(string executionId, IEnumerable<string> variableNames)
         {
-            return commandExecutor.execute(new GetExecutionVariableInstancesCmd(executionId, variableNames, true));
+            return commandExecutor.Execute(new GetExecutionVariableInstancesCmd(executionId, variableNames, true));
         }
 
-        public virtual object getVariable(string executionId, string variableName)
+        public virtual object GetVariable(string executionId, string variableName)
         {
-            return commandExecutor.execute(new GetExecutionVariableCmd(executionId, variableName, false));
+            return commandExecutor.Execute(new GetExecutionVariableCmd(executionId, variableName, false));
         }
 
-        public virtual IVariableInstance getVariableInstance(string executionId, string variableName)
+        public virtual IVariableInstance GetVariableInstance(string executionId, string variableName)
         {
-            return commandExecutor.execute(new GetExecutionVariableInstanceCmd(executionId, variableName, false));
+            return commandExecutor.Execute(new GetExecutionVariableInstanceCmd(executionId, variableName, false));
         }
 
-        public virtual T getVariable<T>(string executionId, string variableName)
+        public virtual T GetVariable<T>(string executionId, string variableName)
         {
-            return (T)getVariable(executionId, variableName);
+            return (T)GetVariable(executionId, variableName);
         }
 
-        public virtual bool hasVariable(string executionId, string variableName)
+        public virtual bool HasVariable(string executionId, string variableName)
         {
-            return commandExecutor.execute(new HasExecutionVariableCmd(executionId, variableName, false));
+            return commandExecutor.Execute(new HasExecutionVariableCmd(executionId, variableName, false));
         }
 
-        public virtual object getVariableLocal(string executionId, string variableName)
+        public virtual object GetVariableLocal(string executionId, string variableName)
         {
-            return commandExecutor.execute(new GetExecutionVariableCmd(executionId, variableName, true));
+            return commandExecutor.Execute(new GetExecutionVariableCmd(executionId, variableName, true));
         }
 
-        public virtual IVariableInstance getVariableInstanceLocal(string executionId, string variableName)
+        public virtual IVariableInstance GetVariableInstanceLocal(string executionId, string variableName)
         {
-            return commandExecutor.execute(new GetExecutionVariableInstanceCmd(executionId, variableName, true));
+            return commandExecutor.Execute(new GetExecutionVariableInstanceCmd(executionId, variableName, true));
         }
 
-        public virtual T getVariableLocal<T>(string executionId, string variableName)
+        public virtual T GetVariableLocal<T>(string executionId, string variableName)
         {
-            return (T)getVariableLocal(executionId, variableName);
+            return (T)GetVariableLocal(executionId, variableName);
         }
 
-        public virtual bool hasVariableLocal(string executionId, string variableName)
+        public virtual bool HasVariableLocal(string executionId, string variableName)
         {
-            return commandExecutor.execute(new HasExecutionVariableCmd(executionId, variableName, true));
+            return commandExecutor.Execute(new HasExecutionVariableCmd(executionId, variableName, true));
         }
 
-        public virtual void setVariable(string executionId, string variableName, object value)
+        public virtual void SetVariable(string executionId, string variableName, object value)
         {
-            if (ReferenceEquals(variableName, null))
+            if (variableName is null)
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
-            IDictionary<string, object> variables = new Dictionary<string, object>();
-            variables[variableName] = value;
-            commandExecutor.execute(new SetExecutionVariablesCmd(executionId, variables, false));
+            IDictionary<string, object> variables = new Dictionary<string, object>
+            {
+                [variableName] = value
+            };
+            commandExecutor.Execute(new SetExecutionVariablesCmd(executionId, variables, false));
         }
 
-        public virtual void setVariableLocal(string executionId, string variableName, object value)
+        public virtual void SetVariableLocal(string executionId, string variableName, object value)
         {
-            if (ReferenceEquals(variableName, null))
+            if (variableName is null)
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
-            IDictionary<string, object> variables = new Dictionary<string, object>();
-            variables[variableName] = value;
-            commandExecutor.execute(new SetExecutionVariablesCmd(executionId, variables, true));
+            IDictionary<string, object> variables = new Dictionary<string, object>
+            {
+                [variableName] = value
+            };
+            commandExecutor.Execute(new SetExecutionVariablesCmd(executionId, variables, true));
         }
 
-        public virtual void setVariables<T1>(string executionId, IDictionary<string, T1> variables)
+        public virtual void SetVariables<T1>(string executionId, IDictionary<string, T1> variables)
         {
-            commandExecutor.execute(new SetExecutionVariablesCmd(executionId, variables as IDictionary<string, object>, false));
+            commandExecutor.Execute(new SetExecutionVariablesCmd(executionId, variables as IDictionary<string, object>, false));
         }
 
-        public virtual void setVariablesLocal<T1>(string executionId, IDictionary<string, T1> variables)
+        public virtual void SetVariablesLocal<T1>(string executionId, IDictionary<string, T1> variables)
         {
-            commandExecutor.execute(new SetExecutionVariablesCmd(executionId, variables as IDictionary<string, object>, true));
+            commandExecutor.Execute(new SetExecutionVariablesCmd(executionId, variables as IDictionary<string, object>, true));
         }
 
-        public virtual void removeVariable(string executionId, string variableName)
+        public virtual void RemoveVariable(string executionId, string variableName)
         {
-            ICollection<string> variableNames = new List<string>(1);
-            variableNames.Add(variableName);
-            commandExecutor.execute(new RemoveExecutionVariablesCmd(executionId, variableNames, false));
+            IList<string> variableNames = new List<string>(1)
+            {
+                variableName
+            };
+            commandExecutor.Execute(new RemoveExecutionVariablesCmd(executionId, variableNames, false));
         }
 
-        public virtual void removeVariableLocal(string executionId, string variableName)
+        public virtual void RemoveVariableLocal(string executionId, string variableName)
         {
-            ICollection<string> variableNames = new List<string>();
-            variableNames.Add(variableName);
-            commandExecutor.execute(new RemoveExecutionVariablesCmd(executionId, variableNames, true));
+            IList<string> variableNames = new List<string>
+            {
+                variableName
+            };
+            commandExecutor.Execute(new RemoveExecutionVariablesCmd(executionId, variableNames, true));
         }
 
-        public virtual void removeVariables(string executionId, ICollection<string> variableNames)
+        public virtual void RemoveVariables(string executionId, IEnumerable<string> variableNames)
         {
-            commandExecutor.execute(new RemoveExecutionVariablesCmd(executionId, variableNames, false));
+            commandExecutor.Execute(new RemoveExecutionVariablesCmd(executionId, variableNames, false));
         }
 
-        public virtual void removeVariablesLocal(string executionId, ICollection<string> variableNames)
+        public virtual void RemoveVariablesLocal(string executionId, IEnumerable<string> variableNames)
         {
-            commandExecutor.execute(new RemoveExecutionVariablesCmd(executionId, variableNames, true));
+            commandExecutor.Execute(new RemoveExecutionVariablesCmd(executionId, variableNames, true));
         }
 
-        public virtual IDictionary<string, IDataObject> getDataObjects(string executionId)
+        public virtual IDictionary<string, IDataObject> GetDataObjects(string executionId)
         {
-            return commandExecutor.execute(new GetDataObjectsCmd(executionId, null, false));
+            return commandExecutor.Execute(new GetDataObjectsCmd(executionId, null, false));
         }
 
-        public virtual IDictionary<string, IDataObject> getDataObjects(string executionId, string locale, bool withLocalizationFallback)
+        public virtual IDictionary<string, IDataObject> GetDataObjects(string executionId, string locale, bool withLocalizationFallback)
         {
-            return commandExecutor.execute(new GetDataObjectsCmd(executionId, null, false, locale, withLocalizationFallback));
+            return commandExecutor.Execute(new GetDataObjectsCmd(executionId, null, false, locale, withLocalizationFallback));
         }
 
-        public virtual IDictionary<string, IDataObject> getDataObjectsLocal(string executionId)
+        public virtual IDictionary<string, IDataObject> GetDataObjectsLocal(string executionId)
         {
-            return commandExecutor.execute(new GetDataObjectsCmd(executionId, null, true));
+            return commandExecutor.Execute(new GetDataObjectsCmd(executionId, null, true));
         }
 
-        public virtual IDictionary<string, IDataObject> getDataObjectsLocal(string executionId, string locale, bool withLocalizationFallback)
+        public virtual IDictionary<string, IDataObject> GetDataObjectsLocal(string executionId, string locale, bool withLocalizationFallback)
         {
-            return commandExecutor.execute(new GetDataObjectsCmd(executionId, null, true, locale, withLocalizationFallback));
+            return commandExecutor.Execute(new GetDataObjectsCmd(executionId, null, true, locale, withLocalizationFallback));
         }
 
-        public virtual IDictionary<string, IDataObject> getDataObjects(string executionId, ICollection<string> dataObjectNames)
+        public virtual IDictionary<string, IDataObject> GetDataObjects(string executionId, IEnumerable<string> dataObjectNames)
         {
-            return commandExecutor.execute(new GetDataObjectsCmd(executionId, dataObjectNames, false));
+            return commandExecutor.Execute(new GetDataObjectsCmd(executionId, dataObjectNames, false));
         }
 
-        public virtual IDictionary<string, IDataObject> getDataObjects(string executionId, ICollection<string> dataObjectNames, string locale, bool withLocalizationFallback)
+        public virtual IDictionary<string, IDataObject> GetDataObjects(string executionId, IEnumerable<string> dataObjectNames, string locale, bool withLocalizationFallback)
         {
-            return commandExecutor.execute(new GetDataObjectsCmd(executionId, dataObjectNames, false, locale, withLocalizationFallback));
+            return commandExecutor.Execute(new GetDataObjectsCmd(executionId, dataObjectNames, false, locale, withLocalizationFallback));
         }
 
-        public virtual IDictionary<string, IDataObject> getDataObjectsLocal(string executionId, ICollection<string> dataObjects)
+        public virtual IDictionary<string, IDataObject> GetDataObjectsLocal(string executionId, IEnumerable<string> dataObjects)
         {
-            return commandExecutor.execute(new GetDataObjectsCmd(executionId, dataObjects, true));
+            return commandExecutor.Execute(new GetDataObjectsCmd(executionId, dataObjects, true));
         }
 
-        public virtual IDictionary<string, IDataObject> getDataObjectsLocal(string executionId, ICollection<string> dataObjectNames, string locale, bool withLocalizationFallback)
+        public virtual IDictionary<string, IDataObject> GetDataObjectsLocal(string executionId, IEnumerable<string> dataObjectNames, string locale, bool withLocalizationFallback)
         {
-            return commandExecutor.execute(new GetDataObjectsCmd(executionId, dataObjectNames, true, locale, withLocalizationFallback));
+            return commandExecutor.Execute(new GetDataObjectsCmd(executionId, dataObjectNames, true, locale, withLocalizationFallback));
         }
 
-        public virtual IDataObject getDataObject(string executionId, string dataObject)
+        public virtual IDataObject GetDataObject(string executionId, string dataObject)
         {
-            return commandExecutor.execute(new GetDataObjectCmd(executionId, dataObject, false));
+            return commandExecutor.Execute(new GetDataObjectCmd(executionId, dataObject, false));
         }
 
-        public virtual IDataObject getDataObject(string executionId, string dataObjectName, string locale, bool withLocalizationFallback)
+        public virtual IDataObject GetDataObject(string executionId, string dataObjectName, string locale, bool withLocalizationFallback)
         {
-            return commandExecutor.execute(new GetDataObjectCmd(executionId, dataObjectName, false, locale, withLocalizationFallback));
+            return commandExecutor.Execute(new GetDataObjectCmd(executionId, dataObjectName, false, locale, withLocalizationFallback));
         }
 
-        public virtual IDataObject getDataObjectLocal(string executionId, string dataObjectName)
+        public virtual IDataObject GetDataObjectLocal(string executionId, string dataObjectName)
         {
-            return commandExecutor.execute(new GetDataObjectCmd(executionId, dataObjectName, true));
+            return commandExecutor.Execute(new GetDataObjectCmd(executionId, dataObjectName, true));
         }
 
-        public virtual IDataObject getDataObjectLocal(string executionId, string dataObjectName, string locale, bool withLocalizationFallback)
+        public virtual IDataObject GetDataObjectLocal(string executionId, string dataObjectName, string locale, bool withLocalizationFallback)
         {
-            return commandExecutor.execute(new GetDataObjectCmd(executionId, dataObjectName, true, locale, withLocalizationFallback));
+            return commandExecutor.Execute(new GetDataObjectCmd(executionId, dataObjectName, true, locale, withLocalizationFallback));
         }
 
-        public virtual void signal(string executionId)
+        public virtual void Signal(string executionId)
         {
-            commandExecutor.execute(new TriggerCmd(executionId, null));
+            commandExecutor.Execute(new TriggerCmd(executionId, null));
         }
 
-        public virtual void trigger(string executionId)
+        public virtual void Trigger(string executionId)
         {
-            commandExecutor.execute(new TriggerCmd(executionId, null));
+            commandExecutor.Execute(new TriggerCmd(executionId, null));
         }
 
-        public virtual void signal(string executionId, IDictionary<string, object> processVariables)
+        public virtual void Signal(string executionId, IDictionary<string, object> processVariables)
         {
-            commandExecutor.execute(new TriggerCmd(executionId, processVariables));
+            commandExecutor.Execute(new TriggerCmd(executionId, processVariables));
         }
 
-        public virtual void trigger(string executionId, IDictionary<string, object> processVariables)
+        public virtual void Trigger(string executionId, IDictionary<string, object> processVariables)
         {
-            commandExecutor.execute(new TriggerCmd(executionId, processVariables));
+            commandExecutor.Execute(new TriggerCmd(executionId, processVariables));
         }
 
-        public virtual void trigger(string executionId, IDictionary<string, object> processVariables, IDictionary<string, object> transientVariables)
+        public virtual void Trigger(string executionId, IDictionary<string, object> processVariables, IDictionary<string, object> transientVariables)
         {
-            commandExecutor.execute(new TriggerCmd(executionId, processVariables, transientVariables));
+            commandExecutor.Execute(new TriggerCmd(executionId, processVariables, transientVariables));
         }
 
-        public virtual void addUserIdentityLink(string processInstanceId, string userId, string identityLinkType)
+        public virtual void AddUserIdentityLink(string processInstanceId, string userId, string identityLinkType)
         {
-            commandExecutor.execute(new AddIdentityLinkForProcessInstanceCmd(processInstanceId, userId, null, identityLinkType));
+            commandExecutor.Execute(new AddIdentityLinkForProcessInstanceCmd(processInstanceId, userId, null, identityLinkType));
         }
 
-        public virtual void addGroupIdentityLink(string processInstanceId, string groupId, string identityLinkType)
+        public virtual void AddGroupIdentityLink(string processInstanceId, string groupId, string identityLinkType)
         {
-            commandExecutor.execute(new AddIdentityLinkForProcessInstanceCmd(processInstanceId, null, groupId, identityLinkType));
+            commandExecutor.Execute(new AddIdentityLinkForProcessInstanceCmd(processInstanceId, null, groupId, identityLinkType));
         }
 
-        public virtual void addParticipantUser(string processInstanceId, string userId)
+        public virtual void AddParticipantUser(string processInstanceId, string userId)
         {
-            commandExecutor.execute(new AddIdentityLinkForProcessInstanceCmd(processInstanceId, userId, null, IdentityLinkType.PARTICIPANT));
+            commandExecutor.Execute(new AddIdentityLinkForProcessInstanceCmd(processInstanceId, userId, null, IdentityLinkType.PARTICIPANT));
         }
 
-        public virtual void addParticipantGroup(string processInstanceId, string groupId)
+        public virtual void AddParticipantGroup(string processInstanceId, string groupId)
         {
-            commandExecutor.execute(new AddIdentityLinkForProcessInstanceCmd(processInstanceId, null, groupId, IdentityLinkType.PARTICIPANT));
+            commandExecutor.Execute(new AddIdentityLinkForProcessInstanceCmd(processInstanceId, null, groupId, IdentityLinkType.PARTICIPANT));
         }
 
-        public virtual void deleteParticipantUser(string processInstanceId, string userId)
+        public virtual void DeleteParticipantUser(string processInstanceId, string userId)
         {
-            commandExecutor.execute(new DeleteIdentityLinkForProcessInstanceCmd(processInstanceId, userId, null, IdentityLinkType.PARTICIPANT));
+            commandExecutor.Execute(new DeleteIdentityLinkForProcessInstanceCmd(processInstanceId, userId, null, IdentityLinkType.PARTICIPANT));
         }
 
-        public virtual void deleteParticipantGroup(string processInstanceId, string groupId)
+        public virtual void DeleteParticipantGroup(string processInstanceId, string groupId)
         {
-            commandExecutor.execute(new DeleteIdentityLinkForProcessInstanceCmd(processInstanceId, null, groupId, IdentityLinkType.PARTICIPANT));
+            commandExecutor.Execute(new DeleteIdentityLinkForProcessInstanceCmd(processInstanceId, null, groupId, IdentityLinkType.PARTICIPANT));
         }
 
-        public virtual void deleteUserIdentityLink(string processInstanceId, string userId, string identityLinkType)
+        public virtual void DeleteUserIdentityLink(string processInstanceId, string userId, string identityLinkType)
         {
-            commandExecutor.execute(new DeleteIdentityLinkForProcessInstanceCmd(processInstanceId, userId, null, identityLinkType));
+            commandExecutor.Execute(new DeleteIdentityLinkForProcessInstanceCmd(processInstanceId, userId, null, identityLinkType));
         }
 
-        public virtual void deleteGroupIdentityLink(string processInstanceId, string groupId, string identityLinkType)
+        public virtual void DeleteGroupIdentityLink(string processInstanceId, string groupId, string identityLinkType)
         {
-            commandExecutor.execute(new DeleteIdentityLinkForProcessInstanceCmd(processInstanceId, null, groupId, identityLinkType));
+            commandExecutor.Execute(new DeleteIdentityLinkForProcessInstanceCmd(processInstanceId, null, groupId, identityLinkType));
         }
 
-        public virtual IList<IIdentityLink> getIdentityLinksForProcessInstance(string processInstanceId)
+        public virtual IList<IIdentityLink> GetIdentityLinksForProcessInstance(string processInstanceId)
         {
-            return commandExecutor.execute(new GetIdentityLinksForProcessInstanceCmd(processInstanceId));
+            return commandExecutor.Execute(new GetIdentityLinksForProcessInstanceCmd(processInstanceId));
         }
 
-        public virtual IProcessInstanceQuery createProcessInstanceQuery()
+        public virtual IProcessInstanceQuery CreateProcessInstanceQuery()
         {
             return new ProcessInstanceQueryImpl(commandExecutor);
         }
 
-        public virtual IList<string> getActiveActivityIds(string executionId)
+        public virtual IList<string> GetActiveActivityIds(string executionId)
         {
-            return commandExecutor.execute(new FindActiveActivityIdsCmd(executionId));
+            return commandExecutor.Execute(new FindActiveActivityIdsCmd(executionId));
         }
 
-        public virtual void suspendProcessInstanceById(string processInstanceId)
+        public virtual void SuspendProcessInstanceById(string processInstanceId)
         {
-            commandExecutor.execute(new SuspendProcessInstanceCmd(processInstanceId));
+            commandExecutor.Execute(new SuspendProcessInstanceCmd(processInstanceId));
         }
 
-        public virtual void activateProcessInstanceById(string processInstanceId)
+        public virtual void ActivateProcessInstanceById(string processInstanceId)
         {
-            commandExecutor.execute(new ActivateProcessInstanceCmd(processInstanceId));
+            commandExecutor.Execute(new ActivateProcessInstanceCmd(processInstanceId));
         }
 
-        public virtual IProcessInstance startProcessInstanceByMessage(string messageName)
+        public virtual IProcessInstance StartProcessInstanceByMessage(string messageName)
         {
-            return commandExecutor.execute(new StartProcessInstanceByMessageCmd(messageName, null, null, null));
+            return commandExecutor.Execute(new StartProcessInstanceByMessageCmd(messageName, null, null, null));
         }
 
-        public virtual IProcessInstance startProcessInstanceByMessageAndTenantId(string messageName, string tenantId)
+        public virtual IProcessInstance StartProcessInstanceByMessageAndTenantId(string messageName, string tenantId)
         {
-            return commandExecutor.execute(new StartProcessInstanceByMessageCmd(messageName, null, null, tenantId));
+            return commandExecutor.Execute(new StartProcessInstanceByMessageCmd(messageName, null, null, tenantId));
         }
 
-        public virtual IProcessInstance startProcessInstanceByMessage(string messageName, string businessKey)
+        public virtual IProcessInstance StartProcessInstanceByMessage(string messageName, string businessKey)
         {
-            return commandExecutor.execute(new StartProcessInstanceByMessageCmd(messageName, businessKey, null, null));
+            return commandExecutor.Execute(new StartProcessInstanceByMessageCmd(messageName, businessKey, null, null));
         }
 
-        public virtual IProcessInstance startProcessInstanceByMessageAndTenantId(string messageName, string businessKey, string tenantId)
+        public virtual IProcessInstance StartProcessInstanceByMessageAndTenantId(string messageName, string businessKey, string tenantId)
         {
-            return commandExecutor.execute(new StartProcessInstanceByMessageCmd(messageName, businessKey, null, tenantId));
+            return commandExecutor.Execute(new StartProcessInstanceByMessageCmd(messageName, businessKey, null, tenantId));
         }
 
-        public virtual IProcessInstance startProcessInstanceByMessage(string messageName, IDictionary<string, object> processVariables)
+        public virtual IProcessInstance StartProcessInstanceByMessage(string messageName, IDictionary<string, object> processVariables)
         {
-            return commandExecutor.execute(new StartProcessInstanceByMessageCmd(messageName, null, processVariables, null));
+            return commandExecutor.Execute(new StartProcessInstanceByMessageCmd(messageName, null, processVariables, null));
         }
 
-        public virtual IProcessInstance startProcessInstanceByMessageAndTenantId(string messageName, IDictionary<string, object> processVariables, string tenantId)
+        public virtual IProcessInstance StartProcessInstanceByMessageAndTenantId(string messageName, IDictionary<string, object> processVariables, string tenantId)
         {
-            return commandExecutor.execute(new StartProcessInstanceByMessageCmd(messageName, null, processVariables, tenantId));
+            return commandExecutor.Execute(new StartProcessInstanceByMessageCmd(messageName, null, processVariables, tenantId));
         }
 
-        public virtual IProcessInstance startProcessInstanceByMessage(string messageName, string businessKey, IDictionary<string, object> processVariables)
+        public virtual IProcessInstance StartProcessInstanceByMessage(string messageName, string businessKey, IDictionary<string, object> processVariables)
         {
-            return commandExecutor.execute(new StartProcessInstanceByMessageCmd(messageName, businessKey, processVariables, null));
+            return commandExecutor.Execute(new StartProcessInstanceByMessageCmd(messageName, businessKey, processVariables, null));
         }
 
-        public virtual IProcessInstance startProcessInstanceByMessageAndTenantId(string messageName, string businessKey, IDictionary<string, object> processVariables, string tenantId)
+        public virtual IProcessInstance StartProcessInstanceByMessageAndTenantId(string messageName, string businessKey, IDictionary<string, object> processVariables, string tenantId)
         {
-            return commandExecutor.execute(new StartProcessInstanceByMessageCmd(messageName, businessKey, processVariables, tenantId));
+            return commandExecutor.Execute(new StartProcessInstanceByMessageCmd(messageName, businessKey, processVariables, tenantId));
         }
 
-        public virtual void signalEventReceived(string signalName)
+        public virtual void SignalEventReceived(string signalName)
         {
-            commandExecutor.execute(new SignalEventReceivedCmd(signalName, null, null, null));
+            commandExecutor.Execute(new SignalEventReceivedCmd(signalName, null, null, null));
         }
 
-        public virtual void signalEventReceivedWithTenantId(string signalName, string tenantId)
+        public virtual void SignalEventReceivedWithTenantId(string signalName, string tenantId)
         {
-            commandExecutor.execute(new SignalEventReceivedCmd(signalName, null, null, tenantId));
+            commandExecutor.Execute(new SignalEventReceivedCmd(signalName, null, null, tenantId));
         }
 
-        public virtual void signalEventReceivedAsync(string signalName)
+        public virtual void SignalEventReceivedAsync(string signalName)
         {
-            commandExecutor.execute(new SignalEventReceivedCmd(signalName, null, true, null));
+            commandExecutor.Execute(new SignalEventReceivedCmd(signalName, null, true, null));
         }
 
-        public virtual void signalEventReceivedAsyncWithTenantId(string signalName, string tenantId)
+        public virtual void SignalEventReceivedAsyncWithTenantId(string signalName, string tenantId)
         {
-            commandExecutor.execute(new SignalEventReceivedCmd(signalName, null, true, tenantId));
+            commandExecutor.Execute(new SignalEventReceivedCmd(signalName, null, true, tenantId));
         }
 
-        public virtual void signalEventReceived(string signalName, IDictionary<string, object> processVariables)
+        public virtual void SignalEventReceived(string signalName, IDictionary<string, object> processVariables)
         {
-            commandExecutor.execute(new SignalEventReceivedCmd(signalName, null, processVariables, null));
+            commandExecutor.Execute(new SignalEventReceivedCmd(signalName, null, processVariables, null));
         }
 
-        public virtual void signalEventReceivedWithTenantId(string signalName, IDictionary<string, object> processVariables, string tenantId)
+        public virtual void SignalEventReceivedWithTenantId(string signalName, IDictionary<string, object> processVariables, string tenantId)
         {
-            commandExecutor.execute(new SignalEventReceivedCmd(signalName, null, processVariables, tenantId));
+            commandExecutor.Execute(new SignalEventReceivedCmd(signalName, null, processVariables, tenantId));
         }
 
-        public virtual void signalEventReceived(string signalName, string executionId)
+        public virtual void SignalEventReceived(string signalName, string executionId)
         {
-            commandExecutor.execute(new SignalEventReceivedCmd(signalName, executionId, null, null));
+            commandExecutor.Execute(new SignalEventReceivedCmd(signalName, executionId, null, null));
         }
 
-        public virtual void signalEventReceived(string signalName, string executionId, IDictionary<string, object> processVariables)
+        public virtual void SignalEventReceived(string signalName, string executionId, IDictionary<string, object> processVariables)
         {
-            commandExecutor.execute(new SignalEventReceivedCmd(signalName, executionId, processVariables, null));
+            commandExecutor.Execute(new SignalEventReceivedCmd(signalName, executionId, processVariables, null));
         }
 
-        public virtual void signalEventReceivedAsync(string signalName, string executionId)
+        public virtual void SignalEventReceivedAsync(string signalName, string executionId)
         {
-            commandExecutor.execute(new SignalEventReceivedCmd(signalName, executionId, true, null));
+            commandExecutor.Execute(new SignalEventReceivedCmd(signalName, executionId, true, null));
         }
 
-        public virtual void messageEventReceived(string messageName, string executionId)
+        public virtual void MessageEventReceived(string messageName, string executionId)
         {
-            commandExecutor.execute(new MessageEventReceivedCmd(messageName, executionId, null));
+            commandExecutor.Execute(new MessageEventReceivedCmd(messageName, executionId, null));
         }
 
-        public virtual void messageEventReceived(string messageName, string executionId, IDictionary<string, object> processVariables)
+        public virtual void MessageEventReceived(string messageName, string executionId, IDictionary<string, object> processVariables)
         {
-            commandExecutor.execute(new MessageEventReceivedCmd(messageName, executionId, processVariables));
+            commandExecutor.Execute(new MessageEventReceivedCmd(messageName, executionId, processVariables));
         }
 
-        public virtual void messageEventReceivedAsync(string messageName, string executionId)
+        public virtual void MessageEventReceivedAsync(string messageName, string executionId)
         {
-            commandExecutor.execute(new MessageEventReceivedCmd(messageName, executionId, true));
+            commandExecutor.Execute(new MessageEventReceivedCmd(messageName, executionId, true));
         }
 
-        public virtual void addEventListener(IActivitiEventListener listenerToAdd)
+        public virtual void AddEventListener(IActivitiEventListener listenerToAdd)
         {
-            commandExecutor.execute(new AddEventListenerCommand(listenerToAdd));
+            commandExecutor.Execute(new AddEventListenerCommand(listenerToAdd));
         }
 
-        public virtual void addEventListener(IActivitiEventListener listenerToAdd, params ActivitiEventType[] types)
+        public virtual void AddEventListener(IActivitiEventListener listenerToAdd, params ActivitiEventType[] types)
         {
-            commandExecutor.execute(new AddEventListenerCommand(listenerToAdd, types));
+            commandExecutor.Execute(new AddEventListenerCommand(listenerToAdd, types));
         }
 
-        public virtual void removeEventListener(IActivitiEventListener listenerToRemove)
+        public virtual void RemoveEventListener(IActivitiEventListener listenerToRemove)
         {
-            commandExecutor.execute(new RemoveEventListenerCommand(listenerToRemove));
+            commandExecutor.Execute(new RemoveEventListenerCommand(listenerToRemove));
         }
 
-        public virtual void dispatchEvent(IActivitiEvent @event)
+        public virtual void DispatchEvent(IActivitiEvent @event)
         {
-            commandExecutor.execute(new DispatchEventCommand(@event));
+            commandExecutor.Execute(new DispatchEventCommand(@event));
         }
 
-        public virtual void setProcessInstanceName(string processInstanceId, string name)
+        public virtual void SetProcessInstanceName(string processInstanceId, string name)
         {
-            commandExecutor.execute(new SetProcessInstanceNameCmd(processInstanceId, name));
+            commandExecutor.Execute(new SetProcessInstanceNameCmd(processInstanceId, name));
         }
 
-        public virtual IList<Event> getProcessInstanceEvents(string processInstanceId)
+        public virtual IList<Event> GetProcessInstanceEvents(string processInstanceId)
         {
-            return commandExecutor.execute(new GetProcessInstanceEventsCmd(processInstanceId)) as IList<Event>;
+            return commandExecutor.Execute(new GetProcessInstanceEventsCmd(processInstanceId)) as IList<Event>;
         }
 
-        public virtual IList<FlowNode> getEnabledActivitiesFromAdhocSubProcess(string executionId)
+        public virtual IList<FlowNode> GetEnabledActivitiesFromAdhocSubProcess(string executionId)
         {
-            return commandExecutor.execute(new GetEnabledActivitiesForAdhocSubProcessCmd(executionId));
+            return commandExecutor.Execute(new GetEnabledActivitiesForAdhocSubProcessCmd(executionId));
         }
 
-        public virtual IExecution executeActivityInAdhocSubProcess(string executionId, string activityId)
+        public virtual IExecution ExecuteActivityInAdhocSubProcess(string executionId, string activityId)
         {
-            return commandExecutor.execute(new ExecuteActivityForAdhocSubProcessCmd(executionId, activityId));
+            return commandExecutor.Execute(new ExecuteActivityForAdhocSubProcessCmd(executionId, activityId));
         }
 
-        public virtual void completeAdhocSubProcess(string executionId)
+        public virtual void CompleteAdhocSubProcess(string executionId)
         {
-            commandExecutor.execute(new CompleteAdhocSubProcessCmd(executionId));
+            commandExecutor.Execute(new CompleteAdhocSubProcessCmd(executionId));
         }
 
-        public virtual IProcessInstanceBuilder createProcessInstanceBuilder()
+        public virtual IProcessInstanceBuilder CreateProcessInstanceBuilder()
         {
             return new ProcessInstanceBuilderImpl(this);
         }
 
-        public virtual IProcessInstance startProcessInstance(ProcessInstanceBuilderImpl processInstanceBuilder)
+        public virtual IProcessInstance StartProcessInstance(ProcessInstanceBuilderImpl processInstanceBuilder)
         {
-            if (!ReferenceEquals(processInstanceBuilder.ProcessDefinitionId, null) || !ReferenceEquals(processInstanceBuilder.ProcessDefinitionKey, null))
+            if (!(processInstanceBuilder.ProcessDefinitionId is null) || !(processInstanceBuilder.ProcessDefinitionKey is null))
             {
-                return commandExecutor.execute(new StartProcessInstanceCmd(processInstanceBuilder));
+                return commandExecutor.Execute(new StartProcessInstanceCmd(processInstanceBuilder));
             }
-            else if (!ReferenceEquals(processInstanceBuilder.MessageName, null))
+            else if (!(processInstanceBuilder.MessageName is null))
             {
-                return commandExecutor.execute(new StartProcessInstanceByMessageCmd(processInstanceBuilder));
+                return commandExecutor.Execute(new StartProcessInstanceByMessageCmd(processInstanceBuilder));
             }
             else
             {
@@ -571,11 +579,27 @@ namespace org.activiti.engine.impl
 
         /// <inheritdoc />
 
-        public IProcessInstance startProcessInstanceByCmd(IStartProcessInstanceCmd cmd)
+        public IProcessInstance[] StartProcessInstanceByCmd(IStartProcessInstanceCmd[] cmds)
         {
-            var scmd = new StartProcessInstanceCmd(cmd);
+            IList<IProcessInstance> instances = new List<IProcessInstance>();
 
-            return commandExecutor.execute(scmd);
+            foreach (IStartProcessInstanceCmd cmd in cmds)
+            {
+                var scmd = new StartProcessInstanceCmd(cmd);
+
+                instances.Add(commandExecutor.Execute(scmd));
+            }
+
+            return instances.ToArray();
+        }
+
+        /// <inheritdoc />
+
+        public IProcessInstance StartProcessInstanceByCmd(IStartProcessInstanceCmd cmd)
+        {
+            IProcessInstance[] ins = StartProcessInstanceByCmd(new IStartProcessInstanceCmd[] { cmd });
+
+            return ins[0];
         }
     }
 

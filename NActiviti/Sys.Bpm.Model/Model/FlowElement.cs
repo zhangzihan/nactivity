@@ -17,7 +17,6 @@ namespace org.activiti.bpmn.model
 {
     public abstract class FlowElement : BaseElement, IHasExecutionListeners
     {
-
         protected internal string name;
         protected internal string documentation;
         protected internal IList<ActivitiListener> executionListeners = new List<ActivitiListener>();
@@ -92,7 +91,7 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override abstract BaseElement clone();
+        public override abstract BaseElement Clone();
 
         public override BaseElement Values
         {
@@ -109,7 +108,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (ActivitiListener listener in val.ExecutionListeners)
                     {
-                        executionListeners.Add(listener.clone() as ActivitiListener);
+                        executionListeners.Add(listener.Clone() as ActivitiListener);
                     }
                 }
             }

@@ -40,97 +40,97 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        public override IModelEntity findById<IModelEntity>(KeyValuePair<string, object> entityId)
+        public override IModelEntity FindById<IModelEntity>(KeyValuePair<string, object> entityId)
         {
-            return modelDataManager.findById<IModelEntity>(entityId);
+            return modelDataManager.FindById<IModelEntity>(entityId);
         }
 
-        public override void insert(IModelEntity model)
+        public override void Insert(IModelEntity model)
         {
             ((IModelEntity)model).CreateTime = Clock.CurrentTime;
             ((IModelEntity)model).LastUpdateTime = Clock.CurrentTime;
 
-            base.insert(model);
+            base.Insert(model);
         }
 
-        public virtual void updateModel(IModelEntity updatedModel)
+        public virtual void UpdateModel(IModelEntity updatedModel)
         {
             updatedModel.LastUpdateTime = Clock.CurrentTime;
-            update(updatedModel);
+            Update(updatedModel);
         }
 
-        public override void delete(KeyValuePair<string, object> modelId)
+        public override void Delete(KeyValuePair<string, object> modelId)
         {
-            IModelEntity modelEntity = findById<IModelEntity>(modelId);
-            base.delete(modelEntity);
-            deleteEditorSource(modelEntity);
-            deleteEditorSourceExtra(modelEntity);
+            IModelEntity modelEntity = FindById<IModelEntity>(modelId);
+            base.Delete(modelEntity);
+            DeleteEditorSource(modelEntity);
+            DeleteEditorSourceExtra(modelEntity);
         }
 
-        public virtual void insertEditorSourceForModel(string modelId, byte[] modelSource)
+        public virtual void InsertEditorSourceForModel(string modelId, byte[] modelSource)
         {
-            IModelEntity model = findById<IModelEntity>(new KeyValuePair<string, object>("id", modelId));
+            IModelEntity model = FindById<IModelEntity>(new KeyValuePair<string, object>("id", modelId));
             if (model != null)
             {
                 ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceValueId);
-                @ref.setValue("source", modelSource);
+                @ref.SetValue("source", modelSource);
 
-                if (ReferenceEquals(model.EditorSourceValueId, null))
+                if (model.EditorSourceValueId is null)
                 {
                     model.EditorSourceValueId = @ref.Id;
-                    updateModel(model);
+                    UpdateModel(model);
                 }
             }
         }
 
-        public virtual void deleteEditorSource(IModelEntity model)
+        public virtual void DeleteEditorSource(IModelEntity model)
         {
-            if (!ReferenceEquals(model.EditorSourceValueId, null))
+            if (!(model.EditorSourceValueId is null))
             {
                 ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceValueId);
-                @ref.delete();
+                @ref.Delete();
             }
         }
 
-        public virtual void deleteEditorSourceExtra(IModelEntity model)
+        public virtual void DeleteEditorSourceExtra(IModelEntity model)
         {
-            if (!ReferenceEquals(model.EditorSourceExtraValueId, null))
+            if (!(model.EditorSourceExtraValueId is null))
             {
                 ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceExtraValueId);
-                @ref.delete();
+                @ref.Delete();
             }
         }
 
-        public virtual void insertEditorSourceExtraForModel(string modelId, byte[] modelSource)
+        public virtual void InsertEditorSourceExtraForModel(string modelId, byte[] modelSource)
         {
-            IModelEntity model = findById<IModelEntity>(new KeyValuePair<string, object>("id", modelId));
+            IModelEntity model = FindById<IModelEntity>(modelId);
             if (model != null)
             {
                 ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceExtraValueId);
-                @ref.setValue("source-extra", modelSource);
+                @ref.SetValue("source-extra", modelSource);
 
-                if (ReferenceEquals(model.EditorSourceExtraValueId, null))
+                if (model.EditorSourceExtraValueId is null)
                 {
                     model.EditorSourceExtraValueId = @ref.Id;
-                    updateModel(model);
+                    UpdateModel(model);
                 }
             }
         }
 
-        public virtual IList<IModel> findModelsByQueryCriteria(ModelQueryImpl query, Page page)
+        public virtual IList<IModel> FindModelsByQueryCriteria(IModelQuery query, Page page)
         {
-            return modelDataManager.findModelsByQueryCriteria(query, page);
+            return modelDataManager.FindModelsByQueryCriteria(query, page);
         }
 
-        public virtual long findModelCountByQueryCriteria(ModelQueryImpl query)
+        public virtual long FindModelCountByQueryCriteria(IModelQuery query)
         {
-            return modelDataManager.findModelCountByQueryCriteria(query);
+            return modelDataManager.FindModelCountByQueryCriteria(query);
         }
 
-        public virtual byte[] findEditorSourceByModelId(string modelId)
+        public virtual byte[] FindEditorSourceByModelId(string modelId)
         {
-            IModelEntity model = findById<IModelEntity>(new KeyValuePair<string, object>("id", modelId));
-            if (model == null || ReferenceEquals(model.EditorSourceValueId, null))
+            IModelEntity model = FindById<IModelEntity>(modelId);
+            if (model == null || model.EditorSourceValueId is null)
             {
                 return null;
             }
@@ -139,10 +139,10 @@ namespace org.activiti.engine.impl.persistence.entity
             return @ref.Bytes;
         }
 
-        public virtual byte[] findEditorSourceExtraByModelId(string modelId)
+        public virtual byte[] FindEditorSourceExtraByModelId(string modelId)
         {
-            IModelEntity model = findById<IModelEntity>(new KeyValuePair<string, object>("id", modelId));
-            if (model == null || ReferenceEquals(model.EditorSourceExtraValueId, null))
+            IModelEntity model = FindById<IModelEntity>(modelId);
+            if (model == null || model.EditorSourceExtraValueId is null)
             {
                 return null;
             }
@@ -151,14 +151,14 @@ namespace org.activiti.engine.impl.persistence.entity
             return @ref.Bytes;
         }
 
-        public virtual IList<IModel> findModelsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IModel> FindModelsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return modelDataManager.findModelsByNativeQuery(parameterMap, firstResult, maxResults);
+            return modelDataManager.FindModelsByNativeQuery(parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findModelCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindModelCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return modelDataManager.findModelCountByNativeQuery(parameterMap);
+            return modelDataManager.FindModelCountByNativeQuery(parameterMap);
         }
 
         public virtual IModelDataManager ModelDataManager
@@ -172,8 +172,5 @@ namespace org.activiti.engine.impl.persistence.entity
                 this.modelDataManager = value;
             }
         }
-
-
     }
-
 }

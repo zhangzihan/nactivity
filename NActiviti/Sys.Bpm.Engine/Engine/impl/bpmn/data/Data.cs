@@ -18,44 +18,66 @@ namespace org.activiti.engine.impl.bpmn.data
     /// 
     /// </summary>
     public class Data
-	{
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal string id;
 
-	  protected internal string id;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal string name;
 
-	  protected internal string name;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal ItemDefinition definition;
 
-	  protected internal ItemDefinition definition;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="definition"></param>
+        public Data(string id, string name, ItemDefinition definition)
+        {
+            this.id = id;
+            this.name = name;
+            this.definition = definition;
+        }
 
-	  public Data(string id, string name, ItemDefinition definition)
-	  {
-		this.id = id;
-		this.name = name;
-		this.definition = definition;
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual string Id
+        {
+            get
+            {
+                return this.id;
+            }
+        }
 
-	  public virtual string Id
-	  {
-		  get
-		  {
-			return this.id;
-		  }
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual string Name
+        {
+            get
+            {
+                return this.name;
+            }
+        }
 
-	  public virtual string Name
-	  {
-		  get
-		  {
-			return this.name;
-		  }
-	  }
-
-	  public virtual ItemDefinition Definition
-	  {
-		  get
-		  {
-			return this.definition;
-		  }
-	  }
-	}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual ItemDefinition Definition
+        {
+            get
+            {
+                return this.definition;
+            }
+        }
+    }
 }

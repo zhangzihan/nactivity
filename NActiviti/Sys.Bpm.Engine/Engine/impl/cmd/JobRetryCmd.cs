@@ -22,7 +22,7 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
-    using Sys;
+    using Sys.Workflow;
     using System.Collections.Generic;
 
     /// 
@@ -41,9 +41,9 @@ namespace org.activiti.engine.impl.cmd
             this.exception = exception;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            IJobEntity job = commandContext.JobEntityManager.findById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
+            IJobEntity job = commandContext.JobEntityManager.FindById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
             if (job == null)
             {
                 return null;
@@ -68,15 +68,15 @@ namespace org.activiti.engine.impl.cmd
 
                 if (job.Retries <= 1)
                 {
-                    newJobEntity = commandContext.JobManager.moveJobToDeadLetterJob(job);
+                    newJobEntity = commandContext.JobManager.MoveJobToDeadLetterJob(job);
                 }
                 else
                 {
-                    newJobEntity = commandContext.JobManager.moveJobToTimerJob(job);
+                    newJobEntity = commandContext.JobManager.MoveJobToTimerJob(job);
                 }
 
                 newJobEntity.Retries = job.Retries - 1;
-                if (!job.Duedate.HasValue || Job_Fields.JOB_TYPE_MESSAGE.Equals(job.JobType))
+                if (!job.Duedate.HasValue || JobFields.JOB_TYPE_MESSAGE.Equals(job.JobType))
                 {
                     // add wait time for failed async job
                     newJobEntity.Duedate = calculateDueDate(commandContext, processEngineConfig.AsyncFailedJobWaitTime, null);
@@ -102,11 +102,11 @@ namespace org.activiti.engine.impl.cmd
 
                     if (jobRetries <= 1)
                     {
-                        newJobEntity = commandContext.JobManager.moveJobToDeadLetterJob(job);
+                        newJobEntity = commandContext.JobManager.MoveJobToDeadLetterJob(job);
                     }
                     else
                     {
-                        newJobEntity = commandContext.JobManager.moveJobToTimerJob(job);
+                        newJobEntity = commandContext.JobManager.MoveJobToTimerJob(job);
                     }
 
                     newJobEntity.Duedate = durationHelper.DateAfter;
@@ -141,8 +141,8 @@ namespace org.activiti.engine.impl.cmd
             IActivitiEventDispatcher eventDispatcher = commandContext.EventDispatcher;
             if (eventDispatcher.Enabled)
             {
-                eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_UPDATED, newJobEntity));
-                eventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.JOB_RETRIES_DECREMENTED, newJobEntity));
+                eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_UPDATED, newJobEntity));
+                eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.JOB_RETRIES_DECREMENTED, newJobEntity));
             }
 
             return null;
@@ -182,7 +182,7 @@ namespace org.activiti.engine.impl.cmd
             {
                 return null;
             }
-            return commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
+            return commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
         }
 
     }

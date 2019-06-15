@@ -15,14 +15,16 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl.cmd
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.asyncexecutor;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow;
 
     /// 
     public class AcquireJobsCmd : ICommand<AcquiredJobEntities>
     {
+        private static readonly ILogger<AcquireJobsCmd> logger = ProcessEngineServiceProvider.LoggerService<AcquireJobsCmd>();
 
         private readonly IAsyncExecutor asyncExecutor;
 
@@ -31,21 +33,22 @@ namespace org.activiti.engine.impl.cmd
             this.asyncExecutor = asyncExecutor;
         }
 
-        public virtual AcquiredJobEntities execute(ICommandContext commandContext)
+        public virtual AcquiredJobEntities Execute(ICommandContext commandContext)
         {
             AcquiredJobEntities acquiredJobs = new AcquiredJobEntities();
-            IList<IJobEntity> jobs = commandContext.JobEntityManager.findJobsToExecute(new Page(0, asyncExecutor.MaxAsyncJobsDuePerAcquisition));
+
+            IList<IJobEntity> jobs = commandContext.JobEntityManager.FindJobsToExecute(new Page(0, asyncExecutor.MaxAsyncJobsDuePerAcquisition));
 
             foreach (IJobEntity job in jobs)
             {
-                lockJob(commandContext, job, asyncExecutor.AsyncJobLockTimeInMillis);
-                acquiredJobs.addJob(job);
+                LockJob(commandContext, job, asyncExecutor.AsyncJobLockTimeInMillis);
+                acquiredJobs.AddJob(job);
             }
 
             return acquiredJobs;
         }
 
-        protected internal virtual void lockJob(ICommandContext commandContext, IJobEntity job, int lockTimeInMillis)
+        protected internal virtual void LockJob(ICommandContext commandContext, IJobEntity job, int lockTimeInMillis)
         {
             var cl = new DateTime(commandContext.ProcessEngineConfiguration.Clock.CurrentTime.Ticks);
 

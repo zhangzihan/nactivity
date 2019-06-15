@@ -24,7 +24,7 @@ namespace org.activiti.cloud.services.rest.assemblers
         /// </summary>
         /// <param name="processInstanceVariable"></param>
         /// <returns></returns>
-        public override ProcessVariableResource toResource(ProcessInstanceVariable processInstanceVariable)
+        public override ProcessVariableResource ToResource(ProcessInstanceVariable processInstanceVariable)
         {
             //throw new NotImplementedException();
             //Link processVariables = linkTo(methodOn(typeof(ProcessInstanceVariableControllerImpl)).getVariables(processInstanceVariable.ProcessInstanceId)).withRel("processVariables");

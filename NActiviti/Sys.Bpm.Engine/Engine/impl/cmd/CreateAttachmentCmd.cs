@@ -50,14 +50,14 @@ namespace org.activiti.engine.impl.cmd
             this.url = url;
         }
 
-        public virtual IAttachment execute(ICommandContext commandContext)
+        public virtual IAttachment Execute(ICommandContext commandContext)
         {
-            if (!ReferenceEquals(processInstanceId, null))
+            if (!(processInstanceId is null))
             {
-                IExecutionEntity execution = verifyExecutionParameters(commandContext);
+                VerifyExecutionParameters(commandContext);
             }
 
-            IAttachmentEntity attachment = commandContext.AttachmentEntityManager.create();
+            IAttachmentEntity attachment = commandContext.AttachmentEntityManager.Create();
             attachment.Name = attachmentName;
             attachment.ProcessInstanceId = processInstanceId;
             attachment.TaskId = taskId;
@@ -67,44 +67,44 @@ namespace org.activiti.engine.impl.cmd
             attachment.UserId = Authentication.AuthenticatedUser.Id;
             attachment.Time = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
 
-            commandContext.AttachmentEntityManager.insert(attachment, false);
+            commandContext.AttachmentEntityManager.Insert(attachment, false);
 
             if (content != null)
             {
-                byte[] bytes = IoUtil.readInputStream(content, attachmentName);
-                IByteArrayEntity byteArray = commandContext.ByteArrayEntityManager.create();
+                byte[] bytes = IoUtil.ReadInputStream(content, attachmentName);
+                IByteArrayEntity byteArray = commandContext.ByteArrayEntityManager.Create();
                 byteArray.Bytes = bytes;
-                commandContext.ByteArrayEntityManager.insert(byteArray);
+                commandContext.ByteArrayEntityManager.Insert(byteArray);
                 attachment.ContentId = byteArray.Id;
                 attachment.Content = byteArray;
             }
 
-            commandContext.HistoryManager.createAttachmentComment(taskId, processInstanceId, attachmentName, true);
+            commandContext.HistoryManager.CreateAttachmentComment(taskId, processInstanceId, attachmentName, true);
 
             if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
                 // Forced to fetch the process-instance to associate the right
                 // process definition
                 string processDefinitionId = null;
-                if (!ReferenceEquals(attachment.ProcessInstanceId, null))
+                if (!(attachment.ProcessInstanceId is null))
                 {
-                    IExecutionEntity process = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
+                    IExecutionEntity process = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
                     if (process != null)
                     {
                         processDefinitionId = process.ProcessDefinitionId;
                     }
                 }
 
-                commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_CREATED, attachment, processInstanceId, processInstanceId, processDefinitionId));
-                commandContext.ProcessEngineConfiguration.EventDispatcher.dispatchEvent(ActivitiEventBuilder.createEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, attachment, processInstanceId, processInstanceId, processDefinitionId));
+                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_CREATED, attachment, processInstanceId, processInstanceId, processDefinitionId));
+                commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_INITIALIZED, attachment, processInstanceId, processInstanceId, processDefinitionId));
             }
 
             return attachment;
         }
 
-        protected internal virtual ITaskEntity verifyTaskParameters(ICommandContext commandContext)
+        protected internal virtual ITaskEntity VerifyTaskParameters(ICommandContext commandContext)
         {
-            ITaskEntity task = commandContext.TaskEntityManager.findById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
+            ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
 
             if (task == null)
             {
@@ -119,9 +119,9 @@ namespace org.activiti.engine.impl.cmd
             return task;
         }
 
-        protected internal virtual IExecutionEntity verifyExecutionParameters(ICommandContext commandContext)
+        protected internal virtual IExecutionEntity VerifyExecutionParameters(ICommandContext commandContext)
         {
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(processInstanceId);
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
             if (execution == null)
             {
@@ -135,7 +135,5 @@ namespace org.activiti.engine.impl.cmd
 
             return execution;
         }
-
     }
-
 }

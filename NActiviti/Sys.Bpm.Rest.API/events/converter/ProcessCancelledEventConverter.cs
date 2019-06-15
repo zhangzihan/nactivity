@@ -38,7 +38,7 @@ namespace org.activiti.cloud.services.events.converter
         /// 
         /// </summary>
 
-        public override IProcessEngineEvent from(IActivitiEvent @event)
+        public override IProcessEngineEvent From(IActivitiEvent @event)
         {
             return new ProcessCancelledEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, RuntimeBundleProperties.ServiceName, RuntimeBundleProperties.ServiceFullName, RuntimeBundleProperties.ServiceType, RuntimeBundleProperties.ServiceVersion, @event.ExecutionId, @event.ProcessDefinitionId, @event.ProcessInstanceId, ((IActivitiCancelledEvent)@event).Cause.ToString());
         }
@@ -47,7 +47,7 @@ namespace org.activiti.cloud.services.events.converter
         /// 
         /// </summary>
 
-        public override string handledType()
+        public override string HandledType()
         {
             return "ProcessInstance:" + ActivitiEventType.PROCESS_CANCELLED.ToString();
         }

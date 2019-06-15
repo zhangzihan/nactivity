@@ -25,7 +25,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
         IExecutionEntity Execution { set; }
 
-        void forceUpdate();
+        void ForceUpdate();
 
         IByteArrayRef ByteArrayRef { get; }
 

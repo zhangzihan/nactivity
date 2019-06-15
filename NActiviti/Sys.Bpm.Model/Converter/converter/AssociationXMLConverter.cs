@@ -14,7 +14,7 @@
  */
 namespace org.activiti.bpmn.converter
 {
-
+    using org.activiti.bpmn.constants;
     using org.activiti.bpmn.converter.util;
     using org.activiti.bpmn.model;
 
@@ -33,41 +33,41 @@ namespace org.activiti.bpmn.converter
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_ASSOCIATION;
+                return BpmnXMLConstants.ELEMENT_ASSOCIATION;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             Association association = new Association();
-            BpmnXMLUtil.addXMLLocation(association, xtr);
-            association.SourceRef = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF);
-            association.TargetRef = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FLOW_TARGET_REF);
-            association.Id = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID);
+            BpmnXMLUtil.AddXMLLocation(association, xtr);
+            association.SourceRef = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF);
+            association.TargetRef = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_FLOW_TARGET_REF);
+            association.Id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
 
-            string asociationDirectionString = xtr.getAttributeValue(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ASSOCIATION_DIRECTION);
+            string asociationDirectionString = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ASSOCIATION_DIRECTION);
             if (!string.IsNullOrWhiteSpace(asociationDirectionString))
             {
-                AssociationDirection associationDirection = AssociationDirection.valueOf(asociationDirectionString.ToUpper());
+                AssociationDirection associationDirection = AssociationDirection.ValueOf(asociationDirectionString.ToUpper());
 
                 association.AssociationDirection = associationDirection;
             }
 
-            parseChildElements(XMLElementName, association, model, xtr);
+            ParseChildElements(XMLElementName, association, model, xtr);
 
             return association;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             Association association = (Association)element;
-            writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF, association.SourceRef, xtw);
-            writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_FLOW_TARGET_REF, association.TargetRef, xtw);
+            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_SOURCE_REF, association.SourceRef, xtw);
+            WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_FLOW_TARGET_REF, association.TargetRef, xtw);
             AssociationDirection associationDirection = association.AssociationDirection;
             if (associationDirection != null)
             {
-                writeDefaultAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ASSOCIATION_DIRECTION, associationDirection.Value, xtw);
+                WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_ASSOCIATION_DIRECTION, associationDirection.Value, xtw);
             }
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
     }

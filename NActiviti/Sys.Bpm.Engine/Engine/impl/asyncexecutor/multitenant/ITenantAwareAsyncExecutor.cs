@@ -29,9 +29,9 @@ namespace org.activiti.engine.impl.asyncexecutor.multitenant
     {
         ICollection<string> TenantIds { get; }
 
-        void addTenantAsyncExecutor(string tenantId, bool startExecutor);
+        void AddTenantAsyncExecutor(string tenantId, bool startExecutor);
 
-        void removeTenantAsyncExecutor(string tenantId);
+        void RemoveTenantAsyncExecutor(string tenantId);
 
     }
 

@@ -29,16 +29,13 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, Transaction transaction)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, Transaction transaction)
         {
 
-            transaction.Behavior = bpmnParse.ActivityBehaviorFactory.createTransactionActivityBehavior(transaction);
+            transaction.Behavior = bpmnParse.ActivityBehaviorFactory.CreateTransactionActivityBehavior(transaction);
 
-            bpmnParse.processFlowElements(transaction.FlowElements);
-            processArtifacts(bpmnParse, transaction.Artifacts);
-
+            bpmnParse.ProcessFlowElements(transaction.FlowElements);
+            ProcessArtifacts(bpmnParse, transaction.Artifacts);
         }
-
     }
-
 }

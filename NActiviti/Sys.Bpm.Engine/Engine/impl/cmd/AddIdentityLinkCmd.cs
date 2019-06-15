@@ -14,11 +14,14 @@
  */
 namespace org.activiti.engine.impl.cmd
 {
-    
+
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.impl.util;
     using org.activiti.engine.task;
+    using Sys;
+    using Sys.Workflow;
+    using Sys.Workflow.Engine.Bpmn.Rules;
 
     /// 
     [Serializable]
@@ -36,28 +39,31 @@ namespace org.activiti.engine.impl.cmd
 
         protected internal string identityType;
 
+        private readonly IUserServiceProxy userService;
+
         public AddIdentityLinkCmd(string taskId, string identityId, int identityIdType, string identityType) : base(taskId)
         {
-            validateParams(taskId, identityId, identityIdType, identityType);
+            ValidateParams(taskId, identityId, identityIdType, identityType);
             this.taskId = taskId;
             this.identityId = identityId;
             this.identityIdType = identityIdType;
             this.identityType = identityType;
+            userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
         }
 
-        protected internal virtual void validateParams(string taskId, string identityId, int identityIdType, string identityType)
+        protected internal virtual void ValidateParams(string taskId, string identityId, int identityIdType, string identityType)
         {
-            if (ReferenceEquals(taskId, null))
+            if (taskId is null)
             {
                 throw new ActivitiIllegalArgumentException("taskId is null");
             }
 
-            if (ReferenceEquals(identityType, null))
+            if (identityType is null)
             {
                 throw new ActivitiIllegalArgumentException("type is required when adding a new task identity link");
             }
 
-            if (ReferenceEquals(identityId, null) && (identityIdType == IDENTITY_GROUP || (!IdentityLinkType.ASSIGNEE.Equals(identityType) && !IdentityLinkType.OWNER.Equals(identityType))))
+            if (identityId is null && (identityIdType == IDENTITY_GROUP || (!IdentityLinkType.ASSIGNEE.Equals(identityType) && !IdentityLinkType.OWNER.Equals(identityType))))
             {
 
                 throw new ActivitiIllegalArgumentException("identityId is null");
@@ -69,25 +75,30 @@ namespace org.activiti.engine.impl.cmd
             }
         }
 
-        protected internal override object execute(ICommandContext commandContext, ITaskEntity task)
+        protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
         {
             bool assignedToNoOne = false;
             if (IdentityLinkType.ASSIGNEE.Equals(identityType))
             {
-                commandContext.TaskEntityManager.changeTaskAssignee(task, identityId);
-                assignedToNoOne = ReferenceEquals(identityId, null);
+                string assigneeUser = null;
+                if (string.IsNullOrWhiteSpace(identityId) == false)
+                {
+                    assigneeUser = AsyncHelper.RunSync(() => userService.GetUser(identityId))?.FullName;
+                }
+                commandContext.TaskEntityManager.ChangeTaskAssignee(task, identityId, assigneeUser);
+                assignedToNoOne = identityId is null;
             }
             else if (IdentityLinkType.OWNER.Equals(identityType))
             {
-                commandContext.TaskEntityManager.changeTaskOwner(task, identityId);
+                commandContext.TaskEntityManager.ChangeTaskOwner(task, identityId);
             }
             else if (IDENTITY_USER == identityIdType)
             {
-                task.addUserIdentityLink(identityId, identityType);
+                task.AddUserIdentityLink(identityId, identityType);
             }
             else if (IDENTITY_GROUP == identityIdType)
             {
-                task.addGroupIdentityLink(identityId, identityType);
+                task.AddGroupIdentityLink(identityId, identityType);
             }
 
             bool forceNullUserId = false;
@@ -101,11 +112,11 @@ namespace org.activiti.engine.impl.cmd
 
             if (IDENTITY_USER == identityIdType)
             {
-                commandContext.HistoryManager.createUserIdentityLinkComment(taskId, identityId, identityType, true, forceNullUserId);
+                commandContext.HistoryManager.CreateUserIdentityLinkComment(taskId, identityId, identityType, true, forceNullUserId);
             }
             else
             {
-                commandContext.HistoryManager.createGroupIdentityLinkComment(taskId, identityId, identityType, true);
+                commandContext.HistoryManager.CreateGroupIdentityLinkComment(taskId, identityId, identityType, true);
             }
 
             return null;

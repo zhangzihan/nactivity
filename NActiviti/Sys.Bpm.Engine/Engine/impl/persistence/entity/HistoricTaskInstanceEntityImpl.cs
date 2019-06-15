@@ -16,10 +16,14 @@ using System.Collections.Generic;
 
 namespace org.activiti.engine.impl.persistence.entity
 {
+    using Newtonsoft.Json.Linq;
     using org.activiti.engine.history;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.db;
     using org.activiti.engine.task;
+    using Sys.Net.Http;
+    using Sys.Workflow;
+    using System.Linq;
 
     /// 
     /// 
@@ -71,15 +75,19 @@ namespace org.activiti.engine.impl.persistence.entity
             this.description = task.Description;
             this.owner = task.Owner;
             this.assignee = task.Assignee;
+            this.AssigneeUser = task.AssigneeUser;
             this.startTime = Context.ProcessEngineConfiguration.Clock.CurrentTime;
             this.taskDefinitionKey = task.TaskDefinitionKey;
 
             this.Priority = task.Priority;
             this.DueDate = task.DueDate;
             this.Category = task.Category;
+            this.CanTransfer = task.CanTransfer;
+            this.OnlyAssignee = task.OnlyAssignee;
+            this.IsTransfer = task.IsTransfer;
 
             // Inherit tenant id (if applicable)
-            if (!ReferenceEquals(task.TenantId, null))
+            if (!(task.TenantId is null))
             {
                 tenantId = task.TenantId;
             }
@@ -91,20 +99,25 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                PersistentState persistentState = new PersistentState();
-                persistentState["name"] = name;
-                persistentState["owner"] = owner;
-                persistentState["assignee"] = assignee;
-                persistentState["endTime"] = endTime;
-                persistentState["durationInMillis"] = durationInMillis;
-                persistentState["description"] = description;
-                persistentState["deleteReason"] = deleteReason;
-                persistentState["taskDefinitionKey"] = taskDefinitionKey;
-                persistentState["formKey"] = formKey;
-                persistentState["priority"] = priority;
-                persistentState["category"] = category;
-                persistentState["processDefinitionId"] = processDefinitionId;
-                if (!ReferenceEquals(parentTaskId, null))
+                PersistentState persistentState = new PersistentState
+                {
+                    ["name"] = name,
+                    ["owner"] = owner,
+                    ["assignee"] = assignee,
+                    ["endTime"] = endTime,
+                    ["durationInMillis"] = durationInMillis,
+                    ["description"] = description,
+                    ["deleteReason"] = deleteReason,
+                    ["taskDefinitionKey"] = taskDefinitionKey,
+                    ["formKey"] = formKey,
+                    ["priority"] = priority,
+                    ["category"] = category,
+                    ["processDefinitionId"] = processDefinitionId,
+                    ["canTransfer"] = CanTransfer,
+                    ["isTransfer"] = IsTransfer,
+                    ["onlyAssignee"] = OnlyAssignee
+                };
+                if (!(parentTaskId is null))
                 {
                     persistentState["parentTaskId"] = parentTaskId;
                 }
@@ -134,12 +147,24 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
+        private string businessKey;
+        public virtual string BusinessKey
+        {
+            get
+            {
+                return businessKey;
+            }
+            set
+            {
+                businessKey = value;
+            }
+        }
 
         public virtual string Name
         {
             get
             {
-                if (!ReferenceEquals(localizedName, null) && localizedName.Length > 0)
+                if (!(localizedName is null) && localizedName.Length > 0)
                 {
                     return localizedName;
                 }
@@ -170,7 +195,7 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                if (!ReferenceEquals(localizedDescription, null) && localizedDescription.Length > 0)
+                if (!(localizedDescription is null) && localizedDescription.Length > 0)
                 {
                     return localizedDescription;
                 }
@@ -210,6 +235,78 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
+        public virtual string AssigneeUser
+        {
+            get; set;
+        }
+
+        internal static IEnumerable<IHistoricTaskInstance> EnsureAssignerInitialized(IEnumerable<HistoricTaskInstanceEntityImpl> tasks)
+        {
+            foreach (var task in tasks ?? new HistoricTaskInstanceEntityImpl[0])
+            {
+                task.EnsureAssignerInitialized();
+
+                yield return task;
+            }
+
+            yield break;
+        }
+
+        private IUserInfo EnsureAssignerInitialized()
+        {
+            if (assignee == null)
+            {
+                assigner = null;
+                return null;
+            }
+
+            if (AssigneeUser != null)
+            {
+                assigner = new UserInfo
+                {
+                    Id = assignee,
+                    FullName = AssigneeUser
+                };
+
+                return assigner;
+            }
+
+            if (Context.CommandContext != null && (assigner == null || assigner.Id != this.assignee))
+            {
+                var hisTask = this.QueryVariables.FirstOrDefault(x => x.VariableName == this.assignee);
+
+                if (hisTask != null)
+                {
+                    assigner = JToken.FromObject(hisTask.Value).ToObject<UserInfo>();
+
+                    return assigner;
+                }
+            }
+
+            assigner = new UserInfo
+            {
+                Id = assignee
+            };
+
+            return assigner;
+        }
+
+        private IUserInfo assigner = null;
+
+        public virtual IUserInfo Assigner
+        {
+            get
+            {
+                if (assigner == null)
+                {
+                    assigner = EnsureAssignerInitialized();
+                }
+
+                return assigner;
+                //                throw new org.activiti.engine.exceptions.NotFoundAssigneeException(this.assignee);  
+                //#endif
+            }
+        }
 
         public virtual string TaskDefinitionKey
         {
@@ -365,7 +462,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (IHistoricVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!ReferenceEquals(variableInstance.Id, null) && !ReferenceEquals(variableInstance.TaskId, null))
+                        if (!(variableInstance.Id is null) && !(variableInstance.TaskId is null))
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }
@@ -384,7 +481,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     foreach (IHistoricVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!ReferenceEquals(variableInstance.Id, null) && ReferenceEquals(variableInstance.TaskId, null))
+                        if (!(variableInstance.Id is null) && variableInstance.TaskId is null)
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }
@@ -415,6 +512,10 @@ namespace org.activiti.engine.impl.persistence.entity
 
         /// <inheritdoc />
         public bool? IsTransfer { get; set; }
+
+        public bool? CanTransfer { get; set; }
+
+        public bool? OnlyAssignee { get; set; }
 
         /// <inheritdoc />
         public bool? IsRuntime { get; set; }

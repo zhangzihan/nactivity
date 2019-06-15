@@ -17,6 +17,19 @@ namespace org.activiti.cloud.services.api.model
 
         }
 
+        /// <inheritdoc />
+        public override string Id
+        {
+            get
+            {
+                return base.Id;
+            }
+            set
+            {
+                base.Id = value;
+            }
+        }
+
         /// <summary>
         /// 多个部署id
         /// </summary>
@@ -66,5 +79,10 @@ namespace org.activiti.cloud.services.api.model
         /// 仅查询最后部署的流程
         /// </summary>
         public bool LatestDeployment { get; set; }
+
+        /// <summary>
+        /// 仅查询草稿流程
+        /// </summary>
+        public bool OnlyDrafts { get; set; }
     }
 }

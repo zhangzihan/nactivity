@@ -31,13 +31,13 @@ namespace org.activiti.engine.impl.cmd
             this.modelId = modelId;
         }
 
-        public  virtual object  execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            if (ReferenceEquals(modelId, null))
+            if (modelId is null)
             {
                 throw new ActivitiIllegalArgumentException("modelId is null");
             }
-            commandContext.ModelEntityManager.delete(new KeyValuePair<string, object>("id", modelId));
+            commandContext.ModelEntityManager.Delete(new KeyValuePair<string, object>("id", modelId));
 
             return null;
         }

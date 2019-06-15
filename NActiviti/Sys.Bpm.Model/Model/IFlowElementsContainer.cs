@@ -18,27 +18,27 @@ namespace org.activiti.bpmn.model
     public interface IFlowElementsContainer
     {
 
-        FlowElement getFlowElement(string id);
+        FlowElement FindFlowElement(string id);
 
-        ICollection<FlowElement> FlowElements { get; }
+        IList<FlowElement> FlowElements { get; }
 
         IDictionary<string, FlowElement> FlowElementMap { get; }
 
-        void addFlowElement(FlowElement element);
+        void AddFlowElement(FlowElement element);
 
-        void addFlowElementToMap(FlowElement element);
+        void AddFlowElementToMap(FlowElement element);
 
-        void removeFlowElement(string elementId);
+        void RemoveFlowElement(string elementId);
 
-        void removeFlowElementFromMap(string elementId);
+        void RemoveFlowElementFromMap(string elementId);
 
-        Artifact getArtifact(string id);
+        Artifact GetArtifact(string id);
 
-        ICollection<Artifact> Artifacts { get; }
+        IList<Artifact> Artifacts { get; }
 
-        void addArtifact(Artifact artifact);
+        void AddArtifact(Artifact artifact);
 
-        void removeArtifact(string artifactId);
+        void RemoveArtifact(string artifactId);
     }
 
 }

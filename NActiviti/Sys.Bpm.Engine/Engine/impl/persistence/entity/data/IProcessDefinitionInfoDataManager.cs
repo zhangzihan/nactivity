@@ -17,7 +17,7 @@ namespace org.activiti.engine.impl.persistence.entity.data
     public interface IProcessDefinitionInfoDataManager : IDataManager<IProcessDefinitionInfoEntity>
     {
 
-        IProcessDefinitionInfoEntity findProcessDefinitionInfoByProcessDefinitionId(string processDefinitionId);
+        IProcessDefinitionInfoEntity FindProcessDefinitionInfoByProcessDefinitionId(string processDefinitionId);
     }
 
 }

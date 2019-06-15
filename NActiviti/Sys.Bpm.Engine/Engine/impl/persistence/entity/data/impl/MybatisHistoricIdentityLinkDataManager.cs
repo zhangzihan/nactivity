@@ -37,19 +37,19 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IHistoricIdentityLinkEntity create()
+        public override IHistoricIdentityLinkEntity Create()
         {
             return new HistoricIdentityLinkEntityImpl();
         }
 
-        public virtual IList<IHistoricIdentityLinkEntity> findHistoricIdentityLinksByTaskId(string taskId)
+        public virtual IList<IHistoricIdentityLinkEntity> FindHistoricIdentityLinksByTaskId(string taskId)
         {
-            return DbSqlSession.selectList<HistoricIdentityLinkEntityImpl, IHistoricIdentityLinkEntity>("selectHistoricIdentityLinksByTask", new { taskId });
+            return DbSqlSession.SelectList<HistoricIdentityLinkEntityImpl, IHistoricIdentityLinkEntity>("selectHistoricIdentityLinksByTask", new { taskId });
         }
 
-        public virtual IList<IHistoricIdentityLinkEntity> findHistoricIdentityLinksByProcessInstanceId(string processInstanceId)
+        public virtual IList<IHistoricIdentityLinkEntity> FindHistoricIdentityLinksByProcessInstanceId(string processInstanceId)
         {
-            return (IList<IHistoricIdentityLinkEntity>)getList("selectHistoricIdentityLinksByProcessInstance", new { processInstanceId }, historicIdentityLinksByProcInstMatcher, true);
+            return (IList<IHistoricIdentityLinkEntity>)GetList("selectHistoricIdentityLinksByProcessInstance", new { processInstanceId }, historicIdentityLinksByProcInstMatcher, true);
         }
 
     }

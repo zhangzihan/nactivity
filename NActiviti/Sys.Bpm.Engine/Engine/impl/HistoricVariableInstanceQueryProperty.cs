@@ -36,7 +36,7 @@ namespace org.activiti.engine.impl
         public static readonly HistoricVariableInstanceQueryProperty PROCESS_INSTANCE_ID = new HistoricVariableInstanceQueryProperty("PROC_INST_ID_");
         public static readonly HistoricVariableInstanceQueryProperty VARIABLE_NAME = new HistoricVariableInstanceQueryProperty("NAME_");
 
-        private string name;
+        private readonly string name;
 
         public HistoricVariableInstanceQueryProperty(string name)
         {
@@ -52,7 +52,7 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public static HistoricVariableInstanceQueryProperty findByName(string propertyName)
+        public static HistoricVariableInstanceQueryProperty FindByName(string propertyName)
         {
             return properties[propertyName];
         }

@@ -43,7 +43,6 @@ namespace Spring.Objects.Factory.Config
     /// </p>
     /// </remarks>
     /// <author>Rick Evans</author>
-    /// <seealso cref="Common.Logging.LogManager.GetLogger(string)"/>
     [Serializable]
     public class LogFactoryObject : IFactoryObject, IInitializingObject
     {
@@ -79,11 +78,11 @@ namespace Spring.Objects.Factory.Config
         #endregion
 
         /// <summary>
-        /// The name of the <see cref="Common.Logging.ILog"/> instance served up by
+        /// The name of the log name instance served up by
         /// this factory.
         /// </summary>
         /// <value>
-        /// The name of the <see cref="Common.Logging.ILog"/> instance served up by
+        /// The name of the log instance served up by
         /// this factory.
         /// </value>
         /// <exception cref="System.ArgumentNullException">

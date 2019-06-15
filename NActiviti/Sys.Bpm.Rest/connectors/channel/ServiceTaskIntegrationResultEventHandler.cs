@@ -7,7 +7,7 @@ using org.activiti.engine.integration;
 using org.activiti.services.connectors.model;
 using org.springframework.messaging;
 using org.springframework.messaging.support;
-using Sys;
+using Sys.Workflow;
 using System.Collections.Generic;
 
 /*
@@ -33,12 +33,11 @@ namespace org.activiti.services.connectors.channel
     /// </summary>
     public class ServiceTaskIntegrationResultEventHandler
     {
-        private static readonly ILogger LOGGER = ProcessEngineServiceProvider.LoggerService<ServiceTaskIntegrationResultEventHandler>();
-
+        private readonly ILogger logger = null;
 
         private readonly IRuntimeService runtimeService;
         private readonly IIntegrationContextService integrationContextService;
-        private readonly IMessageChannel<IntegrationResultReceivedEvent[]> auditProducer;
+        private readonly IMessageChannel<IIntegrationResultReceivedEvent[]> auditProducer;
         private readonly RuntimeBundleProperties runtimeBundleProperties;
 
         /// <summary>
@@ -48,25 +47,31 @@ namespace org.activiti.services.connectors.channel
         /// <param name="integrationContextService"></param>
         /// <param name="auditProducer"></param>
         /// <param name="runtimeBundleProperties"></param>
-        public ServiceTaskIntegrationResultEventHandler(IRuntimeService runtimeService, IIntegrationContextService integrationContextService, IMessageChannel<IntegrationResultReceivedEvent[]> auditProducer, RuntimeBundleProperties runtimeBundleProperties)
+        /// <param name="loggerFactory"></param>
+        public ServiceTaskIntegrationResultEventHandler(IRuntimeService runtimeService,
+            IIntegrationContextService integrationContextService,
+            IMessageChannel<IIntegrationResultReceivedEvent[]> auditProducer,
+            RuntimeBundleProperties runtimeBundleProperties,
+            ILoggerFactory loggerFactory)
         {
             this.runtimeService = runtimeService;
             this.integrationContextService = integrationContextService;
             this.auditProducer = auditProducer;
             this.runtimeBundleProperties = runtimeBundleProperties;
+            logger = loggerFactory.CreateLogger<ServiceTaskIntegrationResultEventHandler>();
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="integrationResultEvent"></param>
-        public virtual void receive(IntegrationResultEvent integrationResultEvent)
+        public virtual void Receive(IntegrationResultEvent integrationResultEvent)
         {
             IList<IIntegrationContextEntity> integrationContexts = integrationContextService.findIntegrationContextByExecutionId(integrationResultEvent.ExecutionId);
 
             if (integrationContexts == null || integrationContexts.Count == 0)
             {
-                LOGGER.LogDebug("No integration contexts found in this RB for execution Id `" + integrationResultEvent.ExecutionId + ", flow node id `" + integrationResultEvent.FlowNodeId + "`");
+                logger.LogDebug("No integration contexts found in this RB for execution Id `" + integrationResultEvent.ExecutionId + ", flow node id `" + integrationResultEvent.FlowNodeId + "`");
             }
 
             if (integrationContexts != null)
@@ -77,34 +82,34 @@ namespace org.activiti.services.connectors.channel
                     {
                         integrationContextService.deleteIntegrationContext(integrationContext);
                     }
-                    sendAuditMessage(integrationContext);
+                    SendAuditMessage(integrationContext);
                 }
             }
 
-            if (runtimeService.createExecutionQuery().executionId(integrationResultEvent.ExecutionId).list().Count > 0)
+            if (runtimeService.CreateExecutionQuery().SetExecutionId(integrationResultEvent.ExecutionId).List().Count > 0)
             {
-                runtimeService.trigger(integrationResultEvent.ExecutionId, integrationResultEvent.Variables);
+                runtimeService.Trigger(integrationResultEvent.ExecutionId, integrationResultEvent.Variables);
             }
             else
             {
                 string message = "No task is in this RB is waiting for integration result with execution id `" + integrationResultEvent.ExecutionId +
                         ", flow node id `" + integrationResultEvent.FlowNodeId +
                         "`. The integration result `" + integrationResultEvent.Id + "` will be ignored.";
-                LOGGER.LogDebug(message);
+                logger.LogDebug(message);
             }
         }
 
-        private void sendAuditMessage(IIntegrationContextEntity integrationContext)
+        private void SendAuditMessage(IIntegrationContextEntity integrationContext)
         {
             if (runtimeBundleProperties.EventsProperties.IntegrationAuditEventsEnabled)
             {
-                IMessage<IntegrationResultReceivedEvent[]> message =
-                    MessageBuilder<IntegrationResultReceivedEvent[]>.withPayload(new IntegrationResultReceivedEvent[]
+                IMessage<IIntegrationResultReceivedEvent[]> message =
+                    MessageBuilder<IIntegrationResultReceivedEvent[]>.WithPayload(new IIntegrationResultReceivedEvent[]
                     {
                         new IntegrationResultReceivedEventImpl(runtimeBundleProperties.AppName, runtimeBundleProperties.AppVersion, runtimeBundleProperties.ServiceName, runtimeBundleProperties.ServiceFullName, runtimeBundleProperties.ServiceType, runtimeBundleProperties.ServiceVersion, integrationContext.ExecutionId, integrationContext.ProcessDefinitionId, integrationContext.ProcessInstanceId, integrationContext.Id, integrationContext.FlowNodeId)
-                    }).build();
+                    }).Build();
 
-                auditProducer.send(message);
+                auditProducer.Send(message);
             }
         }
     }

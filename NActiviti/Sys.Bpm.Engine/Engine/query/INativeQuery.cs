@@ -21,7 +21,7 @@ namespace org.activiti.engine.query
     /// 
     /// 
     /// </summary>
-    public interface INativeQuery<T, U> where U : class
+    public interface INativeQuery<T, U> where U : class where T : class
     {
 
         /// <summary>
@@ -29,31 +29,31 @@ namespace org.activiti.engine.query
         /// 
         /// If you need paging you have to insert the pagination code yourself. We skipped doing this for you as this is done really different on some databases (especially MS-SQL / DB2)
         /// </summary>
-        T sql(string selectClause);
+        T Sql(string selectClause);
 
         /// <summary>
         /// Add parameter to be replaced in query for index, e.g. :param1, :myParam, ...
         /// </summary>
-        T parameter(string name, object value);
+        T SetParameter(string name, object value);
 
         /// <summary>
         /// Executes the query and returns the number of results </summary>
-        long count();
+        long Count();
 
         /// <summary>
         /// Executes the query and returns the resulting entity or null if no entity matches the query criteria.
         /// </summary>
         /// <exception cref="ActivitiException">
         ///           when the query results in more than one entities. </exception>
-        U singleResult();
+        U SingleResult();
 
         /// <summary>
         /// Executes the query and get a list of entities as the result. </summary>
-        IList<U> list();
+        IList<U> List();
 
         /// <summary>
         /// Executes the query and get a list of entities as the result. </summary>
-        IList<U> listPage(int firstResult, int maxResults);
+        IList<U> ListPage(int firstResult, int maxResults);
     }
 
 }

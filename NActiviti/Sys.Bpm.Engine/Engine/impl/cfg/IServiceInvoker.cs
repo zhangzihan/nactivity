@@ -21,8 +21,13 @@ namespace org.activiti.engine.impl.cfg
     /// 
     public interface IServiceInvoker
     {
-
-        void invoke(string serviceType, IDictionary<string, object> parameters, IExecutionEntity execution, ITaskEntity task);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceType"></param>
+        /// <param name="parameters"></param>
+        /// <param name="execution"></param>
+        /// <param name="task"></param>
+        void Invoke(string serviceType, IDictionary<string, object> parameters, IExecutionEntity execution, ITaskEntity task);
     }
-
 }

@@ -46,17 +46,19 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                PersistentState persistentState = new PersistentState();
-                persistentState["name"] = this.name;
-                persistentState["key"] = key;
-                persistentState["category"] = this.category;
-                persistentState["createTime"] = this.createTime;
-                persistentState["lastUpdateTime"] = lastUpdateTime;
-                persistentState["version"] = this.version;
-                persistentState["metaInfo"] = this.metaInfo;
-                persistentState["deploymentId"] = deploymentId;
-                persistentState["editorSourceValueId"] = this.editorSourceValueId;
-                persistentState["editorSourceExtraValueId"] = this.editorSourceExtraValueId;
+                PersistentState persistentState = new PersistentState
+                {
+                    ["name"] = this.name,
+                    ["key"] = key,
+                    ["category"] = this.category,
+                    ["createTime"] = this.createTime,
+                    ["lastUpdateTime"] = lastUpdateTime,
+                    ["version"] = this.version,
+                    ["metaInfo"] = this.metaInfo,
+                    ["deploymentId"] = deploymentId,
+                    ["editorSourceValueId"] = this.editorSourceValueId,
+                    ["editorSourceExtraValueId"] = this.editorSourceExtraValueId
+                };
                 return persistentState;
             }
         }
@@ -206,12 +208,12 @@ namespace org.activiti.engine.impl.persistence.entity
         }
 
 
-        public virtual bool hasEditorSource()
+        public virtual bool HasEditorSource()
         {
             return !ReferenceEquals(this.editorSourceValueId, null);
         }
 
-        public virtual bool hasEditorSourceExtra()
+        public virtual bool HasEditorSourceExtra()
         {
             return !ReferenceEquals(this.editorSourceExtraValueId, null);
         }

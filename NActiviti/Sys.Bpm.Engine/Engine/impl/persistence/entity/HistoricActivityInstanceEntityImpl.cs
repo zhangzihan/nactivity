@@ -44,12 +44,14 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                PersistentState persistentState = new PersistentState();
-                persistentState["endTime"] = endTime;
-                persistentState["durationInMillis"] = durationInMillis;
-                persistentState["deleteReason"] = deleteReason;
-                persistentState["executionId"] = executionId;
-                persistentState["assignee"] = assignee;
+                PersistentState persistentState = new PersistentState
+                {
+                    ["endTime"] = endTime,
+                    ["durationInMillis"] = durationInMillis,
+                    ["deleteReason"] = deleteReason,
+                    ["executionId"] = executionId,
+                    ["assignee"] = assignee
+                };
                 return persistentState;
             }
         }
@@ -118,6 +120,12 @@ namespace org.activiti.engine.impl.persistence.entity
             {
                 this.assignee = value;
             }
+        }
+
+        public virtual string AssigneeUser
+        {
+            get;
+            set;
         }
 
 

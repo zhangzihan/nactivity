@@ -32,23 +32,23 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         private const long serialVersionUID = 1L;
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
-            SubProcess subProcess = getSubProcessFromExecution(execution);
+            SubProcess subProcess = GetSubProcessFromExecution(execution);
             execution.IsScope = true;
 
             // initialize the template-defined data objects as variables
-            IDictionary<string, object> dataObjectVars = processDataObjects(subProcess.DataObjects);
+            IDictionary<string, object> dataObjectVars = ProcessDataObjects(subProcess.DataObjects);
             if (dataObjectVars != null)
             {
                 execution.VariablesLocal = dataObjectVars;
             }
         }
 
-        protected internal virtual SubProcess getSubProcessFromExecution(IExecutionEntity execution)
+        protected internal virtual SubProcess GetSubProcessFromExecution(IExecutionEntity execution)
         {
             FlowElement flowElement = execution.CurrentFlowElement;
-            SubProcess subProcess = null;
+            SubProcess subProcess;
             if (flowElement is SubProcess)
             {
                 subProcess = (SubProcess)flowElement;
@@ -60,7 +60,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             return subProcess;
         }
 
-        protected internal virtual IDictionary<string, object> processDataObjects(ICollection<ValuedDataObject> dataObjects)
+        protected internal virtual IDictionary<string, object> ProcessDataObjects(ICollection<ValuedDataObject> dataObjects)
         {
             IDictionary<string, object> variablesMap = new Dictionary<string, object>();
             // convert data objects to process variables

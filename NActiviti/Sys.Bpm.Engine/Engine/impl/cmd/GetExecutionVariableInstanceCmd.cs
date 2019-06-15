@@ -35,32 +35,32 @@ namespace org.activiti.engine.impl.cmd
             this.isLocal = isLocal;
         }
 
-        public virtual IVariableInstance execute(ICommandContext commandContext)
+        public virtual IVariableInstance Execute(ICommandContext commandContext)
         {
-            if (ReferenceEquals(executionId, null))
+            if (executionId is null)
             {
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }
-            if (ReferenceEquals(variableName, null))
+            if (variableName is null)
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
 
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
 
             if (execution == null)
             {
                 throw new ActivitiObjectNotFoundException("execution " + executionId + " doesn't exist", typeof(IExecution));
             }
 
-            IVariableInstance variableEntity = null;
+            IVariableInstance variableEntity;
             if (isLocal)
             {
-                variableEntity = execution.getVariableInstanceLocal(variableName, false);
+                variableEntity = execution.GetVariableInstanceLocal(variableName, false);
             }
             else
             {
-                variableEntity = execution.getVariableInstance(variableName, false);
+                variableEntity = execution.GetVariableInstance(variableName, false);
             }
 
             return variableEntity;;

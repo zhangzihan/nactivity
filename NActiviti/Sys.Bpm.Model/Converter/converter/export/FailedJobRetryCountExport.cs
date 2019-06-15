@@ -18,20 +18,19 @@ namespace org.activiti.bpmn.converter.export
 
     public class FailedJobRetryCountExport : IBpmnXMLConstants
     {
-        public static void writeFailedJobRetryCount(Activity activity, XMLStreamWriter xtw)
+        public static void WriteFailedJobRetryCount(Activity activity, XMLStreamWriter xtw)
         {
             string failedJobRetryCycle = activity.FailedJobRetryTimeCycleValue;
-            if (!string.ReferenceEquals(failedJobRetryCycle, null))
+            if (!(failedJobRetryCycle is null))
             {
 
                 if (!string.IsNullOrWhiteSpace(failedJobRetryCycle))
                 {
-                    xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, org.activiti.bpmn.constants.BpmnXMLConstants.FAILED_JOB_RETRY_TIME_CYCLE, org.activiti.bpmn.constants.BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-                    xtw.writeCharacters(failedJobRetryCycle);
-                    xtw.writeEndElement();
+                    xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.FAILED_JOB_RETRY_TIME_CYCLE, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                    xtw.WriteCharacters(failedJobRetryCycle);
+                    xtw.WriteEndElement();
                 }
             }
         }
     }
-
 }

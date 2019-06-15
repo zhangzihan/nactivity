@@ -21,25 +21,24 @@ namespace org.activiti.engine.impl.persistence.entity
     public interface IVariableInstanceEntityManager : IEntityManager<IVariableInstanceEntity>
     {
 
-        IVariableInstanceEntity create(string name, IVariableType type, object value);
+        IVariableInstanceEntity Create(string name, IVariableType type, object value);
 
-        IList<IVariableInstanceEntity> findVariableInstancesByTaskId(string taskId);
+        IList<IVariableInstanceEntity> FindVariableInstancesByTaskId(string taskId);
 
-        IList<IVariableInstanceEntity> findVariableInstancesByTaskIds(ISet<string> taskIds);
+        IList<IVariableInstanceEntity> FindVariableInstancesByTaskIds(string[] taskIds);
 
-        IList<IVariableInstanceEntity> findVariableInstancesByExecutionId(string executionId);
+        IList<IVariableInstanceEntity> FindVariableInstancesByExecutionId(string executionId);
 
-        IList<IVariableInstanceEntity> findVariableInstancesByExecutionIds(ISet<string> executionIds);
+        IList<IVariableInstanceEntity> FindVariableInstancesByExecutionIds(string[] executionIds);
 
-        IVariableInstanceEntity findVariableInstanceByExecutionAndName(string executionId, string variableName);
+        IVariableInstanceEntity FindVariableInstanceByExecutionAndName(string executionId, string variableName);
 
-        IList<IVariableInstanceEntity> findVariableInstancesByExecutionAndNames(string executionId, ICollection<string> names);
+        IList<IVariableInstanceEntity> FindVariableInstancesByExecutionAndNames(string executionId, IEnumerable<string> names);
 
-        IVariableInstanceEntity findVariableInstanceByTaskAndName(string taskId, string variableName);
+        IVariableInstanceEntity FindVariableInstanceByTaskAndName(string taskId, string variableName);
 
-        IList<IVariableInstanceEntity> findVariableInstancesByTaskAndNames(string taskId, ICollection<string> names);
+        IList<IVariableInstanceEntity> FindVariableInstancesByTaskAndNames(string taskId, IEnumerable<string> names);
 
-        void deleteVariableInstanceByTask(ITaskEntity task);
-
+        void DeleteVariableInstanceByTask(ITaskEntity task);
     }
 }

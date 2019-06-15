@@ -15,35 +15,50 @@
 
 namespace org.activiti.engine.impl.asyncexecutor.multitenant
 {
-	using org.activiti.engine.impl.cfg;
-	using org.activiti.engine.impl.cfg.multitenant;
-	using org.activiti.engine.impl.persistence.entity;
-	using org.activiti.engine.runtime;
+    using org.activiti.engine.impl.cfg;
+    using org.activiti.engine.impl.cfg.multitenant;
+    using org.activiti.engine.impl.persistence.entity;
+    using org.activiti.engine.runtime;
 
-	/// <summary>
-	/// Factory that produces a <seealso cref="Runnable"/> that executes a <seealso cref="IJobEntity"/>.
-	/// Can be used to create special implementations for specific tenants.
-	/// 
-	/// 
-	/// </summary>
-	public class TenantAwareExecuteAsyncRunnableFactory : IExecuteAsyncRunnableFactory
-	{
+    /// <summary>
+    /// Factory that produces a <seealso cref="Runnable"/> that executes a <seealso cref="IJobEntity"/>.
+    /// Can be used to create special implementations for specific tenants.
+    /// 
+    /// 
+    /// </summary>
+    public class TenantAwareExecuteAsyncRunnableFactory : IExecuteAsyncRunnableFactory
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal ITenantInfoHolder tenantInfoHolder;
 
-	  protected internal ITenantInfoHolder tenantInfoHolder;
-	  protected internal string tenantId;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal string tenantId;
 
-	  public TenantAwareExecuteAsyncRunnableFactory(ITenantInfoHolder tenantInfoHolder, string tenantId)
-	  {
-		this.tenantInfoHolder = tenantInfoHolder;
-		this.tenantId = tenantId;
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantInfoHolder"></param>
+        /// <param name="tenantId"></param>
+        public TenantAwareExecuteAsyncRunnableFactory(ITenantInfoHolder tenantInfoHolder, string tenantId)
+        {
+            this.tenantInfoHolder = tenantInfoHolder;
+            this.tenantId = tenantId;
+        }
 
-	  public virtual ThreadStart createExecuteAsyncRunnable(IJob job, ProcessEngineConfigurationImpl processEngineConfiguration)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="job"></param>
+        /// <param name="processEngineConfiguration"></param>
+        /// <returns></returns>
+        public virtual ThreadStart CreateExecuteAsyncRunnable(IJob job, ProcessEngineConfigurationImpl processEngineConfiguration)
         {
             throw new System.NotImplementedException();
             //return new TenantAwareExecuteAsyncRunnable(job, processEngineConfiguration, tenantInfoHolder, tenantId);
         }
-
-	}
-
+    }
 }

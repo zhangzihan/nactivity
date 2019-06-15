@@ -38,7 +38,7 @@ namespace org.activiti.cloud.services.rest.assemblers
         /// </summary>
         /// <param name="processInstance"></param>
         /// <returns></returns>
-        public override ProcessInstanceResource toResource(ProcessInstance processInstance)
+        public override ProcessInstanceResource ToResource(ProcessInstance processInstance)
         {
             //throw new NotImplementedException();
             //Link processInstancesRel = linkTo(methodOn(typeof(ProcessInstanceControllerImpl)).getProcessInstances(null)).withRel("processInstances");

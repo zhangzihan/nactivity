@@ -44,18 +44,18 @@ namespace org.activiti.cloud.services.events.converter
         /// <summary>
         /// 
         /// </summary>
-        public override IProcessEngineEvent from(IActivitiEvent @event)
+        public override IProcessEngineEvent From(IActivitiEvent @event)
         {
             var eventObj = (IActivitiEntityEvent)@event;
 
-            return new TaskActivatedEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, RuntimeBundleProperties.ServiceName, RuntimeBundleProperties.ServiceFullName, RuntimeBundleProperties.ServiceType, RuntimeBundleProperties.ServiceVersion, @event.ExecutionId, @event.ProcessDefinitionId, @event.ProcessInstanceId, taskConverter.from((ITask)eventObj.Entity));
+            return new TaskActivatedEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, RuntimeBundleProperties.ServiceName, RuntimeBundleProperties.ServiceFullName, RuntimeBundleProperties.ServiceType, RuntimeBundleProperties.ServiceVersion, @event.ExecutionId, @event.ProcessDefinitionId, @event.ProcessInstanceId, taskConverter.From((ITask)eventObj.Entity));
         }
 
         /// <summary>
         /// 
         /// </summary>
 
-        public override string handledType()
+        public override string HandledType()
         {
             return "Task:" + ActivitiEventType.ENTITY_ACTIVATED;
         }

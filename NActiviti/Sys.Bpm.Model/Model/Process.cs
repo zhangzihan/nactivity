@@ -33,7 +33,7 @@ namespace org.activiti.bpmn.model
         protected internal IList<string> candidateStarterUsers = new List<string>();
         protected internal IList<string> candidateStarterGroups = new List<string>();
         protected internal IList<EventListener> eventListeners = new List<EventListener>();
-        protected internal IDictionary<string, FlowElement> flowElementMap = new ConcurrentDictionary<string, FlowElement>();
+        protected internal IDictionary<string, FlowElement> flowElementMap = new Dictionary<string, FlowElement>();
 
         // Added during process definition parsing
         protected internal FlowElement initialFlowElement;
@@ -134,18 +134,18 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual bool containsFlowElementId(string id)
+        public virtual bool ContainsFlowElementId(string id)
         {
             return flowElementMap.ContainsKey(id);
         }
 
-        public virtual FlowElement getFlowElement(string flowElementId)
+        public virtual FlowElement FindFlowElement(string flowElementId)
         {
-            return getFlowElement(flowElementId, false);
+            return GetFlowElement(flowElementId, false);
         }
 
         /// <param name="searchRecurive">: searches the whole process, including subprocesses </param>
-        public virtual FlowElement getFlowElement(string flowElementId, bool searchRecurive)
+        public virtual FlowElement GetFlowElement(string flowElementId, bool searchRecurive)
         {
             if (searchRecurive)
             {
@@ -160,24 +160,23 @@ namespace org.activiti.bpmn.model
             }
             else
             {
-                return findFlowElementInList(flowElementId);
+                return FindFlowElementInList(flowElementId);
             }
         }
 
-        public virtual IList<Association> findAssociationsWithSourceRefRecursive(string sourceRef)
+        public virtual IList<Association> FindAssociationsWithSourceRefRecursive(string sourceRef)
         {
-            return findAssociationsWithSourceRefRecursive(this, sourceRef);
+            return FindAssociationsWithSourceRefRecursive(this, sourceRef);
         }
 
-        protected internal virtual IList<Association> findAssociationsWithSourceRefRecursive(IFlowElementsContainer flowElementsContainer, string sourceRef)
+        protected internal virtual IList<Association> FindAssociationsWithSourceRefRecursive(IFlowElementsContainer flowElementsContainer, string sourceRef)
         {
             IList<Association> associations = new List<Association>();
             foreach (Artifact artifact in flowElementsContainer.Artifacts)
             {
-                if (artifact is Association)
+                if (artifact is Association association)
                 {
-                    Association association = (Association)artifact;
-                    if (!string.ReferenceEquals(association.SourceRef, null) && !string.ReferenceEquals(association.TargetRef, null) && association.SourceRef.Equals(sourceRef))
+                    if (!(association.SourceRef is null) && !(association.TargetRef is null) && association.SourceRef.Equals(sourceRef))
                     {
                         associations.Add(association);
                     }
@@ -188,26 +187,25 @@ namespace org.activiti.bpmn.model
             {
                 if (flowElement is IFlowElementsContainer)
                 {
-                    ((List<Association>)associations).AddRange(findAssociationsWithSourceRefRecursive((IFlowElementsContainer)flowElement, sourceRef));
+                    ((List<Association>)associations).AddRange(FindAssociationsWithSourceRefRecursive((IFlowElementsContainer)flowElement, sourceRef));
                 }
             }
             return associations;
         }
 
-        public virtual IList<Association> findAssociationsWithTargetRefRecursive(string targetRef)
+        public virtual IList<Association> FindAssociationsWithTargetRefRecursive(string targetRef)
         {
-            return findAssociationsWithTargetRefRecursive(this, targetRef);
+            return FindAssociationsWithTargetRefRecursive(this, targetRef);
         }
 
-        protected internal virtual IList<Association> findAssociationsWithTargetRefRecursive(IFlowElementsContainer flowElementsContainer, string targetRef)
+        protected internal virtual IList<Association> FindAssociationsWithTargetRefRecursive(IFlowElementsContainer flowElementsContainer, string targetRef)
         {
             IList<Association> associations = new List<Association>();
             foreach (Artifact artifact in flowElementsContainer.Artifacts)
             {
-                if (artifact is Association)
+                if (artifact is Association association)
                 {
-                    Association association = (Association)artifact;
-                    if (!string.ReferenceEquals(association.TargetRef, null) && association.TargetRef.Equals(targetRef))
+                    if (!(association.TargetRef is null) && association.TargetRef.Equals(targetRef))
                     {
                         associations.Add(association);
                     }
@@ -218,7 +216,7 @@ namespace org.activiti.bpmn.model
             {
                 if (flowElement is IFlowElementsContainer)
                 {
-                    ((List<Association>)associations).AddRange(findAssociationsWithTargetRefRecursive((IFlowElementsContainer)flowElement, targetRef));
+                    ((List<Association>)associations).AddRange(FindAssociationsWithTargetRefRecursive((IFlowElementsContainer)flowElement, targetRef));
                 }
             }
             return associations;
@@ -227,22 +225,22 @@ namespace org.activiti.bpmn.model
         /// <summary>
         /// Searches the whole process, including subprocesses
         /// </summary>
-        public virtual IFlowElementsContainer getFlowElementsContainer(string flowElementId)
+        public virtual IFlowElementsContainer GetFlowElementsContainer(string flowElementId)
         {
-            return getFlowElementsContainer(this, flowElementId);
+            return GetFlowElementsContainer(this, flowElementId);
         }
 
-        protected internal virtual IFlowElementsContainer getFlowElementsContainer(IFlowElementsContainer flowElementsContainer, string flowElementId)
+        protected internal virtual IFlowElementsContainer GetFlowElementsContainer(IFlowElementsContainer flowElementsContainer, string flowElementId)
         {
             foreach (FlowElement flowElement in flowElementsContainer.FlowElements)
             {
-                if (!string.ReferenceEquals(flowElement.Id, null) && flowElement.Id.Equals(flowElementId))
+                if (!(flowElement.Id is null) && flowElement.Id.Equals(flowElementId))
                 {
                     return flowElementsContainer;
                 }
                 else if (flowElement is IFlowElementsContainer)
                 {
-                    IFlowElementsContainer result = getFlowElementsContainer((IFlowElementsContainer)flowElement, flowElementId);
+                    IFlowElementsContainer result = GetFlowElementsContainer((IFlowElementsContainer)flowElement, flowElementId);
                     if (result != null)
                     {
                         return result;
@@ -252,7 +250,7 @@ namespace org.activiti.bpmn.model
             return null;
         }
 
-        protected internal virtual FlowElement findFlowElementInList(string flowElementId)
+        protected internal virtual FlowElement FindFlowElementInList(string flowElementId)
         {
             foreach (FlowElement f in flowElementList)
             {
@@ -264,7 +262,7 @@ namespace org.activiti.bpmn.model
             return null;
         }
 
-        public virtual ICollection<FlowElement> FlowElements
+        public virtual IList<FlowElement> FlowElements
         {
             get
             {
@@ -272,7 +270,7 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual void addFlowElement(FlowElement element)
+        public virtual void AddFlowElement(FlowElement element)
         {
             flowElementList.Add(element);
             element.ParentContainer = this;
@@ -282,11 +280,11 @@ namespace org.activiti.bpmn.model
             }
             if (element is IFlowElementsContainer)
             {
-                flowElementMap.putAll(((IFlowElementsContainer)element).FlowElementMap);
+                flowElementMap.PutAll(((IFlowElementsContainer)element).FlowElementMap);
             }
         }
 
-        public virtual void addFlowElementToMap(FlowElement element)
+        public virtual void AddFlowElementToMap(FlowElement element)
         {
             if (element != null && !string.IsNullOrWhiteSpace(element.Id))
             {
@@ -294,7 +292,7 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual void removeFlowElement(string elementId)
+        public virtual void RemoveFlowElement(string elementId)
         {
             flowElementMap.TryGetValue(elementId, out var element);
             if (element != null)
@@ -304,7 +302,7 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual void removeFlowElementFromMap(string elementId)
+        public virtual void RemoveFlowElementFromMap(string elementId)
         {
             if (!string.IsNullOrWhiteSpace(elementId))
             {
@@ -312,7 +310,7 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual Artifact getArtifact(string id)
+        public virtual Artifact GetArtifact(string id)
         {
             Artifact foundArtifact = null;
             foreach (Artifact artifact in artifactList)
@@ -326,7 +324,7 @@ namespace org.activiti.bpmn.model
             return foundArtifact;
         }
 
-        public virtual ICollection<Artifact> Artifacts
+        public virtual IList<Artifact> Artifacts
         {
             get
             {
@@ -334,14 +332,14 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual void addArtifact(Artifact artifact)
+        public virtual void AddArtifact(Artifact artifact)
         {
             artifactList.Add(artifact);
         }
 
-        public virtual void removeArtifact(string artifactId)
+        public virtual void RemoveArtifact(string artifactId)
         {
-            Artifact artifact = getArtifact(artifactId);
+            Artifact artifact = GetArtifact(artifactId);
             if (artifact != null)
             {
                 artifactList.Remove(artifact);
@@ -387,12 +385,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual IList<FlowElementType> findFlowElementsOfType<FlowElementType>() where FlowElementType : FlowElement
+        public virtual IList<FlowElementType> FindFlowElementsOfType<FlowElementType>() where FlowElementType : FlowElement
         {
-            return findFlowElementsOfType<FlowElementType>(true);
+            return FindFlowElementsOfType<FlowElementType>(true);
         }
 
-        public virtual IList<FlowElementType> findFlowElementsOfType<FlowElementType>(bool goIntoSubprocesses) where FlowElementType : FlowElement
+        public virtual IList<FlowElementType> FindFlowElementsOfType<FlowElementType>(bool goIntoSubprocesses) where FlowElementType : FlowElement
         {
             IList<FlowElementType> foundFlowElements = new List<FlowElementType>();
             foreach (FlowElement flowElement in this.FlowElements)
@@ -405,19 +403,19 @@ namespace org.activiti.bpmn.model
                 {
                     if (goIntoSubprocesses)
                     {
-                        ((List<FlowElementType>)foundFlowElements).AddRange(findFlowElementsInSubProcessOfType<FlowElementType>((SubProcess)flowElement));
+                        ((List<FlowElementType>)foundFlowElements).AddRange(FindFlowElementsInSubProcessOfType<FlowElementType>((SubProcess)flowElement));
                     }
                 }
             }
             return foundFlowElements;
         }
 
-        public virtual IList<FlowElementType> findFlowElementsInSubProcessOfType<FlowElementType>(SubProcess subProcess) where FlowElementType : FlowElement
+        public virtual IList<FlowElementType> FindFlowElementsInSubProcessOfType<FlowElementType>(SubProcess subProcess) where FlowElementType : FlowElement
         {
-            return findFlowElementsInSubProcessOfType<FlowElementType>(subProcess, true);
+            return FindFlowElementsInSubProcessOfType<FlowElementType>(subProcess, true);
         }
 
-        public virtual IList<FlowElementType> findFlowElementsInSubProcessOfType<FlowElementType>(SubProcess subProcess, bool goIntoSubprocesses) where FlowElementType : FlowElement
+        public virtual IList<FlowElementType> FindFlowElementsInSubProcessOfType<FlowElementType>(SubProcess subProcess, bool goIntoSubprocesses) where FlowElementType : FlowElement
         {
 
             IList<FlowElementType> foundFlowElements = new List<FlowElementType>();
@@ -431,29 +429,29 @@ namespace org.activiti.bpmn.model
                 {
                     if (goIntoSubprocesses)
                     {
-                        ((List<FlowElementType>)foundFlowElements).AddRange(findFlowElementsInSubProcessOfType<FlowElementType>((SubProcess)flowElement));
+                        ((List<FlowElementType>)foundFlowElements).AddRange(FindFlowElementsInSubProcessOfType<FlowElementType>((SubProcess)flowElement));
                     }
                 }
             }
             return foundFlowElements;
         }
 
-        public virtual IFlowElementsContainer findParent(FlowElement childElement)
+        public virtual IFlowElementsContainer FindParent(FlowElement childElement)
         {
-            return findParent(childElement, this);
+            return FindParent(childElement, this);
         }
 
-        public virtual IFlowElementsContainer findParent(FlowElement childElement, IFlowElementsContainer flowElementsContainer)
+        public virtual IFlowElementsContainer FindParent(FlowElement childElement, IFlowElementsContainer flowElementsContainer)
         {
             foreach (FlowElement flowElement in flowElementsContainer.FlowElements)
             {
-                if (!string.ReferenceEquals(childElement.Id, null) && childElement.Id.Equals(flowElement.Id))
+                if (!(childElement.Id is null) && childElement.Id.Equals(flowElement.Id))
                 {
                     return flowElementsContainer;
                 }
                 if (flowElement is IFlowElementsContainer)
                 {
-                    IFlowElementsContainer result = findParent(childElement, (IFlowElementsContainer)flowElement);
+                    IFlowElementsContainer result = FindParent(childElement, (IFlowElementsContainer)flowElement);
                     if (result != null)
                     {
                         return result;
@@ -463,10 +461,12 @@ namespace org.activiti.bpmn.model
             return null;
         }
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            Process clone = new Process();
-            clone.Values = this;
+            Process clone = new Process()
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -484,7 +484,7 @@ namespace org.activiti.bpmn.model
                 Documentation = val.Documentation;
                 if (val.IoSpecification != null)
                 {
-                    IoSpecification = val.IoSpecification.clone() as IOSpecification;
+                    IoSpecification = val.IoSpecification.Clone() as IOSpecification;
                 }
 
                 executionListeners = new List<ActivitiListener>();
@@ -492,7 +492,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (ActivitiListener listener in val.ExecutionListeners)
                     {
-                        executionListeners.Add(listener.clone() as ActivitiListener);
+                        executionListeners.Add(listener.Clone() as ActivitiListener);
                     }
                 }
 
@@ -513,7 +513,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (EventListener listener in val.EventListeners)
                     {
-                        eventListeners.Add(listener.clone() as EventListener);
+                        eventListeners.Add(listener.Clone() as EventListener);
                     }
                 }
 
@@ -535,7 +535,7 @@ namespace org.activiti.bpmn.model
                     if (!exists)
                     {
                         // missing object
-                        removeFlowElement(thisObject.Id);
+                        RemoveFlowElement(thisObject.Id);
                     }
                 }
 
@@ -544,13 +544,13 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (ValuedDataObject dataObject in val.DataObjects)
                     {
-                        ValuedDataObject clone = dataObject.clone() as ValuedDataObject;
+                        ValuedDataObject clone = dataObject.Clone() as ValuedDataObject;
                         dataObjects.Add(clone);
                         // add it to the list of FlowElements
                         // if it is already there, remove it first so order is same as
                         // data object list
-                        removeFlowElement(clone.Id);
-                        addFlowElement(clone);
+                        RemoveFlowElement(clone.Id);
+                        AddFlowElement(clone);
                     }
                 }
             }

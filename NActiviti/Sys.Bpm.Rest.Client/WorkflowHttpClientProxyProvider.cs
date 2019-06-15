@@ -11,28 +11,23 @@ namespace Sys.Bpm.Rest.Client
     /// </summary>
     public class WorkflowHttpClientProxyProvider
     {
-        private readonly HttpClient httpClient;
         private readonly IHttpClientProxy httpProxy;
-        private readonly IAccessTokenProvider accessTokenProvider;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="httpClient"></param>
-        public WorkflowHttpClientProxyProvider(HttpClient httpClient, IAccessTokenProvider accessTokenProvider, IHttpContextAccessor httpContextAccessor) : this(httpClient, accessTokenProvider, httpContextAccessor.HttpContext)
+        /// <param name="httpProxy"></param>
+        public WorkflowHttpClientProxyProvider(IHttpClientProxy httpProxy)
         {
-
+            this.httpProxy = httpProxy;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="httpClient"></param>
-        public WorkflowHttpClientProxyProvider(HttpClient httpClient, IAccessTokenProvider accessTokenProvider, HttpContext httpContext)
+        public IHttpClientProxy HttpProxy
         {
-            this.httpClient = httpClient;
-            this.accessTokenProvider = accessTokenProvider;
-            httpProxy = new HttpClientProxy(httpClient, this.accessTokenProvider, httpContext);
+            get
+            {
+                return httpProxy;
+            }
         }
 
         /// <summary>
@@ -87,6 +82,34 @@ namespace Sys.Bpm.Rest.Client
         public ITaskController GetTaskClient()
         {
             return new TaskClient(httpProxy);
+        }
+
+        /// <summary>
+        /// 流程任务客户端
+        /// </summary>
+        /// <returns></returns>
+        public ITaskAdminController GetTaskAdminClient()
+        {
+            return new TaskAdminClient(httpProxy);
+        }
+
+        /// <summary>
+        /// 获取流程实例变量Http Client
+        /// </summary>
+        /// <returns></returns>
+        public IProcessInstanceVariableController GetProcessInstanceVariableClient()
+        {
+            return new ProcessInstanceVariableClient(httpProxy);
+        }
+
+        /// <summary>
+        /// 获取流程任务变量Http Client
+        /// </summary>
+        /// <returns></returns>
+
+        public ITaskVariableController GetTaskVariableClient()
+        {
+            return new TaskVariableClient(httpProxy);
         }
     }
 }

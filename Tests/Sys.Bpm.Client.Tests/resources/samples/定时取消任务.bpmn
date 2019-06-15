@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+  xmlns:camunda="http://camunda.org/schema/1.0/bpmn" 
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"  id="sample-diagram" 
+  targetNamespace="http://bpmn.io/schema/bpmn" 
+  xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_qpriPAZCB" name="定时取消任务" isExecutable="true">
+    <bpmn2:startEvent id="Start_lKcuZQ6wCH">
+      <bpmn2:outgoing>SequenceFlow_0nhpmhh</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_0nhpmhh" sourceRef="Start_lKcuZQ6wCH" targetRef="Task_11tfaop" />
+    <bpmn2:userTask id="Task_11tfaop" name="定时取消任务" camunda:formKey="P1388" camunda:assignee="评审员">
+      <bpmn2:extensionElements>
+        <camunda:taskListener class="org.activiti.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:formData>
+          <camunda:formField id="FormField_06pcngl" />
+        </camunda:formData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_0nhpmhh</bpmn2:incoming>
+    </bpmn2:userTask>
+    <bpmn2:boundaryEvent id="BoundaryEvent_16ov43r" attachedToRef="Task_11tfaop">
+      <bpmn2:outgoing>SequenceFlow_0mpt8sr</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeDate xsi:type="bpmn2:tFormalExpression">${timerDateTime}</bpmn2:timeDate>
+      </bpmn2:timerEventDefinition>
+    </bpmn2:boundaryEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_0mpt8sr" sourceRef="BoundaryEvent_16ov43r" targetRef="IntermediateThrowEvent_1bg82ck" />
+    <bpmn2:endEvent id="IntermediateThrowEvent_1bg82ck">
+      <bpmn2:incoming>SequenceFlow_0mpt8sr</bpmn2:incoming>
+    </bpmn2:endEvent>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_qpriPAZCB">
+      <bpmndi:BPMNShape id="_BPMNShape_Start_lKcuZQ6wCH" bpmnElement="Start_lKcuZQ6wCH">
+        <dc:Bounds x="216" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0nhpmhh_di" bpmnElement="SequenceFlow_0nhpmhh">
+        <di:waypoint x="252" y="237" />
+        <di:waypoint x="302" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1wba7xb_di" bpmnElement="Task_11tfaop">
+        <dc:Bounds x="302" y="197" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_16f2x4k_di" bpmnElement="BoundaryEvent_16ov43r">
+        <dc:Bounds x="331" y="259" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0mpt8sr_di" bpmnElement="SequenceFlow_0mpt8sr">
+        <di:waypoint x="349" y="295" />
+        <di:waypoint x="349" y="357" />
+        <di:waypoint x="417" y="357" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_06yz6hh_di" bpmnElement="IntermediateThrowEvent_1bg82ck">
+        <dc:Bounds x="417" y="339" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

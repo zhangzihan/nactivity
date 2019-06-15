@@ -15,18 +15,25 @@ using System.Collections.Generic;
  */
 namespace org.activiti.engine.impl
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.cfg;
     using org.activiti.engine.impl.cmd;
+    using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
     using org.activiti.engine.task;
     using org.activiti.services.api.commands;
+    using Sys.Workflow;
+    using System.IO;
+    using System.Linq;
 
     /// 
     /// 
     public class TaskServiceImpl : ServiceImpl, ITaskService
     {
+        private readonly object syncRoot = new object();
+
+        private readonly ILogger<TaskServiceImpl> logger = ProcessEngineServiceProvider.LoggerService<TaskServiceImpl>();
 
         public TaskServiceImpl()
         {
@@ -37,485 +44,666 @@ namespace org.activiti.engine.impl
         {
         }
 
-        public virtual ITask newTask()
+        private TOut ExecuteCommand<TOut>(ICommand<TOut> command)
         {
-            return newTask(null);
+            return commandExecutor.Execute(command);
         }
 
-        public virtual ITask newTask(string taskId)
+        public virtual ITask NewTask()
         {
-            return commandExecutor.execute(new NewTaskCmd(taskId));
+            return NewTask(null);
         }
 
-        public virtual void saveTask(ITask task)
+        public virtual ITask NewTask(string taskId)
         {
-            commandExecutor.execute(new SaveTaskCmd(task));
+            return ExecuteCommand(new NewTaskCmd(taskId));
         }
 
-        public virtual void terminateTask(string taskId, string terminateReason, bool terminateExecution)
+        public virtual void SaveTask(ITask task)
         {
-            commandExecutor.execute(new TerminateTaskCmd(taskId, terminateReason, terminateExecution));
+            ExecuteCommand(new SaveTaskCmd(task));
         }
 
-        public virtual void deleteTasks(ICollection<string> taskIds)
+        public virtual void TerminateTask(string taskId, string terminateReason, bool terminateExecution)
         {
-            commandExecutor.execute(new DeleteTaskCmd(taskIds, null, false));
+            ExecuteCommand(new TerminateTaskCmd(taskId, terminateReason, terminateExecution));
         }
 
-        public virtual void deleteTasks(ICollection<string> taskIds, bool cascade)
+        public virtual void DeleteTasks(ICollection<string> taskIds)
         {
-            commandExecutor.execute(new DeleteTaskCmd(taskIds, null, cascade));
+            ExecuteCommand(new DeleteTaskCmd(taskIds, null, false));
         }
 
-        public virtual void deleteTask(string taskId)
+        public virtual void DeleteTasks(ICollection<string> taskIds, bool cascade)
         {
-            deleteTask(taskId, "Canceled");
+            ExecuteCommand(new DeleteTaskCmd(taskIds, null, cascade));
         }
 
-        public virtual void deleteTask(string taskId, string deleteReason, bool cascade = false)
+        public virtual void DeleteTask(string taskId)
         {
-            commandExecutor.execute(new DeleteTaskCmd(taskId, deleteReason, cascade));
+            DeleteTask(taskId, "Canceled");
         }
 
-        public virtual void deleteTasks(ICollection<string> taskIds, string deleteReason)
+        public virtual void DeleteTask(string taskId, string deleteReason, bool cascade = false)
         {
-            commandExecutor.execute(new DeleteTaskCmd(taskIds, deleteReason, false));
+            ExecuteCommand(new DeleteTaskCmd(taskId, deleteReason, cascade));
         }
 
-        public virtual void setAssignee(string taskId, string userId)
+        public virtual void DeleteTasks(ICollection<string> taskIds, string deleteReason)
         {
-            commandExecutor.execute(new AddIdentityLinkCmd(taskId, userId, AddIdentityLinkCmd.IDENTITY_USER, IdentityLinkType.ASSIGNEE));
+            ExecuteCommand(new DeleteTaskCmd(taskIds, deleteReason, false));
         }
 
-        public virtual void setOwner(string taskId, string userId)
+        public virtual void SetAssignee(string taskId, string userId)
         {
-            commandExecutor.execute(new AddIdentityLinkCmd(taskId, userId, AddIdentityLinkCmd.IDENTITY_USER, IdentityLinkType.OWNER));
+            ExecuteCommand(new AddIdentityLinkCmd(taskId, userId, AddIdentityLinkCmd.IDENTITY_USER, IdentityLinkType.ASSIGNEE));
         }
 
-        public virtual void addCandidateUser(string taskId, string userId)
+        public virtual void SetOwner(string taskId, string userId)
         {
-            commandExecutor.execute(new AddIdentityLinkCmd(taskId, userId, AddIdentityLinkCmd.IDENTITY_USER, IdentityLinkType.CANDIDATE));
+            ExecuteCommand(new AddIdentityLinkCmd(taskId, userId, AddIdentityLinkCmd.IDENTITY_USER, IdentityLinkType.OWNER));
         }
 
-        public virtual void addCandidateGroup(string taskId, string groupId)
+        public virtual void AddCandidateUser(string taskId, string userId)
         {
-            commandExecutor.execute(new AddIdentityLinkCmd(taskId, groupId, AddIdentityLinkCmd.IDENTITY_GROUP, IdentityLinkType.CANDIDATE));
+            ExecuteCommand(new AddIdentityLinkCmd(taskId, userId, AddIdentityLinkCmd.IDENTITY_USER, IdentityLinkType.CANDIDATE));
         }
 
-        public virtual void addUserIdentityLink(string taskId, string userId, string identityLinkType)
+        public virtual void AddCandidateGroup(string taskId, string groupId)
         {
-            commandExecutor.execute(new AddIdentityLinkCmd(taskId, userId, AddIdentityLinkCmd.IDENTITY_USER, identityLinkType));
+            ExecuteCommand(new AddIdentityLinkCmd(taskId, groupId, AddIdentityLinkCmd.IDENTITY_GROUP, IdentityLinkType.CANDIDATE));
         }
 
-        public virtual void addGroupIdentityLink(string taskId, string groupId, string identityLinkType)
+        public virtual void AddUserIdentityLink(string taskId, string userId, string identityLinkType)
         {
-            commandExecutor.execute(new AddIdentityLinkCmd(taskId, groupId, AddIdentityLinkCmd.IDENTITY_GROUP, identityLinkType));
+            ExecuteCommand(new AddIdentityLinkCmd(taskId, userId, AddIdentityLinkCmd.IDENTITY_USER, identityLinkType));
         }
 
-        public virtual void deleteCandidateGroup(string taskId, string groupId)
+        public virtual void AddGroupIdentityLink(string taskId, string groupId, string identityLinkType)
         {
-            commandExecutor.execute(new DeleteIdentityLinkCmd(taskId, null, groupId, IdentityLinkType.CANDIDATE));
+            ExecuteCommand(new AddIdentityLinkCmd(taskId, groupId, AddIdentityLinkCmd.IDENTITY_GROUP, identityLinkType));
         }
 
-        public virtual void deleteCandidateUser(string taskId, string userId)
+        public virtual void DeleteCandidateGroup(string taskId, string groupId)
         {
-            commandExecutor.execute(new DeleteIdentityLinkCmd(taskId, userId, null, IdentityLinkType.CANDIDATE));
+            ExecuteCommand(new DeleteIdentityLinkCmd(taskId, null, groupId, IdentityLinkType.CANDIDATE));
         }
 
-        public virtual void deleteGroupIdentityLink(string taskId, string groupId, string identityLinkType)
+        public virtual void DeleteCandidateUser(string taskId, string userId)
         {
-            commandExecutor.execute(new DeleteIdentityLinkCmd(taskId, null, groupId, identityLinkType));
+            ExecuteCommand(new DeleteIdentityLinkCmd(taskId, userId, null, IdentityLinkType.CANDIDATE));
         }
 
-        public virtual void deleteUserIdentityLink(string taskId, string userId, string identityLinkType)
+        public virtual void DeleteGroupIdentityLink(string taskId, string groupId, string identityLinkType)
         {
-            commandExecutor.execute(new DeleteIdentityLinkCmd(taskId, userId, null, identityLinkType));
+            ExecuteCommand(new DeleteIdentityLinkCmd(taskId, null, groupId, identityLinkType));
         }
 
-        public virtual IList<IIdentityLink> getIdentityLinksForTask(string taskId)
+        public virtual void DeleteUserIdentityLink(string taskId, string userId, string identityLinkType)
         {
-            return commandExecutor.execute(new GetIdentityLinksForTaskCmd(taskId));
+            ExecuteCommand(new DeleteIdentityLinkCmd(taskId, userId, null, identityLinkType));
         }
 
-        public virtual void claim(string taskId, string userId)
+        public virtual IList<IIdentityLink> GetIdentityLinksForTask(string taskId)
         {
-            commandExecutor.execute(new ClaimTaskCmd(taskId, userId));
+            return ExecuteCommand(new GetIdentityLinksForTaskCmd(taskId));
         }
 
-        public virtual void unclaim(string taskId)
+        public virtual void Claim(string taskId, string userId)
         {
-            commandExecutor.execute(new ClaimTaskCmd(taskId, null));
+            ExecuteCommand(new ClaimTaskCmd(taskId, userId));
         }
 
-        public virtual void complete(string taskId)
+        public virtual void Unclaim(string taskId)
         {
-            commandExecutor.execute(new CompleteTaskCmd(taskId, null));
+            ExecuteCommand(new ClaimTaskCmd(taskId, null));
         }
 
-        public virtual void complete(string taskId, IDictionary<string, object> variables)
+        public virtual void Complete(string taskId)
         {
-            commandExecutor.execute(new CompleteTaskCmd(taskId, variables));
+            lock (syncRoot)
+            {
+                try
+                {
+                    if (TryGetTask(taskId, out var task) == false)
+                    {
+                        return;
+                    }
+                    Complete(taskId, null);
+                }
+                catch (ActivitiObjectNotFoundException)
+                {
+                    if (logger.IsEnabled(LogLevel.Debug))
+                    {
+                        logger.LogDebug("任务可能已经终止或无效.");
+                    }
+                }
+            }
         }
 
-        public virtual void complete(string taskId, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
+        public virtual void Complete(string taskId, IDictionary<string, object> variables)
         {
-            commandExecutor.execute(new CompleteTaskCmd(taskId, variables, transientVariables));
+            lock (syncRoot)
+            {
+                try
+                {
+                    if (TryGetTask(taskId, out var task) == false)
+                    {
+                        return;
+                    }
+                    Complete(taskId, variables, null);
+                }
+                catch (ActivitiObjectNotFoundException)
+                {
+                    if (logger.IsEnabled(LogLevel.Debug))
+                    {
+                        logger.LogDebug("任务可能已经终止或无效.");
+                    }
+                }
+            }
         }
 
-        public virtual void complete(string taskId, IDictionary<string, object> variables, bool localScope)
+        public virtual void Complete(string taskId, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
         {
-            commandExecutor.execute(new CompleteTaskCmd(taskId, variables, localScope));
+            lock (syncRoot)
+            {
+                try
+                {
+                    if (TryGetTask(taskId, out var task) == false)
+                    {
+                        return;
+                    }
+                    ExecuteCommand(new CompleteTaskCmd(taskId, variables, transientVariables));
+                }
+                catch (ActivitiObjectNotFoundException)
+                {
+                    if (logger.IsEnabled(LogLevel.Debug))
+                    {
+                        logger.LogDebug("任务可能已经终止或无效.");
+                    }
+                }
+            }
         }
 
-        public virtual void delegateTask(string taskId, string userId)
+        public virtual void Complete(string taskId, IDictionary<string, object> variables, bool localScope)
         {
-            commandExecutor.execute(new DelegateTaskCmd(taskId, userId));
+            lock (syncRoot)
+            {
+                try
+                {
+                    if (TryGetTask(taskId, out var task) == false)
+                    {
+                        return;
+                    }
+                    ExecuteCommand(new CompleteTaskCmd(taskId, variables, localScope));
+                }
+                catch (ActivitiObjectNotFoundException)
+                {
+                    if (logger.IsEnabled(LogLevel.Debug))
+                    {
+                        logger.LogDebug("任务可能已经终止或无效.");
+                    }
+                }
+            }
         }
 
-        public virtual void resolveTask(string taskId)
+        public virtual void Complete(string taskId, string comment, IDictionary<string, object> variables, bool localScope, IDictionary<string, object> transientVariables)
         {
-            commandExecutor.execute(new ResolveTaskCmd(taskId, null));
+            lock (syncRoot)
+            {
+                try
+                {
+                    if (TryGetTask(taskId, out var task) == false)
+                    {
+                        return;
+                    }
+                    if (string.IsNullOrWhiteSpace(comment) == false)
+                    {
+                        AddComment(taskId, task.ProcessInstanceId, comment);
+                    }
+
+                    ExecuteCommand(new CompleteTaskCmd(taskId, variables, transientVariables, localScope));
+                }
+                catch (ActivitiObjectNotFoundException)
+                {
+                    if (logger.IsEnabled(LogLevel.Debug))
+                    {
+                        logger.LogDebug("任务可能已经终止或无效.");
+                    }
+                }
+            }
         }
 
-        public virtual void resolveTask(string taskId, IDictionary<string, object> variables)
+        public void Complete(string businessKey, string assignee, string comment, IDictionary<string, object> variables, bool localScope, IDictionary<string, object> transientVariables = null)
         {
-            commandExecutor.execute(new ResolveTaskCmd(taskId, variables));
+            lock (syncRoot)
+            {
+                try
+                {
+                    if (TryGetTask(businessKey, assignee, out var task) == false)
+                    {
+                        return;
+                    }
+
+                    ExecuteCommand(new CompleteTaskCmd(task.Id, variables, transientVariables, localScope));
+                }
+                catch (ActivitiObjectNotFoundException)
+                {
+                    if (logger.IsEnabled(LogLevel.Debug))
+                    {
+                        logger.LogDebug("任务可能已经终止或无效.");
+                    }
+                }
+            }
         }
 
-        public virtual void resolveTask(string taskId, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
+        public virtual void DelegateTask(string taskId, string userId)
         {
-            commandExecutor.execute(new ResolveTaskCmd(taskId, variables, transientVariables));
+            ExecuteCommand(new DelegateTaskCmd(taskId, userId));
         }
 
-        public virtual void setPriority(string taskId, int priority)
+        public virtual void ResolveTask(string taskId)
         {
-            commandExecutor.execute(new SetTaskPriorityCmd(taskId, priority));
+            ExecuteCommand(new ResolveTaskCmd(taskId, null));
         }
 
-        public virtual void setDueDate(string taskId, DateTime dueDate)
+        public virtual void ResolveTask(string taskId, IDictionary<string, object> variables)
         {
-            commandExecutor.execute(new SetTaskDueDateCmd(taskId, dueDate));
+            ExecuteCommand(new ResolveTaskCmd(taskId, variables));
         }
 
-        public virtual ITaskQuery createTaskQuery()
+        public virtual void ResolveTask(string taskId, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
+        {
+            ExecuteCommand(new ResolveTaskCmd(taskId, variables, transientVariables));
+        }
+
+        public virtual void SetPriority(string taskId, int priority)
+        {
+            ExecuteCommand(new SetTaskPriorityCmd(taskId, priority));
+        }
+
+        public virtual void SetDueDate(string taskId, DateTime dueDate)
+        {
+            ExecuteCommand(new SetTaskDueDateCmd(taskId, dueDate));
+        }
+
+        public virtual ITaskQuery CreateTaskQuery()
         {
             return new TaskQueryImpl(commandExecutor, processEngineConfiguration.DatabaseType);
         }
 
-        public virtual INativeTaskQuery createNativeTaskQuery()
+        public virtual INativeTaskQuery CreateNativeTaskQuery()
         {
             return new NativeTaskQueryImpl(commandExecutor);
         }
 
-        public virtual IDictionary<string, object> getVariables(string taskId)
+        public virtual IDictionary<string, object> GetVariables(string taskId)
         {
-            return commandExecutor.execute(new GetTaskVariablesCmd(taskId, null, false));
+            return ExecuteCommand(new GetTaskVariablesCmd(taskId, null, false));
         }
 
-        public virtual IDictionary<string, object> getVariablesLocal(string taskId)
+        public virtual IDictionary<string, object> GetVariablesLocal(string taskId)
         {
-            return commandExecutor.execute(new GetTaskVariablesCmd(taskId, null, true));
+            return ExecuteCommand(new GetTaskVariablesCmd(taskId, null, true));
         }
 
-        public virtual IDictionary<string, object> getVariables(string taskId, ICollection<string> variableNames)
+        public virtual IDictionary<string, object> GetVariables(string taskId, ICollection<string> variableNames)
         {
-            return commandExecutor.execute(new GetTaskVariablesCmd(taskId, variableNames, false));
+            return ExecuteCommand(new GetTaskVariablesCmd(taskId, variableNames, false));
         }
 
-        public virtual IDictionary<string, object> getVariablesLocal(string taskId, ICollection<string> variableNames)
+        public virtual IDictionary<string, object> GetVariablesLocal(string taskId, ICollection<string> variableNames)
         {
-            return commandExecutor.execute(new GetTaskVariablesCmd(taskId, variableNames, true));
+            return ExecuteCommand(new GetTaskVariablesCmd(taskId, variableNames, true));
         }
 
-        public virtual object getVariable(string taskId, string variableName)
+        public virtual object GetVariable(string taskId, string variableName)
         {
-            return commandExecutor.execute(new GetTaskVariableCmd(taskId, variableName, false));
+            return ExecuteCommand(new GetTaskVariableCmd(taskId, variableName, false));
         }
 
-        public virtual T getVariable<T>(string taskId, string variableName)
+        public virtual T GetVariable<T>(string taskId, string variableName)
         {
-            return (T)getVariable(taskId, variableName);
+            return (T)GetVariable(taskId, variableName);
         }
 
-        public virtual bool hasVariable(string taskId, string variableName)
+        public virtual bool HasVariable(string taskId, string variableName)
         {
-            return commandExecutor.execute(new HasTaskVariableCmd(taskId, variableName, false));
+            return ExecuteCommand(new HasTaskVariableCmd(taskId, variableName, false));
         }
 
-        public virtual object getVariableLocal(string taskId, string variableName)
+        public virtual object GetVariableLocal(string taskId, string variableName)
         {
-            return commandExecutor.execute(new GetTaskVariableCmd(taskId, variableName, true));
+            return ExecuteCommand(new GetTaskVariableCmd(taskId, variableName, true));
         }
 
-        public virtual T getVariableLocal<T>(string taskId, string variableName)
+        public virtual T GetVariableLocal<T>(string taskId, string variableName)
         {
-            return (T)getVariableLocal(taskId, variableName);
+            return (T)GetVariableLocal(taskId, variableName);
         }
 
-        public virtual IList<IVariableInstance> getVariableInstancesLocalByTaskIds(ISet<string> taskIds)
+        public virtual IList<IVariableInstance> GetVariableInstancesLocalByTaskIds(string[] taskIds)
         {
-            return commandExecutor.execute(new GetTasksLocalVariablesCmd(taskIds));
+            return ExecuteCommand(new GetTasksLocalVariablesCmd(taskIds));
         }
 
-        public virtual bool hasVariableLocal(string taskId, string variableName)
+        public virtual bool HasVariableLocal(string taskId, string variableName)
         {
-            return commandExecutor.execute(new HasTaskVariableCmd(taskId, variableName, true));
+            return ExecuteCommand(new HasTaskVariableCmd(taskId, variableName, true));
         }
 
-        public virtual void setVariable(string taskId, string variableName, object value)
+        public virtual bool TryGetTask(string businessKey, string assignee, out ITask task)
         {
-            if (ReferenceEquals(variableName, null))
+            if (string.IsNullOrWhiteSpace(businessKey) || string.IsNullOrWhiteSpace(assignee))
+            {
+                task = null;
+            }
+            else
+            {
+                task = CreateTaskQuery().SetProcessInstanceBusinessKey(businessKey)
+                    .SetTaskInvolvedUser(assignee)
+                    .List()
+                    .FirstOrDefault();
+            }
+
+            return task != null;
+        }
+
+        public virtual bool TryGetTask(string taskId, out ITask task)
+        {
+            if (string.IsNullOrWhiteSpace(taskId))
+            {
+                task = null;
+            }
+            else
+            {
+                task = CreateTaskQuery().SetTaskId(taskId).SingleResult();
+            }
+
+            return task != null;
+        }
+
+        public virtual void SetVariable(string taskId, string variableName, object value)
+        {
+            if (variableName is null)
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
-            IDictionary<string, object> variables = new Dictionary<string, object>();
-            variables[variableName] = value;
-            commandExecutor.execute(new SetTaskVariablesCmd<object>(taskId, variables, false));
+            IDictionary<string, object> variables = new Dictionary<string, object>
+            {
+                [variableName] = value
+            };
+            ExecuteCommand(new SetTaskVariablesCmd<object>(taskId, variables, false));
         }
 
-        public virtual void setVariableLocal(string taskId, string variableName, object value)
+        public virtual void SetVariableLocal(string taskId, string variableName, object value)
         {
-            if (ReferenceEquals(variableName, null))
+            if (variableName is null)
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
-            IDictionary<string, object> variables = new Dictionary<string, object>();
-            variables[variableName] = value;
-            commandExecutor.execute(new SetTaskVariablesCmd<object>(taskId, variables, true));
+            IDictionary<string, object> variables = new Dictionary<string, object>
+            {
+                [variableName] = value
+            };
+            ExecuteCommand(new SetTaskVariablesCmd<object>(taskId, variables, true));
         }
 
-        public virtual void setVariables<T1>(string taskId, IDictionary<string, T1> variables)
+        public virtual void SetVariables<T1>(string taskId, IDictionary<string, T1> variables)
         {
-            commandExecutor.execute(new SetTaskVariablesCmd<T1>(taskId, variables, false));
+            ExecuteCommand(new SetTaskVariablesCmd<T1>(taskId, variables, false));
         }
 
-        public virtual void setVariablesLocal<T1>(string taskId, IDictionary<string, T1> variables)
+        public virtual void SetVariablesLocal<T1>(string taskId, IDictionary<string, T1> variables)
         {
-            commandExecutor.execute(new SetTaskVariablesCmd<T1>(taskId, variables, true));
+            ExecuteCommand(new SetTaskVariablesCmd<T1>(taskId, variables, true));
         }
 
-        public virtual void removeVariable(string taskId, string variableName)
+        public virtual void RemoveVariable(string taskId, string variableName)
         {
-            ICollection<string> variableNames = new List<string>();
-            variableNames.Add(variableName);
-            commandExecutor.execute(new RemoveTaskVariablesCmd(taskId, variableNames, false));
+            ICollection<string> variableNames = new List<string>
+            {
+                variableName
+            };
+            ExecuteCommand(new RemoveTaskVariablesCmd(taskId, variableNames, false));
         }
 
-        public virtual void removeVariableLocal(string taskId, string variableName)
+        public virtual void RemoveVariableLocal(string taskId, string variableName)
         {
-            ICollection<string> variableNames = new List<string>(1);
-            variableNames.Add(variableName);
-            commandExecutor.execute(new RemoveTaskVariablesCmd(taskId, variableNames, true));
+            ICollection<string> variableNames = new List<string>(1)
+            {
+                variableName
+            };
+            ExecuteCommand(new RemoveTaskVariablesCmd(taskId, variableNames, true));
         }
 
-        public virtual void removeVariables(string taskId, ICollection<string> variableNames)
+        public virtual void RemoveVariables(string taskId, ICollection<string> variableNames)
         {
-            commandExecutor.execute(new RemoveTaskVariablesCmd(taskId, variableNames, false));
+            ExecuteCommand(new RemoveTaskVariablesCmd(taskId, variableNames, false));
         }
 
-        public virtual void removeVariablesLocal(string taskId, ICollection<string> variableNames)
+        public virtual void RemoveVariablesLocal(string taskId, ICollection<string> variableNames)
         {
-            commandExecutor.execute(new RemoveTaskVariablesCmd(taskId, variableNames, true));
+            ExecuteCommand(new RemoveTaskVariablesCmd(taskId, variableNames, true));
         }
 
-        public virtual IComment addComment(string taskId, string processInstance, string message)
+        public virtual IComment AddComment(string taskId, string processInstance, string message)
         {
-            return commandExecutor.execute(new AddCommentCmd(taskId, processInstance, message));
+            return ExecuteCommand(new AddCommentCmd(taskId, processInstance, message));
         }
 
-        public virtual IComment addComment(string taskId, string processInstance, string type, string message)
+        public virtual IComment AddComment(string taskId, string processInstance, string type, string message)
         {
-            return commandExecutor.execute(new AddCommentCmd(taskId, processInstance, type, message));
+            return ExecuteCommand(new AddCommentCmd(taskId, processInstance, type, message));
         }
 
-        public virtual IComment getComment(string commentId)
+        public virtual IComment GetComment(string commentId)
         {
-            return commandExecutor.execute(new GetCommentCmd(commentId));
+            return ExecuteCommand(new GetCommentCmd(commentId));
         }
 
-        public virtual IEvent getEvent(string eventId)
+        public virtual IEvent GetEvent(string eventId)
         {
-            return commandExecutor.execute(new GetTaskEventCmd(eventId));
+            return ExecuteCommand(new GetTaskEventCmd(eventId));
         }
 
-        public virtual IList<IComment> getTaskComments(string taskId)
+        public virtual IList<IComment> GetTaskComments(string taskId)
         {
-            return commandExecutor.execute(new GetTaskCommentsCmd(taskId));
+            return ExecuteCommand(new GetTaskCommentsCmd(taskId));
         }
 
-        public virtual IList<IComment> getTaskComments(string taskId, string type)
+        public virtual IList<IComment> GetTaskComments(string taskId, string type)
         {
-            return commandExecutor.execute(new GetTaskCommentsByTypeCmd(taskId, type));
+            return ExecuteCommand(new GetTaskCommentsByTypeCmd(taskId, type));
         }
 
-        public virtual IList<IComment> getCommentsByType(string type)
+        public virtual IList<IComment> GetCommentsByType(string type)
         {
-            return commandExecutor.execute(new GetTypeCommentsCmd(type));
+            return ExecuteCommand(new GetTypeCommentsCmd(type));
         }
 
-        public virtual IList<IEvent> getTaskEvents(string taskId)
+        public virtual IList<IEvent> GetTaskEvents(string taskId)
         {
-            return commandExecutor.execute(new GetTaskEventsCmd(taskId));
+            return ExecuteCommand(new GetTaskEventsCmd(taskId));
         }
 
-        public virtual IList<IComment> getProcessInstanceComments(string processInstanceId)
+        public virtual IList<IComment> GetProcessInstanceComments(string processInstanceId)
         {
-            return commandExecutor.execute(new GetProcessInstanceCommentsCmd(processInstanceId));
+            return ExecuteCommand(new GetProcessInstanceCommentsCmd(processInstanceId));
         }
 
-        public virtual IList<IComment> getProcessInstanceComments(string processInstanceId, string type)
+        public virtual IList<IComment> GetProcessInstanceComments(string processInstanceId, string type)
         {
-            return commandExecutor.execute(new GetProcessInstanceCommentsCmd(processInstanceId, type));
+            return ExecuteCommand(new GetProcessInstanceCommentsCmd(processInstanceId, type));
         }
 
-        public virtual IAttachment createAttachment(string attachmentType, string taskId, string processInstanceId, string attachmentName, string attachmentDescription, System.IO.Stream content)
+        public virtual IAttachment CreateAttachment(string attachmentType, string taskId, string processInstanceId, string attachmentName, string attachmentDescription, System.IO.Stream content)
         {
-            return commandExecutor.execute(new CreateAttachmentCmd(attachmentType, taskId, processInstanceId, attachmentName, attachmentDescription, content, null));
+            return ExecuteCommand(new CreateAttachmentCmd(attachmentType, taskId, processInstanceId, attachmentName, attachmentDescription, content, null));
         }
 
-        public virtual IAttachment createAttachment(string attachmentType, string taskId, string processInstanceId, string attachmentName, string attachmentDescription, string url)
+        public virtual IAttachment CreateAttachment(string attachmentType, string taskId, string processInstanceId, string attachmentName, string attachmentDescription, string url)
         {
-            return commandExecutor.execute(new CreateAttachmentCmd(attachmentType, taskId, processInstanceId, attachmentName, attachmentDescription, null, url));
+            return ExecuteCommand(new CreateAttachmentCmd(attachmentType, taskId, processInstanceId, attachmentName, attachmentDescription, null, url));
         }
 
-        public virtual System.IO.Stream getAttachmentContent(string attachmentId)
+        public virtual Stream GetAttachmentContent(string attachmentId)
         {
-            return commandExecutor.execute(new GetAttachmentContentCmd(attachmentId));
+            return ExecuteCommand(new GetAttachmentContentCmd(attachmentId));
         }
 
-        public virtual void deleteAttachment(string attachmentId)
+        public virtual void DeleteAttachment(string attachmentId)
         {
-            commandExecutor.execute(new DeleteAttachmentCmd(attachmentId));
+            ExecuteCommand(new DeleteAttachmentCmd(attachmentId));
         }
 
-        public virtual void deleteComments(string taskId, string processInstanceId)
+        public virtual void DeleteComments(string taskId, string processInstanceId)
         {
-            commandExecutor.execute(new DeleteCommentCmd(taskId, processInstanceId, null));
+            ExecuteCommand(new DeleteCommentCmd(taskId, processInstanceId, null));
         }
 
-        public virtual void deleteComment(string commentId)
+        public virtual void DeleteComment(string commentId)
         {
-            commandExecutor.execute(new DeleteCommentCmd(null, null, commentId));
+            ExecuteCommand(new DeleteCommentCmd(null, null, commentId));
         }
 
-        public virtual IAttachment getAttachment(string attachmentId)
+        public virtual IAttachment GetAttachment(string attachmentId)
         {
-            return commandExecutor.execute(new GetAttachmentCmd(attachmentId));
+            return ExecuteCommand(new GetAttachmentCmd(attachmentId));
         }
 
-        public virtual IList<IAttachment> getTaskAttachments(string taskId)
+        public virtual IList<IAttachment> GetTaskAttachments(string taskId)
         {
-            return (IList<IAttachment>)commandExecutor.execute(new GetTaskAttachmentsCmd(taskId));
+            return (IList<IAttachment>)ExecuteCommand(new GetTaskAttachmentsCmd(taskId));
         }
 
-        public virtual IList<IAttachment> getProcessInstanceAttachments(string processInstanceId)
+        public virtual IList<IAttachment> GetProcessInstanceAttachments(string processInstanceId)
         {
-            return (IList<IAttachment>)commandExecutor.execute(new GetProcessInstanceAttachmentsCmd(processInstanceId));
+            return (IList<IAttachment>)ExecuteCommand(new GetProcessInstanceAttachmentsCmd(processInstanceId));
         }
 
-        public virtual void saveAttachment(IAttachment attachment)
+        public virtual void SaveAttachment(IAttachment attachment)
         {
-            commandExecutor.execute(new SaveAttachmentCmd(attachment));
+            ExecuteCommand(new SaveAttachmentCmd(attachment));
         }
 
-        public virtual IList<ITask> getSubTasks(string parentTaskId)
+        public virtual IList<ITask> GetSubTasks(string parentTaskId)
         {
-            return commandExecutor.execute(new GetSubTasksCmd(parentTaskId));
+            return ExecuteCommand(new GetSubTasksCmd(parentTaskId));
         }
 
-        public virtual IVariableInstance getVariableInstance(string taskId, string variableName)
+        public virtual IVariableInstance GetVariableInstance(string taskId, string variableName)
         {
-            return commandExecutor.execute(new GetTaskVariableInstanceCmd(taskId, variableName, false));
+            return ExecuteCommand(new GetTaskVariableInstanceCmd(taskId, variableName, false));
         }
 
-        public virtual IVariableInstance getVariableInstanceLocal(string taskId, string variableName)
+        public virtual IVariableInstance GetVariableInstanceLocal(string taskId, string variableName)
         {
-            return commandExecutor.execute(new GetTaskVariableInstanceCmd(taskId, variableName, true));
+            return ExecuteCommand(new GetTaskVariableInstanceCmd(taskId, variableName, true));
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstances(string taskId)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstances(string taskId)
         {
-            return commandExecutor.execute(new GetTaskVariableInstancesCmd(taskId, null, false));
+            return ExecuteCommand(new GetTaskVariableInstancesCmd(taskId, null, false));
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstances(string taskId, ICollection<string> variableNames)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstances(string taskId, ICollection<string> variableNames)
         {
-            return commandExecutor.execute(new GetTaskVariableInstancesCmd(taskId, variableNames, false));
+            return ExecuteCommand(new GetTaskVariableInstancesCmd(taskId, variableNames, false));
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstancesLocal(string taskId)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstancesLocal(string taskId)
         {
-            return commandExecutor.execute(new GetTaskVariableInstancesCmd(taskId, null, true));
+            return ExecuteCommand(new GetTaskVariableInstancesCmd(taskId, null, true));
         }
 
-        public virtual IDictionary<string, IVariableInstance> getVariableInstancesLocal(string taskId, ICollection<string> variableNames)
+        public virtual IDictionary<string, IVariableInstance> GetVariableInstancesLocal(string taskId, ICollection<string> variableNames)
         {
-            return commandExecutor.execute(new GetTaskVariableInstancesCmd(taskId, variableNames, true));
+            return ExecuteCommand(new GetTaskVariableInstancesCmd(taskId, variableNames, true));
         }
 
-        public virtual IDictionary<string, IDataObject> getDataObjects(string taskId)
+        public virtual IDictionary<string, IDataObject> GetDataObjects(string taskId)
         {
-            return commandExecutor.execute(new GetTaskDataObjectsCmd(taskId, null));
+            return ExecuteCommand(new GetTaskDataObjectsCmd(taskId, null));
         }
 
-        public virtual IDictionary<string, IDataObject> getDataObjects(string taskId, string locale, bool withLocalizationFallback)
+        public virtual IDictionary<string, IDataObject> GetDataObjects(string taskId, string locale, bool withLocalizationFallback)
         {
-            return commandExecutor.execute(new GetTaskDataObjectsCmd(taskId, null, locale, withLocalizationFallback));
+            return ExecuteCommand(new GetTaskDataObjectsCmd(taskId, null, locale, withLocalizationFallback));
         }
 
-        public virtual IDictionary<string, IDataObject> getDataObjects(string taskId, ICollection<string> dataObjectNames)
+        public virtual IDictionary<string, IDataObject> GetDataObjects(string taskId, ICollection<string> dataObjectNames)
         {
-            return commandExecutor.execute(new GetTaskDataObjectsCmd(taskId, dataObjectNames));
+            return ExecuteCommand(new GetTaskDataObjectsCmd(taskId, dataObjectNames));
         }
 
-        public virtual IDictionary<string, IDataObject> getDataObjects(string taskId, ICollection<string> dataObjectNames, string locale, bool withLocalizationFallback)
+        public virtual IDictionary<string, IDataObject> GetDataObjects(string taskId, ICollection<string> dataObjectNames, string locale, bool withLocalizationFallback)
         {
-            return commandExecutor.execute(new GetTaskDataObjectsCmd(taskId, dataObjectNames, locale, withLocalizationFallback));
+            return ExecuteCommand(new GetTaskDataObjectsCmd(taskId, dataObjectNames, locale, withLocalizationFallback));
         }
 
-        public virtual IDataObject getDataObject(string taskId, string dataObject)
+        public virtual IDataObject GetDataObject(string taskId, string dataObject)
         {
-            return commandExecutor.execute(new GetTaskDataObjectCmd(taskId, dataObject));
+            return ExecuteCommand(new GetTaskDataObjectCmd(taskId, dataObject));
         }
 
-        public virtual IDataObject getDataObject(string taskId, string dataObjectName, string locale, bool withLocalizationFallback)
+        public virtual IDataObject GetDataObject(string taskId, string dataObjectName, string locale, bool withLocalizationFallback)
         {
-            return commandExecutor.execute(new GetTaskDataObjectCmd(taskId, dataObjectName, locale, withLocalizationFallback));
+            return ExecuteCommand(new GetTaskDataObjectCmd(taskId, dataObjectName, locale, withLocalizationFallback));
         }
 
-        public ITask updateTask(IUpdateTaskCmd updateTaskCmd)
+        public ITask UpdateTask(IUpdateTaskCmd updateTaskCmd)
         {
-            return commandExecutor.execute(new UpdateTaskCmd(updateTaskCmd));
+            return ExecuteCommand(new UpdateTaskCmd(updateTaskCmd));
         }
 
-        public ITask createNewSubtask(string taskName, string description, DateTime? dueDate, int? priority, string parentTaskId, string assignee, string tenantId)
+        public ITask CreateNewSubtask(string taskName, string description, DateTime? dueDate, int? priority, string parentTaskId, string assignee, string tenantId)
         {
             var cmd = new CreateNewSubtaskCmd(taskName, description, dueDate, priority, parentTaskId, assignee, tenantId);
 
-            return commandExecutor.execute(cmd);
+            return ExecuteCommand(cmd);
         }
 
         /// <inheritdoc />
-        public ITask[] transfer(ITransferTaskCmd cmd)
+        public ITask[] Transfer(ITransferTaskCmd cmd)
         {
-            return commandExecutor.execute(new TransferTaskCmd(cmd)) as ITask[];
+            lock (syncRoot)
+            {
+                return ExecuteCommand(new TransferTaskCmd(cmd)) as ITask[];
+            }
         }
 
         /// <inheritdoc />
-        public ITask[] addCountersign(string taskId, string[] assignees, string tenantId)
+        public ITask[] AddCountersign(string taskId, string[] assignees, string tenantId)
         {
-            var cmd = new AddCountersignCmd(taskId, assignees, tenantId);
+            lock (syncRoot)
+            {
+                var cmd = new AddCountersignCmd(taskId, assignees, tenantId);
 
-            return commandExecutor.execute(cmd);
+                return ExecuteCommand(cmd);
+            }
         }
 
         /// <inheritdoc />
-        public ITask createNewTask(string name, string description, DateTime? dueDate, int? priority, string parentTaskId, string assignee, string tenantId)
+        public ITask CreateNewTask(string name, string description, DateTime? dueDate, int? priority, string parentTaskId, string assignee, string tenantId)
         {
             var cmd = new CreateNewTaskCmd(name, description, dueDate, priority, parentTaskId, assignee, tenantId);
 
-            return commandExecutor.execute(cmd);
+            return ExecuteCommand(cmd);
+        }
+
+        public IList<ITask> GetMyTasks(string assignee)
+        {
+            var cmd = new GetMyTasksCmd(assignee);
+
+            return ExecuteCommand(cmd);
+        }
+
+        public ITask[] ReassignTaskUsers(ReassignUser[] users)
+        {
+            var cmd = new ReassignTaskUsersCmd(users);
+
+            return ExecuteCommand(cmd);
         }
     }
-
 }

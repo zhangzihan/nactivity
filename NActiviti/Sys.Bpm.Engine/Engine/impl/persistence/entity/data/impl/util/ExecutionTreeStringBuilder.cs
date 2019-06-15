@@ -42,13 +42,13 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.util
             {
                 foreach (IExecutionEntity childExecution in children)
                 {
-                    internalToString(childExecution, strb, "", true);
+                    InternalToString(childExecution, strb, "", true);
                 }
             }
             return strb.ToString();
         }
 
-        protected internal virtual void internalToString(IExecutionEntity execution, StringBuilder strb, string prefix, bool isTail)
+        protected internal virtual void InternalToString(IExecutionEntity execution, StringBuilder strb, string prefix, bool isTail)
         {
             strb.Append(prefix).Append(isTail ? "└── " : "├── ").Append(execution.Id).Append(" : ").Append("activityId=" + execution.ActivityId).Append(", parent id ").Append(execution.ParentId).Append(execution.IsScope ? " (scope)" : "").Append(execution.IsMultiInstanceRoot ? " (multi instance root)" : "").AppendLine();
 
@@ -57,11 +57,11 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl.util
             {
                 for (int i = 0; i < children.Count - 1; i++)
                 {
-                    internalToString(children[i], strb, prefix + (isTail ? "    " : "│   "), false);
+                    InternalToString(children[i], strb, prefix + (isTail ? "    " : "│   "), false);
                 }
                 if (children.Count > 0)
                 {
-                    internalToString(children[children.Count - 1], strb, prefix + (isTail ? "    " : "│   "), true);
+                    InternalToString(children[children.Count - 1], strb, prefix + (isTail ? "    " : "│   "), true);
                 }
             }
         }

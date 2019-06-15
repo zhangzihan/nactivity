@@ -69,6 +69,7 @@ namespace Spring.Expressions
             collectionProcessorMap.Add("convert", new ConversionProcessor());
 
             extensionMethodProcessorMap.Add("date", new DateConversionProcessor());
+            extensionMethodProcessorMap.Add("isnull", new IsNullValueConversionProcessor());
         }
 
         /// <summary>
@@ -86,6 +87,8 @@ namespace Spring.Expressions
         {
         }
 
+        private object syncRoot = new object();
+
         /// <summary>
         /// Returns node's value for the given context.
         /// </summary>
@@ -100,7 +103,7 @@ namespace Spring.Expressions
             IMethodCallProcessor methodCallProcessor = null;
 
             // resolve method, if necessary
-            lock (this)
+            lock (syncRoot)
             {
                 // check if it is a collection and the methodname denotes a collection processor
                 if ((context == null || context is ICollection))

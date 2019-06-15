@@ -28,9 +28,9 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, ManualTask manualTask)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, ManualTask manualTask)
         {
-            manualTask.Behavior = bpmnParse.ActivityBehaviorFactory.createManualTaskActivityBehavior(manualTask);
+            manualTask.Behavior = bpmnParse.ActivityBehaviorFactory.CreateManualTaskActivityBehavior(manualTask);
         }
     }
 

@@ -26,11 +26,11 @@ namespace org.activiti.engine.impl.persistence.entity
 
         IList<string> TablesPresentInDatabase { get; }
 
-        TablePage getTablePage(TablePageQueryImpl tablePageQuery, int firstResult, int maxResults);
+        TablePage GetTablePage(ITablePageQuery tablePageQuery, int firstResult, int maxResults);
 
-        string getTableName(Type entityClass, bool withPrefix);
+        string GetTableName(Type entityClass, bool withPrefix);
 
-        TableMetaData getTableMetaData(string tableName);
+        TableMetaData GetTableMetaData(string tableName);
 
     }
 }

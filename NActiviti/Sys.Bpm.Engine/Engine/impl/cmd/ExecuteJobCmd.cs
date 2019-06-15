@@ -17,9 +17,8 @@ namespace org.activiti.engine.impl.cmd
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.jobexecutor;
-    using org.activiti.engine.impl.util;
     using org.activiti.engine.runtime;
-    using Sys;
+    using Sys.Workflow;
     using System.Collections.Generic;
 
     /// 
@@ -38,14 +37,14 @@ namespace org.activiti.engine.impl.cmd
             this.jobId = jobId;
         }
 
-        public virtual object execute(ICommandContext commandContext)
+        public virtual object Execute(ICommandContext commandContext)
         {
-            if (ReferenceEquals(jobId, null))
+            if (jobId is null)
             {
                 throw new ActivitiIllegalArgumentException("jobId and job is null");
             }
 
-            IJob job = commandContext.JobEntityManager.findById<IJob>(new KeyValuePair<string, object>("id", jobId));
+            IJob job = commandContext.JobEntityManager.FindById<IJob>(new KeyValuePair<string, object>("id", jobId));
 
             if (job == null)
             {
@@ -57,11 +56,11 @@ namespace org.activiti.engine.impl.cmd
                 log.LogDebug($"Executing job {job.Id}");
             }
 
-            commandContext.addCloseListener(new FailedJobListener(commandContext.ProcessEngineConfiguration.CommandExecutor, job));
+            commandContext.AddCloseListener(new FailedJobListener(commandContext.ProcessEngineConfiguration.CommandExecutor, job));
 
             try
             {
-                commandContext.JobManager.execute(job);
+                commandContext.JobManager.Execute(job);
             }
             catch (Exception exception)
             {

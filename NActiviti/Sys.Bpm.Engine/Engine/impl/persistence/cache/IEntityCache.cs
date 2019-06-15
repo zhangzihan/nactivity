@@ -27,7 +27,6 @@ namespace org.activiti.engine.impl.persistence.cache
     /// </summary>
     public interface IEntityCache : ISession
     {
-
         /// <summary>
         /// Returns all cached <seealso cref="IEntity"/> instances as a map 
         /// with following structure: { entityClassName, {entityId, entity} }
@@ -41,38 +40,36 @@ namespace org.activiti.engine.impl.persistence.cache
         /// <param name="storeState"> If true, the current state <seealso cref="IEntity#getPersistentState()"/> will be stored for future diffing.
         ///                   Note that, if false, the <seealso cref="IEntity"/> will always be seen as changed. </param>
         /// <returns> Returns a <seealso cref="CachedEntity"/> instance, which can be enriched later on.                    </returns>
-        CachedEntity put(IEntity entity, bool storeState);
+        CachedEntity Put(IEntity entity, bool storeState);
 
         /// <summary>
         /// Returns the cached <seealso cref="IEntity"/> instance of the given class with the provided id.
         /// Returns null if such a <seealso cref="IEntity"/> cannot be found. 
         /// </summary>
-        T findInCache<T>(string id);
+        T FindInCache<T>(string id);
 
-        object findInCache(Type cacheType, string id);
+        object FindInCache(Type cacheType, string id);
 
         /// <summary>
         /// Returns all cached <seealso cref="IEntity"/> instances of a given type.
         /// Returns an empty list if no instances of the given type exist.
         /// </summary>
-        IList<T> findInCache<T>();
+        IList<T> FindInCache<T>();
 
-        IList<object> findInCache(Type cacheType);
+        IList<object> FindInCache(Type cacheType);
 
         /// <summary>
         /// Returns all <seealso cref="CachedEntity"/> instances for the given type.
         /// The difference with <seealso cref="#findInCache(Class)"/> is that here the whole <seealso cref="CachedEntity"/>
         /// is returned, which gives access to the persistent state at the moment of putting it in the cache.  
         /// </summary>
-        ICollection<CachedEntity> findInCacheAsCachedObjects<T>();
+        ICollection<CachedEntity> FindInCacheAsCachedObjects<T>();
 
-        ICollection<CachedEntity> findInCacheAsCachedObjects(Type entityClass);
+        ICollection<CachedEntity> FindInCacheAsCachedObjects(Type entityClass);
 
         /// <summary>
         /// Removes the <seealso cref="IEntity"/> of the given type with the given id from the cache. 
         /// </summary>
-        void cacheRemove(Type entityClass, string entityId);
-
+        void CacheRemove(Type entityClass, string entityId);
     }
-
 }

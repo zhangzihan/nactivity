@@ -24,10 +24,10 @@ namespace org.activiti.engine.impl.variable
     /// 
     public class EntityManagerSessionImpl : IEntityManagerSession
     {
-        private IEntityManagerFactory entityManagerFactory;
+        private readonly IEntityManagerFactory entityManagerFactory;
         private IEntityManager entityManager;
-        private bool handleTransactions;
-        private bool closeEntityManager;
+        private readonly bool handleTransactions;
+        private readonly bool closeEntityManager;
 
         public EntityManagerSessionImpl(IEntityManagerFactory entityManagerFactory, IEntityManager entityManager, bool handleTransactions, bool closeEntityManager) : this(entityManagerFactory, handleTransactions, closeEntityManager)
         {
@@ -41,15 +41,15 @@ namespace org.activiti.engine.impl.variable
             this.closeEntityManager = closeEntityManager;
         }
 
-        public virtual void flush()
+        public virtual void Flush()
         {
             if (entityManager != null && !handleTransactions)
             {
                 try
                 {
-                    entityManager.flush();
+                    entityManager.Flush();
                 }
-                catch (System.InvalidOperationException ise)
+                catch (InvalidOperationException ise)
                 {
                     throw new ActivitiException("Error while flushing EntityManager, illegal state", ise);
                 }
@@ -64,15 +64,15 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public virtual void close()
+        public virtual void Close()
         {
             if (closeEntityManager && entityManager != null && !entityManager.Open)
             {
                 try
                 {
-                    entityManager.close();
+                    entityManager.Close();
                 }
-                catch (System.InvalidOperationException ise)
+                catch (InvalidOperationException ise)
                 {
                     throw new ActivitiException("Error while closing EntityManager, may have already been closed or it is container-managed", ise);
                 }
@@ -85,7 +85,7 @@ namespace org.activiti.engine.impl.variable
             {
                 if (entityManager == null)
                 {
-                    entityManager = EntityManagerFactory.createEntityManager();
+                    entityManager = EntityManagerFactory.CreateEntityManager();
 
                     if (handleTransactions)
                     {
@@ -95,8 +95,8 @@ namespace org.activiti.engine.impl.variable
                         ITransactionListener jpaTransactionRollbackListener = new TransactionListenerAnonymousInnerClass2(this);
 
                         ITransactionContext transactionContext = Context.TransactionContext;
-                        transactionContext.addTransactionListener(TransactionState.COMMITTED, jpaTransactionCommitListener);
-                        transactionContext.addTransactionListener(TransactionState.ROLLED_BACK, jpaTransactionRollbackListener);
+                        transactionContext.AddTransactionListener(TransactionState.COMMITTED, jpaTransactionCommitListener);
+                        transactionContext.AddTransactionListener(TransactionState.ROLLED_BACK, jpaTransactionRollbackListener);
 
                         // Also, start a transaction, if one isn't started already
                         //if (!TransactionActive)
@@ -119,7 +119,7 @@ namespace org.activiti.engine.impl.variable
                 this.outerInstance = outerInstance;
             }
 
-            public virtual void execute(ICommandContext commandContext)
+            public virtual void Execute(ICommandContext commandContext)
             {
                 outerInstance.entityManager.Transaction.Commit();
 
@@ -139,7 +139,7 @@ namespace org.activiti.engine.impl.variable
                 this.outerInstance = outerInstance;
             }
 
-            public virtual void execute(ICommandContext commandContext)
+            public virtual void Execute(ICommandContext commandContext)
             {
                 outerInstance.entityManager.Transaction.Rollback();
                 //if (outerInstance.TransactionActive)

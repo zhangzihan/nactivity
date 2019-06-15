@@ -29,16 +29,31 @@ namespace org.activiti.cloud.services.api.commands
         /// <param name="pageableRepositoryService">分页仓储服务</param>
         /// <param name="qo">查询对象</param>
         /// <returns></returns>
-        public IPage<HistoricInstance> loadPage(IHistoryService historyService,
+        public IPage<HistoricInstance> LoadPage(IHistoryService historyService,
             PageableProcessHistoryRepositoryService pageableRepositoryService, HistoricInstanceQuery qo)
         {
-            HistoricProcessInstanceQueryImpl query = historyService.createHistoricProcessInstanceQuery() as HistoricProcessInstanceQueryImpl;
-            
+            HistoricProcessInstanceQueryImpl query = historyService.CreateHistoricProcessInstanceQuery() as HistoricProcessInstanceQueryImpl;
+
             FastCopy.Copy<HistoricInstanceQuery, HistoricProcessInstanceQueryImpl>(qo, query);
 
-            pageableRepositoryService.SortApplier.applySort(query, qo.Pageable);
+            if (qo.IsTerminated.HasValue)
+            {
+                if (qo.IsTerminated.Value)
+                {
+                    query.SetDeleted();
+                }
+                else
+                {
+                    query.SetNotDeleted();
+                }
+            }
 
-            IPage<HistoricInstance> defs = pageableRepositoryService.PageRetriever.loadPage(query, qo.Pageable, pageableRepositoryService.ProcessDefinitionConverter);
+            pageableRepositoryService.SortApplier.ApplySort(query, qo.Pageable);
+
+            IPage<HistoricInstance> defs = pageableRepositoryService.PageRetriever.LoadPage(historyService as ServiceImpl, query, qo.Pageable, pageableRepositoryService.ProcessDefinitionConverter, (q, firstResult, pageSize) =>
+            {
+                return new engine.impl.cmd.GetHistoricProcessInstancesCmd(q, firstResult, pageSize);
+            });
 
             return defs;
         }

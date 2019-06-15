@@ -38,32 +38,32 @@ namespace org.activiti.engine.impl.cmd
             this.isLocal = isLocal;
         }
 
-        public  virtual bool  execute(ICommandContext  commandContext)
+        public  virtual bool  Execute(ICommandContext  commandContext)
         {
-            if (ReferenceEquals(taskId, null))
+            if (taskId is null)
             {
                 throw new ActivitiIllegalArgumentException("taskId is null");
             }
-            if (ReferenceEquals(variableName, null))
+            if (variableName is null)
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
 
-            ITaskEntity task = commandContext.TaskEntityManager.findById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
+            ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
 
             if (task == null)
             {
                 throw new ActivitiObjectNotFoundException("task " + taskId + " doesn't exist", typeof(ITask));
             }
-            bool hasVariable = false;
 
+            bool hasVariable;
             if (isLocal)
             {
-                hasVariable = task.hasVariableLocal(variableName);
+                hasVariable = task.HasVariableLocal(variableName);
             }
             else
             {
-                hasVariable = task.hasVariable(variableName);
+                hasVariable = task.HasVariable(variableName);
             }
 
             return hasVariable;

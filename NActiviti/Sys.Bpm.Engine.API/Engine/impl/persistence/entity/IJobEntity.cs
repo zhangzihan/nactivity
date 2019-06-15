@@ -23,18 +23,9 @@ namespace org.activiti.engine.impl.persistence.entity
     /// </summary>
     public interface IJobEntity : IAbstractJobEntity
     {
-        new string Id { get; set; }
-
-        new string ExecutionId { get; set; }
-
-        new string ProcessDefinitionId { get; set; }
-
         string LockOwner { get; set; }
 
 
         DateTime? LockExpirationTime { get; set; }
-
-        new DateTime? Duedate { get; set; }
     }
-
 }

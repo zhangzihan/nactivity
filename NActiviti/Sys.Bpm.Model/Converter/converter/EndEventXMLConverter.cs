@@ -37,20 +37,20 @@ namespace org.activiti.bpmn.converter
                 return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_EVENT_END;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             EndEvent endEvent = new EndEvent();
-            BpmnXMLUtil.addXMLLocation(endEvent, xtr);
-            parseChildElements(XMLElementName, endEvent, model, xtr);
+            BpmnXMLUtil.AddXMLLocation(endEvent, xtr);
+            ParseChildElements(XMLElementName, endEvent, model, xtr);
             return endEvent;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             EndEvent endEvent = (EndEvent)element;
-            writeEventDefinitions(endEvent, endEvent.EventDefinitions, model, xtw);
+            WriteEventDefinitions(endEvent, endEvent.EventDefinitions, model, xtw);
         }
     }
 

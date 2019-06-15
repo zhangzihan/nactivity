@@ -19,9 +19,9 @@ namespace org.activiti.engine.impl
     internal sealed class SchemaOperationProcessEngineClose : ICommand<object>
     {
 
-        public  object  execute(ICommandContext commandContext)
+        public  object  Execute(ICommandContext commandContext)
         {
-            commandContext.DbSqlSession.performSchemaOperationsProcessEngineClose();
+            commandContext.DbSqlSession.PerformSchemaOperationsProcessEngineClose();
             return null;
         }
     }

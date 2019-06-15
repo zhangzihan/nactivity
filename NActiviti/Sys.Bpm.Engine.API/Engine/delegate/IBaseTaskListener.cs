@@ -19,18 +19,39 @@ namespace org.activiti.engine.@delegate
     {
 
         /// <summary>
-        /// Not an actual event, used as a marker-value for <seealso cref="IBaseTaskListener"/>s that should be called for all events, including <seealso cref="#EVENTNAME_CREATE"/> , <seealso cref="#EVENTNAME_ASSIGNMENT"/> and
-        /// <seealso cref="#EVENTNAME_COMPLETE"/> and <seealso cref="#EVENTNAME_DELETE"/>.
+        /// Not an actual event, used as a marker-value for <seealso cref="IBaseTaskListener"/>s that should be called for all events, including <seealso cref="EVENTNAME_CREATE"/> , <seealso cref="EVENTNAME_ASSIGNMENT"/> and
+        /// <seealso cref="EVENTNAME_COMPLETE"/> and <seealso cref="EVENTNAME_DELETE"/>.
         /// </summary>
     }
 
-    public static class BaseTaskListener_Fields
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class BaseTaskListenerFields
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public const string EVENTNAME_CREATE = "create";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string EVENTNAME_ASSIGNMENT = "assignment";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string EVENTNAME_COMPLETE = "complete";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string EVENTNAME_DELETE = "delete";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const string EVENTNAME_ALL_EVENTS = "all";
     }
-
 }

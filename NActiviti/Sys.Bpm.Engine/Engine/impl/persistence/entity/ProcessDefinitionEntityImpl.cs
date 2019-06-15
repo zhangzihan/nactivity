@@ -55,9 +55,11 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                PersistentState persistentState = new PersistentState();
-                persistentState["suspensionState"] = this.suspensionState;
-                persistentState["category"] = this.category;
+                PersistentState persistentState = new PersistentState
+                {
+                    ["suspensionState"] = this.suspensionState,
+                    ["category"] = this.category
+                };
                 return persistentState;
             }
         }
@@ -72,7 +74,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 var ctx = Context.CommandContext;
                 if (!isIdentityLinksInitialized && ctx != null)
                 {
-                    definitionIdentityLinkEntities = ctx.IdentityLinkEntityManager.findIdentityLinksByProcessDefinitionId(id);
+                    definitionIdentityLinkEntities = ctx.IdentityLinkEntityManager.FindIdentityLinksByProcessDefinitionId(id);
                     isIdentityLinksInitialized = true;
                 }
 
@@ -318,6 +320,35 @@ namespace org.activiti.engine.impl.persistence.entity
             return "ProcessDefinitionEntity[" + id + "]";
         }
 
+        public override bool Equals(object obj)
+        {
+            return this == obj as ProcessDefinitionEntityImpl;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.GetType().GetHashCode() >> 2;
+        }
+
+        public static bool operator ==(ProcessDefinitionEntityImpl objA, ProcessDefinitionEntityImpl objB)
+        {
+            if (objA is null && objB is null)
+            {
+                return true;
+            }
+
+            if ((!(objA is null) && objB is null) || (!(objB is null) && objA is null))
+            {
+                return false;
+            }
+
+            return string.Equals(objA.Name, objB.Name, StringComparison.OrdinalIgnoreCase) && objA.Version == objB.Version && string.Equals(objA.TenantId, objB.TenantId, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool operator !=(ProcessDefinitionEntityImpl objA, ProcessDefinitionEntityImpl objB)
+        {
+            return !(objA == objB);
+        }
     }
 
 }

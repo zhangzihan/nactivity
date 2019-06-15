@@ -21,9 +21,9 @@ namespace org.activiti.engine
     public interface IUserRoleLookupProxy
     {
 
-        IList<string> getRolesForUser(string user);
+        IList<string> GetRolesForUser(string user);
 
-        bool isAdmin(string user);
+        bool IsAdmin(string user);
     }
 
 }

@@ -64,12 +64,12 @@ namespace org.activiti.engine.impl.scripting
             this.variableScope = variableScope;
         }
 
-        public virtual bool containsKey(object key)
+        public virtual bool ContainsKey(object key)
         {
-            return variableScopeKey.Equals(key?.ToString()) || KEYS.Contains(key?.ToString()) || variableScope.hasVariable(key?.ToString());
+            return variableScopeKey.Equals(key?.ToString()) || KEYS.Contains(key?.ToString()) || variableScope.HasVariable(key?.ToString());
         }
 
-        public virtual object get(object key)
+        public virtual object Get(object key)
         {
             if (variableScopeKey.Equals(key))
             {
@@ -96,7 +96,7 @@ namespace org.activiti.engine.impl.scripting
                 return processEngineConfiguration.ManagementService;
             }
 
-            return variableScope.getVariable((string)key);
+            return variableScope.GetVariable((string)key);
         }
     }
 

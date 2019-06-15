@@ -22,23 +22,23 @@ namespace org.activiti.engine.impl.persistence.entity.data
 	public interface ITimerJobDataManager : IDataManager<ITimerJobEntity>
 	{
 
-	  IList<ITimerJobEntity> findTimerJobsToExecute(Page page);
+	  IList<ITimerJobEntity> FindTimerJobsToExecute(Page page);
 
-	  IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionId(string jobHandlerType, string processDefinitionId);
+	  IList<ITimerJobEntity> FindJobsByTypeAndProcessDefinitionId(string jobHandlerType, string processDefinitionId);
 
-	  IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionKeyNoTenantId(string jobHandlerType, string processDefinitionKey);
+	  IList<ITimerJobEntity> FindJobsByTypeAndProcessDefinitionKeyNoTenantId(string jobHandlerType, string processDefinitionKey);
 
-	  IList<ITimerJobEntity> findJobsByTypeAndProcessDefinitionKeyAndTenantId(string jobHandlerType, string processDefinitionKey, string tenantId);
+	  IList<ITimerJobEntity> FindJobsByTypeAndProcessDefinitionKeyAndTenantId(string jobHandlerType, string processDefinitionKey, string tenantId);
 
-	  IList<ITimerJobEntity> findJobsByExecutionId(string executionId);
+	  IList<ITimerJobEntity> FindJobsByExecutionId(string executionId);
 
-	  IList<ITimerJobEntity> findJobsByProcessInstanceId(string processInstanceId);
+	  IList<ITimerJobEntity> FindJobsByProcessInstanceId(string processInstanceId);
 
-	  IList<IJob> findJobsByQueryCriteria(TimerJobQueryImpl jobQuery, Page page);
+	  IList<IJob> FindJobsByQueryCriteria(ITimerJobQuery jobQuery, Page page);
 
-	  long findJobCountByQueryCriteria(TimerJobQueryImpl jobQuery);
+	  long FindJobCountByQueryCriteria(ITimerJobQuery jobQuery);
 
-	  void updateJobTenantIdForDeployment(string deploymentId, string newTenantId);
+	  void UpdateJobTenantIdForDeployment(string deploymentId, string newTenantId);
 	}
 
 }

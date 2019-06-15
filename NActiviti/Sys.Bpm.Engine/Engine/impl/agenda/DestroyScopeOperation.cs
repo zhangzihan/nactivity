@@ -2,9 +2,11 @@
 
 namespace org.activiti.engine.impl.agenda
 {
-
+    using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow;
+    using System;
 
     /// <summary>
     /// Destroys a scope (for example a subprocess): this means that all child executions,
@@ -16,104 +18,118 @@ namespace org.activiti.engine.impl.agenda
     /// </para>
     /// </summary>
     public class DestroyScopeOperation : AbstractOperation
-	{
+    {
+        private static readonly ILogger<DestroyScopeOperation> logger = ProcessEngineServiceProvider.LoggerService<DestroyScopeOperation>();
 
-		public DestroyScopeOperation(ICommandContext commandContext, IExecutionEntity execution) : base(commandContext, execution)
-		{
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <param name="execution"></param>
+        public DestroyScopeOperation(ICommandContext commandContext, IExecutionEntity execution) : base(commandContext, execution)
+        {
+        }
 
-        protected override void run()
-		{
+        /// <summary>
+        /// 
+        /// </summary>
+        protected override void RunOperation()
+        {
+            try
+            {
+                // Find the actual scope that needs to be destroyed.
+                // This could be the incoming execution, or the first parent execution where isScope = true
 
-			// Find the actual scope that needs to be destroyed.
-			// This could be the incoming execution, or the first parent execution where isScope = true
+                // Find parent scope execution
+                IExecutionEntity scopeExecution = execution.IsScope ? execution : FindFirstParentScopeExecution(execution);
 
-			// Find parent scope execution
-			IExecutionEntity scopeExecution = execution.IsScope ? execution : findFirstParentScopeExecution(execution);
+                if (scopeExecution == null)
+                {
+                    throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event");
+                }
 
-			if (scopeExecution == null)
-			{
-				throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event");
-			}
+                IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
+                DeleteAllChildExecutions(executionEntityManager, scopeExecution);
 
-			IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
-			deleteAllChildExecutions(executionEntityManager, scopeExecution);
+                // Delete all scope tasks
+                ITaskEntityManager taskEntityManager = commandContext.TaskEntityManager;
+                DeleteAllScopeTasks(scopeExecution, taskEntityManager);
 
-			// Delete all scope tasks
-			ITaskEntityManager taskEntityManager = commandContext.TaskEntityManager;
-			deleteAllScopeTasks(scopeExecution, taskEntityManager);
+                // Delete all scope jobs
+                ITimerJobEntityManager timerJobEntityManager = commandContext.TimerJobEntityManager;
+                DeleteAllScopeJobs(scopeExecution, timerJobEntityManager);
 
-			// Delete all scope jobs
-			ITimerJobEntityManager timerJobEntityManager = commandContext.TimerJobEntityManager;
-			deleteAllScopeJobs(scopeExecution, timerJobEntityManager);
+                // Remove variables associated with this scope
+                IVariableInstanceEntityManager variableInstanceEntityManager = commandContext.VariableInstanceEntityManager;
+                RemoveAllVariablesFromScope(scopeExecution, variableInstanceEntityManager);
 
+                commandContext.HistoryManager.RecordActivityEnd(scopeExecution, scopeExecution.DeleteReason);
+                executionEntityManager.Delete(scopeExecution);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
 
-			// Remove variables associated with this scope
-			IVariableInstanceEntityManager variableInstanceEntityManager = commandContext.VariableInstanceEntityManager;
-			removeAllVariablesFromScope(scopeExecution, variableInstanceEntityManager);
+        private void RemoveAllVariablesFromScope(IExecutionEntity scopeExecution, IVariableInstanceEntityManager variableInstanceEntityManager)
+        {
+            ICollection<IVariableInstanceEntity> variablesForExecution = variableInstanceEntityManager.FindVariableInstancesByExecutionId(scopeExecution.Id);
+            foreach (IVariableInstanceEntity variable in variablesForExecution)
+            {
+                variableInstanceEntityManager.Delete(variable);
+            }
+        }
 
-			commandContext.HistoryManager.recordActivityEnd(scopeExecution, scopeExecution.DeleteReason);
-			executionEntityManager.delete(scopeExecution);
-		}
+        private void DeleteAllScopeJobs(IExecutionEntity scopeExecution, ITimerJobEntityManager timerJobEntityManager)
+        {
+            ICollection<ITimerJobEntity> timerJobsForExecution = timerJobEntityManager.FindJobsByExecutionId(scopeExecution.Id);
+            foreach (ITimerJobEntity job in timerJobsForExecution)
+            {
+                timerJobEntityManager.Delete(job);
+            }
 
-		private void removeAllVariablesFromScope(IExecutionEntity scopeExecution, IVariableInstanceEntityManager variableInstanceEntityManager)
-		{
-			ICollection<IVariableInstanceEntity> variablesForExecution = variableInstanceEntityManager.findVariableInstancesByExecutionId(scopeExecution.Id);
-			foreach (IVariableInstanceEntity variable in variablesForExecution)
-			{
-				variableInstanceEntityManager.delete(variable);
-			}
-		}
+            IJobEntityManager jobEntityManager = commandContext.JobEntityManager;
+            ICollection<IJobEntity> jobsForExecution = jobEntityManager.FindJobsByExecutionId(scopeExecution.Id);
+            foreach (IJobEntity job in jobsForExecution)
+            {
+                jobEntityManager.Delete(job);
+            }
 
-		private void deleteAllScopeJobs(IExecutionEntity scopeExecution, ITimerJobEntityManager timerJobEntityManager)
-		{
-			ICollection<ITimerJobEntity> timerJobsForExecution = timerJobEntityManager.findJobsByExecutionId(scopeExecution.Id);
-			foreach (ITimerJobEntity job in timerJobsForExecution)
-			{
-				timerJobEntityManager.delete(job);
-			}
+            ISuspendedJobEntityManager suspendedJobEntityManager = commandContext.SuspendedJobEntityManager;
+            ICollection<ISuspendedJobEntity> suspendedJobsForExecution = suspendedJobEntityManager.FindJobsByExecutionId(scopeExecution.Id);
+            foreach (ISuspendedJobEntity job in suspendedJobsForExecution)
+            {
+                suspendedJobEntityManager.Delete(job);
+            }
 
-			IJobEntityManager jobEntityManager = commandContext.JobEntityManager;
-			ICollection<IJobEntity> jobsForExecution = jobEntityManager.findJobsByExecutionId(scopeExecution.Id);
-			foreach (IJobEntity job in jobsForExecution)
-			{
-				jobEntityManager.delete(job);
-			}
+            IDeadLetterJobEntityManager deadLetterJobEntityManager = commandContext.DeadLetterJobEntityManager;
+            ICollection<IDeadLetterJobEntity> deadLetterJobsForExecution = deadLetterJobEntityManager.FindJobsByExecutionId(scopeExecution.Id);
+            foreach (IDeadLetterJobEntity job in deadLetterJobsForExecution)
+            {
+                deadLetterJobEntityManager.Delete(job);
+            }
+        }
 
-			ISuspendedJobEntityManager suspendedJobEntityManager = commandContext.SuspendedJobEntityManager;
-			ICollection<ISuspendedJobEntity> suspendedJobsForExecution = suspendedJobEntityManager.findJobsByExecutionId(scopeExecution.Id);
-			foreach (ISuspendedJobEntity job in suspendedJobsForExecution)
-			{
-				suspendedJobEntityManager.delete(job);
-			}
+        private void DeleteAllScopeTasks(IExecutionEntity scopeExecution, ITaskEntityManager taskEntityManager)
+        {
+            ICollection<ITaskEntity> tasksForExecution = taskEntityManager.FindTasksByExecutionId(scopeExecution.Id);
+            foreach (ITaskEntity taskEntity in tasksForExecution)
+            {
+                taskEntityManager.DeleteTask(taskEntity, execution.DeleteReason, false, false);
+            }
+        }
 
-			IDeadLetterJobEntityManager deadLetterJobEntityManager = commandContext.DeadLetterJobEntityManager;
-			ICollection<IDeadLetterJobEntity> deadLetterJobsForExecution = deadLetterJobEntityManager.findJobsByExecutionId(scopeExecution.Id);
-			foreach (IDeadLetterJobEntity job in deadLetterJobsForExecution)
-			{
-				deadLetterJobEntityManager.delete(job);
-			}
-		}
-
-		private void deleteAllScopeTasks(IExecutionEntity scopeExecution, ITaskEntityManager taskEntityManager)
-		{
-			ICollection<ITaskEntity> tasksForExecution = taskEntityManager.findTasksByExecutionId(scopeExecution.Id);
-			foreach (ITaskEntity taskEntity in tasksForExecution)
-			{
-				taskEntityManager.deleteTask(taskEntity, execution.DeleteReason, false, false);
-			}
-		}
-
-		private IExecutionEntityManager deleteAllChildExecutions(IExecutionEntityManager executionEntityManager, IExecutionEntity scopeExecution)
-		{
-			// Delete all child executions
-			ICollection<IExecutionEntity> childExecutions = executionEntityManager.findChildExecutionsByParentExecutionId(scopeExecution.Id);
-			foreach (IExecutionEntity childExecution in childExecutions)
-			{
-				executionEntityManager.deleteExecutionAndRelatedData(childExecution, execution.DeleteReason, false);
-			}
-			return executionEntityManager;
-		}
-	}
-
+        private IExecutionEntityManager DeleteAllChildExecutions(IExecutionEntityManager executionEntityManager, IExecutionEntity scopeExecution)
+        {
+            // Delete all child executions
+            ICollection<IExecutionEntity> childExecutions = executionEntityManager.FindChildExecutionsByParentExecutionId(scopeExecution.Id);
+            foreach (IExecutionEntity childExecution in childExecutions)
+            {
+                executionEntityManager.DeleteExecutionAndRelatedData(childExecution, execution.DeleteReason, false);
+            }
+            return executionEntityManager;
+        }
+    }
 }

@@ -29,67 +29,65 @@ namespace org.activiti.engine.history
 
         /// <summary>
         /// Only select a historic variable with the given id. </summary>
-        IHistoricVariableInstanceQuery id(string id);
+        IHistoricVariableInstanceQuery SetId(string id);
 
         /// <summary>
         /// Only select historic process variables with the given process instance. </summary>
-        IHistoricVariableInstanceQuery processInstanceId(string processInstanceId);
+        IHistoricVariableInstanceQuery SetProcessInstanceId(string processInstanceId);
 
         /// <summary>
         /// Only select historic process variables with the given id. * </summary>
-        IHistoricVariableInstanceQuery executionId(string executionId);
+        IHistoricVariableInstanceQuery SetExecutionId(string executionId);
 
         /// <summary>
         /// Only select historic process variables whose id is in the given set of ids. </summary>
-        IHistoricVariableInstanceQuery executionIds(ISet<string> executionIds);
+        IHistoricVariableInstanceQuery SetExecutionIds(string[] executionIds);
 
         /// <summary>
         /// Only select historic process variables with the given task. </summary>
-        IHistoricVariableInstanceQuery taskId(string taskId);
+        IHistoricVariableInstanceQuery SetTaskId(string taskId);
 
         /// <summary>
         /// Only select historic process variables whose id is in the given set of ids. </summary>
-        IHistoricVariableInstanceQuery taskIds(ISet<string> taskIds);
+        IHistoricVariableInstanceQuery SetTaskIds(string[] taskIds);
 
         /// <summary>
         /// Only select historic process variables with the given variable name. </summary>
-        IHistoricVariableInstanceQuery variableName(string variableName);
+        IHistoricVariableInstanceQuery SetVariableName(string variableName);
 
         /// <summary>
         /// Only select historic process variables where the given variable name is like. </summary>
-        IHistoricVariableInstanceQuery variableNameLike(string variableNameLike);
+        IHistoricVariableInstanceQuery SetVariableNameLike(string variableNameLike);
 
         /// <summary>
         /// Only select historic process variables which were not set task-local. </summary>
-        IHistoricVariableInstanceQuery excludeTaskVariables();
+        IHistoricVariableInstanceQuery SetExcludeTaskVariables();
 
         /// <summary>
         /// Don't initialize variable values. This is foremost a way to deal with variable delete queries </summary>
-        IHistoricVariableInstanceQuery excludeVariableInitialization();
+        IHistoricVariableInstanceQuery SetExcludeVariableInitialization();
 
         /// <summary>
         /// only select historic process variables with the given name and value </summary>
-        IHistoricVariableInstanceQuery variableValueEquals(string variableName, object variableValue);
+        IHistoricVariableInstanceQuery VariableValueEquals(string variableName, object variableValue);
 
         /// <summary>
         /// only select historic process variables that don't have the given name and value
         /// </summary>
-        IHistoricVariableInstanceQuery variableValueNotEquals(string variableName, object variableValue);
+        IHistoricVariableInstanceQuery VariableValueNotEquals(string variableName, object variableValue);
 
         /// <summary>
         /// only select historic process variables like the given name and value
         /// </summary>
-        IHistoricVariableInstanceQuery variableValueLike(string variableName, string variableValue);
+        IHistoricVariableInstanceQuery VariableValueLike(string variableName, string variableValue);
 
         /// <summary>
         /// only select historic process variables like the given name and value (case insensitive)
         /// </summary>
-        IHistoricVariableInstanceQuery variableValueLikeIgnoreCase(string variableName, string variableValue);
+        IHistoricVariableInstanceQuery VariableValueLikeIgnoreCase(string variableName, string variableValue);
 
-        IHistoricVariableInstanceQuery orderByProcessInstanceId();
+        IHistoricVariableInstanceQuery OrderByProcessInstanceId();
 
-        IHistoricVariableInstanceQuery orderByVariableName();
-
+        IHistoricVariableInstanceQuery OrderByVariableName();
     }
-
 }

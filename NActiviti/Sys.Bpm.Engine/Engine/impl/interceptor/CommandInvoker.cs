@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-/* Licensed under the Apache License, Version 2.0 (the "License");
+﻿/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -17,55 +15,71 @@ namespace org.activiti.engine.impl.interceptor
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.agenda;
     using org.activiti.engine.impl.context;
-    using Sys;
+    using Sys.Workflow;
     using System;
-    using System.Threading.Tasks;
 
     /// 
     public class CommandInvoker : AbstractCommandInterceptor
     {
         private static readonly ILogger<CommandInvoker> log = ProcessEngineServiceProvider.LoggerService<CommandInvoker>();
 
-        public override T execute<T>(CommandConfig config, ICommand<T> command)
+        public override T Execute<T>(CommandConfig config, ICommand<T> command)
         {
+            object value;
+
             ICommandContext commandContext = Context.CommandContext;
 
-            // Execute the command.
-            // This will produce operations that will be put on the agenda.
-            commandContext.Agenda.planOperation(new RunableOperation(() =>
+            try
             {
-                commandContext.SetResult(command.execute(commandContext));
-            }));
+                // Execute the command.
+                // This will produce operations that will be put on the agenda.
+                commandContext.Agenda.PlanOperation(new RunableOperation(() =>
+                {
+                    T result = command.Execute(commandContext);
 
-            // Run loop for agenda
-            executeOperations(commandContext);
+                    commandContext.SetResult(result);
+                }));
 
-            // At the end, call the execution tree change listeners.
-            // TODO: optimization: only do this when the tree has actually changed (ie check dbSqlSession).
-            if (commandContext.hasInvolvedExecutions())
-            {
-                Context.Agenda.planExecuteInactiveBehaviorsOperation();
-                executeOperations(commandContext);
+                // Run loop for agenda
+                ExecuteOperations(commandContext);
+
+                // At the end, call the execution tree change listeners.
+                // TODO: optimization: only do this when the tree has actually changed (ie check dbSqlSession).
+                if (commandContext.HasInvolvedExecutions())
+                {
+                    Context.Agenda.PlanExecuteInactiveBehaviorsOperation();
+                    ExecuteOperations(commandContext);
+                }
+
+                value = commandContext.GetResult();
+
+                return (T)value;
             }
-
-            var value = (T)commandContext.GetResult();
-
-            return value;
+            catch (InvalidCastException ex)
+            {
+                return default;
+                /// TODO: commandcontext和command不在一个线程导致异常
+                //throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        protected internal virtual void executeOperations(ICommandContext commandContext)
+        private void ExecuteOperations(ICommandContext commandContext)
         {
             while (!commandContext.Agenda.Empty)
             {
                 AbstractOperation runnable = commandContext.Agenda.NextOperation();
                 if (runnable != null)
                 {
-                    executeOperation(runnable);
+                    ExecuteOperation(runnable);
                 }
             }
         }
 
-        public virtual void executeOperation(AbstractOperation runnable)
+        public virtual void ExecuteOperation(AbstractOperation runnable)
         {
             if (runnable is AbstractOperation operation)
             {

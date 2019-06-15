@@ -38,7 +38,7 @@ namespace org.activiti.cloud.services.events.converter
         /// <summary>
         /// 
         /// </summary>
-        public override IProcessEngineEvent from(IActivitiEvent @event)
+        public override IProcessEngineEvent From(IActivitiEvent @event)
         {
             var eventObj = (IActivitiSequenceFlowTakenEvent)@event;
 
@@ -63,7 +63,7 @@ namespace org.activiti.cloud.services.events.converter
         /// <summary>
         /// 
         /// </summary>
-        public override string handledType()
+        public override string HandledType()
         {
             return ActivitiEventType.SEQUENCEFLOW_TAKEN.ToString();
         }

@@ -12,14 +12,11 @@
  */
 namespace org.activiti.engine.cfg.security
 {
-	using org.activiti.engine.impl.util;
+    using org.activiti.engine.impl.util;
 
-	/// 
-	public interface ICommandExecutorFactory
-	{
-
-		ICommandExecutor createExecutor(IExecutorContext executorContext);
-
-	}
-
+    /// 
+    public interface ICommandExecutorFactory
+    {
+        ICommandExecutor CreateExecutor(IExecutorContext executorContext);
+    }
 }

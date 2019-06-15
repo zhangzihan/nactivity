@@ -12,22 +12,21 @@
  */
 
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using Sys;
+using Sys.Workflow;
 
 namespace org.activiti.engine.impl.interceptor
 {
     /// 
     public class LogInterceptor : AbstractCommandInterceptor
     {
-        private ILogger log = ProcessEngineServiceProvider.LoggerService<ILogger<LogInterceptor>>();
+        private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<ILogger<LogInterceptor>>();
 
-        public override T execute<T>(CommandConfig config, ICommand<T> command)
+        public override T Execute<T>(CommandConfig config, ICommand<T> command)
         {
             if (!log.IsEnabled(LogLevel.Debug))
             {
                 // do nothing here if we cannot log
-                return next.execute(config, command);
+                return next.Execute(config, command);
             }
 
             log.LogDebug("\n");
@@ -35,7 +34,7 @@ namespace org.activiti.engine.impl.interceptor
             try
             {
 
-                return next.execute(config, command);
+                return next.Execute(config, command);
 
             }
             finally

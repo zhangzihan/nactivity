@@ -21,23 +21,23 @@ namespace org.activiti.engine.impl.persistence.entity
     public interface IHistoricVariableInstanceEntityManager : IEntityManager<IHistoricVariableInstanceEntity>
     {
 
-        IHistoricVariableInstanceEntity copyAndInsert(IVariableInstanceEntity variableInstance);
+        IHistoricVariableInstanceEntity CopyAndInsert(IVariableInstanceEntity variableInstance);
 
-        void copyVariableValue(IHistoricVariableInstanceEntity historicVariableInstance, IVariableInstanceEntity variableInstance);
+        void CopyVariableValue(IHistoricVariableInstanceEntity historicVariableInstance, IVariableInstanceEntity variableInstance);
 
-        IList<IHistoricVariableInstance> findHistoricVariableInstancesByQueryCriteria(IHistoricVariableInstanceQuery historicProcessVariableQuery, Page page);
+        IList<IHistoricVariableInstance> FindHistoricVariableInstancesByQueryCriteria(IHistoricVariableInstanceQuery historicProcessVariableQuery, Page page);
 
-        IHistoricVariableInstanceEntity findHistoricVariableInstanceByVariableInstanceId(string variableInstanceId);
+        IHistoricVariableInstanceEntity FindHistoricVariableInstanceByVariableInstanceId(string variableInstanceId);
 
-        long findHistoricVariableInstanceCountByQueryCriteria(IHistoricVariableInstanceQuery historicProcessVariableQuery);
+        long FindHistoricVariableInstanceCountByQueryCriteria(IHistoricVariableInstanceQuery historicProcessVariableQuery);
 
-        IList<IHistoricVariableInstance> findHistoricVariableInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
+        IList<IHistoricVariableInstance> FindHistoricVariableInstancesByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults);
 
-        long findHistoricVariableInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
+        long FindHistoricVariableInstanceCountByNativeQuery(IDictionary<string, object> parameterMap);
 
-        void deleteHistoricVariableInstancesByTaskId(string taskId);
+        void DeleteHistoricVariableInstancesByTaskId(string taskId);
 
-        void deleteHistoricVariableInstanceByProcessInstanceId(string historicProcessInstanceId);
+        void DeleteHistoricVariableInstanceByProcessInstanceId(string historicProcessInstanceId);
 
     }
 }

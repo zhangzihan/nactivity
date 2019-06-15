@@ -24,7 +24,7 @@ namespace org.activiti.cloud.services.rest.assemblers
         /// </summary>
         /// <param name="processDefinitionMeta"></param>
         /// <returns></returns>
-        public override ProcessDefinitionMetaResource toResource(ProcessDefinitionMeta processDefinitionMeta)
+        public override ProcessDefinitionMetaResource ToResource(ProcessDefinitionMeta processDefinitionMeta)
         {
             //throw new NotImplementedException();
             //Link metadata = linkTo(methodOn(typeof(ProcessDefinitionMetaControllerImpl)).getProcessDefinitionMetadata(processDefinitionMeta.Id)).withRel("meta");

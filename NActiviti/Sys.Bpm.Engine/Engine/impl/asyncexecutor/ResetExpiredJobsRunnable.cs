@@ -19,7 +19,7 @@ namespace org.activiti.engine.impl.asyncexecutor
     using Microsoft.Extensions.Logging;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
-    using Sys;
+    using Sys.Workflow;
 
     /// <summary>
     /// Runnable that checks the <seealso cref="IJob"/> entities periodically for 'expired' jobs.
@@ -36,23 +36,49 @@ namespace org.activiti.engine.impl.asyncexecutor
     {
         private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<ResetExpiredJobsRunnable>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal readonly IAsyncExecutor asyncExecutor;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal volatile bool isInterrupted;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal readonly object MONITOR = new object();
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool isWaiting = false;// new AtomicBoolean(false);
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ThreadStart Runable { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="asyncExecutor"></param>
         public ResetExpiredJobsRunnable(IAsyncExecutor asyncExecutor)
         {
             this.asyncExecutor = asyncExecutor;
-            Runable += new ThreadStart(run);
+            Runable += new ThreadStart(Run);
         }
 
-        public virtual void run()
+        private readonly object syncRoot = new object();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Run()
         {
-            lock (this)
+            lock (syncRoot)
             {
                 Thread.CurrentThread.Name = "activiti-reset-expired-jobs";
                 log.LogInformation($"{Thread.CurrentThread.Name} starting to reset expired jobs");
@@ -61,7 +87,7 @@ namespace org.activiti.engine.impl.asyncexecutor
                 {
                     try
                     {
-                        IList<IJobEntity> expiredJobs = asyncExecutor.ProcessEngineConfiguration.CommandExecutor.execute(new FindExpiredJobsCmd(asyncExecutor.ResetExpiredJobsPageSize));
+                        IList<IJobEntity> expiredJobs = asyncExecutor.ProcessEngineConfiguration.CommandExecutor.Execute(new FindExpiredJobsCmd(asyncExecutor.ResetExpiredJobsPageSize));
 
                         IList<string> expiredJobIds = new List<string>(expiredJobs.Count);
                         foreach (IJobEntity expiredJob in expiredJobs)
@@ -71,7 +97,7 @@ namespace org.activiti.engine.impl.asyncexecutor
 
                         if (expiredJobIds.Count > 0)
                         {
-                            asyncExecutor.ProcessEngineConfiguration.CommandExecutor.execute(new ResetExpiredJobsCmd(expiredJobIds));
+                            asyncExecutor.ProcessEngineConfiguration.CommandExecutor.Execute(new ResetExpiredJobsCmd(expiredJobIds));
                         }
                     }
                     catch (Exception e)
@@ -116,7 +142,10 @@ namespace org.activiti.engine.impl.asyncexecutor
             }
         }
 
-        public virtual void stop()
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual void Stop()
         {
             lock (MONITOR)
             {
@@ -127,9 +156,5 @@ namespace org.activiti.engine.impl.asyncexecutor
                 }
             }
         }
-
-
-
     }
-
 }

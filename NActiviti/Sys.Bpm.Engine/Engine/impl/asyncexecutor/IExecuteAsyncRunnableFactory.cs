@@ -15,15 +15,20 @@
 
 namespace org.activiti.engine.impl.asyncexecutor
 {
-	using org.activiti.engine.impl.cfg;
-	using org.activiti.engine.runtime;
+    using org.activiti.engine.impl.cfg;
+    using org.activiti.engine.runtime;
 
-	/// 
+    /// <summary>
+    /// 
+    /// </summary>
 	public interface IExecuteAsyncRunnableFactory
-	{
-
-	  ThreadStart createExecuteAsyncRunnable(IJob job, ProcessEngineConfigurationImpl processEngineConfiguration);
-
-	}
-
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="job"></param>
+        /// <param name="processEngineConfiguration"></param>
+        /// <returns></returns>
+        ThreadStart CreateExecuteAsyncRunnable(IJob job, ProcessEngineConfigurationImpl processEngineConfiguration);
+    }
 }

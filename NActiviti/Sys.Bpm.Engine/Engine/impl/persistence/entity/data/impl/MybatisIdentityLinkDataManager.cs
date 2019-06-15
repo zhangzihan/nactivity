@@ -20,7 +20,7 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
     using org.activiti.engine.impl.persistence.entity.data.impl.cachematcher;
 
     /// 
-    public class MybatisIdentityLinkDataManager : AbstractDataManager<IIdentityLinkEntity>, IdentityLinkDataManager
+    public class MybatisIdentityLinkDataManager : AbstractDataManager<IIdentityLinkEntity>, IIdentityLinkDataManager
     {
 
         protected internal ICachedEntityMatcher<IIdentityLinkEntity> identityLinkByProcessInstanceMatcher = new IdentityLinksByProcInstMatcher();
@@ -37,58 +37,64 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IIdentityLinkEntity create()
+        public override IIdentityLinkEntity Create()
         {
             return new IdentityLinkEntityImpl();
         }
 
-        public virtual IList<IIdentityLinkEntity> findIdentityLinksByTaskId(string taskId)
+        public virtual IList<IIdentityLinkEntity> FindIdentityLinksByTaskId(string taskId)
         {
-            return DbSqlSession.selectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinksByTask", new { taskId });
+            return DbSqlSession.SelectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinksByTask", new { taskId });
         }
 
-        public virtual IList<IIdentityLinkEntity> findIdentityLinksByProcessInstanceId(string processInstanceId)
+        public virtual IList<IIdentityLinkEntity> FindIdentityLinksByProcessInstanceId(string processInstanceId)
         {
-            return (IList<IIdentityLinkEntity>)getList("selectIdentityLinksByProcessInstance", new { processInstanceId }, identityLinkByProcessInstanceMatcher, true);
+            return (IList<IIdentityLinkEntity>)GetList("selectIdentityLinksByProcessInstance", new { processInstanceId }, identityLinkByProcessInstanceMatcher, true);
         }
 
-        public virtual IList<IIdentityLinkEntity> findIdentityLinksByProcessDefinitionId(string processDefinitionId)
+        public virtual IList<IIdentityLinkEntity> FindIdentityLinksByProcessDefinitionId(string processDefinitionId)
         {
-            return DbSqlSession.selectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinksByProcessDefinition", new { processDefinitionId });
+            return DbSqlSession.SelectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinksByProcessDefinition", new { processDefinitionId });
         }
 
-        public virtual IList<IIdentityLinkEntity> findIdentityLinkByTaskUserGroupAndType(string taskId, string userId, string groupId, string type)
+        public virtual IList<IIdentityLinkEntity> FindIdentityLinkByTaskUserGroupAndType(string taskId, string userId, string groupId, string type)
         {
-            IDictionary<string, string> parameters = new Dictionary<string, string>();
-            parameters["taskId"] = taskId;
-            parameters["userId"] = userId;
-            parameters["groupId"] = groupId;
-            parameters["type"] = type;
-            return DbSqlSession.selectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinkByTaskUserGroupAndType", parameters);
+            IDictionary<string, string> parameters = new Dictionary<string, string>
+            {
+                ["taskId"] = taskId,
+                ["userId"] = userId,
+                ["groupId"] = groupId,
+                ["type"] = type
+            };
+            return DbSqlSession.SelectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinkByTaskUserGroupAndType", parameters);
         }
 
-        public virtual IList<IIdentityLinkEntity> findIdentityLinkByProcessInstanceUserGroupAndType(string processInstanceId, string userId, string groupId, string type)
+        public virtual IList<IIdentityLinkEntity> FindIdentityLinkByProcessInstanceUserGroupAndType(string processInstanceId, string userId, string groupId, string type)
         {
-            IDictionary<string, string> parameters = new Dictionary<string, string>();
-            parameters["processInstanceId"] = processInstanceId;
-            parameters["userId"] = userId;
-            parameters["groupId"] = groupId;
-            parameters["type"] = type;
-            return DbSqlSession.selectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinkByProcessInstanceUserGroupAndType", parameters);
+            IDictionary<string, string> parameters = new Dictionary<string, string>
+            {
+                ["processInstanceId"] = processInstanceId,
+                ["userId"] = userId,
+                ["groupId"] = groupId,
+                ["type"] = type
+            };
+            return DbSqlSession.SelectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinkByProcessInstanceUserGroupAndType", parameters);
         }
 
-        public virtual IList<IIdentityLinkEntity> findIdentityLinkByProcessDefinitionUserAndGroup(string processDefinitionId, string userId, string groupId)
+        public virtual IList<IIdentityLinkEntity> FindIdentityLinkByProcessDefinitionUserAndGroup(string processDefinitionId, string userId, string groupId)
         {
-            IDictionary<string, string> parameters = new Dictionary<string, string>();
-            parameters["processDefinitionId"] = processDefinitionId;
-            parameters["userId"] = userId;
-            parameters["groupId"] = groupId;
-            return DbSqlSession.selectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinkByProcessDefinitionUserAndGroup", parameters);
+            IDictionary<string, string> parameters = new Dictionary<string, string>
+            {
+                ["processDefinitionId"] = processDefinitionId,
+                ["userId"] = userId,
+                ["groupId"] = groupId
+            };
+            return DbSqlSession.SelectList<IdentityLinkEntityImpl, IIdentityLinkEntity>("selectIdentityLinkByProcessDefinitionUserAndGroup", parameters);
         }
 
-        public virtual void deleteIdentityLinksByProcDef(string processDefId)
+        public virtual void DeleteIdentityLinksByProcDef(string processDefId)
         {
-            DbSqlSession.delete("deleteIdentityLinkByProcDef", new { processDefId }, typeof(IdentityLinkEntityImpl));
+            DbSqlSession.Delete("deleteIdentityLinkByProcDef", new { processDefId }, typeof(IdentityLinkEntityImpl));
         }
 
     }

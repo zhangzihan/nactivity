@@ -28,9 +28,9 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             }
         }
 
-        protected internal override void executeParse(BpmnParse bpmnParse, InclusiveGateway gateway)
+        protected internal override void ExecuteParse(BpmnParse bpmnParse, InclusiveGateway gateway)
         {
-            gateway.Behavior = bpmnParse.ActivityBehaviorFactory.createInclusiveGatewayActivityBehavior(gateway);
+            gateway.Behavior = bpmnParse.ActivityBehaviorFactory.CreateInclusiveGatewayActivityBehavior(gateway);
         }
 
     }

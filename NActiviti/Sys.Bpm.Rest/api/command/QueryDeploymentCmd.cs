@@ -31,17 +31,17 @@ namespace org.activiti.cloud.services.api.commands
         /// <param name="pageableRepositoryService">分页仓储服务</param>
         /// <param name="qo">查询对象</param>
         /// <returns></returns>
-        public IPage<Deployment> loadPage(IRepositoryService repositoryService,
+        public IPage<Deployment> LoadPage(IRepositoryService repositoryService,
             PageableDeploymentRespositoryService pageableRepositoryService,
             DeploymentQuery qo)
         {
-            DeploymentQueryImpl query = repositoryService.createDeploymentQuery() as DeploymentQueryImpl;
+            DeploymentQueryImpl query = repositoryService.CreateDeploymentQuery() as DeploymentQueryImpl;
 
             FastCopy.Copy<DeploymentQuery, DeploymentQueryImpl>(qo, query);
 
-            pageableRepositoryService.SortApplier.applySort(query, qo.Pageable);
+            pageableRepositoryService.SortApplier.ApplySort(query, qo.Pageable);
 
-            IPage<Deployment> defs = pageableRepositoryService.PageRetriever.loadPage(query, qo.Pageable, pageableRepositoryService.DeploymentConverter);
+            IPage<Deployment> defs = pageableRepositoryService.PageRetriever.LoadPage(query, qo.Pageable, pageableRepositoryService.DeploymentConverter);
 
             return defs;
         }

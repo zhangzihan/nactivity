@@ -23,8 +23,10 @@ namespace org.activiti.engine.@delegate
     /// </summary>
     public interface IExecutionListener : IBaseExecutionListener
     {
-
-        void notify(IExecutionEntity execution);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        void Notify(IExecutionEntity execution);
     }
-
 }

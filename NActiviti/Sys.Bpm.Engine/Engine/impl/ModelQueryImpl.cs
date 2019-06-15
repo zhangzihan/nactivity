@@ -55,13 +55,13 @@ namespace org.activiti.engine.impl
         {
         }
 
-        public virtual IModelQuery modelId(string modelId)
+        public virtual IModelQuery SetModelId(string modelId)
         {
             this.id = modelId;
             return this;
         }
 
-        public virtual IModelQuery modelCategory(string category)
+        public virtual IModelQuery SetModelCategory(string category)
         {
             if (string.IsNullOrWhiteSpace(category))
             {
@@ -72,7 +72,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IModelQuery modelCategoryLike(string categoryLike)
+        public virtual IModelQuery SetModelCategoryLike(string categoryLike)
         {
             if (string.IsNullOrWhiteSpace(categoryLike))
             {
@@ -83,7 +83,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IModelQuery modelCategoryNotEquals(string categoryNotEquals)
+        public virtual IModelQuery SetModelCategoryNotEquals(string categoryNotEquals)
         {
             if (string.IsNullOrWhiteSpace(categoryNotEquals))
             {
@@ -94,7 +94,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IModelQuery modelName(string name)
+        public virtual IModelQuery SetModelName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -105,7 +105,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IModelQuery modelNameLike(string nameLike)
+        public virtual IModelQuery SetModelNameLike(string nameLike)
         {
             if (string.IsNullOrWhiteSpace(nameLike))
             {
@@ -116,7 +116,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IModelQuery modelKey(string key)
+        public virtual IModelQuery SetModelKey(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -127,7 +127,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IModelQuery modelVersion(int? version)
+        public virtual IModelQuery SetModelVersion(int? version)
         {
             if (version == null)
             {
@@ -141,13 +141,13 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IModelQuery latestVersion()
+        public virtual IModelQuery SetLatestVersion()
         {
             this.latest = true;
             return this;
         }
 
-        public virtual IModelQuery deploymentId(string deploymentId)
+        public virtual IModelQuery SetDeploymentId(string deploymentId)
         {
             if (string.IsNullOrWhiteSpace(deploymentId))
             {
@@ -158,7 +158,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IModelQuery notDeployed()
+        public virtual IModelQuery SetNotDeployed()
         {
             if (deployed_)
             {
@@ -168,7 +168,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IModelQuery deployed()
+        public virtual IModelQuery SetDeployed()
         {
             if (notDeployed_)
             {
@@ -178,7 +178,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IModelQuery modelTenantId(string tenantId)
+        public virtual IModelQuery SetModelTenantId(string tenantId)
         {
             if (string.IsNullOrWhiteSpace(tenantId))
             {
@@ -189,7 +189,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IModelQuery modelTenantIdLike(string tenantIdLike)
+        public virtual IModelQuery SetModelTenantIdLike(string tenantIdLike)
         {
             if (string.IsNullOrWhiteSpace(tenantIdLike))
             {
@@ -200,7 +200,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IModelQuery modelWithoutTenantId()
+        public virtual IModelQuery SetModelWithoutTenantId()
         {
             this.withoutTenantId = true;
             return this;
@@ -208,58 +208,58 @@ namespace org.activiti.engine.impl
 
         // sorting ////////////////////////////////////////////
 
-        public virtual IModelQuery orderByModelCategory()
+        public virtual IModelQuery OrderByModelCategory()
         {
-            return orderBy(ModelQueryProperty.MODEL_CATEGORY);
+            return SetOrderBy(ModelQueryProperty.MODEL_CATEGORY);
         }
 
-        public virtual IModelQuery orderByModelId()
+        public virtual IModelQuery OrderByModelId()
         {
-            return orderBy(ModelQueryProperty.MODEL_ID);
+            return SetOrderBy(ModelQueryProperty.MODEL_ID);
         }
 
-        public virtual IModelQuery orderByModelKey()
+        public virtual IModelQuery OrderByModelKey()
         {
-            return orderBy(ModelQueryProperty.MODEL_KEY);
+            return SetOrderBy(ModelQueryProperty.MODEL_KEY);
         }
 
-        public virtual IModelQuery orderByModelVersion()
+        public virtual IModelQuery OrderByModelVersion()
         {
-            return orderBy(ModelQueryProperty.MODEL_VERSION);
+            return SetOrderBy(ModelQueryProperty.MODEL_VERSION);
         }
 
-        public virtual IModelQuery orderByModelName()
+        public virtual IModelQuery OrderByModelName()
         {
-            return orderBy(ModelQueryProperty.MODEL_NAME);
+            return SetOrderBy(ModelQueryProperty.MODEL_NAME);
         }
 
-        public virtual IModelQuery orderByCreateTime()
+        public virtual IModelQuery OrderByCreateTime()
         {
-            return orderBy(ModelQueryProperty.MODEL_CREATE_TIME);
+            return SetOrderBy(ModelQueryProperty.MODEL_CREATE_TIME);
         }
 
-        public virtual IModelQuery orderByLastUpdateTime()
+        public virtual IModelQuery OrderByLastUpdateTime()
         {
-            return orderBy(ModelQueryProperty.MODEL_LAST_UPDATE_TIME);
+            return SetOrderBy(ModelQueryProperty.MODEL_LAST_UPDATE_TIME);
         }
 
-        public virtual IModelQuery orderByTenantId()
+        public virtual IModelQuery OrderByTenantId()
         {
-            return orderBy(ModelQueryProperty.MODEL_TENANT_ID);
+            return SetOrderBy(ModelQueryProperty.MODEL_TENANT_ID);
         }
 
         // results ////////////////////////////////////////////
 
-        public override long executeCount(ICommandContext commandContext)
+        public override long ExecuteCount(ICommandContext commandContext)
         {
-            checkQueryOk();
-            return commandContext.ModelEntityManager.findModelCountByQueryCriteria(this);
+            CheckQueryOk();
+            return commandContext.ModelEntityManager.FindModelCountByQueryCriteria(this);
         }
 
-        public override IList<IModel> executeList(ICommandContext commandContext, Page page)
+        public override IList<IModel> ExecuteList(ICommandContext commandContext, Page page)
         {
-            checkQueryOk();
-            return commandContext.ModelEntityManager.findModelsByQueryCriteria(this, page);
+            CheckQueryOk();
+            return commandContext.ModelEntityManager.FindModelsByQueryCriteria(this, page);
         }
 
         // getters ////////////////////////////////////////////
@@ -270,7 +270,7 @@ namespace org.activiti.engine.impl
             {
                 return id;
             }
-            set => modelId(value);
+            set => SetModelId(value);
         }
 
         public virtual string Name
@@ -279,7 +279,7 @@ namespace org.activiti.engine.impl
             {
                 return name;
             }
-            set => modelName(value);
+            set => SetModelName(value);
         }
 
         public virtual string NameLike
@@ -288,7 +288,7 @@ namespace org.activiti.engine.impl
             {
                 return nameLike;
             }
-            set => modelNameLike(value);
+            set => SetModelNameLike(value);
         }
 
         public virtual int? Version
@@ -297,7 +297,7 @@ namespace org.activiti.engine.impl
             {
                 return version;
             }
-            set => modelVersion(value);
+            set => SetModelVersion(value);
         }
 
         public virtual string Category
@@ -306,7 +306,7 @@ namespace org.activiti.engine.impl
             {
                 return category;
             }
-            set => modelCategory(value);
+            set => SetModelCategory(value);
         }
 
         public virtual string CategoryLike
@@ -315,7 +315,7 @@ namespace org.activiti.engine.impl
             {
                 return categoryLike;
             }
-            set => modelCategoryLike(value);
+            set => SetModelCategoryLike(value);
         }
 
         public virtual string CategoryNotEquals
@@ -324,7 +324,7 @@ namespace org.activiti.engine.impl
             {
                 return categoryNotEquals;
             }
-            set => modelCategoryNotEquals(value);
+            set => SetModelCategoryNotEquals(value);
         }
 
         //public static long Serialversionuid
@@ -341,7 +341,7 @@ namespace org.activiti.engine.impl
             {
                 return key;
             }
-            set => modelKey(value);
+            set => SetModelKey(value);
         }
 
         public virtual bool Latest
@@ -350,7 +350,7 @@ namespace org.activiti.engine.impl
             {
                 return latest;
             }
-            set => latestVersion();
+            set => SetLatestVersion();
         }
 
         public virtual string DeploymentId
@@ -359,7 +359,7 @@ namespace org.activiti.engine.impl
             {
                 return deploymentId_;
             }
-            set => deploymentId(value);
+            set => SetDeploymentId(value);
         }
 
         public virtual bool NotDeployed
@@ -368,7 +368,7 @@ namespace org.activiti.engine.impl
             {
                 return notDeployed_;
             }
-            set => notDeployed();
+            set => SetNotDeployed();
         }
 
         public virtual bool Deployed
@@ -377,7 +377,7 @@ namespace org.activiti.engine.impl
             {
                 return deployed_;
             }
-            set => deployed();
+            set => SetDeployed();
         }
 
         public virtual string TenantId
@@ -386,7 +386,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantId;
             }
-            set => modelTenantId(value);
+            set => SetModelTenantId(value);
         }
 
         public virtual string TenantIdLike
@@ -395,7 +395,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantIdLike;
             }
-            set => modelTenantIdLike(value);
+            set => SetModelTenantIdLike(value);
         }
 
         public virtual bool WithoutTenantId
@@ -404,7 +404,7 @@ namespace org.activiti.engine.impl
             {
                 return withoutTenantId;
             }
-            set => modelWithoutTenantId();
+            set => SetModelWithoutTenantId();
         }
 
     }

@@ -44,12 +44,12 @@ namespace org.activiti.engine.debug
         /// <summary>
         /// Looks up the <seealso cref="IExecutionEntity"/> for a given id.
         /// </summary>
-        public virtual ExecutionTreeNode getTreeNode(string executionId)
+        public virtual ExecutionTreeNode GetTreeNode(string executionId)
         {
-            return getTreeNode(executionId, root);
+            return GetTreeNode(executionId, root);
         }
 
-        protected internal virtual ExecutionTreeNode getTreeNode(string executionId, ExecutionTreeNode currentNode)
+        protected internal virtual ExecutionTreeNode GetTreeNode(string executionId, ExecutionTreeNode currentNode)
         {
             if (currentNode.ExecutionEntity.Id.Equals(executionId))
             {
@@ -62,7 +62,7 @@ namespace org.activiti.engine.debug
                 int index = 0;
                 while (index < children.Count)
                 {
-                    ExecutionTreeNode result = getTreeNode(executionId, children[index]);
+                    ExecutionTreeNode result = GetTreeNode(executionId, children[index]);
                     if (result != null)
                     {
                         return result;
@@ -79,7 +79,7 @@ namespace org.activiti.engine.debug
             return new ExecutionTreeBfsIterator(this.Root);
         }
 
-        public virtual ExecutionTreeBfsIterator bfsIterator()
+        public virtual ExecutionTreeBfsIterator BfsIterator()
         {
             return new ExecutionTreeBfsIterator(this.Root);
         }
@@ -87,7 +87,7 @@ namespace org.activiti.engine.debug
         /// <summary>
         /// Uses an <seealso cref="ExecutionTreeBfsIterator"/>, but returns the leafs first (so flipped order of BFS)
         /// </summary>
-        public virtual ExecutionTreeBfsIterator leafsFirstIterator()
+        public virtual ExecutionTreeBfsIterator LeafsFirstIterator()
         {
             return new ExecutionTreeBfsIterator(this.Root, true);
         }

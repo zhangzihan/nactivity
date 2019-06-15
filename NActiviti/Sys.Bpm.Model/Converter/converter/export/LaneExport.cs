@@ -19,40 +19,39 @@ namespace org.activiti.bpmn.converter.export
 
     public class LaneExport : IBpmnXMLConstants
     {
-        public static void writeLanes(Process process, XMLStreamWriter xtw)
+        public static void WriteLanes(Process process, XMLStreamWriter xtw)
         {
             if (process.Lanes.Count > 0)
             {
-                xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_LANESET);
-                xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID, "laneSet_" + process.Id);
+                xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_LANESET, BpmnXMLConstants.BPMN2_NAMESPACE);
+                xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, "laneSet_" + process.Id);
                 foreach (Lane lane in process.Lanes)
                 {
-                    xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_LANE);
-                    xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_ID, lane.Id);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_LANE, BpmnXMLConstants.BPMN2_NAMESPACE);
+                    xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_ID, lane.Id);
 
                     if (!string.IsNullOrWhiteSpace(lane.Name))
                     {
-                        xtw.writeAttribute(org.activiti.bpmn.constants.BpmnXMLConstants.ATTRIBUTE_NAME, lane.Name);
+                        xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_NAME, lane.Name);
                     }
 
-                    bool didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(lane, false, xtw);
+                    bool didWriteExtensionStartElement = BpmnXMLUtil.WriteExtensionElements(lane, false, xtw);
                     if (didWriteExtensionStartElement)
                     {
-                        xtw.writeEndElement();
+                        xtw.WriteEndElement();
                     }
 
                     foreach (string flowNodeRef in lane.FlowReferences)
                     {
-                        xtw.writeStartElement(org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_FLOWNODE_REF);
-                        xtw.writeCharacters(flowNodeRef);
-                        xtw.writeEndElement();
+                        xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_FLOWNODE_REF, BpmnXMLConstants.BPMN2_NAMESPACE);
+                        xtw.WriteCharacters(flowNodeRef);
+                        xtw.WriteEndElement();
                     }
 
-                    xtw.writeEndElement();
+                    xtw.WriteEndElement();
                 }
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
         }
     }
-
 }

@@ -19,11 +19,11 @@ namespace org.activiti.engine.impl.persistence.entity.data
 	public interface IResourceDataManager : IDataManager<IResourceEntity>
 	{
 
-	  void deleteResourcesByDeploymentId(string deploymentId);
+	  void DeleteResourcesByDeploymentId(string deploymentId);
 
-	  IResourceEntity findResourceByDeploymentIdAndResourceName(string deploymentId, string resourceName);
+	  IResourceEntity FindResourceByDeploymentIdAndResourceName(string deploymentId, string resourceName);
 
-	  IList<IResourceEntity> findResourcesByDeploymentId(string deploymentId);
+	  IList<IResourceEntity> FindResourcesByDeploymentId(string deploymentId);
 
 	}
 

@@ -2,7 +2,7 @@
 {
 
 
-    using TaskCandidateUser = org.activiti.cloud.services.api.model.TaskCandidateUser;
+    using TaskCandidateUser = api.model.TaskCandidateUser;
 
 
     /// <summary>

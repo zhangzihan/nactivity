@@ -34,58 +34,58 @@ namespace org.activiti.engine.runtime
         /// Set the id of the process definition 
         /// 
         /// </summary>
-        IProcessInstanceBuilder processDefinitionId(string processDefinitionId);
+        IProcessInstanceBuilder SetProcessDefinitionId(string processDefinitionId);
 
         /// <summary>
         /// Set the key of the process definition, latest version of the process definition with the given key. 
         /// If processDefinitionId was set this will be ignored
         /// 
         /// </summary>
-        IProcessInstanceBuilder processDefinitionKey(string processDefinitionKey);
+        IProcessInstanceBuilder SetProcessDefinitionKey(string processDefinitionKey);
 
         /// <summary>
         /// Set the message name that needs to be used to look up the process definition that needs to be used to start the process instance.
         /// </summary>
-        IProcessInstanceBuilder messageName(string messageName);
+        IProcessInstanceBuilder SetMessageName(string messageName);
 
         /// <summary>
         /// Set the name of process instance 
         /// 
         /// </summary>
-        IProcessInstanceBuilder name(string processInstanceName);
+        IProcessInstanceBuilder SetName(string processInstanceName);
 
         /// <summary>
         /// Set the businessKey of process instance 
         /// 
         /// </summary>
-        IProcessInstanceBuilder businessKey(string businessKey);
+        IProcessInstanceBuilder SetBusinessKey(string businessKey);
 
         /// <summary>
         /// Set the tenantId of process instance 
         /// 
         /// </summary>
-        IProcessInstanceBuilder tenantId(string tenantId);
+        IProcessInstanceBuilder SetTenantId(string tenantId);
 
         /// <summary>
         /// Sets the process variables
         /// </summary>
-        IProcessInstanceBuilder variables(IDictionary<string, object> variables);
+        IProcessInstanceBuilder SetVariables(IDictionary<string, object> variables);
 
         /// <summary>
         /// Adds a variable to the process instance 
         /// 
         /// </summary>
-        IProcessInstanceBuilder variable(string variableName, object value);
+        IProcessInstanceBuilder SetVariable(string variableName, object value);
 
         /// <summary>
         /// Sets the transient variables
         /// </summary>
-        IProcessInstanceBuilder transientVariables(IDictionary<string, object> transientVariables);
+        IProcessInstanceBuilder SetTransientVariables(IDictionary<string, object> transientVariables);
 
         /// <summary>
         /// Adds a transient variable to the process instance
         /// </summary>
-        IProcessInstanceBuilder transientVariable(string variableName, object value);
+        IProcessInstanceBuilder SetTransientVariable(string variableName, object value);
 
         /// <summary>
         /// Start the process instance
@@ -95,8 +95,6 @@ namespace org.activiti.engine.runtime
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no process definition is deployed with the given processDefinitionKey or processDefinitionId
         /// * </exception>
-        IProcessInstance start();
-
+        IProcessInstance Start();
     }
-
 }

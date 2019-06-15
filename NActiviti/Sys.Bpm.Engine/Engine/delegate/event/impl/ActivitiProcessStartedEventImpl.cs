@@ -30,9 +30,8 @@ namespace org.activiti.engine.@delegate.@event.impl
 
         public ActivitiProcessStartedEventImpl(object entity, IDictionary<string, object> variables, bool localScope) : base(entity, variables, localScope, ActivitiEventType.PROCESS_STARTED)
         {
-            if (entity is IExecutionEntity)
+            if (entity is IExecutionEntity executionEntity)
             {
-                IExecutionEntity executionEntity = (IExecutionEntity)entity;
                 if (!executionEntity.ProcessInstanceType)
                 {
                     executionEntity = executionEntity.Parent;

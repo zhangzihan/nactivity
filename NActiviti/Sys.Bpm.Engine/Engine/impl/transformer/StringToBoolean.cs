@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +22,20 @@ namespace org.activiti.engine.impl.transformer
     /// </summary>
     public class StringToBoolean : AbstractTransformer
     {
-        protected internal override object primTransform(object anObject)
+        protected internal override object PrimTransform(object anObject)
         {
-            return Convert.ToBoolean((string)anObject);
+            string str = anObject?.ToString();
+            if (string.IsNullOrWhiteSpace(str))
+            {
+                return null;
+            }
+
+            if ("true" == str.ToLower() || "1" == str || "是" == str)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 

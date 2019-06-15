@@ -22,56 +22,53 @@ namespace org.activiti.engine.impl.persistence.entity
 
     /// 
     public class EventLogEntryEntityManagerImpl : AbstractEntityManager<IEventLogEntryEntity>, IEventLogEntryEntityManager
-	{
+    {
 
-	  protected internal IEventLogEntryDataManager eventLogEntryDataManager;
+        protected internal IEventLogEntryDataManager eventLogEntryDataManager;
 
-	  public EventLogEntryEntityManagerImpl(ProcessEngineConfigurationImpl processEngineConfiguration, IEventLogEntryDataManager eventLogEntryDataManager) : base(processEngineConfiguration)
-	  {
-		this.eventLogEntryDataManager = eventLogEntryDataManager;
-	  }
+        public EventLogEntryEntityManagerImpl(ProcessEngineConfigurationImpl processEngineConfiguration, IEventLogEntryDataManager eventLogEntryDataManager) : base(processEngineConfiguration)
+        {
+            this.eventLogEntryDataManager = eventLogEntryDataManager;
+        }
 
-	  protected internal override IDataManager<IEventLogEntryEntity> DataManager
-	  {
-		  get
-		  {
-			return eventLogEntryDataManager;
-		  }
-	  }
+        protected internal override IDataManager<IEventLogEntryEntity> DataManager
+        {
+            get
+            {
+                return eventLogEntryDataManager;
+            }
+        }
 
-	  public virtual IList<IEventLogEntry> findAllEventLogEntries()
-	  {
-		return eventLogEntryDataManager.findAllEventLogEntries();
-	  }
+        public virtual IList<IEventLogEntry> FindAllEventLogEntries()
+        {
+            return eventLogEntryDataManager.FindAllEventLogEntries();
+        }
 
-	  public virtual IList<IEventLogEntry> findEventLogEntries(long startLogNr, long pageSize)
-	  {
-	   return eventLogEntryDataManager.findEventLogEntries(startLogNr, pageSize);
-	  }
+        public virtual IList<IEventLogEntry> FindEventLogEntries(long startLogNr, long pageSize)
+        {
+            return eventLogEntryDataManager.FindEventLogEntries(startLogNr, pageSize);
+        }
 
-	  public virtual IList<IEventLogEntry> findEventLogEntriesByProcessInstanceId(string processInstanceId)
-	  {
-		return eventLogEntryDataManager.findEventLogEntriesByProcessInstanceId(processInstanceId);
-	  }
+        public virtual IList<IEventLogEntry> FindEventLogEntriesByProcessInstanceId(string processInstanceId)
+        {
+            return eventLogEntryDataManager.FindEventLogEntriesByProcessInstanceId(processInstanceId);
+        }
 
-	  public virtual void deleteEventLogEntry(long logNr)
-	  {
-		eventLogEntryDataManager.deleteEventLogEntry(logNr);
-	  }
+        public virtual void DeleteEventLogEntry(long logNr)
+        {
+            eventLogEntryDataManager.DeleteEventLogEntry(logNr);
+        }
 
-	  public virtual IEventLogEntryDataManager EventLogEntryDataManager
-	  {
-		  get
-		  {
-			return eventLogEntryDataManager;
-		  }
-		  set
-		  {
-			this.eventLogEntryDataManager = value;
-		  }
-	  }
-
-
-	}
-
+        public virtual IEventLogEntryDataManager EventLogEntryDataManager
+        {
+            get
+            {
+                return eventLogEntryDataManager;
+            }
+            set
+            {
+                this.eventLogEntryDataManager = value;
+            }
+        }
+    }
 }

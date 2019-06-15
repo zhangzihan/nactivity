@@ -15,49 +15,49 @@
 namespace org.activiti.engine.task
 {
 
-	/// <summary>
-	/// Allows programmatic querying of <seealso cref="ITask"/>s;
-	/// 
-	/// 
-	/// 
-	/// 
-	/// </summary>
-	public interface ITaskQuery : ITaskInfoQuery<ITaskQuery, ITask>
-	{
+    /// <summary>
+    /// Allows programmatic querying of <seealso cref="ITask"/>s;
+    /// 
+    /// 
+    /// 
+    /// 
+    /// </summary>
+    public interface ITaskQuery : ITaskInfoQuery<ITaskQuery, ITask>
+    {
 
-	  /// <summary>
-	  /// Only select tasks which don't have an assignee. </summary>
-	  ITaskQuery taskUnassigned();
+        /// <summary>
+        /// Only select tasks which don't have an assignee. </summary>
+        ITaskQuery SetTaskUnassigned();
 
-	  /// <summary>
-	  /// Only select tasks with the given <seealso cref="DelegationState"/>. </summary>
-	  ITaskQuery taskDelegationState(DelegationState? delegationState);
+        /// <summary>
+        /// Only select tasks with the given <seealso cref="DelegationState"/>. </summary>
+        ITaskQuery SetTaskDelegationState(DelegationState? delegationState);
 
-	  /// <summary>
-	  /// Select tasks that has been claimed or assigned to user or waiting to claim by user (candidate user or groups). You can invoke <seealso cref="#taskCandidateGroupIn(List)"/> to include tasks that can be
-	  /// claimed by a user in the given groups while set property <strong>dbIdentityUsed</strong> to <strong>false</strong> in process engine configuration or using custom session factory of
-	  /// GroupIdentityManager.
-	  /// </summary>
-	  ITaskQuery taskCandidateOrAssigned(string userIdForCandidateAndAssignee);
+        /// <summary>
+        /// Select tasks that has been claimed or assigned to user or waiting to claim by user (candidate user or groups). You can invoke <seealso cref="#taskCandidateGroupIn(List)"/> to include tasks that can be
+        /// claimed by a user in the given groups while set property <strong>dbIdentityUsed</strong> to <strong>false</strong> in process engine configuration or using custom session factory of
+        /// GroupIdentityManager.
+        /// </summary>
+        ITaskQuery SetTaskCandidateOrAssigned(string userIdForCandidateAndAssignee);
 
-	  /// <summary>
-	  /// Select tasks that has been claimed or assigned to user or waiting to claim by user (candidate user or groups).
-	  /// </summary>
-	  ITaskQuery taskCandidateOrAssigned(string userIdForCandidateAndAssignee, IList<string> usersGroups);
+        /// <summary>
+        /// Select tasks that has been claimed or assigned to user or waiting to claim by user (candidate user or groups).
+        /// </summary>
+        ITaskQuery SetTaskCandidateOrAssigned(string userIdForCandidateAndAssignee, IList<string> usersGroups);
 
-	  /// <summary>
-	  /// Only select tasks that have no parent (i.e. do not select subtasks). </summary>
-	  ITaskQuery excludeSubtasks();
+        /// <summary>
+        /// Only select tasks that have no parent (i.e. do not select subtasks). </summary>
+        ITaskQuery SetExcludeSubtasks();
 
-	  /// <summary>
-	  /// Only selects tasks which are suspended, because its process instance was suspended.
-	  /// </summary>
-	  ITaskQuery suspended();
+        /// <summary>
+        /// Only selects tasks which are suspended, because its process instance was suspended.
+        /// </summary>
+        ITaskQuery SetSuspended();
 
-	  /// <summary>
-	  /// Only selects tasks which are active (ie. not suspended)
-	  /// </summary>
-	  ITaskQuery active();
-	}
+        /// <summary>
+        /// Only selects tasks which are active (ie. not suspended)
+        /// </summary>
+        ITaskQuery SetActive();
+    }
 
 }

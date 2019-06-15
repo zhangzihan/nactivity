@@ -18,12 +18,23 @@ namespace org.activiti.engine.@delegate
     public interface IExpression
     {
 
-        object getValue(IVariableScope variableScope);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableScope"></param>
+        /// <returns></returns>
+        object GetValue(IVariableScope variableScope);
 
-        void setValue(object value, IVariableScope variableScope);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="variableScope"></param>
+        void SetValue(object value, IVariableScope variableScope);
 
+        /// <summary>
+        /// 
+        /// </summary>
         string ExpressionText { get; }
-
     }
-
 }

@@ -23,7 +23,7 @@ namespace org.activiti.cloud.services.events.integration
     /// <summary>
     /// 
     /// </summary>
-    public class IntegrationRequestSentEventImpl : BaseIntegrationEventImpl, IntegrationRequestSentEvent
+    public class IntegrationRequestSentEventImpl : BaseIntegrationEventImpl, IIntegrationRequestSentEvent
     {
 
         /// <summary>

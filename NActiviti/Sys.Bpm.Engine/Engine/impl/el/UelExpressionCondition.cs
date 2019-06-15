@@ -34,9 +34,9 @@ namespace org.activiti.engine.impl.el
             this.expression = expression;
         }
 
-        public virtual bool evaluate(string sequenceFlowId, IExecutionEntity execution)
+        public virtual bool Evaluate(string sequenceFlowId, IExecutionEntity execution)
         {
-            object result = expression.getValue(execution);
+            object result = expression.GetValue(execution);
 
             if (result == null)
             {

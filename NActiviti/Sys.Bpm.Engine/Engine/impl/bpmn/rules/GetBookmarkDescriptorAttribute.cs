@@ -10,6 +10,10 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class GetBookmarkDescriptorAttribute : Attribute
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
         public GetBookmarkDescriptorAttribute(string name)
         {
             this.Name = name;

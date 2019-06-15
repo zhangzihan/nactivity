@@ -20,7 +20,6 @@ namespace org.activiti.engine.impl.cmd
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using org.activiti.engine.runtime;
-    using System.Collections.Generic;
 
     /// 
     [Serializable]
@@ -37,9 +36,9 @@ namespace org.activiti.engine.impl.cmd
             this.activityId = activityId;
         }
 
-        public virtual IExecution execute(ICommandContext commandContext)
+        public virtual IExecution Execute(ICommandContext commandContext)
         {
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
             if (execution == null)
             {
                 throw new ActivitiObjectNotFoundException("No execution found for id '" + executionId + "'", typeof(IExecutionEntity));
@@ -54,7 +53,7 @@ namespace org.activiti.engine.impl.cmd
             AdhocSubProcess adhocSubProcess = (AdhocSubProcess)execution.CurrentFlowElement;
 
             // if sequential ordering, only one child execution can be active
-            if (adhocSubProcess.hasSequentialOrdering())
+            if (adhocSubProcess.HasSequentialOrdering())
             {
                 if (execution.Executions.Count > 0)
                 {
@@ -74,14 +73,9 @@ namespace org.activiti.engine.impl.cmd
                 }
             }
 
-            if (foundNode == null)
-            {
-                throw new ActivitiException("The requested activity with id " + activityId + " can not be enabled");
-            }
-
-            IExecutionEntity activityExecution = Context.CommandContext.ExecutionEntityManager.createChildExecution(execution);
-            activityExecution.CurrentFlowElement = foundNode;
-            Context.Agenda.planContinueProcessOperation(activityExecution);
+            IExecutionEntity activityExecution = Context.CommandContext.ExecutionEntityManager.CreateChildExecution(execution);
+            activityExecution.CurrentFlowElement = foundNode ?? throw new ActivitiException("The requested activity with id " + activityId + " can not be enabled");
+            Context.Agenda.PlanContinueProcessOperation(activityExecution);
 
             return activityExecution;
         }

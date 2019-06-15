@@ -13,46 +13,46 @@
 namespace org.activiti.engine.@delegate.@event.impl
 {
 
-	/// <summary>
-	/// Implementation of <seealso cref="IActivitiMembershipEvent"/>.
-	/// 
-	/// 
-	/// </summary>
-	public class ActivitiMembershipEventImpl : ActivitiEventImpl, IActivitiMembershipEvent
-	{
+    /// <summary>
+    /// Implementation of <seealso cref="IActivitiMembershipEvent"/>.
+    /// 
+    /// 
+    /// </summary>
+    public class ActivitiMembershipEventImpl : ActivitiEventImpl, IActivitiMembershipEvent
+    {
 
-	  protected internal string userId;
-	  protected internal string groupId;
+        protected internal string userId;
+        protected internal string groupId;
 
-	  public ActivitiMembershipEventImpl(ActivitiEventType type) : base(type)
-	  {
-	  }
+        public ActivitiMembershipEventImpl(ActivitiEventType type) : base(type)
+        {
+        }
 
-	  public virtual string UserId
-	  {
-		  set
-		  {
-			this.userId = value;
-		  }
-		  get
-		  {
-			return userId;
-		  }
-	  }
+        public virtual string UserId
+        {
+            set
+            {
+                this.userId = value;
+            }
+            get
+            {
+                return userId;
+            }
+        }
 
 
-	  public virtual string GroupId
-	  {
-		  set
-		  {
-			this.groupId = value;
-		  }
-		  get
-		  {
-			return groupId;
-		  }
-	  }
+        public virtual string GroupId
+        {
+            set
+            {
+                this.groupId = value;
+            }
+            get
+            {
+                return groupId;
+            }
+        }
 
-	}
+    }
 
 }

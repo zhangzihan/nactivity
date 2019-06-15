@@ -34,98 +34,98 @@ namespace org.activiti.engine.history
         /// <summary>
         /// Only select historic process instances with the given process instance. {@link ProcessInstance) ids and <seealso cref="IHistoricProcessInstance"/> ids match.
         /// </summary>
-        IHistoricProcessInstanceQuery processInstanceId(string processInstanceId);
+        IHistoricProcessInstanceQuery SetProcessInstanceId(string processInstanceId);
 
         /// <summary>
         /// Only select historic process instances whose id is in the given set of ids. {@link ProcessInstance) ids and <seealso cref="IHistoricProcessInstance"/> ids match.
         /// </summary>
-        IHistoricProcessInstanceQuery processInstanceIds(string[] processInstanceIds);
+        IHistoricProcessInstanceQuery SetProcessInstanceIds(string[] processInstanceIds);
 
         /// <summary>
         /// Only select historic process instances for the given process definition </summary>
-        IHistoricProcessInstanceQuery processDefinitionId(string processDefinitionId);
+        IHistoricProcessInstanceQuery SetProcessDefinitionId(string processDefinitionId);
 
         /// <summary>
         /// Only select historic process instances that are defined by a process definition with the given key.
         /// </summary>
-        IHistoricProcessInstanceQuery processDefinitionKey(string processDefinitionKey);
+        IHistoricProcessInstanceQuery SetProcessDefinitionKey(string processDefinitionKey);
 
         /// <summary>
         /// Only select historic process instances that are defined by a process definition with one of the given process definition keys.
         /// </summary>
-        IHistoricProcessInstanceQuery processDefinitionKeyIn(string[] processDefinitionKeys);
+        IHistoricProcessInstanceQuery SetProcessDefinitionKeyIn(string[] processDefinitionKeys);
 
         /// <summary>
         /// Only select historic process instances that don't have a process-definition of which the key is present in the given list
         /// </summary>
-        IHistoricProcessInstanceQuery processDefinitionKeyNotIn(string[] processDefinitionKeys);
+        IHistoricProcessInstanceQuery SetProcessDefinitionKeyNotIn(string[] processDefinitionKeys);
 
         /// <summary>
         /// Only select historic process instances whose process definition category is processDefinitionCategory. </summary>
-        IHistoricProcessInstanceQuery processDefinitionCategory(string processDefinitionCategory);
+        IHistoricProcessInstanceQuery SetProcessDefinitionCategory(string processDefinitionCategory);
 
         /// <summary>
         /// Select process historic instances whose process definition name is processDefinitionName </summary>
-        IHistoricProcessInstanceQuery processDefinitionName(string processDefinitionName);
+        IHistoricProcessInstanceQuery SetProcessDefinitionName(string processDefinitionName);
 
         /// <summary>
         /// Only select historic process instances with a certain process definition version.
         /// Particulary useful when used in combination with <seealso cref="#processDefinitionKey(String)"/>
         /// </summary>
-        IHistoricProcessInstanceQuery processDefinitionVersion(int? processDefinitionVersion);
+        IHistoricProcessInstanceQuery SetProcessDefinitionVersion(int? processDefinitionVersion);
 
         /// <summary>
         /// Only select historic process instances with the given business key </summary>
-        IHistoricProcessInstanceQuery processInstanceBusinessKey(string processInstanceBusinessKey);
+        IHistoricProcessInstanceQuery SetProcessInstanceBusinessKey(string processInstanceBusinessKey);
 
         /// <summary>
         /// Only select historic process instances that are defined by a process definition with the given deployment identifier.
         /// </summary>
-        IHistoricProcessInstanceQuery deploymentId(string deploymentId);
+        IHistoricProcessInstanceQuery SetDeploymentId(string deploymentId);
 
         /// <summary>
         /// Only select historic process instances that are defined by a process definition with one of the given deployment identifiers.
         /// </summary>
-        IHistoricProcessInstanceQuery deploymentIdIn(string[] deploymentIds);
+        IHistoricProcessInstanceQuery SetDeploymentIdIn(string[] deploymentIds);
 
         /// <summary>
         /// Only select historic process instances that are completely finished. </summary>
-        IHistoricProcessInstanceQuery finished();
+        IHistoricProcessInstanceQuery SetFinished();
 
         /// <summary>
         /// Only select historic process instance that are not yet finished. </summary>
-        IHistoricProcessInstanceQuery unfinished();
+        IHistoricProcessInstanceQuery SetUnfinished();
 
         /// <summary>
         /// Only select historic process instances that are deleted. </summary>
-        IHistoricProcessInstanceQuery deleted();
+        IHistoricProcessInstanceQuery SetDeleted();
 
         /// <summary>
         /// Only select historic process instance that are not deleted. </summary>
-        IHistoricProcessInstanceQuery notDeleted();
+        IHistoricProcessInstanceQuery SetNotDeleted();
 
         /// <summary>
         /// Only select the historic process instances with which the user with the given id is involved.
         /// </summary>
-        IHistoricProcessInstanceQuery involvedUser(string userId);
+        IHistoricProcessInstanceQuery SetInvolvedUser(string userId);
 
-        IHistoricProcessInstanceQuery involvedGroups(string[] involvedGroups);
+        IHistoricProcessInstanceQuery SetInvolvedGroups(string[] involvedGroups);
 
         /// <summary>
         /// Only select process instances which had a global variable with the given value when they ended. The type only applies to already ended process instances, otherwise use a
-        /// <seealso cref="IProcessInstanceQuery"/> instead! of variable is determined based on the value, using types configured in <seealso cref="ProcessEngineConfiguration#getVariableTypes()"/>. Byte-arrays and
+        /// <seealso cref="IProcessInstanceQuery"/> instead! of variable is determined based on the value, using types configured in <seealso cref="ProcessEngineConfiguration#GetVariableTypes()"/>. Byte-arrays and
         /// <seealso cref="Serializable"/> objects (which are not primitive type wrappers) are not supported.
         /// </summary>
         /// <param name="name">
         ///          of the variable, cannot be null. </param>
-        IHistoricProcessInstanceQuery variableValueEquals(string name, object value);
+        IHistoricProcessInstanceQuery VariableValueEquals(string name, object value);
 
         /// <summary>
         /// Only select process instances which had at least one global variable with the given value when they ended. The type only applies to already ended process instances, otherwise use a
-        /// <seealso cref="IProcessInstanceQuery"/> instead! of variable is determined based on the value, using types configured in <seealso cref="ProcessEngineConfiguration#getVariableTypes()"/>. Byte-arrays and
+        /// <seealso cref="IProcessInstanceQuery"/> instead! of variable is determined based on the value, using types configured in <seealso cref="ProcessEngineConfiguration#GetVariableTypes()"/>. Byte-arrays and
         /// <seealso cref="Serializable"/> objects (which are not primitive type wrappers) are not supported.
         /// </summary>
-        IHistoricProcessInstanceQuery variableValueEquals(object value);
+        IHistoricProcessInstanceQuery VariableValueEquals(object value);
 
         /// <summary>
         /// Only select historic process instances which have a local string variable with the given value, case insensitive.
@@ -134,7 +134,7 @@ namespace org.activiti.engine.history
         ///          name of the variable, cannot be null. </param>
         /// <param name="value">
         ///          value of the variable, cannot be null. </param>
-        IHistoricProcessInstanceQuery variableValueEqualsIgnoreCase(string name, string value);
+        IHistoricProcessInstanceQuery VariableValueEqualsIgnoreCase(string name, string value);
 
         /// <summary>
         /// Only select process instances which had a global variable with the given name, but with a different value than the passed value when they ended. Only select process instances which have a
@@ -142,7 +142,7 @@ namespace org.activiti.engine.history
         /// </summary>
         /// <param name="name">
         ///          of the variable, cannot be null. </param>
-        IHistoricProcessInstanceQuery variableValueNotEquals(string name, object value);
+        IHistoricProcessInstanceQuery VariableValueNotEquals(string name, object value);
 
         /// <summary>
         /// Only select process instances which had a global variable value greater than the passed value when they ended. Booleans, Byte-arrays and <seealso cref="Serializable"/> objects (which are not primitive type
@@ -152,27 +152,27 @@ namespace org.activiti.engine.history
         ///          cannot be null. </param>
         /// <param name="value">
         ///          cannot be null. </param>
-        IHistoricProcessInstanceQuery variableValueGreaterThan(string name, object value);
+        IHistoricProcessInstanceQuery VariableValueGreaterThan(string name, object value);
 
         /// <summary>
         /// Only select process instances which had a global variable value greater than or equal to the passed value when they ended. Booleans, Byte-arrays and <seealso cref="Serializable"/> objects (which are not
-        /// primitive type wrappers) are not supported. Only applies to already ended process instances, otherwise use a <seealso cref="IProcessInstanceQuery"/> instead!
+        /// primitive type wrappers) are not supported. Only applies to already ended process instances, otherwise use a <seealso cref="IHistoricProcessInstanceQuery"/> instead!
         /// </summary>
         /// <param name="name">
         ///          cannot be null. </param>
         /// <param name="value">
         ///          cannot be null. </param>
-        IHistoricProcessInstanceQuery variableValueGreaterThanOrEqual(string name, object value);
+        IHistoricProcessInstanceQuery VariableValueGreaterThanOrEqual(string name, object value);
 
         /// <summary>
         /// Only select process instances which had a global variable value less than the passed value when the ended. Only applies to already ended process instances, otherwise use a
-        /// <seealso cref="IProcessInstanceQuery"/> instead! Booleans, Byte-arrays and <seealso cref="Serializable"/> objects (which are not primitive type wrappers) are not supported.
+        /// <seealso cref="IHistoricProcessInstanceQuery"/> instead! Booleans, Byte-arrays and <seealso cref="Serializable"/> objects (which are not primitive type wrappers) are not supported.
         /// </summary>
         /// <param name="name">
         ///          cannot be null. </param>
         /// <param name="value">
         ///          cannot be null. </param>
-        IHistoricProcessInstanceQuery variableValueLessThan(string name, object value);
+        IHistoricProcessInstanceQuery VariableValueLessThan(string name, object value);
 
         /// <summary>
         /// Only select process instances which has a global variable value less than or equal to the passed value when they ended. Only applies to already ended process instances, otherwise use a
@@ -182,7 +182,7 @@ namespace org.activiti.engine.history
         ///          cannot be null. </param>
         /// <param name="value">
         ///          cannot be null. </param>
-        IHistoricProcessInstanceQuery variableValueLessThanOrEqual(string name, object value);
+        IHistoricProcessInstanceQuery VariableValueLessThanOrEqual(string name, object value);
 
         /// <summary>
         /// Only select process instances which had global variable value like the given value when they ended. Only applies to already ended process instances, otherwise use a <seealso cref="IProcessInstanceQuery"/>
@@ -192,150 +192,150 @@ namespace org.activiti.engine.history
         ///          cannot be null. </param>
         /// <param name="value">
         ///          cannot be null. The string can include the wildcard character '%' to express like-strategy: starts with (string%), ends with (%string) or contains (%string%). </param>
-        IHistoricProcessInstanceQuery variableValueLike(string name, string value);
+        IHistoricProcessInstanceQuery VariableValueLike(string name, string value);
 
         /// <summary>
         /// Only select process instances which had global variable value like (case insensitive)
         /// the given value when they ended. Only applies to already ended process instances,
-        /// otherwise use a <seealso cref="IProcessInstanceQuery"/> instead! This can be used on string
+        /// otherwise use a <seealso cref="IHistoricProcessInstanceQuery"/> instead! This can be used on string
         /// variables only. </summary>
         /// <param name="name"> cannot be null. </param>
         /// <param name="value"> cannot be null. The string can include the
         ///          wildcard character '%' to express like-strategy: starts with
         ///          (string%), ends with (%string) or contains (%string%).  </param>
-        IHistoricProcessInstanceQuery variableValueLikeIgnoreCase(string name, string value);
+        IHistoricProcessInstanceQuery VariableValueLikeIgnoreCase(string name, string value);
 
         /// <summary>
         /// Only select historic process instances that were started before the given date.
         /// </summary>
-        IHistoricProcessInstanceQuery startedBefore(DateTime? date);
+        IHistoricProcessInstanceQuery SetStartedBefore(DateTime? date);
 
         /// <summary>
         /// Only select historic process instances that were started after the given date.
         /// </summary>
-        IHistoricProcessInstanceQuery startedAfter(DateTime? date);
+        IHistoricProcessInstanceQuery SetStartedAfter(DateTime? date);
 
         /// <summary>
         /// Only select historic process instances that were started before the given date.
         /// </summary>
-        IHistoricProcessInstanceQuery finishedBefore(DateTime? date);
+        IHistoricProcessInstanceQuery SetFinishedBefore(DateTime? date);
 
         /// <summary>
         /// Only select historic process instances that were started after the given date.
         /// </summary>
-        IHistoricProcessInstanceQuery finishedAfter(DateTime? date);
+        IHistoricProcessInstanceQuery SetFinishedAfter(DateTime? date);
 
         /// <summary>
         /// Only select historic process instance that are started by the given user.
         /// </summary>
-        IHistoricProcessInstanceQuery startedBy(string userId);
+        IHistoricProcessInstanceQuery SetStartedBy(string userId);
 
         /// <summary>
         /// Only select process instances that have the given tenant id. </summary>
-        IHistoricProcessInstanceQuery processInstanceTenantId(string tenantId);
+        IHistoricProcessInstanceQuery SetProcessInstanceTenantId(string tenantId);
 
         /// <summary>
         /// Only select process instances with a tenant id like the given one. </summary>
-        IHistoricProcessInstanceQuery processInstanceTenantIdLike(string tenantIdLike);
+        IHistoricProcessInstanceQuery SetProcessInstanceTenantIdLike(string tenantIdLike);
 
         /// <summary>
         /// Only select process instances that do not have a tenant id. </summary>
-        IHistoricProcessInstanceQuery processInstanceWithoutTenantId();
+        IHistoricProcessInstanceQuery SetProcessInstanceWithoutTenantId();
 
         /// <summary>
         /// Begin an OR statement. Make sure you invoke the endOr method at the end of your OR statement. Only one OR statement is allowed, for the second call to this method an exception will be thrown.
         /// </summary>
-        IHistoricProcessInstanceQuery or();
+        IHistoricProcessInstanceQuery Or();
 
         /// <summary>
         /// End an OR statement. Only one OR statement is allowed, for the second call to this method an exception will be thrown.
         /// </summary>
-        IHistoricProcessInstanceQuery endOr();
+        IHistoricProcessInstanceQuery EndOr();
 
         /// <summary>
         /// Order by the process instance id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricProcessInstanceQuery orderByProcessInstanceId();
+        IHistoricProcessInstanceQuery OrderByProcessInstanceId();
 
         /// <summary>
         /// Order by the process definition id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricProcessInstanceQuery orderByProcessDefinitionId();
+        IHistoricProcessInstanceQuery OrderByProcessDefinitionId();
 
         /// <summary>
         /// Order by the business key (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricProcessInstanceQuery orderByProcessInstanceBusinessKey();
+        IHistoricProcessInstanceQuery OrderByProcessInstanceBusinessKey();
 
         /// <summary>
         /// Order by the start time (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricProcessInstanceQuery orderByProcessInstanceStartTime();
+        IHistoricProcessInstanceQuery OrderByProcessInstanceStartTime();
 
         /// <summary>
         /// Order by the end time (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricProcessInstanceQuery orderByProcessInstanceEndTime();
+        IHistoricProcessInstanceQuery OrderByProcessInstanceEndTime();
 
         /// <summary>
         /// Order by the duration of the process instance (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricProcessInstanceQuery orderByProcessInstanceDuration();
+        IHistoricProcessInstanceQuery OrderByProcessInstanceDuration();
 
         /// <summary>
         /// Order by tenant id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
-        IHistoricProcessInstanceQuery orderByTenantId();
+        IHistoricProcessInstanceQuery OrderByTenantId();
 
         /// <summary>
         /// Only select historic process instances started by the given process instance. {@link ProcessInstance) ids and <seealso cref="IHistoricProcessInstance"/> ids match.
         /// </summary>
-        IHistoricProcessInstanceQuery superProcessInstanceId(string superProcessInstanceId);
+        IHistoricProcessInstanceQuery SetSuperProcessInstanceId(string superProcessInstanceId);
 
         /// <summary>
         /// Exclude sub processes from the query result;
         /// </summary>
-        IHistoricProcessInstanceQuery excludeSubprocesses(bool excludeSubprocesses);
+        IHistoricProcessInstanceQuery SetExcludeSubprocesses(bool excludeSubprocesses);
 
         /// <summary>
         /// Include process variables in the process query result
         /// </summary>
-        IHistoricProcessInstanceQuery includeProcessVariables();
+        IHistoricProcessInstanceQuery SeIncludeProcessVariables();
 
         /// <summary>
         /// Limit process instance variables
         /// </summary>
-        IHistoricProcessInstanceQuery limitProcessInstanceVariables(int? processInstanceVariablesLimit);
+        IHistoricProcessInstanceQuery SetLimitProcessInstanceVariables(int? processInstanceVariablesLimit);
 
         /// <summary>
         /// Only select process instances that failed due to an exception happening during a job execution.
         /// </summary>
-        IHistoricProcessInstanceQuery withJobException();
+        IHistoricProcessInstanceQuery SetWithJobException();
 
         /// <summary>
         /// Only select process instances with the given name.
         /// </summary>
-        IHistoricProcessInstanceQuery processInstanceName(string name);
+        IHistoricProcessInstanceQuery SetProcessInstanceName(string name);
 
         /// <summary>
         /// Only select process instances with a name like the given value.
         /// </summary>
-        IHistoricProcessInstanceQuery processInstanceNameLike(string nameLike);
+        IHistoricProcessInstanceQuery SetProcessInstanceNameLike(string nameLike);
 
         /// <summary>
         /// Only select process instances with a name like the given value, ignoring upper/lower case.
         /// </summary>
-        IHistoricProcessInstanceQuery processInstanceNameLikeIgnoreCase(string nameLikeIgnoreCase);
+        IHistoricProcessInstanceQuery SetProcessInstanceNameLikeIgnoreCase(string nameLikeIgnoreCase);
 
         /// <summary>
         /// Localize historic process name and description to specified locale.
         /// </summary>
-        IHistoricProcessInstanceQuery locale(string locale);
+        IHistoricProcessInstanceQuery Locale(string locale);
 
         /// <summary>
         /// Instruct localization to fallback to more general locales including the default locale of the JVM if the specified locale is not found. 
         /// </summary>
-        IHistoricProcessInstanceQuery withLocalizationFallback();
+        IHistoricProcessInstanceQuery WithLocalizationFallback();
     }
 
 }

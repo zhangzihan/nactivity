@@ -23,7 +23,7 @@ namespace org.activiti.engine.impl.calendar
         /// <param name="timeZone">
         ///          The time zone to use in the calculations </param>
         /// <returns> The due date </returns>
-        DateTime? resolve(string duedateDescription, IClockReader clockReader, TimeZoneInfo timeZone);
+        DateTime? Resolve(string duedateDescription, IClockReader clockReader, TimeZoneInfo timeZone);
 
     }
 

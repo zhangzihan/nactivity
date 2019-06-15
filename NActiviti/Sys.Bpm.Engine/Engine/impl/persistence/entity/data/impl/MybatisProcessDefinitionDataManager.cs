@@ -35,33 +35,35 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             }
         }
 
-        public override IProcessDefinitionEntity create()
+        public override IProcessDefinitionEntity Create()
         {
             return new ProcessDefinitionEntityImpl();
         }
 
-        public virtual IProcessDefinitionEntity findLatestProcessDefinitionByKey(string processDefinitionKey)
+        public virtual IProcessDefinitionEntity FindLatestProcessDefinitionByKey(string processDefinitionKey)
         {
-            return DbSqlSession.selectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectLatestProcessDefinitionByKey", new { processDefinitionKey });
+            return DbSqlSession.SelectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectLatestProcessDefinitionByKey", new { processDefinitionKey });
         }
 
-        public virtual IProcessDefinitionEntity findLatestProcessDefinitionByKeyAndTenantId(string processDefinitionKey, string tenantId)
+        public virtual IProcessDefinitionEntity FindLatestProcessDefinitionByKeyAndTenantId(string processDefinitionKey, string tenantId)
         {
-            IDictionary<string, object> @params = new Dictionary<string, object>(2);
-            @params["processDefinitionKey"] = processDefinitionKey;
-            @params["tenantId"] = tenantId;
-            return DbSqlSession.selectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectLatestProcessDefinitionByKeyAndTenantId", @params);
+            IDictionary<string, object> @params = new Dictionary<string, object>(2)
+            {
+                ["processDefinitionKey"] = processDefinitionKey,
+                ["tenantId"] = tenantId
+            };
+            return DbSqlSession.SelectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectLatestProcessDefinitionByKeyAndTenantId", @params);
         }
 
-        public virtual void deleteProcessDefinitionsByDeploymentId(string deploymentId)
+        public virtual void DeleteProcessDefinitionsByDeploymentId(string deploymentId)
         {
-            DbSqlSession.delete("deleteProcessDefinitionsByDeploymentId", new { deploymentId }, typeof(ProcessDefinitionEntityImpl));
+            DbSqlSession.Delete("deleteProcessDefinitionsByDeploymentId", new { deploymentId }, typeof(ProcessDefinitionEntityImpl));
         }
 
-        public virtual IList<IProcessDefinition> findProcessDefinitionsByQueryCriteria(ProcessDefinitionQueryImpl processDefinitionQuery, Page page)
+        public virtual IList<IProcessDefinition> FindProcessDefinitionsByQueryCriteria(IProcessDefinitionQuery processDefinitionQuery, Page page)
         {
             // List<ProcessDefinition> processDefinitions =
-            return DbSqlSession.selectList<ProcessDefinitionEntityImpl, IProcessDefinition>("selectProcessDefinitionsByQueryCriteria", processDefinitionQuery, page);
+            return DbSqlSession.SelectList<ProcessDefinitionEntityImpl, IProcessDefinition>("selectProcessDefinitionsByQueryCriteria", processDefinitionQuery, page);
 
             // skipped this after discussion within the team
             // // retrieve process definitions from cache
@@ -79,19 +81,19 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             // return result;
         }
 
-        public virtual long findProcessDefinitionCountByQueryCriteria(ProcessDefinitionQueryImpl processDefinitionQuery)
+        public virtual long FindProcessDefinitionCountByQueryCriteria(IProcessDefinitionQuery processDefinitionQuery)
         {
-            return ((long?)DbSqlSession.selectOne<ProcessDefinitionEntityImpl, long?>("selectProcessDefinitionCountByQueryCriteria", processDefinitionQuery)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<ProcessDefinitionEntityImpl, long?>("selectProcessDefinitionCountByQueryCriteria", processDefinitionQuery).GetValueOrDefault();
         }
 
-        public virtual IProcessDefinitionEntity findProcessDefinitionByDeploymentAndKey(string deploymentId, string processDefinitionKey)
+        public virtual IProcessDefinitionEntity FindProcessDefinitionByDeploymentAndKey(string deploymentId, string processDefinitionKey)
         {
-            return DbSqlSession.selectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionByDeploymentAndKey", new { deploymentId, processDefinitionKey });
+            return DbSqlSession.SelectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionByDeploymentAndKey", new { deploymentId, processDefinitionKey });
         }
 
-        public virtual IProcessDefinitionEntity findProcessDefinitionByDeploymentAndKeyAndTenantId(string deploymentId, string processDefinitionKey, string tenantId)
+        public virtual IProcessDefinitionEntity FindProcessDefinitionByDeploymentAndKeyAndTenantId(string deploymentId, string processDefinitionKey, string tenantId)
         {
-            return DbSqlSession.selectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionByDeploymentAndKeyAndTenantId", new
+            return DbSqlSession.SelectOne<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionByDeploymentAndKeyAndTenantId", new
             {
                 deploymentId,
                 processDefinitionKey,
@@ -99,9 +101,9 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             });
         }
 
-        public virtual IProcessDefinitionEntity findProcessDefinitionByKeyAndVersion(string processDefinitionKey, int? processDefinitionVersion)
+        public virtual IProcessDefinitionEntity FindProcessDefinitionByKeyAndVersion(string processDefinitionKey, int? processDefinitionVersion)
         {
-            IList<IProcessDefinitionEntity> results = DbSqlSession.selectList<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionsByKeyAndVersion", new { processDefinitionKey, processDefinitionVersion });
+            IList<IProcessDefinitionEntity> results = DbSqlSession.SelectList<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionsByKeyAndVersion", new { processDefinitionKey, processDefinitionVersion });
             if (results.Count == 1)
             {
                 return results[0];
@@ -113,9 +115,9 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             return null;
         }
 
-        public virtual IProcessDefinitionEntity findProcessDefinitionByKeyAndVersionAndTenantId(string processDefinitionKey, int? processDefinitionVersion, string tenantId)
+        public virtual IProcessDefinitionEntity FindProcessDefinitionByKeyAndVersionAndTenantId(string processDefinitionKey, int? processDefinitionVersion, string tenantId)
         {
-            IList<IProcessDefinitionEntity> results = DbSqlSession.selectList<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionsByKeyAndVersionAndTenantId", new
+            IList<IProcessDefinitionEntity> results = DbSqlSession.SelectList<ProcessDefinitionEntityImpl, IProcessDefinitionEntity>("selectProcessDefinitionsByKeyAndVersionAndTenantId", new
             { processDefinitionKey, processDefinitionVersion, tenantId });
             if (results.Count == 1)
             {
@@ -128,22 +130,24 @@ namespace org.activiti.engine.impl.persistence.entity.data.impl
             return null;
         }
 
-        public virtual IList<IProcessDefinition> findProcessDefinitionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
+        public virtual IList<IProcessDefinition> FindProcessDefinitionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
-            return DbSqlSession.selectListWithRawParameter<ProcessDefinitionEntityImpl, IProcessDefinition>("selectProcessDefinitionByNativeQuery", parameterMap, firstResult, maxResults);
+            return DbSqlSession.SelectListWithRawParameter<ProcessDefinitionEntityImpl, IProcessDefinition>("selectProcessDefinitionByNativeQuery", parameterMap, firstResult, maxResults);
         }
 
-        public virtual long findProcessDefinitionCountByNativeQuery(IDictionary<string, object> parameterMap)
+        public virtual long FindProcessDefinitionCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
-            return ((long?)DbSqlSession.selectOne<ProcessDefinitionEntityImpl, long?>("selectProcessDefinitionCountByNativeQuery", parameterMap)).GetValueOrDefault();
+            return DbSqlSession.SelectOne<ProcessDefinitionEntityImpl, long?>("selectProcessDefinitionCountByNativeQuery", parameterMap).GetValueOrDefault();
         }
 
-        public virtual void updateProcessDefinitionTenantIdForDeployment(string deploymentId, string newTenantId)
+        public virtual void UpdateProcessDefinitionTenantIdForDeployment(string deploymentId, string newTenantId)
         {
-            Dictionary<string, object> @params = new Dictionary<string, object>();
-            @params["deploymentId"] = deploymentId;
-            @params["tenantId"] = newTenantId;
-            DbSqlSession.update<ProcessDefinitionEntityImpl>("updateProcessDefinitionTenantIdForDeploymentId", @params);
+            Dictionary<string, object> @params = new Dictionary<string, object>
+            {
+                ["deploymentId"] = deploymentId,
+                ["tenantId"] = newTenantId
+            };
+            DbSqlSession.Update<ProcessDefinitionEntityImpl>("updateProcessDefinitionTenantIdForDeploymentId", @params);
         }
 
     }

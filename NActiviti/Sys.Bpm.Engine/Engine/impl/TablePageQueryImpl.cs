@@ -42,21 +42,21 @@ namespace org.activiti.engine.impl
             this.commandExecutor = commandExecutor;
         }
 
-        public virtual ITablePageQuery tableName(string tableName)
+        public virtual ITablePageQuery SetTableName(string tableName)
         {
             this.tableName_Renamed = tableName;
             return this;
         }
 
-        public virtual ITablePageQuery orderAsc(string column)
+        public virtual ITablePageQuery OrderAsc(string column)
         {
-            addOrder(column, "asc");
+            AddOrder(column, "asc");
             return this;
         }
 
-        public virtual ITablePageQuery orderDesc(string column)
+        public virtual ITablePageQuery OrderDesc(string column)
         {
-            addOrder(column, "desc");
+            AddOrder(column, "desc");
             return this;
         }
 
@@ -68,29 +68,29 @@ namespace org.activiti.engine.impl
             }
         }
 
-        protected internal virtual void addOrder(string column, string sortOrder)
+        protected internal virtual void AddOrder(string column, string sortOrder)
         {
-            if (ReferenceEquals(order, null))
+            if (order is null)
             {
                 order = "";
             }
             else
             {
-                order = order + ", ";
+                order += ", ";
             }
-            order = order + column + " " + sortOrder;
+            order = $"{order}{column} {sortOrder}";
         }
 
-        public virtual TablePage listPage(int firstResult, int maxResults)
+        public virtual TablePage ListPage(int firstResult, int maxResults)
         {
             this.firstResult = firstResult;
             this.maxResults = maxResults;
-            return commandExecutor.execute(this);
+            return commandExecutor.Execute(this);
         }
 
-        public virtual TablePage execute(ICommandContext commandContext)
+        public virtual TablePage Execute(ICommandContext commandContext)
         {
-            return commandContext.TableDataManager.getTablePage(this, firstResult, maxResults);
+            return commandContext.TableDataManager.GetTablePage(this, firstResult, maxResults);
         }
 
         public virtual string Order

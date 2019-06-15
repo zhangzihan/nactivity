@@ -103,10 +103,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            CallActivity clone = new CallActivity();
-            clone.Values = this;
+            CallActivity clone = new CallActivity
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -126,7 +128,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (IOParameter parameter in val.InParameters)
                     {
-                        inParameters.Add(parameter.clone() as IOParameter);
+                        inParameters.Add(parameter.Clone() as IOParameter);
                     }
                 }
 
@@ -135,7 +137,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (IOParameter parameter in val.OutParameters)
                     {
-                        outParameters.Add(parameter.clone() as IOParameter);
+                        outParameters.Add(parameter.Clone() as IOParameter);
                     }
                 }
             }

@@ -63,10 +63,12 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            IOSpecification clone = new IOSpecification();
-            clone.Values = this;
+            IOSpecification clone = new IOSpecification
+            {
+                Values = this
+            };
             return clone;
         }
 
@@ -81,7 +83,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (DataSpec dataSpec in val.DataInputs)
                     {
-                        dataInputs.Add(dataSpec.clone() as DataSpec);
+                        dataInputs.Add(dataSpec.Clone() as DataSpec);
                     }
                 }
 
@@ -90,7 +92,7 @@ namespace org.activiti.bpmn.model
                 {
                     foreach (DataSpec dataSpec in val.DataOutputs)
                     {
-                        dataOutputs.Add(dataSpec.clone() as DataSpec);
+                        dataOutputs.Add(dataSpec.Clone() as DataSpec);
                     }
                 }
 

@@ -14,14 +14,10 @@
  */
 
 using Microsoft.Extensions.Logging;
-using org.activiti.api.runtime.shared.query;
-using org.activiti.cloud.services.api.model;
 using org.activiti.cloud.services.api.model.converter;
 using org.activiti.cloud.services.core.pageable.sort;
-using org.activiti.cloud.services.rest.controllers;
 using org.activiti.engine;
-using org.activiti.engine.runtime;
-using Sys;
+using Sys.Workflow;
 
 namespace org.activiti.cloud.services.core.pageable
 {
@@ -30,15 +26,13 @@ namespace org.activiti.cloud.services.core.pageable
     /// </summary>
     public class PageableDeploymentRespositoryService
     {
-        private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<PageableDeploymentRespositoryService>();
+        private readonly PageRetriever pageRetriever;
 
-        private PageRetriever pageRetriever;
+        private readonly IRuntimeService runtimeService;
 
-        private IRuntimeService runtimeService;
+        private readonly DeploymentSortApplier sortApplier;
 
-        private DeploymentSortApplier sortApplier;
-
-        private DeploymentConverter deploymentConverter;
+        private readonly DeploymentConverter deploymentConverter;
 
         private readonly SecurityPoliciesApplicationService securityService;
 
@@ -48,10 +42,10 @@ namespace org.activiti.cloud.services.core.pageable
         /// <summary>
         /// 
         /// </summary>
-        public PageableDeploymentRespositoryService(PageRetriever pageRetriever, 
+        public PageableDeploymentRespositoryService(PageRetriever pageRetriever,
             IRuntimeService runtimeService,
             DeploymentSortApplier sortApplier,
-            DeploymentConverter deploymentConverter, 
+            DeploymentConverter deploymentConverter,
             SecurityPoliciesApplicationService securityPolicyApplicationService)
         {
             this.pageRetriever = pageRetriever;

@@ -57,7 +57,7 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual string getDefinitionsAttributeValue(string @namespace, string name)
+        public virtual string GetDefinitionsAttributeValue(string @namespace, string name)
         {
             IList<ExtensionAttribute> attributes = DefinitionsAttributes[name];
             if (attributes != null && attributes.Count > 0)
@@ -73,14 +73,13 @@ namespace org.activiti.bpmn.model
             return null;
         }
 
-        public virtual void addDefinitionsAttribute(ExtensionAttribute attribute)
+        public virtual void AddDefinitionsAttribute(ExtensionAttribute attribute)
         {
             if (attribute != null && !string.IsNullOrWhiteSpace(attribute.Name))
             {
-                List<ExtensionAttribute> attributeList = null;
                 if (!this.definitionsAttributes.ContainsKey(attribute.Name))
                 {
-                    attributeList = new List<ExtensionAttribute>();
+                    List<ExtensionAttribute> attributeList = new List<ExtensionAttribute>();
                     this.definitionsAttributes[attribute.Name] = attributeList;
                 }
                 this.definitionsAttributes[attribute.Name].Add(attribute);
@@ -94,16 +93,16 @@ namespace org.activiti.bpmn.model
             {
                 if (Pools.Count > 0)
                 {
-                    return getProcess(Pools[0].Id);
+                    return GetProcess(Pools[0].Id);
                 }
                 else
                 {
-                    return getProcess(null);
+                    return GetProcess(null);
                 }
             }
         }
 
-        public virtual Process getProcess(string poolRef)
+        public virtual Process GetProcess(string poolRef)
         {
             foreach (Process process in processes)
             {
@@ -113,7 +112,7 @@ namespace org.activiti.bpmn.model
                     if (!string.IsNullOrWhiteSpace(pool.ProcessRef) && pool.ProcessRef.Equals(process.Id, StringComparison.CurrentCultureIgnoreCase))
                     {
 
-                        if (!string.ReferenceEquals(poolRef, null))
+                        if (!(poolRef is null))
                         {
                             if (pool.Id.Equals(poolRef, StringComparison.CurrentCultureIgnoreCase))
                             {
@@ -127,11 +126,11 @@ namespace org.activiti.bpmn.model
                     }
                 }
 
-                if (string.ReferenceEquals(poolRef, null) && !foundPool)
+                if (poolRef is null && !foundPool)
                 {
                     return process;
                 }
-                else if (!string.ReferenceEquals(poolRef, null) && foundPool)
+                else if (!(poolRef is null) && foundPool)
                 {
                     return process;
                 }
@@ -140,7 +139,7 @@ namespace org.activiti.bpmn.model
             return null;
         }
 
-        public virtual Process getProcessById(string id)
+        public virtual Process GetProcessById(string id)
         {
             foreach (Process process in processes)
             {
@@ -160,12 +159,12 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual void addProcess(Process process)
+        public virtual void AddProcess(Process process)
         {
             processes.Add(process);
         }
 
-        public virtual Pool getPool(string id)
+        public virtual Pool GetPool(string id)
         {
             Pool foundPool = null;
             if (!string.IsNullOrWhiteSpace(id))
@@ -182,7 +181,7 @@ namespace org.activiti.bpmn.model
             return foundPool;
         }
 
-        public virtual Lane getLane(string id)
+        public virtual Lane GetLane(string id)
         {
             Lane foundLane = null;
             if (!string.IsNullOrWhiteSpace(id))
@@ -206,12 +205,12 @@ namespace org.activiti.bpmn.model
             return foundLane;
         }
 
-        public virtual FlowElement getFlowElement(string id)
+        public virtual FlowElement GetFlowElement(string id)
         {
             FlowElement foundFlowElement = null;
             foreach (Process process in processes)
             {
-                foundFlowElement = process.getFlowElement(id);
+                foundFlowElement = process.FindFlowElement(id);
                 if (foundFlowElement != null)
                 {
                     break;
@@ -222,9 +221,9 @@ namespace org.activiti.bpmn.model
             {
                 foreach (Process process in processes)
                 {
-                    foreach (FlowElement flowElement in process.findFlowElementsOfType<SubProcess>())
+                    foreach (FlowElement flowElement in process.FindFlowElementsOfType<SubProcess>())
                     {
-                        foundFlowElement = getFlowElementInSubProcess(id, (SubProcess)flowElement);
+                        foundFlowElement = GetFlowElementInSubProcess(id, (SubProcess)flowElement);
                         if (foundFlowElement != null)
                         {
                             break;
@@ -240,16 +239,16 @@ namespace org.activiti.bpmn.model
             return foundFlowElement;
         }
 
-        protected internal virtual FlowElement getFlowElementInSubProcess(string id, SubProcess subProcess)
+        protected internal virtual FlowElement GetFlowElementInSubProcess(string id, SubProcess subProcess)
         {
-            FlowElement foundFlowElement = subProcess.getFlowElement(id);
+            FlowElement foundFlowElement = subProcess.FindFlowElement(id);
             if (foundFlowElement == null)
             {
                 foreach (FlowElement flowElement in subProcess.FlowElements)
                 {
                     if (flowElement is SubProcess)
                     {
-                        foundFlowElement = getFlowElementInSubProcess(id, (SubProcess)flowElement);
+                        foundFlowElement = GetFlowElementInSubProcess(id, (SubProcess)flowElement);
                         if (foundFlowElement != null)
                         {
                             break;
@@ -260,12 +259,12 @@ namespace org.activiti.bpmn.model
             return foundFlowElement;
         }
 
-        public virtual Artifact getArtifact(string id)
+        public virtual Artifact GetArtifact(string id)
         {
             Artifact foundArtifact = null;
             foreach (Process process in processes)
             {
-                foundArtifact = process.getArtifact(id);
+                foundArtifact = process.GetArtifact(id);
                 if (foundArtifact != null)
                 {
                     break;
@@ -276,9 +275,9 @@ namespace org.activiti.bpmn.model
             {
                 foreach (Process process in processes)
                 {
-                    foreach (FlowElement flowElement in process.findFlowElementsOfType<SubProcess>())
+                    foreach (FlowElement flowElement in process.FindFlowElementsOfType<SubProcess>())
                     {
-                        foundArtifact = getArtifactInSubProcess(id, (SubProcess)flowElement);
+                        foundArtifact = GetArtifactInSubProcess(id, (SubProcess)flowElement);
                         if (foundArtifact != null)
                         {
                             break;
@@ -294,16 +293,16 @@ namespace org.activiti.bpmn.model
             return foundArtifact;
         }
 
-        protected internal virtual Artifact getArtifactInSubProcess(string id, SubProcess subProcess)
+        protected internal virtual Artifact GetArtifactInSubProcess(string id, SubProcess subProcess)
         {
-            Artifact foundArtifact = subProcess.getArtifact(id);
+            Artifact foundArtifact = subProcess.GetArtifact(id);
             if (foundArtifact == null)
             {
                 foreach (FlowElement flowElement in subProcess.FlowElements)
                 {
                     if (flowElement is SubProcess)
                     {
-                        foundArtifact = getArtifactInSubProcess(id, (SubProcess)flowElement);
+                        foundArtifact = GetArtifactInSubProcess(id, (SubProcess)flowElement);
                         if (foundArtifact != null)
                         {
                             break;
@@ -314,27 +313,29 @@ namespace org.activiti.bpmn.model
             return foundArtifact;
         }
 
-        public virtual void addGraphicInfo(string key, GraphicInfo graphicInfo)
+        public virtual void AddGraphicInfo(string key, GraphicInfo graphicInfo)
         {
             locationMap[key] = graphicInfo;
         }
 
-        public virtual GraphicInfo getGraphicInfo(string key)
+        public virtual GraphicInfo GetGraphicInfo(string key)
         {
-            return locationMap[key];
+            locationMap.TryGetValue(key, out var gi);
+            return gi;
         }
 
-        public virtual void removeGraphicInfo(string key)
+        public virtual void RemoveGraphicInfo(string key)
         {
             locationMap.Remove(key);
         }
 
-        public virtual IList<GraphicInfo> getFlowLocationGraphicInfo(string key)
+        public virtual IList<GraphicInfo> GetFlowLocationGraphicInfo(string key)
         {
-            return flowLocationMap[key];
+            flowLocationMap.TryGetValue(key, out var list);
+            return list;
         }
 
-        public virtual void removeFlowGraphicInfoList(string key)
+        public virtual void RemoveFlowGraphicInfoList(string key)
         {
             flowLocationMap.Remove(key);
         }
@@ -347,7 +348,7 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual bool hasDiagramInterchangeInfo()
+        public virtual bool HasDiagramInterchangeInfo()
         {
             return locationMap.Count > 0;
         }
@@ -360,17 +361,18 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual GraphicInfo getLabelGraphicInfo(string key)
+        public virtual GraphicInfo GetLabelGraphicInfo(string key)
         {
-            return labelLocationMap[key];
+            labelLocationMap.TryGetValue(key, out var gi);
+            return gi;
         }
 
-        public virtual void addLabelGraphicInfo(string key, GraphicInfo graphicInfo)
+        public virtual void AddLabelGraphicInfo(string key, GraphicInfo graphicInfo)
         {
             labelLocationMap[key] = graphicInfo;
         }
 
-        public virtual void removeLabelGraphicInfo(string key)
+        public virtual void RemoveLabelGraphicInfo(string key)
         {
             labelLocationMap.Remove(key);
         }
@@ -383,7 +385,7 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual void addFlowGraphicInfoList(string key, IList<GraphicInfo> graphicInfoList)
+        public virtual void AddFlowGraphicInfoList(string key, IList<GraphicInfo> graphicInfoList)
         {
             flowLocationMap[key] = graphicInfoList;
         }
@@ -405,7 +407,7 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual void addResource(Resource resource)
+        public virtual void AddResource(Resource resource)
         {
             if (resource != null)
             {
@@ -413,12 +415,12 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual bool containsResourceId(string resourceId)
+        public virtual bool ContainsResourceId(string resourceId)
         {
-            return getResource(resourceId) != null;
+            return GetResource(resourceId) != null;
         }
 
-        public virtual Resource getResource(string id)
+        public virtual Resource GetResource(string id)
         {
             foreach (Resource resource in resources)
             {
@@ -447,7 +449,7 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual void addSignal(Signal signal)
+        public virtual void AddSignal(Signal signal)
         {
             if (signal != null)
             {
@@ -455,12 +457,12 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual bool containsSignalId(string signalId)
+        public virtual bool ContainsSignalId(string signalId)
         {
-            return getSignal(signalId) != null;
+            return GetSignal(signalId) != null;
         }
 
-        public virtual Signal getSignal(string id)
+        public virtual Signal GetSignal(string id)
         {
             foreach (Signal signal in signals)
             {
@@ -485,7 +487,7 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual void addMessageFlow(MessageFlow messageFlow)
+        public virtual void AddMessageFlow(MessageFlow messageFlow)
         {
             if (messageFlow != null && !string.IsNullOrWhiteSpace(messageFlow.Id))
             {
@@ -493,12 +495,12 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual MessageFlow getMessageFlow(string id)
+        public virtual MessageFlow GetMessageFlow(string id)
         {
             return messageFlowMap[id];
         }
 
-        public virtual bool containsMessageFlowId(string messageFlowId)
+        public virtual bool ContainsMessageFlowId(string messageFlowId)
         {
             return messageFlowMap.ContainsKey(messageFlowId);
         }
@@ -516,14 +518,14 @@ namespace org.activiti.bpmn.model
                     messageMap.Clear();
                     foreach (Message message in value)
                     {
-                        addMessage(message);
+                        AddMessage(message);
                     }
                 }
             }
         }
 
 
-        public virtual void addMessage(Message message)
+        public virtual void AddMessage(Message message)
         {
             if (message != null && !string.IsNullOrWhiteSpace(message.Id))
             {
@@ -531,7 +533,7 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual Message getMessage(string id)
+        public virtual Message GetMessage(string id)
         {
             Message result = messageMap[id];
             if (result == null)
@@ -550,7 +552,7 @@ namespace org.activiti.bpmn.model
             return result;
         }
 
-        public virtual bool containsMessageId(string messageId)
+        public virtual bool ContainsMessageId(string messageId)
         {
             return messageMap.ContainsKey(messageId);
         }
@@ -568,7 +570,7 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual void addError(string errorRef, string errorCode)
+        public virtual void AddError(string errorRef, string errorCode)
         {
             if (!string.IsNullOrWhiteSpace(errorRef))
             {
@@ -576,7 +578,7 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual bool containsErrorRef(string errorRef)
+        public virtual bool ContainsErrorRef(string errorRef)
         {
             return errorMap.ContainsKey(errorRef);
         }
@@ -594,7 +596,7 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual void addItemDefinition(string id, ItemDefinition item)
+        public virtual void AddItemDefinition(string id, ItemDefinition item)
         {
             if (!string.IsNullOrWhiteSpace(id))
             {
@@ -602,7 +604,7 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual bool containsItemDefinitionId(string id)
+        public virtual bool ContainsItemDefinitionId(string id)
         {
             return itemDefinitionMap.ContainsKey(id);
         }
@@ -620,7 +622,7 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual DataStore getDataStore(string id)
+        public virtual DataStore GetDataStore(string id)
         {
             DataStore dataStore = null;
             if (dataStoreMap.ContainsKey(id))
@@ -630,7 +632,7 @@ namespace org.activiti.bpmn.model
             return dataStore;
         }
 
-        public virtual void addDataStore(string id, DataStore dataStore)
+        public virtual void AddDataStore(string id, DataStore dataStore)
         {
             if (!string.IsNullOrWhiteSpace(id))
             {
@@ -638,7 +640,7 @@ namespace org.activiti.bpmn.model
             }
         }
 
-        public virtual bool containsDataStore(string id)
+        public virtual bool ContainsDataStore(string id)
         {
             return dataStoreMap.ContainsKey(id);
         }
@@ -695,17 +697,17 @@ namespace org.activiti.bpmn.model
         }
 
 
-        public virtual void addNamespace(string prefix, string uri)
+        public virtual void AddNamespace(string prefix, string uri)
         {
             namespaceMap[prefix] = uri;
         }
 
-        public virtual bool containsNamespacePrefix(string prefix)
+        public virtual bool ContainsNamespacePrefix(string prefix)
         {
             return namespaceMap.ContainsKey(prefix);
         }
 
-        public virtual string getNamespace(string prefix)
+        public virtual string GetNamespace(string prefix)
         {
             return namespaceMap[prefix];
         }

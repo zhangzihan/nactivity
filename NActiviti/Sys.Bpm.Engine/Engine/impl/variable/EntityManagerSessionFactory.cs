@@ -50,7 +50,7 @@ namespace org.activiti.engine.impl.variable
             }
         }
 
-        public virtual ISession openSession(ICommandContext commandContext)
+        public virtual ISession OpenSession(ICommandContext commandContext)
         {
             return new EntityManagerSessionImpl(entityManagerFactory, handleTransactions, closeEntityManager);
         }

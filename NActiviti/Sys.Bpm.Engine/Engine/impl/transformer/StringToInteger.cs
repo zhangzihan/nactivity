@@ -21,9 +21,14 @@ namespace org.activiti.engine.impl.transformer
     /// </summary>
     public class StringToInteger : AbstractTransformer
     {
-        protected internal override object primTransform(object anObject)
+        protected internal override object PrimTransform(object anObject)
         {
-            return Convert.ToInt32((string)anObject);
+            if (int.TryParse(anObject?.ToString(), out var i))
+            {
+                return i;
+            }
+
+            return null;
         }
     }
 

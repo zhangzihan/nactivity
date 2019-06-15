@@ -49,45 +49,45 @@ namespace org.activiti.bpmn.converter
                 return BpmnXMLConstants.ELEMENT_CALL_ACTIVITY;
             }
         }
-        protected internal override BaseElement convertXMLToElement(XMLStreamReader xtr, BpmnModel model)
+        protected internal override BaseElement ConvertXMLToElement(XMLStreamReader xtr, BpmnModel model)
         {
             CallActivity callActivity = new CallActivity();
-            BpmnXMLUtil.addXMLLocation(callActivity, xtr);
-            callActivity.CalledElement = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_CALLEDELEMENT);
-            callActivity.BusinessKey = xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_BUSINESS_KEY);
-            bool.TryParse(xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_INHERIT_BUSINESS_KEY), out callActivity.inheritBusinessKey);
-            bool.TryParse(xtr.getAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_INHERITVARIABLES), out callActivity.inheritVariables);
-            parseChildElements(XMLElementName, callActivity, childParserMap, model, xtr);
+            BpmnXMLUtil.AddXMLLocation(callActivity, xtr);
+            callActivity.CalledElement = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_CALLEDELEMENT);
+            callActivity.BusinessKey = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_BUSINESS_KEY);
+            bool.TryParse(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_INHERIT_BUSINESS_KEY), out callActivity.inheritBusinessKey);
+            bool.TryParse(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_INHERITVARIABLES), out callActivity.inheritVariables);
+            ParseChildElements(XMLElementName, callActivity, childParserMap, model, xtr);
             return callActivity;
         }
-        protected internal override void writeAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             CallActivity callActivity = (CallActivity)element;
             if (!string.IsNullOrWhiteSpace(callActivity.CalledElement))
             {
-                xtw.writeAttribute(BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_CALLEDELEMENT, callActivity.CalledElement);
+                xtw.WriteAttribute(BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_CALLEDELEMENT, callActivity.CalledElement);
             }
             if (!string.IsNullOrWhiteSpace(callActivity.BusinessKey))
             {
-                writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_BUSINESS_KEY, callActivity.BusinessKey, xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_BUSINESS_KEY, callActivity.BusinessKey, xtw);
             }
             if (callActivity.InheritBusinessKey)
             {
-                writeQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_INHERIT_BUSINESS_KEY, "true", xtw);
+                WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_INHERIT_BUSINESS_KEY, "true", xtw);
             }
-            xtw.writeAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_INHERITVARIABLES, callActivity.InheritVariables.ToString());
+            xtw.WriteAttribute(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_INHERITVARIABLES, callActivity.InheritVariables.ToString());
         }
-        protected internal override bool writeExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        protected internal override bool WriteExtensionChildElements(BaseElement element, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
             CallActivity callActivity = (CallActivity)element;
-            didWriteExtensionStartElement = writeIOParameters(BpmnXMLConstants.ELEMENT_CALL_ACTIVITY_IN_PARAMETERS, callActivity.InParameters, didWriteExtensionStartElement, xtw);
-            didWriteExtensionStartElement = writeIOParameters(BpmnXMLConstants.ELEMENT_CALL_ACTIVITY_OUT_PARAMETERS, callActivity.OutParameters, didWriteExtensionStartElement, xtw);
+            didWriteExtensionStartElement = WriteIOParameters(BpmnXMLConstants.ELEMENT_CALL_ACTIVITY_IN_PARAMETERS, callActivity.InParameters, didWriteExtensionStartElement, xtw);
+            didWriteExtensionStartElement = WriteIOParameters(BpmnXMLConstants.ELEMENT_CALL_ACTIVITY_OUT_PARAMETERS, callActivity.OutParameters, didWriteExtensionStartElement, xtw);
             return didWriteExtensionStartElement;
         }
-        protected internal override void writeAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
+        protected internal override void WriteAdditionalChildElements(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
         }
-        private bool writeIOParameters(string elementName, IList<IOParameter> parameterList, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
+        private bool WriteIOParameters(string elementName, IList<IOParameter> parameterList, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
 
             if (parameterList.Count == 0)
@@ -99,25 +99,25 @@ namespace org.activiti.bpmn.converter
             {
                 if (!didWriteExtensionStartElement)
                 {
-                    xtw.writeStartElement(BpmnXMLConstants.ELEMENT_EXTENSIONS);
+                    xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE);
                     didWriteExtensionStartElement = true;
                 }
 
-                xtw.writeStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, elementName, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
+                xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, elementName, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
                 if (!string.IsNullOrWhiteSpace(ioParameter.Source))
                 {
-                    writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_SOURCE, ioParameter.Source, xtw);
+                    WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_SOURCE, ioParameter.Source, xtw);
                 }
                 if (!string.IsNullOrWhiteSpace(ioParameter.SourceExpression))
                 {
-                    writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_SOURCE_EXPRESSION, ioParameter.SourceExpression, xtw);
+                    WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_SOURCE_EXPRESSION, ioParameter.SourceExpression, xtw);
                 }
                 if (!string.IsNullOrWhiteSpace(ioParameter.Target))
                 {
-                    writeDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_TARGET, ioParameter.Target, xtw);
+                    WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_TARGET, ioParameter.Target, xtw);
                 }
 
-                xtw.writeEndElement();
+                xtw.WriteEndElement();
             }
 
             return didWriteExtensionStartElement;
@@ -140,11 +140,11 @@ namespace org.activiti.bpmn.converter
                     return BpmnXMLConstants.ELEMENT_CALL_ACTIVITY_IN_PARAMETERS;
                 }
             }
-            public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+            public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
             {
-                string source = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_SOURCE);
-                string sourceExpression = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_SOURCE_EXPRESSION);
-                string target = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_TARGET);
+                string source = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_SOURCE);
+                string sourceExpression = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_SOURCE_EXPRESSION);
+                string target = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_TARGET);
                 if ((!string.IsNullOrWhiteSpace(source) || !string.IsNullOrWhiteSpace(sourceExpression)) && !string.IsNullOrWhiteSpace(target))
                 {
 
@@ -182,11 +182,11 @@ namespace org.activiti.bpmn.converter
                     return BpmnXMLConstants.ELEMENT_CALL_ACTIVITY_OUT_PARAMETERS;
                 }
             }
-            public override void parseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
+            public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)
             {
-                string source = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_SOURCE);
-                string sourceExpression = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_SOURCE_EXPRESSION);
-                string target = xtr.getAttributeValue(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_TARGET);
+                string source = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_SOURCE);
+                string sourceExpression = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_SOURCE_EXPRESSION);
+                string target = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_IOPARAMETER_TARGET);
                 if ((!string.IsNullOrWhiteSpace(source) || !string.IsNullOrWhiteSpace(sourceExpression)) && !string.IsNullOrWhiteSpace(target))
                 {
 

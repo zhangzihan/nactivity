@@ -33,14 +33,14 @@ namespace org.activiti.engine.impl.cmd
             this.processDefinitionId = processDefinitionId;
         }
 
-        public  virtual BpmnModel  execute(ICommandContext  commandContext)
+        public  virtual BpmnModel  Execute(ICommandContext  commandContext)
         {
             if (string.IsNullOrWhiteSpace(processDefinitionId))
             {
                 throw new ActivitiIllegalArgumentException("processDefinitionId is null");
             }
 
-            return ProcessDefinitionUtil.getBpmnModel(processDefinitionId);
+            return ProcessDefinitionUtil.GetBpmnModel(processDefinitionId);
         }
     }
 }

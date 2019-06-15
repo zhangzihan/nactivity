@@ -27,5 +27,20 @@ namespace org.activiti.cloud.services.rest.api
         /// <param name="processInstanceId">流程实例id</param>
         /// <returns>历史实例</returns>
         Task<HistoricInstance> GetProcessInstanceById(string processInstanceId);
+
+        /// <summary>
+        /// 读取流程实例变量列表,流程实例全局变量,作用域范围为整个工作流实例
+        /// </summary>
+        /// <param name="processInstanceId">流程历史实例id</param>
+        /// <param name="taskId">流程实例任务id</param>
+        /// <returns></returns>
+        Task<Resources<HistoricVariableInstance>> GetVariables(string processInstanceId, string taskId);
+
+        /// <summary>
+        /// 读取流程实例变量列表,流程实例全局变量,作用域范围为整个工作流实例
+        /// </summary>
+        /// <param name="processInstanceId">流程历史实例id</param>
+        /// <returns></returns>
+        Task<Resources<HistoricVariableInstance>> GetVariables(ProcessVariablesQuery query);
     }
 }

@@ -24,7 +24,7 @@ namespace org.activiti.engine.impl.persistence.entity
 
 	  public MessageEventSubscriptionEntityImpl()
 	  {
-		eventType = MessageEventSubscriptionEntity_Fields.EVENT_TYPE;
+		eventType = MessageEventSubscriptionEntityFields.EVENT_TYPE;
 	  }
 
 	}

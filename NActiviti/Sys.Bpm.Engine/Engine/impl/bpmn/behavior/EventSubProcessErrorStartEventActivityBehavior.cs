@@ -33,7 +33,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         private const long serialVersionUID = 1L;
 
-        public override void execute(IExecutionEntity execution)
+        public override void Execute(IExecutionEntity execution)
         {
             StartEvent startEvent = (StartEvent)execution.CurrentFlowElement;
             EventSubProcess eventSubProcess = (EventSubProcess)startEvent.SubProcess;
@@ -41,18 +41,18 @@ namespace org.activiti.engine.impl.bpmn.behavior
             execution.IsScope = true;
 
             // initialize the template-defined data objects as variables
-            IDictionary<string, object> dataObjectVars = processDataObjects(eventSubProcess.DataObjects);
+            IDictionary<string, object> dataObjectVars = ProcessDataObjects(eventSubProcess.DataObjects);
             if (dataObjectVars != null)
             {
                 execution.VariablesLocal = dataObjectVars;
             }
 
-            IExecutionEntity startSubProcessExecution = Context.CommandContext.ExecutionEntityManager.createChildExecution(execution);
+            IExecutionEntity startSubProcessExecution = Context.CommandContext.ExecutionEntityManager.CreateChildExecution(execution);
             startSubProcessExecution.CurrentFlowElement = startEvent;
-            Context.Agenda.planTakeOutgoingSequenceFlowsOperation(startSubProcessExecution, true);
+            Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(startSubProcessExecution, true);
         }
 
-        protected internal virtual IDictionary<string, object> processDataObjects(ICollection<ValuedDataObject> dataObjects)
+        protected internal virtual IDictionary<string, object> ProcessDataObjects(ICollection<ValuedDataObject> dataObjects)
         {
             IDictionary<string, object> variablesMap = new Dictionary<string, object>();
             // convert data objects to process variables

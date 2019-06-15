@@ -50,31 +50,31 @@ namespace org.activiti.engine.@delegate.@event
             this.entityClass = entityClass;
         }
 
-        public void onEvent(IActivitiEvent @event)
+        public void OnEvent(IActivitiEvent @event)
         {
-            if (isValidEvent(@event))
+            if (IsValidEvent(@event))
             {
                 // Check if this event
                 if (@event.Type == ActivitiEventType.ENTITY_CREATED)
                 {
-                    onCreate(@event);
+                    OnCreate(@event);
                 }
                 else if (@event.Type == ActivitiEventType.ENTITY_INITIALIZED)
                 {
-                    onInitialized(@event);
+                    OnInitialized(@event);
                 }
                 else if (@event.Type == ActivitiEventType.ENTITY_DELETED)
                 {
-                    onDelete(@event);
+                    OnDelete(@event);
                 }
                 else if (@event.Type == ActivitiEventType.ENTITY_UPDATED)
                 {
-                    onUpdate(@event);
+                    OnUpdate(@event);
                 }
                 else
                 {
                     // Entity-specific event
-                    onEntityEvent(@event);
+                    OnEntityEvent(@event);
                 }
             }
         }
@@ -88,7 +88,7 @@ namespace org.activiti.engine.@delegate.@event
         }
 
         /// <returns> true, if the event is an <seealso cref="IActivitiEntityEvent"/> and (if needed) the entityClass set in this instance, is assignable from the entity class in the event. </returns>
-        protected internal virtual bool isValidEvent(IActivitiEvent @event)
+        protected internal virtual bool IsValidEvent(IActivitiEvent @event)
         {
             bool valid = false;
             if (@event is IActivitiEntityEvent)
@@ -108,7 +108,7 @@ namespace org.activiti.engine.@delegate.@event
         /// <summary>
         /// Called when an entity create event is received.
         /// </summary>
-        protected internal virtual void onCreate(IActivitiEvent @event)
+        protected internal virtual void OnCreate(IActivitiEvent @event)
         {
             // Default implementation is a NO-OP
         }
@@ -116,7 +116,7 @@ namespace org.activiti.engine.@delegate.@event
         /// <summary>
         /// Called when an entity initialized event is received.
         /// </summary>
-        protected internal virtual void onInitialized(IActivitiEvent @event)
+        protected internal virtual void OnInitialized(IActivitiEvent @event)
         {
             // Default implementation is a NO-OP
         }
@@ -124,7 +124,7 @@ namespace org.activiti.engine.@delegate.@event
         /// <summary>
         /// Called when an entity delete event is received.
         /// </summary>
-        protected internal virtual void onDelete(IActivitiEvent @event)
+        protected internal virtual void OnDelete(IActivitiEvent @event)
         {
             // Default implementation is a NO-OP
         }
@@ -132,7 +132,7 @@ namespace org.activiti.engine.@delegate.@event
         /// <summary>
         /// Called when an entity update event is received.
         /// </summary>
-        protected internal virtual void onUpdate(IActivitiEvent @event)
+        protected internal virtual void OnUpdate(IActivitiEvent @event)
         {
             // Default implementation is a NO-OP
         }
@@ -140,10 +140,9 @@ namespace org.activiti.engine.@delegate.@event
         /// <summary>
         /// Called when an event is received, which is not a create, an update or delete.
         /// </summary>
-        protected internal virtual void onEntityEvent(IActivitiEvent @event)
+        protected internal virtual void OnEntityEvent(IActivitiEvent @event)
         {
             // Default implementation is a NO-OP
         }
     }
-
 }

@@ -22,14 +22,23 @@ namespace org.activiti.engine.impl.@delegate.invocation
     /// </summary>
     public abstract class ExpressionInvocation : DelegateInvocation
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal readonly ValueExpression valueExpression;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="valueExpression"></param>
         public ExpressionInvocation(ValueExpression valueExpression)
         {
             this.valueExpression = valueExpression;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override object Target
         {
             get
@@ -37,7 +46,5 @@ namespace org.activiti.engine.impl.@delegate.invocation
                 return valueExpression;
             }
         }
-
     }
-
 }

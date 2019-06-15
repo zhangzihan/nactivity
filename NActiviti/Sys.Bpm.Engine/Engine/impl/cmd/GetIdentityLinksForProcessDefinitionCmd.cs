@@ -34,9 +34,9 @@ namespace org.activiti.engine.impl.cmd
             this.processDefinitionId = processDefinitionId;
         }
 
-        public virtual IList<IIdentityLink> execute(ICommandContext commandContext)
+        public virtual IList<IIdentityLink> Execute(ICommandContext commandContext)
         {
-            IProcessDefinitionEntity processDefinition = commandContext.ProcessDefinitionEntityManager.findById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("id", processDefinitionId));
+            IProcessDefinitionEntity processDefinition = commandContext.ProcessDefinitionEntityManager.FindById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("id", processDefinitionId));
 
             if (processDefinition == null)
             {

@@ -21,7 +21,7 @@ namespace org.activiti.cloud.services.events.integration
     /// <summary>
     /// 
     /// </summary>
-    public interface IntegrationEvent : IProcessEngineEvent
+    public interface IIntegrationEvent : IProcessEngineEvent
 	{
 
         /// <summary>

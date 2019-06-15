@@ -1,5 +1,7 @@
-﻿using org.activiti.engine.impl.persistence.entity;
+﻿using Newtonsoft.Json.Linq;
+using org.activiti.engine.impl.persistence.entity;
 using org.activiti.engine.task;
+using Sys.Net.Http;
 using System;
 using System.Collections.Generic;
 using static org.activiti.cloud.services.api.model.TaskModel;
@@ -43,7 +45,7 @@ namespace org.activiti.cloud.services.api.model.converter
         /// <summary>
         /// 
         /// </summary>
-        public virtual TaskModel from(ITask source)
+        public virtual TaskModel From(ITask source)
         {
             TaskModel task = null;
             if (source != null)
@@ -62,8 +64,17 @@ namespace org.activiti.cloud.services.api.model.converter
                     source.ProcessInstanceId,
                     source.ParentTaskId,
                     source.FormKey,
-                    calculateStatus(source),
-                    null);
+                    CalculateStatus(source),
+                    null,
+                    source.IsTransfer,
+                    source.CanTransfer,
+                    source.OnlyAssignee,
+                    source.BusinessKey);
+
+                if (source.Assigner != null)
+                {
+                    task.Assigner = JToken.FromObject(source.Assigner).ToObject<UserInfo>();
+                }
             }
             return task;
         }
@@ -72,7 +83,7 @@ namespace org.activiti.cloud.services.api.model.converter
         /// <summary>
         /// 
         /// </summary>
-        private string calculateStatus(ITask source)
+        private string CalculateStatus(ITask source)
         {
             if (source is ITaskEntity && (((ITaskEntity)source).Deleted || ((ITaskEntity)source).Canceled))
             {
@@ -93,9 +104,9 @@ namespace org.activiti.cloud.services.api.model.converter
         /// <summary>
         /// 
         /// </summary>
-        public virtual IList<TaskModel> from(IList<ITask> tasks)
+        public virtual IEnumerable<TaskModel> From(IEnumerable<ITask> tasks)
         {
-            return listConverter.from(tasks, this);
+            return listConverter.From(tasks, this);
         }
     }
 

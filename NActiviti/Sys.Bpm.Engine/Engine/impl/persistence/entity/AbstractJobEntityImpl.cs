@@ -37,7 +37,7 @@ namespace org.activiti.engine.impl.persistence.entity
         protected internal string processInstanceId;
         protected internal string processDefinitionId;
 
-        protected internal bool isExclusive = engine.runtime.Job_Fields.DEFAULT_EXCLUSIVE;
+        protected internal bool isExclusive = engine.runtime.JobFields.DEFAULT_EXCLUSIVE;
 
         protected internal int retries;
 
@@ -58,11 +58,12 @@ namespace org.activiti.engine.impl.persistence.entity
         {
             get
             {
-                PersistentState persistentState = new PersistentState();
-
-                persistentState["retries"] = retries;
-                persistentState["duedate"] = duedate;
-                persistentState["exceptionMessage"] = exceptionMessage;
+                PersistentState persistentState = new PersistentState
+                {
+                    ["retries"] = retries,
+                    ["duedate"] = duedate,
+                    ["exceptionMessage"] = exceptionMessage
+                };
 
                 if (exceptionByteArrayRef != null)
                 {
@@ -284,7 +285,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 {
                     exceptionByteArrayRef = new ByteArrayRef();
                 }
-                exceptionByteArrayRef.setValue("stacktrace", getUtf8Bytes(value));
+                exceptionByteArrayRef.SetValue("stacktrace", GetUtf8Bytes(value));
             }
         }
 
@@ -310,15 +311,15 @@ namespace org.activiti.engine.impl.persistence.entity
             }
         }
 
-        protected internal virtual byte[] getUtf8Bytes(string str)
+        protected internal virtual byte[] GetUtf8Bytes(string str)
         {
-            if (ReferenceEquals(str, null))
+            if (str is null)
             {
                 return null;
             }
             try
             {
-                return str.GetBytes(Encoding.UTF8);
+                return str.GetBytes(new UTF8Encoding(false));
             }
             catch (Exception)
             {

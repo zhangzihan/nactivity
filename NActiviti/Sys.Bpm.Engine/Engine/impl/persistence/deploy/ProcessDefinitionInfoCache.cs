@@ -14,11 +14,14 @@
  */
 namespace org.activiti.engine.impl.persistence.deploy
 {
+    using Microsoft.Extensions.Caching.Memory;
     using Newtonsoft.Json.Linq;
     using org.activiti.engine.impl.context;
     using org.activiti.engine.impl.interceptor;
     using org.activiti.engine.impl.persistence.entity;
     using Sys.Bpm;
+    using Sys.Workflow;
+    using Sys.Workflow.Cache;
     using System;
     using System.Collections.Concurrent;
 
@@ -29,15 +32,14 @@ namespace org.activiti.engine.impl.persistence.deploy
     /// </summary>
     public class ProcessDefinitionInfoCache
     {
-        protected internal ConcurrentDictionary<string, ProcessDefinitionInfoCacheObject> cache;
+        private IMemoryCache cache;
         protected internal ICommandExecutor commandExecutor;
+        private readonly int sizeLimit;
 
         /// <summary>
         /// Cache with no limit </summary>
-        public ProcessDefinitionInfoCache(ICommandExecutor commandExecutor)
+        public ProcessDefinitionInfoCache(ICommandExecutor commandExecutor) : this(commandExecutor, -1)
         {
-            this.commandExecutor = commandExecutor;
-            this.cache = new ConcurrentDictionary<string, ProcessDefinitionInfoCacheObject>();
         }
 
         /// <summary>
@@ -45,51 +47,23 @@ namespace org.activiti.engine.impl.persistence.deploy
         public ProcessDefinitionInfoCache(ICommandExecutor commandExecutor, int limit)
         {
             this.commandExecutor = commandExecutor;
-            this.cache = new LinkedHashMapAnonymousInnerClass(this, limit + 1);
+            sizeLimit = limit;
+
+            cache = ProcessEngineServiceProvider.Resolve<MemoryCacheProvider>().Create(limit);
         }
 
-        private class LinkedHashMapAnonymousInnerClass : ConcurrentDictionary<string, ProcessDefinitionInfoCacheObject>
+        public virtual ProcessDefinitionInfoCacheObject Get(string processDefinitionId)
         {
-            private readonly ProcessDefinitionInfoCache outerInstance;
-
-            private int limit;
-
-            // +1 is needed, because the entry is inserted first, before it is removed
-            // 0.75 is the default (see javadocs)
-            // true will keep the 'access-order', which is needed to have a real LRU cache
-            private long serialVersionUID;
-
-            public LinkedHashMapAnonymousInnerClass(ProcessDefinitionInfoCache outerInstance, int limit) : base(StringComparer.OrdinalIgnoreCase)
-            {
-                this.outerInstance = outerInstance;
-                this.limit = limit;
-                serialVersionUID = 1L;
-            }
-
-            protected internal virtual bool removeEldestEntry(KeyValuePair<string, ProcessDefinitionInfoCacheObject> eldest)
-            {
-                bool removeEldest = outerInstance.size() > limit;
-                //if (removeEldest)
-                //{
-                //    logger.trace("Cache limit is reached, {} will be evicted", eldest.Key);
-                //}
-                return removeEldest;
-            }
-
-        }
-
-        public virtual ProcessDefinitionInfoCacheObject get(string processDefinitionId)
-        {
-            ProcessDefinitionInfoCacheObject infoCacheObject = null;
             ICommand<object> cacheCommand = new CommandAnonymousInnerClass(this, processDefinitionId);
 
+            ProcessDefinitionInfoCacheObject infoCacheObject;
             if (Context.CommandContext != null)
             {
-                infoCacheObject = retrieveProcessDefinitionInfoCacheObject(processDefinitionId, Context.CommandContext);
+                infoCacheObject = RetrieveProcessDefinitionInfoCacheObject(processDefinitionId, Context.CommandContext);
             }
             else
             {
-                infoCacheObject = commandExecutor.execute(cacheCommand) as ProcessDefinitionInfoCacheObject;
+                infoCacheObject = commandExecutor.Execute(cacheCommand) as ProcessDefinitionInfoCacheObject;
             }
 
             return infoCacheObject;
@@ -99,7 +73,7 @@ namespace org.activiti.engine.impl.persistence.deploy
         {
             private readonly ProcessDefinitionInfoCache outerInstance;
 
-            private string processDefinitionId;
+            private readonly string processDefinitionId;
 
             public CommandAnonymousInnerClass(ProcessDefinitionInfoCache outerInstance, string processDefinitionId)
             {
@@ -108,60 +82,56 @@ namespace org.activiti.engine.impl.persistence.deploy
             }
 
 
-            public virtual object execute(ICommandContext commandContext)
+            public virtual object Execute(ICommandContext commandContext)
             {
-                return outerInstance.retrieveProcessDefinitionInfoCacheObject(processDefinitionId, commandContext);
+                return outerInstance.RetrieveProcessDefinitionInfoCacheObject(processDefinitionId, commandContext);
             }
         }
 
-        public virtual void add(string id, ProcessDefinitionInfoCacheObject obj)
+        public virtual void Add(string id, ProcessDefinitionInfoCacheObject obj)
         {
-            cache.GetOrAdd(id, (str) => obj);
+            cache.Set(id, obj);
         }
 
-        public virtual void remove(string id)
+        public virtual void Remove(string id)
         {
-            cache.TryRemove(id, out ProcessDefinitionInfoCacheObject pico);
+            cache.Remove(id);
         }
 
-        public virtual void clear()
+        public virtual void Clear()
         {
-            cache.Clear();
+            cache.Dispose();
+
+            cache = ProcessEngineServiceProvider.Resolve<MemoryCacheProvider>().Create(sizeLimit);
         }
 
         // For testing purposes only
-        public virtual int size()
+        public virtual int Size()
         {
-            return cache.Count;
+            return (cache as MemoryCache).Count;
         }
 
-        protected internal virtual ProcessDefinitionInfoCacheObject retrieveProcessDefinitionInfoCacheObject(string processDefinitionId, ICommandContext commandContext)
+        protected internal virtual ProcessDefinitionInfoCacheObject RetrieveProcessDefinitionInfoCacheObject(string processDefinitionId, ICommandContext commandContext)
         {
             IProcessDefinitionInfoEntityManager infoEntityManager = commandContext.ProcessDefinitionInfoEntityManager;
             ObjectMapper objectMapper = commandContext.ProcessEngineConfiguration.ObjectMapper;
 
-            ProcessDefinitionInfoCacheObject cacheObject = null;
-            if (cache.ContainsKey(processDefinitionId))
+            ProcessDefinitionInfoCacheObject cacheObject = cache.GetOrCreate(processDefinitionId, (key) => new ProcessDefinitionInfoCacheObject()
             {
-                cacheObject = cache[processDefinitionId];
-            }
-            else
-            {
-                cacheObject = new ProcessDefinitionInfoCacheObject();
-                cacheObject.Revision = 0;
-                cacheObject.InfoNode = objectMapper.createObjectNode();
-            }
+                Revision = 0,
+                InfoNode = objectMapper.CreateObjectNode()
+            });
 
-            IProcessDefinitionInfoEntity infoEntity = infoEntityManager.findProcessDefinitionInfoByProcessDefinitionId(processDefinitionId);
+            IProcessDefinitionInfoEntity infoEntity = infoEntityManager.FindProcessDefinitionInfoByProcessDefinitionId(processDefinitionId);
             if (infoEntity != null && infoEntity.Revision != cacheObject.Revision)
             {
                 cacheObject.Revision = infoEntity.Revision;
-                if (!ReferenceEquals(infoEntity.InfoJsonId, null))
+                if (!(infoEntity.InfoJsonId is null))
                 {
-                    byte[] infoBytes = infoEntityManager.findInfoJsonById(infoEntity.InfoJsonId);
+                    byte[] infoBytes = infoEntityManager.FindInfoJsonById(infoEntity.InfoJsonId);
                     try
                     {
-                        JToken infoNode = objectMapper.readTree(infoBytes);
+                        JToken infoNode = objectMapper.ReadTree(infoBytes);
                         cacheObject.InfoNode = infoNode;
                     }
                     catch (Exception e)
@@ -173,7 +143,7 @@ namespace org.activiti.engine.impl.persistence.deploy
             else if (infoEntity == null)
             {
                 cacheObject.Revision = 0;
-                cacheObject.InfoNode = objectMapper.createObjectNode();
+                cacheObject.InfoNode = objectMapper.CreateObjectNode();
             }
 
             return cacheObject;

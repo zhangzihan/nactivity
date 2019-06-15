@@ -34,14 +34,14 @@ namespace org.activiti.engine.impl.cmd
             this.executionId = executionId;
         }
 
-        public  virtual T  execute(ICommandContext  commandContext)
+        public  virtual T  Execute(ICommandContext  commandContext)
         {
-            if (ReferenceEquals(executionId, null))
+            if (executionId is null)
             {
                 throw new ActivitiIllegalArgumentException("executionId is null");
             }
 
-            IExecutionEntity execution = commandContext.ExecutionEntityManager.findById<IExecutionEntity>(executionId);
+            IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
 
             if (execution == null)
             {
@@ -53,13 +53,13 @@ namespace org.activiti.engine.impl.cmd
                 throw new ActivitiException(SuspendedExceptionMessage);
             }
 
-            return execute(commandContext, execution);
+            return Execute(commandContext, execution);
         }
 
         /// <summary>
         /// Subclasses should implement this method. The provided <seealso cref="IExecutionEntity"/> is guaranteed to be active (ie. not suspended).
         /// </summary>
-        protected  internal abstract T  execute(ICommandContext  commandContext, IExecutionEntity execution);
+        protected  internal abstract T  Execute(ICommandContext  commandContext, IExecutionEntity execution);
 
         /// <summary>
         /// Subclasses can override this to provide a more detailed exception message that will be thrown when the execution is suspended.

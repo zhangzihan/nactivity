@@ -7,6 +7,7 @@ create table ACT_HI_PROCINST (
   END_TIME_ timestamp,
   DURATION_ bigint,
   START_USER_ID_ varchar(255),
+  START_USER_ varchar(255),
   START_ACT_ID_ varchar(255),
   END_ACT_ID_ varchar(255),
   SUPER_PROCESS_INSTANCE_ID_ varchar(64),
@@ -28,6 +29,7 @@ create table ACT_HI_ACTINST (
   ACT_NAME_ varchar(255),
   ACT_TYPE_ varchar(255) not null,
   ASSIGNEE_ varchar(255),
+  ASSIGNEE_USER_ varchar(255),
   START_TIME_ timestamp not null,
   END_TIME_ timestamp,
   DURATION_ bigint,
@@ -47,6 +49,7 @@ create table ACT_HI_TASKINST (
   DESCRIPTION_ varchar(4000),
   OWNER_ varchar(255),
   ASSIGNEE_ varchar(255),
+  ASSIGNEE_USER_ varchar(255),
   START_TIME_ timestamp not null,
   CLAIM_TIME_ timestamp,
   END_TIME_ timestamp,
@@ -59,6 +62,8 @@ create table ACT_HI_TASKINST (
   TENANT_ID_ varchar(255) default '',
   IS_APPEND_ BIT,
   IS_TRANSFER_ BIT,
+  CAN_TRANSFER_ BIT,
+  ONLY_ASSIGNEE_ BIT,
   IS_RUNTIME_ BIT,
   primary key (ID_)
 );
@@ -156,3 +161,8 @@ create index ACT_IDX_HI_IDENT_LNK_PROCINST on ACT_HI_IDENTITYLINK(PROC_INST_ID_)
 
 create index ACT_IDX_HI_ACT_INST_EXEC on ACT_HI_ACTINST(EXECUTION_ID_, ACT_ID_);    
 create index ACT_IDX_HI_TASK_INST_PROCINST on ACT_HI_TASKINST(PROC_INST_ID_);
+
+create index ACT_IDX_HI_PROCINST_TENANT_ID on ACT_HI_PROCINST(TENANT_ID_);
+create index ACT_IDX_HI_INST_TENANT_ID on ACT_HI_ACTINST(TENANT_ID_);
+create index ACT_IDX_HI_TASK_TENANT_ID on ACT_HI_TASKINST(TENANT_ID_);
+

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Spring.Util;
+using Sys.Net.Http;
 
 namespace Sys.Workflow
 {
@@ -15,9 +18,24 @@ namespace Sys.Workflow
         string Id { get; set; }
 
         /// <summary>
+        /// 登录用户id
+        /// </summary>
+        string LoginUserId { get; set; }
+
+        /// <summary>
         /// 用户姓名
         /// </summary>
-        string Name { get; set; }
+        string FullName { get; set; }
+
+        /// <summary>
+        /// Email
+        /// </summary>
+        string Email { get; set; }
+
+        /// <summary>
+        /// phone
+        /// </summary>
+        string Phone { get; set; }
 
         /// <summary>
         /// 租户id

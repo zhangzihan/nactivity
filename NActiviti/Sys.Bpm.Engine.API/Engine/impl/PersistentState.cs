@@ -8,12 +8,22 @@ using System.Threading.Tasks;
 
 namespace org.activiti.engine.impl.persistence
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class PersistentState : Dictionary<string, object>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public PersistentState() : base()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public PersistentState Clone()
         {
             var clone = new PersistentState();
@@ -26,9 +36,14 @@ namespace org.activiti.engine.impl.persistence
             return clone;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(obj, null))
+            if (obj is null)
             {
                 return false;
             }
@@ -62,6 +77,10 @@ namespace org.activiti.engine.impl.persistence
             //return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return base.GetHashCode();

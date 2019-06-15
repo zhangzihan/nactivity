@@ -26,7 +26,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
         public static readonly string[] BPMN_RESOURCE_SUFFIXES = new string[] { "bpmn20.xml", "bpmn" };
         public static readonly string[] DIAGRAM_SUFFIXES = new string[] { "png", "jpg", "gif", "svg" };
 
-        public static string stripBpmnFileSuffix(string bpmnFileResource)
+        public static string StripBpmnFileSuffix(string bpmnFileResource)
         {
             foreach (string suffix in BPMN_RESOURCE_SUFFIXES)
             {
@@ -38,9 +38,9 @@ namespace org.activiti.engine.impl.bpmn.deployer
             return bpmnFileResource;
         }
 
-        public static string getProcessDiagramResourceName(string bpmnFileResource, string processKey, string diagramSuffix)
+        public static string GetProcessDiagramResourceName(string bpmnFileResource, string processKey, string diagramSuffix)
         {
-            string bpmnFileResourceBase = stripBpmnFileSuffix(bpmnFileResource);
+            string bpmnFileResourceBase = StripBpmnFileSuffix(bpmnFileResource);
             return bpmnFileResourceBase + processKey + "." + diagramSuffix;
         }
 
@@ -66,7 +66,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
         /// </para>
         /// </summary>
         /// <returns> name of an existing resource, or null if no matching image resource is found in the resources. </returns>
-        public static string getProcessDiagramResourceNameFromDeployment(IProcessDefinitionEntity processDefinition, IDictionary<string, IResourceEntity> resources)
+        public static string GetProcessDiagramResourceNameFromDeployment(IProcessDefinitionEntity processDefinition, IDictionary<string, IResourceEntity> resources)
         {
 
             if (string.IsNullOrWhiteSpace(processDefinition.ResourceName))
@@ -74,7 +74,7 @@ namespace org.activiti.engine.impl.bpmn.deployer
                 throw new System.InvalidOperationException("Provided process definition must have its resource name set.");
             }
 
-            string bpmnResourceBase = stripBpmnFileSuffix(processDefinition.ResourceName);
+            string bpmnResourceBase = StripBpmnFileSuffix(processDefinition.ResourceName);
             string key = processDefinition.Key;
 
             foreach (string diagramSuffix in DIAGRAM_SUFFIXES)
@@ -94,8 +94,5 @@ namespace org.activiti.engine.impl.bpmn.deployer
 
             return null;
         }
-
     }
-
-
 }

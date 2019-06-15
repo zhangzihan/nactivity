@@ -19,57 +19,59 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
     using org.activiti.bpmn.model;
     using org.activiti.engine.@delegate;
     using org.activiti.engine.parse;
-    using Sys;
+    using Sys.Workflow;
 
-    public abstract class AbstractBpmnParseHandler<T> : IBpmnParseHandler where T : org.activiti.bpmn.model.BaseElement
+    public abstract class AbstractBpmnParseHandler<T> : IBpmnParseHandler where T : BaseElement
     {
         protected readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<T>();
-        
+
         public virtual ICollection<Type> HandledTypes
         {
             get
             {
-                ISet<Type> types = new HashSet<Type>();
-                types.Add(HandledType);
+                ISet<Type> types = new HashSet<Type>
+                {
+                    HandledType
+                };
                 return types;
             }
         }
 
         protected internal abstract Type HandledType { get; }
 
-        public virtual void parse(BpmnParse bpmnParse, BaseElement element)
+        public virtual void Parse(BpmnParse bpmnParse, BaseElement element)
         {
             T baseElement = (T)element;
-            executeParse(bpmnParse, baseElement);
+            ExecuteParse(bpmnParse, baseElement);
         }
 
-        protected internal abstract void executeParse(BpmnParse bpmnParse, T element);
+        protected internal abstract void ExecuteParse(BpmnParse bpmnParse, T element);
 
-        protected internal virtual IExecutionListener createExecutionListener(BpmnParse bpmnParse, ActivitiListener activitiListener)
+        protected internal virtual IExecutionListener CreateExecutionListener(BpmnParse bpmnParse, ActivitiListener activitiListener)
         {
             IExecutionListener executionListener = null;
 
             if (ImplementationType.IMPLEMENTATION_TYPE_CLASS.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
             {
-                executionListener = bpmnParse.ListenerFactory.createClassDelegateExecutionListener(activitiListener);
+                executionListener = bpmnParse.ListenerFactory.CreateClassDelegateExecutionListener(activitiListener);
             }
             else if (ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
             {
-                executionListener = bpmnParse.ListenerFactory.createExpressionExecutionListener(activitiListener);
+                executionListener = bpmnParse.ListenerFactory.CreateExpressionExecutionListener(activitiListener);
             }
             else if (ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION.Equals(activitiListener.ImplementationType, StringComparison.CurrentCultureIgnoreCase))
             {
-                executionListener = bpmnParse.ListenerFactory.createDelegateExpressionExecutionListener(activitiListener);
+                executionListener = bpmnParse.ListenerFactory.CreateDelegateExpressionExecutionListener(activitiListener);
             }
             return executionListener;
         }
 
-        protected internal virtual string getPrecedingEventBasedGateway(BpmnParse bpmnParse, IntermediateCatchEvent @event)
+        protected internal virtual string GetPrecedingEventBasedGateway(BpmnParse bpmnParse, IntermediateCatchEvent @event)
         {
             string eventBasedGatewayId = null;
             foreach (SequenceFlow sequenceFlow in @event.IncomingFlows)
             {
-                FlowElement sourceElement = bpmnParse.BpmnModel.getFlowElement(sequenceFlow.SourceRef);
+                FlowElement sourceElement = bpmnParse.BpmnModel.GetFlowElement(sequenceFlow.SourceRef);
                 if (sourceElement is EventGateway)
                 {
                     eventBasedGatewayId = sourceElement.Id;
@@ -79,22 +81,22 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
             return eventBasedGatewayId;
         }
 
-        protected internal virtual void processArtifacts(BpmnParse bpmnParse, ICollection<Artifact> artifacts)
+        protected internal virtual void ProcessArtifacts(BpmnParse bpmnParse, ICollection<Artifact> artifacts)
         {
             // associations
             foreach (Artifact artifact in artifacts)
             {
                 if (artifact is Association)
                 {
-                    createAssociation(bpmnParse, (Association)artifact);
+                    CreateAssociation(bpmnParse, (Association)artifact);
                 }
             }
         }
 
-        protected internal virtual void createAssociation(BpmnParse bpmnParse, Association association)
+        protected internal virtual void CreateAssociation(BpmnParse bpmnParse, Association association)
         {
             BpmnModel bpmnModel = bpmnParse.BpmnModel;
-            if (bpmnModel.getArtifact(association.SourceRef) != null || bpmnModel.getArtifact(association.TargetRef) != null)
+            if (bpmnModel.GetArtifact(association.SourceRef) != null || bpmnModel.GetArtifact(association.TargetRef) != null)
             {
 
                 // connected to a text annotation so skipping it

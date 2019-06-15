@@ -34,9 +34,9 @@ namespace org.activiti.engine.impl.cmd
             this.taskId = taskId;
         }
 
-        public virtual IList<IAttachmentEntity> execute(ICommandContext commandContext)
+        public virtual IList<IAttachmentEntity> Execute(ICommandContext commandContext)
         {
-            return commandContext.AttachmentEntityManager.findAttachmentsByTaskId(taskId);
+            return commandContext.AttachmentEntityManager.FindAttachmentsByTaskId(taskId);
         }
     }
 

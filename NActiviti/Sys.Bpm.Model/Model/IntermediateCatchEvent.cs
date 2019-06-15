@@ -15,10 +15,12 @@ namespace org.activiti.bpmn.model
     public class IntermediateCatchEvent : Event
     {
 
-        public override BaseElement clone()
+        public override BaseElement Clone()
         {
-            IntermediateCatchEvent clone = new IntermediateCatchEvent();
-            clone.Values = this;
+            IntermediateCatchEvent clone = new IntermediateCatchEvent
+            {
+                Values = this
+            };
             return clone;
         }
     }

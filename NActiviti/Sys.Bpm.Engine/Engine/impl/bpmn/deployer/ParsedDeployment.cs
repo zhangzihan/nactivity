@@ -61,35 +61,32 @@ namespace org.activiti.engine.impl.bpmn.deployer
             }
         }
 
-        public virtual IResourceEntity getResourceForProcessDefinition(IProcessDefinitionEntity processDefinition)
+        public virtual IResourceEntity GetResourceForProcessDefinition(IProcessDefinitionEntity processDefinition)
         {
             mapProcessDefinitionsToResources.TryGetValue(processDefinition, out var res);
 
             return res;
         }
 
-        public virtual BpmnParse getBpmnParseForProcessDefinition(IProcessDefinitionEntity processDefinition)
+        public virtual BpmnParse GetBpmnParseForProcessDefinition(IProcessDefinitionEntity processDefinition)
         {
             mapProcessDefinitionsToParses.TryGetValue(processDefinition, out var parser);
 
             return parser;
         }
 
-        public virtual BpmnModel getBpmnModelForProcessDefinition(IProcessDefinitionEntity processDefinition)
+        public virtual BpmnModel GetBpmnModelForProcessDefinition(IProcessDefinitionEntity processDefinition)
         {
-            BpmnParse parse = getBpmnParseForProcessDefinition(processDefinition);
+            BpmnParse parse = GetBpmnParseForProcessDefinition(processDefinition);
 
-            return (parse == null ? null : parse.BpmnModel);
+            return (parse?.BpmnModel);
         }
 
-        public virtual Process getProcessModelForProcessDefinition(IProcessDefinitionEntity processDefinition)
+        public virtual Process GetProcessModelForProcessDefinition(IProcessDefinitionEntity processDefinition)
         {
-            BpmnModel model = getBpmnModelForProcessDefinition(processDefinition);
+            BpmnModel model = GetBpmnModelForProcessDefinition(processDefinition);
 
-            return (model == null ? null : model.getProcessById(processDefinition.Key));
+            return (model?.GetProcessById(processDefinition.Key));
         }
-
     }
-
-
 }

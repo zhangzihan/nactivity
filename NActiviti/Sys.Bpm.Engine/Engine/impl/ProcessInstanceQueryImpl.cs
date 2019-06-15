@@ -37,45 +37,45 @@ namespace org.activiti.engine.impl
         protected internal string businessKey;
         protected internal bool? includeChildExecutionsWithBusinessKeyQuery;
 
-        protected internal string processDefinitionId_Renamed;
+        protected internal string _processDefinitionId;
 
-        protected internal string[] processDefinitionIds_Renamed;
+        protected internal string[] _processDefinitionIds;
 
-        protected internal string processDefinitionCategory_Renamed;
+        protected internal string _processDefinitionCategory;
 
-        protected internal string processDefinitionName_Renamed;
+        protected internal string _processDefinitionName;
 
-        protected internal int? processDefinitionVersion_Renamed;
+        protected internal int? _processDefinitionVersion;
 
-        protected internal string[] processInstanceIds_Renamed;
+        protected internal string[] _processInstanceIds;
 
-        protected internal string processDefinitionKey_Renamed;
+        protected internal string _processDefinitionKey;
 
-        protected internal string[] processDefinitionKeys_Renamed;
+        protected internal string[] _processDefinitionKeys;
 
-        protected internal string deploymentId_Renamed;
+        protected internal string _deploymentId;
         protected internal IList<string> deploymentIds;
 
-        protected internal string superProcessInstanceId_Renamed;
+        protected internal string _superProcessInstanceId;
 
-        protected internal string subProcessInstanceId_Renamed;
+        protected internal string _subProcessInstanceId;
 
-        protected internal bool? excludeSubprocesses_Renamed;
+        protected internal bool? _excludeSubprocesses;
 
-        protected internal string involvedUser_Renamed;
+        protected internal string _involvedUser;
         protected internal ISuspensionState suspensionState;
 
-        protected internal bool? includeProcessVariables_Renamed;
+        protected internal bool? _includeProcessVariables;
         protected internal int? processInstanceVariablesLimit;
 
-        protected internal bool? withJobException_Renamed;
+        protected internal bool? _withJobException;
         protected internal string name;
         protected internal string nameLike;
         protected internal string nameLikeIgnoreCase;
 
-        protected internal string locale_Renamed;
+        protected internal string _locale;
 
-        protected internal bool? withLocalizationFallback_Renamed;
+        protected internal bool? _withLocalizationFallback;
 
         protected internal string tenantId;
         protected internal string tenantIdLike;
@@ -85,10 +85,10 @@ namespace org.activiti.engine.impl
         protected internal ProcessInstanceQueryImpl currentOrQueryObject = null;
         protected internal bool inOrStatement = false;
 
-        protected internal DateTime? startedBefore_Renamed;
-        protected internal DateTime? startedAfter_Renamed;
+        protected internal DateTime? _startedBefore;
+        protected internal DateTime? _startedAfter;
 
-        protected internal string startedBy_Renamed;
+        protected internal string _startedBy;
 
         // Unused, see dynamic query
         protected internal string activityId;
@@ -111,7 +111,7 @@ namespace org.activiti.engine.impl
         {
         }
 
-        public virtual IProcessInstanceQuery processInstanceId(string processInstanceId)
+        public virtual IProcessInstanceQuery SetProcessInstanceId(string processInstanceId)
         {
             //if (ReferenceEquals(processInstanceId, null))
             //{
@@ -137,7 +137,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessInstanceQuery processInstanceIds(string[] processInstanceIds)
+        public virtual IProcessInstanceQuery SetProcessInstanceIds(string[] processInstanceIds)
         {
             //if (processInstanceIds == null)
             //{
@@ -149,25 +149,25 @@ namespace org.activiti.engine.impl
             //}
             if ((processInstanceIds ?? new string[0]).Length == 0)
             {
-                this.processInstanceIds_Renamed = null;
+                this._processInstanceIds = null;
                 if (this.currentOrQueryObject != null)
                 {
-                    this.currentOrQueryObject.processInstanceIds_Renamed = null;
+                    this.currentOrQueryObject._processInstanceIds = null;
                 }
                 return this;
             }
             if (inOrStatement)
             {
-                this.currentOrQueryObject.processInstanceIds_Renamed = processInstanceIds;
+                this.currentOrQueryObject._processInstanceIds = processInstanceIds;
             }
             else
             {
-                this.processInstanceIds_Renamed = processInstanceIds;
+                this._processInstanceIds = processInstanceIds;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery processInstanceBusinessKey(string businessKey)
+        public virtual IProcessInstanceQuery SetProcessInstanceBusinessKey(string businessKey)
         {
             if (string.IsNullOrWhiteSpace(businessKey))
             {
@@ -190,7 +190,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessInstanceQuery processInstanceBusinessKey(string businessKey, string processDefinitionKey)
+        public virtual IProcessInstanceQuery SetProcessInstanceBusinessKey(string businessKey, string processDefinitionKey)
         {
             if (string.IsNullOrWhiteSpace(businessKey))
             {
@@ -208,11 +208,11 @@ namespace org.activiti.engine.impl
             }
 
             this.businessKey = businessKey;
-            this.processDefinitionKey_Renamed = processDefinitionKey;
+            this._processDefinitionKey = processDefinitionKey;
             return this;
         }
 
-        public virtual IProcessInstanceQuery processInstanceTenantId(string tenantId)
+        public virtual IProcessInstanceQuery SetProcessInstanceTenantId(string tenantId)
         {
             if (string.IsNullOrWhiteSpace(tenantId))
             {
@@ -235,7 +235,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessInstanceQuery processInstanceTenantIdLike(string tenantIdLike)
+        public virtual IProcessInstanceQuery SetProcessInstanceTenantIdLike(string tenantIdLike)
         {
             if (string.IsNullOrWhiteSpace(tenantIdLike))
             {
@@ -258,7 +258,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessInstanceQuery processInstanceWithoutTenantId()
+        public virtual IProcessInstanceQuery ProcessInstanceWithoutTenantId()
         {
             if (inOrStatement)
             {
@@ -271,14 +271,14 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessInstanceQuery processDefinitionCategory(string processDefinitionCategory)
+        public virtual IProcessInstanceQuery SetProcessDefinitionCategory(string processDefinitionCategory)
         {
             if (string.IsNullOrWhiteSpace(processDefinitionCategory))
             {
-                this.processDefinitionCategory_Renamed = null;
+                this._processDefinitionCategory = null;
                 if (this.currentOrQueryObject != null)
                 {
-                    this.currentOrQueryObject.processDefinitionCategory_Renamed = null;
+                    this.currentOrQueryObject._processDefinitionCategory = null;
                 }
                 return this;
                 //throw new ActivitiIllegalArgumentException("Process definition category is null");
@@ -286,23 +286,23 @@ namespace org.activiti.engine.impl
 
             if (inOrStatement)
             {
-                this.currentOrQueryObject.processDefinitionCategory_Renamed = processDefinitionCategory;
+                this.currentOrQueryObject._processDefinitionCategory = processDefinitionCategory;
             }
             else
             {
-                this.processDefinitionCategory_Renamed = processDefinitionCategory;
+                this._processDefinitionCategory = processDefinitionCategory;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery processDefinitionName(string processDefinitionName)
+        public virtual IProcessInstanceQuery SetProcessDefinitionName(string processDefinitionName)
         {
             if (string.IsNullOrWhiteSpace(processDefinitionName))
             {
-                this.processDefinitionName_Renamed = null;
+                this._processDefinitionName = null;
                 if (this.currentOrQueryObject != null)
                 {
-                    this.currentOrQueryObject.processDefinitionName_Renamed = null;
+                    this.currentOrQueryObject._processDefinitionName = null;
                 }
                 return this;
                 //throw new ActivitiIllegalArgumentException("Process definition name is null");
@@ -310,23 +310,23 @@ namespace org.activiti.engine.impl
 
             if (inOrStatement)
             {
-                this.currentOrQueryObject.processDefinitionName_Renamed = processDefinitionName;
+                this.currentOrQueryObject._processDefinitionName = processDefinitionName;
             }
             else
             {
-                this.processDefinitionName_Renamed = processDefinitionName;
+                this._processDefinitionName = processDefinitionName;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery processDefinitionVersion(int? processDefinitionVersion)
+        public virtual IProcessInstanceQuery SetProcessDefinitionVersion(int? processDefinitionVersion)
         {
             if (processDefinitionVersion.HasValue == false)
             {
-                this.processDefinitionVersion_Renamed = null;
+                this._processDefinitionVersion = null;
                 if (this.currentOrQueryObject != null)
                 {
-                    this.currentOrQueryObject.processDefinitionVersion_Renamed = null;
+                    this.currentOrQueryObject._processDefinitionVersion = null;
                 }
                 return this;
                 //throw new ActivitiIllegalArgumentException("Process definition version is null");
@@ -334,23 +334,23 @@ namespace org.activiti.engine.impl
 
             if (inOrStatement)
             {
-                this.currentOrQueryObject.processDefinitionVersion_Renamed = processDefinitionVersion;
+                this.currentOrQueryObject._processDefinitionVersion = processDefinitionVersion;
             }
             else
             {
-                this.processDefinitionVersion_Renamed = processDefinitionVersion;
+                this._processDefinitionVersion = processDefinitionVersion;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery processDefinitionId(string processDefinitionId)
+        public virtual IProcessInstanceQuery SetProcessDefinitionId(string processDefinitionId)
         {
             if (string.IsNullOrWhiteSpace(processDefinitionId))
             {
-                this.processDefinitionId_Renamed = null;
+                this._processDefinitionId = null;
                 if (this.currentOrQueryObject != null)
                 {
-                    this.currentOrQueryObject.processDefinitionId_Renamed = null;
+                    this.currentOrQueryObject._processDefinitionId = null;
                 }
                 return this;
                 //throw new ActivitiIllegalArgumentException("Process definition id is null");
@@ -358,23 +358,23 @@ namespace org.activiti.engine.impl
 
             if (inOrStatement)
             {
-                this.currentOrQueryObject.processDefinitionId_Renamed = processDefinitionId;
+                this.currentOrQueryObject._processDefinitionId = processDefinitionId;
             }
             else
             {
-                this.processDefinitionId_Renamed = processDefinitionId;
+                this._processDefinitionId = processDefinitionId;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery processDefinitionIds(string[] processDefinitionIds)
+        public virtual IProcessInstanceQuery SetProcessDefinitionIds(string[] processDefinitionIds)
         {
             if ((processDefinitionIds ?? new string[0]).Length == 0)
             {
-                this.processDefinitionIds_Renamed = null;
+                this._processDefinitionIds = null;
                 if (this.currentOrQueryObject != null)
                 {
-                    this.currentOrQueryObject.processDefinitionIds_Renamed = null;
+                    this.currentOrQueryObject._processDefinitionIds = null;
                 }
                 return this;
                 //throw new ActivitiIllegalArgumentException("Set of process definition ids is null");
@@ -382,23 +382,23 @@ namespace org.activiti.engine.impl
 
             if (inOrStatement)
             {
-                this.currentOrQueryObject.processDefinitionIds_Renamed = processDefinitionIds;
+                this.currentOrQueryObject._processDefinitionIds = processDefinitionIds;
             }
             else
             {
-                this.processDefinitionIds_Renamed = processDefinitionIds;
+                this._processDefinitionIds = processDefinitionIds;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery processDefinitionKey(string processDefinitionKey)
+        public virtual IProcessInstanceQuery SetProcessDefinitionKey(string processDefinitionKey)
         {
             if (string.IsNullOrWhiteSpace(processDefinitionKey))
             {
-                this.processDefinitionKey_Renamed = null;
+                this._processDefinitionKey = null;
                 if (this.currentOrQueryObject != null)
                 {
-                    this.currentOrQueryObject.processDefinitionKey_Renamed = null;
+                    this.currentOrQueryObject._processDefinitionKey = null;
                 }
                 return this;
                 //throw new ActivitiIllegalArgumentException("Process definition key is null");
@@ -406,23 +406,23 @@ namespace org.activiti.engine.impl
 
             if (inOrStatement)
             {
-                this.currentOrQueryObject.processDefinitionKey_Renamed = processDefinitionKey;
+                this.currentOrQueryObject._processDefinitionKey = processDefinitionKey;
             }
             else
             {
-                this.processDefinitionKey_Renamed = processDefinitionKey;
+                this._processDefinitionKey = processDefinitionKey;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery processDefinitionKeys(string[] processDefinitionKeys)
+        public virtual IProcessInstanceQuery SetProcessDefinitionKeys(string[] processDefinitionKeys)
         {
             if ((processDefinitionKeys ?? new string[0]).Length == 0)
             {
-                this.processDefinitionKeys_Renamed = null;
+                this._processDefinitionKeys = null;
                 if (this.currentOrQueryObject != null)
                 {
-                    this.currentOrQueryObject.processDefinitionKeys_Renamed = null;
+                    this.currentOrQueryObject._processDefinitionKeys = null;
                 }
                 return this;
                 //throw new ActivitiIllegalArgumentException("Set of process definition keys is null");
@@ -430,29 +430,29 @@ namespace org.activiti.engine.impl
 
             if (inOrStatement)
             {
-                this.currentOrQueryObject.processDefinitionKeys_Renamed = processDefinitionKeys;
+                this.currentOrQueryObject._processDefinitionKeys = processDefinitionKeys;
             }
             else
             {
-                this.processDefinitionKeys_Renamed = processDefinitionKeys;
+                this._processDefinitionKeys = processDefinitionKeys;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery deploymentId(string deploymentId)
+        public virtual IProcessInstanceQuery SetDeploymentId(string deploymentId)
         {
             if (inOrStatement)
             {
-                this.currentOrQueryObject.deploymentId_Renamed = deploymentId;
+                this.currentOrQueryObject._deploymentId = deploymentId;
             }
             else
             {
-                this.deploymentId_Renamed = deploymentId;
+                this._deploymentId = deploymentId;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery deploymentIdIn(IList<string> deploymentIds)
+        public virtual IProcessInstanceQuery SetDeploymentIdIn(IList<string> deploymentIds)
         {
             if (inOrStatement)
             {
@@ -465,53 +465,53 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessInstanceQuery superProcessInstanceId(string superProcessInstanceId)
+        public virtual IProcessInstanceQuery SetSuperProcessInstanceId(string superProcessInstanceId)
         {
             if (inOrStatement)
             {
-                this.currentOrQueryObject.superProcessInstanceId_Renamed = superProcessInstanceId;
+                this.currentOrQueryObject._superProcessInstanceId = superProcessInstanceId;
             }
             else
             {
-                this.superProcessInstanceId_Renamed = superProcessInstanceId;
+                this._superProcessInstanceId = superProcessInstanceId;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery subProcessInstanceId(string subProcessInstanceId)
+        public virtual IProcessInstanceQuery SetSubProcessInstanceId(string subProcessInstanceId)
         {
             if (inOrStatement)
             {
-                this.currentOrQueryObject.subProcessInstanceId_Renamed = subProcessInstanceId;
+                this.currentOrQueryObject._subProcessInstanceId = subProcessInstanceId;
             }
             else
             {
-                this.subProcessInstanceId_Renamed = subProcessInstanceId;
+                this._subProcessInstanceId = subProcessInstanceId;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery excludeSubprocesses(bool excludeSubprocesses)
+        public virtual IProcessInstanceQuery SetExcludeSubprocesses(bool excludeSubprocesses)
         {
             if (inOrStatement)
             {
-                this.currentOrQueryObject.excludeSubprocesses_Renamed = excludeSubprocesses;
+                this.currentOrQueryObject._excludeSubprocesses = excludeSubprocesses;
             }
             else
             {
-                this.excludeSubprocesses_Renamed = excludeSubprocesses;
+                this._excludeSubprocesses = excludeSubprocesses;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery involvedUser(string involvedUser)
+        public virtual IProcessInstanceQuery SetInvolvedUser(string involvedUser)
         {
             if (string.IsNullOrWhiteSpace(involvedUser))
             {
-                this.involvedUser_Renamed = null;
+                this._involvedUser = null;
                 if (this.currentOrQueryObject != null)
                 {
-                    this.currentOrQueryObject.involvedUser_Renamed = null;
+                    this.currentOrQueryObject._involvedUser = null;
                 }
                 return this;
                 //throw new ActivitiIllegalArgumentException("Involved user is null");
@@ -519,16 +519,16 @@ namespace org.activiti.engine.impl
 
             if (inOrStatement)
             {
-                this.currentOrQueryObject.involvedUser_Renamed = involvedUser;
+                this.currentOrQueryObject._involvedUser = involvedUser;
             }
             else
             {
-                this.involvedUser_Renamed = involvedUser;
+                this._involvedUser = involvedUser;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery active()
+        public virtual IProcessInstanceQuery Active()
         {
             if (inOrStatement)
             {
@@ -541,7 +541,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessInstanceQuery suspended()
+        public virtual IProcessInstanceQuery Suspended()
         {
             if (inOrStatement)
             {
@@ -554,13 +554,13 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessInstanceQuery includeProcessVariables()
+        public virtual IProcessInstanceQuery SetIncludeProcessVariables()
         {
-            this.includeProcessVariables_Renamed = true;
+            this._includeProcessVariables = true;
             return this;
         }
 
-        public virtual IProcessInstanceQuery limitProcessInstanceVariables(int? processInstanceVariablesLimit)
+        public virtual IProcessInstanceQuery SetLimitProcessInstanceVariables(int? processInstanceVariablesLimit)
         {
             this.processInstanceVariablesLimit = processInstanceVariablesLimit;
             return this;
@@ -574,13 +574,13 @@ namespace org.activiti.engine.impl
             }
         }
 
-        public virtual IProcessInstanceQuery withJobException()
+        public virtual IProcessInstanceQuery WithJobException()
         {
-            this.withJobException_Renamed = true;
+            this._withJobException = true;
             return this;
         }
 
-        public virtual IProcessInstanceQuery processInstanceName(string name)
+        public virtual IProcessInstanceQuery SetProcessInstanceName(string name)
         {
             if (inOrStatement)
             {
@@ -593,7 +593,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessInstanceQuery processInstanceNameLike(string nameLike)
+        public virtual IProcessInstanceQuery SetProcessInstanceNameLike(string nameLike)
         {
             if (inOrStatement)
             {
@@ -606,7 +606,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessInstanceQuery processInstanceNameLikeIgnoreCase(string nameLikeIgnoreCase)
+        public virtual IProcessInstanceQuery SetProcessInstanceNameLikeIgnoreCase(string nameLikeIgnoreCase)
         {
             if (inOrStatement)
             {
@@ -619,7 +619,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessInstanceQuery or()
+        public virtual IProcessInstanceQuery Or()
         {
             if (inOrStatement)
             {
@@ -632,7 +632,7 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public virtual IProcessInstanceQuery endOr()
+        public virtual IProcessInstanceQuery EndOr()
         {
             if (!inOrStatement)
             {
@@ -644,219 +644,219 @@ namespace org.activiti.engine.impl
             return this;
         }
 
-        public override IProcessInstanceQuery variableValueEquals(string variableName, object variableValue)
+        public override IProcessInstanceQuery VariableValueEquals(string variableName, object variableValue)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueEquals(variableName, variableValue, false);
+                currentOrQueryObject.VariableValueEquals(variableName, variableValue, false);
                 return this;
             }
             else
             {
-                return variableValueEquals(variableName, variableValue, false);
+                return VariableValueEquals(variableName, variableValue, false);
             }
         }
 
-        public override IProcessInstanceQuery variableValueNotEquals(string variableName, object variableValue)
+        public override IProcessInstanceQuery VariableValueNotEquals(string variableName, object variableValue)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueNotEquals(variableName, variableValue, false);
+                currentOrQueryObject.VariableValueNotEquals(variableName, variableValue, false);
                 return this;
             }
             else
             {
-                return variableValueNotEquals(variableName, variableValue, false);
+                return VariableValueNotEquals(variableName, variableValue, false);
             }
         }
 
-        public override IProcessInstanceQuery variableValueEquals(object variableValue)
+        public override IProcessInstanceQuery VariableValueEquals(object variableValue)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueEquals(variableValue, false);
+                currentOrQueryObject.VariableValueEquals(variableValue, false);
                 return this;
             }
             else
             {
-                return variableValueEquals(variableValue, false);
+                return VariableValueEquals(variableValue, false);
             }
         }
 
-        public override IProcessInstanceQuery variableValueEqualsIgnoreCase(string name, string value)
+        public override IProcessInstanceQuery VariableValueEqualsIgnoreCase(string name, string value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueEqualsIgnoreCase(name, value, false);
+                currentOrQueryObject.VariableValueEqualsIgnoreCase(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueEqualsIgnoreCase(name, value, false);
+                return VariableValueEqualsIgnoreCase(name, value, false);
             }
         }
 
-        public override IProcessInstanceQuery variableValueNotEqualsIgnoreCase(string name, string value)
+        public override IProcessInstanceQuery VariableValueNotEqualsIgnoreCase(string name, string value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueNotEqualsIgnoreCase(name, value, false);
+                currentOrQueryObject.VariableValueNotEqualsIgnoreCase(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueNotEqualsIgnoreCase(name, value, false);
+                return VariableValueNotEqualsIgnoreCase(name, value, false);
             }
         }
 
-        public override IProcessInstanceQuery variableValueGreaterThan(string name, object value)
+        public override IProcessInstanceQuery VariableValueGreaterThan(string name, object value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueGreaterThan(name, value, false);
+                currentOrQueryObject.VariableValueGreaterThan(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueGreaterThan(name, value, false);
+                return VariableValueGreaterThan(name, value, false);
             }
         }
 
-        public override IProcessInstanceQuery variableValueGreaterThanOrEqual(string name, object value)
+        public override IProcessInstanceQuery VariableValueGreaterThanOrEqual(string name, object value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueGreaterThanOrEqual(name, value, false);
+                currentOrQueryObject.VariableValueGreaterThanOrEqual(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueGreaterThanOrEqual(name, value, false);
+                return VariableValueGreaterThanOrEqual(name, value, false);
             }
         }
 
-        public override IProcessInstanceQuery variableValueLessThan(string name, object value)
+        public override IProcessInstanceQuery VariableValueLessThan(string name, object value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueLessThan(name, value, false);
+                currentOrQueryObject.VariableValueLessThan(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueLessThan(name, value, false);
+                return VariableValueLessThan(name, value, false);
             }
         }
 
-        public override IProcessInstanceQuery variableValueLessThanOrEqual(string name, object value)
+        public override IProcessInstanceQuery VariableValueLessThanOrEqual(string name, object value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueLessThanOrEqual(name, value, false);
+                currentOrQueryObject.VariableValueLessThanOrEqual(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueLessThanOrEqual(name, value, false);
+                return VariableValueLessThanOrEqual(name, value, false);
             }
         }
 
-        public override IProcessInstanceQuery variableValueLike(string name, string value)
+        public override IProcessInstanceQuery VariableValueLike(string name, string value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueLike(name, value, false);
+                currentOrQueryObject.VariableValueLike(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueLike(name, value, false);
+                return VariableValueLike(name, value, false);
             }
         }
 
-        public override IProcessInstanceQuery variableValueLikeIgnoreCase(string name, string value)
+        public override IProcessInstanceQuery VariableValueLikeIgnoreCase(string name, string value)
         {
             if (inOrStatement)
             {
-                currentOrQueryObject.variableValueLikeIgnoreCase(name, value, false);
+                currentOrQueryObject.VariableValueLikeIgnoreCase(name, value, false);
                 return this;
             }
             else
             {
-                return variableValueLikeIgnoreCase(name, value, false);
+                return VariableValueLikeIgnoreCase(name, value, false);
             }
         }
 
-        public virtual IProcessInstanceQuery locale(string locale)
+        public virtual IProcessInstanceQuery SetLocale(string locale)
         {
-            this.locale_Renamed = locale;
+            this._locale = locale;
             return this;
         }
 
-        public virtual IProcessInstanceQuery withLocalizationFallback()
+        public virtual IProcessInstanceQuery WithLocalizationFallback()
         {
-            withLocalizationFallback_Renamed = true;
+            _withLocalizationFallback = true;
             return this;
         }
 
-        public virtual IProcessInstanceQuery startedBefore(DateTime beforeTime)
+        public virtual IProcessInstanceQuery SetStartedBefore(DateTime beforeTime)
         {
             if (inOrStatement)
             {
-                this.currentOrQueryObject.startedBefore_Renamed = beforeTime;
+                this.currentOrQueryObject._startedBefore = beforeTime;
             }
             else
             {
-                this.startedBefore_Renamed = beforeTime;
-            }
-            return this;
-        }
-
-        public virtual IProcessInstanceQuery startedAfter(DateTime afterTime)
-        {
-            if (inOrStatement)
-            {
-                this.currentOrQueryObject.startedAfter_Renamed = afterTime;
-            }
-            else
-            {
-                this.startedAfter_Renamed = afterTime;
+                this._startedBefore = beforeTime;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery startedBy(string userId)
+        public virtual IProcessInstanceQuery SetStartedAfter(DateTime afterTime)
         {
             if (inOrStatement)
             {
-                this.currentOrQueryObject.startedBy_Renamed = userId;
+                this.currentOrQueryObject._startedAfter = afterTime;
             }
             else
             {
-                this.startedBy_Renamed = userId;
+                this._startedAfter = afterTime;
             }
             return this;
         }
 
-        public virtual IProcessInstanceQuery orderByProcessInstanceId()
+        public virtual IProcessInstanceQuery SetStartedBy(string userId)
+        {
+            if (inOrStatement)
+            {
+                this.currentOrQueryObject._startedBy = userId;
+            }
+            else
+            {
+                this._startedBy = userId;
+            }
+            return this;
+        }
+
+        public virtual IProcessInstanceQuery OrderByProcessInstanceId()
         {
             this.orderProperty = ProcessInstanceQueryProperty.PROCESS_INSTANCE_ID;
             return this;
         }
 
-        public virtual IProcessInstanceQuery orderByProcessDefinitionId()
+        public virtual IProcessInstanceQuery OrderByProcessDefinitionId()
         {
             this.orderProperty = ProcessInstanceQueryProperty.PROCESS_DEFINITION_ID;
             return this;
         }
 
-        public virtual IProcessInstanceQuery orderByProcessDefinitionKey()
+        public virtual IProcessInstanceQuery OrderByProcessDefinitionKey()
         {
             this.orderProperty = ProcessInstanceQueryProperty.PROCESS_DEFINITION_KEY;
             return this;
         }
 
-        public virtual IProcessInstanceQuery orderByTenantId()
+        public virtual IProcessInstanceQuery OrderByTenantId()
         {
             this.orderProperty = ProcessInstanceQueryProperty.TENANT_ID;
             return this;
@@ -867,7 +867,7 @@ namespace org.activiti.engine.impl
             get
             {
                 string specialOrderBy = base.OrderBy;
-                if (!ReferenceEquals(specialOrderBy, null) && specialOrderBy.Length > 0)
+                if (!(specialOrderBy is null) && specialOrderBy.Length > 0)
                 {
                     specialOrderBy = specialOrderBy.Replace("RES.", "TEMPRES_");
                     specialOrderBy = specialOrderBy.Replace("ProcessDefinitionKey", "TEMPP_KEY_");
@@ -879,25 +879,25 @@ namespace org.activiti.engine.impl
 
         // results /////////////////////////////////////////////////////////////////
 
-        public override long executeCount(ICommandContext commandContext)
+        public override long ExecuteCount(ICommandContext commandContext)
         {
-            checkQueryOk();
-            ensureVariablesInitialized();
-            return commandContext.ExecutionEntityManager.findProcessInstanceCountByQueryCriteria(this);
+            CheckQueryOk();
+            EnsureVariablesInitialized();
+            return commandContext.ExecutionEntityManager.FindProcessInstanceCountByQueryCriteria(this);
         }
 
-        public override IList<IProcessInstance> executeList(ICommandContext commandContext, Page page)
+        public override IList<IProcessInstance> ExecuteList(ICommandContext commandContext, Page page)
         {
-            checkQueryOk();
-            ensureVariablesInitialized();
+            CheckQueryOk();
+            EnsureVariablesInitialized();
             IList<IProcessInstance> processInstances = null;
-            if (includeProcessVariables_Renamed.GetValueOrDefault())
+            if (_includeProcessVariables.GetValueOrDefault())
             {
-                processInstances = commandContext.ExecutionEntityManager.findProcessInstanceAndVariablesByQueryCriteria(this);
+                processInstances = commandContext.ExecutionEntityManager.FindProcessInstanceAndVariablesByQueryCriteria(this);
             }
             else
             {
-                processInstances = commandContext.ExecutionEntityManager.findProcessInstanceByQueryCriteria(this);
+                processInstances = commandContext.ExecutionEntityManager.FindProcessInstanceByQueryCriteria(this);
             }
 
             if (Context.ProcessEngineConfiguration.PerformanceSettings.EnableLocalization)
@@ -911,13 +911,13 @@ namespace org.activiti.engine.impl
             return processInstances;
         }
 
-        protected internal override void ensureVariablesInitialized()
+        protected internal override void EnsureVariablesInitialized()
         {
-            base.ensureVariablesInitialized();
+            base.EnsureVariablesInitialized();
 
             foreach (ProcessInstanceQueryImpl orQueryObject in orQueryObjects)
             {
-                orQueryObject.ensureVariablesInitialized();
+                orQueryObject.EnsureVariablesInitialized();
             }
         }
 
@@ -927,21 +927,21 @@ namespace org.activiti.engine.impl
             processInstanceExecution.LocalizedName = null;
             processInstanceExecution.LocalizedDescription = null;
 
-            if (!string.IsNullOrWhiteSpace(locale_Renamed))
+            if (!string.IsNullOrWhiteSpace(_locale))
             {
                 string processDefinitionId = processInstanceExecution.ProcessDefinitionId;
                 if (!string.IsNullOrWhiteSpace(processDefinitionId))
                 {
-                    JToken languageNode = Context.getLocalizationElementProperties(locale_Renamed, processInstanceExecution.ProcessDefinitionKey, processDefinitionId, withLocalizationFallback_Renamed.GetValueOrDefault());
+                    JToken languageNode = Context.GetLocalizationElementProperties(_locale, processInstanceExecution.ProcessDefinitionKey, processDefinitionId, _withLocalizationFallback.GetValueOrDefault());
                     if (languageNode != null)
                     {
-                        JToken languageNameNode = languageNode[DynamicBpmnConstants_Fields.LOCALIZATION_NAME];
+                        JToken languageNameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
                         if (languageNameNode != null)
                         {
                             processInstanceExecution.LocalizedName = languageNameNode.ToString();
                         }
 
-                        JToken languageDescriptionNode = languageNode[DynamicBpmnConstants_Fields.LOCALIZATION_DESCRIPTION];
+                        JToken languageDescriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
                         if (languageDescriptionNode != null)
                         {
                             processInstanceExecution.LocalizedDescription = languageDescriptionNode.ToString();
@@ -971,7 +971,7 @@ namespace org.activiti.engine.impl
             {
                 return executionId;
             }
-            set => processInstanceId(value);
+            set => SetProcessInstanceId(value);
         }
 
         public virtual string RootProcessInstanceId
@@ -987,9 +987,9 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processInstanceIds_Renamed;
+                return _processInstanceIds;
             }
-            set => processInstanceIds(value);
+            set => SetProcessInstanceIds(value);
         }
 
         public virtual string BusinessKey
@@ -998,7 +998,7 @@ namespace org.activiti.engine.impl
             {
                 return businessKey;
             }
-            set => processInstanceBusinessKey(value);
+            set => SetProcessInstanceBusinessKey(value);
         }
 
         public virtual bool? IncludeChildExecutionsWithBusinessKeyQuery
@@ -1014,63 +1014,63 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return processDefinitionId_Renamed;
+                return _processDefinitionId;
             }
-            set => processDefinitionId(value);
+            set => SetProcessDefinitionId(value);
         }
 
         public virtual string[] ProcessDefinitionIds
         {
             get
             {
-                return processDefinitionIds_Renamed;
+                return _processDefinitionIds;
             }
-            set => processDefinitionIds(value);
+            set => SetProcessDefinitionIds(value);
         }
 
         public virtual string ProcessDefinitionCategory
         {
             get
             {
-                return processDefinitionCategory_Renamed;
+                return _processDefinitionCategory;
             }
-            set => processDefinitionCategory(value);
+            set => SetProcessDefinitionCategory(value);
         }
 
         public virtual string ProcessDefinitionName
         {
             get
             {
-                return processDefinitionName_Renamed;
+                return _processDefinitionName;
             }
-            set => processDefinitionName(value);
+            set => SetProcessDefinitionName(value);
         }
 
         public virtual int? ProcessDefinitionVersion
         {
             get
             {
-                return processDefinitionVersion_Renamed;
+                return _processDefinitionVersion;
             }
-            set => processDefinitionVersion(value);
+            set => SetProcessDefinitionVersion(value);
         }
 
         public virtual string ProcessDefinitionKey
         {
             get
             {
-                return processDefinitionKey_Renamed;
+                return _processDefinitionKey;
             }
-            set => processDefinitionKey(value);
+            set => SetProcessDefinitionKey(value);
         }
 
         public virtual string[] ProcessDefinitionKeys
         {
             get
             {
-                return processDefinitionKeys_Renamed;
+                return _processDefinitionKeys;
             }
-            set => processDefinitionKeys(value);
+            set => SetProcessDefinitionKeys(value);
         }
 
         public virtual string ActivityId
@@ -1085,36 +1085,36 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return superProcessInstanceId_Renamed;
+                return _superProcessInstanceId;
             }
-            set => superProcessInstanceId(value);
+            set => SetSuperProcessInstanceId(value);
         }
 
         public virtual string SubProcessInstanceId
         {
             get
             {
-                return subProcessInstanceId_Renamed;
+                return _subProcessInstanceId;
             }
-            set => subProcessInstanceId(value);
+            set => SetSubProcessInstanceId(value);
         }
 
         public virtual bool? ExcludeSubprocesses
         {
             get
             {
-                return excludeSubprocesses_Renamed;
+                return _excludeSubprocesses;
             }
-            set => excludeSubprocesses(value.GetValueOrDefault());
+            set => SetExcludeSubprocesses(value.GetValueOrDefault());
         }
 
         public virtual string InvolvedUser
         {
             get
             {
-                return involvedUser_Renamed;
+                return _involvedUser;
             }
-            set => involvedUser(value);
+            set => SetInvolvedUser(value);
         }
 
         public virtual ISuspensionState SuspensionState
@@ -1149,7 +1149,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantId;
             }
-            set => processInstanceTenantId(value);
+            set => SetProcessInstanceTenantId(value);
         }
 
         public virtual string TenantIdLike
@@ -1158,7 +1158,7 @@ namespace org.activiti.engine.impl
             {
                 return tenantIdLike;
             }
-            set => processInstanceTenantIdLike(value);
+            set => SetProcessInstanceTenantIdLike(value);
         }
 
         public virtual bool? WithoutTenantId
@@ -1171,7 +1171,7 @@ namespace org.activiti.engine.impl
             {
                 if (value.GetValueOrDefault())
                 {
-                    processInstanceWithoutTenantId();
+                    ProcessInstanceWithoutTenantId();
                 }
                 else
                 {
@@ -1216,16 +1216,16 @@ namespace org.activiti.engine.impl
             {
                 return executionId;
             }
-            set => processInstanceId(value);
+            set => SetProcessInstanceId(value);
         }
 
         public virtual string DeploymentId
         {
             get
             {
-                return deploymentId_Renamed;
+                return _deploymentId;
             }
-            set => deploymentId(value);
+            set => SetDeploymentId(value);
         }
 
         public virtual IList<string> DeploymentIds
@@ -1234,25 +1234,25 @@ namespace org.activiti.engine.impl
             {
                 return deploymentIds;
             }
-            set => deploymentIdIn(value);
+            set => SetDeploymentIdIn(value);
         }
 
         public virtual bool? IncludeProcessVariables
         {
             get
             {
-                return includeProcessVariables_Renamed;
+                return _includeProcessVariables;
             }
-            set => includeProcessVariables_Renamed = value;
+            set => _includeProcessVariables = value;
         }
 
         public virtual bool? IsWithException
         {
             get
             {
-                return withJobException_Renamed;
+                return _withJobException;
             }
-            set => withJobException_Renamed = value;
+            set => _withJobException = value;
         }
 
         public virtual string NameLikeIgnoreCase
@@ -1261,7 +1261,7 @@ namespace org.activiti.engine.impl
             {
                 return nameLikeIgnoreCase;
             }
-            set => processInstanceNameLikeIgnoreCase(value);
+            set => SetProcessInstanceNameLikeIgnoreCase(value);
         }
 
         public virtual IList<IProcessInstanceQuery> OrQueryObjects
@@ -1315,11 +1315,11 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return startedBefore_Renamed;
+                return _startedBefore;
             }
             set
             {
-                this.startedBefore_Renamed = value;
+                this._startedBefore = value;
             }
         }
 
@@ -1328,11 +1328,11 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return startedAfter_Renamed;
+                return _startedAfter;
             }
             set
             {
-                this.startedAfter_Renamed = value;
+                this._startedAfter = value;
             }
         }
 
@@ -1341,14 +1341,12 @@ namespace org.activiti.engine.impl
         {
             get
             {
-                return startedBy_Renamed;
+                return _startedBy;
             }
             set
             {
-                this.startedBy_Renamed = value;
+                this._startedBy = value;
             }
         }
-
     }
-
 }

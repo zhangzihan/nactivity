@@ -8,6 +8,6 @@
         /// <summary>
         /// 
         /// </summary>
-        void send(IMessage<T> message);
+        void Send(IMessage<T> message);
     }
 }

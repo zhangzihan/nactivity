@@ -37,7 +37,7 @@ namespace org.activiti.engine.impl.cmd
             this.jobType = jobType;
         }
 
-        public virtual string execute(ICommandContext commandContext)
+        public virtual string Execute(ICommandContext commandContext)
         {
             if (ReferenceEquals(jobId, null))
             {
@@ -48,16 +48,16 @@ namespace org.activiti.engine.impl.cmd
             switch (jobType)
             {
                 case JobType.ASYNC:
-                    job = commandContext.JobEntityManager.findById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
+                    job = commandContext.JobEntityManager.FindById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
                     break;
                 case JobType.TIMER:
-                    job = commandContext.TimerJobEntityManager.findById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
+                    job = commandContext.TimerJobEntityManager.FindById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
                     break;
                 case JobType.SUSPENDED:
-                    job = commandContext.SuspendedJobEntityManager.findById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
+                    job = commandContext.SuspendedJobEntityManager.FindById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
                     break;
                 case JobType.DEADLETTER:
-                    job = commandContext.DeadLetterJobEntityManager.findById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
+                    job = commandContext.DeadLetterJobEntityManager.FindById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
                     break;
             }
 
