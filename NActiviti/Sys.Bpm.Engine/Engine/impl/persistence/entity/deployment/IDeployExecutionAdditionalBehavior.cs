@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
     /// <summary>
     /// 部署用户Task的一些附件行为

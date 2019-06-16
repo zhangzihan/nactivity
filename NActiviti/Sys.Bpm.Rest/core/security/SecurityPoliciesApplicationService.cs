@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Headers;
 using Sys.Workflow;
 
-namespace org.activiti.cloud.services.core
+namespace Sys.Workflow.cloud.services.core
 {
     /// <summary>
     /// authentication midlleware

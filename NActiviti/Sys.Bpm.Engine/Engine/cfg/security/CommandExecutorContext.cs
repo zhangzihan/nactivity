@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.cfg.security
+namespace Sys.Workflow.engine.cfg.security
 {
 	public class CommandExecutorContext
 	{

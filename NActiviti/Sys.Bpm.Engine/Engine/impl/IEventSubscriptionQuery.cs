@@ -1,7 +1,7 @@
-﻿using org.activiti.engine.impl.persistence.entity;
-using org.activiti.engine.query;
+﻿using Sys.Workflow.engine.impl.persistence.entity;
+using Sys.Workflow.engine.query;
 
-namespace org.activiti.engine.impl
+namespace Sys.Workflow.engine.impl
 {
     public interface IEventSubscriptionQuery : IQuery<IEventSubscriptionQuery, IEventSubscriptionEntity>
     {

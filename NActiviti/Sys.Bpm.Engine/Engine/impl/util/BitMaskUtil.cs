@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.util
+namespace Sys.Workflow.engine.impl.util
 {
     /// <summary>
     /// Util class for manipulating bit-flag in ints.

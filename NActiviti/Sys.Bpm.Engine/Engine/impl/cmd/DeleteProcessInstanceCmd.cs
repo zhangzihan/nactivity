@@ -12,15 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.cmd
+namespace Sys.Workflow.engine.impl.cmd
 {
 
 
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
-    using org.activiti.engine.runtime;
-    using org.activiti.engine.task;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.engine.task;
     using System.Collections.Generic;
     using ICommandExecutor = interceptor.ICommandExecutor;
 

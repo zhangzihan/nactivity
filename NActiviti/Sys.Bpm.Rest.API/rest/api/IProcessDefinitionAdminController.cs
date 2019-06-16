@@ -1,8 +1,8 @@
-﻿using org.activiti.api.runtime.shared.query;
-using org.activiti.cloud.services.api.model;
+﻿using Sys.Workflow.api.runtime.shared.query;
+using Sys.Workflow.cloud.services.api.model;
 using org.springframework.hateoas;
 
-namespace org.activiti.cloud.services.rest.api
+namespace Sys.Workflow.cloud.services.rest.api
 {
     /// <summary>
     /// 工作流定义,管理员使用

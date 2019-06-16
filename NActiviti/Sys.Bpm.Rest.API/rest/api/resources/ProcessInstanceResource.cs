@@ -13,10 +13,10 @@
  *
  */
 
-using org.activiti.cloud.services.api.model;
+using Sys.Workflow.cloud.services.api.model;
 using org.springframework.hateoas;
 
-namespace org.activiti.cloud.services.rest.api.resources
+namespace Sys.Workflow.cloud.services.rest.api.resources
 {
 
     /// <summary>

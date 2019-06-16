@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.cloud.services.events.configuration
+namespace Sys.Workflow.cloud.services.events.configuration
 {
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sys.Workflow.engine.runtime;
+using System;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.util
+namespace Sys.Workflow.engine.impl.util
 {
 
     /// 
-    public class DefaultClockImpl : org.activiti.engine.runtime.IClock
+    public class DefaultClockImpl : IClock
     {
 
         private static DateTime? CURRENT_TIME;

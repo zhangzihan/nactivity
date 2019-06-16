@@ -1,14 +1,14 @@
-﻿using org.activiti.bpmn.model;
-using org.activiti.cloud.services.api.commands;
-using org.activiti.engine.impl.bpmn.behavior;
-using org.activiti.engine.impl.context;
-using org.activiti.engine.impl.el;
-using org.activiti.engine.impl.interceptor;
-using org.activiti.engine.impl.persistence.entity;
-using org.activiti.engine.runtime;
+﻿using Sys.Workflow.bpmn.model;
+using Sys.Workflow.cloud.services.api.commands;
+using Sys.Workflow.engine.impl.bpmn.behavior;
+using Sys.Workflow.engine.impl.context;
+using Sys.Workflow.engine.impl.el;
+using Sys.Workflow.engine.impl.interceptor;
+using Sys.Workflow.engine.impl.persistence.entity;
+using Sys.Workflow.engine.runtime;
 using org.springframework.context;
 
-namespace org.activiti.services.subscriptions.behavior
+namespace Sys.Workflow.services.subscriptions.behavior
 {
     /// <summary>
     /// 

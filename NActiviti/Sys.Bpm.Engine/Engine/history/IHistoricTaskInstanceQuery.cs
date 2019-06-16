@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.history
+namespace Sys.Workflow.engine.history
 {
 
-    using org.activiti.engine.task;
+    using Sys.Workflow.engine.task;
 
     /// <summary>
     /// Allows programmatic querying for <seealso cref="IHistoricTaskInstance"/>s.

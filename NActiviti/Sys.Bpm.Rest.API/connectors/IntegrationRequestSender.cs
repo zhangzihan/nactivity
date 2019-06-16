@@ -1,13 +1,13 @@
-﻿namespace org.activiti.services.connectors
+﻿using Sys.Workflow.cloud.services.api.events;
+using Sys.Workflow.cloud.services.events.configuration;
+using Sys.Workflow.cloud.services.events.integration;
+using Sys.Workflow.services.connectors.model;
+
+namespace Sys.Workflow.services.connectors
 {
-    using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
-    using RuntimeBundleProperties = org.activiti.cloud.services.events.configuration.RuntimeBundleProperties;
-    using IntegrationRequestSentEventImpl = org.activiti.cloud.services.events.integration.IntegrationRequestSentEventImpl;
-    using IntegrationRequestEvent = org.activiti.services.connectors.model.IntegrationRequestEvent;
     using org.springframework.messaging;
     using org.springframework.cloud.stream.binding;
     using org.springframework.messaging.support;
-
 
     /// <summary>
     /// 

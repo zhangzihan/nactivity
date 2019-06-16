@@ -12,7 +12,7 @@
  */
 
 using Microsoft.Extensions.Logging;
-using org.activiti.engine.impl.cfg.jta;
+using Sys.Workflow.engine.impl.cfg.jta;
 using Sys.Workflow;
 using System;
 using System.Runtime.Serialization;

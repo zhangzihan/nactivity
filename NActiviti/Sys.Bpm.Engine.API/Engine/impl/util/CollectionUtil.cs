@@ -16,7 +16,7 @@ using System.Linq;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.util
+namespace Sys.Workflow.engine.impl.util
 {
 
     /// <summary>

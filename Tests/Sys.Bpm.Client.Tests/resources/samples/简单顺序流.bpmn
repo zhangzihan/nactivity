@@ -10,7 +10,7 @@
         <camunda:properties>
           <camunda:property name="CanTransfer" value="false" />
         </camunda:properties>
-        <camunda:taskListener class="org.activiti.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_0ihgz1d</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1kbdvpj</bpmn2:outgoing>
@@ -21,7 +21,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_1kbdvpj" sourceRef="Task_0opugm1" targetRef="Task_085qd6k" />
     <bpmn2:userTask id="Task_085qd6k" name="学生注册" camunda:formKey="2" camunda:assignee="${user_}">
       <bpmn2:extensionElements>
-        <camunda:taskListener class="org.activiti.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1kbdvpj</bpmn2:incoming>
       <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${name}" camunda:elementVariable="user_">

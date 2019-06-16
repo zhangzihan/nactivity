@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace org.activiti.bpmn.constants
+namespace Sys.Workflow.bpmn.constants
 {
     /// <summary>
     ///  多人员处理同一个用户任务时的处理方式，

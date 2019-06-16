@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
 
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.persistence.entity.data;
-    using org.activiti.engine.repository;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.persistence.entity.data;
+    using Sys.Workflow.engine.repository;
 
     /// 
     /// 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
     /// <summary>
     /// 添加一个分配用户时的侦听器，用来从系统中获取执行人信息

@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace org.activiti.engine.impl.history
+namespace Sys.Workflow.engine.impl.history
 {
 
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// <summary>
     /// 

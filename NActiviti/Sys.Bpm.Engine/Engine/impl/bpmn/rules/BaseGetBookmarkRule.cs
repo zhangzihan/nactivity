@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using org.activiti.engine.impl.interceptor;
-using org.activiti.engine.impl.persistence.entity;
+using Sys.Workflow.engine.impl.interceptor;
+using Sys.Workflow.engine.impl.persistence.entity;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {

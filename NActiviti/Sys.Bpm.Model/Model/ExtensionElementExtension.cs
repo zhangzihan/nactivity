@@ -1,10 +1,10 @@
-﻿using org.activiti.bpmn.constants;
+﻿using Sys.Workflow.bpmn.constants;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace org.activiti.bpmn.model
+namespace Sys.Workflow.bpmn.model
 {
     public static class ExtensionElementExtension
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
     /// <summary>
     /// 转换用户任务为并行多任务

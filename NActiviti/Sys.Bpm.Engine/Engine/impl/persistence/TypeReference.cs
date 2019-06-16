@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace org.activiti.engine.impl.persistence
+namespace Sys.Workflow.engine.impl.persistence
 {
     public class TypeReference<T>
     {

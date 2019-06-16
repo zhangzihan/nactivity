@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace org.activiti.cloud.services.api.commands
+namespace Sys.Workflow.cloud.services.api.commands
 {
 
     /// <summary>

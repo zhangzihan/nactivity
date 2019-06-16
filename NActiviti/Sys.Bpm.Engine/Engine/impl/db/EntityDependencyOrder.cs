@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace org.activiti.engine.impl.db
+namespace Sys.Workflow.engine.impl.db
 {
 
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.persistence.entity;
     using System.Linq;
 
 

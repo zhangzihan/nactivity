@@ -1,5 +1,5 @@
-﻿using org.activiti.cloud.services.api.commands;
-using org.activiti.services.connectors.model;
+﻿using Sys.Workflow.cloud.services.api.commands;
+using Sys.Workflow.services.connectors.model;
 
 namespace org.springframework.context
 {

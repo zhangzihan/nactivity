@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.db
+namespace Sys.Workflow.engine.impl.db
 {
     /// <summary>
     /// Entities that are using revisions for optimistic locking, need to implement this interface.

@@ -14,7 +14,7 @@
 using Microsoft.Extensions.Logging;
 using Sys.Workflow;
 
-namespace org.activiti.engine.impl.interceptor
+namespace Sys.Workflow.engine.impl.interceptor
 {
     /// 
     public class LogInterceptor : AbstractCommandInterceptor

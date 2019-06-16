@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace org.activiti.engine.impl.calendar
+namespace Sys.Workflow.engine.impl.calendar
 {
     /*
 	 * Included from org.quartz-scheduler/quartz/1.8.4
@@ -23,7 +23,7 @@ namespace org.activiti.engine.impl.calendar
 	 */
 
 
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.runtime;
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;

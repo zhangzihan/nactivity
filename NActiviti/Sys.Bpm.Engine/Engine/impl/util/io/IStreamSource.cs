@@ -10,10 +10,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.util.io
+namespace Sys.Workflow.engine.impl.util.io
 {
 
-    using org.activiti.bpmn.converter.util;
+    using Sys.Workflow.bpmn.converter.util;
     using System.IO;
 
     /// 

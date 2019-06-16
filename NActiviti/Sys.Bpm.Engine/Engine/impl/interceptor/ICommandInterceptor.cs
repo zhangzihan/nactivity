@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.interceptor
+namespace Sys.Workflow.engine.impl.interceptor
 {
 	/// 
 	public interface ICommandInterceptor

@@ -2,10 +2,10 @@
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using org.activiti.bpmn.constants;
+using Sys.Workflow.bpmn.constants;
 using Sys.Bpm;
 
-namespace org.activiti.bpmn.converter
+namespace Sys.Workflow.bpmn.converter
 {
     public class XMLStreamWriter
     {

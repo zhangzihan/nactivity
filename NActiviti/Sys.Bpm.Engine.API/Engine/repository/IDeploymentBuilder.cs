@@ -12,18 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.repository
+namespace Sys.Workflow.engine.repository
 {
     using java.util.zip;
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.impl.persistence.entity;
     using System.Collections.Generic;
     using System.IO;
 
     /// <summary>
     /// Builder for creating new deployments.
     /// 
-    /// A builder instance can be obtained through <seealso cref="org.activiti.engine.IRepositoryService#createDeployment()"/>.
+    /// A builder instance can be obtained through <seealso cref="Sys.Workflow.engine.IRepositoryService#createDeployment()"/>.
     /// 
     /// Multiple resources can be added to one deployment before calling the <seealso cref="#deploy()"/> operation.
     /// 
@@ -148,7 +148,7 @@ namespace org.activiti.engine.repository
         /// </summary>
         /// <param name="startForm">开始表单，如果部署是未指定开始表单，则使用bpmnXML的开始节点FormKey</param>
         /// <returns>流程定义XML</returns>
-        /// <exception cref="org.activiti.engine.repository.StartFormNullException">表单Null异常</exception>
+        /// <exception cref="Sys.Workflow.engine.repository.StartFormNullException">表单Null异常</exception>
         IDeploymentBuilder StartForm(string startForm, string bpmnXML);
 
         /// <summary>

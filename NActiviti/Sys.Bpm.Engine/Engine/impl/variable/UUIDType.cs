@@ -12,7 +12,7 @@
  */
 using System;
 
-namespace org.activiti.engine.impl.variable
+namespace Sys.Workflow.engine.impl.variable
 {
 
     /// 

@@ -15,18 +15,18 @@ using System.Text;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
 
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.@delegate.@event.impl;
-    using org.activiti.engine.impl.calendar;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.jobexecutor;
-    using org.activiti.engine.impl.persistence.entity.data;
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.engine.@delegate.@event.impl;
+    using Sys.Workflow.engine.impl.calendar;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.jobexecutor;
+    using Sys.Workflow.engine.impl.persistence.entity.data;
+    using Sys.Workflow.engine.runtime;
     using System.Linq;
 
     public class TimerJobEntityManagerImpl : AbstractEntityManager<ITimerJobEntity>, ITimerJobEntityManager

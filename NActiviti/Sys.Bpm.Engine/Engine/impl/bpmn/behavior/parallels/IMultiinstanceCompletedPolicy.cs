@@ -1,6 +1,6 @@
-﻿using org.activiti.engine.impl.persistence.entity;
+﻿using Sys.Workflow.engine.impl.persistence.entity;
 
-namespace org.activiti.engine.impl.bpmn.behavior
+namespace Sys.Workflow.engine.impl.bpmn.behavior
 {
     public interface IMultiinstanceCompletedPolicy
     {

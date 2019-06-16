@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.data
+namespace Sys.Workflow.engine.impl.bpmn.data
 {
 
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.persistence.entity;
     using System.Collections.ObjectModel;
 
     /// <summary>

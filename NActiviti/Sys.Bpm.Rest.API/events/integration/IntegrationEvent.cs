@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-namespace org.activiti.cloud.services.events.integration
-{
-	using IProcessEngineEvent = org.activiti.cloud.services.api.events.IProcessEngineEvent;
+using Sys.Workflow.cloud.services.api.events;
 
+namespace Sys.Workflow.cloud.services.events.integration
+{
     /// <summary>
     /// 
     /// </summary>
     public interface IIntegrationEvent : IProcessEngineEvent
-	{
+    {
 
         /// <summary>
         /// 
         /// </summary>
-        string IntegrationContextId {get;}
+        string IntegrationContextId { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        string FlowNodeId {get;}
+        string FlowNodeId { get; }
 
-	}
+    }
 
 }

@@ -14,10 +14,10 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl
+namespace Sys.Workflow.engine.impl
 {
 
-    using org.activiti.engine.query;
+    using Sys.Workflow.engine.query;
 
     /// 
     [Serializable]

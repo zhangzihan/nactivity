@@ -14,7 +14,7 @@ using System.Reflection;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.variable
+namespace Sys.Workflow.engine.impl.variable
 {
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace org.activiti.image.impl.icon
+﻿namespace Sys.Workflow.image.impl.icon
 {
 	public class ManualTaskIconType : TaskIconType
 	{

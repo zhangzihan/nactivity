@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.validation.validator.impl
+namespace Sys.Workflow.validation.validator.impl
 {
 
-    using org.activiti.bpmn.model;
+    using Sys.Workflow.bpmn.model;
 
     public abstract class ExternalInvocationTaskValidator : ProcessLevelValidator
     {

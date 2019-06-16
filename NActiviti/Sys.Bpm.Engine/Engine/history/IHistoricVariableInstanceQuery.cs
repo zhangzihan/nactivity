@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.history
+namespace Sys.Workflow.engine.history
 {
 
-    using org.activiti.engine.query;
+    using Sys.Workflow.engine.query;
 
     /// <summary>
     /// Programmatic querying for <seealso cref="IHistoricVariableInstance"/>s.

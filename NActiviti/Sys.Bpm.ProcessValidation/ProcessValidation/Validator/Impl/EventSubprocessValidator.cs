@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.validation.validator.impl
+namespace Sys.Workflow.validation.validator.impl
 {
 
-    using org.activiti.bpmn.model;
+    using Sys.Workflow.bpmn.model;
 
     /// 
     public class EventSubprocessValidator : ProcessLevelValidator
@@ -33,7 +33,7 @@ namespace org.activiti.validation.validator.impl
                     if (startEvent.EventDefinitions != null && startEvent.EventDefinitions.Count > 0)
                     {
                         EventDefinition eventDefinition = startEvent.EventDefinitions[0];
-                        if (!(eventDefinition is org.activiti.bpmn.model.ErrorEventDefinition) && !(eventDefinition is MessageEventDefinition) && !(eventDefinition is SignalEventDefinition))
+                        if (!(eventDefinition is ErrorEventDefinition) && !(eventDefinition is MessageEventDefinition) && !(eventDefinition is SignalEventDefinition))
                         {
                             AddError(errors, ProblemsConstants.EVENT_SUBPROCESS_INVALID_START_EVENT_DEFINITION, process, eventSubprocess, ProcessValidatorResource.EVENT_SUBPROCESS_INVALID_START_EVENT_DEFINITION);
                         }

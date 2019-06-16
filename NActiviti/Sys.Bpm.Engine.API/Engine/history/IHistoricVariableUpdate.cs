@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.history
+namespace Sys.Workflow.engine.history
 {
     /// <summary>
     /// Update of a process variable. This is only available if history level is configured to FULL.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.MembershipRelationImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.MembershipRelationImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- MEMBERSHIP INSERT -->
 

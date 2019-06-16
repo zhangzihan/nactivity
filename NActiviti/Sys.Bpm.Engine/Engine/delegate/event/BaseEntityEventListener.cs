@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.@delegate.@event
+namespace Sys.Workflow.engine.@delegate.@event
 {
     /// <summary>
     /// Base event listener that can be used when implementing an <seealso cref="IActivitiEventListener"/> to get notified when an entity is created, updated, deleted or if another entity-related event occurs.

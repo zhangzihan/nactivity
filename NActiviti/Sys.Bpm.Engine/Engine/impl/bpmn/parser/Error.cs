@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.parser
+namespace Sys.Workflow.engine.impl.bpmn.parser
 {
     /// <summary>
     /// Represents a BPMN Error definition, whereas <seealso cref="BpmnError"/> represents an actual instance of an Error.

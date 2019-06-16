@@ -14,7 +14,7 @@
   ~ limitations under the License.
   -->
 
-<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.HistoricDetailEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.HistoricDetailEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- HISTORIC DETAILS RESULTMAP -->
 
@@ -23,7 +23,7 @@
       <case value="FormProperty" ResultMap="historicFormPropertyResultMap"/> 
     </discriminator>-->
 
-  <ResultMap Id="historicDetailResultMap" ResultType="org.activiti.engine.impl.persistence.entity.HistoricDetailEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="historicDetailResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.HistoricDetailEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />
     <Result Property="activityInstanceId" Column="ACT_INST_ID_" />
@@ -32,7 +32,7 @@
     <Result Property="time" Column="TIME_" />
   </ResultMap>
 
-  <ResultMap Id="historicVariableUpdateResultMap" extends="historicDetailResultMap" ResultType="org.activiti.engine.impl.persistence.entity.HistoricDetailVariableInstanceUpdateEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="historicVariableUpdateResultMap" extends="historicDetailResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.HistoricDetailVariableInstanceUpdateEntityImpl,Sys.Bpm.Engine">
     <Result Property="name" Column="NAME_" />
     <Result Property="revision" Column="REV_" />
     <Result Property="variableType" Column="VAR_TYPE_" />
@@ -44,7 +44,7 @@
     <Result Property="longValue" Column="LONG_" />
   </ResultMap>
 
-  <ResultMap Id="historicFormPropertyResultMap" extends="historicDetailResultMap" ResultType="org.activiti.engine.impl.persistence.entity.HistoricFormPropertyEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="historicFormPropertyResultMap" extends="historicDetailResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.HistoricFormPropertyEntityImpl,Sys.Bpm.Engine">
     <Result Property="propertyId" Column="NAME_" />
     <Result Property="propertyValue" Column="TEXT_" />
   </ResultMap>

@@ -14,15 +14,15 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.cmd
+namespace Sys.Workflow.engine.impl.cmd
 {
     using Newtonsoft.Json.Linq;
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.engine.runtime;
 
     [Serializable]
     public class GetTaskDataObjectsCmd : ICommand<IDictionary<string, IDataObject>>

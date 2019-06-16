@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace org.activiti.engine.impl.@event.logger
+namespace Sys.Workflow.engine.impl.@event.logger
 {
     using Microsoft.Extensions.Logging;
-    using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.@event.logger.handler;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.@event.logger.handler;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.runtime;
     using Sys.Bpm;
     using Sys.Workflow;
 

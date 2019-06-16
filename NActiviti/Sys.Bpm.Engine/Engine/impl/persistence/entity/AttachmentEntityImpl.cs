@@ -14,7 +14,7 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
 
     /// 

@@ -14,12 +14,10 @@
  * limitations under the License.
  *
  */
+using Sys.Workflow.cloud.services.api.model;
 
-namespace org.activiti.cloud.services.events
+namespace Sys.Workflow.cloud.services.events
 {
-    using TaskModel = org.activiti.cloud.services.api.model.TaskModel;
-
-
     /// <summary>
     /// 
     /// </summary>

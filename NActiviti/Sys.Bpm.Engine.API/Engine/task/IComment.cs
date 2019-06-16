@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.task
+namespace Sys.Workflow.engine.task
 {
 
-    using org.activiti.engine.history;
+    using Sys.Workflow.engine.history;
 
     /// <summary>
     /// User comments that form discussions around tasks.

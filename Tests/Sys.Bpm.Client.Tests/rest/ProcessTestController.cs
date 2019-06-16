@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using org.activiti.cloud.services.api.commands;
-using org.activiti.cloud.services.api.model;
-using org.activiti.engine;
-using org.activiti.engine.impl.cfg;
-using org.activiti.engine.impl.identity;
-using org.activiti.engine.impl.persistence.entity;
-using org.activiti.engine.runtime;
-using org.activiti.engine.task;
+using Sys.Workflow.cloud.services.api.commands;
+using Sys.Workflow.cloud.services.api.model;
+using Sys.Workflow.engine;
+using Sys.Workflow.engine.impl.cfg;
+using Sys.Workflow.engine.impl.identity;
+using Sys.Workflow.engine.impl.persistence.entity;
+using Sys.Workflow.engine.runtime;
+using Sys.Workflow.engine.task;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -56,7 +56,7 @@ namespace BpmnTest.Test
 
             //configuration.JobManager.scheduleTimerJob(timer);
 
-            IJobEntity timer = configuration.CommandExecutor.Execute<IJobEntity>(new org.activiti.engine.impl.cmd.CreateTimerStartJobCmd("Process_b55g1NTCp", DateTime.Now.AddMinutes(1), "Task_1gfchcb"));
+            IJobEntity timer = configuration.CommandExecutor.Execute<IJobEntity>(new Sys.Workflow.engine.impl.cmd.CreateTimerStartJobCmd("Process_b55g1NTCp", DateTime.Now.AddMinutes(1), "Task_1gfchcb"));
 
             //processEngine.RepositoryService.
             // 保存作业事件

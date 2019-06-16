@@ -1,6 +1,6 @@
-﻿namespace org.activiti.engine.impl.@delegate
+﻿namespace Sys.Workflow.engine.impl.@delegate
 {
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// <summary>
     /// If the behaviour of an element in a process implements this interface, it has a 'background job' functionality.

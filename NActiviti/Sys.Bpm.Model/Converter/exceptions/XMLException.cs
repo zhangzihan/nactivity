@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.bpmn.exceptions
+namespace Sys.Workflow.bpmn.exceptions
 {
 	/// 
 	public class XMLException : Exception

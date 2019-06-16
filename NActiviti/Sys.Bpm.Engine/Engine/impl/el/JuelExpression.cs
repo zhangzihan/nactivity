@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.el
+namespace Sys.Workflow.engine.impl.el
 {
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.@delegate.invocation;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.@delegate.invocation;
     using Sys;
 
     /// <summary>

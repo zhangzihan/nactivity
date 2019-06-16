@@ -10,12 +10,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.json
+namespace Sys.Workflow.engine.impl.json
 {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.task;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.task;
     using System.IO;
 
     /// 

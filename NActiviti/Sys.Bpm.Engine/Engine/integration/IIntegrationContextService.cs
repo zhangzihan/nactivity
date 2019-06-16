@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.integration
+namespace Sys.Workflow.engine.integration
 {
-    using org.activiti.engine.impl.persistence.entity.integration;
+    using Sys.Workflow.engine.impl.persistence.entity.integration;
 
     public interface IIntegrationContextService
     {

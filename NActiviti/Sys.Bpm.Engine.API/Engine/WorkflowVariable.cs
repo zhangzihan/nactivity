@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace org.activiti.services.api.commands
+namespace Sys.Workflow.services.api.commands
 {
     /// <summary>
     /// 工作流流程变量

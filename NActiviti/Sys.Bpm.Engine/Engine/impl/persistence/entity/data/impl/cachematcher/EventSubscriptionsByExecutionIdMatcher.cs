@@ -12,7 +12,7 @@
  */
 using System.Collections.Generic;
 
-namespace org.activiti.engine.impl.persistence.entity.data.impl.cachematcher
+namespace Sys.Workflow.engine.impl.persistence.entity.data.impl.cachematcher
 {
 
 	/// 

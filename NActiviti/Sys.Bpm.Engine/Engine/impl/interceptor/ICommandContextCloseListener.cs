@@ -1,6 +1,6 @@
-﻿namespace org.activiti.engine.impl.interceptor
+﻿namespace Sys.Workflow.engine.impl.interceptor
 {
-    using org.activiti.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.cfg;
 
     /// <summary>
     /// A listener that can be used to be notified of lifecycle events of the <seealso cref="CommandContext"/>.

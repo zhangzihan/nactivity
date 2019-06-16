@@ -13,9 +13,9 @@
 using System;
 using System.IO;
 using System.Text;
-using org.activiti.engine;
+using Sys.Workflow.engine;
 
-namespace org.activiti.engine.impl.util
+namespace Sys.Workflow.engine.impl.util
 {
 
     /// 

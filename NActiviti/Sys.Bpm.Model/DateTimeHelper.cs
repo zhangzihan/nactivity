@@ -92,6 +92,91 @@ public static class DateTimeHelper
 
     public static DateTime Add(this DateTime date, DatePart part, long value)
     {
+        return Add(date, part, (int)value);
+    }
+
+    public static DateTime Set(this DateTime date, DatePart part, long value)
+    {
+        return Set(date, part, (int)value);
+    }
+
+    public static DateTime AddYears(int value)
+    {
+        return Add(DatePart.YEAR, value);
+    }
+
+    public static DateTime AddYears(this DateTime date, int value)
+    {
+        return date.Add(DatePart.YEAR, value);
+    }
+
+    public static DateTime AddMonths(int value)
+    {
+        return Add(DatePart.MONTH, value);
+    }
+
+    public static DateTime AddMonths(this DateTime date, int value)
+    {
+        return date.Add(DatePart.MONTH, value);
+    }
+
+    public static DateTime AddDays(int value)
+    {
+        return Add(DatePart.DAY, value);
+    }
+
+    public static DateTime AddDays(this DateTime date, int value)
+    {
+        return date.Add(DatePart.DAY, value);
+    }
+
+    public static DateTime AddWeeks(int value)
+    {
+        return Add(DatePart.WEEK, value);
+    }
+
+    public static DateTime AddWeeks(this DateTime date, int value)
+    {
+        return date.Add(DatePart.WEEK, value);
+    }
+
+    public static DateTime AddHours(int value)
+    {
+        return Add(DatePart.HOUR, value);
+    }
+
+    public static DateTime AddHours(this DateTime date, int value)
+    {
+        return date.Add(DatePart.HOUR, value);
+    }
+
+    public static DateTime AddMinutes(int value)
+    {
+        return Add(DatePart.MINUTE, value);
+    }
+
+    public static DateTime AddMinutes(this DateTime date, int value)
+    {
+        return date.Add(DatePart.MINUTE, value);
+    }
+
+    public static DateTime AddSeconds(int value)
+    {
+        return Add(DatePart.SECOND, value);
+    }
+
+    public static DateTime AddSeconds(this DateTime date, int value)
+    {
+        return date.Add(DatePart.SECOND, value);
+    }
+
+    public static DateTime Add(DatePart part, int value)
+    {
+        return DateTime.Now.Add(part, value);
+    }
+
+    public static DateTime Add(this DateTime date, DatePart part, int value)
+    {
         switch (part)
         {
             case DatePart.ERA:
@@ -118,24 +203,24 @@ public static class DateTimeHelper
         }
     }
 
-    public static DateTime Set(this DateTime date, DatePart part, long value)
+    public static DateTime Set(this DateTime date, DatePart part, int value)
     {
         switch (part)
         {
             case DatePart.YEAR:
-                return new DateTime((int)value, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond);
+                return new DateTime(value, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond);
             case DatePart.MONTH:
-                return new DateTime(date.Year, (int)value, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond);
+                return new DateTime(date.Year, value, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond);
             case DatePart.DAY:
-                return new DateTime(date.Year, date.Month, (int)value, date.Hour, date.Minute, date.Second, date.Millisecond);
+                return new DateTime(date.Year, date.Month, value, date.Hour, date.Minute, date.Second, date.Millisecond);
             case DatePart.HOUR:
-                return new DateTime(date.Year, date.Month, date.Day, (int)value, date.Minute, date.Second, date.Millisecond);
+                return new DateTime(date.Year, date.Month, date.Day, value, date.Minute, date.Second, date.Millisecond);
             case DatePart.MINUTE:
-                return new DateTime(date.Year, date.Month, date.Day, date.Hour, (int)value, date.Second, date.Millisecond);
+                return new DateTime(date.Year, date.Month, date.Day, date.Hour, value, date.Second, date.Millisecond);
             case DatePart.SECOND:
-                return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, (int)value, date.Millisecond);
+                return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, value, date.Millisecond);
             case DatePart.MILLISECOND:
-                return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, (int)value);
+                return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, value);
             default:
                 return date;
         }

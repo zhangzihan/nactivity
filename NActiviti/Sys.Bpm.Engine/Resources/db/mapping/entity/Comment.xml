@@ -14,11 +14,11 @@
   ~ limitations under the License.
   -->
 
-<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.CommentEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.CommentEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
   
   <!-- COMMENT RESULTMAP -->
     
-  <ResultMap Id="commentResultMap" ResultType="org.activiti.engine.impl.persistence.entity.CommentEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="commentResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.CommentEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="type" Column="TYPE_" />
     <Result Property="userId" Column="USER_ID_" />

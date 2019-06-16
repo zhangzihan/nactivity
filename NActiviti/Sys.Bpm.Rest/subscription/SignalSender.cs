@@ -1,7 +1,7 @@
-﻿using org.activiti.cloud.services.api.commands;
-using org.activiti.services.subscription.channel;
+﻿using Sys.Workflow.cloud.services.api.commands;
+using Sys.Workflow.services.subscription.channel;
 
-namespace org.activiti.services.subscription
+namespace Sys.Workflow.services.subscription
 {
     /// <summary>
     /// 

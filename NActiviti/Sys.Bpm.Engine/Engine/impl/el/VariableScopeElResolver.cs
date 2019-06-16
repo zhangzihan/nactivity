@@ -12,13 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.el
+namespace Sys.Workflow.engine.impl.el
 {
 
 
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.identity;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.identity;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// <summary>
     /// Implementation of an <seealso cref="ELResolver"/> that resolves expressions with the process variables of a given <seealso cref="IVariableScope"/> as context. <br>

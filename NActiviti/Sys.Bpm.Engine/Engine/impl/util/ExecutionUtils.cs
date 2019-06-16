@@ -5,10 +5,10 @@
 //  Original author: 张楠
 
 using Newtonsoft.Json.Linq;
-using org.activiti.bpmn.model;
-using org.activiti.engine.impl.persistence.entity;
+using Sys.Workflow.bpmn.model;
+using Sys.Workflow.engine.impl.persistence.entity;
 
-namespace org.activiti.engine.impl.util
+namespace Sys.Workflow.engine.impl.util
 {
     /// <summary>
     /// 任务执行工具类

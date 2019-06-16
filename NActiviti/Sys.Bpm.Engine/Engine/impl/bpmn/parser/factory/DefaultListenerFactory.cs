@@ -13,17 +13,17 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.parser.factory
+namespace Sys.Workflow.engine.impl.bpmn.parser.factory
 {
 
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.impl.bpmn.helper;
-    using org.activiti.engine.impl.bpmn.listener;
-    using org.activiti.engine.repository;
-    using org.activiti.engine.runtime;
-    using org.activiti.engine.task;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.engine.impl.bpmn.helper;
+    using Sys.Workflow.engine.impl.bpmn.listener;
+    using Sys.Workflow.engine.repository;
+    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.engine.task;
 
     /// <summary>
     /// Default implementation of the <seealso cref="IListenerFactory"/>. Used when no custom <seealso cref="IListenerFactory"/> is injected on the <seealso cref="ProcessEngineConfigurationImpl"/>.

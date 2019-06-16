@@ -14,10 +14,10 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
     using Newtonsoft.Json.Linq;
-    using org.activiti.engine.impl.context;
+    using Sys.Workflow.engine.impl.context;
 
     /// 
     /// 

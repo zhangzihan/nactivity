@@ -10,11 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.interceptor
+namespace Sys.Workflow.engine.impl.interceptor
 {
     using Microsoft.Extensions.Logging;
-    using org.activiti.engine.impl.agenda;
-    using org.activiti.engine.impl.context;
+    using Sys.Workflow.engine.impl.agenda;
+    using Sys.Workflow.engine.impl.context;
     using Sys.Workflow;
     using System;
 

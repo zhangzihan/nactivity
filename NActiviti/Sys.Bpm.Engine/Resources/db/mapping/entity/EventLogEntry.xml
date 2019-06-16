@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.EventLogEntryEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.EventLogEntryEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
     <!-- RESULTMAP -->
 
-    <ResultMap Id="eventLogEntryResultMap" ResultType="org.activiti.engine.impl.persistence.entity.EventLogEntryEntityImpl,Sys.Bpm.Engine">
+    <ResultMap Id="eventLogEntryResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.EventLogEntryEntityImpl,Sys.Bpm.Engine">
       <Result Property="logNumber" Column="LOG_NR_" />
       <Result Property="type" Column="TYPE_"/>
       <Result Property="processDefinitionId" Column="PROC_DEF_ID_"/>
@@ -19,7 +19,7 @@
       <Result Property="isProcessed" Column="IS_PROCESSED_"/>
     </ResultMap>
 
-    <ResultMap Id="eventLogEntryResultMap_postgres" ResultType="org.activiti.engine.impl.persistence.entity.EventLogEntryEntityImpl,Sys.Bpm.Engine">
+    <ResultMap Id="eventLogEntryResultMap_postgres" ResultType="Sys.Workflow.engine.impl.persistence.entity.EventLogEntryEntityImpl,Sys.Bpm.Engine">
       <Result Property="logNumber" Column="LOG_NR_" />
       <Result Property="type" Column="TYPE_"/>
       <Result Property="processDefinitionId" Column="PROC_DEF_ID_"/>

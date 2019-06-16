@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
-using org.activiti.cloud.services.api.commands;
+using Sys.Workflow.cloud.services.api.commands;
 using Sys.Workflow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace org.activiti.cloud.services.core.commands
+namespace Sys.Workflow.cloud.services.core.commands
 {
     /// <summary>
     /// 

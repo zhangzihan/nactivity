@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace org.activiti.engine.impl
+namespace Sys.Workflow.engine.impl
 {
 
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.runtime;
 
     [Serializable]
     public class NativeProcessInstanceQueryImpl : AbstractNativeQuery<INativeProcessInstanceQuery, IProcessInstance>, INativeProcessInstanceQuery

@@ -1,4 +1,4 @@
-﻿namespace org.activiti.bpmn.model.parse
+﻿namespace Sys.Workflow.bpmn.model.parse
 {
 
     public class Warning

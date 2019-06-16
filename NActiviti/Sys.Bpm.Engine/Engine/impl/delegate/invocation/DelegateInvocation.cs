@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.@delegate.invocation
+namespace Sys.Workflow.engine.impl.@delegate.invocation
 {
-    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.interceptor;
     using System;
 
     /// <summary>

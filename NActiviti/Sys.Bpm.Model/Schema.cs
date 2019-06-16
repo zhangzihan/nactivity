@@ -1,4 +1,4 @@
-﻿namespace org.activiti.bpmn.converter
+﻿namespace Sys.Workflow.bpmn.converter
 {
     public class Schema
     {

@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.context
+namespace Sys.Workflow.engine.impl.context
 {
     using Newtonsoft.Json.Linq;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.deploy;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.deploy;
     using System.Globalization;
     using System.Threading;
 

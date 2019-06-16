@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace org.activiti.cloud.services.api.model
+namespace Sys.Workflow.cloud.services.api.model
 {
     public class ProcessVariablesQuery
     {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace org.activiti.bpmn.converter
+namespace Sys.Workflow.bpmn.converter
 {
     using Microsoft.Extensions.Logging;
-    using org.activiti.bpmn.constants;
-    using org.activiti.bpmn.converter.util;
-    using org.activiti.bpmn.model;
+    using Sys.Workflow.bpmn.constants;
+    using Sys.Workflow.bpmn.converter.util;
+    using Sys.Workflow.bpmn.model;
     using Sys.Bpm.Model;
     using System.Globalization;
     using System.Text.RegularExpressions;

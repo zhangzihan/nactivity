@@ -13,11 +13,11 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.deployer
+namespace Sys.Workflow.engine.impl.bpmn.deployer
 {
     using Microsoft.Extensions.Logging;
-    using org.activiti.engine.impl.bpmn.parser;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.bpmn.parser;
+    using Sys.Workflow.engine.impl.persistence.entity;
     using Sys.Workflow;
     using System.IO;
 

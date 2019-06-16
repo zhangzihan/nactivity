@@ -1,4 +1,4 @@
-﻿namespace org.activiti.cloud.services.core
+﻿namespace Sys.Workflow.cloud.services.core
 {
     /// <summary>
     /// action information

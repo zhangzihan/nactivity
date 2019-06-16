@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.data
+namespace Sys.Workflow.engine.impl.bpmn.data
 {
     /// <summary>
     /// Represents a structure encapsulated in a class

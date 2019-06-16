@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.services.connectors.config
+namespace Sys.Workflow.services.connectors.config
 {
     /// <summary>
     /// 

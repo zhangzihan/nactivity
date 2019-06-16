@@ -11,10 +11,10 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.@event
+namespace Sys.Workflow.engine.impl.@event
 {
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     public interface IEventHandler

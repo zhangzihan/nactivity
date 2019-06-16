@@ -13,9 +13,9 @@
  *
  */
 
-using org.activiti.api.runtime.shared.query;
+using Sys.Workflow.api.runtime.shared.query;
 
-namespace org.activiti.cloud.services.core.pageable.sort
+namespace Sys.Workflow.cloud.services.core.pageable.sort
 {
     /// <summary>
     /// 

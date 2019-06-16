@@ -12,7 +12,7 @@
  */
 using System.IO;
 
-namespace org.activiti.engine.impl.util.io
+namespace Sys.Workflow.engine.impl.util.io
 {
 
     /// 

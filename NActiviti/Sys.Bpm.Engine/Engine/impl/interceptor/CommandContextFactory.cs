@@ -11,9 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.interceptor
+namespace Sys.Workflow.engine.impl.interceptor
 {
-    using org.activiti.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.cfg;
 
     /// 
     public class CommandContextFactory

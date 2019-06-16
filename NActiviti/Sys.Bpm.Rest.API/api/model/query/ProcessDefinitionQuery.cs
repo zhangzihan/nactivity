@@ -1,8 +1,8 @@
-﻿using org.activiti.api.runtime.shared.query;
-using org.activiti.engine.impl.persistence.entity;
+﻿using Sys.Workflow.api.runtime.shared.query;
+using Sys.Workflow.engine.impl.persistence.entity;
 using System.Collections.Generic;
 
-namespace org.activiti.cloud.services.api.model
+namespace Sys.Workflow.cloud.services.api.model
 {
 
     /// <summary>

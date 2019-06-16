@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.persistence.deploy
+namespace Sys.Workflow.engine.impl.persistence.deploy
 {
 
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.repository;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.repository;
 
     /// 
     [Serializable]

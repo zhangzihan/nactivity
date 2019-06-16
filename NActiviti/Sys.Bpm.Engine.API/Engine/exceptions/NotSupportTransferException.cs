@@ -7,7 +7,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace org.activiti.engine.exceptions
+namespace Sys.Workflow.engine.exceptions
 {
     /// <summary>
     /// 不允许转审

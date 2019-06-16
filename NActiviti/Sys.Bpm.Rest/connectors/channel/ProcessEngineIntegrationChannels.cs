@@ -16,7 +16,7 @@
 
 using org.springframework.messaging;
 
-namespace org.activiti.services.connectors.channel
+namespace Sys.Workflow.services.connectors.channel
 {
     /// <summary>
     /// 

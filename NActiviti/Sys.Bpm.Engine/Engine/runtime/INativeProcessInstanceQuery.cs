@@ -1,6 +1,6 @@
-﻿namespace org.activiti.engine.runtime
+﻿namespace Sys.Workflow.engine.runtime
 {
-	using org.activiti.engine.query;
+	using Sys.Workflow.engine.query;
 
 	/// <summary>
 	/// Allows querying of <seealso cref="IProcessInstance"/>s via native (SQL) queries

@@ -1,9 +1,9 @@
-﻿namespace org.activiti.engine.impl.asyncexecutor
+﻿namespace Sys.Workflow.engine.impl.asyncexecutor
 {
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.runtime;
 
     /// <summary>
     /// Contains methods that are not tied to any specific job type (async, timer, suspended or deadletter),

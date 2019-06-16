@@ -11,11 +11,11 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.cmd
+namespace Sys.Workflow.engine.impl.cmd
 {
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.task;
-    using org.activiti.services.api.commands;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.task;
+    using Sys.Workflow.services.api.commands;
     using Sys;
     using Sys.Workflow;
     using Sys.Workflow.Engine.Bpmn.Rules;

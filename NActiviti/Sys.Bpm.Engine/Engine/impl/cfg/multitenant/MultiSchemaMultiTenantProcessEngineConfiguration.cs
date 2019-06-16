@@ -10,11 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.cfg.multitenant
+namespace Sys.Workflow.engine.impl.cfg.multitenant
 {
-    using org.activiti.engine.impl.asyncexecutor.multitenant;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence;
+    using Sys.Workflow.engine.impl.asyncexecutor.multitenant;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence;
     using Sys.Data;
 
     /// <summary>

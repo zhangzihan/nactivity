@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.bpmn.converter.util
+namespace Sys.Workflow.bpmn.converter.util
 {
 
     public class CommaSplitter

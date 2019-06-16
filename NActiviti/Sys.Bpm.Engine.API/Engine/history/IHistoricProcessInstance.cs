@@ -15,10 +15,10 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.history
+namespace Sys.Workflow.engine.history
 {
 
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.runtime;
 
     /// <summary>
     /// A single execution of a whole process definition that is stored permanently.

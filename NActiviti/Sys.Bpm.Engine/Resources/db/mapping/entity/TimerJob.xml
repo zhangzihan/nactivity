@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.TimerJobEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.TimerJobEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- TIMER JOB ResultMap -->
 
-  <ResultMap Id="jobResultMap" ResultType="org.activiti.engine.impl.persistence.entity.TimerJobEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="jobResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.TimerJobEntityImpl,Sys.Bpm.Engine">
     <Result Property="Id" Column="ID_" />
     <Result Property="Revision" Column="REV_" />
     <Result Property="JobType" Column="TYPE_" />

@@ -10,12 +10,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.parser.handler
+namespace Sys.Workflow.engine.impl.bpmn.parser.handler
 {
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.impl.bpmn.behavior;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.el;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.impl.bpmn.behavior;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.el;
 
     /// 
     public abstract class AbstractActivityBpmnParseHandler<T> : AbstractFlowNodeBpmnParseHandler<T> where T : FlowNode

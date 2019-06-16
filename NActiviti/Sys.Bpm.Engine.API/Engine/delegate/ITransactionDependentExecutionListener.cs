@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.@delegate
+namespace Sys.Workflow.engine.@delegate
 {
-    using org.activiti.bpmn.model;
+    using Sys.Workflow.bpmn.model;
 
     /// 
     public interface ITransactionDependentExecutionListener : IBaseExecutionListener

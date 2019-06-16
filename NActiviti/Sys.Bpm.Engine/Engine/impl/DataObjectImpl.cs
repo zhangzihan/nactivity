@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl
+namespace Sys.Workflow.engine.impl
 {
-	using org.activiti.engine.runtime;
+	using Sys.Workflow.engine.runtime;
 
 	public class DataObjectImpl : IDataObject
 	{

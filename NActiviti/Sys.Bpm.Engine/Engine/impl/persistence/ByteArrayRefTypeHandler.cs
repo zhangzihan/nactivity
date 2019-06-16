@@ -1,10 +1,10 @@
-﻿using org.activiti.engine.impl.persistence.entity;
+﻿using Sys.Workflow.engine.impl.persistence.entity;
 using SmartSql.Abstractions.TypeHandler;
 using System;
 using System.Data;
 using System.IO;
 
-namespace org.activiti.engine.impl.persistence
+namespace Sys.Workflow.engine.impl.persistence
 {
     public class ByteArrayRefTypeHandler : ITypeHandler
     {

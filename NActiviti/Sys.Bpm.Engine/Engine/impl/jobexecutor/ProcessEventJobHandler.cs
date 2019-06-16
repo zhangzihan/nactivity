@@ -11,10 +11,10 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.jobexecutor
+namespace Sys.Workflow.engine.impl.jobexecutor
 {
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity;
     using System.Collections.Generic;
 
     /// 

@@ -14,9 +14,9 @@ using System.Text;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
-    using org.activiti.engine.impl.variable;
+    using Sys.Workflow.engine.impl.variable;
 
     /// 
     /// 

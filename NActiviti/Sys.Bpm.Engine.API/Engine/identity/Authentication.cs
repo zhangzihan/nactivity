@@ -17,7 +17,7 @@ using System.Threading;
 using System.Linq;
 using Sys.Workflow;
 
-namespace org.activiti.engine.impl.identity
+namespace Sys.Workflow.engine.impl.identity
 {
     /// 
     public abstract class Authentication

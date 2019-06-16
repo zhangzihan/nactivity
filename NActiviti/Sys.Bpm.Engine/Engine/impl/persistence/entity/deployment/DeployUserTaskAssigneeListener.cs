@@ -1,13 +1,13 @@
-﻿using org.activiti.bpmn.constants;
-using org.activiti.engine.@delegate;
-using org.activiti.engine.impl.bpmn.listener;
+﻿using Sys.Workflow.bpmn.constants;
+using Sys.Workflow.engine.@delegate;
+using Sys.Workflow.engine.impl.bpmn.listener;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
     /// <summary>
     /// 添加一个分配用户时的侦听器，用来从系统中获取执行人信息

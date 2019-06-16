@@ -15,7 +15,7 @@
  *
  */
 
-namespace org.activiti.cloud.services.api.events
+namespace Sys.Workflow.cloud.services.api.events
 {
 
     /// <summary>

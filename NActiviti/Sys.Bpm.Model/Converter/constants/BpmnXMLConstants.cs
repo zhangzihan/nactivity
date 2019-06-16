@@ -10,11 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using org.activiti.bpmn.converter;
-using org.activiti.bpmn.model;
+using Sys.Workflow.bpmn.converter;
+using Sys.Workflow.bpmn.model;
 using System.Xml.Linq;
 
-namespace org.activiti.bpmn.constants
+namespace Sys.Workflow.bpmn.constants
 {
     public interface IBpmnXMLConstants
     {

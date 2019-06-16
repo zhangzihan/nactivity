@@ -11,10 +11,10 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.scripting
+namespace Sys.Workflow.engine.impl.scripting
 {
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.cfg;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.cfg;
 
     /// 
     /// 

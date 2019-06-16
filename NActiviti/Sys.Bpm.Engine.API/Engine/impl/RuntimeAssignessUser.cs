@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace org.activiti.engine.impl
+namespace Sys.Workflow.engine.impl
 {
     /// <summary>
     /// 运行时动态获取用户变量

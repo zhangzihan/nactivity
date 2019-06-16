@@ -10,10 +10,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.parser
+namespace Sys.Workflow.engine.impl.bpmn.parser
 {
-    using org.activiti.engine.impl.bpmn.parser.factory;
-    using org.activiti.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.bpmn.parser.factory;
+    using Sys.Workflow.engine.impl.cfg;
 
     /// <summary>
     /// Parser for BPMN 2.0 process models.

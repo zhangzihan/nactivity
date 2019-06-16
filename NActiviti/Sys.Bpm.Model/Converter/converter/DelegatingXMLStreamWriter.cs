@@ -12,7 +12,7 @@
  */
 using System.Xml.Linq;
 
-namespace org.activiti.bpmn.converter
+namespace Sys.Workflow.bpmn.converter
 {
     using Sys.Bpm;
     using System.Linq;

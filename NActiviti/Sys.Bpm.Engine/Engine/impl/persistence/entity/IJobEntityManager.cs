@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
 
-    using org.activiti.engine.impl.asyncexecutor;
-    using org.activiti.engine.impl.cmd;
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.impl.asyncexecutor;
+    using Sys.Workflow.engine.impl.cmd;
+    using Sys.Workflow.engine.runtime;
 
     /// <summary>
     /// <seealso cref="EntityManager"/> responsible for the <seealso cref="IJobEntity"/> class.

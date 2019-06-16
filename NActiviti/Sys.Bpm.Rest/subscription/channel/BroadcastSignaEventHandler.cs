@@ -1,10 +1,10 @@
-﻿using org.activiti.cloud.services.api.commands;
-using org.activiti.engine;
+﻿using Sys.Workflow.cloud.services.api.commands;
+using Sys.Workflow.engine;
 using org.springframework.cloud.stream.binding;
 using org.springframework.messaging;
 using org.springframework.messaging.support;
 
-namespace org.activiti.services.subscription.channel
+namespace Sys.Workflow.services.subscription.channel
 {
     /// <summary>
     /// 

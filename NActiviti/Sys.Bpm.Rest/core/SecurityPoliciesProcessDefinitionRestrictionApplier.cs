@@ -16,10 +16,8 @@
  * limitations under the License.
  */
 
-namespace org.activiti.cloud.services.core
+namespace Sys.Workflow.cloud.services.core
 {
-
-	using ProcessDefinitionQuery = org.activiti.engine.repository.ProcessDefinitionQuery;
 	using Component = org.springframework.stereotype.Component;
 
     public class SecurityPoliciesProcessDefinitionRestrictionApplier : SecurityPoliciesRestrictionApplier<ProcessDefinitionQuery>

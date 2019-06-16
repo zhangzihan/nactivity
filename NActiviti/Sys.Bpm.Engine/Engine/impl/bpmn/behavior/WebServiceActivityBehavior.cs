@@ -14,22 +14,26 @@ using System.Threading;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.behavior
+namespace Sys.Workflow.engine.impl.bpmn.behavior
 {
 
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.bpmn.data;
-    using org.activiti.engine.impl.bpmn.helper;
-    using org.activiti.engine.impl.bpmn.parser;
-    using org.activiti.engine.impl.bpmn.webservice;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.el;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
-    using org.activiti.engine.impl.webservice;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.bpmn.data;
+    using Sys.Workflow.engine.impl.bpmn.helper;
+    using Sys.Workflow.engine.impl.bpmn.parser;
+    using Sys.Workflow.engine.impl.bpmn.webservice;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.el;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.engine.impl.webservice;
     using Sys.Bpm;
+    using IOSpecification = Workflow.bpmn.model.IOSpecification;
+    using ItemDefinition = Workflow.bpmn.model.ItemDefinition;
+    using Operation = Workflow.bpmn.model.Operation;
+    using Assignment = Workflow.bpmn.model.Assignment;
 
     /// <summary>
     /// An activity behavior that allows calling Web services
@@ -44,7 +48,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         private const long serialVersionUID = 1L;
 
-        public const string CURRENT_MESSAGE = "org.activiti.engine.impl.bpmn.CURRENT_MESSAGE";
+        public const string CURRENT_MESSAGE = "Sys.Workflow.engine.impl.bpmn.CURRENT_MESSAGE";
 
         protected internal IDictionary<string, IXMLImporter> xmlImporterMap = new Dictionary<string, IXMLImporter>();
         protected internal IDictionary<string, WSOperation> wsOperationMap = new Dictionary<string, WSOperation>();
@@ -63,7 +67,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
         {
             BpmnModel bpmnModel = ProcessDefinitionUtil.GetBpmnModel(execution.ProcessDefinitionId);
             FlowElement flowElement = execution.CurrentFlowElement;
-            activiti.bpmn.model.IOSpecification ioSpecification;
+            IOSpecification ioSpecification;
             string operationRef;
             IList<DataAssociation> dataInputAssociations;
             IList<DataAssociation> dataOutputAssociations;
@@ -161,7 +165,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
             }
         }
 
-        protected internal virtual void InitializeIoSpecification(activiti.bpmn.model.IOSpecification activityIoSpecification, IExecutionEntity execution, BpmnModel bpmnModel)
+        protected internal virtual void InitializeIoSpecification(IOSpecification activityIoSpecification, IExecutionEntity execution, BpmnModel bpmnModel)
         {
             foreach (DataSpec dataSpec in activityIoSpecification.DataInputs)
             {
@@ -190,7 +194,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
 
         protected internal virtual void CreateItemDefinitions(BpmnModel bpmnModel)
         {
-            foreach (org.activiti.bpmn.model.ItemDefinition itemDefinitionElement in bpmnModel.ItemDefinitions.Values)
+            foreach (ItemDefinition itemDefinitionElement in bpmnModel.ItemDefinitions.Values)
             {
 
                 if (!itemDefinitionMap.ContainsKey(itemDefinitionElement.Id))
@@ -250,7 +254,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                     Implementation = wsServiceMap[interfaceObject.ImplementationRef]
                 };
 
-                foreach (org.activiti.bpmn.model.Operation operationObject in interfaceObject.Operations)
+                foreach (Operation operationObject in interfaceObject.Operations)
                 {
                     if (!operationMap.ContainsKey(operationObject.Id))
                     {
@@ -285,7 +289,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                     Type wsdlImporterClass;
                     try
                     {
-                        wsdlImporterClass = Type.GetType("org.activiti.engine.impl.webservice.CxfWSDLImporter", true);
+                        wsdlImporterClass = Type.GetType("Sys.Workflow.engine.impl.webservice.CxfWSDLImporter", true);
                         IXMLImporter importerInstance = (IXMLImporter)Activator.CreateInstance(wsdlImporterClass);
                         xmlImporterMap[theImport.ImportType] = importerInstance;
                         importerInstance.ImportFrom(theImport, sourceSystemId);
@@ -339,7 +343,7 @@ namespace org.activiti.engine.impl.bpmn.behavior
                 SimpleDataInputAssociation dataAssociation = new SimpleDataInputAssociation(dataAssociationElement.SourceRef, dataAssociationElement.TargetRef);
                 ExpressionManager expressionManager = Context.ProcessEngineConfiguration.ExpressionManager;
 
-                foreach (org.activiti.bpmn.model.Assignment assignmentElement in dataAssociationElement.Assignments)
+                foreach (Assignment assignmentElement in dataAssociationElement.Assignments)
                 {
                     if (!string.IsNullOrWhiteSpace(assignmentElement.From) && !string.IsNullOrWhiteSpace(assignmentElement.To))
                     {

@@ -14,14 +14,15 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.cmd
+namespace Sys.Workflow.engine.impl.cmd
 {
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.deploy;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
-    using org.activiti.engine.repository;
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.deploy;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.engine.repository;
+    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.bpmn.model;
 
     /// <summary>
     /// <seealso cref="Command"/> that changes the process definition version of an existing process instance.
@@ -105,7 +106,7 @@ namespace org.activiti.engine.impl.cmd
         protected internal virtual void ValidateAndSwitchVersionOfExecution(ICommandContext commandContext, IExecutionEntity execution, IProcessDefinition newProcessDefinition)
         {
             // check that the new process definition version contains the current activity
-            activiti.bpmn.model.Process process = ProcessDefinitionUtil.GetProcess(newProcessDefinition.Id);
+            Process process = ProcessDefinitionUtil.GetProcess(newProcessDefinition.Id);
             if (!(execution.ActivityId is null) && process.GetFlowElement(execution.ActivityId, true) == null)
             {
                 throw new ActivitiException("The new process definition " + "(key = '" + newProcessDefinition.Key + "') " + "does not contain the current activity " + "(id = '" + execution.ActivityId + "') " + "of the process instance " + "(id = '" + processInstanceId + "').");

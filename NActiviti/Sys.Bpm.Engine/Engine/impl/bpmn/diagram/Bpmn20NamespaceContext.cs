@@ -14,7 +14,7 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.bpmn.diagram
+namespace Sys.Workflow.engine.impl.bpmn.diagram
 {
     /// <summary>
     /// XML <seealso cref="NamespaceContext"/> containing the namespaces used by BPMN 2.0 XML documents.

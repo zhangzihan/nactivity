@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace org.activiti.bpmn.model
+namespace Sys.Workflow.bpmn.model
 {
 
     public class ExtensionElement : BaseElement

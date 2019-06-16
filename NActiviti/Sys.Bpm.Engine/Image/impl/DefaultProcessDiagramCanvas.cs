@@ -18,29 +18,29 @@ using System.Text;
  * limitations under the License.
  */
 
-namespace org.activiti.image.impl
+namespace Sys.Workflow.image.impl
 {
 
-    using org.activiti.bpmn.model;
-    using org.activiti.bpmn.model;
-    using org.activiti.image.exception;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
-    using org.activiti.image.impl.icon;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.image.exception;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.image.impl.icon;
     using org.apache.batik.dom;
     using org.apache.batik.svggen;
     using org.slf4j;
@@ -53,7 +53,7 @@ namespace org.activiti.image.impl
     /// <para>
     /// </para>
     /// </summary>
-    /// <seealso cref= org.activiti.image.impl.DefaultProcessDiagramGenerator </seealso>
+    /// <seealso cref="Sys.Workflow.image.impl.DefaultProcessDiagramGenerator"></seealso>
     public class DefaultProcessDiagramCanvas
     {
 

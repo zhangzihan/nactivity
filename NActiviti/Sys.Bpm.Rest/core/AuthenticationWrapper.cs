@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-using org.activiti.engine.impl.identity;
+using Sys.Workflow.engine.impl.identity;
 using Sys.Workflow;
 
-namespace org.activiti.cloud.services.core
+namespace Sys.Workflow.cloud.services.core
 {
     /// <summary>
     /// Wrap Authentication.java so as to be able to mock static methods. May later want to move this to engine level but not necessary now.

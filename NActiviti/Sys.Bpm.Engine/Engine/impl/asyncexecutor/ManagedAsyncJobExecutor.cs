@@ -16,7 +16,7 @@ using System.Threading;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.asyncexecutor
+namespace Sys.Workflow.engine.impl.asyncexecutor
 {
     /// <summary>
     /// Simple JSR-236 async job executor to allocate threads through <seealso cref="ManagedThreadFactory"/>. Falls back to <seealso cref="IAsyncExecutor"/> when a thread factory was not referenced in configuration.

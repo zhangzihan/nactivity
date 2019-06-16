@@ -14,11 +14,11 @@ using System.Text;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.scripting
+namespace Sys.Workflow.engine.impl.scripting
 {
-    using org.activiti.engine.impl.bpmn.data;
-    using org.activiti.engine.impl.el;
-    using org.activiti.engine.impl.util;
+    using Sys.Workflow.engine.impl.bpmn.data;
+    using Sys.Workflow.engine.impl.el;
+    using Sys.Workflow.engine.impl.util;
 
     /// <summary>
     /// ScriptEngine that used JUEL for script evaluation and compilation (JSR-223).

@@ -11,11 +11,11 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.asyncexecutor.multitenant
+namespace Sys.Workflow.engine.impl.asyncexecutor.multitenant
 {
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.cfg.multitenant;
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.cfg.multitenant;
+    using Sys.Workflow.engine.runtime;
 
     /// <summary>
     /// Extends the default <seealso cref="ExecuteAsyncRunnable"/> by setting the 'tenant' context before executing.

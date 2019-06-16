@@ -1,4 +1,4 @@
-﻿namespace org.activiti.image.impl
+﻿namespace Sys.Workflow.image.impl
 {
 	using org.apache.batik.ext.awt.g2d;
 	using org.apache.batik.svggen;

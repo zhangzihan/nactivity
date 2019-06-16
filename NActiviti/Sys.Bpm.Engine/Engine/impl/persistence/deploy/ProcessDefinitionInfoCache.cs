@@ -12,13 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.persistence.deploy
+namespace Sys.Workflow.engine.impl.persistence.deploy
 {
     using Microsoft.Extensions.Caching.Memory;
     using Newtonsoft.Json.Linq;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity;
     using Sys.Bpm;
     using Sys.Workflow;
     using Sys.Workflow.Cache;

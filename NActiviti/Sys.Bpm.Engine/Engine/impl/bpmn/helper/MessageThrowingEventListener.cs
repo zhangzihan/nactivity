@@ -13,12 +13,12 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.helper
+namespace Sys.Workflow.engine.impl.bpmn.helper
 {
 
-    using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// <summary>
     /// An <seealso cref="IActivitiEventListener"/> that throws a message event when an event is dispatched to it. Sends the message to the execution the event was fired from. If the execution is not subscribed to a

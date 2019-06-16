@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.helper
+namespace Sys.Workflow.engine.impl.bpmn.helper
 {
-    using org.activiti.engine.@delegate.@event;
+    using Sys.Workflow.engine.@delegate.@event;
 
     /// <summary>
     /// Base implementation of a <seealso cref="IActivitiEventListener"/>, used when creating event-listeners that are part of a BPMN definition.

@@ -1,6 +1,6 @@
-﻿using org.activiti.api.runtime.shared.query;
+﻿using Sys.Workflow.api.runtime.shared.query;
 
-namespace org.activiti.cloud.services.api.model
+namespace Sys.Workflow.cloud.services.api.model
 {
     /// <summary>
     /// 查询对象

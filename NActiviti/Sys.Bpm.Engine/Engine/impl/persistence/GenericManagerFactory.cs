@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.persistence
+namespace Sys.Workflow.engine.impl.persistence
 {
-    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.interceptor;
 
     /// 
     /// 

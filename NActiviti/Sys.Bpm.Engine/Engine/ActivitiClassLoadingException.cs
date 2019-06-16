@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine
+namespace Sys.Workflow.engine
 {
     /// <summary>
     /// Runtime exception indicating the requested class was not found or an error occurred while loading the class.

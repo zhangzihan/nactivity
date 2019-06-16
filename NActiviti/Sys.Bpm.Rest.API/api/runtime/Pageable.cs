@@ -1,7 +1,7 @@
 ﻿
 using Newtonsoft.Json;
 
-namespace org.activiti.api.runtime.shared.query
+namespace Sys.Workflow.api.runtime.shared.query
 {
     /// <summary>
     /// 分页

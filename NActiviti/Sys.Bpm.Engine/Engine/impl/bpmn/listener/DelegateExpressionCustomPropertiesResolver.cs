@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.listener
+namespace Sys.Workflow.engine.impl.bpmn.listener
 {
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     public class DelegateExpressionCustomPropertiesResolver : ICustomPropertiesResolver

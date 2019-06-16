@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine
+namespace Sys.Workflow.engine
 {
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.persistence.entity;
     using System.Collections.Generic;
 
     /// <summary>

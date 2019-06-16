@@ -12,14 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.variable
+namespace Sys.Workflow.engine.impl.variable
 {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Bson;
     using Newtonsoft.Json.Linq;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.util;
     using System.IO;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;

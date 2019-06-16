@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.image
+namespace Sys.Workflow.image
 {
 
-    using org.activiti.bpmn.model;
+    using Sys.Workflow.bpmn.model;
     using System.IO;
 
     /// <summary>

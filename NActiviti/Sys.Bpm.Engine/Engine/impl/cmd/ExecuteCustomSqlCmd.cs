@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace org.activiti.engine.impl.cmd
+namespace Sys.Workflow.engine.impl.cmd
 {
-    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.interceptor;
 
     /// 
     public class ExecuteCustomSqlCmd<Mapper, ResultType> : ICommand<ResultType>

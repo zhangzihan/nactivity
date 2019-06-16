@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using org.activiti.bpmn.model;
-using org.activiti.engine.impl.persistence.entity;
-using org.activiti.engine.impl.persistence.entity.integration;
-using org.activiti.engine.runtime;
+using Sys.Workflow.bpmn.model;
+using Sys.Workflow.engine.impl.persistence.entity;
+using Sys.Workflow.engine.impl.persistence.entity.integration;
+using Sys.Workflow.engine.runtime;
 using System.Collections.Generic;
 
 /*
@@ -21,7 +21,7 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.services.connectors.model
+namespace Sys.Workflow.services.connectors.model
 {
 
     /// <summary>

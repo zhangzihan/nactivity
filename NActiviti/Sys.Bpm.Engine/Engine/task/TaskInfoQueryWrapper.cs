@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.task
+namespace Sys.Workflow.engine.task
 {
     /// <summary>
     /// This is a helper class to help you work with the <seealso cref="TaskInfoQuery"/>, without having to care about the awful generics.

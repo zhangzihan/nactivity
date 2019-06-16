@@ -10,15 +10,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.jobexecutor
+namespace Sys.Workflow.engine.impl.jobexecutor
 {
     using Newtonsoft.Json.Linq;
-    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     public abstract class TimerChangeProcessDefinitionSuspensionStateJobHandler : IJobHandler
     {
-        public abstract void Execute(org.activiti.engine.impl.persistence.entity.IJobEntity job, string configuration, org.activiti.engine.impl.persistence.entity.IExecutionEntity execution, ICommandContext commandContext);
+        public abstract void Execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext);
         public abstract string Type { get; }
 
         private const string JOB_HANDLER_CFG_INCLUDE_PROCESS_INSTANCES = "includeProcessInstances";

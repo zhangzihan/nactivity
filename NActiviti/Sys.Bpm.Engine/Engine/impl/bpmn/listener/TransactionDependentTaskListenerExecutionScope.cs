@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.listener
+namespace Sys.Workflow.engine.impl.bpmn.listener
 {
 
-    using org.activiti.bpmn.model;
+    using Sys.Workflow.bpmn.model;
 
     /// 
     public class TransactionDependentTaskListenerExecutionScope

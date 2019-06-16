@@ -1,6 +1,6 @@
-﻿using org.activiti.engine.@delegate.@event;
+﻿using Sys.Workflow.engine.@delegate.@event;
 
-namespace org.activiti.engine.impl.@event.logger
+namespace Sys.Workflow.engine.impl.@event.logger
 {
     /// 
     public interface IEventLoggerListener

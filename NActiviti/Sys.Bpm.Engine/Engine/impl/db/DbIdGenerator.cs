@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.db
+namespace Sys.Workflow.engine.impl.db
 {
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.cmd;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.cmd;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     public class DbIdGenerator : IIdGenerator

@@ -116,7 +116,6 @@
     <ProjectReference Include="..\..\Smart.Sql\SmartSql.DyRepository\SmartSql.DyRepository.csproj" />
     <ProjectReference Include="..\..\Smart.Sql\SmartSql.TypeHandler\SmartSql.TypeHandler.csproj" />
     <ProjectReference Include="..\..\Smart.Sql\SmartSql\SmartSql.csproj" />
-    <ProjectReference Include="..\..\Spring.Core\Spring.Core.csproj" />
     <ProjectReference Include="..\Sys.Bpm.Engine.API\Sys.Bpm.Engine.API.csproj" />
   </ItemGroup>
 

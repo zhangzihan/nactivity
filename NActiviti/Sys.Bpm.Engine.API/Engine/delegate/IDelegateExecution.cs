@@ -11,10 +11,10 @@
  * limitations under the License.
  */
 
-using org.activiti.bpmn.model;
+using Sys.Workflow.bpmn.model;
 using System.Collections.Generic;
 
-namespace org.activiti.engine.@delegate
+namespace Sys.Workflow.engine.@delegate
 {
     /**
      * Execution used in {@link JavaDelegate}s and {@link ExecutionListener}s.

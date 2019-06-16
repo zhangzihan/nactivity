@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.repository
+namespace Sys.Workflow.engine.repository
 {
     /// <summary>
     /// Stores position and dimensions of a diagram node.

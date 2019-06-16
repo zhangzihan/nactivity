@@ -1,9 +1,9 @@
-﻿namespace org.activiti.engine.history
+﻿namespace Sys.Workflow.engine.history
 {
-    using org.activiti.engine.query;
+    using Sys.Workflow.engine.query;
 
     /// <summary>
-    /// Allows querying of <seealso cref="org.activiti.engine.history.IHistoricVariableInstance"/>s via native (SQL) queries
+    /// Allows querying of <seealso cref="Sys.Workflow.engine.history.IHistoricVariableInstance"/>s via native (SQL) queries
     /// 
     /// 
     /// </summary>

@@ -13,12 +13,12 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.cmd
+namespace Sys.Workflow.engine.impl.cmd
 {
 
-    using org.activiti.engine.impl.asyncexecutor;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.asyncexecutor;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     public class AcquireTimerJobsCmd : ICommand<AcquiredTimerJobEntities>

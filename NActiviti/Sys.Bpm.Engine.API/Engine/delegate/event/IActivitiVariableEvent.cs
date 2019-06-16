@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.@delegate.@event
+namespace Sys.Workflow.engine.@delegate.@event
 {
-    using org.activiti.engine.impl.variable;
+    using Sys.Workflow.engine.impl.variable;
 
     /// <summary>
     /// An <seealso cref="IActivitiEvent"/> related to a single variable.

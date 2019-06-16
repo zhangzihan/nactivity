@@ -1,4 +1,4 @@
-﻿namespace org.activiti.bpmn.model
+﻿namespace Sys.Workflow.bpmn.model
 {
     /// <summary>
     /// The Resource class is used to specify resources that can be referenced by

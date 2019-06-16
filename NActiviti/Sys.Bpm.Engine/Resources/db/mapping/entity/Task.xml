@@ -14,10 +14,10 @@
   ~ limitations under the License.
   -->
 
-<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.TaskEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.TaskEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- TASK RESULTMAP -->
-  <ResultMap Id="taskResultMap" ResultType="org.activiti.engine.impl.persistence.entity.TaskEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="taskResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.TaskEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="revision" Column="REV_" />
     <Result Property="name" Column="NAME_" />
@@ -47,10 +47,10 @@
   </ResultMap>
 
   <!--
-    <collection property="queryVariables" column="TASK_ID_" javaType="ArrayList" ofType="org.activiti.engine.impl.persistence.entity.VariableInstanceEntityImpl">
+    <collection property="queryVariables" column="TASK_ID_" javaType="ArrayList" ofType="Sys.Workflow.engine.impl.persistence.entity.VariableInstanceEntityImpl">
       <id property="id" column="VAR_ID_"/>
       <result property="name" column="VAR_NAME_" javaType="String" jdbcType="VARCHAR" />
-      <result property="type" column="VAR_TYPE_" javaType="org.activiti.engine.impl.variable.VariableType" jdbcType="VARCHAR" />
+      <result property="type" column="VAR_TYPE_" javaType="Sys.Workflow.engine.impl.variable.VariableType" jdbcType="VARCHAR" />
       <result property="revision" column="VAR_REV_" jdbcType="INTEGER" />
       <result property="processInstanceId" column="VAR_PROC_INST_ID_" jdbcType="VARCHAR" />
       <result property="executionId" column="VAR_EXECUTION_ID_" jdbcType="VARCHAR" />
@@ -62,7 +62,7 @@
       <result property="longValue" column="VAR_LONG_" jdbcType="BIGINT" />
     </collection>-->
 
-  <ResultMap Id="taskAndVariablesResultMap" ResultType="org.activiti.engine.impl.persistence.entity.TaskEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="taskAndVariablesResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.TaskEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="revision" Column="REV_" />
     <Result Property="name" Column="NAME_" />

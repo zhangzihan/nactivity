@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace org.activiti.api.runtime.shared.query
+namespace Sys.Workflow.api.runtime.shared.query
 {
 
     /// <summary>

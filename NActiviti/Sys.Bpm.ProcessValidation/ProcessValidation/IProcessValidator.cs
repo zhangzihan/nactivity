@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.validation
+namespace Sys.Workflow.validation
 {
 
-    using org.activiti.bpmn.model;
-    using org.activiti.validation.validator;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.validation.validator;
 
     /// <summary>
     /// Validates a process definition against the rules of the Activiti engine to be executable

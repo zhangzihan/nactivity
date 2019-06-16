@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using org.activiti.services.api.commands;
+using Sys.Workflow.services.api.commands;
 using System;
 using System.Collections.Generic;
 
@@ -18,7 +18,7 @@ using System.Collections.Generic;
  *
  */
 
-namespace org.activiti.cloud.services.api.commands
+namespace Sys.Workflow.cloud.services.api.commands
 {
 
     /// <summary>

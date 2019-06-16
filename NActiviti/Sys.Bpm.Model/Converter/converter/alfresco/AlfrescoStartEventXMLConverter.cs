@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.bpmn.converter.alfresco
+namespace Sys.Workflow.bpmn.converter.alfresco
 {
-    using org.activiti.bpmn.model.alfresco;
+    using Sys.Workflow.bpmn.model.alfresco;
 
     /// 
     public class AlfrescoStartEventXMLConverter : StartEventXMLConverter

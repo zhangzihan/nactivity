@@ -13,10 +13,10 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.persistence.entity.data.impl
+namespace Sys.Workflow.engine.impl.persistence.entity.data.impl
 {
 
-    using org.activiti.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.cfg;
     using Sys.Bpm.Engine;
 
     /// 

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.history
+namespace Sys.Workflow.engine.impl.history
 {
 
     /// <summary>

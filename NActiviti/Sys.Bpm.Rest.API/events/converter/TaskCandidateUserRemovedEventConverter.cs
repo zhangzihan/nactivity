@@ -1,10 +1,10 @@
-﻿using org.activiti.cloud.services.api.events;
-using org.activiti.cloud.services.api.model.converter;
-using org.activiti.cloud.services.events.configuration;
-using org.activiti.engine.@delegate.@event;
-using org.activiti.engine.task;
+﻿using Sys.Workflow.cloud.services.api.events;
+using Sys.Workflow.cloud.services.api.model.converter;
+using Sys.Workflow.cloud.services.events.configuration;
+using Sys.Workflow.engine.@delegate.@event;
+using Sys.Workflow.engine.task;
 
-namespace org.activiti.cloud.services.events.converter
+namespace Sys.Workflow.cloud.services.events.converter
 {
 
     /// <summary>

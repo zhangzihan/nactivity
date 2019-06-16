@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace org.activiti.cloud.services.api.commands.results
+namespace Sys.Workflow.cloud.services.api.commands.results
 {
 
     /// <summary>

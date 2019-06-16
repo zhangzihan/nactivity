@@ -1,4 +1,4 @@
-﻿namespace org.activiti.bpmn.model.alfresco
+﻿namespace Sys.Workflow.bpmn.model.alfresco
 {
 
     public class AlfrescoStartEvent : StartEvent

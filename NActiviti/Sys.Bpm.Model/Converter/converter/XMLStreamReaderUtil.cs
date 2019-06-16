@@ -15,7 +15,7 @@ using Sys.Bpm.Model;
 using System;
 using System.IO;
 
-namespace org.activiti.bpmn.converter
+namespace Sys.Workflow.bpmn.converter
 {
     /// 
     public class XMLStreamReaderUtil

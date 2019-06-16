@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace org.activiti.engine.impl
+namespace Sys.Workflow.engine.impl
 {
 
-    using org.activiti.engine.history;
-    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow.engine.history;
+    using Sys.Workflow.engine.impl.interceptor;
 
     [Serializable]
     public class NativeHistoricVariableInstanceQueryImpl : AbstractNativeQuery<INativeHistoricVariableInstanceQuery, IHistoricVariableInstance>, INativeHistoricVariableInstanceQuery

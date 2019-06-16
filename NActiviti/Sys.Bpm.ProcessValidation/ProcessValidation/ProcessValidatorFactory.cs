@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.validation
+namespace Sys.Workflow.validation
 {
-    using org.activiti.validation.validator;
+    using Sys.Workflow.validation.validator;
 
     /// 
     public class ProcessValidatorFactory : IProcessValidatorFactory

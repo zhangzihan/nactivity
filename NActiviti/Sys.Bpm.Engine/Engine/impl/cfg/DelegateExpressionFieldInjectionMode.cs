@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using org.activiti.engine.@delegate;
+using Sys.Workflow.engine.@delegate;
 
-namespace org.activiti.engine.impl.cfg
+namespace Sys.Workflow.engine.impl.cfg
 {
     /// <summary>
     /// 

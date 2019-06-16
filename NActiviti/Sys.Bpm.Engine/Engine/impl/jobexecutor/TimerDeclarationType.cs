@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.jobexecutor
+namespace Sys.Workflow.engine.impl.jobexecutor
 {
     public sealed class TimerDeclarationType
 	{

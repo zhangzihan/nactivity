@@ -13,11 +13,11 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.bpmn.converter.parser
+namespace Sys.Workflow.bpmn.converter.parser
 {
 
-    using org.activiti.bpmn.constants;
-    using org.activiti.bpmn.model;
+    using Sys.Workflow.bpmn.constants;
+    using Sys.Workflow.bpmn.model;
 
     /// 
     public class PotentialStarterParser : IBpmnXMLConstants

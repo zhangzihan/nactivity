@@ -13,10 +13,10 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.runtime
+namespace Sys.Workflow.engine.runtime
 {
 
-    using org.activiti.engine.query;
+    using Sys.Workflow.engine.query;
 
     /// <summary>
     /// Allows programmatic querying of <seealso cref="IExecution"/>s.

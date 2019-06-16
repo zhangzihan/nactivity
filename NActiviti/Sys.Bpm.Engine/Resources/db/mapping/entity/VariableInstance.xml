@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.VariableInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.VariableInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- VARIABLE INSTANCE RESULTMAP -->
 
-  <ResultMap Id="variableInstanceResultMap" ResultType="org.activiti.engine.impl.persistence.entity.VariableInstanceEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="variableInstanceResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.VariableInstanceEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="revision" Column="REV_" />
     <Result Property="type" Column="TYPE_" TypeHandler="变量类型" />

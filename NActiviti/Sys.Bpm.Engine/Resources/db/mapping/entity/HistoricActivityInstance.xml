@@ -14,11 +14,11 @@
   ~ limitations under the License.
   -->
 
-<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.HistoricActivityInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.HistoricActivityInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
   
   <!-- HISTORIC ACTIVITY INSTANCE RESULT MAP -->
 
-  <ResultMap Id="historicActivityInstanceResultMap" ResultType="org.activiti.engine.impl.persistence.entity.HistoricActivityInstanceEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="historicActivityInstanceResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.HistoricActivityInstanceEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />
@@ -37,7 +37,7 @@
 
   <!-- HISTORIC ACTIVITY INSTANCE INSERT -->
   
-  <Insert Id="insertHistoricActivityInstance" ResultType="org.activiti.engine.impl.persistence.entity.HistoricActivityInstanceEntity">
+  <Insert Id="insertHistoricActivityInstance" ResultType="Sys.Workflow.engine.impl.persistence.entity.HistoricActivityInstanceEntity">
       insert into ACT_HI_ACTINST (
         ID_,
         PROC_DEF_ID_,

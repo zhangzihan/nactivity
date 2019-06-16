@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.persistence.entity.integration
+namespace Sys.Workflow.engine.impl.persistence.entity.integration
 {
-	using org.activiti.engine.impl.cfg;
-	using org.activiti.engine.impl.persistence.entity.data;
-	using org.activiti.engine.impl.persistence.entity.data.integration;
+	using Sys.Workflow.engine.impl.cfg;
+	using Sys.Workflow.engine.impl.persistence.entity.data;
+	using Sys.Workflow.engine.impl.persistence.entity.data.integration;
 
 	public class IntegrationContextManagerImpl : AbstractEntityManager<IIntegrationContextEntity>, IIntegrationContextManager
 	{

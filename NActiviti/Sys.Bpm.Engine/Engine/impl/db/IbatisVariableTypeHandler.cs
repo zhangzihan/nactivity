@@ -11,11 +11,11 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.db
+namespace Sys.Workflow.engine.impl.db
 {
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.persistence;
-    using org.activiti.engine.impl.variable;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.persistence;
+    using Sys.Workflow.engine.impl.variable;
     using SmartSql.Abstractions.TypeHandler;
     using System;
     using System.Data;

@@ -1,6 +1,6 @@
-﻿namespace org.activiti.engine.history
+﻿namespace Sys.Workflow.engine.history
 {
-    using org.activiti.engine.task;
+    using Sys.Workflow.engine.task;
 
     /// <summary>
     /// Allows to fetch the <seealso cref="IProcessInstanceHistoryLog"/> for a process instance.

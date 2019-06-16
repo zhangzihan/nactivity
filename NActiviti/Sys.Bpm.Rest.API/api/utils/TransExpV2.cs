@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace org.activiti.cloud.services.api.utils
+namespace Sys.Workflow.cloud.services.api.utils
 {
     /// <summary>
     /// 将数据类型从一种类型转为另外一种类型,复制公共属性

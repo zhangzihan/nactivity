@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl
+namespace Sys.Workflow.engine.impl
 {
     /// <summary>
     /// Represents a variable value used in a task query.

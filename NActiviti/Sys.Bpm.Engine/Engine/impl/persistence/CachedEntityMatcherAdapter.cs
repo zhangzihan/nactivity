@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace org.activiti.engine.impl.persistence
+namespace Sys.Workflow.engine.impl.persistence
 {
 
-    using org.activiti.engine.impl.persistence.cache;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.persistence.cache;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     public abstract class CachedEntityMatcherAdapter<EntityImpl> : ICachedEntityMatcher<EntityImpl> where EntityImpl : IEntity

@@ -26,7 +26,7 @@
     <EmbeddedResource Update="Resources\ProcessValidatorResource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ProcessValidatorResource.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>org.activiti.validation.validator</CustomToolNamespace>
+      <CustomToolNamespace>Sys.Workflow.validation.validator</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>
 

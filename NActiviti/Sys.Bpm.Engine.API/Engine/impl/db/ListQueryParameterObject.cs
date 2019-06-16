@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.db
+namespace Sys.Workflow.engine.impl.db
 {
     /// 
     public class ListQueryParameterObject

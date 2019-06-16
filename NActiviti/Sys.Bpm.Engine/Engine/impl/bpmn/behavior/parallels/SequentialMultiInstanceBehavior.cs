@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.behavior
+namespace Sys.Workflow.engine.impl.bpmn.behavior
 {
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     /// 

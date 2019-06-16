@@ -14,13 +14,13 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.bpmn.behavior
+namespace Sys.Workflow.engine.impl.bpmn.behavior
 {
 
-    using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.@delegate.@event.impl;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.engine.@delegate.@event.impl;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// <summary>
     /// Helper class for implementing BPMN 2.0 activities, offering convenience methods specific to BPMN 2.0.

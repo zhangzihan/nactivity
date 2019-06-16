@@ -13,13 +13,13 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.parse
+namespace Sys.Workflow.engine.parse
 {
 
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.impl.bpmn.parser;
-    using org.activiti.engine.impl.bpmn.parser.handler;
-    using org.activiti.engine.impl.cfg;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.impl.bpmn.parser;
+    using Sys.Workflow.engine.impl.bpmn.parser.handler;
+    using Sys.Workflow.engine.impl.cfg;
 
     /// <summary>
     /// Allows to hook into the parsing of one or more elements during the parsing of a BPMN 2.0 process. For more details, see the userguide section on bpmn parse handlers.

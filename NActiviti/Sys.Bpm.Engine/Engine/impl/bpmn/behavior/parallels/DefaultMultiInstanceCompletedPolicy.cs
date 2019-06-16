@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using org.activiti.engine.impl.persistence.entity;
+using Sys.Workflow.engine.impl.persistence.entity;
 using Sys.Workflow;
 
-namespace org.activiti.engine.impl.bpmn.behavior
+namespace Sys.Workflow.engine.impl.bpmn.behavior
 {
     class DefaultMultiInstanceCompletedPolicy : IMultiinstanceCompletedPolicy
     {

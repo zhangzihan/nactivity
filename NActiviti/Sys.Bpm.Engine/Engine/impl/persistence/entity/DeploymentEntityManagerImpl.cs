@@ -13,17 +13,17 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
 
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.@delegate.@event.impl;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.jobexecutor;
-    using org.activiti.engine.impl.persistence.entity.data;
-    using org.activiti.engine.impl.util;
-    using org.activiti.engine.repository;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.engine.@delegate.@event.impl;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.jobexecutor;
+    using Sys.Workflow.engine.impl.persistence.entity.data;
+    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.engine.repository;
     using System;
 
     /// 

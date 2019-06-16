@@ -1,7 +1,11 @@
-﻿using org.activiti.engine.@delegate;
-using org.activiti.engine.impl.@delegate;
-using org.activiti.engine.impl.persistence.entity.integration;
-using org.activiti.engine.runtime;
+﻿using Sys.Workflow.cloud.services.events.configuration;
+using Sys.Workflow.engine.@delegate;
+using Sys.Workflow.engine.impl.bpmn.behavior;
+using Sys.Workflow.engine.impl.bpmn.parser.factory;
+using Sys.Workflow.engine.impl.@delegate;
+using Sys.Workflow.engine.impl.persistence.entity.integration;
+using Sys.Workflow.engine.runtime;
+using Sys.Workflow.services.connectors.model;
 using System;
 
 /*
@@ -20,14 +24,9 @@ using System;
  * limitations under the License.
  */
 
-namespace org.activiti.services.connectors.behavior
+namespace Sys.Workflow.services.connectors.behavior
 {
-    using RuntimeBundleProperties = org.activiti.cloud.services.events.configuration.RuntimeBundleProperties;
-
-    using AbstractBpmnActivityBehavior = org.activiti.engine.impl.bpmn.behavior.AbstractBpmnActivityBehavior;
-    using DefaultActivityBehaviorFactory = org.activiti.engine.impl.bpmn.parser.factory.DefaultActivityBehaviorFactory;
-    using IntegrationRequestEvent = org.activiti.services.connectors.model.IntegrationRequestEvent;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.persistence.entity;
     using org.springframework.context;
 
     /// <summary>

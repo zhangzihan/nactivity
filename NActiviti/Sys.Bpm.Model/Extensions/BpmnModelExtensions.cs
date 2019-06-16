@@ -1,11 +1,11 @@
-﻿using org.activiti.bpmn.constants;
+﻿using Sys.Workflow.bpmn.constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace org.activiti.bpmn.model
+namespace Sys.Workflow.bpmn.model
 {
     /// <summary>
     /// 系统模型扩展属性

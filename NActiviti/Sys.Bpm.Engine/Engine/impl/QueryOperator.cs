@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl
+namespace Sys.Workflow.engine.impl
 {
     /// <summary>
     /// Used to indicate the operator that should be used to comparing values in a query clause.

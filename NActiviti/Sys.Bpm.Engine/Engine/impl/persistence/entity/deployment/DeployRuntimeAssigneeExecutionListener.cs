@@ -1,13 +1,13 @@
-﻿using org.activiti.bpmn.constants;
-using org.activiti.engine.@delegate;
-using org.activiti.engine.impl.bpmn.listener;
+﻿using Sys.Workflow.bpmn.constants;
+using Sys.Workflow.engine.@delegate;
+using Sys.Workflow.engine.impl.bpmn.listener;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
     /// <inheritdoc />
     class DeployRuntimeAssigneeExecutionListener : IDeployRuntimeAssigneeExecutionListener
@@ -20,8 +20,8 @@ namespace org.activiti.engine.impl.persistence.entity
                   <camunda:property name="runtimeAssignee" value="true" />
                   <camunda:property name="assigneeVariable" value="dynamicUsers" />
                 </camunda:properties>
-                <camunda:executionListener class="org.activiti.engine.impl.bpmn.listener.RuntimeAssigneeExecutionListener,Sys.Bpm.Engine" event="start" />
-                <camunda:executionListener class="org.activiti.engine.impl.bpmn.listener.RuntimeAssigneeExecutionEndedListener,Sys.Bpm.Engine" event="end" />
+                <camunda:executionListener class="Sys.Workflow.engine.impl.bpmn.listener.RuntimeAssigneeExecutionListener,Sys.Bpm.Engine" event="start" />
+                <camunda:executionListener class="Sys.Workflow.engine.impl.bpmn.listener.RuntimeAssigneeExecutionEndedListener,Sys.Bpm.Engine" event="end" />
               </bpmn2:extensionElements>
            */
             bool changed = false;

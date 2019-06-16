@@ -13,16 +13,16 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.persistence.deploy
+namespace Sys.Workflow.engine.impl.persistence.deploy
 {
     using Microsoft.Extensions.Logging;
-    using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.@delegate.@event.impl;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.repository;
+    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.engine.@delegate.@event.impl;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.repository;
     using Sys.Workflow;
 
     /// 

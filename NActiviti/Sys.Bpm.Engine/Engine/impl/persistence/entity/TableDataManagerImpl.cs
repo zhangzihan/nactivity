@@ -14,18 +14,18 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
     using DatabaseSchemaReader;
     using DatabaseSchemaReader.DataSchema;
     using Microsoft.Extensions.Logging;
-    using org.activiti.engine.history;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.db;
-    using org.activiti.engine.management;
-    using org.activiti.engine.repository;
-    using org.activiti.engine.runtime;
-    using org.activiti.engine.task;
+    using Sys.Workflow.engine.history;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.db;
+    using Sys.Workflow.engine.management;
+    using Sys.Workflow.engine.repository;
+    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.engine.task;
     using Sys.Workflow;
     using System.Data.SqlClient;
     using System.Linq;

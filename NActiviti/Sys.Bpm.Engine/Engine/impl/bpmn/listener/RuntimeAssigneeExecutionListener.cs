@@ -8,17 +8,17 @@
 ///
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using org.activiti.bpmn.constants;
-using org.activiti.bpmn.model;
-using org.activiti.engine.@delegate;
-using org.activiti.engine.exceptions;
-using org.activiti.engine.impl.persistence.entity;
-using org.activiti.engine.impl.util;
+using Sys.Workflow.bpmn.constants;
+using Sys.Workflow.bpmn.model;
+using Sys.Workflow.engine.@delegate;
+using Sys.Workflow.engine.exceptions;
+using Sys.Workflow.engine.impl.persistence.entity;
+using Sys.Workflow.engine.impl.util;
 using Sys.Workflow;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace org.activiti.engine.impl.bpmn.listener
+namespace Sys.Workflow.engine.impl.bpmn.listener
 {
     /// <summary>
     /// 运行时分配节点运行人员,监听节点的Excution创建事件,在流程进入节点时根据当前数据变量获取

@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace org.activiti.engine.impl.calendar
+namespace Sys.Workflow.engine.impl.calendar
 {
 
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.runtime;
 
     /// <summary>
     /// Resolves a due date using the original Activiti due date resolver. This does not take into account the passed time zone.

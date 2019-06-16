@@ -13,7 +13,7 @@
 using System;
 using System.Collections.Concurrent;
 
-namespace org.activiti.engine.impl.bpmn.webservice
+namespace Sys.Workflow.engine.impl.bpmn.webservice
 {
 
     /// <summary>

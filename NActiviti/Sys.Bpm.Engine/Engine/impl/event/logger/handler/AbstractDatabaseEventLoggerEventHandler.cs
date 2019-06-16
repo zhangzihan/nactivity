@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace org.activiti.engine.impl.@event.logger.handler
+namespace Sys.Workflow.engine.impl.@event.logger.handler
 {
     using Microsoft.Extensions.Logging;
-    using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.identity;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
-    using org.activiti.engine.repository;
+    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.identity;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.engine.repository;
     using Sys.Bpm;
     using Sys.Workflow;
+    using Sys.Workflow.engine.impl.interceptor;
 
     /// 
     public abstract class AbstractDatabaseEventLoggerEventHandler : IEventLoggerEventHandler
     {
         private static readonly ILogger<AbstractDatabaseEventLoggerEventHandler> log = ProcessEngineServiceProvider.LoggerService<AbstractDatabaseEventLoggerEventHandler>();
-        public abstract IEventLogEntryEntity GenerateEventLogEntry(org.activiti.engine.impl.interceptor.CommandContext<IEventLogEntryEntity> commandContext);
+        public abstract IEventLogEntryEntity GenerateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext);
 
         protected internal IActivitiEvent @event;
         protected internal DateTime? timeStamp;

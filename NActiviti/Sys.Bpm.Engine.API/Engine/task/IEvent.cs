@@ -14,7 +14,7 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.task
+namespace Sys.Workflow.engine.task
 {
 
     /// <summary>

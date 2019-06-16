@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.webservice
+namespace Sys.Workflow.engine.impl.bpmn.webservice
 {
-    using org.activiti.engine.impl.bpmn.data;
+    using Sys.Workflow.engine.impl.bpmn.data;
 
     /// <summary>
     /// Implementation of the BPMN 2.0 'message'

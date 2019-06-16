@@ -13,12 +13,12 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.@delegate
+namespace Sys.Workflow.engine.@delegate
 {
 
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.task;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.task;
     using Sys.Workflow;
 
     /// 
@@ -98,7 +98,7 @@ namespace org.activiti.engine.@delegate
         ActivitiListener CurrentActivitiListener { get; }
 
         /// <summary>
-        /// The current <seealso cref="org.activiti.engine.task.DelegationState"/> for this task.
+        /// The current <seealso cref="Sys.Workflow.engine.task.DelegationState"/> for this task.
         /// </summary>
         DelegationState? DelegationState { get; }
 

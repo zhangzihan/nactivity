@@ -11,9 +11,9 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.@delegate
+namespace Sys.Workflow.engine.@delegate
 {
-    using org.activiti.engine.impl.bpmn.parser;
+    using Sys.Workflow.engine.impl.bpmn.parser;
 
     /// <summary>
     /// Special exception that can be used to throw a BPMN Error from <seealso cref="IJavaDelegate"/>s and expressions.

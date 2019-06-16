@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.bpmn.behavior
+namespace Sys.Workflow.engine.impl.bpmn.behavior
 {
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// <summary>
     /// A receive task is a wait state that waits for the receival of some message.

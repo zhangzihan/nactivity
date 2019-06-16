@@ -13,13 +13,13 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.bpmn.behavior
+namespace Sys.Workflow.engine.impl.bpmn.behavior
 {
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.@delegate;
-    using org.activiti.engine.impl.@delegate.invocation;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.@delegate;
+    using Sys.Workflow.engine.impl.@delegate.invocation;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     [Serializable]

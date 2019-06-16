@@ -16,7 +16,7 @@ using Sys.Bpm;
 using Sys.Workflow;
 using System;
 
-namespace org.activiti.engine.impl.variable
+namespace Sys.Workflow.engine.impl.variable
 {
     /// 
     public class JsonType : AbstractVariableType

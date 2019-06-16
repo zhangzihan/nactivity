@@ -12,7 +12,7 @@
  */
 using System.IO;
 
-namespace org.activiti.bpmn.converter.util
+namespace Sys.Workflow.bpmn.converter.util
 {
 
     /// 

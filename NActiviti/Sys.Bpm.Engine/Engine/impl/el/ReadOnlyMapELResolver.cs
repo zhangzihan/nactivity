@@ -14,7 +14,7 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.el
+namespace Sys.Workflow.engine.impl.el
 {
     /// <summary>
     /// An <seealso cref="ELResolver"/> that exposed object values in the map, under the name of the entry's key. The values in the map are only returned when requested property has no 'base', meaning it's a

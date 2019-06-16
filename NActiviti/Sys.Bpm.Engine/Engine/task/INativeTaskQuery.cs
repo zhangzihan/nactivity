@@ -1,6 +1,6 @@
-﻿namespace org.activiti.engine.task
+﻿namespace Sys.Workflow.engine.task
 {
-	using org.activiti.engine.query;
+	using Sys.Workflow.engine.query;
 
 	/// <summary>
 	/// Allows querying of <seealso cref="ITask"/>s via native (SQL) queries

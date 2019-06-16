@@ -13,7 +13,7 @@
 using javax.transaction;
 using System;
 
-namespace org.activiti.engine.impl.interceptor
+namespace Sys.Workflow.engine.impl.interceptor
 {
     /// <summary>
     /// We cannot perform a retry if we are called in an existing transaction. In that case, the transaction will be marked "rollback-only" after the first ActivitiOptimisticLockingException.

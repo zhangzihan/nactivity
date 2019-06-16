@@ -10,11 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.bpmn.converter.child
+namespace Sys.Workflow.bpmn.converter.child
 {
-
-    using org.activiti.bpmn.converter.util;
-    using org.activiti.bpmn.model;
+    using Sys.Workflow.bpmn.constants;
+    using Sys.Workflow.bpmn.converter.util;
+    using Sys.Workflow.bpmn.model;
 
     public class DataInputAssociationParser : BaseChildElementParser
     {
@@ -23,7 +23,7 @@ namespace org.activiti.bpmn.converter.child
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.ELEMENT_INPUT_ASSOCIATION;
+                return BpmnXMLConstants.ELEMENT_INPUT_ASSOCIATION;
             }
         }
         public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)

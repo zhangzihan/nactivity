@@ -1,7 +1,7 @@
-﻿using org.activiti.cloud.services.api.commands;
+﻿using Sys.Workflow.cloud.services.api.commands;
 using System;
 
-namespace org.activiti.cloud.services.core.commands
+namespace Sys.Workflow.cloud.services.core.commands
 {
     /// <summary>
     /// 

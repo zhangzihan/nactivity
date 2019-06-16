@@ -14,10 +14,10 @@ using System.Text;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
 
-    using org.activiti.engine.impl.db;
+    using Sys.Workflow.engine.impl.db;
 
 
     /// <summary>

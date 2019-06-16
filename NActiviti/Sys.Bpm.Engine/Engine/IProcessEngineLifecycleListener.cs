@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine
+namespace Sys.Workflow.engine
 {
     /// <summary>
     /// Interface describing a listener that gets notified when certain event occurs, related to the process-engine lifecycle it is attached to.

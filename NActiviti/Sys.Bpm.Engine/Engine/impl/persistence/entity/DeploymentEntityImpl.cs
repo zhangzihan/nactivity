@@ -14,13 +14,13 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
-    using org.activiti.bpmn.constants;
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.bpmn.behavior;
-    using org.activiti.engine.impl.bpmn.listener;
-    using org.activiti.engine.impl.context;
+    using Sys.Workflow.bpmn.constants;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.bpmn.behavior;
+    using Sys.Workflow.engine.impl.bpmn.listener;
+    using Sys.Workflow.engine.impl.context;
     using System.IO;
     using System.Linq;
     using System.Text;

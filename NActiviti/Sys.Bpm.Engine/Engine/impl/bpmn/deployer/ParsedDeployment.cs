@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.deployer
+namespace Sys.Workflow.engine.impl.bpmn.deployer
 {
 
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.impl.bpmn.parser;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.impl.bpmn.parser;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// <summary>
     /// An intermediate representation of a DeploymentEntity which keeps track of all of the entity's

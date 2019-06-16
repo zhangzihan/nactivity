@@ -17,7 +17,7 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.persistence.deploy
+namespace Sys.Workflow.engine.impl.persistence.deploy
 {
     /// <summary>
     /// Default cache: keep everything in memory, unless a limit is set.

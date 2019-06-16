@@ -12,9 +12,9 @@
  */
 
 using Microsoft.Extensions.Configuration;
-using org.activiti.engine.impl.asyncexecutor;
+using Sys.Workflow.engine.impl.asyncexecutor;
 
-namespace org.activiti.engine.impl.cfg
+namespace Sys.Workflow.engine.impl.cfg
 {
     /// 
     public class StandaloneInMemProcessEngineConfiguration : StandaloneProcessEngineConfiguration

@@ -1,10 +1,10 @@
-﻿using org.activiti.cloud.services.api.commands;
-using org.activiti.cloud.services.api.commands.results;
+﻿using Sys.Workflow.cloud.services.api.commands;
+using Sys.Workflow.cloud.services.api.commands.results;
 using org.springframework.messaging;
 using org.springframework.messaging.support;
 using System;
 
-namespace org.activiti.cloud.services.core.commands
+namespace Sys.Workflow.cloud.services.core.commands
 {
     /// <summary>
     /// 

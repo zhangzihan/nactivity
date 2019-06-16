@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.integration
+namespace Sys.Workflow.engine.integration
 {
-    using org.activiti.engine.impl.cmd.integration;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.entity.integration;
+    using Sys.Workflow.engine.impl.cmd.integration;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity.integration;
 
     public class IntegrationContextServiceImpl : IIntegrationContextService
     {

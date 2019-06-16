@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine
+namespace Sys.Workflow.engine
 {
     /// <summary>
     /// An exception indicating that the object that is required or actioned on does not exist.

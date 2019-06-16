@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.util
+namespace Sys.Workflow.engine.impl.util
 {
 
-    using org.activiti.engine.cfg.security;
+    using Sys.Workflow.engine.cfg.security;
 
     /// 
     public class ShellExecutorContext : IExecutorContext

@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.parser.handler
+namespace Sys.Workflow.engine.impl.bpmn.parser.handler
 {
     using Microsoft.Extensions.Logging;
-    using org.activiti.bpmn.model;
+    using Sys.Workflow.bpmn.model;
 
     /// 
     public class IntermediateThrowEventParseHandler : AbstractActivityBpmnParseHandler<ThrowEvent>
@@ -64,7 +64,7 @@ namespace org.activiti.engine.impl.bpmn.parser.handler
         //
         // protected CompensateEventDefinition
         // createCompensateEventDefinition(BpmnParse bpmnParse,
-        // org.activiti.bpmn.model.CompensateEventDefinition eventDefinition,
+        // Sys.Workflow.bpmn.model.CompensateEventDefinition eventDefinition,
         // ScopeImpl scopeElement) {
         // if(!string.IsNullOrWhiteSpace(eventDefinition.getActivityRef())) {
         // if(scopeElement.findActivity(eventDefinition.getActivityRef()) == null) {

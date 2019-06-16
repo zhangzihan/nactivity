@@ -11,9 +11,9 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.repository
+namespace Sys.Workflow.engine.repository
 {
-    using org.activiti.engine.query;
+    using Sys.Workflow.engine.query;
     using System.Collections.Generic;
 
     /// <summary>

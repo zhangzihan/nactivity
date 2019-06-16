@@ -1,7 +1,7 @@
-﻿namespace org.activiti.engine.@delegate.@event
+﻿namespace Sys.Workflow.engine.@delegate.@event
 {
     /// <summary>
-    /// An <seealso cref="org.activiti.engine.delegate.event.ActivitiEvent"/> related to cancel event being sent when activiti object is cancelled.
+    /// An <seealso cref="Sys.Workflow.engine.delegate.event.ActivitiEvent"/> related to cancel event being sent when activiti object is cancelled.
     /// 
     /// 
     /// </summary>

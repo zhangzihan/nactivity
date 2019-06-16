@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.asyncexecutor
+namespace Sys.Workflow.engine.impl.asyncexecutor
 {
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.runtime;
 
     /// <summary>
     /// 

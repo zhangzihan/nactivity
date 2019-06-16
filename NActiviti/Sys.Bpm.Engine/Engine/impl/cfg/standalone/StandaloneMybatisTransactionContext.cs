@@ -13,11 +13,11 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.cfg.standalone
+namespace Sys.Workflow.engine.impl.cfg.standalone
 {
     using Microsoft.Extensions.Logging;
-    using org.activiti.engine.impl.db;
-    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.db;
+    using Sys.Workflow.engine.impl.interceptor;
     using Sys.Workflow;
 
     /// 

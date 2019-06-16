@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.bpmn.behavior
+namespace Sys.Workflow.engine.impl.bpmn.behavior
 {
 	/// <summary>
 	/// Implementation of the BPMN 2.0 'manual task': a task that is external to the BPMS and to which there is no reference to IT systems whatsoever.

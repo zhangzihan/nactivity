@@ -15,13 +15,10 @@
  *
  */
 
-namespace org.activiti.cloud.services.events
+using Sys.Workflow.cloud.services.api.model;
+
+namespace Sys.Workflow.cloud.services.events
 {
-
-    using ProcessInstance = org.activiti.cloud.services.api.model.ProcessInstance;
-
-
-
     /// <summary>
     /// 
     /// </summary>

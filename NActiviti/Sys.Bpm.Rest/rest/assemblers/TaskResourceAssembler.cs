@@ -1,6 +1,6 @@
-﻿using org.activiti.cloud.services.api.model;
-using org.activiti.cloud.services.rest.api.resources;
-using org.activiti.cloud.services.rest.controllers;
+﻿using Sys.Workflow.cloud.services.api.model;
+using Sys.Workflow.cloud.services.rest.api.resources;
+using Sys.Workflow.cloud.services.rest.controllers;
 using org.springframework.hateoas.mvc;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ using System.Collections.Generic;
  *
  */
 
-namespace org.activiti.cloud.services.rest.assemblers
+namespace Sys.Workflow.cloud.services.rest.assemblers
 {
     /// <summary>
     /// 

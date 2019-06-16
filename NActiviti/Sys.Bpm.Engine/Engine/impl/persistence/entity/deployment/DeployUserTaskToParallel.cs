@@ -1,6 +1,6 @@
-﻿using org.activiti.bpmn.constants;
-using org.activiti.bpmn.model;
-using org.activiti.engine.impl.bpmn.behavior;
+﻿using Sys.Workflow.bpmn.constants;
+using Sys.Workflow.bpmn.model;
+using Sys.Workflow.engine.impl.bpmn.behavior;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
     /// <inheritdoc />
     class DeployUserTaskToParallel : IDeployUserTaskToParallel

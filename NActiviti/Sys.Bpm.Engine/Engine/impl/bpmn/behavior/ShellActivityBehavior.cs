@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace org.activiti.engine.impl.bpmn.behavior
+namespace Sys.Workflow.engine.impl.bpmn.behavior
 {
 
-    using org.activiti.engine.cfg.security;
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
+    using Sys.Workflow.engine.cfg.security;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.util;
 
     [Serializable]
     public class ShellActivityBehavior : AbstractBpmnActivityBehavior

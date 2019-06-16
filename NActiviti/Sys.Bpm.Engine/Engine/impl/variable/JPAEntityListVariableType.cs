@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace org.activiti.engine.impl.variable
+namespace Sys.Workflow.engine.impl.variable
 {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Bson;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.interceptor;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;

@@ -1,6 +1,6 @@
-﻿namespace org.activiti.engine.impl.cfg
+﻿namespace Sys.Workflow.engine.impl.cfg
 {
-    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.interceptor;
 
     /// <summary>
     /// Command executor that passes commands to the first interceptor in the chain. If no <seealso cref="CommandConfig"/> is passed, the default configuration will be used.

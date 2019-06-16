@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.bpmn.parser
+namespace Sys.Workflow.engine.impl.bpmn.parser
 {
 
     /// <summary>

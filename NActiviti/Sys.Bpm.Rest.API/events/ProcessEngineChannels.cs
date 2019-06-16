@@ -1,9 +1,9 @@
-﻿using org.activiti.cloud.services.api.commands.results;
-using org.activiti.cloud.services.api.events;
+﻿using Sys.Workflow.cloud.services.api.commands.results;
+using Sys.Workflow.cloud.services.api.events;
 using org.springframework.messaging;
 using System.Collections.Generic;
 
-namespace org.activiti.cloud.services.events
+namespace Sys.Workflow.cloud.services.events
 {
 
     /// <summary>

@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using org.activiti.cloud.services.api.model;
+using Sys.Workflow.cloud.services.api.model;
 using System;
 
-namespace org.activiti.cloud.services.api.commands.results
+namespace Sys.Workflow.cloud.services.api.commands.results
 {
 
     /// <summary>

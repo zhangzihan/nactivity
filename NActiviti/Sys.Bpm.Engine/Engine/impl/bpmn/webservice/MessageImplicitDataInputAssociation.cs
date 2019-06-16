@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.webservice
+namespace Sys.Workflow.engine.impl.bpmn.webservice
 {
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.bpmn.behavior;
-    using org.activiti.engine.impl.bpmn.data;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.bpmn.behavior;
+    using Sys.Workflow.engine.impl.bpmn.data;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// <summary>
     /// An implicit data input association between a source and a target. source is a variable in the current execution context and target is a property in the message

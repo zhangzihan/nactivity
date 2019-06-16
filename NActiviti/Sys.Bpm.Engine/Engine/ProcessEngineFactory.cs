@@ -13,10 +13,10 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine
+namespace Sys.Workflow.engine
 {
     using Microsoft.Extensions.Logging;
-    using org.activiti.engine.impl;
+    using Sys.Workflow.engine.impl;
     using Sys.Workflow;
     using System.Collections.Concurrent;
 
@@ -24,7 +24,7 @@ namespace org.activiti.engine
     /// Helper for initializing and closing process engines in server environments. <br>
     /// All created <seealso cref="IProcessEngine"/>s will be registered with this class. <br>
     /// The activiti-webapp-init webapp will call the <seealso cref="#init()"/> method when the webapp is deployed and it will call the <seealso cref="#destroy()"/> method when the webapp is destroyed, using a
-    /// context-listener ( <code>org.activiti.impl.servlet.listener.ProcessEnginesServletContextListener</code> ). That way, all applications can just use the <seealso cref="#getProcessEngines()"/> to obtain
+    /// context-listener ( <code>Sys.Workflow.impl.servlet.listener.ProcessEnginesServletContextListener</code> ). That way, all applications can just use the <seealso cref="#getProcessEngines()"/> to obtain
     /// pre-initialized and cached process engines. <br>
     /// <br>
     /// Please note that there is <b>no lazy initialization</b> of process engines, so make sure the context-listener is configured or <seealso cref="IProcessEngine"/>s are already created so they were registered on

@@ -1,4 +1,4 @@
-﻿namespace org.activiti.engine.impl.db
+﻿namespace Sys.Workflow.engine.impl.db
 {
 	/// <summary>
 	/// Marker interface to indicate the entity can be deleted in bulk.

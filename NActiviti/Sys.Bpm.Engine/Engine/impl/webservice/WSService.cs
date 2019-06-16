@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.webservice
+namespace Sys.Workflow.engine.impl.webservice
 {
 
-    using org.activiti.engine.impl.bpmn.webservice;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.util;
+    using Sys.Workflow.engine.impl.bpmn.webservice;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.util;
 
     /// <summary>
     /// Represents a WS implementation of a <seealso cref="BpmnInterface"/>

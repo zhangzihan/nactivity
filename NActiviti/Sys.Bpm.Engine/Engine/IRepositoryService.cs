@@ -14,13 +14,13 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine
+namespace Sys.Workflow.engine
 {
 
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.repository;
-    using org.activiti.engine.task;
-    using org.activiti.validation;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.repository;
+    using Sys.Workflow.engine.task;
+    using Sys.Workflow.validation;
     using System.IO;
 
     /// <summary>
@@ -116,7 +116,7 @@ namespace org.activiti.engine
         IProcessDefinitionQuery CreateProcessDefinitionQuery();
 
         /// <summary>
-        /// Returns a new <seealso cref="org.activiti.engine.query.NativeQuery"/> for process definitions.
+        /// Returns a new <seealso cref="Sys.Workflow.engine.query.NativeQuery"/> for process definitions.
         /// </summary>
         INativeProcessDefinitionQuery CreateNativeProcessDefinitionQuery();
 
@@ -125,7 +125,7 @@ namespace org.activiti.engine
         IDeploymentQuery CreateDeploymentQuery();
 
         /// <summary>
-        /// Returns a new <seealso cref="org.activiti.engine.query.NativeQuery"/> for deployment.
+        /// Returns a new <seealso cref="Sys.Workflow.engine.query.NativeQuery"/> for deployment.
         /// </summary>
         INativeDeploymentQuery CreateNativeDeploymentQuery();
 
@@ -313,7 +313,7 @@ namespace org.activiti.engine
         IModelQuery CreateModelQuery();
 
         /// <summary>
-        /// Returns a new <seealso cref="org.activiti.engine.query.NativeQuery"/> for process definitions.
+        /// Returns a new <seealso cref="Sys.Workflow.engine.query.NativeQuery"/> for process definitions.
         /// </summary>
         INativeModelQuery CreateNativeModelQuery();
 

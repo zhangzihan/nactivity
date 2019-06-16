@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.ResourceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.ResourceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- RESOURCE RESULTMAP -->
     
-    <ResultMap Id="resourceResultMap" ResultType="org.activiti.engine.impl.persistence.entity.ResourceEntityImpl,Sys.Bpm.Engine" >
+    <ResultMap Id="resourceResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.ResourceEntityImpl,Sys.Bpm.Engine" >
       <Result Property="id" Column="ID_" />
       <Result Property="name" Column="NAME_" />
       <Result Property="bytes" Column="BYTES_" TypeHandler="文件" />

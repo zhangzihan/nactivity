@@ -10,11 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.@delegate.@event.impl
+namespace Sys.Workflow.engine.@delegate.@event.impl
 {
 
     /// <summary>
-    /// An <seealso cref="org.activiti.engine.delegate.event.ActivitiCancelledEvent"/> implementation.
+    /// An <seealso cref="Sys.Workflow.engine.delegate.event.ActivitiCancelledEvent"/> implementation.
     /// 
     /// 
     /// </summary>

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
-using org.activiti.cloud.services.events.configuration;
-using org.activiti.cloud.services.events.integration;
-using org.activiti.engine;
-using org.activiti.engine.impl.persistence.entity.integration;
-using org.activiti.engine.integration;
-using org.activiti.services.connectors.model;
+using Sys.Workflow.cloud.services.events.configuration;
+using Sys.Workflow.cloud.services.events.integration;
+using Sys.Workflow.engine;
+using Sys.Workflow.engine.impl.persistence.entity.integration;
+using Sys.Workflow.engine.integration;
+using Sys.Workflow.services.connectors.model;
 using org.springframework.messaging;
 using org.springframework.messaging.support;
 using Sys.Workflow;
@@ -26,7 +26,7 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.services.connectors.channel
+namespace Sys.Workflow.services.connectors.channel
 {
     /// <summary>
     /// 

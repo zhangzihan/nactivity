@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.@delegate
+namespace Sys.Workflow.engine.@delegate
 {
-    using org.activiti.engine.history;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.history;
+    using Sys.Workflow.engine.impl.persistence.entity;
     using System.Collections;
 
     /// <summary>

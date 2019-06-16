@@ -1,7 +1,7 @@
-﻿namespace org.activiti.bpmn.converter.child
+﻿namespace Sys.Workflow.bpmn.converter.child
 {
-
-    using org.activiti.bpmn.model;
+    using Sys.Workflow.bpmn.constants;
+    using Sys.Workflow.bpmn.model;
 
     public class ActivitiFailedjobRetryParser : BaseChildElementParser
     {
@@ -10,7 +10,7 @@
         {
             get
             {
-                return org.activiti.bpmn.constants.BpmnXMLConstants.FAILED_JOB_RETRY_TIME_CYCLE;
+                return BpmnXMLConstants.FAILED_JOB_RETRY_TIME_CYCLE;
             }
         }
         public override void ParseChildElement(XMLStreamReader xtr, BaseElement parentElement, BpmnModel model)

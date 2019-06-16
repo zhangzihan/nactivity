@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace org.activiti.cloud.services.core
+namespace Sys.Workflow.cloud.services.core
 {
     /// <summary>
     /// mvc controller discovery

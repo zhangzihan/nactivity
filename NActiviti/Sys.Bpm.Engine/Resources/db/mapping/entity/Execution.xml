@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.ExecutionEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.ExecutionEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- EXECUTION RESULTMAP -->
 
-  <ResultMap Id="executionResultMap" ResultType="org.activiti.engine.impl.persistence.entity.ExecutionEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="executionResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.ExecutionEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="revision" Column="REV_" />
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />
@@ -39,7 +39,7 @@
 
   <!-- Lowercase 'columns', as they are filled in during a query and are not mapped directly to a table column -->
 
-  <ResultMap Id="processInstanceResultMap" ResultType="org.activiti.engine.impl.persistence.entity.ExecutionEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="processInstanceResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.ExecutionEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="revision" Column="REV_" />
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />
@@ -76,7 +76,7 @@
     <Result Property="identityLinkCount" Column="ID_LINK_COUNT_" />
   </ResultMap>
 
-  <!--<Results Property="queryVariables" Column="EXECUTION_ID_" javaType="ArrayList" ofType="org.activiti.engine.impl.persistence.entity.VariableInstanceEntityImpl">
+  <!--<Results Property="queryVariables" Column="EXECUTION_ID_" javaType="ArrayList" ofType="Sys.Workflow.engine.impl.persistence.entity.VariableInstanceEntityImpl">
       <id property="id" column="VAR_ID_"/>
       <Result Property="name" Column="VAR_NAME_" />
       <Result Property="type" Column="VAR_TYPE_" />
@@ -91,7 +91,7 @@
       <Result Property="longValue" Column="VAR_LONG_" />
     </Results>-->
 
-  <ResultMap Id="executionAndVariablesResultMap" ResultType="org.activiti.engine.impl.persistence.entity.ExecutionEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="executionAndVariablesResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.ExecutionEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="revision" Column="REV_" />
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />
@@ -124,7 +124,7 @@
 
   </ResultMap>
 
-  <!--<collection property="queryVariables" column="EXECUTION_ID_" javaType="ArrayList" ofType="org.activiti.engine.impl.persistence.entity.VariableInstanceEntityImpl">
+  <!--<collection property="queryVariables" column="EXECUTION_ID_" javaType="ArrayList" ofType="Sys.Workflow.engine.impl.persistence.entity.VariableInstanceEntityImpl">
       <id property="id" column="VAR_ID_"/>
       <Result Property="name" Column="VAR_NAME_" />
       <Result Property="type" Column="VAR_TYPE_" />
@@ -139,7 +139,7 @@
       <Result Property="longValue" Column="VAR_LONG_" />
     </collection>-->
 
-  <ResultMap Id="processInstanceAndVariablesResultMap" ResultType="org.activiti.engine.impl.persistence.entity.ExecutionEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="processInstanceAndVariablesResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.ExecutionEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="revision" Column="REV_" />
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />
@@ -964,7 +964,7 @@
   </Select>
 
 
-  <!--<Include RefId="org.activiti.engine.db.common.selectByNativeQuery"/>-->
+  <!--<Include RefId="Sys.Workflow.engine.db.common.selectByNativeQuery"/>-->
   <Select Id="selectExecutionByNativeQuery" >
   </Select>
 

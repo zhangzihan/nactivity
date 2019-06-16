@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Spring.Core\Spring.Core.csproj" />
+    <ProjectReference Include="..\..\Sys.Expression\Sys.Expression.csproj" />
     <ProjectReference Include="..\Sys.Bpm.ProcessValidation\Sys.Bpm.ProcessValidation.csproj" />
   </ItemGroup>
 

@@ -13,12 +13,12 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl
+namespace Sys.Workflow.engine.impl
 {
 
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.query;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.query;
     using Sys.Bpm;
 
     /// <summary>

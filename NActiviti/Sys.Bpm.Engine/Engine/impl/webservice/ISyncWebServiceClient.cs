@@ -13,7 +13,7 @@
 using System;
 using System.Collections.Concurrent;
 
-namespace org.activiti.engine.impl.webservice
+namespace Sys.Workflow.engine.impl.webservice
 {
 
     /// <summary>

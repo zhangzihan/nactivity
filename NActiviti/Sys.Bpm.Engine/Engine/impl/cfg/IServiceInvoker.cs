@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.cfg
+namespace Sys.Workflow.engine.impl.cfg
 {
 
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     public interface IServiceInvoker

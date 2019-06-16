@@ -4,7 +4,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace org.activiti.bpmn.converter
+namespace Sys.Workflow.bpmn.converter
 {
     public class XMLStreamReader : XmlReader
     {

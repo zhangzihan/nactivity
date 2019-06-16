@@ -11,7 +11,7 @@
         <camunda:properties>
           <camunda:property name="url" value="http://localhost/process-test/timer-datetime" />
         </camunda:properties>
-        <camunda:taskListener class="org.activiti.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_005mzrp</bpmn2:incoming>
     </bpmn2:userTask>
@@ -28,7 +28,7 @@
         <camunda:properties>
           <camunda:property name="url" value="http://localhost/process-test/timer-datetime" />
         </camunda:properties>
-        <camunda:executionListener class="org.activiti.engine.impl.bpmn.listener.ActivityDebugLoggerListener,Sys.Bpm.Engine" event="start" />
+        <camunda:executionListener class="Sys.Workflow.engine.impl.bpmn.listener.ActivityDebugLoggerListener,Sys.Bpm.Engine" event="start" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1ca2ngh</bpmn2:incoming>
     </bpmn2:manualTask>

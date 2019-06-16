@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace org.activiti.engine.impl.calendar
+namespace Sys.Workflow.engine.impl.calendar
 {
 
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.runtime;
 
     /// <summary>
     /// Provides an interface for versioned due date resolvers.

@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.@delegate.@event.impl
+namespace Sys.Workflow.engine.@delegate.@event.impl
 {
 
 	/// <summary>

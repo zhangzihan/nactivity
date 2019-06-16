@@ -13,15 +13,15 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.behavior
+namespace Sys.Workflow.engine.impl.bpmn.behavior
 {
 
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.impl.bpmn.helper;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.impl.bpmn.helper;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.util;
 
     /// 
     /// 

@@ -1,11 +1,11 @@
-﻿namespace org.activiti.engine.impl.util.condition
+﻿namespace Sys.Workflow.engine.impl.util.condition
 {
     using Newtonsoft.Json.Linq;
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.el;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.el;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     /// 

@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.cfg
+namespace Sys.Workflow.engine.cfg
 {
-    using org.activiti.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.cfg;
 
     /// <summary>
     /// Implementations of this class can be plugged into a <seealso cref="ProcessEngineConfigurationImpl"/>. Such implementations can configure the engine in any way programmatically possible.

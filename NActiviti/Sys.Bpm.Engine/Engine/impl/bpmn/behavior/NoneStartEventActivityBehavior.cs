@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.behavior
+namespace Sys.Workflow.engine.impl.bpmn.behavior
 {
 	/// <summary>
 	/// implementation of the 'none start event': a start event that has no specific trigger but the programmatic one (processService.startProcessInstanceXXX()).

@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.cfg.multitenant
+namespace Sys.Workflow.engine.impl.cfg.multitenant
 {
     /// <summary>
     /// Interface to be implemented when using the <seealso cref="MultiSchemaMultiTenantProcessEngineConfiguration"/> and used 

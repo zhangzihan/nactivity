@@ -14,7 +14,7 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.el
+namespace Sys.Workflow.engine.impl.el
 {
     /// <summary>
     /// Defines property resolution behavior on JsonNodes.

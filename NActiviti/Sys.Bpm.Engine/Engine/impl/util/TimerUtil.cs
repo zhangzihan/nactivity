@@ -1,16 +1,16 @@
 ﻿using System;
 
-namespace org.activiti.engine.impl.util
+namespace Sys.Workflow.engine.impl.util
 {
-    using org.activiti.bpmn.model;
-    using org.activiti.engine;
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.calendar;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.el;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.calendar;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.el;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.runtime;
     using System.Xml;
 
     /// 

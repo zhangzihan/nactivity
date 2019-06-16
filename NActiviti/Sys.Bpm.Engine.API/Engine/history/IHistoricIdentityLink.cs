@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.history
+namespace Sys.Workflow.engine.history
 {
     /// <summary>
     /// Historic counterpart of <seealso cref="IIdentityLink"/> that represents the current state if any runtime link. Will be preserved when the runtime process instance or task is finished.

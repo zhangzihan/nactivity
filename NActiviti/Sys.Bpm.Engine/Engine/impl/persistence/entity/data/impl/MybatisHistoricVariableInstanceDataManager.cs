@@ -13,12 +13,12 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.persistence.entity.data.impl
+namespace Sys.Workflow.engine.impl.persistence.entity.data.impl
 {
 
-    using org.activiti.engine.history;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.persistence.entity.data.impl.cachematcher;
+    using Sys.Workflow.engine.history;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.persistence.entity.data.impl.cachematcher;
 
     /// 
     public class MybatisHistoricVariableInstanceDataManager : AbstractDataManager<IHistoricVariableInstanceEntity>, IHistoricVariableInstanceDataManager

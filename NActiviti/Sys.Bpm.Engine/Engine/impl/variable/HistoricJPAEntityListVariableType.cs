@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.variable
+namespace Sys.Workflow.engine.impl.variable
 {
     /// <summary>
     /// Subclass of <seealso cref="JPAEntityListVariableType"/> which is cacheable, unlike the super-class. This is used when fetching historic variables

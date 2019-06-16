@@ -13,17 +13,15 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.bpmn.parser.factory
+namespace Sys.Workflow.engine.impl.bpmn.parser.factory
 {
-    using org.activiti.bpmn.constants;
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.bpmn.behavior;
-    using org.activiti.engine.impl.bpmn.helper;
-    using org.activiti.engine.impl.@delegate;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.bpmn.constants;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.bpmn.behavior;
+    using Sys.Workflow.engine.impl.bpmn.helper;
+    using Sys.Workflow.engine.impl.@delegate;
     using System.Text.RegularExpressions;
-    using ExtensionAttribute = activiti.bpmn.model.ExtensionAttribute;
 
     /// <summary>
     /// Default implementation of the <seealso cref="IActivityBehaviorFactory"/>. Used when no custom <seealso cref="IActivityBehaviorFactory"/> is injected on the <seealso cref="ProcessEngineConfigurationImpl"/>.
@@ -165,13 +163,13 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
             try
             {
 
-                Type theClass = Type.GetType("org.activiti.mule.MuleSendActivitiBehavior");
+                Type theClass = Type.GetType("Sys.Workflow.mule.MuleSendActivitiBehavior");
                 IList<FieldDeclaration> fieldDeclarations = CreateFieldDeclarations(fieldExtensions);
                 return (IActivityBehavior)ClassDelegate.DefaultInstantiateDelegate(theClass, fieldDeclarations);
             }
             catch (Exception e)
             {
-                throw new ActivitiException("Could not find org.activiti.mule.MuleSendActivitiBehavior: ", e);
+                throw new ActivitiException("Could not find Sys.Workflow.mule.MuleSendActivitiBehavior: ", e);
             }
         }
 
@@ -211,7 +209,7 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
                 if (theClass == null)
                 {
                     // Default Camel behavior class
-                    theClass = Type.GetType("org.activiti.camel.impl.CamelBehaviorDefaultImpl");
+                    theClass = Type.GetType("Sys.Workflow.camel.impl.CamelBehaviorDefaultImpl");
                 }
 
                 IList<FieldDeclaration> fieldDeclarations = CreateFieldDeclarations(fieldExtensions);
@@ -220,7 +218,7 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
             }
             catch (Exception e)
             {
-                throw new ActivitiException("Could not find org.activiti.camel.CamelBehavior: ", e);
+                throw new ActivitiException("Could not find Sys.Workflow.camel.CamelBehavior: ", e);
             }
         }
 
@@ -274,7 +272,7 @@ namespace org.activiti.engine.impl.bpmn.parser.factory
             }
             else
             {
-                ruleActivity.ResultVariable = "org.activiti.engine.rules.OUTPUT";
+                ruleActivity.ResultVariable = "Sys.Workflow.engine.rules.OUTPUT";
             }
 
             return ruleActivity;

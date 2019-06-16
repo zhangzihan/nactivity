@@ -13,11 +13,11 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.task
+namespace Sys.Workflow.engine.task
 {
 
-    using org.activiti.engine.history;
-    using org.activiti.engine.query;
+    using Sys.Workflow.engine.history;
+    using Sys.Workflow.engine.query;
 
     /// <summary>
     /// Interface containing shared methods between the <seealso cref="ITaskQuery"/> and the <seealso cref="IHistoricTaskInstanceQuery"/>.

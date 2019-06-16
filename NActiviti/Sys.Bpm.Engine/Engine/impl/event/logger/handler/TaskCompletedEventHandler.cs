@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace org.activiti.engine.impl.@event.logger.handler
+namespace Sys.Workflow.engine.impl.@event.logger.handler
 {
 
-    using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     public class TaskCompletedEventHandler : AbstractTaskEventHandler

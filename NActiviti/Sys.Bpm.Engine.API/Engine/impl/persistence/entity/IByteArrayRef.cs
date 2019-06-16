@@ -1,4 +1,4 @@
-﻿namespace org.activiti.engine.impl.persistence.entity
+﻿namespace Sys.Workflow.engine.impl.persistence.entity
 {
     public interface IByteArrayRef
     {

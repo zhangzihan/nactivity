@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace org.activiti.engine.impl.cmd
+namespace Sys.Workflow.engine.impl.cmd
 {
 
-    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.interceptor;
 
     [Serializable]
     public class GetTableNameCmd : ICommand<string>

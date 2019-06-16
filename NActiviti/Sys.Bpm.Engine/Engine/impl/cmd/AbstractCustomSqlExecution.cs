@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace org.activiti.engine.impl.cmd
+namespace Sys.Workflow.engine.impl.cmd
 {
     /// 
     public abstract class AbstractCustomSqlExecution<Mapper, ResultType> : ICustomSqlExecution<Mapper, ResultType>

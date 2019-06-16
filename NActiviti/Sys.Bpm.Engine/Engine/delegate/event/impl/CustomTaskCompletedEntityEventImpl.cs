@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using org.activiti.engine.impl.persistence.entity;
+using Sys.Workflow.engine.impl.persistence.entity;
 
-namespace org.activiti.engine.@delegate.@event.impl
+namespace Sys.Workflow.engine.@delegate.@event.impl
 {
 
     /// <summary>

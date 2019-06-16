@@ -12,15 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine
+namespace Sys.Workflow.engine
 {
 
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.runtime;
-    using org.activiti.engine.task;
-    using org.activiti.services.api.commands;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.engine.task;
+    using Sys.Workflow.services.api.commands;
 
     /// 
     /// 

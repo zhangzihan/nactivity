@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.ProcessDefinitionInfoEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.ProcessDefinitionInfoEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- MODEL RESULTMAP -->
 
-  <ResultMap Id="processDefinitionInfoResultMap" ResultType="org.activiti.engine.impl.persistence.entity.ProcessDefinitionInfoEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="processDefinitionInfoResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.ProcessDefinitionInfoEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
     <Result Property="revision" Column="REV_" />

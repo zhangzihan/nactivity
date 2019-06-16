@@ -11,11 +11,11 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.context
+namespace Sys.Workflow.engine.impl.context
 {
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
-    using org.activiti.engine.repository;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.engine.repository;
     using System.Collections.Generic;
 
     /// 

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-using org.activiti.cloud.services.api.events;
-using org.activiti.cloud.services.events.configuration;
-using org.activiti.engine.@delegate.@event;
+using Sys.Workflow.cloud.services.api.events;
+using Sys.Workflow.cloud.services.events.configuration;
+using Sys.Workflow.engine.@delegate.@event;
 
-namespace org.activiti.cloud.services.events.converter
+namespace Sys.Workflow.cloud.services.events.converter
 {
 
     /// <summary>

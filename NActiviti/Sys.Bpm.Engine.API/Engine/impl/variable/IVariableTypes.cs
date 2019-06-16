@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.variable
+namespace Sys.Workflow.engine.impl.variable
 {
     /// <summary>
     /// Interface describing a container for all available <seealso cref="IVariableType"/>s of variables.

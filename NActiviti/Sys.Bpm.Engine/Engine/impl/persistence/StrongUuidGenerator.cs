@@ -1,8 +1,8 @@
-﻿namespace org.activiti.engine.impl.persistence
+﻿namespace Sys.Workflow.engine.impl.persistence
 {
     using MassTransit;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.persistence.entity;
     using System;
 
     /// <summary>

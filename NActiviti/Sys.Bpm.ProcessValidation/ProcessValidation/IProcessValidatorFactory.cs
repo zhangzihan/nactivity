@@ -1,4 +1,4 @@
-﻿namespace org.activiti.validation
+﻿namespace Sys.Workflow.validation
 {
     public interface IProcessValidatorFactory
     {

@@ -1,6 +1,6 @@
-﻿namespace org.activiti.engine.impl.bpmn.helper
+﻿namespace Sys.Workflow.engine.impl.bpmn.helper
 {
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     public class SubProcessVariableSnapshotter

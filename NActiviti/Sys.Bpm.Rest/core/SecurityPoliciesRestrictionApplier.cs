@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.cloud.services.core
+namespace Sys.Workflow.cloud.services.core
 {
     public interface SecurityPoliciesRestrictionApplier<T>
     {

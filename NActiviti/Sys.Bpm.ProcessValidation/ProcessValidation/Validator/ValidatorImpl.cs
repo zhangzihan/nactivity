@@ -12,15 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.validation.validator
+namespace Sys.Workflow.validation.validator
 {
 
-    using org.activiti.bpmn.model;
+    using Sys.Workflow.bpmn.model;
 
     /// 
     public abstract class ValidatorImpl : IValidator
     {
-        public abstract void Validate(org.activiti.bpmn.model.BpmnModel bpmnModel, IList<ValidationError> errors);
+        public abstract void Validate(BpmnModel bpmnModel, IList<ValidationError> errors);
 
         public virtual void AddError(IList<ValidationError> validationErrors, ValidationError error)
         {

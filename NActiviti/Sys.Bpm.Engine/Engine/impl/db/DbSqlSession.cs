@@ -14,18 +14,18 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.db
+namespace Sys.Workflow.engine.impl.db
 {
     using DatabaseSchemaReader;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.db.upgrade;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.cache;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.db.upgrade;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.cache;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.util;
     using SmartSql.Abstractions;
     using SmartSql.Utils;
     using Sys.Data;

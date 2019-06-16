@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.db.upgrade
+namespace Sys.Workflow.engine.impl.db.upgrade
 {
     /// <summary>
     /// 

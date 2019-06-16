@@ -1,6 +1,6 @@
-﻿namespace org.activiti.engine.impl.persistence
+﻿namespace Sys.Workflow.engine.impl.persistence
 {
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// <summary>
     /// Interface to express a condition whether or not one specific cached entity should be used in the return result of a query.

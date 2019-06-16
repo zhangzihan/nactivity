@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace org.activiti.engine.impl
+namespace Sys.Workflow.engine.impl
 {
 
-    using org.activiti.engine.history;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.variable;
+    using Sys.Workflow.engine.history;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.variable;
 
     /// 
     public class ProcessInstanceHistoryLogQueryImpl : IProcessInstanceHistoryLogQuery, ICommand<IProcessInstanceHistoryLog>
@@ -88,14 +88,14 @@ namespace org.activiti.engine.impl
             if (_includeTasks)
             {
                 IList<IHistoricData> tasks = commandContext.HistoricTaskInstanceEntityManager.FindHistoricTaskInstancesByQueryCriteria((new HistoricTaskInstanceQueryImpl(commandExecutor)).SetProcessInstanceId(processInstanceId)) as IList<IHistoricData>;
-                processInstanceHistoryLog.addHistoricData(tasks);
+                processInstanceHistoryLog.AddHistoricData(tasks);
             }
 
             // Activities
             if (_includeActivities)
             {
                 IList<IHistoricActivityInstance> activities = commandContext.HistoricActivityInstanceEntityManager.FindHistoricActivityInstancesByQueryCriteria((new HistoricActivityInstanceQueryImpl(commandExecutor)).SetProcessInstanceId(processInstanceId), null);
-                processInstanceHistoryLog.addHistoricData(activities);
+                processInstanceHistoryLog.AddHistoricData(activities);
             }
 
             // Variables
@@ -116,14 +116,14 @@ namespace org.activiti.engine.impl
                     }
                 }
 
-                processInstanceHistoryLog.addHistoricData(variables);
+                processInstanceHistoryLog.AddHistoricData(variables);
             }
 
             // Comment
             if (_includeComments)
             {
                 IList<IHistoricData> comments = commandContext.CommentEntityManager.FindCommentsByProcessInstanceId(processInstanceId) as IList<IHistoricData>;
-                processInstanceHistoryLog.addHistoricData(comments);
+                processInstanceHistoryLog.AddHistoricData(comments);
             }
 
             // Details: variables
@@ -138,14 +138,14 @@ namespace org.activiti.engine.impl
                     //variableUpdate.Value;
                 }
 
-                processInstanceHistoryLog.addHistoricData(variableUpdates);
+                processInstanceHistoryLog.AddHistoricData(variableUpdates);
             }
 
             // Details: form properties
             if (_includeFormProperties)
             {
                 IList<IHistoricData> formProperties = commandContext.HistoricDetailEntityManager.FindHistoricDetailsByQueryCriteria((new HistoricDetailQueryImpl(commandExecutor)).FormProperties(), null) as IList<IHistoricData>;
-                processInstanceHistoryLog.addHistoricData(formProperties);
+                processInstanceHistoryLog.AddHistoricData(formProperties);
             }
 
             // All events collected. Sort them by date.

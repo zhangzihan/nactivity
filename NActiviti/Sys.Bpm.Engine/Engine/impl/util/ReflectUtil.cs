@@ -13,12 +13,12 @@ using System.Reflection;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.util
+namespace Sys.Workflow.engine.impl.util
 {
     using Microsoft.Extensions.Logging;
-    using org.activiti.engine;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.context;
+    using Sys.Workflow.engine;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.context;
     using Sys;
     using Sys.Workflow;
     using System.Globalization;

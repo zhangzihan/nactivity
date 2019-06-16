@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace org.activiti.bpmn.model
+namespace Sys.Workflow.bpmn.model
 {
     public class BooleanDataObject : ValuedDataObject
     {

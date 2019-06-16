@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.interceptor
+namespace Sys.Workflow.engine.impl.interceptor
 {
     /// <summary>
     /// A session factory produces a <seealso cref="ISession"/> instance that has the lifespane of one <seealso cref="ICommandContext"/>.

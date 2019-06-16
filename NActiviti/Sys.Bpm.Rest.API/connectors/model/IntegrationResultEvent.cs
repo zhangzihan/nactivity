@@ -17,7 +17,7 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.services.connectors.model
+namespace Sys.Workflow.services.connectors.model
 {
 
     /// <summary>

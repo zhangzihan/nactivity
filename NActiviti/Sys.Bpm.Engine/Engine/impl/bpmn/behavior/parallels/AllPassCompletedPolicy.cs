@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using org.activiti.engine.history;
-using org.activiti.engine.impl.context;
-using org.activiti.engine.impl.persistence.entity;
-using org.activiti.engine.impl.persistence.entity.data;
-using org.activiti.services.api.commands;
+using Sys.Workflow.engine.history;
+using Sys.Workflow.engine.impl.context;
+using Sys.Workflow.engine.impl.persistence.entity;
+using Sys.Workflow.engine.impl.persistence.entity.data;
+using Sys.Workflow.services.api.commands;
 using Sys.Workflow;
 
-namespace org.activiti.engine.impl.bpmn.behavior
+namespace Sys.Workflow.engine.impl.bpmn.behavior
 {
     /// <summary>
     /// 全部通过

@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.@delegate.@event
+namespace Sys.Workflow.engine.@delegate.@event
 {
     /// <summary>
     /// Describes a class that listens for <seealso cref="IActivitiEvent"/>s dispatched by the engine.

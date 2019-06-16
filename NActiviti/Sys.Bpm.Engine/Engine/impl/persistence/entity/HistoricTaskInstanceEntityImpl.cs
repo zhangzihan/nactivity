@@ -14,13 +14,13 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
     using Newtonsoft.Json.Linq;
-    using org.activiti.engine.history;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.db;
-    using org.activiti.engine.task;
+    using Sys.Workflow.engine.history;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.db;
+    using Sys.Workflow.engine.task;
     using Sys.Net.Http;
     using Sys.Workflow;
     using System.Linq;
@@ -303,7 +303,7 @@ namespace org.activiti.engine.impl.persistence.entity
                 }
 
                 return assigner;
-                //                throw new org.activiti.engine.exceptions.NotFoundAssigneeException(this.assignee);  
+                //                throw new Sys.Workflow.engine.exceptions.NotFoundAssigneeException(this.assignee);  
                 //#endif
             }
         }

@@ -6,8 +6,8 @@
     </bpmn2:startEvent>
     <bpmn2:userTask id="Task_0uq4gmb" name="专家评审" camunda:assignee="${expert}">
       <bpmn2:extensionElements>
-        <camunda:executionListener class="org.activiti.engine.impl.bpmn.listener.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
-        <camunda:taskListener class="org.activiti.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:executionListener class="Sys.Workflow.engine.impl.bpmn.listener.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
+        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_0jfucfq</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_1xwv282</bpmn2:incoming>
@@ -19,8 +19,8 @@
     </bpmn2:userTask>
     <bpmn2:userTask id="Task_0zs3woa" name="管理员分配" camunda:assignee="${Task_0zs3woa}">
       <bpmn2:extensionElements>
-        <camunda:executionListener class="org.activiti.engine.impl.bpmn.listener.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
-        <camunda:taskListener class="org.activiti.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:executionListener class="Sys.Workflow.engine.impl.bpmn.listener.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
+        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_15ljg7g</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_1pqdxi4</bpmn2:incoming>
@@ -52,8 +52,8 @@
     <bpmn2:sequenceFlow id="SequenceFlow_1xwv282" sourceRef="Task_15uusiq" targetRef="Task_0uq4gmb" />
     <bpmn2:userTask id="Task_15uusiq" name="等待修改" camunda:assignee="${Task_15uusiq}">
       <bpmn2:extensionElements>
-        <camunda:executionListener class="org.activiti.engine.impl.bpmn.listener.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
-        <camunda:taskListener class="org.activiti.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:executionListener class="Sys.Workflow.engine.impl.bpmn.listener.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
+        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_0am2rui</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1xwv282</bpmn2:outgoing>
@@ -77,8 +77,8 @@
     </bpmn2:sequenceFlow>
     <bpmn2:userTask id="Task_1lmqkp3" name="需要管理员终审" camunda:assignee="${Task_1lmqkp3}">
       <bpmn2:extensionElements>
-        <camunda:executionListener class="org.activiti.engine.impl.bpmn.listener.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
-        <camunda:taskListener class="org.activiti.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:executionListener class="Sys.Workflow.engine.impl.bpmn.listener.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
+        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_05tcz2n</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1b4gyzy</bpmn2:outgoing>

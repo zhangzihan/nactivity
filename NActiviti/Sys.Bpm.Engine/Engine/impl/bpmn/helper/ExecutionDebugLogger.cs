@@ -1,13 +1,13 @@
-﻿using org.activiti.engine.@delegate;
-using org.activiti.engine.impl.context;
-using org.activiti.engine.impl.persistence.entity;
+﻿using Sys.Workflow.engine.@delegate;
+using Sys.Workflow.engine.impl.context;
+using Sys.Workflow.engine.impl.persistence.entity;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace org.activiti.engine.impl.bpmn.helper
+namespace Sys.Workflow.engine.impl.bpmn.helper
 {
     static class ExecutionDebugLogger
     {

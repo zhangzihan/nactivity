@@ -1,6 +1,6 @@
-﻿namespace org.activiti.engine.impl.interceptor
+﻿namespace Sys.Workflow.engine.impl.interceptor
 {
-    using org.activiti.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.cfg;
 
     /// <summary>
     /// Configuration settings for the command interceptor chain.

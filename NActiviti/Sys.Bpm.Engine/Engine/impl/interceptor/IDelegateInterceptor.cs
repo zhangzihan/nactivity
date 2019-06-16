@@ -10,18 +10,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.interceptor
+namespace Sys.Workflow.engine.impl.interceptor
 {
-    using org.activiti.engine.impl.@delegate.invocation;
+    using Sys.Workflow.engine.impl.@delegate.invocation;
 
     /// <summary>
     /// Interceptor responsible for handling calls to 'user code'. User code represents external Java code (e.g. services and listeners) invoked by activiti. The following is a list of classes that
     /// represent user code:
     /// <ul>
-    /// <li><seealso cref="org.activiti.engine.delegate.JavaDelegate"/></li>
-    /// <li><seealso cref="org.activiti.engine.delegate.ExecutionListener"/></li>
-    /// <li><seealso cref="org.activiti.engine.delegate.Expression"/></li>
-    /// <li><seealso cref="org.activiti.engine.delegate.TaskListener"/></li>
+    /// <li><seealso cref="Sys.Workflow.engine.delegate.JavaDelegate"/></li>
+    /// <li><seealso cref="Sys.Workflow.engine.delegate.ExecutionListener"/></li>
+    /// <li><seealso cref="Sys.Workflow.engine.delegate.Expression"/></li>
+    /// <li><seealso cref="Sys.Workflow.engine.delegate.TaskListener"/></li>
     /// </ul>
     /// 
     /// The interceptor is passed in an instance of <seealso cref="DelegateInvocation"/>. Implementations are responsible for calling <seealso cref="DelegateInvocation#proceed()"/>.

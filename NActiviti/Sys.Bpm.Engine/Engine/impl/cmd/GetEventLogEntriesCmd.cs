@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace org.activiti.engine.impl.cmd
+namespace Sys.Workflow.engine.impl.cmd
 {
 
-    using org.activiti.engine.@event;
-    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow.engine.@event;
+    using Sys.Workflow.engine.impl.interceptor;
 
     /// 
     public class GetEventLogEntriesCmd : ICommand<IList<IEventLogEntry>>

@@ -13,16 +13,16 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.repository
+namespace Sys.Workflow.engine.impl.repository
 {
     using java.util.zip;
-    using org.activiti.bpmn.constants;
-    using org.activiti.bpmn.converter;
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
-    using org.activiti.engine.repository;
+    using Sys.Workflow.bpmn.constants;
+    using Sys.Workflow.bpmn.converter;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.engine.repository;
     using System.IO;
     using System.Linq;
     using System.Text;

@@ -1,7 +1,7 @@
-﻿using org.activiti.cloud.services.api.commands;
+﻿using Sys.Workflow.cloud.services.api.commands;
 using org.springframework.messaging;
 
-namespace org.activiti.services.subscription.channel
+namespace Sys.Workflow.services.subscription.channel
 {
     /// <summary>
     /// 

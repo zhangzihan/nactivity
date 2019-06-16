@@ -1,6 +1,6 @@
-﻿using org.activiti.cloud.services.rest.api.resources;
+﻿using Sys.Workflow.cloud.services.rest.api.resources;
 
-namespace org.activiti.cloud.services.rest.api
+namespace Sys.Workflow.cloud.services.rest.api
 {
     /// <summary>
     /// 流程定义元数据RestAPI

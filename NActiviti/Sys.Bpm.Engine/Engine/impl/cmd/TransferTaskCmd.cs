@@ -4,27 +4,27 @@
 //  Created on:      1-2月-2019 8:32:00
 //  Original author: 张楠
 
-using org.activiti.bpmn.model;
-using org.activiti.engine.@delegate;
-using org.activiti.engine.@delegate.@event;
-using org.activiti.engine.@delegate.@event.impl;
-using org.activiti.engine.exceptions;
-using org.activiti.engine.impl.cfg;
-using org.activiti.engine.impl.context;
-using org.activiti.engine.impl.identity;
-using org.activiti.engine.impl.interceptor;
-using org.activiti.engine.impl.persistence.entity;
-using org.activiti.engine.impl.util;
-using org.activiti.engine.runtime;
-using org.activiti.engine.task;
-using org.activiti.services.api.commands;
+using Sys.Workflow.bpmn.model;
+using Sys.Workflow.engine.@delegate;
+using Sys.Workflow.engine.@delegate.@event;
+using Sys.Workflow.engine.@delegate.@event.impl;
+using Sys.Workflow.engine.exceptions;
+using Sys.Workflow.engine.impl.cfg;
+using Sys.Workflow.engine.impl.context;
+using Sys.Workflow.engine.impl.identity;
+using Sys.Workflow.engine.impl.interceptor;
+using Sys.Workflow.engine.impl.persistence.entity;
+using Sys.Workflow.engine.impl.util;
+using Sys.Workflow.engine.runtime;
+using Sys.Workflow.engine.task;
+using Sys.Workflow.services.api.commands;
 using Sys.Workflow;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 
-namespace org.activiti.engine.impl.cmd
+namespace Sys.Workflow.engine.impl.cmd
 {
     /// <summary>
     /// 任务转派

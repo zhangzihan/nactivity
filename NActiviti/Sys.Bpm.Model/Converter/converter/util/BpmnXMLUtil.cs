@@ -1,13 +1,13 @@
-﻿using org.activiti.bpmn.constants;
-using org.activiti.bpmn.converter.child;
-using org.activiti.bpmn.model;
+﻿using Sys.Workflow.bpmn.constants;
+using Sys.Workflow.bpmn.converter.child;
+using Sys.Workflow.bpmn.model;
 using Sys.Bpm;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
-namespace org.activiti.bpmn.converter.util
+namespace Sys.Workflow.bpmn.converter.util
 {
 
     public class BpmnXMLUtil : IBpmnXMLConstants

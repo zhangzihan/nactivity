@@ -6,14 +6,14 @@
     </bpmn2:startEvent>
     <bpmn2:userTask id="Task_1dji758" name="管理员审核" camunda:formKey="8a010000-5d88-0015-8ca4-08d6c22d7a6f" camunda:assignee="2f1d8821-e429-4dad-9aa2-31d8d2e9e127">
       <bpmn2:extensionElements>
-        <camunda:taskListener class="org.activiti.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_15p49iu</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_10jeblo</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:userTask id="Task_0iy4n9o" name="支付" camunda:formKey="8a010000-5d88-0015-3306-08d6c2ded55a" camunda:assignee="${Task_0iy4n9o}">
       <bpmn2:extensionElements>
-        <camunda:taskListener class="org.activiti.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1ny357b</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_10i9o66</bpmn2:incoming>

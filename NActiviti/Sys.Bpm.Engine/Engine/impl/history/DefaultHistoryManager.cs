@@ -14,18 +14,18 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.history
+namespace Sys.Workflow.engine.impl.history
 {
     using Microsoft.Extensions.Logging;
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.@delegate.@event.impl;
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.identity;
-    using org.activiti.engine.impl.persistence;
-    using org.activiti.engine.impl.persistence.cache;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.task;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.engine.@delegate.@event.impl;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.identity;
+    using Sys.Workflow.engine.impl.persistence;
+    using Sys.Workflow.engine.impl.persistence.cache;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.task;
     using Sys.Workflow;
 
     /// <summary>
@@ -46,7 +46,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# isHistoryLevelAtLeast(org.activiti.engine.impl.history.HistoryLevel)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# isHistoryLevelAtLeast(Sys.Workflow.engine.impl.history.HistoryLevel)
          */
         public virtual bool IsHistoryLevelAtLeast(HistoryLevel level)
         {
@@ -62,7 +62,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface#isHistoryEnabled ()
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#isHistoryEnabled ()
          */
         public virtual bool HistoryEnabled
         {
@@ -81,7 +81,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordProcessInstanceEnd(java.lang.String, java.lang.String, java.lang.String)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordProcessInstanceEnd(java.lang.String, java.lang.String, java.lang.String)
          */
         public virtual void RecordProcessInstanceEnd(string processInstanceId, string deleteReason, string activityId)
         {
@@ -122,7 +122,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordProcessInstanceStart (org.activiti.engine.impl.persistence.entity.ExecutionEntity)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordProcessInstanceStart (Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity)
          */
         public virtual void RecordProcessInstanceStart(IExecutionEntity processInstance, FlowElement startElement)
         {
@@ -147,8 +147,8 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordSubProcessInstanceStart (org.activiti.engine.impl.persistence.entity.ExecutionEntity,
-         * org.activiti.engine.impl.persistence.entity.ExecutionEntity)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordSubProcessInstanceStart (Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity,
+         * Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity)
          */
         public virtual void RecordSubProcessInstanceStart(IExecutionEntity parentExecution, IExecutionEntity subProcessInstance, FlowElement initialElement)
         {
@@ -185,7 +185,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordActivityStart (org.activiti.engine.impl.persistence.entity.ExecutionEntity)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordActivityStart (Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity)
          */
         public virtual void RecordActivityStart(IExecutionEntity executionEntity)
         {
@@ -221,7 +221,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordActivityEnd (org.activiti.engine.impl.persistence.entity.ExecutionEntity)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordActivityEnd (Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity)
          */
         public virtual void RecordActivityEnd(IExecutionEntity executionEntity, string deleteReason)
         {
@@ -362,7 +362,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordProcessDefinitionChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordProcessDefinitionChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordProcessDefinitionChange(string processInstanceId, string processDefinitionId)
         {
@@ -381,8 +381,8 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskCreated (org.activiti.engine.impl.persistence.entity.TaskEntity,
-         * org.activiti.engine.impl.persistence.entity.ExecutionEntity)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskCreated (Sys.Workflow.engine.impl.persistence.entity.TaskEntity,
+         * Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity)
          */
         public virtual void RecordTaskCreated(ITaskEntity task, IExecutionEntity execution)
         {
@@ -398,7 +398,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskAssignment (org.activiti.engine.impl.persistence.entity.TaskEntity)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskAssignment (Sys.Workflow.engine.impl.persistence.entity.TaskEntity)
          */
         public virtual void RecordTaskAssignment(ITaskEntity task)
         {
@@ -420,7 +420,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          *
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskClaim (org.activiti.engine.impl.persistence.entity.TaskEntity)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskClaim (Sys.Workflow.engine.impl.persistence.entity.TaskEntity)
          */
 
         public virtual void RecordTaskClaim(ITaskEntity task)
@@ -438,7 +438,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskId (org.activiti.engine.impl.persistence.entity.TaskEntity)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskId (Sys.Workflow.engine.impl.persistence.entity.TaskEntity)
          */
         public virtual void RecordTaskId(ITaskEntity task)
         {
@@ -459,7 +459,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskEnd (java.lang.String, java.lang.String)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskEnd (java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskEnd(string taskId, string deleteReason)
         {
@@ -476,7 +476,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskAssigneeChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskAssigneeChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskAssigneeChange(string taskId, string assignee, string assigneeUser)
         {
@@ -494,7 +494,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskOwnerChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskOwnerChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskOwnerChange(string taskId, string owner)
         {
@@ -511,7 +511,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskNameChange (java.lang.String, java.lang.String)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskNameChange (java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskNameChange(string taskId, string taskName)
         {
@@ -528,7 +528,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskDescriptionChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskDescriptionChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskDescriptionChange(string taskId, string description)
         {
@@ -545,7 +545,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskDueDateChange(java.lang.String, java.util.Date)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskDueDateChange(java.lang.String, java.util.Date)
          */
         public virtual void RecordTaskDueDateChange(string taskId, DateTime dueDate)
         {
@@ -562,7 +562,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskPriorityChange(java.lang.String, int)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskPriorityChange(java.lang.String, int)
          */
         public virtual void RecordTaskPriorityChange(string taskId, int? priority)
         {
@@ -579,7 +579,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskCategoryChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskCategoryChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskCategoryChange(string taskId, string category)
         {
@@ -608,7 +608,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskParentTaskIdChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskParentTaskIdChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskParentTaskIdChange(string taskId, string parentTaskId)
         {
@@ -625,7 +625,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskExecutionIdChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskExecutionIdChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskExecutionIdChange(string taskId, string executionId)
         {
@@ -642,7 +642,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordTaskDefinitionKeyChange (org.activiti.engine.impl.persistence.entity.TaskEntity, java.lang.String)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskDefinitionKeyChange (Sys.Workflow.engine.impl.persistence.entity.TaskEntity, java.lang.String)
          */
         public virtual void RecordTaskDefinitionKeyChange(string taskId, string taskDefinitionKey)
         {
@@ -657,7 +657,7 @@ namespace org.activiti.engine.impl.history
         }
 
         /* (non-Javadoc)
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordTaskProcessDefinitionChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskProcessDefinitionChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskProcessDefinitionChange(string taskId, string processDefinitionId)
         {
@@ -676,7 +676,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordVariableCreate (org.activiti.engine.impl.persistence.entity.VariableInstanceEntity)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordVariableCreate (Sys.Workflow.engine.impl.persistence.entity.VariableInstanceEntity)
          */
         public virtual void RecordVariableCreate(IVariableInstanceEntity variable)
         {
@@ -690,8 +690,8 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordHistoricDetailVariableCreate (org.activiti.engine.impl.persistence.entity.VariableInstanceEntity,
-         * org.activiti.engine.impl.persistence.entity.ExecutionEntity, boolean)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordHistoricDetailVariableCreate (Sys.Workflow.engine.impl.persistence.entity.VariableInstanceEntity,
+         * Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity, boolean)
          */
         public virtual void RecordHistoricDetailVariableCreate(IVariableInstanceEntity variable, IExecutionEntity sourceActivityExecution, bool useActivityId)
         {
@@ -714,7 +714,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface#recordVariableUpdate (org.activiti.engine.impl.persistence.entity.VariableInstanceEntity)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordVariableUpdate (Sys.Workflow.engine.impl.persistence.entity.VariableInstanceEntity)
          */
         public virtual void RecordVariableUpdate(IVariableInstanceEntity variable)
         {
@@ -743,7 +743,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# createIdentityLinkComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# createIdentityLinkComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)
          */
         public virtual void CreateIdentityLinkComment(string taskId, string userId, string groupId, string type, bool create)
         {
@@ -768,7 +768,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# createIdentityLinkComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# createIdentityLinkComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
          */
         public virtual void CreateIdentityLinkComment(string taskId, string userId, string groupId, string type, bool create, bool forceNullUserId)
         {
@@ -855,7 +855,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# createAttachmentComment(java.lang.String, java.lang.String, java.lang.String, boolean)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# createAttachmentComment(java.lang.String, java.lang.String, java.lang.String, boolean)
          */
         public virtual void CreateAttachmentComment(string taskId, string processInstanceId, string attachmentName, bool create)
         {
@@ -885,7 +885,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# recordIdentityLinkCreated (org.activiti.engine.impl.persistence.entity.IdentityLinkEntity)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordIdentityLinkCreated (Sys.Workflow.engine.impl.persistence.entity.IdentityLinkEntity)
          */
         public virtual void RecordIdentityLinkCreated(IIdentityLinkEntity identityLink)
         {
@@ -908,7 +908,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# deleteHistoricIdentityLink(java.lang.String)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# deleteHistoricIdentityLink(java.lang.String)
          */
         public virtual void DeleteHistoricIdentityLink(string id)
         {
@@ -921,7 +921,7 @@ namespace org.activiti.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see org.activiti.engine.impl.history.HistoryManagerInterface# updateProcessBusinessKeyInHistory (org.activiti.engine.impl.persistence.entity.ExecutionEntity)
+         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# updateProcessBusinessKeyInHistory (Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity)
          */
         public virtual void UpdateProcessBusinessKeyInHistory(IExecutionEntity processInstance)
         {

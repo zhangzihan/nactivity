@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.IdentityLinkEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.IdentityLinkEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
 
   <!-- IDENTITY LINK RESULTMAP -->
 
-  <ResultMap Id="identityLinkResultMap" ResultType="org.activiti.engine.impl.persistence.entity.IdentityLinkEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="identityLinkResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.IdentityLinkEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="type" Column="TYPE_" />
     <Result Property="userId" Column="USER_ID_" />

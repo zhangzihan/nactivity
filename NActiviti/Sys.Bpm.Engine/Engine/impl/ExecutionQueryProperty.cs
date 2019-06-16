@@ -14,11 +14,11 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl
+namespace Sys.Workflow.engine.impl
 {
 
-    using org.activiti.engine.query;
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.query;
+    using Sys.Workflow.engine.runtime;
 
     /// <summary>
     /// Contains the possible properties that can be used in a <seealso cref="IExecutionQuery"/> .

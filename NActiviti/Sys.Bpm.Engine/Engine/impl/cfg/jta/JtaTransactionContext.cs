@@ -11,11 +11,11 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.cfg.jta
+namespace Sys.Workflow.engine.impl.cfg.jta
 {
     using javax.transaction;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.interceptor;
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;

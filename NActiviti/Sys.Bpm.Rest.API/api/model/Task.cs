@@ -18,7 +18,7 @@ using Sys.Workflow;
  *
  */
 
-namespace org.activiti.cloud.services.api.model
+namespace Sys.Workflow.cloud.services.api.model
 {
 
     /// <summary>

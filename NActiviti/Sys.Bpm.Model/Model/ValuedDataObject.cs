@@ -1,4 +1,4 @@
-﻿namespace org.activiti.bpmn.model
+﻿namespace Sys.Workflow.bpmn.model
 {
     public abstract class ValuedDataObject : DataObject
     {

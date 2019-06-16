@@ -37,6 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Spring.Core\Spring.Core.csproj" />
+    <ProjectReference Include="..\..\Sys.Expression\Sys.Expression.csproj" />
   </ItemGroup>
 </Project>

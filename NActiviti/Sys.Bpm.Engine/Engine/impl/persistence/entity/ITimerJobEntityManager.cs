@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.persistence.entity
+namespace Sys.Workflow.engine.impl.persistence.entity
 {
 
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.runtime;
 
     /// <summary>
     /// <seealso cref="EntityManager"/> responsible for <seealso cref="ITimerJobEntity"/> instances.

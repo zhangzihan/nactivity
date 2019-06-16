@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.image.exception
+namespace Sys.Workflow.image.exception
 {
 	/// <summary>
 	/// Exception thrown when the BPMN modle doesn't have graphic info inside

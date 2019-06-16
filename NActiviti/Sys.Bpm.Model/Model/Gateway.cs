@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.bpmn.model
+namespace Sys.Workflow.bpmn.model
 {
     public abstract class Gateway : FlowNode
     {

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace org.activiti.engine.impl.@event.logger.handler
+namespace Sys.Workflow.engine.impl.@event.logger.handler
 {
 
-    using org.activiti.engine.impl.cfg;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     public abstract class AbstractTaskEventHandler : AbstractDatabaseEventLoggerEventHandler

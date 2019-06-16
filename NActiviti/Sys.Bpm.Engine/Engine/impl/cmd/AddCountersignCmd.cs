@@ -4,16 +4,16 @@
 //  Created on:      1-2月-2019 8:32:00
 //  Original author: 张楠
 
-using org.activiti.bpmn.model;
-using org.activiti.engine.exceptions;
-using org.activiti.engine.impl.bpmn.behavior;
-using org.activiti.engine.impl.cfg;
-using org.activiti.engine.impl.context;
-using org.activiti.engine.impl.interceptor;
-using org.activiti.engine.impl.persistence.entity;
-using org.activiti.engine.impl.util;
-using org.activiti.engine.runtime;
-using org.activiti.engine.task;
+using Sys.Workflow.bpmn.model;
+using Sys.Workflow.engine.exceptions;
+using Sys.Workflow.engine.impl.bpmn.behavior;
+using Sys.Workflow.engine.impl.cfg;
+using Sys.Workflow.engine.impl.context;
+using Sys.Workflow.engine.impl.interceptor;
+using Sys.Workflow.engine.impl.persistence.entity;
+using Sys.Workflow.engine.impl.util;
+using Sys.Workflow.engine.runtime;
+using Sys.Workflow.engine.task;
 using Sys;
 using Sys.Net.Http;
 using Sys.Workflow;
@@ -24,7 +24,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace org.activiti.engine.impl.cmd
+namespace Sys.Workflow.engine.impl.cmd
 {
     /// <summary>
     /// 加签

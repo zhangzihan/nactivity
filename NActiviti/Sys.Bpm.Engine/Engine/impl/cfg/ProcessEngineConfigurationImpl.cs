@@ -16,49 +16,49 @@ using System.Threading;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.cfg
+namespace Sys.Workflow.engine.impl.cfg
 {
     using DatabaseSchemaReader;
     using javax.transaction;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using org.activiti.engine.cfg;
-    using org.activiti.engine.@delegate.@event;
-    using org.activiti.engine.@delegate.@event.impl;
-    using org.activiti.engine.impl.asyncexecutor;
-    using org.activiti.engine.impl.bpmn.data;
-    using org.activiti.engine.impl.bpmn.deployer;
-    using org.activiti.engine.impl.bpmn.listener;
-    using org.activiti.engine.impl.bpmn.parser;
-    using org.activiti.engine.impl.bpmn.parser.factory;
-    using org.activiti.engine.impl.bpmn.parser.handler;
-    using org.activiti.engine.impl.bpmn.webservice;
-    using org.activiti.engine.impl.calendar;
-    using org.activiti.engine.impl.cfg.standalone;
-    using org.activiti.engine.impl.cmd;
-    using org.activiti.engine.impl.db;
-    using org.activiti.engine.impl.@delegate.invocation;
-    using org.activiti.engine.impl.el;
-    using org.activiti.engine.impl.@event;
-    using org.activiti.engine.impl.@event.logger;
-    using org.activiti.engine.impl.history;
-    using org.activiti.engine.impl.interceptor;
-    using org.activiti.engine.impl.jobexecutor;
-    using org.activiti.engine.impl.persistence;
-    using org.activiti.engine.impl.persistence.cache;
-    using org.activiti.engine.impl.persistence.deploy;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.persistence.entity.data;
-    using org.activiti.engine.impl.persistence.entity.data.impl;
-    using org.activiti.engine.impl.persistence.entity.data.integration;
-    using org.activiti.engine.impl.persistence.entity.integration;
-    using org.activiti.engine.impl.scripting;
-    using org.activiti.engine.impl.util;
-    using org.activiti.engine.impl.variable;
-    using org.activiti.engine.integration;
-    using org.activiti.engine.parse;
-    using org.activiti.engine.runtime;
-    using org.activiti.validation;
+    using Sys.Workflow.engine.cfg;
+    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.engine.@delegate.@event.impl;
+    using Sys.Workflow.engine.impl.asyncexecutor;
+    using Sys.Workflow.engine.impl.bpmn.data;
+    using Sys.Workflow.engine.impl.bpmn.deployer;
+    using Sys.Workflow.engine.impl.bpmn.listener;
+    using Sys.Workflow.engine.impl.bpmn.parser;
+    using Sys.Workflow.engine.impl.bpmn.parser.factory;
+    using Sys.Workflow.engine.impl.bpmn.parser.handler;
+    using Sys.Workflow.engine.impl.bpmn.webservice;
+    using Sys.Workflow.engine.impl.calendar;
+    using Sys.Workflow.engine.impl.cfg.standalone;
+    using Sys.Workflow.engine.impl.cmd;
+    using Sys.Workflow.engine.impl.db;
+    using Sys.Workflow.engine.impl.@delegate.invocation;
+    using Sys.Workflow.engine.impl.el;
+    using Sys.Workflow.engine.impl.@event;
+    using Sys.Workflow.engine.impl.@event.logger;
+    using Sys.Workflow.engine.impl.history;
+    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.jobexecutor;
+    using Sys.Workflow.engine.impl.persistence;
+    using Sys.Workflow.engine.impl.persistence.cache;
+    using Sys.Workflow.engine.impl.persistence.deploy;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.persistence.entity.data;
+    using Sys.Workflow.engine.impl.persistence.entity.data.impl;
+    using Sys.Workflow.engine.impl.persistence.entity.data.integration;
+    using Sys.Workflow.engine.impl.persistence.entity.integration;
+    using Sys.Workflow.engine.impl.scripting;
+    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.engine.impl.variable;
+    using Sys.Workflow.engine.integration;
+    using Sys.Workflow.engine.parse;
+    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.validation;
     using Sys;
     using Sys.Bpm;
     using Sys.Data;
@@ -129,7 +129,7 @@ namespace org.activiti.engine.impl.cfg
         /// <summary>
         /// 
         /// </summary>
-        public const string DEFAULT_WS_SYNC_FACTORY = "org.activiti.engine.impl.webservice.CxfWebServiceClientFactory";
+        public const string DEFAULT_WS_SYNC_FACTORY = "Sys.Workflow.engine.impl.webservice.CxfWebServiceClientFactory";
 
         /// <summary>
         /// 

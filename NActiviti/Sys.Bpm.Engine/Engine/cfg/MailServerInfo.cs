@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.cfg
+namespace Sys.Workflow.engine.cfg
 {
 	/// 
 	public class MailServerInfo

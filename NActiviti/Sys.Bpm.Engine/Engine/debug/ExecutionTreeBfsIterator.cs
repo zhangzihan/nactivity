@@ -13,7 +13,7 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.debug
+namespace Sys.Workflow.engine.debug
 {
 
     /// <summary>

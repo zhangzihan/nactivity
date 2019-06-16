@@ -1,4 +1,4 @@
-﻿namespace org.activiti.engine.@delegate.@event.impl
+﻿namespace Sys.Workflow.engine.@delegate.@event.impl
 {
 
     /// 

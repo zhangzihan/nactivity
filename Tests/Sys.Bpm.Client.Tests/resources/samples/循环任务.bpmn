@@ -9,7 +9,7 @@
     <bpmn2:manualTask id="Task_07cbn9f" name="循环任务">
       <bpmn2:documentation>${'循环任务' + DateTime.Now}</bpmn2:documentation>
       <bpmn2:extensionElements>
-        <camunda:executionListener class="org.activiti.engine.impl.bpmn.listener.ActivityDebugLoggerListener,Sys.Bpm.Engine" event="start" />
+        <camunda:executionListener class="Sys.Workflow.engine.impl.bpmn.listener.ActivityDebugLoggerListener,Sys.Bpm.Engine" event="start" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_0bh2lfn</bpmn2:incoming>
     </bpmn2:manualTask>

@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.debug
+namespace Sys.Workflow.engine.debug
 {
     using System.Collections;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     public class ExecutionTree : IEnumerable<ExecutionTreeNode>

@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.cfg
+namespace Sys.Workflow.engine.impl.cfg
 {
-    using org.activiti.engine.impl.bpmn.parser;
+    using Sys.Workflow.engine.impl.bpmn.parser;
 
     /// 
     public class DefaultBpmnParseFactory : IBpmnParseFactory

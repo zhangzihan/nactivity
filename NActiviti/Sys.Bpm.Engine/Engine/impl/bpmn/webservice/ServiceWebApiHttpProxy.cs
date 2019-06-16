@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace org.activiti.engine.impl.bpmn.webservice
+namespace Sys.Workflow.engine.impl.bpmn.webservice
 {
     public class ServiceWebApiHttpProxy : IServiceWebApiHttpProxy
     {

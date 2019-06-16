@@ -1,6 +1,6 @@
-﻿namespace org.activiti.engine
+﻿namespace Sys.Workflow.engine
 {
-    using org.activiti.engine.runtime;
+    using Sys.Workflow.engine.runtime;
 
     /// <summary>
     /// This exception is thrown when you try to execute a job that is not found (may be due to cancelActiviti="true" for instance)..

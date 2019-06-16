@@ -11,13 +11,13 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.cfg
+namespace Sys.Workflow.engine.impl.cfg
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
-    using org.activiti.engine.impl.asyncexecutor;
-    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.asyncexecutor;
+    using Sys.Workflow.engine.impl.interceptor;
     using Sys;
     using Sys.Workflow.Engine.Bpmn.Rules;
     using System;

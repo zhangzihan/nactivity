@@ -15,7 +15,7 @@
  *
  */
 
-namespace org.activiti.cloud.services.events
+namespace Sys.Workflow.cloud.services.events
 {
 
     using ProcessInstance = api.model.ProcessInstance;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace org.activiti.cloud.services.core
+namespace Sys.Workflow.cloud.services.core
 {
     public class SecurityPoliciesApplicationService : BaseSecurityPoliciesApplicationService
     {

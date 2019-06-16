@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace org.activiti.engine.impl.el
+namespace Sys.Workflow.engine.impl.el
 {
 
     public class CompositeELResolver : ELResolver

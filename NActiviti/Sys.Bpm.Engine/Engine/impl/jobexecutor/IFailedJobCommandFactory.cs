@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace org.activiti.engine.impl.jobexecutor
+namespace Sys.Workflow.engine.impl.jobexecutor
 {
-    using org.activiti.engine.impl.interceptor;
+    using Sys.Workflow.engine.impl.interceptor;
 
     public interface IFailedJobCommandFactory
     {

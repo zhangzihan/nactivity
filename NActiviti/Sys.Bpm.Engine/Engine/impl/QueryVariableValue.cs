@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl
+namespace Sys.Workflow.engine.impl
 {
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.variable;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.variable;
 
     /// <summary>
     /// Represents a variable value used in queries.

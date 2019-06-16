@@ -17,7 +17,7 @@ using System.Data.Common;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.cfg.multitenant
+namespace Sys.Workflow.engine.impl.cfg.multitenant
 {
 
 

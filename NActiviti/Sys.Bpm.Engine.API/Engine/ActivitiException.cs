@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine
+namespace Sys.Workflow.engine
 {
     /// <summary>
     /// Runtime exception that is the superclass of all Activiti exceptions.

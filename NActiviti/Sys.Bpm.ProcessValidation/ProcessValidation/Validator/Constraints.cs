@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.validation.validator
+namespace Sys.Workflow.validation.validator
 {
     /// 
     public class Constraints

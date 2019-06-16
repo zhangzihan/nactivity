@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<SmartSqlMap Scope="org.activiti.engine.impl.persistence.entity.ByteArrayEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.ByteArrayEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- BYTE ARRAY RESULTMAP -->
     
-    <ResultMap Id="byteArrayResultMap" ResultType="org.activiti.engine.impl.persistence.entity.ByteArrayEntityImpl,Sys.Bpm.Engine">
+    <ResultMap Id="byteArrayResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.ByteArrayEntityImpl,Sys.Bpm.Engine">
       <Result Property="id" Column="ID_" />
       <Result Property="revision" Column="REV_" />
       <Result Property="name" Column="NAME_" />

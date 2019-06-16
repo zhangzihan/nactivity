@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace org.activiti.engine.impl
+namespace Sys.Workflow.engine.impl
 {
 
-    using org.activiti.engine.history;
+    using Sys.Workflow.engine.history;
     using System.Linq;
 
     /// 
@@ -121,7 +121,7 @@ namespace org.activiti.engine.impl
             historicData.Add(historicEvent);
         }
 
-        public virtual void addHistoricData<T1>(ICollection<T1> historicEvents) where T1 : org.activiti.engine.history.IHistoricData
+        public virtual void AddHistoricData<T1>(ICollection<T1> historicEvents) where T1 : IHistoricData
         {
             ((List<IHistoricData>)historicData).AddRange(historicEvents as IEnumerable<IHistoricData>);
         }

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.query
+namespace Sys.Workflow.engine.query
 {
 
     /// <summary>

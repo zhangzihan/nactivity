@@ -14,17 +14,17 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.bpmn.behavior
+namespace Sys.Workflow.engine.impl.bpmn.behavior
 {
     using Microsoft.Extensions.Logging;
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.@delegate;
-    using org.activiti.engine.impl.bpmn.helper;
-    using org.activiti.engine.impl.cmd;
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.@delegate;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.engine.impl.bpmn.helper;
+    using Sys.Workflow.engine.impl.cmd;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.@delegate;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.util;
     using Sys.Workflow;
     using System.Collections;
 

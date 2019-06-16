@@ -6,11 +6,11 @@
 //  Original author: 张楠
 ///////////////////////////////////////////////////////////
 
-using org.activiti.engine;
+using Sys.Workflow.engine;
 using System;
 using System.Runtime.Serialization;
 
-namespace org.activiti.engine.exceptions
+namespace Sys.Workflow.engine.exceptions
 {
     /// <summary>
     /// 已存在的获取会签用户规则类型

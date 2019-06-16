@@ -14,11 +14,11 @@ using System.Text;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.debug
+namespace Sys.Workflow.engine.debug
 {
     using System.Collections;
-    using org.activiti.bpmn.model;
-    using org.activiti.engine.impl.persistence.entity;
+    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.engine.impl.persistence.entity;
 
     /// 
     public class ExecutionTreeNode : IEnumerable<ExecutionTreeNode>
@@ -104,7 +104,7 @@ namespace org.activiti.engine.debug
             {
                 strb.Append(" (process instance)");
             }
-            strb.Append(Environment.NewLine);
+            strb.Append(System.Environment.NewLine);
             if (children != null)
             {
                 foreach (ExecutionTreeNode childNode in children)
@@ -117,7 +117,7 @@ namespace org.activiti.engine.debug
 
         protected internal virtual void InternalToString(StringBuilder strb, string prefix, bool isTail)
         {
-            strb.Append(prefix + (isTail ? "└── " : "├── ") + ExecutionEntity.Id + " : " + CurrentFlowElementId + ", parent id " + ExecutionEntity.ParentId + (ExecutionEntity.IsActive ? " (active)" : " (not active)") + (ExecutionEntity.IsScope ? " (scope)" : "") + (ExecutionEntity.IsMultiInstanceRoot ? " (multi instance root)" : "") + (ExecutionEntity.Ended ? " (ended)" : "") + Environment.NewLine);
+            strb.Append(prefix + (isTail ? "└── " : "├── ") + ExecutionEntity.Id + " : " + CurrentFlowElementId + ", parent id " + ExecutionEntity.ParentId + (ExecutionEntity.IsActive ? " (active)" : " (not active)") + (ExecutionEntity.IsScope ? " (scope)" : "") + (ExecutionEntity.IsMultiInstanceRoot ? " (multi instance root)" : "") + (ExecutionEntity.Ended ? " (ended)" : "") + System.Environment.NewLine);
             if (children != null)
             {
                 for (int i = 0; i < children.Count - 1; i++)

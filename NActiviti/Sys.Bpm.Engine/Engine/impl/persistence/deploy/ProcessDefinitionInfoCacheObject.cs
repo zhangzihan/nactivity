@@ -12,7 +12,7 @@
  */
 using Newtonsoft.Json.Linq;
 
-namespace org.activiti.engine.impl.persistence.deploy
+namespace Sys.Workflow.engine.impl.persistence.deploy
 {
     /// 
     public class ProcessDefinitionInfoCacheObject

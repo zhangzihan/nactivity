@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-namespace org.activiti.engine.impl.bpmn.helper
+namespace Sys.Workflow.engine.impl.bpmn.helper
 {
-    using org.activiti.engine.impl.context;
-    using org.activiti.engine.impl.persistence.entity;
-    using org.activiti.engine.impl.util;
+    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.engine.impl.util;
     using System;
     using System.Linq;
 

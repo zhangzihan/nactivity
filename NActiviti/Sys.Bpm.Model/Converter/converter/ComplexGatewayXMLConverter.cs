@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.bpmn.converter
+namespace Sys.Workflow.bpmn.converter
 {
-    using org.activiti.bpmn.constants;
-    using org.activiti.bpmn.converter.util;
-    using org.activiti.bpmn.model;
+    using Sys.Workflow.bpmn.constants;
+    using Sys.Workflow.bpmn.converter.util;
+    using Sys.Workflow.bpmn.model;
 
     /// 
     public class ComplexGatewayXMLConverter : BaseBpmnXMLConverter

@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace org.activiti.engine.impl.interceptor
+namespace Sys.Workflow.engine.impl.interceptor
 {
     /// 
     public abstract class AbstractCommandInterceptor : ICommandInterceptor
@@ -18,7 +18,7 @@ namespace org.activiti.engine.impl.interceptor
         public abstract T Execute<T>(CommandConfig config, ICommand<T> command);
 
         /// <summary>
-        /// will be initialized by the <seealso cref="org.activiti.engine.ProcessEngineConfiguration ProcessEngineConfiguration"/>
+        /// will be initialized by the <seealso cref="Sys.Workflow.engine.ProcessEngineConfiguration ProcessEngineConfiguration"/>
         /// </summary>
         protected internal ICommandInterceptor next;
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using org.activiti.bpmn.model;
-using org.activiti.engine;
-using org.activiti.image;
+using Sys.Workflow.bpmn.model;
+using Sys.Workflow.engine;
+using Sys.Workflow.image;
 using Sys.Workflow;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ using System.IO;
  * limitations under the License.
  */
 
-namespace org.activiti.cloud.services.core
+namespace Sys.Workflow.cloud.services.core
 {
     /// <summary>
     /// Service logic for generating process diagrams
