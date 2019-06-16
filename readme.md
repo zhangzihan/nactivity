@@ -19,7 +19,7 @@
   ```
   {
     "id": "processEngineConfiguration",
-    "type": "org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration",
+    "type": "Sys.Workflow.engine.impl.cfg.StandaloneProcessEngineConfiguration",
     //web主机应用程序名称
     "applicationName": "workflow",
     //数据库更新策略，true=update drop-create create
