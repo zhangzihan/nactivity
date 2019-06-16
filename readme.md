@@ -1,40 +1,39 @@
-## ¹¤×÷Á÷ÏµÍ³Êı¾İ¿âÅäÖÃ
-* MySql´´½¨Êı¾İ¿âschema activiti
-* ĞŞ¸ÄÊı¾İ¿âÅäÖÃ appsettings.json
+## å·¥ä½œæµç³»ç»Ÿæ•°æ®åº“é…ç½®
+* MySqlåˆ›å»ºæ•°æ®åº“schema activiti
+* ä¿®æ”¹æ•°æ®åº“é…ç½® appsettings.json
 ```
-"WorkflowDataSource"£º{
+"WorkflowDataSource"ï¼š{
     "providerName": "MySql",
-    "database": "activiti",¡¡//Êı¾İ¿âÃû³Æ
-    "connectionString": "server=localhost;database=Êı¾İ¿âÃû³Æ;uid=ÓÃ»§Ãû;pwd=ÃÜÂë;Character Set=utf8"
+    "database": "activiti",ã€€//æ•°æ®åº“åç§°
+    "connectionString": "server=localhost;database=æ•°æ®åº“åç§°;uid=ç”¨æˆ·å;pwd=å¯†ç ;Character Set=utf8"
 }
 ```
 
-## ³õÊ¼»¯Êı¾İ¿â±í½á¹¹
-* Ê×´ÎÆô¶¯ĞŞ¸ÄÏîÄ¿Ä¿Â¼ÎÄ¼ş 
-* ¿ÉÒÔÊ¹ÓÃĞŞ¸ÄÅäÖÃ·½Ê½£ºresources\activiti.cfg.json ÅäÖÃ
-  * databaseSchemaUpdateÅäÖÃËµÃ÷: 
-    *  update£ºtrue µ±Êı¾İ¿â±í½á¹¹·¢Éú±ä»¯Ê±ÉèÖÃÎªtrue£¬ÏµÍ³»á×Ô¶¯¸üĞÂµ½ĞÂµÄ±í½á¹¹
-    *  drop-create£ºÏµÍ³»áÏÈÉ¾³ı±íÔÙ´´½¨±í£¬¸ÃÅäÖÃ½öÔÚ¿ª·¢Ê±¿ÉÓÃ£¬nuget°üÒıÓÃ¸Ã¹¦ÄÜ²»¿ÉÓÃ
-    *  create: ¸ÃÅäÖÃ½öÔÚÊı¾İ¿âÎª¿ÕÊ±´´½¨±í½á¹¹£¬·ñÔòÏµÍ³»áÎŞ·¨Æô¶¯£¬Ê×´ÎÆô¶¯ºóÇëĞŞ¸Ä¸ÃÅäÖÃÎªfalse£¬·ñÔòÔÙ´ÎÆô¶¯·şÎñ½«ÎŞ·¨Æô¶¯¡£
+## åˆå§‹åŒ–æ•°æ®åº“è¡¨ç»“æ„
+* é¦–æ¬¡å¯åŠ¨ä¿®æ”¹é…ç½®æ–‡ä»¶ï¼šresources\activiti.cfg.json é…ç½®
+  * databaseSchemaUpdateé…ç½®è¯´æ˜: 
+    *  updateï¼štrue å½“æ•°æ®åº“è¡¨ç»“æ„å‘ç”Ÿå˜åŒ–æ—¶è®¾ç½®ä¸ºtrueï¼Œç³»ç»Ÿä¼šè‡ªåŠ¨æ›´æ–°åˆ°æ–°çš„è¡¨ç»“æ„
+    *  drop-createï¼šç³»ç»Ÿä¼šå…ˆåˆ é™¤è¡¨å†åˆ›å»ºè¡¨ï¼Œè¯¥é…ç½®ä»…åœ¨å¼€å‘æ—¶å¯ç”¨ï¼ŒnugetåŒ…å¼•ç”¨è¯¥åŠŸèƒ½ä¸å¯ç”¨
+    *  create: è¯¥é…ç½®ä»…åœ¨æ•°æ®åº“ä¸ºç©ºæ—¶åˆ›å»ºè¡¨ç»“æ„ï¼Œå¦åˆ™ç³»ç»Ÿä¼šæ— æ³•å¯åŠ¨ï¼Œé¦–æ¬¡å¯åŠ¨åè¯·ä¿®æ”¹è¯¥é…ç½®ä¸ºfalseï¼Œå¦åˆ™å†æ¬¡å¯åŠ¨æœåŠ¡å°†æ— æ³•å¯åŠ¨ã€‚
 *  
   ```
   {
     "id": "processEngineConfiguration",
     "type": "org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration",
-    //webÖ÷»úÓ¦ÓÃ³ÌĞòÃû³Æ
+    //webä¸»æœºåº”ç”¨ç¨‹åºåç§°
     "applicationName": "workflow",
-    //Êı¾İ¿â¸üĞÂ²ßÂÔ£¬true=update drop-create create
-    "databaseSchemaUpdate": "Êı¾İ¿â¸üĞÂ²ßÂÔ",
+    //æ•°æ®åº“æ›´æ–°ç­–ç•¥ï¼Œtrue=update drop-create create
+    "databaseSchemaUpdate": "æ•°æ®åº“æ›´æ–°ç­–ç•¥",
     ...
   ```
 
-* ÊÖ¹¤´´½¨Êı¾İ¿â±í£º
-  * ´´½¨±í£º
-    * Á÷³ÌÔËĞĞÊ±±í½á¹¹£º resources\db\create\activiti.mysql.create.engine.sql  
-    * Á÷³ÌÀúÊ·¼ÇÂ¼±í½á¹¹£ºresources\db\create\activiti.mysql.create.history.sql
-  * É¾³ı±í
-    * Á÷³ÌÔËĞĞÊ±±í½á¹¹£º resources\db\drop\activiti.mysql.drop.engine.sql  
-    * Á÷³ÌÀúÊ·¼ÇÂ¼±í½á¹¹£ºresources\db\drop\activiti.mysql.drop.history.sql
+* æ‰‹å·¥åˆ›å»ºæ•°æ®åº“è¡¨ï¼š
+  * åˆ›å»ºè¡¨ï¼š
+    * æµç¨‹è¿è¡Œæ—¶è¡¨ç»“æ„ï¼š resources\db\create\activiti.mysql.create.engine.sql  
+    * æµç¨‹å†å²è®°å½•è¡¨ç»“æ„ï¼šresources\db\create\activiti.mysql.create.history.sql
+  * åˆ é™¤è¡¨
+    * æµç¨‹è¿è¡Œæ—¶è¡¨ç»“æ„ï¼š resources\db\drop\activiti.mysql.drop.engine.sql  
+    * æµç¨‹å†å²è®°å½•è¡¨ç»“æ„ï¼šresources\db\drop\activiti.mysql.drop.history.sql
 
-## ¼òÒ×Á÷³Ì±à¼­Æ÷·ÃÎÊµØÖ· http://localhost:11015/index.html
-* ±à¼­Æ÷´úÂë BpmnEditor
+## ç®€æ˜“æµç¨‹ç¼–è¾‘å™¨è®¿é—®åœ°å€ http://localhost:11015/index.html
+* ç¼–è¾‘å™¨ä»£ç  BpmnEditor
