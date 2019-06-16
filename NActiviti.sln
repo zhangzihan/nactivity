@@ -28,7 +28,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "说明", "说明", "{4E99C3D6-917B-495D-858F-6CE8328277CA}"
 	ProjectSection(SolutionItems) = preProject
 		license.txt = license.txt
-		readme.txt = readme.txt
+		readme.md = readme.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5BA0D35E-83CF-4AA4-8958-E4BDEB6F7477}"

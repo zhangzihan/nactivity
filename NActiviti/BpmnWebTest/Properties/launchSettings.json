@@ -19,11 +19,12 @@
     },
     "BpmnWebTest": {
       "commandName": "Project",
-      "launchUrl": "api/values",
+      "launchBrowser": true,
+      "launchUrl": "index.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:5000"
+      "applicationUrl": "http://localhost:11015"
     },
     "Docker": {
       "commandName": "Docker",

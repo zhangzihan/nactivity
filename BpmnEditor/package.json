@@ -14,7 +14,8 @@
   },
   "scripts": {
     "start": "nps",
-    "test": "nps test"
+    "test": "nps test",
+    "build": "nps build"
   },
   "jest": {
     "modulePaths": [
