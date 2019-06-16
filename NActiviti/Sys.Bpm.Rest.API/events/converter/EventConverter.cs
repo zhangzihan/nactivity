@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-using Sys.Workflow.cloud.services.api.events;
-using Sys.Workflow.engine.@delegate.@event;
+using Sys.Workflow.Cloud.Services.Api.Events;
+using Sys.Workflow.Engine.Delegate.Events;
 
-namespace Sys.Workflow.cloud.services.events.converter
+namespace Sys.Workflow.Cloud.Services.Events.Converters
 {
 
     /// <summary>

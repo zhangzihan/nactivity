@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl
+namespace Sys.Workflow.Engine.Impl
 {
-    using Sys.Workflow.engine.query;
+    using Sys.Workflow.Engine.Query;
 
     /// 
     [Serializable]

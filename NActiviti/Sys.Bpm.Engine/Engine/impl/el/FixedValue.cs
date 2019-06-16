@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.el
+namespace Sys.Workflow.Engine.Impl.EL
 {
-    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.Engine.Delegate;
 
     /// <summary>
     /// Expression that always returns the same value when <code>getValue</code> is called. Setting of the value is not supported.

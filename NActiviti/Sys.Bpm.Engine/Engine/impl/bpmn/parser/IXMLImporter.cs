@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.parser
+namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
 {
 
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.impl.bpmn.data;
-    using Sys.Workflow.engine.impl.webservice;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Impl.Bpmn.Datas;
+    using Sys.Workflow.Engine.Impl.Webservice;
 
     /// <summary>
     /// A XML importer

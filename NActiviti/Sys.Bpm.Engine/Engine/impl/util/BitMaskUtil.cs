@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.util
+namespace Sys.Workflow.Engine.Impl.Util
 {
     /// <summary>
     /// Util class for manipulating bit-flag in ints.

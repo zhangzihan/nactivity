@@ -13,9 +13,9 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.deployer
+namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
 {
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// <summary>
     /// Static methods for working with BPMN and image resource names.

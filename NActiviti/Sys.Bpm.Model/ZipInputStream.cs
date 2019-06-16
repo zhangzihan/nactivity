@@ -1,4 +1,4 @@
-﻿namespace java.util.zip
+﻿namespace Sys.Workflow.Util.Zip
 {
     public class ZipInputStream
     {

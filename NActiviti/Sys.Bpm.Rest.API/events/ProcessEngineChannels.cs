@@ -1,9 +1,9 @@
-﻿using Sys.Workflow.cloud.services.api.commands.results;
-using Sys.Workflow.cloud.services.api.events;
-using org.springframework.messaging;
+﻿using Sys.Workflow.Cloud.Services.Api.Commands.Results;
+using Sys.Workflow.Cloud.Services.Api.Events;
+using Sys.Workflow.Messaging;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.cloud.services.events
+namespace Sys.Workflow.Cloud.Services.Events
 {
 
     /// <summary>

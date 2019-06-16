@@ -1,10 +1,10 @@
-﻿using Sys.Workflow.api.runtime.shared.query;
-using Sys.Workflow.engine.impl.persistence.entity;
+﻿using Sys.Workflow.Api.Runtime.Shared.Query;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sys.Workflow.cloud.services.api.model
+namespace Sys.Workflow.Cloud.Services.Api.Model
 {
     /// <summary>
     /// 流程实例查询条件对象

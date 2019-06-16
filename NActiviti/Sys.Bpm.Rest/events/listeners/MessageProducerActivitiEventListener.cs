@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.cloud.services.events.listeners
+namespace Sys.Workflow.Cloud.Services.Events.Listeners
 {
-    using Sys.Workflow.cloud.services.api.events;
-    using Sys.Workflow.cloud.services.events.converter;
-    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.Cloud.Services.Api.Events;
+    using Sys.Workflow.Cloud.Services.Events.Converters;
+    using Sys.Workflow.Engine.Delegate.Events;
 
     /// <summary>
     /// 

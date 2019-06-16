@@ -1,4 +1,4 @@
-﻿using Sys.Workflow.engine.impl.agenda;
+﻿using Sys.Workflow.Engine.Impl.Agenda;
 using System;
 using System.Threading;
 
@@ -14,7 +14,7 @@ using System.Threading;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine
+namespace Sys.Workflow.Engine
 {
     /// <summary>
     /// For each API call (and thus <seealso cref="Command"/>) being executed, a new agenda instance is created.

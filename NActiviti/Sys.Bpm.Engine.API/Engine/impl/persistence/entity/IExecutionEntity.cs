@@ -14,13 +14,13 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
     using Newtonsoft.Json;
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.db;
-    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.DB;
+    using Sys.Workflow.Engine.Runtime;
 
     public interface IExecutionEntity : IVariableScope, IExecution, IProcessInstance, IEntity, IHasRevision
     {

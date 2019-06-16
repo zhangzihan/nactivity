@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace Sys.Workflow.cloud.services.core
+namespace Sys.Workflow.Cloud.Services.Core
 {
     /// <summary>
     /// mvc controller discovery

@@ -14,7 +14,7 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.behavior
+namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
     /// <summary>
     /// Parent class for all BPMN 2.0 task types such as ServiceTask, ScriptTask, UserTask, etc.

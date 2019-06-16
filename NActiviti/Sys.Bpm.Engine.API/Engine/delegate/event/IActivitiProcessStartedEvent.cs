@@ -1,7 +1,7 @@
-﻿namespace Sys.Workflow.engine.@delegate.@event
+﻿namespace Sys.Workflow.Engine.Delegate.Events
 {
     /// <summary>
-    /// An <seealso cref="Sys.Workflow.engine.delegate.event.ActivitiEvent"/> related to start event being sent when activiti process
+    /// An <seealso cref="Sys.Workflow.Engine.Delegate.Events.ActivitiEvent"/> related to start event being sent when activiti process
     /// instance is started.
     /// 
     /// 

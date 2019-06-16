@@ -11,11 +11,11 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.variable
+namespace Sys.Workflow.Engine.Impl.Variable
 {
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys.Data;
     using System;
     using System.Data.Common;

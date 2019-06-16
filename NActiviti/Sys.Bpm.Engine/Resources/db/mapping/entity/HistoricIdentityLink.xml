@@ -14,11 +14,11 @@
   ~ limitations under the License.
   -->
 
-<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.HistoricIdentityLinkEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricIdentityLinkEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
   
   <!-- HISTORIC IDENTITY LINK RESULTMAP -->
 
-  <ResultMap Id="historicIdentityLinkResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.HistoricIdentityLinkEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="historicIdentityLinkResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricIdentityLinkEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="type" Column="TYPE_" />
     <Result Property="userId" Column="USER_ID_" />

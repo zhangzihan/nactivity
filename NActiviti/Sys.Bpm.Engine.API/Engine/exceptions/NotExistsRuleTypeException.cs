@@ -6,11 +6,11 @@
 //  Original author: 张楠
 ///////////////////////////////////////////////////////////
 
-using Sys.Workflow.engine;
+using Sys.Workflow.Engine;
 using System;
 using System.Runtime.Serialization;
 
-namespace Sys.Workflow.engine.exceptions
+namespace Sys.Workflow.Engine.Exceptions
 {
     /// <summary>
     /// 不存在的会签角色规则

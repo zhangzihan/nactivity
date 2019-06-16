@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
-using Sys.Workflow.cloud.services.events.configuration;
-using Sys.Workflow.cloud.services.events.integration;
-using Sys.Workflow.engine;
-using Sys.Workflow.engine.impl.persistence.entity.integration;
-using Sys.Workflow.engine.integration;
-using Sys.Workflow.services.connectors.model;
-using org.springframework.messaging;
-using org.springframework.messaging.support;
+using Sys.Workflow.Cloud.Services.Events.Configurations;
+using Sys.Workflow.Cloud.Services.Events.Integration;
+using Sys.Workflow.Engine;
+using Sys.Workflow.Engine.Impl.Persistence.Entity.Integration;
+using Sys.Workflow.Engine.Integration;
+using Sys.Workflow.Services.Connectors.Models;
+using Sys.Workflow.Messaging;
+using Sys.Workflow.Messaging.Support;
 using Sys.Workflow;
 using System.Collections.Generic;
 
@@ -26,7 +26,7 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.services.connectors.channel
+namespace Sys.Workflow.Services.Connectors.Channels
 {
     /// <summary>
     /// 

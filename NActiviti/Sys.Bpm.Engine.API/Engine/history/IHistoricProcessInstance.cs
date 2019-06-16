@@ -15,10 +15,10 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.history
+namespace Sys.Workflow.Engine.History
 {
 
-    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.Engine.Runtime;
 
     /// <summary>
     /// A single execution of a whole process definition that is stored permanently.

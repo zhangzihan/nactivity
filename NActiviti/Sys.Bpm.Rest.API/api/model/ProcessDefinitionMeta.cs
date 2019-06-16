@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.cloud.services.api.model
+namespace Sys.Workflow.Cloud.Services.Api.Model
 {
 
     /// <summary>

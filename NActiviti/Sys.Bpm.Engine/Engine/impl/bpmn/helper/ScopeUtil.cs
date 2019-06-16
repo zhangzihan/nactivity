@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.bpmn.helper
+namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 {
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Impl.Util;
     using System;
     using System.Linq;
 

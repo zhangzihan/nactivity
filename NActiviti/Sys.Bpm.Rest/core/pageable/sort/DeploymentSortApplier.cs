@@ -1,8 +1,8 @@
-﻿using Sys.Workflow.api.runtime.shared.query;
-using Sys.Workflow.engine.impl;
-using Sys.Workflow.engine.query;
-using Sys.Workflow.engine.repository;
-using Sys.Workflow.engine.runtime;
+﻿using Sys.Workflow.Api.Runtime.Shared.Query;
+using Sys.Workflow.Engine.Impl;
+using Sys.Workflow.Engine.Query;
+using Sys.Workflow.Engine.Repository;
+using Sys.Workflow.Engine.Runtime;
 using System;
 using System.Collections.Generic;
 
@@ -21,7 +21,7 @@ using System.Collections.Generic;
  *
  */
 
-namespace Sys.Workflow.cloud.services.core.pageable.sort
+namespace Sys.Workflow.Cloud.Services.Core.Pageables.Sorts
 {
     /// <summary>
     /// 

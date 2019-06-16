@@ -1,12 +1,12 @@
-﻿using Sys.Workflow.cloud.services.api.model;
-using Sys.Workflow.cloud.services.rest.api;
-using org.springframework.hateoas;
-using Sys.Bpmn.Test;
+﻿using Sys.Workflow.Cloud.Services.Api.Model;
+using Sys.Workflow.Cloud.Services.Rest.Api;
+using Sys.Workflow.Hateoas;
+using Sys.Workflown.Test;
 using System;
 using System.Linq;
 using Xunit;
 
-namespace Sys.Bpm.Client.Tests.rest.client
+namespace Sys.Workflow.Client.Tests.Rest.Client
 {
     //[Order(5)]
     public class ProcessInstanceTasksClientTest

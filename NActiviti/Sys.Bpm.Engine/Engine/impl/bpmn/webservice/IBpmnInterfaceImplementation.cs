@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.webservice
+namespace Sys.Workflow.Engine.Impl.Bpmn.Webservice
 {
     /// <summary>
     /// Represents an implementation of a <seealso cref="BpmnInterface"/>

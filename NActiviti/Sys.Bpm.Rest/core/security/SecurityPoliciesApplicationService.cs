@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Headers;
 using Sys.Workflow;
 
-namespace Sys.Workflow.cloud.services.core
+namespace Sys.Workflow.Cloud.Services.Core
 {
     /// <summary>
     /// authentication midlleware

@@ -13,16 +13,16 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.behavior
+namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.@delegate.@event;
-    using Sys.Workflow.engine.@delegate.@event.impl;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.history;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Delegate.Events;
+    using Sys.Workflow.Engine.Delegate.Events.Impl;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Histories;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// 
     [Serializable]
@@ -231,7 +231,7 @@ namespace Sys.Workflow.engine.impl.bpmn.behavior
 
         protected internal virtual string CreateDeleteReason(string activityId)
         {
-            return engine.history.DeleteReasonFields.TERMINATE_END_EVENT + " (" + activityId + ")";
+            return History.DeleteReasonFields.TERMINATE_END_EVENT + " (" + activityId + ")";
         }
 
         public virtual bool TerminateAll

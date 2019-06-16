@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.JobEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.JobEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- JOB RESULTMAP (FOR TIMER AND MESSAGE) -->
 
@@ -8,10 +8,10 @@
       <case value="message" ResultMap="messageResultMap"/>
       <case value="timer" ResultMap="timerResultMap"/>
 
-  <ResultMap Id="messageResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.MessageEntityImpl,Sys.Bpm.Engine" extends="jobResultMap"/>
+  <ResultMap Id="messageResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.MessageEntityImpl,Sys.Bpm.Engine" extends="jobResultMap"/>
     </discriminator>
 
-  <ResultMap Id="timerResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.TimerEntityImpl,Sys.Bpm.Engine" extends="jobResultMap">
+  <ResultMap Id="timerResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.TimerEntityImpl,Sys.Bpm.Engine" extends="jobResultMap">
     <Result Property="Duedate" Column="DUEDATE_" />
     <Result Property="Repeat" Column="REPEAT_" />
   </ResultMap>
@@ -21,7 +21,7 @@
     <Parameter Property="(Items_)?exceptionByteArrayRef(_p\d)?" TypeHandler="二进制引用" />
   </ParameterMap>
   
-  <ResultMap Id="jobResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.JobEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="jobResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.JobEntityImpl,Sys.Bpm.Engine">
     <Result Property="Id" Column="ID_" />
     <Result Property="Revision" Column="REV_" />
     <result Property="JobType" Column="TYPE_" />

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.bpmn.behavior
+namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
 	/// 
 	[Serializable]

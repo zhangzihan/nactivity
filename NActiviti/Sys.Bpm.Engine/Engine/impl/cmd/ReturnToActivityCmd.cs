@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.impl.cmd
+namespace Sys.Workflow.Engine.Impl.Cmd
 {
-    using Sys.Workflow.engine.history;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.impl.util;
-    using Sys.Workflow.engine.task;
+    using Sys.Workflow.Engine.History;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Impl.Util;
+    using Sys.Workflow.Engine.Tasks;
     using System.Linq;
 
     /// 
@@ -37,7 +37,7 @@ namespace Sys.Workflow.engine.impl.cmd
             lock (syncRoot)
             {
                 ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.ProcessEngineConfiguration;
-                interceptor.ICommandExecutor commandExecutor = processEngineConfiguration.CommandExecutor;
+                Interceptor.ICommandExecutor commandExecutor = processEngineConfiguration.CommandExecutor;
 
                 ITaskEntity task = commandExecutor.Execute(new GetTaskByIdCmd(currentTaskId)) as ITaskEntity;
                 if (task is null)
@@ -103,7 +103,7 @@ namespace Sys.Workflow.engine.impl.cmd
             }
         }
 
-        private void DeleteTasks(ICommandContext commandContext, interceptor.ICommandExecutor commandExecutor, IExecutionEntity execution, IExecutionEntityManager executionEntityManager, List<ITask> tasks)
+        private void DeleteTasks(ICommandContext commandContext, Interceptor.ICommandExecutor commandExecutor, IExecutionEntity execution, IExecutionEntityManager executionEntityManager, List<ITask> tasks)
         {
             foreach (ITaskEntity delTask in tasks)
             {

@@ -13,10 +13,10 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.persistence.entity.data.impl
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
 {
 
-    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.Engine.Impl.Cfg;
 
     /// 
     public class MybatisPropertyDataManager : AbstractDataManager<IPropertyEntity>, IPropertyDataManager

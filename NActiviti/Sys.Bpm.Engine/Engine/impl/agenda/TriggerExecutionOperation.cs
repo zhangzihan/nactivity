@@ -1,10 +1,10 @@
-﻿namespace Sys.Workflow.engine.impl.agenda
+﻿namespace Sys.Workflow.Engine.Impl.Agenda
 {
     using Microsoft.Extensions.Logging;
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.impl.@delegate;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Impl.Delegate;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using Sys;
     using Sys.Workflow;
     using System;

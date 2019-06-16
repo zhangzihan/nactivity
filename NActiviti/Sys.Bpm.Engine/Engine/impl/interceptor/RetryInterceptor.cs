@@ -14,7 +14,7 @@ using System.Threading;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.interceptor
+namespace Sys.Workflow.Engine.Impl.Interceptor
 {
     /// <summary>
     /// Intercepts <seealso cref="ActivitiOptimisticLockingException"/> and tries to run the same command again. The number of retries and the time waited between retries is configurable.

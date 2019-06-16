@@ -13,13 +13,13 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl
+namespace Sys.Workflow.Engine.Impl
 {
 
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.query;
-    using Sys.Bpm;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Query;
+    using Sys.Workflow;
 
     /// <summary>
     /// Abstract superclass for all native query types.

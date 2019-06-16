@@ -1,4 +1,4 @@
-﻿namespace Sys.Workflow.bpmn.model.alfresco
+﻿namespace Sys.Workflow.Bpmn.Models.Alfresco
 {
 
     public class AlfrescoScriptTask : ServiceTask

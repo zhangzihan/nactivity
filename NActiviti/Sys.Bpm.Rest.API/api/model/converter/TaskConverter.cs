@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
-using Sys.Workflow.engine.impl.persistence.entity;
-using Sys.Workflow.engine.task;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
+using Sys.Workflow.Engine.Tasks;
 using Sys.Net.Http;
 using System;
 using System.Collections.Generic;
-using static Sys.Workflow.cloud.services.api.model.TaskModel;
+using static Sys.Workflow.Cloud.Services.Api.Model.TaskModel;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,7 @@ using static Sys.Workflow.cloud.services.api.model.TaskModel;
  *
  */
 
-namespace Sys.Workflow.cloud.services.api.model.converter
+namespace Sys.Workflow.Cloud.Services.Api.Model.Converters
 {
 
     /// <summary>

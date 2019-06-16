@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.impl.cmd
+namespace Sys.Workflow.Engine.Impl.Cmd
 {
 
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.validation;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Validation;
 
     /// 
     public class ValidateBpmnModelCmd : ICommand<IList<ValidationError>>

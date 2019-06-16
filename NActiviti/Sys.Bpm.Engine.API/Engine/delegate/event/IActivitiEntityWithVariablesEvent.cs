@@ -12,7 +12,7 @@
  */
 using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.@delegate.@event
+namespace Sys.Workflow.Engine.Delegate.Events
 {
 
     /// <summary>

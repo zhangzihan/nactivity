@@ -13,9 +13,9 @@
  *
  */
 
-using Sys.Workflow.api.runtime.shared.query;
+using Sys.Workflow.Api.Runtime.Shared.Query;
 
-namespace Sys.Workflow.cloud.services.core.pageable.sort
+namespace Sys.Workflow.Cloud.Services.Core.Pageables.Sorts
 {
     /// <summary>
     /// 

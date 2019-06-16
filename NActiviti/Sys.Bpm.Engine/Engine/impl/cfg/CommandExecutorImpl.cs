@@ -1,6 +1,6 @@
-﻿namespace Sys.Workflow.engine.impl.cfg
+﻿namespace Sys.Workflow.Engine.Impl.Cfg
 {
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.Impl.Interceptor;
 
     /// <summary>
     /// Command executor that passes commands to the first interceptor in the chain. If no <seealso cref="CommandConfig"/> is passed, the default configuration will be used.

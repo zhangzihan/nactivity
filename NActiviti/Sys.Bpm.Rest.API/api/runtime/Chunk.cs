@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.api.runtime.shared.query
+namespace Sys.Workflow.Api.Runtime.Shared.Query
 {
 
     /// <summary>

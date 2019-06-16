@@ -12,12 +12,11 @@
  */
 
 using Microsoft.Extensions.Logging;
-using Sys.Workflow.engine.impl.cfg.jta;
-using Sys.Workflow;
+using Sys.Workflow.Engine.Impl.Cfg.Jta;
 using System;
 using System.Runtime.Serialization;
 
-namespace javax.transaction
+namespace Sys.Workflow.Transactions
 {
     public class TransactionManager
     {

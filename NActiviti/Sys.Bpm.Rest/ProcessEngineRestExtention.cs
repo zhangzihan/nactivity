@@ -6,18 +6,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Sys.Workflow.api.runtime.shared.query;
-using Sys.Workflow.cloud.services.api;
-using Sys.Workflow.cloud.services.api.model.converter;
-using Sys.Workflow.cloud.services.core;
-using Sys.Workflow.cloud.services.core.pageable;
-using Sys.Workflow.cloud.services.core.pageable.sort;
-using Sys.Workflow.cloud.services.rest.assemblers;
-using Sys.Workflow.engine;
+using Sys.Workflow.Api.Runtime.Shared.Query;
+using Sys.Workflow.Cloud.Services.Api;
+using Sys.Workflow.Cloud.Services.Api.Model.Converters;
+using Sys.Workflow.Cloud.Services.Core;
+using Sys.Workflow.Cloud.Services.Core.Pageables;
+using Sys.Workflow.Cloud.Services.Core.Pageables.Sorts;
+using Sys.Workflow.Cloud.Services.Rest.Assemblers;
+using Sys.Workflow.Engine;
 using Serilog;
 using System.Linq;
 
-namespace Sys.Bpm.Services.Rest
+namespace Sys.Workflow.Services.Rest
 {
     /// <summary>
     /// 
@@ -173,9 +173,8 @@ namespace Sys.Bpm.Services.Rest
 
             SecurityPoliciesProviderOptions options = new SecurityPoliciesProviderOptions(config.GetSection("SecurityPoliciesProvider"));
 
-            app.UseMiddleware<ErrorHandlingMiddleware>();
-
-            app.UseMiddleware<SecurityPoliciesApplicationMiddle>(Options.Create(options));
+            _ = app.UseMiddleware<ErrorHandlingMiddleware>()
+                .UseMiddleware<SecurityPoliciesApplicationMiddle>(Microsoft.Extensions.Options.Options.Create(options));
 
             return app;
         }

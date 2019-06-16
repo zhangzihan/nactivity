@@ -12,7 +12,7 @@
  */
 using System;
 
-namespace Sys.Workflow.engine.impl.variable
+namespace Sys.Workflow.Engine.Impl.Variable
 {
     /// 
     public class JodaDateTimeType : AbstractVariableType

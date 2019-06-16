@@ -1,4 +1,4 @@
-﻿using javax.enterprise.concurrent;
+﻿using Sys.Workflow.Concurrent;
 using Microsoft.Extensions.Logging;
 using Sys.Workflow;
 using System.Collections.Concurrent;
@@ -16,7 +16,7 @@ using System.Threading;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.asyncexecutor
+namespace Sys.Workflow.Engine.Impl.Asyncexecutor
 {
     /// <summary>
     /// Simple JSR-236 async job executor to allocate threads through <seealso cref="ManagedThreadFactory"/>. Falls back to <seealso cref="IAsyncExecutor"/> when a thread factory was not referenced in configuration.

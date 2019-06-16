@@ -13,17 +13,17 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
 
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.@delegate.@event;
-    using Sys.Workflow.engine.@delegate.@event.impl;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.jobexecutor;
-    using Sys.Workflow.engine.impl.persistence.entity.data;
-    using Sys.Workflow.engine.impl.util;
-    using Sys.Workflow.engine.repository;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Delegate.Events;
+    using Sys.Workflow.Engine.Delegate.Events.Impl;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.JobExecutors;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
+    using Sys.Workflow.Engine.Impl.Util;
+    using Sys.Workflow.Engine.Repository;
     using System;
 
     /// 
@@ -319,7 +319,7 @@ namespace Sys.Workflow.engine.impl.persistence.entity
         protected internal virtual IProcessDefinitionEntity findLatestProcessDefinition(IProcessDefinition processDefinition)
         {
             IProcessDefinitionEntity latestProcessDefinition = null;
-            if (!ReferenceEquals(processDefinition.TenantId, null) && !engine.ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
+            if (!ReferenceEquals(processDefinition.TenantId, null) && !Engine.ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinition.TenantId))
             {
                 latestProcessDefinition = ProcessDefinitionEntityManager.FindLatestProcessDefinitionByKeyAndTenantId(processDefinition.Key, processDefinition.TenantId);
             }
@@ -339,7 +339,7 @@ namespace Sys.Workflow.engine.impl.persistence.entity
             ProcessDefinitionQueryImpl query = new ProcessDefinitionQueryImpl();
             query.SetProcessDefinitionKey(processDefinitionToBeRemoved.Key);
 
-            if (!ReferenceEquals(processDefinitionToBeRemoved.TenantId, null) && !engine.ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinitionToBeRemoved.TenantId))
+            if (!ReferenceEquals(processDefinitionToBeRemoved.TenantId, null) && !Engine.ProcessEngineConfiguration.NO_TENANT_ID.Equals(processDefinitionToBeRemoved.TenantId))
             {
                 query.SetProcessDefinitionTenantId(processDefinitionToBeRemoved.TenantId);
             }

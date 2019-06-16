@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sys.Workflow.cloud.services.api.commands;
-using Sys.Workflow.cloud.services.api.model;
-using Sys.Workflow.cloud.services.core;
-using Sys.Workflow.cloud.services.rest.api;
-using Sys.Workflow.cloud.services.rest.api.resources;
-using Sys.Workflow.cloud.services.rest.assemblers;
-using Sys.Workflow.engine;
-using Sys.Workflow.engine.impl.persistence.entity;
-using org.springframework.hateoas;
+using Sys.Workflow.Cloud.Services.Api.Commands;
+using Sys.Workflow.Cloud.Services.Api.Model;
+using Sys.Workflow.Cloud.Services.Core;
+using Sys.Workflow.Cloud.Services.Rest.Api;
+using Sys.Workflow.Cloud.Services.Rest.Api.Resources;
+using Sys.Workflow.Cloud.Services.Rest.Assemblers;
+using Sys.Workflow.Engine;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
+using Sys.Workflow.Hateoas;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,7 +26,7 @@ using System.Threading.Tasks;
  *
  */
 
-namespace Sys.Workflow.cloud.services.rest.controllers
+namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 {
 
     /// <inheritdoc />

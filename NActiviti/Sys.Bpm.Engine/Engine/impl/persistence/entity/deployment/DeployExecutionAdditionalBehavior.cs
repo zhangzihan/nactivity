@@ -1,4 +1,4 @@
-﻿using Sys.Workflow.bpmn.constants;
+﻿using Sys.Workflow.Bpmn.Constants;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
     /// <inheritdoc />
     public class DeployExecutionAdditionalBehavior : IDeployExecutionBehavior

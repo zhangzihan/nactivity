@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
-using Sys.Workflow.services.api.commands;
+using Sys.Workflow.Services.Api.Commands;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sys.Workflow.cloud.services.api.commands
+namespace Sys.Workflow.Cloud.Services.Api.Commands
 {
     /// <summary>
     /// 重新指派流程节点执行人，该操作由管理员操作。该节点将终止当前所有待办任务.

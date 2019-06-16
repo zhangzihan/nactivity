@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.@delegate.@event.impl
+namespace Sys.Workflow.Engine.Delegate.Events.Impl
 {
-    using Sys.Workflow.engine.impl.variable;
+    using Sys.Workflow.Engine.Impl.Variable;
 
     /// <summary>
     /// Implementation of <seealso cref="IActivitiVariableEvent"/>.

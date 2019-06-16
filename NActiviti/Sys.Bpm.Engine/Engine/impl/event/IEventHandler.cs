@@ -11,10 +11,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.@event
+namespace Sys.Workflow.Engine.Impl.Events
 {
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// 
     public interface IEventHandler

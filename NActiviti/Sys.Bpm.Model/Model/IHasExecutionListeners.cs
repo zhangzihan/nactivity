@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.bpmn.model
+namespace Sys.Workflow.Bpmn.Models
 {
 
 	/// <summary>

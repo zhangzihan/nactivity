@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine
+namespace Sys.Workflow.Engine
 {
     /// <summary>
     /// Exception that is thrown when the Activiti engine discovers a mismatch between the database schema version and the engine version.

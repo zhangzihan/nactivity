@@ -1,6 +1,6 @@
-﻿namespace Sys.Workflow.engine.runtime
+﻿namespace Sys.Workflow.Engine.Runtime
 {
-	using Sys.Workflow.engine.query;
+	using Sys.Workflow.Engine.Query;
 
 	/// <summary>
 	/// Allows querying of <seealso cref="IProcessInstance"/>s via native (SQL) queries

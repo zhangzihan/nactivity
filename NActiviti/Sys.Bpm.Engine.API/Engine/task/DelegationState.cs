@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.task
+namespace Sys.Workflow.Engine.Tasks
 {
 	/// <summary>
 	/// Defines the different states of delegation that a task can be in.

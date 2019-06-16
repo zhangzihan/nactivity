@@ -14,18 +14,18 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.cmd
+namespace Sys.Workflow.Engine.Impl.Cmd
 {
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.@delegate.@event;
-    using Sys.Workflow.engine.@delegate.@event.impl;
-    using Sys.Workflow.engine.impl.bpmn.behavior;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.identity;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.impl.util;
-    using Sys.Workflow.engine.task;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Delegate.Events;
+    using Sys.Workflow.Engine.Delegate.Events.Impl;
+    using Sys.Workflow.Engine.Impl.Bpmn.Behavior;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Identities;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Impl.Util;
+    using Sys.Workflow.Engine.Tasks;
     using Sys.Workflow;
 
     /// 

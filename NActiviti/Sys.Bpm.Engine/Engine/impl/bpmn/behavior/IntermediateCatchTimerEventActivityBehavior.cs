@@ -13,15 +13,15 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.behavior
+namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
 
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.history;
-    using Sys.Workflow.engine.impl.asyncexecutor;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.jobexecutor;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.History;
+    using Sys.Workflow.Engine.Impl.Asyncexecutor;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.JobExecutors;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     [Serializable]
     public class IntermediateCatchTimerEventActivityBehavior : IntermediateCatchEventActivityBehavior

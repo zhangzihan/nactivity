@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.validation.validator.impl
+namespace Sys.Workflow.Validation.Validators.Impl
 {
 
-    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.Bpmn.Models;
 
     /// 
     public class IntermediateCatchEventValidator : ProcessLevelValidator

@@ -1,10 +1,10 @@
-﻿using Sys.Workflow.cloud.services.api.commands;
-using Sys.Workflow.cloud.services.api.commands.results;
-using org.springframework.messaging;
-using org.springframework.messaging.support;
+﻿using Sys.Workflow.Cloud.Services.Api.Commands;
+using Sys.Workflow.Cloud.Services.Api.Commands.Results;
+using Sys.Workflow.Messaging;
+using Sys.Workflow.Messaging.Support;
 using System;
 
-namespace Sys.Workflow.cloud.services.core.commands
+namespace Sys.Workflow.Cloud.Services.Core.Commands
 {
     /// <summary>
     /// 

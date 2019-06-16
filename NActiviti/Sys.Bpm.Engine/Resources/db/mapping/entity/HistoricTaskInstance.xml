@@ -14,11 +14,11 @@
   ~ limitations under the License.
   -->
 
-<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.HistoricTaskInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricTaskInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- HISTORIC TASK INSTANCE RESULT MAP -->
 
-  <ResultMap Id="historicTaskInstanceResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.HistoricTaskInstanceEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="historicTaskInstanceResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricTaskInstanceEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />
@@ -45,7 +45,7 @@
     <Result Property="onlyAssignee" Column="ONLY_ASSIGNEE_" />
   </ResultMap>
 
-  <!--<collection property="queryVariables" column="TASK_ID_" javaType="ArrayList" ofType="Sys.Workflow.engine.impl.persistence.entity.HistoricVariableInstanceEntity">
+  <!--<collection property="queryVariables" column="TASK_ID_" javaType="ArrayList" ofType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricVariableInstanceEntity">
       <id property="id" column="VAR_ID_"/>
       <Result Property="name" Column="VAR_NAME_" />
       <Result Property="variableType" Column="VAR_TYPE_" />
@@ -60,7 +60,7 @@
       <Result Property="longValue" Column="VAR_LONG_" />
     </collection>-->
 
-  <ResultMap Id="historicTaskInstanceAndVariablesResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.HistoricTaskInstanceEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="historicTaskInstanceAndVariablesResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricTaskInstanceEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="processDefinitionId" Column="PROC_DEF_ID_" />
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />

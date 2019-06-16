@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.cmd
+namespace Sys.Workflow.Engine.Impl.Cmd
 {
 
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.repository;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Repository;
     using System.Collections.Generic;
 
     /// 

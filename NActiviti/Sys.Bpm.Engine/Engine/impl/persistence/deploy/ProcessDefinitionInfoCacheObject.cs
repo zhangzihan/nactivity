@@ -12,7 +12,7 @@
  */
 using Newtonsoft.Json.Linq;
 
-namespace Sys.Workflow.engine.impl.persistence.deploy
+namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
 {
     /// 
     public class ProcessDefinitionInfoCacheObject

@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.interceptor
+namespace Sys.Workflow.Engine.Impl.Interceptor
 {
-    using javax.transaction;
-    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.Transactions;
+    using Sys.Workflow.Engine.Impl.Cfg;
 
     /// 
     public class JtaTransactionInterceptor : AbstractCommandInterceptor

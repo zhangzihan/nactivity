@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.repository
+namespace Sys.Workflow.Engine.Repository
 {
 
-    using Sys.Workflow.engine.query;
+    using Sys.Workflow.Engine.Query;
 
     /// <summary>
     /// Allows programmatic querying of <seealso cref="IProcessDefinition"/>s.

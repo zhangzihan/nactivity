@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.image.exception
+namespace Sys.Workflow.Image.Exceptions
 {
 	/// <summary>
 	/// Exception thrown when the BPMN modle doesn't have graphic info inside

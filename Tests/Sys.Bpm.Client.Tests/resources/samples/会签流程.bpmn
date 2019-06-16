@@ -19,7 +19,7 @@
           <camunda:property name="method" value="post" />
           <camunda:property name="userPolicy" value="[{&#34;ruleType&#34;:&#34;GetUser&#34;,&#34;ruleName&#34;:&#34;GetUser&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;用户1&#34;,&#34;name&#34;:&#34;用户1&#34;}]},{&#34;ruleType&#34;:&#34;GetDept&#34;,&#34;ruleName&#34;:&#34;GetDept&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;部门1&#34;,&#34;name&#34;:&#34;部门1&#34;}]},{&#34;ruleType&#34;:&#34;GetDeptLeader&#34;,&#34;ruleName&#34;:&#34;GetDeptLeader&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;部门1&#34;,&#34;name&#34;:&#34;部门1&#34;}]},{&#34;ruleType&#34;:&#34;GetDirectReporter&#34;,&#34;ruleName&#34;:&#34;GetDirectReporter&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;部门1&#34;,&#34;name&#34;:&#34;部门1&#34;}]},{&#34;ruleType&#34;:&#34;GetDuty&#34;,&#34;ruleName&#34;:&#34;GetDuty&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;岗位1&#34;,&#34;name&#34;:&#34;岗位1&#34;}]},{&#34;ruleType&#34;:&#34;GetUnderling&#34;,&#34;ruleName&#34;:&#34;GetUnderling&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;领导1&#34;,&#34;name&#34;:&#34;领导1&#34;}]}]" />
         </camunda:properties>
-        <camunda:executionListener class="Sys.Workflow.engine.impl.bpmn.listener.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
+        <camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1gi8lyw</bpmn2:incoming>
       <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${countersignUsers}" camunda:elementVariable="countersignUser">

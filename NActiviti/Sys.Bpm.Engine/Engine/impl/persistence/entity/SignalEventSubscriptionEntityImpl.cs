@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
 
-    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.Bpmn.Models;
 
     /// 
     /// 

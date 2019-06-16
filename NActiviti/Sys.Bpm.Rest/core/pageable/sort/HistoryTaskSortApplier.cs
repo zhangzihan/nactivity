@@ -1,13 +1,13 @@
-﻿using Sys.Workflow.api.runtime.shared.query;
-using Sys.Workflow.engine.history;
-using Sys.Workflow.engine.impl;
-using Sys.Workflow.engine.query;
-using Sys.Workflow.engine.task;
+﻿using Sys.Workflow.Api.Runtime.Shared.Query;
+using Sys.Workflow.Engine.History;
+using Sys.Workflow.Engine.Impl;
+using Sys.Workflow.Engine.Query;
+using Sys.Workflow.Engine.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sys.Workflow.cloud.services.core.pageable.sort
+namespace Sys.Workflow.Cloud.Services.Core.Pageables.Sorts
 {
     /// <summary>
     /// 

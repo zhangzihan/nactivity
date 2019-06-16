@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.CompensateEventSubscriptionEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.CompensateEventSubscriptionEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
 
 
@@ -11,7 +11,7 @@
         <Case Value="compensate" ResultMap="compensateResultMap"/>
       </Discriminator>-->
 
-  <ResultMap Id="eventSubscriptionResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.EventSubscriptionEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="eventSubscriptionResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.EventSubscriptionEntityImpl,Sys.Bpm.Engine">
     <Result Property="Id" Column="ID_" />
     <Result Property="Revision" Column="REV_" />
     <Result Property="EventType" Column="EVENT_TYPE_" />
@@ -25,7 +25,7 @@
     <Result Property="TenantId" Column="TENANT_ID_" />
   </ResultMap>
 
-  <ResultMap Id="messageResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.MessageEventSubscriptionEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="messageResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.MessageEventSubscriptionEntityImpl,Sys.Bpm.Engine">
     <Result Property="Id" Column="ID_" />
     <Result Property="Revision" Column="REV_" />
     <Result Property="EventType" Column="EVENT_TYPE_" />
@@ -39,7 +39,7 @@
     <Result Property="TenantId" Column="TENANT_ID_" />
   </ResultMap>
 
-  <ResultMap Id="signalResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.SignalEventSubscriptionEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="signalResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.SignalEventSubscriptionEntityImpl,Sys.Bpm.Engine">
     <Result Property="Id" Column="ID_" />
     <Result Property="Revision" Column="REV_" />
     <Result Property="EventType" Column="EVENT_TYPE_" />
@@ -53,7 +53,7 @@
     <Result Property="TenantId" Column="TENANT_ID_" />
   </ResultMap>
 
-  <ResultMap Id="compensateResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.CompensateEventSubscriptionEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="compensateResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.CompensateEventSubscriptionEntityImpl,Sys.Bpm.Engine">
     <Result Property="Id" Column="ID_" />
     <Result Property="Revision" Column="REV_" />
     <Result Property="EventType" Column="EVENT_TYPE_" />

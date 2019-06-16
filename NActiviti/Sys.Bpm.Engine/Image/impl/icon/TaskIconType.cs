@@ -1,4 +1,4 @@
-﻿namespace Sys.Workflow.image.impl.icon
+﻿namespace Sys.Workflow.Image.Impl.Icon
 {
 	using org.apache.batik.svggen;
 	using org.w3c.dom;

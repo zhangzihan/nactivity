@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sys.Workflow.bpmn.model
+namespace Sys.Workflow.Bpmn.Models
 {
     public class FormFieldProperty
     {

@@ -12,7 +12,7 @@
  */
 using Newtonsoft.Json;
 
-namespace Sys.Workflow.bpmn.model
+namespace Sys.Workflow.Bpmn.Models
 {
 
     public class BoundaryEvent : Event

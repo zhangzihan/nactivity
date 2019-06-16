@@ -11,11 +11,11 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.asyncexecutor.multitenant
+namespace Sys.Workflow.Engine.Impl.Asyncexecutor.Multitenants
 {
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.cfg.multitenant;
-    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Cfg.Multitenants;
+    using Sys.Workflow.Engine.Runtime;
 
     /// <summary>
     /// Extends the default <seealso cref="ExecuteAsyncRunnable"/> by setting the 'tenant' context before executing.

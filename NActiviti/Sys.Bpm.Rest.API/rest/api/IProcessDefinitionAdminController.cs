@@ -1,8 +1,8 @@
-﻿using Sys.Workflow.api.runtime.shared.query;
-using Sys.Workflow.cloud.services.api.model;
-using org.springframework.hateoas;
+﻿using Sys.Workflow.Api.Runtime.Shared.Query;
+using Sys.Workflow.Cloud.Services.Api.Model;
+using Sys.Workflow.Hateoas;
 
-namespace Sys.Workflow.cloud.services.rest.api
+namespace Sys.Workflow.Cloud.Services.Rest.Api
 {
     /// <summary>
     /// 工作流定义,管理员使用

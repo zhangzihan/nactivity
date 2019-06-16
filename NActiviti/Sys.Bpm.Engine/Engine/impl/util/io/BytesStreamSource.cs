@@ -12,7 +12,7 @@
  */
 using System.IO;
 
-namespace Sys.Workflow.engine.impl.util.io
+namespace Sys.Workflow.Engine.Impl.Util.IO
 {
 
     /// 

@@ -17,7 +17,7 @@ using System;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.cloud.services.api.commands
+namespace Sys.Workflow.Cloud.Services.Api.Commands
 {
     /// <summary>
     /// 追加审批人员

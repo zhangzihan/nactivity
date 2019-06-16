@@ -1,6 +1,6 @@
-﻿using Sys.Workflow.engine.impl.persistence.entity;
+﻿using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
-namespace Sys.Workflow.engine.impl.bpmn.behavior
+namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
     public interface IMultiinstanceCompletedPolicy
     {

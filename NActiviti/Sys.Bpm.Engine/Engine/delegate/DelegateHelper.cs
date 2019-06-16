@@ -12,17 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.@delegate
+namespace Sys.Workflow.Engine.Delegate
 {
 
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.el;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.EL;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Impl.Util;
 
     /// <summary>
-    /// Class that provides helper operations for use in the <seealso cref="IJavaDelegate"/>,
+    /// Class that provides helper operations for use in the <seealso cref="ICSharpDelegate"/>,
     /// <seealso cref="ActivityBehavior"/>, <seealso cref="IExecutionListener"/> and <seealso cref="ITaskListener"/>
     /// interfaces.
     /// </summary>
@@ -30,7 +30,7 @@ namespace Sys.Workflow.engine.@delegate
     {
 
         /// <summary>
-        /// To be used in an <seealso cref="ActivityBehavior"/> or <seealso cref="IJavaDelegate"/>: leaves
+        /// To be used in an <seealso cref="ActivityBehavior"/> or <seealso cref="ICSharpDelegate"/>: leaves
         /// according to the default BPMN 2.0 rules: all sequenceflow with a condition
         /// that evaluates to true are followed.
         /// </summary>
@@ -40,7 +40,7 @@ namespace Sys.Workflow.engine.@delegate
         }
 
         /// <summary>
-        /// To be used in an <seealso cref="ActivityBehavior"/> or <seealso cref="IJavaDelegate"/>: leaves
+        /// To be used in an <seealso cref="ActivityBehavior"/> or <seealso cref="ICSharpDelegate"/>: leaves
         /// the current activity via one specific sequenceflow.
         /// </summary>
         public static void LeaveDelegate(IExecutionEntity delegateExecution, string sequenceFlowId)

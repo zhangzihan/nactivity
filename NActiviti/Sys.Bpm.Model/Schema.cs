@@ -1,4 +1,4 @@
-﻿namespace Sys.Workflow.bpmn.converter
+﻿namespace Sys.Workflow.Bpmn.Converters
 {
     public class Schema
     {

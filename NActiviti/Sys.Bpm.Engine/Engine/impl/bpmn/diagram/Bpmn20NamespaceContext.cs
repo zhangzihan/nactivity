@@ -1,4 +1,4 @@
-﻿using Sys.Bpm;
+﻿using Sys.Workflow;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,7 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.bpmn.diagram
+namespace Sys.Workflow.Engine.Impl.Bpmn.Diagram
 {
     /// <summary>
     /// XML <seealso cref="NamespaceContext"/> containing the namespaces used by BPMN 2.0 XML documents.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Sys.Bpm.Exceptions
+namespace Sys.Workflow.Exceptions
 {
     /// <summary>
     /// 400业务异常

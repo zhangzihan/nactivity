@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Sys.Workflow.bpmn.model;
-using Sys.Workflow.cloud.services.api.model;
-using Sys.Workflow.cloud.services.rest.api;
-using org.springframework.hateoas;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Cloud.Services.Api.Model;
+using Sys.Workflow.Cloud.Services.Rest.Api;
+using Sys.Workflow.Hateoas;
 using Sys.Net.Http;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Sys.Bpm.Rest.Client.API
+namespace Sys.Workflow.Rest.Client.API
 {
     /// <inheritdoc />
     class ProcessDefinitionClient : IProcessDefinitionController

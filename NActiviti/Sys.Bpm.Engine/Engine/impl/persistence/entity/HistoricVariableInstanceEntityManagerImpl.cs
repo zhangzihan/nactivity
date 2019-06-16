@@ -14,13 +14,13 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
 
-    using Sys.Workflow.engine.history;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.history;
-    using Sys.Workflow.engine.impl.persistence.entity.data;
+    using Sys.Workflow.Engine.History;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Histories;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
 
     /// 
     /// 

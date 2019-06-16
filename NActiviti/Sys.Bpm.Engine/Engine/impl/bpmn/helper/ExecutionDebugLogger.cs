@@ -1,13 +1,13 @@
-﻿using Sys.Workflow.engine.@delegate;
-using Sys.Workflow.engine.impl.context;
-using Sys.Workflow.engine.impl.persistence.entity;
+﻿using Sys.Workflow.Engine.Delegate;
+using Sys.Workflow.Engine.Impl.Contexts;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace Sys.Workflow.engine.impl.bpmn.helper
+namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 {
     static class ExecutionDebugLogger
     {

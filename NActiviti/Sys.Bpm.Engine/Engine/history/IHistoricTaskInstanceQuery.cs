@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.history
+namespace Sys.Workflow.Engine.History
 {
 
-    using Sys.Workflow.engine.task;
+    using Sys.Workflow.Engine.Tasks;
 
     /// <summary>
     /// Allows programmatic querying for <seealso cref="IHistoricTaskInstance"/>s.

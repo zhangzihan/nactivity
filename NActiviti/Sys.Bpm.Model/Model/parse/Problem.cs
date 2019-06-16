@@ -1,4 +1,4 @@
-﻿namespace Sys.Workflow.bpmn.model.parse
+﻿namespace Sys.Workflow.Bpmn.Models.Parses
 {
 
     public class Problem

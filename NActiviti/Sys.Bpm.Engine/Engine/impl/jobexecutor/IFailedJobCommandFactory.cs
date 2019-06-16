@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Sys.Workflow.engine.impl.jobexecutor
+namespace Sys.Workflow.Engine.Impl.JobExecutors
 {
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.Impl.Interceptor;
 
     public interface IFailedJobCommandFactory
     {

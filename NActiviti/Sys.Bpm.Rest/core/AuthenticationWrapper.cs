@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-using Sys.Workflow.engine.impl.identity;
+using Sys.Workflow.Engine.Impl.Identities;
 using Sys.Workflow;
 
-namespace Sys.Workflow.cloud.services.core
+namespace Sys.Workflow.Cloud.Services.Core
 {
     /// <summary>
     /// Wrap Authentication.java so as to be able to mock static methods. May later want to move this to engine level but not necessary now.

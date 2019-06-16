@@ -10,11 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.parser.factory
+namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
 {
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Delegate.Events;
 
     /// <summary>
     /// Factory class used by the <seealso cref="BpmnParser"/> and <seealso cref="BpmnParse"/> to instantiate the behaviour classes for <seealso cref="ITaskListener"/> and <seealso cref="IExecutionListener"/> usages.

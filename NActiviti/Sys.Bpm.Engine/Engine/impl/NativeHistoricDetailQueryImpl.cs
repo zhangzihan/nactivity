@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.impl
+namespace Sys.Workflow.Engine.Impl
 {
 
-    using Sys.Workflow.engine.history;
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.History;
+    using Sys.Workflow.Engine.Impl.Interceptor;
 
     [Serializable]
     public class NativeHistoricDetailQueryImpl : AbstractNativeQuery<INativeHistoricDetailQuery, IHistoricDetail>, INativeHistoricDetailQuery

@@ -11,10 +11,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.variable
+namespace Sys.Workflow.Engine.Impl.Variable
 {
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Interceptor;
 
     /// <summary>
     /// Variable type capable of storing reference to JPA-entities. Only JPA-Entities which are configured by annotations are supported. Use of compound primary keys is not supported.

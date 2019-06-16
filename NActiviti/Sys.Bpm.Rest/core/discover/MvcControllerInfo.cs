@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Sys.Workflow.cloud.services.core
+namespace Sys.Workflow.Cloud.Services.Core
 {
     /// <summary>
     /// 

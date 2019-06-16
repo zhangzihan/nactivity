@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.asyncexecutor
+namespace Sys.Workflow.Engine.Impl.Asyncexecutor
 {
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Runtime;
 
     /// <summary>
     /// 

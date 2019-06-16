@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.helper
+namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 {
-    using Sys.Workflow.engine.@delegate.@event;
+    using Sys.Workflow.Engine.Delegate.Events;
 
     /// <summary>
     /// Base implementation of a <seealso cref="IActivitiEventListener"/>, used when creating event-listeners that are part of a BPMN definition.

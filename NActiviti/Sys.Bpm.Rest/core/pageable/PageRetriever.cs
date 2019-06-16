@@ -1,9 +1,9 @@
-﻿using Sys.Workflow.api.runtime.shared.query;
-using Sys.Workflow.cloud.services.api.model.converter;
-using Sys.Workflow.engine.impl;
-using Sys.Workflow.engine.impl.cmd;
-using Sys.Workflow.engine.impl.interceptor;
-using Sys.Workflow.engine.query;
+﻿using Sys.Workflow.Api.Runtime.Shared.Query;
+using Sys.Workflow.Cloud.Services.Api.Model.Converters;
+using Sys.Workflow.Engine.Impl;
+using Sys.Workflow.Engine.Impl.Cmd;
+using Sys.Workflow.Engine.Impl.Interceptor;
+using Sys.Workflow.Engine.Query;
 using System;
 using System.Collections.Generic;
 
@@ -22,7 +22,7 @@ using System.Collections.Generic;
  *
  */
 
-namespace Sys.Workflow.cloud.services.core.pageable
+namespace Sys.Workflow.Cloud.Services.Core.Pageables
 {
     /// <summary>
     /// 

@@ -16,56 +16,55 @@ using System.Threading;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.cfg
+namespace Sys.Workflow.Engine.Impl.Cfg
 {
     using DatabaseSchemaReader;
-    using javax.transaction;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using Sys.Workflow.engine.cfg;
-    using Sys.Workflow.engine.@delegate.@event;
-    using Sys.Workflow.engine.@delegate.@event.impl;
-    using Sys.Workflow.engine.impl.asyncexecutor;
-    using Sys.Workflow.engine.impl.bpmn.data;
-    using Sys.Workflow.engine.impl.bpmn.deployer;
-    using Sys.Workflow.engine.impl.bpmn.listener;
-    using Sys.Workflow.engine.impl.bpmn.parser;
-    using Sys.Workflow.engine.impl.bpmn.parser.factory;
-    using Sys.Workflow.engine.impl.bpmn.parser.handler;
-    using Sys.Workflow.engine.impl.bpmn.webservice;
-    using Sys.Workflow.engine.impl.calendar;
-    using Sys.Workflow.engine.impl.cfg.standalone;
-    using Sys.Workflow.engine.impl.cmd;
-    using Sys.Workflow.engine.impl.db;
-    using Sys.Workflow.engine.impl.@delegate.invocation;
-    using Sys.Workflow.engine.impl.el;
-    using Sys.Workflow.engine.impl.@event;
-    using Sys.Workflow.engine.impl.@event.logger;
-    using Sys.Workflow.engine.impl.history;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.jobexecutor;
-    using Sys.Workflow.engine.impl.persistence;
-    using Sys.Workflow.engine.impl.persistence.cache;
-    using Sys.Workflow.engine.impl.persistence.deploy;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.impl.persistence.entity.data;
-    using Sys.Workflow.engine.impl.persistence.entity.data.impl;
-    using Sys.Workflow.engine.impl.persistence.entity.data.integration;
-    using Sys.Workflow.engine.impl.persistence.entity.integration;
-    using Sys.Workflow.engine.impl.scripting;
-    using Sys.Workflow.engine.impl.util;
-    using Sys.Workflow.engine.impl.variable;
-    using Sys.Workflow.engine.integration;
-    using Sys.Workflow.engine.parse;
-    using Sys.Workflow.engine.runtime;
-    using Sys.Workflow.validation;
+    using Sys.Workflow.Engine.Cfg;
+    using Sys.Workflow.Engine.Delegate.Events;
+    using Sys.Workflow.Engine.Delegate.Events.Impl;
+    using Sys.Workflow.Engine.Impl.Asyncexecutor;
+    using Sys.Workflow.Engine.Impl.Bpmn.Datas;
+    using Sys.Workflow.Engine.Impl.Bpmn.Deployers;
+    using Sys.Workflow.Engine.Impl.Bpmn.Listeners;
+    using Sys.Workflow.Engine.Impl.Bpmn.Parser;
+    using Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory;
+    using Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers;
+    using Sys.Workflow.Engine.Impl.Bpmn.Webservice;
+    using Sys.Workflow.Engine.Impl.Calendars;
+    using Sys.Workflow.Engine.Impl.Cfg.Standalone;
+    using Sys.Workflow.Engine.Impl.Cmd;
+    using Sys.Workflow.Engine.Impl.DB;
+    using Sys.Workflow.Engine.Impl.Delegate.Invocation;
+    using Sys.Workflow.Engine.Impl.EL;
+    using Sys.Workflow.Engine.Impl.Events;
+    using Sys.Workflow.Engine.Impl.Events.Logger;
+    using Sys.Workflow.Engine.Impl.Histories;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.JobExecutors;
+    using Sys.Workflow.Engine.Impl.Persistence;
+    using Sys.Workflow.Engine.Impl.Persistence.Caches;
+    using Sys.Workflow.Engine.Impl.Persistence.Deploies;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Integration;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity.Integration;
+    using Sys.Workflow.Engine.Impl.Scripting;
+    using Sys.Workflow.Engine.Impl.Util;
+    using Sys.Workflow.Engine.Impl.Variable;
+    using Sys.Workflow.Engine.Integration;
+    using Sys.Workflow.Engine.Parse;
+    using Sys.Workflow.Engine.Runtime;
+    using Sys.Workflow.Validation;
     using Sys;
-    using Sys.Bpm;
-    using Sys.Data;
     using Sys.Workflow;
+    using Sys.Data;
     using Sys.Workflow.Engine.Bpmn.Rules;
     using System.IO;
     using System.Linq;
+    using Sys.Workflow.Transactions;
 
     /// <inheritdoc />
     public abstract class ProcessEngineConfigurationImpl : ProcessEngineConfiguration
@@ -129,7 +128,7 @@ namespace Sys.Workflow.engine.impl.cfg
         /// <summary>
         /// 
         /// </summary>
-        public const string DEFAULT_WS_SYNC_FACTORY = "Sys.Workflow.engine.impl.webservice.CxfWebServiceClientFactory";
+        public const string DEFAULT_WS_SYNC_FACTORY = "Sys.Workflow.Engine.Impl.Webservice.CxfWebServiceClientFactory";
 
         /// <summary>
         /// 
@@ -222,7 +221,7 @@ namespace Sys.Workflow.engine.impl.cfg
 
         /// <summary>
         /// this will be initialized during the configurationComplete() </summary>
-        protected internal interceptor.ICommandExecutor commandExecutor;
+        protected internal Interceptor.ICommandExecutor commandExecutor;
 
         // DATA MANAGERS /////////////////////////////////////////////////////////////
 
@@ -2954,7 +2953,7 @@ namespace Sys.Workflow.engine.impl.cfg
         /// <summary>
         /// 
         /// </summary>
-        public virtual interceptor.ICommandExecutor CommandExecutor
+        public virtual Interceptor.ICommandExecutor CommandExecutor
         {
             get
             {

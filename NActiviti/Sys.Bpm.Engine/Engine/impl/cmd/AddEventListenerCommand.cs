@@ -10,10 +10,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.cmd
+namespace Sys.Workflow.Engine.Impl.Cmd
 {
-    using Sys.Workflow.engine.@delegate.@event;
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.Delegate.Events;
+    using Sys.Workflow.Engine.Impl.Interceptor;
 
     /// <summary>
     /// Command that adds an event-listener to the Activiti engine.

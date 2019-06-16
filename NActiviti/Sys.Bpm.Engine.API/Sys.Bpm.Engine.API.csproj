@@ -6,6 +6,7 @@
     <OutputPath>bin</OutputPath>
     <DocumentationFile>bin\Sys.Bpm.Engine.API.xml</DocumentationFile>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <RootNamespace>Sys.Workflow</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

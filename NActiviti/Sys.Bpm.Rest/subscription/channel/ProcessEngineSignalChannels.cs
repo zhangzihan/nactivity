@@ -1,7 +1,7 @@
-﻿using Sys.Workflow.cloud.services.api.commands;
-using org.springframework.messaging;
+﻿using Sys.Workflow.Cloud.Services.Api.Commands;
+using Sys.Workflow.Messaging;
 
-namespace Sys.Workflow.services.subscription.channel
+namespace Sys.Workflow.Services.Subscription.Channels
 {
     /// <summary>
     /// 

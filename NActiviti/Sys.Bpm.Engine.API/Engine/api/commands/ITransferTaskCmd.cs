@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.services.api.commands
+namespace Sys.Workflow.Services.Api.Commands
 {
     /// <summary>
     /// 任务转派数据传输对象

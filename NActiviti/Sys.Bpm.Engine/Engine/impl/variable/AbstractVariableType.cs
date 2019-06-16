@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sys.Workflow.engine.impl.variable
+namespace Sys.Workflow.Engine.Impl.Variable
 {
     public abstract class AbstractVariableType : IVariableType
     {

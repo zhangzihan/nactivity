@@ -10,10 +10,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.@delegate.@event
+namespace Sys.Workflow.Engine.Delegate.Events
 {
     /// <summary>
-    /// An <seealso cref="Sys.Workflow.engine.delegate.event.ActivitiEvent"/> related to cancel event being sent to an activity.
+    /// An <seealso cref="Sys.Workflow.Engine.Delegate.Events.ActivitiEvent"/> related to cancel event being sent to an activity.
     /// 
     /// 
     /// </summary>

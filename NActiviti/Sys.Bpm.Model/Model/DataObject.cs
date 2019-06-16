@@ -1,4 +1,4 @@
-﻿namespace Sys.Workflow.bpmn.model
+﻿namespace Sys.Workflow.Bpmn.Models
 {
     public class DataObject : FlowElement
     {

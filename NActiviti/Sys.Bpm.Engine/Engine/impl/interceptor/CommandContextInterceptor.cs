@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.interceptor
+namespace Sys.Workflow.Engine.Impl.Interceptor
 {
     using Microsoft.Extensions.Logging;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Contexts;
     using Sys.Workflow;
 
     /// 

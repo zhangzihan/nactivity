@@ -12,9 +12,9 @@
  */
 
 using Microsoft.Extensions.Configuration;
-using Sys.Workflow.engine.impl.asyncexecutor;
+using Sys.Workflow.Engine.Impl.Asyncexecutor;
 
-namespace Sys.Workflow.engine.impl.cfg
+namespace Sys.Workflow.Engine.Impl.Cfg
 {
     /// 
     public class StandaloneInMemProcessEngineConfiguration : StandaloneProcessEngineConfiguration

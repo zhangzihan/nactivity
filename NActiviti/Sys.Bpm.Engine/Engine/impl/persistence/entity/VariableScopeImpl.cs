@@ -13,15 +13,15 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
     using Newtonsoft.Json;
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.el;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.variable;
-    using Sys.Bpm;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.EL;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Variable;
+    using Sys.Workflow;
     using System.Collections.ObjectModel;
     using System.Linq;
 

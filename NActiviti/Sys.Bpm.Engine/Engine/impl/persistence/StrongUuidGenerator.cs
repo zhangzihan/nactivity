@@ -1,8 +1,8 @@
-﻿namespace Sys.Workflow.engine.impl.persistence
+﻿namespace Sys.Workflow.Engine.Impl.Persistence
 {
     using MassTransit;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using System;
 
     /// <summary>

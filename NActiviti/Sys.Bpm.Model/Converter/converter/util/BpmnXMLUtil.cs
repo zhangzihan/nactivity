@@ -1,13 +1,13 @@
-﻿using Sys.Workflow.bpmn.constants;
-using Sys.Workflow.bpmn.converter.child;
-using Sys.Workflow.bpmn.model;
-using Sys.Bpm;
+﻿using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Bpmn.Converters.Childs;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
-namespace Sys.Workflow.bpmn.converter.util
+namespace Sys.Workflow.Bpmn.Converters.Utils
 {
 
     public class BpmnXMLUtil : IBpmnXMLConstants

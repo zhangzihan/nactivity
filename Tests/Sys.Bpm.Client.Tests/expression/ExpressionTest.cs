@@ -1,5 +1,5 @@
 ﻿using Moq;
-using Sys.Workflow.engine.impl.util;
+using Sys.Workflow.Engine.Impl.Util;
 using Spring.Core.TypeResolution;
 using Spring.Expressions;
 using Sys.Workflow.Util;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace Sys.Bpm.Client.Tests.expression
+namespace Sys.Workflow.Client.Tests.Expression
 {
     public class ExpressionTest
     {

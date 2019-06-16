@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.bpmn.listener
+namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 {
-    using Sys.Workflow.engine.@delegate;
+    using Sys.Workflow.Engine.Delegate;
 
     /// 
     /// 

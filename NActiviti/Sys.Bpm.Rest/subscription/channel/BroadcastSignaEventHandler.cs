@@ -1,10 +1,10 @@
-﻿using Sys.Workflow.cloud.services.api.commands;
-using Sys.Workflow.engine;
-using org.springframework.cloud.stream.binding;
-using org.springframework.messaging;
-using org.springframework.messaging.support;
+﻿using Sys.Workflow.Cloud.Services.Api.Commands;
+using Sys.Workflow.Engine;
+using Sys.Workflow.Cloud.Streams.Bindings;
+using Sys.Workflow.Messaging;
+using Sys.Workflow.Messaging.Support;
 
-namespace Sys.Workflow.services.subscription.channel
+namespace Sys.Workflow.Services.Subscription.Channels
 {
     /// <summary>
     /// 

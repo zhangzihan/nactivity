@@ -12,14 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.runtime
+namespace Sys.Workflow.Engine.Runtime
 {
 
 
     /// <summary>
     /// Helper for starting new ProcessInstance.
     /// 
-    /// An instance can be obtained through <seealso cref="Sys.Workflow.engine.IRuntimeService#createProcessInstanceBuilder()"/>.
+    /// An instance can be obtained through <seealso cref="Sys.Workflow.Engine.IRuntimeService#createProcessInstanceBuilder()"/>.
     /// 
     /// processDefinitionId or processDefinitionKey should be set before calling <seealso cref="#start()"/> to start a process instance.
     /// 

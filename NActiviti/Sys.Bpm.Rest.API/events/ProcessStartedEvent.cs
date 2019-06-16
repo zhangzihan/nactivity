@@ -15,9 +15,9 @@
  *
  */
 
-namespace Sys.Workflow.cloud.services.events
+namespace Sys.Workflow.Cloud.Services.Events
 {
-    using IProcessEngineEvent = api.events.IProcessEngineEvent;
+    using Sys.Workflow.Cloud.Services.Api.Events;
 
     /// <summary>
     /// 

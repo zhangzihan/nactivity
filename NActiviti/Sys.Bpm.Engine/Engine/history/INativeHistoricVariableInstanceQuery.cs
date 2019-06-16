@@ -1,9 +1,9 @@
-﻿namespace Sys.Workflow.engine.history
+﻿namespace Sys.Workflow.Engine.History
 {
-    using Sys.Workflow.engine.query;
+    using Sys.Workflow.Engine.Query;
 
     /// <summary>
-    /// Allows querying of <seealso cref="Sys.Workflow.engine.history.IHistoricVariableInstance"/>s via native (SQL) queries
+    /// Allows querying of <seealso cref="Sys.Workflow.Engine.History.IHistoricVariableInstance"/>s via native (SQL) queries
     /// 
     /// 
     /// </summary>

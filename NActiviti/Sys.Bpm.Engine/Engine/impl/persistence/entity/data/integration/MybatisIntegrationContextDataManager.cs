@@ -17,10 +17,10 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.persistence.entity.data.integration
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Integration
 {
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.persistence.entity.integration;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity.Integration;
 
     public class MybatisIntegrationContextDataManager : AbstractDataManager<IIntegrationContextEntity>, IIntegrationContextDataManager
     {

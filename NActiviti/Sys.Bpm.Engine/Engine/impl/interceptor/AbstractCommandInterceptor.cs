@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.interceptor
+namespace Sys.Workflow.Engine.Impl.Interceptor
 {
     /// 
     public abstract class AbstractCommandInterceptor : ICommandInterceptor
@@ -18,7 +18,7 @@ namespace Sys.Workflow.engine.impl.interceptor
         public abstract T Execute<T>(CommandConfig config, ICommand<T> command);
 
         /// <summary>
-        /// will be initialized by the <seealso cref="Sys.Workflow.engine.ProcessEngineConfiguration ProcessEngineConfiguration"/>
+        /// will be initialized by the <seealso cref="Sys.Workflow.Engine.ProcessEngineConfiguration ProcessEngineConfiguration"/>
         /// </summary>
         protected internal ICommandInterceptor next;
 

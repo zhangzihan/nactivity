@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine
+namespace Sys.Workflow.Engine
 {
     /// <summary>
     /// Runtime exception indicating the requested class was not found or an error occurred while loading the class.

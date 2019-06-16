@@ -11,13 +11,13 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.cfg
+namespace Sys.Workflow.Engine.Impl.Cfg
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
-    using Sys.Workflow.engine.impl.asyncexecutor;
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.Impl.Asyncexecutor;
+    using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys;
     using Sys.Workflow.Engine.Bpmn.Rules;
     using System;

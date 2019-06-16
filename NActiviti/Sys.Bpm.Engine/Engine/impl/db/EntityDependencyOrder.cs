@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.impl.db
+namespace Sys.Workflow.Engine.Impl.DB
 {
 
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using System.Linq;
 
 

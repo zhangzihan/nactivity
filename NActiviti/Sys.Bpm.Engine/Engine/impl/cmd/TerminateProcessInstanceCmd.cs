@@ -1,10 +1,10 @@
-﻿using Sys.Workflow.engine.impl.interceptor;
-using Sys.Workflow.engine.repository;
-using Sys.Workflow.engine.runtime;
-using Sys.Workflow.engine.task;
+﻿using Sys.Workflow.Engine.Impl.Interceptor;
+using Sys.Workflow.Engine.Repository;
+using Sys.Workflow.Engine.Runtime;
+using Sys.Workflow.Engine.Tasks;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.impl.cmd
+namespace Sys.Workflow.Engine.Impl.Cmd
 {
     public class TerminateProcessInstanceCmd : ICommand<bool>
     {

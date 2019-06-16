@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 
-namespace Sys.Workflow.engine.impl.persistence
+namespace Sys.Workflow.Engine.Impl.Persistence
 {
     public interface ITypeHandler<T>
     {

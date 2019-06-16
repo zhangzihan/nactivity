@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.bpmn.exceptions
+namespace Sys.Workflow.Bpmn.Exceptions
 {
 	/// 
 	public class XMLException : Exception

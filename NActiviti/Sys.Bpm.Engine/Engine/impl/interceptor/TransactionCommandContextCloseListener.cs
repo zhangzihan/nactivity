@@ -11,9 +11,9 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.interceptor
+namespace Sys.Workflow.Engine.Impl.Interceptor
 {
-    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.Engine.Impl.Cfg;
 
     /// 
     public class TransactionCommandContextCloseListener : ICommandContextCloseListener

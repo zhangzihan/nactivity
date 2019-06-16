@@ -14,18 +14,18 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.bpmn.helper
+namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 {
     using Newtonsoft.Json.Linq;
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.bpmn.behavior;
-    using Sys.Workflow.engine.impl.bpmn.parser;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.@delegate;
-    using Sys.Workflow.engine.impl.@delegate.invocation;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Bpmn.Behavior;
+    using Sys.Workflow.Engine.Impl.Bpmn.Parser;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Delegate;
+    using Sys.Workflow.Engine.Impl.Delegate.Invocation;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Impl.Util;
     using System.Reflection;
 
     /// <summary>
@@ -148,13 +148,13 @@ namespace Sys.Workflow.engine.impl.bpmn.helper
                 {
                     return (IExecutionListener)delegateInstance;
                 }
-                else if (delegateInstance is IJavaDelegate)
+                else if (delegateInstance is ICSharpDelegate)
                 {
-                    return new ServiceTaskJavaDelegateActivityBehavior((IJavaDelegate)delegateInstance);
+                    return new ServiceTaskCSharpDelegateActivityBehavior((ICSharpDelegate)delegateInstance);
                 }
                 else
                 {
-                    throw new ActivitiIllegalArgumentException(delegateInstance.GetType().FullName + " doesn't implement " + typeof(IExecutionListener) + " nor " + typeof(IJavaDelegate));
+                    throw new ActivitiIllegalArgumentException(delegateInstance.GetType().FullName + " doesn't implement " + typeof(IExecutionListener) + " nor " + typeof(ICSharpDelegate));
                 }
             }
         }
@@ -292,9 +292,9 @@ namespace Sys.Workflow.engine.impl.bpmn.helper
                 activityBehaviorInstance = ActivityBehaviorInstance;
             }
 
-            if (activityBehaviorInstance is @delegate.ISubProcessActivityBehavior)
+            if (activityBehaviorInstance is ISubProcessActivityBehavior)
             {
-                ((@delegate.ISubProcessActivityBehavior)activityBehaviorInstance).Completing(execution, subProcessInstance);
+                ((ISubProcessActivityBehavior)activityBehaviorInstance).Completing(execution, subProcessInstance);
             }
             else
             {
@@ -329,13 +329,13 @@ namespace Sys.Workflow.engine.impl.bpmn.helper
                 {
                     return DetermineBehaviour((IActivityBehavior)delegateInstance);
                 }
-                else if (delegateInstance is IJavaDelegate)
+                else if (delegateInstance is ICSharpDelegate)
                 {
-                    return DetermineBehaviour(new ServiceTaskJavaDelegateActivityBehavior((IJavaDelegate)delegateInstance));
+                    return DetermineBehaviour(new ServiceTaskCSharpDelegateActivityBehavior((ICSharpDelegate)delegateInstance));
                 }
                 else
                 {
-                    throw new ActivitiIllegalArgumentException(delegateInstance.GetType().FullName + " doesn't implement " + typeof(IJavaDelegate).FullName + " nor " + typeof(IActivityBehavior).FullName);
+                    throw new ActivitiIllegalArgumentException(delegateInstance.GetType().FullName + " doesn't implement " + typeof(ICSharpDelegate).FullName + " nor " + typeof(IActivityBehavior).FullName);
                 }
             }
         }

@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Sys.Workflow.cloud.services.api.model;
+using Sys.Workflow.Cloud.Services.Api.Model;
 using System;
 
-namespace Sys.Workflow.cloud.services.api.commands.results
+namespace Sys.Workflow.Cloud.Services.Api.Commands.Results
 {
 
     /// <summary>

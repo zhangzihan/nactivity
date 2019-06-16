@@ -13,16 +13,16 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.behavior
+namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
     using Newtonsoft.Json.Linq;
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.bpmn.helper;
-    using Sys.Workflow.engine.impl.bpmn.parser;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.@delegate;
-    using Sys.Workflow.engine.impl.@delegate.invocation;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Bpmn.Helper;
+    using Sys.Workflow.Engine.Impl.Bpmn.Parser;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Delegate;
+    using Sys.Workflow.Engine.Impl.Delegate.Invocation;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// <summary>
     /// <seealso cref="IActivityBehavior"/> used when 'delegateExpression' is used for a serviceTask.
@@ -90,15 +90,15 @@ namespace Sys.Workflow.engine.impl.bpmn.behavior
                         Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new ActivityBehaviorInvocation((IActivityBehavior)@delegate, execution));
 
                     }
-                    else if (@delegate is IJavaDelegate)
+                    else if (@delegate is ICSharpDelegate)
                     {
-                        Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new JavaDelegateInvocation((IJavaDelegate)@delegate, execution));
+                        Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new CSharpDelegateInvocation((ICSharpDelegate)@delegate, execution));
                         Leave(execution);
 
                     }
                     else
                     {
-                        throw new ActivitiIllegalArgumentException("Delegate expression " + expression + " did neither resolve to an implementation of " + typeof(IActivityBehavior) + " nor " + typeof(IJavaDelegate));
+                        throw new ActivitiIllegalArgumentException("Delegate expression " + expression + " did neither resolve to an implementation of " + typeof(IActivityBehavior) + " nor " + typeof(ICSharpDelegate));
                     }
                 }
                 else

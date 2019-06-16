@@ -14,18 +14,18 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.history
+namespace Sys.Workflow.Engine.Impl.Histories
 {
     using Microsoft.Extensions.Logging;
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.@delegate.@event;
-    using Sys.Workflow.engine.@delegate.@event.impl;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.identity;
-    using Sys.Workflow.engine.impl.persistence;
-    using Sys.Workflow.engine.impl.persistence.cache;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.task;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Delegate.Events;
+    using Sys.Workflow.Engine.Delegate.Events.Impl;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Identities;
+    using Sys.Workflow.Engine.Impl.Persistence;
+    using Sys.Workflow.Engine.Impl.Persistence.Caches;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Tasks;
     using Sys.Workflow;
 
     /// <summary>
@@ -46,7 +46,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# isHistoryLevelAtLeast(Sys.Workflow.engine.impl.history.HistoryLevel)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# isHistoryLevelAtLeast(Sys.Workflow.Engine.Impl.Histories.HistoryLevel)
          */
         public virtual bool IsHistoryLevelAtLeast(HistoryLevel level)
         {
@@ -62,7 +62,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#isHistoryEnabled ()
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#isHistoryEnabled ()
          */
         public virtual bool HistoryEnabled
         {
@@ -81,7 +81,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordProcessInstanceEnd(java.lang.String, java.lang.String, java.lang.String)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordProcessInstanceEnd(java.lang.String, java.lang.String, java.lang.String)
          */
         public virtual void RecordProcessInstanceEnd(string processInstanceId, string deleteReason, string activityId)
         {
@@ -122,7 +122,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordProcessInstanceStart (Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordProcessInstanceStart (Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity)
          */
         public virtual void RecordProcessInstanceStart(IExecutionEntity processInstance, FlowElement startElement)
         {
@@ -147,8 +147,8 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordSubProcessInstanceStart (Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity,
-         * Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordSubProcessInstanceStart (Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity,
+         * Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity)
          */
         public virtual void RecordSubProcessInstanceStart(IExecutionEntity parentExecution, IExecutionEntity subProcessInstance, FlowElement initialElement)
         {
@@ -185,7 +185,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordActivityStart (Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordActivityStart (Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity)
          */
         public virtual void RecordActivityStart(IExecutionEntity executionEntity)
         {
@@ -221,7 +221,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordActivityEnd (Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordActivityEnd (Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity)
          */
         public virtual void RecordActivityEnd(IExecutionEntity executionEntity, string deleteReason)
         {
@@ -362,7 +362,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordProcessDefinitionChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordProcessDefinitionChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordProcessDefinitionChange(string processInstanceId, string processDefinitionId)
         {
@@ -381,8 +381,8 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskCreated (Sys.Workflow.engine.impl.persistence.entity.TaskEntity,
-         * Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskCreated (Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntity,
+         * Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity)
          */
         public virtual void RecordTaskCreated(ITaskEntity task, IExecutionEntity execution)
         {
@@ -398,7 +398,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskAssignment (Sys.Workflow.engine.impl.persistence.entity.TaskEntity)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskAssignment (Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntity)
          */
         public virtual void RecordTaskAssignment(ITaskEntity task)
         {
@@ -420,7 +420,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          *
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskClaim (Sys.Workflow.engine.impl.persistence.entity.TaskEntity)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskClaim (Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntity)
          */
 
         public virtual void RecordTaskClaim(ITaskEntity task)
@@ -438,7 +438,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskId (Sys.Workflow.engine.impl.persistence.entity.TaskEntity)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskId (Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntity)
          */
         public virtual void RecordTaskId(ITaskEntity task)
         {
@@ -459,7 +459,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskEnd (java.lang.String, java.lang.String)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskEnd (java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskEnd(string taskId, string deleteReason)
         {
@@ -476,7 +476,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskAssigneeChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskAssigneeChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskAssigneeChange(string taskId, string assignee, string assigneeUser)
         {
@@ -494,7 +494,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskOwnerChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskOwnerChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskOwnerChange(string taskId, string owner)
         {
@@ -511,7 +511,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskNameChange (java.lang.String, java.lang.String)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskNameChange (java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskNameChange(string taskId, string taskName)
         {
@@ -528,7 +528,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskDescriptionChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskDescriptionChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskDescriptionChange(string taskId, string description)
         {
@@ -545,7 +545,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskDueDateChange(java.lang.String, java.util.Date)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskDueDateChange(java.lang.String, java.util.Date)
          */
         public virtual void RecordTaskDueDateChange(string taskId, DateTime dueDate)
         {
@@ -562,7 +562,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskPriorityChange(java.lang.String, int)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskPriorityChange(java.lang.String, int)
          */
         public virtual void RecordTaskPriorityChange(string taskId, int? priority)
         {
@@ -579,7 +579,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskCategoryChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskCategoryChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskCategoryChange(string taskId, string category)
         {
@@ -608,7 +608,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskParentTaskIdChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskParentTaskIdChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskParentTaskIdChange(string taskId, string parentTaskId)
         {
@@ -625,7 +625,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskExecutionIdChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskExecutionIdChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskExecutionIdChange(string taskId, string executionId)
         {
@@ -642,7 +642,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordTaskDefinitionKeyChange (Sys.Workflow.engine.impl.persistence.entity.TaskEntity, java.lang.String)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskDefinitionKeyChange (Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntity, java.lang.String)
          */
         public virtual void RecordTaskDefinitionKeyChange(string taskId, string taskDefinitionKey)
         {
@@ -657,7 +657,7 @@ namespace Sys.Workflow.engine.impl.history
         }
 
         /* (non-Javadoc)
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordTaskProcessDefinitionChange(java.lang.String, java.lang.String)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskProcessDefinitionChange(java.lang.String, java.lang.String)
          */
         public virtual void RecordTaskProcessDefinitionChange(string taskId, string processDefinitionId)
         {
@@ -676,7 +676,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordVariableCreate (Sys.Workflow.engine.impl.persistence.entity.VariableInstanceEntity)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordVariableCreate (Sys.Workflow.Engine.Impl.Persistence.Entity.VariableInstanceEntity)
          */
         public virtual void RecordVariableCreate(IVariableInstanceEntity variable)
         {
@@ -690,8 +690,8 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordHistoricDetailVariableCreate (Sys.Workflow.engine.impl.persistence.entity.VariableInstanceEntity,
-         * Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity, boolean)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordHistoricDetailVariableCreate (Sys.Workflow.Engine.Impl.Persistence.Entity.VariableInstanceEntity,
+         * Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity, boolean)
          */
         public virtual void RecordHistoricDetailVariableCreate(IVariableInstanceEntity variable, IExecutionEntity sourceActivityExecution, bool useActivityId)
         {
@@ -714,7 +714,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface#recordVariableUpdate (Sys.Workflow.engine.impl.persistence.entity.VariableInstanceEntity)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordVariableUpdate (Sys.Workflow.Engine.Impl.Persistence.Entity.VariableInstanceEntity)
          */
         public virtual void RecordVariableUpdate(IVariableInstanceEntity variable)
         {
@@ -743,7 +743,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# createIdentityLinkComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# createIdentityLinkComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)
          */
         public virtual void CreateIdentityLinkComment(string taskId, string userId, string groupId, string type, bool create)
         {
@@ -768,7 +768,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# createIdentityLinkComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# createIdentityLinkComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
          */
         public virtual void CreateIdentityLinkComment(string taskId, string userId, string groupId, string type, bool create, bool forceNullUserId)
         {
@@ -855,7 +855,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# createAttachmentComment(java.lang.String, java.lang.String, java.lang.String, boolean)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# createAttachmentComment(java.lang.String, java.lang.String, java.lang.String, boolean)
          */
         public virtual void CreateAttachmentComment(string taskId, string processInstanceId, string attachmentName, bool create)
         {
@@ -885,7 +885,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# recordIdentityLinkCreated (Sys.Workflow.engine.impl.persistence.entity.IdentityLinkEntity)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordIdentityLinkCreated (Sys.Workflow.Engine.Impl.Persistence.Entity.IdentityLinkEntity)
          */
         public virtual void RecordIdentityLinkCreated(IIdentityLinkEntity identityLink)
         {
@@ -908,7 +908,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# deleteHistoricIdentityLink(java.lang.String)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# deleteHistoricIdentityLink(java.lang.String)
          */
         public virtual void DeleteHistoricIdentityLink(string id)
         {
@@ -921,7 +921,7 @@ namespace Sys.Workflow.engine.impl.history
         /*
          * (non-Javadoc)
          * 
-         * @see Sys.Workflow.engine.impl.history.HistoryManagerInterface# updateProcessBusinessKeyInHistory (Sys.Workflow.engine.impl.persistence.entity.ExecutionEntity)
+         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# updateProcessBusinessKeyInHistory (Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity)
          */
         public virtual void UpdateProcessBusinessKeyInHistory(IExecutionEntity processInstance)
         {

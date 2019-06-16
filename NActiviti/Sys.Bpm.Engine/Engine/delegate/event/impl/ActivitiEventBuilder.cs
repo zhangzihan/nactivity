@@ -12,15 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.@delegate.@event.impl
+namespace Sys.Workflow.Engine.Delegate.Events.Impl
 {
 
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.impl.variable;
-    using Sys.Workflow.engine.repository;
-    using Sys.Workflow.engine.runtime;
-    using Sys.Workflow.engine.task;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Impl.Variable;
+    using Sys.Workflow.Engine.Repository;
+    using Sys.Workflow.Engine.Runtime;
+    using Sys.Workflow.Engine.Tasks;
     using System.Collections.Generic;
 
     /// <summary>

@@ -10,12 +10,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.jobexecutor
+namespace Sys.Workflow.Engine.Impl.JobExecutors
 {
-    using Sys.Workflow.engine.impl.asyncexecutor;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Impl.Asyncexecutor;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// 
     public class AsyncJobAddedNotification : ICommandContextCloseListener

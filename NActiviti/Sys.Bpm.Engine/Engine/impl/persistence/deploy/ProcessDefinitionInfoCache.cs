@@ -12,16 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.persistence.deploy
+namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
 {
     using Microsoft.Extensions.Caching.Memory;
     using Newtonsoft.Json.Linq;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Bpm;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using Sys.Workflow;
-    using Sys.Workflow.Cache;
+    using Sys.Workflow;
+    using Sys.Workflow.Caches;
     using System;
     using System.Collections.Concurrent;
 

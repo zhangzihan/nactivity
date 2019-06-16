@@ -1,5 +1,5 @@
-﻿using Sys.Workflow.cloud.services.api.model;
-using org.springframework.hateoas;
+﻿using Sys.Workflow.Cloud.Services.Api.Model;
+using Sys.Workflow.Hateoas;
 using System.Collections.Generic;
 
 /*
@@ -17,7 +17,7 @@ using System.Collections.Generic;
  *
  */
 
-namespace Sys.Workflow.cloud.services.rest.api.resources
+namespace Sys.Workflow.Cloud.Services.Rest.Api.Resources
 {
 
     /// <summary>

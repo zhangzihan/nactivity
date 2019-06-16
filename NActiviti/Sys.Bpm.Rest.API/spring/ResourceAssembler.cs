@@ -1,4 +1,4 @@
-﻿namespace org.springframework.hateoas
+﻿namespace Sys.Workflow.Hateoas
 {
     /// <summary>
     /// 

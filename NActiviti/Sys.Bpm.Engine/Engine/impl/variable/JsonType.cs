@@ -12,11 +12,11 @@
  */
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using Sys.Bpm;
+using Sys.Workflow;
 using Sys.Workflow;
 using System;
 
-namespace Sys.Workflow.engine.impl.variable
+namespace Sys.Workflow.Engine.Impl.Variable
 {
     /// 
     public class JsonType : AbstractVariableType

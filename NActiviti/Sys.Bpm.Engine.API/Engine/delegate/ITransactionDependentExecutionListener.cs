@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.@delegate
+namespace Sys.Workflow.Engine.Delegate
 {
-    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.Bpmn.Models;
 
     /// 
     public interface ITransactionDependentExecutionListener : IBaseExecutionListener

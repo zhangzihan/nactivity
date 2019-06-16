@@ -11,17 +11,17 @@
  * limitations under the License.
  */
 
-using Sys.Workflow.bpmn.constants;
-using Sys.Workflow.bpmn.converter.child;
-using Sys.Workflow.bpmn.converter.export;
-using Sys.Workflow.bpmn.converter.util;
-using Sys.Workflow.bpmn.model;
-using Sys.Bpm;
+using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Bpmn.Converters.Childs;
+using Sys.Workflow.Bpmn.Converters.Exports;
+using Sys.Workflow.Bpmn.Converters.Utils;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow;
 using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace Sys.Workflow.bpmn.converter
+namespace Sys.Workflow.Bpmn.Converters
 {
     public abstract class BaseBpmnXMLConverter : IBpmnXMLConstants
     {

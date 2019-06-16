@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sys.Bpm
+namespace Sys.Workflow
 {
     class TimeUnit
     {

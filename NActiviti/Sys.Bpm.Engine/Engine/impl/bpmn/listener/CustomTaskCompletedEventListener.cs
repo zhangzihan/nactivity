@@ -1,19 +1,19 @@
-﻿using Sys.Workflow.bpmn.model;
-using Sys.Workflow.engine.@delegate.@event;
-using Sys.Workflow.engine.@delegate.@event.impl;
-using Sys.Workflow.engine.impl.bpmn.helper;
-using Sys.Workflow.engine.impl.context;
-using Sys.Workflow.engine.impl.interceptor;
-using Sys.Workflow.engine.impl.persistence.entity;
+﻿using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Engine.Delegate.Events;
+using Sys.Workflow.Engine.Delegate.Events.Impl;
+using Sys.Workflow.Engine.Impl.Bpmn.Helper;
+using Sys.Workflow.Engine.Impl.Contexts;
+using Sys.Workflow.Engine.Impl.Interceptor;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Sys.Workflow.engine.impl.util;
+using Sys.Workflow.Engine.Impl.Util;
 using System.Text.RegularExpressions;
-using Sys.Workflow.engine.impl.bpmn.behavior;
+using Sys.Workflow.Engine.Impl.Bpmn.Behavior;
 using System.Linq;
 
-namespace Sys.Workflow.engine.impl.bpmn.helper
+namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 {
     /// <summary>
     /// 自定义任务完成时的事件监听处理,主要用来处理转派和追加任务的完成

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.persistence.entity.integration
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Integration
 {
     public interface IIntegrationContextManager : IEntityManager<IIntegrationContextEntity>
     {

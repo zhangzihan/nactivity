@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace Sys.Workflow.api.runtime.shared.query
+namespace Sys.Workflow.Api.Runtime.Shared.Query
 {
 
     /// <summary>

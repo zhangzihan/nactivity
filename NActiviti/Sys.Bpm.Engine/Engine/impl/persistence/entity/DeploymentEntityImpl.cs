@@ -14,13 +14,13 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
-    using Sys.Workflow.bpmn.constants;
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.bpmn.behavior;
-    using Sys.Workflow.engine.impl.bpmn.listener;
-    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.Bpmn.Constants;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Bpmn.Behavior;
+    using Sys.Workflow.Engine.Impl.Bpmn.Listeners;
+    using Sys.Workflow.Engine.Impl.Contexts;
     using System.IO;
     using System.Linq;
     using System.Text;

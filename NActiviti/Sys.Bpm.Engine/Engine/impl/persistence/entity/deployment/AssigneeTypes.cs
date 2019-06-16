@@ -1,9 +1,9 @@
-﻿using Sys.Workflow.bpmn.constants;
-using Sys.Workflow.engine.impl.bpmn.behavior;
+﻿using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Engine.Impl.Bpmn.Behavior;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
     public class AssigneeTypes : Dictionary<string, string>
     {

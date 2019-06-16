@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace org.springframework.hateoas.mvc
+namespace Sys.Workflow.Hateoas.Mvc
 {
 
     /// <summary>

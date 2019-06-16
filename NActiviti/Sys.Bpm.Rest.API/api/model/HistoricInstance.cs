@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Sys.Workflow.engine.history;
+using Sys.Workflow.Engine.History;
 using System;
 using System.Collections.Generic;
 
@@ -18,7 +18,7 @@ using System.Collections.Generic;
  *
  */
 
-namespace Sys.Workflow.cloud.services.api.model
+namespace Sys.Workflow.Cloud.Services.Api.Model
 {
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace Sys.Workflow.engine.impl.@event.logger.handler
+﻿namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
 {
     /// 
     public interface IFields

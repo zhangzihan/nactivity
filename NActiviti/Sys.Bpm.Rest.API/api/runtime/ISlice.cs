@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Sys.Workflow.cloud.services.api.commands;
-using Sys.Workflow.cloud.services.api.model;
-using Sys.Workflow.cloud.services.events.integration;
-using Sys.Workflow.cloud.services.rest.api.resources;
-using Sys.Workflow.services.connectors.model;
-using org.springframework.messaging;
+using Sys.Workflow.Cloud.Services.Api.Commands;
+using Sys.Workflow.Cloud.Services.Api.Model;
+using Sys.Workflow.Cloud.Services.Events.Integration;
+using Sys.Workflow.Cloud.Services.Rest.Api.Resources;
+using Sys.Workflow.Services.Connectors.Models;
+using Sys.Workflow.Messaging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sys.Workflow.api.runtime.shared.query
+namespace Sys.Workflow.Api.Runtime.Shared.Query
 {
     /// <summary>
     /// 

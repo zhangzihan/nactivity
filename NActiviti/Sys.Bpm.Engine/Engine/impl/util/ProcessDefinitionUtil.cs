@@ -10,16 +10,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.util
+namespace Sys.Workflow.Engine.Impl.Util
 {
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.persistence.deploy;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.repository;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Persistence.Deploies;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Repository;
     using System.Collections.Generic;
-    using Sys.Workflow.engine;
+    using Sys.Workflow.Engine;
 
     /// <summary>
     /// A utility class that hides the complexity of <seealso cref="IProcessDefinitionEntity"/> and <seealso cref="Process"/> lookup. Use this class rather than accessing the process definition cache or

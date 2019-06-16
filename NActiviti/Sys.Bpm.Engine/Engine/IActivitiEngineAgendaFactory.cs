@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine
+namespace Sys.Workflow.Engine
 {
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.Impl.Interceptor;
 
     public interface IActivitiEngineAgendaFactory
     {

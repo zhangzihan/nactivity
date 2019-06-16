@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.bpmn.converter.alfresco
+namespace Sys.Workflow.Bpmn.Converters.Alfresco
 {
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.bpmn.model.alfresco;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Bpmn.Models.Alfresco;
 
     /// 
     public class AlfrescoUserTaskXMLConverter : UserTaskXMLConverter

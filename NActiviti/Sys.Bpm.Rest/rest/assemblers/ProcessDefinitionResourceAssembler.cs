@@ -13,13 +13,13 @@
  *
  */
 
-using Sys.Workflow.cloud.services.api.model;
-using Sys.Workflow.cloud.services.rest.api.resources;
-using Sys.Workflow.cloud.services.rest.controllers;
-using org.springframework.hateoas.mvc;
+using Sys.Workflow.Cloud.Services.Api.Model;
+using Sys.Workflow.Cloud.Services.Rest.Api.Resources;
+using Sys.Workflow.Cloud.Services.Rest.Controllers;
+using Sys.Workflow.Hateoas.Mvc;
 using System;
 
-namespace Sys.Workflow.cloud.services.rest.assemblers
+namespace Sys.Workflow.Cloud.Services.Rest.Assemblers
 {
     /// <summary>
     /// 

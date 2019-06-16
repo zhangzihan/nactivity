@@ -14,17 +14,17 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.bpmn.behavior
+namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
     using Microsoft.Extensions.Logging;
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.bpmn.helper;
-    using Sys.Workflow.engine.impl.cmd;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.@delegate;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Bpmn.Helper;
+    using Sys.Workflow.Engine.Impl.Cmd;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Delegate;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Impl.Util;
     using Sys.Workflow;
     using System.Collections;
 

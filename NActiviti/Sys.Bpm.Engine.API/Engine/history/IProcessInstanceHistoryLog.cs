@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.history
+namespace Sys.Workflow.Engine.History
 {
 
-    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.Engine.Runtime;
 
     /// <summary>
     /// A trail of data for a given process instance.

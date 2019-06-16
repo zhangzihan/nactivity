@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.asyncexecutor.multitenant
+namespace Sys.Workflow.Engine.Impl.Asyncexecutor.Multitenants
 {
 
-    using Sys.Workflow.engine.impl.cfg.multitenant;
+    using Sys.Workflow.Engine.Impl.Cfg.Multitenants;
 
     /// <summary>
     /// Interface for <seealso cref="IAsyncExecutor"/> implementations used in conjucntion with the 

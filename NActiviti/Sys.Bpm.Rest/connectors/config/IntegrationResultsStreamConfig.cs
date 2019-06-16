@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.services.connectors.config
+namespace Sys.Workflow.Services.Connectors.Config
 {
     /// <summary>
     /// 

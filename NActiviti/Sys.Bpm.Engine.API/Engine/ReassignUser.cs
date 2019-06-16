@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sys.Workflow.services.api.commands
+namespace Sys.Workflow.Services.Api.Commands
 {
     /// <summary>
     /// 重新分配任务处理人

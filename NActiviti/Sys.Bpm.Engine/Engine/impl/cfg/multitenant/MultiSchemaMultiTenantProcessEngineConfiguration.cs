@@ -10,11 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.cfg.multitenant
+namespace Sys.Workflow.Engine.Impl.Cfg.Multitenants
 {
-    using Sys.Workflow.engine.impl.asyncexecutor.multitenant;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence;
+    using Sys.Workflow.Engine.Impl.Asyncexecutor.Multitenants;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence;
     using Sys.Data;
 
     /// <summary>

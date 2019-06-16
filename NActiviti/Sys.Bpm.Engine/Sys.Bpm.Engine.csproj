@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Sys.Bpm</RootNamespace>
+    <RootNamespace>Sys.Workflow</RootNamespace>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <OutputPath>bin</OutputPath>
@@ -63,7 +63,6 @@
     <Compile Remove="Image\impl\icon\UserTaskIconType.cs" />
     <Compile Remove="Image\impl\ProcessDiagramDOMGroupManager.cs" />
     <Compile Remove="Image\impl\ProcessDiagramSVGGraphics2D.cs" />
-    <Compile Remove="JavaDataSource.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -107,7 +106,6 @@
     <None Include="Image\impl\icon\UserTaskIconType.cs" />
     <None Include="Image\impl\ProcessDiagramDOMGroupManager.cs" />
     <None Include="Image\impl\ProcessDiagramSVGGraphics2D.cs" />
-    <None Include="JavaDataSource.cs" />
   </ItemGroup>
 
   <ItemGroup>

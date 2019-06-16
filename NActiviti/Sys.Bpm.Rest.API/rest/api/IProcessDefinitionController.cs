@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sys.Workflow.bpmn.model;
-using Sys.Workflow.cloud.services.api.model;
-using Sys.Workflow.cloud.services.rest.api.resources;
-using org.springframework.hateoas;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Cloud.Services.Api.Model;
+using Sys.Workflow.Cloud.Services.Rest.Api.Resources;
+using Sys.Workflow.Hateoas;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Sys.Workflow.cloud.services.rest.api
+namespace Sys.Workflow.Cloud.Services.Rest.Api
 {
     /// <summary>
     /// 流程定义-已发布流程

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Sys.Workflow.cloud.services.rest.api;
-using Sys.Bpm.Rest.Client.API;
+using Sys.Workflow.Cloud.Services.Rest.Api;
+using Sys.Workflow.Rest.Client.API;
 using Sys.Net.Http;
 using System.Net.Http;
 
-namespace Sys.Bpm.Rest.Client
+namespace Sys.Workflow.Rest.Client
 {
     /// <summary>
     /// 工作流客户端调用创建工厂

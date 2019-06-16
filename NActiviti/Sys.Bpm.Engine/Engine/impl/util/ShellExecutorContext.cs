@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.util
+namespace Sys.Workflow.Engine.Impl.Util
 {
 
-    using Sys.Workflow.engine.cfg.security;
+    using Sys.Workflow.Engine.Cfg.Securities;
 
     /// 
     public class ShellExecutorContext : IExecutorContext

@@ -1,4 +1,4 @@
-﻿using Sys.Workflow.engine.history;
+﻿using Sys.Workflow.Engine.History;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,7 +14,7 @@ using System.Linq;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.@delegate.@event
+namespace Sys.Workflow.Engine.Delegate.Events
 {
     /// <summary>
     /// Enumeration containing all possible types of <seealso cref="IActivitiEvent"/>s.

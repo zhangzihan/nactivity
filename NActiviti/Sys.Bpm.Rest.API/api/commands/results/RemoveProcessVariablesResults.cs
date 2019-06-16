@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Sys.Workflow.cloud.services.api.commands.results
+namespace Sys.Workflow.Cloud.Services.Api.Commands.Results
 {
 
     /// <summary>

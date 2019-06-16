@@ -14,26 +14,26 @@ using System.Threading;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.behavior
+namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
 
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.bpmn.data;
-    using Sys.Workflow.engine.impl.bpmn.helper;
-    using Sys.Workflow.engine.impl.bpmn.parser;
-    using Sys.Workflow.engine.impl.bpmn.webservice;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.el;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.impl.util;
-    using Sys.Workflow.engine.impl.webservice;
-    using Sys.Bpm;
-    using IOSpecification = Workflow.bpmn.model.IOSpecification;
-    using ItemDefinition = Workflow.bpmn.model.ItemDefinition;
-    using Operation = Workflow.bpmn.model.Operation;
-    using Assignment = Workflow.bpmn.model.Assignment;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Bpmn.Datas;
+    using Sys.Workflow.Engine.Impl.Bpmn.Helper;
+    using Sys.Workflow.Engine.Impl.Bpmn.Parser;
+    using Sys.Workflow.Engine.Impl.Bpmn.Webservice;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.EL;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Impl.Util;
+    using Sys.Workflow.Engine.Impl.Webservice;
+    using Sys.Workflow;
+    using IOSpecification = Workflow.Bpmn.Models.IOSpecification;
+    using ItemDefinition = Workflow.Bpmn.Models.ItemDefinition;
+    using Operation = Workflow.Bpmn.Models.Operation;
+    using Assignment = Workflow.Bpmn.Models.Assignment;
 
     /// <summary>
     /// An activity behavior that allows calling Web services
@@ -48,19 +48,19 @@ namespace Sys.Workflow.engine.impl.bpmn.behavior
 
         private const long serialVersionUID = 1L;
 
-        public const string CURRENT_MESSAGE = "Sys.Workflow.engine.impl.bpmn.CURRENT_MESSAGE";
+        public const string CURRENT_MESSAGE = "Sys.Workflow.Engine.Impl.Bpmn.CURRENT_MESSAGE";
 
         protected internal IDictionary<string, IXMLImporter> xmlImporterMap = new Dictionary<string, IXMLImporter>();
         protected internal IDictionary<string, WSOperation> wsOperationMap = new Dictionary<string, WSOperation>();
         protected internal IDictionary<string, IStructureDefinition> structureDefinitionMap = new Dictionary<string, IStructureDefinition>();
         protected internal IDictionary<string, WSService> wsServiceMap = new Dictionary<string, WSService>();
-        protected internal IDictionary<string, webservice.Operation> operationMap = new Dictionary<string, webservice.Operation>();
-        protected internal IDictionary<string, data.ItemDefinition> itemDefinitionMap = new Dictionary<string, data.ItemDefinition>();
+        protected internal IDictionary<string, Webservice.Operation> operationMap = new Dictionary<string, Webservice.Operation>();
+        protected internal IDictionary<string, Datas.ItemDefinition> itemDefinitionMap = new Dictionary<string, Datas.ItemDefinition>();
         protected internal IDictionary<string, MessageDefinition> messageDefinitionMap = new Dictionary<string, MessageDefinition>();
 
         public WebServiceActivityBehavior()
         {
-            itemDefinitionMap["http://www.w3.org/2001/XMLSchema:string"] = new data.ItemDefinition("http://www.w3.org/2001/XMLSchema:string", new ClassStructureDefinition(typeof(string)));
+            itemDefinitionMap["http://www.w3.org/2001/XMLSchema:string"] = new Datas.ItemDefinition("http://www.w3.org/2001/XMLSchema:string", new ClassStructureDefinition(typeof(string)));
         }
 
         public override void Execute(IExecutionEntity execution)
@@ -94,7 +94,7 @@ namespace Sys.Workflow.engine.impl.bpmn.behavior
 
             FillDefinitionMaps(bpmnModel);
 
-            webservice.Operation operation = operationMap[operationRef];
+            Webservice.Operation operation = operationMap[operationRef];
 
             try
             {
@@ -169,13 +169,13 @@ namespace Sys.Workflow.engine.impl.bpmn.behavior
         {
             foreach (DataSpec dataSpec in activityIoSpecification.DataInputs)
             {
-                data.ItemDefinition itemDefinition = itemDefinitionMap[dataSpec.ItemSubjectRef];
+                Datas.ItemDefinition itemDefinition = itemDefinitionMap[dataSpec.ItemSubjectRef];
                 execution.SetVariable(dataSpec.Id, itemDefinition.CreateInstance());
             }
 
             foreach (DataSpec dataSpec in activityIoSpecification.DataOutputs)
             {
-                data.ItemDefinition itemDefinition = itemDefinitionMap[dataSpec.ItemSubjectRef];
+                Datas.ItemDefinition itemDefinition = itemDefinitionMap[dataSpec.ItemSubjectRef];
                 execution.SetVariable(dataSpec.Id, itemDefinition.CreateInstance());
             }
         }
@@ -213,7 +213,7 @@ namespace Sys.Workflow.engine.impl.bpmn.behavior
                         structure = structureDefinitionMap[itemDefinitionElement.StructureRef];
                     }
 
-                    data.ItemDefinition itemDefinition = new data.ItemDefinition(itemDefinitionElement.Id, structure);
+                    Datas.ItemDefinition itemDefinition = new Datas.ItemDefinition(itemDefinitionElement.Id, structure);
                     if (!string.IsNullOrWhiteSpace(itemDefinitionElement.ItemKind))
                     {
                         itemDefinition.ItemKind = (ItemKind)Enum.Parse(typeof(ItemKind), itemDefinitionElement.ItemKind);
@@ -235,7 +235,7 @@ namespace Sys.Workflow.engine.impl.bpmn.behavior
                     {
                         if (itemDefinitionMap.ContainsKey(messageElement.ItemRef))
                         {
-                            data.ItemDefinition itemDefinition = itemDefinitionMap[messageElement.ItemRef];
+                            Datas.ItemDefinition itemDefinition = itemDefinitionMap[messageElement.ItemRef];
                             messageDefinition.ItemDefinition = itemDefinition;
                         }
                     }
@@ -259,7 +259,7 @@ namespace Sys.Workflow.engine.impl.bpmn.behavior
                     if (!operationMap.ContainsKey(operationObject.Id))
                     {
                         MessageDefinition inMessage = messageDefinitionMap[operationObject.InMessageRef];
-                        webservice.Operation operation = new webservice.Operation(operationObject.Id, operationObject.Name, bpmnInterface, inMessage)
+                        Webservice.Operation operation = new Webservice.Operation(operationObject.Id, operationObject.Name, bpmnInterface, inMessage)
                         {
                             Implementation = wsOperationMap[operationObject.ImplementationRef]
                         };
@@ -289,7 +289,7 @@ namespace Sys.Workflow.engine.impl.bpmn.behavior
                     Type wsdlImporterClass;
                     try
                     {
-                        wsdlImporterClass = Type.GetType("Sys.Workflow.engine.impl.webservice.CxfWSDLImporter", true);
+                        wsdlImporterClass = Type.GetType("Sys.Workflow.Engine.Impl.Webservice.CxfWSDLImporter", true);
                         IXMLImporter importerInstance = (IXMLImporter)Activator.CreateInstance(wsdlImporterClass);
                         xmlImporterMap[theImport.ImportType] = importerInstance;
                         importerInstance.ImportFrom(theImport, sourceSystemId);
@@ -349,7 +349,7 @@ namespace Sys.Workflow.engine.impl.bpmn.behavior
                     {
                         IExpression from = expressionManager.CreateExpression(assignmentElement.From);
                         IExpression to = expressionManager.CreateExpression(assignmentElement.To);
-                        data.Assignment assignment = new data.Assignment(from, to);
+                        Datas.Assignment assignment = new Datas.Assignment(from, to);
                         dataAssociation.AddAssignment(assignment);
                     }
                 }

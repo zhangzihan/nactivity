@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using Sys.Workflow.cloud.services.api.commands;
-using Sys.Workflow.cloud.services.api.model;
-using Sys.Workflow.engine;
-using Sys.Workflow.engine.impl.cfg;
-using Sys.Workflow.engine.impl.identity;
-using Sys.Workflow.engine.impl.persistence.entity;
-using Sys.Workflow.engine.runtime;
-using Sys.Workflow.engine.task;
+using Sys.Workflow.Cloud.Services.Api.Commands;
+using Sys.Workflow.Cloud.Services.Api.Model;
+using Sys.Workflow.Engine;
+using Sys.Workflow.Engine.Impl.Cfg;
+using Sys.Workflow.Engine.Impl.Identities;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
+using Sys.Workflow.Engine.Runtime;
+using Sys.Workflow.Engine.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -56,7 +56,7 @@ namespace BpmnTest.Test
 
             //configuration.JobManager.scheduleTimerJob(timer);
 
-            IJobEntity timer = configuration.CommandExecutor.Execute<IJobEntity>(new Sys.Workflow.engine.impl.cmd.CreateTimerStartJobCmd("Process_b55g1NTCp", DateTime.Now.AddMinutes(1), "Task_1gfchcb"));
+            IJobEntity timer = configuration.CommandExecutor.Execute<IJobEntity>(new Sys.Workflow.Engine.Impl.Cmd.CreateTimerStartJobCmd("Process_b55g1NTCp", DateTime.Now.AddMinutes(1), "Task_1gfchcb"));
 
             //processEngine.RepositoryService.
             // 保存作业事件

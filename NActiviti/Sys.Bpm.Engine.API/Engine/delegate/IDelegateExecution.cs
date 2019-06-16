@@ -11,10 +11,10 @@
  * limitations under the License.
  */
 
-using Sys.Workflow.bpmn.model;
+using Sys.Workflow.Bpmn.Models;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.@delegate
+namespace Sys.Workflow.Engine.Delegate
 {
     /**
      * Execution used in {@link JavaDelegate}s and {@link ExecutionListener}s.

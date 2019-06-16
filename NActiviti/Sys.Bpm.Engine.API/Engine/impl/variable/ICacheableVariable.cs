@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.variable
+namespace Sys.Workflow.Engine.Impl.Variable
 {
     /// <summary>
     /// Interface to abstract the JPA cacheable setting

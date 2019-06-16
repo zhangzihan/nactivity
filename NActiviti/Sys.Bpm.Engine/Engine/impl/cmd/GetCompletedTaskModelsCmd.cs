@@ -14,15 +14,15 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.cmd
+namespace Sys.Workflow.Engine.Impl.Cmd
 {
     using Newtonsoft.Json.Linq;
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.history;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.impl.util;
-    using Sys.Workflow.engine.task;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.History;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Impl.Util;
+    using Sys.Workflow.Engine.Tasks;
     using Sys.Net.Http;
     using Sys.Workflow;
     using System.Linq;
@@ -43,8 +43,8 @@ namespace Sys.Workflow.engine.impl.cmd
 
         public virtual IList<FlowElement> Execute(ICommandContext commandContext)
         {
-            cfg.ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.ProcessEngineConfiguration;
-            interceptor.ICommandExecutor commandExecutor = processEngineConfiguration.CommandExecutor;
+            Cfg.ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.ProcessEngineConfiguration;
+            Interceptor.ICommandExecutor commandExecutor = processEngineConfiguration.CommandExecutor;
 
             IHistoricActivityInstanceQuery query = processEngineConfiguration.HistoryService.CreateHistoricActivityInstanceQuery()
                 .SetProcessInstanceId(processInstanceId);

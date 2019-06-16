@@ -18,7 +18,7 @@ using Sys.Data;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Sys.Workflow.engine.impl.db
+namespace Sys.Workflow.Engine.Impl.DB
 {
     /// <summary>
     /// Use this to execute a dedicated delete statement. It

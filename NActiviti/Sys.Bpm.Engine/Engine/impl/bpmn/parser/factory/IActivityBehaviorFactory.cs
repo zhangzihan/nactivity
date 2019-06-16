@@ -10,12 +10,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.parser.factory
+namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
 {
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.impl.bpmn.behavior;
-    using Sys.Workflow.engine.impl.bpmn.helper;
-    using Sys.Workflow.engine.impl.@delegate;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Impl.Bpmn.Behavior;
+    using Sys.Workflow.Engine.Impl.Bpmn.Helper;
+    using Sys.Workflow.Engine.Impl.Delegate;
 
     /// <summary>
     /// Factory class used by the <seealso cref="BpmnParser"/> and <seealso cref="BpmnParse"/> to instantiate the behaviour classes. For example when parsing an exclusive gateway, this factory will be requested to create a

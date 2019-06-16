@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.@delegate.@event
+namespace Sys.Workflow.Engine.Delegate.Events
 {
     /// <summary>
     /// Indicates the <seealso cref="IActivitiEvent"/> also contains information about a <seealso cref="Throwable"/> that occurred, triggering the event.

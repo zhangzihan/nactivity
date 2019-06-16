@@ -1,7 +1,7 @@
-﻿using Sys.Workflow.cloud.services.api.commands;
+﻿using Sys.Workflow.Cloud.Services.Api.Commands;
 using System;
 
-namespace Sys.Workflow.cloud.services.core.commands
+namespace Sys.Workflow.Cloud.Services.Core.Commands
 {
     /// <summary>
     /// 

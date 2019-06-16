@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Sys.Workflow.engine.repository
+namespace Sys.Workflow.Engine.Repository
 {
     /// <summary>
     /// 

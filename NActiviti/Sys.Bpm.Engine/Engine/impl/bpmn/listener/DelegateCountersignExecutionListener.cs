@@ -9,11 +9,11 @@
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Sys.Workflow.bpmn.constants;
-using Sys.Workflow.bpmn.model;
-using Sys.Workflow.engine.@delegate;
-using Sys.Workflow.engine.impl.context;
-using Sys.Workflow.engine.impl.persistence.entity;
+using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Engine.Delegate;
+using Sys.Workflow.Engine.Impl.Contexts;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
 using Sys;
 using Sys.Workflow;
 using Sys.Workflow.Engine.Bpmn.Rules;
@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Sys.Workflow.engine.impl.bpmn.listener
+namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 {
     /// <summary>
     /// 会签任务监听器,侦听节点任务开始事件,然后根据会签策略从业务服务拉取相关的人员。

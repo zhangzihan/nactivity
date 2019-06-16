@@ -1,11 +1,8 @@
-﻿using Sys.Workflow.cloud.services.events.configuration;
-using Sys.Workflow.engine.@delegate;
-using Sys.Workflow.engine.impl.bpmn.behavior;
-using Sys.Workflow.engine.impl.bpmn.parser.factory;
-using Sys.Workflow.engine.impl.@delegate;
-using Sys.Workflow.engine.impl.persistence.entity.integration;
-using Sys.Workflow.engine.runtime;
-using Sys.Workflow.services.connectors.model;
+﻿using Sys.Workflow.Cloud.Services.Events.Configurations;
+using Sys.Workflow.Engine.Impl.Bpmn.Behavior;
+using Sys.Workflow.Engine.Impl.Delegate;
+using Sys.Workflow.Engine.Impl.Persistence.Entity.Integration;
+using Sys.Workflow.Services.Connectors.Models;
 using System;
 
 /*
@@ -24,10 +21,10 @@ using System;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.services.connectors.behavior
+namespace Sys.Workflow.Services.Connectors.Behavior
 {
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using org.springframework.context;
+    using Sys.Workflow.Contexts;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// <summary>
     /// 

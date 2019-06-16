@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.DeploymentEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.DeploymentEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- DEPLOYMENT RESULTMAP -->
 
-  <ResultMap Id="deploymentResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.DeploymentEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="deploymentResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.DeploymentEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="name" Column="NAME_" />
     <Result Property="category" Column="CATEGORY_" />

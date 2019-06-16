@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.el
+namespace Sys.Workflow.Engine.Impl.EL
 {
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// <summary>
     /// <seealso cref="ICondition"/> that resolves an UEL expression at runtime.

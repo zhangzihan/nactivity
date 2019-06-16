@@ -10,11 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.bpmn.converter.child
+namespace Sys.Workflow.Bpmn.Converters.Childs
 {
-    using Sys.Workflow.bpmn.constants;
-    using Sys.Workflow.bpmn.exceptions;
-    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.Bpmn.Constants;
+    using Sys.Workflow.Bpmn.Exceptions;
+    using Sys.Workflow.Bpmn.Models;
 
     /// 
 

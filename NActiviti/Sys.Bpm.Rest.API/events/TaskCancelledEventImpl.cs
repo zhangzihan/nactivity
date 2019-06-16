@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.cloud.services.events
+namespace Sys.Workflow.Cloud.Services.Events
 {
-    using TaskModel = api.model.TaskModel;
+    using Sys.Workflow.Cloud.Services.Api.Model;
 
     /// <summary>
     /// Task cancelled event implementation

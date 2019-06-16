@@ -9,12 +9,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Sys.Workflow.cloud.services.api.commands;
-using Sys.Workflow.cloud.services.api.model;
-using Sys.Workflow.cloud.services.rest.api;
-using Sys.Workflow.engine.impl.bpmn.webservice;
-using Sys.Bpm.Rest.Client;
-using Sys.Bpm.Services.Rest;
+using Sys.Workflow.Cloud.Services.Api.Commands;
+using Sys.Workflow.Cloud.Services.Api.Model;
+using Sys.Workflow.Cloud.Services.Rest.Api;
+using Sys.Workflow.Engine.Impl.Bpmn.Webservice;
+using Sys.Workflow.Rest.Client;
+using Sys.Workflow.Services.Rest;
 using Sys.Net.Http;
 using Sys.Workflow;
 using Sys.Workflow.Engine.Bpmn.Rules;
@@ -31,7 +31,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Xunit;
 
-namespace Sys.Bpmn.Test
+namespace Sys.Workflown.Test
 {
     /// <summary>
     /// 集成测试上下文

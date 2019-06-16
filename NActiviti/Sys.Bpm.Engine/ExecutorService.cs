@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace java.util.concurrent
+namespace Sys.Workflow.Util.Concurrent
 {
     public class ExecutorService
     {

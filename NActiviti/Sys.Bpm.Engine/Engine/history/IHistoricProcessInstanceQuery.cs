@@ -14,11 +14,11 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.history
+namespace Sys.Workflow.Engine.History
 {
 
-    using Sys.Workflow.engine.query;
-    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.Engine.Query;
+    using Sys.Workflow.Engine.Runtime;
 
     /// <summary>
     /// Allows programmatic querying of <seealso cref="IHistoricProcessInstance"/>s.

@@ -13,12 +13,12 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.persistence.entity.data
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
 {
 
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.db;
-    using Sys.Workflow.engine.impl.persistence.cache;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.DB;
+    using Sys.Workflow.Engine.Impl.Persistence.Caches;
     using System.Collections;
     using System.Linq;
     using System.Reflection;

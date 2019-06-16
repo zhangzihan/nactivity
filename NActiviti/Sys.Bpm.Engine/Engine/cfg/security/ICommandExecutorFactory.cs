@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.cfg.security
+namespace Sys.Workflow.Engine.Cfg.Securities
 {
-    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.Engine.Impl.Util;
 
     /// 
     public interface ICommandExecutorFactory

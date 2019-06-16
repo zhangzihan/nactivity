@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.task
+namespace Sys.Workflow.Engine.Tasks
 {
 
-    using Sys.Workflow.engine.history;
+    using Sys.Workflow.Engine.History;
 
     /// <summary>
     /// User comments that form discussions around tasks.

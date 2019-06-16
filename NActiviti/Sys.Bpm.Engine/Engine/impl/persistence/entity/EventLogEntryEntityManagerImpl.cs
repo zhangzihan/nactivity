@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
 
-    using Sys.Workflow.engine.@event;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.persistence.entity.data;
+    using Sys.Workflow.Engine.Events;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
 
     /// 
     public class EventLogEntryEntityManagerImpl : AbstractEntityManager<IEventLogEntryEntity>, IEventLogEntryEntityManager

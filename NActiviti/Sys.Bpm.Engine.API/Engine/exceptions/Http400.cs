@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Sys.Bpm.Exceptions
+namespace Sys.Workflow.Exceptions
 {
     /// <summary>
     /// Httpp400异常消息

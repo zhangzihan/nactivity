@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.impl.@event.logger.handler
+namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
 {
 
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// 
     public abstract class AbstractTaskEventHandler : AbstractDatabaseEventLoggerEventHandler

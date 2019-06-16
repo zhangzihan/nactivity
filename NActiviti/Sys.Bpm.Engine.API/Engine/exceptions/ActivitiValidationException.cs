@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Sys.Workflow.validation;
+using Sys.Workflow.Validation;
 
-namespace Sys.Workflow.engine.exceptions
+namespace Sys.Workflow.Engine.Exceptions
 {
     [Serializable]
     public class ActivitiValidationException : Exception

@@ -15,10 +15,10 @@
  *
  */
 
-using Sys.Workflow.cloud.services.api.model;
-
-namespace Sys.Workflow.cloud.services.events
+namespace Sys.Workflow.Cloud.Services.Events
 {
+    using Sys.Workflow.Cloud.Services.Api.Model;
+
     /// <summary>
     /// 
     /// </summary>

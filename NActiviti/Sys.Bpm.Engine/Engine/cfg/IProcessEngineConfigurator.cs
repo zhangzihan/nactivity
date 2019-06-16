@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.cfg
+namespace Sys.Workflow.Engine.Cfg
 {
-    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.Engine.Impl.Cfg;
 
     /// <summary>
     /// Implementations of this class can be plugged into a <seealso cref="ProcessEngineConfigurationImpl"/>. Such implementations can configure the engine in any way programmatically possible.

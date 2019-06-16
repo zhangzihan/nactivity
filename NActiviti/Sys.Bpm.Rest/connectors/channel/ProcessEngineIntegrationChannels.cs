@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using org.springframework.messaging;
+using Sys.Workflow.Messaging;
 
-namespace Sys.Workflow.services.connectors.channel
+namespace Sys.Workflow.Services.Connectors.Channels
 {
     /// <summary>
     /// 

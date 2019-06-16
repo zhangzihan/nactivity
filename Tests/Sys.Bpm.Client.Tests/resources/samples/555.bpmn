@@ -41,8 +41,8 @@
           <camunda:property name="userPolicy" value="[{&#34;ruleType&#34;:&#34;GetExecutor&#34;,&#34;ruleName&#34;:&#34;获取节点执行人&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;startUserId&#34;,&#34;name&#34;:&#34;工作流发起人&#34;}]}]" group="ApprovalTask" />
           <camunda:property name="assigneeType" value="single" group="ApprovalTask" />
         </camunda:properties>
-        <camunda:executionListener class="Sys.Workflow.engine.impl.bpmn.listener.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
-        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
+        <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1y5ak2d</bpmn2:incoming>
     </bpmn2:userTask>

@@ -12,14 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.deployer
+namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
 {
-    using Sys.Workflow.bpmn.constants;
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.task;
+    using Sys.Workflow.Bpmn.Constants;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Tasks;
     using System;
     using System.IO;
     using System.Xml;

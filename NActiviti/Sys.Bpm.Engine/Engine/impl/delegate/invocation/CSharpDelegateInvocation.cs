@@ -10,22 +10,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.@delegate.invocation
+namespace Sys.Workflow.Engine.Impl.Delegate.Invocation
 {
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// <summary>
     /// Class handling invocations of JavaDelegates
     /// 
     /// 
     /// </summary>
-    public class JavaDelegateInvocation : DelegateInvocation
+    public class CSharpDelegateInvocation : DelegateInvocation
     {
         /// <summary>
         /// 
         /// </summary>
-        protected internal readonly IJavaDelegate delegateInstance;
+        protected internal readonly ICSharpDelegate delegateInstance;
 
         /// <summary>
         /// 
@@ -37,7 +37,7 @@ namespace Sys.Workflow.engine.impl.@delegate.invocation
         /// </summary>
         /// <param name="delegateInstance"></param>
         /// <param name="execution"></param>
-        public JavaDelegateInvocation(IJavaDelegate delegateInstance, IExecutionEntity execution)
+        public CSharpDelegateInvocation(ICSharpDelegate delegateInstance, IExecutionEntity execution)
         {
             this.delegateInstance = delegateInstance;
             this.execution = execution;

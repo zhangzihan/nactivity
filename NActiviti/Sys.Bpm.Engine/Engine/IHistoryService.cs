@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine
+namespace Sys.Workflow.Engine
 {
 
-    using Sys.Workflow.engine.history;
+    using Sys.Workflow.Engine.History;
 
     /// <summary>
     /// Service exposing information about ongoing and past process instances. This is different from the runtime information in the sense that this runtime information only contains the actual runtime
@@ -50,7 +50,7 @@ namespace Sys.Workflow.engine
         IHistoricDetailQuery CreateHistoricDetailQuery();
 
         /// <summary>
-        /// Returns a new <seealso cref="Sys.Workflow.engine.query.NativeQuery"/> for process definitions.
+        /// Returns a new <seealso cref="Sys.Workflow.Engine.Query.NativeQuery"/> for process definitions.
         /// </summary>
         INativeHistoricDetailQuery CreateNativeHistoricDetailQuery();
 
@@ -60,7 +60,7 @@ namespace Sys.Workflow.engine
         IHistoricVariableInstanceQuery CreateHistoricVariableInstanceQuery();
 
         /// <summary>
-        /// Returns a new <seealso cref="Sys.Workflow.engine.query.NativeQuery"/> for process definitions.
+        /// Returns a new <seealso cref="Sys.Workflow.Engine.Query.NativeQuery"/> for process definitions.
         /// </summary>
         INativeHistoricVariableInstanceQuery CreateNativeHistoricVariableInstanceQuery();
 

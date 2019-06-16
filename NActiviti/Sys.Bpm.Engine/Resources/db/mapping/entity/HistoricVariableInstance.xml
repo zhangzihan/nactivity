@@ -14,10 +14,10 @@
   ~ limitations under the License.
   -->
 
-<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.HistoricVariableInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricVariableInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- HISTORIC PROCESS VARIABLE RESULTMAP -->
-  <ResultMap Id="historicProcessVariableResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.HistoricVariableInstanceEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="historicProcessVariableResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricVariableInstanceEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />
     <Result Property="executionId" Column="EXECUTION_ID_" />

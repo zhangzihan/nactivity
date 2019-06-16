@@ -14,13 +14,13 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine
+namespace Sys.Workflow.Engine
 {
 
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.repository;
-    using Sys.Workflow.engine.task;
-    using Sys.Workflow.validation;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Repository;
+    using Sys.Workflow.Engine.Tasks;
+    using Sys.Workflow.Validation;
     using System.IO;
 
     /// <summary>
@@ -116,7 +116,7 @@ namespace Sys.Workflow.engine
         IProcessDefinitionQuery CreateProcessDefinitionQuery();
 
         /// <summary>
-        /// Returns a new <seealso cref="Sys.Workflow.engine.query.NativeQuery"/> for process definitions.
+        /// Returns a new <seealso cref="Sys.Workflow.Engine.Query.NativeQuery"/> for process definitions.
         /// </summary>
         INativeProcessDefinitionQuery CreateNativeProcessDefinitionQuery();
 
@@ -125,7 +125,7 @@ namespace Sys.Workflow.engine
         IDeploymentQuery CreateDeploymentQuery();
 
         /// <summary>
-        /// Returns a new <seealso cref="Sys.Workflow.engine.query.NativeQuery"/> for deployment.
+        /// Returns a new <seealso cref="Sys.Workflow.Engine.Query.NativeQuery"/> for deployment.
         /// </summary>
         INativeDeploymentQuery CreateNativeDeploymentQuery();
 
@@ -313,7 +313,7 @@ namespace Sys.Workflow.engine
         IModelQuery CreateModelQuery();
 
         /// <summary>
-        /// Returns a new <seealso cref="Sys.Workflow.engine.query.NativeQuery"/> for process definitions.
+        /// Returns a new <seealso cref="Sys.Workflow.Engine.Query.NativeQuery"/> for process definitions.
         /// </summary>
         INativeModelQuery CreateNativeModelQuery();
 

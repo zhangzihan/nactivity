@@ -1,13 +1,13 @@
-﻿using Sys.Workflow.bpmn.constants;
-using Sys.Workflow.engine.@delegate;
-using Sys.Workflow.engine.impl.bpmn.listener;
+﻿using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Engine.Delegate;
+using Sys.Workflow.Engine.Impl.Bpmn.Listeners;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
     /// <inheritdoc />
     class DeployRuntimeAssigneeExecutionListener : IDeployRuntimeAssigneeExecutionListener
@@ -20,8 +20,8 @@ namespace Sys.Workflow.engine.impl.persistence.entity
                   <camunda:property name="runtimeAssignee" value="true" />
                   <camunda:property name="assigneeVariable" value="dynamicUsers" />
                 </camunda:properties>
-                <camunda:executionListener class="Sys.Workflow.engine.impl.bpmn.listener.RuntimeAssigneeExecutionListener,Sys.Bpm.Engine" event="start" />
-                <camunda:executionListener class="Sys.Workflow.engine.impl.bpmn.listener.RuntimeAssigneeExecutionEndedListener,Sys.Bpm.Engine" event="end" />
+                <camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.RuntimeAssigneeExecutionListener,Sys.Bpm.Engine" event="start" />
+                <camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.RuntimeAssigneeExecutionEndedListener,Sys.Bpm.Engine" event="end" />
               </bpmn2:extensionElements>
            */
             bool changed = false;

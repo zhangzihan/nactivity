@@ -27,10 +27,10 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl
+namespace Sys.Workflow.Engine.Impl
 {
 
-    using Sys.Workflow.engine.query;
+    using Sys.Workflow.Engine.Query;
 
     /// <summary>
     /// Contains the possible properties that can be used in a <seealso cref="IDeploymentQuery"/>.

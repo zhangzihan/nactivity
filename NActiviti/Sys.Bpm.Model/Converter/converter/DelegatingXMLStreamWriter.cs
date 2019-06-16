@@ -12,9 +12,9 @@
  */
 using System.Xml.Linq;
 
-namespace Sys.Workflow.bpmn.converter
+namespace Sys.Workflow.Bpmn.Converters
 {
-    using Sys.Bpm;
+    using Sys.Workflow;
     using System.Linq;
     using System.Xml.Linq;
 

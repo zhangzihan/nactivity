@@ -20,7 +20,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_1gxertc" sourceRef="IntermediateThrowEvent_0h7ldio" targetRef="Task_0a047ib" />
     <bpmn2:userTask id="Task_0a047ib" name="用户任务" camunda:assignee="${Task_0a047ib}">
       <bpmn2:extensionElements>
-        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1gxertc</bpmn2:incoming>
       <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${name}" camunda:elementVariable="Task_0a047ib">

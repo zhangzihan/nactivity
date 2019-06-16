@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.bpmn.model
+namespace Sys.Workflow.Bpmn.Models
 {
     public class ImplementationType
     {
@@ -27,8 +27,8 @@ namespace Sys.Workflow.bpmn.model
 
         public static readonly string IMPLEMENTATION_TYPE_INVALID_THROW_EVENT = "invalidThrowEvent";
 
-        public static readonly string IMPLEMENTATION_TASK_SEND_DEFAULT = "Sys.Workflow.engine.impl.bpmn.behavior.SendTaskActivityBehavior,Sys.Bpm.Engine";
-        public static readonly string IMPLEMENTATION_TASK_SERVICE_DEFAULT = "Sys.Workflow.engine.impl.bpmn.behavior.ServiceTaskWebApiActivityBehavior,Sys.Bpm.Engine";
+        public static readonly string IMPLEMENTATION_TASK_SEND_DEFAULT = "Sys.Workflow.Engine.Impl.Bpmn.Behavior.SendTaskActivityBehavior,Sys.Bpm.Engine";
+        public static readonly string IMPLEMENTATION_TASK_SERVICE_DEFAULT = "Sys.Workflow.Engine.Impl.Bpmn.Behavior.ServiceTaskWebApiActivityBehavior,Sys.Bpm.Engine";
     }
 
 }

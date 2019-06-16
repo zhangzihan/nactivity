@@ -13,15 +13,15 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.listener
+namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 {
 
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.bpmn.helper;
-    using Sys.Workflow.engine.impl.bpmn.parser;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.@delegate.invocation;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Bpmn.Helper;
+    using Sys.Workflow.Engine.Impl.Bpmn.Parser;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Delegate.Invocation;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// 
     [Serializable]
@@ -44,13 +44,13 @@ namespace Sys.Workflow.engine.impl.bpmn.listener
             {
                 Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new ExecutionListenerInvocation((IExecutionListener)@delegate, execution));
             }
-            else if (@delegate is IJavaDelegate)
+            else if (@delegate is ICSharpDelegate)
             {
-                Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new JavaDelegateInvocation((IJavaDelegate)@delegate, execution));
+                Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new CSharpDelegateInvocation((ICSharpDelegate)@delegate, execution));
             }
             else
             {
-                throw new ActivitiIllegalArgumentException("Delegate expression " + expression + " did not resolve to an implementation of " + typeof(IExecutionListener) + " nor " + typeof(IJavaDelegate));
+                throw new ActivitiIllegalArgumentException("Delegate expression " + expression + " did not resolve to an implementation of " + typeof(IExecutionListener) + " nor " + typeof(ICSharpDelegate));
             }
         }
 

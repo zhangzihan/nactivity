@@ -14,11 +14,11 @@
   ~ limitations under the License.
   -->
 
-<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.HistoricProcessInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricProcessInstanceEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
 
   <!-- HISTORIC PROCESS INSTANCE RESULT MAP -->
 
-  <ResultMap Id="historicProcessInstanceResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.HistoricProcessInstanceEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="historicProcessInstanceResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricProcessInstanceEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />
     <Result Property="businessKey" Column="BUSINESS_KEY_" />
@@ -40,7 +40,7 @@
     <Result Property="name" Column="NAME_" />
   </ResultMap>
 
-  <!--<collection property="queryVariables" column="EXECUTION_ID_" javaType="ArrayList" ofType="Sys.Workflow.engine.impl.persistence.entity.HistoricVariableInstanceEntity">
+  <!--<collection property="queryVariables" column="EXECUTION_ID_" javaType="ArrayList" ofType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricVariableInstanceEntity">
       <Result Property="id" Column="VAR_ID_" />
       <Result Property="name" Column="VAR_NAME_" />
       <Result Property="variableType" Column="VAR_TYPE_" />
@@ -54,7 +54,7 @@
       <Result Property="textValue2" Column="VAR_TEXT2_" />
       <Result Property="longValue" Column="VAR_LONG_" />
     </collection>-->
-  <ResultMap Id="historicProcessInstanceAndVariablesResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.HistoricProcessInstanceEntityImpl,Sys.Bpm.Engine">
+  <ResultMap Id="historicProcessInstanceAndVariablesResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.HistoricProcessInstanceEntityImpl,Sys.Bpm.Engine">
     <Result Property="id" Column="ID_" />
     <Result Property="processInstanceId" Column="PROC_INST_ID_" />
     <Result Property="businessKey" Column="BUSINESS_KEY_" />

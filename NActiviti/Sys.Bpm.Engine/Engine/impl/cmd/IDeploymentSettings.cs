@@ -1,4 +1,4 @@
-﻿namespace Sys.Workflow.engine.impl.cmd
+﻿namespace Sys.Workflow.Engine.Impl.Cmd
 {
     /// 
     public interface IDeploymentSettings

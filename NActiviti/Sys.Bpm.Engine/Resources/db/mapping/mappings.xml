@@ -13,13 +13,13 @@
   </Database>
   <TypeHandlers>    
     <TypeHandler Name="文件"
-                 Type="Sys.Workflow.engine.impl.persistence.ByteArrayTypeHandler,Sys.Bpm.Engine"/> 
+                 Type="Sys.Workflow.Engine.Impl.Persistence.ByteArrayTypeHandler,Sys.Bpm.Engine"/> 
     <TypeHandler Name="二进制引用"
-                 Type="Sys.Workflow.engine.impl.persistence.ByteArrayRefTypeHandler,Sys.Bpm.Engine"/>
+                 Type="Sys.Workflow.Engine.Impl.Persistence.ByteArrayRefTypeHandler,Sys.Bpm.Engine"/>
     <TypeHandler Name="Json"
                  Type="SmartSql.TypeHandler.JsonTypeHandler,SmartSql.TypeHandler"/>
     <TypeHandler Name="变量类型"
-                 Type="Sys.Workflow.engine.impl.db.IbatisVariableTypeHandler,Sys.Bpm.Engine"/>
+                 Type="Sys.Workflow.Engine.Impl.DB.IbatisVariableTypeHandler,Sys.Bpm.Engine"/>
 
     
   </TypeHandlers>

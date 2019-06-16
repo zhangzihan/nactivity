@@ -13,10 +13,10 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.calendar
+namespace Sys.Workflow.Engine.Impl.Calendars
 {
 
-    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.Engine.Impl.Contexts;
     using System.Globalization;
 
     /// 

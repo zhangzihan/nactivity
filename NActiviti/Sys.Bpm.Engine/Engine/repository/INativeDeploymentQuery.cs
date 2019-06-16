@@ -1,9 +1,9 @@
-﻿namespace Sys.Workflow.engine.repository
+﻿namespace Sys.Workflow.Engine.Repository
 {
-    using Sys.Workflow.engine.query;
+    using Sys.Workflow.Engine.Query;
 
     /// <summary>
-    /// Allows querying of <seealso cref="Sys.Workflow.engine.repository.IDeployment"/>s via native (SQL) queries
+    /// Allows querying of <seealso cref="Sys.Workflow.Engine.Repository.IDeployment"/>s via native (SQL) queries
     /// 
     /// 
     /// </summary>

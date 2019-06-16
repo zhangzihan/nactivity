@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.history
+namespace Sys.Workflow.Engine.History
 {
 
-    using Sys.Workflow.engine.task;
+    using Sys.Workflow.Engine.Tasks;
 
     /// <summary>
     /// Represents a historic task instance (waiting, finished or deleted) that is stored permanent for statistics, audit and other business intelligence purposes.

@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.scripting
+namespace Sys.Workflow.Engine.Impl.Scripting
 {
 
 
-	using Sys.Workflow.engine.@delegate;
+	using Sys.Workflow.Engine.Delegate;
 
 	/// 
 	/// 

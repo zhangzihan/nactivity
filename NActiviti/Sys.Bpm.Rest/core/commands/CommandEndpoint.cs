@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
-using Sys.Workflow.cloud.services.api.commands;
+using Sys.Workflow.Cloud.Services.Api.Commands;
 using Sys.Workflow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Sys.Workflow.cloud.services.core.commands
+namespace Sys.Workflow.Cloud.Services.Core.Commands
 {
     /// <summary>
     /// 

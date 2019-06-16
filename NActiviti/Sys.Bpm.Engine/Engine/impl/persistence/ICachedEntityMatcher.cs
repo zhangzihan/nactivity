@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.impl.persistence
+namespace Sys.Workflow.Engine.Impl.Persistence
 {
-    using Sys.Workflow.engine.impl.persistence.cache;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Impl.Persistence.Caches;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// <summary>
     /// Interface to express a condition whether or not a cached entity should be used in the return result of a query.

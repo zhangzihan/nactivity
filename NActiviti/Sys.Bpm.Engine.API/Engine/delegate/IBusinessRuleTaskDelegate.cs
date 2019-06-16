@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.@delegate
+namespace Sys.Workflow.Engine.Delegate
 {
-    using Sys.Workflow.engine.impl.@delegate;
+    using Sys.Workflow.Engine.Impl.Delegate;
 
     /// <summary>
     /// 

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.impl.agenda
+namespace Sys.Workflow.Engine.Impl.Agenda
 {
     using Microsoft.Extensions.Logging;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using Sys.Workflow;
     using System;
 

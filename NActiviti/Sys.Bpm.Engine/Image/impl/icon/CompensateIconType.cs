@@ -1,4 +1,4 @@
-﻿namespace Sys.Workflow.image.impl.icon
+﻿namespace Sys.Workflow.Image.Impl.Icon
 {
     public class CompensateIconType : IconType
 	{

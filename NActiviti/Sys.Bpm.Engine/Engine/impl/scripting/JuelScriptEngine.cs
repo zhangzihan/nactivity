@@ -14,11 +14,11 @@ using System.Text;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.scripting
+namespace Sys.Workflow.Engine.Impl.Scripting
 {
-    using Sys.Workflow.engine.impl.bpmn.data;
-    using Sys.Workflow.engine.impl.el;
-    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.Engine.Impl.Bpmn.Datas;
+    using Sys.Workflow.Engine.Impl.EL;
+    using Sys.Workflow.Engine.Impl.Util;
 
     /// <summary>
     /// ScriptEngine that used JUEL for script evaluation and compilation (JSR-223).

@@ -10,11 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.cfg
+namespace Sys.Workflow.Engine.Impl.Cfg
 {
-    using javax.transaction;
-    using Sys.Workflow.engine.impl.cfg.jta;
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Transactions;
+    using Sys.Workflow.Engine.Impl.Cfg.Jta;
+    using Sys.Workflow.Engine.Impl.Interceptor;
 
     /// 
     public class JtaProcessEngineConfiguration : ProcessEngineConfigurationImpl

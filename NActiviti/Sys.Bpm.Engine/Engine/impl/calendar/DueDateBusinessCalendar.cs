@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.calendar
+namespace Sys.Workflow.Engine.Impl.Calendars
 {
 
-    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.Engine.Runtime;
 
     public class DueDateBusinessCalendar : BusinessCalendarImpl
     {

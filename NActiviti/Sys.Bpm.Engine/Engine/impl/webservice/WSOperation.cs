@@ -10,10 +10,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.webservice
+namespace Sys.Workflow.Engine.Impl.Webservice
 {
 
-    using Sys.Workflow.engine.impl.bpmn.webservice;
+    using Sys.Workflow.Engine.Impl.Bpmn.Webservice;
     using System;
     using System.Collections.Concurrent;
 

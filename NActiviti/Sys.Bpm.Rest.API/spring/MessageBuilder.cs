@@ -1,4 +1,4 @@
-﻿namespace org.springframework.messaging.support
+﻿namespace Sys.Workflow.Messaging.Support
 {
 
     /// <summary>

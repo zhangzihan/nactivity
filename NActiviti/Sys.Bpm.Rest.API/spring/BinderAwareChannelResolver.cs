@@ -1,6 +1,6 @@
-﻿using org.springframework.messaging;
+﻿using Sys.Workflow.Messaging;
 
-namespace org.springframework.cloud.stream.binding
+namespace Sys.Workflow.Cloud.Streams.Bindings
 {
 
     /// <summary>

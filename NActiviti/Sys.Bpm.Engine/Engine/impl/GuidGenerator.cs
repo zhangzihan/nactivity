@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Logging;
-using Sys.Workflow.engine.impl.cfg;
-using Sys.Workflow.engine.impl.persistence.entity;
+using Sys.Workflow.Engine.Impl.Cfg;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
 using Sys.Workflow;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sys.Bpm.Engine.impl
+namespace Sys.Workflow.Engine.Impl
 {
     public class GuidGenerator : IIdGenerator
     {

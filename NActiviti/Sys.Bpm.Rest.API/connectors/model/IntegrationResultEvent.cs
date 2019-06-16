@@ -17,7 +17,7 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.services.connectors.model
+namespace Sys.Workflow.Services.Connectors.Models
 {
 
     /// <summary>

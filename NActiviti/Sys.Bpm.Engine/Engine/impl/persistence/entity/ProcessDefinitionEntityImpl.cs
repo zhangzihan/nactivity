@@ -13,11 +13,11 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
     using Newtonsoft.Json;
-    using Sys.Workflow.engine.impl.bpmn.data;
-    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.Engine.Impl.Bpmn.Datas;
+    using Sys.Workflow.Engine.Impl.Contexts;
 
     /// 
     /// 

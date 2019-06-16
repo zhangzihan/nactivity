@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Sys.Workflow.engine.impl.history
+namespace Sys.Workflow.Engine.Impl.Histories
 {
 
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// <summary>
     /// 

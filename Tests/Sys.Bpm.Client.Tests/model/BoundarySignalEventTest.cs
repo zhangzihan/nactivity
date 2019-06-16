@@ -1,16 +1,16 @@
 ﻿using Microsoft.Xunit.Performance;
-using Sys.Workflow.bpmn.converter;
-using Sys.Workflow.bpmn.model;
-using Sys.Workflow.engine;
-using Sys.Workflow.engine.impl.cfg;
-using Sys.Workflow.engine.impl.cmd;
-using Sys.Workflow.engine.impl.identity;
-using Sys.Workflow.engine.impl.interceptor;
-using Sys.Workflow.engine.impl.persistence.entity;
-using Sys.Workflow.engine.repository;
-using Sys.Workflow.engine.runtime;
-using Sys.Workflow.engine.task;
-using Sys.Bpmn.Test;
+using Sys.Workflow.Bpmn.Converters;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Engine;
+using Sys.Workflow.Engine.Impl.Cfg;
+using Sys.Workflow.Engine.Impl.Cmd;
+using Sys.Workflow.Engine.Impl.Identities;
+using Sys.Workflow.Engine.Impl.Interceptor;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
+using Sys.Workflow.Engine.Repository;
+using Sys.Workflow.Engine.Runtime;
+using Sys.Workflow.Engine.Tasks;
+using Sys.Workflown.Test;
 using Sys.Workflow;
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace Sys.Bpm.Client.Tests.model
+namespace Sys.Workflow.Client.Tests.Models
 {
     public class BoundarySignalEventTest
     {

@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.variable;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Variable;
     using System.Collections;
 
     /// <summary>

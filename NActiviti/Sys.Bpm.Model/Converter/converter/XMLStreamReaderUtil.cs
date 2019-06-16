@@ -11,11 +11,11 @@
  * limitations under the License.
  */
 using Microsoft.Extensions.Logging;
-using Sys.Bpm.Model;
+using Sys.Workflow.Model;
 using System;
 using System.IO;
 
-namespace Sys.Workflow.bpmn.converter
+namespace Sys.Workflow.Bpmn.Converters
 {
     /// 
     public class XMLStreamReaderUtil

@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.runtime
+namespace Sys.Workflow.Engine.Runtime
 {
 
-	using Sys.Workflow.engine.query;
+	using Sys.Workflow.Engine.Query;
 
 	/// <summary>
 	/// Allows programmatic querying of <seealso cref="IJob"/>s.

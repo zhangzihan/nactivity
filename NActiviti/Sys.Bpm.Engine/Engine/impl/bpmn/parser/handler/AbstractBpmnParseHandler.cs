@@ -13,12 +13,12 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.parser.handler
+namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
 {
     using Microsoft.Extensions.Logging;
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.parse;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Parse;
     using Sys.Workflow;
 
     public abstract class AbstractBpmnParseHandler<T> : IBpmnParseHandler where T : BaseElement

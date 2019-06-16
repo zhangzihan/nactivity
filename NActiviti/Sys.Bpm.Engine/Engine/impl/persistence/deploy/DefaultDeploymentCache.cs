@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Sys.Workflow;
-using Sys.Workflow.Cache;
+using Sys.Workflow.Caches;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.persistence.deploy
+namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
 {
     /// <summary>
     /// Default cache: keep everything in memory, unless a limit is set.

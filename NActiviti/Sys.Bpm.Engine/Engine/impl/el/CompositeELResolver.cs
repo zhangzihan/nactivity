@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.impl.el
+namespace Sys.Workflow.Engine.Impl.EL
 {
 
     public class CompositeELResolver : ELResolver

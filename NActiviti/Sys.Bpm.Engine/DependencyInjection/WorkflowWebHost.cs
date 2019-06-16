@@ -11,7 +11,7 @@ using Sys.Workflow.Options;
 using System;
 using System.IO;
 
-namespace Sys.Bpm
+namespace Sys.Workflow
 {
     /// <summary>
     /// 工作流主机

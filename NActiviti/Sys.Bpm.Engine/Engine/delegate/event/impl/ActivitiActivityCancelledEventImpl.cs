@@ -11,9 +11,9 @@
  * limitations under the License.
  */
 
-using Sys.Workflow.engine.@delegate.@event;
+using Sys.Workflow.Engine.Delegate.Events;
 
-namespace Sys.Workflow.engine.@delegate.@event.impl
+namespace Sys.Workflow.Engine.Delegate.Events.Impl
 {
     /// <summary>
     /// An <seealso cref="ActivitiActivityCancelledEvent"/> implementation.

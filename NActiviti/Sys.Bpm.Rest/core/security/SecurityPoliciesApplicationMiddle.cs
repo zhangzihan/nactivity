@@ -29,9 +29,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Authorization;
-using Sys.Workflow.engine.impl.identity;
+using Sys.Workflow.Engine.Impl.Identities;
 
-namespace Sys.Workflow.cloud.services.core
+namespace Sys.Workflow.Cloud.Services.Core
 {
     /// <summary>
     /// authentication midlleware

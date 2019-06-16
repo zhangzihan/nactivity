@@ -1,6 +1,6 @@
-﻿namespace Sys.Workflow.engine.logging
+﻿namespace Sys.Workflow.Engine.Logging
 {
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Threading;

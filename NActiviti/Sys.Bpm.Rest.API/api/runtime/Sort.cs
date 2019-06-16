@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using static Sys.Workflow.api.runtime.shared.query.Sort;
+using static Sys.Workflow.Api.Runtime.Shared.Query.Sort;
 
-namespace Sys.Workflow.api.runtime.shared.query
+namespace Sys.Workflow.Api.Runtime.Shared.Query
 {
 
     /// <summary>

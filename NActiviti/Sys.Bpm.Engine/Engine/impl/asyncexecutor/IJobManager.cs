@@ -1,9 +1,9 @@
-﻿namespace Sys.Workflow.engine.impl.asyncexecutor
+﻿namespace Sys.Workflow.Engine.Impl.Asyncexecutor
 {
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Runtime;
 
     /// <summary>
     /// Contains methods that are not tied to any specific job type (async, timer, suspended or deadletter),

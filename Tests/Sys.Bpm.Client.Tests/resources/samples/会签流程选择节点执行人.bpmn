@@ -19,7 +19,7 @@
           <camunda:property name="method" value="post" />
           <camunda:property name="userPolicy" value="[{&#34;ruleType&#34;:&#34;GetExecutor&#34;,&#34;ruleName&#34;:&#34;GetExecutor&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;Task_0u3ok8f&#34;,&#34;name&#34;:&#34;&#34;}]}]" />
         </camunda:properties>
-        <camunda:executionListener class="Sys.Workflow.engine.impl.bpmn.listener.DelegateCountersignExecutionListener" event="start" />
+        <camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.DelegateCountersignExecutionListener" event="start" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_0qhmjxw</bpmn2:incoming>
       <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${countersignUsers}" camunda:elementVariable="countersignUser">

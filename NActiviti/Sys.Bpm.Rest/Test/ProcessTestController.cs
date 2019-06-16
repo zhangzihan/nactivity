@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using Sys.Workflow.cloud.services.api.commands;
-using Sys.Workflow.cloud.services.api.model;
-using Sys.Workflow.engine;
-using Sys.Workflow.engine.impl.cfg;
-using Sys.Workflow.engine.impl.cmd;
-using Sys.Workflow.engine.impl.context;
-using Sys.Workflow.engine.impl.identity;
-using Sys.Workflow.engine.impl.interceptor;
-using Sys.Workflow.engine.impl.jobexecutor;
-using Sys.Workflow.engine.impl.persistence.entity;
-using Sys.Workflow.engine.runtime;
-using Sys.Workflow.engine.task;
-using Sys.Workflow.services.api.commands;
+using Sys.Workflow.Cloud.Services.Api.Commands;
+using Sys.Workflow.Cloud.Services.Api.Model;
+using Sys.Workflow.Engine;
+using Sys.Workflow.Engine.Impl.Cfg;
+using Sys.Workflow.Engine.Impl.Cmd;
+using Sys.Workflow.Engine.Impl.Contexts;
+using Sys.Workflow.Engine.Impl.Identities;
+using Sys.Workflow.Engine.Impl.Interceptor;
+using Sys.Workflow.Engine.Impl.JobExecutors;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
+using Sys.Workflow.Engine.Runtime;
+using Sys.Workflow.Engine.Tasks;
+using Sys.Workflow.Services.Api.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,7 +78,7 @@ namespace BpmnTest.Test
 
             //启动流程
             IProcessInstance instance = processEngine.RuntimeService.StartProcessInstanceByCmd(
-                new Sys.Workflow.cloud.services.api.commands.StartProcessInstanceCmd()
+                new Sys.Workflow.Cloud.Services.Api.Commands.StartProcessInstanceCmd()
                 {
                     ProcessName = "报名注册",
                     TenantId = "cb79f3dd-e84e-49b0-95c2-0bdafc80f09d",

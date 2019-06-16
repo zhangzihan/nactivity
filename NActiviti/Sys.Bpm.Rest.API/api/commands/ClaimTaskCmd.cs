@@ -17,7 +17,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace Sys.Workflow.cloud.services.api.commands
+namespace Sys.Workflow.Cloud.Services.Api.Commands
 {
     /// <summary>
     ///任务领取命令

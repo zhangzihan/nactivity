@@ -16,10 +16,10 @@ using System.Linq;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.calendar
+namespace Sys.Workflow.Engine.Impl.Calendars
 {
-    using Sys.Workflow.engine.impl.util;
-    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.Engine.Impl.Util;
+    using Sys.Workflow.Engine.Runtime;
     using System.Globalization;
     using System.Xml;
 

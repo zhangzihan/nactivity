@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.context
+namespace Sys.Workflow.Engine.Impl.Contexts
 {
     using Newtonsoft.Json.Linq;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence.deploy;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence.Deploies;
     using System.Globalization;
     using System.Threading;
 

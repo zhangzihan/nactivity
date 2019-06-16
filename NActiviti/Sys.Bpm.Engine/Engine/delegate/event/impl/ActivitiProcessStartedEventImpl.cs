@@ -10,14 +10,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.@delegate.@event.impl
+namespace Sys.Workflow.Engine.Delegate.Events.Impl
 {
 
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using System.Collections.Generic;
 
     /// <summary>
-    /// An <seealso cref="Sys.Workflow.engine.delegate.event.ActivitiCancelledEvent"/> implementation.
+    /// An <seealso cref="Sys.Workflow.Engine.Delegate.Events.ActivitiCancelledEvent"/> implementation.
     /// 
     /// 
     /// </summary>

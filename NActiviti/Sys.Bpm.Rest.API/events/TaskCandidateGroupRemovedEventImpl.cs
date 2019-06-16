@@ -1,9 +1,6 @@
-﻿namespace Sys.Workflow.cloud.services.events
+﻿namespace Sys.Workflow.Cloud.Services.Events
 {
-
-
-    using TaskCandidateGroup = api.model.TaskCandidateGroup;
-
+    using Sys.Workflow.Cloud.Services.Api.Model;
 
     /// <summary>
     /// 

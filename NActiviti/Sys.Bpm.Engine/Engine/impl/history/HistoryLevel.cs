@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.history
+namespace Sys.Workflow.Engine.Impl.Histories
 {
 
     /// <summary>

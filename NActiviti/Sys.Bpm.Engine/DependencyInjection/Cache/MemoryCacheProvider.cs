@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sys.Workflow.Cache
+namespace Sys.Workflow.Caches
 {
     public class MemoryCacheProvider
     {

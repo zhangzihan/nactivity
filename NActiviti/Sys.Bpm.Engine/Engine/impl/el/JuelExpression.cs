@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.el
+namespace Sys.Workflow.Engine.Impl.EL
 {
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.@delegate.invocation;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Delegate.Invocation;
     using Sys;
 
     /// <summary>

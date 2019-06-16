@@ -12,7 +12,7 @@
  */
 using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.impl.persistence.entity.data.impl.cachematcher
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 {
 
 	/// 

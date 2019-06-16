@@ -1,6 +1,6 @@
-﻿using Sys.Workflow.engine.@delegate.@event;
+﻿using Sys.Workflow.Engine.Delegate.Events;
 
-namespace Sys.Workflow.engine.impl.@event.logger
+namespace Sys.Workflow.Engine.Impl.Events.Logger
 {
     /// 
     public interface IEventLoggerListener

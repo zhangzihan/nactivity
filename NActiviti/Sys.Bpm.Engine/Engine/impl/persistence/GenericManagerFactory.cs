@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.persistence
+namespace Sys.Workflow.Engine.Impl.Persistence
 {
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.Impl.Interceptor;
 
     /// 
     /// 

@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.impl.agenda
+namespace Sys.Workflow.Engine.Impl.Agenda
 {
     using Microsoft.Extensions.Logging;
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.@delegate.@event;
-    using Sys.Workflow.engine.@delegate.@event.impl;
-    using Sys.Workflow.engine.impl.bpmn.behavior;
-    using Sys.Workflow.engine.impl.bpmn.helper;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.@delegate;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence.entity;
-    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Delegate.Events;
+    using Sys.Workflow.Engine.Delegate.Events.Impl;
+    using Sys.Workflow.Engine.Impl.Bpmn.Behavior;
+    using Sys.Workflow.Engine.Impl.Bpmn.Helper;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Delegate;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using Sys.Workflow.Engine.Impl.Util;
     using Sys.Workflow;
 
     /// <summary>
@@ -74,13 +74,13 @@ namespace Sys.Workflow.engine.impl.agenda
             logger.LogDebug($"No parent execution found. Verifying if process instance {processInstanceId} can be stopped.");
 
             IExecutionEntity superExecution = processInstanceExecution.SuperExecution;
-            @delegate.ISubProcessActivityBehavior subProcessActivityBehavior = null;
+            ISubProcessActivityBehavior subProcessActivityBehavior = null;
 
             // copy variables before destroying the ended sub process instance (call activity)
             if (superExecution != null)
             {
                 FlowNode superExecutionElement = (FlowNode)superExecution.CurrentFlowElement;
-                subProcessActivityBehavior = (@delegate.ISubProcessActivityBehavior)superExecutionElement.Behavior;
+                subProcessActivityBehavior = (ISubProcessActivityBehavior)superExecutionElement.Behavior;
                 try
                 {
                     subProcessActivityBehavior.Completing(superExecution, processInstanceExecution);

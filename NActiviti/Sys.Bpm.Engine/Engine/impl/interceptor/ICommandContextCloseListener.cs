@@ -1,6 +1,6 @@
-﻿namespace Sys.Workflow.engine.impl.interceptor
+﻿namespace Sys.Workflow.Engine.Impl.Interceptor
 {
-    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.Engine.Impl.Cfg;
 
     /// <summary>
     /// A listener that can be used to be notified of lifecycle events of the <seealso cref="CommandContext"/>.

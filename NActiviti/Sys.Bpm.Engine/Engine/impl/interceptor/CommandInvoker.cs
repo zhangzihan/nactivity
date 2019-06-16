@@ -10,11 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.interceptor
+namespace Sys.Workflow.Engine.Impl.Interceptor
 {
     using Microsoft.Extensions.Logging;
-    using Sys.Workflow.engine.impl.agenda;
-    using Sys.Workflow.engine.impl.context;
+    using Sys.Workflow.Engine.Impl.Agenda;
+    using Sys.Workflow.Engine.Impl.Contexts;
     using Sys.Workflow;
     using System;
 

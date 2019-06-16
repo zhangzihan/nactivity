@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.cfg
+namespace Sys.Workflow.Engine.Cfg
 {
 	/// 
 	public class MailServerInfo

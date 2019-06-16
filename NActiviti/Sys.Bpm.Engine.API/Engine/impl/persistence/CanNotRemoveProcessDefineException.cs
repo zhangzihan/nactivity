@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Sys.Workflow.engine.impl.persistence
+namespace Sys.Workflow.Engine.Impl.Persistence
 {
     [Serializable]
     public class CanNotRemoveProcessDefineException : Exception

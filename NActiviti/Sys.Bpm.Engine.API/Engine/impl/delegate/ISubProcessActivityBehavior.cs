@@ -11,10 +11,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.@delegate
+namespace Sys.Workflow.Engine.Impl.Delegate
 {
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// <summary>
     /// behavior for activities that delegate to a complete separate execution of a process definition. In BPMN terminology this can be used to implement a reusable subprocess.

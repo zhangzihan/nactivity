@@ -1,4 +1,4 @@
-﻿namespace javax.enterprise.concurrent
+﻿namespace Sys.Workflow.Concurrent
 {
     public class ManagedThreadFactory
     {

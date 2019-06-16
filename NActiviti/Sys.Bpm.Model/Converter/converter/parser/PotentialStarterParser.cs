@@ -13,11 +13,11 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.bpmn.converter.parser
+namespace Sys.Workflow.Bpmn.Converters.Parsers
 {
 
-    using Sys.Workflow.bpmn.constants;
-    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.Bpmn.Constants;
+    using Sys.Workflow.Bpmn.Models;
 
     /// 
     public class PotentialStarterParser : IBpmnXMLConstants

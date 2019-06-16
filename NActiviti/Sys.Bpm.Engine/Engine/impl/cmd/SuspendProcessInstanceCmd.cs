@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.cmd
+namespace Sys.Workflow.Engine.Impl.Cmd
 {
-	using Sys.Workflow.engine.impl.persistence.entity;
+	using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
 	/// 
 	/// 

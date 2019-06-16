@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.@delegate.@event
+namespace Sys.Workflow.Engine.Delegate.Events
 {
     /// <summary>
     /// An <seealso cref="IActivitiEvent"/> related to an error being sent to an activity.

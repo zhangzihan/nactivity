@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine
+namespace Sys.Workflow.Engine
 {
     /// <summary>
     /// Interface describing a listener that gets notified when certain event occurs, related to the process-engine lifecycle it is attached to.

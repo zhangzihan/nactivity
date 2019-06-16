@@ -13,14 +13,14 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl
+namespace Sys.Workflow.Engine.Impl
 {
 
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.db;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.query;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.DB;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Query;
 
 
     public enum ResultType
@@ -109,12 +109,12 @@ namespace Sys.Workflow.engine.impl
 
         public virtual T Asc()
         {
-            return Direction(impl.Direction.ASCENDING);
+            return Direction(Impl.Direction.ASCENDING);
         }
 
         public virtual T Desc()
         {
-            return Direction(impl.Direction.DESCENDING);
+            return Direction(Impl.Direction.DESCENDING);
         }
 
         public virtual T Direction(Direction direction)

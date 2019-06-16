@@ -13,7 +13,7 @@
     </bpmn2:startEvent>
     <bpmn2:userTask id="UserTask_1hohhhm" name="男性分支" camunda:formKey="647a105a-4e1f-4c2f-bf78-6864fe6156fa" camunda:assignee="${UserTask_1hohhhm}">
       <bpmn2:extensionElements>
-        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_0z6y69a</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_0gbvq9s</bpmn2:outgoing>
@@ -23,7 +23,7 @@
     </bpmn2:userTask>
     <bpmn2:userTask id="UserTask_09xfovp" name="女性分支" camunda:formKey="1183f9a5-df5a-4a71-818a-bf2094e023dd" camunda:assignee="${UserTask_09xfovp}">
       <bpmn2:extensionElements>
-        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_05cxz88</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_0r1fl4b</bpmn2:outgoing>
@@ -33,7 +33,7 @@
     </bpmn2:userTask>
     <bpmn2:userTask id="UserTask_12nwe0f" name="填写注册信息" camunda:formKey="414468fb-b4b6-40c0-951c-7c2fdcc83f73" camunda:assignee="${UserTask_12nwe0f}">
       <bpmn2:extensionElements>
-        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_0xb3drj</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_0z6y69a</bpmn2:outgoing>
@@ -44,7 +44,7 @@
     </bpmn2:userTask>
     <bpmn2:userTask id="UserTask_1rsu0h1" name="注册后" camunda:formKey="805a1e3f-ea2b-4f7c-a222-7e7356d401a6" camunda:assignee="${UserTask_1rsu0h1}">
       <bpmn2:extensionElements>
-        <camunda:taskListener class="Sys.Workflow.engine.impl.bpmn.listener.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_0gbvq9s</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_0r1fl4b</bpmn2:incoming>

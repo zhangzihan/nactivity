@@ -14,10 +14,11 @@ using System.Text;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
 
-    using Sys.Workflow.engine.impl.db;
+    using Sys.Workflow.Engine.Impl.DB;
+    using Sys.Workflow.Engine.Runtime;
 
 
     /// <summary>
@@ -37,7 +38,7 @@ namespace Sys.Workflow.engine.impl.persistence.entity
         protected internal string processInstanceId;
         protected internal string processDefinitionId;
 
-        protected internal bool isExclusive = engine.runtime.JobFields.DEFAULT_EXCLUSIVE;
+        protected internal bool isExclusive = JobFields.DEFAULT_EXCLUSIVE;
 
         protected internal int retries;
 

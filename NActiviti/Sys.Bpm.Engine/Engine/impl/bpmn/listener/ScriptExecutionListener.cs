@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.bpmn.listener
+namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 {
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     [Serializable]
     public class ScriptExecutionListener : IExecutionListener

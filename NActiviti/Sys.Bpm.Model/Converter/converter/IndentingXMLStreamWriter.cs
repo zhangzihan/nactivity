@@ -14,7 +14,7 @@ using System.Xml.Linq;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.bpmn.converter
+namespace Sys.Workflow.Bpmn.Converters
 {
 
 

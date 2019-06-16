@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.webservice
+namespace Sys.Workflow.Engine.Impl.Webservice
 {
 
-    using Sys.Workflow.engine.impl.bpmn.webservice;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.util;
+    using Sys.Workflow.Engine.Impl.Bpmn.Webservice;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Util;
 
     /// <summary>
     /// Represents a WS implementation of a <seealso cref="BpmnInterface"/>

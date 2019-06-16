@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace org.springframework.hateoas
+namespace Sys.Workflow.Hateoas
 {
 
     /// <summary>

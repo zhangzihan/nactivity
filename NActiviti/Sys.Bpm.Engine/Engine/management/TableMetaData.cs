@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.management
+namespace Sys.Workflow.Engine.Management
 {
 
     /// <summary>

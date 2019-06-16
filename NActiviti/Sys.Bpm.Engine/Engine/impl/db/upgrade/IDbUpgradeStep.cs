@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.db.upgrade
+namespace Sys.Workflow.Engine.Impl.DB.Upgrade
 {
     /// <summary>
     /// 

@@ -12,13 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.bpmn.converter.parser
+namespace Sys.Workflow.Bpmn.Converters.Parsers
 {
 
-    using Sys.Workflow.bpmn.constants;
-    using Sys.Workflow.bpmn.converter.child;
-    using Sys.Workflow.bpmn.converter.util;
-    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.Bpmn.Constants;
+    using Sys.Workflow.Bpmn.Converters.Childs;
+    using Sys.Workflow.Bpmn.Converters.Utils;
+    using Sys.Workflow.Bpmn.Models;
     using System;
 
     /// 
@@ -63,12 +63,12 @@ namespace Sys.Workflow.bpmn.converter.parser
                     }
 
                 }
-                else if (xtr.EndElement && constants.BpmnXMLConstants.ELEMENT_EXTENSIONS.Equals(xtr.LocalName))
+                else if (xtr.EndElement && BpmnXMLConstants.ELEMENT_EXTENSIONS.Equals(xtr.LocalName))
                 {
                     readyWithChildElements = true;
                 }
 
-                if (xtr.IsEmptyElement && string.Compare(xtr.LocalName, constants.BpmnXMLConstants.ELEMENT_EXTENSIONS, true) == 0)
+                if (xtr.IsEmptyElement && string.Compare(xtr.LocalName, BpmnXMLConstants.ELEMENT_EXTENSIONS, true) == 0)
                 {
                     readyWithChildElements = true;
                 }

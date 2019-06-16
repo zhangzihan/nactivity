@@ -13,12 +13,12 @@ using System.Threading;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.asyncexecutor.multitenant
+namespace Sys.Workflow.Engine.Impl.Asyncexecutor.Multitenants
 {
     using Microsoft.Extensions.Logging;
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.cfg.multitenant;
-    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Cfg.Multitenants;
+    using Sys.Workflow.Engine.Runtime;
     using Sys.Workflow;
     using System;
     using System.Collections.Concurrent;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Sys.Workflow.cloud.services.api.model
+namespace Sys.Workflow.Cloud.Services.Api.Model
 {
 
     /// <summary>

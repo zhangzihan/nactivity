@@ -1,7 +1,7 @@
-﻿using Sys.Workflow.cloud.services.api.commands;
-using Sys.Workflow.services.subscription.channel;
+﻿using Sys.Workflow.Cloud.Services.Api.Commands;
+using Sys.Workflow.Services.Subscription.Channels;
 
-namespace Sys.Workflow.services.subscription
+namespace Sys.Workflow.Services.Subscription
 {
     /// <summary>
     /// 

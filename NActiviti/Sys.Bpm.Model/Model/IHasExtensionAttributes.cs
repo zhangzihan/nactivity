@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Sys.Workflow.bpmn.model
+namespace Sys.Workflow.Bpmn.Models
 {
 
     /// <summary>

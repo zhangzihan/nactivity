@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine
+namespace Sys.Workflow.Engine
 {
 
     /// <summary>
@@ -18,16 +18,16 @@ namespace Sys.Workflow.engine
     /// 
     /// <ul>
     /// <li>
-    /// <b><seealso cref="Sys.Workflow.engine.IRuntimeService"/>: </b> Allows the creation of <seealso cref="Sys.Workflow.engine.repository.IDeployment"/>s and the starting of and searching on
-    /// <seealso cref="Sys.Workflow.engine.runtime.IProcessInstance"/>s.</li>
+    /// <b><seealso cref="Sys.Workflow.Engine.IRuntimeService"/>: </b> Allows the creation of <seealso cref="Sys.Workflow.Engine.Repository.IDeployment"/>s and the starting of and searching on
+    /// <seealso cref="Sys.Workflow.Engine.Runtime.IProcessInstance"/>s.</li>
     /// <li>
-    /// <b><seealso cref="Sys.Workflow.engine.ITaskService"/>: </b> Exposes operations to manage human (standalone) <seealso cref="Sys.Workflow.engine.task.ITask"/>s, such as claiming, completing and assigning tasks</li>
+    /// <b><seealso cref="Sys.Workflow.Engine.ITaskService"/>: </b> Exposes operations to manage human (standalone) <seealso cref="Sys.Workflow.Engine.Tasks.ITask"/>s, such as claiming, completing and assigning tasks</li>
     /// <li>
-    /// <b><seealso cref="Sys.Workflow.engine.IdentityService"/>: </b> Used for managing <seealso cref="Sys.Workflow.engine.identity.User"/>s, <seealso cref="Sys.Workflow.engine.identity.Group"/>s and the relations between them<</li>
+    /// <b><seealso cref="Sys.Workflow.Engine.IdentityService"/>: </b> Used for managing <seealso cref="Sys.Workflow.Engine.identity.User"/>s, <seealso cref="Sys.Workflow.Engine.identity.Group"/>s and the relations between them<</li>
     /// <li>
-    /// <b><seealso cref="Sys.Workflow.engine.IManagementService"/>: </b> Exposes engine admin and maintenance operations</li>
+    /// <b><seealso cref="Sys.Workflow.Engine.IManagementService"/>: </b> Exposes engine admin and maintenance operations</li>
     /// <li>
-    /// <b><seealso cref="Sys.Workflow.engine.IHistoryService"/>: </b> Service exposing information about ongoing and past process instances.</li>
+    /// <b><seealso cref="Sys.Workflow.Engine.IHistoryService"/>: </b> Service exposing information about ongoing and past process instances.</li>
     /// </ul>
     /// 
     /// Typically, there will be only one central ProcessEngine instance needed in a end-user application. Building a ProcessEngine is done through a <seealso cref="ProcessEngineConfiguration"/> instance and is a

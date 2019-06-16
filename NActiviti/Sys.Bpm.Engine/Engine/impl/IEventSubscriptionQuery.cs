@@ -1,7 +1,7 @@
-﻿using Sys.Workflow.engine.impl.persistence.entity;
-using Sys.Workflow.engine.query;
+﻿using Sys.Workflow.Engine.Impl.Persistence.Entity;
+using Sys.Workflow.Engine.Query;
 
-namespace Sys.Workflow.engine.impl
+namespace Sys.Workflow.Engine.Impl
 {
     public interface IEventSubscriptionQuery : IQuery<IEventSubscriptionQuery, IEventSubscriptionEntity>
     {

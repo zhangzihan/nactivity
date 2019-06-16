@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.cfg.standalone
+namespace Sys.Workflow.Engine.Impl.Cfg.Standalone
 {
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.Impl.Interceptor;
 
     /// 
     public class StandaloneMybatisTransactionContextFactory : ITransactionContextFactory

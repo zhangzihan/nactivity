@@ -14,7 +14,7 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.bpmn.parser
+namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
 {
 
     /// 

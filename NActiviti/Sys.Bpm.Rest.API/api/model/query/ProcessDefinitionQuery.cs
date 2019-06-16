@@ -1,8 +1,8 @@
-﻿using Sys.Workflow.api.runtime.shared.query;
-using Sys.Workflow.engine.impl.persistence.entity;
+﻿using Sys.Workflow.Api.Runtime.Shared.Query;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.cloud.services.api.model
+namespace Sys.Workflow.Cloud.Services.Api.Model
 {
 
     /// <summary>

@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.@delegate
+namespace Sys.Workflow.Engine.Delegate
 {
-    using Sys.Workflow.engine.history;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.History;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using System.Collections;
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace Sys.Workflow.engine.@delegate
     /// 
     /// Typically, executions (and thus process instances) and tasks are the primary use case
     /// to get and set variables. The <seealso cref="IDelegateExecution"/> for example is often used
-    /// in <seealso cref="IJavaDelegate"/> implementation to get and set variables.
+    /// in <seealso cref="ICSharpDelegate"/> implementation to get and set variables.
     /// 
     /// Variables are typically stored on the 'highest parent'. For executions, this
     /// means that when called on an execution the variable will be stored on the process instance

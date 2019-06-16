@@ -1,4 +1,4 @@
-﻿namespace Sys.Workflow.engine.impl.persistence.entity
+﻿namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
     public interface IByteArrayRef
     {

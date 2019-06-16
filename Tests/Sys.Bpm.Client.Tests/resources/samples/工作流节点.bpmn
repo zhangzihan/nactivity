@@ -64,7 +64,7 @@
       <bpmn2:multiInstanceLoopCharacteristics isSequential="true" />
     </bpmn2:userTask>
     <bpmn2:callActivity id="Task_09anxyh" calledElement="Process_1v6eli2" />
-    <bpmn2:serviceTask id="Task_1p6t1yc" camunda:class="Sys.Workflow.engine.impl.bpmn.behavior.ServiceTaskWebApiActivityBehavior,Sys.Bpm.Engine" />
+    <bpmn2:serviceTask id="Task_1p6t1yc" camunda:class="Sys.Workflow.Engine.Impl.Bpmn.Behavior.ServiceTaskWebApiActivityBehavior,Sys.Bpm.Engine" />
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1v6eli2">

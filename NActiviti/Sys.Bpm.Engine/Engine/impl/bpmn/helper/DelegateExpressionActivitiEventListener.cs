@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.helper
+namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 {
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.@delegate.@event;
-    using Sys.Workflow.engine.impl.el;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Delegate.Events;
+    using Sys.Workflow.Engine.Impl.EL;
 
     /// <summary>
     /// An <seealso cref="IActivitiEventListener"/> implementation which resolves an expression to a delegate <seealso cref="IActivitiEventListener"/> instance and uses this for event notification. <br>

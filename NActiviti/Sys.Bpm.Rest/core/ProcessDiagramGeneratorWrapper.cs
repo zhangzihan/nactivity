@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using Sys.Workflow.bpmn.model;
-using Sys.Workflow.engine;
-using Sys.Workflow.image;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Engine;
+using Sys.Workflow.Image;
 using Sys.Workflow;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ using System.IO;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.cloud.services.core
+namespace Sys.Workflow.Cloud.Services.Core
 {
     /// <summary>
     /// Service logic for generating process diagrams

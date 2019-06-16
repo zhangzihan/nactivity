@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Sys.Bpm
+namespace Sys.Workflow
 {
     public static class DictionaryHelper
     {

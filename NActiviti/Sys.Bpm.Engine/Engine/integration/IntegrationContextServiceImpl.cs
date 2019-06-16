@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.integration
+namespace Sys.Workflow.Engine.Integration
 {
-    using Sys.Workflow.engine.impl.cmd.integration;
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.impl.persistence.entity.integration;
+    using Sys.Workflow.Engine.Impl.Cmd.Integration;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity.Integration;
 
     public class IntegrationContextServiceImpl : IIntegrationContextService
     {

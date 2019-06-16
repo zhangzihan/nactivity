@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.image.exception
+namespace Sys.Workflow.Image.Exceptions
 {
 	/// <summary>
 	/// Runtime exception for all image logic.

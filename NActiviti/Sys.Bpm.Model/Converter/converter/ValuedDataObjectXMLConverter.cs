@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.bpmn.converter
+namespace Sys.Workflow.Bpmn.Converters
 {
     using Microsoft.Extensions.Logging;
-    using Sys.Workflow.bpmn.constants;
-    using Sys.Workflow.bpmn.converter.util;
-    using Sys.Workflow.bpmn.model;
-    using Sys.Bpm.Model;
+    using Sys.Workflow.Bpmn.Constants;
+    using Sys.Workflow.Bpmn.Converters.Utils;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Model;
     using System.Globalization;
     using System.Text.RegularExpressions;
 

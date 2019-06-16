@@ -17,7 +17,7 @@ using System.Data.Common;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.cfg.multitenant
+namespace Sys.Workflow.Engine.Impl.Cfg.Multitenants
 {
 
 

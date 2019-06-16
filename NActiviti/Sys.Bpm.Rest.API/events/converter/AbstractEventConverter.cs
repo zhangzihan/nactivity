@@ -1,8 +1,8 @@
-﻿using Sys.Workflow.cloud.services.api.events;
-using Sys.Workflow.cloud.services.events.configuration;
-using Sys.Workflow.engine.@delegate.@event;
+﻿using Sys.Workflow.Cloud.Services.Api.Events;
+using Sys.Workflow.Cloud.Services.Events.Configurations;
+using Sys.Workflow.Engine.Delegate.Events;
 
-namespace Sys.Workflow.cloud.services.events.converter
+namespace Sys.Workflow.Cloud.Services.Events.Converters
 {
 
     /// <summary>

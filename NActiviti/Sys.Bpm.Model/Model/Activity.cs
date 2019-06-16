@@ -1,4 +1,4 @@
-﻿using Sys.Workflow.bpmn.constants;
+﻿using Sys.Workflow.Bpmn.Constants;
 using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.bpmn.model
+namespace Sys.Workflow.Bpmn.Models
 {
 
     public abstract class Activity : FlowNode

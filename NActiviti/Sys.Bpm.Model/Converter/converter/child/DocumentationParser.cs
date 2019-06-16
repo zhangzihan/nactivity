@@ -10,10 +10,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.bpmn.converter.child
+namespace Sys.Workflow.Bpmn.Converters.Childs
 {
 
-    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.Bpmn.Models;
 
     /// 
     public class DocumentationParser : BaseChildElementParser

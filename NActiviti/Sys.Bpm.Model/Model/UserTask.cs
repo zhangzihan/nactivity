@@ -1,4 +1,4 @@
-﻿using Sys.Workflow.bpmn.constants;
+﻿using Sys.Workflow.Bpmn.Constants;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,7 +14,7 @@ using System.Linq;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.bpmn.model
+namespace Sys.Workflow.Bpmn.Models
 {
     public class UserTask : TaskActivity
     {
@@ -312,7 +312,7 @@ namespace Sys.Workflow.bpmn.model
         {
             get
             {
-                return string.Compare(constants.AssigneeType.ONE, AssigneeType?.Value, true) == 0;
+                return string.Compare(Constants.AssigneeType.ONE, AssigneeType?.Value, true) == 0;
             }
         }
 

@@ -1,7 +1,7 @@
 ﻿using System;
-using Sys.Workflow.bpmn.constants;
-using Sys.Workflow.bpmn.converter.util;
-using Sys.Workflow.bpmn.model;
+using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Bpmn.Converters.Utils;
+using Sys.Workflow.Bpmn.Models;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@ using Sys.Workflow.bpmn.model;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.bpmn.converter
+namespace Sys.Workflow.Bpmn.Converters
 {    /// 
     public class SequenceFlowXMLConverter : BaseBpmnXMLConverter
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sys.Workflow.cloud.services.api.model
+namespace Sys.Workflow.Cloud.Services.Api.Model
 {
     /// <summary>
     /// 流程实例查询条件对象

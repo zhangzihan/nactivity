@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.bpmn.converter.export
+namespace Sys.Workflow.Bpmn.Converters.Exports
 {
 
-    using Sys.Workflow.bpmn.constants;
-    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.Bpmn.Constants;
+    using Sys.Workflow.Bpmn.Models;
 
     public class BPMNDIExport : IBpmnXMLConstants
     {

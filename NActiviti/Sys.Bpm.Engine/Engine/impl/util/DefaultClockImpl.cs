@@ -1,4 +1,4 @@
-﻿using Sys.Workflow.engine.runtime;
+﻿using Sys.Workflow.Engine.Runtime;
 using System;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@ using System;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.util
+namespace Sys.Workflow.Engine.Impl.Util
 {
 
     /// 

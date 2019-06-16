@@ -11,12 +11,12 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.@delegate
+namespace Sys.Workflow.Engine.Delegate
 {
-    using Sys.Workflow.engine.impl.bpmn.parser;
+    using Sys.Workflow.Engine.Impl.Bpmn.Parser;
 
     /// <summary>
-    /// Special exception that can be used to throw a BPMN Error from <seealso cref="IJavaDelegate"/>s and expressions.
+    /// Special exception that can be used to throw a BPMN Error from <seealso cref="ICSharpDelegate"/>s and expressions.
     /// 
     /// This should only be used for business faults, which shall be handled by a Boundary Error Event or Error Event Sub-Process modeled in the process definition. Technical errors should be represented
     /// by other exception types.

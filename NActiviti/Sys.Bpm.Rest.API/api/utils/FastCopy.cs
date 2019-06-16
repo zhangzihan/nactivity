@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Sys.Workflow.cloud.services.api.utils
+namespace Sys.Workflow.Cloud.Services.Api.Utils
 {
     /// <summary>
     /// 在两个不同的类型之间，快速的拷贝

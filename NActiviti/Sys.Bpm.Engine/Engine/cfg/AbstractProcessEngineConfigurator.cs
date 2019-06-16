@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.cfg
+namespace Sys.Workflow.Engine.Cfg
 {
-    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.Engine.Impl.Cfg;
 
     /// 
     public abstract class AbstractProcessEngineConfigurator : IProcessEngineConfigurator

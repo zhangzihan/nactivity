@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine
+namespace Sys.Workflow.Engine
 {
     /// <summary>
     /// An exception indicating that an illegal argument has been supplied in an Activiti API-call, an illegal value was configured in the engine's configuration or an illegal value has been supplied or an

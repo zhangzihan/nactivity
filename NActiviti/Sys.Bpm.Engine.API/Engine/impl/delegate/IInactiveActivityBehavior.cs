@@ -1,6 +1,6 @@
-﻿namespace Sys.Workflow.engine.impl.@delegate
+﻿namespace Sys.Workflow.Engine.Impl.Delegate
 {
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// <summary>
     /// If the behaviour of an element in a process implements this interface, it has a 'background job' functionality.

@@ -12,7 +12,7 @@
  */
 using System.Text.RegularExpressions;
 
-namespace Sys.Workflow.bpmn.model
+namespace Sys.Workflow.Bpmn.Models
 {
     public class MultiInstanceLoopCharacteristics : BaseElement
     {

@@ -10,11 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Sys.Workflow.bpmn.converter;
-using Sys.Workflow.bpmn.model;
+using Sys.Workflow.Bpmn.Converters;
+using Sys.Workflow.Bpmn.Models;
 using System.Xml.Linq;
 
-namespace Sys.Workflow.bpmn.constants
+namespace Sys.Workflow.Bpmn.Constants
 {
     public interface IBpmnXMLConstants
     {

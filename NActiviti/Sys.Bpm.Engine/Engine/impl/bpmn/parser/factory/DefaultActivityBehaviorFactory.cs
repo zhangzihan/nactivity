@@ -13,14 +13,14 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.parser.factory
+namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
 {
-    using Sys.Workflow.bpmn.constants;
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.bpmn.behavior;
-    using Sys.Workflow.engine.impl.bpmn.helper;
-    using Sys.Workflow.engine.impl.@delegate;
+    using Sys.Workflow.Bpmn.Constants;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Bpmn.Behavior;
+    using Sys.Workflow.Engine.Impl.Bpmn.Helper;
+    using Sys.Workflow.Engine.Impl.Delegate;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -163,13 +163,13 @@ namespace Sys.Workflow.engine.impl.bpmn.parser.factory
             try
             {
 
-                Type theClass = Type.GetType("Sys.Workflow.mule.MuleSendActivitiBehavior");
+                Type theClass = Type.GetType("Sys.Workflow.Mule.MuleSendActivitiBehavior");
                 IList<FieldDeclaration> fieldDeclarations = CreateFieldDeclarations(fieldExtensions);
                 return (IActivityBehavior)ClassDelegate.DefaultInstantiateDelegate(theClass, fieldDeclarations);
             }
             catch (Exception e)
             {
-                throw new ActivitiException("Could not find Sys.Workflow.mule.MuleSendActivitiBehavior: ", e);
+                throw new ActivitiException("Could not find Sys.Workflow.Mule.MuleSendActivitiBehavior: ", e);
             }
         }
 
@@ -209,7 +209,7 @@ namespace Sys.Workflow.engine.impl.bpmn.parser.factory
                 if (theClass == null)
                 {
                     // Default Camel behavior class
-                    theClass = Type.GetType("Sys.Workflow.camel.impl.CamelBehaviorDefaultImpl");
+                    theClass = Type.GetType("Sys.Workflow.Camel.Impl.CamelBehaviorDefaultImpl");
                 }
 
                 IList<FieldDeclaration> fieldDeclarations = CreateFieldDeclarations(fieldExtensions);
@@ -218,7 +218,7 @@ namespace Sys.Workflow.engine.impl.bpmn.parser.factory
             }
             catch (Exception e)
             {
-                throw new ActivitiException("Could not find Sys.Workflow.camel.CamelBehavior: ", e);
+                throw new ActivitiException("Could not find Sys.Workflow.Camel.CamelBehavior: ", e);
             }
         }
 
@@ -272,7 +272,7 @@ namespace Sys.Workflow.engine.impl.bpmn.parser.factory
             }
             else
             {
-                ruleActivity.ResultVariable = "Sys.Workflow.engine.rules.OUTPUT";
+                ruleActivity.ResultVariable = "Sys.Workflow.Engine.rules.OUTPUT";
             }
 
             return ruleActivity;

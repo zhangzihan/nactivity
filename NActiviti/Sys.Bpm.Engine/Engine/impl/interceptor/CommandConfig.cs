@@ -1,6 +1,6 @@
-﻿namespace Sys.Workflow.engine.impl.interceptor
+﻿namespace Sys.Workflow.Engine.Impl.Interceptor
 {
-    using Sys.Workflow.engine.impl.cfg;
+    using Sys.Workflow.Engine.Impl.Cfg;
 
     /// <summary>
     /// Configuration settings for the command interceptor chain.

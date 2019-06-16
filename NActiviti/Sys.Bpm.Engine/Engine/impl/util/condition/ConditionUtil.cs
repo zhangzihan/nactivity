@@ -1,11 +1,11 @@
-﻿namespace Sys.Workflow.engine.impl.util.condition
+﻿namespace Sys.Workflow.Engine.Impl.Util.Conditions
 {
     using Newtonsoft.Json.Linq;
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.el;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.EL;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// 
     /// 

@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.@delegate.@event
+namespace Sys.Workflow.Engine.Delegate.Events
 {
     /// <summary>
     /// Dispatcher which allows for adding and removing <seealso cref="IActivitiEventListener"/> s to the Activiti Engine as well as dispatching <seealso cref="IActivitiEvent"/> to all the listeners registered.

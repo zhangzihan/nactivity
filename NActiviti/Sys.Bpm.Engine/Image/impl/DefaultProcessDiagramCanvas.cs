@@ -18,29 +18,13 @@ using System.Text;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.image.impl
+namespace Sys.Workflow.Image.Impl
 {
 
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.image.exception;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
-    using Sys.Workflow.image.impl.icon;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Image.Exceptions;
+    using Sys.Workflow.Image.Impl.Icon;
     using org.apache.batik.dom;
     using org.apache.batik.svggen;
     using org.slf4j;
@@ -53,7 +37,7 @@ namespace Sys.Workflow.image.impl
     /// <para>
     /// </para>
     /// </summary>
-    /// <seealso cref="Sys.Workflow.image.impl.DefaultProcessDiagramGenerator"></seealso>
+    /// <seealso cref="Sys.Workflow.Image.Impl.DefaultProcessDiagramGenerator"></seealso>
     public class DefaultProcessDiagramCanvas
     {
 

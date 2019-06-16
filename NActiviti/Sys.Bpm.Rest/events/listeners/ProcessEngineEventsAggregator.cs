@@ -1,4 +1,4 @@
-﻿using Sys.Workflow.cloud.services.api.events;
+﻿using Sys.Workflow.Cloud.Services.Api.Events;
 using System;
 
 /*
@@ -17,7 +17,7 @@ using System;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.cloud.services.events.listeners
+namespace Sys.Workflow.Cloud.Services.Events.Listeners
 {
     /// <summary>
     /// 

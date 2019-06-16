@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.@delegate.@event.impl
+namespace Sys.Workflow.Engine.Delegate.Events.Impl
 {
 
 	/// <summary>

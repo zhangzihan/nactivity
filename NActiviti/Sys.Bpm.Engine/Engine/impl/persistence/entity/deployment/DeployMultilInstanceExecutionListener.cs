@@ -1,14 +1,14 @@
-﻿using Sys.Workflow.bpmn.constants;
-using Sys.Workflow.bpmn.model;
-using Sys.Workflow.engine.@delegate;
-using Sys.Workflow.engine.impl.bpmn.listener;
+﻿using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Engine.Delegate;
+using Sys.Workflow.Engine.Impl.Bpmn.Listeners;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
     /// <summary>
     /// 添加运行时分配人员事件侦听

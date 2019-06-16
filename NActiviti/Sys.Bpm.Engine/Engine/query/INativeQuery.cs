@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.query
+namespace Sys.Workflow.Engine.Query
 {
 
     /// <summary>

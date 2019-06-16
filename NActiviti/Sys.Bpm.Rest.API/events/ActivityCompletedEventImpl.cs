@@ -15,7 +15,7 @@
  *
  */
 
-namespace Sys.Workflow.cloud.services.events
+namespace Sys.Workflow.Cloud.Services.Events
 {
     /// <summary>
     /// 

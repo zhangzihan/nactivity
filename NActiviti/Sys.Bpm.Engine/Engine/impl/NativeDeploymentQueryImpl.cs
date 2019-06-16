@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Sys.Workflow.engine.impl
+namespace Sys.Workflow.Engine.Impl
 {
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.repository;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Repository;
 
 
     [Serializable]

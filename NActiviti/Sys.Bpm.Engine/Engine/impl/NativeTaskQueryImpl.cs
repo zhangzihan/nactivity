@@ -17,11 +17,11 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl
+namespace Sys.Workflow.Engine.Impl
 {
 
-    using Sys.Workflow.engine.impl.interceptor;
-    using Sys.Workflow.engine.task;
+    using Sys.Workflow.Engine.Impl.Interceptor;
+    using Sys.Workflow.Engine.Tasks;
 
     [Serializable]
     public class NativeTaskQueryImpl : AbstractNativeQuery<INativeTaskQuery, ITask>, INativeTaskQuery

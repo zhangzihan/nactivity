@@ -1,24 +1,24 @@
 ﻿using Microsoft.Extensions.Logging;
-using Sys.Workflow.api.runtime.shared.query;
-using Sys.Workflow.bpmn.constants;
-using Sys.Workflow.cloud.services.api.commands;
-using Sys.Workflow.cloud.services.api.model;
-using Sys.Workflow.cloud.services.api.model.converter;
-using Sys.Workflow.cloud.services.core.pageable;
-using Sys.Workflow.cloud.services.events.listeners;
-using Sys.Workflow.engine;
-using Sys.Workflow.engine.history;
-using Sys.Workflow.engine.impl;
-using Sys.Workflow.engine.repository;
-using Sys.Workflow.engine.runtime;
-using Sys.Workflow.engine.task;
-using Sys.Workflow.services.api.commands;
-using org.springframework.context;
+using Sys.Workflow.Api.Runtime.Shared.Query;
+using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Cloud.Services.Api.Commands;
+using Sys.Workflow.Cloud.Services.Api.Model;
+using Sys.Workflow.Cloud.Services.Api.Model.Converters;
+using Sys.Workflow.Cloud.Services.Core.Pageables;
+using Sys.Workflow.Cloud.Services.Events.Listeners;
+using Sys.Workflow.Engine;
+using Sys.Workflow.Engine.History;
+using Sys.Workflow.Engine.Impl;
+using Sys.Workflow.Engine.Repository;
+using Sys.Workflow.Engine.Runtime;
+using Sys.Workflow.Engine.Tasks;
+using Sys.Workflow.Services.Api.Commands;
+using Sys.Workflow.Contexts;
 using Sys.Workflow;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Sys.Workflow.cloud.services.core
+namespace Sys.Workflow.Cloud.Services.Core
 {
     /// <summary>
     /// 
@@ -166,7 +166,7 @@ namespace Sys.Workflow.cloud.services.core
         /// </summary>
         public virtual ProcessInstance GetProcessInstanceById(string processInstanceId)
         {
-            IProcessInstance processInstance = (runtimeService as ServiceImpl).CommandExecutor.Execute(new engine.impl.cmd.GetProcessInstanceByIdCmd(processInstanceId));
+            IProcessInstance processInstance = (runtimeService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.GetProcessInstanceByIdCmd(processInstanceId));
 
             return processInstanceConverter.From(processInstance);
         }
@@ -176,7 +176,7 @@ namespace Sys.Workflow.cloud.services.core
         /// </summary>
         public virtual HistoricInstance GetHistoryProcessInstanceById(string processInstanceId)
         {
-            IHistoricProcessInstance processInstance = (this.historyService as ServiceImpl).CommandExecutor.Execute(new engine.impl.cmd.GetHistoricProcessInstanceByIdCmd(processInstanceId));
+            IHistoricProcessInstance processInstance = (this.historyService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.GetHistoricProcessInstanceByIdCmd(processInstanceId));
 
             return historicInstanceConverter.From(processInstance);
         }
@@ -255,7 +255,7 @@ namespace Sys.Workflow.cloud.services.core
         /// </summary>
         public virtual TaskModel GetTaskById(string taskId)
         {
-            ITask task = (taskService as ServiceImpl).CommandExecutor.Execute(new engine.impl.cmd.GetTaskByIdCmd(taskId));
+            ITask task = (taskService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.GetTaskByIdCmd(taskId));
 
             return taskConverter.From(task);
         }
@@ -282,7 +282,7 @@ namespace Sys.Workflow.cloud.services.core
         /// </summary>
         public virtual TaskModel ReleaseTask(ReleaseTaskCmd cmd)
         {
-            ITask task = (taskService as ServiceImpl).CommandExecutor.Execute(new engine.impl.cmd.AssigneeReleaseTaskCmd(cmd.TaskId, cmd.BusinessKey, cmd.Assignee, cmd.Reason));
+            ITask task = (taskService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.AssigneeReleaseTaskCmd(cmd.TaskId, cmd.BusinessKey, cmd.Assignee, cmd.Reason));
 
             return taskConverter.From(taskService.CreateTaskQuery()
                 .SetTaskId(task.Id)

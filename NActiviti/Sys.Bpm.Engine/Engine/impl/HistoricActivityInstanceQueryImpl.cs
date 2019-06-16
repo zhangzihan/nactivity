@@ -14,11 +14,11 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl
+namespace Sys.Workflow.Engine.Impl
 {
 
-    using Sys.Workflow.engine.history;
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.History;
+    using Sys.Workflow.Engine.Impl.Interceptor;
 
     /// 
     [Serializable]

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.jobexecutor
+namespace Sys.Workflow.Engine.Impl.JobExecutors
 {
     public sealed class TimerDeclarationType
 	{
-	  public static readonly TimerDeclarationType DATE = new TimerDeclarationType("DATE", InnerEnum.DATE, calendar.DueDateBusinessCalendar.NAME);
-	  public static readonly TimerDeclarationType DURATION = new TimerDeclarationType("DURATION", InnerEnum.DURATION, calendar.DurationBusinessCalendar.NAME);
-	  public static readonly TimerDeclarationType CYCLE = new TimerDeclarationType("CYCLE", InnerEnum.CYCLE, calendar.CycleBusinessCalendar.NAME);
+	  public static readonly TimerDeclarationType DATE = new TimerDeclarationType("DATE", InnerEnum.DATE, Calendars.DueDateBusinessCalendar.NAME);
+	  public static readonly TimerDeclarationType DURATION = new TimerDeclarationType("DURATION", InnerEnum.DURATION, Calendars.DurationBusinessCalendar.NAME);
+	  public static readonly TimerDeclarationType CYCLE = new TimerDeclarationType("CYCLE", InnerEnum.CYCLE, Calendars.CycleBusinessCalendar.NAME);
 
 	  private static readonly IList<TimerDeclarationType> valueList = new List<TimerDeclarationType>();
 

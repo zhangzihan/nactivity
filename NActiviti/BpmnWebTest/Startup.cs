@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Sys.Bpm.Services.Rest;
+using Sys.Workflow.Services.Rest;
 using Sys.Workflow;
 using Sys.Workflow.Options;
 using App.Metrics.AspNetCore;

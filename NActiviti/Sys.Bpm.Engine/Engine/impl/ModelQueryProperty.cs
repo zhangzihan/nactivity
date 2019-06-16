@@ -14,11 +14,11 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl
+namespace Sys.Workflow.Engine.Impl
 {
 
-    using Sys.Workflow.engine.query;
-    using Sys.Workflow.engine.repository;
+    using Sys.Workflow.Engine.Query;
+    using Sys.Workflow.Engine.Repository;
 
     /// <summary>
     /// Contains the possible properties that can be used in a <seealso cref="IModelQuery"/>.

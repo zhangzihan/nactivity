@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Sys.Workflow.validation.validator {
+namespace Sys.Workflow.Validation.Validators {
     using System;
     
     

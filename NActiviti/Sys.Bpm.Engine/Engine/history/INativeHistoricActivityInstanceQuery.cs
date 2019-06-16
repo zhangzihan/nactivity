@@ -1,6 +1,6 @@
-﻿namespace Sys.Workflow.engine.history
+﻿namespace Sys.Workflow.Engine.History
 {
-    using Sys.Workflow.engine.query;
+    using Sys.Workflow.Engine.Query;
 
     /// <summary>
     /// Allows querying of <seealso cref="IHistoricActivityInstanceQuery"/>s via native (SQL) queries

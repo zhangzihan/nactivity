@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?> 
 
-<SmartSqlMap Scope="Sys.Workflow.engine.impl.persistence.entity.DeadLetterJobEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+<SmartSqlMap Scope="Sys.Workflow.Engine.Impl.Persistence.Entity.DeadLetterJobEntityImpl"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
   
-    <ResultMap Id="jobResultMap" ResultType="Sys.Workflow.engine.impl.persistence.entity.DeadLetterJobEntityImpl,Sys.Bpm.Engine">
+    <ResultMap Id="jobResultMap" ResultType="Sys.Workflow.Engine.Impl.Persistence.Entity.DeadLetterJobEntityImpl,Sys.Bpm.Engine">
         <Result Property="id" Column="ID_" />
         <Result Property="revision" Column="REV_" />
         <Result Property="jobType" Column="TYPE_" />

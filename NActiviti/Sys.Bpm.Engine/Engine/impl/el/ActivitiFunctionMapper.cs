@@ -14,7 +14,7 @@
 using java;
 using System.Reflection;
 
-namespace Sys.Workflow.engine.impl.el
+namespace Sys.Workflow.Engine.Impl.EL
 {
 
     /// <summary>

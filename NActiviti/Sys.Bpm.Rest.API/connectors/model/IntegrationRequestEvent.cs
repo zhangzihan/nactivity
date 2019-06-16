@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Sys.Workflow.bpmn.model;
-using Sys.Workflow.engine.impl.persistence.entity;
-using Sys.Workflow.engine.impl.persistence.entity.integration;
-using Sys.Workflow.engine.runtime;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
+using Sys.Workflow.Engine.Impl.Persistence.Entity.Integration;
+using Sys.Workflow.Engine.Runtime;
 using System.Collections.Generic;
 
 /*
@@ -21,7 +21,7 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.services.connectors.model
+namespace Sys.Workflow.Services.Connectors.Models
 {
 
     /// <summary>

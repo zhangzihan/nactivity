@@ -15,7 +15,7 @@
  *
  */
 
-namespace Sys.Workflow.cloud.services.api.model.converter
+namespace Sys.Workflow.Cloud.Services.Api.Model.Converters
 {
 
     /// <summary>

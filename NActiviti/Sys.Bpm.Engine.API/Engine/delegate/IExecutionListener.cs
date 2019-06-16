@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Sys.Workflow.engine.impl.persistence.entity;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
-namespace Sys.Workflow.engine.@delegate
+namespace Sys.Workflow.Engine.Delegate
 {
     /// <summary>
     /// Callback interface to be notified of execution events like starting a process instance, ending an activity instance or taking a transition.

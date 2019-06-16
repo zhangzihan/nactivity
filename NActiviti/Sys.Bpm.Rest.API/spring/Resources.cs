@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
-using Sys.Workflow.api.runtime.shared.query;
+using Sys.Workflow.Api.Runtime.Shared.Query;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace org.springframework.hateoas
+namespace Sys.Workflow.Hateoas
 {
     /// <summary>
     /// 资源

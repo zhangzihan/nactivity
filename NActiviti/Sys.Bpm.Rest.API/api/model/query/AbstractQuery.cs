@@ -1,6 +1,6 @@
-﻿using Sys.Workflow.api.runtime.shared.query;
+﻿using Sys.Workflow.Api.Runtime.Shared.Query;
 
-namespace Sys.Workflow.cloud.services.api.model
+namespace Sys.Workflow.Cloud.Services.Api.Model
 {
     /// <summary>
     /// 查询对象

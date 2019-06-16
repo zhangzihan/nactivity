@@ -5,10 +5,10 @@
 //  Original author: 张楠
 
 using Newtonsoft.Json.Linq;
-using Sys.Workflow.bpmn.model;
-using Sys.Workflow.engine.impl.persistence.entity;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
-namespace Sys.Workflow.engine.impl.util
+namespace Sys.Workflow.Engine.Impl.Util
 {
     /// <summary>
     /// 任务执行工具类

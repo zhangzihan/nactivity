@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
-using Sys.Workflow.bpmn.constants;
-using Sys.Workflow.bpmn.converter.alfresco;
-using Sys.Workflow.bpmn.converter.child;
-using Sys.Workflow.bpmn.converter.export;
-using Sys.Workflow.bpmn.converter.parser;
-using Sys.Workflow.bpmn.converter.util;
-using Sys.Workflow.bpmn.exceptions;
-using Sys.Workflow.bpmn.model;
-using Sys.Bpm;
-using Sys.Bpm.Model;
+using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Bpmn.Converters.Alfresco;
+using Sys.Workflow.Bpmn.Converters.Childs;
+using Sys.Workflow.Bpmn.Converters.Exports;
+using Sys.Workflow.Bpmn.Converters.Parsers;
+using Sys.Workflow.Bpmn.Converters.Utils;
+using Sys.Workflow.Bpmn.Exceptions;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow;
+using Sys.Workflow.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,7 +29,7 @@ using System.Xml.Serialization;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.bpmn.converter
+namespace Sys.Workflow.Bpmn.Converters
 {
     /// 
     /// 
@@ -222,7 +222,7 @@ namespace Sys.Workflow.bpmn.converter
 
                     if (!xtr.IsStartElement())
                     {
-                        if (constants.BpmnXMLConstants.ELEMENT_DI_DIAGRAM == xtr.LocalName)
+                        if (BpmnXMLConstants.ELEMENT_DI_DIAGRAM == xtr.LocalName)
                         {
                             xtr.Skip();
                         }

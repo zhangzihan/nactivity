@@ -11,9 +11,9 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.variable
+namespace Sys.Workflow.Engine.Impl.Variable
 {
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys.Data;
 
     /// 

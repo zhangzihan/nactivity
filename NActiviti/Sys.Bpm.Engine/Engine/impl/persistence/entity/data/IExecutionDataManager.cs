@@ -13,10 +13,10 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.persistence.entity.data
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
 {
 
-    using Sys.Workflow.engine.runtime;
+    using Sys.Workflow.Engine.Runtime;
 
     /// 
     public interface IExecutionDataManager : IDataManager<IExecutionEntity>

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sys.Bpm.Model
+namespace Sys.Workflow.Model
 {
     public static class BpmModelServiceProvider
     {

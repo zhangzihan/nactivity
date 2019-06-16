@@ -13,35 +13,35 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.bpmn.behavior
+namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.@delegate;
-    using Sys.Workflow.engine.impl.@delegate.invocation;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Delegate;
+    using Sys.Workflow.Engine.Impl.Delegate.Invocation;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// 
     [Serializable]
-    public class ServiceTaskJavaDelegateActivityBehavior : TaskActivityBehavior, IActivityBehavior, IExecutionListener
+    public class ServiceTaskCSharpDelegateActivityBehavior : TaskActivityBehavior, IActivityBehavior, IExecutionListener
     {
 
         private const long serialVersionUID = 1L;
 
-        protected internal IJavaDelegate javaDelegate;
+        protected internal ICSharpDelegate javaDelegate;
 
-        protected internal ServiceTaskJavaDelegateActivityBehavior()
+        protected internal ServiceTaskCSharpDelegateActivityBehavior()
         {
         }
 
-        public ServiceTaskJavaDelegateActivityBehavior(IJavaDelegate javaDelegate)
+        public ServiceTaskCSharpDelegateActivityBehavior(ICSharpDelegate javaDelegate)
         {
             this.javaDelegate = javaDelegate;
         }
 
         public override void Execute(IExecutionEntity execution)
         {
-            Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new JavaDelegateInvocation(javaDelegate, execution));
+            Context.ProcessEngineConfiguration.DelegateInterceptor.HandleInvocation(new CSharpDelegateInvocation(javaDelegate, execution));
             Leave(execution);
         }
 

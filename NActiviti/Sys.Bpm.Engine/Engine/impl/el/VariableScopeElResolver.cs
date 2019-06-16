@@ -12,13 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.el
+namespace Sys.Workflow.Engine.Impl.EL
 {
 
 
-    using Sys.Workflow.engine.@delegate;
-    using Sys.Workflow.engine.impl.identity;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Impl.Identities;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
     /// <summary>
     /// Implementation of an <seealso cref="ELResolver"/> that resolves expressions with the process variables of a given <seealso cref="IVariableScope"/> as context. <br>

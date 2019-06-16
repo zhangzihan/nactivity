@@ -1,11 +1,11 @@
-﻿using Sys.Workflow.bpmn.constants;
-using Sys.Workflow.bpmn.model;
+﻿using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Bpmn.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
     /// <summary>
     /// 添加服务节点的默认实现

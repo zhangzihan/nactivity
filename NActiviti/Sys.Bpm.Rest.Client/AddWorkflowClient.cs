@@ -9,7 +9,7 @@ using Sys.Workflow.Util;
 using System;
 using System.Net.Http;
 
-namespace Sys.Bpm.Rest.Client
+namespace Sys.Workflow.Rest.Client
 {
     public static class AddWorkflowClientExtension
     {

@@ -1,4 +1,4 @@
-﻿namespace Sys.Workflow.bpmn.model
+﻿namespace Sys.Workflow.Bpmn.Models
 {
     /// <summary>
     /// The Resource class is used to specify resources that can be referenced by

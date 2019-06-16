@@ -1,4 +1,4 @@
-﻿namespace Sys.Workflow.validation
+﻿namespace Sys.Workflow.Validation
 {
     public interface IProcessValidatorFactory
     {

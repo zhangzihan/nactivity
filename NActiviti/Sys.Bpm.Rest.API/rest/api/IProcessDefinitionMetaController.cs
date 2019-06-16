@@ -1,6 +1,6 @@
-﻿using Sys.Workflow.cloud.services.rest.api.resources;
+﻿using Sys.Workflow.Cloud.Services.Rest.Api.Resources;
 
-namespace Sys.Workflow.cloud.services.rest.api
+namespace Sys.Workflow.Cloud.Services.Rest.Api
 {
     /// <summary>
     /// 流程定义元数据RestAPI

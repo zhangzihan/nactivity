@@ -10,10 +10,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl
+namespace Sys.Workflow.Engine.Impl
 {
-    using Sys.Workflow.engine.impl.cfg;
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Interceptor;
 
     /// 
     /// 

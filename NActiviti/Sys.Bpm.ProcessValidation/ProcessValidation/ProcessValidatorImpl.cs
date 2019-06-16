@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.validation
+namespace Sys.Workflow.Validation
 {
 
-    using Sys.Workflow.bpmn.model;
-    using Sys.Workflow.validation.validator;
+    using Sys.Workflow.Bpmn.Models;
+    using Sys.Workflow.Validation.Validators;
 
     /// 
     public class ProcessValidatorImpl : IProcessValidator

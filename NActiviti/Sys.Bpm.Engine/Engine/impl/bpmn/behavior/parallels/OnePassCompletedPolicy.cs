@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using Sys.Workflow.bpmn.constants;
-using Sys.Workflow.bpmn.model;
-using Sys.Workflow.engine.history;
-using Sys.Workflow.engine.impl.context;
-using Sys.Workflow.engine.impl.interceptor;
-using Sys.Workflow.engine.impl.persistence.entity;
-using Sys.Workflow.engine.impl.persistence.entity.data;
-using Sys.Workflow.engine.task;
-using Sys.Workflow.services.api.commands;
+using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Engine.History;
+using Sys.Workflow.Engine.Impl.Contexts;
+using Sys.Workflow.Engine.Impl.Interceptor;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
+using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
+using Sys.Workflow.Engine.Tasks;
+using Sys.Workflow.Services.Api.Commands;
 using Sys.Workflow;
 
-namespace Sys.Workflow.engine.impl.bpmn.behavior
+namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
     class OnePassCompletedPolicy : DefaultMultiInstanceCompletedPolicy
     {

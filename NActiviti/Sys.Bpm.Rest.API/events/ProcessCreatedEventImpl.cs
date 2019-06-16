@@ -15,9 +15,9 @@
  *
  */
 
-using Sys.Workflow.cloud.services.api.model;
+using Sys.Workflow.Cloud.Services.Api.Model;
 
-namespace Sys.Workflow.cloud.services.events
+namespace Sys.Workflow.Cloud.Services.Events
 {
     /// <summary>
     /// 

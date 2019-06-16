@@ -11,9 +11,9 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.history
+namespace Sys.Workflow.Engine.History
 {
-    using Sys.Workflow.engine.query;
+    using Sys.Workflow.Engine.Query;
 
     /// <summary>
     /// Programmatic querying for <seealso cref="IHistoricActivityInstance"/>s.

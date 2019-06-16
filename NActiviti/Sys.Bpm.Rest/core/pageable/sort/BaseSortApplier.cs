@@ -13,11 +13,11 @@
  *
  */
 
-using Sys.Workflow.api.runtime.shared.query;
-using Sys.Workflow.engine;
-using Sys.Workflow.engine.query;
+using Sys.Workflow.Api.Runtime.Shared.Query;
+using Sys.Workflow.Engine;
+using Sys.Workflow.Engine.Query;
 
-namespace Sys.Workflow.cloud.services.core.pageable.sort
+namespace Sys.Workflow.Cloud.Services.Core.Pageables.Sorts
 {
     /// <summary>
     /// 

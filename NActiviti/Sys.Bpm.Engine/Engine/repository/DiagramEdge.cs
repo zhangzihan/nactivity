@@ -14,7 +14,7 @@ using System.Collections.Generic;
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.repository
+namespace Sys.Workflow.Engine.Repository
 {
 
     /// <summary>

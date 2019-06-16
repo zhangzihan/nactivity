@@ -11,11 +11,11 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.cfg.jta
+namespace Sys.Workflow.Engine.Impl.Cfg.Jta
 {
-    using javax.transaction;
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Transactions;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Interceptor;
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;

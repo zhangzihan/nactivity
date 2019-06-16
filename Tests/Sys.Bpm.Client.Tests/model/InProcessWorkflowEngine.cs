@@ -6,8 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Sys.Workflow.engine;
-using Sys.Workflow.engine.impl.bpmn.webservice;
+using Sys.Workflow.Engine;
+using Sys.Workflow.Engine.Impl.Bpmn.Webservice;
 using Sys.Net.Http;
 using Sys.Workflow;
 using Sys.Workflow.Engine.Bpmn.Rules;
@@ -19,7 +19,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace Sys.Bpm
+namespace Sys.Workflow
 {
     public class InProcessWorkflowEngine
     {

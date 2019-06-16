@@ -11,11 +11,11 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.impl.db
+namespace Sys.Workflow.Engine.Impl.DB
 {
-    using Sys.Workflow.engine.impl.context;
-    using Sys.Workflow.engine.impl.persistence;
-    using Sys.Workflow.engine.impl.variable;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Persistence;
+    using Sys.Workflow.Engine.Impl.Variable;
     using SmartSql.Abstractions.TypeHandler;
     using System;
     using System.Data;

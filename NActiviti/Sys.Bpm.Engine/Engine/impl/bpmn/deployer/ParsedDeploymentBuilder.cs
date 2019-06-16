@@ -13,11 +13,11 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.deployer
+namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
 {
     using Microsoft.Extensions.Logging;
-    using Sys.Workflow.engine.impl.bpmn.parser;
-    using Sys.Workflow.engine.impl.persistence.entity;
+    using Sys.Workflow.Engine.Impl.Bpmn.Parser;
+    using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using Sys.Workflow;
     using System.IO;
 
@@ -82,15 +82,15 @@ namespace Sys.Workflow.engine.impl.bpmn.deployer
             if (deploymentSettings != null)
             {
                 // Schema validation if needed
-                if (deploymentSettings.ContainsKey(cmd.DeploymentSettingsFields.IS_BPMN20_XSD_VALIDATION_ENABLED))
+                if (deploymentSettings.ContainsKey(Cmd.DeploymentSettingsFields.IS_BPMN20_XSD_VALIDATION_ENABLED))
                 {
-                    bpmnParse.ValidateSchema = Convert.ToBoolean(deploymentSettings[cmd.DeploymentSettingsFields.IS_BPMN20_XSD_VALIDATION_ENABLED]);
+                    bpmnParse.ValidateSchema = Convert.ToBoolean(deploymentSettings[Cmd.DeploymentSettingsFields.IS_BPMN20_XSD_VALIDATION_ENABLED]);
                 }
 
                 // Process validation if needed
-                if (deploymentSettings.ContainsKey(cmd.DeploymentSettingsFields.IS_PROCESS_VALIDATION_ENABLED))
+                if (deploymentSettings.ContainsKey(Cmd.DeploymentSettingsFields.IS_PROCESS_VALIDATION_ENABLED))
                 {
-                    bpmnParse.ValidateProcess = Convert.ToBoolean(deploymentSettings[cmd.DeploymentSettingsFields.IS_PROCESS_VALIDATION_ENABLED]);
+                    bpmnParse.ValidateProcess = Convert.ToBoolean(deploymentSettings[Cmd.DeploymentSettingsFields.IS_PROCESS_VALIDATION_ENABLED]);
                 }
             }
             else

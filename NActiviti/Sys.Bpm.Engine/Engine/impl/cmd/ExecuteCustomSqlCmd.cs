@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Sys.Workflow.engine.impl.cmd
+namespace Sys.Workflow.Engine.Impl.Cmd
 {
-    using Sys.Workflow.engine.impl.interceptor;
+    using Sys.Workflow.Engine.Impl.Interceptor;
 
     /// 
     public class ExecuteCustomSqlCmd<Mapper, ResultType> : ICommand<ResultType>

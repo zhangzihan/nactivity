@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.bpmn.parser.handler
+namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
 {
-    using Sys.Workflow.bpmn.model;
+    using Sys.Workflow.Bpmn.Models;
 
     /// 
     public abstract class AbstractFlowNodeBpmnParseHandler<T> : AbstractBpmnParseHandler<T> where T : FlowNode

@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-namespace Sys.Workflow.engine.history
+namespace Sys.Workflow.Engine.History
 {
     /// <summary>
     /// Update of a process variable. This is only available if history level is configured to FULL.

@@ -1,13 +1,13 @@
-﻿using Sys.Workflow.cloud.services.api.events;
-using Sys.Workflow.cloud.services.events.configuration;
-using Sys.Workflow.cloud.services.events.integration;
-using Sys.Workflow.services.connectors.model;
+﻿using Sys.Workflow.Cloud.Services.Api.Events;
+using Sys.Workflow.Cloud.Services.Events.Configurations;
+using Sys.Workflow.Cloud.Services.Events.Integration;
+using Sys.Workflow.Services.Connectors.Models;
 
-namespace Sys.Workflow.services.connectors
+namespace Sys.Workflow.Services.Connectors
 {
-    using org.springframework.messaging;
-    using org.springframework.cloud.stream.binding;
-    using org.springframework.messaging.support;
+    using Sys.Workflow.Messaging;
+    using Sys.Workflow.Cloud.Streams.Bindings;
+    using Sys.Workflow.Messaging.Support;
 
     /// <summary>
     /// 

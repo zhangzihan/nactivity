@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Sys.Workflow.engine.impl.db
+namespace Sys.Workflow.Engine.Impl.DB
 {
 
     /// <summary>

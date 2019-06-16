@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using Sys.Workflow.cloud.services.api.events;
+using Sys.Workflow.Cloud.Services.Api.Events;
 
-namespace Sys.Workflow.cloud.services.events.integration
+namespace Sys.Workflow.Cloud.Services.Events.Integration
 {
     /// <summary>
     /// 

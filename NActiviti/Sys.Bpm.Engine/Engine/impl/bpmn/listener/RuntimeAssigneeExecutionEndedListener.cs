@@ -7,14 +7,14 @@
 ///////////////////////////////////////////////////////////
 ///
 using Newtonsoft.Json.Linq;
-using Sys.Workflow.bpmn.constants;
-using Sys.Workflow.bpmn.model;
-using Sys.Workflow.engine.@delegate;
-using Sys.Workflow.engine.impl.persistence.entity;
+using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Engine.Delegate;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Sys.Workflow.engine.impl.bpmn.listener
+namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 {
     /// <summary>
     /// 运行时分配节点运行人员,监听节点的Excution End事件,在流程结束时删除动态添加的人员

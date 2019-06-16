@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sys.Workflow.engine.impl.persistence
+namespace Sys.Workflow.Engine.Impl.Persistence
 {
     public class TypeReference<T>
     {

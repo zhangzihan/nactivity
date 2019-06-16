@@ -1,7 +1,7 @@
-﻿using Sys.Workflow.cloud.services.api.commands;
-using Sys.Workflow.services.connectors.model;
+﻿using Sys.Workflow.Cloud.Services.Api.Commands;
+using Sys.Workflow.Services.Connectors.Models;
 
-namespace org.springframework.context
+namespace Sys.Workflow.Contexts
 {
 
     /// <summary>

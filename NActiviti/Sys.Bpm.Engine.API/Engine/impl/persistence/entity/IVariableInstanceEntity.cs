@@ -10,9 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Sys.Workflow.engine.impl.persistence.entity
+namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
-    using Sys.Workflow.engine.impl.variable;
+    using Sys.Workflow.Engine.Impl.Variable;
 
     /// 
     /// 
