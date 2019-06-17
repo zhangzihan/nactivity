@@ -33,16 +33,6 @@ namespace Sys.Workflow.Client.Tests.Models
             processEngine = ProcessEngineFactory.Instance.GetProcessEngine("InProcess");
         }
 
-        class TestUser : IUserInfo
-        {
-            public string Id { get; set; }
-            public string LoginUserId { get; set; }
-            public string FullName { get; set; }
-            public string Email { get; set; }
-            public string Phone { get; set; }
-            public string TenantId { get; set; }
-        }
-
         [Theory]
         [InlineData("边界信号事件.bpmn")]
         public void 读取信号边界事件处理(string bpmnFile)
@@ -51,7 +41,7 @@ namespace Sys.Workflow.Client.Tests.Models
 
             ICommandExecutor commandExecutor = (processEngine.ProcessEngineConfiguration as ProcessEngineConfigurationImpl).CommandExecutor;
 
-            Authentication.AuthenticatedUser = new TestUser()
+            Authentication.AuthenticatedUser = new InProcessWorkflowEngine.TestUser()
             {
                 Id = "评审员",
                 FullName = "评审员",
@@ -134,7 +124,7 @@ namespace Sys.Workflow.Client.Tests.Models
 
             ICommandExecutor commandExecutor = (processEngine.ProcessEngineConfiguration as ProcessEngineConfigurationImpl).CommandExecutor;
 
-            Authentication.AuthenticatedUser = new TestUser()
+            Authentication.AuthenticatedUser = new InProcessWorkflowEngine.TestUser()
             {
                 Id = "评审员",
                 FullName = "评审员",
@@ -210,7 +200,7 @@ namespace Sys.Workflow.Client.Tests.Models
 
             ICommandExecutor commandExecutor = (processEngine.ProcessEngineConfiguration as ProcessEngineConfigurationImpl).CommandExecutor;
 
-            Authentication.AuthenticatedUser = new TestUser()
+            Authentication.AuthenticatedUser = new InProcessWorkflowEngine.TestUser()
             {
                 Id = "评审员",
                 FullName = "评审员",
@@ -276,7 +266,7 @@ namespace Sys.Workflow.Client.Tests.Models
 
             ICommandExecutor commandExecutor = (processEngine.ProcessEngineConfiguration as ProcessEngineConfigurationImpl).CommandExecutor;
 
-            Authentication.AuthenticatedUser = new TestUser()
+            Authentication.AuthenticatedUser = new InProcessWorkflowEngine.TestUser()
             {
                 Id = "评审员",
                 FullName = "评审员",

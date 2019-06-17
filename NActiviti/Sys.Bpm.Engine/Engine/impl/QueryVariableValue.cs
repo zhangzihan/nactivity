@@ -52,11 +52,11 @@ namespace Sys.Workflow.Engine.Impl
                 {
                     throw new ActivitiIllegalArgumentException("Variables of type ByteArray cannot be used to query");
                 }
-                else if (type is IJPAEntityVariableType && @operator != QueryOperator.EQUALS)
+                else if (type is IEntityVariableType && @operator != QueryOperator.EQUALS)
                 {
                     throw new ActivitiIllegalArgumentException("JPA entity variables can only be used in 'variableValueEquals'");
                 }
-                else if (type is IJPAEntityListVariableType)
+                else if (type is IEntityListVariableType)
                 {
                     throw new ActivitiIllegalArgumentException("Variables containing a list of JPA entities cannot be used to query");
                 }

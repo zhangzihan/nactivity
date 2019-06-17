@@ -31,6 +31,16 @@ namespace Sys.Workflow
 
         private HttpClient _httpClient;
 
+        public class TestUser : IUserInfo
+        {
+            public string Id { get; set; }
+            public string LoginUserId { get; set; }
+            public string FullName { get; set; }
+            public string Email { get; set; }
+            public string Phone { get; set; }
+            public string TenantId { get; set; }
+        }
+
         public void Create()
         {
             string root = AppDomain.CurrentDomain.BaseDirectory;

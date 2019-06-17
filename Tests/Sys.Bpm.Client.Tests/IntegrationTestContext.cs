@@ -339,7 +339,7 @@ namespace Sys.Workflown.Test
             return client.Start(cmds);
         }
 
-        public Task<ProcessInstance[]> StartUseFile(string bpmnFile, string[] users, IDictionary<string, object> variables = null)
+        public Task<ProcessInstance[]> StartUseFile(string bpmnFile, string[] users, IDictionary<string, object> variables = null, string businessKey = null)
         {
             IProcessInstanceController client = CreateWorkflowHttpProxy().GetProcessInstanceClient();
 
@@ -355,6 +355,7 @@ namespace Sys.Workflown.Test
             {
                 ProcessDefinitionId = processDefinitionId,
                 Variables = vars,
+                BusinessKey = businessKey,
                 TenantId = TenantId
             };
 

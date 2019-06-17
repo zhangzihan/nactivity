@@ -32,6 +32,8 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
     using Sys.Workflow;
     using System.Net.Http;
     using System.Threading;
+    using System.Net;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// ActivityBehavior that evaluates an expression when executed. Optionally, it sets the result of the expression as a variable on the execution.
@@ -63,32 +65,10 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             {
                 try
                 {
-                    string url = pElements.GetAttributeValue("url");
-                    string taskRequest = pElements.GetAttributeValue("taskRequest");
-                    string dataObj = pElements.GetAttributeValue("dataObj");
-                    string method = pElements.GetAttributeValue("method");
-
-                    ExpandoObject contextObject = new ExpandoObject();
-                    foreach (string key in execution.Variables.Keys)
-                    {
-                        (contextObject as IDictionary<string, object>).Add(key, execution.Variables[key]);
-                    }
-
-                    url = GetValue(contextObject, url, execution.Variables).ToString();
-                    object parameter = GetValue(contextObject, taskRequest, execution.Variables);
-
-                    if (parameter?.GetType() == typeof(string))
-                    {
-                        var reg = new Regex(@"(^\{(.*?)(.*?)(\})$)|(^\[(.*?)(.*?)(\])$)");
-                        if (reg.IsMatch(parameter.ToString()))
-                        {
-                            parameter = JsonConvert.DeserializeObject<JToken>(parameter.ToString());
-                        }
-                        else
-                        {
-                            parameter = JToken.FromObject(parameter.ToString());
-                        }
-                    }
+                    WebApiParameter parameter = new WebApiParameter(execution, pElements);
+                    string url = parameter.Url;
+                    string dataObj = parameter.VariableName;
+                    string method = parameter.Method;
 
                     var httpProxy = ProcessEngineServiceProvider.Resolve<IServiceWebApiHttpProxy>();
 
@@ -105,36 +85,10 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     {
                         default:
                         case "get":
-                            if (string.IsNullOrWhiteSpace(dataObj))
-                            {
-                                AsyncHelper.RunSync(() => httpProxy.GetAsync(url));
-                            }
-                            else
-                            {
-                                HttpResponseMessage response = AsyncHelper.RunSync<HttpResponseMessage>(() => httpProxy.GetAsync<HttpResponseMessage>(url, CancellationToken.None));
-
-                                response.EnsureSuccessStatusCode();
-
-                                object data = JsonConvert.DeserializeObject<object>(AsyncHelper.RunSync<string>(() => response.Content.ReadAsStringAsync()));
-
-                                execution.SetVariable(dataObj, data);
-                            }
+                            ExecuteGet(execution, url, parameter.Request, dataObj, httpProxy);
                             break;
                         case "post":
-                            if (string.IsNullOrWhiteSpace(dataObj))
-                            {
-                                AsyncHelper.RunSync(() => httpProxy.PostAsync(url, parameter));
-                            }
-                            else
-                            {
-                                HttpResponseMessage response = AsyncHelper.RunSync<HttpResponseMessage>(() => httpProxy.PostAsync<HttpResponseMessage>(url, parameter, CancellationToken.None));
-
-                                response.EnsureSuccessStatusCode();
-
-                                object data = JsonConvert.DeserializeObject<object>(AsyncHelper.RunSync<string>(() => response.Content.ReadAsStringAsync()));
-
-                                execution.SetVariable(dataObj, data);
-                            }
+                            ExecutePost(execution, url, parameter.Request, dataObj, httpProxy);
                             break;
                     }
 
@@ -147,74 +101,90 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
         }
 
-        /// <summary>
-        /// 进行表达式运算
-        /// </summary>
-        /// <param name="contextObject"></param>
-        /// <param name="expstr"></param>
-        /// <param name="variables"></param>
-        /// <returns></returns>
-        private object GetValue(ExpandoObject contextObject, string expstr, IDictionary<string, object> variables)
+        private void ExecutePost(IExecutionEntity execution, string url, object request, string dataObj, IServiceWebApiHttpProxy httpProxy)
         {
-            if (string.IsNullOrWhiteSpace(expstr))
-                return expstr;
+            url = QueryParameter(execution, url, request, false);
 
-            //存在动态参数，进行替换
-            if (EXPR_PATTERN.IsMatch(expstr))
+            if (string.IsNullOrWhiteSpace(dataObj))
             {
-                string vexpre = GetExpression(expstr);
-                return Sys.Expressions.ExpressionManager
-                    .GetValue(contextObject, vexpre, variables);
-            }
-
-            return expstr;
-        }
-
-
-        /// <summary>
-        /// 获取能被表达式处理的字符串
-        /// </summary>
-        /// <param name="expstr"></param>
-        /// <returns></returns>
-        public static string GetExpression(string expstr)
-        {
-            if (string.IsNullOrWhiteSpace(expstr)) return expstr;
-            List<string> sb = new List<string>();
-            if (EXPR_PATTERN.IsMatch(expstr))
-            {
-                EXPR_PATTERN.Replace(expstr, (m) =>
-                {
-                    if (sb.Count == 0 && m.Index > 0)
-                    {
-                        sb.Add($"'{expstr.Substring(0, m.Index)}'");
-                    }
-
-                    var r = m.Result("$1");
-                    sb.Add(r);
-                    var nm = m.NextMatch();
-                    if (nm.Success)
-                    {
-                        sb.Add($"'{expstr.Substring(m.Index + m.Length, nm.Index - (m.Index + m.Length))}'");
-                    }
-                    else
-                    {
-                        if (expstr.Length > (m.Index + m.Length))
-                        {
-                            sb.Add($"'{expstr.Substring(m.Index + m.Length, expstr.Length - m.Index - m.Length)}'");
-                        }
-                    }
-
-                    return r;
-                });
-                return string.Join("+", sb);
-                ;
+                AsyncHelper.RunSync(() => httpProxy.PostAsync(url, request));
             }
             else
             {
-                return expstr;
+                HttpResponseMessage response = AsyncHelper.RunSync(() => httpProxy.PostAsync<HttpResponseMessage>(url, request, CancellationToken.None));
+
+                object data = null;
+                if (response is null == false)
+                {
+                    response.EnsureSuccessStatusCode();
+                    data = AsyncHelper.RunSync(() => ToObject(response));
+                }
+
+                execution.SetVariable(dataObj, data);
             }
         }
 
+        private void ExecuteGet(IExecutionEntity execution, string url, object request, string dataObj, IServiceWebApiHttpProxy httpProxy)
+        {
+            url = QueryParameter(execution, url, request, true);
+
+            if (string.IsNullOrWhiteSpace(dataObj))
+            {
+                AsyncHelper.RunSync(() => httpProxy.GetAsync(url));
+            }
+            else
+            {
+                HttpResponseMessage response = AsyncHelper.RunSync(() => httpProxy.GetAsync<HttpResponseMessage>(url, CancellationToken.None));
+
+                object data = null;
+                if (response is null == false)
+                {
+                    response.EnsureSuccessStatusCode();
+                    data = AsyncHelper.RunSync(() => ToObject(response));
+                }
+
+                execution.SetVariable(dataObj, data);
+            }
+        }
+
+        private static string QueryParameter(IExecutionEntity execution, string url, object request, bool concatQueryString)
+        {
+            url = WebUtility.UrlDecode(url);
+            string queryParam = (request ?? "").ToString();
+            if (new Regex(@"\?=").IsMatch(url))
+            {
+                url = string.Concat(url, "&", queryParam, "&businessKey=", execution.BusinessKey);
+            }
+            else
+            {
+                if (concatQueryString)
+                {
+                    url = string.Concat(url, string.IsNullOrWhiteSpace(queryParam) ? "?businessKey=" + execution.BusinessKey : string.Concat("?", queryParam, "&businessKey=", execution.BusinessKey));
+                }
+                else
+                {
+                    url = string.Concat(url, "?businessKey=" + execution.BusinessKey);
+                }
+            }
+
+            return url;
+        }
+
+        private async Task<object> ToObject(HttpResponseMessage response)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(data))
+            {
+                return null;
+            }
+            var reg = new Regex(@"(^(\s*{)(.*?)(\}\s*)$)|(^\s*\[(.*?)(\]\s*)$)");
+            if (reg.IsMatch(data))
+            {
+                return JsonConvert.DeserializeObject<object>(data);
+            }
+
+            return data;
+        }
 
         public override void Trigger(IExecutionEntity execution, string signalEvent, object signalData, bool throwError = true)
         {

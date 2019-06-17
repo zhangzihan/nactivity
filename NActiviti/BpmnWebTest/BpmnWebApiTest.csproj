@@ -36,10 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Sys.Bpm.Rest\Sys.Bpm.Rest.csproj" />
   </ItemGroup>
 

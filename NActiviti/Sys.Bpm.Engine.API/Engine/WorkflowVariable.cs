@@ -14,11 +14,21 @@ namespace Sys.Workflow.Services.Api.Commands
     {
         private readonly IDictionary<string, object> workflowVariables = null;
 
-        public static readonly string GLOBAL_APPROVALED_VARIABLE = "同意";
-        public static readonly string GLOBAL_BUSINESSKEY_VARIABLE = "事项编号";
-        public static readonly string GLOBAL_WORKFLOWDATA_VARIABLE = "流程数据";
-        public static readonly string GLOBAL_APPROVALED_COMMENTS = "审批意见";
-        public static readonly string GLOBAL_APPROVALED_COUNTERSIGN = "会签审批人";
+        public const string GLOBAL_APPROVALED_VARIABLE = "同意";
+        public const string GLOBAL_BUSINESSKEY_VARIABLE = "事项编号";
+        public const string GLOBAL_WORKFLOWDATA_VARIABLE = "流程数据";
+        public const string GLOBAL_APPROVALED_COMMENTS = "审批意见";
+        public const string GLOBAL_APPROVALED_COUNTERSIGN = "会签审批人";
+
+        /// <summary>
+        /// 流程实例业务主键变量名
+        /// </summary>
+        public const string GLOBAL_PROCESSINSTANCE_BUSINESSKEY_VARNAME = "process_businesskey";
+
+        /// <summary>
+        /// 流程运行时业务主键变量名
+        /// </summary>
+        public const string GLOBAL_EXECUTIONINSTANCE_BUSINESSKEY_VARNAME = "execution_businesskey";
 
         /// <summary>
         /// 流程主数据，存在整个工作流生命周期中
@@ -100,7 +110,8 @@ namespace Sys.Workflow.Services.Api.Commands
         {
             get
             {
-                return workflowVariables[key];
+                workflowVariables.TryGetValue(key, out object value);
+                return value;
             }
             set
             {

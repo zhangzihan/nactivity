@@ -118,16 +118,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         /// </summary>
         protected internal virtual void InitializeVariable(IVariableInstanceEntity e)
         {
-            if (Context.CommandContext != null && e != null && e.Type != null)
-            {
-                //e.Value;
-
-                // make sure JPA entities are cached for later retrieval
-                if (JPAEntityVariableType.TYPE_NAME.Equals(e.Type.TypeName) || JPAEntityListVariableType.TYPE_NAME.Equals(e.Type.TypeName))
-                {
-                    ((ICacheableVariable)e.Type).ForceCacheable = true;
-                }
-            }
         }
 
         void ICollection<IVariableInstanceEntity>.Add(IVariableInstanceEntity item)

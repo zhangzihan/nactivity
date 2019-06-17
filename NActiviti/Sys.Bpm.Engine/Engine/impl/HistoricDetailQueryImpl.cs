@@ -114,37 +114,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             CheckQueryOk();
             IList<IHistoricDetail> historicDetails = commandContext.HistoricDetailEntityManager.FindHistoricDetailsByQueryCriteria(this, page) ?? new List<IHistoricDetail>();
-            if (historicDetails != null)
-            {
-                foreach (IHistoricDetail historicDetail in historicDetails)
-                {
-                    if (historicDetail is IHistoricDetailVariableInstanceUpdateEntity varUpdate)
-                    {
-                        // Touch byte-array to ensure initialized inside context
-                        // TODO there should be a generic way to initialize variable
-                        // values
-                        //varUpdate.Bytes;
 
-                        // ACT-863: EntityManagerFactorySession instance needed for
-                        // fetching value, touch while inside context to store
-                        // cached value
-                        if (varUpdate.VariableType is JPAEntityVariableType)
-                        {
-                            // Use HistoricJPAEntityVariableType to force caching of
-                            // value to return from query
-                            varUpdate.VariableType = HistoricJPAEntityVariableType.SharedInstance;
-                            //varUpdate.Value;
-                        }
-                        else if (varUpdate.VariableType is JPAEntityListVariableType)
-                        {
-                            // Use HistoricJPAEntityListVariableType to force
-                            // caching of list to return from query
-                            varUpdate.VariableType = HistoricJPAEntityListVariableType.SharedInstance;
-                            //varUpdate.Value;
-                        }
-                    }
-                }
-            }
             return historicDetails;
         }
 

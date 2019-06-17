@@ -25,20 +25,20 @@ namespace Sys.Workflow.Engine.Impl.Variable
     public class EntityMetaData
     {
 
-        private bool isJPAEntity;
+        private bool isEntity;
         private Type entityClass;
         private MethodInfo idMethod;
         private FieldInfo idField;
 
-        public virtual bool JPAEntity
+        public virtual bool IsEntity
         {
             get
             {
-                return isJPAEntity;
+                return isEntity;
             }
             set
             {
-                this.isJPAEntity = value;
+                this.isEntity = value;
             }
         }
 

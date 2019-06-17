@@ -227,25 +227,6 @@ namespace Sys.Workflow.Engine.Impl
 
             IList<IHistoricVariableInstance> historicVariableInstances = commandContext.HistoricVariableInstanceEntityManager.FindHistoricVariableInstancesByQueryCriteria(this, page);
 
-            if (!excludeVariableInitialization_)
-            {
-                foreach (IHistoricVariableInstance historicVariableInstance in historicVariableInstances)
-                {
-                    if (historicVariableInstance is IHistoricVariableInstanceEntity variableEntity)
-                    {
-                        if (variableEntity != null && variableEntity.VariableType != null)
-                        {
-                            //variableEntity.Value;
-
-                            // make sure JPA entities are cached for later retrieval
-                            if (JPAEntityVariableType.TYPE_NAME.Equals(variableEntity.VariableType.TypeName) || JPAEntityListVariableType.TYPE_NAME.Equals(variableEntity.VariableType.TypeName))
-                            {
-                                ((ICacheableVariable)variableEntity.VariableType).ForceCacheable = true;
-                            }
-                        }
-                    }
-                }
-            }
             return historicVariableInstances;
         }
 

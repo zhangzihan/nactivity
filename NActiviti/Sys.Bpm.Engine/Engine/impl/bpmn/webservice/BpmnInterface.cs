@@ -78,7 +78,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Webservice
 
         public virtual Operation GetOperation(string operationId)
         {
-            return operations[operationId];
+            operations.TryGetValue(operationId, out var operation);
+
+            return operation;
         }
 
         public virtual ICollection<Operation> Operations

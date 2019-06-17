@@ -33,9 +33,24 @@ namespace Sys.Workflow.Engine.Impl.EL
             get; set;
         }
 
-        internal void SetValue(ELContext context, object value)
+        internal void SetValue(ELContext elContext, object value)
         {
-            throw new NotImplementedException("Value Expression 51 line");
+            //if (string.IsNullOrWhiteSpace(this.ExpressionString))
+            //{
+            //    return;
+            //}
+
+            //var expstr = ExpressionString;
+
+            //if (elContext.ELResolver is CompositeELResolver eLResolver)
+            //{
+            //    var variableScope = eLResolver.Resolvers.First(x => x.GetType() == typeof(VariableScopeElResolver)) as VariableScopeElResolver;
+
+            //    variableScope.SetValue(elContext, value);
+            //    return;
+            //}
+
+            throw new NotImplementedException("Value Expression not support!");
         }
 
         internal object GetValue(ELContext elContext)
@@ -122,7 +137,7 @@ namespace Sys.Workflow.Engine.Impl.EL
                     (contextObject as IDictionary<string, object>).Add(key, obj);
                 }
 
-                return Sys.Expressions.ExpressionManager.GetValue(contextObject, expstr, execution.Variables);
+                return Expressions.ExpressionManager.GetValue(contextObject, expstr, execution.Variables);
             }
 
             // property resolution (eg. bean.value) will be done by the

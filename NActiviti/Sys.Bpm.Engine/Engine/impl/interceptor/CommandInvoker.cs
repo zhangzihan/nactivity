@@ -57,6 +57,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             }
             catch (InvalidCastException ex)
             {
+                System.Diagnostics.Debugger.Break();
                 return default;
                 /// TODO: commandcontext和command不在一个线程导致异常
                 //throw ex;

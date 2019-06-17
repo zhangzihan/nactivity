@@ -67,6 +67,9 @@
     <None Update="resources\activiti.cfg.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="resources\samples\事务块.bpmn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="resources\samples\征文评审不需要管理员.bpmn">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

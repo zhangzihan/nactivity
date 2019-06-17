@@ -123,16 +123,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         /// </summary>
         protected internal virtual void InitializeVariable(IHistoricVariableInstanceEntity e)
         {
-            if (Context.CommandContext != null && e != null && e.VariableType != null)
-            {
-                //e.Value;
-
-                // make sure JPA entities are cached for later retrieval
-                if (JPAEntityVariableType.TYPE_NAME.Equals(e.VariableType.TypeName) || JPAEntityListVariableType.TYPE_NAME.Equals(e.VariableType.TypeName))
-                {
-                    ((ICacheableVariable)e.VariableType).ForceCacheable = true;
-                }
-            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()

@@ -23,6 +23,7 @@ namespace Sys.Workflow.Engine.Impl.Util
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using Sys.Workflow.Engine.Repository;
     using Sys.Workflow.Engine.Runtime;
+    using Sys.Workflow.Services.Api.Commands;
 
 
     /// 
@@ -126,6 +127,11 @@ namespace Sys.Workflow.Engine.Impl.Util
             commandContext.HistoryManager.RecordProcessInstanceStart(processInstance, initialFlowElement);
 
             processInstance.Variables = ProcessDataObjects(process.DataObjects);
+
+            if (string.IsNullOrWhiteSpace(businessKey) == false)
+            {
+                processInstance.SetVariable(WorkflowVariable.GLOBAL_PROCESSINSTANCE_BUSINESSKEY_VARNAME, businessKey);
+            }
 
             // Set the variables passed into the start command
             if (variables != null)

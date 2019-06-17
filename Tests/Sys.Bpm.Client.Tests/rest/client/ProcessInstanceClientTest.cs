@@ -931,7 +931,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }, new Dictionary<string, object>
                 {
                     ["startTimer"] = DateTime.Now.AddSeconds(4)
-                }));
+                }, Guid.NewGuid().ToString()));
             });
 
             Assert.Null(ex);

@@ -67,12 +67,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
                         }
                     }
 
-                    if (users.Count == 0)
-                    {
-                        throw new NoneCountersignUsersException(execution.CurrentFlowElement.Name);
-                    }
+                    //if (users.Count == 0)
+                    //{
+                    //    throw new NoneCountersignUsersException(execution.CurrentFlowElement.Name);
+                    //}
 
-                    execution.SetVariable(varName, users.Select(x => x.Id).Distinct().ToArray());
+                    execution.SetVariable(varName, users.Count == 0 ? new string[] { "" } : users.Select(x => x.Id).Distinct().ToArray());
                 }
             }
         }

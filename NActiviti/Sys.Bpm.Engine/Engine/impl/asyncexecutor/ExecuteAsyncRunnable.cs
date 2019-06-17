@@ -138,6 +138,10 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             {
                 processEngineConfiguration.CommandExecutor.Execute(new ExecuteAsyncJobCmd(jobId));
             }
+            catch (InvalidCastException ex)
+            {
+                System.Diagnostics.Debugger.Break();
+            }
             catch (ActivitiOptimisticLockingException e)
             {
 

@@ -20,6 +20,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
     using Sys.Workflow.Engine.Impl.Util;
     using System;
     using System.Linq;
+    using System.Collections.Generic;
 
     /// 
     /// 
@@ -74,57 +75,49 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
             {
                 return DateTime.Compare(x.Created, y.Created);
             }
-
-            /// <summary>
-            /// Creates a new event scope execution and moves existing event subscriptions to this new execution
-            /// </summary>
-            public static void CreateCopyOfSubProcessExecutionForCompensation(IExecutionEntity subProcessExecution)
-            {
-                IEventSubscriptionEntityManager eventSubscriptionEntityManager = Context.CommandContext.EventSubscriptionEntityManager;
-                IList<IEventSubscriptionEntity> eventSubscriptions = eventSubscriptionEntityManager.FindEventSubscriptionsByExecutionAndType(subProcessExecution.Id, "compensate");
-
-                IList<ICompensateEventSubscriptionEntity> compensateEventSubscriptions = new List<ICompensateEventSubscriptionEntity>();
-                foreach (IEventSubscriptionEntity @event in eventSubscriptions)
-                {
-                    if (@event.EventType == CompensateEventSubscriptionEntityFields.EVENT_TYPE)
-                    {
-                        compensateEventSubscriptions.Add((ICompensateEventSubscriptionEntity)@event);
-                    }
-                }
-
-                if (CollectionUtil.IsNotEmpty(compensateEventSubscriptions))
-                {
-
-                    IExecutionEntity processInstanceExecutionEntity = subProcessExecution.ProcessInstance;
-
-                    IExecutionEntity eventScopeExecution = Context.CommandContext.ExecutionEntityManager.CreateChildExecution(processInstanceExecutionEntity);
-                    eventScopeExecution.IsActive = false;
-                    eventScopeExecution.IsEventScope = true;
-                    eventScopeExecution.CurrentFlowElement = subProcessExecution.CurrentFlowElement;
-
-                    // copy local variables to eventScopeExecution by value. This way,
-                    // the eventScopeExecution references a 'snapshot' of the local variables
-                    (new SubProcessVariableSnapshotter()).SetVariablesSnapshots(subProcessExecution, eventScopeExecution);
-
-                    // set event subscriptions to the event scope execution:
-                    foreach (ICompensateEventSubscriptionEntity eventSubscriptionEntity in compensateEventSubscriptions)
-                    {
-                        eventSubscriptionEntityManager.Delete(eventSubscriptionEntity);
-
-                        ICompensateEventSubscriptionEntity newSubscription = eventSubscriptionEntityManager.InsertCompensationEvent(eventScopeExecution, eventSubscriptionEntity.ActivityId);
-                        newSubscription.Configuration = eventSubscriptionEntity.Configuration;
-                        newSubscription.Created = eventSubscriptionEntity.Created;
-                    }
-
-                    ICompensateEventSubscriptionEntity eventSubscription = eventSubscriptionEntityManager.InsertCompensationEvent(processInstanceExecutionEntity, eventScopeExecution.CurrentFlowElement.Id);
-                    eventSubscription.Configuration = eventScopeExecution.Id;
-                }
-            }
         }
 
-        internal static void CreateCopyOfSubProcessExecutionForCompensation(IExecutionEntity parentExecution)
+        public static void CreateCopyOfSubProcessExecutionForCompensation(IExecutionEntity subProcessExecution)
         {
-            throw new NotImplementedException();
+            IEventSubscriptionEntityManager eventSubscriptionEntityManager = Context.CommandContext.EventSubscriptionEntityManager;
+            IList<IEventSubscriptionEntity> eventSubscriptions = eventSubscriptionEntityManager.FindEventSubscriptionsByExecutionAndType(subProcessExecution.Id, "compensate");
+
+            IList<ICompensateEventSubscriptionEntity> compensateEventSubscriptions = new List<ICompensateEventSubscriptionEntity>();
+            foreach (IEventSubscriptionEntity @event in eventSubscriptions)
+            {
+                if (@event is ICompensateEventSubscriptionEntity)
+                {
+                    compensateEventSubscriptions.Add((ICompensateEventSubscriptionEntity)@event);
+                }
+            }
+
+            if (CollectionUtil.IsNotEmpty(compensateEventSubscriptions))
+            {
+                IExecutionEntity processInstanceExecutionEntity = subProcessExecution.ProcessInstance;
+
+                IExecutionEntity eventScopeExecution = Context.CommandContext.ExecutionEntityManager.CreateChildExecution(processInstanceExecutionEntity);
+                eventScopeExecution.IsActive = false;
+                eventScopeExecution.IsEventScope = true;
+                eventScopeExecution.CurrentFlowElement = subProcessExecution.CurrentFlowElement;
+
+                // copy local variables to eventScopeExecution by value. This way,
+                // the eventScopeExecution references a 'snapshot' of the local variables
+                (new SubProcessVariableSnapshotter()).SetVariablesSnapshots(subProcessExecution, eventScopeExecution);
+
+                // set event subscriptions to the event scope execution:
+                foreach (ICompensateEventSubscriptionEntity eventSubscriptionEntity in compensateEventSubscriptions)
+                {
+                    eventSubscriptionEntityManager.Delete(eventSubscriptionEntity);
+
+                    ICompensateEventSubscriptionEntity newSubscription = eventSubscriptionEntityManager.InsertCompensationEvent(eventScopeExecution, eventSubscriptionEntity.ActivityId);
+                    newSubscription.Configuration = eventSubscriptionEntity.Configuration;
+                    newSubscription.Created = eventSubscriptionEntity.Created;
+                }
+
+                ICompensateEventSubscriptionEntity eventSubscription = eventSubscriptionEntityManager.InsertCompensationEvent(processInstanceExecutionEntity, eventScopeExecution.CurrentFlowElement.Id);
+                eventSubscription.Configuration = eventScopeExecution.Id;
+
+            }
         }
     }
 }

@@ -1582,7 +1582,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
         public object Clone()
         {
-            throw new NotImplementedException();
+            return new CronExpression(cronExpression, clockReader, timeZone);
         }
     }
 
