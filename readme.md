@@ -1,3 +1,5 @@
+* 翻译自java activiti https://github.com/Activiti/Activiti
+
 ## 工作流系统数据库配置
 * MySql创建数据库schema activiti
 * 修改数据库配置 appsettings.json
