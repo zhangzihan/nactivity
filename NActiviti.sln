@@ -48,9 +48,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sys.Bpm.Client.Tests", "Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sys.Bpm.ProcessValidation", "NActiviti\Sys.Bpm.ProcessValidation\Sys.Bpm.ProcessValidation.csproj", "{2C233610-DD82-4035-BA69-D8807595BC47}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BpmnWebApiTest", "NActiviti\BpmnWebTest\BpmnWebApiTest.csproj", "{B86C3A7C-9871-4696-927F-1E1B97201AAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BpmnWebTest", "NActiviti\BpmnWebTest\BpmnWebTest.csproj", "{B86C3A7C-9871-4696-927F-1E1B97201AAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sys.Expression", "Sys.Expression\Sys.Expression.csproj", "{2DF9301E-6B6B-46DB-BBA3-7802A70B9CF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sys.Expression", "Sys.Expression\Sys.Expression.csproj", "{2DF9301E-6B6B-46DB-BBA3-7802A70B9CF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

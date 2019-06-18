@@ -35,6 +35,6 @@
     * 流程运行时表结构： resources\db\drop\activiti.mysql.drop.engine.sql  
     * 流程历史记录表结构：resources\db\drop\activiti.mysql.drop.history.sql
 
-## 简易流程编辑器访问地址 http://localhost:11015/index.html
+## 运行BpmnWebTest项目,打开流程编辑器访问地址 http://localhost:11015/index.html
 * 编辑器代码 BpmnEditor
 	* 打开编辑器地址，点击下方CODE按钮，复制测试项目 resources\samples\ 目录下的bpmn文件内容
