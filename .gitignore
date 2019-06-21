@@ -256,3 +256,5 @@ gloable.json
 publish_docker.bat
 Dockerfile
 start.sh
+
+!Sys.Expresion/Expressions/Parser/antlr/debug/**

@@ -1627,7 +1627,8 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                     ["limitBeforeNativeQuery"] = "",
                     ["orderBy"] = "",
                     ["blobType"] = "",
-                    ["boolValue"] = "TRUE"
+                    ["boolValue"] = "TRUE",
+                    ["top100"] = "",
                 };
 
                 string codebase = AppDomain.CurrentDomain.BaseDirectory;
