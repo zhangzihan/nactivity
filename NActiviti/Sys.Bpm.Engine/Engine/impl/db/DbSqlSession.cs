@@ -292,6 +292,16 @@ namespace Sys.Workflow.Engine.Impl.DB
                 request.Add("maxResults", maxResults);
             }
 
+            if (request.ContainsKey("firstRow") == false)
+            {
+                request.Add("firstRow", firstResult);
+            }
+
+            if (request.ContainsKey("lastRow") == false)
+            {
+                request.Add("lastRow", firstResult + maxResults + 1);
+            }
+
             RequestContext ctx = dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, statement, request);
 
             var loadedObjects = SqlMapper.Query<TOut>(ctx);
@@ -702,9 +712,9 @@ namespace Sys.Workflow.Engine.Impl.DB
                 if (!handledExecutionIds.Contains(executionId))
                 {
                     string parentId = childToParentExecutionMapping[executionId];
-                    if (!(parentId is null))
+                    if (parentId is object)
                     {
-                        while (!(parentId is null))
+                        while (parentId is object)
                         {
                             string newParentId = childToParentExecutionMapping[parentId];
                             if (newParentId is null)
@@ -1037,7 +1047,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                     errorMessage = AddMissingComponent(errorMessage, "history");
                 }
 
-                if (!(errorMessage is null))
+                if (errorMessage is object)
                 {
                     throw new ActivitiException("Activiti database problem: " + errorMessage);
                 }
@@ -1289,13 +1299,13 @@ namespace Sys.Workflow.Engine.Impl.DB
             try
             {
                 string catalog = this.connectionMetadataDefaultCatalog;
-                if (!(dbSqlSessionFactory.DatabaseCatalog is null) && dbSqlSessionFactory.DatabaseCatalog.Length > 0)
+                if (dbSqlSessionFactory.DatabaseCatalog is object && dbSqlSessionFactory.DatabaseCatalog.Length > 0)
                 {
                     catalog = dbSqlSessionFactory.DatabaseCatalog;
                 }
 
                 string schema = this.connectionMetadataDefaultSchema;
-                if (!(dbSqlSessionFactory.DatabaseSchema is null) && dbSqlSessionFactory.DatabaseSchema.Length > 0)
+                if (dbSqlSessionFactory.DatabaseSchema is object && dbSqlSessionFactory.DatabaseSchema.Length > 0)
                 {
                     schema = dbSqlSessionFactory.DatabaseSchema;
                 }
@@ -1307,12 +1317,12 @@ namespace Sys.Workflow.Engine.Impl.DB
                     tableName = tableName.ToLower();
                 }
 
-                if (!(schema is null) && "oracle".Equals(databaseType))
+                if (schema is object && "oracle".Equals(databaseType))
                 {
                     schema = schema.ToUpper();
                 }
 
-                if (!(catalog is null) && catalog.Length == 0)
+                if (catalog is object && catalog.Length == 0)
                 {
                     catalog = null;
                 }
@@ -1509,7 +1519,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                 string line = ReadNextTrimmedLine(reader);
                 bool inOraclePlsqlBlock = false;
 
-                while (!(line is null))
+                while (line is object)
                 {
                     if (line.StartsWith("# ", StringComparison.Ordinal))
                     {

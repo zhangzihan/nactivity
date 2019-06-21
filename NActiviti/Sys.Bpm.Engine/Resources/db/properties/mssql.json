@@ -1,6 +1,6 @@
 ﻿{
   "limitBefore": "'SELECT top 100 percent SUB.* FROM ('",
-  "limitAfter": "')RES ) SUB WHERE SUB.rnk >= #{firstResult} AND SUB.rnk < #{maxResults}'",
+  "limitAfter": "')RES ) SUB WHERE SUB.rnk >= #{firstRow} AND SUB.rnk < #{lastRow}'",
   "limitBetween": "', row_number() over (ORDER BY #{orderByColumns}) rnk FROM ( select distinct top 100 percent RES.* '",
   "limitOuterJoinBetween": "', row_number() over (ORDER BY #{mssqlOrDB2OrderBy}) rnk FROM ( select distinct top 100 percent '",
   "limitBeforeNativeQuery": "'SELECT top 100 percent SUB.* FROM ( select RES.* , row_number() over (ORDER BY #{orderByColumns}) rnk FROM ('",
