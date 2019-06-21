@@ -287,7 +287,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             get
             {
-                if (_orderBy is null)
+                if (string.IsNullOrWhiteSpace(_orderBy))
                 {
                     return base.OrderBy;
                 }

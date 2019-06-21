@@ -10,6 +10,24 @@
     "connectionString": "server=localhost;database=数据库名称;uid=用户名;pwd=密码;Character Set=utf8"
 }
 ```
+* 使用MySql DbProvider resources\db\mapping\mappings.xml
+```
+<DbProvider Name="MySqlClientFactory" ParameterPrefix="?" Type="MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data"/>
+```
+
+* SQLServer 创建数据库 activiti
+* 修改数据库配置 appsettings.json
+```
+"WorkflowDataSource"：{
+    "providerName": "System.Data.SqlClient",
+    "database": "activiti",　//数据库名称
+    "connectionString": "server=localhost;database=数据库名称;uid=用户名;pwd=密码;"
+}
+```
+* 使用SQLServer DbProvider resources\db\mapping\mappings.xml
+```
+<DbProvider Name="SqlClientFactory" ParameterPrefix="@" Type="System.Data.SqlClient.SqlClientFactory,System.Data.SqlClient"/>
+```
 
 ## 初始化数据库表结构
 * 首次启动修改配置文件：resources\activiti.cfg.json 配置

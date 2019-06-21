@@ -188,12 +188,29 @@ namespace SmartSql.Abstractions
                                 FixedMySqlOrderBy();
                             }
 
+                            if (this.SmartSqlContext.Database.DbProvider.Name == "SqlClientFactory" && (path.ToLower() == "limitbetween" || path.ToLower() == "limitbeforenativequery" || path.ToLower() == "orderby"))
+                            {
+                                FixedSqlServerOrderBy();
+                            }
+
                             return (ExpressionManager.GetValue(Request, exp, RequestParameters) ?? "").ToString();
                         }
                     });
                 }
 
                 RealSql = sql;
+            }
+        }
+
+        private void FixedSqlServerOrderBy()
+        {
+            if (Request is Dictionary<string, object> dict && !dict.TryGetValue("orderByColumns", out object ob))
+            {
+                dict["orderByColumns"] = "RES.ID_";
+            }
+            if (!RequestParameters.TryGetValue("orderByColumns", out object obj))
+            {
+                RequestParameters["orderByColumns"] = "RES.ID_";
             }
         }
 

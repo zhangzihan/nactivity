@@ -18,6 +18,7 @@ namespace Sys.Workflow
             TypeRegistry.RegisterType(typeof(DateTimeHelper));
             TypeRegistry.RegisterType(typeof(UrlUtil));
             TypeRegistry.RegisterType(typeof(Math));
+            TypeRegistry.RegisterType(typeof(String));
             TypeRegistry.RegisterType(typeof(MathHelper));
         }
     }
