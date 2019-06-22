@@ -1,6 +1,4 @@
-﻿using Microsoft.Xunit.Performance;
-using Sys.Workflow.Bpmn.Converters;
-using Sys.Workflow.Bpmn.Models;
+﻿using Sys.Workflow.Bpmn.Models;
 using Sys.Workflow.Engine;
 using Sys.Workflow.Engine.Impl.Cfg;
 using Sys.Workflow.Engine.Impl.Cmd;
@@ -11,12 +9,10 @@ using Sys.Workflow.Engine.Repository;
 using Sys.Workflow.Engine.Runtime;
 using Sys.Workflow.Engine.Tasks;
 using Sys.Workflown.Test;
-using Sys.Workflow;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace Sys.Workflow.Client.Tests.Models
