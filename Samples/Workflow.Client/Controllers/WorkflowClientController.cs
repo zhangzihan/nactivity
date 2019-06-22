@@ -82,7 +82,8 @@ namespace Workflow.Client.Controllers
 
             MockDatas.Requests.Add(request);
 
-            //转换为流程变量
+            //转换为流程变量,这里只是一个演示，实际仅需要传递流程需要的数据变量就可以了。
+            //不需要把整个业务数据都传递给工作流
             Dictionary<string, object> variables = JToken.FromObject(request).ToObject<Dictionary<string, object>>();
 
             //设置流程管理员用户,变量名对应流程中设置的流程变量名.
@@ -123,15 +124,15 @@ namespace Workflow.Client.Controllers
             //处理业务部分内容
             IUserInfo user = await accessToken.FromRequestHeaderAsync(httpContext);
 
+            WorkflowVariable workflowVariable = new WorkflowVariable();
+            workflowVariable.Approvaled = true;
+
             //提交流程
             await taskClient.CompleteTask(new CompleteTaskCmd
             {
                 BusinessKey = id,
                 Assignee = user.Id,
-                OutputVariables = new WorkflowVariable
-                {
-                    { "同意", true}
-                }
+                OutputVariables = workflowVariable
             });
 
             return true;
@@ -143,15 +144,15 @@ namespace Workflow.Client.Controllers
             //处理业务部分内容
             IUserInfo user = await accessToken.FromRequestHeaderAsync(httpContext);
 
+            WorkflowVariable workflowVariable = new WorkflowVariable();
+            workflowVariable.Approvaled = false;
+
             //提交流程
             await taskClient.CompleteTask(new CompleteTaskCmd
             {
                 BusinessKey = id,
                 Assignee = user.Id,
-                OutputVariables = new WorkflowVariable
-                {
-                    { "同意", false}
-                }
+                OutputVariables = workflowVariable
             });
 
             return true;
