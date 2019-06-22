@@ -1,0 +1,20 @@
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <td style="width:330px">ID</td>
+      <td>姓名</td>
+      <td>岗位</td>
+      <td>登录</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{user.id}}</td>
+      <td>{{user.name}}</td>
+      <td>{{user.duty}}</td>
+      <td>
+        <button class="btn btn-primary" (click)="login(user)">登录</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

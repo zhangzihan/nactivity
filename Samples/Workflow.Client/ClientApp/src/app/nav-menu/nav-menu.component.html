@@ -1,0 +1,20 @@
+<header>
+  <nav class='navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3'>
+    <div class="container">
+      <a class="navbar-brand" [routerLink]='["/"]'>请假申请</a>
+      <div>
+        <ul class="navbar-nav flex-grow">
+          <li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
+            <a class="nav-link text-dark" [routerLink]='["/"]'>系统登录</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]='["link-active"]'>
+            <a class="nav-link text-dark" [routerLink]='["/leave-request"]'>请假单</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]='["link-active"]'>
+            <a class="nav-link text-dark" [routerLink]='["/my-tasks"]'>待办任务</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>

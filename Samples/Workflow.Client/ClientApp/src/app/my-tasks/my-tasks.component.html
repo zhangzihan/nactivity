@@ -1,0 +1,22 @@
+<div>登录人：{{loginUser.name}}</div>
+<table class='table table-striped table-bordered'>
+  <thead>
+    <tr>
+      <th>任务ID</th>
+      <th>请假单ID</th>
+      <th>审批人</th>
+      <th>#</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let task of tasks">
+      <td>task.id</td>
+      <td>task.businessKey</td>
+      <td>task.assignee</td>
+      <td>
+        <button class="btn btn-primary" (click)="passed(task)">同意</button>
+        <button class="btn btn-danger" (click)="reject(task)">拒绝</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

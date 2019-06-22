@@ -1,0 +1,44 @@
+<div class="animated fadeIn">
+  <div class="container container-fluid">
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <label for="requestId">单据ID</label>
+          <input type="text" class="form-control" readonly id="requestId" [(ngModel)]="request.id" />
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <label for="requestCode">单据号</label>
+          <input type="text" class="form-control" id="requestCode" [(ngModel)]="request.code">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <label for="requestStart">开始日期</label>
+          <input type="date" class="form-control" id="requestStart" [ngModel]="request.start | date:'yyyy-MM-dd'"  (ngModelChange)="request.start = $event" />
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <label for="requestEnd">结束日期</label>
+          <input type="date" class="form-control" id="requestEnd" [ngModel]="request.end | date:'yyyy-MM-dd'"  (ngModelChange)="request.end = $event" >
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group">
+          <label for="requestReasno">原因</label>
+          <textarea class="form-control" id="requestReasno" [(ngModel)]="request.reason" style="width:100%"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="text-align: center">
+      <button class="btn btn-primary" [disabled]="request==null" (click)="newRequest()">新建</button>&nbsp;
+      <button class="btn btn-primary" [disabled]="request==null" (click)="submit()">提交</button>
+    </div>
+  </div>
+</div>
