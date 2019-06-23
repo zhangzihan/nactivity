@@ -16,7 +16,7 @@
       <bpmn2:outgoing>SequenceFlow_00m0yz2</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_0ogsipr" name="大于3天" sourceRef="ExclusiveGateway_1nuv4n1" targetRef="Task_05y7cch">
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${Days&gt;=3}</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${同意==true and Days&gt;=3}</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_00m0yz2" sourceRef="ExclusiveGateway_1nuv4n1" targetRef="Task_1x3opee" />
     <bpmn2:sequenceFlow id="SequenceFlow_070763w" sourceRef="Task_05y7cch" targetRef="Task_1x3opee" />
