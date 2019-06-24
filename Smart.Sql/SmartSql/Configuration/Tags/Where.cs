@@ -16,16 +16,21 @@ namespace SmartSql.Configuration.Tags
 
         private static readonly Regex WHERE_TRIM = new Regex("where\\s+(and|or)\\b", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
+        private static readonly Regex WHERE_WITHOUT = new Regex(@"^(\s*(and|or))", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
         public override void BuildSql(RequestContext context)
         {
+            string origSql = context.Sql.ToString();
+
+            context.Sql = new StringBuilder();
+
             base.BuildSql(context);
 
-            var sql = context.Sql.ToString();
+            string sql = context.Sql.ToString();
 
             if (WHERE_PATTERN.IsMatch(sql))
             {
                 sql = WHERE_PATTERN.Replace(sql, " ");
-                context.Sql = new StringBuilder(sql);
             }
 
             if (WHERE_TRIM.IsMatch(sql))
@@ -34,8 +39,14 @@ namespace SmartSql.Configuration.Tags
                 {
                     return "where ";
                 });
-                context.Sql = new StringBuilder(sql);
             }
+
+            if (WHERE_WITHOUT.IsMatch(sql))
+            {
+                sql = WHERE_WITHOUT.Replace(sql, "where ");
+            }
+
+            context.Sql = new StringBuilder(origSql).Append(" ").Append(sql);
         }
 
         public override void BuildChildSql(RequestContext context)
