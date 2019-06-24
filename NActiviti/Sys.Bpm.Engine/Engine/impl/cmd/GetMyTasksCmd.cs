@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             var taskService = commandContext.ProcessEngineConfiguration.TaskService;
 
             List<ITask> tasks = taskService.CreateTaskQuery()
-                .SetTaskAssignee(assignee)
+                .SetTaskCandidateOrAssigned(assignee)
                 .OrderByTaskCreateTime()
                 .Desc()
                 .List()
