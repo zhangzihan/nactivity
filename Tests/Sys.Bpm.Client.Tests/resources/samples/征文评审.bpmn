@@ -44,10 +44,10 @@
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_0jfucfq" sourceRef="Task_0zs3woa" targetRef="Task_0uq4gmb" />
     <bpmn2:sequenceFlow id="SequenceFlow_05txvvf" sourceRef="Start_5_Lm_zZymQ" targetRef="ExclusiveGateway_1bmxq01" />
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_1pyzm0t" default="EssayCondition">
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_1pyzm0t" default="SequenceFlow_0m58lhx">
       <bpmn2:incoming>SequenceFlow_0sesj2u</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_0m58lhx</bpmn2:outgoing>
       <bpmn2:outgoing>EssayCondition</bpmn2:outgoing>
-      <bpmn2:outgoing>SequenceFlow_170z1jc</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_1xwv282" sourceRef="Task_15uusiq" targetRef="Task_0uq4gmb" />
     <bpmn2:userTask id="Task_15uusiq" name="等待修改" camunda:assignee="${Task_15uusiq}">
@@ -62,13 +62,13 @@
       </bpmn2:multiInstanceLoopCharacteristics>
     </bpmn2:userTask>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_0i0kpdz" default="SequenceFlow_1pc8ko3">
-      <bpmn2:incoming>EssayCondition</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_0m58lhx</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_05tcz2n</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_1pc8ko3</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
-    <bpmn2:sequenceFlow id="EssayCondition" name="已通过" sourceRef="ExclusiveGateway_1pyzm0t" targetRef="ExclusiveGateway_0i0kpdz" />
+    <bpmn2:sequenceFlow id="SequenceFlow_0m58lhx" name="已通过" sourceRef="ExclusiveGateway_1pyzm0t" targetRef="ExclusiveGateway_0i0kpdz" />
     <bpmn2:endEvent id="EndEvent_06lymq1">
-      <bpmn2:incoming>SequenceFlow_170z1jc</bpmn2:incoming>
+      <bpmn2:incoming>EssayCondition</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_1b4gyzy</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_1pc8ko3</bpmn2:incoming>
     </bpmn2:endEvent>
@@ -87,7 +87,7 @@
         <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${nrOfActiveInstances==0}</bpmn2:completionCondition>
       </bpmn2:multiInstanceLoopCharacteristics>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_170z1jc" name="已拒绝" sourceRef="ExclusiveGateway_1pyzm0t" targetRef="EndEvent_06lymq1">
+    <bpmn2:sequenceFlow id="EssayCondition" name="已拒绝" sourceRef="ExclusiveGateway_1pyzm0t" targetRef="EndEvent_06lymq1">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${CollectionUtil.Sum(scores,null) == 0 or Math.Abs(CollectionUtil.Sub(scores, null)) &gt; 50}</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_1b4gyzy" sourceRef="Task_1lmqkp3" targetRef="EndEvent_06lymq1" />
@@ -166,7 +166,7 @@
       <bpmndi:BPMNShape id="ExclusiveGateway_0i0kpdz_di" bpmnElement="ExclusiveGateway_0i0kpdz" isMarkerVisible="true">
         <dc:Bounds x="695" y="343" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_1nmyml4_di" bpmnElement="EssayCondition">
+      <bpmndi:BPMNEdge id="SequenceFlow_1nmyml4_di" bpmnElement="SequenceFlow_0m58lhx">
         <di:waypoint x="720" y="253" />
         <di:waypoint x="720" y="343" />
         <bpmndi:BPMNLabel>
@@ -187,7 +187,7 @@
       <bpmndi:BPMNShape id="UserTask_0pk6yh6_di" bpmnElement="Task_1lmqkp3">
         <dc:Bounds x="832" y="469" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_170z1jc_di" bpmnElement="SequenceFlow_170z1jc">
+      <bpmndi:BPMNEdge id="SequenceFlow_170z1jc_di" bpmnElement="EssayCondition">
         <di:waypoint x="745" y="228" />
         <di:waypoint x="882" y="228" />
         <di:waypoint x="882" y="350" />

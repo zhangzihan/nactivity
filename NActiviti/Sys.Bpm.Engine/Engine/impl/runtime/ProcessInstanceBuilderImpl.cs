@@ -55,6 +55,8 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
         protected internal IDictionary<string, object> _variables;
         protected internal IDictionary<string, object> _transientVariables;
 
+        protected internal string _initialFlowElementId;
+
         public ProcessInstanceBuilderImpl(RuntimeServiceImpl runtimeService)
         {
             this.runtimeService = runtimeService;
@@ -153,6 +155,13 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             return runtimeService.StartProcessInstance(this);
         }
 
+        public virtual IProcessInstanceBuilder SetInitialFlowElement(string initialFlowElementId)
+        {
+            _initialFlowElementId = initialFlowElementId;
+
+            return this;
+        }
+
         public virtual string ProcessDefinitionId
         {
             get
@@ -217,6 +226,12 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             }
         }
 
+        public virtual string InitialFlowElementId
+        {
+            get
+            {
+                return _initialFlowElementId;
+            }
+        }
     }
-
 }

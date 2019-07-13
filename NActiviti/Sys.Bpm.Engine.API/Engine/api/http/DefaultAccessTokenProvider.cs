@@ -27,12 +27,15 @@ namespace Sys.Net.Http
         }
 
         /// <inheritdoc />
-        public void SetHttpClientRequestAccessToken(HttpClient httpClient, string clientId, string tenantId)
+        public void SetHttpClientRequestAccessToken(HttpClient httpClient, string clientId, string tenantId, string name = null, string email = null, string phone = null)
         {
             httpClient.DefaultRequestHeaders.Remove("Authorization");
             string accessToken = WebUtility.UrlEncode(JsonConvert.SerializeObject(new UserInfo
             {
                 Id = string.IsNullOrWhiteSpace(clientId) ? WORKFLOW_CLIENT_ID : clientId,
+                FullName = name,
+                Email = email,
+                Phone = phone,
                 TenantId = tenantId
             }));
 

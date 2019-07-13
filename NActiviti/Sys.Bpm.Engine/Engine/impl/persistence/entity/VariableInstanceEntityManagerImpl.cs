@@ -57,7 +57,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             base.Insert(entity, fireCreateEvent);
 
-            if (!(entity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (entity.ExecutionId is object && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = ExecutionEntityManager.FindById<ICountingExecutionEntity>(entity.ExecutionId);
                 if (IsExecutionRelatedEntityCountEnabled(executionEntity))
@@ -117,7 +117,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             entity.Deleted = true;
 
-            if (!(entity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (entity.ExecutionId is object && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = ExecutionEntityManager.FindById<ICountingExecutionEntity>(entity.ExecutionId);
                 if (IsExecutionRelatedEntityCountEnabled(executionEntity))
@@ -139,7 +139,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual IActivitiVariableEvent CreateVariableDeleteEvent(IVariableInstanceEntity variableInstance)
         {
             string processDefinitionId = null;
-            if (!(variableInstance.ProcessInstanceId is null))
+            if (variableInstance.ProcessInstanceId is object)
             {
                 IExecutionEntity executionEntity = ExecutionEntityManager.FindById<IExecutionEntity>(variableInstance.ProcessInstanceId);
                 if (executionEntity != null)

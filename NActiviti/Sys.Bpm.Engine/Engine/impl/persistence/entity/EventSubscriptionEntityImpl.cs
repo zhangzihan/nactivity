@@ -227,7 +227,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             EventSubscriptionEntityImpl other = (EventSubscriptionEntityImpl)obj;
             if (id is null)
             {
-                if (!(other.id is null))
+                if (other.id is object)
                 {
                     return false;
                 }

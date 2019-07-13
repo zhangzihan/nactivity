@@ -765,7 +765,7 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 string specialOrderBy = base.OrderBy;
-                if (!(specialOrderBy is null) && specialOrderBy.Length > 0)
+                if (specialOrderBy is object && specialOrderBy.Length > 0)
                 {
                     specialOrderBy = specialOrderBy.Replace("RES.", "TEMPRES_");
                     specialOrderBy = specialOrderBy.Replace("VAR.", "TEMPVAR_");
@@ -812,7 +812,7 @@ namespace Sys.Workflow.Engine.Impl
             processInstanceEntity.LocalizedName = null;
             processInstanceEntity.LocalizedDescription = null;
 
-            if (!(_locale is null) && !(processInstance.ProcessDefinitionId is null))
+            if (_locale is object && processInstance.ProcessDefinitionId is object)
             {
                 IProcessDefinition processDefinition = commandContext.ProcessEngineConfiguration.DeploymentManager.FindDeployedProcessDefinitionById(processInstanceEntity.ProcessDefinitionId);
                 JToken languageNode = Context.GetLocalizationElementProperties(_locale, processDefinition.Key, processInstanceEntity.ProcessDefinitionId, _withLocalizationFallback);

@@ -344,7 +344,7 @@ namespace Sys.Workflow.Engine.Impl
                 // Similar behaviour as the TaskQuery.taskCandidateUser() which
                 // includes the groups the candidate
                 // user is part of
-                if (!(authorizationUserId is null))
+                if (authorizationUserId is object)
                 {
                     IUserGroupLookupProxy userGroupLookupProxy = Context.ProcessEngineConfiguration.UserGroupLookupProxy;
                     if (userGroupLookupProxy != null)

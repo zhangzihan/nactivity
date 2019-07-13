@@ -57,6 +57,22 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
         ///          the entity this event targets </param>
         /// <returns> an <seealso cref="IActivitiEntityEvent"/>. In case an <seealso cref="ExecutionContext"/> is active, the execution related event fields will be populated. If not, execution details will be retrieved from the
         ///         <seealso cref="Object"/> if possible. </returns>
+        public static IActivitiEntityEvent CreateTaskReturnEntityEvent(object entity, string activityId)
+        {
+            ActivitiTaskReturnToEventImpl newEvent = new ActivitiTaskReturnToEventImpl(entity, ActivitiEventType.TASK_RETURN_TO, activityId);
+
+            // In case an execution-context is active, populate the event fields
+            // related to the execution
+            PopulateEventWithCurrentContext(newEvent);
+            return newEvent;
+        }
+
+        /// <param name="type">
+        ///          type of event </param>
+        /// <param name="entity">
+        ///          the entity this event targets </param>
+        /// <returns> an <seealso cref="IActivitiEntityEvent"/>. In case an <seealso cref="ExecutionContext"/> is active, the execution related event fields will be populated. If not, execution details will be retrieved from the
+        ///         <seealso cref="Object"/> if possible. </returns>
         public static IActivitiEntityEvent CreateEntityEvent(ActivitiEventType type, object entity)
         {
             ActivitiEntityEventImpl newEvent = new ActivitiEntityEventImpl(entity, type);
@@ -332,17 +348,17 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
                 }
                 else if (persistedObject is IIdentityLinkEntity idLink)
                 {
-                    if (!(idLink.ProcessDefinitionId is null))
+                    if (idLink.ProcessDefinitionId is object)
                     {
                         @event.ProcessDefinitionId = idLink.ProcessDefId;
                     }
-                    else if (idLink.ProcessInstance != null)
+                    else if (idLink.ProcessInstance is object)
                     {
                         @event.ProcessDefinitionId = idLink.ProcessInstance.ProcessDefinitionId;
                         @event.ProcessInstanceId = idLink.ProcessInstanceId;
                         @event.ExecutionId = idLink.ProcessInstanceId;
                     }
-                    else if (idLink.Task != null)
+                    else if (idLink.Task is object)
                     {
                         @event.ProcessDefinitionId = idLink.Task.ProcessDefinitionId;
                         @event.ProcessInstanceId = idLink.Task.ProcessInstanceId;

@@ -102,9 +102,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(businessKey))
+                IExecutionEntity execution = Execution;
+                if (string.IsNullOrWhiteSpace(businessKey) && execution is object)
                 {
-                    businessKey = Execution.BusinessKey;
+                    businessKey = execution.BusinessKey;
                 }
 
                 return businessKey;
@@ -145,7 +146,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     persistentState["dueDate"] = this.dueDate;
                 }
-                if (!(parentTaskId is null))
+                if (parentTaskId is object)
                 {
                     persistentState["parentTaskId"] = this.parentTaskId;
                 }
@@ -211,7 +212,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             // Dispatch event, if needed
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            if (!(processEngineConfiguration is null) && processEngineConfiguration.EventDispatcher.Enabled)
+            if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
             {
                 processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateVariableEvent(ActivitiEventType.VARIABLE_CREATED, variableName, value, result.Type, result.TaskId, result.ExecutionId, ProcessInstanceId, ProcessDefinitionId));
             }
@@ -224,7 +225,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             // Dispatch event, if needed
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            if (!(processEngineConfiguration is null) && processEngineConfiguration.EventDispatcher.Enabled)
+            if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
             {
                 processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateVariableEvent(ActivitiEventType.VARIABLE_UPDATED, variableInstance.Name, value, variableInstance.Type, variableInstance.TaskId, variableInstance.ExecutionId, ProcessInstanceId, ProcessDefinitionId));
             }
@@ -309,7 +310,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void DeleteGroupIdentityLink(string groupId, string identityLinkType)
         {
-            if (!(groupId is null))
+            if (groupId is object)
             {
                 Context.CommandContext.IdentityLinkEntityManager.DeleteIdentityLink(this, null, groupId, identityLinkType);
             }
@@ -317,7 +318,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void DeleteUserIdentityLink(string userId, string identityLinkType)
         {
-            if (!(userId is null))
+            if (userId is object)
             {
                 Context.CommandContext.IdentityLinkEntityManager.DeleteIdentityLink(this, userId, null, identityLinkType);
             }
@@ -357,7 +358,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             get
             {
-                if (!(localizedName is null) && localizedName.Length > 0)
+                if (localizedName is object && localizedName.Length > 0)
                 {
                     return localizedName;
                 }
@@ -376,7 +377,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             get
             {
-                if (!(localizedDescription is null) && localizedDescription.Length > 0)
+                if (localizedDescription is object && localizedDescription.Length > 0)
                 {
                     return localizedDescription;
                 }
@@ -896,7 +897,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     foreach (IVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!(variableInstance.Id is null) && !(variableInstance.TaskId is null))
+                        if (variableInstance.Id is object && variableInstance.TaskId is object)
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }
@@ -915,7 +916,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     foreach (IVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!(variableInstance.Id is null) && variableInstance.TaskId is null)
+                        if (variableInstance.Id is object && variableInstance.TaskId is null)
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }

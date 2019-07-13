@@ -116,7 +116,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                         }
                     }
 
-                    if (!(locale is null) && foundDataObject != null)
+                    if (locale is object && foundDataObject is object)
                     {
                         JToken languageNode = Context.GetLocalizationElementProperties(locale, foundDataObject.Id, task.ProcessDefinitionId, withLocalizationFallback);
 

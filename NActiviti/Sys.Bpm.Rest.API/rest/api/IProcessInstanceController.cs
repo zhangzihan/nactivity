@@ -57,7 +57,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// </summary>
         /// <param name="cmd">信号命令</param>
         /// <returns></returns>
-        Task<ActionResult> SendSignal(SignalCmd cmd);
+        Task<bool> SendSignal(SignalCmd cmd);
 
         /// <summary>
         /// 挂起流程实例
@@ -76,9 +76,9 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// <summary>
         /// 终止流程实例
         /// </summary>
-        /// <param name="cmd">流程终止命令</param>
+        /// <param name="cmds">流程终止命令</param>
         /// <returns></returns>
-        Task<ActionResult> Terminate(TerminateProcessInstanceCmd cmd);
+        Task<bool> Terminate(TerminateProcessInstanceCmd[] cmds);
     }
 
 }

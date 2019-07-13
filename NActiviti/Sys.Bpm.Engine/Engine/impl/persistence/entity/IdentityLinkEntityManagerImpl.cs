@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             base.Insert(entity, fireCreateEvent);
             HistoryManager.RecordIdentityLinkCreated(entity);
 
-            if (!(entity.ProcessInstanceId is null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (entity.ProcessInstanceId is object && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.FindById<ICountingExecutionEntity>(entity.ProcessInstanceId);
                 if (IsExecutionRelatedEntityCountEnabled(executionEntity))
@@ -67,7 +67,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 HistoryManager.DeleteHistoricIdentityLink(identityLink.Id);
             }
 
-            if (!(identityLink.ProcessInstanceId is null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (identityLink.ProcessInstanceId is object && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.FindById<ICountingExecutionEntity>(identityLink.ProcessInstanceId);
                 if (IsExecutionRelatedEntityCountEnabled(executionEntity))
@@ -133,7 +133,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             identityLinkEntity.GroupId = groupId;
             identityLinkEntity.Type = type;
             Insert(identityLinkEntity);
-            if (!(userId is null) && !(taskEntity.ProcessInstanceId is null))
+            if (userId is object && taskEntity.ProcessInstanceId is object)
             {
                 InvolveUser(taskEntity.ProcessInstance, userId, IdentityLinkType.PARTICIPANT);
             }
@@ -207,7 +207,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void DeleteIdentityLink(IExecutionEntity executionEntity, string userId, string groupId, string type)
         {
-            string id = !(executionEntity.ProcessInstanceId is null) ? executionEntity.ProcessInstanceId : executionEntity.Id;
+            string id = executionEntity.ProcessInstanceId is object ? executionEntity.ProcessInstanceId : executionEntity.Id;
             IList<IIdentityLinkEntity> identityLinks = FindIdentityLinkByProcessInstanceUserGroupAndType(id, userId, groupId, type);
 
             foreach (IIdentityLinkEntity identityLink in identityLinks)
@@ -243,7 +243,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 if (IdentityLinkType.CANDIDATE.Equals(identityLinkEntity.Type) && identityLinkIds.Contains(identityLinkEntity.Id) == false)
                 {
 
-                    if ((!(userId is null) && userId.Equals(identityLinkEntity.UserId)) || (!(groupId is null) && groupId.Equals(identityLinkEntity.GroupId)))
+                    if ((userId is object && userId.Equals(identityLinkEntity.UserId)) || (groupId is object && groupId.Equals(identityLinkEntity.GroupId)))
                     {
 
                         DeleteIdentityLink(identityLinkEntity, true);

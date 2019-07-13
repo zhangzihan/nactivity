@@ -8,7 +8,7 @@
     <RootNamespace>Sys.Bpm</RootNamespace>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>bin</OutputPath>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>latest</LangVersion>
     <DocumentationFile>bin\Sys.Bpm.Model.xml</DocumentationFile>
   </PropertyGroup>
 

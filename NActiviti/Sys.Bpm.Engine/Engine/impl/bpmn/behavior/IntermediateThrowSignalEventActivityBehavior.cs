@@ -63,7 +63,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             ICommandContext commandContext = Context.CommandContext;
 
             string eventSubscriptionName;
-            if (!(signalEventName is null))
+            if (signalEventName is object)
             {
                 eventSubscriptionName = signalEventName;
             }

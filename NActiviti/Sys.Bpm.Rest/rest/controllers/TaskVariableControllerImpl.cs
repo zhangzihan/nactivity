@@ -101,21 +101,21 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         /// <inheritdoc />
 
         [HttpPost]
-        public virtual Task<ActionResult> SetVariables(string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
+        public virtual Task<bool> SetVariables(string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
         {
             processEngine.SetTaskVariables(setTaskVariablesCmd);
 
-            return Task.FromResult<ActionResult>(Ok());
+            return Task.FromResult(true);
         }
 
 
         /// <inheritdoc />
         [HttpPost("local")]
-        public virtual Task<ActionResult> SetVariablesLocal(string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
+        public virtual Task<bool> SetVariablesLocal(string taskId, [FromBody]SetTaskVariablesCmd setTaskVariablesCmd)
         {
             processEngine.SetTaskVariablesLocal(setTaskVariablesCmd);
 
-            return Task.FromResult<ActionResult>(Ok());
+            return Task.FromResult(true);
         }
 
         /// <inheritdoc />

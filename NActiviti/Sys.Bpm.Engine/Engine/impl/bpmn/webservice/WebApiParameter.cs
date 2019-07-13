@@ -19,10 +19,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Webservice
         public const string WEBAPI_REQUEST_PARAMETER = "taskRequest";
         public const string WEBAPI_RETURN_VARNAME = "dataObject";
 
+        private static readonly Regex JSONOBJECT_PATTERN = new Regex(@"(^(\s*{)(.*?)(\}\s*)$)|(^\s*\[(.*?)(\]\s*)$)", RegexOptions.Compiled);
+
         /// <summary>
         /// 正则表达式
         /// </summary>
-        private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
+        private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline | RegexOptions.Compiled);
 
         private readonly IList<ExtensionElement> extensionElements;
         private readonly IExecutionEntity execution;
@@ -137,26 +139,22 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Webservice
 
                 object parameter = GetValue(contextObject, taskRequest, execution.Variables);
 
-                if (parameter is null == false)
+                if (parameter is object)
                 {
                     string strParam = parameter.ToString();
-                    var reg = new Regex(@"(^(\s*{)(.*?)(\}\s*)$)|(^\s*\[(.*?)(\]\s*)$)");
+
                     JToken token;
-                    if (reg.IsMatch(strParam))
+                    if (JSONOBJECT_PATTERN.IsMatch(strParam))
                     {
                         token = JsonConvert.DeserializeObject<JToken>(parameter.ToString());
-                    }
-                    else
-                    {
-                        token = JToken.FromObject(strParam);
-                    }
 
-                    if (token is JArray == false && token is JValue == false)
-                    {
-                        token["businessKey"] = execution.BusinessKey;
-                    }
+                        if (token is JArray == false && token is JValue == false)
+                        {
+                            token["businessKey"] = execution.BusinessKey;
+                        }
 
-                    parameter = token;
+                        parameter = token;
+                    }
                 }
 
                 return parameter;

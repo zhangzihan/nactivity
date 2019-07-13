@@ -20,6 +20,8 @@ using Sys.Workflow.Engine.Bpmn.Rules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using Sys.Expressions;
 
 namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 {
@@ -38,6 +40,15 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
     /// </summary>
     public class DelegateCountersignExecutionListener : IExecutionListener
     {
+        private static readonly Regex EXPR_PATTERN = new Regex(@"\$\{(.*?)\}", RegexOptions.Multiline | RegexOptions.Compiled);
+
+        private static readonly ILogger<DelegateCountersignExecutionListener> logger = ProcessEngineServiceProvider.LoggerService<DelegateCountersignExecutionListener>();
+
+        public DelegateCountersignExecutionListener()
+        {
+
+        }
+
         /// <summary>
         /// 侦听接收通知处理
         /// </summary>
@@ -54,6 +65,17 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
                     string getUserPolicy = userTask.GetUsersPolicy();
                     if (string.IsNullOrWhiteSpace(getUserPolicy) == false)
                     {
+                        if (EXPR_PATTERN.IsMatch(getUserPolicy))
+                        {
+                            getUserPolicy = EXPR_PATTERN.Replace(getUserPolicy, (m) =>
+                            {
+                                var value = m.Groups[1].Value;
+                                var variables = execution.Variables;
+                                object roles = ExpressionManager.GetValue(variables, value, variables);
+                                return roles.ToString();
+                            });
+                        }
+
                         QueryBookmark[] actors = JsonConvert.DeserializeObject<QueryBookmark[]>(getUserPolicy);
 
                         IGetBookmarkRuleProvider ruleProvider = ProcessEngineServiceProvider.Resolve<IGetBookmarkRuleProvider>();
@@ -67,10 +89,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
                         }
                     }
 
-                    //if (users.Count == 0)
-                    //{
-                    //    throw new NoneCountersignUsersException(execution.CurrentFlowElement.Name);
-                    //}
+                    if (users.Count == 0)
+                    {
+                        logger.LogError($"调用查询人员服务失败,分组没有人,Duty={getUserPolicy}");
+                        //throw new NoneCountersignUsersException(execution.CurrentFlowElement.Name);
+                    }
 
                     execution.SetVariable(varName, users.Count == 0 ? new string[] { "" } : users.Select(x => x.Id).Distinct().ToArray());
                 }

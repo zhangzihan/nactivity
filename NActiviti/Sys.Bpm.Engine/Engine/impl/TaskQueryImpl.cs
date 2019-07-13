@@ -423,15 +423,15 @@ namespace Sys.Workflow.Engine.Impl
                 }
             }
 
-            if (!(assignee is null))
+            if (assignee is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssignee");
             }
-            if (!(assigneeLike is null))
+            if (assigneeLike is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssigneeLike");
             }
-            if (!(assigneeLikeIgnoreCase is null))
+            if (assigneeLikeIgnoreCase is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssigneeLikeIgnoreCase");
             }
@@ -613,11 +613,11 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetTaskCandidateOrAssigned(string userIdForCandidateAndAssignee)
         {
-            if (!(candidateGroup is null))
+            if (candidateGroup is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set candidateGroup");
             }
-            if (!(candidateUser is null))
+            if (candidateUser is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both candidateGroup and candidateUser");
             }
@@ -639,11 +639,11 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetTaskCandidateOrAssigned(string userIdForCandidateAndAssignee, IList<string> usersGroups)
         {
-            if (!(candidateGroup is null))
+            if (candidateGroup is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set candidateGroup");
             }
-            if (!(candidateUser is null))
+            if (candidateUser is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both candidateGroup and candidateUser");
             }
@@ -676,7 +676,7 @@ namespace Sys.Workflow.Engine.Impl
                 throw new ActivitiIllegalArgumentException("Candidate group list is empty");
             }
 
-            if (!(candidateGroup is null))
+            if (candidateGroup is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both candidateGroupIn and candidateGroup");
             }
@@ -1546,7 +1546,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             get
             {
-                if (!(candidateGroup is null))
+                if (candidateGroup is object)
                 {
                     IList<string> candidateGroupList = new List<string>(1)
                     {
@@ -1560,12 +1560,12 @@ namespace Sys.Workflow.Engine.Impl
                     return candidateGroups;
 
                 }
-                else if (!(candidateUser is null))
+                else if (candidateUser is object)
                 {
                     return GetGroupsForCandidateUser(candidateUser);
 
                 }
-                else if (!(userIdForCandidateAndAssignee is null))
+                else if (userIdForCandidateAndAssignee is object)
                 {
                     return GetGroupsForCandidateUser(userIdForCandidateAndAssignee);
                 }
@@ -1716,7 +1716,7 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 string specialOrderBy = base.OrderBy;
-                if (!(specialOrderBy is null) && specialOrderBy.Length > 0)
+                if (specialOrderBy is object && specialOrderBy.Length > 0)
                 {
                     specialOrderBy = specialOrderBy.Replace("RES.", "TEMPRES_");
                 }

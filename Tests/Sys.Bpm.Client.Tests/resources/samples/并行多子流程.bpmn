@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_0" name="顺序注册路径" isExecutable="true">
+    <bpmn2:startEvent id="StartEvent_1">
+      <bpmn2:outgoing>SequenceFlow_0ihgz1d</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_0ihgz1d" sourceRef="StartEvent_1" targetRef="Task_0opugm1" />
+    <bpmn2:userTask id="Task_0opugm1" name="教师注册" camunda:formKey="3" camunda:assignee="${user_}">
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="CanTransfer" value="false" />
+        </camunda:properties>
+        <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_0ihgz1d</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_1kbdvpj</bpmn2:outgoing>
+      <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${teachers}" camunda:elementVariable="user_">
+        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${nrOfInstances==0 or 完成==true}</bpmn2:completionCondition>
+      </bpmn2:multiInstanceLoopCharacteristics>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_1kbdvpj" sourceRef="Task_0opugm1" targetRef="SubProcess_1hn9zgh" />
+    <bpmn2:userTask id="Task_085qd6k" name="学生注册" camunda:formKey="2" camunda:assignee="${students}">
+      <bpmn2:extensionElements>
+        <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_04bmsea</bpmn2:incoming>
+    </bpmn2:userTask>
+    <bpmn2:subProcess id="SubProcess_1hn9zgh">
+      <bpmn2:incoming>SequenceFlow_1kbdvpj</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_04bmsea</bpmn2:outgoing>
+      <bpmn2:userTask id="Task_170r23o" name="子流程用户" camunda:assignee="${subUsers}">
+        <bpmn2:incoming>SequenceFlow_1bxd3zg</bpmn2:incoming>
+      </bpmn2:userTask>
+      <bpmn2:sequenceFlow id="SequenceFlow_1bxd3zg" sourceRef="StartEvent_1rnwcdb" targetRef="Task_170r23o" />
+      <bpmn2:startEvent id="StartEvent_1rnwcdb">
+        <bpmn2:outgoing>SequenceFlow_1bxd3zg</bpmn2:outgoing>
+      </bpmn2:startEvent>
+    </bpmn2:subProcess>
+    <bpmn2:sequenceFlow id="SequenceFlow_04bmsea" sourceRef="SubProcess_1hn9zgh" targetRef="Task_085qd6k" />
+  </bpmn2:process>
+  <bpmn2:message id="Message_1yes94e" name="Message_1qh50uo" />
+  <bpmn2:signal id="Signal_1jbamay" name="Signal_1qlnq87" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="190" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ihgz1d_di" bpmnElement="SequenceFlow_0ihgz1d">
+        <di:waypoint x="226" y="200" />
+        <di:waypoint x="306" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_16tu8q7_di" bpmnElement="Task_0opugm1">
+        <dc:Bounds x="306" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1kbdvpj_di" bpmnElement="SequenceFlow_1kbdvpj">
+        <di:waypoint x="356" y="160" />
+        <di:waypoint x="356" y="83" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0ornknv_di" bpmnElement="Task_085qd6k">
+        <dc:Bounds x="519" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1bxd3zg_di" bpmnElement="SequenceFlow_1bxd3zg">
+        <di:waypoint x="404" y="11" />
+        <di:waypoint x="482" y="11" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0e1o0ey_di" bpmnElement="Task_170r23o">
+        <dc:Bounds x="482" y="-29" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubProcess_0ow0hpl_di" bpmnElement="SubProcess_1hn9zgh" isExpanded="true">
+        <dc:Bounds x="326" y="-70" width="283" height="153" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1vezkv3_di" bpmnElement="StartEvent_1rnwcdb">
+        <dc:Bounds x="368" y="-7" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_04bmsea_di" bpmnElement="SequenceFlow_04bmsea">
+        <di:waypoint x="569" y="83" />
+        <di:waypoint x="569" y="160" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

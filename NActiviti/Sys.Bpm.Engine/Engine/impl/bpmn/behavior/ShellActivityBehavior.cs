@@ -74,23 +74,23 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 commandStr
             };
 
-            if (!(arg1Str is null))
+            if (arg1Str is object)
             {
                 argList.Add(arg1Str);
             }
-            if (!(arg2Str is null))
+            if (arg2Str is object)
             {
                 argList.Add(arg2Str);
             }
-            if (!(arg3Str is null))
+            if (arg3Str is object)
             {
                 argList.Add(arg3Str);
             }
-            if (!(arg4Str is null))
+            if (arg4Str is object)
             {
                 argList.Add(arg4Str);
             }
-            if (!(arg5Str is null))
+            if (arg5Str is object)
             {
                 argList.Add(arg5Str);
             }

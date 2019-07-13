@@ -106,11 +106,11 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IHistoricVariableInstanceQuery SetExcludeTaskVariables()
         {
-            if (!(taskId_ is null))
+            if (taskId_ is object)
             {
                 throw new ActivitiIllegalArgumentException("Cannot use taskId together with excludeTaskVariables");
             }
-            if (!(taskIds_ is null))
+            if (taskIds_ is object)
             {
                 throw new ActivitiIllegalArgumentException("Cannot use taskIds together with excludeTaskVariables");
             }

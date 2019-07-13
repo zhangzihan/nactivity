@@ -6,9 +6,9 @@
   //数据库更新策略，true=update drop-create create
   "databaseSchemaUpdate": "false",
   //查询执行下一个异步作业作业等待时间（以毫秒为单位）
-  "asyncExecutorDefaultAsyncJobAcquireWaitTime": 5000,
+  "asyncExecutorDefaultAsyncJobAcquireWaitTime": 15000,
   //查询执行下一个计时器作业等待时间（以毫秒为单位）
-  "asyncExecutorDefaultTimerJobAcquireWaitTime": 5000,
+  "asyncExecutorDefaultTimerJobAcquireWaitTime": 15000,
   //用于执行异步作业在销毁之前必须保持活动状态的时间（以毫秒为单位）。
   //设置>0可以在许多作业执行的情况下避免始终创建新线程。
   //如果=0，则线程在用于执行作业后将被销毁。

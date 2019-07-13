@@ -126,7 +126,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
             if (infoEntity != null && infoEntity.Revision != cacheObject.Revision)
             {
                 cacheObject.Revision = infoEntity.Revision;
-                if (!(infoEntity.InfoJsonId is null))
+                if (infoEntity.InfoJsonId is object)
                 {
                     byte[] infoBytes = infoEntityManager.FindInfoJsonById(infoEntity.InfoJsonId);
                     try

@@ -259,7 +259,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             bool found = false;
             IExecutionEntity parentScopeExecution = null;
             IExecutionEntity currentExecution = execution;
-            while (!found && currentExecution != null && !(currentExecution.ParentId is null))
+            while (!found && currentExecution is object && currentExecution.ParentId is object)
             {
                 parentScopeExecution = executionEntityManager.FindById<IExecutionEntity>(currentExecution.ParentId);
                 if (parentScopeExecution != null && parentScopeExecution.IsScope)

@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Sys.Workflow.Services.Api.Commands
@@ -10,9 +11,11 @@ namespace Sys.Workflow.Services.Api.Commands
     /// <summary>
     /// 工作流流程变量
     /// </summary>
-    public class WorkflowVariable : IDictionary<string, object>
+    public class WorkflowVariable : IDictionary<string, object>, IDictionary
     {
-        private readonly IDictionary<string, object> workflowVariables = null;
+        private readonly Dictionary<string, object> workflowVariables = null;
+
+        private readonly IDictionary idict = null;
 
         public const string GLOBAL_APPROVALED_VARIABLE = "同意";
         public const string GLOBAL_BUSINESSKEY_VARIABLE = "事项编号";
@@ -77,7 +80,7 @@ namespace Sys.Workflow.Services.Api.Commands
         {
             get
             {
-                if (TryGetValue(GLOBAL_APPROVALED_VARIABLE, out object approvaled) && !(approvaled is null))
+                if (TryGetValue(GLOBAL_APPROVALED_VARIABLE, out object approvaled) && approvaled is object)
                 {
                     bool.TryParse(approvaled.ToString(), out bool result);
 
@@ -103,6 +106,8 @@ namespace Sys.Workflow.Services.Api.Commands
             this.Approvaled = false;
             this.WorkflowData = null;
             this.BusinessKey = null;
+
+            idict = workflowVariables;
         }
 
         /// <inheritdoc />
@@ -131,6 +136,57 @@ namespace Sys.Workflow.Services.Api.Commands
         /// <inheritdoc />
         public bool IsReadOnly => false;
 
+        public bool IsFixedSize => idict.IsFixedSize;
+
+        ICollection IDictionary.Keys => idict.Keys;
+
+        ICollection IDictionary.Values => idict.Values;
+
+        public bool IsSynchronized => idict.IsSynchronized;
+
+        public object SyncRoot => idict.SyncRoot;
+
+        public object this[object key] { get => this[key.ToString()]; set => this[key.ToString()] = value; }
+
+        /// <summary>
+        /// 添加分配人
+        /// </summary>
+        /// <param name="variableName">流程变量名</param>
+        /// <param name="assignee">分配人</param>
+        /// <returns></returns>
+        public WorkflowVariable AddAssignee(string variableName, string assignee)
+        {
+            return AddAssignee(variableName, new string[] { assignee });
+        }
+
+        /// <summary>
+        /// 添加分配人
+        /// </summary>
+        /// <param name="variableName">流程变量名</param>
+        /// <param name="assignee">分配人</param>
+        /// <returns></returns>
+        public WorkflowVariable AddAssignee(string variableName, IEnumerable<string> assignee)
+        {
+            if (assignee is null)
+            {
+                throw new ArgumentNullException(nameof(assignee));
+            }
+
+            List<string> list;
+            if (TryGetValue(variableName, out string[] assignees) == false)
+            {
+                list = new List<string>();
+            }
+            else
+            {
+                list = new List<string>(assignees ?? new string[0]);
+            }
+            list.AddRange(assignee);
+            this[variableName] = list.Distinct().ToArray();
+
+            return this;
+        }
+
         /// <inheritdoc />
         public void Add(string key, object value)
         {
@@ -144,7 +200,7 @@ namespace Sys.Workflow.Services.Api.Commands
             return this;
         }
 
-        public WorkflowVariable Put(Dictionary<string, object> @params)
+        public WorkflowVariable Put(IDictionary<string, object> @params)
         {
             foreach (var key in @params.Keys)
             {
@@ -157,7 +213,7 @@ namespace Sys.Workflow.Services.Api.Commands
         /// <inheritdoc />
         public void Add(KeyValuePair<string, object> item)
         {
-            workflowVariables.Add(item);
+            workflowVariables.Add(item.Key, item.Value);
         }
 
         /// <inheritdoc />
@@ -181,7 +237,7 @@ namespace Sys.Workflow.Services.Api.Commands
         /// <inheritdoc />
         public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
         {
-            workflowVariables.CopyTo(array, arrayIndex);
+            (workflowVariables as IDictionary<string, object>).CopyTo(array, arrayIndex);
         }
 
         /// <inheritdoc />
@@ -199,7 +255,7 @@ namespace Sys.Workflow.Services.Api.Commands
         /// <inheritdoc />
         public bool Remove(KeyValuePair<string, object> item)
         {
-            return workflowVariables.Remove(item);
+            return workflowVariables.Remove(item.Key);
         }
 
         /// <inheritdoc />
@@ -238,6 +294,41 @@ namespace Sys.Workflow.Services.Api.Commands
         IEnumerator IEnumerable.GetEnumerator()
         {
             return workflowVariables.GetEnumerator();
+        }
+
+        public void Add(object key, object value)
+        {
+            idict.Add(key, value);
+        }
+
+        public bool Contains(object key)
+        {
+            return idict.Contains(key);
+        }
+
+        IDictionaryEnumerator IDictionary.GetEnumerator()
+        {
+            return idict.GetEnumerator();
+        }
+
+        public void Remove(object key)
+        {
+            idict.Remove(key);
+        }
+
+        public void CopyTo(Array array, int index)
+        {
+            idict.CopyTo(array, index);
+        }
+
+        public static WorkflowVariable FromObject(object @object)
+        {
+            if (@object is null)
+            {
+                return new WorkflowVariable();
+            }
+
+            return JToken.FromObject(@object);
         }
 
         public static implicit operator Dictionary<string, object>(WorkflowVariable @params)

@@ -55,7 +55,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 // process definition
                 string processDefinitionId = null;
                 string processInstanceId = comment.ProcessInstanceId;
-                if (!(comment.ProcessInstanceId is null))
+                if (comment.ProcessInstanceId is object)
                 {
                     IExecutionEntity process = ExecutionEntityManager.FindById<IExecutionEntity>(comment.ProcessInstanceId);
                     if (process != null)
@@ -145,7 +145,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 // process definition
                 string processDefinitionId = null;
                 string processInstanceId = comment.ProcessInstanceId;
-                if (!(comment.ProcessInstanceId is null))
+                if (comment.ProcessInstanceId is object)
                 {
                     IExecutionEntity process = ExecutionEntityManager.FindById<IExecutionEntity>(comment.ProcessInstanceId);
                     if (process != null)

@@ -43,46 +43,45 @@ namespace Sys.Workflow.Engine.Impl.Histories
             this.historyLevel = historyLevel;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# isHistoryLevelAtLeast(Sys.Workflow.Engine.Impl.Histories.HistoryLevel)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="level"></param>
+        /// <returns></returns>
         public virtual bool IsHistoryLevelAtLeast(HistoryLevel level)
         {
-            if (log.IsEnabled(LogLevel.Debug))
-            {
-                log.LogDebug($"Current history level: {historyLevel}, level required: {level}");
-            }
+            //if (log.IsEnabled(LogLevel.Debug))
+            //{
+            //    log.LogDebug($"Current history level: {historyLevel}, level required: {level}");
+            //}
             // Comparing enums actually compares the location of values declared in
             // the enum
             return historyLevel.IsAtLeast(level);
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#isHistoryEnabled ()
-         */
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool HistoryEnabled
         {
             get
             {
-                if (log.IsEnabled(LogLevel.Debug))
-                {
-                    log.LogDebug($"Current history level: {historyLevel}");
-                }
+                //if (log.IsEnabled(LogLevel.Debug))
+                //{
+                //    log.LogDebug($"Current history level: {historyLevel}");
+                //}
                 return !historyLevel.Equals(HistoryLevel.NONE);
             }
         }
 
         // Process related history
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordProcessInstanceEnd(java.lang.String, java.lang.String, java.lang.String)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstanceId"></param>
+        /// <param name="deleteReason"></param>
+        /// <param name="activityId"></param>
         public virtual void RecordProcessInstanceEnd(string processInstanceId, string deleteReason, string activityId)
         {
 
@@ -119,11 +118,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordProcessInstanceStart (Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstance"></param>
+        /// <param name="startElement"></param>
         public virtual void RecordProcessInstanceStart(IExecutionEntity processInstance, FlowElement startElement)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
@@ -144,12 +143,12 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordSubProcessInstanceStart (Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity,
-         * Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parentExecution"></param>
+        /// <param name="subProcessInstance"></param>
+        /// <param name="initialElement"></param>
         public virtual void RecordSubProcessInstanceStart(IExecutionEntity parentExecution, IExecutionEntity subProcessInstance, FlowElement initialElement)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
@@ -182,11 +181,10 @@ namespace Sys.Workflow.Engine.Impl.Histories
 
         // Activity related history
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordActivityStart (Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntity"></param>
         public virtual void RecordActivityStart(IExecutionEntity executionEntity)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
@@ -218,11 +216,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordActivityEnd (Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntity"></param>
+        /// <param name="deleteReason"></param>
         public virtual void RecordActivityEnd(IExecutionEntity executionEntity, string deleteReason)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
@@ -254,7 +252,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 activityId = ((SequenceFlow)(execution.CurrentFlowElement)).SourceFlowElement.Id;
             }
 
-            if (!(activityId is null))
+            if (activityId is object)
             {
                 return FindActivityInstance(execution, activityId, createOnNotFound, endTimeMustBeNull);
             }
@@ -294,7 +292,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 }
             }
 
-            if (!(execution.ParentId is null))
+            if (execution.ParentId is object)
             {
                 IHistoricActivityInstanceEntity historicActivityInstanceFromParent = FindActivityInstance(execution.Parent, activityId, false, endTimeMustBeNull); // always false for create, we only check if it can be found
                 if (historicActivityInstanceFromParent != null)
@@ -303,7 +301,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 }
             }
 
-            if (createOnNotFound && !(activityId is null) && ((execution.CurrentFlowElement != null && execution.CurrentFlowElement is FlowNode) || execution.CurrentFlowElement == null))
+            if (createOnNotFound && activityId is object && ((execution.CurrentFlowElement != null && execution.CurrentFlowElement is FlowNode) || execution.CurrentFlowElement == null))
             {
                 return CreateHistoricActivityInstanceEntity(execution);
             }
@@ -316,7 +314,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             IList<IHistoricActivityInstanceEntity> cachedHistoricActivityInstances = EntityCache.FindInCache(typeof(HistoricActivityInstanceEntityImpl)) as IList<IHistoricActivityInstanceEntity>;
             foreach (IHistoricActivityInstanceEntity cachedHistoricActivityInstance in cachedHistoricActivityInstances ?? new List<IHistoricActivityInstanceEntity>())
             {
-                if (!(activityId is null) && activityId.Equals(cachedHistoricActivityInstance.ActivityId) && (!endTimeMustBeNull || cachedHistoricActivityInstance.EndTime == null))
+                if (activityId is object && activityId.Equals(cachedHistoricActivityInstance.ActivityId) && (!endTimeMustBeNull || cachedHistoricActivityInstance.EndTime == null))
                 {
                     if (executionId.Equals(cachedHistoricActivityInstance.ExecutionId))
                     {
@@ -350,7 +348,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             historicActivityInstance.StartTime = now;
 
             // Inherit tenant id (if applicable)
-            if (!(execution.TenantId is null))
+            if (execution.TenantId is object)
             {
                 historicActivityInstance.TenantId = execution.TenantId;
             }
@@ -359,11 +357,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
             return historicActivityInstance;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordProcessDefinitionChange(java.lang.String, java.lang.String)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstanceId"></param>
+        /// <param name="processDefinitionId"></param>
         public virtual void RecordProcessDefinitionChange(string processInstanceId, string processDefinitionId)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
@@ -378,12 +376,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
 
         // Task related history
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskCreated (Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntity,
-         * Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="execution"></param>
         public virtual void RecordTaskCreated(ITaskEntity task, IExecutionEntity execution)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
@@ -395,11 +392,10 @@ namespace Sys.Workflow.Engine.Impl.Histories
             RecordTaskId(task);
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskAssignment (Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntity)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="task"></param>
         public virtual void RecordTaskAssignment(ITaskEntity task)
         {
             IExecutionEntity executionEntity = task.Execution;
@@ -417,11 +413,10 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskClaim (Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntity)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="task"></param>
 
         public virtual void RecordTaskClaim(ITaskEntity task)
         {
@@ -435,11 +430,10 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskId (Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntity)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="task"></param>
         public virtual void RecordTaskId(ITaskEntity task)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
@@ -456,11 +450,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskEnd (java.lang.String, java.lang.String)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="deleteReason"></param>
         public virtual void RecordTaskEnd(string taskId, string deleteReason)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
@@ -473,11 +467,12 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskAssigneeChange(java.lang.String, java.lang.String)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="assignee"></param>
+        /// <param name="assigneeUser"></param>
         public virtual void RecordTaskAssigneeChange(string taskId, string assignee, string assigneeUser)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
@@ -491,11 +486,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskOwnerChange(java.lang.String, java.lang.String)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="owner"></param>
         public virtual void RecordTaskOwnerChange(string taskId, string owner)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
@@ -508,11 +503,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskNameChange (java.lang.String, java.lang.String)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="taskName"></param>
         public virtual void RecordTaskNameChange(string taskId, string taskName)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
@@ -525,11 +520,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskDescriptionChange(java.lang.String, java.lang.String)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="description"></param>
         public virtual void RecordTaskDescriptionChange(string taskId, string description)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
@@ -542,11 +537,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskDueDateChange(java.lang.String, java.util.Date)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="dueDate"></param>
         public virtual void RecordTaskDueDateChange(string taskId, DateTime dueDate)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
@@ -559,11 +554,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskPriorityChange(java.lang.String, int)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="priority"></param>
         public virtual void RecordTaskPriorityChange(string taskId, int? priority)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
@@ -576,11 +571,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskCategoryChange(java.lang.String, java.lang.String)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="category"></param>
         public virtual void RecordTaskCategoryChange(string taskId, string category)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
@@ -605,11 +600,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskParentTaskIdChange(java.lang.String, java.lang.String)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="parentTaskId"></param>
         public virtual void RecordTaskParentTaskIdChange(string taskId, string parentTaskId)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
@@ -621,12 +616,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 }
             }
         }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskExecutionIdChange(java.lang.String, java.lang.String)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="executionId"></param>
         public virtual void RecordTaskExecutionIdChange(string taskId, string executionId)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
@@ -639,11 +633,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordTaskDefinitionKeyChange (Sys.Workflow.Engine.Impl.Persistence.Entity.TaskEntity, java.lang.String)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="taskDefinitionKey"></param>
         public virtual void RecordTaskDefinitionKeyChange(string taskId, string taskDefinitionKey)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
@@ -655,10 +649,11 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 }
             }
         }
-
-        /* (non-Javadoc)
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordTaskProcessDefinitionChange(java.lang.String, java.lang.String)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="processDefinitionId"></param>
         public virtual void RecordTaskProcessDefinitionChange(string taskId, string processDefinitionId)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
@@ -673,11 +668,10 @@ namespace Sys.Workflow.Engine.Impl.Histories
 
         // Variables related history
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordVariableCreate (Sys.Workflow.Engine.Impl.Persistence.Entity.VariableInstanceEntity)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variable"></param>
         public virtual void RecordVariableCreate(IVariableInstanceEntity variable)
         {
             // Historic variables
@@ -687,12 +681,12 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordHistoricDetailVariableCreate (Sys.Workflow.Engine.Impl.Persistence.Entity.VariableInstanceEntity,
-         * Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity, boolean)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variable"></param>
+        /// <param name="sourceActivityExecution"></param>
+        /// <param name="useActivityId"></param>
         public virtual void RecordHistoricDetailVariableCreate(IVariableInstanceEntity variable, IExecutionEntity sourceActivityExecution, bool useActivityId)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.FULL))
@@ -711,11 +705,10 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface#recordVariableUpdate (Sys.Workflow.Engine.Impl.Persistence.Entity.VariableInstanceEntity)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variable"></param>
         public virtual void RecordVariableUpdate(IVariableInstanceEntity variable)
         {
             if (variable != null && IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
@@ -738,13 +731,14 @@ namespace Sys.Workflow.Engine.Impl.Histories
 
         // Comment related history
 
-
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# createIdentityLinkComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="userId"></param>
+        /// <param name="groupId"></param>
+        /// <param name="type"></param>
+        /// <param name="create"></param>
         public virtual void CreateIdentityLinkComment(string taskId, string userId, string groupId, string type, bool create)
         {
             CreateIdentityLinkComment(taskId, userId, groupId, type, create, false);
@@ -765,11 +759,15 @@ namespace Sys.Workflow.Engine.Impl.Histories
             CreateIdentityLinkComment(taskId, userId, null, type, create, forceNullUserId);
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# createIdentityLinkComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="userId"></param>
+        /// <param name="groupId"></param>
+        /// <param name="type"></param>
+        /// <param name="create"></param>
+        /// <param name="forceNullUserId"></param>
         public virtual void CreateIdentityLinkComment(string taskId, string userId, string groupId, string type, bool create, bool forceNullUserId)
         {
             if (HistoryEnabled)
@@ -780,7 +778,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 comment.Type = CommentEntityFields.TYPE_EVENT;
                 comment.Time = Clock.CurrentTime;
                 comment.TaskId = taskId;
-                if (!(userId is null) || forceNullUserId)
+                if (userId is object || forceNullUserId)
                 {
                     if (create)
                     {
@@ -824,7 +822,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 comment.Type = CommentEntityFields.TYPE_EVENT;
                 comment.Time = Clock.CurrentTime;
                 comment.ProcessInstanceId = processInstanceId;
-                if (!(userId is null) || forceNullUserId)
+                if (userId is object || forceNullUserId)
                 {
                     if (create)
                     {
@@ -852,11 +850,13 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# createAttachmentComment(java.lang.String, java.lang.String, java.lang.String, boolean)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="processInstanceId"></param>
+        /// <param name="attachmentName"></param>
+        /// <param name="create"></param>
         public virtual void CreateAttachmentComment(string taskId, string processInstanceId, string attachmentName, bool create)
         {
             if (HistoryEnabled)
@@ -882,17 +882,17 @@ namespace Sys.Workflow.Engine.Impl.Histories
         }
 
         // Identity link related history
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# recordIdentityLinkCreated (Sys.Workflow.Engine.Impl.Persistence.Entity.IdentityLinkEntity)
-         */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="identityLink"></param>
         public virtual void RecordIdentityLinkCreated(IIdentityLinkEntity identityLink)
         {
             // It makes no sense storing historic counterpart for an identity-link
             // that is related
             // to a process-definition only as this is never kept in history
-            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT) && (!(identityLink.ProcessInstanceId is null) || !(identityLink.TaskId is null)))
+            if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT) && (identityLink.ProcessInstanceId is object || identityLink.TaskId is object))
             {
                 IHistoricIdentityLinkEntity historicIdentityLinkEntity = HistoricIdentityLinkEntityManager.Create();
                 historicIdentityLinkEntity.Id = identityLink.Id;
@@ -905,11 +905,10 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# deleteHistoricIdentityLink(java.lang.String)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
         public virtual void DeleteHistoricIdentityLink(string id)
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
@@ -918,11 +917,10 @@ namespace Sys.Workflow.Engine.Impl.Histories
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see Sys.Workflow.Engine.Impl.Histories.HistoryManagerInterface# updateProcessBusinessKeyInHistory (Sys.Workflow.Engine.Impl.Persistence.Entity.ExecutionEntity)
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstance"></param>
         public virtual void UpdateProcessBusinessKeyInHistory(IExecutionEntity processInstance)
         {
             if (HistoryEnabled)
@@ -985,8 +983,5 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 this.historyLevel = value;
             }
         }
-
-
     }
-
 }

@@ -36,6 +36,8 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         private readonly string tenantId;
         private readonly IUserServiceProxy userService;
 
+        private static readonly Regex VARNAME_PATTERN = new Regex("\\$\\{(.*?)\\}", RegexOptions.Compiled);
+
         public AddCountersignCmd(string taskId, string[] assignees, string tenantId)
         {
             this.taskId = taskId;
@@ -89,7 +91,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             if (parent.IsMultiInstanceRoot && parent.CurrentFlowElement is UserTask mTask)
             {
                 string varName = mTask.LoopCharacteristics.InputDataItem;
-                var match = new Regex("\\$\\{(.*?)\\}").Match(varName);
+                Match match = VARNAME_PATTERN.Match(varName);
                 varName = match.Groups[1].Value;
 
                 IList<string> list = parent.GetLoopVariable<IList<string>>(varName);
@@ -125,7 +127,8 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 taskEntity.Assignee = assignee;
                 if (string.IsNullOrWhiteSpace(assignee) == false)
                 {
-                    taskEntity.AssigneeUser = AsyncHelper.RunSync(() => userService.GetUser(assignee))?.FullName;
+                    //TODO: 考虑性能问题，暂时不要获取人员信息
+                    //taskEntity.AssigneeUser = AsyncHelper.RunSync(() => userService.GetUser(assignee))?.FullName;
                 }
                 taskEntity.TenantId = task.TenantId;
                 taskEntity.FormKey = task.FormKey;

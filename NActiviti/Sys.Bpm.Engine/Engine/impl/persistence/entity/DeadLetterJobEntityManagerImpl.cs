@@ -56,12 +56,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
 
             // add link to execution
-            if (!(jobEntity.ExecutionId is null))
+            if (jobEntity.ExecutionId is object)
             {
                 IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
 
                 // Inherit tenant if (if applicable)
-                if (!(execution.TenantId is null))
+                if (execution.TenantId is object)
                 {
                     jobEntity.TenantId = execution.TenantId;
                 }
@@ -90,7 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             DeleteExceptionByteArrayRef(jobEntity);
 
-            if (!(jobEntity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (jobEntity.ExecutionId is object && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = ExecutionEntityManager.FindById<ICountingExecutionEntity>(jobEntity.ExecutionId);
                 if (IsExecutionRelatedEntityCountEnabled(executionEntity))

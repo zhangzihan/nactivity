@@ -39,7 +39,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// <param name="taskId">任务id</param>
         /// <param name="setTaskVariablesCmd">任务变量命令</param>
         /// <returns></returns>
-        Task<ActionResult> SetVariables(string taskId, SetTaskVariablesCmd setTaskVariablesCmd); //(required = true)
+        Task<bool> SetVariables(string taskId, SetTaskVariablesCmd setTaskVariablesCmd); //(required = true)
 
         /// <summary>
         /// 设置任务本地变量
@@ -47,6 +47,6 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// <param name="taskId">任务id</param>
         /// <param name="setTaskVariablesCmd">任务变量命令</param>
         /// <returns></returns>
-        Task<ActionResult> SetVariablesLocal(string taskId, SetTaskVariablesCmd setTaskVariablesCmd);
+        Task<bool> SetVariablesLocal(string taskId, SetTaskVariablesCmd setTaskVariablesCmd);
     }
 }

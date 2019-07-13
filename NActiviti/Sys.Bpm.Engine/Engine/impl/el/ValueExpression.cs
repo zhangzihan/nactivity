@@ -15,7 +15,7 @@ namespace Sys.Workflow.Engine.Impl.EL
 
     public class ValueExpression
     {
-        private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
+        private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline | RegexOptions.Compiled);
 
         public ValueExpression(string expression, Type expectedType)
         {
@@ -137,7 +137,7 @@ namespace Sys.Workflow.Engine.Impl.EL
                     (contextObject as IDictionary<string, object>).Add(key, obj);
                 }
 
-                return Expressions.ExpressionManager.GetValue(contextObject, expstr, execution.Variables);
+                return Sys.Expressions.ExpressionManager.GetValue(contextObject, expstr, execution.Variables);
             }
 
             // property resolution (eg. bean.value) will be done by the

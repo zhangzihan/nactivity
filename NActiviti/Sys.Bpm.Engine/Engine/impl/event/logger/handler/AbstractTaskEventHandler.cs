@@ -28,7 +28,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
             PutInMapIfNotNull(data, FieldsFields.PROCESS_INSTANCE_ID, task.ProcessInstanceId);
             PutInMapIfNotNull(data, FieldsFields.EXECUTION_ID, task.ExecutionId);
 
-            if (!(task.TenantId is null) && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(task.TenantId))
+            if (task.TenantId is object && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(task.TenantId))
             {
                 PutInMapIfNotNull(data, FieldsFields.TENANT_ID, task.TenantId); // Important for standalone tasks
             }

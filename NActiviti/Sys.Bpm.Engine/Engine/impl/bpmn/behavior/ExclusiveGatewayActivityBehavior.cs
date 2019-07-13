@@ -57,7 +57,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             ExclusiveGateway exclusiveGateway = (ExclusiveGateway)execution.CurrentFlowElement;
 
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            if (!(processEngineConfiguration is null) && processEngineConfiguration.EventDispatcher.Enabled)
+            if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
             {
                 processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityEvent(ActivitiEventType.ACTIVITY_COMPLETED, exclusiveGateway.Id, exclusiveGateway.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, exclusiveGateway));
             }
@@ -90,7 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
 
                 // Already store it, if we would need it later. Saves one for loop.
-                if (!(defaultSequenceFlowId is null) && defaultSequenceFlowId.Equals(sequenceFlow.Id))
+                if (defaultSequenceFlowId is object && defaultSequenceFlowId.Equals(sequenceFlow.Id))
                 {
                     defaultSequenceFlow = sequenceFlow;
                 }
@@ -104,12 +104,16 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (outgoingSequenceFlow != null)
             {
                 execution.CurrentFlowElement = outgoingSequenceFlow;
+
+                log.LogInformation($"条件表达式:id={outgoingSequenceFlow.Id} expression={outgoingSequenceFlow.ConditionExpression}");
             }
             else
             {
                 if (defaultSequenceFlow != null)
                 {
                     execution.CurrentFlowElement = defaultSequenceFlow;
+
+                    log.LogInformation($"条件表达式:id={defaultSequenceFlow.Id} expression={defaultSequenceFlow.ConditionExpression}");
                 }
                 else
                 {

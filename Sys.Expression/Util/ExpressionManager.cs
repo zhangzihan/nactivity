@@ -6,14 +6,15 @@ namespace Sys.Expressions
 {
     public static class ExpressionManager
     {
+        private static readonly Regex EXPTOKEN_PATTERN = new Regex(@"[#]{(([\p{L}\p{N}_]+)(\.[\p{L}\p{N}_]+)*)}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
         public static object GetValue(object context, string expression, IDictionary<string, object> variables)
         {
-            Regex expToken = new Regex(@"[#]{(([\p{L}\p{N}_]+)(\.[\p{L}\p{N}_]+)*)}", RegexOptions.IgnoreCase);
 
             string expr = expression;
-            if (expToken.IsMatch(expr))
+            if (EXPTOKEN_PATTERN.IsMatch(expr))
             {
-                expr = expToken.Replace(expr, match =>
+                expr = EXPTOKEN_PATTERN.Replace(expr, match =>
                 {
                     var token = match.Groups[1].Value;
 

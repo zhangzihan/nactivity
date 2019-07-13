@@ -94,7 +94,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             IActivityBehavior activityBehavior = (IActivityBehavior)flowNode.Behavior;
             if (activityBehavior != null)
             {
-                logger.LogDebug($"Executing activityBehavior {activityBehavior.GetType()} on activity '{flowNode.Id}' with execution {execution.Id}");
+                //logger.LogDebug($"Executing activityBehavior {activityBehavior.GetType()} on activity '{flowNode.Id}' with execution {execution.Id}");
 
                 ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
                 if (processEngineConfiguration != null && processEngineConfiguration.EventDispatcher.Enabled)

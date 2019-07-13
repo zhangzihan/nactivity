@@ -16,6 +16,7 @@ namespace Sys.Workflow.Bpmn.Models
 {
     public class MultiInstanceLoopCharacteristics : BaseElement
     {
+        private readonly static Regex VARNAME_PATTERN = new Regex(@"\$\{(.*)\}", RegexOptions.Compiled);
 
         protected internal string inputDataItem;
         protected internal string loopCardinality;
@@ -103,11 +104,9 @@ namespace Sys.Workflow.Bpmn.Models
 
         public string GetCollectionVarName()
         {
-            var regex = new Regex("\\$\\{(.*?)\\}");
-
-            if (regex.IsMatch(this.inputDataItem))
+            if (VARNAME_PATTERN.IsMatch(this.inputDataItem))
             {
-                return regex.Match(this.inputDataItem).Groups[1].Value;
+                return VARNAME_PATTERN.Match(this.inputDataItem).Groups[1].Value;
             }
 
             return this.inputDataItem;

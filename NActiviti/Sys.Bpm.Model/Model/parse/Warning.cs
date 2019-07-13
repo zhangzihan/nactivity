@@ -27,7 +27,7 @@
 
         public override string ToString()
         {
-            return warningMessage + (!(resource is null) ? " | " + resource : "") + " | line " + line + " | column " + column;
+            return warningMessage + (resource is object ? " | " + resource : "") + " | line " + line + " | column " + column;
         }
     }
 

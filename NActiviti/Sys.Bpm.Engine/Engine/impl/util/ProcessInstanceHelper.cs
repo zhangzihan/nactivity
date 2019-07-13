@@ -37,13 +37,13 @@ namespace Sys.Workflow.Engine.Impl.Util
             return CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables, false);
         }
 
-        public virtual IProcessInstance CreateAndStartProcessInstance(IProcessDefinition processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
+        public virtual IProcessInstance CreateAndStartProcessInstance(IProcessDefinition processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, string initialFlowElementId = null)
         {
 
-            return CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables, true);
+            return CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables, true, initialFlowElementId);
         }
 
-        protected internal virtual IProcessInstance CreateAndStartProcessInstance(IProcessDefinition processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, bool startProcessInstance)
+        protected internal virtual IProcessInstance CreateAndStartProcessInstance(IProcessDefinition processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, bool startProcessInstance, string initialFlowElementId = null)
         {
             // Todo: ideally, context should be passed here
             _ = Context.CommandContext;
@@ -61,7 +61,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 throw new ActivitiException("Cannot start process instance. Process model " + processDefinition.Name + " (id = " + processDefinition.Id + ") could not be found");
             }
 
-            FlowElement initialFlowElement = process.InitialFlowElement;
+            FlowElement initialFlowElement = string.IsNullOrWhiteSpace(initialFlowElementId) ? process.InitialFlowElement : process.FindFlowElement(initialFlowElementId);
             if (initialFlowElement == null)
             {
                 throw new ActivitiException("No start element found for process definition " + processDefinition.Id);
@@ -151,7 +151,7 @@ namespace Sys.Workflow.Engine.Impl.Util
             }
 
             // Set processInstance name
-            if (!(processInstanceName is null))
+            if (processInstanceName is object)
             {
                 processInstance.Name = processInstanceName;
                 commandContext.HistoryManager.RecordProcessInstanceNameChange(processInstance.Id, processInstanceName);

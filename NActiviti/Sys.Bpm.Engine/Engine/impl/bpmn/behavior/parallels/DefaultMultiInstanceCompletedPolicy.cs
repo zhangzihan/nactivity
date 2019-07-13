@@ -19,7 +19,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         public virtual bool CompletionConditionSatisfied(IExecutionEntity execution, MultiInstanceActivityBehavior multiInstanceActivity, object signalData)
         {
-            if (!(multiInstanceActivity.CompletionConditionExpression is null))
+            if (multiInstanceActivity.CompletionConditionExpression is object)
             {
                 object value = multiInstanceActivity.CompletionConditionExpression.GetValue(execution);
                 if (!(value is bool?))

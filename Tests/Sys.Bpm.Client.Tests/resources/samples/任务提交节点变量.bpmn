@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_1" name="555" isExecutable="true">
+    <bpmn2:startEvent id="StartEvent_1kar9x9" name="666">
+      <bpmn2:extensionElements>
+        <camunda:properties />
+      </bpmn2:extensionElements>
+      <bpmn2:outgoing>SequenceFlow_1y5ak2d</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="UserTask_0m95mod" name="888" camunda:assignee="${users}">
+      <bpmn2:incoming>SequenceFlow_1y5ak2d</bpmn2:incoming>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_1y5ak2d" sourceRef="StartEvent_1kar9x9" targetRef="UserTask_0m95mod" />
+    <bpmn2:sequenceFlow id="SequenceFlow_0iylgak" sourceRef="BoundaryEvent_01tikux" targetRef="Task_12vao14" />
+    <bpmn2:serviceTask id="Task_12vao14" name="测试服务" camunda:asyncBefore="true" camunda:exclusive="false">
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="url" value="http://localhost:11015/api/webapi/taskvariable/${同意}" />
+          <camunda:property name="method" value="get" />
+        </camunda:properties>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_0iylgak</bpmn2:incoming>
+    </bpmn2:serviceTask>
+    <bpmn2:boundaryEvent id="BoundaryEvent_01tikux" cancelActivity="false" attachedToRef="UserTask_0m95mod">
+      <bpmn2:outgoing>SequenceFlow_0iylgak</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition id="TimerEventDefinition_1fjyks0">
+        <bpmn2:timeDate xsi:type="bpmn2:tFormalExpression">-1</bpmn2:timeDate>
+      </bpmn2:timerEventDefinition>
+    </bpmn2:boundaryEvent>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="StartEvent_1kar9x9_di" bpmnElement="StartEvent_1kar9x9">
+        <dc:Bounds x="238" y="235" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="246" y="211" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0m95mod_di" bpmnElement="UserTask_0m95mod">
+        <dc:Bounds x="369" y="213" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1y5ak2d_di" bpmnElement="SequenceFlow_1y5ak2d">
+        <di:waypoint x="274" y="253" />
+        <di:waypoint x="369" y="253" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0iylgak_di" bpmnElement="SequenceFlow_0iylgak">
+        <di:waypoint x="421" y="195" />
+        <di:waypoint x="420" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1xz5nlf_di" bpmnElement="Task_12vao14">
+        <dc:Bounds x="369" y="70" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_098r9mr_di" bpmnElement="BoundaryEvent_01tikux">
+        <dc:Bounds x="404" y="195" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

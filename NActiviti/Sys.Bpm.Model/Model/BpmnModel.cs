@@ -112,7 +112,7 @@ namespace Sys.Workflow.Bpmn.Models
                     if (!string.IsNullOrWhiteSpace(pool.ProcessRef) && pool.ProcessRef.Equals(process.Id, StringComparison.CurrentCultureIgnoreCase))
                     {
 
-                        if (!(poolRef is null))
+                        if (poolRef is object)
                         {
                             if (pool.Id.Equals(poolRef, StringComparison.CurrentCultureIgnoreCase))
                             {
@@ -130,7 +130,7 @@ namespace Sys.Workflow.Bpmn.Models
                 {
                     return process;
                 }
-                else if (!(poolRef is null) && foundPool)
+                else if (poolRef is object && foundPool)
                 {
                     return process;
                 }

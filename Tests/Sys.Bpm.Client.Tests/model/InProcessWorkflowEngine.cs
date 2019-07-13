@@ -27,7 +27,7 @@ namespace Sys.Workflow
 
         public IServiceProvider ServiceProvider { get; private set; }
 
-        public string TenantId { get; set; }
+        public string TenantId { get; set; } = "cb79f3dd-e84e-49b0-95c2-0bdafc80f09d";
 
         private HttpClient _httpClient;
 
@@ -133,7 +133,8 @@ namespace Sys.Workflow
                 new HttpContextAccessor()
                 {
                     HttpContext = httpContext
-                });
+                },
+                Resolve<ILoggerFactory>());
         }
 
         public T Resolve<T>()

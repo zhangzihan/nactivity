@@ -17,18 +17,13 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
 
     using Sys.Workflow.Bpmn.Models;
-    using Sys.Workflow.Engine.Impl.Bpmn.Helper;
-    using Sys.Workflow.Engine.Impl.Contexts;
     using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
-    using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
     using Sys.Workflow.Engine.Impl.Util;
-    using Sys.Workflow.Engine.Tasks;
-    using Sys.Workflow.Services.Api.Commands;
-    using System.Linq;
 
-    /// 
-    /// 
+    /// <summary>
+    /// 一票通过全部否决，多任务场景下如果有人提交了该任务，并且提交条件为true则当前多任务就算完成，并删除所有其它未完成的子任务，否则需要等待其他人得投票.
+    /// </summary>
     [Serializable]
     public class OnePassParallelMultiInstanceBehavior : ParallelMultiInstanceBehavior
     {

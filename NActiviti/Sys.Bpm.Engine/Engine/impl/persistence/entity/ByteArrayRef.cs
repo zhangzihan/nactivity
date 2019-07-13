@@ -98,7 +98,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void Delete()
         {
-            if (!deleted && !(id is null))
+            if (!deleted && id is object)
             {
                 if (entity != null)
                 {

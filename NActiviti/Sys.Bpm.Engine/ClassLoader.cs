@@ -13,7 +13,7 @@ namespace Sys
 {
     public class ClassLoader
     {
-        private static readonly Regex regex = new Regex("^(http|https):", RegexOptions.IgnoreCase);
+        private static readonly Regex regex = new Regex("^(http|https):", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public IEnumerator<Uri> GetResources(string v)
         {

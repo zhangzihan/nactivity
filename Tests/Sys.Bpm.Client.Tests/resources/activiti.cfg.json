@@ -4,7 +4,7 @@
   //web主机应用程序名称
   "applicationName": "workflow",
   //数据库更新策略，true=update drop-create create
-  "databaseSchemaUpdate": "drop-create",
+  "databaseSchemaUpdate": "false",
   //查询执行下一个异步作业作业等待时间（以毫秒为单位）
   "asyncExecutorDefaultAsyncJobAcquireWaitTime": 5000,
   //查询执行下一个计时器作业等待时间（以毫秒为单位）

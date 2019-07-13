@@ -96,7 +96,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                 }
             }
 
-            logger.LogDebug($"Operation {operation.GetType()} added to agenda");
+            //logger.LogDebug($"Operation {operation.GetType()} added to agenda");
         }
 
         /// <summary>

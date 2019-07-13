@@ -66,21 +66,26 @@ namespace Sys.Workflow.Rest.Client.API
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> CompleteTask(CompleteTaskCmd completeTaskCmd)
+        public async Task<bool> CompleteTask(CompleteTaskCmd completeTaskCmd)
         {
-            return await httpProxy.PostAsync<ActionResult>($"{serviceUrl}/complete", completeTaskCmd).ConfigureAwait(false);
+            return await httpProxy.PostAsync<bool>($"{serviceUrl}/complete", completeTaskCmd).ConfigureAwait(false);
+        }
+
+        public async Task<CompleteTaskCmd[]> CompleteTask(CompleteTaskCmd[] cmds)
+        {
+            return await httpProxy.PostAsync<CompleteTaskCmd[]>($"{serviceUrl}/completes", cmds).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> Terminate(TerminateTaskCmd cmd)
+        public async Task<bool> Terminate(TerminateTaskCmd cmd)
         {
-            return await httpProxy.PostAsync<ActionResult>($"{serviceUrl}/terminate", cmd).ConfigureAwait(false);
+            return await httpProxy.PostAsync<bool>($"{serviceUrl}/terminate", cmd).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> DeleteTask(string taskId)
+        public async Task<bool> DeleteTask(string taskId)
         {
-            return await httpProxy.PostAsync<ActionResult>($"{serviceUrl}/{taskId}/remove").ConfigureAwait(false);
+            return await httpProxy.PostAsync<bool>($"{serviceUrl}/{taskId}/remove").ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -90,9 +95,9 @@ namespace Sys.Workflow.Rest.Client.API
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> UpdateTask(UpdateTaskCmd updateTaskCmd)
+        public async Task<bool> UpdateTask(UpdateTaskCmd updateTaskCmd)
         {
-            return await httpProxy.PostAsync<ActionResult>($"{serviceUrl}/update", updateTaskCmd).ConfigureAwait(false);
+            return await httpProxy.PostAsync<bool>($"{serviceUrl}/update", updateTaskCmd).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -120,21 +125,21 @@ namespace Sys.Workflow.Rest.Client.API
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> Approvaled(ApprovaleTaskCmd cmd)
+        public async Task<bool> Approvaled(ApprovaleTaskCmd cmd)
         {
-            return await httpProxy.PostAsync<ActionResult>($"{serviceUrl}/approvaled", cmd).ConfigureAwait(false);
+            return await httpProxy.PostAsync<bool>($"{serviceUrl}/approvaled", cmd).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> Reject(RejectTaskCmd cmd)
+        public async Task<bool> Reject(RejectTaskCmd cmd)
         {
-            return await httpProxy.PostAsync<ActionResult>($"{serviceUrl}/reject", cmd).ConfigureAwait(false);
+            return await httpProxy.PostAsync<bool>($"{serviceUrl}/reject", cmd).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> ReturnTo(ReturnToTaskCmd cmd)
+        public async Task<bool> ReturnTo(ReturnToTaskCmd cmd)
         {
-            return await httpProxy.PostAsync<ActionResult>($"{serviceUrl}/returnTo", cmd).ConfigureAwait(false);
+            return await httpProxy.PostAsync<bool>($"{serviceUrl}/returnTo", cmd).ConfigureAwait(false);
         }
     }
 }

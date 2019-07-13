@@ -43,10 +43,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 throw new ActivitiObjectNotFoundException("Unable to find task for the given id: " + updateTaskCmd.TaskId);
             }
             task.Assignee = updateTaskCmd.Assignee;
-            if (string.IsNullOrWhiteSpace(task.Assignee) == false)
-            {
-                task.AssigneeUser = AsyncHelper.RunSync(() => userService.GetUser(task.Assignee))?.FullName;
-            }
+            //TODO: 考虑性能问题，暂时不要获取人员信息
+            //if (string.IsNullOrWhiteSpace(task.Assignee) == false)
+            //{
+            //    task.AssigneeUser = AsyncHelper.RunSync(() => userService.GetUser(task.Assignee))?.FullName;
+            //}
             task.Name = updateTaskCmd.Name;
             task.Description = updateTaskCmd.Description;
             task.DueDate = updateTaskCmd.DueDate;

@@ -30,6 +30,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         private readonly string id = "completeTaskCmd";
         private string taskId;
         private WorkflowVariable outputVariables;
+        private string taskName;
 
         /// <summary>
         /// 构造函数
@@ -47,9 +48,11 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         /// <param name="runtimeAssignUser">如果下一步需要从当前任务中指定人员处理,则使用这个参数</param>
         ////[JsonConstructor]
         public CompleteTaskCmd([JsonProperty("TaskId")] string taskId,
+            [JsonProperty("TaskId")] string taskName,
             [JsonProperty("OutputVariables")] WorkflowVariable outputVariables,
             [JsonProperty("RuntimeAssignUsers")]RuntimeAssigneeUser runtimeAssignUser)
         {
+            this.taskName = taskName;
             this.taskId = taskId;
             this.outputVariables = outputVariables;
             this.RuntimeAssigneeUser = runtimeAssignUser;
@@ -88,6 +91,19 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         }
 
         /// <summary>
+        /// 处理失败的异常信息
+        /// </summary>
+        public virtual string ErrorMessage
+        {
+            get; set;
+        }
+
+        public virtual string Exception
+        {
+            get;set;
+        }
+
+        /// <summary>
         /// 提交的数据
         /// </summary>
         public virtual WorkflowVariable OutputVariables
@@ -112,7 +128,27 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
             set => taskId = value;
         }
 
+        /// <summary>
+        /// 任务名称
+        /// </summary>
+        public virtual string TaskName
+        {
+            get => taskName;
+            set => taskName = value;
+        }
+
+        /// <summary>
+        /// 变量是否仅任务可见
+        /// </summary>
         public bool LocalScope
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// 未找到任务是否抛出异常
+        /// </summary>
+        public bool NotFoundThrowError
         {
             get; set;
         }

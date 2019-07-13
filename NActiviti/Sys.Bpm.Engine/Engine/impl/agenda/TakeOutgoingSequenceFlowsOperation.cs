@@ -165,7 +165,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             // Check if there is a default sequence flow
             if (outgoingSequenceFlows.Count == 0 && evaluateConditions)
             { // The elements that set this to false also have no support for default sequence flow
-                if (!(defaultSequenceFlowId is null))
+                if (defaultSequenceFlowId is object)
                 {
                     foreach (SequenceFlow sequenceFlow in flowNode.OutgoingFlows)
                     {
@@ -211,8 +211,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                 {
                     for (int i = 1; i < outgoingSequenceFlows.Count; i++)
                     {
-
-                        IExecutionEntity parent = !(execution.ParentId is null) ? execution.Parent : execution;
+                        IExecutionEntity parent = execution.ParentId is object ? execution.Parent : execution;
                         IExecutionEntity outgoingExecutionEntity = commandContext.ExecutionEntityManager.CreateChildExecution(parent);
 
                         SequenceFlow outgoingSequenceFlow = outgoingSequenceFlows[i];
@@ -239,7 +238,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         {
             bool completeAdhocSubProcess = false;
             AdhocSubProcess adhocSubProcess = (AdhocSubProcess)flowNode.ParentContainer;
-            if (!(adhocSubProcess.CompletionCondition is null))
+            if (adhocSubProcess.CompletionCondition is object)
             {
                 IExpression expr = Context.ProcessEngineConfiguration.ExpressionManager.CreateExpression(adhocSubProcess.CompletionCondition);
                 bool adHoc = (bool)expr.GetValue(execution);
@@ -340,7 +339,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         /// <param name="currentFlowElement"></param>
         protected internal virtual void CleanupExecutions(FlowElement currentFlowElement)
         {
-            if (!(execution.ParentId is null) && execution.IsScope)
+            if (execution.ParentId is object && execution.IsScope)
             {
                 // If the execution is a scope (and not a process instance), the scope must first be
                 // destroyed before we can continue and follow the sequence flow
@@ -384,7 +383,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         /// </summary>
         protected internal virtual IExecutionEntity FindNextParentScopeExecutionWithAllEndedChildExecutions(IExecutionEntity executionEntity, IExecutionEntity executionEntityToIgnore)
         {
-            if (!(executionEntity.ParentId is null))
+            if (executionEntity.ParentId is object)
             {
                 IExecutionEntity scopeExecutionEntity = executionEntity.Parent;
 

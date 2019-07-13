@@ -53,7 +53,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             processEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(taskEntity, BaseTaskListenerFields.EVENTNAME_COMPLETE);
 
             IUserInfo user = Authentication.AuthenticatedUser;
-            if (!(user is null) && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
+            if (user is object && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
             {
                 IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ProcessInstanceId);
                 commandContext.IdentityLinkEntityManager.InvolveUser(processInstanceEntity, user.Id, IdentityLinkType.PARTICIPANT);
@@ -75,7 +75,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             commandContext.TaskEntityManager.DeleteTask(taskEntity, completeReason, false, false);
 
             // Continue process (if not a standalone task)
-            if (!(taskEntity.ExecutionId is null))
+            if (taskEntity.ExecutionId is object)
             {
                 IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ExecutionId);
                 Context.Agenda.PlanTriggerExecutionOperation(executionEntity, variables);

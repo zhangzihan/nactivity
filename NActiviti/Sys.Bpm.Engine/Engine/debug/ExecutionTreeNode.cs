@@ -92,11 +92,11 @@ namespace Sys.Workflow.Engine.Debug
         {
             StringBuilder strb = new StringBuilder();
             strb.Append(ExecutionEntity.Id);
-            if (!(ExecutionEntity.ActivityId is null))
+            if (ExecutionEntity.ActivityId is object)
             {
                 strb.Append(" : " + ExecutionEntity.ActivityId);
             }
-            if (!(ExecutionEntity.ParentId is null))
+            if (ExecutionEntity.ParentId is object)
             {
                 strb.Append(", parent id " + ExecutionEntity.ParentId);
             }

@@ -67,7 +67,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             // We need to check if the job was locked, ie acquired by the job acquisition thread
             // This happens if the the job was already acquired, but not yet executed.
             // In that case, we can't allow to delete the job.
-            if (!(job.LockOwner is null))
+            if (job.LockOwner is object)
             {
                 throw new ActivitiException("Cannot delete job when the job is being executed. Try again later.");
             }

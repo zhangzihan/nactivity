@@ -87,7 +87,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                             if (j != i)
                             {
                                 BoundaryEvent otherBoundaryEvent = boundaryEvents[j];
-                                if (!ReferenceEquals(otherBoundaryEvent.AttachedToRefId, null) && otherBoundaryEvent.AttachedToRefId.Equals(boundaryEvent.AttachedToRefId))
+                                if (otherBoundaryEvent.AttachedToRefId is object && otherBoundaryEvent.AttachedToRefId.Equals(boundaryEvent.AttachedToRefId))
                                 {
                                     if (otherBoundaryEvent.EventDefinitions != null && otherBoundaryEvent.EventDefinitions.Count > 0)
                                     {
@@ -96,7 +96,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                                         {
                                             MessageEventDefinition currentMessageEventDefinition = (MessageEventDefinition)eventDefinition;
                                             MessageEventDefinition otherMessageEventDefinition = (MessageEventDefinition)otherEventDefinition;
-                                            if (!ReferenceEquals(otherMessageEventDefinition.MessageRef, null) && otherMessageEventDefinition.MessageRef.Equals(currentMessageEventDefinition.MessageRef))
+                                            if (otherMessageEventDefinition.MessageRef is object && otherMessageEventDefinition.MessageRef.Equals(currentMessageEventDefinition.MessageRef))
                                             {
                                                 AddError(errors, ProblemsConstants.MESSAGE_EVENT_MULTIPLE_ON_BOUNDARY_SAME_MESSAGE_ID, process, boundaryEvent, ProcessValidatorResource.MESSAGE_EVENT_MULTIPLE_ON_BOUNDARY_SAME_MESSAGE_ID);
                                             }

@@ -17,6 +17,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
     using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using Sys.Workflow.Engine.Runtime;
+    using System.Collections.Generic;
     using ICommandExecutor = Interceptor.ICommandExecutor;
 
     /// 
@@ -43,14 +44,17 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             ICommandExecutor commandExecutor = commandContext.ProcessEngineConfiguration.CommandExecutor;
 
-            IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
-
-            if (processInstanceEntity is null)
+            if (string.IsNullOrWhiteSpace(processInstanceId) == false)
             {
-                throw new ActivitiObjectNotFoundException("No process instance found for id '" + processInstanceId + "'", typeof(IProcessInstance));
-            }
+                IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
-            commandContext.ExecutionEntityManager.DeleteProcessInstance(processInstanceEntity.ProcessInstanceId, deleteReason, false);
+                if (processInstanceEntity is null)
+                {
+                    throw new ActivitiObjectNotFoundException("No process instance found for id '" + processInstanceId + "'", typeof(IProcessInstance));
+                }
+
+                commandContext.ExecutionEntityManager.DeleteProcessInstance(processInstanceEntity.ProcessInstanceId, deleteReason, false);
+            }
 
             return null;
         }

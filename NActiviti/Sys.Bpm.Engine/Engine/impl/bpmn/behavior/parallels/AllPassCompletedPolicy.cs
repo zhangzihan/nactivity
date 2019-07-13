@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Extensions.Logging;
-using Sys.Workflow.Engine.History;
-using Sys.Workflow.Engine.Impl.Contexts;
+﻿using Microsoft.Extensions.Logging;
 using Sys.Workflow.Engine.Impl.Persistence.Entity;
-using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
 using Sys.Workflow.Services.Api.Commands;
-using Sys.Workflow;
+using System.Collections.Generic;
 
 namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
     /// <summary>
-    /// 全部通过
+    /// 一票否决全部通过，多任务场景下如果有人提交了该任务，并且提交条件为false则当前多任务就算完成，并删除所有其它未完成的子任务，否则需要等待其他人得投票.
     /// </summary>
     class AllPassCompletedPolicy : DefaultMultiInstanceCompletedPolicy
     {

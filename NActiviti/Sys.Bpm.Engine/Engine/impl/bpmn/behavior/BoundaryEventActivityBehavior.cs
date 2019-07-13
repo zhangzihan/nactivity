@@ -76,24 +76,14 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
             IExecutionEntity attachedRefScopeExecution = executionEntityManager.FindById<IExecutionEntity>(executionEntity.ParentId);
 
-            IExecutionEntity parentScopeExecution = null;
+            IExecutionEntity scopeExecution = null;
             IExecutionEntity currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(attachedRefScopeExecution.ParentId);
-            while (currentlyExaminedExecution != null && parentScopeExecution == null)
-            {
-                if (currentlyExaminedExecution.IsScope)
-                {
-                    parentScopeExecution = currentlyExaminedExecution;
-                }
-                else
-                {
-                    currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
-                }
-            }
+            GetScopeExecution(executionEntityManager, ref scopeExecution, ref currentlyExaminedExecution);
 
             DeleteChildExecutions(attachedRefScopeExecution, executionEntity, commandContext);
 
             // set new parent for boundary event execution
-            executionEntity.Parent = parentScopeExecution ?? throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event");
+            executionEntity.Parent = scopeExecution ?? throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event");
 
             Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(executionEntity, true);
         }
@@ -116,6 +106,22 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             IExecutionEntity scopeExecution = null;
             IExecutionEntity currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(parentExecutionEntity.ParentId);
+
+            GetScopeExecution(executionEntityManager, ref scopeExecution, ref currentlyExaminedExecution);
+
+            if (scopeExecution == null)
+            {
+                throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event");
+            }
+
+            IExecutionEntity nonInterruptingExecution = executionEntityManager.CreateChildExecution(scopeExecution);
+            nonInterruptingExecution.CurrentFlowElement = executionEntity.CurrentFlowElement;
+
+            Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(nonInterruptingExecution, true);
+        }
+
+        private static void GetScopeExecution(IExecutionEntityManager executionEntityManager, ref IExecutionEntity scopeExecution, ref IExecutionEntity currentlyExaminedExecution)
+        {
             while (currentlyExaminedExecution != null && scopeExecution == null)
             {
                 if (currentlyExaminedExecution.IsScope)
@@ -127,16 +133,6 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(currentlyExaminedExecution.ParentId);
                 }
             }
-
-            if (scopeExecution == null)
-            {
-                throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event");
-            }
-
-            IExecutionEntity nonInterruptingExecution = executionEntityManager.CreateChildExecution(scopeExecution);
-            nonInterruptingExecution.CurrentFlowElement = executionEntity.CurrentFlowElement;
-
-            Context.Agenda.PlanTakeOutgoingSequenceFlowsOperation(nonInterruptingExecution, true);
         }
 
         protected internal virtual void DeleteChildExecutions(IExecutionEntity parentExecution, IExecutionEntity notToDeleteExecution, ICommandContext commandContext)

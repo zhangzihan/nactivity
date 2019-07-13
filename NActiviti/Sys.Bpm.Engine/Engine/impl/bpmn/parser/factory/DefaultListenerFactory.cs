@@ -168,7 +168,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
         ///           when the given entity name </exception>
         protected internal virtual Type GetEntityType(string entityType)
         {
-            if (!(entityType is null))
+            if (entityType is object)
             {
                 Type entityClass = ENTITY_MAPPING[entityType.Trim()];
                 if (entityClass == null)

@@ -59,10 +59,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             task.DueDate = dueDate;
             task.Priority = priority;
             task.Assignee = assignee;
-            if (string.IsNullOrWhiteSpace(assignee) == false)
-            {
-                task.AssigneeUser = AsyncHelper.RunSync(() => userService.GetUser(assignee))?.FullName;
-            }
+            //TODO: 考虑性能问题，暂时不要获取人员信息
+            //if (string.IsNullOrWhiteSpace(assignee) == false)
+            //{
+            //    task.AssigneeUser = AsyncHelper.RunSync(() => userService.GetUser(assignee))?.FullName;
+            //}
             taskService.SaveTask(task);
 
             return task;

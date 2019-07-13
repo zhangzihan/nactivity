@@ -34,6 +34,8 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
     using System.Threading;
     using System.Net;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Logging;
+    using System.Diagnostics;
 
     /// <summary>
     /// ActivityBehavior that evaluates an expression when executed. Optionally, it sets the result of the expression as a variable on the execution.
@@ -47,10 +49,10 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
     [Serializable]
     public class ServiceTaskWebApiActivityBehavior : TaskActivityBehavior
     {
-        /// <summary>
-        /// 正则表达式
-        /// </summary>
-        private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
+        private static readonly Regex OBJECT_PATTERN = new Regex(@"(^(\s*{)(.*?)(\}\s*)$)|(^\s*\[(.*?)(\]\s*)$)", RegexOptions.Compiled);
+
+        private readonly static ILogger logger = ProcessEngineServiceProvider.LoggerService<ServiceTaskWebApiActivityBehavior>();
+
 
         public ServiceTaskWebApiActivityBehavior()
         {
@@ -63,11 +65,20 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             if (pElements != null)
             {
+                Exception exception = null;
+                Stopwatch sw = new Stopwatch();
+                string url = null;
+                string dataObj = null;
+                object request = null;
+
                 try
                 {
+                    sw.Start();
+
                     WebApiParameter parameter = new WebApiParameter(execution, pElements);
-                    string url = parameter.Url;
-                    string dataObj = parameter.VariableName;
+                    url = parameter.Url;
+                    dataObj = parameter.VariableName;
+                    request = parameter.Request;
                     string method = parameter.Method;
 
                     var httpProxy = ProcessEngineServiceProvider.Resolve<IServiceWebApiHttpProxy>();
@@ -78,24 +89,31 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     {
                         IAccessTokenProvider accessTokenProvider = ProcessEngineServiceProvider.Resolve<IAccessTokenProvider>();
 
-                        accessTokenProvider.SetHttpClientRequestAccessToken(httpProxy.HttpClient, null, execution.TenantId);
+                        accessTokenProvider.SetHttpClientRequestAccessToken(httpProxy.HttpClient, execution.StartUserId, execution.TenantId);
                     }
 
                     switch (method?.ToLower())
                     {
                         default:
                         case "get":
-                            ExecuteGet(execution, url, parameter.Request, dataObj, httpProxy);
+                            ExecuteGet(execution, url, request, dataObj, httpProxy);
                             break;
                         case "post":
-                            ExecutePost(execution, url, parameter.Request, dataObj, httpProxy);
+                            ExecutePost(execution, url, request, dataObj, httpProxy);
                             break;
                     }
+
+                    sw.Stop();
+
+                    logger.LogInformation($"调用外部服务共计({sw.ElapsedMilliseconds}ms) url={url} request={(request is null ? "" : JsonConvert.SerializeObject(request))}");
 
                     Leave(execution);
                 }
                 catch (Exception ex)
                 {
+                    sw.Stop();
+                    logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={url} request={(request is null ? "" : JsonConvert.SerializeObject(request))}：\r\n" + ex.Message + ex.StackTrace);
+
                     throw new BpmnError(Context.CommandContext.ProcessEngineConfiguration.WebApiErrorCode, ex.Message);
                 }
             }
@@ -177,8 +195,8 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             {
                 return null;
             }
-            var reg = new Regex(@"(^(\s*{)(.*?)(\}\s*)$)|(^\s*\[(.*?)(\]\s*)$)");
-            if (reg.IsMatch(data))
+
+            if (OBJECT_PATTERN.IsMatch(data))
             {
                 return JsonConvert.DeserializeObject<object>(data);
             }

@@ -169,7 +169,7 @@ namespace Sys.Workflow.Engine.Impl
                     {
                         return;
                     }
-                    Complete(taskId, null);
+                    ExecuteCommand(new CompleteTaskCmd(taskId, null, null));
                 }
                 catch (ActivitiObjectNotFoundException)
                 {
@@ -191,7 +191,7 @@ namespace Sys.Workflow.Engine.Impl
                     {
                         return;
                     }
-                    Complete(taskId, variables, null);
+                    ExecuteCommand(new CompleteTaskCmd(taskId, variables, null));
                 }
                 catch (ActivitiObjectNotFoundException)
                 {
@@ -225,7 +225,7 @@ namespace Sys.Workflow.Engine.Impl
             }
         }
 
-        public virtual void Complete(string taskId, IDictionary<string, object> variables, bool localScope)
+        public virtual void Complete(string taskId, IDictionary<string, object> variables, bool localScope, bool notFoundThrowError = false)
         {
             lock (syncRoot)
             {
@@ -233,21 +233,34 @@ namespace Sys.Workflow.Engine.Impl
                 {
                     if (TryGetTask(taskId, out var task) == false)
                     {
-                        return;
+                        if (notFoundThrowError)
+                        {
+                            throw new ActivitiObjectNotFoundException($"Cannot find task for 'taskId={taskId}'", typeof(ITask));
+                        }
                     }
                     ExecuteCommand(new CompleteTaskCmd(taskId, variables, localScope));
                 }
-                catch (ActivitiObjectNotFoundException)
+                catch (ActivitiObjectNotFoundException ex)
                 {
-                    if (logger.IsEnabled(LogLevel.Debug))
+                    if (notFoundThrowError)
+                    {
+                        logger.LogError(ex.Message, ex);
+                        throw ex;
+                    }
+                    else if (logger.IsEnabled(LogLevel.Debug))
                     {
                         logger.LogDebug("任务可能已经终止或无效.");
                     }
                 }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex.Message, ex);
+                    throw ex;
+                }
             }
         }
 
-        public virtual void Complete(string taskId, string comment, IDictionary<string, object> variables, bool localScope, IDictionary<string, object> transientVariables)
+        public virtual void Complete(string taskId, string comment, IDictionary<string, object> variables, bool localScope, IDictionary<string, object> transientVariables = null)
         {
             lock (syncRoot)
             {
@@ -274,14 +287,18 @@ namespace Sys.Workflow.Engine.Impl
             }
         }
 
-        public void Complete(string businessKey, string assignee, string comment, IDictionary<string, object> variables, bool localScope, IDictionary<string, object> transientVariables = null)
+        public void Complete(string businessKey, string taskName, string assignee, string comment, IDictionary<string, object> variables, bool localScope, IDictionary<string, object> transientVariables = null, bool notFoundThrowError = false)
         {
             lock (syncRoot)
             {
                 try
                 {
-                    if (TryGetTask(businessKey, assignee, out var task) == false)
+                    if (TryGetTask(businessKey, taskName, assignee, out var task) == false)
                     {
+                        if (notFoundThrowError)
+                        {
+                            throw new ActivitiObjectNotFoundException($"Cannot find task for 'businessKey={businessKey} and assignee={assignee}'", typeof(ITask));
+                        }
                         return;
                     }
 
@@ -289,7 +306,11 @@ namespace Sys.Workflow.Engine.Impl
                 }
                 catch (ActivitiObjectNotFoundException)
                 {
-                    if (logger.IsEnabled(LogLevel.Debug))
+                    if (notFoundThrowError)
+                    {
+                        throw;
+                    }
+                    else if (logger.IsEnabled(LogLevel.Debug))
                     {
                         logger.LogDebug("任务可能已经终止或无效.");
                     }
@@ -392,17 +413,25 @@ namespace Sys.Workflow.Engine.Impl
             return ExecuteCommand(new HasTaskVariableCmd(taskId, variableName, true));
         }
 
-        public virtual bool TryGetTask(string businessKey, string assignee, out ITask task)
+        public virtual bool TryGetTask(string businessKey, string taskName, string assignee, out ITask task)
         {
-            if (string.IsNullOrWhiteSpace(businessKey) || string.IsNullOrWhiteSpace(assignee))
+            if (string.IsNullOrWhiteSpace(businessKey) || (string.IsNullOrWhiteSpace(taskName) && string.IsNullOrWhiteSpace(assignee)))
             {
                 task = null;
             }
             else
             {
-                task = CreateTaskQuery().SetProcessInstanceBusinessKey(businessKey)
-                    .SetTaskInvolvedUser(assignee)
-                    .List()
+                ITaskQuery query = CreateTaskQuery().SetProcessInstanceBusinessKey(businessKey);
+                if (string.IsNullOrWhiteSpace(taskName))
+                {
+                    query.SetTaskInvolvedUser(assignee);
+                }
+                else
+                {
+                    query.SetTaskName(taskName);
+                }
+
+                task = query.List()
                     .FirstOrDefault();
             }
 

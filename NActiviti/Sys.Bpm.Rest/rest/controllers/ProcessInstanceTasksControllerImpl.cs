@@ -65,7 +65,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
             if (query.IncludeCompleted)
             {
-                historics = pageableTaskService.GetHistoryTasks(query.ProcessInstanceId, query.BusinessKey, query.TenantId, query.Pageable);
+                historics = pageableTaskService.GetHistoryTasks(query.ProcessInstanceId, query.BusinessKey, query.TenantId, query.Pageable, true);
 
                 res.AddRange(taskResourceAssembler.ToResources(historics.GetContent()));
             }

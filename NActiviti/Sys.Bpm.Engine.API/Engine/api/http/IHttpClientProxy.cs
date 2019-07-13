@@ -16,7 +16,10 @@ namespace Sys.Net.Http
         /// </summary>
         /// <param name="clientId">用户id或其它id</param>
         /// <param name="tenantId">组织id</param>
-        void SetHttpClientRequestAccessToken(string clientId, string tenantId);
+        /// <param name="name">用户名</param>
+        /// <param name="email">email</param>
+        /// <param name="phone">phone</param>
+        void SetHttpClientRequestAccessToken(string clientId, string tenantId, string name = null, string email = null, string phone = null);
 
         /// <summary>
         /// http get proxy

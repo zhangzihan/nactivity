@@ -78,7 +78,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             {
                 object result = scriptingEngines.Evaluate(script, execution);
 
-                if (!(resultVariable is null))
+                if (resultVariable is object)
                 {
                     execution.SetVariable(resultVariable, result);
                 }

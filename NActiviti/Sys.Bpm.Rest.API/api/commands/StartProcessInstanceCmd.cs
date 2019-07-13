@@ -34,6 +34,8 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         private string businessKey;
         private string tenantId;
         private string startForm;
+        private string processDefinitionBusinessKey;
+        private string initialFlowElementId;
 
 
         /// <summary>
@@ -43,19 +45,6 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         {
         }
 
-        //[JsonConstructor]
-        //public StartProcessInstanceCmd([JsonProperty("ProcessDefinitionKey")]string processDefinitionKey,
-        //    [JsonProperty("ProcessDefinitionId")]string processDefinitionId,
-        //    [JsonProperty("Variables")]IDictionary<string, object> variables,
-        //    [JsonProperty("BusinessKey")]string businessKey) : this()
-        //{
-        //    this.processDefinitionKey = processDefinitionKey;
-        //    this.processDefinitionId = processDefinitionId;
-        //    this.variables = variables;
-        //    this.businessKey = businessKey;
-        //}
-
-
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -63,12 +52,18 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         /// <param name="variables">流程变量</param>
         //[JsonConstructor]
         public StartProcessInstanceCmd(
+            [JsonProperty("ProcessDefinitionBusinessKey")]string processDefinitionBusinessKey,
+            [JsonProperty("ProcessDefinitionKey")]string processDefinitionKey,
             [JsonProperty("ProcessDefinitionId")]string processDefinitionId,
-            [JsonProperty("Variables")]WorkflowVariable variables) : this()
+            [JsonProperty("Variables")]WorkflowVariable variables,
+            [JsonProperty("BusinessKey")]string businessKey,
+            [JsonProperty("InitialFlowElementId")]string initialFlowElementId) : this()
         {
             this.processDefinitionId = processDefinitionId;
-
+            this.processDefinitionKey = processDefinitionKey;
+            this.businessKey = businessKey;
             this.variables = variables;
+            this.initialFlowElementId = initialFlowElementId;
         }
 
         /// <summary>
@@ -89,6 +84,15 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         public virtual string Id
         {
             get => id;
+        }
+
+        /// <summary>
+        /// 流程定义BusinessKey
+        /// </summary>
+        public virtual string ProcessDefinitionBusinessKey
+        {
+            get => processDefinitionBusinessKey;
+            set => processDefinitionBusinessKey = value;
         }
 
         /// <summary>
@@ -161,6 +165,13 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         {
             get => startForm;
             set => startForm = value;
+        }
+
+        /// <inheritdoc />
+        public string InitialFlowElementId
+        {
+            get => initialFlowElementId;
+            set => initialFlowElementId = value;
         }
     }
 

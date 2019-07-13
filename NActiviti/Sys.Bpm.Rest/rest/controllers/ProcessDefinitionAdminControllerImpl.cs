@@ -21,6 +21,15 @@ using Sys.Workflow.Cloud.Services.Api.Model;
 using Sys.Workflow.Cloud.Services.Core.Pageables;
 using Sys.Workflow.Cloud.Services.Rest.Api;
 using Sys.Workflow.Cloud.Services.Rest.Assemblers;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.IO;
+using System;
+using Sys.Workflow.Expressions;
+using System.Reflection;
+using System.Linq;
+using Sys.Expressions;
 
 namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 {
@@ -34,6 +43,8 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         private readonly PageableProcessDefinitionRepositoryService pageableRepositoryService;
 
+        private readonly ExpressionTypeRegistry expressionTypeRegistry;
+
         //public virtual string handleAppException(ActivitiObjectNotFoundException ex)
         //{
         //    return ex.Message;
@@ -41,10 +52,11 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         /// <inheritdoc />
 
-        public ProcessDefinitionAdminControllerImpl(ProcessDefinitionResourceAssembler resourceAssembler, PageableProcessDefinitionRepositoryService pageableRepositoryService)
+        public ProcessDefinitionAdminControllerImpl(ProcessDefinitionResourceAssembler resourceAssembler, PageableProcessDefinitionRepositoryService pageableRepositoryService, ExpressionTypeRegistry expressionTypeRegistry)
         {
             this.resourceAssembler = resourceAssembler;
             this.pageableRepositoryService = pageableRepositoryService;
+            this.expressionTypeRegistry = expressionTypeRegistry;
         }
 
         /// <inheritdoc />
@@ -60,6 +72,52 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             return null;
         }
 
-    }
+        [HttpPost]
+        public async Task<bool> UploadFormulaAssembly(ICollection<IFormFile> files)
+        {
+            string binDir = Directory.GetCurrentDirectory();
 
+            foreach (var file in files)
+            {
+                string fileName = Path.Combine(binDir, file.Name);
+                string oldFile = Path.Combine(binDir, Guid.NewGuid().ToString());
+                try
+                {
+                    if (System.IO.File.Exists(fileName))
+                    {
+                        System.IO.File.Move(fileName, oldFile);
+                    }
+
+                    using (FileStream stream = System.IO.File.Open(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                    {
+                        await file.CopyToAsync(stream);
+                        await stream.FlushAsync();
+                    }
+
+                    Assembly assembly = Assembly.LoadFrom(fileName);
+                    IEnumerable<Type> types = assembly.GetTypes().Where(x => x.GetCustomAttribute(typeof(FormulaTypeAttribute)) != null);
+                    foreach (var type in types)
+                    {
+                        expressionTypeRegistry.Register(type);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (System.IO.File.Exists(oldFile))
+                    {
+                        System.IO.File.Move(oldFile, fileName);
+                    }
+                }
+                finally
+                {
+                    if (System.IO.File.Exists(oldFile))
+                    {
+                        System.IO.File.Delete(oldFile);
+                    }
+                }
+            }
+
+            return true;
+        }
+    }
 }

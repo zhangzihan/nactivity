@@ -54,8 +54,8 @@ namespace Sys.Workflow.Bpmn.Converters
             BpmnXMLUtil.AddXMLLocation(startEvent, xtr);
             startEvent.Initiator = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_EVENT_START_INITIATOR);
             bool interrupting = true;
-            string interruptingAttribute = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_EVENT_START_INTERRUPTING);
-            if (BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE.Equals(interruptingAttribute, StringComparison.CurrentCultureIgnoreCase))
+            string interruptingAttribute = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_EVENT_START_INTERRUPTING);
+            if (BpmnXMLConstants.ATTRIBUTE_VALUE_FALSE.Equals(interruptingAttribute, StringComparison.OrdinalIgnoreCase))
             {
                 interrupting = false;
             }

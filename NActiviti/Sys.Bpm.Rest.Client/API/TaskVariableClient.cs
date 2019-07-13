@@ -39,15 +39,15 @@ namespace Sys.Workflow.Rest.Client.API
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> SetVariables(string taskId, SetTaskVariablesCmd setTaskVariablesCmd)
+        public async Task<bool> SetVariables(string taskId, SetTaskVariablesCmd setTaskVariablesCmd)
         {
-            return await httpProxy.PostAsync<ActionResult>($"{serviceUrl.Replace("{taskId}", taskId)}", setTaskVariablesCmd).ConfigureAwait(false);
+            return await httpProxy.PostAsync<bool>($"{serviceUrl.Replace("{taskId}", taskId)}", setTaskVariablesCmd).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> SetVariablesLocal(string taskId, SetTaskVariablesCmd setTaskVariablesCmd)
+        public async Task<bool> SetVariablesLocal(string taskId, SetTaskVariablesCmd setTaskVariablesCmd)
         {
-            return await httpProxy.PostAsync<ActionResult>($"{serviceUrl.Replace("{taskId}", taskId)}/local", setTaskVariablesCmd).ConfigureAwait(false);
+            return await httpProxy.PostAsync<bool>($"{serviceUrl.Replace("{taskId}", taskId)}/local", setTaskVariablesCmd).ConfigureAwait(false);
         }
     }
 }

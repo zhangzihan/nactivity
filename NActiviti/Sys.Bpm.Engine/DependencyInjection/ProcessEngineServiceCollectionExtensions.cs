@@ -1,23 +1,25 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Sys.Workflow.Engine.Impl.Bpmn.Webservice;
-using Sys.Workflow.Engine.Impl.Cfg;
-using Sys.Workflow.Engine.Impl.DB;
-using Sys.Workflow.Engine.Impl.Util;
 using Spring.Core.TypeResolution;
 using Spring.Extensions;
-using Sys.Workflow.Engine.Impl;
 using Sys.Extentions;
 using Sys.Net.Http;
 using Sys.Workflow.Caches;
 using Sys.Workflow.Engine.Bpmn.Rules;
+using Sys.Workflow.Engine.Impl;
+using Sys.Workflow.Engine.Impl.Bpmn.Webservice;
+using Sys.Workflow.Engine.Impl.Cfg;
+using Sys.Workflow.Engine.Impl.DB;
+using Sys.Workflow.Engine.Impl.Util;
 using Sys.Workflow.Options;
 using Sys.Workflow.Util;
 using System;
 using System.Net.Http;
+using Polly;
+using System.Net;
+using Polly.Extensions.Http;
 
 namespace Sys.Workflow
 {
@@ -70,40 +72,47 @@ namespace Sys.Workflow
             ConfigUtil.Configuration = configuration;
 
             TypeRegistry.RegisterType(typeof(TimerUtil));
+            TypeRegistry.RegisterType(typeof(ExternalConnector));
             builder.Services.AddSpringCoreTypeRepository();
 
             builder.Services.AddSpringCoreService(builder.Services.BuildServiceProvider().GetService<ILoggerFactory>());
 
             builder.Services.AddSingleton<MemoryCacheProvider>();
 
-            builder.Services.AddHttpClient<HttpClient>()
-                .ConfigureHttpMessageHandlerBuilder(cb =>
-                {
-                    HttpClientHandler handler = new HttpClientHandler();
-                    handler.MaxRequestContentBufferSize = int.MaxValue;
-                    handler.ClientCertificateOptions = ClientCertificateOption.Automatic;
-                    handler.UseDefaultCredentials = true;
-                    handler.ServerCertificateCustomValidationCallback += (s, arg1, arg2, arg3) => true;
-
-                    cb.PrimaryHandler = handler;
-                    cb.Build();
-                });
-
             DbSqlSessionVersion.InitVersion(configuration);
 
             builder.Configure(configuration, setupAction);
 
-            builder.Services.AddSingleton<IIdGenerator>(sp => new GuidGenerator());
+            builder.Services.AddHttpClient("ExternalHttpClient")
+                .AddPolicyHandler(PollyPolicy.GetRetryPolicy())
+                .AddPolicyHandler(PollyPolicy.GetCircuitBreakerPolicy())
+                .ConfigureHttpMessageHandlerBuilder(cb =>
+                {
+                    if (cb.PrimaryHandler is HttpClientHandler handler)
+                    {
+                        handler.MaxRequestContentBufferSize = int.MaxValue;
+                        handler.ClientCertificateOptions = ClientCertificateOption.Automatic;
+                        handler.UseDefaultCredentials = true;
+                        handler.ServerCertificateCustomValidationCallback += (s, arg1, arg2, arg3) => true;
+                    }
 
-            builder.Services.AddUserSession<DefaultUserSession>();
+                    //HttpClientHandler handler = new HttpClientHandler
+                    //{
+                    //    MaxRequestContentBufferSize = int.MaxValue,
+                    //    ClientCertificateOptions = ClientCertificateOption.Automatic,
+                    //    UseDefaultCredentials = true
+                    //};
+                    //handler.ServerCertificateCustomValidationCallback += (s, arg1, arg2, arg3) => true;
 
-            builder.Services.AddWorkflowAccessTokenProvider<DefaultAccessTokenProvider>();
+                    //cb.PrimaryHandler = handler;
+                    //cb.Build();
+                });
 
             builder.Services.AddTransient<IHttpClientProxy>(sp =>
             {
                 try
                 {
-                    HttpClient client = sp.GetService<IHttpClientFactory>().CreateClient();
+                    HttpClient client = sp.GetService<IHttpClientFactory>().CreateClient("ExternalHttpClient");
                     var url = sp.GetService<ExternalConnectorProvider>().WorkflowUrl;
                     if (!string.IsNullOrWhiteSpace(url))
                     {
@@ -112,13 +121,20 @@ namespace Sys.Workflow
 
                     return new DefaultHttpClientProxy(client,
                         sp.GetService<IAccessTokenProvider>(),
-                        sp.GetService<IHttpContextAccessor>());
+                        sp.GetService<IHttpContextAccessor>(),
+                        sp.GetService<ILoggerFactory>());
                 }
                 catch (Exception ex)
                 {
                     throw ex;
                 }
             });
+
+            builder.Services.AddSingleton<IIdGenerator>(sp => new GuidGenerator());
+
+            builder.Services.AddUserSession<DefaultUserSession>();
+
+            builder.Services.AddWorkflowAccessTokenProvider<DefaultAccessTokenProvider>();
 
             builder.Services.AddSingleton<IUserServiceProxy, DefaultUserServiceProxy>();
 

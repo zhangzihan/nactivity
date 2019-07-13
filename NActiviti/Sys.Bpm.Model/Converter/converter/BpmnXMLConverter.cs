@@ -645,7 +645,7 @@ namespace Sys.Workflow.Bpmn.Converters
                     if (!string.IsNullOrWhiteSpace(adhocSubProcess.CompletionCondition))
                     {
                         xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ELEMENT_COMPLETION_CONDITION, BpmnXMLConstants.BPMN2_NAMESPACE);
-                        xtw.WriteCData(adhocSubProcess.CompletionCondition);
+                        xtw.WriteCharacters(adhocSubProcess.CompletionCondition);
                         xtw.WriteEndElement();
                     }
                 }

@@ -16,6 +16,10 @@ using Sys.Workflow;
 
 namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
+
+    /// <summary>
+    /// 一票通过全部否决，多任务场景下如果有人提交了该任务，并且提交条件为true则当前多任务就算完成，并删除所有其它未完成的子任务，否则需要等待其他人得投票.
+    /// </summary>
     class OnePassCompletedPolicy : DefaultMultiInstanceCompletedPolicy
     {
         private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<OnePassCompletedPolicy>();
@@ -45,9 +49,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         /// <returns></returns>
         public override bool CompletionConditionSatisfied(IExecutionEntity parent, MultiInstanceActivityBehavior multiInstanceActivity, object signalData)
         {
+            //bool pass = base.CompletionConditionSatisfied(parent, multiInstanceActivity, signalData);
+
             object passed = parent.GetVariable(CompleteConditionVarName, true);
             if (passed is null || (bool.TryParse(passed.ToString(), out var p) && p))
             {
+                //return pass;
                 return true;
             }
 
@@ -63,6 +70,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 parent.SetVariable(CompleteConditionVarName, false);
             }
 
+            //return pass || approvaled;
             return approvaled;
         }
     }

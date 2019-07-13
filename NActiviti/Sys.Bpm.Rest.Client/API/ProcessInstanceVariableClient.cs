@@ -35,15 +35,15 @@ namespace Sys.Workflow.Rest.Client.API
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> SetVariables(string processInstanceId, SetProcessVariablesCmd setTaskVariablesCmd)
+        public async Task<bool> SetVariables(SetProcessVariablesCmd setTaskVariablesCmd)
         {
-            return await httpProxy.PostAsync<ActionResult>($"{serviceUrl.Replace("{processInstanceId}", processInstanceId)}", setTaskVariablesCmd).ConfigureAwait(false);
+            return await httpProxy.PostAsync<bool>($"{serviceUrl.Replace("{processInstanceId}", setTaskVariablesCmd.ProcessId)}", setTaskVariablesCmd).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> RemoveVariables(string processInstanceId, RemoveProcessVariablesCmd removeProcessVariablesCmd)
+        public async Task<bool> RemoveVariables(RemoveProcessVariablesCmd removeProcessVariablesCmd)
         {
-            return await httpProxy.PostAsync<ActionResult>($"{serviceUrl.Replace("{processInstanceId}", processInstanceId)}/remove", removeProcessVariablesCmd).ConfigureAwait(false);
+            return await httpProxy.PostAsync<bool>($"{serviceUrl.Replace("{processInstanceId}", removeProcessVariablesCmd.ProcessId)}/remove", removeProcessVariablesCmd).ConfigureAwait(false);
         }
 
         public async Task<ProcessInstanceVariable> GetVariable(string processInstanceId, string variableName)

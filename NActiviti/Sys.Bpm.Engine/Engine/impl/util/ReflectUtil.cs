@@ -31,8 +31,8 @@ namespace Sys.Workflow.Engine.Impl.Util
     {
         private static readonly ILogger log = ProcessEngineServiceProvider.LoggerService<ReflectUtil>();
 
-        private static readonly Regex GETTER_PATTERN = new Regex("(get|is)[A-Z].*");
-        private static readonly Regex SETTER_PATTERN = new Regex("set[A-Z].*");
+        private static readonly Regex GETTER_PATTERN = new Regex("(get|is)[A-Z].*", RegexOptions.Compiled);
+        private static readonly Regex SETTER_PATTERN = new Regex("set[A-Z].*", RegexOptions.Compiled);
 
         public static ClassLoader ClassLoader
         {

@@ -125,7 +125,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
                     encoding = processEngineConfiguration.XmlEncoding;
                 }
 
-                if (!(encoding is null))
+                if (encoding is object)
                 {
                     bpmnModel = converter.ConvertToBpmnModel(streamSource, validateSchema, enableSafeBpmnXml, encoding);
                 }

@@ -64,6 +64,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             }
             catch (Exception ex)
             {
+                log.LogError($"{(command is null ? "command is null " : command.GetType().FullName)} execute failed!");
                 throw ex;
             }
         }
@@ -88,10 +89,10 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 // or the operation has an execution and it is not ended
                 if (operation.Execution == null || !operation.Execution.Ended)
                 {
-                    if (log.IsEnabled(LogLevel.Debug))
-                    {
-                        log.LogDebug($"Executing operation {operation.GetType()} ");
-                    }
+                    //if (log.IsEnabled(LogLevel.Debug))
+                    //{
+                    //    log.LogDebug($"Executing operation {operation.GetType()} ");
+                    //}
 
                     runnable.Run();
                 }

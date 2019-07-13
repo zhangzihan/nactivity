@@ -11,6 +11,11 @@
     {
         private readonly string id = "terminateProcessInstanceCmd";
 
+        public TerminateProcessInstanceCmd()
+        {
+
+        }
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -18,8 +23,10 @@
         /// <param name="reason">终止原因</param>
         //[JsonConstructor]
         public TerminateProcessInstanceCmd([JsonProperty("ProcessInstanceId")]string processInstanceId,
-            [JsonProperty("reason")]string reason)
+            [JsonProperty("BusinessKey")]string businessKey,
+            [JsonProperty("Reason")]string reason)
         {
+            this.BusinessKey = businessKey;
             this.ProcessInstanceId = processInstanceId;
             this.Reason = reason;
         }
@@ -38,6 +45,16 @@
         /// 流程实例id
         /// </summary>
         public virtual string ProcessInstanceId
+        {
+            get;
+            set;
+        }
+
+
+        /// <summary>
+        /// 业务主键
+        /// </summary>
+        public virtual string BusinessKey
         {
             get;
             set;

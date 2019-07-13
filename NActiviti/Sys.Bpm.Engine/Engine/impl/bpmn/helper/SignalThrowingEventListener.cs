@@ -52,7 +52,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                 else
                 {
                     string tenantId = null;
-                    if (!(@event.ProcessDefinitionId is null))
+                    if (@event.ProcessDefinitionId is object)
                     {
                         IProcessDefinition processDefinition = commandContext.ProcessEngineConfiguration.DeploymentManager.FindDeployedProcessDefinitionById(@event.ProcessDefinitionId);
                         tenantId = processDefinition.TenantId;

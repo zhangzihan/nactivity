@@ -1,6 +1,7 @@
 ﻿using Sys.Workflow.Api.Runtime.Shared.Query;
 using Sys.Workflow.Cloud.Services.Api.Model;
 using Sys.Workflow.Cloud.Services.Api.Model.Converters;
+using Sys.Workflow.Cloud.Services.Api.Utils;
 using Sys.Workflow.Cloud.Services.Core.Pageables.Sorts;
 using Sys.Workflow.Engine;
 using Sys.Workflow.Engine.History;
@@ -85,7 +86,7 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
         {
             string userId = authenticationWrapper.AuthenticatedUser.Id;
             ITaskQuery query = taskService.CreateTaskQuery();
-            if (!(userId is null))
+            if (userId is object)
             {
                 IList<string> groups = null;
                 if (userGroupLookupProxy != null)
@@ -105,12 +106,15 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<TaskModel> GetAllTasks(Pageable pageable)
+        public virtual IPage<TaskModel> GetAllTasks(TaskQuery taskQuery)
         {
-            ITaskQuery query = taskService.CreateTaskQuery();
-            sortApplier.ApplySort(query, pageable);
+            TaskQueryImpl query = taskService.CreateTaskQuery() as TaskQueryImpl;
 
-            return pageRetriever.LoadPage(taskService as ServiceImpl, query, pageable, taskConverter, (q, firstResult, pageSize) =>
+            FastCopy.Copy<TaskQuery, TaskQueryImpl>(taskQuery, query);
+
+            sortApplier.ApplySort(query, taskQuery.Pageable);
+
+            return pageRetriever.LoadPage(taskService as ServiceImpl, query, taskQuery.Pageable, taskConverter, (q, firstResult, pageSize) =>
             {
                 return new GetProcessInstanceTasksCmd(q, firstResult, pageSize);
             });
@@ -148,9 +152,10 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
         /// <summary>
         /// 获取流程实例历史记录，默认不启用分页，返回当期流程实例下的所有历史任务.
         /// </summary>
-        public virtual IPage<TaskModel> GetHistoryTasks(string processInstanceId, string businessKey, string tenantId, Pageable pageable)
+        public virtual IPage<TaskModel> GetHistoryTasks(string processInstanceId, string businessKey, string tenantId, Pageable pageable, bool? finished = null)
         {
             IHistoricTaskInstanceQuery query = historyService.CreateHistoricTaskInstanceQuery();
+
             if (string.IsNullOrWhiteSpace(processInstanceId) == false)
             {
                 query.SetProcessInstanceId(processInstanceId);
@@ -159,6 +164,11 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
             {
                 query.SetProcessInstanceBusinessKey(businessKey)
                 .SetTaskTenantId(tenantId);
+            }
+
+            if (finished.HasValue)
+            {
+                query.SetFinished();
             }
 
             if (pageable.PageSize == 0)

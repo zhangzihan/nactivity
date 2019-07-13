@@ -55,13 +55,11 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         /// <inheritdoc />
         [HttpPost]
-        public virtual Task<Resources<TaskModel>> GetAllTasks(Pageable pageable)
+        public virtual Task<Resources<TaskModel>> GetAllTasks(TaskQuery query)
         {
-            IPage<TaskModel> page = processEngine.GetAllTasks(pageable);
+            IPage<TaskModel> page = processEngine.GetAllTasks(query);
 
-            //return pagedResourcesAssembler.toResource(pageable, page, taskResourceAssembler);
-
-            return null;
+            return Task.FromResult(new Resources<TaskModel>(page.GetContent(), page.GetTotalItems(), query.Pageable));
         }
     }
 

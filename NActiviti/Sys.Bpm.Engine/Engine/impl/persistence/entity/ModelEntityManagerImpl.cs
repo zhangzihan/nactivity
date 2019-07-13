@@ -85,7 +85,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void DeleteEditorSource(IModelEntity model)
         {
-            if (!(model.EditorSourceValueId is null))
+            if (model.EditorSourceValueId is object)
             {
                 ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceValueId);
                 @ref.Delete();
@@ -94,7 +94,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void DeleteEditorSourceExtra(IModelEntity model)
         {
-            if (!(model.EditorSourceExtraValueId is null))
+            if (model.EditorSourceExtraValueId is object)
             {
                 ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceExtraValueId);
                 @ref.Delete();

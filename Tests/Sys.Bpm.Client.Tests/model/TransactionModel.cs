@@ -11,7 +11,8 @@ using Sys.Workflow.Engine.Impl.Interceptor;
 using Sys.Workflow.Engine.Repository;
 using Sys.Workflow.Engine.Runtime;
 using Sys.Workflow.Engine.Tasks;
-using Sys.Workflown.Test;
+using Sys.Workflow.Services.Api.Commands;
+using Sys.Workflow.Test;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -64,6 +65,46 @@ namespace Sys.Bpm.Client.Tests.model
                 .SingleResult();
 
             IProcessInstance processInstance = commandExecutor.Execute(new StartProcessInstanceCmd(definition.Id, null));
+
+            IList<ITask> tasks = processEngine.TaskService.GetMyTasks("评审员");
+            commandExecutor.Execute(new CompleteTaskCmd(tasks[0].Id, null));
+        }
+
+
+        [Theory]
+        [InlineData("主流程.bpmn")]
+        public void 商品审核流程(string bpmnFile)
+        {
+            //string xml = IntegrationTestContext.ReadBpmn(bpmnFile);
+
+            ICommandExecutor commandExecutor = (processEngine.ProcessEngineConfiguration as ProcessEngineConfigurationImpl).CommandExecutor;
+
+            Authentication.AuthenticatedUser = new InProcessWorkflowEngine.TestUser()
+            {
+                Id = "评审员",
+                FullName = "评审员",
+                TenantId = context.TenantId
+            };
+
+            //IDeploymentBuilder builder = processEngine.RepositoryService.CreateDeployment()
+            //    .Name(Path.GetFileNameWithoutExtension(bpmnFile))
+            //    .TenantId(context.TenantId)
+            //    .AddString(bpmnFile, xml)
+            //    .EnableDuplicateFiltering()
+            //    .TenantId(context.TenantId);
+
+            //IDeployment deploy = commandExecutor.Execute(new DeployCmd(builder));
+
+            IProcessDefinition definition = processEngine.RepositoryService.CreateProcessDefinitionQuery()
+                .SetProcessDefinitionKey("Process_9PoKARBVU")
+                .SetProcessDefinitionTenantId(context.TenantId)
+                .SetLatestVersion()
+                .SingleResult();
+
+            IProcessInstance processInstance = commandExecutor.Execute(new StartProcessInstanceCmd(definition.Id, new WorkflowVariable
+            {
+                { "商品s", new string[]{ "1", "2"} }
+            }));
 
             IList<ITask> tasks = processEngine.TaskService.GetMyTasks("评审员");
             commandExecutor.Execute(new CompleteTaskCmd(tasks[0].Id, null));

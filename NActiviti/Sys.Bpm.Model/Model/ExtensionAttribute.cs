@@ -80,10 +80,10 @@ namespace Sys.Workflow.Bpmn.Models
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            if (!(namespacePrefix is null))
+            if (namespacePrefix is object)
             {
                 sb.Append(namespacePrefix);
-                if (!(name is null))
+                if (name is object)
                 {
                     sb.Append(":").Append(name);
                 }
@@ -92,7 +92,7 @@ namespace Sys.Workflow.Bpmn.Models
             {
                 sb.Append(name);
             }
-            if (!(value is null))
+            if (value is object)
             {
                 sb.Append("=").Append(value);
             }

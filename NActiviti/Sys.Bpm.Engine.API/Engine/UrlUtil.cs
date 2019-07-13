@@ -10,6 +10,8 @@ namespace Sys.Workflow.Engine.Api
     /// </summary>
     public static class UrlUtil
     {
+        private static readonly Regex URL_PATTERN = new Regex("\\s+(http|https)://", RegexOptions.Compiled);
+
         /// <summary>
         /// 
         /// </summary>
@@ -28,8 +30,7 @@ namespace Sys.Workflow.Engine.Api
                 return baseAddress;
             }
 
-            var reg = new Regex("\\s+(http|https)://");
-            if (reg.IsMatch(url))
+            if (URL_PATTERN.IsMatch(url))
             {
                 return url;
             }

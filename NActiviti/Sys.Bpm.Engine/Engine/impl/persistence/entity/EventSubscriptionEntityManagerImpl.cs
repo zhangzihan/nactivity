@@ -65,7 +65,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             if (signal != null)
             {
                 subscriptionEntity.EventName = signal.Name;
-                if (!(signal.Scope is null))
+                if (signal.Scope is object)
                 {
                     subscriptionEntity.Configuration = signal.Scope;
                 }
@@ -77,7 +77,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             subscriptionEntity.ActivityId = execution.CurrentActivityId;
             subscriptionEntity.ProcessDefinitionId = execution.ProcessDefinitionId;
-            if (!(execution.TenantId is null))
+            if (execution.TenantId is object)
             {
                 subscriptionEntity.TenantId = execution.TenantId;
             }
@@ -94,7 +94,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             subscriptionEntity.ActivityId = execution.CurrentActivityId;
             subscriptionEntity.ProcessDefinitionId = execution.ProcessDefinitionId;
-            if (!(execution.TenantId is null))
+            if (execution.TenantId is object)
             {
                 subscriptionEntity.TenantId = execution.TenantId;
             }
@@ -108,7 +108,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             ICompensateEventSubscriptionEntity eventSubscription = CreateCompensateEventSubscription();
             eventSubscription.Execution = execution;
             eventSubscription.ActivityId = activityId;
-            if (!(execution.TenantId is null))
+            if (execution.TenantId is object)
             {
                 eventSubscription.TenantId = execution.TenantId;
             }
@@ -120,7 +120,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             base.Insert(entity, fireCreateEvent);
 
-            if (!(entity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (entity.ExecutionId is object && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)entity.Execution;
                 if (IsExecutionRelatedEntityCountEnabled(executionEntity))
@@ -132,7 +132,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public override void Delete(IEventSubscriptionEntity entity, bool fireDeleteEvent)
         {
-            if (!(entity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (entity.ExecutionId is object && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)entity.Execution;
                 if (IsExecutionRelatedEntityCountEnabled(executionEntity))

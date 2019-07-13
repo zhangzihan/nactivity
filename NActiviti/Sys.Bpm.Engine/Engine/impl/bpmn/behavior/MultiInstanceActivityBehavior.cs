@@ -143,7 +143,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             ICollection<BoundaryEvent> boundaryEvents = process.FindFlowElementsOfType<BoundaryEvent>(true);
             foreach (BoundaryEvent boundaryEvent in boundaryEvents)
             {
-                if (!(boundaryEvent.AttachedToRefId is null) && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
+                if (boundaryEvent.AttachedToRefId is object && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
                 {
                     results.Add(boundaryEvent);
                 }
@@ -203,7 +203,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         protected internal virtual void ExecuteOriginalBehavior(IExecutionEntity execution, int loopCounter)
         {
-            if (UsesCollection() && !(collectionElementVariable is null))
+            if (UsesCollection() && collectionElementVariable is object)
             {
                 ICollection collection = (ICollection)ResolveCollection(execution);
 
@@ -229,7 +229,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         protected internal virtual ICollection ResolveAndValidateCollection(IExecutionEntity execution)
         {
             object obj = ResolveCollection(execution);
-            if (!(collectionExpression is null))
+            if (collectionExpression is object)
             {
                 if (!(obj is ICollection))
                 {
@@ -237,7 +237,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
 
             }
-            else if (!(collectionVariable is null))
+            else if (collectionVariable is object)
             {
                 if (obj is null)
                 {
@@ -263,7 +263,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             {
                 return collectionExpression.GetValue(execution);
             }
-            else if (!(collectionVariable is null))
+            else if (collectionVariable is object)
             {
                 return execution.GetVariable(collectionVariable);
             }
@@ -272,12 +272,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         protected internal virtual bool UsesCollection()
         {
-            return collectionExpression != null || !(collectionVariable is null);
+            return collectionExpression is object || collectionVariable is object;
         }
 
         protected internal virtual bool IsExtraScopeNeeded(FlowNode flowNode)
         {
-            return flowNode.SubProcess != null;
+            return flowNode.SubProcess is object;
         }
 
         protected internal virtual int ResolveLoopCardinality(IExecutionEntity execution)

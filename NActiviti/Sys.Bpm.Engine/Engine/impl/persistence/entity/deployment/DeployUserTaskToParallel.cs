@@ -13,6 +13,8 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
     /// <inheritdoc />
     class DeployUserTaskToParallel : IDeployUserTaskToParallel
     {
+        private static readonly Regex EXPR_PATTERN = new Regex(@"\$\{(.*?)\}", RegexOptions.Compiled);
+
         /// <inheritdoc />
         public bool ConvertUserTaskToParallel(IEnumerable<XElement> userTasks)
         {
@@ -42,7 +44,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     var loops = task.Descendants(XName.Get(BpmnXMLConstants.ELEMENT_MULTIINSTANCE, BpmnXMLConstants.BPMN2_NAMESPACE));
 
-                    var match = new Regex("\\$\\{(.*?)\\}").Match(user);
+                    Match match = EXPR_PATTERN.Match(user);
 
                     if (loops.Count() == 0 && match.Success)
                     {

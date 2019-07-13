@@ -1,6 +1,9 @@
-﻿using Sys.Workflow.Api.Runtime.Shared.Query;
+﻿using Microsoft.AspNetCore.Http;
+using Sys.Workflow.Api.Runtime.Shared.Query;
 using Sys.Workflow.Cloud.Services.Api.Model;
 using Sys.Workflow.Hateoas;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Sys.Workflow.Cloud.Services.Rest.Api
 {
@@ -15,5 +18,12 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// <param name="pageable">分页</param>
         /// <returns></returns>
         Resources<ProcessDefinition> GetAllProcessDefinitions(Pageable pageable);
+
+        /// <summary>
+        /// 上传公式表达式解析文件
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        Task<bool> UploadFormulaAssembly(ICollection<IFormFile> files);
     }
 }

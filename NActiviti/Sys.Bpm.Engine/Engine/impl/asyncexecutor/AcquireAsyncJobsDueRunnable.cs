@@ -84,7 +84,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                 {
                     AcquiredJobEntities acquiredJobs = commandExecutor.Execute(new AcquireJobsCmd(asyncExecutor));
 
-                    if (!(acquiredJobs is null))
+                    if (acquiredJobs is object)
                     {
                         bool allJobsSuccessfullyOffered = true;
                         foreach (IJobEntity job in acquiredJobs.Jobs)
@@ -134,10 +134,10 @@ You can ignore this message if you indeed have multiple async executor acquisiti
                 {
                     try
                     {
-                        if (log.IsEnabled(LogLevel.Debug))
-                        {
-                            log.LogDebug($"async job acquisition thread sleeping for {millisToWait} millis");
-                        }
+                        //if (log.IsEnabled(LogLevel.Debug))
+                        //{
+                        //    log.LogDebug($"async job acquisition thread sleeping for {millisToWait} millis");
+                        //}
                         lock (MONITOR)
                         {
                             if (!isInterrupted)
@@ -147,10 +147,10 @@ You can ignore this message if you indeed have multiple async executor acquisiti
                             }
                         }
 
-                        if (log.IsEnabled(LogLevel.Debug))
-                        {
-                            log.LogDebug("async job acquisition thread woke up");
-                        }
+                        //if (log.IsEnabled(LogLevel.Debug))
+                        //{
+                        //    log.LogDebug("async job acquisition thread woke up");
+                        //}
                     }
                     catch (ThreadInterruptedException e)
                     {

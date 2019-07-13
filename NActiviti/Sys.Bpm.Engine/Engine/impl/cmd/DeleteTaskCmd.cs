@@ -45,7 +45,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public  virtual object  Execute(ICommandContext commandContext)
         {
-            if (!(taskId is null))
+            if (taskId is object)
             {
                 DeleteTask(commandContext, taskId);
             }

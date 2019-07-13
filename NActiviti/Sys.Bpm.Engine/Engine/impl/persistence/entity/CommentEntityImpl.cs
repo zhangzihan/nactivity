@@ -64,7 +64,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
 
         public static string MESSAGE_PARTS_MARKER = "_|_";
-        public static Regex MESSAGE_PARTS_MARKER_REGEX = new Regex("_\\|_");
+        public static readonly Regex MESSAGE_PARTS_MARKER_REGEX = new Regex("_\\|_", RegexOptions.Compiled);
 
         public virtual string Message
         {
@@ -107,7 +107,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 StringBuilder stringBuilder = new StringBuilder();
                 foreach (string part in value)
                 {
-                    if (!(part is null))
+                    if (part is object)
                     {
                         stringBuilder.Append(part.Replace(MESSAGE_PARTS_MARKER, " | "));
                         stringBuilder.Append(MESSAGE_PARTS_MARKER);

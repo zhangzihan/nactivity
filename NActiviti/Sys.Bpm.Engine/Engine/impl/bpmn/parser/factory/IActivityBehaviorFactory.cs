@@ -115,6 +115,8 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
 
         IntermediateThrowNoneEventActivityBehavior CreateIntermediateThrowNoneEventActivityBehavior(ThrowEvent throwEvent);
 
+        IntermediateThrowMessageEventActivityBehavior CreateIntermediateThrowMessgeEventActivityBehavior(ThrowEvent throwEvent, MessageEventDefinition messageEventDefinition, Message message);
+
         IntermediateThrowSignalEventActivityBehavior CreateIntermediateThrowSignalEventActivityBehavior(ThrowEvent throwEvent, SignalEventDefinition signalEventDefinition, Signal signal);
 
         IntermediateThrowCompensationEventActivityBehavior CreateIntermediateThrowCompensationEventActivityBehavior(ThrowEvent throwEvent, CompensateEventDefinition compensateEventDefinition);

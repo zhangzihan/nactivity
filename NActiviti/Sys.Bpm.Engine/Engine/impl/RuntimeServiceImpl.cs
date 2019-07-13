@@ -24,6 +24,7 @@ namespace Sys.Workflow.Engine.Impl
     using Sys.Workflow.Engine.Tasks;
     using Sys.Workflow.Services.Api.Commands;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public class RuntimeServiceImpl : ServiceImpl, IRuntimeService
     {
@@ -87,10 +88,24 @@ namespace Sys.Workflow.Engine.Impl
             return commandExecutor.Execute(new StartProcessInstanceCmd(null, processDefinitionId, businessKey, variables));
         }
 
+        private readonly object syncRoot = new object();
+
         public virtual void DeleteProcessInstance(string processInstanceId, string deleteReason)
         {
-            commandExecutor.Execute(new DeleteProcessInstanceCmd(processInstanceId, deleteReason));
+            lock (syncRoot)
+            {
+                commandExecutor.Execute(new DeleteProcessInstanceCmd(processInstanceId, deleteReason));
+            }
         }
+
+        public virtual void TerminateProcessInstance(string processInstanceId, string businessKey, string reason)
+        {
+            lock (syncRoot)
+            {
+                commandExecutor.Execute(new TerminateProcessInstanceCmd(processInstanceId, businessKey, reason));
+            }
+        }
+
 
         public virtual IExecutionQuery CreateExecutionQuery()
         {
@@ -563,11 +578,11 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IProcessInstance StartProcessInstance(ProcessInstanceBuilderImpl processInstanceBuilder)
         {
-            if (!(processInstanceBuilder.ProcessDefinitionId is null) || !(processInstanceBuilder.ProcessDefinitionKey is null))
+            if (processInstanceBuilder.ProcessDefinitionId is object || processInstanceBuilder.ProcessDefinitionKey is object)
             {
                 return commandExecutor.Execute(new StartProcessInstanceCmd(processInstanceBuilder));
             }
-            else if (!(processInstanceBuilder.MessageName is null))
+            else if (processInstanceBuilder.MessageName is object)
             {
                 return commandExecutor.Execute(new StartProcessInstanceByMessageCmd(processInstanceBuilder));
             }
@@ -582,13 +597,18 @@ namespace Sys.Workflow.Engine.Impl
         public IProcessInstance[] StartProcessInstanceByCmd(IStartProcessInstanceCmd[] cmds)
         {
             IList<IProcessInstance> instances = new List<IProcessInstance>();
-
+            IList<Task> tasks = new List<Task>();
             foreach (IStartProcessInstanceCmd cmd in cmds)
             {
-                var scmd = new StartProcessInstanceCmd(cmd);
+                tasks.Add(Task.Factory.StartNew(() =>
+                {
+                    var scmd = new StartProcessInstanceCmd(cmd);
 
-                instances.Add(commandExecutor.Execute(scmd));
+                    instances.Add(commandExecutor.Execute(scmd));
+                }));
             }
+
+            Task.WaitAll(tasks.ToArray());
 
             return instances.ToArray();
         }

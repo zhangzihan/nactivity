@@ -30,7 +30,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// </summary>
         /// <param name="deployId">流程定义部署id</param>
         /// <returns></returns>
-        Task<ActionResult> Remove(string deployId);
+        Task<bool> Remove(string deployId);
 
         /// <summary>
         /// 查询最终部署的流程(已发布)

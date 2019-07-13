@@ -43,20 +43,20 @@ namespace SmartSql.DbSession
         }
         public void BeginTransaction()
         {
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                _logger.LogDebug("BeginTransaction.");
-            }
+            //if (_logger.IsEnabled(LogLevel.Debug))
+            //{
+            //    _logger.LogDebug("BeginTransaction.");
+            //}
             OpenConnection();
             Transaction = Connection.BeginTransaction();
             LifeCycle = DbSessionLifeCycle.Scoped;
         }
         public void BeginTransaction(IsolationLevel isolationLevel)
         {
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                _logger.LogDebug("BeginTransaction.");
-            }
+            //if (_logger.IsEnabled(LogLevel.Debug))
+            //{
+            //    _logger.LogDebug("BeginTransaction.");
+            //}
             OpenConnection();
             Transaction = Connection.BeginTransaction(isolationLevel);
             LifeCycle = DbSessionLifeCycle.Scoped;
@@ -71,10 +71,10 @@ namespace SmartSql.DbSession
         {
             if ((Connection != null) && (Connection.State != ConnectionState.Closed))
             {
-                if (_logger.IsEnabled(LogLevel.Debug))
-                {
-                    _logger.LogDebug($"CloseConnection {Connection.GetHashCode()}:{DataSource.Name} ");
-                }
+                //if (_logger.IsEnabled(LogLevel.Debug))
+                //{
+                //    _logger.LogDebug($"CloseConnection {Connection.GetHashCode()}:{DataSource.Name} ");
+                //}
                 Connection.Close();
                 Connection.Dispose();
             }
@@ -83,10 +83,10 @@ namespace SmartSql.DbSession
 
         public void CommitTransaction()
         {
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                _logger.LogDebug("CommitTransaction.");
-            }
+            //if (_logger.IsEnabled(LogLevel.Debug))
+            //{
+            //    _logger.LogDebug("CommitTransaction.");
+            //}
             if (Transaction == null)
             {
                 if (_logger.IsEnabled(LogLevel.Error))
@@ -128,10 +128,10 @@ namespace SmartSql.DbSession
             {
                 try
                 {
-                    if (_logger.IsEnabled(LogLevel.Debug))
-                    {
-                        _logger.LogDebug($"OpenConnection {Connection.GetHashCode()} to {DataSource.Name} .");
-                    }
+                    //if (_logger.IsEnabled(LogLevel.Debug))
+                    //{
+                    //    _logger.LogDebug($"OpenConnection {Connection.GetHashCode()} to {DataSource.Name} .");
+                    //}
                     Connection.Open();
                 }
                 catch (Exception ex)
@@ -178,10 +178,10 @@ namespace SmartSql.DbSession
 
         public void RollbackTransaction()
         {
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                _logger.LogDebug("RollbackTransaction .");
-            }
+            //if (_logger.IsEnabled(LogLevel.Debug))
+            //{
+            //    _logger.LogDebug("RollbackTransaction .");
+            //}
             if (Transaction == null)
             {
                 if (_logger.IsEnabled(LogLevel.Error))
@@ -210,20 +210,20 @@ namespace SmartSql.DbSession
 
         public void Begin()
         {
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                _logger.LogDebug("Begin .");
-            }
+            //if (_logger.IsEnabled(LogLevel.Debug))
+            //{
+            //    _logger.LogDebug("Begin .");
+            //}
             LifeCycle = DbSessionLifeCycle.Scoped;
             OpenConnection();
         }
 
         public void End()
         {
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                _logger.LogDebug("End .");
-            }
+            //if (_logger.IsEnabled(LogLevel.Debug))
+            //{
+            //    _logger.LogDebug("End .");
+            //}
             LifeCycle = DbSessionLifeCycle.Transient;
             CloseConnection();
         }

@@ -105,7 +105,7 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
         {
             BpmnModel result = null;
 
-            if (result == null && !(@event.ProcessDefinitionId is null))
+            if (@event.ProcessDefinitionId is object)
             {
                 IProcessDefinition processDefinition = ProcessDefinitionUtil.GetProcessDefinition(@event.ProcessDefinitionId, true);
                 if (processDefinition != null)

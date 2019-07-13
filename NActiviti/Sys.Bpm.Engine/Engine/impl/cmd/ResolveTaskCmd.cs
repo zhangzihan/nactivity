@@ -60,10 +60,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             task.DelegationState = DelegationState.RESOLVED;
             string ownerName = null;
-            if (string.IsNullOrWhiteSpace(task.Owner) == false)
-            {
-                ownerName = AsyncHelper.RunSync(() => userService.GetUser(task.Owner))?.FullName;
-            }
+            //TODO: 考虑性能问题，暂时不要获取人员信息
+            //if (string.IsNullOrWhiteSpace(task.Owner) == false)
+            //{
+            //    ownerName = AsyncHelper.RunSync(() => userService.GetUser(task.Owner))?.FullName;
+            //}
             commandContext.TaskEntityManager.ChangeTaskAssignee(task, task.Owner, ownerName);
 
             return null;

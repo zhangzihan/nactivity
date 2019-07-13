@@ -17,7 +17,7 @@ using Sys.Workflow;
 namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
     /// <summary>
-    /// 半数通过
+    /// 少数服从多数，当半数以上人员投的通过票则输出为true，否则半数以上人员投的反对票则输出为false.
     /// </summary>
     class HalfPassCompletedPolicy : DefaultMultiInstanceCompletedPolicy
     {

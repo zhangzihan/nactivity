@@ -127,7 +127,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 if (ioSpecification != null && ioSpecification.DataOutputRefs.Count > 0)
                 {
                     string firstDataOutputName = ioSpecification.DataOutputRefs[0];
-                    if (!(firstDataOutputName is null))
+                    if (firstDataOutputName is object)
                     {
                         ItemInstance outputItem = (ItemInstance)execution.GetVariable(firstDataOutputName);
                         outputItem.StructureInstance.LoadFrom(receivedMessage.StructureInstance.ToArray());

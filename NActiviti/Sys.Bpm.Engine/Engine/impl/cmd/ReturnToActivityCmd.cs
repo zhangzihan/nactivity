@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace Sys.Workflow.Engine.Impl.Cmd
 {
+    using Sys.Workflow.Engine.Delegate.Events;
+    using Sys.Workflow.Engine.Delegate.Events.Impl;
     using Sys.Workflow.Engine.History;
     using Sys.Workflow.Engine.Impl.Cfg;
     using Sys.Workflow.Engine.Impl.Interceptor;
@@ -97,16 +99,22 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     tasks.Add(task);
                 }
 
-                DeleteTasks(commandContext, commandExecutor, miRoot != null ? miRoot : execution, executionEntityManager, tasks);
+                ReturnToTasks(commandContext, commandExecutor, miRoot != null ? miRoot : execution, executionEntityManager, tasks);
 
                 return null;
             }
         }
 
-        private void DeleteTasks(ICommandContext commandContext, Interceptor.ICommandExecutor commandExecutor, IExecutionEntity execution, IExecutionEntityManager executionEntityManager, List<ITask> tasks)
+        private void ReturnToTasks(ICommandContext commandContext, Interceptor.ICommandExecutor commandExecutor, IExecutionEntity execution, IExecutionEntityManager executionEntityManager, List<ITask> tasks)
         {
             foreach (ITaskEntity delTask in tasks)
             {
+                IActivitiEventDispatcher eventDispatcher = commandContext.ProcessEngineConfiguration.EventDispatcher;
+                if (eventDispatcher.Enabled)
+                {
+                    eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateTaskReturnEntityEvent(delTask, returnToActivityId));
+                }
+
                 commandExecutor.Execute(new AddCommentCmd(delTask.Id, delTask.ProcessInstanceId, returnToReason));
 
                 commandContext.TaskEntityManager.DeleteTask(delTask, returnToReason, false, false);

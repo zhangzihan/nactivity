@@ -16,7 +16,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             extElement = parent.Descendants(XName.Get(BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE)).FirstOrDefault();
 
-            return !(extElement is null);
+            return extElement is object;
         }
 
         public static XElement GetOrAddExtensionElements(this XElement parent)
@@ -37,7 +37,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             extElements = parent.Descendants(XName.Get(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE));
 
-            return !(extElements is null);
+            return extElements is object;
         }
 
         public static bool TryGetUserTaskAssigneeType(this XElement parent, out XElement assigneeElement)
@@ -46,7 +46,7 @@ namespace Sys.Workflow.Bpmn.Models
                 .Where(x => string.Compare(x.Attribute(BpmnXMLConstants.ATTRIBUTE_NAME)?.Value, BpmnXMLConstants.ELEMENT_USER_TASK_EXTENSION_ASSIGNE_TYPE, true) == 0)
                 .FirstOrDefault();
 
-            return !(assigneeElement is null);
+            return assigneeElement is object;
         }
 
         public static bool TryGetExecutionStartListener(this XElement parent, out IEnumerable<XElement> listeners)
@@ -54,7 +54,7 @@ namespace Sys.Workflow.Bpmn.Models
             listeners = parent.Descendants(XName.Get(BpmnXMLConstants.ELEMENT_EXECUTION_LISTENER, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE))
                                 .Where(x => x.Attribute(BpmnXMLConstants.ATTRIBUTE_EVENT)?.Value == BpmnXMLConstants.ATTRIBUTE_EVENT_START_VALUE);
 
-            return !(listeners is null);
+            return listeners is object;
         }
 
         private static IEnumerable<XElement> GetOrAddExecutionStartListener(this XElement parent, string listenerType)
@@ -146,7 +146,7 @@ namespace Sys.Workflow.Bpmn.Models
                     return false;
                 }).FirstOrDefault();
 
-            return !(elem is null);
+            return elem is object;
         }
     }
 }

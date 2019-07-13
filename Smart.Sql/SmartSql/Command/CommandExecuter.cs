@@ -31,6 +31,7 @@ namespace SmartSql.Command
         {
             return ExecuteWarp((dbCommand) =>
             {
+                dbCommand.CommandTimeout = 0;
                 return dbCommand.ExecuteNonQuery();
             }, dbSession, context);
         }
@@ -39,6 +40,7 @@ namespace SmartSql.Command
         {
             return ExecuteWarp((dbCommand) =>
             {
+                dbCommand.CommandTimeout = 0;
                 if (_logger.IsEnabled(LogLevel.Debug))
                 {
                     _logger.LogDebug(dbCommand.CommandText);
@@ -53,8 +55,9 @@ namespace SmartSql.Command
         public object ExecuteScalar(IDbConnectionSession dbSession, RequestContext context)
         {
             return ExecuteWarp((dbCommand) =>
-             {
-                 return dbCommand.ExecuteScalar();
+            {
+                dbCommand.CommandTimeout = 0;
+                return dbCommand.ExecuteScalar();
              }, dbSession, context);
         }
         private T ExecuteWarp<T>(Func<IDbCommand, T> excute, IDbConnectionSession dbSession, RequestContext context)
@@ -75,6 +78,7 @@ namespace SmartSql.Command
         {
             return ExecuteWarpAsync((dbCommand) =>
             {
+                dbCommand.CommandTimeout = 0;
                 return dbCommand.ExecuteNonQueryAsync();
             }, dbSession, context);
         }
@@ -83,6 +87,7 @@ namespace SmartSql.Command
         {
             return ExecuteWarpAsync((dbCommand) =>
             {
+                dbCommand.CommandTimeout = 0;
                 return dbCommand.ExecuteNonQueryAsync(cancellationToken);
             }, dbSession, context);
         }
@@ -91,6 +96,7 @@ namespace SmartSql.Command
         {
             return ExecuteWarpAsync((dbCommand) =>
             {
+                dbCommand.CommandTimeout = 0;
                 return dbCommand.ExecuteScalarAsync();
             }, dbSession, context);
         }
@@ -99,6 +105,7 @@ namespace SmartSql.Command
         {
             return ExecuteWarpAsync((dbCommand) =>
             {
+                dbCommand.CommandTimeout = 0;
                 return dbCommand.ExecuteScalarAsync(cancellationToken);
             }, dbSession, context);
         }
@@ -106,6 +113,7 @@ namespace SmartSql.Command
         {
             return ExecuteWarpAsync((dbCommand) =>
             {
+                dbCommand.CommandTimeout = 0;
                 return dbCommand.ExecuteReaderAsync();
             }, dbSession, context);
         }
@@ -114,6 +122,7 @@ namespace SmartSql.Command
         {
             return ExecuteWarpAsync((dbCommand) =>
             {
+                dbCommand.CommandTimeout = 0;
                 return dbCommand.ExecuteReaderAsync(cancellationToken);
             }, dbSession, context);
         }

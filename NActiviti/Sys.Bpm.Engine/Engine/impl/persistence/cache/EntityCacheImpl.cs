@@ -124,7 +124,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
                 classCache = FindClassCacheByCheckingSubclasses(entityClass);
             }
 
-            if (!(classCache is null))
+            if (classCache is object)
             {
                 IList<object> entities = new List<object>(classCache.Count);
                 foreach (CachedEntity cachedObject in classCache.Values)

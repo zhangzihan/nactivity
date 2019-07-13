@@ -45,10 +45,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 task.Owner = task.Assignee;
             }
             string userName = null;
-            if (string.IsNullOrWhiteSpace(userId) == false)
-            {
-                userName = AsyncHelper.RunSync(() => userService.GetUser(userId))?.FullName;
-            }
+            //TODO: 考虑性能问题，暂时不要获取人员信息
+            //if (string.IsNullOrWhiteSpace(userId) == false)
+            //{
+            //    userName = AsyncHelper.RunSync(() => userService.GetUser(userId))?.FullName;
+            //}
             commandContext.TaskEntityManager.ChangeTaskAssignee(task, userId, userName);
             return null;
         }

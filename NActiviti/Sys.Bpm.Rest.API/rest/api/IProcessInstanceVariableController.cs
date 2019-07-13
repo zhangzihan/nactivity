@@ -37,10 +37,9 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// <summary>
         /// 设置某个工作流实例变量
         /// </summary>
-        /// <param name="processInstanceId">流程实例id</param>
         /// <param name="setTaskVariablesCmd">流程变量命令</param>
         /// <returns></returns>
-        Task<ActionResult> SetVariables(string processInstanceId, SetProcessVariablesCmd setTaskVariablesCmd);
+        Task<bool> SetVariables(SetProcessVariablesCmd setTaskVariablesCmd);
 
         /// <summary>
         /// 移除某个工作流实例变量
@@ -48,6 +47,6 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// <param name="processInstanceId">流程实例id</param>
         /// <param name="removeProcessVariablesCmd">移除命令</param>
         /// <returns></returns>
-        Task<ActionResult> RemoveVariables(string processInstanceId, RemoveProcessVariablesCmd removeProcessVariablesCmd);
+        Task<bool> RemoveVariables(RemoveProcessVariablesCmd removeProcessVariablesCmd);
     }
 }

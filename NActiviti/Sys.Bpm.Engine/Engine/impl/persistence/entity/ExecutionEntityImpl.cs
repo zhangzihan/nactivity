@@ -649,7 +649,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         // TODO: this should ideally move to another place  
         protected internal override void InitializeVariableInstanceBackPointer(IVariableInstanceEntity variableInstance)
         {
-            if (!(processInstanceId is null))
+            if (processInstanceId is object)
             {
                 variableInstance.ProcessInstanceId = processInstanceId;
             }
@@ -690,7 +690,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             // Dispatch event, if needed
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            if (!(processEngineConfiguration is null) && processEngineConfiguration.EventDispatcher.Enabled)
+            if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
             {
                 processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateVariableEvent(ActivitiEventType.VARIABLE_CREATED, variableName, value, result.Type, result.TaskId, result.ExecutionId, ProcessInstanceId, ProcessDefinitionId));
             }
@@ -703,7 +703,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             // Dispatch event, if needed
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            if (!(processEngineConfiguration is null) && processEngineConfiguration.EventDispatcher.Enabled)
+            if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
             {
                 processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateVariableEvent(ActivitiEventType.VARIABLE_UPDATED, variableInstance.Name, value, variableInstance.Type, variableInstance.TaskId, variableInstance.ExecutionId, ProcessInstanceId, ProcessDefinitionId));
             }
@@ -1033,7 +1033,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (!(localizedName is null) && localizedName.Length > 0)
+                if (localizedName is object && localizedName.Length > 0)
                 {
                     return localizedName;
                 }
@@ -1053,7 +1053,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (!(localizedDescription is null) && localizedDescription.Length > 0)
+                if (localizedDescription is object && localizedDescription.Length > 0)
                 {
                     return localizedDescription;
                 }
@@ -1130,7 +1130,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     foreach (IVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!(variableInstance.Id is null) && variableInstance.TaskId is null)
+                        if (variableInstance.Id is object && variableInstance.TaskId is null)
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }
@@ -1442,11 +1442,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     strb.Append("Execution[ id '" + Id + "' ]");
                 }
-                if (!(activityId is null))
+                if (activityId is object)
                 {
                     strb.Append(" - activity '" + activityId);
                 }
-                if (!(parentId is null))
+                if (parentId is object)
                 {
                     strb.Append(" - parent '" + parentId + "'");
                 }

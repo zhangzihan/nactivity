@@ -83,7 +83,8 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 string assigneeUser = null;
                 if (string.IsNullOrWhiteSpace(identityId) == false)
                 {
-                    assigneeUser = AsyncHelper.RunSync(() => userService.GetUser(identityId))?.FullName;
+                    //TODO: 考虑性能问题，暂时不要获取人员信息
+                    //assigneeUser = AsyncHelper.RunSync(() => userService.GetUser(identityId))?.FullName;
                 }
                 commandContext.TaskEntityManager.ChangeTaskAssignee(task, identityId, assigneeUser);
                 assignedToNoOne = identityId is null;

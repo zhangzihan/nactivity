@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_1" name="子流程" isExecutable="true">
+    <bpmn2:startEvent id="StartEvent_1kar9x9">
+      <bpmn2:extensionElements>
+        <camunda:properties />
+      </bpmn2:extensionElements>
+      <bpmn2:outgoing>SequenceFlow_1hjuyvj</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:subProcess id="SubProcess_1rgmegj">
+      <bpmn2:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="Input_1t61dmr">子流程入参</camunda:inputParameter>
+          <camunda:outputParameter name="Output_0bhburp">子流程出参</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_1hjuyvj</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_05fwti0</bpmn2:outgoing>
+      <bpmn2:startEvent id="StartEvent_1p86uq3">
+        <bpmn2:outgoing>SequenceFlow_03d2v9q</bpmn2:outgoing>
+      </bpmn2:startEvent>
+      <bpmn2:sequenceFlow id="SequenceFlow_03d2v9q" sourceRef="StartEvent_1p86uq3" targetRef="Task_10r20l1" />
+      <bpmn2:userTask id="Task_10r20l1" name="子流程用户" camunda:assignee="${子用户}">
+        <bpmn2:incoming>SequenceFlow_03d2v9q</bpmn2:incoming>
+      </bpmn2:userTask>
+    </bpmn2:subProcess>
+    <bpmn2:sequenceFlow id="SequenceFlow_1hjuyvj" sourceRef="StartEvent_1kar9x9" targetRef="SubProcess_1rgmegj" />
+    <bpmn2:sequenceFlow id="SequenceFlow_05fwti0" sourceRef="SubProcess_1rgmegj" targetRef="Task_0otzwuu" />
+    <bpmn2:userTask id="Task_0otzwuu" name="主用户" camunda:assignee="${主用户}">
+      <bpmn2:incoming>SequenceFlow_05fwti0</bpmn2:incoming>
+    </bpmn2:userTask>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="StartEvent_1kar9x9_di" bpmnElement="StartEvent_1kar9x9">
+        <dc:Bounds x="165" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="321" y="206" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubProcess_1rgmegj_di" bpmnElement="SubProcess_1rgmegj" isExpanded="true">
+        <dc:Bounds x="332" y="170" width="263" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1hjuyvj_di" bpmnElement="SequenceFlow_1hjuyvj">
+        <di:waypoint x="201" y="240" />
+        <di:waypoint x="332" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_1p86uq3_di" bpmnElement="StartEvent_1p86uq3">
+        <dc:Bounds x="358" y="212" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_03d2v9q_di" bpmnElement="SequenceFlow_03d2v9q">
+        <di:waypoint x="394" y="230" />
+        <di:waypoint x="469" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0jlwlea_di" bpmnElement="Task_10r20l1">
+        <dc:Bounds x="469" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_05fwti0_di" bpmnElement="SequenceFlow_05fwti0">
+        <di:waypoint x="595" y="240" />
+        <di:waypoint x="719" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1x0ee69_di" bpmnElement="Task_0otzwuu">
+        <dc:Bounds x="719" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

@@ -69,20 +69,27 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// </summary>
         /// <param name="completeTaskCmd">任务完成命令</param>
         /// <returns></returns>
-        Task<ActionResult> CompleteTask(CompleteTaskCmd completeTaskCmd);
+        Task<bool> CompleteTask(CompleteTaskCmd completeTaskCmd);
+
+        /// <summary>
+        /// 批量完成处理人任务
+        /// </summary>
+        /// <param name="cmds">任务完成命令</param>
+        /// <returns>仅返回错误的任务</returns>
+        Task<CompleteTaskCmd[]> CompleteTask(CompleteTaskCmd[] cmds);
 
         /// <summary>
         /// 终止任务
         /// </summary>
         /// <param name="cmd">终止任务命令</param>
         /// <returns></returns>
-        Task<ActionResult> Terminate(TerminateTaskCmd cmd);
+        Task<bool> Terminate(TerminateTaskCmd cmd);
 
         /// <summary>
         /// 删除任务
         /// </summary>
         /// <param name="taskId">任务id</param>
-        Task<ActionResult> DeleteTask(string taskId);
+        Task<bool> DeleteTask(string taskId);
 
         /// <summary>
         /// 创建新的任务
@@ -96,7 +103,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// </summary>
         /// <param name="updateTaskCmd">更新任务状态</param>
         /// <returns></returns>
-        Task<ActionResult> UpdateTask(UpdateTaskCmd updateTaskCmd);
+        Task<bool> UpdateTask(UpdateTaskCmd updateTaskCmd);
 
         /// <summary>
         /// 创建子任务
@@ -131,20 +138,20 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// </summary>
         /// <param name="cmd" cref="ApprovaleTaskCmd">同意命令</param>
         /// <returns></returns>
-        Task<ActionResult> Approvaled(ApprovaleTaskCmd cmd);
+        Task<bool> Approvaled(ApprovaleTaskCmd cmd);
 
         /// <summary>
         /// 审批类型任务-拒绝
         /// </summary>
         /// <param name="cmd" cref="RejectTaskCmd">拒绝命令</param>
         /// <returns></returns>
-        Task<ActionResult> Reject(RejectTaskCmd cmd);
+        Task<bool> Reject(RejectTaskCmd cmd);
 
         /// <summary>
         /// 审批类型任务-退回到
         /// </summary>
         /// <param name="cmd" cref="ReturnToTaskCmd">退回到</param>
         /// <returns></returns>
-        Task<ActionResult> ReturnTo(ReturnToTaskCmd cmd);
+        Task<bool> ReturnTo(ReturnToTaskCmd cmd);
     }
 }

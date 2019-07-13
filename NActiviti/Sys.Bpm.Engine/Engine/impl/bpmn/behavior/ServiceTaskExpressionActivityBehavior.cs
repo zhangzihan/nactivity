@@ -71,7 +71,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     }
 
                     object value = expression.GetValue(execution);
-                    if (!(resultVariable is null))
+                    if (resultVariable is object)
                     {
                         execution.SetVariable(resultVariable, value);
                     }

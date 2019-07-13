@@ -68,6 +68,16 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             entity.Deleted = true;
         }
 
+        public override void Insert(IExecutionEntity entity)
+        {
+            base.Insert(entity);
+        }
+
+        public override void Insert(IExecutionEntity entity, bool fireCreateEvent)
+        {
+            base.Insert(entity, fireCreateEvent);
+        }
+
         // FIND METHODS
 
         public virtual IExecutionEntity FindSubProcessInstanceBySuperExecutionId(string superExecutionId)
@@ -143,19 +153,19 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
 
                 // Root process instance relationship
-                if (!(executionEntity.RootProcessInstanceId is null))
+                if (executionEntity.RootProcessInstanceId is object)
                 {
                     executionEntity.RootProcessInstance = executionMap[executionEntity.RootProcessInstanceId];
                 }
 
                 // Process instance relationship
-                if (!(executionEntity.ProcessInstanceId is null))
+                if (executionEntity.ProcessInstanceId is object)
                 {
                     executionEntity.ProcessInstance = executionMap[executionEntity.ProcessInstanceId];
                 }
 
                 // Parent - child relationship
-                if (!(executionEntity.ParentId is null))
+                if (executionEntity.ParentId is object)
                 {
                     IExecutionEntity parentExecutionEntity = executionMap[executionEntity.ParentId];
                     executionEntity.Parent = parentExecutionEntity;
@@ -223,7 +233,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             processInstanceExecution.IsScope = true; // process instance is always a scope for all child executions
 
             // Inherit tenant id (if any)
-            if (!(tenantId is null))
+            if (tenantId is object)
             {
                 processInstanceExecution.TenantId = tenantId;
             }
@@ -243,26 +253,32 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
                 ExternalConnectorProvider externalConnector = ProcessEngineServiceProvider.Resolve<ExternalConnectorProvider>();
 
-                try
+                starter = new UserInfo
                 {
-                    starter = AsyncHelper.RunSync<IUserInfo>(() => userService.GetUser(processInstanceExecution.StartUserId));
-                    starter.TenantId = processInstanceExecution.TenantId;
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, ex.Message);
-                    starter = new UserInfo
-                    {
-                        Id = processInstanceExecution.StartUserId,
-                        FullName = processInstanceExecution.StartUserId
-                    };
-                }
+                    Id = processInstanceExecution.StartUserId,
+                    FullName = processInstanceExecution.StartUserId
+                };
+                //TODO: 考虑性能问题，暂时不要获取人员信息
+                //try
+                //{
+                //    starter = AsyncHelper.RunSync<IUserInfo>(() => userService.GetUser(processInstanceExecution.StartUserId));
+                //    starter.TenantId = processInstanceExecution.TenantId;
+                //}
+                //catch (Exception ex)
+                //{
+                //    logger.LogError(ex, ex.Message);
+                //    starter = new UserInfo
+                //    {
+                //        Id = processInstanceExecution.StartUserId,
+                //        FullName = processInstanceExecution.StartUserId
+                //    };
+                //}
 
                 //保存调用用户变量
                 processInstanceExecution.SetVariable(processInstanceExecution.StartUserId, starter);
             }
 
-            if (!(initiatorVariableName is null))
+            if (initiatorVariableName is object)
             {
                 processInstanceExecution.SetVariable(initiatorVariableName, authenticatedUserId);
             }
@@ -270,7 +286,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             // Need to be after insert, cause we need the id
             processInstanceExecution.ProcessInstanceId = processInstanceExecution.Id;
             processInstanceExecution.RootProcessInstanceId = processInstanceExecution.Id;
-            if (!(authenticatedUserId is null))
+            if (authenticatedUserId is object)
             {
                 IdentityLinkEntityManager.AddIdentityLink(processInstanceExecution, authenticatedUserId, null, IdentityLinkType.STARTER);
             }
@@ -295,7 +311,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             childExecution.Parent = parentExecutionEntity;
             childExecution.ProcessDefinitionId = parentExecutionEntity.ProcessDefinitionId;
             childExecution.ProcessDefinitionKey = parentExecutionEntity.ProcessDefinitionKey;
-            childExecution.ProcessInstanceId = !(parentExecutionEntity.ProcessInstanceId is null) ? parentExecutionEntity.ProcessInstanceId : parentExecutionEntity.Id;
+            childExecution.ProcessInstanceId = parentExecutionEntity.ProcessInstanceId is object ? parentExecutionEntity.ProcessInstanceId : parentExecutionEntity.Id;
             childExecution.IsScope = false;
             childExecution.ActivityId = parentExecutionEntity.ActivityId;
             childExecution.BusinessKey = parentExecutionEntity.BusinessKey;
@@ -346,7 +362,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             superExecutionEntity.SubProcessInstance = subProcessInstance;
 
             ProcessEngineConfigurationImpl processEngineConfiguration1 = Context.ProcessEngineConfiguration;
-            if (!(processEngineConfiguration1 is null) && processEngineConfiguration1.EventDispatcher.Enabled)
+            if (processEngineConfiguration1 is object && processEngineConfiguration1.EventDispatcher.Enabled)
             {
                 processEngineConfiguration1.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.ENTITY_CREATED, subProcessInstance));
             }
@@ -369,7 +385,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             childExecution.IsActive = true;
             childExecution.StartTime = processEngineConfiguration.Clock.CurrentTime;
 
-            if (!(parentExecutionEntity.TenantId is null))
+            if (parentExecutionEntity.TenantId is object)
             {
                 childExecution.TenantId = parentExecutionEntity.TenantId;
             }
@@ -650,7 +666,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     {
                         IVariableInstanceEntityManager variableInstanceEntityManager = VariableInstanceEntityManager;
                         variableInstanceEntityManager.Delete(variableInstanceEntity);
-                        if (variableInstanceEntity.ByteArrayRef != null && !(variableInstanceEntity.ByteArrayRef.Id is null))
+                        if (variableInstanceEntity.ByteArrayRef != null && variableInstanceEntity.ByteArrayRef.Id is object)
                         {
                             ByteArrayEntityManager.DeleteByteArrayById(variableInstanceEntity.ByteArrayRef.Id);
                         }
@@ -760,7 +776,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual string UpdateProcessInstanceBusinessKey(IExecutionEntity executionEntity, string businessKey)
         {
-            if (executionEntity.ProcessInstanceType && !(businessKey is null))
+            if (executionEntity.ProcessInstanceType && businessKey is object)
             {
                 executionEntity.BusinessKey = businessKey;
                 HistoryManager.UpdateProcessBusinessKeyInHistory(executionEntity);

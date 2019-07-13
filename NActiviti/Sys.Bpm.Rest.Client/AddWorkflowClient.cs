@@ -2,11 +2,14 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Polly;
+using Polly.Extensions.Http;
 using Sys.Extentions;
 using Sys.Net.Http;
 using Sys.Workflow;
 using Sys.Workflow.Util;
 using System;
+using System.Net;
 using System.Net.Http;
 
 namespace Sys.Workflow.Rest.Client
@@ -25,15 +28,30 @@ namespace Sys.Workflow.Rest.Client
             services.AddSpringCoreTypeRepository();
 
             services.AddHttpClient(HTTPCLIENT_WORKFLOW)
-                .ConfigureHttpMessageHandlerBuilder(builder =>
+                .AddPolicyHandler(GetRetryPolicy())
+                .AddPolicyHandler(GetCircuitBreakerPolicy())
+                .ConfigureHttpMessageHandlerBuilder(cb =>
                 {
-                    HttpClientHandler handler = new HttpClientHandler();
-                    handler.MaxRequestContentBufferSize = int.MaxValue;
-                    handler.ClientCertificateOptions = ClientCertificateOption.Automatic;
-                    handler.UseDefaultCredentials = true;
-                    handler.ServerCertificateCustomValidationCallback += (s, arg1, arg2, arg3) => true;
-                    builder.PrimaryHandler = handler;
-                    builder.Build();
+                    if (cb.PrimaryHandler is HttpClientHandler handler)
+                    {
+                        handler.MaxRequestContentBufferSize = int.MaxValue;
+                        handler.ClientCertificateOptions = ClientCertificateOption.Automatic;
+                        handler.UseDefaultCredentials = true;
+                        handler.ServerCertificateCustomValidationCallback += (s, arg1, arg2, arg3) => true;
+                    }
+                    else
+                    {
+                        handler = new HttpClientHandler
+                        {
+                            MaxRequestContentBufferSize = int.MaxValue,
+                            ClientCertificateOptions = ClientCertificateOption.Automatic,
+                            UseDefaultCredentials = true
+                        };
+                        handler.ServerCertificateCustomValidationCallback += (s, arg1, arg2, arg3) => true;
+
+                        cb.PrimaryHandler = handler;
+                        cb.Build();
+                    }
                 });
 
             services.AddSingleton<ExternalConnectorProvider>(sp =>
@@ -67,6 +85,22 @@ namespace Sys.Workflow.Rest.Client
             services.AddUserSession<DefaultUserSession>();
 
             return services;
+        }
+
+        static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions
+              .HandleTransientHttpError()
+              .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
+              .WaitAndRetryAsync(4, t => TimeSpan.FromMilliseconds(Math.Pow(2, t) * 500));
+
+        }
+
+        static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .CircuitBreakerAsync(3, TimeSpan.FromSeconds(10));
         }
     }
 }

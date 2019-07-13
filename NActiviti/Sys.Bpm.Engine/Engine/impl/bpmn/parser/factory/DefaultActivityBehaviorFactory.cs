@@ -31,6 +31,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
 
         public const string DEFAULT_SERVICE_TASK_BEAN_NAME = "defaultServiceTaskBehavior";
         private readonly IClassDelegateFactory classDelegateFactory;
+        private static readonly Regex EXPR_PATTERN = new Regex("\\$+\\{+.+\\}", RegexOptions.Compiled);
 
         public DefaultActivityBehaviorFactory(IClassDelegateFactory classDelegateFactory)
         {
@@ -266,7 +267,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
 
             ruleActivity.Exclude = businessRuleTask.Exclude;
 
-            if (!(businessRuleTask.ResultVariableName is null) && businessRuleTask.ResultVariableName.Length > 0)
+            if (businessRuleTask.ResultVariableName is object && businessRuleTask.ResultVariableName.Length > 0)
             {
                 ruleActivity.ResultVariable = businessRuleTask.ResultVariableName;
             }
@@ -328,6 +329,8 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
                 case AssigneeType.SINGLE:
                 default:
                     return new ParallelMultiInstanceBehavior(activity, innerActivityBehavior);
+                case AssigneeType.SINGLE_PASS:
+                    return new SinglePassParallelMultiInstanceBehavior(activity, innerActivityBehavior);
                 case AssigneeType.ONE:
                     return new OnePassParallelMultiInstanceBehavior(activity, innerActivityBehavior);
                 case AssigneeType.HALF_PASSED:
@@ -364,10 +367,8 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
 
         public virtual CallActivityBehavior CreateCallActivityBehavior(CallActivity callActivity)
         {
-            string expressionRegex = "\\$+\\{+.+\\}";
-
             CallActivityBehavior callActivityBehaviour;
-            if (!string.IsNullOrWhiteSpace(callActivity.CalledElement) && new Regex(expressionRegex).IsMatch(callActivity.CalledElement))
+            if (!string.IsNullOrWhiteSpace(callActivity.CalledElement) && EXPR_PATTERN.IsMatch(callActivity.CalledElement))
             {
                 callActivityBehaviour = new CallActivityBehavior(expressionManager.CreateExpression(callActivity.CalledElement), callActivity.MapExceptions);
             }
@@ -412,6 +413,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
         public virtual IntermediateThrowNoneEventActivityBehavior CreateIntermediateThrowNoneEventActivityBehavior(ThrowEvent throwEvent)
         {
             return new IntermediateThrowNoneEventActivityBehavior();
+        }
+
+        public virtual IntermediateThrowMessageEventActivityBehavior CreateIntermediateThrowMessgeEventActivityBehavior(ThrowEvent throwEvent, MessageEventDefinition messageEventDefinition, Message message)
+        {
+            return new IntermediateThrowMessageEventActivityBehavior(messageEventDefinition, message);
         }
 
         public virtual IntermediateThrowSignalEventActivityBehavior CreateIntermediateThrowSignalEventActivityBehavior(ThrowEvent throwEvent, SignalEventDefinition signalEventDefinition, Signal signal)

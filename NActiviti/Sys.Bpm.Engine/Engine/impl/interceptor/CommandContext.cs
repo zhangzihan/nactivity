@@ -160,14 +160,11 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         public virtual void AddCloseListener(ICommandContextCloseListener commandContextCloseListener)
         {
-            lock (syncRoot)
+            if (closeListeners == null)
             {
-                if (closeListeners == null)
-                {
-                    closeListeners = new List<ICommandContextCloseListener>(1);
-                }
-                closeListeners.Add(commandContextCloseListener);
+                closeListeners = new List<ICommandContextCloseListener>(1);
             }
+            closeListeners.Add(commandContextCloseListener);
         }
 
         public virtual IList<ICommandContextCloseListener> CloseListeners
@@ -195,21 +192,18 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         protected virtual void ExecuteCloseListenersClosing()
         {
-            lock (syncRoot)
+            if (closeListeners != null)
             {
-                if (closeListeners != null)
+                try
                 {
-                    try
+                    foreach (ICommandContextCloseListener listener in closeListeners)
                     {
-                        foreach (ICommandContextCloseListener listener in closeListeners)
-                        {
-                            listener.Closing(this);
-                        }
+                        listener.Closing(this);
                     }
-                    catch (Exception exception)
-                    {
-                        this.SetException(exception);
-                    }
+                }
+                catch (Exception exception)
+                {
+                    this.SetException(exception);
                 }
             }
         }
@@ -218,42 +212,36 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         protected virtual void ExecuteCloseListenersAfterSessionFlushed()
         {
-            lock (syncRoot)
+            if (closeListeners != null)
             {
-                if (closeListeners != null)
+                try
                 {
-                    try
+                    foreach (ICommandContextCloseListener listener in closeListeners)
                     {
-                        foreach (ICommandContextCloseListener listener in closeListeners)
-                        {
-                            listener.AfterSessionsFlush(this);
-                        }
+                        listener.AfterSessionsFlush(this);
                     }
-                    catch (Exception exception)
-                    {
-                        this.SetException(exception);
-                    }
+                }
+                catch (Exception exception)
+                {
+                    this.SetException(exception);
                 }
             }
         }
 
         protected virtual void ExecuteCloseListenersClosed()
         {
-            lock (syncRoot)
+            if (closeListeners != null)
             {
-                if (closeListeners != null)
+                try
                 {
-                    try
+                    foreach (ICommandContextCloseListener listener in closeListeners)
                     {
-                        foreach (ICommandContextCloseListener listener in closeListeners)
-                        {
-                            listener.Closed(this);
-                        }
+                        listener.Closed(this);
                     }
-                    catch (Exception exception)
-                    {
-                        this.SetException(exception);
-                    }
+                }
+                catch (Exception exception)
+                {
+                    this.SetException(exception);
                 }
             }
         }
@@ -308,9 +296,9 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
         /// </summary>
         public virtual void SetException(Exception exception)
         {
-            if (this.exception_ == null)
+            if (exception_ is null)
             {
-                this.exception_ = exception;
+                exception_ = exception;
             }
             else
             {

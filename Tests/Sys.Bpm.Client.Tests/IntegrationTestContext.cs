@@ -31,7 +31,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Xunit;
 
-namespace Sys.Workflown.Test
+namespace Sys.Workflow.Test
 {
     /// <summary>
     /// 集成测试上下文
@@ -114,7 +114,7 @@ namespace Sys.Workflown.Test
             return TestServer.Host.Services.GetService<T>();
         }
 
-        public string TenantId => "cb79f3dd-e84e-49b0-95c2-0bdafc80f09d";
+        public string TenantId => "3b450000-00f0-5254-168b-08d6f4673e73";
 
         public string AuthUserId => "8a010000-5d88-0015-e013-08d6bd87c815";
 
@@ -346,7 +346,7 @@ namespace Sys.Workflown.Test
             string processDefinitionId = GetOrAddProcessDefinition(bpmnFile).Id;
 
             var vars = new Dictionary<string, object>(variables ?? new Dictionary<string, object>());
-            if (!(users is null))
+            if (users is object)
             {
                 vars.TryAdd("name", users);
             }
@@ -424,7 +424,8 @@ namespace Sys.Workflown.Test
                 new HttpContextAccessor()
                 {
                     HttpContext = httpContext
-                });
+                },
+                Resolve<ILoggerFactory>());
         }
 
         private HttpClient _httpClient;

@@ -65,15 +65,15 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     persistentState["doubleValue"] = doubleValue;
                 }
-                if (!(textValue is null))
+                if (textValue is object)
                 {
                     persistentState["textValue"] = textValue;
                 }
-                if (!(textValue2 is null))
+                if (textValue2 is object)
                 {
                     persistentState["textValue2"] = textValue2;
                 }
-                if (byteArrayRef != null && !(byteArrayRef.Id is null))
+                if (byteArrayRef is object && byteArrayRef.Id is object)
                 {
                     persistentState["byteArrayValueId"] = byteArrayRef.Id;
                 }
@@ -201,7 +201,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (!(typeName is null))
+                if (typeName is object)
                 {
                     return typeName;
                 }
@@ -330,15 +330,15 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 sb.Append(", doubleValue=").Append(doubleValue);
             }
-            if (!(textValue is null))
+            if (textValue is object)
             {
                 sb.Append(", textValue=").Append(textValue.PadLeft(40, ' '));
             }
-            if (!(textValue2 is null))
+            if (textValue2 is object)
             {
                 sb.Append(", textValue2=").Append(textValue2.PadLeft(40, ' '));
             }
-            if (byteArrayRef != null && !(byteArrayRef.Id is null))
+            if (byteArrayRef is object && byteArrayRef.Id is object)
             {
                 sb.Append(", byteArrayValueId=").Append(byteArrayRef.Id);
             }

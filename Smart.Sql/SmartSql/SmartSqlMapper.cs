@@ -83,7 +83,7 @@ namespace SmartSql
             {
                 context.Variables = Variables;
                 SetupRequestContext(context);
-                if (CacheManager.TryGet<T>(context, out T cachedResult))
+                if (CacheManager.TryGet(context, out T cachedResult))
                 {
                     return cachedResult;
                 }
@@ -91,7 +91,7 @@ namespace SmartSql
                 dbSession = SessionStore.GetOrAddDbSession(dataSource);
                 var result = execute(dbSession);
                 CacheManager.RequestExecuted(dbSession, context);
-                CacheManager.TryAdd<T>(context, result);
+                CacheManager.TryAdd(context, result);
                 return result;
             }
             catch (Exception ex)

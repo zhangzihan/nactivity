@@ -254,7 +254,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             {
                 IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
                 eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_CREATED, task));
-                if (!(task.Assignee is null))
+                if (task.Assignee is object)
                 {
                     eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_ASSIGNED, task));
                 }
@@ -298,10 +298,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     assigneeValue = assigneeExpressionValue.ToString();
                 }
                 string assigneeUser = null;
-                if (string.IsNullOrWhiteSpace(assigneeValue) == false)
-                {
-                    assigneeUser = AsyncHelper.RunSync(() => userService.GetUser(assigneeValue))?.FullName;
-                }
+                //TODO: 考虑性能问题，暂时不获取人员
+                //if (string.IsNullOrWhiteSpace(assigneeValue) == false)
+                //{
+                //    assigneeUser = AsyncHelper.RunSync(() => userService.GetUser(assigneeValue))?.FullName;
+                //}
                 taskEntityManager.ChangeTaskAssigneeNoEvents(task, assigneeValue, assigneeUser);
             }
 

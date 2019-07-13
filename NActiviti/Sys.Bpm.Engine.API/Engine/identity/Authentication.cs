@@ -23,7 +23,7 @@ namespace Sys.Workflow.Engine.Impl.Identities
     public abstract class Authentication
     {
 
-        internal static ThreadLocal<IUserInfo> authenticatedUserIdThreadLocal = new ThreadLocal<IUserInfo>();
+        internal static AsyncLocal<IUserInfo> authenticatedUserIdThreadLocal = new AsyncLocal<IUserInfo>();
 
         /// <summary>
         /// 验证用户

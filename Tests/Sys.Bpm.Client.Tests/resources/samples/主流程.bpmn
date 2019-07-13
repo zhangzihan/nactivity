@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_9PoKARBVU" name="WebApi" isExecutable="true">
+    <bpmn2:startEvent id="Start_LyvmWffqX4">
+      <bpmn2:outgoing>SequenceFlow_0wbquiq</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:callActivity id="Task_1nwwkb2" name="商品审核流程" calledElement="Process_Product" camunda:calledElementTenantId="${tenantId}">
+      <bpmn2:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_0wbquiq</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_06kk5gy</bpmn2:outgoing>
+      <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${商品s}" camunda:elementVariable="商品">
+        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${nrOfActiveInstances==0}</bpmn2:completionCondition>
+      </bpmn2:multiInstanceLoopCharacteristics>
+    </bpmn2:callActivity>
+    <bpmn2:sequenceFlow id="SequenceFlow_0wbquiq" sourceRef="Start_LyvmWffqX4" targetRef="Task_1nwwkb2" />
+    <bpmn2:sequenceFlow id="SequenceFlow_06kk5gy" sourceRef="Task_1nwwkb2" targetRef="Task_0kgc927" />
+    <bpmn2:userTask id="Task_0kgc927" name="任务等待" camunda:assignee="评审员">
+      <bpmn2:extensionElements>
+        <camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
+        <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_06kk5gy</bpmn2:incoming>
+    </bpmn2:userTask>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_9PoKARBVU">
+      <bpmndi:BPMNShape id="_BPMNShape_Start_LyvmWffqX4" bpmnElement="Start_LyvmWffqX4">
+        <dc:Bounds x="154" y="231" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CallActivity_1vtv8ed_di" bpmnElement="Task_1nwwkb2">
+        <dc:Bounds x="300" y="209" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0wbquiq_di" bpmnElement="SequenceFlow_0wbquiq">
+        <di:waypoint x="190" y="249" />
+        <di:waypoint x="300" y="249" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_06kk5gy_di" bpmnElement="SequenceFlow_06kk5gy">
+        <di:waypoint x="400" y="249" />
+        <di:waypoint x="510" y="249" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_01fb6n1_di" bpmnElement="Task_0kgc927">
+        <dc:Bounds x="510" y="209" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

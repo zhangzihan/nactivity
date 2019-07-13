@@ -61,7 +61,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             currentProcessDefinition.Description = process.Documentation;
             currentProcessDefinition.DeploymentId = bpmnParse.Deployment.Id;
 
-            if (!(bpmnParse.Deployment.EngineVersion is null))
+            if (bpmnParse.Deployment.EngineVersion is object)
             {
                 currentProcessDefinition.EngineVersion = bpmnParse.Deployment.EngineVersion;
             }

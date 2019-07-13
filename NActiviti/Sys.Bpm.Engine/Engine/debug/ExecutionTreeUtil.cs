@@ -27,9 +27,9 @@ namespace Sys.Workflow.Engine.Debug
         {
             // Find highest parent
             IExecutionEntity parentExecution = executionEntity;
-            while (!(parentExecution.ParentId is null) || !(((IExecution)parentExecution).SuperExecutionId is null))
+            while (parentExecution.ParentId is object || parentExecution.SuperExecutionId is object)
             {
-                if (!(parentExecution.ParentId is null))
+                if (parentExecution.ParentId is object)
                 {
                     parentExecution = parentExecution.Parent;
                 }
@@ -76,10 +76,10 @@ namespace Sys.Workflow.Engine.Debug
                 // Support for call activity
                 if (parentId is null)
                 {
-                    parentId = ((IExecution)executionEntity).SuperExecutionId;
+                    parentId = executionEntity.SuperExecutionId;
                 }
 
-                if (!(parentId is null))
+                if (parentId is object)
                 {
                     if (!parentMapping.ContainsKey(parentId))
                     {
@@ -87,7 +87,7 @@ namespace Sys.Workflow.Engine.Debug
                     }
                     parentMapping[parentId].Add(executionEntity);
                 }
-                else if (((IExecution)executionEntity).SuperExecutionId is null)
+                else if (executionEntity.SuperExecutionId is null)
                 {
                     executionTree.Root = new ExecutionTreeNode(executionEntity);
                 }
@@ -111,7 +111,7 @@ namespace Sys.Workflow.Engine.Debug
             {
                 string parentId = executionEntity.ParentId;
 
-                if (!(parentId is null))
+                if (parentId is object)
                 {
                     if (!parentMapping.ContainsKey(parentId))
                     {

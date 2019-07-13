@@ -17,7 +17,7 @@ namespace Sys.Workflow.Bpmn.Converters
     {
         private static readonly ILogger logger = BpmnModelLoggerFactory.LoggerService<ValuedDataObjectXMLConverter>();
 
-        private readonly Regex xmlChars = new Regex("[<>&]");
+        private static readonly Regex XMLCHARS_PATTERN = new Regex("[<>&]", RegexOptions.Compiled);
         private readonly string sdf = "yyyy-MM-dd'T'HH:mm:ss";
         protected internal bool didWriteExtensionStartElement = false;
 
@@ -161,7 +161,7 @@ namespace Sys.Workflow.Bpmn.Converters
                         value = dataObject.Value.ToString();
                     }
 
-                    if (dataObject is StringDataObject && xmlChars.IsMatch(value))
+                    if (dataObject is StringDataObject && XMLCHARS_PATTERN.IsMatch(value))
                     {
                         xtw.WriteCData(value);
                     }

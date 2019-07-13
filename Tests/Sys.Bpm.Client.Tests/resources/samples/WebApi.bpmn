@@ -52,7 +52,7 @@
       <bpmn2:extensionElements>
         <camunda:properties>
           <camunda:property name="url" value="${ConfigUtil.Value(&#39;BaseUrl&#39;) + &#39;api/webapi/withparameter&#39;}" />
-          <camunda:property name="taskRequest" value="[&#34;这是一个参数&#34;]" />
+          <camunda:property name="taskRequest" value="[&#34;${getNoParameter}&#34;]" />
           <camunda:property name="dataObj" value="postWithParameter" />
           <camunda:property name="method" value="post" />
         </camunda:properties>
@@ -61,7 +61,7 @@
       <bpmn2:outgoing>SequenceFlow_0hxmxfl</bpmn2:outgoing>
     </bpmn2:serviceTask>
     <bpmn2:sequenceFlow id="SequenceFlow_0hxmxfl" sourceRef="Task_17j4b6c" targetRef="Task_0caxcow" />
-    <bpmn2:userTask id="Task_0caxcow" name="暂停">
+    <bpmn2:userTask id="Task_0caxcow" name="暂停" camunda:assignee="${user}">
       <bpmn2:incoming>SequenceFlow_0hxmxfl</bpmn2:incoming>
     </bpmn2:userTask>
   </bpmn2:process>

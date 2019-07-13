@@ -72,13 +72,13 @@ namespace Sys.Workflow.Engine.Impl.Util
 
                     process.WaitForExit();
 
-                    if (!(ResultVariableStr is null))
+                    if (ResultVariableStr is object)
                     {
                         string result = process.StandardOutput.ReadToEnd(); //convertStreamToStr(process.StandardOutput);
                         execution.SetVariable(ResultVariableStr, result);
                     }
 
-                    if (!(ErrorCodeVariableStr is null))
+                    if (ErrorCodeVariableStr is object)
                     {
                         execution.SetVariable(ErrorCodeVariableStr, Convert.ToString(errorCode));
 

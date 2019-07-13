@@ -17,6 +17,9 @@ using Sys.Workflow.Contexts;
 using Sys.Workflow;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using System.Text;
+using Sys.Workflow.Engine.Exceptions;
 
 namespace Sys.Workflow.Cloud.Services.Core
 {
@@ -245,9 +248,9 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// 
         /// </summary>
 
-        public virtual IPage<TaskModel> GetAllTasks(Pageable pageable)
+        public virtual IPage<TaskModel> GetAllTasks(TaskQuery query)
         {
-            return pageableTaskService.GetAllTasks(pageable);
+            return pageableTaskService.GetAllTasks(query);
         }
 
         /// <summary>
@@ -280,6 +283,15 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="cmd"></param>
+        public void ReturnTo(ReturnToTaskCmd cmd)
+        {
+            (taskService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.ReturnToActivityCmd(cmd.TaskId, cmd.ActivityId, cmd.ReturnReason, cmd.Variables));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual TaskModel ReleaseTask(ReleaseTaskCmd cmd)
         {
             ITask task = (taskService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.AssigneeReleaseTaskCmd(cmd.TaskId, cmd.BusinessKey, cmd.Assignee, cmd.Reason));
@@ -304,11 +316,11 @@ namespace Sys.Workflow.Cloud.Services.Core
 
                 if (string.IsNullOrWhiteSpace(cmd.TaskId) == false)
                 {
-                    taskService.Complete(cmd.TaskId, variables, cmd.LocalScope);
+                    taskService.Complete(cmd.TaskId, variables, cmd.LocalScope, cmd.NotFoundThrowError);
                 }
                 else if (string.IsNullOrWhiteSpace(cmd.BusinessKey) == false && string.IsNullOrWhiteSpace(cmd.Assignee) == false)
                 {
-                    taskService.Complete(cmd.BusinessKey, cmd.Assignee, cmd.Comment, variables, cmd.LocalScope);
+                    taskService.Complete(cmd.BusinessKey, cmd.TaskName, cmd.Assignee, cmd.Comment, variables, cmd.LocalScope, notFoundThrowError: cmd.NotFoundThrowError);
                 }
             }
         }
@@ -450,6 +462,34 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// <summary>
         /// 
         /// </summary>
+        public virtual void TerminateProcessInstance(TerminateProcessInstanceCmd[] cmds)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var cmd in cmds ?? new TerminateProcessInstanceCmd[0])
+            {
+                try
+                {
+                    runtimeService.TerminateProcessInstance(cmd.ProcessInstanceId, cmd.BusinessKey, cmd.Reason);
+                }
+                catch (ActivitiObjectNotFoundException ex)
+                {
+                    logger.LogWarning(ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    sb.AppendLine($"流程终止失败:processInstanceId={cmd.ProcessInstanceId} businessKey={cmd.BusinessKey}\r\n{ex.Message}");
+                }
+            }
+
+            if (sb.Length > 0)
+            {
+                throw new TerminateProcessInstanceException(sb.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void TerminateProcessInstance(string processInstanceId)
         {
             TerminateProcessInstance(processInstanceId, "Cancelled by " + authenticationWrapper.AuthenticatedUser.Id);
@@ -460,7 +500,7 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// </summary>
         public virtual void TerminateProcessInstance(string processInstanceId, string reason)
         {
-            VerifyCanWriteToProcessInstance(processInstanceId);
+            //VerifyCanWriteToProcessInstance(processInstanceId);
             runtimeService.DeleteProcessInstance(processInstanceId, reason ?? "Cancelled");
         }
 

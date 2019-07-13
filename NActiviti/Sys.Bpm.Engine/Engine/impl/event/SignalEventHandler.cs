@@ -39,13 +39,13 @@ namespace Sys.Workflow.Engine.Impl.Events
 
         public override void HandleEvent(IEventSubscriptionEntity eventSubscription, object payload, ICommandContext commandContext)
         {
-            if (!(eventSubscription.ExecutionId is null))
+            if (eventSubscription.ExecutionId is object)
             {
 
                 base.HandleEvent(eventSubscription, payload, commandContext);
 
             }
-            else if (!(eventSubscription.ProcessDefinitionId is null))
+            else if (eventSubscription.ProcessDefinitionId is object)
             {
                 // Find initial flow element matching the signal start event
                 string processDefinitionId = eventSubscription.ProcessDefinitionId;

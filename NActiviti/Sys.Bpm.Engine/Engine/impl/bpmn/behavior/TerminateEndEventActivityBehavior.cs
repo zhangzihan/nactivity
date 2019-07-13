@@ -109,7 +109,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
 
             }
-            else if (scopeExecutionEntity.ParentId is null && !(scopeExecutionEntity.SuperExecutionId is null))
+            else if (scopeExecutionEntity.ParentId is null && scopeExecutionEntity.SuperExecutionId is object)
             { // CallActivity
 
                 IExecutionEntity callActivityExecution = scopeExecutionEntity.SuperExecution;
@@ -190,7 +190,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)
             {
-                if ((execution.ProcessInstanceType && execution.SuperExecutionId is null) || (execution.ParentId is null && !(execution.SuperExecutionId is null)))
+                if ((execution.ProcessInstanceType && execution.SuperExecutionId is null) || (execution.ParentId is null && execution.SuperExecutionId is object))
                 {
                     Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateCancelledEvent(execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, execution.CurrentFlowElement));
                 }

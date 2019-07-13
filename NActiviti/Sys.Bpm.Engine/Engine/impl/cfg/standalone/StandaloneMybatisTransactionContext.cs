@@ -69,12 +69,12 @@ namespace Sys.Workflow.Engine.Impl.Cfg.Standalone
         /// </summary>
         public virtual void Commit()
         {
-            log.LogDebug("firing event committing...");
+            //log.LogDebug("firing event committing...");
             FireTransactionEvent(TransactionState.COMMITTING, false);
 
-            log.LogDebug("committing the ibatis sql session...");
+            //log.LogDebug("committing the ibatis sql session...");
             DbSqlSession.Commit();
-            log.LogDebug("firing event committed...");
+            //log.LogDebug("firing event committed...");
             FireTransactionEvent(TransactionState.COMMITTED, true);
         }
 

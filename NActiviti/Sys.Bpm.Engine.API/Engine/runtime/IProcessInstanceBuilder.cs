@@ -96,5 +96,12 @@ namespace Sys.Workflow.Engine.Runtime
         ///           when no process definition is deployed with the given processDefinitionKey or processDefinitionId
         /// * </exception>
         IProcessInstance Start();
+
+        /// <summary>
+        /// 从指定节点启动
+        /// </summary>
+        /// <param name="initialFlowElementId">指定节点id</param>
+        /// <returns></returns>
+        IProcessInstanceBuilder SetInitialFlowElement(string initialFlowElementId);
     }
 }

@@ -279,12 +279,21 @@ namespace Sys.Workflow.Engine
         /// Delete an existing runtime process instance.
         /// </summary>
         /// <param name="processInstanceId">
-        ///          id of process instance to delete, cannot be null. </param>
+        ///          id of process instance to delete. </param>
         /// <param name="deleteReason">
         ///          reason for deleting, can be null. </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no process instance is found with the given id. </exception>
         void DeleteProcessInstance(string processInstanceId, string deleteReason);
+
+        /// <summary>
+        /// terminate an existing runtime porcess instance.
+        /// </summary>
+        /// <param name="processInstanceId"></param>
+        /// <param name="busineeKey"></param>
+        /// <param name="reason"></param>
+        void TerminateProcessInstance(string processInstanceId, string busineeKey, string reason);
+
 
         /// <summary>
         /// Finds the activity ids for all executions that are waiting in activities. This is a list because a single activity can be active multiple times.

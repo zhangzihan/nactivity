@@ -337,7 +337,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return true;
             }
 
-            if ((!(objA is null) && objB is null) || (!(objB is null) && objA is null))
+            if ((objA is object && objB is null) || (objB is object && objA is null))
             {
                 return false;
             }

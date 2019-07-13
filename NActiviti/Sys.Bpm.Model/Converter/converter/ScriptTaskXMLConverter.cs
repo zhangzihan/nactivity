@@ -78,7 +78,7 @@ namespace Sys.Workflow.Bpmn.Converters
             if (!string.IsNullOrWhiteSpace(scriptTask.Script))
             {
                 xtw.WriteStartElement(BpmnXMLConstants.BPMN_PREFIX, BpmnXMLConstants.ATTRIBUTE_TASK_SCRIPT_TEXT, BpmnXMLConstants.BPMN2_NAMESPACE);
-                xtw.WriteCData(scriptTask.Script);
+                xtw.WriteCharacters(scriptTask.Script);
                 xtw.WriteEndElement();
             }
         }

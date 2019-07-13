@@ -7,7 +7,7 @@ namespace Sys.Workflow.Options
     /// </summary>
     public sealed class DataSourceOption
     {
-        private readonly static Regex regDatabase = new Regex("database=(\\w+);?", RegexOptions.IgnoreCase);
+        private readonly static Regex regDatabase = new Regex("database=(\\w+);?", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         private string connectionString;
 
@@ -27,6 +27,11 @@ namespace Sys.Workflow.Options
                 if (string.IsNullOrWhiteSpace(Database))
                 {
                     return connectionString;
+                }
+
+                if (new Regex("(Connection Timeout)", RegexOptions.IgnoreCase).IsMatch(connectionString) == false)
+                {
+                    connectionString = string.Concat("Connection Timeout=300;", connectionString);
                 }
 
                 if (regDatabase.IsMatch(connectionString))

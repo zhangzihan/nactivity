@@ -68,13 +68,13 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
             {
 
                 // Backwards compatibility
-                if (!(engineVersion is null))
+                if (engineVersion is object)
                 {
                     processDefinition.EngineVersion = engineVersion;
                 }
 
                 // process definition inherits the tenant id
-                if (!(tenantId is null))
+                if (tenantId is object)
                 {
                     processDefinition.TenantId = tenantId;
                 }
@@ -110,7 +110,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
             IProcessDefinitionEntityManager processDefinitionManager = Context.CommandContext.ProcessEngineConfiguration.ProcessDefinitionEntityManager;
 
             IProcessDefinitionEntity existingDefinition;
-            if (!(tenantId is null) && !tenantId.Equals(ProcessEngineConfiguration.NO_TENANT_ID))
+            if (tenantId is object && !tenantId.Equals(ProcessEngineConfiguration.NO_TENANT_ID))
             {
                 existingDefinition = processDefinitionManager.FindLatestProcessDefinitionByKeyAndTenantId(key, tenantId);
             }

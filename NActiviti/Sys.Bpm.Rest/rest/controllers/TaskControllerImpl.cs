@@ -14,6 +14,12 @@ using Sys.Workflow.Hateoas;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
+using Sys.Workflow.Exceptions;
+using Newtonsoft.Json;
+using System.Text;
+using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,7 +44,6 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
     [ApiController]
     public class TaskControllerImpl : ControllerBase, ITaskController
     {
-
         private readonly ProcessEngineWrapper processEngine;
 
         private readonly TaskResourceAssembler taskResourceAssembler;
@@ -53,13 +58,15 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         private readonly IProcessEngine engine;
 
+        private readonly ILogger<TaskControllerImpl> logger;
 
         /// <inheritdoc />
         public TaskControllerImpl(ProcessEngineWrapper processEngine,
             IProcessEngine engine,
             TaskResourceAssembler taskResourceAssembler,
             AuthenticationWrapper authenticationWrapper,
-            TaskConverter taskConverter)
+            TaskConverter taskConverter,
+            ILoggerFactory loggerFactory)
         {
             this.engine = engine;
             this.taskService = engine.TaskService;
@@ -67,6 +74,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             this.processEngine = processEngine;
             this.taskResourceAssembler = taskResourceAssembler;
             this.taskConverter = taskConverter;
+            this.logger = loggerFactory.CreateLogger<TaskControllerImpl>();
         }
 
         //public virtual string handleAppException(ActivitiObjectNotFoundException ex)
@@ -147,21 +155,76 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             return Task.FromResult(taskResourceAssembler.ToResource(model).Content);
         }
 
-
         /// <inheritdoc />
         [HttpPost("complete")]
-        public virtual Task<ActionResult> CompleteTask([FromBody]CompleteTaskCmd completeTaskCmd)
+        public virtual Task<bool> CompleteTask([FromBody]CompleteTaskCmd completeTaskCmd)
         {
-            processEngine.CompleteTask(completeTaskCmd);
+            Http400 http400 = null;
+            try
+            {
+                processEngine.CompleteTask(completeTaskCmd);
 
-            return Task.FromResult<ActionResult>(Ok());
+            }
+            catch (Exception ex)
+            {
+                if (http400 is null)
+                {
+                    http400 = new Http400();
+                }
+                http400.Code = "completeTask[]";
+                http400.Message = ex.Message;
+                http400.Details.Add(new HttpException
+                {
+                    Message = ex.Message
+                });
+            }
+
+            if (http400 is null == false)
+            {
+                throw new Http400Exception(http400, null);
+            }
+
+            return Task.FromResult(true);
+        }
+
+        /// <inheritdoc />
+        [HttpPost("completes")]
+        public virtual Task<CompleteTaskCmd[]> CompleteTask([FromBody]CompleteTaskCmd[] cmds)
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            logger.LogInformation("开始调用工作流完成事件\r\n" + JsonConvert.SerializeObject(cmds));
+
+            List<CompleteTaskCmd> errors = new List<CompleteTaskCmd>();
+            foreach (var cmd in cmds)
+            {
+                try
+                {
+                    logger.LogInformation("开始调用工作流完成事件\r\n" + JsonConvert.SerializeObject(cmd));
+
+                    processEngine.CompleteTask(cmd);
+
+                    logger.LogInformation("调用工作流完成事件完成");
+                }
+                catch (Exception ex)
+                {
+                    cmd.ErrorMessage = ex.Message;
+                    cmd.Exception = ex.GetType().Name;
+                    errors.Add(cmd);
+                }
+            }
+
+            sw.Stop();
+            logger.LogInformation($"共计执行{cmds.Length}项任务,执行完成时间：{sw.ElapsedMilliseconds}");
+
+            return Task.FromResult(errors.ToArray());
         }
 
         /// <inheritdoc />
         [HttpPost("approvaled")]
-        public Task<ActionResult> Approvaled(ApprovaleTaskCmd cmd)
+        public Task<bool> Approvaled(ApprovaleTaskCmd cmd)
         {
-
             processEngine.CompleteApprovalTask(new CompleteTaskCmd
             {
                 TaskId = cmd.TaskId,
@@ -173,12 +236,12 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
                 }
             });
 
-            return Task.FromResult<ActionResult>(Ok());
+            return Task.FromResult(true);
         }
 
         /// <inheritdoc />
         [HttpPost("reject")]
-        public Task<ActionResult> Reject(RejectTaskCmd cmd)
+        public Task<bool> Reject(RejectTaskCmd cmd)
         {
             processEngine.CompleteApprovalTask(new CompleteTaskCmd
             {
@@ -191,31 +254,33 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
                 }
             });
 
-            return Task.FromResult<ActionResult>(Ok());
+            return Task.FromResult(true);
         }
 
-        [HttpPost("returnTo")]
-        public Task<ActionResult> ReturnTo(ReturnToTaskCmd cmd)
+        [HttpPost("returnto")]
+        public Task<bool> ReturnTo(ReturnToTaskCmd cmd)
         {
-            throw new System.NotImplementedException();
+            processEngine.ReturnTo(cmd);
+
+            return Task.FromResult(true);
         }
 
         /// <inheritdoc />
         [HttpPost("terminate")]
-        public virtual Task<ActionResult> Terminate(TerminateTaskCmd cmd)
+        public virtual Task<bool> Terminate(TerminateTaskCmd cmd)
         {
             processEngine.TerminateTask(cmd);
 
-            return Task.FromResult<ActionResult>(Ok());
+            return Task.FromResult(true);
         }
 
         /// <inheritdoc />
         [HttpPost("{taskId}/remove")]
-        public virtual Task<ActionResult> DeleteTask(string taskId)
+        public virtual Task<bool> DeleteTask(string taskId)
         {
             processEngine.DeleteTask(taskId);
 
-            return Task.FromResult<ActionResult>(Ok());
+            return Task.FromResult(true);
         }
 
 
@@ -229,11 +294,11 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         /// <inheritdoc />
         [HttpPost("update")]
-        public virtual Task<ActionResult> UpdateTask(UpdateTaskCmd updateTaskCmd)
+        public virtual Task<bool> UpdateTask(UpdateTaskCmd updateTaskCmd)
         {
             processEngine.UpdateTask(updateTaskCmd);
 
-            return Task.FromResult<ActionResult>(Ok());
+            return Task.FromResult(true);
         }
 
 

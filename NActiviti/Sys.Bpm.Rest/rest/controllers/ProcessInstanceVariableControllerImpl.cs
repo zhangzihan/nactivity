@@ -104,20 +104,20 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         /// <inheritdoc />
         [HttpPost]
-        public virtual Task<ActionResult> SetVariables(string processInstanceId, SetProcessVariablesCmd setProcessVariablesCmd)
+        public virtual Task<bool> SetVariables(SetProcessVariablesCmd setProcessVariablesCmd)
         {
             processEngine.SetProcessVariables(setProcessVariablesCmd);
 
-            return Task.FromResult<ActionResult>(Ok());
+            return Task.FromResult(true);
         }
 
         /// <inheritdoc />
         [HttpPost("remove")]
-        public virtual Task<ActionResult> RemoveVariables(string processInstanceId, RemoveProcessVariablesCmd removeProcessVariablesCmd)
+        public virtual Task<bool> RemoveVariables(RemoveProcessVariablesCmd removeProcessVariablesCmd)
         {
             this.processEngine.RemoveProcessVariables(removeProcessVariablesCmd);
 
-            return Task.FromResult<ActionResult>(Ok());
+            return Task.FromResult(true);
         }
 
         /// <inheritdoc />

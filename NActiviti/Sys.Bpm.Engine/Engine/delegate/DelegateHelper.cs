@@ -205,7 +205,7 @@ namespace Sys.Workflow.Engine.Delegate
             }
             foreach (FieldExtension fieldExtension in fieldExtensions)
             {
-                if (!(fieldExtension.FieldName is null) && fieldExtension.FieldName.Equals(fieldName))
+                if (fieldExtension.FieldName is object && fieldExtension.FieldName.Equals(fieldName))
                 {
                     return fieldExtension;
                 }
@@ -222,7 +222,7 @@ namespace Sys.Workflow.Engine.Delegate
             }
             foreach (FieldExtension fieldExtension in fieldExtensions)
             {
-                if (!(fieldExtension.FieldName is null) && fieldExtension.FieldName.Equals(fieldName))
+                if (fieldExtension.FieldName is object && fieldExtension.FieldName.Equals(fieldName))
                 {
                     return fieldExtension;
                 }

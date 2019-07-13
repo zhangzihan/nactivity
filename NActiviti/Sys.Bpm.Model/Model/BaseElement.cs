@@ -191,7 +191,7 @@ namespace Sys.Workflow.Bpmn.Models
                 return true;
             }
 
-            if ((objA is null && !(objB is null)) || (!(objA is null) && objB is null))
+            if ((objA is null && objB is object) || (objA is object && objB is null))
             {
                 return false;
             }
@@ -211,12 +211,12 @@ namespace Sys.Workflow.Bpmn.Models
                 return false;
             }
 
-            return this.Id == ((BaseElement)obj).Id;
+            return string.Equals(Id, ((BaseElement)obj).Id, StringComparison.OrdinalIgnoreCase);
         }
 
         public override int GetHashCode()
         {
-            return this.Id.GetHashCode() >> 2;
+            return Id.GetHashCode() * 2 + this.GetType().GetHashCode();
         }
     }
 

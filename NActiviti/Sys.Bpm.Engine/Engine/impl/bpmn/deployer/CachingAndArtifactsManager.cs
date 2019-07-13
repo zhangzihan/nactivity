@@ -68,7 +68,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
             IProcessDefinitionInfoEntity definitionInfoEntity = definitionInfoEntityManager.FindProcessDefinitionInfoByProcessDefinitionId(processDefinition.Id);
 
             JToken infoNode = null;
-            if (definitionInfoEntity != null && !(definitionInfoEntity.InfoJsonId is null))
+            if (definitionInfoEntity is object && definitionInfoEntity.InfoJsonId is object)
             {
                 byte[] infoBytes = definitionInfoEntityManager.FindInfoJsonById(definitionInfoEntity.InfoJsonId);
                 if (infoBytes != null)

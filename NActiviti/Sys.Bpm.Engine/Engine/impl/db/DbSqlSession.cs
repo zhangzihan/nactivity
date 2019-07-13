@@ -43,7 +43,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// <summary>
         /// 
         /// </summary>
-        protected internal static readonly Regex CLEAN_VERSION_REGEX = new Regex("\\d\\.\\d*");
+        private static readonly Regex CLEAN_VERSION_REGEX = new Regex("\\d\\.\\d*", RegexOptions.Compiled);
 
         /// <summary>
         /// 
@@ -192,6 +192,19 @@ namespace Sys.Workflow.Engine.Impl.DB
             dec[entity.Id] = entity;
             entity.Deleted = true;
 
+            //if (insertedObjects is object && insertedObjects.TryGetValue(clazz, out var insObj))
+            //{
+            //    if (insObj.TryGetValue(entity.Id, out IEntity insEntity))
+            //    {
+            //        insObj.Remove(entity.Id);
+            //    }
+            //}
+
+            //IEntity updEntity = updatedObjects?.FirstOrDefault(x => string.Compare(x.Id, entity.Id, true) == 0);
+            //if (updEntity is object)
+            //{
+            //    updatedObjects.Remove(updEntity);
+            //}
             return entity;
         }
 
@@ -558,39 +571,39 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         protected virtual void DebugFlush()
         {
-            log.LogDebug("Flushing dbSqlSession");
-            int nrOfInserts = 0, nrOfUpdates = 0, nrOfDeletes = 0;
-            foreach (Dictionary<string, IEntity> insertedObjectMap in insertedObjects.Values)
-            {
-                foreach (IEntity insertedObject in insertedObjectMap.Values)
-                {
-                    log.LogDebug($"  insert {insertedObject}");
-                    nrOfInserts++;
-                }
-            }
-            foreach (IEntity updatedObject in updatedObjects)
-            {
-                log.LogDebug($"  update {updatedObject}");
-                nrOfUpdates++;
-            }
-            foreach (Dictionary<string, IEntity> deletedObjectMap in deletedObjects.Values)
-            {
-                foreach (IEntity deletedObject in deletedObjectMap.Values)
-                {
-                    log.LogDebug($"  delete {deletedObject} with id {deletedObject.Id}");
-                    nrOfDeletes++;
-                }
-            }
-            foreach (ICollection<BulkDeleteOperation> bulkDeleteOperationList in bulkDeleteOperations.Values)
-            {
-                foreach (BulkDeleteOperation bulkDeleteOperation in bulkDeleteOperationList)
-                {
-                    log.LogDebug($"  {bulkDeleteOperation}");
-                    nrOfDeletes++;
-                }
-            }
-            log.LogDebug($"flush summary: {nrOfInserts} insert, {nrOfUpdates} update, {nrOfDeletes} delete.");
-            log.LogDebug($"now executing flush...");
+            //log.LogDebug("Flushing dbSqlSession");
+            //int nrOfInserts = 0, nrOfUpdates = 0, nrOfDeletes = 0;
+            //foreach (Dictionary<string, IEntity> insertedObjectMap in insertedObjects.Values)
+            //{
+            //    foreach (IEntity insertedObject in insertedObjectMap.Values)
+            //    {
+            //        log.LogDebug($"  insert {insertedObject}");
+            //        nrOfInserts++;
+            //    }
+            //}
+            //foreach (IEntity updatedObject in updatedObjects)
+            //{
+            //    log.LogDebug($"  update {updatedObject}");
+            //    nrOfUpdates++;
+            //}
+            //foreach (Dictionary<string, IEntity> deletedObjectMap in deletedObjects.Values)
+            //{
+            //    foreach (IEntity deletedObject in deletedObjectMap.Values)
+            //    {
+            //        log.LogDebug($"  delete {deletedObject} with id {deletedObject.Id}");
+            //        nrOfDeletes++;
+            //    }
+            //}
+            //foreach (ICollection<BulkDeleteOperation> bulkDeleteOperationList in bulkDeleteOperations.Values)
+            //{
+            //    foreach (BulkDeleteOperation bulkDeleteOperation in bulkDeleteOperationList)
+            //    {
+            //        log.LogDebug($"  {bulkDeleteOperation}");
+            //        nrOfDeletes++;
+            //    }
+            //}
+            //log.LogDebug($"flush summary: {nrOfInserts} insert, {nrOfUpdates} update, {nrOfDeletes} delete.");
+            //log.LogDebug($"now executing flush...");
         }
 
         /// <summary>
@@ -798,7 +811,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                 throw new ActivitiException("no insert statement for " + entity.GetType() + " in the ibatis mapping files");
             }
 
-            log.LogDebug($"inserting: {entity}");
+            //log.LogDebug($"inserting: {entity}");
             SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, insertStatement, entity));
 
             // See https://activiti.atlassian.net/browse/ACT-1290
@@ -891,7 +904,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                     throw new ActivitiException("no update statement for " + updatedObject.GetType() + " in the ibatis mapping files");
                 }
 
-                log.LogDebug($"updating: {updatedObject}");
+                //log.LogDebug($"updating: {updatedObject}");
                 int updatedRecords = SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, updateStatement, updatedObject));
                 if (updatedRecords == 0)
                 {

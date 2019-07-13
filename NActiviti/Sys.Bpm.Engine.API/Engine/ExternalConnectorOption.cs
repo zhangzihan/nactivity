@@ -26,8 +26,6 @@ namespace Sys.Workflow
         /// </summary>
         public object ExternalConnectorContext { get; set; }
 
-        private static readonly Regex urlReg = new Regex("\\{(.*?)\\}");
-
         /// <summary>
         /// 
         /// </summary>
@@ -153,6 +151,11 @@ namespace Sys.Workflow
                 throw new NotExistsExternalConnectorUrlException(key);
             }
 
+            return ResolveUrl(url);
+        }
+
+        public string ResolveUrl(string url)
+        {
             if (ExternalConnectorContext == null)
             {
                 IEnumerable<IConfigurationSection> childs = Configuration.GetSection("ExternalConnectorUrl").GetChildren();

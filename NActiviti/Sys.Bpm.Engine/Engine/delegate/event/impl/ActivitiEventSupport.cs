@@ -37,43 +37,35 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
             typedListeners = new ConcurrentDictionary<ActivitiEventType, IList<IActivitiEventListener>>();
         }
 
-        private readonly object syncRoot = new object();
-
         public virtual void AddEventListener(IActivitiEventListener listenerToAdd)
         {
-            lock (syncRoot)
+            if (listenerToAdd == null)
             {
-                if (listenerToAdd == null)
-                {
-                    throw new ActivitiIllegalArgumentException("Listener cannot be null.");
-                }
-                if (!eventListeners.Contains(listenerToAdd))
-                {
-                    eventListeners.Add(listenerToAdd);
-                }
+                throw new ActivitiIllegalArgumentException("Listener cannot be null.");
+            }
+            if (!eventListeners.Contains(listenerToAdd))
+            {
+                eventListeners.Add(listenerToAdd);
             }
         }
 
         public virtual void AddEventListener(IActivitiEventListener listenerToAdd, params ActivitiEventType[] types)
         {
-            lock (syncRoot)
+            if (listenerToAdd == null)
             {
-                if (listenerToAdd == null)
-                {
-                    throw new ActivitiIllegalArgumentException("Listener cannot be null.");
-                }
+                throw new ActivitiIllegalArgumentException("Listener cannot be null.");
+            }
 
-                if (types == null || types.Length == 0)
-                {
-                    AddEventListener(listenerToAdd);
+            if (types == null || types.Length == 0)
+            {
+                AddEventListener(listenerToAdd);
 
-                }
-                else
+            }
+            else
+            {
+                foreach (ActivitiEventType type in types)
                 {
-                    foreach (ActivitiEventType type in types)
-                    {
-                        AddTypedEventListener(listenerToAdd, type);
-                    }
+                    AddTypedEventListener(listenerToAdd, type);
                 }
             }
         }
@@ -143,20 +135,17 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
 
         protected internal virtual void AddTypedEventListener(IActivitiEventListener listener, ActivitiEventType type)
         {
-            lock (syncRoot)
+            typedListeners.TryGetValue(type, out IList<IActivitiEventListener> listeners);
+            if (listeners == null)
             {
-                typedListeners.TryGetValue(type, out IList<IActivitiEventListener> listeners);
-                if (listeners == null)
-                {
-                    // Add an empty list of listeners for this type
-                    listeners = new List<IActivitiEventListener>(); // SynchronizedCollection<IActivitiEventListener>();
-                    typedListeners.TryAdd(type, listeners);
-                }
+                // Add an empty list of listeners for this type
+                listeners = new List<IActivitiEventListener>(); // SynchronizedCollection<IActivitiEventListener>();
+                typedListeners.TryAdd(type, listeners);
+            }
 
-                if (!listeners.Contains(listener))
-                {
-                    listeners.Add(listener);
-                }
+            if (!listeners.Contains(listener))
+            {
+                listeners.Add(listener);
             }
         }
     }

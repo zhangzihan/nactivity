@@ -115,14 +115,28 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public virtual object Deserialize(byte[] bytes, IValueFields valueFields)
         {
+            string s = Encoding.UTF8.GetString(bytes);
+
             try
             {
-                string s = Encoding.UTF8.GetString(bytes);
                 return JsonConvert.DeserializeObject(s, new JsonSerializerSettings
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                     TypeNameHandling = TypeNameHandling.All
                 });
+            }
+            catch (JsonSerializationException e)
+            {
+                if (e.InnerException is FileNotFoundException)
+                {
+                    return JsonConvert.DeserializeObject(s, new JsonSerializerSettings
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                        TypeNameHandling = TypeNameHandling.None
+                    });
+                }
+
+                throw new ActivitiException("Couldn't deserialize object in variable '" + valueFields.Name + "'", e);
             }
             catch (Exception e)
             {

@@ -15,6 +15,7 @@ namespace Sys.Workflow.Bpmn.Converters.Childs
     using Sys.Workflow.Bpmn.Constants;
     using Sys.Workflow.Bpmn.Converters.Utils;
     using Sys.Workflow.Bpmn.Models;
+    using System;
 
     /// 
     /// 
@@ -37,7 +38,7 @@ namespace Sys.Workflow.Bpmn.Converters.Childs
 
             TerminateEventDefinition eventDefinition = new TerminateEventDefinition();
 
-            parseTerminateAllAttribute(xtr, eventDefinition);
+            ParseTerminateAllAttribute(xtr, eventDefinition);
             ParseTerminateMultiInstanceAttribute(xtr, eventDefinition);
 
             BpmnXMLUtil.AddXMLLocation(eventDefinition, xtr);
@@ -46,10 +47,10 @@ namespace Sys.Workflow.Bpmn.Converters.Childs
             ((Event)parentElement).EventDefinitions.Add(eventDefinition);
         }
 
-        protected internal virtual void parseTerminateAllAttribute(XMLStreamReader xtr, TerminateEventDefinition eventDefinition)
+        protected internal virtual void ParseTerminateAllAttribute(XMLStreamReader xtr, TerminateEventDefinition eventDefinition)
         {
             string terminateAllValue = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TERMINATE_ALL);
-            if (!string.ReferenceEquals(terminateAllValue, null) && "true".Equals(terminateAllValue))
+            if (terminateAllValue is object && "true".Equals(terminateAllValue))
             {
                 eventDefinition.TerminateAll = true;
             }
@@ -62,7 +63,7 @@ namespace Sys.Workflow.Bpmn.Converters.Childs
         protected internal virtual void ParseTerminateMultiInstanceAttribute(XMLStreamReader xtr, TerminateEventDefinition eventDefinition)
         {
             string terminateMiValue = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_TERMINATE_MULTI_INSTANCE);
-            if (!(terminateMiValue is null) && "true".Equals(terminateMiValue))
+            if (terminateMiValue is object && "true".Equals(terminateMiValue, StringComparison.OrdinalIgnoreCase))
             {
                 eventDefinition.TerminateMultiInstance = true;
             }

@@ -16,16 +16,21 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
     using Sys.Workflow.Bpmn.Models;
     using Sys.Workflow.Engine.Delegate;
+    using Sys.Workflow.Engine.Delegate.Events;
+    using Sys.Workflow.Engine.Delegate.Events.Impl;
     using Sys.Workflow.Engine.Impl.Asyncexecutor;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Cmd;
     using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys.Workflow.Engine.Impl.JobExecutors;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using System.Threading.Tasks;
 
     /// 
     [Serializable]
     public class BoundaryTimerEventActivityBehavior : BoundaryEventActivityBehavior
     {
-
         private const long serialVersionUID = 1L;
 
         protected internal TimerEventDefinition timerEventDefinition;
@@ -42,15 +47,38 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 throw new ActivitiException("Programmatic error: " + this.GetType() + " should not be used for anything else than a boundary event");
             }
 
-            IJobManager jobManager = Context.CommandContext.JobManager;
-            string timerConfig = TimerEventHandler.CreateConfiguration(execution.CurrentActivityId, timerEventDefinition.EndDate, timerEventDefinition.CalendarName);
-            ITimerJobEntity timerJob = jobManager.CreateTimerJob(timerEventDefinition, interrupting, execution, TriggerTimerEventJobHandler.TYPE, timerConfig);
-
-            if (timerJob != null)
+            if (timerEventDefinition.TimeDate == "-1" || timerEventDefinition.TimeCycle == "-1" || timerEventDefinition.TimeDuration == "-1")
             {
-                jobManager.ScheduleTimerJob(timerJob);
+                ProcessEngineConfigurationImpl processConfig = Context.CommandContext.ProcessEngineConfiguration;
+
+                var element = execution.CurrentFlowElement as BoundaryEvent;
+
+                var beab = new BoundaryEventActivityBehavior(element.CancelActivity);
+
+                beab.Trigger(execution, TriggerTimerEventJobHandler.TYPE, null);
+
+                processConfig.ExecutionEntityManager.Delete(execution);
+
+                //if (element.CancelActivity)
+                //{
+                //    IExecutionEntityManager executionEntityManager = processConfig.ExecutionEntityManager;
+                //    IExecutionEntity attachedRefScopeExecution = executionEntityManager.FindById<IExecutionEntity>(execution.ParentId);
+
+                //    processConfig.ExecutionEntityManager.Delete(attachedRefScopeExecution);
+                //    processConfig.ExecutionEntityManager.Delete(execution);
+                //}
+            }
+            else
+            {
+                IJobManager jobManager = Context.CommandContext.JobManager;
+                string timerConfig = TimerEventHandler.CreateConfiguration(execution.CurrentActivityId, timerEventDefinition.EndDate, timerEventDefinition.CalendarName);
+                ITimerJobEntity timerJob = jobManager.CreateTimerJob(timerEventDefinition, interrupting, execution, TriggerTimerEventJobHandler.TYPE, timerConfig);
+
+                if (timerJob != null)
+                {
+                    jobManager.ScheduleTimerJob(timerJob);
+                }
             }
         }
-
     }
 }

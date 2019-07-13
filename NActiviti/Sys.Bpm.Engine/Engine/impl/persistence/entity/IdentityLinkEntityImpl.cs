@@ -53,27 +53,27 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     ["type"] = this.type
                 };
 
-                if (!(this.userId is null))
+                if (this.userId is object)
                 {
                     persistentState["userId"] = this.userId;
                 }
 
-                if (!(this.groupId is null))
+                if (this.groupId is object)
                 {
                     persistentState["groupId"] = this.groupId;
                 }
 
-                if (!(this.taskId is null))
+                if (this.taskId is object)
                 {
                     persistentState["taskId"] = this.taskId;
                 }
 
-                if (!(this.processInstanceId is null))
+                if (this.processInstanceId is object)
                 {
                     persistentState["processInstanceId"] = this.processInstanceId;
                 }
 
-                if (!(this.processDefId is null))
+                if (this.processDefId is object)
                 {
                     persistentState["processDefId"] = this.processDefId;
                 }
@@ -86,7 +86,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                return !(userId is null);
+                return userId is object;
             }
         }
 
@@ -94,7 +94,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                return !(groupId is null);
+                return groupId is object;
             }
         }
 
@@ -119,7 +119,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                if (!(this.groupId is null) && !(value is null))
+                if (this.groupId is object && value is object)
                 {
                     throw new ActivitiException("Cannot assign a userId to a task assignment that already has a groupId");
                 }
@@ -136,7 +136,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                if (!(this.userId is null) && !(value is null))
+                if (this.userId is object && value is object)
                 {
                     throw new ActivitiException("Cannot assign a groupId to a task assignment that already has a userId");
                 }
@@ -258,19 +258,19 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 sb.Append(", userId=").Append(userId);
             }
-            if (!(groupId is null))
+            if (groupId is object)
             {
                 sb.Append(", groupId=").Append(groupId);
             }
-            if (!(taskId is null))
+            if (taskId is object)
             {
                 sb.Append(", taskId=").Append(taskId);
             }
-            if (!(processInstanceId is null))
+            if (processInstanceId is object)
             {
                 sb.Append(", processInstanceId=").Append(processInstanceId);
             }
-            if (!(processDefId is null))
+            if (processDefId is object)
             {
                 sb.Append(", processDefId=").Append(processDefId);
             }

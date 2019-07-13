@@ -77,9 +77,9 @@ namespace Sys.Workflow.Rest.Client.API
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> Remove(string deployId)
+        public async Task<bool> Remove(string deployId)
         {
-            return await httpProxy.GetAsync<ActionResult>($"{serviceUrl}/{deployId}/remove").ConfigureAwait(false);
+            return await httpProxy.GetAsync<bool>($"{serviceUrl}/{deployId}/remove").ConfigureAwait(false);
         }
 
         /// <inheritdoc />

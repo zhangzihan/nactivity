@@ -35,6 +35,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         private const long serialVersionUID = 1L;
         protected internal string processDefinitionKey;
         protected internal string processDefinitionId;
+        protected internal string processDefinitionBusinessKey;
         protected internal IDictionary<string, object> variables;
         protected internal IDictionary<string, object> transientVariables;
         protected internal string businessKey;
@@ -43,6 +44,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         protected internal ProcessInstanceHelper processInstanceHelper;
         protected internal string startForm;
         protected string processName;
+        private readonly string initialFlowElementId;
 
         private readonly IStartProcessInstanceCmd startCmd;
 
@@ -58,6 +60,8 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             processInstanceName = cmd.ProcessInstanceName;
             startForm = cmd.StartForm;
             processName = cmd.ProcessName;
+            processDefinitionBusinessKey = cmd.ProcessDefinitionBusinessKey;
+            initialFlowElementId = cmd.InitialFlowElementId;
 
             this.startCmd = cmd;
         }
@@ -86,6 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             this.processInstanceName = processInstanceBuilder.ProcessInstanceName;
             this.transientVariables = processInstanceBuilder.TransientVariables;
+            this.initialFlowElementId = processInstanceBuilder.InitialFlowElementId;
         }
 
         public virtual IProcessInstance Execute(ICommandContext commandContext)
@@ -109,7 +114,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     }
 
                 }
-                else if (!(processDefinitionKey is null) && (tenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId)))
+                else if (processDefinitionKey is object && (tenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId)))
                 {
                     processDefinition = deploymentCache.FindDeployedLatestProcessDefinitionByKey(processDefinitionKey);
                     if (processDefinition == null)
@@ -118,7 +123,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     }
 
                 }
-                else if (!(processDefinitionKey is null) && !(tenantId is null) && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
+                else if (processDefinitionKey is object && tenantId is object && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
                 {
 
                     processDefinition = deploymentCache.FindDeployedLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
@@ -133,15 +138,10 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 }
 
                 processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
-                IProcessInstance processInstance = CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables);
+                IProcessInstance processInstance = processInstanceHelper.CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables, initialFlowElementId);
 
                 return processInstance;
             }
-        }
-
-        protected internal virtual IProcessInstance CreateAndStartProcessInstance(IProcessDefinition processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
-        {
-            return processInstanceHelper.CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables);
         }
 
         protected internal virtual IDictionary<string, object> ProcessDataObjects(ICollection<ValuedDataObject> dataObjects)
@@ -213,6 +213,22 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 }
                 processDefinitionId = definition.Id;
             }
+            else if (string.IsNullOrWhiteSpace(processDefinitionBusinessKey) == false)
+            {
+                definition = repositoryService.CreateProcessDefinitionQuery()
+                    .SetProcessDefinitionBusinessKey(processDefinitionBusinessKey)
+                    .SetProcessDefinitionTenantId(startCmd.TenantId)
+                    .SetLatestVersion()
+                    .SingleResult();
+
+                if (definition == null)
+                {
+                    logger.LogError($"Unable to find process definition for the given key:'{processDefinitionKey}'");
+
+                    throw new ActivitiObjectNotFoundException($"Unable to find process definition for the given key:'{processDefinitionKey}'");
+                }
+                processDefinitionId = definition.Id;
+            }
             else
             {
                 definition = repositoryService.GetProcessDefinition(id);
@@ -235,6 +251,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             builder.SetBusinessKey(startCmd.BusinessKey);
             builder.SetName(startCmd.ProcessInstanceName);
             builder.SetTenantId(startCmd.TenantId);
+            builder.SetInitialFlowElement(startCmd.InitialFlowElementId);
 
             return builder.Start();
         }

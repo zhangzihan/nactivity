@@ -9,17 +9,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Xunit;
+using Sys.Workflow.Services.Api.Commands;
+using Sys.Expressions;
+using Newtonsoft.Json.Linq;
+using Sys.Workflow.Engine.Api;
 
 namespace Sys.Workflow.Client.Tests.Expression
 {
     public class ExpressionTest
     {
+        private ExpressionTypeRegistry typeRegistry = null;
+
         public ExpressionTest()
         {
-            TypeRegistry.RegisterType(typeof(CollectionUtil));
-            TypeRegistry.RegisterType(typeof(TimerUtil));
-            TypeRegistry.RegisterType(typeof(ConfigUtil));
-            TypeRegistry.RegisterType(typeof(Math));
+            typeRegistry = new ExpressionTypeRegistry();
+        }
+
+        class ObjectData
+        {
+            public int ReviewDays { get; set; }
+        }
+
+        [Fact]
+        public void WorkflowVariable_FromObject_测试()
+        {
+            var data = new ObjectData { ReviewDays = 10 };
+
+            WorkflowVariable wv = WorkflowVariable.FromObject(data);
+
+            var obj = ExpressionEvaluator.GetValue(wv, "DateTimeHelper.AddDays(ReviewDays)");
         }
 
         [Fact]

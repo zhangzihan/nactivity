@@ -52,7 +52,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public virtual IAttachment Execute(ICommandContext commandContext)
         {
-            if (!(processInstanceId is null))
+            if (processInstanceId is object)
             {
                 VerifyExecutionParameters(commandContext);
             }
@@ -86,7 +86,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 // Forced to fetch the process-instance to associate the right
                 // process definition
                 string processDefinitionId = null;
-                if (!(attachment.ProcessInstanceId is null))
+                if (attachment.ProcessInstanceId is object)
                 {
                     IExecutionEntity process = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
                     if (process != null)

@@ -21,31 +21,32 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
         public void Notify(IDelegateTask task)
         {
             string assignee = task.Assignee;
-            if (string.IsNullOrWhiteSpace(assignee))
-            {
-                return;
-            }
+            task.SetVariableLocal($"{assignee}", new { Id = assignee });
+            //if (string.IsNullOrWhiteSpace(assignee))
+            //{
+            //    return;
+            //}
 
-            IUserInfo user = task.GetVariableLocal<IUserInfo>($"{assignee}");
-            if (!(user is null) && user.Id == assignee)
-            {
-                return;
-            }
+            //IUserInfo user = task.GetVariableLocal<IUserInfo>($"{assignee}");
+            //if (user is object && string.Equals(user.Id, assignee, StringComparison.OrdinalIgnoreCase))
+            //{
+            //    return;
+            //}
 
-            IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
+            //IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
-            user = AsyncHelper.RunSync(() => userService.GetUser(assignee));
-            if (user == null)
-            {
-                logger.LogError($"找不到执行人{assignee}");
-            }
-            else
-            {
-                user.TenantId = task.TenantId;
-                task.AssigneeUser = user.FullName;
-            }
+            //user = AsyncHelper.RunSync(() => userService.GetUser(assignee));
+            //if (user == null)
+            //{
+            //    logger.LogError($"找不到执行人{assignee}");
+            //}
+            //else
+            //{
+            //    user.TenantId = task.TenantId;
+            //    task.AssigneeUser = user.FullName;
+            //}
 
-            task.SetVariableLocal($"{assignee}", user);
+            //task.SetVariableLocal($"{assignee}", user);
         }
     }
 }

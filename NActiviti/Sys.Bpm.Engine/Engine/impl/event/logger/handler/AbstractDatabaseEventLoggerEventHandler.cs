@@ -52,7 +52,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
 
             // Current user
             string userId = Authentication.AuthenticatedUser.Id;
-            if (!(userId is null))
+            if (userId is object)
             {
                 eventLogEntry.UserId = userId;
                 PutInMapIfNotNull(data, "userId", userId);

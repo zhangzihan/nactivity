@@ -45,12 +45,12 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
                         if (!string.IsNullOrWhiteSpace(fieldExtension.StringValue))
                         {
                             xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_FIELD_STRING, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-                            xtw.WriteCData(fieldExtension.StringValue);
+                            xtw.WriteCharacters(fieldExtension.StringValue);
                         }
                         else
                         {
                             xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ATTRIBUTE_FIELD_EXPRESSION, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-                            xtw.WriteCData(fieldExtension.Expression);
+                            xtw.WriteCharacters(fieldExtension.Expression);
                         }
                         xtw.WriteEndElement();
                         xtw.WriteEndElement();

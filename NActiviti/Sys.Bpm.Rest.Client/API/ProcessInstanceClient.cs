@@ -49,9 +49,9 @@ namespace Sys.Workflow.Rest.Client.API
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> SendSignal(SignalCmd cmd)
+        public async Task<bool> SendSignal(SignalCmd cmd)
         {
-            return await httpProxy.PostAsync<ActionResult>($"{serviceUrl}/signal", cmd).ConfigureAwait(false);
+            return await httpProxy.PostAsync<bool>($"{serviceUrl}/signal", cmd).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -67,9 +67,9 @@ namespace Sys.Workflow.Rest.Client.API
         }
 
         /// <inheritdoc />
-        public async Task<ActionResult> Terminate(TerminateProcessInstanceCmd cmd)
+        public async Task<bool> Terminate(TerminateProcessInstanceCmd[] cmds)
         {
-            return await httpProxy.PostAsync<ActionResult>($"{serviceUrl}/terminate", cmd).ConfigureAwait(false);
+            return await httpProxy.PostAsync<bool>($"{serviceUrl}/terminate", cmds).ConfigureAwait(false);
         }
 
         /// <inheritdoc />

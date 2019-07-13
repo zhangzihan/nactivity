@@ -288,7 +288,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                             localizationValuesChanged = true;
                         }
 
-                        if (!(documentation is null) && !IsEqualToCurrentLocalizationValue(locale, processId, "description", documentation, infoNode))
+                        if (documentation is object && !IsEqualToCurrentLocalizationValue(locale, processId, "description", documentation, infoNode))
                         {
                             dynamicBpmnService.ChangeLocalizationDescription(locale, processId, documentation, infoNode);
                             localizationValuesChanged = true;
@@ -355,7 +355,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                                     localizationValuesChanged = true;
                                 }
 
-                                if (!(documentation is null) && IsEqualToCurrentLocalizationValue(locale, flowElementId, "description", documentation, infoNode) == false)
+                                if (documentation is object && IsEqualToCurrentLocalizationValue(locale, flowElementId, "description", documentation, infoNode) == false)
                                 {
                                     dynamicBpmnService.ChangeLocalizationDescription(locale, flowElementId, documentation, infoNode);
                                     localizationValuesChanged = true;
@@ -421,13 +421,13 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                                 }
                             }
 
-                            if (!(name is null) && IsEqualToCurrentLocalizationValue(locale, dataObject.Id, DynamicBpmnConstants.LOCALIZATION_NAME, name, infoNode) == false)
+                            if (name is object && IsEqualToCurrentLocalizationValue(locale, dataObject.Id, DynamicBpmnConstants.LOCALIZATION_NAME, name, infoNode) == false)
                             {
                                 dynamicBpmnService.ChangeLocalizationName(locale, dataObject.Id, name, infoNode);
                                 localizationValuesChanged = true;
                             }
 
-                            if (!(documentation is null) && IsEqualToCurrentLocalizationValue(locale, dataObject.Id, DynamicBpmnConstants.LOCALIZATION_DESCRIPTION, documentation, infoNode) == false)
+                            if (documentation is object && IsEqualToCurrentLocalizationValue(locale, dataObject.Id, DynamicBpmnConstants.LOCALIZATION_DESCRIPTION, documentation, infoNode) == false)
                             {
 
                                 dynamicBpmnService.ChangeLocalizationDescription(locale, dataObject.Id, documentation, infoNode);

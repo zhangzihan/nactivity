@@ -3,7 +3,7 @@ using Sys.Workflow.Cloud.Services.Api.Commands;
 using Sys.Workflow.Cloud.Services.Api.Model;
 using Sys.Workflow.Cloud.Services.Rest.Api;
 using Sys.Workflow.Hateoas;
-using Sys.Workflown.Test;
+using Sys.Workflow.Test;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,7 +104,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 DateTime dateValue = DateTime.Now;
                 string textValue = "this is a string.";
 
-                AsyncHelper.RunSync(() => varClient.SetVariables(inst[0].Id, new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
+                AsyncHelper.RunSync(() => varClient.SetVariables(new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
                  {
                     { "guidValue",  guidValue},
                     { "longValue", longValue},
@@ -165,7 +165,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 Resources<ProcessInstanceVariable> variables = null;
 
-                AsyncHelper.RunSync(() => varClient.SetVariables(inst[0].Id, new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
+                AsyncHelper.RunSync(() => varClient.SetVariables(new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
                     {
                         { "guidValue",  guidValue}
                     })));
@@ -178,7 +178,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 guidValue = Guid.NewGuid();
 
-                AsyncHelper.RunSync(() => varClient.SetVariables(inst[0].Id, new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
+                AsyncHelper.RunSync(() => varClient.SetVariables(new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
                     {
                         { "guidValue", guidValue }
                     })));
@@ -208,7 +208,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 Guid guidValue = Guid.NewGuid();
 
-                AsyncHelper.RunSync(() => varClient.SetVariables(inst[0].Id, new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
+                AsyncHelper.RunSync(() => varClient.SetVariables(new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
                 {
                     { "guidValue",  guidValue}
                 })));
@@ -219,7 +219,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 Assert.True(guidValue == new Guid(varInst.Value.ToString()));
 
-                AsyncHelper.RunSync(() => varClient.RemoveVariables(inst[0].Id, new RemoveProcessVariablesCmd(inst[0].Id, new string[] { "guidValue" })));
+                AsyncHelper.RunSync(() => varClient.RemoveVariables(new RemoveProcessVariablesCmd(inst[0].Id, new string[] { "guidValue" })));
 
                 variables = AsyncHelper.RunSync<Resources<ProcessInstanceVariable>>(() => varClient.GetVariables(inst[0].Id));
 

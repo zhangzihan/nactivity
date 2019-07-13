@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             set
             {
-                if (!(value is null) && value.Contains("{\"scope\":"))
+                if (value is object && value.Contains("{\"scope\":"))
                 {
                     this.configuration = value;
                 }
@@ -54,7 +54,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 string scope = ExtractScopeFormConfiguration();
-                return (!(scope is null)) && (Signal.SCOPE_PROCESS_INSTANCE.Equals(scope));
+                return (scope is object) && (Signal.SCOPE_PROCESS_INSTANCE.Equals(scope));
             }
         }
 

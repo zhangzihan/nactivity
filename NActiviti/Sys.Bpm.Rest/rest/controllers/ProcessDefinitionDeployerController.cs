@@ -191,13 +191,13 @@ namespace Sys.Workflow.Rest.Controllers
 
         /// <inheritdoc />
         [HttpGet("{deployId}/remove")]
-        public Task<ActionResult> Remove(string deployId)
+        public Task<bool> Remove(string deployId)
         {
             try
             {
                 this.repositoryService.DeleteDeployment(deployId);
 
-                return Task.FromResult<ActionResult>(Ok());
+                return Task.FromResult(true);
             }
             catch (ActivitiObjectNotFoundException ex)
             {
@@ -206,7 +206,7 @@ namespace Sys.Workflow.Rest.Controllers
                     logger.LogDebug($"remove deployment failed.{ex.Message}");
                 }
 
-                return Task.FromResult<ActionResult>(Ok());
+                return Task.FromResult(true);
             }
             catch (ExistsProcessInstanceException ex)
             {

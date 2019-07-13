@@ -97,7 +97,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             {
                 return execution.CurrentFlowElement;
             }
-            else if (!(execution.CurrentActivityId is null))
+            else if (execution.CurrentActivityId is object)
             {
                 string processDefinitionId = execution.ProcessDefinitionId;
                 Process process = ProcessDefinitionUtil.GetProcess(processDefinitionId);

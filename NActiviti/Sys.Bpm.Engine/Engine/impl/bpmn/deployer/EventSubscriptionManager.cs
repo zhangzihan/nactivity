@@ -108,7 +108,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
             newSubscription.Configuration = processDefinition.Id;
             newSubscription.ProcessDefinitionId = processDefinition.Id;
 
-            if (!(processDefinition.TenantId is null))
+            if (processDefinition.TenantId is object)
             {
                 newSubscription.TenantId = processDefinition.TenantId;
             }
@@ -141,7 +141,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                                 }
                                 subscriptionEntity.ActivityId = startEvent.Id;
                                 subscriptionEntity.ProcessDefinitionId = processDefinition.Id;
-                                if (!(processDefinition.TenantId is null))
+                                if (processDefinition.TenantId is object)
                                 {
                                     subscriptionEntity.TenantId = processDefinition.TenantId;
                                 }

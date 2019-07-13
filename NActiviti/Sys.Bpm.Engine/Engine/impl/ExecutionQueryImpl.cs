@@ -469,7 +469,7 @@ namespace Sys.Workflow.Engine.Impl
                     string activityId = null;
                     if (execution.Id.Equals(execution.ProcessInstanceId))
                     {
-                        if (!(execution.ProcessDefinitionId is null))
+                        if (execution.ProcessDefinitionId is object)
                         {
                             IProcessDefinition processDefinition = commandContext.ProcessEngineConfiguration.DeploymentManager.FindDeployedProcessDefinitionById(execution.ProcessDefinitionId);
                             activityId = processDefinition.Key;
@@ -481,7 +481,7 @@ namespace Sys.Workflow.Engine.Impl
                         activityId = execution.ActivityId;
                     }
 
-                    if (!(activityId is null))
+                    if (activityId is object)
                     {
                         Localize(execution, activityId);
                     }

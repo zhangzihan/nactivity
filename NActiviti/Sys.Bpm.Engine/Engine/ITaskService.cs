@@ -210,7 +210,7 @@ namespace Sys.Workflow.Engine
         ///          If true, the provided variables will be stored task-local, instead of process instance wide (which is the default for <seealso cref="#complete(String, Map)"/>). </param>
         /// <exception cref="ActivitiObjectNotFoundException">
         ///           when no task exists with the given id. </exception>
-        void Complete(string taskId, IDictionary<string, object> variables, bool localScope);
+        void Complete(string taskId, IDictionary<string, object> variables, bool localScope, bool notFoundThrowError = false);
 
         /// <summary>
         /// Similar to <seealso cref="#complete(String, Map)"/>, but allows to set transient variables too. 
@@ -225,7 +225,7 @@ namespace Sys.Workflow.Engine
         /// <summary>
         /// Similar to <seealso cref="#complete(String, Map)"/>, but allows to set transient variables too. 
         /// </summary>
-        void Complete(string businessKey, string assignee, string comment, IDictionary<string, object> variables, bool localScope, IDictionary<string, object> transientVariables = null);
+        void Complete(string businessKey, string taskName, string assignee, string comment, IDictionary<string, object> variables, bool localScope, IDictionary<string, object> transientVariables = null, bool notFoundThrowError = false);
 
         /// <summary>
         /// 创建一个新的任务

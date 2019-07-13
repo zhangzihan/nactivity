@@ -18,6 +18,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,6 +61,8 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         private readonly PageableProcessInstanceRepositoryService pageableProcessInstanceService;
 
+        private readonly ILogger<ProcessInstanceControllerImpl> logger;
+
         //public virtual string handleAppException(ActivitiForbiddenException ex)
         //{
         //    return ex.Message;
@@ -79,7 +84,8 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             ProcessInstanceResourceAssembler resourceAssembler,
             PageableProcessInstanceRepositoryService pageableProcessInstanceService,
             IProcessEngine engine,
-            SecurityPoliciesApplicationService securityPoliciesApplicationService)
+            SecurityPoliciesApplicationService securityPoliciesApplicationService,
+            ILoggerFactory loggerFactory)
         {
             this.processEngineWrapper = processEngine;
             this.repositoryService = engine.RepositoryService;
@@ -88,8 +94,8 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             this.resourceAssembler = resourceAssembler;
             this.securityService = securityPoliciesApplicationService;
             this.pageableProcessInstanceService = pageableProcessInstanceService;
+            this.logger = loggerFactory.CreateLogger<ProcessInstanceControllerImpl>();
         }
-
 
         /// <inheritdoc />
         [HttpPost]
@@ -107,15 +113,34 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         [HttpPost("start")]
         public virtual Task<ProcessInstance[]> Start(StartProcessInstanceCmd[] cmds)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             try
             {
+                logger.LogInformation("开始调用工作流启动事件\r\n" + JsonConvert.SerializeObject(cmds));
+
                 ProcessInstance[] instances = processEngineWrapper.StartProcess(cmds);
 
-                return Task.FromResult<ProcessInstance[]>(instances);
+
+                logger.LogInformation("调用工作流启动事件完成");
+
+                return Task.FromResult(instances);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Http400Exception(new Http400
+                {
+                    Code = "processStartFailed",
+                    Message = ex.Message,
+                    Target = this.GetType().Name,
+                }, ex);
+            }
+            finally
+            {
+                sw.Stop();
+
+                logger.LogInformation($"共计启动{cmds.Length}项任务,执行完成时间：{sw.ElapsedMilliseconds}");
             }
         }
 
@@ -165,11 +190,11 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         /// <inheritdoc />
         [HttpPost("signal")]
-        public virtual Task<ActionResult> SendSignal(SignalCmd cmd)
+        public virtual Task<bool> SendSignal(SignalCmd cmd)
         {
             processEngineWrapper.Signal(cmd);
 
-            return Task.FromResult<ActionResult>(Ok());
+            return Task.FromResult(true);
         }
 
         /// <inheritdoc />
@@ -195,11 +220,11 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         /// <inheritdoc />
         [HttpPost("terminate")]
-        public virtual Task<ActionResult> Terminate(TerminateProcessInstanceCmd cmd)
+        public virtual Task<bool> Terminate(TerminateProcessInstanceCmd[] cmds)
         {
-            processEngineWrapper.TerminateProcessInstance(cmd.ProcessInstanceId, cmd.Reason);
+            processEngineWrapper.TerminateProcessInstance(cmds);
 
-            return Task.FromResult<ActionResult>(Ok());
+            return Task.FromResult(true);
         }
 
         /// <inheritdoc />

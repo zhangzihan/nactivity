@@ -1,4 +1,5 @@
 ﻿using Sys.Workflow.Engine.History;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -206,6 +207,12 @@ namespace Sys.Workflow.Engine.Delegate.Events
         public static readonly ActivitiEventType TASK_COMPLETED = new ActivitiEventType("TASK_COMPLETED", InnerEnum.TASK_COMPLETED);
 
         /// <summary>
+        /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="#ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
+        /// result of the task completion. In that case, a <seealso cref="ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
+        /// </summary>
+        public static readonly ActivitiEventType TASK_RETURN_TO = new ActivitiEventType("TASK_RETURN_TO", InnerEnum.TASK_RETURN_TO);
+
+        /// <summary>
         /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
         /// result of the task completion. In that case, a <seealso cref="ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
         /// </summary>
@@ -364,6 +371,7 @@ namespace Sys.Workflow.Engine.Delegate.Events
             TASK_COMPLETED,
             TASK_TERMINATED,
             TASK_TRANSFERED,
+            TASK_RETURN_TO,
             PROCESS_STARTED,
             PROCESS_COMPLETED,
             PROCESS_COMPLETED_WITH_ERROR_END_EVENT,
@@ -397,7 +405,7 @@ namespace Sys.Workflow.Engine.Delegate.Events
         public static ActivitiEventType[] GetTypesFromString(string @string)
         {
             IList<ActivitiEventType> result = new List<ActivitiEventType>();
-            if (!(@string is null) && @string.Length > 0)
+            if (@string is object && @string.Length > 0)
             {
                 string[] split = @string.Split(',');
                 foreach (string typeName in split)
@@ -446,7 +454,7 @@ namespace Sys.Workflow.Engine.Delegate.Events
                     return enumInstance;
                 }
             }
-            throw new System.ArgumentException(name);
+            throw new ArgumentException(name);
         }
     }
 

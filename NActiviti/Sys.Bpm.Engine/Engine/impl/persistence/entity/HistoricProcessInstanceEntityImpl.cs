@@ -69,7 +69,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             superProcessInstanceId = processInstance.SuperExecution?.ProcessInstanceId;
 
             // Inherit tenant id (if applicable)
-            if (!(processInstance.TenantId is null))
+            if (processInstance.TenantId is object)
             {
                 tenantId = processInstance.TenantId;
             }
@@ -246,7 +246,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (!(localizedName is null) && localizedName.Length > 0)
+                if (localizedName is object && localizedName.Length > 0)
                 {
                     return localizedName;
                 }
@@ -279,7 +279,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (!(localizedDescription is null) && localizedDescription.Length > 0)
+                if (localizedDescription is object && localizedDescription.Length > 0)
                 {
                     return localizedDescription;
                 }
@@ -369,7 +369,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     foreach (IHistoricVariableInstanceEntity variableInstance in queryVariables)
                     {
-                        if (!(variableInstance.Id is null) && variableInstance.TaskId is null)
+                        if (variableInstance.Id is object && variableInstance.TaskId is null)
                         {
                             variables[variableInstance.Name] = variableInstance.Value;
                         }

@@ -93,9 +93,17 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
                 throw new ArgumentNullException("userId");
             }
 
-            //this.httpProxy.SetHttpClientRequestAccessToken(apiWorkflowEngine, "");
+            IUserInfo user;
+            try
+            {
+                user = await this.httpProxy.PostAsync<UserInfo>(apiUrl, new { id = userId }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "invoke user failed: userId");
 
-            IUserInfo user = await this.httpProxy.PostAsync<UserInfo>(apiUrl, new { id = userId }).ConfigureAwait(false);
+                user = Authentication.AuthenticatedUser;
+            }
 
             return user;
         }

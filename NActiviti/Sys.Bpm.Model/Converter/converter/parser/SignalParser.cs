@@ -28,7 +28,7 @@ namespace Sys.Workflow.Bpmn.Converters.Parsers
             Signal signal = new Signal(signalId, signalName);
 
             string scope = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_SCOPE);
-            if (!(scope is null))
+            if (scope is object)
             {
                 signal.Scope = scope;
             }

@@ -63,7 +63,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         {
             get
             {
-                return firstResult == 0 ? firstResult + 1 : firstResult;
+                return firstResult == 0 ? 1 : firstResult;
             }
         }
 
@@ -78,7 +78,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                 {
                     return maxResults;
                 }
-                return FirstRow + maxResults;
+                return (firstResult == 0 ? 1 : firstResult + 1) + maxResults;
             }
         }
 

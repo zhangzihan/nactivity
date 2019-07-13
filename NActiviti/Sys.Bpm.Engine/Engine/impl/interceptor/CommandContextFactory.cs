@@ -21,7 +21,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
 
-        public virtual CommandContext<T1> CreateCommandContext<T1>(ICommand<T1> cmd)
+        public virtual ICommandContext CreateCommandContext<T1>(ICommand<T1> cmd)
         {
             return new CommandContext<T1>(cmd, processEngineConfiguration);
         }

@@ -45,19 +45,19 @@
             }
 
             mdc = logger.Value;
-            if (!(e.Id is null))
+            if (e.Id is object)
             {
                 mdc.Add(LOG_MDC_EXECUTION_ID, e.Id);
             }
-            if (!(e.ProcessDefinitionId is null))
+            if (e.ProcessDefinitionId is object)
             {
                 mdc.Add(LOG_MDC_PROCESSDEFINITION_ID, e.ProcessDefinitionId);
             }
-            if (!(e.ProcessInstanceId is null))
+            if (e.ProcessInstanceId is object)
             {
                 mdc.Add(LOG_MDC_PROCESSINSTANCE_ID, e.ProcessInstanceId);
             }
-            if (!(e.ProcessInstanceBusinessKey is null))
+            if (e.ProcessInstanceBusinessKey is object)
             {
                 mdc.Add(LOG_MDC_BUSINESS_KEY, e.ProcessInstanceBusinessKey);
             }
@@ -73,7 +73,7 @@
             if (logger.IsValueCreated)
             {
                 var mdc = logger.Value;
-                if (!(mdc is null))
+                if (mdc is object)
                 {
                     mdc.TryGetValue(LOG_MDC_PROCESSDEFINITION_ID, out var procid);
                     mdc.TryGetValue(LOG_MDC_EXECUTION_ID, out var execid);

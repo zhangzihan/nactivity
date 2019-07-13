@@ -80,7 +80,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             foreach (IAttachment attachment in attachments)
             {
                 string contentId = attachment.ContentId;
-                if (!(contentId is null))
+                if (contentId is object)
                 {
                     ByteArrayEntityManager.DeleteByteArrayById(contentId);
                 }

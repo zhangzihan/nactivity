@@ -42,12 +42,14 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             if (eventDefinition is SignalEventDefinition signalEventDefinition)
             {
                 intermediateEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateThrowSignalEventActivityBehavior(intermediateEvent, signalEventDefinition, bpmnParse.BpmnModel.GetSignal(signalEventDefinition.SignalRef));
-
             }
             else if (eventDefinition is CompensateEventDefinition compensateEventDefinition)
             {
                 intermediateEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateThrowCompensationEventActivityBehavior(intermediateEvent, compensateEventDefinition);
-
+            }
+            else if (eventDefinition is MessageEventDefinition messageEventDefinition)
+            {
+                intermediateEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateThrowMessgeEventActivityBehavior(intermediateEvent, messageEventDefinition, bpmnParse.BpmnModel.GetMessage(messageEventDefinition.MessageRef));
             }
             else if (eventDefinition == null)
             {

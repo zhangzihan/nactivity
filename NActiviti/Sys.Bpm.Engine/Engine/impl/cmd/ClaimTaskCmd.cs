@@ -40,11 +40,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
         {
-            if (!(userId is null))
+            if (userId is object)
             {
                 task.ClaimTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
 
-                if (!(task.Assignee is null))
+                if (task.Assignee is object)
                 {
                     if (!task.Assignee.Equals(userId))
                     {
@@ -56,9 +56,10 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 }
                 else
                 {
-                    IUserInfo user = AsyncHelper.RunSync(() => userService.GetUser(userId));
-                    task.SetVariable(userId, user);
-                    commandContext.TaskEntityManager.ChangeTaskAssignee(task, userId, user?.FullName);
+                    //TODO: 考虑性能问题，暂时不要获取人员信息
+                    //IUserInfo user = AsyncHelper.RunSync(() => userService.GetUser(userId));
+                    task.SetVariable(userId, new { id = userId });
+                    commandContext.TaskEntityManager.ChangeTaskAssignee(task, userId, null);
                 }
             }
             else

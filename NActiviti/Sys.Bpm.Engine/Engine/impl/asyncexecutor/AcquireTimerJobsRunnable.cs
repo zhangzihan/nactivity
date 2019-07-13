@@ -92,7 +92,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                 {
                     AcquiredTimerJobEntities acquiredJobs = commandExecutor.Execute(new AcquireTimerJobsCmd(asyncExecutor));
 
-                    if (!(acquiredJobs is null))
+                    if (acquiredJobs is object)
                     {
                         commandExecutor.Execute(new CommandAnonymousInnerClass(this, acquiredJobs));
 
@@ -141,10 +141,10 @@ Exception message: {ex.Message}");
                 {
                     try
                     {
-                        if (log.IsEnabled(LogLevel.Debug))
-                        {
-                            log.LogDebug($"timer job acquisition thread sleeping for {millisToWait} millis");
-                        }
+                        //if (log.IsEnabled(LogLevel.Debug))
+                        //{
+                        //    log.LogDebug($"timer job acquisition thread sleeping for {millisToWait} millis");
+                        //}
                         lock (MONITOR)
                         {
                             if (!isInterrupted)
@@ -154,10 +154,10 @@ Exception message: {ex.Message}");
                             }
                         }
 
-                        if (log.IsEnabled(LogLevel.Debug))
-                        {
-                            log.LogDebug("timer job acquisition thread woke up");
-                        }
+                        //if (log.IsEnabled(LogLevel.Debug))
+                        //{
+                        //    log.LogDebug("timer job acquisition thread woke up");
+                        //}
                     }
                     catch (Exception e)
                     {

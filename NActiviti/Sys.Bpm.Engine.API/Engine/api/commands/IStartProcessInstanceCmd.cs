@@ -18,6 +18,11 @@ namespace Sys.Workflow.Services.Api.Commands
         string ProcessDefinitionId { get; set; }
 
         /// <summary>
+        /// 主流程关联的业务键值
+        /// </summary>
+        string ProcessDefinitionBusinessKey { get; set; }
+
+        /// <summary>
         /// 主流程id
         /// </summary>
         string ProcessDefinitionKey { get; set; }
@@ -46,5 +51,10 @@ namespace Sys.Workflow.Services.Api.Commands
         /// 流程变量
         /// </summary>
         WorkflowVariable Variables { get; set; }
+
+        /// <summary>
+        /// 流程启动节点id
+        /// </summary>
+        string InitialFlowElementId { get; set; }
     }
 }

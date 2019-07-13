@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
                 // check whether compensating execution is already created (which is the case when compensating an embedded subprocess,
                 // where the compensating execution is created when leaving the subprocess and holds snapshot data).
-                if (!(eventSubscription.Configuration is null))
+                if (eventSubscription.Configuration is object)
                 {
                     compensatingExecution = executionEntityManager.FindById<IExecutionEntity>(eventSubscription.Configuration);
                     compensatingExecution.Parent = compensatingExecution.ProcessInstance;

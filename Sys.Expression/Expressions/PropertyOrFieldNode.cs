@@ -34,6 +34,7 @@ using Spring.Core.TypeResolution;
 using Spring.Util;
 using Spring.Reflection.Dynamic;
 using System.Linq;
+using System.Dynamic;
 
 #endregion
 
@@ -92,7 +93,7 @@ namespace Spring.Expressions
                 if (contextType != null && accessor == null)
                 {
                     // try to initialize node as ExpandoObject value
-                    if (contextType == typeof(System.Dynamic.ExpandoObject))
+                    if (contextType == typeof(ExpandoObject))
                     {
                         Type type = TypeRegistry.ResolveType(memberName);
                         if (type != null)

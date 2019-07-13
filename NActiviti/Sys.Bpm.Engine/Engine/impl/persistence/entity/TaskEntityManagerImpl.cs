@@ -51,11 +51,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public override void Insert(ITaskEntity taskEntity, bool fireCreateEvent)
         {
-            if (!(taskEntity.Owner is null))
+            if (taskEntity.Owner is object)
             {
                 AddOwnerIdentityLink(taskEntity, taskEntity.Owner);
             }
-            if (!(taskEntity.Assignee is null))
+            if (taskEntity.Assignee is object)
             {
                 AddAssigneeIdentityLinks(taskEntity);
             }
@@ -68,7 +68,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
 
             // Inherit tenant id (if applicable)
-            if (execution != null && !(execution.TenantId is null))
+            if (execution != null && execution.TenantId is object)
             {
                 taskEntity.TenantId = execution.TenantId;
             }
@@ -93,7 +93,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             HistoryManager.RecordTaskCreated(taskEntity, execution);
             HistoryManager.RecordTaskId(taskEntity);
-            if (!(taskEntity.FormKey is null))
+            if (taskEntity.FormKey is object)
             {
                 HistoryManager.RecordTaskFormKeyChange(taskEntity.Id, taskEntity.FormKey);
             }
@@ -112,7 +112,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         private void ChangeTaskAssignee(ITaskEntity taskEntity, string assignee, bool fireEvents, string assigneeUser)
         {
-            if ((!(taskEntity.Assignee is null) && !taskEntity.Assignee.Equals(assignee)) || (taskEntity.Assignee is null && !(assignee is null)))
+            if ((taskEntity.Assignee is object && !taskEntity.Assignee.Equals(assignee)) || (taskEntity.Assignee is null && assignee is object))
             {
                 taskEntity.Assignee = assignee;
                 taskEntity.AssigneeUser = assigneeUser;
@@ -125,7 +125,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     RecordTaskAssignment(taskEntity);
                 }
 
-                if (!(taskEntity.Id is null))
+                if (taskEntity.Id is object)
                 {
                     HistoryManager.RecordTaskAssigneeChange(taskEntity.Id, taskEntity.Assignee, taskEntity.AssigneeUser);
                     AddAssigneeIdentityLinks(taskEntity);
@@ -136,11 +136,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void ChangeTaskOwner(ITaskEntity taskEntity, string owner)
         {
-            if ((!(taskEntity.Owner is null) && !taskEntity.Owner.Equals(owner)) || (taskEntity.Owner is null && !(owner is null)))
+            if ((taskEntity.Owner is object && !taskEntity.Owner.Equals(owner)) || (taskEntity.Owner is null && owner is object))
             {
                 taskEntity.Owner = owner;
 
-                if (!(taskEntity.Id is null))
+                if (taskEntity.Id is object)
                 {
                     HistoryManager.RecordTaskOwnerChange(taskEntity.Id, taskEntity.Owner);
                     AddOwnerIdentityLink(taskEntity, taskEntity.Owner);
@@ -168,7 +168,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         private void AddAssigneeIdentityLinks(ITaskEntity taskEntity)
         {
-            if (!(taskEntity.Assignee is null) && taskEntity.ProcessInstance != null)
+            if (taskEntity.Assignee is object && taskEntity.ProcessInstance is object)
             {
                 IdentityLinkEntityManager.InvolveUser(taskEntity.ProcessInstance, taskEntity.Assignee, IdentityLinkType.PARTICIPANT);
             }
@@ -181,7 +181,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return;
             }
 
-            if (!(owner is null) && !(taskEntity.ProcessInstanceId is null))
+            if (owner is object && taskEntity.ProcessInstanceId is object)
             {
                 IdentityLinkEntityManager.InvolveUser(taskEntity.ProcessInstance, owner, IdentityLinkType.PARTICIPANT);
             }
@@ -249,7 +249,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             base.Delete(entity, fireDeleteEvent);
 
-            if (!(entity.ExecutionId is null) && ExecutionRelatedEntityCountEnabledGlobally)
+            if (entity.ExecutionId is object && ExecutionRelatedEntityCountEnabledGlobally)
             {
                 ICountingExecutionEntity countingExecutionEntity = (ICountingExecutionEntity)entity.Execution;
                 if (IsExecutionRelatedEntityCountEnabled(countingExecutionEntity))
@@ -306,7 +306,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             if (task != null)
             {
-                if (!(task.ExecutionId is null))
+                if (task.ExecutionId is object)
                 {
                     throw new ActivitiException("The task cannot be deleted because is part of a running process");
                 }

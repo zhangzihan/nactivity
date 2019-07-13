@@ -99,7 +99,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             ICollection<BoundaryEvent> boundaryEvents = process.FindFlowElementsOfType<BoundaryEvent>(true);
             foreach (BoundaryEvent boundaryEvent in boundaryEvents)
             {
-                if (!(boundaryEvent.AttachedToRefId is null) && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
+                if (boundaryEvent.AttachedToRefId is object && boundaryEvent.AttachedToRefId.Equals(flowElement.Id))
                 {
                     results.Add(boundaryEvent);
                 }

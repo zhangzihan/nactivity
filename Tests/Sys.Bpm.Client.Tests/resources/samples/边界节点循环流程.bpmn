@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_1" name="边界节点循环" isExecutable="true">
+    <bpmn2:startEvent id="StartEvent_1" camunda:formKey="1">
+      <bpmn2:outgoing>SequenceFlow_0ja2btw</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_0ja2btw" sourceRef="StartEvent_1" targetRef="Task_1g8r03w" />
+    <bpmn2:sequenceFlow id="SequenceFlow_00cwkw6" sourceRef="Task_1g8r03w" targetRef="Task_1e2ra4c" />
+    <bpmn2:userTask id="Task_1e2ra4c" name="暂停" camunda:assignee="${next}">
+      <bpmn2:incoming>SequenceFlow_00cwkw6</bpmn2:incoming>
+    </bpmn2:userTask>
+    <bpmn2:userTask id="Task_1g8r03w" name="节点" camunda:assignee="${node}">
+      <bpmn2:incoming>SequenceFlow_0ja2btw</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_0q06xkt</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_00cwkw6</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:boundaryEvent id="BoundaryEvent_0rmbkvt" attachedToRef="Task_1g8r03w">
+      <bpmn2:outgoing>SequenceFlow_1s7sxjn</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeDate xsi:type="bpmn2:tFormalExpression">${DateTimeHelper.AddSeconds(5)}</bpmn2:timeDate>
+      </bpmn2:timerEventDefinition>
+    </bpmn2:boundaryEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_1s7sxjn" sourceRef="BoundaryEvent_0rmbkvt" targetRef="Task_0icjxly" />
+    <bpmn2:userTask id="Task_0icjxly" name="管理员" camunda:assignee="${admin}">
+      <bpmn2:incoming>SequenceFlow_1s7sxjn</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_0q06xkt</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_0q06xkt" sourceRef="Task_0icjxly" targetRef="Task_1g8r03w" />
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="181" y="237" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ja2btw_di" bpmnElement="SequenceFlow_0ja2btw">
+        <di:waypoint x="217" y="255" />
+        <di:waypoint x="352" y="255" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_00cwkw6_di" bpmnElement="SequenceFlow_00cwkw6">
+        <di:waypoint x="452" y="255" />
+        <di:waypoint x="566" y="255" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_13yex7r_di" bpmnElement="Task_1e2ra4c">
+        <dc:Bounds x="566" y="215" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_06tf58l_di" bpmnElement="Task_1g8r03w">
+        <dc:Bounds x="352" y="215" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1mreq3u_di" bpmnElement="BoundaryEvent_0rmbkvt">
+        <dc:Bounds x="387" y="197" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1s7sxjn_di" bpmnElement="SequenceFlow_1s7sxjn">
+        <di:waypoint x="405" y="197" />
+        <di:waypoint x="405" y="124" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1hn1jtn_di" bpmnElement="Task_0icjxly">
+        <dc:Bounds x="352" y="44" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0q06xkt_di" bpmnElement="SequenceFlow_0q06xkt">
+        <di:waypoint x="352" y="84" />
+        <di:waypoint x="275" y="84" />
+        <di:waypoint x="275" y="230" />
+        <di:waypoint x="349" y="230" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

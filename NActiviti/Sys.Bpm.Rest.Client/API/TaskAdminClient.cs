@@ -24,27 +24,9 @@ namespace Sys.Workflow.Rest.Client.API
             this.httpProxy = httpProxy;
         }
 
-        /// <inheritdoc />
-        public async Task<Resources<TaskModel>> GetTasks(TaskQuery query)
+        public async Task<Resources<TaskModel>> GetAllTasks(TaskQuery query)
         {
             return await httpProxy.PostAsync<Resources<TaskModel>>($"{serviceUrl}", query).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc />
-        public async Task<TaskModel> GetTaskById(string taskId)
-        {
-            return await httpProxy.GetAsync<TaskModel>($"{serviceUrl}/{taskId}").ConfigureAwait(false);
-        }
-
-        /// <inheritdoc />
-        public async Task<Resources<TaskModel>> MyTasks(string userId)
-        {
-            return await httpProxy.GetAsync<Resources<TaskModel>>($"{serviceUrl}/{userId}/mytasks").ConfigureAwait(false);
-        }
-
-        public async Task<Resources<TaskModel>> GetAllTasks(Pageable pageable)
-        {
-            return await httpProxy.PostAsync<Resources<TaskModel>>($"{serviceUrl}", pageable).ConfigureAwait(false);
         }
 
         public async Task<TaskModel[]> ReassignTaskUser(ReassignTaskUserCmd cmd)

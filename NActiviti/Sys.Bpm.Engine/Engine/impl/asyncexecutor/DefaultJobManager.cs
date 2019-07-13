@@ -343,7 +343,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         protected internal virtual void ExecuteMessageJob(IJobEntity jobEntity)
         {
             ExecuteJobHandler(jobEntity);
-            if (!(jobEntity.Id is null))
+            if (jobEntity.Id is object)
             {
                 Context.CommandContext.JobEntityManager.Delete(jobEntity);
             }
@@ -358,7 +358,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             ITimerJobEntityManager timerJobEntityManager = processEngineConfiguration.TimerJobEntityManager;
 
             IVariableScope variableScope = null;
-            if (!(timerEntity.ExecutionId is null))
+            if (timerEntity.ExecutionId is object)
             {
                 variableScope = ExecutionEntityManager.FindById<VariableScopeImpl>(timerEntity.ExecutionId);
             }
@@ -389,7 +389,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                 logger.LogDebug($"Timer {timerEntity.Id} fired. Deleting timer.");
             }
 
-            if (!(timerEntity.Repeat is null))
+            if (timerEntity.Repeat is object)
             {
                 ITimerJobEntity newTimerJobEntity = timerJobEntityManager.CreateAndCalculateNextTimer(timerEntity, variableScope);
                 if (newTimerJobEntity != null)
@@ -406,7 +406,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         protected internal virtual void ExecuteJobHandler(IJobEntity jobEntity)
         {
             IExecutionEntity execution = null;
-            if (!(jobEntity.ExecutionId is null))
+            if (jobEntity.ExecutionId is object)
             {
                 execution = ExecutionEntityManager.FindById<ExecutionEntityImpl>(jobEntity.ExecutionId);
             }
@@ -430,7 +430,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                 activityId = TimerEventHandler.GetActivityIdFromConfiguration(timerEntity.JobHandlerConfiguration);
                 string endDateExpressionString = TimerEventHandler.GetEndDateFromConfiguration(timerEntity.JobHandlerConfiguration);
 
-                if (!(endDateExpressionString is null))
+                if (endDateExpressionString is object)
                 {
                     IExpression endDateExpression = processEngineConfiguration.ExpressionManager.CreateExpression(endDateExpressionString);
 
@@ -463,7 +463,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             }
 
             int maxIterations = 1;
-            if (!(timerEntity.ProcessDefinitionId is null))
+            if (timerEntity.ProcessDefinitionId is object)
             {
                 Process process = ProcessDefinitionUtil.GetProcess(timerEntity.ProcessDefinitionId);
                 maxIterations = GetMaxIterations(process, activityId);
@@ -496,7 +496,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                         {
                             if (eventDefinition is TimerEventDefinition timerEventDefinition)
                             {
-                                if (!(timerEventDefinition.TimeCycle is null))
+                                if (timerEventDefinition.TimeCycle is object)
                                 {
                                     return CalculateMaxIterationsValue(timerEventDefinition.TimeCycle);
                                 }
@@ -621,7 +621,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             jobEntity.JobHandlerType = AsyncContinuationJobHandler.TYPE;
 
             // Inherit tenant id (if applicable)
-            if (!(execution.TenantId is null))
+            if (execution.TenantId is object)
             {
                 jobEntity.TenantId = execution.TenantId;
             }

@@ -176,7 +176,7 @@ namespace Sys.Workflow.Bpmn.Models
             {
                 if (artifact is Association association)
                 {
-                    if (!(association.SourceRef is null) && !(association.TargetRef is null) && association.SourceRef.Equals(sourceRef))
+                    if (association.SourceRef is object && association.TargetRef is object && association.SourceRef.Equals(sourceRef))
                     {
                         associations.Add(association);
                     }
@@ -205,7 +205,7 @@ namespace Sys.Workflow.Bpmn.Models
             {
                 if (artifact is Association association)
                 {
-                    if (!(association.TargetRef is null) && association.TargetRef.Equals(targetRef))
+                    if (association.TargetRef is object && association.TargetRef.Equals(targetRef))
                     {
                         associations.Add(association);
                     }
@@ -234,7 +234,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             foreach (FlowElement flowElement in flowElementsContainer.FlowElements)
             {
-                if (!(flowElement.Id is null) && flowElement.Id.Equals(flowElementId))
+                if (flowElement.Id is object && flowElement.Id.Equals(flowElementId))
                 {
                     return flowElementsContainer;
                 }
@@ -445,7 +445,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             foreach (FlowElement flowElement in flowElementsContainer.FlowElements)
             {
-                if (!(childElement.Id is null) && childElement.Id.Equals(flowElement.Id))
+                if (childElement.Id is object && childElement.Id.Equals(flowElement.Id))
                 {
                     return flowElementsContainer;
                 }

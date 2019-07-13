@@ -166,7 +166,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IHistoricTaskInstanceQuery SetProcessInstanceIdIn(string[] processInstanceIds)
         {
-            var ids = processInstanceIds is null ? new List<string>() : processInstanceIds.Where(x => !(x is null)).ToList();
+            var ids = processInstanceIds is null ? new List<string>() : processInstanceIds.Where(x => x is object).ToList();
 
             if (inOrStatement)
             {
@@ -339,7 +339,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IHistoricTaskInstanceQuery SetProcessCategoryIn(IList<string> processCategoryInList)
         {
-            var cates = processCategoryInList is null ? new List<string>() : processCategoryInList.Where(x => !(x is null)).ToList();
+            var cates = processCategoryInList is null ? new List<string>() : processCategoryInList.Where(x => x is object).ToList();
 
             if (inOrStatement)
             {
@@ -354,7 +354,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IHistoricTaskInstanceQuery SetProcessCategoryNotIn(IList<string> processCategoryNotInList)
         {
-            var cates = processCategoryNotInList is null ? new List<string>() : processCategoryNotInList.Where(x => !(x is null)).ToList();
+            var cates = processCategoryNotInList is null ? new List<string>() : processCategoryNotInList.Where(x => x is object).ToList();
 
             if (inOrStatement)
             {
@@ -421,15 +421,15 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IHistoricTaskInstanceQuery SetTaskNameIn(IList<string> taskNameList)
         {
-            if (!(taskName_ is null))
+            if (taskName_ is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameIn and taskName");
             }
-            if (!(taskNameLike_ is null))
+            if (taskNameLike_ is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameIn and taskNameLike");
             }
-            if (!(taskNameLikeIgnoreCase_ is null))
+            if (taskNameLikeIgnoreCase_ is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameIn and taskNameLikeIgnoreCase");
             }
@@ -1445,7 +1445,7 @@ namespace Sys.Workflow.Engine.Impl
             taskEntity.LocalizedName = null;
             taskEntity.LocalizedDescription = null;
 
-            if (!(locale_ is null))
+            if (locale_ is object)
             {
                 string processDefinitionId = task.ProcessDefinitionId;
                 if (!string.IsNullOrWhiteSpace(processDefinitionId))
@@ -1612,7 +1612,7 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 string specialOrderBy = base.OrderBy;
-                if (!(specialOrderBy is null) && specialOrderBy.Length > 0)
+                if (specialOrderBy is object && specialOrderBy.Length > 0)
                 {
                     specialOrderBy = specialOrderBy.Replace("RES.", "TEMPRES_");
                     specialOrderBy = specialOrderBy.Replace("VAR.", "TEMPVAR_");
@@ -1625,7 +1625,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             get
             {
-                if (!(candidateGroup is null))
+                if (candidateGroup is object)
                 {
                     IList<string> candidateGroupList = new List<string>(1)
                     {
@@ -1639,7 +1639,7 @@ namespace Sys.Workflow.Engine.Impl
                     return candidateGroups;
 
                 }
-                else if (!(candidateUser is null))
+                else if (candidateUser is object)
                 {
                     return GetGroupsForCandidateUser(candidateUser);
                 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +14,13 @@ using System.Collections.Generic;
  */
 namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
-
     using Sys.Workflow.Bpmn.Models;
-    using Sys.Workflow.Engine.Impl.Bpmn.Helper;
-    using Sys.Workflow.Engine.Impl.Contexts;
     using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
-    using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
-    using Sys.Workflow.Engine.Impl.Util;
-    using Sys.Workflow.Engine.Tasks;
-    using Sys.Workflow.Services.Api.Commands;
-    using System.Linq;
 
-    /// 
-    /// 
+    /// <summary>
+    /// 少数服从多数，当半数以上人员投的通过票则输出为true，否则半数以上人员投的反对票则输出为false.
+    /// </summary>
     [Serializable]
     public class HalfPassParallelMultiInstanceBehavior : ParallelMultiInstanceBehavior
     {

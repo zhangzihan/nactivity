@@ -6,9 +6,11 @@
     <AssemblyName>BpmnWebApiTest</AssemblyName>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>latest</LangVersion>
     <TieredCompilation>true</TieredCompilation>
     <WarningsAsErrors>NU1605</WarningsAsErrors>
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,5 +40,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Sys.Bpm.Rest\Sys.Bpm.Rest.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

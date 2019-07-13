@@ -43,12 +43,15 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             {
                 eventDefinition = boundaryEvent.EventDefinitions[0];
             }
+            else
+            {
+                eventDefinition = new EmptyEventDefinition();
+            }
 
-            if (eventDefinition is TimerEventDefinition || eventDefinition is ErrorEventDefinition || eventDefinition is SignalEventDefinition || eventDefinition is CancelEventDefinition || eventDefinition is MessageEventDefinition || eventDefinition is CompensateEventDefinition)
+            if (eventDefinition is TimerEventDefinition || eventDefinition is ErrorEventDefinition || eventDefinition is SignalEventDefinition || eventDefinition is CancelEventDefinition || eventDefinition is MessageEventDefinition || eventDefinition is CompensateEventDefinition || eventDefinition is EmptyEventDefinition)
             {
 
                 bpmnParse.BpmnParserHandlers.ParseElement(bpmnParse, eventDefinition);
-
             }
             else
             {

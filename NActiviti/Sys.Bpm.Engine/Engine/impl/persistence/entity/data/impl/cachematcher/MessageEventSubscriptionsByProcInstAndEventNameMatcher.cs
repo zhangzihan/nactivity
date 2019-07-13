@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +24,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 
         public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object param)
         {
-            IDictionary<string, object> paramMap = (IDictionary<string, object>)param ?? new Dictionary<string, object>();
-            paramMap.TryGetValue("processInstanceId", out object processInstanceId);
-            paramMap.TryGetValue("eventName", out object eventName);
+            if (param is null)
+            {
+                return false;
+            }
+
+            JObject token = JObject.FromObject(param);
+            token.TryGetValue("processInstanceId", StringComparison.OrdinalIgnoreCase, out var processInstanceId);
+            token.TryGetValue("eventName", StringComparison.OrdinalIgnoreCase, out var eventName);
 
             return eventSubscriptionEntity.EventType != null &&
                 string.Compare(eventSubscriptionEntity.EventType, MessageEventSubscriptionEntityFields.EVENT_TYPE, true) ==0 &&
@@ -33,6 +40,5 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
                 eventSubscriptionEntity.ProcessInstanceId != null && 
                 string.Compare(eventSubscriptionEntity.ProcessInstanceId, processInstanceId?.ToString(), true) == 0;
         }
-
     }
 }
