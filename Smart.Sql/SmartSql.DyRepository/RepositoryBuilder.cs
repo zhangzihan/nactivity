@@ -43,7 +43,7 @@ namespace SmartSql.DyRepository
             template = template.Replace("{Scope}", @"([\p{L}\p{N}_]+)");
             template = template.Insert(0, "^");
             template = template + "$";
-            _repositoryScope = new Regex(template, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+            _repositoryScope = new Regex(template, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
         }
 
         private String GetScope(string repositoryName)

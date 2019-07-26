@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
-  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
-  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
-  xmlns:camunda="http://camunda.org/schema/1.0/bpmn" 
-  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"  id="sample-diagram" 
-  targetNamespace="http://bpmn.io/schema/bpmn" 
-  xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
   <bpmn2:process id="Process_qpriPAZCB" name="定时取消任务" isExecutable="true">
     <bpmn2:startEvent id="Start_lKcuZQ6wCH">
       <bpmn2:outgoing>SequenceFlow_0nhpmhh</bpmn2:outgoing>
@@ -53,7 +45,7 @@
         <di:waypoint x="349" y="357" />
         <di:waypoint x="417" y="357" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EndEvent_06yz6hh_di" bpmnElement="IntermediateThrowEvent_1bg82ck">
+      <bpmndi:BPMNShape id="EndEvent_1430ieb_di" bpmnElement="IntermediateThrowEvent_1bg82ck">
         <dc:Bounds x="417" y="339" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>

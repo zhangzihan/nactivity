@@ -36,7 +36,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 string textValue = "this is a string.";
                 string uid = Guid.NewGuid().ToString();
 
-                ProcessInstance[] inst = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[0], new Dictionary<string, object>
+                ProcessInstance[] inst = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }, new Dictionary<string, object>
                 {
                     { "guidValue",  guidValue},
                     { "longValue", longValue},

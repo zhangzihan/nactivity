@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
     [Serializable]
     public class ServiceTaskWebApiActivityBehavior : TaskActivityBehavior
     {
-        private static readonly Regex OBJECT_PATTERN = new Regex(@"(^(\s*{)(.*?)(\}\s*)$)|(^\s*\[(.*?)(\]\s*)$)", RegexOptions.Compiled);
+        private static readonly Regex OBJECT_PATTERN = new Regex(@"(^(\s*{)(.*?)(\}\s*)$)|(^\s*\[(.*?)(\]\s*)$)");
 
         private readonly static ILogger logger = ProcessEngineServiceProvider.LoggerService<ServiceTaskWebApiActivityBehavior>();
 
@@ -81,15 +81,17 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     request = parameter.Request;
                     string method = parameter.Method;
 
-                    var httpProxy = ProcessEngineServiceProvider.Resolve<IServiceWebApiHttpProxy>();
+                    var httpProxy = ProcessEngineServiceProvider.Resolve<IHttpClientProxy>();
 
                     HttpContext httpContext = ProcessEngineServiceProvider.Resolve<IHttpContextAccessor>()?.HttpContext;
 
                     if (httpContext == null)
                     {
-                        IAccessTokenProvider accessTokenProvider = ProcessEngineServiceProvider.Resolve<IAccessTokenProvider>();
+                        httpProxy.SetHttpClientRequestAccessToken(execution.StartUserId, execution.TenantId);
 
-                        accessTokenProvider.SetHttpClientRequestAccessToken(httpProxy.HttpClient, execution.StartUserId, execution.TenantId);
+                        //IAccessTokenProvider accessTokenProvider = ProcessEngineServiceProvider.Resolve<IAccessTokenProvider>();
+
+                        //accessTokenProvider.SetHttpClientRequestAccessToken(httpProxy.HttpClient, execution.StartUserId, execution.TenantId);
                     }
 
                     switch (method?.ToLower())
@@ -119,13 +121,13 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
         }
 
-        private void ExecutePost(IExecutionEntity execution, string url, object request, string dataObj, IServiceWebApiHttpProxy httpProxy)
+        private void ExecutePost(IExecutionEntity execution, string url, object request, string dataObj, IHttpClientProxy httpProxy)
         {
             url = QueryParameter(execution, url, request, false);
 
             if (string.IsNullOrWhiteSpace(dataObj))
             {
-                AsyncHelper.RunSync(() => httpProxy.PostAsync(url, request));
+                AsyncHelper.RunSync(() => httpProxy.PostAsync(url, request, CancellationToken.None));
             }
             else
             {
@@ -142,7 +144,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
         }
 
-        private void ExecuteGet(IExecutionEntity execution, string url, object request, string dataObj, IServiceWebApiHttpProxy httpProxy)
+        private void ExecuteGet(IExecutionEntity execution, string url, object request, string dataObj, IHttpClientProxy httpProxy)
         {
             url = QueryParameter(execution, url, request, true);
 

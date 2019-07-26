@@ -19,11 +19,11 @@ namespace Sys.Workflow.Bpmn.Models
     {
 
         protected internal string calledElement;
-        protected internal bool inheritVariables;
-        protected internal IList<IOParameter> inParameters = new List<IOParameter>();
-        protected internal IList<IOParameter> outParameters = new List<IOParameter>();
+        protected internal bool inheritVariables = true;
+        protected internal IList<IOParameter> inParameters;
+        protected internal IList<IOParameter> outParameters;
         protected internal string businessKey;
-        protected internal bool inheritBusinessKey;
+        protected internal bool inheritBusinessKey = true;
 
         public virtual string CalledElement
         {
@@ -55,6 +55,11 @@ namespace Sys.Workflow.Bpmn.Models
         {
             get
             {
+                if (inParameters is null)
+                {
+                    inParameters = new List<IOParameter>();
+                }
+
                 return inParameters;
             }
             set
@@ -68,6 +73,11 @@ namespace Sys.Workflow.Bpmn.Models
         {
             get
             {
+                if (outParameters is null)
+                {
+                    outParameters = new List<IOParameter>();
+                }
+
                 return outParameters;
             }
             set

@@ -16,7 +16,7 @@ namespace Sys.Workflow.Bpmn.Models
 {
     public class MultiInstanceLoopCharacteristics : BaseElement
     {
-        private readonly static Regex VARNAME_PATTERN = new Regex(@"\$\{(.*)\}", RegexOptions.Compiled);
+        private readonly static Regex VARNAME_PATTERN = new Regex(@"\$\{(.*)\}");
 
         protected internal string inputDataItem;
         protected internal string loopCardinality;

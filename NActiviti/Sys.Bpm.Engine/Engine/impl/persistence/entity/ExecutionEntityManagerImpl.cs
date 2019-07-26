@@ -286,6 +286,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             // Need to be after insert, cause we need the id
             processInstanceExecution.ProcessInstanceId = processInstanceExecution.Id;
             processInstanceExecution.RootProcessInstanceId = processInstanceExecution.Id;
+            //TODO: 当没有用户任务的时候，添加identity会报错
             if (authenticatedUserId is object)
             {
                 IdentityLinkEntityManager.AddIdentityLink(processInstanceExecution, authenticatedUserId, null, IdentityLinkType.STARTER);

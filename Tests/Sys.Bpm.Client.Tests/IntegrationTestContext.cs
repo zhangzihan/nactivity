@@ -396,6 +396,7 @@ namespace Sys.Workflow.Test
         public IHttpClientProxy CreateHttpClientProxy(IUserInfo user = null)
         {
             HttpClient httpClient = Resolve<IHttpClientFactory>().CreateClient(); //TestServer.CreateClient();
+            httpClient.Timeout = TimeSpan.FromHours(1);
             httpClient.BaseAddress = new Uri(Configuration.GetValue<string>("BaseUrl"));
 
             string accessToken = WebUtility.UrlEncode(JsonConvert.SerializeObject(user ?? new UserInfo

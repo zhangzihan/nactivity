@@ -31,7 +31,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
 
         public const string DEFAULT_SERVICE_TASK_BEAN_NAME = "defaultServiceTaskBehavior";
         private readonly IClassDelegateFactory classDelegateFactory;
-        private static readonly Regex EXPR_PATTERN = new Regex("\\$+\\{+.+\\}", RegexOptions.Compiled);
+        private static readonly Regex EXPR_PATTERN = new Regex("\\$+\\{+.+\\}");
 
         public DefaultActivityBehaviorFactory(IClassDelegateFactory classDelegateFactory)
         {

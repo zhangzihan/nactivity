@@ -476,12 +476,12 @@
         and RES.SUPER_EXEC_ is null
       </IsNotNull>
       <IsNotNull Property="suspensionState">
-        <IsEqual Property="suspensionState.stateCode" CompareValue="1">
+        <IsTrue Property="suspensionState.stateCode==1">
           and (RES.SUSPENSION_STATE_ = 1)
-        </IsEqual>
-        <IsEqual Property="suspensionState.stateCode" CompareValue="2">
+        </IsTrue>
+        <IsTrue Property="suspensionState.stateCode==2">
           and (RES.SUSPENSION_STATE_ = 2)
-        </IsEqual>
+        </IsTrue>
       </IsNotNull>
       <IsNotNull Property="tenantId">
         and RES.TENANT_ID_ = #{tenantId}

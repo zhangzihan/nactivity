@@ -11,6 +11,7 @@ using Sys.Workflow.Util;
 using System;
 using System.Net;
 using System.Net.Http;
+using Sys.Workflow.Polly;
 
 namespace Sys.Workflow.Rest.Client
 {
@@ -25,11 +26,13 @@ namespace Sys.Workflow.Rest.Client
         /// <returns></returns>
         public static IServiceCollection AddWorkflowClient(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHttpContextAccessor();
+
             services.AddSpringCoreTypeRepository();
 
             services.AddHttpClient(HTTPCLIENT_WORKFLOW)
-                .AddPolicyHandler(GetRetryPolicy())
-                .AddPolicyHandler(GetCircuitBreakerPolicy())
+                .AddRetryPolicy()
+                .AddCircuitBreakerPolicy()
                 .ConfigureHttpMessageHandlerBuilder(cb =>
                 {
                     if (cb.PrimaryHandler is HttpClientHandler handler)
@@ -85,22 +88,6 @@ namespace Sys.Workflow.Rest.Client
             services.AddUserSession<DefaultUserSession>();
 
             return services;
-        }
-
-        static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
-        {
-            return HttpPolicyExtensions
-              .HandleTransientHttpError()
-              .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
-              .WaitAndRetryAsync(4, t => TimeSpan.FromMilliseconds(Math.Pow(2, t) * 500));
-
-        }
-
-        static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
-        {
-            return HttpPolicyExtensions
-                .HandleTransientHttpError()
-                .CircuitBreakerAsync(3, TimeSpan.FromSeconds(10));
         }
     }
 }

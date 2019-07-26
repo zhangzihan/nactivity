@@ -30,13 +30,16 @@ namespace SmartSql.Command
             _logger = logger;
             _smartSqlContext = smartSqlContext;
             var dbPrefixs = $"{smartSqlContext.DbPrefix}{smartSqlContext.SmartDbPrefix}#";
-            var regOptions = RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.Compiled;
+            var regOptions = RegexOptions.Multiline | RegexOptions.CultureInvariant;
             if (smartSqlContext.IgnoreParameterCase)
             {
                 regOptions |= RegexOptions.IgnoreCase;
             }
             _sqlParamsTokens = new Regex(@"[" + dbPrefixs + @"]{?(([\p{L}\p{N}_]+(\[\d+\])*)(\.[\p{L}\p{N}_]+)*)}?", regOptions);
         }
+
+        private static readonly Regex regDbParamName = new Regex(@"(\[(\d+)\])*\.");
+
         public IDbCommand Prepare(IDbConnectionSession dbSession, RequestContext context)
         {
             var dbCommand = dbSession.Connection.CreateCommand();
@@ -54,7 +57,7 @@ namespace SmartSql.Command
                                   string paramName = match.Groups[1].Value;
                                   var paramMap = context.Statement?.ParameterMap?.Parameters?.FirstOrDefault(p => new Regex(p.Property, RegexOptions.IgnoreCase).IsMatch(paramName));
                                   string propertyName = paramName; //paramMap != null ? paramMap.Property : paramName;
-                                  string dbParamName = new Regex(@"(\[(\d+)\])*\.").Replace(paramName, "$2_");
+                                  string dbParamName = regDbParamName.Replace(paramName, "$2_");
 
                                   if (context.RequestParameters == null)
                                   {

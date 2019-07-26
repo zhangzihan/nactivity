@@ -29,10 +29,12 @@ namespace Sys.Workflow.Engine.Impl.Cmd
     {
         private const long serialVersionUID = 1L;
         protected internal string instanceId;
+        protected internal ISuspensionState suspensionState;
 
-        public GetProcessInstanceByIdCmd(string instanceId)
+        public GetProcessInstanceByIdCmd(string instanceId, ISuspensionState suspensionState = null)
         {
             this.instanceId = instanceId;
+            this.suspensionState = suspensionState;
         }
 
         public virtual IProcessInstance Execute(ICommandContext commandContext)
@@ -41,6 +43,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             IProcessInstanceQuery query = runtimeService.CreateProcessInstanceQuery();
             query = query.SetProcessInstanceId(instanceId);
+            if (suspensionState is object)
+            {
+                query.Suspended();
+            }
+
             IProcessInstance processInstance = query.SingleResult();
 
             if (processInstance != null)

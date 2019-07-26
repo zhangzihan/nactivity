@@ -111,7 +111,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         /// <inheritdoc />
         [HttpPost("start")]
-        public virtual Task<ProcessInstance[]> Start(StartProcessInstanceCmd[] cmds)
+        public async virtual Task<ProcessInstance[]> Start(StartProcessInstanceCmd[] cmds)
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -120,12 +120,11 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             {
                 logger.LogInformation("开始调用工作流启动事件\r\n" + JsonConvert.SerializeObject(cmds));
 
-                ProcessInstance[] instances = processEngineWrapper.StartProcess(cmds);
-
+                ProcessInstance[] instances = await processEngineWrapper.StartProcessAsync(cmds);
 
                 logger.LogInformation("调用工作流启动事件完成");
 
-                return Task.FromResult(instances);
+                return instances;
             }
             catch (Exception ex)
             {

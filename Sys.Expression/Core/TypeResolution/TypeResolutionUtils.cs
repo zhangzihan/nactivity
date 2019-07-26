@@ -151,8 +151,7 @@ namespace Spring.Core.TypeResolution
         // TODO : Use the future Pointcut expression language instead
 
         private readonly static Regex methodMatchRegex = new Regex(
-            @"(?<methodName>([\w]+\.)*[\w\*]+)(?<parameters>(\((?<parameterTypes>[\w\.]+(,[\w\.]+)*)*\))?)",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+            @"(?<methodName>([\w]+\.)*[\w\*]+)(?<parameters>(\((?<parameterTypes>[\w\.]+(,[\w\.]+)*)*\))?)", RegexOptions.ExplicitCapture);
 
         /// <summary>
         /// Match a method against the given pattern.

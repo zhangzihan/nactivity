@@ -20,6 +20,7 @@ using System.Net.Http;
 using Polly;
 using System.Net;
 using Polly.Extensions.Http;
+using Sys.Workflow.Polly;
 
 namespace Sys.Workflow
 {
@@ -84,8 +85,8 @@ namespace Sys.Workflow
             builder.Configure(configuration, setupAction);
 
             builder.Services.AddHttpClient("ExternalHttpClient")
-                .AddPolicyHandler(PollyPolicy.GetRetryPolicy())
-                .AddPolicyHandler(PollyPolicy.GetCircuitBreakerPolicy())
+                .AddRetryPolicy()
+                .AddCircuitBreakerPolicy()
                 .ConfigureHttpMessageHandlerBuilder(cb =>
                 {
                     if (cb.PrimaryHandler is HttpClientHandler handler)

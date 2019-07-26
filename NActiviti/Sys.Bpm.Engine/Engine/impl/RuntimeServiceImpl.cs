@@ -23,6 +23,7 @@ namespace Sys.Workflow.Engine.Impl
     using Sys.Workflow.Engine.Runtime;
     using Sys.Workflow.Engine.Tasks;
     using Sys.Workflow.Services.Api.Commands;
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -596,19 +597,35 @@ namespace Sys.Workflow.Engine.Impl
 
         public IProcessInstance[] StartProcessInstanceByCmd(IStartProcessInstanceCmd[] cmds)
         {
-            IList<IProcessInstance> instances = new List<IProcessInstance>();
-            IList<Task> tasks = new List<Task>();
-            foreach (IStartProcessInstanceCmd cmd in cmds)
+            var instances = new List<IProcessInstance>(cmds.Length);
+            foreach (var cmd in cmds)
             {
-                tasks.Add(Task.Factory.StartNew(() =>
-                {
-                    var scmd = new StartProcessInstanceCmd(cmd);
+                var scmd = new StartProcessInstanceCmd(cmd as IStartProcessInstanceCmd);
 
-                    instances.Add(commandExecutor.Execute(scmd));
-                }));
+                var instance = commandExecutor.Execute(scmd);
+
+                instances.Add(instance);
             }
 
-            Task.WaitAll(tasks.ToArray());
+            return instances.ToArray();
+        }
+
+        /// <inheritdoc />
+
+        public async Task<IProcessInstance[]> StartProcessInstanceByCmdAsync(IStartProcessInstanceCmd[] cmds)
+        {
+            var instances = new List<IProcessInstance>(cmds.Length);
+            foreach (var cmd in cmds)
+            {
+                await Task.Factory.StartNew((command) =>
+                {
+                    var scmd = new StartProcessInstanceCmd(cmd as IStartProcessInstanceCmd);
+
+                    var instance = commandExecutor.Execute(scmd);
+
+                    instances.Add(instance);
+                }, cmd);
+            }
 
             return instances.ToArray();
         }

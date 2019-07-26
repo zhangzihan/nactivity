@@ -518,6 +518,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 return superExecutionId;
             }
+            set
+            {
+                superExecutionId = value;
+            }
         }
 
         public virtual IExecutionEntity SuperExecution

@@ -50,8 +50,7 @@ namespace Spring.Core.TypeConversion
     public class CredentialConverter : TypeConverter
     {
         private readonly static Regex credentialRegex = new Regex(
-            @"(((?<domain>[\w_.]+)\\)?)(?<userName>([\w_.]+))((:(?<password>([\w_.]+)))?)",
-            RegexOptions.Compiled);
+            @"(((?<domain>[\w_.]+)\\)?)(?<userName>([\w_.]+))((:(?<password>([\w_.]+)))?)");
 
         /// <summary>
         /// Can we convert from the sourcetype 

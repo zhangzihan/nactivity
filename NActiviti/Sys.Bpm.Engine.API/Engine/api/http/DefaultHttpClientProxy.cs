@@ -23,9 +23,9 @@ namespace Sys.Net.Http
     public class DefaultHttpClientProxy : IHttpClientProxy
     {
         private HttpClient httpClient;
-        private readonly IAccessTokenProvider accessTokenProvider;
-        private readonly HttpContext httpContext;
-        private readonly ILogger<DefaultHttpClientProxy> logger;
+        protected readonly IAccessTokenProvider accessTokenProvider;
+        protected readonly HttpContext httpContext;
+        protected readonly ILogger<DefaultHttpClientProxy> logger;
 
         /// <summary>
         /// 
@@ -39,6 +39,7 @@ namespace Sys.Net.Http
             ILoggerFactory loggerFactory)
         {
             this.httpClient = httpClient;
+            this.httpClient.Timeout = TimeSpan.FromMinutes(10);
             this.httpClient.DefaultRequestHeaders.ConnectionClose = false;
             this.accessTokenProvider = accessTokenProvider;
             this.httpContext = httpContextAccessor.HttpContext;
@@ -175,7 +176,7 @@ namespace Sys.Net.Http
             {
                 sw.Stop();
 
-                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={uri}\r\n{(data == null ? "" : JsonConvert.SerializeObject(data))}" + ex.Message + "\r\n" + ex.StackTrace);
+                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={this.HttpClient.BaseAddress}/{uri}\r\n{(data == null ? "" : JsonConvert.SerializeObject(data))}" + ex.Message + "\r\n" + ex.StackTrace);
 
                 throw;
             }
@@ -198,7 +199,7 @@ namespace Sys.Net.Http
             {
                 sw.Stop();
 
-                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={uri}\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={this.HttpClient.BaseAddress}/{uri}\r\n" + ex.Message + "\r\n" + ex.StackTrace);
 
                 throw;
             }
@@ -219,7 +220,7 @@ namespace Sys.Net.Http
             {
                 sw.Stop();
 
-                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={uri}\r\n{(data == null ? "" : JsonConvert.SerializeObject(data))}" + ex.Message + "\r\n" + ex.StackTrace);
+                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={this.HttpClient.BaseAddress}/{uri}\r\n{(data == null ? "" : JsonConvert.SerializeObject(data))}" + ex.Message + "\r\n" + ex.StackTrace);
 
                 throw;
             }
@@ -240,7 +241,7 @@ namespace Sys.Net.Http
             {
                 sw.Stop();
 
-                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={uri}\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={this.HttpClient.BaseAddress}/{uri}\r\n" + ex.Message + "\r\n" + ex.StackTrace);
 
                 throw;
             }

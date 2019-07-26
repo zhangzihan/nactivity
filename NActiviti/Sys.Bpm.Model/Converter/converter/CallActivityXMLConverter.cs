@@ -53,11 +53,23 @@ namespace Sys.Workflow.Bpmn.Converters
         {
             CallActivity callActivity = new CallActivity();
             BpmnXMLUtil.AddXMLLocation(callActivity, xtr);
+
             callActivity.CalledElement = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_CALLEDELEMENT);
+
             callActivity.BusinessKey = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_BUSINESS_KEY);
-            bool.TryParse(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_INHERIT_BUSINESS_KEY), out callActivity.inheritBusinessKey);
-            bool.TryParse(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_INHERITVARIABLES), out callActivity.inheritVariables);
+
+            if (bool.TryParse(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_INHERIT_BUSINESS_KEY), out bool inheritBusinessKey))
+            {
+                callActivity.InheritBusinessKey = inheritBusinessKey;
+            }
+
+            if (bool.TryParse(xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_CALL_ACTIVITY_INHERITVARIABLES), out bool inheritVariables))
+            {
+                callActivity.InheritVariables = inheritVariables;
+            }
+
             ParseChildElements(XMLElementName, callActivity, childParserMap, model, xtr);
+
             return callActivity;
         }
         protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)

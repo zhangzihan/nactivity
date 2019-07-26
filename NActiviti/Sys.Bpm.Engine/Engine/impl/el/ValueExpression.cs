@@ -15,7 +15,7 @@ namespace Sys.Workflow.Engine.Impl.EL
 
     public class ValueExpression
     {
-        private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline | RegexOptions.Compiled);
+        private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
 
         public ValueExpression(string expression, Type expectedType)
         {

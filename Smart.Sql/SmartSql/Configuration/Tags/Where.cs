@@ -12,11 +12,11 @@ namespace SmartSql.Configuration.Tags
         public override TagType Type => TagType.Where;
         public override string Prepend { get { return "Where"; } }
 
-        private static readonly Regex WHERE_PATTERN = new Regex("(where\\s+)$", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex WHERE_PATTERN = new Regex("(where\\s+)$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
-        private static readonly Regex WHERE_TRIM = new Regex("where\\s+(and|or)\\b", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex WHERE_TRIM = new Regex("where\\s+(and|or)\\b", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
-        private static readonly Regex WHERE_WITHOUT = new Regex(@"^(\s*(and|or))", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex WHERE_WITHOUT = new Regex(@"^(\s*(and|or))", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
         public override void BuildSql(RequestContext context)
         {

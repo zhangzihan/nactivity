@@ -7,7 +7,7 @@ namespace Sys.Workflow.Options
     /// </summary>
     public sealed class DataSourceOption
     {
-        private readonly static Regex regDatabase = new Regex("database=(\\w+);?", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private readonly static Regex regDatabase = new Regex("database=(\\w+);?", RegexOptions.IgnoreCase);
 
         private string connectionString;
 

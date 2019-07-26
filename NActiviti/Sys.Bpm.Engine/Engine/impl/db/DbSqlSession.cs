@@ -43,7 +43,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// <summary>
         /// 
         /// </summary>
-        private static readonly Regex CLEAN_VERSION_REGEX = new Regex("\\d\\.\\d*", RegexOptions.Compiled);
+        private static readonly Regex CLEAN_VERSION_REGEX = new Regex("\\d\\.\\d*");
 
         /// <summary>
         /// 
@@ -449,27 +449,24 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         public virtual void Flush()
         {
-            lock (syncFlush)
+            DetermineUpdatedObjects(); // Needs to be done before the removeUnnecessaryOperations, as removeUnnecessaryOperations will remove stuff from the cache
+            RemoveUnnecessaryOperations();
+
+            if (log.IsEnabled(LogLevel.Debug))
             {
-                DetermineUpdatedObjects(); // Needs to be done before the removeUnnecessaryOperations, as removeUnnecessaryOperations will remove stuff from the cache
-                RemoveUnnecessaryOperations();
-
-                if (log.IsEnabled(LogLevel.Debug))
-                {
-                    DebugFlush();
-                }
-
-                if (SqlMapper.SessionStore.LocalSession == null && (insertedObjects.Count > 0 || updatedObjects.Count > 0 || deletedObjects.Count > 0))
-                {
-                    SqlMapper.BeginTransaction();// IsolationLevel.ReadUncommitted);
-
-                    RemoveInstanceIncludeHis();
-                }
-
-                FlushInserts();
-                FlushUpdates();
-                FlushDeletes();
+                DebugFlush();
             }
+
+            if (SqlMapper.SessionStore.LocalSession == null && (insertedObjects.Count > 0 || updatedObjects.Count > 0 || deletedObjects.Count > 0))
+            {
+                SqlMapper.BeginTransaction();// IsolationLevel.ReadUncommitted);
+
+                RemoveInstanceIncludeHis();
+            }
+
+            FlushInserts();
+            FlushUpdates();
+            FlushDeletes();
         }
 
         private void RemoveInstanceIncludeHis()

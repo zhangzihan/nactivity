@@ -36,7 +36,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         private readonly string tenantId;
         private readonly IUserServiceProxy userService;
 
-        private static readonly Regex VARNAME_PATTERN = new Regex("\\$\\{(.*?)\\}", RegexOptions.Compiled);
+        private static readonly Regex VARNAME_PATTERN = new Regex("\\$\\{(.*?)\\}");
 
         public AddCountersignCmd(string taskId, string[] assignees, string tenantId)
         {

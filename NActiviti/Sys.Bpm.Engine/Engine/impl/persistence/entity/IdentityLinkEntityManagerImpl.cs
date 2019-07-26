@@ -20,6 +20,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
     using Sys.Workflow.Engine.Delegate.Events;
     using Sys.Workflow.Engine.Delegate.Events.Impl;
     using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Histories;
     using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
     using Sys.Workflow.Engine.Tasks;
 
@@ -46,15 +47,19 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public override void Insert(IIdentityLinkEntity entity, bool fireCreateEvent)
         {
-            base.Insert(entity, fireCreateEvent);
-            HistoryManager.RecordIdentityLinkCreated(entity);
-
-            if (entity.ProcessInstanceId is object && ExecutionRelatedEntityCountEnabledGlobally)
+            //当审核登记设置为Audit时候，再记录identity link，否则会抛出外键异常
+            if (HistoryManager.IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
-                ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.FindById<ICountingExecutionEntity>(entity.ProcessInstanceId);
-                if (IsExecutionRelatedEntityCountEnabled(executionEntity))
+                base.Insert(entity, fireCreateEvent);
+                HistoryManager.RecordIdentityLinkCreated(entity);
+
+                if (entity.ProcessInstanceId is object && ExecutionRelatedEntityCountEnabledGlobally)
                 {
-                    executionEntity.IdentityLinkCount += 1;
+                    ICountingExecutionEntity executionEntity = (ICountingExecutionEntity)ExecutionEntityManager.FindById<ICountingExecutionEntity>(entity.ProcessInstanceId);
+                    if (IsExecutionRelatedEntityCountEnabled(executionEntity))
+                    {
+                        executionEntity.IdentityLinkCount += 1;
+                    }
                 }
             }
         }

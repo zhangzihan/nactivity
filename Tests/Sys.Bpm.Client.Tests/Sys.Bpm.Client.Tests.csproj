@@ -64,6 +64,18 @@
     <None Update="resources\activiti.cfg.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="resources\samples\主活动并行子活动.bpmn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="resources\samples\主活动.bpmn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="resources\samples\主活动_并行子活动.bpmn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="resources\samples\主活动_子活动.bpmn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="resources\samples\并行多子流程.bpmn">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ namespace Spring.Core.TypeResolution
               + @"\]"
               + @"(?'remainder'.*)"
               + @"$"
-              , RegexOptions.CultureInvariant | RegexOptions.Compiled
+              , RegexOptions.CultureInvariant
             );
 
         private static readonly Regex CSharpPattern = new Regex(
@@ -59,7 +59,7 @@ namespace Spring.Core.TypeResolution
               + @">"
               + @"(?'remainder'.*)"
               + @"$"
-              , RegexOptions.CultureInvariant | RegexOptions.Compiled
+              , RegexOptions.CultureInvariant
             );
 
         private static Regex GenericArgumentListPattern = new Regex(

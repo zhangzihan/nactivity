@@ -3,6 +3,10 @@
   <bpmn2:process id="Process_ProductItem_Approval" name="商品审核流程" isExecutable="true">
     <bpmn2:extensionElements>
       <camunda:properties>
+        <camunda:property name="id" value="aa740000-0047-5254-4b40-08d708e09b05" gruop="default" />
+        <camunda:property name="id" value="aa740000-0047-5254-31bb-08d708d67dc6" gruop="default" />
+        <camunda:property name="id" value="aa740000-0047-5254-0fce-08d70451e1ee" gruop="default" />
+        <camunda:property name="id" value="aa740000-0047-5254-ef13-08d7042e0179" gruop="default" />
         <camunda:property name="id" value="aa740000-0047-5254-8cfe-08d701b27684" gruop="default" />
         <camunda:property name="id" value="aa740000-0047-5254-cfad-08d6ff5aa69d" gruop="default" />
         <camunda:property name="id" value="aa740000-0047-5254-521d-08d6ff54d912" gruop="default" />
@@ -29,8 +33,8 @@
         <camunda:property name="id" value="aa740000-0047-5254-7460-08d6fa17fd87" gruop="default" />
         <camunda:property name="id" value="aa740000-0047-5254-72fb-08d6fa140d38" gruop="default" />
         <camunda:property name="id" value="aa740000-0047-5254-1f6b-08d6fa12c806" gruop="default" />
-        <camunda:property name="version" value="48" gruop="default" />
-        <camunda:property name="deploymentId" value="aa740000-0047-5254-0507-08d701b27681" gruop="default" />
+        <camunda:property name="version" value="52" gruop="default" />
+        <camunda:property name="deploymentId" value="aa740000-0047-5254-f355-08d708e09af9" gruop="default" />
         <camunda:property name="startForm" gruop="default" />
         <camunda:property name="id" value="1d3a0000-6416-e86a-93cf-08d6f9f07229" gruop="default" />
         <camunda:property name="id" value="aa740000-0047-5254-4cd7-08d6f3d34064" gruop="default" />
@@ -72,9 +76,6 @@
     </bpmn2:sequenceFlow>
     <bpmn2:userTask id="Task_0w1jr3z" name="提交审核" camunda:assignee="${Task_0w1jr3z}">
       <bpmn2:extensionElements>
-        <camunda:properties>
-          <camunda:property name="userPolicy" value="[{&#34;ruleType&#34;:&#34;GetDuty&#34;,&#34;ruleName&#34;:&#34;获取角色组节点执行人&#34;,&#34;queryCondition&#34;:${GroupId1}}]" />
-        </camunda:properties>
         <camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
         <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
@@ -132,17 +133,14 @@
     </bpmn2:sequenceFlow>
     <bpmn2:userTask id="Task_18wxhlx" name="一级审核" camunda:assignee="${Task_18wxhlx}">
       <bpmn2:extensionElements>
-        <camunda:properties>
-          <camunda:property name="userPolicy" value="[{&#34;ruleType&#34;:&#34;GetDuty&#34;,&#34;ruleName&#34;:&#34;获取角色组节点执行人&#34;,&#34;queryCondition&#34;:${GroupId1}}]" />
-        </camunda:properties>
         <camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
         <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1aaduhr</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_1raw96n</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1swqjmb</bpmn2:outgoing>
-      <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${users}" camunda:elementVariable="Task_18wxhlx">
-        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${Passed==true or Passed==false}</bpmn2:completionCondition>
+      <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${GroupId1}" camunda:elementVariable="Task_18wxhlx">
+        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${nrOfCompletedInstances&gt;0}</bpmn2:completionCondition>
       </bpmn2:multiInstanceLoopCharacteristics>
     </bpmn2:userTask>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_13qu2g1" name="一级审核结果">
@@ -163,13 +161,13 @@
       <bpmn2:extensionElements>
         <camunda:properties />
       </bpmn2:extensionElements>
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${Passed==false}</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${NeedEdit==false and Passed==false}</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_029yuzd" name="通过" sourceRef="ExclusiveGateway_13qu2g1" targetRef="ExclusiveGateway_07kunut">
       <bpmn2:extensionElements>
         <camunda:properties />
       </bpmn2:extensionElements>
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${Passed==true}</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${NeedEdit==false and Passed==true}</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_1axult8" name="需修改" sourceRef="ExclusiveGateway_13qu2g1" targetRef="Task_11yk33n">
       <bpmn2:extensionElements>
@@ -207,13 +205,13 @@
       <bpmn2:extensionElements>
         <camunda:properties />
       </bpmn2:extensionElements>
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${Passed==false}</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${NeedEdit==false and Passed==false}</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_0hivfux" name="需要下一级审核时，通过" sourceRef="ExclusiveGateway_0mhfqun" targetRef="ExclusiveGateway_138nf34">
       <bpmn2:extensionElements>
         <camunda:properties />
       </bpmn2:extensionElements>
-      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${Passed==true}</bpmn2:conditionExpression>
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${NeedEdit==false and Passed==true}</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_197eorx" name="需修改" sourceRef="ExclusiveGateway_0mhfqun" targetRef="Task_11yk33n">
       <bpmn2:extensionElements>
@@ -280,32 +278,28 @@
     </bpmn2:sequenceFlow>
     <bpmn2:userTask id="Task_1g5n11c" name="二级审核" camunda:assignee="${Task_1g5n11c}">
       <bpmn2:extensionElements>
-        <camunda:properties>
-          <camunda:property name="userPolicy" value="[{&#34;ruleType&#34;:&#34;GetDuty&#34;,&#34;ruleName&#34;:&#34;获取角色组节点执行人&#34;,&#34;queryCondition&#34;:${GroupId2}}]" />
-        </camunda:properties>
         <camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
         <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:properties />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_0nntmsu</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_0fmqzbe</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_0w6uc64</bpmn2:outgoing>
-      <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${users2}" camunda:elementVariable="Task_1g5n11c">
-        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${Passed==true or Passed==false}</bpmn2:completionCondition>
+      <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${GroupId2}" camunda:elementVariable="Task_1g5n11c">
+        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${nrOfCompletedInstances&gt;0}</bpmn2:completionCondition>
       </bpmn2:multiInstanceLoopCharacteristics>
     </bpmn2:userTask>
     <bpmn2:userTask id="Task_0jkfyqt" name="三级审核" camunda:assignee="${Task_0jkfyqt}">
       <bpmn2:extensionElements>
-        <camunda:properties>
-          <camunda:property name="userPolicy" value="[{&#34;ruleType&#34;:&#34;GetDuty&#34;,&#34;ruleName&#34;:&#34;获取角色组节点执行人&#34;,&#34;queryCondition&#34;:${GroupId3}}]" />
-        </camunda:properties>
         <camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
         <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        <camunda:properties />
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1glbeae</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_13ofrg7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_09andnp</bpmn2:outgoing>
-      <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${users3}" camunda:elementVariable="Task_0jkfyqt">
-        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${Passed==true or Passed==false}</bpmn2:completionCondition>
+      <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${GroupId3}" camunda:elementVariable="Task_0jkfyqt">
+        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${nrOfCompletedInstances&gt;0}</bpmn2:completionCondition>
       </bpmn2:multiInstanceLoopCharacteristics>
     </bpmn2:userTask>
     <bpmn2:boundaryEvent id="BoundaryEvent_0812cxu" cancelActivity="false" attachedToRef="Task_1g5n11c">
@@ -320,7 +314,7 @@
     <bpmn2:serviceTask id="Task_1d2drka" name="推送当前审核状态" camunda:class="Sys.Workflow.Engine.Impl.Bpmn.Behavior.ServiceTaskWebApiActivityBehavior,Sys.Bpm.Engine">
       <bpmn2:extensionElements>
         <camunda:properties>
-          <camunda:property name="url" value="${ExternalConnector.Url(&#39;RegistrationUrl&#39;) + &#39;Api/Attendees/ApprovaledAttendeeCallBack&#39;}" />
+          <camunda:property name="url" value="http://localhost:11015/api/webapi/noparameter" />
           <camunda:property name="method" value="post" />
           <camunda:property name="taskRequest" value="{&#34;CurrentLevel&#34;:2,&#34;AuditLevelStatus&#34;:&#34;PendingApproval&#34;}" />
         </camunda:properties>
@@ -349,7 +343,7 @@
     <bpmn2:serviceTask id="Task_0hz0s8u" name="推送当前审核状态" camunda:class="Sys.Workflow.Engine.Impl.Bpmn.Behavior.ServiceTaskWebApiActivityBehavior,Sys.Bpm.Engine">
       <bpmn2:extensionElements>
         <camunda:properties>
-          <camunda:property name="url" value="${ExternalConnector.Url(&#39;RegistrationUrl&#39;) + &#39;Api/Attendees/ApprovaledAttendeeCallBack&#39;}" />
+          <camunda:property name="url" value="http://localhost:11015/api/webapi/noparameter" />
           <camunda:property name="method" value="post" />
           <camunda:property name="taskRequest" value="{&#34;CurrentLevel&#34;:3,&#34;AuditLevelStatus&#34;:&#34;PendingApproval&#34;}" />
         </camunda:properties>
@@ -391,7 +385,7 @@
     <bpmn2:serviceTask id="ServiceTask_1wotnt1" name="流程结束拒绝通知" camunda:class="Sys.Workflow.Engine.Impl.Bpmn.Behavior.ServiceTaskWebApiActivityBehavior,Sys.Bpm.Engine">
       <bpmn2:extensionElements>
         <camunda:properties>
-          <camunda:property name="url" value="${ExternalConnector.Url(&#39;RegistrationUrl&#39;) + &#39;Api/Attendees/ApprovaledAttendeeCallBack&#39;}" />
+          <camunda:property name="url" value="http://localhost:11015/api/webapi/noparameter" />
           <camunda:property name="method" value="post" />
           <camunda:property name="taskRequest" value="{&#34;IsFinalApproval&#34;:true,&#34;FinalPassedStatus&#34;:false}" />
         </camunda:properties>
@@ -426,7 +420,7 @@
     <bpmn2:serviceTask id="ServiceTask_1ikfuhn" name="流程结束通过通知" camunda:class="Sys.Workflow.Engine.Impl.Bpmn.Behavior.ServiceTaskWebApiActivityBehavior,Sys.Bpm.Engine">
       <bpmn2:extensionElements>
         <camunda:properties>
-          <camunda:property name="url" value="${ExternalConnector.Url(&#39;RegistrationUrl&#39;) + &#39;Api/Attendees/ApprovaledAttendeeCallBack&#39;}" />
+          <camunda:property name="url" value="http://localhost:11015/api/webapi/noparameter" />
           <camunda:property name="method" value="post" />
           <camunda:property name="taskRequest" value="{&#34;IsFinalApproval&#34;:true,&#34;FinalPassedStatus&#34;:true}" />
         </camunda:properties>

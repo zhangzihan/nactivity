@@ -67,7 +67,7 @@ namespace Spring.Expressions
                     if (regex == null)
                     {
                         string pattern = GetRightValue( context, evalContext ) as string;
-                        regex = new Regex(pattern, RegexOptions.Compiled);
+                        regex = new Regex(pattern);
                     }
                 }
             }

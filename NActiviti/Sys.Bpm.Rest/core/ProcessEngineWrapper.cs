@@ -20,6 +20,8 @@ using System.Linq;
 using System;
 using System.Text;
 using Sys.Workflow.Engine.Exceptions;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
+using System.Threading.Tasks;
 
 namespace Sys.Workflow.Cloud.Services.Core
 {
@@ -96,7 +98,7 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// <summary>
         /// 
         /// </summary>
-        public virtual ProcessInstance[] StartProcess(IStartProcessInstanceCmd[] cmds)
+        public virtual async Task<ProcessInstance[]> StartProcessAsync(IStartProcessInstanceCmd[] cmds)
         {
             //if (!securityService.canWrite(processDefinitionKey))
             //{
@@ -104,7 +106,7 @@ namespace Sys.Workflow.Cloud.Services.Core
             //    throw new ActivitiForbiddenException("Operation not permitted for " + processDefinitionKey);
             //}
 
-            IProcessInstance[] processInstance = runtimeService.StartProcessInstanceByCmd(cmds);
+            IProcessInstance[] processInstance = await  runtimeService.StartProcessInstanceByCmdAsync(cmds);
 
             return processInstanceConverter.From(processInstance).ToArray();
         }
@@ -126,10 +128,9 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// </summary>
         public virtual ProcessInstance Suspend(SuspendProcessInstanceCmd suspendProcessInstanceCmd)
         {
-            VerifyCanWriteToProcessInstance(suspendProcessInstanceCmd.ProcessInstanceId);
             runtimeService.SuspendProcessInstanceById(suspendProcessInstanceCmd.ProcessInstanceId);
 
-            return GetProcessInstanceById(suspendProcessInstanceCmd.ProcessInstanceId);
+            return GetProcessInstanceById(suspendProcessInstanceCmd.ProcessInstanceId, SuspensionStateProvider.SUSPENDED);
         }
 
         private void VerifyCanWriteToProcessInstance(string processInstanceId)
@@ -167,9 +168,9 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// <summary>
         /// 
         /// </summary>
-        public virtual ProcessInstance GetProcessInstanceById(string processInstanceId)
+        public virtual ProcessInstance GetProcessInstanceById(string processInstanceId, ISuspensionState suspensionState = null)
         {
-            IProcessInstance processInstance = (runtimeService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.GetProcessInstanceByIdCmd(processInstanceId));
+            IProcessInstance processInstance = (runtimeService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.GetProcessInstanceByIdCmd(processInstanceId, suspensionState));
 
             return processInstanceConverter.From(processInstance);
         }

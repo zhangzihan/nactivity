@@ -13,7 +13,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
     /// <inheritdoc />
     class DeployUserTaskToParallel : IDeployUserTaskToParallel
     {
-        private static readonly Regex EXPR_PATTERN = new Regex(@"\$\{(.*?)\}", RegexOptions.Compiled);
+        private static readonly Regex EXPR_PATTERN = new Regex(@"\$\{(.*?)\}");
 
         /// <inheritdoc />
         public bool ConvertUserTaskToParallel(IEnumerable<XElement> userTasks)

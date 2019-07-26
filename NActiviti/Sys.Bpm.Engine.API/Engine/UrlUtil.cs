@@ -10,7 +10,7 @@ namespace Sys.Workflow.Engine.Api
     /// </summary>
     public static class UrlUtil
     {
-        private static readonly Regex URL_PATTERN = new Regex("\\s+(http|https)://", RegexOptions.Compiled);
+        private static readonly Regex URL_PATTERN = new Regex("\\s+(http|https)://");
 
         /// <summary>
         /// 

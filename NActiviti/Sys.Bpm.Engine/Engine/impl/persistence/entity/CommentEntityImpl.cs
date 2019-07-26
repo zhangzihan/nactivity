@@ -64,7 +64,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
 
         public static string MESSAGE_PARTS_MARKER = "_|_";
-        public static readonly Regex MESSAGE_PARTS_MARKER_REGEX = new Regex("_\\|_", RegexOptions.Compiled);
+        public static readonly Regex MESSAGE_PARTS_MARKER_REGEX = new Regex("_\\|_");
 
         public virtual string Message
         {

@@ -21,6 +21,7 @@ namespace Sys.Workflow.Engine
     using Sys.Workflow.Engine.Runtime;
     using Sys.Workflow.Engine.Tasks;
     using Sys.Workflow.Services.Api.Commands;
+    using System.Threading.Tasks;
 
     /// 
     /// 
@@ -76,6 +77,13 @@ namespace Sys.Workflow.Engine
         /// <param name="cmds">批量启动流程命令</param>
         /// <returns></returns>
         IProcessInstance[] StartProcessInstanceByCmd(IStartProcessInstanceCmd[] cmds);
+
+        /// <summary>
+        /// 使用流程启动命令启动流程
+        /// </summary>
+        /// <param name="cmds">批量启动流程命令</param>
+        /// <returns></returns>
+        Task<IProcessInstance[]> StartProcessInstanceByCmdAsync(IStartProcessInstanceCmd[] cmds);
 
         /// <summary>
         /// 使用流程启动命令启动流程

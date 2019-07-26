@@ -19,12 +19,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Webservice
         public const string WEBAPI_REQUEST_PARAMETER = "taskRequest";
         public const string WEBAPI_RETURN_VARNAME = "dataObject";
 
-        private static readonly Regex JSONOBJECT_PATTERN = new Regex(@"(^(\s*{)(.*?)(\}\s*)$)|(^\s*\[(.*?)(\]\s*)$)", RegexOptions.Compiled);
+        private static readonly Regex JSONOBJECT_PATTERN = new Regex(@"(^(\s*{)(.*?)(\}\s*)$)|(^\s*\[(.*?)(\]\s*)$)");
 
         /// <summary>
         /// 正则表达式
         /// </summary>
-        private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline | RegexOptions.Compiled);
+        private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
 
         private readonly IList<ExtensionElement> extensionElements;
         private readonly IExecutionEntity execution;

@@ -43,6 +43,16 @@ namespace BpmnWebTest
                 //    })
                 //.UseMetrics()
                 //.UseMetricsWebTracking()
+                .UseKestrel(config =>
+                {
+                    config.AllowSynchronousIO = true;
+                    config.Limits.MaxConcurrentConnections = null;
+                    config.Limits.MaxRequestHeaderCount = 200;
+                    config.Limits.MinRequestBodyDataRate = null;
+                    config.Limits.MinResponseDataRate = null;
+                    config.Limits.RequestHeadersTimeout = TimeSpan.FromMinutes(3);
+                    config.Limits.Http2.MaxStreamsPerConnection = 1000;
+                })
                 .UseStartup<Startup>();
         }
     }

@@ -40,7 +40,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
     /// </summary>
     public class DelegateCountersignExecutionListener : IExecutionListener
     {
-        private static readonly Regex EXPR_PATTERN = new Regex(@"\$\{(.*?)\}", RegexOptions.Multiline | RegexOptions.Compiled);
+        private static readonly Regex EXPR_PATTERN = new Regex(@"\$\{(.*?)\}", RegexOptions.Multiline);
 
         private static readonly ILogger<DelegateCountersignExecutionListener> logger = ProcessEngineServiceProvider.LoggerService<DelegateCountersignExecutionListener>();
 

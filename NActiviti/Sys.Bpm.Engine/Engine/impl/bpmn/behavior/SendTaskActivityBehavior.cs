@@ -53,7 +53,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         /// <summary>
         /// 正则表达式
         /// </summary>
-        private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline | RegexOptions.Compiled);
+        private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
 
         private readonly ExternalConnectorProvider externalConnector;
 

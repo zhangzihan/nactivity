@@ -79,12 +79,12 @@ namespace SmartSql.Configuration.Tags
                 }
             }
         }
-        protected virtual String GetDbProviderPrefix(RequestContext context)
+        protected virtual string GetDbProviderPrefix(RequestContext context)
         {
             return context.SmartSqlContext.DbPrefix;
         }
 
-        protected virtual Object GetPropertyValue(RequestContext context)
+        protected virtual object GetPropertyValue(RequestContext context)
         {
             var reqParams = context.RequestParameters;
             if (reqParams == null)

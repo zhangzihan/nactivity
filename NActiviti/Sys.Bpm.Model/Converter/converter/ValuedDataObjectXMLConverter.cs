@@ -17,7 +17,7 @@ namespace Sys.Workflow.Bpmn.Converters
     {
         private static readonly ILogger logger = BpmnModelLoggerFactory.LoggerService<ValuedDataObjectXMLConverter>();
 
-        private static readonly Regex XMLCHARS_PATTERN = new Regex("[<>&]", RegexOptions.Compiled);
+        private static readonly Regex XMLCHARS_PATTERN = new Regex("[<>&]");
         private readonly string sdf = "yyyy-MM-dd'T'HH:mm:ss";
         protected internal bool didWriteExtensionStartElement = false;
 

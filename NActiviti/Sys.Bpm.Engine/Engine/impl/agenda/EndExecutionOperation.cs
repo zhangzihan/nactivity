@@ -97,7 +97,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                 }
             }
 
-            int activeExecutions = GetNumberOfActiveChildExecutionsForProcessInstance(executionEntityManager, processInstanceId);
+            int activeExecutions = GetNumberOfActiveChildExecutionsForProcessInstance(executionEntityManager, processInstanceId, superExecution);
             if (activeExecutions == 0)
             {
                 logger.LogDebug($"No active executions found. Ending process instance {processInstanceId} ");
@@ -368,12 +368,17 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         /// <param name="executionEntityManager"></param>
         /// <param name="processInstanceId"></param>
         /// <returns></returns>
-        protected internal virtual int GetNumberOfActiveChildExecutionsForProcessInstance(IExecutionEntityManager executionEntityManager, string processInstanceId)
+        protected internal virtual int GetNumberOfActiveChildExecutionsForProcessInstance(IExecutionEntityManager executionEntityManager, string processInstanceId, IExecutionEntity endingExecution)
         {
             ICollection<IExecutionEntity> executions = executionEntityManager.FindChildExecutionsByProcessInstanceId(processInstanceId);
             int activeExecutions = 0;
             foreach (IExecutionEntity execution in executions)
             {
+                if (endingExecution is object && endingExecution.Id == execution.Id)
+                {
+                    continue;
+                }
+
                 if (execution.IsActive && !processInstanceId.Equals(execution.Id))
                 {
                     activeExecutions++;

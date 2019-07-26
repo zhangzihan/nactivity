@@ -8,6 +8,7 @@ using SmartSql.Abstractions;
 using System.Reflection;
 using SmartSql.Exceptions;
 using SmartSql.Utils;
+using AspectCore.Extensions.Reflection;
 
 namespace SmartSql.Configuration.Tags
 {
@@ -31,6 +32,7 @@ namespace SmartSql.Configuration.Tags
             }
             return false;
         }
+
         public override void BuildChildSql(RequestContext context)
         {
             if (string.IsNullOrEmpty(Key))
@@ -57,7 +59,7 @@ namespace SmartSql.Configuration.Tags
                     else
                     {
                         string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}#";
-                        if (new Regex($"([{dbPrefixs}]{{(.*?)}})", RegexOptions.IgnoreCase).IsMatch(itemSqlStr))
+                        if (new Regex($"([{dbPrefixs}]{{.+}})", RegexOptions.IgnoreCase).IsMatch(itemSqlStr))
                         {
                             BuildItemSql_NotDirectValue(itemSqlStr, context);
                         }
@@ -141,12 +143,16 @@ namespace SmartSql.Configuration.Tags
                 item_index++;
             }
         }
+
         private void BuildItemSql_NotDirectValue(string itemSqlStr, RequestContext context)
         {
             string dbPrefix = GetDbProviderPrefix(context);
             string dbPrefixs = $"{context.SmartSqlContext.DbPrefix}{context.SmartSqlContext.SmartDbPrefix}#";
             var reqVal = GetPropertyValue(context) as IEnumerable;
             int item_index = 0;
+            Dictionary<PropertyInfo, PropertyReflector> htGetters = new Dictionary<PropertyInfo, PropertyReflector>();
+            Dictionary<string, Regex> regPatten = new Dictionary<string, Regex>(StringComparer.OrdinalIgnoreCase);
+
             foreach (var itemVal in reqVal)
             {
                 if (item_index > 0)
@@ -154,15 +160,28 @@ namespace SmartSql.Configuration.Tags
                     context.Sql.AppendFormat(" {0} ", Separator);
                 }
                 string item_sql = itemSqlStr;
-
-                var properties = itemVal.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                var properties = itemVal.GetType().GetTypeInfo().GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 foreach (var property in properties)
                 {
                     string patternStr = $"([{dbPrefixs}]{{{Regex.Escape(property.Name)}}})";
-                    bool isHasParam = Regex.IsMatch(item_sql, patternStr, RegexOptions.IgnoreCase);
-                    if (!isHasParam) { continue; }
+                    if (regPatten.TryGetValue(patternStr, out Regex regex) == false)
+                    {
+                        regex = new Regex(patternStr, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                        regPatten.Add(patternStr, regex);
+                    }
 
-                    var propertyVal = property.GetValue(itemVal);
+                    if (!regex.IsMatch(item_sql))
+                    {
+                        continue;
+                    }
+
+                    if (htGetters.TryGetValue(property, out PropertyReflector reflector) == false)
+                    {
+                        reflector = property.GetReflector();
+                        htGetters.Add(property, reflector);
+                    }
+                    var propertyVal = reflector.GetValue(itemVal);
+
                     string key_name = $"{KeyPrepend(Property)}_{property.Name}_{Key}{item_index}";
                     //context.RequestParameters.Add(key_name, itemVal);
                     string key_name_dbPrefix = $"{dbPrefix}{key_name}";
@@ -174,10 +193,7 @@ namespace SmartSql.Configuration.Tags
                     }
                     context.RequestParameters.Add(key_name, propertyVal);
 
-                    item_sql = Regex.Replace(item_sql
-                                      , (patternStr)
-                                      , key_name_dbPrefix
-                                      , RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.CultureInvariant);
+                    item_sql = regex.Replace(item_sql, key_name_dbPrefix);
                 }
 
                 if (!string.IsNullOrWhiteSpace(Index))

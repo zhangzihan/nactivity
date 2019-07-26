@@ -25,11 +25,8 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual FlowElement FindFlowElement(string id)
         {
-            FlowElement foundElement = null;
-            if (!string.IsNullOrWhiteSpace(id))
-            {
-                foundElement = flowElementMap[id];
-            }
+            flowElementMap.TryGetValue(id, out FlowElement foundElement);
+
             return foundElement;
         }
 
