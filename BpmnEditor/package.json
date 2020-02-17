@@ -123,7 +123,7 @@
     "diagram-js": "^3.0.0",
     "font-awesome": "4.7.0",
     "isomorphic-fetch": "2.2.1",
-    "jquery": "3.2.1",
+    "jquery": "3.4.0",
     "lodash": "4.17.11",
     "popper.js": "^1.12.9",
     "shortid": "2.2.14",
