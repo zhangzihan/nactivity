@@ -2,7 +2,7 @@
 
 export class Shared {
 
-  static tenantId = "cb79f3dd-e84e-49b0-95c2-0bdafc80f09d";
+  static tenantId = "3b450000-00f0-5254-168b-08d6f4673e73";
 
   static admin = {
     id: "ba98ecce-26fa-4c8d-ac94-887dce70169b",
