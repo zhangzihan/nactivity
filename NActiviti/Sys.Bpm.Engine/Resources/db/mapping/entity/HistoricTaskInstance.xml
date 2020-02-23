@@ -968,7 +968,7 @@
 
   <Select Id="selectHistoricTaskInstancesByQueryCriteria" ResultMap="historicTaskInstanceResultMap">
     ${limitBefore}
-    select distinct RES.* ${limitBetween}
+    select distinct ${top100} RES.* ${limitBetween}
     <Include RefId="selectHistoricTaskInstancesByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}
@@ -981,7 +981,7 @@
 
   <Select Id="selectHistoricTaskInstancesWithVariablesByQueryCriteria" ResultMap="historicTaskInstanceAndVariablesResultMap">
     ${limitBefore}
-    select distinct RES.*,
+    select distinct ${top100} RES.*,
     VAR.ID_ as VAR_ID_, VAR.NAME_ as VAR_NAME_, VAR.VAR_TYPE_ as VAR_TYPE_, VAR.REV_ as VAR_REV_,
     VAR.PROC_INST_ID_ as VAR_PROC_INST_ID_, VAR.EXECUTION_ID_ as VAR_EXECUTION_ID_, VAR.TASK_ID_ as VAR_TASK_ID_,
     VAR.BYTEARRAY_ID_ as VAR_BYTEARRAY_ID_, VAR.DOUBLE_ as VAR_DOUBLE_,
@@ -994,7 +994,7 @@
 
   <Select Id="selectHistoricTaskInstancesWithVariablesByQueryCriteria_mssql_or_db2" ResultMap="historicTaskInstanceAndVariablesResultMap">
     ${limitBefore}
-    select distinct TEMPRES_ID_ as ID_,
+    select distinct ${top100} TEMPRES_ID_ as ID_,
     TEMPRES_PROC_DEF_ID_ as PROC_DEF_ID_, TEMPRES_PROC_INST_ID_ as PROC_INST_ID_, TEMPRES_EXECUTION_ID_ as EXECUTION_ID_,
     TEMPRES_NAME_ as NAME_, TEMPRES_PARENT_TASK_ID_ as PARENT_TASK_ID_,
     TEMPRES_DESCRIPTION_ as DESCRIPTION_, TEMPRES_OWNER_ as OWNER_, TEMPRES_ASSIGNEE_ as ASSIGNEE_,

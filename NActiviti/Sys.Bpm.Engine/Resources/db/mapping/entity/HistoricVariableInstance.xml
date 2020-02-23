@@ -229,7 +229,7 @@
 
   <Select Id="selectHistoricVariableInstanceByQueryCriteria" ResultMap="historicProcessVariableResultMap">
     ${limitBefore}
-    select RES.* ${limitBetween}
+    select ${top100} RES.* ${limitBetween}
     <Include RefId="selectHistoricVariableInstanceByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}

@@ -181,7 +181,7 @@
 
   <Select Id="selectHistoricActivityInstancesByQueryCriteria" ResultMap="historicActivityInstanceResultMap">
     ${limitBefore}
-    select RES.* ${limitBetween}
+    select ${top100} RES.* ${limitBetween}
     <Include RefId="selectHistoricActivityInstancesByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}

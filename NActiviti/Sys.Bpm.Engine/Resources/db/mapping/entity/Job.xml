@@ -305,8 +305,7 @@
 
   <Select Id="selectNextJobsToExecute" ResultMap="jobResultMap">
     ${limitBefore}
-    select
-    RES.* ${limitBetween}
+    select ${top100} RES.* ${limitBetween}
     from ACT_RU_JOB RES
     LEFT OUTER JOIN ACT_RU_EXECUTION PI ON PI.ID_ = RES.PROCESS_INSTANCE_ID_
     where (RES.RETRIES_ &gt; 0)
@@ -322,8 +321,7 @@
 
   <Select Id="selectNextTimerJobsToExecute" ResultMap="jobResultMap">
     ${limitBefore}
-    select
-    RES.* ${limitBetween}
+    select ${top100} RES.* ${limitBetween}
     from ACT_RU_JOB RES
     LEFT OUTER JOIN ACT_RU_EXECUTION PI ON PI.ID_ = RES.PROCESS_INSTANCE_ID_
     where (RES.RETRIES_ &gt; 0)
@@ -340,8 +338,7 @@
 
   <Select Id="selectAsyncJobsDueToExecute" ResultMap="jobResultMap">
     ${limitBefore}
-    select
-    RES.* ${limitBetween}
+    select ${top100} RES.* ${limitBetween}
     from ACT_RU_JOB RES
     LEFT OUTER JOIN ACT_RU_EXECUTION PI ON PI.ID_ = RES.PROCESS_INSTANCE_ID_
     where RES.RETRIES_ &gt; 0
@@ -361,8 +358,7 @@
 
   <Select Id="selectJobsByLockOwner" ResultMap="jobResultMap">
     ${limitBefore}
-    select
-    RES.* ${limitBetween}
+    select ${top100} RES.* ${limitBetween}
     from ACT_RU_JOB RES
     where (RES.LOCK_OWNER_ = #{parameter})
     order by ID_ <!-- Need to have some definitive ordering to have a correct check in place during job fetching -->
@@ -371,7 +367,7 @@
 
   <Select Id="selectExclusiveJobsToExecute" ResultMap="jobResultMap">
     ${limitBefore}
-    select RES.* ${limitBetween}
+    select ${top100} RES.* ${limitBetween}
     from ACT_RU_JOB RES
     where (RETRIES_ &gt; 0)
     and (DUEDATE_ is null or DUEDATE_ &lt;= #{duedate})
@@ -383,7 +379,7 @@
 
   <Select Id="selectExclusiveJobsToExecute_integerBoolean" ResultMap="jobResultMap">
     ${limitBefore}
-    select RES.* ${limitBetween}
+    select ${top100} RES.* ${limitBetween}
     from ACT_RU_JOB RES
     where (RETRIES_ &gt; 0)
     and (DUEDATE_ is null or DUEDATE_ &lt;= #{duedate})
@@ -407,8 +403,7 @@
 
   <Select Id="selectExpiredJobs" ResultMap="jobResultMap">
 	  	${limitBefore}
-      	select
-      	RES.* ${limitBetween} 
+      	select ${top100} RES.* ${limitBetween} 
       	from ACT_RU_JOB RES
     	where RES.LOCK_EXP_TIME_ is not null and RES.LOCK_EXP_TIME_ &lt; #{lockExpTime}
     	${limitAfter}
@@ -459,7 +454,7 @@
 
   <Select Id="selectJobByQueryCriteria" ResultMap="jobResultMap">
     ${limitBefore}
-    select RES.* ${limitBetween}
+    select ${top100} RES.* ${limitBetween}
     <Include RefId="selectJobByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}
@@ -472,8 +467,7 @@
 
   <Select Id="selectJobsToExecute" ResultMap="jobResultMap">
     ${limitBefore}
-    select
-    RES.* ${limitBetween}
+    select ${top100} RES.* ${limitBetween}
     from ACT_RU_JOB RES
     where LOCK_EXP_TIME_ is null
     ${limitAfter}

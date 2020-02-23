@@ -139,7 +139,7 @@
 
     <Select Id="selectModelsByQueryCriteria" ResultMap="modelResultMap">
       ${limitBefore}
-      select distinct RES.* ${limitBetween}
+      select distinct ${top100} RES.* ${limitBetween}
       <Include RefId="selectModelsByQueryCriteriaSql"/>
       ${orderBy}
       ${limitAfter}

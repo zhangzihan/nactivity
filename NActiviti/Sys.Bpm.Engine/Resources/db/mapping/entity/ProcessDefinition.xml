@@ -233,7 +233,7 @@
 
     <Select Id="selectProcessDefinitionsByQueryCriteria" ResultMap="processDefinitionResultMap">
       ${limitBefore}
-      select RES.* ${limitBetween}
+      select ${top100} RES.* ${limitBetween}
       <Include RefId="selectProcessDefinitionsByQueryCriteriaSql"/>
       ${orderBy}
       ${limitAfter}
@@ -289,7 +289,7 @@
     <!-- mysql specific sql -->
     <Select Id="selectProcessDefinitionsByQueryCriteria_mysql" ResultMap="processDefinitionResultMap">
       ${limitBefore}
-      select distinct RES.* ${limitBetween}
+      select distinct ${top100} RES.* ${limitBetween}
       <Include RefId="selectProcessDefinitionsByQueryCriteriaSql"/>
       ${orderBy}
       ${limitAfter}

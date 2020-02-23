@@ -134,7 +134,7 @@
 
   <Select  Id="selectEventSubscriptionByQueryCriteria" ResultMap="eventSubscriptionResultMap">
     ${limitBefore}
-    select RES.* ${limitBetween}
+    select ${top100} RES.* ${limitBetween}
     <Include RefId="selectEventSubscriptionByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}

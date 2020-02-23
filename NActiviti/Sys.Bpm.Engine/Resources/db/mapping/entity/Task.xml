@@ -1061,7 +1061,7 @@
   <!-- Using distinct here because a task can appear multiple times in a resultset when -->
   <Select Id="selectTaskByQueryCriteria" ResultMap="taskResultMap">
     ${limitBefore}
-    select distinct RES.* ${limitBetween}
+    select distinct ${top100} RES.* ${limitBetween}
     <Include RefId="selectTaskByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}
@@ -1074,7 +1074,7 @@
 
   <Select Id="selectTaskWithVariablesByQueryCriteria" ResultMap="taskAndVariablesResultMap">
     ${limitBefore}
-    select RES.*,
+    select ${top100} RES.*,
     VAR.ID_ as VAR_ID_, VAR.NAME_ as VAR_NAME_, VAR.TYPE_ as VAR_TYPE_, VAR.REV_ as VAR_REV_,
     VAR.PROC_INST_ID_ as VAR_PROC_INST_ID_, VAR.EXECUTION_ID_ as VAR_EXECUTION_ID_, VAR.TASK_ID_ as VAR_TASK_ID_,
     VAR.BYTEARRAY_ID_ as VAR_BYTEARRAY_ID_, VAR.DOUBLE_ as VAR_DOUBLE_,
@@ -1087,7 +1087,7 @@
 
   <Select Id="selectTaskWithVariablesByQueryCriteria_mssql_or_db2" ResultMap="taskAndVariablesResultMap">
     ${limitBefore}
-    select distinct TEMPRES_ID_ as ID_, TEMPRES_REV_ as REV_, TEMPRES_NAME_ as NAME_,
+    select distinct ${top100} TEMPRES_ID_ as ID_, TEMPRES_REV_ as REV_, TEMPRES_NAME_ as NAME_,
     TEMPRES_PARENT_TASK_ID_ as PARENT_TASK_ID_, TEMPRES_DESCRIPTION_ as DESCRIPTION_,
     TEMPRES_PRIORITY_ as PRIORITY_, TEMPRES_CREATE_TIME_ as CREATE_TIME_,
     TEMPRES_OWNER_ as OWNER_, TEMPRES_ASSIGNEE_ as ASSIGNEE_, TEMPRES_ASSIGNEE_USER_ as ASSIGNEE_USER_,TEMPRES_DELEGATION_ as DELEGATION_,

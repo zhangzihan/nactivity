@@ -197,7 +197,7 @@
 
   <Select Id="selectHistoricDetailsByQueryCriteria" ResultMap="historicDetailResultMap">
     ${limitBefore}
-    select RES.* ${limitBetween}
+    select ${top100} RES.* ${limitBetween}
     <Include RefId="selectHistoricDetailsByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}

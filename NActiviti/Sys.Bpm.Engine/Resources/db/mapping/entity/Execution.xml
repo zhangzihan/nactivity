@@ -789,7 +789,7 @@
     ${limitBefore}
     <IsNotEqual Property="_databaseId" CompareValue="db2">
       <IsNotEqual Property="_databaseId" CompareValue="mssql">
-        select distinct RES.*, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId, P.NAME_ as ProcessDefinitionName, P.VERSION_ as ProcessDefinitionVersion, P.DEPLOYMENT_ID_ as DeploymentId,
+        select distinct ${top100} RES.*, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId, P.NAME_ as ProcessDefinitionName, P.VERSION_ as ProcessDefinitionVersion, P.DEPLOYMENT_ID_ as DeploymentId,
         VAR.ID_ as VAR_ID_, VAR.NAME_ as VAR_NAME_, VAR.TYPE_ as VAR_TYPE_, VAR.REV_ as VAR_REV_,
         VAR.PROC_INST_ID_ as VAR_PROC_INST_ID_, VAR.EXECUTION_ID_ as VAR_EXECUTION_ID_, VAR.TASK_ID_ as VAR_TASK_ID_,
         VAR.BYTEARRAY_ID_ as VAR_BYTEARRAY_ID_, VAR.DOUBLE_ as VAR_DOUBLE_,
@@ -925,7 +925,7 @@
 
   <Select Id="selectExecutionsByQueryCriteria" ResultMap="executionResultMap">
     ${limitBefore}
-    select distinct RES.ID_, RES.REV_, RES.PROC_INST_ID_, RES.BUSINESS_KEY_, RES.PROC_DEF_ID_, RES.ACT_ID_, RES.IS_ACTIVE_, RES.IS_CONCURRENT_, RES.IS_SCOPE_, RES.IS_EVENT_SCOPE_, RES.IS_MI_ROOT_, RES.PARENT_ID_, RES.SUPER_EXEC_, RES.ROOT_PROC_INST_ID_, RES.SUSPENSION_STATE_, RES.TENANT_ID_, RES.NAME_, RES.START_TIME_, RES.START_USER_ID_, RES.START_USER_, RES.IS_COUNT_ENABLED_, RES.EVT_SUBSCR_COUNT_, RES.TASK_COUNT_, RES.JOB_COUNT_, RES.TIMER_JOB_COUNT_, RES.SUSP_JOB_COUNT_, RES.DEADLETTER_JOB_COUNT_, RES.VAR_COUNT_, RES.ID_LINK_COUNT_ ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId
+    select distinct ${top100} RES.ID_, RES.REV_, RES.PROC_INST_ID_, RES.BUSINESS_KEY_, RES.PROC_DEF_ID_, RES.ACT_ID_, RES.IS_ACTIVE_, RES.IS_CONCURRENT_, RES.IS_SCOPE_, RES.IS_EVENT_SCOPE_, RES.IS_MI_ROOT_, RES.PARENT_ID_, RES.SUPER_EXEC_, RES.ROOT_PROC_INST_ID_, RES.SUSPENSION_STATE_, RES.TENANT_ID_, RES.NAME_, RES.START_TIME_, RES.START_USER_ID_, RES.START_USER_, RES.IS_COUNT_ENABLED_, RES.EVT_SUBSCR_COUNT_, RES.TASK_COUNT_, RES.JOB_COUNT_, RES.TIMER_JOB_COUNT_, RES.SUSP_JOB_COUNT_, RES.DEADLETTER_JOB_COUNT_, RES.VAR_COUNT_, RES.ID_LINK_COUNT_ ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId
     <Include RefId="selectExecutionsByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}
@@ -939,7 +939,7 @@
   <!--  same as selectExecutionsByQueryCriteria, but with different parameterType -->
   <Select Id="selectProcessInstanceByQueryCriteria" ResultMap="processInstanceResultMap" >
     ${limitBefore}
-    select distinct RES.ID_, RES.REV_, RES.PROC_INST_ID_, RES.BUSINESS_KEY_, RES.PROC_DEF_ID_, RES.ACT_ID_, RES.IS_ACTIVE_, RES.IS_CONCURRENT_, RES.IS_SCOPE_, RES.IS_EVENT_SCOPE_, RES.IS_MI_ROOT_, RES.PARENT_ID_, RES.SUPER_EXEC_, RES.ROOT_PROC_INST_ID_, RES.SUSPENSION_STATE_, RES.TENANT_ID_, RES.NAME_, RES.START_TIME_, RES.START_USER_ID_, RES.START_USER_, RES.IS_COUNT_ENABLED_, RES.EVT_SUBSCR_COUNT_, RES.TASK_COUNT_, RES.JOB_COUNT_, RES.TIMER_JOB_COUNT_, RES.SUSP_JOB_COUNT_, RES.DEADLETTER_JOB_COUNT_, RES.VAR_COUNT_, RES.ID_LINK_COUNT_  ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId, P.NAME_ as ProcessDefinitionName, P.VERSION_ as ProcessDefinitionVersion, P.DEPLOYMENT_ID_ as DeploymentId
+    select distinct ${top100} RES.ID_, RES.REV_, RES.PROC_INST_ID_, RES.BUSINESS_KEY_, RES.PROC_DEF_ID_, RES.ACT_ID_, RES.IS_ACTIVE_, RES.IS_CONCURRENT_, RES.IS_SCOPE_, RES.IS_EVENT_SCOPE_, RES.IS_MI_ROOT_, RES.PARENT_ID_, RES.SUPER_EXEC_, RES.ROOT_PROC_INST_ID_, RES.SUSPENSION_STATE_, RES.TENANT_ID_, RES.NAME_, RES.START_TIME_, RES.START_USER_ID_, RES.START_USER_, RES.IS_COUNT_ENABLED_, RES.EVT_SUBSCR_COUNT_, RES.TASK_COUNT_, RES.JOB_COUNT_, RES.TIMER_JOB_COUNT_, RES.SUSP_JOB_COUNT_, RES.DEADLETTER_JOB_COUNT_, RES.VAR_COUNT_, RES.ID_LINK_COUNT_  ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId, P.NAME_ as ProcessDefinitionName, P.VERSION_ as ProcessDefinitionVersion, P.DEPLOYMENT_ID_ as DeploymentId
     <Include RefId="selectExecutionsByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}

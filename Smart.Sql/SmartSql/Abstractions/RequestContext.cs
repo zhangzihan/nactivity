@@ -179,7 +179,7 @@ namespace SmartSql.Abstractions
                         if (path.ToLower() == "isnull")
                         {
                             string[] isnull = m.Groups[1].Value.Split(new char[] { ',' });
-                            return $"{exp}({isnull[1]}, {isnull[2]})";
+                            return $"{exp.Replace("'", "")}({isnull[1]}, {isnull[2]})";
                         }
                         else
                         {

@@ -168,7 +168,7 @@
 
     <Select Id="selectDeadLetterJobByQueryCriteria"  ResultMap="jobResultMap">
         ${limitBefore}
-        select RES.* ${limitBetween}
+        select ${top100} RES.* ${limitBetween}
         <Include RefId="selectDeadLetterJobByQueryCriteriaSql"/>
         ${orderBy}
         ${limitAfter}

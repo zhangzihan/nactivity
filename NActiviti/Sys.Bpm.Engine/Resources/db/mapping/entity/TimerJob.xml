@@ -83,7 +83,7 @@
 
   <Select Id="selectTimerJobByQueryCriteria" ResultMap="jobResultMap">
     ${limitBefore}
-    select RES.* ${limitBetween}
+    select ${top100} RES.* ${limitBetween}
     <Include RefId="selectTimerJobByQueryCriteriaSql" />
     ${orderBy}
     ${limitAfter}
@@ -95,8 +95,7 @@
   </Select>
 
   <Select Id="selectTimerJobsToExecute" ResultMap="jobResultMap">
-    select
-    RES.*
+    select RES.*
     from ACT_RU_TIMER_JOB RES
     where DUEDATE_ &lt;= #{duedate}
     and LOCK_OWNER_ is null

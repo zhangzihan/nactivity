@@ -111,7 +111,7 @@
 
   <Select Id="selectDeploymentsByQueryCriteria" ResultMap="deploymentResultMap">
     ${limitBefore}
-    select RES.* from (select distinct ${top100} RES.* <IsTrue Property="onlyDrafts">,PROCDEF.ID_ as PROC_DEF_ID_</IsTrue> ${limitBetween}
+    select ${top100} RES.* from (select distinct ${top100} RES.* <IsTrue Property="onlyDrafts">,PROCDEF.ID_ as PROC_DEF_ID_</IsTrue> ${limitBetween}
     <Include RefId="selectDeploymentsByQueryCriteriaSql"/>
     ) RES
     <Where>
@@ -149,7 +149,7 @@
   <!-- mysql specific -->
   <Select Id="selectDeploymentsByQueryCriteria_mysql" ResultMap="deploymentResultMap">
     ${limitBefore}
-    select distinct RES.* ${limitBetween}
+    select distinct ${top100} RES.* ${limitBetween}
     <Include RefId="selectDeploymentsByQueryCriteriaSql"/>
     ${orderBy}
     ${limitAfter}
