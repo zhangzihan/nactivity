@@ -270,7 +270,7 @@
     and (EXECUTION_ID_ = #{executionId})
   </Select>
 
-  <Select  Id="selectMessageStartEventSubscriptionByName" ResultMap="eventSubscriptionResultMap">
+  <Select  Id="selectMessageStartEventSubscriptionByName" ResultMap="messageResultMap">
     select *
     from ACT_RU_EVENT_SUBSCR
     where (EVENT_TYPE_ = 'message')

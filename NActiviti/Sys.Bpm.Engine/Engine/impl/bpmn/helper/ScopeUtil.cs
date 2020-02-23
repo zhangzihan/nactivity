@@ -80,16 +80,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         public static void CreateCopyOfSubProcessExecutionForCompensation(IExecutionEntity subProcessExecution)
         {
             IEventSubscriptionEntityManager eventSubscriptionEntityManager = Context.CommandContext.EventSubscriptionEntityManager;
-            IList<IEventSubscriptionEntity> eventSubscriptions = eventSubscriptionEntityManager.FindEventSubscriptionsByExecutionAndType(subProcessExecution.Id, "compensate");
-
-            IList<ICompensateEventSubscriptionEntity> compensateEventSubscriptions = new List<ICompensateEventSubscriptionEntity>();
-            foreach (IEventSubscriptionEntity @event in eventSubscriptions)
-            {
-                if (@event is ICompensateEventSubscriptionEntity)
-                {
-                    compensateEventSubscriptions.Add((ICompensateEventSubscriptionEntity)@event);
-                }
-            }
+            IList<ICompensateEventSubscriptionEntity> compensateEventSubscriptions = eventSubscriptionEntityManager.FindCompensateEventSubscriptionsByExecutionId(subProcessExecution.Id);
 
             if (CollectionUtil.IsNotEmpty(compensateEventSubscriptions))
             {

@@ -85,7 +85,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
             get
             {
                 Stack<ProcessEngineConfigurationImpl> stack = GetStack(processEngineConfigurationStackThreadLocal);
-                if ((stack?.Count).GetValueOrDefault(0) == 0)
+                if (stack.Count == 0)
                 {
                     return null;
                 }
@@ -113,7 +113,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
             get
             {
                 Stack<ITransactionContext> stack = GetStack(transactionContextThreadLocal);
-                if ((stack?.Count).GetValueOrDefault() == 0)
+                if (stack.Count == 0)
                 {
                     return null;
                 }

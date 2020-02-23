@@ -23,7 +23,7 @@ namespace Sys.Workflow.Bpmn.Models
         protected internal IList<IOParameter> inParameters;
         protected internal IList<IOParameter> outParameters;
         protected internal string businessKey;
-        protected internal bool inheritBusinessKey = true;
+        protected internal bool inheritBusinessKey = false;
 
         public virtual string CalledElement
         {

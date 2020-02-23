@@ -22,6 +22,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor.Multitenants
     using Sys.Workflow;
     using System;
     using System.Collections.Concurrent;
+    using System.Threading;
 
     /// <summary>
     /// An <seealso cref="IAsyncExecutor"/> that has one <seealso cref="IAsyncExecutor"/> per tenant.
@@ -267,6 +268,10 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor.Multitenants
             {
                 return DetermineAsyncExecutor().LockOwner;
             }
+            set
+            {
+                DetermineAsyncExecutor().LockOwner = value;
+            }
         }
 
         /// <summary>
@@ -445,6 +450,117 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor.Multitenants
                 foreach (IAsyncExecutor asyncExecutor in tenantExecutors.Values)
                 {
                     asyncExecutor.ResetExpiredJobsPageSize = value;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public bool MessageQueueMode
+        {
+            get
+            {
+                return DetermineAsyncExecutor().MessageQueueMode;
+            }
+            set
+            {
+                foreach (IAsyncExecutor asyncExecutor in tenantExecutors.Values)
+                {
+                    asyncExecutor.MessageQueueMode = value;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public int CorePoolSize
+        {
+            get
+            {
+                return DetermineAsyncExecutor().CorePoolSize;
+            }
+            set
+            {
+                foreach (IAsyncExecutor asyncExecutor in tenantExecutors.Values)
+                {
+                    asyncExecutor.CorePoolSize = value;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public int MaxPoolSize
+        {
+            get
+            {
+                return DetermineAsyncExecutor().MaxPoolSize;
+            }
+            set
+            {
+                foreach (IAsyncExecutor asyncExecutor in tenantExecutors.Values)
+                {
+                    asyncExecutor.MaxPoolSize = value;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public long KeepAliveTime
+        {
+            get
+            {
+                return DetermineAsyncExecutor().KeepAliveTime;
+            }
+            set
+            {
+                foreach (IAsyncExecutor asyncExecutor in tenantExecutors.Values)
+                {
+                    asyncExecutor.KeepAliveTime = value;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public ConcurrentQueue<ThreadStart> ThreadPoolQueue
+        {
+            get
+            {
+                return DetermineAsyncExecutor().ThreadPoolQueue;
+            }
+            set
+            {
+                foreach (IAsyncExecutor asyncExecutor in tenantExecutors.Values)
+                {
+                    asyncExecutor.ThreadPoolQueue = value;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public int QueueSize
+        {
+            get
+            {
+                return DetermineAsyncExecutor().QueueSize;
+            }
+            set
+            {
+                foreach (IAsyncExecutor asyncExecutor in tenantExecutors.Values)
+                {
+                    asyncExecutor.QueueSize = value;
+                }
+            }
+        }
+        /// <inheritdoc />
+        public long SecondsToWaitOnShutdown
+        {
+            get
+            {
+                return DetermineAsyncExecutor().SecondsToWaitOnShutdown;
+            }
+            set
+            {
+                foreach (IAsyncExecutor asyncExecutor in tenantExecutors.Values)
+                {
+                    asyncExecutor.SecondsToWaitOnShutdown = value;
                 }
             }
         }

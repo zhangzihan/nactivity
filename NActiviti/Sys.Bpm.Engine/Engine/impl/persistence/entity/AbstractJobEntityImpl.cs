@@ -330,7 +330,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public override string ToString()
         {
-            return this.GetType().FullName + " [id=" + id + "]";
+            return this.GetType().FullName + " [id=" + Id + "]";
         }
 
     }

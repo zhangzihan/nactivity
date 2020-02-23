@@ -251,7 +251,7 @@ namespace SmartSql
             {
                 var dataReader = await CommandExecuter.ExecuteReaderAsync(dbSession, context).ConfigureAwait(false);
                 var deser = DeserializerFactory.Create();
-                return await deser.ToEnumerableAsync<T>(context, dataReader);
+                return await deser.ToEnumerableAsync<T>(context, dataReader).ConfigureAwait(false);
             }, context).ConfigureAwait(false);
         }
         public async Task<T> QuerySingleAsync<T>(RequestContext context)
@@ -405,7 +405,13 @@ namespace SmartSql
             SessionStore.Dispose();
         }
         #endregion
+
         public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
         {
             ConfigLoader.Dispose();
             SessionStore.Dispose();

@@ -40,7 +40,7 @@ namespace Sys.Workflow.Rest.Client.API
         {
             HttpResponseMessage response = await httpProxy.GetAsync<HttpResponseMessage>($"{serviceUrl}/{id}/bpmnmodel").ConfigureAwait(false);
 
-            string data = AsyncHelper.RunSync<string>(() => response.Content.ReadAsStringAsync());
+            string data = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
             BpmnModel model = JsonConvert.DeserializeObject<BpmnModel>(data, new JsonSerializerSettings
             {

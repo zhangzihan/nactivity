@@ -57,7 +57,6 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         public override void Execute(IExecutionEntity execution)
         {
-
             string finalProcessDefinitonKey;
             if (processDefinitionExpression != null)
             {
@@ -95,7 +94,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             CallActivity callActivity = (CallActivity)execution.CurrentFlowElement;
 
-            string businessKey = null;
+            string businessKey = execution.BusinessKey;
 
             if (!string.IsNullOrWhiteSpace(callActivity.BusinessKey))
             {
@@ -152,7 +151,6 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             Context.Agenda.PlanContinueProcessOperation(subProcessInitialExecution);
 
             Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateProcessStartedEvent(subProcessInitialExecution, variables, false));
-
         }
 
         public virtual void Completing(IExecutionEntity execution, IExecutionEntity subProcessInstance)

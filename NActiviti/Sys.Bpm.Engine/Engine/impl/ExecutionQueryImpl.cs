@@ -84,6 +84,8 @@ namespace Sys.Workflow.Engine.Impl
         protected internal string[] processDefinitionKeys_;
         protected internal string[] processDefinitionIds;
 
+        private bool isWithException = false;
+
         // Not exposed in API, but here for the ProcessInstanceQuery support, since
         // the name lives on the
         // Execution entity/table
@@ -518,6 +520,13 @@ namespace Sys.Workflow.Engine.Impl
             }
         }
 
+        public virtual IExecutionQuery SetIsWithException()
+        {
+            isWithException = true;
+
+            return this;
+        }
+
         public IList<string> DeploymentIds
         {
             get => deploymentIds;
@@ -922,6 +931,22 @@ namespace Sys.Workflow.Engine.Impl
         {
             get => deploymentId;
             set => SetProcessDeploymentId(value);
+        }
+
+        public virtual bool IsWithException
+        {
+            get => isWithException;
+            set
+            {
+                if (value)
+                {
+                    SetIsWithException();
+                }
+                else
+                {
+                    isWithException = false;
+                }
+            }
         }
     }
 }

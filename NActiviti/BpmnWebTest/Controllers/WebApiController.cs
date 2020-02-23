@@ -4,6 +4,7 @@ using Sys.Workflow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace BpmnWebApiTest.Controllers
@@ -16,6 +17,7 @@ namespace BpmnWebApiTest.Controllers
         [HttpGet("noparameter")]
         public object Get([FromQuery]string businessKey)
         {
+            //throw new Exception("发生错误");
             return businessKey;
         }
 
@@ -34,6 +36,7 @@ namespace BpmnWebApiTest.Controllers
         [HttpPost("withparameter")]
         public object Post(string[] data, [FromQuery]string businessKey)
         {
+            //throw new Exception("发生错误");
             return string.Join(@"\r\n", data) + businessKey;
         }
 

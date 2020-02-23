@@ -25,7 +25,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public CompensateEventSubscriptionEntityImpl()
         {
-            eventType = CompensateEventSubscriptionEntityFields.EVENT_TYPE;
+            EventType = CompensateEventSubscriptionEntityFields.EVENT_TYPE;
         }
     }
 }

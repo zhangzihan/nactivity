@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Spring.Collections;
 using Spring.Util;
@@ -47,7 +48,7 @@ namespace Spring.Expressions
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Returns a value for the arithmetic addition operator node.
         /// </summary>
@@ -63,6 +64,14 @@ namespace Spring.Expressions
             {
                 return NumberUtils.Add(left, right);
             }
+            else if (NumberUtils.IsNumber(left) && NumberUtils.TryConvertTo(ref right, ref left))
+            {
+                return NumberUtils.Add(left, right);
+            }
+            else if (NumberUtils.IsNumber(right) && NumberUtils.TryConvertTo(ref left, ref right))
+            {
+                return NumberUtils.Add(left, right);
+            }
             else if (left is DateTime && (right is TimeSpan || right is string || NumberUtils.IsNumber(right)))
             {
                 if (NumberUtils.IsNumber(right))
@@ -71,10 +80,10 @@ namespace Spring.Expressions
                 }
                 else if (right is string)
                 {
-                    right = TimeSpan.Parse((string) right);
+                    right = TimeSpan.Parse((string)right);
                 }
 
-                return (DateTime) left + (TimeSpan) right;
+                return (DateTime)left + (TimeSpan)right;
             }
             else if (left is String || right is String)
             {
@@ -88,14 +97,14 @@ namespace Spring.Expressions
             }
             else if (left is IDictionary && right is IDictionary)
             {
-                ISet leftset = new HybridSet(((IDictionary) left).Keys);
-                ISet rightset = new HybridSet(((IDictionary) right).Keys);
+                ISet leftset = new HybridSet(((IDictionary)left).Keys);
+                ISet rightset = new HybridSet(((IDictionary)right).Keys);
                 ISet unionset = leftset.Union(rightset);
-                
+
                 IDictionary result = new Hashtable(unionset.Count);
-                foreach(object key in unionset)
+                foreach (object key in unionset)
                 {
-                    if(leftset.Contains(key))
+                    if (leftset.Contains(key))
                     {
                         result.Add(key, ((IDictionary)left)[key]);
                     }

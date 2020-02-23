@@ -104,21 +104,29 @@ namespace SmartSql.DbSession
 
         public void Dispose()
         {
-            //if (_logger.IsEnabled(LogLevel.Warning))
-            //{
-            //    _logger.LogWarning("Dispose.");
-            //}
+            Dispose(true);
+        }
 
-            if (Transaction != null)
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                if (Connection.State != ConnectionState.Closed)
+                //if (_logger.IsEnabled(LogLevel.Warning))
+                //{
+                //    _logger.LogWarning("Dispose.");
+                //}
+
+                if (Transaction != null)
                 {
-                    RollbackTransaction();
+                    if (Connection.State != ConnectionState.Closed)
+                    {
+                        RollbackTransaction();
+                    }
                 }
-            }
-            else
-            {
-                CloseConnection();
+                else
+                {
+                    CloseConnection();
+                }
             }
         }
 

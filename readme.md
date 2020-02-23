@@ -12,7 +12,7 @@
 ```
 * 使用MySql DbProvider resources\db\mapping\mappings.xml
 ```
-<DbProvider Name="MySqlClientFactory" ParameterPrefix="?" Type="MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data"/>
+<DbProvider Name="MySqlClientFactory" ParameterPrefix="?" Type="MySql.Data.MySqlClient.MySqlClientFactory,MySqlConnector"/>
 ```
 
 * SQLServer 创建数据库 activiti

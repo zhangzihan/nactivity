@@ -20,7 +20,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         protected internal string name;
 
-        protected internal string scope;
+        protected internal string scope = SCOPE_PROCESS_INSTANCE;
 
         public Signal()
         {

@@ -20,7 +20,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             bool changed = false;
             foreach (XElement task in tasks ?? new XElement[0])
             {
-                var impl = task.Attribute(XName.Get(BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_CLASS, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE));
+                var impl = task.Attribute(XName.Get(ImplementationType.IMPLEMENTATION_TYPE_CLASS, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE)) ??
+                    task.Attribute(XName.Get(ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION, 
+                    BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE)) ??
+                    task.Attribute(XName.Get(ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION,
+                    BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE));
                 if (impl == null)
                 {
                     task.Add(new XAttribute(XName.Get(BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_CLASS, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE), ImplementationType.IMPLEMENTATION_TASK_SERVICE_DEFAULT));

@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Spring.Util;
 
@@ -58,6 +59,14 @@ namespace Spring.Expressions
             object rightVal = GetRightValue(context, evalContext );
 
             if (NumberUtils.IsNumber(leftVal) && NumberUtils.IsNumber(rightVal))
+            {
+                return NumberUtils.Modulus(leftVal, rightVal);
+            }
+            else if (NumberUtils.IsNumber(leftVal) && NumberUtils.TryConvertTo(ref rightVal, ref leftVal))
+            {
+                return NumberUtils.Modulus(leftVal, rightVal);
+            }
+            else if (NumberUtils.IsNumber(rightVal) && NumberUtils.TryConvertTo(ref leftVal, ref rightVal))
             {
                 return NumberUtils.Modulus(leftVal, rightVal);
             }

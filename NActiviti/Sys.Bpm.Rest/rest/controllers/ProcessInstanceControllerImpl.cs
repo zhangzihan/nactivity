@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +44,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
     /// <inheritdoc />
     [Route(WorkflowConstants.PROC_INS_ROUTER_V1)]
     [ApiController]
-    public class ProcessInstanceControllerImpl : ControllerBase, IProcessInstanceController
+    public class ProcessInstanceControllerImpl : WorkflowController, IProcessInstanceController
     {
         private readonly ProcessEngineWrapper processEngineWrapper;
 
@@ -120,20 +121,11 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             {
                 logger.LogInformation("开始调用工作流启动事件\r\n" + JsonConvert.SerializeObject(cmds));
 
-                ProcessInstance[] instances = await processEngineWrapper.StartProcessAsync(cmds);
+                ProcessInstance[] instances = await processEngineWrapper.StartProcessAsync(cmds).ConfigureAwait(false);
 
                 logger.LogInformation("调用工作流启动事件完成");
 
                 return instances;
-            }
-            catch (Exception ex)
-            {
-                throw new Http400Exception(new Http400
-                {
-                    Code = "processStartFailed",
-                    Message = ex.Message,
-                    Target = this.GetType().Name,
-                }, ex);
             }
             finally
             {
@@ -148,24 +140,12 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         [HttpGet("{processInstanceId}")]
         public virtual Task<ProcessInstance> GetProcessInstanceById(string processInstanceId)
         {
-            try
+            ProcessInstance processInstance = processEngineWrapper.GetProcessInstanceById(processInstanceId);
+            if (processInstance == null)
             {
-                ProcessInstance processInstance = processEngineWrapper.GetProcessInstanceById(processInstanceId);
-                if (processInstance == null)
-                {
-                    throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + processInstanceId + "'");
-                }
-                return Task.FromResult<ProcessInstance>(processInstance);
+                throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + processInstanceId + "'");
             }
-            catch (ActivitiObjectNotFoundException ex)
-            {
-                throw new Http400Exception(new Http400
-                {
-                    Code = "activitiObjectNotFound",
-                    Message = "数据不存在",
-                    Target = this.GetType().Name,
-                }, ex);
-            }
+            return Task.FromResult<ProcessInstance>(processInstance);
         }
 
 

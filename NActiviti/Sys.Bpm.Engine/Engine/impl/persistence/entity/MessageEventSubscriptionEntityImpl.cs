@@ -15,18 +15,16 @@
 
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
-	/// 
-	[Serializable]
-	public class MessageEventSubscriptionEntityImpl : EventSubscriptionEntityImpl, IMessageEventSubscriptionEntity
-	{
+    /// 
+    [Serializable]
+    public class MessageEventSubscriptionEntityImpl : EventSubscriptionEntityImpl, IMessageEventSubscriptionEntity
+    {
 
-	  private const long serialVersionUID = 1L;
+        private const long serialVersionUID = 1L;
 
-	  public MessageEventSubscriptionEntityImpl()
-	  {
-		eventType = MessageEventSubscriptionEntityFields.EVENT_TYPE;
-	  }
-
-	}
-
+        public MessageEventSubscriptionEntityImpl()
+        {
+            EventType = MessageEventSubscriptionEntityFields.EVENT_TYPE;
+        }
+    }
 }

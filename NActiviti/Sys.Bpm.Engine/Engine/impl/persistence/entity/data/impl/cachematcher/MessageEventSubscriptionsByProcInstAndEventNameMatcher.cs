@@ -22,22 +22,22 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
     public class MessageEventSubscriptionsByProcInstAndEventNameMatcher : CachedEntityMatcherAdapter<IEventSubscriptionEntity>
     {
 
-        public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object param)
+        public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
         {
-            if (param is null)
+            if (parameter is null)
             {
                 return false;
             }
 
-            JObject token = JObject.FromObject(param);
-            token.TryGetValue("processInstanceId", StringComparison.OrdinalIgnoreCase, out var processInstanceId);
-            token.TryGetValue("eventName", StringComparison.OrdinalIgnoreCase, out var eventName);
+            JToken @params = JToken.FromObject(parameter);
+            string eventName = @params[nameof(eventName)]?.ToString();
+            string processInstanceId = @params[nameof(processInstanceId)]?.ToString();
 
             return eventSubscriptionEntity.EventType != null &&
-                string.Compare(eventSubscriptionEntity.EventType, MessageEventSubscriptionEntityFields.EVENT_TYPE, true) ==0 &&
+                string.Compare(eventSubscriptionEntity.EventType, MessageEventSubscriptionEntityFields.EVENT_TYPE, true) == 0 &&
                 eventSubscriptionEntity.EventName != null &&
                 string.Compare(eventSubscriptionEntity.EventName, eventName?.ToString(), true) == 0 &&
-                eventSubscriptionEntity.ProcessInstanceId != null && 
+                eventSubscriptionEntity.ProcessInstanceId != null &&
                 string.Compare(eventSubscriptionEntity.ProcessInstanceId, processInstanceId?.ToString(), true) == 0;
         }
     }

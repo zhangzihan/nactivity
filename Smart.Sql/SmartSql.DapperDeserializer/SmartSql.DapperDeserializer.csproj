@@ -14,6 +14,14 @@
     <OutputPath>bin</OutputPath>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\SmartSql.DapperDeserializer.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\SmartSql.DapperDeserializer.xml</DocumentationFile>
+  </PropertyGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\SmartSql\SmartSql.csproj" />

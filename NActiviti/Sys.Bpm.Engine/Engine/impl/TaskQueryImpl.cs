@@ -314,6 +314,13 @@ namespace Sys.Workflow.Engine.Impl
             return this;
         }
 
+        public virtual ITaskQuery SetIsTaskBusinessKey(bool isTaskBusinessKey)
+        {
+            IsTaskBusinessKey = isTaskBusinessKey;
+
+            return this;
+        }
+
         public virtual ITaskQuery SetTaskDescriptionLikeIgnoreCase(string descriptionLikeIgnoreCase)
         {
             if (orActive)
@@ -1809,6 +1816,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return name;
             }
+            set
+            {
+                SetTaskName(value);
+            }
         }
 
         public virtual string NameLike
@@ -1816,6 +1827,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return nameLike;
+            }
+            set
+            {
+                SetTaskNameLike(value);
             }
         }
 
@@ -1825,6 +1840,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return nameList;
             }
+            set
+            {
+                SetTaskNameIn(value);
+            }
         }
 
         public virtual IList<string> NameListIgnoreCase
@@ -1832,6 +1851,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return nameListIgnoreCase;
+            }
+            set
+            {
+                SetTaskNameInIgnoreCase(value);
             }
         }
 
@@ -1841,6 +1864,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return assignee;
             }
+            set
+            {
+                SetTaskAssignee(value);
+            }
         }
 
         public virtual bool Unassigned
@@ -1848,6 +1875,17 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return unassigned;
+            }
+            set
+            {
+                if (value)
+                {
+                    SetTaskUnassigned();
+                }
+                else
+                {
+                    unassigned = false;
+                }
             }
         }
 
@@ -1873,6 +1911,13 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return delegationState.ToString();
             }
+            set
+            {
+                if (Enum.TryParse<DelegationState>(value, out var s))
+                {
+                    SetTaskDelegationState(s);
+                }
+            }
         }
 
         public virtual string CandidateUser
@@ -1880,6 +1925,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return candidateUser;
+            }
+            set
+            {
+                SetTaskCandidateUser(value);
             }
         }
 
@@ -1889,6 +1938,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return candidateGroup;
             }
+            set
+            {
+                SetTaskCandidateGroup(value);
+            }
         }
 
         public virtual string ProcessInstanceId
@@ -1896,6 +1949,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return _processInstanceId;
+            }
+            set
+            {
+                SetProcessInstanceId(value);
             }
         }
 
@@ -1905,6 +1962,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return processInstanceIds;
             }
+            set
+            {
+                SetProcessInstanceIdIn(value?.ToArray());
+            }
         }
 
         public virtual IList<string> ExecutionIds
@@ -1912,6 +1973,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return executionIds;
+            }
+            set
+            {
+                SetExecutionIdIn(value?.ToArray());
             }
         }
 
@@ -1921,6 +1986,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return _executionId;
             }
+            set
+            {
+                SetExecutionId(value);
+            }
         }
 
         public virtual string TaskId
@@ -1928,6 +1997,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return _taskId;
+            }
+            set
+            {
+                SetTaskId(value);
             }
         }
 
@@ -1937,6 +2010,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return description;
             }
+            set
+            {
+                SetTaskDescription(value);
+            }
         }
 
         public virtual string DescriptionLike
@@ -1944,6 +2021,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return descriptionLike;
+            }
+            set
+            {
+                SetTaskDescriptionLike(value);
             }
         }
 
@@ -1953,6 +2034,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return priority;
             }
+            set
+            {
+                SetTaskPriority(value);
+            }
         }
 
         public virtual DateTime? CreateTime
@@ -1960,6 +2045,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return createTime;
+            }
+            set
+            {
+                SetTaskCreatedOn(value);
             }
         }
 
@@ -1969,6 +2058,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return createTimeBefore;
             }
+            set
+            {
+                SetTaskCreatedBefore(value);
+            }
         }
 
         public virtual DateTime? CreateTimeAfter
@@ -1976,6 +2069,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return createTimeAfter;
+            }
+            set
+            {
+                SetTaskCreatedAfter(value);
             }
         }
 
@@ -1985,6 +2082,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return key;
             }
+            set
+            {
+                SetTaskDefinitionKey(value);
+            }
         }
 
         public virtual string KeyLike
@@ -1992,6 +2093,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return keyLike;
+            }
+            set
+            {
+                SetTaskDefinitionKeyLike(value);
             }
         }
 
@@ -2001,6 +2106,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return _processDefinitionKey;
             }
+            set
+            {
+                SetProcessDefinitionKey(value);
+            }
         }
 
         public virtual string ProcessDefinitionId
@@ -2008,6 +2117,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return _processDefinitionId;
+            }
+            set
+            {
+                SetProcessDefinitionId(value);
             }
         }
 
@@ -2017,6 +2130,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return _processDefinitionName;
             }
+            set
+            {
+                SetProcessDefinitionName(value);
+            }
         }
 
         public virtual string ProcessInstanceBusinessKey
@@ -2024,6 +2141,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return _processInstanceBusinessKey;
+            }
+            set
+            {
+                SetProcessInstanceBusinessKey(value);
             }
         }
 
@@ -2033,6 +2154,17 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return _excludeSubtasks;
             }
+            set
+            {
+                if (value)
+                {
+                    SetExcludeSubtasks();
+                }
+                else
+                {
+                    _excludeSubtasks = false;
+                }
+            }
         }
 
         public virtual string TenantId
@@ -2040,6 +2172,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return tenantId;
+            }
+            set
+            {
+                SetTaskTenantId(value);
             }
         }
 
@@ -2049,6 +2185,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return tenantIdLike;
             }
+            set
+            {
+                SetTaskTenantIdLike(value);
+            }
         }
 
         public virtual bool WithoutTenantId
@@ -2057,6 +2197,17 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return withoutTenantId;
             }
+            set
+            {
+                if (value)
+                {
+                    TaskWithoutTenantId();
+                }
+                else
+                {
+                    withoutTenantId = false;
+                }
+            }
         }
 
         public virtual string UserIdForCandidateAndAssignee
@@ -2064,6 +2215,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return userIdForCandidateAndAssignee;
+            }
+            set
+            {
+                SetTaskCandidateOrAssigned(value);
             }
         }
 
@@ -2086,6 +2241,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return minPriority;
             }
+            set
+            {
+                SetTaskMinPriority(value);
+            }
         }
 
         public virtual int? MaxPriority
@@ -2093,6 +2252,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return maxPriority;
+            }
+            set
+            {
+                SetTaskMaxPriority(value);
             }
         }
 
@@ -2102,6 +2265,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return assigneeLike;
             }
+            set
+            {
+                SetTaskAssigneeLike(value);
+            }
         }
 
         public virtual IList<string> AssigneeIds
@@ -2109,6 +2276,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return assigneeIds;
+            }
+            set
+            {
+                SetTaskAssigneeIds(value);
             }
         }
 
@@ -2118,6 +2289,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return involvedUser;
             }
+            set
+            {
+                SetTaskInvolvedUser(value);
+            }
         }
 
         public virtual IList<string> InvolvedGroups
@@ -2125,6 +2300,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return involvedGroups;
+            }
+            set
+            {
+                SetTaskInvolvedGroupsIn(value);
             }
         }
 
@@ -2134,6 +2313,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return owner;
             }
+            set
+            {
+                SetTaskOwner(value);
+            }
         }
 
         public virtual string OwnerLike
@@ -2141,6 +2324,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return ownerLike;
+            }
+            set
+            {
+                SetTaskOwnerLike(value);
             }
         }
 
@@ -2150,6 +2337,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return category;
             }
+            set
+            {
+                SetTaskCategory(value);
+            }
         }
 
         public virtual string ProcessDefinitionKeyLike
@@ -2157,6 +2348,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return _processDefinitionKeyLike;
+            }
+            set
+            {
+                SetProcessDefinitionKeyLike(value);
             }
         }
 
@@ -2166,6 +2361,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return processDefinitionKeys;
             }
+            set
+            {
+                SetProcessDefinitionKeyIn(value);
+            }
         }
 
         public virtual string ProcessDefinitionNameLike
@@ -2173,6 +2372,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return _processDefinitionNameLike;
+            }
+            set
+            {
+                SetProcessDefinitionNameLike(value);
             }
         }
 
@@ -2182,6 +2385,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return processCategoryInList;
             }
+            set
+            {
+                SetProcessCategoryIn(value);
+            }
         }
 
         public virtual IList<string> ProcessCategoryNotInList
@@ -2189,6 +2396,11 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return processCategoryNotInList;
+            }
+
+            set
+            {
+                SetProcessCategoryNotIn(value);
             }
         }
 
@@ -2198,6 +2410,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return _deploymentId;
             }
+            set
+            {
+                SetDeploymentId(value);
+            }
         }
 
         public virtual IList<string> DeploymentIds
@@ -2205,6 +2421,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return deploymentIds;
+            }
+            set
+            {
+                SetDeploymentIdIn(value);
             }
         }
 
@@ -2214,6 +2434,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return _processInstanceBusinessKeyLike;
             }
+            set
+            {
+                SetProcessInstanceBusinessKeyLike(value);
+            }
         }
 
         public virtual DateTime? DueDate
@@ -2221,6 +2445,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return _dueDate;
+            }
+            set
+            {
+                SetTaskDueDate(value);
             }
         }
 
@@ -2230,6 +2458,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return _dueBefore;
             }
+            set
+            {
+                SetTaskDueBefore(value);
+            }
         }
 
         public virtual DateTime? DueAfter
@@ -2238,6 +2470,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return _dueAfter;
             }
+            set
+            {
+                SetTaskDueAfter(value);
+            }
         }
 
         public virtual bool WithoutDueDate
@@ -2245,6 +2481,17 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return _withoutDueDate;
+            }
+            set
+            {
+                if (value)
+                {
+                    SetWithoutDueDate();
+                }
+                else
+                {
+                    _withoutDueDate = false;
+                }
             }
         }
 
@@ -2262,6 +2509,17 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return _includeTaskLocalVariables;
             }
+            set
+            {
+                if (value)
+                {
+                    SetIncludeTaskLocalVariables();
+                }
+                else
+                {
+                    _includeTaskLocalVariables = false;
+                }
+            }
         }
 
         public virtual bool IncludeProcessVariables
@@ -2269,6 +2527,17 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return _includeProcessVariables;
+            }
+            set
+            {
+                if (value)
+                {
+                    SetIncludeProcessVariables();
+                }
+                else
+                {
+                    _includeProcessVariables = false;
+                }
             }
         }
 
@@ -2286,6 +2555,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return nameLikeIgnoreCase;
             }
+            set
+            {
+                SetTaskNameLikeIgnoreCase(value);
+            }
         }
 
         public virtual string DescriptionLikeIgnoreCase
@@ -2293,6 +2566,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return descriptionLikeIgnoreCase;
+            }
+            set
+            {
+                SetTaskDescriptionLikeIgnoreCase(value);
             }
         }
 
@@ -2302,6 +2579,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return assigneeLikeIgnoreCase;
             }
+            set
+            {
+                SetTaskAssigneeLikeIgnoreCase(value);
+            }
         }
 
         public virtual string OwnerLikeIgnoreCase
@@ -2309,6 +2590,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return ownerLikeIgnoreCase;
+            }
+            set
+            {
+                SetTaskOwnerLikeIgnoreCase(value);
             }
         }
 
@@ -2318,6 +2603,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return _processInstanceBusinessKeyLikeIgnoreCase;
             }
+            set
+            {
+                SetProcessInstanceBusinessKeyLikeIgnoreCase(value);
+            }
         }
 
         public virtual string ProcessDefinitionKeyLikeIgnoreCase
@@ -2325,6 +2614,10 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return _processDefinitionKeyLikeIgnoreCase;
+            }
+            set
+            {
+                SetProcessDefinitionKeyLikeIgnoreCase(value);
             }
         }
 
@@ -2334,6 +2627,10 @@ namespace Sys.Workflow.Engine.Impl
             {
                 return _locale;
             }
+            set
+            {
+                SetLocale(value);
+            }
         }
 
         public virtual bool OrActive
@@ -2341,6 +2638,17 @@ namespace Sys.Workflow.Engine.Impl
             get
             {
                 return orActive;
+            }
+            set
+            {
+                if (value)
+                {
+                    Or();
+                }
+                else
+                {
+                    orActive = false;
+                }
             }
         }
 
@@ -2355,6 +2663,11 @@ namespace Sys.Workflow.Engine.Impl
         }
 
         public virtual bool? IsRuntime
+        {
+            get; set;
+        }
+
+        public virtual bool IsTaskBusinessKey
         {
             get; set;
         }

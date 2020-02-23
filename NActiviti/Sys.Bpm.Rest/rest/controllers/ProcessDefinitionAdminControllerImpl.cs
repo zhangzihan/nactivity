@@ -30,6 +30,7 @@ using Sys.Workflow.Expressions;
 using System.Reflection;
 using System.Linq;
 using Sys.Expressions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 {
@@ -37,7 +38,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
     /// <inheritdoc />
     [Route(WorkflowConstants.PROC_ADMIN_DEF_ROUTER_V1)]
     [ApiController]
-    public class ProcessDefinitionAdminControllerImpl : ControllerBase, IProcessDefinitionAdminController
+    public class ProcessDefinitionAdminControllerImpl : WorkflowController, IProcessDefinitionAdminController
     {
         private readonly ProcessDefinitionResourceAssembler resourceAssembler;
 
@@ -90,8 +91,8 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
                     using (FileStream stream = System.IO.File.Open(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
                     {
-                        await file.CopyToAsync(stream);
-                        await stream.FlushAsync();
+                        await file.CopyToAsync(stream).ConfigureAwait(false);
+                        await stream.FlushAsync().ConfigureAwait(false);
                     }
 
                     Assembly assembly = Assembly.LoadFrom(fileName);

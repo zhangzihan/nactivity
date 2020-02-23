@@ -24,6 +24,7 @@
 
   <ParameterMap Id="insupVariableInstance">
     <Parameter Property="(Items_)?byteArrayRef(_p\d)?" TypeHandler="二进制引用" />
+    <Parameter Property="(Items_)?type(_p\d)?" TypeHandler="变量类型" />
   </ParameterMap>
 
   <!-- VARIABLE INSTANCE INSERT -->
@@ -55,7 +56,7 @@
     <For Property="Items" Key="p" Separator=",">
       (#{id},
       1,
-      #{typeName},
+      #{type},
       #{name},
       #{processInstanceId},
       #{executionId},

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +23,20 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 
         public override bool IsRetained(IExecutionEntity executionEntity, object parameter)
         {
-            IDictionary<string, object> paramMap = (IDictionary<string, object>)parameter ?? new Dictionary<string, object>();
-            paramMap.TryGetValue("activityId", out object activityId);
-            paramMap.TryGetValue("processInstanceId", out object processInstanceId);
+            if (parameter is null)
+            {
+                return false;
+            }
 
-            return executionEntity.ProcessInstanceId != null &&
-                string.Compare(executionEntity.ProcessInstanceId, processInstanceId?.ToString(), true) == 0 &&
+            JToken @params = JToken.FromObject(parameter);
+            string processInstanceId = @params[nameof(processInstanceId)]?.ToString();
+            string activityId = @params[nameof(activityId)]?.ToString();
+
+            return executionEntity.ProcessInstanceId is object &&
+                executionEntity.ProcessInstanceId.Equals(processInstanceId, System.StringComparison.OrdinalIgnoreCase) &&
                 !executionEntity.IsActive &&
-                executionEntity.ActivityId != null &&
-                string.Compare(executionEntity.ActivityId, activityId?.ToString(), true) == 0;
+                executionEntity.ActivityId is object &&
+                executionEntity.ActivityId.Equals(activityId, System.StringComparison.OrdinalIgnoreCase);
         }
-
     }
 }

@@ -91,7 +91,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
 
                 if (historicProcessInstance != null)
                 {
-                    historicProcessInstance.markEnded(deleteReason);
+                    historicProcessInstance.MarkEnded(deleteReason);
                     historicProcessInstance.EndActivityId = activityId;
 
                     // Fire event
@@ -228,7 +228,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 IHistoricActivityInstanceEntity historicActivityInstance = FindActivityInstance(executionEntity, false, true);
                 if (historicActivityInstance != null)
                 {
-                    historicActivityInstance.markEnded(deleteReason);
+                    historicActivityInstance.MarkEnded(deleteReason);
 
                     // Fire event
                     IActivitiEventDispatcher activitiEventDispatcher = EventDispatcher;
@@ -462,7 +462,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
                 if (historicTaskInstance != null)
                 {
-                    historicTaskInstance.markEnded(deleteReason);
+                    historicTaskInstance.MarkEnded(deleteReason);
                 }
             }
         }

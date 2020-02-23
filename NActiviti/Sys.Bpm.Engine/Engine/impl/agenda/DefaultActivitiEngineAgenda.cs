@@ -123,7 +123,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         /// <param name="execution"></param>
         public virtual void PlanContinueProcessInCompensation(IExecutionEntity execution)
         {
-            PlanOperation(new ContinueProcessOperation(commandContext, execution, false, true));
+            PlanOperation(new ContinueProcessInCompensationOperation(commandContext, execution, false, true));
         }
 
         /// <summary>

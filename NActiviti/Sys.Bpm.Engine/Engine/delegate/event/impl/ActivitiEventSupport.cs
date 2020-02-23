@@ -3,6 +3,7 @@ using Sys.Workflow;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +96,8 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
             // Call global listeners
             if (eventListeners.Count > 0)
             {
-                foreach (IActivitiEventListener listener in eventListeners)
+                var listeners = eventListeners.ToArray();
+                foreach (IActivitiEventListener listener in listeners)
                 {
                     DispatchEvent(@event, listener);
                 }
@@ -105,7 +107,8 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
             typedListeners.TryGetValue(@event.Type, out IList<IActivitiEventListener> typed);
             if (typed != null && typed.Count > 0)
             {
-                foreach (IActivitiEventListener listener in typed)
+                var listeners = typed.ToArray();
+                foreach (IActivitiEventListener listener in listeners)
                 {
                     DispatchEvent(@event, listener);
                 }

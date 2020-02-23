@@ -20,6 +20,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,7 +43,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
     /// <inheritdoc />
     [Route(WorkflowConstants.TASK_ROUTER_V1)]
     [ApiController]
-    public class TaskControllerImpl : ControllerBase, ITaskController
+    public class TaskControllerImpl : WorkflowController, ITaskController
     {
         private readonly ProcessEngineWrapper processEngine;
 
@@ -159,30 +160,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         [HttpPost("complete")]
         public virtual Task<bool> CompleteTask([FromBody]CompleteTaskCmd completeTaskCmd)
         {
-            Http400 http400 = null;
-            try
-            {
-                processEngine.CompleteTask(completeTaskCmd);
-
-            }
-            catch (Exception ex)
-            {
-                if (http400 is null)
-                {
-                    http400 = new Http400();
-                }
-                http400.Code = "completeTask[]";
-                http400.Message = ex.Message;
-                http400.Details.Add(new HttpException
-                {
-                    Message = ex.Message
-                });
-            }
-
-            if (http400 is null == false)
-            {
-                throw new Http400Exception(http400, null);
-            }
+            processEngine.CompleteTask(completeTaskCmd);
 
             return Task.FromResult(true);
         }

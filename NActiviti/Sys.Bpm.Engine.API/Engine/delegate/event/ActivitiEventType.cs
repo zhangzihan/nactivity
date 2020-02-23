@@ -222,7 +222,7 @@ namespace Sys.Workflow.Engine.Delegate.Events
         /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
         /// result of the task completion. In that case, a <seealso cref="ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
         /// </summary>
-        public static readonly ActivitiEventType TASK_TRANSFERED = new ActivitiEventType("TASK_TERMINATED", InnerEnum.TASK_TRANSFERED); 
+        public static readonly ActivitiEventType TASK_TRANSFERED = new ActivitiEventType("TASK_TERMINATED", InnerEnum.TASK_TRANSFERED);
 
         /// <summary>
         /// A process instance has been started. Dispatched when starting a process instance previously created. The event
@@ -284,6 +284,8 @@ namespace Sys.Workflow.Engine.Delegate.Events
         /// </summary>
         public static readonly ActivitiEventType MEMBERSHIPS_DELETED = new ActivitiEventType("MEMBERSHIPS_DELETED", InnerEnum.MEMBERSHIPS_DELETED);
 
+        public static readonly ActivitiEventType DEBUG_LOGGER = new ActivitiEventType("DEBUG_LOGGER", InnerEnum.DEBUG_LOGGER);
+
         private static readonly IList<ActivitiEventType> valueList = new List<ActivitiEventType>();
 
         static ActivitiEventType()
@@ -332,6 +334,7 @@ namespace Sys.Workflow.Engine.Delegate.Events
             valueList.Add(MEMBERSHIP_CREATED);
             valueList.Add(MEMBERSHIP_DELETED);
             valueList.Add(MEMBERSHIPS_DELETED);
+            valueList.Add(DEBUG_LOGGER);
         }
 
         public enum InnerEnum
@@ -380,7 +383,8 @@ namespace Sys.Workflow.Engine.Delegate.Events
             HISTORIC_PROCESS_INSTANCE_ENDED,
             MEMBERSHIP_CREATED,
             MEMBERSHIP_DELETED,
-            MEMBERSHIPS_DELETED
+            MEMBERSHIPS_DELETED,
+            DEBUG_LOGGER
         }
 
         public readonly InnerEnum innerEnumValue;

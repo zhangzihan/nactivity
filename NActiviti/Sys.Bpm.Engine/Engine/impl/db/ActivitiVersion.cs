@@ -78,7 +78,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         public override int GetHashCode()
         {
-            return alternativeVersionStrings.Sum(x => x.GetHashCode()) >> 2;
+            return alternativeVersionStrings.Sum(x => x.GetHashCode()) << 2;
         }
 
         /// <summary>

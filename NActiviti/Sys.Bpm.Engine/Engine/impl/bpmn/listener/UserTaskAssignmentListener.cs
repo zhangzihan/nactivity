@@ -35,7 +35,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
             //IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
-            //user = AsyncHelper.RunSync(() => userService.GetUser(assignee));
+            //user = userService.GetUser(assignee).GetAwaiter().GetResult();
             //if (user == null)
             //{
             //    logger.LogError($"找不到执行人{assignee}");

@@ -22,7 +22,8 @@ namespace Sys.Data
         static DataSource()
         {
             dbTypes.TryAdd("System.Data.SqlClient", "System.Data.SqlClient.SqlClientFactory,System.Data.SqlClient");
-            dbTypes.TryAdd("MySql", "MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data");
+            dbTypes.TryAdd("MySql", "MySql.Data.MySqlClient.MySqlClientFactory,MySqlConnector");
+            dbTypes.TryAdd("Npgsql", "Npgsql.NpgsqlFactory,Npgsql");
             dbTypes.TryAdd("H2Sql", "System.Data.H2.H2ClientFactory,H2Sharp");
         }
 

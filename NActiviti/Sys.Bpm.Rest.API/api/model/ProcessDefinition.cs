@@ -189,5 +189,10 @@ namespace Sys.Workflow.Cloud.Services.Api.Model
             get => tenantId;
             set => tenantId = value;
         }
+
+        public override string ToString()
+        {
+            return $"Key={key} Name={name} Version={version} Id={id} TenantId={tenantId}";
+        }
     }
 }

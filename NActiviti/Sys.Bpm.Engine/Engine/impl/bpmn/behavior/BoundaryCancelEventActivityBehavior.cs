@@ -31,6 +31,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         private const long serialVersionUID = 1L;
 
+        public override void Execute(IExecutionEntity execution)
+        {
+            base.Execute(execution);
+        }
+
+
         public override void Trigger(IExecutionEntity execution, string triggerName, object triggerData, bool throwError = true)
         {
             BoundaryEvent boundaryEvent = (BoundaryEvent)execution.CurrentFlowElement;
@@ -64,6 +70,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
             else
             {
+                Leave(execution);
 
                 string deleteReason = History.DeleteReasonFields.BOUNDARY_EVENT_INTERRUPTING + "(" + boundaryEvent.Id + ")";
 
@@ -85,7 +92,6 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                         }
                     }
                 }
-                Leave(execution);
             }
         }
     }

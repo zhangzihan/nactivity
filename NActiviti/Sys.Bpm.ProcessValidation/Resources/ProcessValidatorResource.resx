@@ -228,6 +228,9 @@
   <data name="PROCESS_DEFINITION_DOCUMENTATION_TOO_LONG" xml:space="preserve">
     <value>流程备注长度不能大于{0}</value>
   </data>
+  <data name="PROCESS_DEFINITION_ID_NOTSUPPORT_IDENTIFIER" xml:space="preserve">
+    <value>不支持的流程ID‘{0}’,只支持字母数字下划线且必须字母或下划线开头.</value>
+  </data>
   <data name="PROCESS_DEFINITION_ID_TOO_LONG" xml:space="preserve">
     <value>必须填写流程ID,并且长度不能大于{0}</value>
   </data>

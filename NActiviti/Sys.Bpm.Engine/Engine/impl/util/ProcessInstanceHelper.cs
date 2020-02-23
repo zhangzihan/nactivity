@@ -25,24 +25,32 @@ namespace Sys.Workflow.Engine.Impl.Util
     using Sys.Workflow.Engine.Runtime;
     using Sys.Workflow.Services.Api.Commands;
 
-
+    /// <summary>
     /// 
-    /// 
+    /// </summary>
     public class ProcessInstanceHelper
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IProcessInstance CreateProcessInstance(IProcessDefinitionEntity processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
         {
 
             return CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables, false);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IProcessInstance CreateAndStartProcessInstance(IProcessDefinition processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, string initialFlowElementId = null)
         {
 
             return CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables, true, initialFlowElementId);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual IProcessInstance CreateAndStartProcessInstance(IProcessDefinition processDefinition, string businessKey, string processInstanceName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, bool startProcessInstance, string initialFlowElementId = null)
         {
             // Todo: ideally, context should be passed here
@@ -70,6 +78,9 @@ namespace Sys.Workflow.Engine.Impl.Util
             return CreateAndStartProcessInstanceWithInitialFlowElement(processDefinition, businessKey, processInstanceName, initialFlowElement, process, variables, transientVariables, startProcessInstance);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IProcessInstance CreateAndStartProcessInstanceByMessage(IProcessDefinition processDefinition, string messageName, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
         {
             _ = Context.CommandContext;
@@ -110,6 +121,9 @@ namespace Sys.Workflow.Engine.Impl.Util
             return CreateAndStartProcessInstanceWithInitialFlowElement(processDefinition, null, null, initialFlowElement, process, variables, transientVariables, true);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IProcessInstance CreateAndStartProcessInstanceWithInitialFlowElement(IProcessDefinition processDefinition, string businessKey, string processInstanceName, FlowElement initialFlowElement, Process process, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, bool startProcessInstance)
         {
 
@@ -175,6 +189,9 @@ namespace Sys.Workflow.Engine.Impl.Util
             return processInstance;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void StartProcessInstance(IExecutionEntity processInstance, ICommandContext commandContext, IDictionary<string, object> variables)
         {
 
@@ -227,6 +244,9 @@ namespace Sys.Workflow.Engine.Impl.Util
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual IDictionary<string, object> ProcessDataObjects(ICollection<ValuedDataObject> dataObjects)
         {
             IDictionary<string, object> variablesMap = new Dictionary<string, object>();

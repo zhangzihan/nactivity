@@ -2363,25 +2363,33 @@ namespace Spring.Objects.Factory.Support
         /// <summary>
         /// Destroy all cached singletons in this factory.
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
         {
-            if (log.IsEnabled(LogLevel.Debug))
-            {
-                log.LogDebug(string.Format("Destroying singletons in factory [{0}].", this));
-            }
+            Dispose(true);
+        }
 
-            prototypesInCreation.Dispose();
-
-            lock (singletonCache)
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                // copy the keys into a new set, 'cos we are going to modifying the
-                // original collection (_singletonCache) as we destroy each singleton.
-                // we also want to traverse the keys in reverse order to destroy correctly
-                ArrayList keys = new ArrayList(singletonCache.Keys);
-                keys.Reverse();
-                foreach (string name in keys)
+                if (log.IsEnabled(LogLevel.Debug))
                 {
-                    DestroySingleton(name);
+                    log.LogDebug(string.Format("Destroying singletons in factory [{0}].", this));
+                }
+
+                prototypesInCreation.Dispose();
+
+                lock (singletonCache)
+                {
+                    // copy the keys into a new set, 'cos we are going to modifying the
+                    // original collection (_singletonCache) as we destroy each singleton.
+                    // we also want to traverse the keys in reverse order to destroy correctly
+                    ArrayList keys = new ArrayList(singletonCache.Keys);
+                    keys.Reverse();
+                    foreach (string name in keys)
+                    {
+                        DestroySingleton(name);
+                    }
                 }
             }
         }

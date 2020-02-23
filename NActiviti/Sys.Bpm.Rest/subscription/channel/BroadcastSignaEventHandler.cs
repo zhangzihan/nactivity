@@ -18,6 +18,18 @@ namespace Sys.Workflow.Services.Subscription.Channels
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="resolver"></param>
+        /// <param name="runtimeService"></param>
+        public BroadcastSignaEventHandler(IBinderAwareChannelResolver resolver,
+            IRuntimeService runtimeService)
+        {
+            this.resolver = resolver;
+            this.runtimeService = runtimeService;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="signalCmd"></param>
         public virtual void Receive(SignalCmd signalCmd)
         {

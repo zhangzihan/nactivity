@@ -19,4 +19,20 @@
     <ProjectReference Include="..\Sys.Bpm.Rest.API\Sys.Bpm.Rest.API.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="ProcessValidatorResource.Designer.cs">
+      <DependentUpon>ProcessValidatorResource.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="ProcessValidatorResource.resx">
+      <CustomToolNamespace>Sys.Workflow.Validation</CustomToolNamespace>
+      <LastGenOutput>ProcessValidatorResource.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

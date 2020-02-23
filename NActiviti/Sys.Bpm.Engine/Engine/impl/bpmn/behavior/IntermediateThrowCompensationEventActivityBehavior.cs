@@ -56,48 +56,60 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             ICommandContext commandContext = Context.CommandContext;
             IEventSubscriptionEntityManager eventSubscriptionEntityManager = commandContext.EventSubscriptionEntityManager;
 
-            IList<ICompensateEventSubscriptionEntity> eventSubscriptions = new List<ICompensateEventSubscriptionEntity>();
+            List<ICompensateEventSubscriptionEntity> eventSubscriptions = new List<ICompensateEventSubscriptionEntity>();
             if (!string.IsNullOrWhiteSpace(activityRef))
             {
                 // If an activity ref is provided, only that activity is compensated
-                ((List<ICompensateEventSubscriptionEntity>)eventSubscriptions).AddRange(eventSubscriptionEntityManager.FindCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(execution.ProcessInstanceId, activityRef));
+                eventSubscriptions.AddRange(eventSubscriptionEntityManager.FindCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(execution.ProcessInstanceId, activityRef));
             }
             else
             {
+                eventSubscriptions.AddRange(eventSubscriptionEntityManager.FindCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(execution.ProcessInstanceId, null));
+
                 // If no activity ref is provided, it is broadcast to the current sub process / process instance
-                Process process = ProcessDefinitionUtil.GetProcess(execution.ProcessDefinitionId);
+                //IFlowElementsContainer process = ProcessDefinitionUtil.GetProcess(execution.ProcessDefinitionId);
 
-                IFlowElementsContainer flowElementsContainer;
-                if (throwEvent.SubProcess == null)
-                {
-                    flowElementsContainer = process;
-                }
-                else
-                {
-                    flowElementsContainer = throwEvent.SubProcess;
-                }
+                //IFlowElementsContainer flowElementsContainer;
+                //if (throwEvent.SubProcess == null)
+                //{
+                //    flowElementsContainer = process;
+                //}
+                //else
+                //{
+                //    flowElementsContainer = throwEvent.SubProcess;
+                //}
 
-                foreach (FlowElement flowElement in flowElementsContainer.FlowElements)
-                {
-                    if (flowElement is Activity)
-                    {
-                        ((List<ICompensateEventSubscriptionEntity>)eventSubscriptions).AddRange(eventSubscriptionEntityManager.FindCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(execution.ProcessInstanceId, flowElement.Id));
-                    }
-                }
+                ////if (flowElementsContainer != process)
+                ////{
+                ////    foreach (FlowElement flowElement in process.FlowElements)
+                ////    {
+                ////        if (flowElement is Activity)
+                ////        {
+                ////            IList<ICompensateEventSubscriptionEntity> compensateEvents = eventSubscriptionEntityManager.FindCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(execution.ProcessInstanceId, flowElement.Id);
 
+                ////            eventSubscriptions.AddRange(compensateEvents);
+                ////        }
+                ////    }
+                ////}
+
+                //foreach (FlowElement flowElement in flowElementsContainer.FlowElements)
+                //{
+                //    if (flowElement is Activity)
+                //    {
+                //        IList<ICompensateEventSubscriptionEntity> compensateEvents = eventSubscriptionEntityManager.FindCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(execution.ProcessInstanceId, flowElement.Id);
+
+                //        eventSubscriptions.AddRange(compensateEvents);
+                //    }
+                //}
             }
 
-            if (eventSubscriptions.Count == 0)
-            {
-                Leave(execution);
-            }
-            else
+            Leave(execution);
+
+            if (eventSubscriptions.Count > 0)
             {
                 // TODO: implement async (waitForCompletion=false in bpmn)
                 ScopeUtil.ThrowCompensationEvent(eventSubscriptions, execution, false);
-                Leave(execution);
             }
         }
     }
-
 }

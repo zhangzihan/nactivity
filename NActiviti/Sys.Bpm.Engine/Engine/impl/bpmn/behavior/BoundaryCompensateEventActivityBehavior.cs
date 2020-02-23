@@ -93,6 +93,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
 
             Context.CommandContext.EventSubscriptionEntityManager.InsertCompensationEvent(scopeExecution, compensationActivity.Id);
+
+            //TODO: 观察一下Compenstion execution删除后有无问题
+            Context.CommandContext.ExecutionEntityManager.Delete(execution);
         }
 
         public override void Trigger(IExecutionEntity execution, string triggerName, object triggerData, bool throwError = true)

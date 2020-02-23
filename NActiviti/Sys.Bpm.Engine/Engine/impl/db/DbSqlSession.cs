@@ -40,6 +40,99 @@ namespace Sys.Workflow.Engine.Impl.DB
     /// 
     public class DbSqlSession : ISession
     {
+        protected internal class DataObject
+        {
+            private Dictionary<string, IEntity> objects = new Dictionary<string, IEntity>();
+
+            public IEntity this[string item]
+            {
+                get
+                {
+                    return objects[item];
+                }
+                set
+                {
+                    objects[item] = value;
+                }
+            }
+
+            public ICollection<IEntity> Values
+            {
+                get
+                {
+                    return objects.Values;
+                }
+            }
+
+            public ICollection<string> Keys
+            {
+                get
+                {
+                    return objects.Keys;
+                }
+            }
+
+            public bool ContainsKey(string key)
+            {
+                return objects.ContainsKey(key);
+            }
+
+            public bool Remove(string key)
+            {
+                return objects.Remove(key);
+            }
+        }
+
+        protected internal class DataObjects
+        {
+            private ConcurrentDictionary<Type, DataObject> objects = new ConcurrentDictionary<Type, DataObject>();
+
+            public DataObject GetOrAdd(Type clazz, DataObject datas)
+            {
+                string name = clazz.Name;
+                return objects.GetOrAdd(clazz, datas);
+            }
+
+            public bool TryGetValue(Type clazz, out DataObject hisValues)
+            {
+                return objects.TryGetValue(clazz, out hisValues);
+            }
+
+            public bool TryRemove(Type clazz, out DataObject value)
+            {
+                return objects.TryRemove(clazz, out value);
+            }
+
+            public ICollection<Type> Keys
+            {
+                get
+                {
+                    return objects.Keys;
+                }
+            }
+
+            public ICollection<DataObject> Values
+            {
+                get
+                {
+                    return objects.Values;
+                }
+            }
+
+            public void Clear()
+            {
+                objects.Clear();
+            }
+
+            public int Count
+            {
+                get
+                {
+                    return objects.Count;
+                }
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -140,7 +233,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             }
 
             Type clazz = managedType ?? entity.GetType();
-            Dictionary<string, IEntity> insObjs = insertedObjects.GetOrAdd(clazz, new Dictionary<string, IEntity>());
+            var insObjs = insertedObjects.GetOrAdd(clazz, new Dictionary<string, IEntity>());
             insObjs[entity.Id] = entity;
             entityCache.Put(entity, false); // False -> entity is inserted, so always changed
             entity.Inserted = true;
@@ -443,7 +536,6 @@ namespace Sys.Workflow.Engine.Impl.DB
 
         // flush
         // ////////////////////////////////////////////////////////////////////
-        private readonly object syncFlush = new object();
         /// <summary>
         /// 
         /// </summary>
@@ -476,8 +568,8 @@ namespace Sys.Workflow.Engine.Impl.DB
                 return;
             }
 
-            if (insertedObjects.TryGetValue(typeof(HistoricIdentityLinkEntityImpl), out Dictionary<string, IEntity> hisValues) &&
-                insertedObjects.TryGetValue(typeof(IdentityLinkEntityImpl), out Dictionary<string, IEntity> values))
+            if (insertedObjects.TryGetValue(typeof(HistoricIdentityLinkEntityImpl), out var hisValues) &&
+                insertedObjects.TryGetValue(typeof(IdentityLinkEntityImpl), out var values))
             {
                 for (int idx = values.Keys.Count - 1; idx >= 0; idx--)
                 {

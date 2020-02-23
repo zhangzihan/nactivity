@@ -31,7 +31,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
     {
         private const long serialVersionUID = 1L;
 
-        private object syncRoot = new object();
+        private readonly object syncRoot = new object();
 
         public ParallelMultiInstanceBehavior(Activity activity, AbstractBpmnActivityBehavior originalActivityBehavior) : base(activity, originalActivityBehavior)
         {

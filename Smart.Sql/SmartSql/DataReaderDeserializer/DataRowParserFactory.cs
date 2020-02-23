@@ -9,43 +9,36 @@ using System.Linq;
 using SmartSql.Abstractions;
 using SmartSql.Utils;
 using System.Globalization;
+using System.Collections.Concurrent;
 
 namespace SmartSql.DataReaderDeserializer
 {
     public class DataRowParserFactory
     {
-        private readonly IDictionary<string, Func<IDataReader, RequestContext, object>> _cachedDeserializer = new Dictionary<string, Func<IDataReader, RequestContext, object>>();
+        private readonly ConcurrentDictionary<string, Func<IDataReader, RequestContext, object>> _cachedDeserializer = new ConcurrentDictionary<string, Func<IDataReader, RequestContext, object>>();
 
         public DataRowParserFactory()
         {
         }
 
-        private object syncRoot = new object();
-
         public Func<IDataReader, RequestContext, object> GetParser(IDataReader dataReader, RequestContext requestContext, Type targetType)
         {
             string key = $"{requestContext.FullSqlId}_{targetType.GUID.ToString("N")}";
-            if (!_cachedDeserializer.ContainsKey(key))
+            if (_cachedDeserializer.TryGetValue(key, out var deser) == false)
             {
-                lock (syncRoot)
+                if (targetType.IsValueType || targetType == TypeUtils.StringType)
                 {
-                    if (!_cachedDeserializer.ContainsKey(key))
-                    {
-                        Func<IDataReader, RequestContext, object> deser = null;
-                        if (targetType.IsValueType || targetType == TypeUtils.StringType)
-                        {
-                            deser = CreateValueTypeParserImpl(dataReader, requestContext, targetType);
-                        }
-                        else
-                        {
-                            deser = CreateParserImpl(dataReader, requestContext, targetType);
-                        }
-                        _cachedDeserializer.Add(key, deser);
-                    }
+                    deser = CreateValueTypeParserImpl(dataReader, requestContext, targetType);
                 }
+                else
+                {
+                    deser = CreateParserImpl(dataReader, requestContext, targetType);
+                }
+                _cachedDeserializer.AddOrUpdate(key, deser, (k, old) => deser);
             }
-            return _cachedDeserializer[key];
+            return deser;
         }
+
         private MethodInfo GetRealValueMethod(Type valueType)
         {
             var typeCode = Type.GetTypeCode(valueType);
@@ -132,11 +125,17 @@ namespace SmartSql.DataReaderDeserializer
 
         private Func<IDataReader, RequestContext, object> CreateParserImpl(IDataReader dataReader, RequestContext context, Type targetType)
         {
-            var dynamicMethod = new DynamicMethod("Deserialize" + Guid.NewGuid().ToString("N"), targetType, new[] { TypeUtils.DataReaderType, TypeUtils.RequestContextType }, targetType, true);
+            var dynamicMethod = new DynamicMethod(
+                "Deserialize" + Guid.NewGuid().ToString("N"),
+                targetType,
+                new[] { TypeUtils.DataReaderType, TypeUtils.RequestContextType },
+                targetType,
+                true);
             var iLGenerator = dynamicMethod.GetILGenerator();
             iLGenerator.DeclareLocal(targetType);
 
-            var targetCtor = targetType.GetConstructor(Type.EmptyTypes);
+            var targetCtor = targetType.GetConstructor(
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
             iLGenerator.Emit(OpCodes.Newobj, targetCtor); // [target]
             iLGenerator.Emit(OpCodes.Stloc_0);
 
@@ -147,7 +146,7 @@ namespace SmartSql.DataReaderDeserializer
             foreach (var colName in columnNames)
             {
                 colIndex++;
-                var result = context.Statement?.ResultMap?.Results?.FirstOrDefault(r => r.Column == colName);
+                var result = context.Statement?.ResultMap?.Results?.FirstOrDefault(r => string.Compare(r.Column, colName, true) == 0);
                 bool hasTypeHandler = result?.Handler != null;
                 string propertyName = result != null ? result.Property : colName;
                 var property = properties.FirstOrDefault(x => string.Compare(x.Name, propertyName, true) == 0);
@@ -160,7 +159,6 @@ namespace SmartSql.DataReaderDeserializer
 
                 Label isDbNullLabel = iLGenerator.DefineLabel();
 
-
                 if (hasTypeHandler)
                 {
                     iLGenerator.Emit(OpCodes.Ldloc_0);// [target]
@@ -169,10 +167,6 @@ namespace SmartSql.DataReaderDeserializer
                     {
                         iLGenerator.Emit(OpCodes.Unbox_Any, propertyType);
                     }
-                    //else
-                    //{
-                    //    iLGenerator.Emit(OpCodes.Castclass, propertyType);
-                    //}
                 }
                 else
                 {
@@ -183,7 +177,7 @@ namespace SmartSql.DataReaderDeserializer
                     {
                         iLGenerator.Emit(OpCodes.Ldarg_0);// [dataReader]
                         EmitUtils.LoadInt32(iLGenerator, colIndex);// [dataReader][index]
-                        iLGenerator.Emit(OpCodes.Call, TypeUtils.IsDBNullMethod);//[isDbNull-value]
+                        iLGenerator.Emit(OpCodes.Callvirt, TypeUtils.IsDBNullMethod);//[isDbNull-value]
                         iLGenerator.Emit(OpCodes.Brtrue, isDbNullLabel);//[empty]
                     }
 
@@ -200,11 +194,11 @@ namespace SmartSql.DataReaderDeserializer
                     EmitUtils.LoadInt32(iLGenerator, colIndex);// [dataReader][index]
                     if (getRealValueMethod != null)
                     {
-                        iLGenerator.Emit(OpCodes.Call, getRealValueMethod);//[prop-value]
+                        iLGenerator.Emit(OpCodes.Callvirt, getRealValueMethod);//[prop-value]
                     }
                     else
                     {
-                        iLGenerator.Emit(OpCodes.Call, TypeUtils.GetValueMethod_DataRecord);//[prop-value]
+                        iLGenerator.Emit(OpCodes.Callvirt, TypeUtils.GetValueMethod_DataRecord);//[prop-value]
                         if (fieldType.IsValueType)
                         {
                             iLGenerator.Emit(OpCodes.Unbox_Any, fieldType);
@@ -236,8 +230,7 @@ namespace SmartSql.DataReaderDeserializer
             iLGenerator.Emit(OpCodes.Ldloc_0);// stack is [rval]
             iLGenerator.Emit(OpCodes.Ret);
 
-            var funcType = System.Linq.Expressions.Expression.GetFuncType(TypeUtils.DataReaderType, TypeUtils.RequestContextType, targetType);
-            return (Func<IDataReader, RequestContext, object>)dynamicMethod.CreateDelegate(funcType);
+            return dynamicMethod.CreateDelegate(typeof(Func<IDataReader, RequestContext, object>)) as Func<IDataReader, RequestContext, object>;
         }
 
         private static readonly MethodInfo _getResultTypeHandlerMethod = TypeUtils.RequestContextType.GetMethod("GetResultTypeHandler");
@@ -245,11 +238,11 @@ namespace SmartSql.DataReaderDeserializer
         {
             iLGenerator.Emit(OpCodes.Ldarg_1);// [RequestContext]
             iLGenerator.Emit(OpCodes.Ldstr, propertyName);// [RequestContext][propertyName]
-            iLGenerator.Emit(OpCodes.Call, _getResultTypeHandlerMethod);//[ITypeHandler]
+            iLGenerator.Emit(OpCodes.Callvirt, _getResultTypeHandlerMethod);//[ITypeHandler]
             iLGenerator.Emit(OpCodes.Ldarg_0);//[typeHandler][dataReader]
             EmitUtils.LoadInt32(iLGenerator, colIndex);// [typeHandler][dataReader][index]
             EmitUtils.TypeOf(iLGenerator, propertyType);//[typeHandler][dataReader][index][propertyType]
-            iLGenerator.Emit(OpCodes.Call, TypeUtils.GetValueMethod_TypeHandler);// [property-Value]
+            iLGenerator.Emit(OpCodes.Callvirt, TypeUtils.GetValueMethod_TypeHandler);// [property-Value]
         }
 
         private void EmitConvertEnum(ILGenerator iLGenerator, Type valueType)
@@ -263,7 +256,7 @@ namespace SmartSql.DataReaderDeserializer
             {
                 enumConvertMethod = typeof(Enum).GetMethod("ToObject", new Type[] { TypeUtils.TypeType, valueType });
             }
-            iLGenerator.Emit(OpCodes.Call, enumConvertMethod);
+            iLGenerator.Emit(OpCodes.Callvirt, enumConvertMethod);
         }
     }
 

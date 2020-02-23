@@ -58,8 +58,9 @@ namespace SmartSql.Command
             {
                 dbCommand.CommandTimeout = 0;
                 return dbCommand.ExecuteScalar();
-             }, dbSession, context);
+            }, dbSession, context);
         }
+
         private T ExecuteWarp<T>(Func<IDbCommand, T> excute, IDbConnectionSession dbSession, RequestContext context)
         {
             var dbCommand = _preparedCommand.Prepare(dbSession, context);
@@ -73,6 +74,7 @@ namespace SmartSql.Command
             return result;
         }
         #endregion
+
         #region Async
         public Task<int> ExecuteNonQueryAsync(IDbConnectionSession dbSession, RequestContext context)
         {

@@ -143,7 +143,7 @@
   </Select>
 
   <Select  Id="selectSignalEventSubscriptionsByEventName" ResultMap="signalResultMap">
-    select *
+    select EVT.*
     from ACT_RU_EVENT_SUBSCR EVT
     left outer join ACT_RU_EXECUTION EXC on EVT.EXECUTION_ID_ = EXC.ID_
     where EVENT_TYPE_ = 'signal'
@@ -409,7 +409,7 @@
     )
     values
     <For Prepend="" Key="p" Open="" Close="" Property="Items" Separator=",">
-      (#{signalEventSubscription.id},
+      (#{id},
       1,
       #{eventType},
       #{eventName},

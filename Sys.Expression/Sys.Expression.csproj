@@ -7,6 +7,21 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
     <DocumentationFile>bin\Sys.Expression.xml</DocumentationFile>
+    <Product>Sys.Expression</Product>
+    <Description>Sys.Expression</Description>
+    <PackageId>Sys.Expression</PackageId>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <PackageReleaseNotes>Sys.Expression</PackageReleaseNotes>
+    <Version>1.0.0.1</Version>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <Company>Sys.Expression</Company>
+    <Authors>Sys.Expression</Authors>
+    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <NoWarn>1701;1702;CS1591;CS1574;CA1712;CA2235;CA2229</NoWarn>
   </PropertyGroup>
   
   <ItemGroup>

@@ -58,6 +58,13 @@ namespace Sys.Workflow.Engine.Tasks
         /// Only selects tasks which are active (ie. not suspended)
         /// </summary>
         ITaskQuery SetActive();
+
+        /// <summary>
+        /// 仅查询与任务关联的businessKey，子活动和子流程可以使用不同的businessKey
+        /// </summary>
+        /// <param name="isTaskBusinessKey"></param>
+        /// <returns></returns>
+        ITaskQuery SetIsTaskBusinessKey(bool isTaskBusinessKey);
     }
 
 }

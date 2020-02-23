@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-/* Licensed under the Apache License, Version 2.0 (the "License");
+﻿/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -16,14 +14,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
 {
     using Microsoft.Extensions.Caching.Memory;
     using Newtonsoft.Json.Linq;
+    using Sys.Workflow;
+    using Sys.Workflow.Caches;
     using Sys.Workflow.Engine.Impl.Contexts;
     using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
-    using Sys.Workflow;
-    using Sys.Workflow;
-    using Sys.Workflow.Caches;
     using System;
-    using System.Collections.Concurrent;
 
     /// <summary>
     /// Default cache: keep everything in memory, unless a limit is set.
@@ -35,6 +31,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
         private IMemoryCache cache;
         protected internal ICommandExecutor commandExecutor;
         private readonly int sizeLimit;
+        private readonly MemoryCacheProvider memoryCacheProvider;
 
         /// <summary>
         /// Cache with no limit </summary>
@@ -49,7 +46,8 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
             this.commandExecutor = commandExecutor;
             sizeLimit = limit;
 
-            cache = ProcessEngineServiceProvider.Resolve<MemoryCacheProvider>().Create(limit);
+            memoryCacheProvider = ProcessEngineServiceProvider.Resolve<MemoryCacheProvider>();
+            cache = memoryCacheProvider.Create(limit);
         }
 
         public virtual ProcessDefinitionInfoCacheObject Get(string processDefinitionId)
@@ -102,13 +100,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
         {
             cache.Dispose();
 
-            cache = ProcessEngineServiceProvider.Resolve<MemoryCacheProvider>().Create(sizeLimit);
-        }
-
-        // For testing purposes only
-        public virtual int Size()
-        {
-            return (cache as MemoryCache).Count;
+            cache = memoryCacheProvider.Create(sizeLimit);
         }
 
         protected internal virtual ProcessDefinitionInfoCacheObject RetrieveProcessDefinitionInfoCacheObject(string processDefinitionId, ICommandContext commandContext)

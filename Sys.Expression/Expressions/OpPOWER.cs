@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Spring.Util;
 
@@ -34,7 +35,7 @@ namespace Spring.Expressions
         /// <summary>
         /// Create a new instance
         /// </summary>
-        public OpPOWER():base()
+        public OpPOWER() : base()
         {
         }
 
@@ -45,7 +46,7 @@ namespace Spring.Expressions
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Returns a value for the arithmetic exponent operator node.
         /// </summary>
@@ -54,11 +55,27 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            object left = GetLeftValue( context, evalContext );
-            object right = GetRightValue( context, evalContext );
+            object left = GetLeftValue(context, evalContext);
+            object right = GetRightValue(context, evalContext);
 
             if (NumberUtils.IsNumber(left) && NumberUtils.IsNumber(right))
             {
+                return NumberUtils.Power(left, right);
+            }
+            else if (NumberUtils.IsNumber(left) && NumberUtils.TryConvertTo(ref right, ref left))
+            {
+                right = double.Parse(right.ToString());
+                return NumberUtils.Power(left, right);
+            }
+            else if (NumberUtils.IsNumber(right) && NumberUtils.TryConvertTo(ref left, ref right))
+            {
+                left = double.Parse(left.ToString());
+                return NumberUtils.Power(left, right);
+            }
+            else if (left is string && right is string)
+            {
+                left = double.Parse(left.ToString());
+                right = double.Parse(right.ToString());
                 return NumberUtils.Power(left, right);
             }
             else

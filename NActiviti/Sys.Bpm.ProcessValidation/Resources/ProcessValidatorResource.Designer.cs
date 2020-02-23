@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Sys.Workflow.Validation.Validators {
+namespace Sys.Workflow.Validation {
     using System;
     
     
@@ -390,6 +390,15 @@ namespace Sys.Workflow.Validation.Validators {
         internal static string PROCESS_DEFINITION_DOCUMENTATION_TOO_LONG {
             get {
                 return ResourceManager.GetString("PROCESS_DEFINITION_DOCUMENTATION_TOO_LONG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 不支持的流程ID‘{0}’,只支持字母数字下划线且必须字母或下划线开头. 的本地化字符串。
+        /// </summary>
+        internal static string PROCESS_DEFINITION_ID_NOTSUPPORT_IDENTIFIER {
+            get {
+                return ResourceManager.GetString("PROCESS_DEFINITION_ID_NOTSUPPORT_IDENTIFIER", resourceCulture);
             }
         }
         

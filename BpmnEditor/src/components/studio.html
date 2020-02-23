@@ -1,0 +1,64 @@
+<template>
+  <require from="./workbench"></require>
+
+  <!-- #HEADER -->
+  <header id="header">
+    <div id="logo-group">
+
+      <!-- PLACE YOUR LOGO HERE -->
+      <span id="logo">
+        工作流编辑器
+      </span>
+      <!-- END LOGO PLACEHOLDER -->
+
+      <!-- Note: The activity badge color changes when clicked and resets the number to 0
+         Suggestion: You may want to set a flag when this happens to tick off all checked messages / notifications -->
+      <span id="activity" class="activity-dropdown" click.trigger="collapse()">
+        <i class="fa fa-bars"></i>
+      </span>
+    </div>
+
+    <!-- #TOGGLE LAYOUT BUTTONS -->
+    <!-- pulled right: nav area -->
+    <div class="pull-right">
+
+      <!-- collapse menu button -->
+      <div id="hide-menu" class="btn-header pull-right">
+        <span> 
+          <a href="javascript:void(0);" title="Signout" click.trigger="signout()"><i class="fa fa-sign-out"></i></a> 
+        </span>
+      </div>
+      <!-- end collapse menu -->
+
+      <!-- #MOBILE -->
+
+      <!-- #SEARCH -->
+      <!-- input: search field -->
+      <form action="#ajax/search.html" class="header-search pull-right">
+        <input id="search-fld" type="text" name="param" placeholder="">
+        <button type="submit">
+          <i class="fa fa-search"></i>
+        </button>
+        <a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>
+      </form>
+      <!-- end input: search field -->
+
+      <!-- fullscreen button -->
+      <div id="fullscreen" class="btn-header transparent pull-right">
+        <span>
+          <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"
+            click.trigger="launchFullScreen($event)">
+            <i class="fa fa-arrows-alt"></i>
+          </a>
+        </span>
+      </div>
+      <!-- end fullscreen button -->
+
+    </div>
+    <!-- end pulled right: nav area -->
+
+  </header>
+  <!-- END HEADER -->
+
+  <workbench></workbench>
+</template>

@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ALL_PROCESS_DEFINITIONS_NOT_EXECUTABLE" xml:space="preserve">
+    <value>不允许讲所有流程定义都被设置为不可执行的(流程的属性“isExecutable”).</value>
+  </data>
+  <data name="ASSOCIATION_INVALID_SOURCE_REFERENCE" xml:space="preserve">
+    <value>关联元素缺少属性“sourceRef”</value>
+  </data>
+  <data name="ASSOCIATION_INVALID_TARGET_REFERENCE" xml:space="preserve">
+    <value>关联元素缺少属性“targetRef”</value>
+  </data>
+  <data name="BOUNDARY_EVENT_CANCEL_ONLY_ON_TRANSACTION" xml:space="preserve">
+    <value>仅在事务子流程上支持带有取消定义的边界事件</value>
+  </data>
+  <data name="BOUNDARY_EVENT_INVALID_EVENT_DEFINITION" xml:space="preserve">
+    <value>不支持的事件定义类型</value>
+  </data>
+  <data name="BPMN_MODEL_TARGET_NAMESPACE_TOO_LONG" xml:space="preserve">
+    <value>BPMN Model名称空间长度不能大于{0}</value>
+  </data>
+  <data name="COMPENSATE_EVENT_INVALID_ACTIVITY_REF" xml:space="preserve">
+    <value>“activityRef”的属性值无效:找不到指定的活动</value>
+  </data>
+  <data name="DATA_OBJECT_MISSING_NAME" xml:space="preserve">
+    <value>必须填写数据对象名称</value>
+  </data>
+  <data name="DI_DOES_NOT_REFERENCE_FLOWNODE" xml:space="preserve">
+    <value>引用无效:{0},不是一个流节点</value>
+  </data>
+  <data name="DI_DOES_NOT_REFERENCE_SEQ_FLOW" xml:space="preserve">
+    <value>引用了一个无效的顺序流{0}</value>
+  </data>
+  <data name="DI_INVALID_REFERENCE" xml:space="preserve">
+    <value>引用无效:找不到{0}</value>
+  </data>
+  <data name="DMN_TASK_NO_KEY" xml:space="preserve">
+    <value>dmn活动中没有定义决策表引用键</value>
+  </data>
+  <data name="END_EVENT_CANCEL_ONLY_INSIDE_TRANSACTION" xml:space="preserve">
+    <value>仅在事务子流程内部支持取消定义结束事件</value>
+  </data>
+  <data name="ERROR_MISSING_ERROR_CODE" xml:space="preserve">
+    <value>errorCode不能为空</value>
+  </data>
+  <data name="EVENT_GATEWAY_ONLY_CONNECTED_TO_INTERMEDIATE_EVENTS" xml:space="preserve">
+    <value>基于事件的网关只能连接到中间匹配事件</value>
+  </data>
+  <data name="EVENT_LISTENER_IMPLEMENTATION_MISSING" xml:space="preserve">
+    <value>必须填写侦听器类型</value>
+  </data>
+  <data name="EVENT_LISTENER_INVALID_THROW_EVENT_TYPE" xml:space="preserve">
+    <value>不支持的事件侦听器类型</value>
+  </data>
+  <data name="EVENT_SUBPROCESS_INVALID_START_EVENT_DEFINITION" xml:space="preserve">
+    <value>事件子流程的开始事件必须是“错误”、“消息”或“信号”类型</value>
+  </data>
+  <data name="EVENT_TIMER_MISSING_CONFIGURATION" xml:space="preserve">
+    <value>计时器需要配置(日期、周期或持续时间)</value>
+  </data>
+  <data name="EXCLUSIVE_GATEWAY_CONDITION_NOT_ALLOWED_ON_SINGLE_SEQ_FLOW" xml:space="preserve">
+    <value>只有一个输出序列流的条件转移不允许设置条件</value>
+  </data>
+  <data name="EXCLUSIVE_GATEWAY_CONDITION_ON_DEFAULT_SEQ_FLOW" xml:space="preserve">
+    <value>不允许默认序列流有一个条件</value>
+  </data>
+  <data name="EXCLUSIVE_GATEWAY_NO_OUTGOING_SEQ_FLOW" xml:space="preserve">
+    <value>条件转移没有设置目标节点</value>
+  </data>
+  <data name="EXCLUSIVE_GATEWAY_SEQ_FLOW_WITHOUT_CONDITIONS" xml:space="preserve">
+    <value>条件转移至少有一个无条件的输出序列流(不是默认的)</value>
+  </data>
+  <data name="EXECUTION_LISTENER_IMPLEMENTATION_MISSING" xml:space="preserve">
+    <value>必须填写时间侦听器类型</value>
+  </data>
+  <data name="EXECUTION_LISTENER_INVALID_IMPLEMENTATION_TYPE" xml:space="preserve">
+    <value>表达式不能被使用在事务上下文中</value>
+  </data>
+  <data name="ID_TOO_LONG" xml:space="preserve">
+    <value>必须填写ID,并且长度不能大于255</value>
+  </data>
+  <data name="INTERMEDIATE_CATCH_EVENT_INVALID_EVENTDEFINITION" xml:space="preserve">
+    <value>不支持的中间捕获事件类型</value>
+  </data>
+  <data name="INTERMEDIATE_CATCH_EVENT_NO_EVENTDEFINITION" xml:space="preserve">
+    <value>中间捕获事件没有事件定义</value>
+  </data>
+  <data name="MAIL_TASK_NO_CONTENT" xml:space="preserve">
+    <value>没有定义邮件内容:Text, html, textVar or htmlVar</value>
+  </data>
+  <data name="MAIL_TASK_NO_RECIPIENT" xml:space="preserve">
+    <value>没有定义邮件接收人</value>
+  </data>
+  <data name="MESSAGE_EVENT_INVALID_MESSAGE_REF" xml:space="preserve">
+    <value>找不到id为{0}的‘messageRef’</value>
+  </data>
+  <data name="MESSAGE_EVENT_MISSING_MESSAGE_REF" xml:space="preserve">
+    <value>必须填写‘messageRef’属性</value>
+  </data>
+  <data name="MESSAGE_EVENT_MULTIPLE_ON_BOUNDARY_SAME_MESSAGE_ID" xml:space="preserve">
+    <value>不支持具有相同消息id的多个消息事件</value>
+  </data>
+  <data name="MESSAGE_INVALID_ITEM_REF" xml:space="preserve">
+    <value>没有找到引用项</value>
+  </data>
+  <data name="NAME_TOO_LONG" xml:space="preserve">
+    <value>必须填写名称,并且长度不能大于255</value>
+  </data>
+  <data name="OPERATION_INVALID_IN_MESSAGE_REFERENCE" xml:space="preserve">
+    <value>操作的消息无效</value>
+  </data>
+  <data name="PROCESS_DEFINITION_DOCUMENTATION_TOO_LONG" xml:space="preserve">
+    <value>流程备注长度不能大于{0}</value>
+  </data>
+  <data name="PROCESS_DEFINITION_ID_NOTSUPPORT_IDENTIFIER" xml:space="preserve">
+    <value>不支持的流程ID‘{0}’定义,必须字母开头并且不能是UNICODE字符.</value>
+  </data>
+  <data name="PROCESS_DEFINITION_ID_TOO_LONG" xml:space="preserve">
+    <value>必须填写流程ID,并且长度不能大于{0}</value>
+  </data>
+  <data name="PROCESS_DEFINITION_NAME_TOO_LONG" xml:space="preserve">
+    <value>必须填写流程名称,并且长度不能大于{0}</value>
+  </data>
+  <data name="PROCESS_DEFINITION_NOT_EXECUTABLE" xml:space="preserve">
+    <value>流程定义为不可执行。</value>
+  </data>
+  <data name="SCRIPT_TASK_MISSING_SCRIPT" xml:space="preserve">
+    <value>必须填写脚本内容</value>
+  </data>
+  <data name="SEND_TASK_INVALID_IMPLEMENTATION" xml:space="preserve">
+    <value>必须填写“type”或“opertaion”属性之一</value>
+  </data>
+  <data name="SEND_TASK_INVALID_TYPE" xml:space="preserve">
+    <value>不支持的发送类型</value>
+  </data>
+  <data name="SEND_TASK_TEMPLATE_NULL" xml:space="preserve">
+    <value>必须选择一种消息发送服务模板</value>
+  </data>
+  <data name="SEND_TASK_WEBSERVICE_INVALID_OPERATION_REF" xml:space="preserve">
+    <value>无效的引用操作</value>
+  </data>
+  <data name="SEQ_FLOW_INVALID_SRC" xml:space="preserve">
+    <value>无效的源</value>
+  </data>
+  <data name="SEQ_FLOW_INVALID_TARGET" xml:space="preserve">
+    <value>无效的目标</value>
+  </data>
+  <data name="SERVICE_TASK_INVALID_TYPE" xml:space="preserve">
+    <value>不支持的服务类型</value>
+  </data>
+  <data name="SERVICE_TASK_MISSING_IMPLEMENTATION" xml:space="preserve">
+    <value>必须填写:'implementation', 'class', 'delegateExpression', 'type', 'operation', or 'expression'其中之一</value>
+  </data>
+  <data name="SERVICE_TASK_RESULT_VAR_NAME_WITH_DELEGATE" xml:space="preserve">
+    <value>'resultVariableName' 不支持'class' or 'delegateExpression‘类型的服务</value>
+  </data>
+  <data name="SERVICE_TASK_WEBSERVICE_INVALID_OPERATION_REF" xml:space="preserve">
+    <value>无效的引用操作</value>
+  </data>
+  <data name="SERVICE_TASK_WEBSERVICE_INVALID_URL" xml:space="preserve">
+    <value>无效的URL</value>
+  </data>
+  <data name="SHELL_TASK_INVALID_PARAM" xml:space="preserve">
+    <value>无效参数</value>
+  </data>
+  <data name="SHELL_TASK_NO_COMMAND" xml:space="preserve">
+    <value>无效shell命令</value>
+  </data>
+  <data name="SIGNAL_DUPLICATE_NAME" xml:space="preserve">
+    <value>已经存在的名称</value>
+  </data>
+  <data name="SIGNAL_EVENT_INVALID_SIGNAL_REF" xml:space="preserve">
+    <value>找不到id为{0}的‘signalRef’</value>
+  </data>
+  <data name="SIGNAL_EVENT_MISSING_SIGNAL_REF" xml:space="preserve">
+    <value>必须填写'signalRef'属性</value>
+  </data>
+  <data name="SIGNAL_INVALID_SCOPE" xml:space="preserve">
+    <value>无效的'scope',仅支持'global' and 'processInstance'</value>
+  </data>
+  <data name="SIGNAL_MISSING_ID" xml:space="preserve">
+    <value>必须填写id</value>
+  </data>
+  <data name="SIGNAL_MISSING_NAME" xml:space="preserve">
+    <value>必须填写名称</value>
+  </data>
+  <data name="START_EVENT_INVALID_EVENT_DEFINITION" xml:space="preserve">
+    <value>开始事件上不支持的事件定义</value>
+  </data>
+  <data name="START_EVENT_MULTIPLE_FOUND" xml:space="preserve">
+    <value>不支持多启动事件</value>
+  </data>
+  <data name="SUBPROCESS_MULTIPLE_START_EVENTS" xml:space="preserve">
+    <value>子流程不支持多启动事件</value>
+  </data>
+  <data name="SUBPROCESS_START_EVENT_EVENT_DEFINITION_NOT_ALLOWED" xml:space="preserve">
+    <value>仅当子流程是事件子流程时，启动事件才允许事件定义</value>
+  </data>
+  <data name="THROW_EVENT_INVALID_EVENTDEFINITION" xml:space="preserve">
+    <value>不支持的中间抛出事件类型</value>
+  </data>
+</root>

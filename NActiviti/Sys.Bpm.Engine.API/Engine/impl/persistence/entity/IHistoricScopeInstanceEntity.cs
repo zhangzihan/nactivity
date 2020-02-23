@@ -21,7 +21,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
     public interface IHistoricScopeInstanceEntity : IEntity
     {
 
-        void markEnded(string deleteReason);
+        void MarkEnded(string deleteReason);
 
         string ProcessInstanceId { get; set; }
 

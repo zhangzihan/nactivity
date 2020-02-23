@@ -73,7 +73,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public override string ToString()
         {
-            return "TimerJobEntity [id=" + id + "]";
+            return "TimerJobEntity [id=" + Id + "]";
         }
 
     }

@@ -27,7 +27,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
     public class DefaultDeploymentCache<T> : IDeploymentCache<T>
     {
         private IMemoryCache cache = null;
-
+        private readonly MemoryCacheProvider memoryCacheProvider;
         private readonly int sizeLimit = -1;
 
         /// <summary>
@@ -43,7 +43,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
         public DefaultDeploymentCache(int limit)
         {
             this.sizeLimit = limit;
-            cache = ProcessEngineServiceProvider.Resolve<MemoryCacheProvider>().Create(limit);
+
+            memoryCacheProvider = ProcessEngineServiceProvider.Resolve<MemoryCacheProvider>();
+
+            cache = memoryCacheProvider.Create(limit);
         }
 
         public virtual T Get(string id)
@@ -75,12 +78,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
         public virtual void Clear()
         {
             cache.Dispose();
-            cache = ProcessEngineServiceProvider.Resolve<MemoryCacheProvider>().Create(sizeLimit);
-        }
-
-        public virtual int Size()
-        {
-            return (cache as MemoryCache).Count;
+            cache = memoryCacheProvider.Create(sizeLimit);
         }
     }
 }

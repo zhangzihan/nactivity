@@ -95,13 +95,14 @@ namespace Sys.Workflow.Test
 
             string xml = File.ReadAllText(Path.Combine(new string[] { root, "resources", "samples", name }));
 
-            XDocument doc = XDocument.Load(new MemoryStream(Encoding.UTF8.GetBytes(xml)), LoadOptions.PreserveWhitespace);
+            //XDocument doc = XDocument.Load(new MemoryStream(Encoding.UTF8.GetBytes(xml)), LoadOptions.PreserveWhitespace);
 
-            XElement elem = doc.Descendants(XName.Get("process", "http://www.omg.org/spec/BPMN/20100524/MODEL")).First();
+            //XElement elem = doc.Descendants(XName.Get("process", "http://www.omg.org/spec/BPMN/20100524/MODEL")).First();
 
-            elem.Attribute("id").Value = processKeyName;
+            //elem.Attribute("id").Value = processKeyName;
 
-            return doc.ToString();
+            //return doc.ToString();
+            return xml;
         }
 
         /// <summary>
@@ -176,7 +177,7 @@ namespace Sys.Workflow.Test
         {
             return procDefines.GetOrAdd(bpmnFile, (key) =>
             {
-                return AsyncHelper.RunSync(() => DeploySampleBpmn(key));
+                return DeploySampleBpmn(key).GetAwaiter().GetResult();
             });
         }
 
@@ -246,7 +247,7 @@ namespace Sys.Workflow.Test
                 EnableDuplicateFiltering = false
             };
 
-            Deployment deployment = AsyncHelper.RunSync<Deployment>(() => deployerClient.Deploy(deployer));
+            Deployment deployment = deployerClient.Deploy(deployer).GetAwaiter().GetResult();
 
             return deployment;
         }
@@ -313,15 +314,12 @@ namespace Sys.Workflow.Test
                 cmds[idx] = cmd;
             }
 
-            ProcessInstance[] instances = AsyncHelper.RunSync<ProcessInstance[]>(() =>
-            {
-                return client.Start(cmds);
-            });
+            ProcessInstance[] instances = client.Start(cmds).GetAwaiter().GetResult();
 
             return instances;
         }
 
-        public Task<ProcessInstance[]> StartUseFile(ProcessDefinition process, IDictionary<string, object> variables = null)
+        public Task<ProcessInstance[]> StartUseFile(ProcessDefinition process, IDictionary<string, object> variables = null, string businessKey = null)
         {
             IProcessInstanceController client = CreateWorkflowHttpProxy().GetProcessInstanceClient();
 
@@ -331,7 +329,8 @@ namespace Sys.Workflow.Test
             {
                 ProcessDefinitionId = process.Id,
                 Variables = vars,
-                TenantId = TenantId
+                TenantId = TenantId,
+                BusinessKey = businessKey
             };
 
             StartProcessInstanceCmd[] cmds = new StartProcessInstanceCmd[] { cmd };

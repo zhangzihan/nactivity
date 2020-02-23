@@ -34,10 +34,10 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         {
             IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
-            return AsyncHelper.RunSync(() => proxy.GetUsers(externalConnector.GetUserByDirectReporter, new
+            return proxy.GetUsers(externalConnector.GetUserByDirectReporter, new
             {
                 idList = Condition.QueryCondition.Select(x => x.Id).ToArray()
-            }));
+            }).GetAwaiter().GetResult();
         }
     }
 }

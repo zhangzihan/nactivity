@@ -2330,15 +2330,15 @@ namespace Sys.Workflow.Engine.Impl.Cfg
             bpmnParser.ActivityBehaviorFactory = activityBehaviorFactory;
             bpmnParser.ListenerFactory = listenerFactory;
 
-            IList<IBpmnParseHandler> parseHandlers = new List<IBpmnParseHandler>();
+            List<IBpmnParseHandler> parseHandlers = new List<IBpmnParseHandler>();
             if (PreBpmnParseHandlers != null)
             {
-                ((List<IBpmnParseHandler>)parseHandlers).AddRange(PreBpmnParseHandlers);
+                parseHandlers.AddRange(PreBpmnParseHandlers);
             }
-          ((List<IBpmnParseHandler>)parseHandlers).AddRange(DefaultBpmnParseHandlers);
+            parseHandlers.AddRange(DefaultBpmnParseHandlers);
             if (PostBpmnParseHandlers != null)
             {
-                ((List<IBpmnParseHandler>)parseHandlers).AddRange(PostBpmnParseHandlers);
+                parseHandlers.AddRange(PostBpmnParseHandlers);
             }
 
             BpmnParseHandlers bpmnParseHandlers = new BpmnParseHandlers();
@@ -2497,16 +2497,15 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         {
             if (asyncExecutor == null)
             {
-                DefaultAsyncJobExecutor defaultAsyncExecutor = new DefaultAsyncJobExecutor
-                {
-                    // Message queue mode
-                    MessageQueueMode = asyncExecutorMessageQueueMode,
+                IAsyncExecutor defaultAsyncExecutor = ProcessEngineServiceProvider.Resolve<IAsyncExecutor>();
 
-                    // Thread pool config
-                    CorePoolSize = asyncExecutorCorePoolSize,
-                    MaxPoolSize = asyncExecutorMaxPoolSize,
-                    KeepAliveTime = asyncExecutorThreadKeepAliveTime
-                };
+                // Message queue mode
+                defaultAsyncExecutor.MessageQueueMode = asyncExecutorMessageQueueMode;
+
+                // Thread pool config
+                defaultAsyncExecutor.CorePoolSize = asyncExecutorCorePoolSize;
+                defaultAsyncExecutor.MaxPoolSize = asyncExecutorMaxPoolSize;
+                defaultAsyncExecutor.KeepAliveTime = asyncExecutorThreadKeepAliveTime;
 
                 // Threadpool queue
                 if (asyncExecutorThreadPoolQueue != null)

@@ -43,11 +43,19 @@ namespace SmartSql.Utils
 
         public void Dispose()
         {
-            for (int i = 0; i < _fileWatchers.Count; i++)
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                FileSystemWatcher fileWatcher = _fileWatchers[i];
-                fileWatcher.EnableRaisingEvents = false;
-                fileWatcher.Dispose();
+                for (int i = 0; i < _fileWatchers.Count; i++)
+                {
+                    FileSystemWatcher fileWatcher = _fileWatchers[i];
+                    fileWatcher.EnableRaisingEvents = false;
+                    fileWatcher.Dispose();
+                }
             }
         }
     }

@@ -128,7 +128,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 if (string.IsNullOrWhiteSpace(assignee) == false)
                 {
                     //TODO: 考虑性能问题，暂时不要获取人员信息
-                    //taskEntity.AssigneeUser = AsyncHelper.RunSync(() => userService.GetUser(assignee))?.FullName;
+                    //taskEntity.AssigneeUser = userService.GetUser(assignee).GetAwaiter().GetResult()?.FullName;
                 }
                 taskEntity.TenantId = task.TenantId;
                 taskEntity.FormKey = task.FormKey;

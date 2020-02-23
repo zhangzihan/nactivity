@@ -22,23 +22,22 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 
         public override bool IsRetained(IVariableInstanceEntity variableInstanceEntity, object parameter)
         {
-            if (variableInstanceEntity == null || variableInstanceEntity.ExecutionId == null || parameter == null)
+            if (variableInstanceEntity is null || variableInstanceEntity.ExecutionId is null || parameter is null)
             {
                 return false;
             }
 
-            if (parameter is string)
-            {
-                return variableInstanceEntity.ExecutionId == parameter.ToString();
-            }
-
+            string value;
             if (parameter is KeyValuePair<string, object> p)
             {
-                return variableInstanceEntity.ExecutionId == p.Value?.ToString();
+                value = p.Value?.ToString();
+            }
+            else
+            {
+                value = parameter.ToString();
             }
 
-            return variableInstanceEntity.ExecutionId == parameter.ToString();
+            return variableInstanceEntity.ExecutionId.Equals(value, StringComparison.OrdinalIgnoreCase);
         }
-
     }
 }

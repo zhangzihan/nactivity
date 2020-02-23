@@ -13,6 +13,7 @@
  *
  */
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sys.Workflow.Api.Runtime.Shared.Query;
 using Sys.Workflow.Cloud.Services.Api.Commands;
@@ -35,7 +36,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
     /// <inheritdoc />
     [Route(WorkflowConstants.PROC_HIS_INST_ROUTER_V1)]
     [ApiController]
-    public class ProcessInstanceHistoriceControllerImpl : ControllerBase, IProcessInstanceHistoriceController
+    public class ProcessInstanceHistoriceControllerImpl : WorkflowController, IProcessInstanceHistoriceController
     {
         private readonly ProcessEngineWrapper processEngine;
         private readonly IRepositoryService repositoryService;

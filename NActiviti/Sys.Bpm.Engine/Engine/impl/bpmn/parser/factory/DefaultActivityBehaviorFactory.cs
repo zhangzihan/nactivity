@@ -459,6 +459,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
                 terminateMultiInstance = ((TerminateEventDefinition)endEvent.EventDefinitions[0]).TerminateMultiInstance;
             }
 
+            var extTerminateAll = endEvent.GetExtensionElementAttributeValue(nameof(terminateAll));
+            bool.TryParse(extTerminateAll, out terminateAll);
+
+            var extTerminateMul = endEvent.GetExtensionElementAttributeValue(nameof(terminateMultiInstance));
+            bool.TryParse(extTerminateMul, out terminateMultiInstance);
+
             TerminateEndEventActivityBehavior terminateEndEventActivityBehavior = new TerminateEndEventActivityBehavior
             {
                 TerminateAll = terminateAll,

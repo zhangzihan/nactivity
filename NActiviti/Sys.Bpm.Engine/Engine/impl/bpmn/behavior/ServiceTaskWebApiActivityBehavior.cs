@@ -36,6 +36,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using System.Diagnostics;
+    using Sys.Workflow.Engine.Impl.Bpmn.Helper;
 
     /// <summary>
     /// ActivityBehavior that evaluates an expression when executed. Optionally, it sets the result of the expression as a variable on the execution.
@@ -49,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
     [Serializable]
     public class ServiceTaskWebApiActivityBehavior : TaskActivityBehavior
     {
-        private static readonly Regex OBJECT_PATTERN = new Regex(@"(^(\s*{)(.*?)(\}\s*)$)|(^\s*\[(.*?)(\]\s*)$)");
+        private static readonly Regex OBJECT_PATTERN = new Regex(@"(^(\s*{)(.*?)(\}\s*)$)|(^\s*\[(.*?)(\]\s*)$)", RegexOptions.Compiled);
 
         private readonly static ILogger logger = ProcessEngineServiceProvider.LoggerService<ServiceTaskWebApiActivityBehavior>();
 
@@ -58,65 +59,123 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
         public override void Execute(IExecutionEntity execution)
+        {
+            execution.CurrentFlowElement.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY,
+                out IList<ExtensionElement> pElements);
+
+            _ = bool.TryParse(execution.GetVariableInstance(DynamicBpmnConstants.PORCESS_DEBUGMODE_VARIABLE)?.Value?.ToString(), out var debugMode);
+
+            WebApiParameter parameter = new WebApiParameter(execution, pElements);
+
+            if (parameter.IsMock.HasValue ? parameter.IsMock.Value : debugMode)
+            {
+                ExecuteDebugMode(execution);
+            }
+            else
+            {
+                if (pElements != null)
+                {
+                    Stopwatch sw = new Stopwatch();
+                    string url = null;
+                    object request = null;
+
+                    try
+                    {
+                        sw.Start();
+
+                        url = parameter.Url;
+                        string dataObj = parameter.VariableName;
+                        request = parameter.Request;
+                        string method = parameter.Method;
+
+                        var httpProxy = ProcessEngineServiceProvider.Resolve<IHttpClientProxy>();
+
+                        HttpContext httpContext = ProcessEngineServiceProvider.Resolve<IHttpContextAccessor>()?.HttpContext;
+
+                        if (httpContext == null)
+                        {
+                            var uid = string.IsNullOrWhiteSpace(execution.StartUserId) ? Guid.NewGuid().ToString() : execution.StartUserId;
+                            httpProxy.SetHttpClientRequestAccessToken(uid, execution.TenantId, isSessionHeader: false);
+                        }
+
+                        switch (method?.ToLower())
+                        {
+                            default:
+                            case "get":
+                                ExecuteGet(execution, url, request, dataObj, httpProxy);
+                                break;
+                            case "post":
+                                ExecutePost(execution, url, request, dataObj, httpProxy);
+                                break;
+                        }
+
+                        sw.Stop();
+
+                        logger.LogInformation($"调用外部服务共计({sw.ElapsedMilliseconds}ms) url={url} request={(request is null ? "" : JsonConvert.SerializeObject(request))}");
+                    }
+                    catch (Exception ex)
+                    {
+                        sw.Stop();
+
+                        logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={url} request={(request is null ? "" : JsonConvert.SerializeObject(request))}：\r\n" + ex.Message + ex.StackTrace);
+                        string errorCode = execution.CurrentFlowElement.GetExtensionElementAttributeValue("errorCode");
+
+                        BpmnError error;
+                        if (string.IsNullOrWhiteSpace(errorCode) == false)
+                        {
+                            error = new BpmnError(errorCode, ex.Message);
+                        }
+                        else
+                        {
+                            error = new BpmnError(Context.CommandContext.ProcessEngineConfiguration.WebApiErrorCode, ex.Message);
+                        }
+
+                        ErrorPropagation.PropagateError(error, execution);
+                    }
+                }
+            }
+
+            Leave(execution);
+        }
+
+        private void ExecuteDebugMode(IExecutionEntity execution)
         {
             execution.CurrentFlowElement.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY,
                 out IList<ExtensionElement> pElements);
 
             if (pElements != null)
             {
-                Exception exception = null;
-                Stopwatch sw = new Stopwatch();
-                string url = null;
-                string dataObj = null;
-                object request = null;
+                var parameter = new WebApiParameter(execution, pElements);
 
-                try
+                string dataObj = parameter.VariableName;
+                if (!string.IsNullOrEmpty(dataObj))
                 {
-                    sw.Start();
-
-                    WebApiParameter parameter = new WebApiParameter(execution, pElements);
-                    url = parameter.Url;
-                    dataObj = parameter.VariableName;
-                    request = parameter.Request;
-                    string method = parameter.Method;
-
-                    var httpProxy = ProcessEngineServiceProvider.Resolve<IHttpClientProxy>();
-
-                    HttpContext httpContext = ProcessEngineServiceProvider.Resolve<IHttpContextAccessor>()?.HttpContext;
-
-                    if (httpContext == null)
+                    try
                     {
-                        httpProxy.SetHttpClientRequestAccessToken(execution.StartUserId, execution.TenantId);
-
-                        //IAccessTokenProvider accessTokenProvider = ProcessEngineServiceProvider.Resolve<IAccessTokenProvider>();
-
-                        //accessTokenProvider.SetHttpClientRequestAccessToken(httpProxy.HttpClient, execution.StartUserId, execution.TenantId);
+                        execution.SetVariable(dataObj, parameter.MockData);
                     }
-
-                    switch (method?.ToLower())
+                    catch (Exception ex)
                     {
-                        default:
-                        case "get":
-                            ExecuteGet(execution, url, request, dataObj, httpProxy);
-                            break;
-                        case "post":
-                            ExecutePost(execution, url, request, dataObj, httpProxy);
-                            break;
+                        logger.LogError($"调用服务失败MockData=${dataObj}\r\n${ex.Message}${ex.StackTrace}");
+                        string errorCode = execution.CurrentFlowElement.GetExtensionElementAttributeValue("errorCode");
+
+                        BpmnError error;
+                        if (string.IsNullOrWhiteSpace(errorCode) == false)
+                        {
+                            error = new BpmnError(errorCode, ex.Message);
+                        }
+                        else
+                        {
+                            error = new BpmnError(Context.CommandContext.ProcessEngineConfiguration.WebApiErrorCode, ex.Message);
+                        }
+
+                        ErrorPropagation.PropagateError(error, execution);
                     }
-
-                    sw.Stop();
-
-                    logger.LogInformation($"调用外部服务共计({sw.ElapsedMilliseconds}ms) url={url} request={(request is null ? "" : JsonConvert.SerializeObject(request))}");
-
-                    Leave(execution);
-                }
-                catch (Exception ex)
-                {
-                    sw.Stop();
-                    logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={url} request={(request is null ? "" : JsonConvert.SerializeObject(request))}：\r\n" + ex.Message + ex.StackTrace);
-
-                    throw new BpmnError(Context.CommandContext.ProcessEngineConfiguration.WebApiErrorCode, ex.Message);
                 }
             }
         }
@@ -127,18 +186,14 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             if (string.IsNullOrWhiteSpace(dataObj))
             {
-                AsyncHelper.RunSync(() => httpProxy.PostAsync(url, request, CancellationToken.None));
+                httpProxy.PostAsync(url, request, CancellationToken.None).GetAwaiter().GetResult();
             }
             else
             {
-                HttpResponseMessage response = AsyncHelper.RunSync(() => httpProxy.PostAsync<HttpResponseMessage>(url, request, CancellationToken.None));
+                HttpResponseMessage response = httpProxy.PostAsync<HttpResponseMessage>(url, request, CancellationToken.None).GetAwaiter().GetResult();
 
-                object data = null;
-                if (response is null == false)
-                {
-                    response.EnsureSuccessStatusCode();
-                    data = AsyncHelper.RunSync(() => ToObject(response));
-                }
+                response.EnsureSuccessStatusCode();
+                object data = ToObject(response).GetAwaiter().GetResult();
 
                 execution.SetVariable(dataObj, data);
             }
@@ -150,18 +205,14 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             if (string.IsNullOrWhiteSpace(dataObj))
             {
-                AsyncHelper.RunSync(() => httpProxy.GetAsync(url));
+                httpProxy.GetAsync(url).GetAwaiter().GetResult();
             }
             else
             {
-                HttpResponseMessage response = AsyncHelper.RunSync(() => httpProxy.GetAsync<HttpResponseMessage>(url, CancellationToken.None));
+                HttpResponseMessage response = httpProxy.GetAsync<HttpResponseMessage>(url, CancellationToken.None).GetAwaiter().GetResult();
 
-                object data = null;
-                if (response is null == false)
-                {
-                    response.EnsureSuccessStatusCode();
-                    data = AsyncHelper.RunSync(() => ToObject(response));
-                }
+                response.EnsureSuccessStatusCode();
+                object data = ToObject(response).GetAwaiter().GetResult();
 
                 execution.SetVariable(dataObj, data);
             }
@@ -192,7 +243,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         private async Task<object> ToObject(HttpResponseMessage response)
         {
-            string data = await response.Content.ReadAsStringAsync();
+            string data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(data))
             {
                 return null;

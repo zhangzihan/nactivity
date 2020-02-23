@@ -17,10 +17,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
 {
 
     using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Persistence.Caches;
     using Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher;
     using System.Linq;
 
-    /// 
+    /// <inheritdoc />
     public class MybatisEventSubscriptionDataManager : AbstractDataManager<IEventSubscriptionEntity>, IEventSubscriptionDataManager
     {
 
@@ -38,6 +39,8 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
         protected internal ICachedEntityMatcher<IEventSubscriptionEntity> eventSubscritionsByExecutionIdMatcher = new EventSubscriptionsByExecutionIdMatcher();
 
         protected internal ICachedEntityMatcher<IEventSubscriptionEntity> eventSubscriptionsByProcInstTypeAndActivityMatcher = new EventSubscriptionsByProcInstTypeAndActivityMatcher();
+
+        protected internal ICachedEntityMatcher<IEventSubscriptionEntity> eventSubscriptionsByProcInstTypeMatcher = new EventSubscriptionsByProcInstTypeMatcher();
 
         protected internal ICachedEntityMatcher<IEventSubscriptionEntity> eventSubscriptionsByExecutionAndTypeMatcher = new EventSubscriptionsByExecutionAndTypeMatcher();
 
@@ -104,7 +107,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
 
         public virtual IList<IMessageEventSubscriptionEntity> FindMessageEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName)
         {
-            var list = GetList("selectMessageEventSubscriptionsByProcessInstanceAndEventName", new { processInstanceId, eventName }, messageEventSubscriptionsByProcInstAndEventNameMatcher, true, typeof(MessageEventSubscriptionEntityImpl), typeof(MessageEventSubscriptionEntityImpl));
+            var list = GetList("selectMessageEventSubscriptionsByProcessInstanceAndEventName", new Dictionary<string, object>
+            {
+                [nameof(processInstanceId)] = processInstanceId,
+                [nameof(eventName)] = eventName,
+            }, messageEventSubscriptionsByProcInstAndEventNameMatcher, true, typeof(MessageEventSubscriptionEntityImpl), typeof(MessageEventSubscriptionEntityImpl));
 
             return list.Cast<IMessageEventSubscriptionEntity>().ToList();
         }
@@ -128,35 +135,169 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
         {
             const string query = "selectSignalEventSubscriptionsByProcessInstanceAndEventName";
 
-            var list = GetList(query, new { processInstanceId, eventName }, signalEventSubscriptionByProcInstAndEventNameMatcher, true, typeof(SignalEventSubscriptionEntityImpl), typeof(SignalEventSubscriptionEntityImpl));
+            var list = GetList(query, new Dictionary<string, object>
+            {
+                [nameof(processInstanceId)] = processInstanceId,
+                [nameof(eventName)] = eventName
+            }, signalEventSubscriptionByProcInstAndEventNameMatcher, true, typeof(SignalEventSubscriptionEntityImpl), typeof(SignalEventSubscriptionEntityImpl));
 
             return list.Cast<ISignalEventSubscriptionEntity>().ToList();
         }
 
         public virtual IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByNameAndExecution(string eventName, string executionId)
         {
-            var list = GetList("selectSignalEventSubscriptionsByNameAndExecution", new { executionId, eventName }, signalEventSubscriptionByNameAndExecutionMatcher, true, typeof(SignalEventSubscriptionEntityImpl), typeof(SignalEventSubscriptionEntityImpl));
+            var list = GetList("selectSignalEventSubscriptionsByNameAndExecution", new Dictionary<string, object>
+            {
+                [nameof(executionId)] = executionId,
+                [nameof(eventName)] = eventName
+            }, signalEventSubscriptionByNameAndExecutionMatcher, true, typeof(SignalEventSubscriptionEntityImpl), typeof(SignalEventSubscriptionEntityImpl));
 
             return list.Cast<ISignalEventSubscriptionEntity>().ToList();
         }
 
         public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByExecutionAndType(string executionId, string eventType)
         {
-            var list = GetList("selectEventSubscriptionsByExecutionAndType", new { executionId, eventType }, eventSubscriptionsByExecutionAndTypeMatcher, true, typeof(EventSubscriptionEntityImpl), typeof(EventSubscriptionEntityImpl));
+            var list = GetList("selectEventSubscriptionsByExecutionAndType", new
+            Dictionary<string, object>
+            {
+                [nameof(executionId)] = executionId,
+                [nameof(eventType)] = eventType
+            }, eventSubscriptionsByExecutionAndTypeMatcher, true, typeof(EventSubscriptionEntityImpl), typeof(EventSubscriptionEntityImpl));
 
             return list.Cast<IEventSubscriptionEntity>().ToList();
         }
 
         public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByProcessInstanceAndActivityId(string processInstanceId, string activityId, string eventType)
         {
-            var list = GetList("selectEventSubscriptionsByProcessInstanceTypeAndActivity", new { processInstanceId, eventType, activityId }, eventSubscriptionsByProcInstTypeAndActivityMatcher, true, typeof(EventSubscriptionEntityImpl), typeof(EventSubscriptionEntityImpl));
+            var list = GetList("selectEventSubscriptionsByProcessInstanceTypeAndActivity", new Dictionary<string, object>
+            {
+                [nameof(processInstanceId)] = processInstanceId,
+                [nameof(eventType)] = eventType,
+                [nameof(activityId)] = activityId
+            }, eventSubscriptionsByProcInstTypeAndActivityMatcher, true, typeof(EventSubscriptionEntityImpl), typeof(EventSubscriptionEntityImpl));
 
             return list.Cast<IEventSubscriptionEntity>().ToList();
         }
 
+        public IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByExecutionId(string executionId)
+        {
+            var list = GetList("selectEventSubscriptionsByExecutionAndType", new
+            Dictionary<string, object>
+            {
+                [nameof(executionId)] = executionId,
+                ["eventType"] = CompensateEventSubscriptionEntityFields.EVENT_TYPE,
+            }, eventSubscriptionsByExecutionAndTypeMatcher, true, typeof(CompensateEventSubscriptionEntityImpl), typeof(ICompensateEventSubscriptionEntity));
+
+            return list.Cast<ICompensateEventSubscriptionEntity>().ToList();
+        }
+
+        public IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByProcessInstanceId(string processInstanceId)
+        {
+            var list = GetList("selectEventSubscriptionsByProcessInstanceType", new
+            Dictionary<string, object>
+            {
+                [nameof(processInstanceId)] = processInstanceId,
+                ["eventType"] = CompensateEventSubscriptionEntityFields.EVENT_TYPE,
+            }, eventSubscriptionsByProcInstTypeMatcher, true, typeof(CompensateEventSubscriptionEntityImpl), typeof(ICompensateEventSubscriptionEntity));
+
+            return list.Cast<ICompensateEventSubscriptionEntity>().ToList();
+        }
+
+        public IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByProcessInstanceAndActivityId(string processInstanceId, string activityId)
+        {
+            if (string.IsNullOrWhiteSpace(activityId))
+            {
+                return FindCompensateEventSubscriptionsByProcessInstanceId(processInstanceId);
+            }
+
+            var list = GetList("selectEventSubscriptionsByProcessInstanceTypeAndActivity", new Dictionary<string, object>
+            {
+                [nameof(processInstanceId)] = processInstanceId,
+                ["eventType"] = CompensateEventSubscriptionEntityFields.EVENT_TYPE,
+                [nameof(activityId)] = activityId
+            }, eventSubscriptionsByProcInstTypeAndActivityMatcher, true, typeof(CompensateEventSubscriptionEntityImpl), typeof(ICompensateEventSubscriptionEntity));
+
+            return list.Cast<ICompensateEventSubscriptionEntity>().ToList();
+        }
+
+        protected internal override ICollection<IEventSubscriptionEntity> GetList(string dbQueryName, object parameter, ICachedEntityMatcher<IEventSubscriptionEntity> cachedEntityMatcher, bool checkCache, Type managedEntityClass, Type outType)
+        {
+            ICollection<IEventSubscriptionEntity> result = selectList(DbSqlSession, managedEntityClass ?? typeof(EventSubscriptionEntityImpl), outType, dbQueryName, parameter);
+
+            if (checkCache)
+            {
+                ICollection<CachedEntity> cachedObjects = EntityCache.FindInCacheAsCachedObjects(managedEntityClass);
+
+                if ((cachedObjects != null && cachedObjects.Count > 0) || ManagedEntitySubClasses != null)
+                {
+                    Dictionary<string, IEventSubscriptionEntity> entityMap = new Dictionary<string, IEventSubscriptionEntity>(result.Count);
+
+                    // Database entities
+                    foreach (IEventSubscriptionEntity entity in result)
+                    {
+                        entityMap[entity.Id] = entity;
+                    }
+
+                    // Cache entities
+                    if (cachedObjects != null && cachedEntityMatcher != null)
+                    {
+                        foreach (CachedEntity cachedObject in cachedObjects)
+                        {
+                            IEventSubscriptionEntity cachedEntity = (IEventSubscriptionEntity)cachedObject.Entity;
+                            if (cachedEntityMatcher.IsRetained(result, cachedObjects, cachedEntity, parameter))
+                            {
+                                entityMap[cachedEntity.Id] = cachedEntity; // will overwite db version with newer version
+                            }
+                        }
+                    }
+
+                    if (ManagedEntitySubClasses != null && cachedEntityMatcher != null)
+                    {
+                        foreach (Type entitySubClass in ManagedEntitySubClasses)
+                        {
+                            ICollection<CachedEntity> subclassCachedObjects = EntityCache.FindInCacheAsCachedObjects(entitySubClass);
+                            if (subclassCachedObjects != null)
+                            {
+                                foreach (CachedEntity subclassCachedObject in subclassCachedObjects)
+                                {
+                                    IEventSubscriptionEntity cachedSubclassEntity = (IEventSubscriptionEntity)subclassCachedObject.Entity;
+                                    if (cachedEntityMatcher.IsRetained(result, cachedObjects, cachedSubclassEntity, parameter))
+                                    {
+                                        entityMap[cachedSubclassEntity.Id] = cachedSubclassEntity; // will overwite db version with newer version
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    result = entityMap.Values;
+
+                }
+
+            }
+
+            // Remove entries which are already deleted
+            if (result.Count > 0)
+            {
+                var list = new List<IEventSubscriptionEntity>(result);
+                for (var idx = list.Count - 1; idx >= 0; idx--)
+                {
+                    var item = list[idx];
+                    if (DbSqlSession.IsEntityToBeDeleted(item))
+                    {
+                        list.RemoveAt(idx);
+                    }
+                }
+
+                return list;
+            }
+
+            return new List<IEventSubscriptionEntity>();
+        }
+
         public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByExecution(string executionId)
         {
-            var list = GetList("selectEventSubscriptionsByExecution", new { executionId }, eventSubscritionsByExecutionIdMatcher, true, typeof(EventSubscriptionEntityImpl), typeof(EventSubscriptionEntityImpl));
+            var list = GetList("selectEventSubscriptionsByExecution", new Dictionary<string, object> { [nameof(executionId)] = executionId }, eventSubscritionsByExecutionIdMatcher, true, typeof(EventSubscriptionEntityImpl), typeof(EventSubscriptionEntityImpl));
 
             return list.Cast<IEventSubscriptionEntity>().ToList();
         }
@@ -195,6 +336,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
             return DbSqlSession.SelectList<EventSubscriptionEntityImpl, IEventSubscriptionEntity>(query, new { eventType, eventName, executionId });
         }
 
+        /// <inheritdoc />
         public virtual IMessageEventSubscriptionEntity FindMessageStartEventSubscriptionByName(string messageName, string tenantId)
         {
             IDictionary<string, string> @params = new Dictionary<string, string>
@@ -203,7 +345,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
                 ["tenantId"] = tenantId
             };
 
-            IMessageEventSubscriptionEntity entity = DbSqlSession.SelectOne<MessageEventSubscriptionEntityImpl, IMessageEventSubscriptionEntity>("selectMessageStartEventSubscriptionByName", @params);
+            IMessageEventSubscriptionEntity entity = DbSqlSession.SelectOne<MessageEventSubscriptionEntityImpl, MessageEventSubscriptionEntityImpl>("selectMessageStartEventSubscriptionByName", @params);
 
             return entity;
         }

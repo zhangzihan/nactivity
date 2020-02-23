@@ -10,6 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
 using System.Collections.Generic;
 
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
@@ -21,24 +22,22 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 
         public override bool IsRetained(IExecutionEntity entity, object parameter)
         {
-            if (entity == null || entity.ParentId == null || parameter == null)
+            if (entity is null || entity.ParentId is null || parameter is null)
             {
                 return false;
             }
 
-            if (parameter is string)
-            {
-                return entity.ParentId == parameter.ToString();
-            }
-
+            string value;
             if (parameter is KeyValuePair<string, object> p)
             {
-                return entity.ParentId == p.Value?.ToString();
+                value = p.Value?.ToString();
+            }
+            else
+            {
+                value = parameter.ToString();
             }
 
-            return entity.ParentId == parameter.ToString();
-            //return string.ReferenceEquals(entity.ParentId, null) && !string.ReferenceEquals(entity.ProcessDefinitionId, null) && entity.ProcessDefinitionId.Equals(parameter);
+            return entity.ParentId.Equals(value, StringComparison.OrdinalIgnoreCase);
         }
-
     }
 }

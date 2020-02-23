@@ -144,7 +144,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             foreach (IHistoricActivityInstanceEntity historicActivityInstance in historicActivityInstances)
             {
-                historicActivityInstance.markEnded(deleteReason);
+                historicActivityInstance.MarkEnded(deleteReason);
 
                 // Fire event
                 ProcessEngineConfigurationImpl config = Context.ProcessEngineConfiguration;

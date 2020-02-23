@@ -95,7 +95,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                         {
                             throw new Exception("未配置邮件服务URL");
                         }
-                        AsyncHelper.RunSync(() => SendMessageAsync(execution, email, mailServiceUrl));
+                        SendMessageAsync(execution, email, mailServiceUrl).GetAwaiter().GetResult();
                     }
 
                     if (!string.IsNullOrWhiteSpace(wechat))
@@ -104,7 +104,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                         {
                             throw new Exception("未配置微信服务URL");
                         }
-                        AsyncHelper.RunSync(() => SendMessageAsync(execution, wechat, wechatServiceUrl));
+                        SendMessageAsync(execution, wechat, wechatServiceUrl).GetAwaiter().GetResult();
                     }
 
                     if (!string.IsNullOrWhiteSpace(sms))
@@ -113,7 +113,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                         {
                             throw new Exception("未配置短信服务URL");
                         }
-                        AsyncHelper.RunSync(() => SendMessageAsync(execution, sms, smsServiceUrl));
+                        SendMessageAsync(execution, sms, smsServiceUrl).GetAwaiter().GetResult();
                     }
 
                     Leave(execution);

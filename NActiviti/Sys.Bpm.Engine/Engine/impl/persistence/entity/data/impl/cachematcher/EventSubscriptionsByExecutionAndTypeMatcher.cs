@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +24,19 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 
         public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
         {
-            IDictionary<string, object> @params = (IDictionary<string, object>)parameter ?? new Dictionary<string, object>();
-            @params.TryGetValue("eventType", out object type);
-            @params.TryGetValue("executionId", out object executionId);
+            if (parameter is null)
+            {
+                return false;
+            }
 
-            return eventSubscriptionEntity.EventType != null &&
-                string.Compare(eventSubscriptionEntity.EventType, type?.ToString(), true) == 0 &&
-                eventSubscriptionEntity.ExecutionId != null &&
-                string.Compare(eventSubscriptionEntity.ExecutionId, executionId?.ToString(), true) == 0;
+            JToken @params = JToken.FromObject(parameter);
+            string eventType = @params[nameof(eventType)]?.ToString();
+            string executionId = @params[nameof(executionId)]?.ToString();
+
+            return eventSubscriptionEntity.EventType is object &&
+                eventSubscriptionEntity.EventType.Equals(eventType, StringComparison.OrdinalIgnoreCase) &&
+                eventSubscriptionEntity.ExecutionId is object &&
+                eventSubscriptionEntity.ExecutionId.Equals(executionId, StringComparison.OrdinalIgnoreCase);
         }
-
     }
 }

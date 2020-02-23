@@ -27,24 +27,28 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         private const long serialVersionUID = 1L;
 
         // Using json here, but not worth of adding json dependency lib for this
-        private const string CONFIGURATION_TEMPLATE = "'{'\"scope\":\"{0}\"'}'";
+        private const string CONFIGURATION_TEMPLATE = "{{\"scope\":\"{0}\"}}";
 
         public SignalEventSubscriptionEntityImpl()
         {
-            eventType = SignalEventSubscriptionEntityFields.EVENT_TYPE;
+            EventType = SignalEventSubscriptionEntityFields.EVENT_TYPE;
         }
 
         public override string Configuration
         {
+            get
+            {
+                return base.Configuration;
+            }
             set
             {
                 if (value is object && value.Contains("{\"scope\":"))
                 {
-                    this.configuration = value;
+                    base.Configuration = value;
                 }
                 else
                 {
-                    this.configuration = string.Format(CONFIGURATION_TEMPLATE, value);
+                    base.Configuration = string.Format(CONFIGURATION_TEMPLATE, value);
                 }
             }
         }
@@ -69,13 +73,13 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         protected internal virtual string ExtractScopeFormConfiguration()
         {
-            if (this.configuration is null)
+            if (this.Configuration is null)
             {
                 return null;
             }
             else
             {
-                return this.configuration.Substring(10, (this.configuration.Length - 2) - 10); // 10 --> length of {"scope": and -2 for removing"}
+                return this.Configuration.Substring(10, (this.Configuration.Length - 2) - 10); // 10 --> length of {"scope": and -2 for removing"}
             }
         }
     }

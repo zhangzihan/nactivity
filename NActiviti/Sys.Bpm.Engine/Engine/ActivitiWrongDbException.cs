@@ -10,6 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
+using System.Runtime.Serialization;
+
 namespace Sys.Workflow.Engine
 {
     /// <summary>
@@ -19,9 +22,9 @@ namespace Sys.Workflow.Engine
     /// 
     /// 
     /// </summary>
+    [Serializable]
     public class ActivitiWrongDbException : ActivitiException
     {
-
         private const long serialVersionUID = 1L;
 
         internal string libraryVersion;
@@ -53,6 +56,10 @@ namespace Sys.Workflow.Engine
             {
                 return dbVersion;
             }
+        }
+
+        protected ActivitiWrongDbException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
         }
     }
 

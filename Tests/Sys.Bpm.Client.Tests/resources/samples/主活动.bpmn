@@ -40,7 +40,7 @@
   <bpmn2:message id="Message_1yes94e" name="Message_1qh50uo" />
   <bpmn2:signal id="Signal_1jbamay" name="Signal_1qlnq87" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_Master">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="79" y="195" width="36" height="36" />
       </bpmndi:BPMNShape>

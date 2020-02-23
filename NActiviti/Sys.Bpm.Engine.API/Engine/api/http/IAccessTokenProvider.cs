@@ -29,6 +29,13 @@ namespace Sys.Net.Http
         Task SetRequestAccessTokenAsync(HttpClient httpClient, HttpContext httpContext = null);
 
         /// <summary>
+        /// 从当前HttpContext上下文中读取用户信息
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        Task<IUserInfo> GetUser(HttpContext context);
+
+        /// <summary>
         /// 获取请求的用户
         /// </summary>
         /// <param name="context">Http请求上下文</param>

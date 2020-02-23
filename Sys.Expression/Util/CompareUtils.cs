@@ -21,6 +21,7 @@
 #region Imports
 
 using System;
+using System.ComponentModel;
 
 #endregion
 
@@ -55,11 +56,13 @@ namespace Spring.Util
             {
                 if (!CoerceTypes(ref first, ref second))
                 {
-                    throw new ArgumentException("Cannot compare instances of ["
-                        + first.GetType().FullName
-                        + "] and ["
-                        + second.GetType().FullName
-                        + "] because they cannot be coerced to the same type.");
+                    return string.Compare(first.ToString(), second.ToString(), true);
+
+                    //throw new ArgumentException("Cannot compare instances of ["
+                    //    + first.GetType().FullName
+                    //    + "] and ["
+                    //    + second.GetType().FullName
+                    //    + "] because they cannot be coerced to the same type.");
                 }
             }
 
@@ -82,6 +85,7 @@ namespace Spring.Util
                 NumberUtils.CoerceTypes(ref right, ref left);
                 return true;
             }
+
             return false;
         }
 

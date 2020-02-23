@@ -37,14 +37,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         private const long serialVersionUID = 1L;
 
         // The cache used when fetching all variables
-        protected internal IDictionary<string, IVariableInstanceEntity> variableInstances; // needs to be null, the logic depends on it for checking if vars were already fetched
+        protected IDictionary<string, IVariableInstanceEntity> variableInstances; // needs to be null, the logic depends on it for checking if vars were already fetched
 
         // The cache is used when fetching/setting specific variables
-        protected internal IDictionary<string, IVariableInstanceEntity> usedVariablesCache = new Dictionary<string, IVariableInstanceEntity>();
+        private IDictionary<string, IVariableInstanceEntity> usedVariablesCache = new Dictionary<string, IVariableInstanceEntity>();
 
-        protected internal IDictionary<string, IVariableInstance> transientVariabes;
+        private IDictionary<string, IVariableInstance> transientVariabes;
 
-        protected internal ELContext cachedElContext;
+        private ELContext cachedElContext;
 
         protected internal abstract IList<IVariableInstanceEntity> LoadVariableInstances();
 

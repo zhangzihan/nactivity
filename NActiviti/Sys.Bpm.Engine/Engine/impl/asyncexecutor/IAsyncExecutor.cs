@@ -12,6 +12,8 @@
  */
 namespace Sys.Workflow.Engine.Impl.Asyncexecutor
 {
+    using System.Collections.Concurrent;
+    using System.Threading;
     using Sys.Workflow.Engine.Impl.Cfg;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using Sys.Workflow.Engine.Runtime;
@@ -59,7 +61,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// <summary>
         /// 
         /// </summary>
-        string LockOwner { get; }
+        string LockOwner { get; set; }
 
         /// <summary>
         /// 
@@ -110,5 +112,40 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// 
         /// </summary>
         int ResetExpiredJobsPageSize { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool MessageQueueMode { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        int CorePoolSize { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        int MaxPoolSize { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        long KeepAliveTime { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        ConcurrentQueue<ThreadStart> ThreadPoolQueue { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        int QueueSize { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        long SecondsToWaitOnShutdown { get; set; }
     }
 }

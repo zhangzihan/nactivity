@@ -8,6 +8,10 @@ using Sys.Workflow;
 using Sys.Workflow.Options;
 using App.Metrics.AspNetCore;
 using App.Metrics;
+using BpmnWebTest.Hubs;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using Sys.Workflow.Cloud.Services.Core;
 
 namespace BpmnWebTest
 {
@@ -29,17 +33,34 @@ namespace BpmnWebTest
             //services.AddMetricsReportingHostedService();
             //services.AddMetricsTrackingMiddleware();
 
+            services.AddSingleton<WorkflowDebuggerEventListenerProvider>();
+
+            services.AddCors(opts =>
+            {
+                opts.AddPolicy("WorkflowCorsPolicy", builder =>
+                {
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
+                    builder.SetIsOriginAllowed(_ => true);
+                    builder.AllowCredentials();
+                    builder.Build();
+                });
+            });
+
             services.AddHttpContextAccessor();
+
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
 
             //注入流程引擎
             services.AddProcessEngine(Configuration);
 
             services.AddMvc()
                 .AddProcessEngineRestServices(Configuration)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-                //.AddMetrics();
-
-            services.AddCors();
+                .SetCompatibilityVersion(CompatibilityVersion.Latest);
+            //.AddMetrics();
 
 #if DEBUG
             services.AddOpenApiDocument(doc =>
@@ -63,18 +84,30 @@ namespace BpmnWebTest
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseProcessEngine(lifetime);
+            app.UseCors("WorkflowCorsPolicy");
 
-            app.UseCors(cors =>
-                cors.AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowAnyOrigin());
+            app.UseProcessEngine(lifetime);
 
             //app.UseMetricsAllMiddleware();
 
             app.UseStaticFiles();
 
+            app.UseSignalRError();
+
             app.UseWorkflow();
+
+            var wsOpts = new WebSocketOptions();
+            wsOpts.AllowedOrigins.Add("*");
+            wsOpts.ReceiveBufferSize = 65535;
+
+            app.UseWebSockets(wsOpts);
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<WorkflowDebuggerHub>("/api/v1/debugger");
+            });
+
+            app.UseAuthentication();
 
             app.UseMvc();
 

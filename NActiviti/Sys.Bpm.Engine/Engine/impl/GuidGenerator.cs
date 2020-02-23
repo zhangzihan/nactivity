@@ -15,6 +15,13 @@ namespace Sys.Workflow.Engine.Impl
 {
     public class GuidGenerator : IIdGenerator
     {
+        private Queue<string> ids = new Queue<string>();
+
+        public GuidGenerator()
+        {
+
+        }
+
         public string GetNextId()
         {
             return NewId.NextGuid().ToString();

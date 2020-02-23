@@ -11,7 +11,6 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
     using Sys.Workflow.Engine.Impl.Util;
     using Sys.Workflow.Engine.Repository;
     using Sys.Workflow;
-    using Sys.Workflow;
     using Sys.Workflow.Engine.Impl.Interceptor;
 
     /// 

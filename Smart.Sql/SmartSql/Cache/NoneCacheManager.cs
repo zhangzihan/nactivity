@@ -13,6 +13,11 @@ namespace SmartSql.Cache
 
         public void Dispose()
         {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
         }
 
         public void RequestCommitted(IDbConnectionSession dbSession)
@@ -25,7 +30,7 @@ namespace SmartSql.Cache
 
         public void TryAdd<T>(RequestContext context, T cacheItem)
         {
-           
+
         }
 
         public bool TryGet<T>(RequestContext context, out T cachedResult)

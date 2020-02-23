@@ -124,7 +124,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 Assert.NotNull(def);
                 Assert.True(def.Id == defs.List.First().Id);
 
-                await ctx.CreateWorkflowHttpProxy().GetDefinitionDeployerClient().Remove(dep.Id);
+                await ctx.CreateWorkflowHttpProxy().GetDefinitionDeployerClient().Remove(dep.Id).ConfigureAwait(false);
             }).ConfigureAwait(false);
 
             Assert.Null(ex);
@@ -209,7 +209,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 Assert.IsType<BpmnModel>(((ObjectResult)model.Result).Value);
 
                 await ctx.CreateWorkflowHttpProxy().GetDefinitionDeployerClient().Remove(dep.Id).ConfigureAwait(false);
-            });
+            }).ConfigureAwait(false);
 
             Assert.NotNull(ex);
         }

@@ -18,5 +18,9 @@ namespace Sys.Workflow.Engine.Repository
             base($"Start form must unique, but {startForm} exists {processName}")
         {
         }
+
+        protected StartFormUniqueException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
 }

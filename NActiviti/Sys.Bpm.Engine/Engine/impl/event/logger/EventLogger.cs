@@ -11,7 +11,6 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using Sys.Workflow.Engine.Runtime;
     using Sys.Workflow;
-    using Sys.Workflow;
 
     /// 
     public class EventLogger : IActivitiEventListener

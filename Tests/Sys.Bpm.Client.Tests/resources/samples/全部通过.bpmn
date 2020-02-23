@@ -30,7 +30,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_1uwm0o2" sourceRef="StartEvent_07nf92e" targetRef="UserTask_11w47k9" />
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_AllPass">
       <bpmndi:BPMNShape id="StartEvent_07nf92e_di" bpmnElement="StartEvent_07nf92e">
         <dc:Bounds x="298" y="354" width="36" height="36" />
       </bpmndi:BPMNShape>

@@ -22,6 +22,7 @@ using System.Text;
 using Sys.Workflow.Engine.Exceptions;
 using Sys.Workflow.Engine.Impl.Persistence.Entity;
 using System.Threading.Tasks;
+using Sys.Workflow.Engine.Impl.Identities;
 
 namespace Sys.Workflow.Cloud.Services.Core
 {
@@ -106,7 +107,7 @@ namespace Sys.Workflow.Cloud.Services.Core
             //    throw new ActivitiForbiddenException("Operation not permitted for " + processDefinitionKey);
             //}
 
-            IProcessInstance[] processInstance = await  runtimeService.StartProcessInstanceByCmdAsync(cmds);
+            IProcessInstance[] processInstance = await runtimeService.StartProcessInstanceByCmdAsync(cmds).ConfigureAwait(false);
 
             return processInstanceConverter.From(processInstance).ToArray();
         }
@@ -118,8 +119,15 @@ namespace Sys.Workflow.Cloud.Services.Core
         {
             //TODO: plan is to restrict access to events using a new security policy on events
             // - that's another piece of work though so for now no security here
+            if (string.IsNullOrWhiteSpace(signalCmd.ExecutionId) == false)
+            {
+                runtimeService.SignalEventReceived(signalCmd.Name, signalCmd.ExecutionId, signalCmd.InputVariables);
+            }
+            else
+            {
+                runtimeService.SignalEventReceivedWithTenantId(signalCmd.Name, signalCmd.InputVariables, signalCmd.TenantId);
+            }
 
-            runtimeService.SignalEventReceived(signalCmd.Name, signalCmd.InputVariables);
             eventPublisher.PublishEvent(signalCmd);
         }
 
@@ -380,7 +388,7 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// <param name="taskId"> the task id to delete </param>
         public virtual void DeleteTask(string taskId)
         {
-            DeleteTask(taskId, "Cancelled by " + authenticationWrapper.AuthenticatedUser.Id);
+            DeleteTask(taskId, "Cancelled by " + Authentication.AuthenticatedUser.Id);
         }
 
         /// <summary>
@@ -501,8 +509,15 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// </summary>
         public virtual void TerminateProcessInstance(string processInstanceId, string reason)
         {
-            //VerifyCanWriteToProcessInstance(processInstanceId);
-            runtimeService.DeleteProcessInstance(processInstanceId, reason ?? "Cancelled");
+            try
+            {
+                //VerifyCanWriteToProcessInstance(processInstanceId);
+                runtimeService.DeleteProcessInstance(processInstanceId, reason ?? "Cancelled");
+            }
+            catch (ActivitiObjectNotFoundException ex)
+            {
+                logger.LogWarning(ex.Message);
+            }
         }
 
         /// <summary>

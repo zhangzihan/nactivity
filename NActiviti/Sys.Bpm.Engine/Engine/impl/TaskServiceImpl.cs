@@ -46,7 +46,10 @@ namespace Sys.Workflow.Engine.Impl
 
         private TOut ExecuteCommand<TOut>(ICommand<TOut> command)
         {
-            return commandExecutor.Execute(command);
+            lock (syncRoot)
+            {
+                return commandExecutor.Execute(command);
+            }
         }
 
         public virtual ITask NewTask()
@@ -161,159 +164,142 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual void Complete(string taskId)
         {
-            lock (syncRoot)
+            try
             {
-                try
+                if (TryGetTask(taskId, out var task) == false)
                 {
-                    if (TryGetTask(taskId, out var task) == false)
-                    {
-                        return;
-                    }
-                    ExecuteCommand(new CompleteTaskCmd(taskId, null, null));
+                    return;
                 }
-                catch (ActivitiObjectNotFoundException)
+                ExecuteCommand(new CompleteTaskCmd(taskId, null, null));
+            }
+            catch (ActivitiObjectNotFoundException)
+            {
+                if (logger.IsEnabled(LogLevel.Debug))
                 {
-                    if (logger.IsEnabled(LogLevel.Debug))
-                    {
-                        logger.LogDebug("任务可能已经终止或无效.");
-                    }
+                    logger.LogDebug("任务可能已经终止或无效.");
                 }
             }
         }
 
         public virtual void Complete(string taskId, IDictionary<string, object> variables)
         {
-            lock (syncRoot)
+            try
             {
-                try
+                if (TryGetTask(taskId, out var task) == false)
                 {
-                    if (TryGetTask(taskId, out var task) == false)
-                    {
-                        return;
-                    }
-                    ExecuteCommand(new CompleteTaskCmd(taskId, variables, null));
+                    return;
                 }
-                catch (ActivitiObjectNotFoundException)
+                ExecuteCommand(new CompleteTaskCmd(taskId, variables, null));
+            }
+            catch (ActivitiObjectNotFoundException)
+            {
+                if (logger.IsEnabled(LogLevel.Debug))
                 {
-                    if (logger.IsEnabled(LogLevel.Debug))
-                    {
-                        logger.LogDebug("任务可能已经终止或无效.");
-                    }
+                    logger.LogDebug("任务可能已经终止或无效.");
                 }
             }
         }
 
         public virtual void Complete(string taskId, IDictionary<string, object> variables, IDictionary<string, object> transientVariables)
         {
-            lock (syncRoot)
+            try
             {
-                try
+                if (TryGetTask(taskId, out var task) == false)
                 {
-                    if (TryGetTask(taskId, out var task) == false)
-                    {
-                        return;
-                    }
-                    ExecuteCommand(new CompleteTaskCmd(taskId, variables, transientVariables));
+                    return;
                 }
-                catch (ActivitiObjectNotFoundException)
+                ExecuteCommand(new CompleteTaskCmd(taskId, variables, transientVariables));
+            }
+            catch (ActivitiObjectNotFoundException)
+            {
+                if (logger.IsEnabled(LogLevel.Debug))
                 {
-                    if (logger.IsEnabled(LogLevel.Debug))
-                    {
-                        logger.LogDebug("任务可能已经终止或无效.");
-                    }
+                    logger.LogDebug("任务可能已经终止或无效.");
                 }
             }
         }
 
         public virtual void Complete(string taskId, IDictionary<string, object> variables, bool localScope, bool notFoundThrowError = false)
         {
-            lock (syncRoot)
+            try
             {
-                try
-                {
-                    if (TryGetTask(taskId, out var task) == false)
-                    {
-                        if (notFoundThrowError)
-                        {
-                            throw new ActivitiObjectNotFoundException($"Cannot find task for 'taskId={taskId}'", typeof(ITask));
-                        }
-                    }
-                    ExecuteCommand(new CompleteTaskCmd(taskId, variables, localScope));
-                }
-                catch (ActivitiObjectNotFoundException ex)
+                if (TryGetTask(taskId, out var task) == false)
                 {
                     if (notFoundThrowError)
                     {
-                        logger.LogError(ex.Message, ex);
-                        throw ex;
-                    }
-                    else if (logger.IsEnabled(LogLevel.Debug))
-                    {
-                        logger.LogDebug("任务可能已经终止或无效.");
+                        throw new ActivitiObjectNotFoundException($"Cannot find task for 'taskId={taskId}'", typeof(ITask));
                     }
                 }
-                catch (Exception ex)
+                ExecuteCommand(new CompleteTaskCmd(taskId, variables, localScope));
+            }
+            catch (ActivitiObjectNotFoundException ex)
+            {
+                if (notFoundThrowError)
                 {
                     logger.LogError(ex.Message, ex);
                     throw ex;
                 }
+                else if (logger.IsEnabled(LogLevel.Debug))
+                {
+                    logger.LogDebug("任务可能已经终止或无效.");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, ex);
+                throw ex;
             }
         }
 
         public virtual void Complete(string taskId, string comment, IDictionary<string, object> variables, bool localScope, IDictionary<string, object> transientVariables = null)
         {
-            lock (syncRoot)
+            try
             {
-                try
+                if (TryGetTask(taskId, out var task) == false)
                 {
-                    if (TryGetTask(taskId, out var task) == false)
-                    {
-                        return;
-                    }
-                    if (string.IsNullOrWhiteSpace(comment) == false)
-                    {
-                        AddComment(taskId, task.ProcessInstanceId, comment);
-                    }
-
-                    ExecuteCommand(new CompleteTaskCmd(taskId, variables, transientVariables, localScope));
+                    return;
                 }
-                catch (ActivitiObjectNotFoundException)
+                if (string.IsNullOrWhiteSpace(comment) == false)
                 {
-                    if (logger.IsEnabled(LogLevel.Debug))
-                    {
-                        logger.LogDebug("任务可能已经终止或无效.");
-                    }
+                    AddComment(taskId, task.ProcessInstanceId, comment);
+                }
+
+                ExecuteCommand(new CompleteTaskCmd(taskId, variables, transientVariables, localScope));
+            }
+            catch (ActivitiObjectNotFoundException)
+            {
+                if (logger.IsEnabled(LogLevel.Debug))
+                {
+                    logger.LogDebug("任务可能已经终止或无效.");
                 }
             }
         }
 
         public void Complete(string businessKey, string taskName, string assignee, string comment, IDictionary<string, object> variables, bool localScope, IDictionary<string, object> transientVariables = null, bool notFoundThrowError = false)
         {
-            lock (syncRoot)
+            try
             {
-                try
-                {
-                    if (TryGetTask(businessKey, taskName, assignee, out var task) == false)
-                    {
-                        if (notFoundThrowError)
-                        {
-                            throw new ActivitiObjectNotFoundException($"Cannot find task for 'businessKey={businessKey} and assignee={assignee}'", typeof(ITask));
-                        }
-                        return;
-                    }
-
-                    ExecuteCommand(new CompleteTaskCmd(task.Id, variables, transientVariables, localScope));
-                }
-                catch (ActivitiObjectNotFoundException)
+                if (TryGetTask(businessKey, taskName, assignee, out var task) == false)
                 {
                     if (notFoundThrowError)
                     {
-                        throw;
+                        throw new ActivitiObjectNotFoundException($"Cannot find task for 'businessKey={businessKey} and assignee={assignee}'", typeof(ITask));
                     }
-                    else if (logger.IsEnabled(LogLevel.Debug))
-                    {
-                        logger.LogDebug("任务可能已经终止或无效.");
-                    }
+                    return;
+                }
+
+                ExecuteCommand(new CompleteTaskCmd(task.Id, variables, transientVariables, localScope));
+            }
+            catch (ActivitiObjectNotFoundException)
+            {
+                if (notFoundThrowError)
+                {
+                    logger.LogError("任务可能已经终止或无效.");
+                    throw;
+                }
+                else if (logger.IsEnabled(LogLevel.Debug))
+                {
+                    logger.LogDebug("任务可能已经终止或无效.");
                 }
             }
         }
@@ -431,6 +417,7 @@ namespace Sys.Workflow.Engine.Impl
                     query.SetTaskName(taskName);
                 }
 
+                query.SetIsTaskBusinessKey(true);
                 task = query.List()
                     .FirstOrDefault();
             }
@@ -696,9 +683,17 @@ namespace Sys.Workflow.Engine.Impl
         /// <inheritdoc />
         public ITask[] Transfer(ITransferTaskCmd cmd)
         {
-            lock (syncRoot)
+            try
             {
                 return ExecuteCommand(new TransferTaskCmd(cmd)) as ITask[];
+            }
+            catch (ActivitiObjectNotFoundException e)
+            {
+                if (logger.IsEnabled(LogLevel.Warning))
+                {
+                    logger.LogWarning("任务可能已经终止或无效.");
+                }
+                return null;
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sys.Workflow.Bpmn.Models;
 using Sys.Workflow.Cloud.Services.Api.Model;
 using Sys.Workflow.Cloud.Services.Rest.Api;
@@ -15,7 +16,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
     /// <inheritdoc />
     [Route("v1/process-definitions/{id}/meta")]
     [ApiController]
-    public class ProcessDefinitionMetaControllerImpl : ControllerBase, IProcessDefinitionMetaController
+    public class ProcessDefinitionMetaControllerImpl : WorkflowController, IProcessDefinitionMetaController
     {
         private readonly IRepositoryService repositoryService;
         private readonly ProcessDefinitionMetaResourceAssembler resourceAssembler;

@@ -324,5 +324,15 @@ namespace Spring.Context.Support
         {
             return _objectFactory.IsObjectNameInUse(objectName);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (_objectFactory != null)
+            {
+                _objectFactory.Dispose();
+            }
+        }
     }
 }

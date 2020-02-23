@@ -1,14 +1,9 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.FileProviders;
-using System;
-using System.IO;
-using Sys.Workflow;
-using System.Reflection;
 using Microsoft.Extensions.Logging;
-using App.Metrics.AspNetCore;
-using App.Metrics;
+using Sys.Workflow;
+using System;
 
 namespace BpmnWebTest
 {
@@ -16,6 +11,8 @@ namespace BpmnWebTest
     {
         public static void Main(string[] args)
         {
+            Console.Title = "工作流";
+
             CreateWebHostBuilder(args).Build().Run();
         }
 
@@ -31,6 +28,11 @@ namespace BpmnWebTest
             return WebHost.CreateDefaultBuilder(args)
                 .UseConfiguration(cr)
                 .ConfigurationWorkflowWebHost()
+                .ConfigureAppConfiguration((builderContext, config) =>
+                {
+                    config.AddJsonFile("appsettings.json", false, true);
+                    config.AddJsonFile("appsettings." + builderContext.HostingEnvironment.EnvironmentName + ".json", false, true);
+                })
                 .ConfigureLogging((host, logging) =>
                 {
                     logging.AddFile("bin/Logs/nactiviti-{Date}.json", LogLevel.Error, isJson: true);
@@ -46,13 +48,16 @@ namespace BpmnWebTest
                 .UseKestrel(config =>
                 {
                     config.AllowSynchronousIO = true;
-                    config.Limits.MaxConcurrentConnections = null;
                     config.Limits.MaxRequestHeaderCount = 200;
+                    config.Limits.RequestHeadersTimeout = TimeSpan.FromMinutes(10);
+                    config.Limits.Http2.MaxStreamsPerConnection = 1000;
+                    config.Limits.MaxConcurrentConnections = null;
                     config.Limits.MinRequestBodyDataRate = null;
                     config.Limits.MinResponseDataRate = null;
-                    config.Limits.RequestHeadersTimeout = TimeSpan.FromMinutes(3);
-                    config.Limits.Http2.MaxStreamsPerConnection = 1000;
+                    //config.ApplicationSchedulingMode = SchedulingMode.ThreadPool;
                 })
+                .UseIIS()
+                .UseIISIntegration()
                 .UseStartup<Startup>();
         }
     }

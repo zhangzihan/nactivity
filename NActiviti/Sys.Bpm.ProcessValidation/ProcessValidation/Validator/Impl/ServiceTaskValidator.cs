@@ -27,23 +27,28 @@ namespace Sys.Workflow.Validation.Validators.Impl
             IList<ServiceTask> serviceTasks = process.FindFlowElementsOfType<ServiceTask>();
             foreach (ServiceTask serviceTask in serviceTasks)
             {
-                //可以不校验实现类,如果没有填写实现类,默认使用ServiceWebApiBehavior
-                //verifyImplementation(process, serviceTask, errors);
-                //verifyType(process, serviceTask, errors);
-                //verifyResultVariableName(process, serviceTask, errors);
-                //verifyWebservice(bpmnModel, process, serviceTask, errors);
-
-                serviceTask.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY,
-                out IList<ExtensionElement> pElements);
-
-                if (pElements == null || pElements.Count == 0 || string.IsNullOrWhiteSpace(pElements.GetAttributeValue("url")))
+                if (string.IsNullOrWhiteSpace(serviceTask.ImplementationType))
                 {
-                    AddError(errors, ProblemsConstants.SERVICE_TASK_WEBSERVICE_INVALID_URL, process, serviceTask, ProcessValidatorResource.SERVICE_TASK_WEBSERVICE_INVALID_URL);
+                    serviceTask.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY,
+                    out IList<ExtensionElement> pElements);
+
+                    if (pElements == null || pElements.Count == 0 || string.IsNullOrWhiteSpace(pElements.GetAttributeValue("url")))
+                    {
+                        AddError(errors, ProblemsConstants.SERVICE_TASK_WEBSERVICE_INVALID_URL, process, serviceTask, ProcessValidatorResource.SERVICE_TASK_WEBSERVICE_INVALID_URL);
+                    }
+
+                    if (string.IsNullOrWhiteSpace(serviceTask.Name) || serviceTask.Name.Length > Constraints.BPMN_MODEL_NAME_MAX_LENGTH)
+                    {
+                        AddError(errors, ProblemsConstants.SERVICE_TASK_NAME_TOO_LONG, process, serviceTask, ProcessValidatorResource.NAME_TOO_LONG);
+                    }
                 }
-
-                if (string.IsNullOrWhiteSpace(serviceTask.Name) || serviceTask.Name.Length > Constraints.BPMN_MODEL_NAME_MAX_LENGTH)
+                else
                 {
-                    AddError(errors, ProblemsConstants.SERVICE_TASK_NAME_TOO_LONG, process, serviceTask, ProcessValidatorResource.NAME_TOO_LONG);
+                    //可以不校验实现类,如果没有填写实现类,默认使用ServiceWebApiBehavior
+                    VerifyImplementation(process, serviceTask, errors);
+                    VerifyType(process, serviceTask, errors);
+                    VerifyResultVariableName(process, serviceTask, errors);
+                    VerifyWebservice(bpmnModel, process, serviceTask, errors);
                 }
             }
         }

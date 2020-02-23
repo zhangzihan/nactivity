@@ -1,6 +1,6 @@
 #region License
 /*
-* Copyright © 2002-2011 the original author or authors.
+* Copyright ?2002-2011 the original author or authors.
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ using System;
 
 namespace Spring.Threading
 {
-	/// <summary>
-	/// Utility class to use an <see cref="ISync"/> with the 
-	/// C# <c>using () {}</c> idiom
-	/// </summary>
-	public class SyncHolder : IDisposable
-	{
+    /// <summary>
+    /// Utility class to use an <see cref="ISync"/> with the 
+    /// C# <c>using () {}</c> idiom
+    /// </summary>
+    public class SyncHolder : IDisposable
+    {
         ISync _sync;
 
         /// <summary>
@@ -33,35 +33,43 @@ namespace Spring.Threading
         /// <see cref="ISync"/>
         /// </summary>
         /// <param name="sync">the <see cref="ISync"/> to be held</param>
-	    public SyncHolder (ISync sync)
-	    {
-            Init (sync);
-	    }
+	    public SyncHolder(ISync sync)
+        {
+            Init(sync);
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Creates a new <see cref="SyncHolder"/> trying to <see cref="ISync.Attempt"/> the given 
         /// <see cref="ISync"/>
         /// </summary>
         /// <param name="sync">the <see cref="ISync"/> to be held</param>
         /// <param name="msecs">millisecond to try to acquire the lock</param>
-	    public SyncHolder (ISync sync, long msecs)
-	    {
+        public SyncHolder(ISync sync, long msecs)
+        {
             Init(new TimeoutSync(sync, msecs));
-	    }
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Releases the held <see cref="ISync"/>
         /// </summary>
-	    public void Dispose ()
+        public void Dispose()
         {
-	        _sync.Release();
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _sync.Release();
+            }
         }
 
         /// <summary>
         /// initializes and acquire access to the <see cref="ISync"/>
         /// </summary>
         /// <param name="sync"></param>
-        private void Init (ISync sync)
+        private void Init(ISync sync)
         {
             this._sync = sync;
             _sync.Acquire();

@@ -18,6 +18,8 @@ using System.Text;
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
     using Newtonsoft.Json.Linq;
+    using Sys.Net.Http;
+    using Sys.Workflow;
     using Sys.Workflow.Bpmn.Models;
     using Sys.Workflow.Engine.Delegate.Events;
     using Sys.Workflow.Engine.Delegate.Events.Impl;
@@ -26,9 +28,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
     using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys.Workflow.Engine.Impl.Util;
     using Sys.Workflow.Engine.Runtime;
-    using Sys.Net.Http;
-    using Sys.Workflow;
-    using System.IO;
     using System.Linq;
 
     /// 
@@ -45,83 +44,83 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         // current position /////////////////////////////////////////////////////////
 
-        protected internal FlowElement currentFlowElement;
-        protected internal ActivitiListener currentActivitiListener; // Only set when executing an execution listener
+        private FlowElement currentFlowElement;
+        private ActivitiListener currentActivitiListener; // Only set when executing an execution listener
 
         /// <summary>
         /// the process instance. this is the root of the execution tree. the processInstance of a process instance is a self reference.
         /// </summary>
-        protected internal IExecutionEntity processInstance;
+        private IExecutionEntity processInstance;
 
         /// <summary>
         /// the parent execution </summary>
-        protected internal IExecutionEntity parent;
+        private IExecutionEntity parent;
 
         /// <summary>
         /// nested executions representing scopes or concurrent paths </summary>
-        protected internal IList<IExecutionEntity> executions;
+        private IList<IExecutionEntity> executions;
 
         /// <summary>
         /// super execution, not-null if this execution is part of a subprocess </summary>
-        protected internal IExecutionEntity superExecution;
+        private IExecutionEntity superExecution;
 
         /// <summary>
         /// reference to a subprocessinstance, not-null if currently subprocess is started from this execution </summary>
-        protected internal IExecutionEntity subProcessInstance;
+        private IExecutionEntity subProcessInstance;
 
         /// <summary>
         /// The tenant identifier (if any) </summary>
-        protected internal string tenantId = ProcessEngineConfiguration.NO_TENANT_ID;
-        protected internal string name;
-        protected internal string description;
-        protected internal string localizedName;
-        protected internal string localizedDescription;
+        private string tenantId = ProcessEngineConfiguration.NO_TENANT_ID;
+        private string name;
+        private string description;
+        private string localizedName;
+        private string localizedDescription;
 
-        protected internal DateTime? lockTime;
+        private DateTime? lockTime;
 
         // state/type of execution //////////////////////////////////////////////////
 
-        protected internal bool isActive = true;
-        protected internal bool isScope = true;
-        protected internal bool isConcurrent;
-        protected internal bool isEnded;
-        protected internal bool isEventScope;
-        protected internal bool isMultiInstanceRoot;
-        protected internal bool isCountEnabled;
+        private bool isActive = true;
+        private bool isScope = true;
+        private bool isConcurrent;
+        private bool isEnded;
+        private bool isEventScope;
+        private bool isMultiInstanceRoot;
+        private bool isCountEnabled;
 
         // events ///////////////////////////////////////////////////////////////////
 
         // TODO: still needed in v6?
 
-        protected internal string eventName;
+        private string eventName;
 
         // associated entities /////////////////////////////////////////////////////
 
         // (we cache associated entities here to minimize db queries)
-        protected internal IList<IEventSubscriptionEntity> eventSubscriptions;
-        protected internal IList<IJobEntity> jobs;
-        protected internal IList<ITimerJobEntity> timerJobs;
-        protected internal IList<ITaskEntity> tasks;
-        protected internal IList<IIdentityLinkEntity> identityLinks;
+        private IList<IEventSubscriptionEntity> eventSubscriptions;
+        private IList<IJobEntity> jobs;
+        private IList<ITimerJobEntity> timerJobs;
+        private IList<ITaskEntity> tasks;
+        private IList<IIdentityLinkEntity> identityLinks;
 
         // cascade deletion ////////////////////////////////////////////////////////
 
-        protected internal string deleteReason;
+        private string deleteReason;
 
-        protected internal int suspensionState = SuspensionStateProvider.ACTIVE.StateCode;
+        private int suspensionState = SuspensionStateProvider.ACTIVE.StateCode;
 
-        protected internal string startUserId;
-        protected internal DateTime startTime;
+        private string startUserId;
+        private DateTime startTime;
 
         // CountingExecutionEntity 
-        protected internal int eventSubscriptionCount;
-        protected internal int taskCount;
-        protected internal int jobCount;
-        protected internal int timerJobCount;
-        protected internal int suspendedJobCount;
-        protected internal int deadLetterJobCount;
-        protected internal int variableCount;
-        protected internal int identityLinkCount;
+        private int eventSubscriptionCount;
+        private int taskCount;
+        private int jobCount;
+        private int timerJobCount;
+        private int suspendedJobCount;
+        private int deadLetterJobCount;
+        private int variableCount;
+        private int identityLinkCount;
 
         /// <summary>
         /// persisted reference to the processDefinition.
@@ -129,27 +128,27 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         /// <seealso cref= #processDefinition </seealso>
         /// <seealso cref= #setProcessDefinition(ProcessDefinitionImpl) </seealso>
         /// <seealso cref= #getProcessDefinition() </seealso>
-        protected internal string processDefinitionId;
+        private string processDefinitionId;
 
         /// <summary>
         /// persisted reference to the process definition key.
         /// </summary>
-        protected internal string processDefinitionKey;
+        private string processDefinitionKey;
 
         /// <summary>
         /// persisted reference to the process definition name.
         /// </summary>
-        protected internal string processDefinitionName;
+        private string processDefinitionName;
 
         /// <summary>
         /// persisted reference to the process definition version.
         /// </summary>
-        protected internal int? processDefinitionVersion;
+        private int? processDefinitionVersion;
 
         /// <summary>
         /// persisted reference to the deployment id.
         /// </summary>
-        protected internal string deploymentId;
+        private string deploymentId;
 
         /// <summary>
         /// persisted reference to the current position in the diagram within the <seealso cref="#processDefinition"/>.
@@ -157,47 +156,45 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         /// <seealso cref= #activity </seealso>
         /// <seealso cref= #setActivity(ActivityImpl) </seealso>
         /// <seealso cref= #getActivity() </seealso>
-        protected internal string activityId;
+        private string activityId;
 
         /// <summary>
         /// The name of the current activity position
         /// </summary>
-        protected internal string activityName;
+        private string activityName;
 
         /// <summary>
         /// persisted reference to the process instance.
         /// </summary>
         /// <seealso cref= #getProcessInstance() </seealso>
-        protected internal string processInstanceId;
+        private string processInstanceId;
 
         /// <summary>
         /// persisted reference to the business key.
         /// </summary>
-        protected internal string businessKey;
+        private string businessKey;
 
         /// <summary>
         /// persisted reference to the parent of this execution.
         /// </summary>
         /// <seealso cref= #getParent() </seealso>
         /// <seealso cref= #setParentId(String) </seealso>
-        protected internal string parentId;
+        private string parentId;
 
         /// <summary>
         /// persisted reference to the super execution of this execution
         /// 
         /// @See <seealso cref="#getSuperExecution()"/> </summary>
         /// <seealso cref= #setSuperExecution(ExecutionEntityImpl) </seealso>
-        protected internal string superExecutionId;
+        private string superExecutionId;
 
-        protected internal string rootProcessInstanceId;
-        protected internal ExecutionEntityImpl rootProcessInstance;
+        private string rootProcessInstanceId;
+        private ExecutionEntityImpl rootProcessInstance;
 
-        protected internal bool forcedUpdate;
+        private bool forcedUpdate;
 
-        protected internal IList<IVariableInstanceEntity> queryVariables;
-
-        protected internal new bool isDeleted; // TODO: should be in entity superclass probably
-
+        private IList<IVariableInstanceEntity> queryVariables;
+        
         public ExecutionEntityImpl()
         {
 
@@ -334,7 +331,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             var ctx = Context.CommandContext;
             if (executions == null && ctx != null)
             {
-                this.executions = ctx.ExecutionEntityManager.FindChildExecutionsByParentExecutionId(id);
+                this.executions = ctx.ExecutionEntityManager.FindChildExecutionsByParentExecutionId(Id);
             }
         }
 
@@ -578,7 +575,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             var ctx = Context.CommandContext;
             if (subProcessInstance == null && ctx != null)
             {
-                subProcessInstance = ctx.ExecutionEntityManager.FindSubProcessInstanceBySuperExecutionId(id);
+                subProcessInstance = ctx.ExecutionEntityManager.FindSubProcessInstanceBySuperExecutionId(Id);
             }
         }
 
@@ -659,14 +656,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             else
             {
-                variableInstance.ProcessInstanceId = id;
+                variableInstance.ProcessInstanceId = Id;
             }
-            variableInstance.ExecutionId = id;
+            variableInstance.ExecutionId = Id;
         }
 
         protected internal override IList<IVariableInstanceEntity> LoadVariableInstances()
         {
-            return Context.CommandContext.VariableInstanceEntityManager.FindVariableInstancesByExecutionId(id) as IList<IVariableInstanceEntity>;
+            return Context.CommandContext.VariableInstanceEntityManager.FindVariableInstancesByExecutionId(Id) as IList<IVariableInstanceEntity>;
         }
 
         protected internal override VariableScopeImpl ParentVariableScope
@@ -721,7 +718,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 throw new ActivitiException("lazy loading outside command context");
             }
-            IVariableInstanceEntity variableInstance = commandContext.VariableInstanceEntityManager.FindVariableInstanceByExecutionAndName(id, variableName);
+            IVariableInstanceEntity variableInstance = commandContext.VariableInstanceEntityManager.FindVariableInstanceByExecutionAndName(Id, variableName);
 
             return variableInstance;
         }
@@ -733,7 +730,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 throw new ActivitiException("lazy loading outside command context");
             }
-            return commandContext.VariableInstanceEntityManager.FindVariableInstancesByExecutionAndNames(id, variableNames);
+            return commandContext.VariableInstanceEntityManager.FindVariableInstancesByExecutionAndNames(Id, variableNames);
         }
 
         // event subscription support //////////////////////////////////////////////
@@ -752,7 +749,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             var ctx = Context.CommandContext;
             if (eventSubscriptions == null && ctx != null)
             {
-                eventSubscriptions = ctx.EventSubscriptionEntityManager.FindEventSubscriptionsByExecution(id);
+                eventSubscriptions = ctx.EventSubscriptionEntityManager.FindEventSubscriptionsByExecution(Id);
             }
         }
 
@@ -772,7 +769,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             var ctx = Context.CommandContext;
             if (jobs == null && ctx != null)
             {
-                jobs = ctx.JobEntityManager.FindJobsByExecutionId(id);
+                jobs = ctx.JobEntityManager.FindJobsByExecutionId(Id);
             }
         }
 
@@ -790,7 +787,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             var ctx = Context.CommandContext;
             if (timerJobs == null && ctx != null)
             {
-                timerJobs = ctx.TimerJobEntityManager.FindJobsByExecutionId(id);
+                timerJobs = ctx.TimerJobEntityManager.FindJobsByExecutionId(Id);
             }
         }
 
@@ -801,7 +798,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             var ctx = Context.CommandContext;
             if (tasks == null && ctx != null)
             {
-                tasks = ctx.TaskEntityManager.FindTasksByExecutionId(id);
+                tasks = ctx.TaskEntityManager.FindTasksByExecutionId(Id);
             }
         }
 
@@ -830,7 +827,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             var ctx = Context.CommandContext;
             if (identityLinks == null && ctx != null)
             {
-                identityLinks = ctx.IdentityLinkEntityManager.FindIdentityLinksByProcessInstanceId(id);
+                identityLinks = ctx.IdentityLinkEntityManager.FindIdentityLinksByProcessInstanceId(Id);
             }
         }
 
@@ -1159,20 +1156,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.queryVariables = value;
             }
         }
-
-
-        public override bool Deleted
-        {
-            get
-            {
-                return isDeleted;
-            }
-            set
-            {
-                this.isDeleted = value;
-            }
-        }
-
 
         public virtual string ActivityName
         {

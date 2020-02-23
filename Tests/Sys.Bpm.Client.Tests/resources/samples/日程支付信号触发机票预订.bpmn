@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Second_Signal" name="机票预订" isExecutable="true">
+    <bpmn2:startEvent id="StartEvent_0x81qrh">
+      <bpmn2:outgoing>SequenceFlow_13d6wym</bpmn2:outgoing>
+      <bpmn2:signalEventDefinition signalRef="Signal_1hchunb" />
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_13d6wym" sourceRef="StartEvent_0x81qrh" targetRef="Task_1i8on2f" />
+    <bpmn2:userTask id="Task_1i8on2f" name="机票预订" camunda:assignee="${机票预订}">
+      <bpmn2:incoming>SequenceFlow_13d6wym</bpmn2:incoming>
+    </bpmn2:userTask>
+  </bpmn2:process>
+  <bpmn2:signal id="Signal_1pdsqhn" name="starter" />
+  <bpmn2:message id="Message_1ggnpn5" name="Message_38jm21j" />
+  <bpmn2:signal id="Signal_1hchunb" name="日程已支付" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Second_Signal">
+      <bpmndi:BPMNShape id="StartEvent_1kwru51_di" bpmnElement="StartEvent_0x81qrh">
+        <dc:Bounds x="239" y="227" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_13d6wym_di" bpmnElement="SequenceFlow_13d6wym">
+        <di:waypoint x="275" y="245" />
+        <di:waypoint x="380" y="245" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_12jzxin_di" bpmnElement="Task_1i8on2f">
+        <dc:Bounds x="380" y="205" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

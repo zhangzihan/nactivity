@@ -22,5 +22,9 @@ namespace Sys.Workflow.Engine.Exceptions
             : base($"exists {ruleType.FullName} with {ruleName}")
         {
         }
+
+        protected ExistsRuleTypeException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
 }

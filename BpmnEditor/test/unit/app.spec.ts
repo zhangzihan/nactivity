@@ -1,47 +1,26 @@
-import { EventAggregator } from 'aurelia-event-aggregator';
-import { inject } from 'aurelia-framework';
-import { App } from 'app';
-import { WorkflowDocument } from 'WorkflowDocument';
+import {bootstrap} from 'aurelia-bootstrapper';
+import {StageComponent} from 'aurelia-testing';
+import {PLATFORM} from 'aurelia-pal';
 
-class RouterStub {
-  routes;
-
-  configure(handler) {
-    handler(this);
-  }
-
-  map(routes) {
-    this.routes = routes;
-  }
-}
-
-describe('the App module', () => {
-  let sut: any;
-  let mockedRouter: any;
+describe('Stage App Component', () => {
+  let component;
 
   beforeEach(() => {
-    mockedRouter = new RouterStub();
-    sut = new App(new WorkflowDocument(new EventAggregator));
-    sut.configureRouter(mockedRouter, mockedRouter);
+    component = StageComponent
+      .withResources(PLATFORM.moduleName('app'))
+      .inView('<app></app>');
   });
 
-  it('contains a router property', () => {
-    expect(sut.router).toBeDefined();
-  });
+  afterEach(() => component.dispose());
 
-  it('configures the router title', () => {
-    expect(sut.router.title).toEqual('Aurelia');
-  });
-
-  it('should have a welcome route', () => {
-    expect(sut.router.routes).toContainEqual({ route: ['', 'welcome'], name: 'welcome', moduleId: './welcome', nav: true, title: 'Welcome' });
-  });
-
-  it('should have a users route', () => {
-    expect(sut.router.routes).toContainEqual({ route: 'users', name: 'users', moduleId: './users', nav: true, title: 'Github Users' });
-  });
-
-  it('should have a child router route', () => {
-    expect(sut.router.routes).toContainEqual({ route: 'child-router', name: 'child-router', moduleId: './child-router', nav: true, title: 'Child Router' });
+  it('should render message', done => {
+    component.create(bootstrap).then(() => {
+      const view = component.element;
+      expect(view.textContent.trim()).toBe('Hello World!');
+      done();
+    }).catch(e => {
+      fail(e);
+      done();
+    });
   });
 });

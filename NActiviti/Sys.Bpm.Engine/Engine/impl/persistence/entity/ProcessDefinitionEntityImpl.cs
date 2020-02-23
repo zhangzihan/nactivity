@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 var ctx = Context.CommandContext;
                 if (!isIdentityLinksInitialized && ctx != null)
                 {
-                    definitionIdentityLinkEntities = ctx.IdentityLinkEntityManager.FindIdentityLinksByProcessDefinitionId(id);
+                    definitionIdentityLinkEntities = ctx.IdentityLinkEntityManager.FindIdentityLinksByProcessDefinitionId(Id);
                     isIdentityLinksInitialized = true;
                 }
 
@@ -317,7 +317,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public override string ToString()
         {
-            return "ProcessDefinitionEntity[" + id + "]";
+            return "ProcessDefinitionEntity[" + Id + "]";
         }
 
         public override bool Equals(object obj)
@@ -327,7 +327,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public override int GetHashCode()
         {
-            return this.GetType().GetHashCode() >> 2;
+            return this.GetType().GetHashCode() << 2;
         }
 
         public static bool operator ==(ProcessDefinitionEntityImpl objA, ProcessDefinitionEntityImpl objB)

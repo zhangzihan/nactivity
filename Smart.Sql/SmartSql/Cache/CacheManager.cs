@@ -142,7 +142,15 @@ namespace SmartSql.Cahce
 
         public void Dispose()
         {
-            _timer.Dispose();
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _timer.Dispose();
+            }
         }
 
         public bool TryGet<T>(RequestContext context, out T cachedResult)

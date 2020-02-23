@@ -23,13 +23,15 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
+using Microsoft.AspNetCore.Authorization;
+using Sys.Workflow.Cloud.Services.Rest.Controllers;
 
-namespace Sys.Workflow.Rest.Controllers
+namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 {
     /// <inheritdoc />
     [Route(WorkflowConstants.PROC_DEP_ROUTER_V1)]
     [ApiController]
-    public class ProcessDefinitionDeployerController : ControllerBase, IProcessDefinitionDeployerController
+    public class ProcessDefinitionDeployerController : WorkflowController, IProcessDefinitionDeployerController
     {
         private readonly IRepositoryService repositoryService;
 
@@ -82,94 +84,58 @@ namespace Sys.Workflow.Rest.Controllers
         [HttpPost]
         public Task<Deployment> Deploy([FromBody]ProcessDefinitionDeployer deployer)
         {
-            try
+            IDeploymentBuilder deployment = this.repositoryService.CreateDeployment();
+
+            if (deployer.DisableSchemaValidation)
             {
-                IDeploymentBuilder deployment = this.repositoryService.CreateDeployment();
-
-                if (deployer.DisableSchemaValidation)
-                {
-                    deployment.DisableSchemaValidation();
-                }
-
-                if (deployer.EnableDuplicateFiltering)
-                {
-                    deployment.EnableDuplicateFiltering();
-                }
-
-                string resourceName = deployer.Name.EndsWith("bpmn", StringComparison.OrdinalIgnoreCase) ? deployer.Name : $"{deployer.Name}.bpmn";
-
-                IDeployment dep = deployment.Name(deployer.Name)
-                    .Category(deployer.Category)
-                    .Key(deployer.Key)
-                    .TenantId(deployer.TenantId)
-                    .BusinessKey(deployer.BusinessKey)
-                    .BusinessPath(deployer.BusinessPath)
-                    .StartForm(deployer.StartForm, deployer.BpmnXML)
-                    .AddString(resourceName, deployer.BpmnXML)
-                    .Deploy();
-
-                return Task.FromResult(deploymentConverter.From(dep));
+                deployment.DisableSchemaValidation();
             }
-            catch (ActivitiValidationException ex)
+
+            if (deployer.EnableDuplicateFiltering)
             {
-                var http400 = new Http400()
-                {
-                    Code = "activitiValidationException",
-                    Message = "流程定义验证失败",
-                    Target = this.GetType().Name,
-                };
-
-                http400.Details = new List<HttpException>();
-                foreach (var err in ex.ValidationErrors ?? new List<ValidationError>())
-                {
-                    http400.Details.Add(new Http400
-                    {
-                        Code = "activitiValidationException",
-                        OriginError = err,
-                        Message = err.ToString()
-                    });
-                }
-
-                throw new Http400Exception(http400, ex);
+                deployment.EnableDuplicateFiltering();
             }
+
+            string resourceName = deployer.Name.EndsWith("bpmn", StringComparison.OrdinalIgnoreCase) ? deployer.Name : $"{deployer.Name}.bpmn";
+
+            IDeployment dep = deployment.Name(deployer.Name)
+                .Category(deployer.Category)
+                .Key(deployer.Key)
+                .TenantId(deployer.TenantId)
+                .BusinessKey(deployer.BusinessKey)
+                .BusinessPath(deployer.BusinessPath)
+                .StartForm(deployer.StartForm, deployer.BpmnXML)
+                .AddString(resourceName, deployer.BpmnXML)
+                .Deploy();
+
+            return Task.FromResult(deploymentConverter.From(dep));
         }
 
         /// <inheritdoc />
         [HttpPost("save")]
         public Task<Deployment> Save(ProcessDefinitionDeployer deployer)
         {
-            try
-            {
-                IDeploymentBuilder deployment = this.repositoryService
-                .CreateDeployment()
-                .DisableDuplicateStartForm();
+            IDeploymentBuilder deployment = this.repositoryService
+            .CreateDeployment()
+            .DisableDuplicateStartForm();
 
-                deployment.DisableBpmnValidation();
-                deployment.DisableSchemaValidation();
-                deployment.EnableDuplicateFiltering();
+            deployment.DisableBpmnValidation();
+            deployment.DisableSchemaValidation();
+            deployment.EnableDuplicateFiltering();
 
-                string resourceName = deployer.Name.EndsWith("bpmn", StringComparison.OrdinalIgnoreCase) ? deployer.Name : $"{deployer.Name}.bpmn";
+            string resourceName = deployer.Name.EndsWith("bpmn", StringComparison.OrdinalIgnoreCase) ? deployer.Name : $"{deployer.Name}.bpmn";
 
-                IDeployment dep = deployment.Name(deployer.Name)
-                    .Category(deployer.Category)
-                    .Key(deployer.Key)
-                    .TenantId(deployer.TenantId)
-                    .BusinessKey(deployer.BusinessKey)
-                    .BusinessPath(deployer.BusinessPath)
-                    .StartForm(deployer.StartForm, deployer.BpmnXML)
-                    .AddString(resourceName, deployer.BpmnXML)
-                    .Save();
+            IDeployment dep = deployment.Name(deployer.Name)
+                .Category(deployer.Category)
+                .Key(deployer.Key)
+                .TenantId(deployer.TenantId)
+                .BusinessKey(deployer.BusinessKey)
+                .BusinessPath(deployer.BusinessPath)
+                .StartForm(deployer.StartForm, deployer.BpmnXML)
+                .AddString(resourceName, deployer.BpmnXML)
+                .Save();
 
-                return Task.FromResult<Deployment>(deploymentConverter.From(dep));
-            }
-            catch (StartFormUniqueException ex)
-            {
-                throw new Http400Exception(new Http400
-                {
-                    Code = "startFormUniqueException",
-                    Message = ex.Message
-                }, ex);
-            }
+            return Task.FromResult<Deployment>(deploymentConverter.From(dep));
         }
 
         /// <inheritdoc />
@@ -207,14 +173,6 @@ namespace Sys.Workflow.Rest.Controllers
                 }
 
                 return Task.FromResult(true);
-            }
-            catch (ExistsProcessInstanceException ex)
-            {
-                throw new Http400Exception(new Http400
-                {
-                    Code = "existsProcessInstance",
-                    Message = ex.Message,
-                }, ex);
             }
         }
 

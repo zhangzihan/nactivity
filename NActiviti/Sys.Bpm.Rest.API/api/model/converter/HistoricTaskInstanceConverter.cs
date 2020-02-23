@@ -71,7 +71,8 @@ namespace Sys.Workflow.Cloud.Services.Api.Model.Converters
                     source.IsTransfer,
                     source.CanTransfer,
                     source.OnlyAssignee,
-                    source.BusinessKey);
+                    source.BusinessKey,
+                    source.TaskDefinitionKey);
 
                 if (source.Assigner != null)
                 {

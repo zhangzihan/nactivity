@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +21,7 @@ namespace Sys.Workflow.Engine
     /// 
     /// 
     /// </summary>
+    [Serializable]
     public class ActivitiClassLoadingException : ActivitiException
     {
 
@@ -54,6 +56,9 @@ namespace Sys.Workflow.Engine
             }
         }
 
+        protected ActivitiClassLoadingException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
 
 }

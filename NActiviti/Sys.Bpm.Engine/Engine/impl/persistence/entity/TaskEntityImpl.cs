@@ -16,22 +16,18 @@ using System.Collections.Generic;
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
     using Newtonsoft.Json.Linq;
+    using Sys.Net.Http;
+    using Sys.Workflow;
     using Sys.Workflow.Bpmn.Constants;
     using Sys.Workflow.Bpmn.Models;
-    using Sys.Workflow.Engine.Delegate;
     using Sys.Workflow.Engine.Delegate.Events;
     using Sys.Workflow.Engine.Delegate.Events.Impl;
-    using Sys.Workflow.Engine.Exceptions;
     using Sys.Workflow.Engine.Impl.Cfg;
     using Sys.Workflow.Engine.Impl.Cmd;
     using Sys.Workflow.Engine.Impl.Contexts;
     using Sys.Workflow.Engine.Impl.DB;
     using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys.Workflow.Engine.Tasks;
-    using Sys.Net.Http;
-    using Sys.Workflow;
-    using System.Diagnostics;
-    using System.IO;
     using System.Linq;
 
     /// 
@@ -79,7 +75,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal string taskDefinitionKey;
         protected internal string formKey;
 
-        protected internal new bool isDeleted;
         protected internal bool isCanceled;
         protected internal string eventName;
         protected internal ActivitiListener currentActivitiListener;
@@ -171,7 +166,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                return revision + 1;
+                return Revision + 1;
             }
         }
 
@@ -196,14 +191,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         protected internal override void InitializeVariableInstanceBackPointer(IVariableInstanceEntity variableInstance)
         {
-            variableInstance.TaskId = id;
+            variableInstance.TaskId = Id;
             variableInstance.ExecutionId = executionId;
             variableInstance.ProcessInstanceId = processInstanceId;
         }
 
         protected internal override IList<IVariableInstanceEntity> LoadVariableInstances()
         {
-            return Context.CommandContext.VariableInstanceEntityManager.FindVariableInstancesByTaskId(id);
+            return Context.CommandContext.VariableInstanceEntityManager.FindVariableInstancesByTaskId(Id);
         }
 
         protected internal override IVariableInstanceEntity CreateVariableInstance(string variableName, object value, IExecutionEntity sourceActivityExecution)
@@ -331,7 +326,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 var ctx = Context.CommandContext;
                 if (!isIdentityLinksInitialized && ctx != null)
                 {
-                    taskIdentityLinkEntities = ctx.IdentityLinkEntityManager.FindIdentityLinksByTaskId(id);
+                    taskIdentityLinkEntities = ctx.IdentityLinkEntityManager.FindIdentityLinksByTaskId(Id);
                     isIdentityLinksInitialized = true;
                 }
 
@@ -599,7 +594,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 throw new ActivitiException("lazy loading outside command context");
             }
-            IVariableInstanceEntity variableInstance = commandContext.VariableInstanceEntityManager.FindVariableInstanceByTaskAndName(id, variableName);
+            IVariableInstanceEntity variableInstance = commandContext.VariableInstanceEntityManager.FindVariableInstanceByTaskAndName(Id, variableName);
 
             return variableInstance;
         }
@@ -611,24 +606,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 throw new ActivitiException("lazy loading outside command context");
             }
-            return commandContext.VariableInstanceEntityManager.FindVariableInstancesByTaskAndNames(id, variableNames);
+            return commandContext.VariableInstanceEntityManager.FindVariableInstancesByTaskAndNames(Id, variableNames);
         }
 
         // regular getters and setters ////////////////////////////////////////////////////////
-
-        public override int Revision
-        {
-            get
-            {
-                return revision;
-            }
-            set
-            {
-                this.revision = value;
-            }
-        }
-
-
 
         public virtual string LocalizedName
         {
@@ -641,9 +622,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.localizedName = value;
             }
         }
-
-
-
+        
         public virtual string LocalizedDescription
         {
             get
@@ -825,20 +804,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
-        public override bool Deleted
-        {
-            get
-            {
-                return isDeleted;
-            }
-            set
-            {
-                this.isDeleted = value;
-            }
-        }
-
-
         public virtual bool Canceled
         {
             get
@@ -995,7 +960,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public override string ToString()
         {
-            return "Task[id=" + id + ", name=" + name + "]";
+            return "Task[id=" + Id + ", name=" + name + "]";
         }
     }
 

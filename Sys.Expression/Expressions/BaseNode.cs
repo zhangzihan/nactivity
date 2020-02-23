@@ -29,7 +29,7 @@ namespace Spring.Expressions
     /// Base type for all expression nodes.
     /// </summary>
     /// <author>Aleksandar Seovic</author>
-    //[Serializable]
+    [Serializable]
     public abstract class BaseNode : SpringAST, IExpression
     {
         protected class ArgumentMismatchException : Exception

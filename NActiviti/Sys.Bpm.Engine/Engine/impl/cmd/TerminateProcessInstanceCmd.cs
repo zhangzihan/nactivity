@@ -34,9 +34,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
                 if (string.IsNullOrWhiteSpace(processInstanceId) == false)
                 {
-                    IProcessInstance processInstance = commandExecutor.Execute(new GetProcessInstanceByIdCmd(processInstanceId)) as IProcessInstance;
-
-                    if (processInstance is null)
+                    if (!(commandExecutor.Execute(new GetProcessInstanceByIdCmd(processInstanceId)) is IProcessInstance processInstance))
                     {
                         throw new ActivitiObjectNotFoundException(string.Concat("Unable to find process instance for the given id: ", processInstanceId));
                     }

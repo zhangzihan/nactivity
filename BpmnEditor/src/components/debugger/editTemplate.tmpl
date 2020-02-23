@@ -1,0 +1,52 @@
+<div>
+    <div class="form-row" style="display:none">
+        <div class="form-group col-md-6">
+            <div class="e-float-input e-control-wrapper">
+                <input id="id" name="id" type="text" value="${id}" disabled />
+                <span class="e-float-line"></span>
+                <label class="e-float-text e-label-top" for="id">ID</label>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <div class="e-float-input e-control-wrapper">
+                <input id="type" name="type" type="text" value="${type}" disabled />
+                <span class="e-float-line"></span>
+                <label class="e-float-text e-label-top" for="type">类型</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <div class="e-float-input e-control-wrapper">
+                <input id="name" name="name" type="text" value="${if(name === null || name === undefined)} '' ${else} ${name} ${/if}" disabled />
+                <span class="e-float-line"></span>
+                <label class="e-float-text e-label-top" for="name">节点名称</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <div class="e-float-input e-control-wrapper">
+                <div style="display:none">
+                  <textarea id="parameterValue" name="parameterValue" type="text" value="${if(parameterValue === null || parameterValue === undefined)} '' ${else} ${parameterValue} ${/if}"></textarea>
+                </div>
+                <span class="e-float-line"></span>
+                <label class="e-float-text e-label-top">
+                  参数
+                </label>
+                <a href="javascript:void(0)" id="btnHelp" style="margin-left:42px;display:none">
+                  <i class="fa fa-question-circle"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-12 parameter-editor">
+          <div class="parameter-help">
+            <a href="javascript:void(0)" id="btnHelpClose" style="z-index:1"><i class="fa fa-close"></i></a>
+            <div class="content"></div>
+          </div>
+          <div id="paramEditor" class="parameter-editor"></div>
+        </div>
+    </div>
+</div>

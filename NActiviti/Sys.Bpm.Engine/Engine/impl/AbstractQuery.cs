@@ -22,7 +22,6 @@ namespace Sys.Workflow.Engine.Impl
     using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys.Workflow.Engine.Query;
 
-
     public enum ResultType
     {
         LIST,

@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,16 +24,20 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
     {
         public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
         {
+            if (parameter is null)
+            {
+                return false;
+            }
 
-            IDictionary<string, object> @params = (IDictionary<string, object>)parameter ?? new Dictionary<string, object>();
-            @params.TryGetValue("eventType", out object type);
-            @params.TryGetValue("eventName", out object eventName);
-            @params.TryGetValue("tenantId", out object tenantId);
+            JToken @params = JToken.FromObject(parameter);
+            string eventType = @params[nameof(eventType)]?.ToString();
+            string eventName = @params[nameof(eventName)]?.ToString();
+            string tenantId = @params[nameof(tenantId)]?.ToString();
 
-            if (eventSubscriptionEntity.EventType != null &&
-                string.Compare(eventSubscriptionEntity.EventType, type?.ToString(), true) == 0 &&
-                eventSubscriptionEntity.EventName != null &&
-                string.Compare(eventSubscriptionEntity.EventName, eventName?.ToString(), true) == 0)
+            if (eventSubscriptionEntity.EventType is object &&
+                eventSubscriptionEntity.EventType.Equals(eventType, StringComparison.OrdinalIgnoreCase) &&
+                eventSubscriptionEntity.EventName is object &&
+                eventSubscriptionEntity.EventName.Equals(eventName, StringComparison.OrdinalIgnoreCase))
             {
                 if (tenantId != null && ProcessEngineConfiguration.NO_TENANT_ID != tenantId?.ToString())
                 {

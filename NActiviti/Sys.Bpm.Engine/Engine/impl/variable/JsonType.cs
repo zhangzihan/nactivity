@@ -12,8 +12,6 @@
  */
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using Sys.Workflow;
-using Sys.Workflow;
 using System;
 
 namespace Sys.Workflow.Engine.Impl.Variable

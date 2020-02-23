@@ -120,64 +120,71 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public void Dispose()
         {
-            if (this.objectPostProcessors != null && this.objectPostProcessors.Count != 0)
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                foreach (IDestructionAwareObjectPostProcessor processor in this.objectPostProcessors)
+                if (this.objectPostProcessors != null && this.objectPostProcessors.Count != 0)
                 {
+                    foreach (IDestructionAwareObjectPostProcessor processor in this.objectPostProcessors)
+                    {
+                        try
+                        {
+                            processor.PostProcessBeforeDestruction(this.instance, this.objectName);
+                        }
+
+                        catch (Exception ex)
+                        {
+                            logger.LogError(ex,
+                                string.Format("Error during execution of {0}.PostProcessBeforeDestruction for object {1}",
+                                              processor.GetType().Name, this.objectName));
+                        }
+                    }
+                }
+
+                if (this.invokeDisposableObject)
+                {
+                    if (logger.IsEnabled(LogLevel.Debug))
+                    {
+                        logger.LogDebug("Invoking Dispose() on object with name '" + this.objectName + "'");
+                    }
                     try
                     {
-                        processor.PostProcessBeforeDestruction(this.instance, this.objectName);
+                        ((IDisposable)instance).Dispose();
+
                     }
 
                     catch (Exception ex)
                     {
-                        logger.LogError(ex,
-                            string.Format("Error during execution of {0}.PostProcessBeforeDestruction for object {1}",
-                                          processor.GetType().Name, this.objectName));
+                        string msg = "Invocation of Dispose method failed on object with name '" + this.objectName + "'";
+                        if (logger.IsEnabled(LogLevel.Debug))
+                        {
+                            logger.LogWarning(msg, ex);
+                        }
+                        else
+                        {
+                            logger.LogWarning(msg + ": " + ex);
+                        }
                     }
                 }
-            }
 
-            if (this.invokeDisposableObject)
-            {
-                if (logger.IsEnabled(LogLevel.Debug))
+                if (this.destroyMethod != null)
                 {
-                    logger.LogDebug("Invoking Dispose() on object with name '" + this.objectName + "'");
+                    InvokeCustomDestroyMethod(this.destroyMethod);
                 }
-                try
+                else if (this.destroyMethodName != null)
                 {
-                    ((IDisposable)instance).Dispose();
-
-                }
-
-                catch (Exception ex)
-                {
-                    string msg = "Invocation of Dispose method failed on object with name '" + this.objectName + "'";
-                    if (logger.IsEnabled(LogLevel.Debug))
+                    MethodInfo methodToCall = DetermineDestroyMethod();
+                    if (methodToCall != null)
                     {
-                        logger.LogWarning(msg, ex);
+                        InvokeCustomDestroyMethod(methodToCall);
                     }
-                    else
-                    {
-                        logger.LogWarning(msg + ": " + ex);
-                    }
-                }
-            }
-
-            if (this.destroyMethod != null)
-            {
-                InvokeCustomDestroyMethod(this.destroyMethod);
-            }
-            else if (this.destroyMethodName != null)
-            {
-                MethodInfo methodToCall = DetermineDestroyMethod();
-                if (methodToCall != null)
-                {
-                    InvokeCustomDestroyMethod(methodToCall);
                 }
             }
         }
-
 
         private MethodInfo DetermineDestroyMethod()
         {

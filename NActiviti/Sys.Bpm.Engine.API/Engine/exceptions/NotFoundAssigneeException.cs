@@ -18,5 +18,9 @@ namespace Sys.Workflow.Engine.Exceptions
         public NotFoundAssigneeException(string assignee = "") : base($"找不到{assignee}待分配的人员")
         {
         }
+
+        protected NotFoundAssigneeException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
 }

@@ -15,35 +15,36 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
     using Microsoft.Extensions.Logging;
     using Sys.Workflow.Engine.Impl.Agenda;
     using Sys.Workflow;
+    using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Cfg;
+    using Sys.Workflow.Engine.Impl.Bpmn.Listener;
+    using System;
+    using Sys.Workflow.Exceptions;
+    using Sys.Workflow.Engine.Impl.Identities;
+    using Sys.Workflow.Engine.Debug;
 
     /// 
     public class DebugCommandInvoker : CommandInvoker
     {
         public override void ExecuteOperation(AbstractOperation runnable)
         {
-            //if (runnable is AbstractOperation)
-            //{
-            //    AbstractOperation operation = (AbstractOperation)runnable;
+            try
+            {
+                ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
+                if (processEngineConfiguration.EnableEventDispatcher)
+                {
+                    if (runnable.Execution != null)
+                    {
+                        processEngineConfiguration.EventDispatcher.DispatchEvent(new WorkflowDebuggerEvent(runnable.Execution));
+                    }
+                }
 
-            //    if (operation.Execution != null)
-            //    {
-            //        logger.LogInformation($"Execution tree while executing operation {operation.GetType()} :");
-            //        ExecutionTree eTree = ExecutionTreeUtil.buildExecutionTree(operation.Execution);
-            //        logger.LogInformation($"\r\n{eTree.ToString()}");
-
-            //        string root = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
-
-            //        lock (syncRoot)
-            //        {
-            //            string file = Path.Combine(root, $"task_trees\\{DateTime.Now.ToString("yyyyMMdd")}.txt");
-            //            Directory.CreateDirectory(Path.GetDirectoryName(file));
-
-            //            File.AppendAllText(file, $"{(File.Exists(file) ? "\r\n" : "")}{eTree.ToString()}");
-            //        }
-            //    }
-            //}
-
-            base.ExecuteOperation(runnable);
+                base.ExecuteOperation(runnable);
+            }
+            catch (Exception ex)
+            {
+                throw new WorkflowDebugException(Authentication.AuthenticatedUser.Id, runnable.Execution, ex);
+            }
         }
     }
 }

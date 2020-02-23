@@ -28,13 +28,16 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
     public class EventSubscriptionEntityManagerImpl : AbstractEntityManager<IEventSubscriptionEntity>, IEventSubscriptionEntityManager
     {
 
+        /// <inheritdoc />
         protected internal IEventSubscriptionDataManager eventSubscriptionDataManager;
 
+        /// <inheritdoc />
         public EventSubscriptionEntityManagerImpl(ProcessEngineConfigurationImpl processEngineConfiguration, IEventSubscriptionDataManager eventSubscriptionDataManager) : base(processEngineConfiguration)
         {
             this.eventSubscriptionDataManager = eventSubscriptionDataManager;
         }
 
+        /// <inheritdoc />
         protected internal override IDataManager<IEventSubscriptionEntity> DataManager
         {
             get
@@ -43,21 +46,25 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <inheritdoc />
         public virtual ICompensateEventSubscriptionEntity CreateCompensateEventSubscription()
         {
             return eventSubscriptionDataManager.CreateCompensateEventSubscription();
         }
 
+        /// <inheritdoc />
         public virtual IMessageEventSubscriptionEntity CreateMessageEventSubscription()
         {
             return eventSubscriptionDataManager.CreateMessageEventSubscription();
         }
 
+        /// <inheritdoc />
         public virtual ISignalEventSubscriptionEntity CreateSignalEventSubscription()
         {
             return eventSubscriptionDataManager.CreateSignalEventSubscription();
         }
 
+        /// <inheritdoc />
         public virtual ISignalEventSubscriptionEntity InsertSignalEvent(string signalName, Signal signal, IExecutionEntity execution)
         {
             ISignalEventSubscriptionEntity subscriptionEntity = CreateSignalEventSubscription();
@@ -86,6 +93,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             return subscriptionEntity;
         }
 
+        /// <inheritdoc />
         public virtual IMessageEventSubscriptionEntity InsertMessageEvent(string messageName, IExecutionEntity execution)
         {
             IMessageEventSubscriptionEntity subscriptionEntity = CreateMessageEventSubscription();
@@ -103,6 +111,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             return subscriptionEntity;
         }
 
+        /// <inheritdoc />
         public virtual ICompensateEventSubscriptionEntity InsertCompensationEvent(IExecutionEntity execution, string activityId)
         {
             ICompensateEventSubscriptionEntity eventSubscription = CreateCompensateEventSubscription();
@@ -116,6 +125,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             return eventSubscription;
         }
 
+        /// <inheritdoc />
         public override void Insert(IEventSubscriptionEntity entity, bool fireCreateEvent)
         {
             base.Insert(entity, fireCreateEvent);
@@ -130,6 +140,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <inheritdoc />
         public override void Delete(IEventSubscriptionEntity entity, bool fireDeleteEvent)
         {
             if (entity.ExecutionId is object && ExecutionRelatedEntityCountEnabledGlobally)
@@ -143,14 +154,18 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             base.Delete(entity, fireDeleteEvent);
         }
 
+        /// <inheritdoc />
         public virtual IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByExecutionId(string executionId)
         {
-            return FindCompensateEventSubscriptionsByExecutionIdAndActivityId(executionId, null);
+            IList<ICompensateEventSubscriptionEntity> eventSubscriptions = eventSubscriptionDataManager.FindCompensateEventSubscriptionsByExecutionId(executionId);
+
+            return eventSubscriptions;
         }
 
+        /// <inheritdoc />
         public virtual IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByExecutionIdAndActivityId(string executionId, string activityId)
         {
-            IList<IEventSubscriptionEntity> eventSubscriptions = FindEventSubscriptionsByExecutionAndType(executionId, "compensate");
+            IList<ICompensateEventSubscriptionEntity> eventSubscriptions = eventSubscriptionDataManager.FindCompensateEventSubscriptionsByProcessInstanceAndActivityId(executionId, activityId);
             IList<ICompensateEventSubscriptionEntity> result = new List<ICompensateEventSubscriptionEntity>();
             foreach (IEventSubscriptionEntity eventSubscriptionEntity in eventSubscriptions)
             {
@@ -165,17 +180,15 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             return result;
         }
 
+        /// <inheritdoc />
         public virtual IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByProcessInstanceIdAndActivityId(string processInstanceId, string activityId)
         {
-            IList<IEventSubscriptionEntity> eventSubscriptions = FindEventSubscriptionsByProcessInstanceAndActivityId(processInstanceId, activityId, "compensate");
-            IList<ICompensateEventSubscriptionEntity> result = new List<ICompensateEventSubscriptionEntity>();
-            foreach (IEventSubscriptionEntity eventSubscriptionEntity in eventSubscriptions)
-            {
-                result.Add((ICompensateEventSubscriptionEntity)eventSubscriptionEntity);
-            }
-            return result;
+            IList<ICompensateEventSubscriptionEntity> eventSubscriptions = eventSubscriptionDataManager.FindCompensateEventSubscriptionsByProcessInstanceAndActivityId(processInstanceId, activityId);
+
+            return eventSubscriptions;
         }
 
+        /// <inheritdoc />
         protected internal virtual void AddToExecution(IEventSubscriptionEntity eventSubscriptionEntity)
         {
             // add reference in execution
@@ -186,76 +199,91 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <inheritdoc />
         public virtual long FindEventSubscriptionCountByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl)
         {
             return eventSubscriptionDataManager.FindEventSubscriptionCountByQueryCriteria(eventSubscriptionQueryImpl);
         }
 
+        /// <inheritdoc />
         public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByQueryCriteria(EventSubscriptionQueryImpl eventSubscriptionQueryImpl, Page page)
         {
             return eventSubscriptionDataManager.FindEventSubscriptionsByQueryCriteria(eventSubscriptionQueryImpl, page);
         }
 
+        /// <inheritdoc />
         public virtual IList<IMessageEventSubscriptionEntity> FindMessageEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName)
         {
             return eventSubscriptionDataManager.FindMessageEventSubscriptionsByProcessInstanceAndEventName(processInstanceId, eventName);
         }
 
+        /// <inheritdoc />
         public virtual IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByEventName(string eventName, string tenantId)
         {
             return eventSubscriptionDataManager.FindSignalEventSubscriptionsByEventName(eventName, tenantId);
         }
 
+        /// <inheritdoc />
         public virtual IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByProcessInstanceAndEventName(string processInstanceId, string eventName)
         {
             return eventSubscriptionDataManager.FindSignalEventSubscriptionsByProcessInstanceAndEventName(processInstanceId, eventName);
         }
 
+        /// <inheritdoc />
         public virtual IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByNameAndExecution(string name, string executionId)
         {
             return eventSubscriptionDataManager.FindSignalEventSubscriptionsByNameAndExecution(name, executionId);
         }
 
+        /// <inheritdoc />
         public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByExecutionAndType(string executionId, string type)
         {
             return eventSubscriptionDataManager.FindEventSubscriptionsByExecutionAndType(executionId, type);
         }
 
+        /// <inheritdoc />
         public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByProcessInstanceAndActivityId(string processInstanceId, string activityId, string type)
         {
             return eventSubscriptionDataManager.FindEventSubscriptionsByProcessInstanceAndActivityId(processInstanceId, activityId, type);
         }
 
+        /// <inheritdoc />
         public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByExecution(string executionId)
         {
             return eventSubscriptionDataManager.FindEventSubscriptionsByExecution(executionId);
         }
 
+        /// <inheritdoc />
         public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByTypeAndProcessDefinitionId(string type, string processDefinitionId, string tenantId)
         {
             return eventSubscriptionDataManager.FindEventSubscriptionsByTypeAndProcessDefinitionId(type, processDefinitionId, tenantId);
         }
 
+        /// <inheritdoc />
         public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByName(string type, string eventName, string tenantId)
         {
             return eventSubscriptionDataManager.FindEventSubscriptionsByName(type, eventName, tenantId);
         }
 
+        /// <inheritdoc />
         public virtual IList<IEventSubscriptionEntity> FindEventSubscriptionsByNameAndExecution(string type, string eventName, string executionId)
         {
             return eventSubscriptionDataManager.FindEventSubscriptionsByNameAndExecution(type, eventName, executionId);
         }
 
+        /// <inheritdoc />
         public virtual IMessageEventSubscriptionEntity FindMessageStartEventSubscriptionByName(string messageName, string tenantId)
         {
             return eventSubscriptionDataManager.FindMessageStartEventSubscriptionByName(messageName, tenantId);
         }
 
+        /// <inheritdoc />
         public virtual void UpdateEventSubscriptionTenantId(string oldTenantId, string newTenantId)
         {
             eventSubscriptionDataManager.UpdateEventSubscriptionTenantId(oldTenantId, newTenantId);
         }
 
+        /// <inheritdoc />
         public virtual void DeleteEventSubscriptionsForProcessDefinition(string processDefinitionId)
         {
             eventSubscriptionDataManager.DeleteEventSubscriptionsForProcessDefinition(processDefinitionId);
@@ -263,6 +291,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         // Processing /////////////////////////////////////////////////////////////
 
+        /// <inheritdoc />
         public virtual void EventReceived(IEventSubscriptionEntity eventSubscriptionEntity, object payload, bool processASync)
         {
             if (processASync)
@@ -275,6 +304,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <inheritdoc />
         protected internal virtual void ProcessEventSync(IEventSubscriptionEntity eventSubscriptionEntity, object payload)
         {
 
@@ -292,6 +322,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             eventHandler.HandleEvent(eventSubscriptionEntity, payload, CommandContext);
         }
 
+        /// <inheritdoc />
         protected internal virtual void ScheduleEventAsync(IEventSubscriptionEntity eventSubscriptionEntity, object payload)
         {
             IJobEntity message = JobEntityManager.Create();
@@ -308,6 +339,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             JobManager.ScheduleAsyncJob(message);
         }
 
+        /// <inheritdoc />
         protected internal virtual IList<ISignalEventSubscriptionEntity> ToSignalEventSubscriptionEntityList(IList<IEventSubscriptionEntity> result)
         {
             IList<ISignalEventSubscriptionEntity> signalEventSubscriptionEntities = new List<ISignalEventSubscriptionEntity>(result.Count);
@@ -318,6 +350,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             return signalEventSubscriptionEntities;
         }
 
+        /// <inheritdoc />
         protected internal virtual IList<IMessageEventSubscriptionEntity> ToMessageEventSubscriptionEntityList(IList<IEventSubscriptionEntity> result)
         {
             IList<IMessageEventSubscriptionEntity> messageEventSubscriptionEntities = new List<IMessageEventSubscriptionEntity>(result.Count);
@@ -328,6 +361,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             return messageEventSubscriptionEntities;
         }
 
+        /// <inheritdoc />
         public virtual IEventSubscriptionDataManager EventSubscriptionDataManager
         {
             get

@@ -53,51 +53,64 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
         /// 
         /// </summary>
         protected internal IDictionary<string, object> _variables;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDictionary<string, object> _transientVariables;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string _initialFlowElementId;
 
+        /// <inheritdoc />
         public ProcessInstanceBuilderImpl(RuntimeServiceImpl runtimeService)
         {
             this.runtimeService = runtimeService;
         }
 
+        /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetProcessDefinitionId(string processDefinitionId)
         {
             this._processDefinitionId = processDefinitionId;
             return this;
         }
 
+        /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetProcessDefinitionKey(string processDefinitionKey)
         {
             this._processDefinitionKey = processDefinitionKey;
             return this;
         }
 
+        /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetMessageName(string messageName)
         {
             this._messageName = messageName;
             return this;
         }
 
+        /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetName(string processInstanceName)
         {
             this.processInstanceName = processInstanceName;
             return this;
         }
 
+        /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetBusinessKey(string businessKey)
         {
             this._businessKey = businessKey;
             return this;
         }
 
+        /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetTenantId(string tenantId)
         {
             this._tenantId = tenantId;
             return this;
         }
 
+        /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetVariables(IDictionary<string, object> variables)
         {
             if (this._variables == null)
@@ -114,6 +127,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             return this;
         }
 
+        /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetVariable(string variableName, object value)
         {
             if (this._variables == null)
@@ -124,6 +138,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             return this;
         }
 
+        /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetTransientVariables(IDictionary<string, object> transientVariables)
         {
             if (this._transientVariables == null)
@@ -140,6 +155,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             return this;
         }
 
+        /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetTransientVariable(string variableName, object value)
         {
             if (this._transientVariables == null)
@@ -150,11 +166,13 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             return this;
         }
 
+        /// <inheritdoc />
         public virtual IProcessInstance Start()
         {
             return runtimeService.StartProcessInstance(this);
         }
 
+        /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetInitialFlowElement(string initialFlowElementId)
         {
             _initialFlowElementId = initialFlowElementId;
@@ -162,6 +180,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             return this;
         }
 
+        /// <inheritdoc />
         public virtual string ProcessDefinitionId
         {
             get
@@ -170,6 +189,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             }
         }
 
+        /// <inheritdoc />
         public virtual string ProcessDefinitionKey
         {
             get
@@ -178,6 +198,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             }
         }
 
+        /// <inheritdoc />
         public virtual string MessageName
         {
             get
@@ -186,6 +207,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             }
         }
 
+        /// <inheritdoc />
         public virtual string ProcessInstanceName
         {
             get
@@ -194,6 +216,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             }
         }
 
+        /// <inheritdoc />
         public virtual string BusinessKey
         {
             get
@@ -202,6 +225,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             }
         }
 
+        /// <inheritdoc />
         public virtual string TenantId
         {
             get
@@ -210,6 +234,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             }
         }
 
+        /// <inheritdoc />
         public virtual IDictionary<string, object> Variables
         {
             get
@@ -218,6 +243,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             }
         }
 
+        /// <inheritdoc />
         public virtual IDictionary<string, object> TransientVariables
         {
             get
@@ -226,6 +252,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
             }
         }
 
+        /// <inheritdoc />
         public virtual string InitialFlowElementId
         {
             get

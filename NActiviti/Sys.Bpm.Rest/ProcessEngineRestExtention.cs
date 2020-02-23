@@ -16,6 +16,9 @@ using Sys.Workflow.Cloud.Services.Rest.Assemblers;
 using Sys.Workflow.Engine;
 using Serilog;
 using System.Linq;
+using Sys.Workflow.Contexts;
+using Microsoft.AspNetCore.Authorization;
+using Sys.Workflow.Cloud.Services.Rest.Api;
 
 namespace Sys.Workflow.Services.Rest
 {
@@ -34,20 +37,42 @@ namespace Sys.Workflow.Services.Rest
         {
             IServiceCollection services = mvcBuilder.Services;
 
+            services.AddAuthorization(opts =>
+            {
+                opts.AddPolicy(WorkflowConstants.WORKFLOW_AUTHORIZE_POLICY, policy =>
+                {
+                    policy.Requirements.Add(new InternaWorkflowAuthorizationRequirement());
+                });
+            });
+
+            services.AddSingleton<IAuthorizationHandler, InternalWorkflowAuthorizationHandler>();
+
+            services.UseInMemoryBus();
+
             mvcBuilder.AddMvcOptions(opts =>
             {
+#if !NETCORE3
                 JsonOutputFormatter jsonFormatter = opts.OutputFormatters.FirstOrDefault(x => x.GetType() == typeof(JsonOutputFormatter)) as JsonOutputFormatter;
 
                 if (jsonFormatter != null)
                 {
-                    //jsonFormatter.PublicSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple;
-                    //jsonFormatter.PublicSerializerSettings.TypeNameHandling = TypeNameHandling.All;
                     jsonFormatter.PublicSerializerSettings.ReferenceLoopHandling =
                         ReferenceLoopHandling.Ignore;
                 }
-
+#endif
                 opts.ModelBinderProviders.Insert(0, new PageableModelBinderProvider());
+#if NETCORE3
+                SystemTextJsonOutputFormatter jsonFormatter = opts.OutputFormatters.FirstOrDefault(x => x.GetType() == typeof(SystemTextJsonOutputFormatter)) as SystemTextJsonOutputFormatter;
+                opts.EnableEndpointRouting = false;
+#endif
             });
+
+#if NETCORE3
+            mvcBuilder.AddNewtonsoftJson(opts =>
+            {
+                opts.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
+#endif
 
             services.AddTransient<ProcessInstanceSortApplier>();
 
@@ -128,7 +153,7 @@ namespace Sys.Workflow.Services.Rest
                     null,
                     sp.GetService<SecurityPoliciesApplicationService>(),
                     null,
-                    null,
+                    sp.GetService<IApplicationEventPublisher>(),
                     engine,
                     sp.GetService<HistoricInstanceConverter>(),
                     sp.GetService<ILoggerFactory>());
@@ -173,8 +198,8 @@ namespace Sys.Workflow.Services.Rest
 
             SecurityPoliciesProviderOptions options = new SecurityPoliciesProviderOptions(config.GetSection("SecurityPoliciesProvider"));
 
-            _ = app.UseMiddleware<ErrorHandlingMiddleware>()
-                .UseMiddleware<SecurityPoliciesApplicationMiddle>(Microsoft.Extensions.Options.Options.Create(options));
+            _ = app.UseMiddleware<SecurityPoliciesApplicationMiddle>(Microsoft.Extensions.Options.Options.Create(options))
+                .UseMiddleware<ErrorHandlingMiddleware>();
 
             return app;
         }

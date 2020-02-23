@@ -7,7 +7,6 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
     using Sys.Workflow.Engine.Delegate.Events;
     using Sys.Workflow.Engine.Impl.Variable;
     using Sys.Workflow;
-    using Sys.Workflow;
 
     /// 
     public abstract class VariableEventHandler : AbstractDatabaseEventLoggerEventHandler

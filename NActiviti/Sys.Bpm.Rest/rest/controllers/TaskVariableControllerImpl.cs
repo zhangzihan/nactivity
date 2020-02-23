@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sys.Workflow.Cloud.Services.Api.Commands;
 using Sys.Workflow.Cloud.Services.Api.Model;
 using Sys.Workflow.Cloud.Services.Core;
@@ -32,7 +33,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
     /// <inheritdoc />
     [Route(WorkflowConstants.TASK_VAR_ROUTER_V1)]
     [ApiController]
-    public class TaskVariableControllerImpl : ControllerBase, ITaskVariableController
+    public class TaskVariableControllerImpl : WorkflowController, ITaskVariableController
     {
 
         private readonly ProcessEngineWrapper processEngine;

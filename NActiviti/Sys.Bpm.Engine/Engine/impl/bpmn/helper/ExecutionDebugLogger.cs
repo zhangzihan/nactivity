@@ -1,4 +1,5 @@
-﻿using Sys.Workflow.Engine.Delegate;
+﻿using Microsoft.Extensions.Logging;
+using Sys.Workflow.Engine.Delegate;
 using Sys.Workflow.Engine.Impl.Contexts;
 using Sys.Workflow.Engine.Impl.Persistence.Entity;
 using System;
@@ -25,7 +26,16 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
                 doc = expression.GetValue(execution)?.ToString();
 
-                File.AppendAllText(file, $"{(File.Exists(file) ? "\r\n" : "")}Task '{execution.ActivityId}' debug_logger {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}:{doc}");
+                string log = $"{(File.Exists(file) ? "\r\n" : "")}Task '{execution.ActivityId}' debug_logger {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}:{doc}";
+
+                File.AppendAllText(file, log);
+
+                ILogger logger = (ProcessEngineServiceProvider.ServiceProvider.GetService(typeof(ILoggerFactory)) as ILoggerFactory).CreateLogger(execution.GetType());
+
+                if (logger.IsEnabled(LogLevel.Information))
+                {
+                    logger.LogInformation(log);
+                }
             }
         }
     }

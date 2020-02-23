@@ -124,6 +124,45 @@ namespace Spring.Util
             return (CanConvertToInteger(number) || CanConvertToDecimal(number));
         }
 
+        internal static bool TryConvertTo(ref object from, ref object to)
+        {
+            TypeConverter converter = TypeDescriptor.GetConverter(to.GetType());
+            if (!converter.CanConvertFrom(from.GetType()))
+            {
+                return false;
+            }
+
+            TypeCode toCode = Convert.GetTypeCode(to);
+
+            try
+            {
+                if (from.ToString().Contains("."))
+                {
+                    if (toCode == TypeCode.Single || toCode == TypeCode.Double || toCode == TypeCode.Decimal)
+                    {
+                        converter = TypeDescriptor.GetConverter(to.GetType());
+                        from = converter.ConvertTo(from, to.GetType());
+                    }
+                    else
+                    {
+                        converter = TypeDescriptor.GetConverter(typeof(decimal));
+                        from = converter.ConvertFrom(from);
+                        to = converter.ConvertFrom(to.ToString());
+                    }
+                }
+                else
+                {
+                    from = converter.ConvertTo(from, to.GetType());
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Is the supplied <paramref name="number"/> equal to zero (0)?
         /// </summary>
@@ -406,12 +445,8 @@ namespace Spring.Util
                 return (Byte)m - (Byte)n;
             else if (n is SByte)
                 return (SByte)m - (SByte)n;
-            else if (n is Single)
-                return (Single)m - (Single)n;
-            else if (n is Double)
-                return (Double)m - (Double)n;
-            else if (n is Decimal)
-                return (Decimal)m - (Decimal)n;
+            else if (n is Double || n is Decimal || n is Single)
+                return Convert.ToDecimal(m) - Convert.ToDecimal(n);
             else
             {
                 throw new ArgumentException(string.Format("'{0}' and/or '{1}' are not one of the supported numeric types.", m, n));
@@ -552,16 +587,37 @@ namespace Spring.Util
         /// <param name="n">The left.</param>
         public static void CoerceTypes(ref object m, ref object n)
         {
-            TypeCode leftTypeCode = Convert.GetTypeCode(m);
-            TypeCode rightTypeCode = Convert.GetTypeCode(n);
-
-            if (leftTypeCode > rightTypeCode)
+            if (m.ToString().Contains(".") && !n.ToString().Contains("."))
             {
-                n = Convert.ChangeType(n, leftTypeCode);
+                m = Convert.ChangeType(m, m is string ? typeof(decimal) : m.GetType());
+                n = Convert.ChangeType(n, m.GetType());
+            }
+            else if (n.ToString().Contains(".") && !m.ToString().Contains("."))
+            {
+                n = Convert.ChangeType(n, n is string ? typeof(decimal) : n.GetType());
+                m = Convert.ChangeType(m, n.GetType());
             }
             else
             {
-                m = Convert.ChangeType(m, rightTypeCode);
+                TypeCode leftTypeCode = Convert.GetTypeCode(m);
+                TypeCode rightTypeCode = Convert.GetTypeCode(n);
+
+                if (leftTypeCode == TypeCode.String)
+                {
+                    m = Convert.ChangeType(m, rightTypeCode);
+                }
+                else if (rightTypeCode == TypeCode.String)
+                {
+                    n = Convert.ChangeType(n, leftTypeCode);
+                }
+                else if (leftTypeCode > rightTypeCode)
+                {
+                    n = Convert.ChangeType(n, leftTypeCode);
+                }
+                else
+                {
+                    m = Convert.ChangeType(m, rightTypeCode);
+                }
             }
         }
 

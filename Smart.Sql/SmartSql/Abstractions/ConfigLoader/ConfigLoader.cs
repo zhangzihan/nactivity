@@ -21,7 +21,13 @@ namespace SmartSql.Abstractions.Config
 
         public abstract event OnChangedHandler OnChanged;
 
-        public abstract void Dispose();
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected abstract void Dispose(bool disposing);
+
         public abstract SmartSqlMapConfig Load();
 
         public SmartSqlMapConfig LoadConfig(ConfigStream configStream)
@@ -121,7 +127,7 @@ namespace SmartSql.Abstractions.Config
         {
             foreach (XElement statementNode in statementNodes)
             {
-                var statement = _statementFactory.Load(statementNode, sqlMap);                
+                var statement = _statementFactory.Load(statementNode, sqlMap);
                 sqlMap.Statements.Add(statement);
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,24 +25,20 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 
         public override bool IsRetained(IExecutionEntity executionEntity, object parameter)
         {
-            IDictionary<string, object> paramMap = (IDictionary<string, object>)parameter ?? new Dictionary<string, object>();
-            paramMap.TryGetValue("parentExecutionId", out object parentExecutionId);
-            ICollection<string> activityIds = null;
+            if (parameter is null)
+            {
+                return false;
+            }
 
-            if (paramMap.TryGetValue("activityIds", out var list))
-            {
-                activityIds = ((IEnumerable)list).Cast<string>().ToList();
-            }
-            else
-            {
-                activityIds = new List<string>();
-            }
+            JToken @params = JToken.FromObject(parameter);
+            string parentExecutionId = @params[nameof(parentExecutionId)]?.ToString();
+            JArray list = @params["activityIds"] as JArray;
+            string[] activityIds = list.Select(x => x.ToString())?.ToArray() ?? new string[0];
 
             return executionEntity.ParentId != null &&
-                string.Compare(executionEntity.ParentId, parentExecutionId?.ToString(), true) == 0 &&
+                string.Compare(executionEntity.ParentId, parentExecutionId, true) == 0 &&
                 executionEntity.ActivityId != null &&
                 activityIds.Any(x => string.Compare(x, executionEntity.ActivityId, true) == 0);
         }
-
     }
 }

@@ -27,7 +27,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public override string ToString()
         {
-            return "DeadLetterJobEntity [id=" + id + "]";
+            return "DeadLetterJobEntity [id=" + Id + "]";
         }
     }
 

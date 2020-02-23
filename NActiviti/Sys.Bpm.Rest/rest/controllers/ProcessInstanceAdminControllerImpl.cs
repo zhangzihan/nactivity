@@ -13,6 +13,7 @@
  *
  */
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sys.Workflow.Api.Runtime.Shared.Query;
 using Sys.Workflow.Cloud.Services.Api.Commands;
@@ -34,7 +35,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
     /// <inheritdoc />
     [Route(WorkflowConstants.PROC_ADMIN_INST_ROUTER_V1)]
     [ApiController]
-    public class ProcessInstanceAdminControllerImpl : ControllerBase, IProcessInstanceAdminController
+    public class ProcessInstanceAdminControllerImpl : WorkflowController, IProcessInstanceAdminController
     {
         private readonly ProcessEngineWrapper processEngine;
         private readonly IRepositoryService repositoryService;

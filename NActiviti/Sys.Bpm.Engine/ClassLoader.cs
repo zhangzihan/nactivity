@@ -48,8 +48,6 @@ namespace Sys
 
     public class Properties : JObject
     {
-        private static ILogger<Properties> log = ProcessEngineServiceProvider.LoggerService<Properties>();
-
         public string GetProperty(string key)
         {
             this.TryGetValue(key ?? "", out var val);
@@ -73,11 +71,13 @@ namespace Sys
         public void Load(FileStream propertiesFile)
         {
             propertiesFile.Seek(0, SeekOrigin.Begin);
-            var sr = new StreamReader(propertiesFile);
-            JObject props = Parse(sr.ReadToEnd());
-            foreach (var prop in props.Properties())
+            using (var sr = new StreamReader(propertiesFile))
             {
-                this[prop.Path] = prop.Value;
+                JObject props = Parse(sr.ReadToEnd());
+                foreach (var prop in props.Properties())
+                {
+                    this[prop.Path] = prop.Value;
+                }
             }
         }
     }
@@ -104,7 +104,10 @@ namespace Sys
         }
     }
 
-    public class Configuration
+    /// <summary>
+    /// 使用protect访问类型，与名称空间有冲突
+    /// </summary>
+    class Configuration
     {
         private static readonly ILogger<Configuration> log = ProcessEngineServiceProvider.LoggerService<Configuration>();
 
@@ -135,7 +138,7 @@ namespace Sys
         }
     }
 
-    public class XMLMapperBuilder
+    class XMLMapperBuilder
     {
         private static ILogger<XMLMapperBuilder> log = ProcessEngineServiceProvider.LoggerService<XMLMapperBuilder>();
 
@@ -158,7 +161,7 @@ namespace Sys
         }
     }
 
-    public class XMLConfigBuilder
+    class XMLConfigBuilder
     {
         private static ILogger<XMLConfigBuilder> log = ProcessEngineServiceProvider.LoggerService<XMLConfigBuilder>();
 

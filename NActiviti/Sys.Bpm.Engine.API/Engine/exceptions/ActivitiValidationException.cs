@@ -16,5 +16,9 @@ namespace Sys.Workflow.Engine.Exceptions
         }
 
         public IList<ValidationError> ValidationErrors => validationErrors;
+
+        protected ActivitiValidationException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
 }

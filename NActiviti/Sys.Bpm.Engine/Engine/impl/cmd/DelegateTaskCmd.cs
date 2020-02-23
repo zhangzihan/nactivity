@@ -48,7 +48,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             //TODO: 考虑性能问题，暂时不要获取人员信息
             //if (string.IsNullOrWhiteSpace(userId) == false)
             //{
-            //    userName = AsyncHelper.RunSync(() => userService.GetUser(userId))?.FullName;
+            //    userName = userService.GetUser(userId).GetAwaiter().GetResult()?.FullName;
             //}
             commandContext.TaskEntityManager.ChangeTaskAssignee(task, userId, userName);
             return null;

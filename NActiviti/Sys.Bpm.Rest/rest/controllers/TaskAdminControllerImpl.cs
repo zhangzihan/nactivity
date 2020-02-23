@@ -13,6 +13,7 @@
  *
  */
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sys.Workflow.Api.Runtime.Shared.Query;
 using Sys.Workflow.Cloud.Services.Api.Commands;
@@ -31,7 +32,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
     /// <inheritdoc />
     [Route(WorkflowConstants.ADMIN_TASK_ROUTER_V1)]
     [ApiController]
-    public class TaskAdminControllerImpl : ControllerBase, ITaskAdminController
+    public class TaskAdminControllerImpl : WorkflowController, ITaskAdminController
     {
         private readonly ProcessEngineWrapper processEngine;
 

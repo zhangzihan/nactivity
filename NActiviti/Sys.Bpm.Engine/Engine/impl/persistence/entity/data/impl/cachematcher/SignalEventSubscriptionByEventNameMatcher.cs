@@ -22,25 +22,24 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 
         public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
         {
-            if (parameter == null)
+            if (parameter is null)
             {
                 return false;
             }
 
-            JObject token = JObject.FromObject(parameter);
+            JToken @params = JToken.FromObject(parameter);
+            string eventName = @params[nameof(eventName)]?.ToString();
+            string tenantId = @params[nameof(tenantId)]?.ToString();
 
-            token.TryGetValue("eventName", StringComparison.OrdinalIgnoreCase, out var eventName);
-            token.TryGetValue("tenantId", StringComparison.OrdinalIgnoreCase, out var tenantId);
-
-            return eventSubscriptionEntity.EventType != null && 
-                string.Compare(eventSubscriptionEntity.EventType, SignalEventSubscriptionEntityFields.EVENT_TYPE, true) == 0 && 
-                eventSubscriptionEntity.EventName != null && 
+            return eventSubscriptionEntity.EventType != null &&
+                string.Compare(eventSubscriptionEntity.EventType, SignalEventSubscriptionEntityFields.EVENT_TYPE, true) == 0 &&
+                eventSubscriptionEntity.EventName != null &&
                 string.Compare(eventSubscriptionEntity.EventName, eventName?.ToString(), true) == 0 &&
-                (eventSubscriptionEntity.ExecutionId == null || 
-                    (eventSubscriptionEntity.ExecutionId != null && 
-                        eventSubscriptionEntity.Execution != null && 
-                            eventSubscriptionEntity.Execution.SuspensionState == SuspensionStateProvider.ACTIVE.StateCode)) && 
-                ((tenantId != null && string.Compare(tenantId?.ToString(), eventSubscriptionEntity.TenantId, true) == 0) || 
+                (eventSubscriptionEntity.ExecutionId == null ||
+                    (eventSubscriptionEntity.ExecutionId != null &&
+                        eventSubscriptionEntity.Execution != null &&
+                            eventSubscriptionEntity.Execution.SuspensionState == SuspensionStateProvider.ACTIVE.StateCode)) &&
+                ((tenantId != null && string.Compare(tenantId?.ToString(), eventSubscriptionEntity.TenantId, true) == 0) ||
                     (tenantId != null && string.IsNullOrWhiteSpace(eventSubscriptionEntity.TenantId)));
         }
 

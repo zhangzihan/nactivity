@@ -14,7 +14,9 @@
  */
 namespace Sys.Workflow.Validation.Validators.Impl
 {
+    using Microsoft.CSharp;
     using Sys.Workflow.Bpmn.Models;
+    using System.Text.RegularExpressions;
 
     /// 
     /// 
@@ -47,6 +49,13 @@ namespace Sys.Workflow.Validation.Validators.Impl
                 AddError(errors, ProblemsConstants.PROCESS_DEFINITION_ID_TOO_LONG, process,
                     string.Format(ProcessValidatorResource.PROCESS_DEFINITION_ID_TOO_LONG, Constraints.PROCESS_DEFINITION_ID_MAX_LENGTH));
             }
+
+            if (new Regex("[\\u0100-\\u9fa5]+|^[^a-zA-Z_]").IsMatch(process.Id))
+            {
+                AddError(errors, ProblemsConstants.PROCESS_DEFINITION_ID_NOTSUPPORT_IDENTIFIER, process,
+                    string.Format(ProcessValidatorResource.PROCESS_DEFINITION_ID_NOTSUPPORT_IDENTIFIER, process.Id));
+            }
+
             if (string.IsNullOrWhiteSpace(process.Name?.Trim()) || process.Name.Length > Constraints.PROCESS_DEFINITION_NAME_MAX_LENGTH)
             {
                 AddError(errors, ProblemsConstants.PROCESS_DEFINITION_NAME_TOO_LONG, process, string.Format(ProcessValidatorResource.PROCESS_DEFINITION_NAME_TOO_LONG, Constraints.PROCESS_DEFINITION_NAME_MAX_LENGTH));

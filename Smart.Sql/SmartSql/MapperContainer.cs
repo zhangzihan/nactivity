@@ -38,11 +38,19 @@ namespace SmartSql
         }
         public void Dispose()
         {
-            foreach (var mapper in _mapperContainer)
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                mapper.Value.Dispose();
+                foreach (var mapper in _mapperContainer)
+                {
+                    mapper.Value.Dispose();
+                }
+                _mapperContainer.Clear();
             }
-            _mapperContainer.Clear();
         }
     }
 }

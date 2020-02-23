@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,18 +24,22 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 
         public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
         {
+            if (parameter is null)
+            {
+                return false;
+            }
 
-            IDictionary<string, object> @params = (IDictionary<string, object>)parameter ?? new Dictionary<string, object>();
-            @params.TryGetValue("eventType", out object type);
-            @params.TryGetValue("processInstanceId", out object processInstanceId);
-            @params.TryGetValue("activityId", out object activityId);
+            JToken @params = JToken.FromObject(parameter);
+            string eventType = @params[nameof(eventType)]?.ToString();
+            string processInstanceId = @params[nameof(processInstanceId)]?.ToString();
+            string activityId = @params[nameof(activityId)]?.ToString();
 
-            return eventSubscriptionEntity.EventType != null && 
-                string.Compare(eventSubscriptionEntity.EventType, type?.ToString(), true) == 0 && 
-                eventSubscriptionEntity.ProcessInstanceId != null && 
-                string.Compare(eventSubscriptionEntity.ProcessInstanceId, processInstanceId?.ToString(), true) == 0 && 
-                eventSubscriptionEntity.ActivityId != null && 
-                string.Compare(eventSubscriptionEntity.ActivityId, activityId?.ToString(), true) == 0;
+            return eventSubscriptionEntity.EventType is object &&
+                eventSubscriptionEntity.EventType.Equals(eventType, StringComparison.OrdinalIgnoreCase) &&
+                eventSubscriptionEntity.ProcessInstanceId is object &&
+                eventSubscriptionEntity.ProcessInstanceId.Equals(processInstanceId, StringComparison.OrdinalIgnoreCase) &&
+                eventSubscriptionEntity.ActivityId is object &&
+                eventSubscriptionEntity.ActivityId.Equals(activityId, StringComparison.OrdinalIgnoreCase);
         }
 
     }

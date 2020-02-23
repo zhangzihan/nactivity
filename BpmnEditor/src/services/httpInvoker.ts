@@ -1,9 +1,10 @@
-import { LoginUser } from 'loginuser';
+import { LoginUser } from '../model/loginuser';
 import Axios, { AxiosRequestConfig, AxiosPromise } from 'axios';
-import { EventBus } from 'EventBus';
-import { inject } from 'aurelia-framework';
+import { EventBus } from '../model/EventBus';
+import { inject, singleton } from 'aurelia-framework';
 
 @inject('loginUser', 'eventBus')
+@singleton()
 export class HttpInvoker {
 
   constructor(private user: LoginUser, private es: EventBus) {
@@ -23,7 +24,7 @@ export class HttpInvoker {
     return Axios.get(url, cfg);
   }
 
-  private tokenAccess() {
+  tokenAccess() {
     return {
       "Authorization": "Bearer " + encodeURIComponent(JSON.stringify(this.user.current))
     }

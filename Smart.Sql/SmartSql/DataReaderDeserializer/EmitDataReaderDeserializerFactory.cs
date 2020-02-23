@@ -11,7 +11,7 @@ namespace SmartSql.DataReaderDeserializer
 
         }
 
-        private object syncRoot = new object();
+        private readonly object syncRoot = new object();
 
         public IDataReaderDeserializer Create()
         {

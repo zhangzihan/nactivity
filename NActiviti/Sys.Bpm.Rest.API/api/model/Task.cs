@@ -119,7 +119,8 @@ namespace Sys.Workflow.Cloud.Services.Api.Model
             [JsonProperty("isTransfer")]bool? isTransfer,
             [JsonProperty("CanTransfer")]bool? canTransfer,
             [JsonProperty("OnlyAssignee")]bool? onlyAssignee,
-            [JsonProperty("BusinessKey")]string businessKey)
+            [JsonProperty("BusinessKey")]string businessKey,
+            [JsonProperty("TaskDefinitionKey")]string taskDefinitionKey)
         {
             this.id = id;
             this.owner = owner;
@@ -141,6 +142,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model
             this.CanTransfer = canTransfer;
             this.OnlyAssignee = onlyAssignee;
             this.BusinessKey = businessKey;
+            this.TaskDefinitionKey = taskDefinitionKey;
         }
 
 
@@ -324,5 +326,10 @@ namespace Sys.Workflow.Cloud.Services.Api.Model
         {
             get; set;
         }
+
+        /// <summary>
+        /// 当前任务节点名称
+        /// </summary>
+        public string TaskDefinitionKey { get; set; }
     }
 }

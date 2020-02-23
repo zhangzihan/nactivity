@@ -26,26 +26,24 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
     [Serializable]
     public class VariableInstanceEntityImpl : AbstractEntity, IVariableInstanceEntity, IValueFields, IBulkDeleteable
     {
-
         private const long serialVersionUID = 1L;
 
-        protected internal string name;
-        protected internal IVariableType type;
-        protected internal string typeName;
+        private string name;
+        private IVariableType type;
+        private string typeName;
 
-        protected internal string processInstanceId;
-        protected internal string executionId;
-        protected internal string taskId;
+        private string processInstanceId;
+        private string executionId;
+        private string taskId;
 
-        protected internal long? longValue;
-        protected internal double? doubleValue;
-        protected internal string textValue;
-        protected internal string textValue2;
-        protected internal ByteArrayRef byteArrayRef;
+        private long? longValue;
+        private double? doubleValue;
+        private string textValue;
+        private string textValue2;
+        private ByteArrayRef byteArrayRef;
 
-        protected internal object cachedValue;
-        protected internal bool forcedUpdate;
-        protected internal bool deleted;
+        private object cachedValue;
+        private bool forcedUpdate;
 
         public VariableInstanceEntityImpl()
         {
@@ -319,7 +317,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("VariableInstanceEntity[");
-            sb.Append("id=").Append(id);
+            sb.Append("id=").Append(Id);
             sb.Append(", name=").Append(name);
             sb.Append(", type=").Append(type != null ? type.TypeName : "null");
             if (longValue != null)

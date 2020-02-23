@@ -1,4 +1,7 @@
-﻿namespace Sys.Workflow.Engine
+﻿using System;
+using System.Runtime.Serialization;
+
+namespace Sys.Workflow.Engine
 {
     /// <summary>
     /// This exception is thrown when you try to claim a task that is already claimed by someone else.
@@ -6,6 +9,7 @@
     /// 
     /// 
     /// </summary>
+    [Serializable]
     public class ActivitiTaskAlreadyClaimedException : ActivitiException
     {
 
@@ -41,6 +45,9 @@
             }
         }
 
+        protected ActivitiTaskAlreadyClaimedException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
 
 }

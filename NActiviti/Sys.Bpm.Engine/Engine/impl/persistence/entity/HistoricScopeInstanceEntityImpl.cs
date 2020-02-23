@@ -33,7 +33,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal long? durationInMillis;
         protected internal string deleteReason;
 
-        public virtual void markEnded(string deleteReason)
+        public virtual void MarkEnded(string deleteReason)
         {
             if (!this.endTime.HasValue)
             {
@@ -105,11 +105,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
-
-
-
-
         public virtual string DeleteReason
         {
             get
@@ -121,7 +116,5 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.deleteReason = value;
             }
         }
-
     }
-
 }

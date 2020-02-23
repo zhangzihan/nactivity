@@ -16,6 +16,8 @@ using System.Collections.Generic;
 
 namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using Sys.Workflow.Bpmn.Models;
     using Sys.Workflow.Engine.Impl.Contexts;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;

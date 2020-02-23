@@ -33,23 +33,24 @@ namespace Sys.Workflow.Engine.Impl.Cmd
     public class StartProcessInstanceCmd : ICommand<IProcessInstance>
     {
         private const long serialVersionUID = 1L;
-        protected internal string processDefinitionKey;
-        protected internal string processDefinitionId;
-        protected internal string processDefinitionBusinessKey;
-        protected internal IDictionary<string, object> variables;
-        protected internal IDictionary<string, object> transientVariables;
-        protected internal string businessKey;
-        protected internal string tenantId;
-        protected internal string processInstanceName;
-        protected internal ProcessInstanceHelper processInstanceHelper;
-        protected internal string startForm;
-        protected string processName;
+        private string processDefinitionKey;
+        private string processDefinitionId;
+        private string processDefinitionBusinessKey;
+        private IDictionary<string, object> variables;
+        private IDictionary<string, object> transientVariables;
+        private string businessKey;
+        private string tenantId;
+        private string processInstanceName;
+        private ProcessInstanceHelper processInstanceHelper;
+        private string startForm;
+        private string processName;
         private readonly string initialFlowElementId;
 
         private readonly IStartProcessInstanceCmd startCmd;
 
         private readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<StartProcessInstanceCmd>();
 
+        /// <inheritdoc />
         public StartProcessInstanceCmd(IStartProcessInstanceCmd cmd)
         {
             processDefinitionKey = cmd.ProcessDefinitionKey;
@@ -66,6 +67,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             this.startCmd = cmd;
         }
 
+        /// <inheritdoc />
         public StartProcessInstanceCmd(string processDefinitionKey, string processDefinitionId, string businessKey, IDictionary<string, object> variables, string startForm = null)
         {
             this.processDefinitionKey = processDefinitionKey;
@@ -75,17 +77,20 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             this.startForm = startForm;
         }
 
+        /// <inheritdoc />
         public StartProcessInstanceCmd(string processDefinitionKey, string processDefinitionId, string businessKey, IDictionary<string, object> variables, string tenantId, string startForm = null) : this(processDefinitionKey, processDefinitionId, businessKey, variables, startForm)
         {
             this.tenantId = tenantId;
         }
 
+        /// <inheritdoc />
         public StartProcessInstanceCmd(string processDefinitionId, IDictionary<string, object> variables)
         {
             this.processDefinitionId = processDefinitionId;
             this.variables = variables;
         }
 
+        /// <inheritdoc />
         public StartProcessInstanceCmd(ProcessInstanceBuilderImpl processInstanceBuilder) : this(processInstanceBuilder.ProcessDefinitionKey, processInstanceBuilder.ProcessDefinitionId, processInstanceBuilder.BusinessKey, processInstanceBuilder.Variables, processInstanceBuilder.TenantId)
         {
             this.processInstanceName = processInstanceBuilder.ProcessInstanceName;
@@ -93,6 +98,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             this.initialFlowElementId = processInstanceBuilder.InitialFlowElementId;
         }
 
+        /// <inheritdoc />
         public virtual IProcessInstance Execute(ICommandContext commandContext)
         {
             if (this.startCmd != null)
@@ -138,12 +144,14 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 }
 
                 processInstanceHelper = commandContext.ProcessEngineConfiguration.ProcessInstanceHelper;
+
                 IProcessInstance processInstance = processInstanceHelper.CreateAndStartProcessInstance(processDefinition, businessKey, processInstanceName, variables, transientVariables, initialFlowElementId);
 
                 return processInstance;
             }
         }
 
+        /// <inheritdoc />
         protected internal virtual IDictionary<string, object> ProcessDataObjects(ICollection<ValuedDataObject> dataObjects)
         {
             IDictionary<string, object> variablesMap = new Dictionary<string, object>();
@@ -160,12 +168,16 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         private IProcessInstance StartFromCommand(ICommandContext commandContext)
         {
-            _ = commandContext.ProcessEngineConfiguration.DeploymentManager;
             IRepositoryService repositoryService = commandContext.ProcessEngineConfiguration.RepositoryService;
             IRuntimeService runtimeService = commandContext.ProcessEngineConfiguration.RuntimeService;
             string id = startCmd.ProcessDefinitionId;
-            IProcessDefinition definition;
-            if (string.IsNullOrWhiteSpace(startCmd.StartForm) == false)
+            IProcessDefinition definition = null;
+            IProcessInstanceBuilder builder = runtimeService.CreateProcessInstanceBuilder();
+            if (string.IsNullOrWhiteSpace(startCmd.StartByMessage) == false)
+            {
+                builder.SetMessageName(startCmd.StartByMessage);
+            }
+            else if (string.IsNullOrWhiteSpace(startCmd.StartForm) == false)
             {
                 definition = repositoryService.CreateProcessDefinitionQuery()
                     .SetProcessDefinitionStartForm(startCmd.StartForm)
@@ -241,11 +253,13 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 processDefinitionId = definition.Id;
             }
 
-            IProcessInstanceBuilder builder = runtimeService.CreateProcessInstanceBuilder();
-            builder.SetProcessDefinitionId(definition.Id);
-            if (string.IsNullOrWhiteSpace(startCmd.ProcessInstanceName))
+            if (definition is object)
             {
-                startCmd.ProcessInstanceName = definition.Name;
+                builder.SetProcessDefinitionId(definition.Id);
+                if (string.IsNullOrWhiteSpace(startCmd.ProcessInstanceName))
+                {
+                    startCmd.ProcessInstanceName = definition.Name;
+                }
             }
             builder.SetVariables(startCmd.Variables);
             builder.SetBusinessKey(startCmd.BusinessKey);

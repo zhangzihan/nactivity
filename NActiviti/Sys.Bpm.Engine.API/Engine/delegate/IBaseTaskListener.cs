@@ -13,15 +13,12 @@
 
 namespace Sys.Workflow.Engine.Delegate
 {
-
-    /// 
+    /// <summary>
+    /// Not an actual event, used as a marker-value for <seealso cref="IBaseTaskListener"/>s that should be called for all events, including <seealso cref="EVENTNAME_CREATE"/> , <seealso cref="EVENTNAME_ASSIGNMENT"/> and
+    /// <seealso cref="EVENTNAME_COMPLETE"/> and <seealso cref="EVENTNAME_DELETE"/>.
+    /// </summary>
     public interface IBaseTaskListener
     {
-
-        /// <summary>
-        /// Not an actual event, used as a marker-value for <seealso cref="IBaseTaskListener"/>s that should be called for all events, including <seealso cref="EVENTNAME_CREATE"/> , <seealso cref="EVENTNAME_ASSIGNMENT"/> and
-        /// <seealso cref="EVENTNAME_COMPLETE"/> and <seealso cref="EVENTNAME_DELETE"/>.
-        /// </summary>
     }
 
     /// <summary>

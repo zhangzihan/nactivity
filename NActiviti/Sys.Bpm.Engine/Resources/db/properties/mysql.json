@@ -3,5 +3,7 @@
   "limitBefore": "",
   "limitBetween": "",
   "orderBy": "'order by  #{orderByColumns} '",
-  "isNull": "ifnull"
+  "isNull": "ifnull",
+  "getDate": "now()",
+  "dateFormat": "date_format"
 }

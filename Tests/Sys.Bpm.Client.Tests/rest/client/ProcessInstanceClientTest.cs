@@ -40,6 +40,15 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             client = ctx.CreateWorkflowHttpProxy().GetProcessInstanceClient();
         }
 
+        [Fact]
+        public void TestWorkflowVariable()
+        {
+            string str = Newtonsoft.Json.JsonConvert.SerializeObject(new WorkflowVariable
+            {
+                { "techer", new string[]{ "1"} }
+            });
+        }
+
         [Theory]
         [InlineData(50)]
         [InlineData(100)]
@@ -70,7 +79,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                         }
                     };
 
-                    list = await client.ProcessInstances(query);
+                    list = await client.ProcessInstances(query).ConfigureAwait(false);
                     if (list.List.Count() < pageSize)
                     {
                         break;
@@ -81,6 +90,35 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 Assert.True(offset == 1 && list.TotalCount <= 0 ? true : list.TotalCount / pageSize + 1 == offset);
             }).ConfigureAwait(false);
+
+            Assert.Null(ex);
+        }
+
+        [Theory]
+        [InlineData("启动测试.bpmn")]
+        public void 流程启动测试(string bpmnFile)
+        {
+            var ex = Record.Exception(() =>
+            {
+                //for (var idx = 0; idx < 5; idx++)
+                //{
+                ctx.StartUseFile(bpmnFile, null, null).GetAwaiter().GetResult();
+
+                //StartProcessInstanceCmd cmd = new StartProcessInstanceCmd()
+                //{
+                //    ProcessDefinitionKey = "启动测试",
+                //    Variables = null,
+                //    TenantId = ctx.TenantId
+                //};
+
+                //StartProcessInstanceCmd[] cmds = new StartProcessInstanceCmd[]
+                //{
+                //    cmd, cmd, cmd, cmd, cmd
+                //};
+
+                //client.Start(cmds);
+                //}
+            });
 
             Assert.Null(ex);
         }
@@ -98,7 +136,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 //{
                 //Task task = Task.Factory.StartNew(() =>
                 //{
-                AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] {
+                ctx.StartUseFile(bpmnFile, new string[] {
                         Guid.NewGuid().ToString(),
                         Guid.NewGuid().ToString(),
                         Guid.NewGuid().ToString()
@@ -107,7 +145,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                         ["isTecher"] = false,
                         ["手工分配"] = false,
                         ["是否终审"] = true
-                    }));
+                    }).GetAwaiter().GetResult();
             });
             //Assert.NotNull(instances);
             //Assert.True(instances.Count() > 0);
@@ -123,15 +161,47 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
         }
 
         [Theory]
+        [InlineData("任务补偿.bpmn")]
+        public void 任务补偿(string bpmnFile)
+        {
+            var ex = Record.Exception(() =>
+            {
+                string bid = Guid.NewGuid().ToString();
+                ProcessDefinition pd = ctx.CreateWorkflowHttpProxy().GetProcessDefinitionClient().LatestProcessDefinitions(new ProcessDefinitionQuery
+                {
+                    Key = "任务补偿"
+                }).GetAwaiter().GetResult().List.FirstOrDefault();
+
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, businessKey: bid).GetAwaiter().GetResult();
+
+                ctx.CreateWorkflowHttpProxy().GetTaskClient().CompleteTask(new CompleteTaskCmd
+                {
+                    BusinessKey = bid,
+                    Assignee = "user"
+                }).GetAwaiter().GetResult();
+
+                //ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
+                //{
+                //    ["同意"] = false
+                //}).GetAwaiter().GetResult();
+
+                Assert.NotNull(instances);
+                Assert.True(instances.Count() > 0);
+            });
+
+            Assert.Null(ex);
+        }
+
+        [Theory]
         [InlineData("任务过期.bpmn")]
         public void 任务自动过期(string bpmnFile)
         {
             var ex = Record.Exception(() =>
             {
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                 {
                     ["同意"] = false
-                }));
+                }).GetAwaiter().GetResult();
 
                 Assert.NotNull(instances);
                 Assert.True(instances.Count() > 0);
@@ -152,10 +222,10 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 List<ProcessInstance> instances = new List<ProcessInstance>();
                 while (count < length)
                 {
-                    instances.AddRange(AsyncHelper.RunSync(() => ctx.StartUseFile(process, new Dictionary<string, object>
+                    instances.AddRange(ctx.StartUseFile(process, new Dictionary<string, object>
                     {
                         ["同意"] = false
-                    })));
+                    }).GetAwaiter().GetResult());
                     count += 1;
                 }
 
@@ -164,11 +234,11 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 foreach (var instance in instances)
                 {
                     var pitc = ctx.CreateWorkflowHttpProxy().GetProcessInstanceTasksClient();
-                    var tasks = AsyncHelper.RunSync(() => pitc.GetTasks(new ProcessInstanceTaskQuery
+                    var tasks = pitc.GetTasks(new ProcessInstanceTaskQuery
                     {
                         ProcessInstanceId = instance.Id,
                         IncludeCompleted = false,
-                    }));
+                    }).GetAwaiter().GetResult();
 
                     var expired = tasks.List.Where(x => x.Assignee != "管理员");
                     var tac = ctx.CreateWorkflowHttpProxy().GetTaskAdminClient();
@@ -194,16 +264,16 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
         {
             var ex = Record.Exception(() =>
             {
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                 {
                     ["同意"] = false
-                }));
+                }).GetAwaiter().GetResult();
 
                 ITaskController tc = ctx.CreateWorkflowHttpProxy().GetTaskClient();
 
                 Thread.Sleep(1000);
 
-                var tasks = AsyncHelper.RunSync(() => tc.MyTasks("8e45aba4-c648-4d71-a1c3-3d15b5518b84"));
+                var tasks = tc.MyTasks("8e45aba4-c648-4d71-a1c3-3d15b5518b84").GetAwaiter().GetResult();
 
                 var task = tasks.List.ElementAt(0);
 
@@ -226,22 +296,22 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 string uid1 = Guid.NewGuid().ToString();
                 string next = Guid.NewGuid().ToString();
 
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                 {
                     ["Users"] = new string[] { uid, uid1 },
                     ["next"] = new string[] { next }
-                }));
+                }).GetAwaiter().GetResult();
 
                 ITaskController tc = ctx.CreateWorkflowHttpProxy().GetTaskClient();
 
-                TaskModel task = AsyncHelper.RunSync(() => tc.MyTasks(uid)).List.First();
+                TaskModel task = tc.MyTasks(uid).GetAwaiter().GetResult().List.First();
 
-                _ = AsyncHelper.RunSync(() => tc.CompleteTask(new CompleteTaskCmd
+                _ = tc.CompleteTask(new CompleteTaskCmd
                 {
                     TaskId = task.Id
-                }));
+                }).GetAwaiter().GetResult();
 
-                _ = AsyncHelper.RunSync(() => tc.MyTasks(next)).List.First();
+                _ = tc.MyTasks(next).GetAwaiter().GetResult().List.First();
             });
 
             Assert.Null(ex);
@@ -260,16 +330,16 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     "e561d025-76c7-4674-b799-5eae802a4980"
                 };
 
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                 {
                     ["UserTask_11w47k9s"] = users
-                }));
+                }).GetAwaiter().GetResult();
 
                 var action = new Action<string, bool>((uid, app) =>
                 {
                     ITaskController tc = ctx.CreateWorkflowHttpProxy().GetTaskClient();
 
-                    var tasks = AsyncHelper.RunSync(() => tc.MyTasks(uid));
+                    var tasks = tc.MyTasks(uid).GetAwaiter().GetResult();
 
                     if (tasks.RecordCount > 0)
                     {
@@ -298,12 +368,12 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 IProcessInstanceHistoriceController pvc = ctx.CreateWorkflowHttpProxy().GetProcessInstanceHistoriceClient();
 
-                var variables = AsyncHelper.RunSync(() => pvc.GetVariables(new ProcessVariablesQuery
+                var variables = pvc.GetVariables(new ProcessVariablesQuery
                 {
                     ProcessInstanceId = instances[0].Id,
                     ExcludeTaskVariables = true,
                     VariableName = WorkflowVariable.GLOBAL_APPROVALED_VARIABLE
-                }));
+                }).GetAwaiter().GetResult();
             });
 
             Assert.Null(ex);
@@ -322,14 +392,14 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     //"e561d025-76c7-4674-b799-5eae802a4980"
                 };
 
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                 {
                     ["UserTask_11w47k9s"] = users
-                }));
+                }).GetAwaiter().GetResult();
 
                 ITaskController tc = ctx.CreateWorkflowHttpProxy().GetTaskClient();
 
-                var tasks = AsyncHelper.RunSync(() => tc.MyTasks(users[0]));
+                var tasks = tc.MyTasks(users[0]).GetAwaiter().GetResult();
 
                 var task = tasks.List.ElementAt(0);
 
@@ -337,7 +407,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 Thread.Sleep(2000);
 
-                tasks = AsyncHelper.RunSync(() => tc.MyTasks(users[1]));
+                tasks = tc.MyTasks(users[1]).GetAwaiter().GetResult();
 
                 if (tasks.List.Count() > 0)
                 {
@@ -366,14 +436,14 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     //"e561d025-76c7-4674-b799-5eae802a4980"
                 };
 
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                 {
                     ["UserTask_11w47k9s"] = users
-                }));
+                }).GetAwaiter().GetResult();
 
                 ITaskController tc = ctx.CreateWorkflowHttpProxy().GetTaskClient();
 
-                var tasks = AsyncHelper.RunSync(() => tc.MyTasks(users[0]));
+                var tasks = tc.MyTasks(users[0]).GetAwaiter().GetResult();
 
                 var task = tasks.List.ElementAt(0);
 
@@ -381,7 +451,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 Thread.Sleep(1000);
 
-                tasks = AsyncHelper.RunSync(() => tc.MyTasks(users[1]));
+                tasks = tc.MyTasks(users[1]).GetAwaiter().GetResult();
 
                 if (tasks.List.Count() > 0)
                 {
@@ -410,16 +480,16 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     //"e561d025-76c7-4674-b799-5eae802a4980"
                 };
 
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                 {
                     ["UserTask_11w47k9s"] = users
-                }));
+                }).GetAwaiter().GetResult();
 
                 ITaskController tc = ctx.CreateWorkflowHttpProxy().GetTaskClient();
 
                 foreach (var uid in users)
                 {
-                    var tasks = AsyncHelper.RunSync(() => tc.MyTasks(uid));
+                    var tasks = tc.MyTasks(uid).GetAwaiter().GetResult();
 
                     if (tasks.List.Count() > 0)
                     {
@@ -464,10 +534,10 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 while (count < 1)
                 {
-                    ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(process, new Dictionary<string, object>
+                    ProcessInstance[] instances = ctx.StartUseFile(process, new Dictionary<string, object>
                     {
                         ["UserTask_11w47k9s"] = users
-                    }));
+                    }).GetAwaiter().GetResult();
 
                     count += 1;
                 }
@@ -480,7 +550,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     bool approvaled = true;
                     foreach (var uid in users)
                     {
-                        var tasks = AsyncHelper.RunSync(() => tc.MyTasks(uid));
+                        var tasks = tc.MyTasks(uid).GetAwaiter().GetResult();
 
                         foreach (var task in tasks.List)
                         {
@@ -510,7 +580,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = await Record.ExceptionAsync(async () =>
             {
                 string sid = Guid.NewGuid().ToString();
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { sid }));
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, new string[] { sid }).GetAwaiter().GetResult();
 
                 Assert.NotNull(instances);
                 Assert.True(instances.Count() > 0);
@@ -536,7 +606,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 }).ConfigureAwait(false);
 
                 tasks = await tc.MyTasks(uid).ConfigureAwait(false);
-            });
+            }).ConfigureAwait(false);
 
             Assert.Null(ex);
         }
@@ -549,7 +619,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = await Record.ExceptionAsync(async () =>
             {
                 string sid = Guid.NewGuid().ToString();
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { sid }));
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, new string[] { sid }).GetAwaiter().GetResult();
 
                 Assert.NotNull(instances);
                 Assert.True(instances.Count() > 0);
@@ -640,7 +710,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     TenantId = ctx.TenantId
                 };
 
-                ProcessInstance[] instances = AsyncHelper.RunSync<ProcessInstance[]>(() => client.Start(new StartProcessInstanceCmd[] { cmd }));
+                ProcessInstance[] instances = client.Start(new StartProcessInstanceCmd[] { cmd }).GetAwaiter().GetResult();
 
                 Assert.NotNull(instances);
                 Assert.True(instances.Count() > 0);
@@ -662,6 +732,115 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 //}
                 //}
             }).ConfigureAwait(false);
+
+            Assert.Null(ex);
+        }
+
+        /// <summary>
+        /// 只能触发一个消息开始节点
+        /// </summary>
+        /// <param name="bpmnFile"></param>
+        [Theory]
+        [InlineData("使用消息触发流程.bpmn")]
+        [Order(2)]
+        public void Start_使用消息触发流程(string bpmnFile)
+        {
+            var ex = Record.Exception(() =>
+            {
+                string uid = Guid.NewGuid().ToString();
+                string bizId = Guid.NewGuid().ToString();
+                WorkflowVariable values = new WorkflowVariable();
+                values.AddAssignee("subuser", uid);
+
+                ctx.Deploy(bpmnFile);
+
+                var pc = ctx.CreateWorkflowHttpProxy().GetProcessInstanceClient();
+                pc.Start(new StartProcessInstanceCmd[]
+                {
+                    new StartProcessInstanceCmd
+                    {
+                        StartByMessage = "Message_38jm21j",
+                        BusinessKey = bizId,
+                        Variables = values,
+                        TenantId = ctx.TenantId
+                    }
+                });
+            });
+
+            Assert.Null(ex);
+        }
+
+        /// <summary>
+        /// 使用信号可以触发多个同名信号开始节点流程定义
+        /// </summary>
+        /// <param name="bpmnFiles"></param>
+        [Theory]
+        [InlineData("日程支付信号触发酒店预订.bpmn", "日程支付信号触发机票预订.bpmn")]
+        [Order(2)]
+        public void Start_使用信号触发流程(params string[] bpmnFiles)
+        {
+            var ex = Record.Exception(() =>
+            {
+                string uid = Guid.NewGuid().ToString();
+                string bizId = Guid.NewGuid().ToString();
+                WorkflowVariable values = new WorkflowVariable();
+                values.AddAssignee("酒店预订", uid);
+                values.AddAssignee("机票预订", uid);
+
+                foreach (var bpmnFile in bpmnFiles)
+                {
+                    ctx.Deploy(bpmnFile);
+                }
+
+                var pc = ctx.CreateWorkflowHttpProxy().GetProcessInstanceClient();
+                pc.SendSignal(new SignalCmd
+                {
+                    TenantId = ctx.TenantId,
+                    Name = "日程已支付",
+                    InputVariables = values
+                }).GetAwaiter().GetResult();
+
+
+            });
+
+            Assert.Null(ex);
+        }
+
+        [Theory]
+        [InlineData("包容网关.bpmn", 100)]
+        [InlineData("包容网关.bpmn", 101)]
+        public void 包容网关(string bpmnFile, int money)
+        {
+            var ex = Record.Exception(() =>
+            {
+                string 项目采购 = Guid.NewGuid().ToString();
+                string 项目主管 = Guid.NewGuid().ToString();
+                string 项目经理 = Guid.NewGuid().ToString();
+                string 财务主管 = Guid.NewGuid().ToString();
+                string 项目总监 = Guid.NewGuid().ToString();
+                string 财务总监 = Guid.NewGuid().ToString();
+
+                string bizId = Guid.NewGuid().ToString();
+                WorkflowVariable values = new WorkflowVariable();
+                values.AddAssignee("项目采购", 项目采购)
+                    .AddAssignee("项目主管", 项目主管)
+                    .AddAssignee("项目经理", 项目经理)
+                    .AddAssignee("财务主管", 财务主管)
+                    .AddAssignee("项目总监", 项目总监)
+                    .AddAssignee("财务总监", 财务总监);
+
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, values, businessKey: bizId).GetAwaiter().GetResult();
+
+                ITaskController taskClient = ctx.CreateWorkflowHttpProxy().GetTaskClient();
+                taskClient.CompleteTask(new CompleteTaskCmd
+                {
+                    BusinessKey = bizId,
+                    OutputVariables = new WorkflowVariable
+                    {
+                        ["金额"] = money
+                    }
+                });
+            });
 
             Assert.Null(ex);
         }
@@ -702,7 +881,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     TenantId = ctx.TenantId
                 };
 
-                ProcessInstance[] instances = AsyncHelper.RunSync<ProcessInstance[]>(() => client.Start(new StartProcessInstanceCmd[] { cmd }));
+                ProcessInstance[] instances = client.Start(new StartProcessInstanceCmd[] { cmd }).GetAwaiter().GetResult();
 
                 Assert.NotNull(instances);
                 Assert.True(instances.Count() > 0);
@@ -735,10 +914,10 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = await Record.ExceptionAsync(async () =>
             {
                 string uid = Guid.NewGuid().ToString();
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[0], new Dictionary<string, object>
+                ProcessInstance[] instances = await ctx.StartUseFile(bpmnFile, new string[0], new Dictionary<string, object>
                     {
                         { "starter", new string[]{ uid } }
-                    }));
+                    }).ConfigureAwait(false);
 
                 ITaskController tc = ctx.CreateWorkflowHttpProxy().GetTaskClient();
 
@@ -770,14 +949,14 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     TenantId = ctx.TenantId
                 };
 
-                ProcessInstance[] instances = AsyncHelper.RunSync<ProcessInstance[]>(() => client.Start(new StartProcessInstanceCmd[] { cmd }));
+                ProcessInstance[] instances = client.Start(new StartProcessInstanceCmd[] { cmd }).GetAwaiter().GetResult();
 
                 Assert.NotNull(instances);
                 Assert.True(instances.Count() > 0);
 
                 var pit = ctx.CreateWorkflowHttpProxy().GetProcessInstanceTasksClient();
 
-                var tasks = AsyncHelper.RunSync<Resources<TaskModel>>(() => pit.GetTasks(new ProcessInstanceTaskQuery() { ProcessInstanceId = instances[0].Id }));
+                var tasks = pit.GetTasks(new ProcessInstanceTaskQuery() { ProcessInstanceId = instances[0].Id }).GetAwaiter().GetResult();
 
                 Assert.True(tasks.List.Count() > 0);
             });
@@ -797,23 +976,23 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     TenantId = ctx.TenantId
                 };
 
-                ProcessInstance[] instances = AsyncHelper.RunSync<ProcessInstance[]>(() => client.Start(new StartProcessInstanceCmd[] { cmd }));
+                ProcessInstance[] instances = client.Start(new StartProcessInstanceCmd[] { cmd }).GetAwaiter().GetResult();
 
                 Assert.NotNull(instances);
                 Assert.True(instances.Count() > 0);
 
                 var pit = ctx.CreateWorkflowHttpProxy().GetProcessInstanceTasksClient();
 
-                var tasks = AsyncHelper.RunSync<Resources<TaskModel>>(() => pit.GetTasks(new ProcessInstanceTaskQuery() { ProcessInstanceId = instances[0].Id }));
+                var tasks = pit.GetTasks(new ProcessInstanceTaskQuery() { ProcessInstanceId = instances[0].Id }).GetAwaiter().GetResult();
 
                 TaskModel task = tasks.List.FirstOrDefault(x => x.Status == "ASSIGNED");
 
                 Assert.NotNull(task);
 
-                AsyncHelper.RunSync(() => ctx.CreateWorkflowHttpProxy().GetTaskClient().CompleteTask(new CompleteTaskCmd
+                ctx.CreateWorkflowHttpProxy().GetTaskClient().CompleteTask(new CompleteTaskCmd
                 {
                     TaskId = task.Id
-                }));
+                }).GetAwaiter().GetResult();
             });
 
             Assert.Null(ex);
@@ -862,7 +1041,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     TenantId = ctx.TenantId
                 };
 
-                ProcessInstance[] instances = AsyncHelper.RunSync<ProcessInstance[]>(() => client.Start(new StartProcessInstanceCmd[] { cmd }));
+                ProcessInstance[] instances = client.Start(new StartProcessInstanceCmd[] { cmd }).GetAwaiter().GetResult();
 
                 Assert.NotNull(instances);
                 Assert.True(instances.Count() > 0);
@@ -883,12 +1062,12 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string uid = Guid.NewGuid().ToString();
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }));
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, new string[] { uid }).GetAwaiter().GetResult();
 
                 Assert.NotNull(instances);
                 Assert.True(instances.Count() > 0);
 
-                ProcessInstance inst = AsyncHelper.RunSync<ProcessInstance>(() => client.GetProcessInstanceById(instances[0].Id));
+                ProcessInstance inst = client.GetProcessInstanceById(instances[0].Id).GetAwaiter().GetResult();
 
                 Assert.NotNull(inst);
             });
@@ -908,12 +1087,12 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string uid = Guid.NewGuid().ToString();
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }));
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, new string[] { uid }).GetAwaiter().GetResult();
 
                 Assert.NotNull(instances);
                 Assert.True(instances.Count() > 0);
 
-                ProcessInstance inst = AsyncHelper.RunSync<ProcessInstance>(() => client.Suspend(instances[0].Id));
+                ProcessInstance inst = client.Suspend(instances[0].Id).GetAwaiter().GetResult();
 
                 Assert.NotNull(inst);
                 Assert.Equal("SUSPENDED", inst.Status, ignoreCase: true);
@@ -929,17 +1108,17 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string uid = Guid.NewGuid().ToString();
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }));
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, new string[] { uid }).GetAwaiter().GetResult();
 
                 Assert.NotNull(instances);
                 Assert.True(instances.Count() > 0);
 
-                ProcessInstance inst = AsyncHelper.RunSync<ProcessInstance>(() => client.Suspend(instances[0].Id));
+                ProcessInstance inst = client.Suspend(instances[0].Id).GetAwaiter().GetResult();
 
                 Assert.NotNull(inst);
                 Assert.Equal("SUSPENDED", inst.Status, ignoreCase: true);
 
-                inst = AsyncHelper.RunSync<ProcessInstance>(() => client.Activate(instances[0].Id));
+                inst = client.Activate(instances[0].Id).GetAwaiter().GetResult();
 
                 Assert.NotNull(inst);
                 Assert.Equal("RUNNING", inst.Status, StringComparer.OrdinalIgnoreCase);
@@ -991,7 +1170,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 };
                 cmds[1] = cmd;
 
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => client.Start(cmds));
+                ProcessInstance[] instances = client.Start(cmds).GetAwaiter().GetResult();
 
                 TerminateProcessInstanceCmd[] tcmds = new TerminateProcessInstanceCmd[]
                 {
@@ -999,9 +1178,9 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     new TerminateProcessInstanceCmd(null, bkey2, "测试终止流程")
                 };
 
-                AsyncHelper.RunSync<bool>(() => client.Terminate(tcmds));
+                client.Terminate(tcmds).GetAwaiter().GetResult();
 
-                ProcessInstance inst = AsyncHelper.RunSync<ProcessInstance>(() => client.GetProcessInstanceById(instances[0].Id));
+                ProcessInstance inst = client.GetProcessInstanceById(instances[0].Id).GetAwaiter().GetResult();
             });
 
             Assert.NotNull(ex);
@@ -1016,14 +1195,14 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 for (var idx = 0; idx < 10; idx++)
                 {
                     string uid = Guid.NewGuid().ToString();
-                    ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
+                    ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                     {
                         ["user"] = new string[] { uid },
                         ["startTimer"] = DateTime.Now.AddSeconds(4)
-                    }, Guid.NewGuid().ToString()));
+                    }, Guid.NewGuid().ToString()).GetAwaiter().GetResult();
 
                     ITaskController taskClient = ctx.CreateWorkflowHttpProxy().GetTaskClient();
-                    Resources<TaskModel> tasks = AsyncHelper.RunSync(() => taskClient.MyTasks(uid));
+                    Resources<TaskModel> tasks = taskClient.MyTasks(uid).GetAwaiter().GetResult();
                     Assert.True(tasks.TotalCount == 1);
                 }
             });
@@ -1042,10 +1221,10 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
             var ex = Record.Exception(() =>
             {
-                insts = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }, new Dictionary<string, object>
+                insts = ctx.StartUseFile(bpmnFile, new string[] { uid }, new Dictionary<string, object>
                 {
                     { "timerDateTime", timerDateTime}
-                }));
+                }).GetAwaiter().GetResult();
             });
 
             Assert.Null(ex);
@@ -1060,7 +1239,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 {
                     Thread.Sleep(10000);
 
-                    tasks = await client.MyTasks(uid);
+                    tasks = await client.MyTasks(uid).ConfigureAwait(false);
 
                     if (tasks?.List.Count() == 0)
                     {
@@ -1069,7 +1248,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     }
                     break;
                 }
-            });
+            }).ConfigureAwait(false);
 
             Assert.Null(ex);
         }
@@ -1084,10 +1263,10 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string uid = Guid.NewGuid().ToString();
-                insts = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }, new Dictionary<string, object>
+                insts = ctx.StartUseFile(bpmnFile, new string[] { uid }, new Dictionary<string, object>
                     {
                         { "timerDateTime", timerDateTime}
-                    }));
+                    }).GetAwaiter().GetResult();
             });
 
             Thread.Sleep(10000);
@@ -1096,7 +1275,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
             ex = Record.Exception(() =>
             {
-                ProcessInstance inst = AsyncHelper.RunSync(() => ctx.CreateWorkflowHttpProxy().GetProcessInstanceClient().GetProcessInstanceById(insts[0].Id));
+                ProcessInstance inst = ctx.CreateWorkflowHttpProxy().GetProcessInstanceClient().GetProcessInstanceById(insts[0].Id).GetAwaiter().GetResult();
             });
 
             Assert.NotNull(ex);
@@ -1120,10 +1299,10 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
             var ex = Record.Exception(() =>
             {
-                insts = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }, new Dictionary<string, object>
+                insts = ctx.StartUseFile(bpmnFile, new string[] { uid }, new Dictionary<string, object>
                     {
                         { "timerDateTime", timerDateTime}
-                    }));
+                    }).GetAwaiter().GetResult();
             });
 
             Thread.Sleep(10000);
@@ -1132,10 +1311,10 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
             ex = await Record.ExceptionAsync(async () =>
             {
-                var tasks = await ctx.CreateWorkflowHttpProxy().GetTaskClient().MyTasks(uid);
+                var tasks = await ctx.CreateWorkflowHttpProxy().GetTaskClient().MyTasks(uid).ConfigureAwait(false);
 
                 Assert.NotEmpty(tasks.List);
-            });
+            }).ConfigureAwait(false);
 
             Assert.Null(ex);
         }
@@ -1148,7 +1327,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string uid = Guid.NewGuid().ToString();
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }));
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, new string[] { uid }).GetAwaiter().GetResult();
             });
 
             Assert.Null(ex);
@@ -1166,12 +1345,12 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string uid = Guid.NewGuid().ToString();
-                insts = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid },
+                insts = ctx.StartUseFile(bpmnFile, new string[] { uid },
                     new Dictionary<string, object>
                     {
                         { "count", count },
                         { "start", start}
-                    }));
+                    }).GetAwaiter().GetResult();
             });
 
             Thread.Sleep(30000);
@@ -1190,11 +1369,11 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string uid = Guid.NewGuid().ToString();
-                insts = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }, new Dictionary<string, object>
+                insts = ctx.StartUseFile(bpmnFile, new string[] { uid }, new Dictionary<string, object>
                     {
                         { "count", count },
                         { "start", start}
-                    }));
+                    }).GetAwaiter().GetResult();
             });
 
             Thread.Sleep(30000);
@@ -1239,10 +1418,10 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                         StartForm = formKey,
                         TenantId = ctx.TenantId
                     }
-                });
+                }).ConfigureAwait(false);
 
                 Assert.Single(insts);
-            });
+            }).ConfigureAwait(false);
 
             Assert.Null(ex);
         }
@@ -1254,24 +1433,24 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string uid = Guid.NewGuid().ToString();
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                 {
                     ["users"] = new string[] { uid }
-                }, Guid.NewGuid().ToString()));
+                }, Guid.NewGuid().ToString()).GetAwaiter().GetResult();
 
                 ITaskController taskClient = ctx.CreateWorkflowHttpProxy().GetTaskClient();
-                TaskModel task = AsyncHelper.RunSync(() => taskClient.MyTasks(uid)).List.FirstOrDefault();
+                TaskModel task = taskClient.MyTasks(uid).GetAwaiter().GetResult().List.FirstOrDefault();
                 var variabled = new WorkflowVariable
                 {
                     Approvaled = true
                 };
-                _ = AsyncHelper.RunSync(() => taskClient.CompleteTask(new CompleteTaskCmd
+                _ = taskClient.CompleteTask(new CompleteTaskCmd
                 {
                     OutputVariables = variabled,
                     LocalScope = false,
                     TaskId = task.Id,
                     NotFoundThrowError = true
-                }));
+                }).GetAwaiter().GetResult();
             });
 
             Assert.Null(ex);
@@ -1290,15 +1469,15 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     Guid.NewGuid().ToString()
                 };
 
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                 {
                     ["teachers"] = teachers
-                }, Guid.NewGuid().ToString()));
+                }, Guid.NewGuid().ToString()).GetAwaiter().GetResult();
 
 
                 //提交完成我的任务
                 ITaskController taskClient = ctx.CreateWorkflowHttpProxy().GetTaskClient();
-                TaskModel task = AsyncHelper.RunSync(() => taskClient.MyTasks(teachers[0])).List.FirstOrDefault();
+                TaskModel task = taskClient.MyTasks(teachers[0]).GetAwaiter().GetResult().List.FirstOrDefault();
                 var variabled = new WorkflowVariable();
                 //从业务端获取任务完成条件 节点teacher的条件 
                 //${nrOfActivateInstances == 0 or 完成==true}
@@ -1310,16 +1489,16 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     Guid.NewGuid().ToString()
                 };
                 variabled["students"] = students;
-                _ = AsyncHelper.RunSync(() => taskClient.CompleteTask(new CompleteTaskCmd
+                _ = taskClient.CompleteTask(new CompleteTaskCmd
                 {
                     OutputVariables = variabled,
                     //一定要设置为false，否则OutputVariables变量的作用域仅当前节点可见
                     LocalScope = false,
                     TaskId = task.Id
-                }));
+                }).GetAwaiter().GetResult();
 
                 //查询下一节点是否有任务
-                task = AsyncHelper.RunSync(() => taskClient.MyTasks(students[0])).List.FirstOrDefault();
+                task = taskClient.MyTasks(students[0]).GetAwaiter().GetResult().List.FirstOrDefault();
                 Assert.NotNull(task);
             });
 
@@ -1339,10 +1518,10 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     Guid.NewGuid().ToString()
                 };
 
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                 {
                     ["teachers"] = teachers
-                }, Guid.NewGuid().ToString()));
+                }, Guid.NewGuid().ToString()).GetAwaiter().GetResult();
 
 
                 //使用变量方式，需要在调用完成任务前对变量赋值，否则流程会报找不到students表达式错误
@@ -1354,30 +1533,30 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 };
 
                 IProcessInstanceVariableController processInstanceVariable = ctx.CreateWorkflowHttpProxy().GetProcessInstanceVariableClient();
-                _ = AsyncHelper.RunSync(() => processInstanceVariable.SetVariables(new SetProcessVariablesCmd(instances[0].Id,
+                _ = processInstanceVariable.SetVariables(new SetProcessVariablesCmd(instances[0].Id,
                      new WorkflowVariable
                      {
                          ["students"] = students
-                     })));
+                     })).GetAwaiter().GetResult();
 
 
                 //提交完成我的任务
                 ITaskController taskClient = ctx.CreateWorkflowHttpProxy().GetTaskClient();
-                TaskModel task = AsyncHelper.RunSync(() => taskClient.MyTasks(teachers[0])).List.FirstOrDefault();
+                TaskModel task = taskClient.MyTasks(teachers[0]).GetAwaiter().GetResult().List.FirstOrDefault();
                 var variabled = new WorkflowVariable();
                 //从业务端获取任务完成条件 节点teacher的条件 
                 //${nrOfActivateInstances == 0 or 完成==true}
                 variabled["完成"] = true;
-                _ = AsyncHelper.RunSync(() => taskClient.CompleteTask(new CompleteTaskCmd
+                _ = taskClient.CompleteTask(new CompleteTaskCmd
                 {
                     OutputVariables = variabled,
                     //一定要设置为false，否则OutputVariables变量的作用域仅当前节点可见
                     LocalScope = false,
                     TaskId = task.Id
-                }));
+                }).GetAwaiter().GetResult();
 
                 //查询下一节点是否有任务
-                task = AsyncHelper.RunSync(() => taskClient.MyTasks(students[0])).List.FirstOrDefault();
+                task = taskClient.MyTasks(students[0]).GetAwaiter().GetResult().List.FirstOrDefault();
                 Assert.NotNull(task);
             });
 
@@ -1478,24 +1657,24 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
             var processClient = httpProxy.GetProcessInstanceClient();
 
-            ProcessInstance[] instances = AsyncHelper.RunSync(() => processClient.Start(itemCmds.ToArray()));
+            ProcessInstance[] instances = processClient.Start(itemCmds.ToArray()).GetAwaiter().GetResult();
 
             Assert.True(instances.Length == itemCmds.Count);
 
             var taskClient = httpProxy.GetTaskClient();
 
             //一审
-            CompleteTaskCmd[] tsks = AsyncHelper.RunSync(() => CompleteProductApproval(taskClient, attendeeItems[0].Id, gup1[0], passed1, needEdit, 1));
+            CompleteTaskCmd[] tsks = CompleteProductApproval(taskClient, attendeeItems[0].Id, gup1[0], passed1, needEdit, 1).GetAwaiter().GetResult();
 
             Assert.Empty(tsks);
 
             if (passed1 == false)
             {
-                Resources<TaskModel> tasks = AsyncHelper.RunSync(() => ctx.CreateWorkflowHttpProxy().GetProcessInstanceTasksClient().GetTasks(new ProcessInstanceTaskQuery
+                Resources<TaskModel> tasks = ctx.CreateWorkflowHttpProxy().GetProcessInstanceTasksClient().GetTasks(new ProcessInstanceTaskQuery
                 {
                     ProcessInstanceId = instances[0].Id,
                     IncludeCompleted = false
-                }));
+                }).GetAwaiter().GetResult();
 
                 Assert.Empty(tasks.List);
 
@@ -1504,11 +1683,11 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
             if (passed1 == null && needEdit)
             {
-                tsks = AsyncHelper.RunSync(() => CompleteProductApproval(taskClient, attendeeItems[0].Id, startUser, false, false, 1));
+                tsks = CompleteProductApproval(taskClient, attendeeItems[0].Id, startUser, false, false, 1).GetAwaiter().GetResult();
 
                 Assert.Empty(tsks);
 
-                tsks = AsyncHelper.RunSync(() => CompleteProductApproval(taskClient, attendeeItems[0].Id, gup1[0], true, false, 1));
+                tsks = CompleteProductApproval(taskClient, attendeeItems[0].Id, gup1[0], true, false, 1).GetAwaiter().GetResult();
 
                 Assert.Empty(tsks);
 
@@ -1516,25 +1695,25 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             }
 
             //二审
-            AsyncHelper.RunSync(() => CompleteProductApproval(taskClient, attendeeItems[0].Id, gup2[0], passed2, needEdit, 2));
+            CompleteProductApproval(taskClient, attendeeItems[0].Id, gup2[0], passed2, needEdit, 2).GetAwaiter().GetResult();
 
             if (passed2 == null && needEdit)
             {
-                tsks = AsyncHelper.RunSync(() => CompleteProductApproval(taskClient, attendeeItems[0].Id, startUser, false, false, 2));
+                tsks = CompleteProductApproval(taskClient, attendeeItems[0].Id, startUser, false, false, 2).GetAwaiter().GetResult();
 
                 Assert.Empty(tsks);
 
-                tsks = AsyncHelper.RunSync(() => CompleteProductApproval(taskClient, attendeeItems[0].Id, gup2[0], true, false, 2));
+                tsks = CompleteProductApproval(taskClient, attendeeItems[0].Id, gup2[0], true, false, 2).GetAwaiter().GetResult();
 
                 Assert.Empty(tsks);
             }
 
             {
-                Resources<TaskModel> tasks = AsyncHelper.RunSync(() => ctx.CreateWorkflowHttpProxy().GetProcessInstanceTasksClient().GetTasks(new ProcessInstanceTaskQuery
+                Resources<TaskModel> tasks = ctx.CreateWorkflowHttpProxy().GetProcessInstanceTasksClient().GetTasks(new ProcessInstanceTaskQuery
                 {
                     ProcessInstanceId = instances[0].Id,
                     IncludeCompleted = false
-                }));
+                }).GetAwaiter().GetResult();
 
                 Assert.Empty(tasks.List);
             }
@@ -1570,51 +1749,58 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             {
                 string uid = Guid.NewGuid().ToString();
                 string utask = Guid.NewGuid().ToString();
+                string[] ids = new string[]
+                {
+                    Guid.NewGuid().ToString(),
+                    Guid.NewGuid().ToString()
+                };
+                string masterKey = Guid.NewGuid().ToString();
 
                 WorkflowVariable vars = new WorkflowVariable();
-                vars.AddAssignee("子用户", uid).AddAssignee("主用户", utask);
+                vars.AddAssignee("子用户", uid).AddAssignee("主用户", utask).Add("ids", ids);
 
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, vars));
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, vars, businessKey: masterKey).GetAwaiter().GetResult();
 
                 ITaskController taskClient = ctx.CreateWorkflowHttpProxy().GetTaskClient();
-                TaskModel task = AsyncHelper.RunSync(() => taskClient.MyTasks(uid)).List.FirstOrDefault();
 
-                _ = AsyncHelper.RunSync(() => taskClient.CompleteTask(new CompleteTaskCmd
+                Task.WhenAll(Enumerable.Select(ids, async (businessKey) =>
                 {
-                    TaskId = task.Id,
-                    NotFoundThrowError = true
-                }));
+                    _ = await taskClient.CompleteTask(new CompleteTaskCmd
+                    {
+                        Assignee = uid,
+                        BusinessKey = businessKey
+                    }).ConfigureAwait(false);
+                })).GetAwaiter().GetResult();
 
-                Resources<TaskModel> tasks = AsyncHelper.RunSync(() => taskClient.GetTasks(new TaskQuery { InvolvedUser = utask }));
-
-                tasks = AsyncHelper.RunSync(() => taskClient.MyTasks(utask));
-                Assert.NotEmpty(tasks.List);
+                var tasks = taskClient.MyTasks(utask).GetAwaiter().GetResult().List.ToList();
+                Assert.NotEmpty(tasks);
             });
 
             Assert.Null(ex);
         }
 
         [Theory]
-        [InlineData("消息事件子流程.bpmn")]
-        public void 消息事件子流程(string bpmnFile)
+        [InlineData("消息事件子流程.bpmn", 3)]
+        public void 消息事件子流程(string bpmnFile, int loopSubProcess)
         {
             var ex = Record.Exception(() =>
             {
                 string uid = Guid.NewGuid().ToString();
                 string utask = Guid.NewGuid().ToString();
                 string eventUser = Guid.NewGuid().ToString();
+                string bizId = Guid.NewGuid().ToString();
 
                 WorkflowVariable vars = new WorkflowVariable();
                 vars.AddAssignee("teachers", uid)
                     .AddAssignee("students", utask)
                     .AddAssignee(nameof(eventUser), eventUser);
 
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, vars));
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, vars, businessKey: bizId).GetAwaiter().GetResult();
 
                 ITaskController taskClient = ctx.CreateWorkflowHttpProxy().GetTaskClient();
-                TaskModel task = AsyncHelper.RunSync(() => taskClient.MyTasks(uid)).List.FirstOrDefault();
+                TaskModel task = taskClient.MyTasks(uid).GetAwaiter().GetResult().List.FirstOrDefault();
 
-                _ = AsyncHelper.RunSync(() => taskClient.CompleteTask(new CompleteTaskCmd
+                _ = taskClient.CompleteTask(new CompleteTaskCmd
                 {
                     TaskId = task.Id,
                     OutputVariables = WorkflowVariable.FromObject(new
@@ -1622,13 +1808,34 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                         完成 = true
                     }),
                     NotFoundThrowError = true
-                }));
+                }).GetAwaiter().GetResult();
 
-                Resources<TaskModel> tasks = AsyncHelper.RunSync(() => taskClient.MyTasks(utask));
+                Resources<TaskModel> tasks = taskClient.MyTasks(utask).GetAwaiter().GetResult();
                 Assert.NotEmpty(tasks.List);
 
-                tasks = AsyncHelper.RunSync(() => taskClient.MyTasks(eventUser));
+                tasks = taskClient.MyTasks(eventUser).GetAwaiter().GetResult();
                 Assert.NotEmpty(tasks.List);
+
+                for (var idx = 0; idx < loopSubProcess; idx++)
+                {
+                    taskClient.CompleteTask(new CompleteTaskCmd
+                    {
+                        BusinessKey = bizId,
+                        Assignee = eventUser
+                    }).GetAwaiter().GetResult();
+                }
+
+                taskClient.CompleteTask(new CompleteTaskCmd
+                {
+                    BusinessKey = bizId,
+                    Assignee = utask
+                }).GetAwaiter().GetResult();
+
+                tasks = taskClient.MyTasks(utask).GetAwaiter().GetResult();
+                Assert.Empty(tasks.List);
+
+                tasks = taskClient.MyTasks(eventUser).GetAwaiter().GetResult();
+                Assert.Empty(tasks.List);
             });
 
             Assert.Null(ex);
@@ -1664,12 +1871,12 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     .AddAssignee(nameof(subUsers), subUsers)
                     .AddAssignee(nameof(subUsers1), subUsers1);
 
-                ProcessInstance[] instances = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, null, vars));
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, vars).GetAwaiter().GetResult();
 
                 ITaskController taskClient = ctx.CreateWorkflowHttpProxy().GetTaskClient();
-                TaskModel task = AsyncHelper.RunSync(() => taskClient.MyTasks(teachers)).List.FirstOrDefault();
+                TaskModel task = taskClient.MyTasks(teachers).GetAwaiter().GetResult().List.FirstOrDefault();
 
-                _ = AsyncHelper.RunSync(() => taskClient.CompleteTask(new CompleteTaskCmd
+                _ = taskClient.CompleteTask(new CompleteTaskCmd
                 {
                     TaskId = task.Id,
                     OutputVariables = WorkflowVariable.FromObject(new
@@ -1678,34 +1885,154 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                         完成 = true
                     }),
                     NotFoundThrowError = true
-                }));
+                }).GetAwaiter().GetResult();
 
-                Resources<TaskModel> tasks = AsyncHelper.RunSync(() => ctx.CreateWorkflowHttpProxy().GetProcessInstanceTasksClient()
+                Resources<TaskModel> tasks = ctx.CreateWorkflowHttpProxy().GetProcessInstanceTasksClient()
                     .GetTasks(new ProcessInstanceTaskQuery()
                     {
                         IncludeCompleted = false,
                         ProcessInstanceId = instances[0].Id
-                    }));
+                    }).GetAwaiter().GetResult();
 
                 foreach (var uid in subUsers)
                 {
-                    var myTasks = AsyncHelper.RunSync(() => taskClient.MyTasks(uid)).List.ToList();
-                    myTasks.ForEach(tsk => AsyncHelper.RunSync(() => taskClient.CompleteTask(new CompleteTaskCmd { TaskId = tsk.Id })));
+                    var myTasks = taskClient.MyTasks(uid).GetAwaiter().GetResult().List.ToList();
+                    myTasks.ForEach(tsk => taskClient.CompleteTask(new CompleteTaskCmd { TaskId = tsk.Id }).GetAwaiter().GetResult());
                 }
 
                 foreach (var uid in subUsers1)
                 {
-                    var myTasks = AsyncHelper.RunSync(() => taskClient.MyTasks(uid)).List.ToList();
-                    myTasks.ForEach(tsk => AsyncHelper.RunSync(() => taskClient.CompleteTask(new CompleteTaskCmd { TaskId = tsk.Id })));
+                    var myTasks = taskClient.MyTasks(uid).GetAwaiter().GetResult().List.ToList();
+                    myTasks.ForEach(tsk => taskClient.CompleteTask(new CompleteTaskCmd { TaskId = tsk.Id }).GetAwaiter().GetResult());
                 }
 
-                var sTasks = AsyncHelper.RunSync(() => taskClient.MyTasks(students)).List.ToList();
-                sTasks.ForEach(tsk => AsyncHelper.RunSync(() => taskClient.CompleteTask(new CompleteTaskCmd { TaskId = tsk.Id })));
+                var sTasks = taskClient.MyTasks(students).GetAwaiter().GetResult().List.ToList();
+                sTasks.ForEach(tsk => taskClient.CompleteTask(new CompleteTaskCmd { TaskId = tsk.Id }).GetAwaiter().GetResult());
 
-                AsyncHelper.RunSync(() => ctx.CreateWorkflowHttpProxy().GetProcessInstanceClient().GetProcessInstanceById(instances[0].Id));
+                ctx.CreateWorkflowHttpProxy().GetProcessInstanceClient().GetProcessInstanceById(instances[0].Id).GetAwaiter().GetResult();
             });
 
             Assert.NotNull(ex);
+        }
+
+        [Theory]
+        [InlineData("分支合并.bpmn")]
+        public void 无条件分支合并_所有分支都完成后执行下一流程(string bpmnFile)
+        {
+            var ex = Record.Exception(() =>
+            {
+                string user1 = Guid.NewGuid().ToString();
+                string user2 = Guid.NewGuid().ToString();
+                string waiter = Guid.NewGuid().ToString();
+                string bizId = Guid.NewGuid().ToString();
+
+                WorkflowVariable vars = new WorkflowVariable();
+                vars.AddAssignee(nameof(user1), user1)
+                    .AddAssignee(nameof(user2), user2)
+                    .AddAssignee(nameof(waiter), waiter);
+
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, vars, businessKey: bizId).GetAwaiter().GetResult();
+
+                ITaskController taskClient = ctx.CreateWorkflowHttpProxy().GetTaskClient();
+
+                //完成用户1的任务
+                _ = taskClient.CompleteTask(new CompleteTaskCmd
+                {
+                    Assignee = user1,
+                    BusinessKey = bizId,
+                    OutputVariables = WorkflowVariable.FromObject(new
+                    {
+                        完成 = true
+                    })
+                }).GetAwaiter().GetResult();
+
+                Assert.Empty(taskClient.MyTasks(waiter).GetAwaiter().GetResult().List);
+
+                //完成用户2的任务
+                _ = taskClient.CompleteTask(new CompleteTaskCmd
+                {
+                    Assignee = user2,
+                    BusinessKey = bizId,
+                    OutputVariables = WorkflowVariable.FromObject(new
+                    {
+                        完成 = true
+                    })
+                }).GetAwaiter().GetResult();
+
+                Assert.NotEmpty(taskClient.MyTasks(waiter).GetAwaiter().GetResult().List);
+            });
+
+            Assert.Null(ex);
+        }
+
+        /// <summary> 
+        /// 1、执行人1执行结果为真，等待执行人2执行完成，不管执行人2执行结果如何，流程都会结束
+        /// 2、执行人1执行结果为假，执行人2执行结果为真，则流程继续执行
+        /// 3、执行人2执行结果为假，等待执行人1执行完成，不管执行人1执行结果如何，流程都会结束
+        /// </summary>
+        /// <param name="bpmnFile"></param>
+        /// <param name="user1Result"></param>
+        [Theory]
+        [InlineData("条件分支合并.bpmn", true, true)]
+        [InlineData("条件分支合并.bpmn", false, true)]
+        [InlineData("条件分支合并.bpmn", false, false)]
+        public void 条件分支合并_所有分支都完成后执行下一流程(string bpmnFile, bool user1Result, bool user2Result)
+        {
+            var ex = Record.Exception(() =>
+            {
+                string user1 = Guid.NewGuid().ToString();
+                string user2 = Guid.NewGuid().ToString();
+                string waiter = Guid.NewGuid().ToString();
+                string bizId = Guid.NewGuid().ToString();
+
+                WorkflowVariable vars = new WorkflowVariable();
+                vars.AddAssignee(nameof(user1), user1)
+                    .AddAssignee(nameof(user2), user2)
+                    .AddAssignee(nameof(waiter), waiter);
+
+                ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, vars, businessKey: bizId).GetAwaiter().GetResult();
+
+                ITaskController taskClient = ctx.CreateWorkflowHttpProxy().GetTaskClient();
+
+                //完成用户1的任务,USER1==false的时候会执行合并
+                _ = taskClient.CompleteTask(new CompleteTaskCmd
+                {
+                    Assignee = user1,
+                    BusinessKey = bizId,
+                    OutputVariables = WorkflowVariable.FromObject(new
+                    {
+                        完成 = user1Result
+                    })
+                }).GetAwaiter().GetResult();
+
+                Assert.Empty(taskClient.MyTasks(waiter).GetAwaiter().GetResult().List);
+
+                //完成用户2的任务
+                _ = taskClient.CompleteTask(new CompleteTaskCmd
+                {
+                    Assignee = user2,
+                    BusinessKey = bizId,
+                    OutputVariables = WorkflowVariable.FromObject(new
+                    {
+                        完成 = user2Result
+                    })
+                }).GetAwaiter().GetResult();
+
+                if (user1Result && user2Result)
+                {
+                    Assert.Empty(taskClient.MyTasks(waiter).GetAwaiter().GetResult().List);
+                }
+                else if (!user1Result && user2Result)
+                {
+                    Assert.NotEmpty(taskClient.MyTasks(waiter).GetAwaiter().GetResult().List);
+                }
+                else if (!user1Result && !user2Result)
+                {
+                    Assert.Empty(taskClient.MyTasks(waiter).GetAwaiter().GetResult().List);
+                }
+            });
+
+            Assert.Null(ex);
         }
     }
 }

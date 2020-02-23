@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +22,7 @@ namespace Sys.Workflow.Engine
     /// 
     /// 
     /// </summary>
+    [Serializable]
     public class ActivitiIllegalArgumentException : ActivitiException
     {
 
@@ -40,6 +42,10 @@ namespace Sys.Workflow.Engine
         /// <param name="message"></param>
         /// <param name="cause"></param>
         public ActivitiIllegalArgumentException(string message, Exception cause) : base(message, cause)
+        {
+        }
+
+        protected ActivitiIllegalArgumentException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         {
         }
     }

@@ -10,6 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
 using System.Collections.Generic;
 
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
@@ -18,26 +19,24 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
     /// 
     public class HistoricIdentityLinksByProcInstMatcher : CachedEntityMatcherAdapter<IHistoricIdentityLinkEntity>
     {
-
         public override bool IsRetained(IHistoricIdentityLinkEntity historicIdentityLinkEntity, object parameter)
         {
-            if (historicIdentityLinkEntity == null || historicIdentityLinkEntity.ProcessInstanceId == null || parameter == null)
+            if (historicIdentityLinkEntity is null || historicIdentityLinkEntity.ProcessInstanceId is null || parameter is null)
             {
                 return false;
             }
 
-            if (parameter is string)
-            {
-                return historicIdentityLinkEntity.ProcessInstanceId == parameter.ToString();
-            }
-
+            string value;
             if (parameter is KeyValuePair<string, object> p)
             {
-                return historicIdentityLinkEntity.ProcessInstanceId == p.Value?.ToString(); ;
+                value = p.Value?.ToString();
+            }
+            else
+            {
+                value = parameter.ToString();
             }
 
-            return historicIdentityLinkEntity.ProcessInstanceId == parameter.ToString();
-            //return !string.ReferenceEquals(historicIdentityLinkEntity.ProcessInstanceId, null) && historicIdentityLinkEntity.ProcessInstanceId.Equals((string)parameter);
+            return historicIdentityLinkEntity.ProcessInstanceId.Equals(value, StringComparison.OrdinalIgnoreCase);
         }
 
     }

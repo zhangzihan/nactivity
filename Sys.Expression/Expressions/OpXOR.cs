@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Spring.Util;
 
@@ -40,7 +41,7 @@ namespace Spring.Expressions
         /// Create a new instance
         /// </summary>
         public OpXOR(BaseNode left, BaseNode right)
-            :base(left, right)
+            : base(left, right)
         {
         }
 
@@ -51,7 +52,7 @@ namespace Spring.Expressions
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Returns a value for the logical AND operator node.
         /// </summary>
@@ -65,6 +66,16 @@ namespace Spring.Expressions
 
             if (NumberUtils.IsInteger(l) && NumberUtils.IsInteger(r))
             {
+                return NumberUtils.BitwiseXor(l, r);
+            }
+            else if (NumberUtils.IsInteger(l))
+            {
+                r = Convert.ToInt32(r);
+                return NumberUtils.BitwiseXor(l, r);
+            }
+            else if (NumberUtils.IsInteger(r))
+            {
+                l = Convert.ToInt32(l);
                 return NumberUtils.BitwiseXor(l, r);
             }
             else if (l is Enum && l.GetType() == r.GetType())

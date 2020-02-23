@@ -1,0 +1,54 @@
+<template>
+  <style>
+    .process-tasks {
+      display: block;
+      width: 100%;
+      position: absolute;
+      bottom: 8px;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      overflow: hidden;
+    }
+
+    .process-tasks .tasks,
+    .process-tasks .historic {
+      float: left;
+      width: 50%;
+      padding: 8px 8px;
+      overflow: hidden;
+      position: relative;
+      height: 100%;
+      border: 1px lightgray solid
+    }
+
+    #dgTasks {
+      overflow: hidden;
+      height: 100%;
+    }
+  </style>
+
+  <div class="process-tasks">
+
+    <div class="tasks">
+      <div id="dgTasks"></div>
+    </div>
+
+    <div class="historic">
+      <div id="tab-bar">
+        <div class="">
+          <div>FORM</div>
+          <div>历史记录</div>
+        </div>
+        <div class="">
+          <div>
+            <div class="task-form"></div>
+          </div>
+          <div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

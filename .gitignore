@@ -9,6 +9,10 @@
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+.vscode/
+BuildScripts/**/*
+.nuget/**/*
+.dist/**/*
 
 # Build results
 [Dd]ebug/
@@ -257,3 +261,5 @@ publish_docker.bat
 Dockerfile
 start.sh
 /WebClient
+/run.bat
+/run.debug.bat

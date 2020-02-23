@@ -1,28 +1,33 @@
+import { Settings } from 'model/settings';
 import { IHistoricInstance } from 'model/resource/IHistoricInstance';
 import { IHistoricInstanceQuery } from 'model/query/IHistoricInstanceQuery';
 import { HttpInvoker } from 'services/httpInvoker';
 import { IProcessInstanceService } from "./IProcessInstanceService";
-import contants from "contants";
+import contants from "../contants";
 import { IResources } from "model/query/IResources";
 import { IProcessInstance } from "model/resource/IProcessInstance";
 import { IProcessInstanceQuery } from 'model/query/IProcessInstanceQuery'
 import { IProcessInstanceTaskQuery } from "model/query/IProcessInstanceTaskQuery";
-import { inject } from "aurelia-framework";
+import { inject, singleton, autoinject } from "aurelia-framework";
 import { IProcessInstanceAdminService } from './IProcessInstanceAdminService';
+import { LoginUser } from 'model/loginuser';
 
-@inject('httpInvoker')
+@autoinject()
+@singleton()
 export class ProcessInstanceAdminService implements IProcessInstanceAdminService {
 
   private controller = "workflow/admin/process-instances";
 
-  constructor(private httpInvoker: HttpInvoker) {
+  constructor(private httpInvoker: HttpInvoker,
+    private loginUser: LoginUser,
+    private settings: Settings) {
 
   }
 
   getAllProcessInstances(query: IProcessInstanceQuery): Promise<IResources<IProcessInstance>> {
-    query.tenantId = contants.tenantId;
+    query.tenantId = this.loginUser.current.tenantId;
     return new Promise((res, rej) => {
-      this.httpInvoker.post(`${contants.serverUrl}/${this.controller}`, query).then(data => {
+      this.httpInvoker.post(this.settings.getUrl(`${this.controller}`), query).then(data => {
         res(data.data.list);
       }).catch(err => rej(err));
     });
@@ -36,9 +41,9 @@ export class ProcessInstanceAdminService implements IProcessInstanceAdminService
   /// <returns>Task < Resources < HistoricInstance >> </returns>
    */
   getAllProcessHistoriecs(query: IHistoricInstanceQuery): Promise<IResources<IHistoricInstance>> {
-    query.tenantId = contants.tenantId;
+    query.tenantId = this.loginUser.current.tenantId;
     return new Promise((res, rej) => {
-      this.httpInvoker.post(`${contants.serverUrl}/${this.controller}/historices`, query).then(data => {
+      this.httpInvoker.post(this.settings.getUrl(`${this.controller}/historices`), query).then(data => {
         res(data.data.list);
       }).catch(err => rej(err));
     });

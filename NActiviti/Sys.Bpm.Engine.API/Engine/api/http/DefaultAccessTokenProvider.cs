@@ -96,7 +96,7 @@ namespace Sys.Net.Http
 
                 Authentication.AuthenticatedUser = user;
 
-                return Task.FromResult<IUserInfo>(user);
+                return Task.FromResult(user);
             }
             catch (IndexOutOfRangeException ex)
             {
@@ -141,6 +141,11 @@ namespace Sys.Net.Http
             {
                 throw new NotSupportedException("不支持的身份验证类型");
             }
+        }
+
+        public async Task<IUserInfo> GetUser(HttpContext context)
+        {
+            return await FromRequestHeaderAsync(context).ConfigureAwait(false);
         }
     }
 }

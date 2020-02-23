@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:process id="Process_1" name="用户注册路径" isExecutable="true">
+  <bpmn2:process id="Process_UserRegisterPath" name="用户注册路径" isExecutable="true">
     <bpmn2:documentation>wahaha~ ha~ ha~~</bpmn2:documentation>
     <bpmn2:extensionElements>
       <camunda:properties />
@@ -65,7 +65,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_012mzu1" sourceRef="UserTask_1rsu0h1" targetRef="EndEvent_0r6xk97" />
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_UserRegisterPath">
       <bpmndi:BPMNShape id="EndEvent_0r6xk97_di" bpmnElement="EndEvent_0r6xk97">
         <dc:Bounds x="768" y="207" width="36" height="36" />
       </bpmndi:BPMNShape>

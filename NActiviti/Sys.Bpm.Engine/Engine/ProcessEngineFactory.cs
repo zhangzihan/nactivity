@@ -42,6 +42,8 @@ namespace Sys.Workflow.Engine
 
         private static ProcessEngineFactory processEngineFactory;
 
+        private readonly object syncRoot = new object();
+
         public static ProcessEngineFactory Instance
         {
             get
@@ -73,7 +75,7 @@ namespace Sys.Workflow.Engine
         /// </summary>
         public void Init()
         {
-            lock (typeof(ProcessEngineFactory))
+            lock (syncRoot)
             {
                 if (!Initialized)
                 {
@@ -234,7 +236,7 @@ namespace Sys.Workflow.Engine
         /// </summary>
         public void Destroy()
         {
-            lock (typeof(ProcessEngineFactory))
+            lock (syncRoot)
             {
                 if (Initialized)
                 {

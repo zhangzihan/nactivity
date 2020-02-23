@@ -56,5 +56,10 @@ namespace Sys.Workflow.Services.Api.Commands
         /// 流程启动节点id
         /// </summary>
         string InitialFlowElementId { get; set; }
+
+        /// <summary>
+        /// 使用消息触发流程
+        /// </summary>
+        string StartByMessage { get; set; }
     }
 }

@@ -312,9 +312,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("HistoricVariableInstanceEntity[");
-            sb.Append("id=").Append(id);
+            sb.Append("id=").Append(Id);
             sb.Append(", name=").Append(name);
-            sb.Append(", revision=").Append(revision);
+            sb.Append(", revision=").Append(Revision);
             sb.Append(", type=").Append(variableType != null ? variableType.TypeName : "null");
             if (longValue != null)
             {

@@ -60,6 +60,7 @@ namespace Sys.Workflow.Validation.Validators
         public const string EVENT_GATEWAY_ONLY_CONNECTED_TO_INTERMEDIATE_EVENTS = "activiti-event-gateway-only-connected-to-intermediate-events";
         public const string BPMN_MODEL_TARGET_NAMESPACE_TOO_LONG = "activiti-bpmn-model-target-namespace-too-long";
         public const string PROCESS_DEFINITION_ID_TOO_LONG = "activiti-process-definition-id-too-long";
+        public const string PROCESS_DEFINITION_ID_NOTSUPPORT_IDENTIFIER = "activiti-process-definition-id-not-support-identifier";
         public const string PROCESS_DEFINITION_NAME_TOO_LONG = "activiti-process-definition-name-too-long";
         public const string PROCESS_DEFINITION_DOCUMENTATION_TOO_LONG = "activiti-process-definition-documentation-too-long";
         public const string FLOW_ELEMENT_ID_TOO_LONG = "activiti-flow-element-id-too-long";

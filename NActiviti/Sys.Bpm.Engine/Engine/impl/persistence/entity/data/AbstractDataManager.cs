@@ -30,7 +30,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
 
         public abstract Type ManagedEntityClass { get; }
 
-        private static readonly Func<DbSqlSession, Type, Type, KeyValuePair<string, object>, bool, IEntity> selectById = (db, managedType, outType, id, useCache) =>
+        protected static readonly Func<DbSqlSession, Type, Type, KeyValuePair<string, object>, bool, IEntity> selectById = (db, managedType, outType, id, useCache) =>
         {
             MethodInfo m = db.GetType().GetMethod("selectbyid", BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.IgnoreCase);
 
@@ -45,7 +45,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
             return (IEntity)res;
         };
 
-        private static readonly Func<DbSqlSession, Type, Type, string, object, IList<EntityImpl>> selectList = (db, managedType, outType, dbQueryName, parameter) =>
+        protected static readonly Func<DbSqlSession, Type, Type, string, object, IList<EntityImpl>> selectList = (db, managedType, outType, dbQueryName, parameter) =>
         {
             MethodInfo m = db.GetType().GetMethod("selectList", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance, Type.DefaultBinder, new Type[] { typeof(string), typeof(object) }, null);
 

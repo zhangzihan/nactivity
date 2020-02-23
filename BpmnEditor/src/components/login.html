@@ -1,0 +1,74 @@
+<template>
+  <style>
+    #main {
+      margin-left: 0;
+    }
+  </style>
+  <div id="main" role="main">
+
+    <!-- MAIN CONTENT -->
+    <div id="content" class="container">
+
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8 hidden-xs hidden-sm">
+          <h1 class="txt-color-red login-header-big">WORKFLOW STUDIO</h1>
+          <div class="hero">
+          </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+          <div class="well no-padding">
+            <form action="index.html" id="login-form" class="smart-form client-form">
+              <header>
+                组织信息
+              </header>
+
+              <fieldset>
+
+                <section>
+                  <label class="label">用户名</label>
+                  <label class="input"> <i class="icon-append fa fa-user"></i>
+                    <input type="text" name="name" value.bind="name" placeholder="随便填">
+                    <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> 输入测试用户名</b></label>
+                </section>
+
+                <section>
+                  <label class="label">组织ID</label>
+                  <label class="input">
+                    <a href="javascript:void(0)" click.trigger="genId()">
+                      <i class="icon-append fa fa-bank"></i>
+                    </a>
+                    <input type="text" name="tenantId" value.bind="tenantId">
+                    <b class="tooltip tooltip-top-right"><i class="fa fa-bank txt-color-teal"></i> 输入组织ID</b>
+                  </label>
+                </section>
+
+                <section>
+                  <label class="label">流程服务器</label>
+                  <label class="input"> <i class="icon-append fa fa-cloud"></i>
+                    <input type="text" name="serverUrl" value.bind="settings.serverUrl">
+                    <b class="tooltip tooltip-top-right"><i class="fa fa-cloud txt-color-teal"></i> 输入流程服务器地址</b>
+                  </label>
+                </section>
+
+                <section>
+                  <label class="checkbox">
+                    <input type="checkbox" name="remember" checked.bind="remenberMe">
+                    <i></i>记住</label>
+                </section>
+              </fieldset>
+              <footer>
+                <button type="submit" class="btn btn-primary" click.trigger="signin()">
+                  进入
+                </button>
+              </footer>
+            </form>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</template>

@@ -32,8 +32,9 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         protected internal readonly IDictionary<string, object> payload;
         protected internal readonly bool async;
         protected internal string tenantId;
+        private readonly string businessKey;
 
-        public SignalEventReceivedCmd(string eventName, string executionId, IDictionary<string, object> processVariables, string tenantId)
+        public SignalEventReceivedCmd(string eventName, string executionId, IDictionary<string, object> processVariables, string tenantId, string businessKey = null)
         {
             this.eventName = eventName;
             this.executionId = executionId;
@@ -48,15 +49,17 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
             this.async = false;
             this.tenantId = tenantId;
+            this.businessKey = businessKey;
         }
 
-        public SignalEventReceivedCmd(string eventName, string executionId, bool async, string tenantId)
+        public SignalEventReceivedCmd(string eventName, string executionId, bool async, string tenantId, string businessKey = null)
         {
             this.eventName = eventName;
             this.executionId = executionId;
             this.async = async;
             this.payload = null;
             this.tenantId = tenantId;
+            this.businessKey = businessKey;
         }
 
         public virtual object Execute(ICommandContext commandContext)
@@ -82,7 +85,23 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 {
                     throw new ActivitiException("Cannot throw signal event '" + eventName + "' because execution '" + executionId + "' is suspended");
                 }
-                signalEvents = eventSubscriptionEntityManager.FindSignalEventSubscriptionsByNameAndExecution(eventName, executionId);
+
+                if (execution.ProcessInstanceType)
+                {
+                    string processInstanceId = execution.ProcessInstanceId;
+                    IExecutionEntity superExection = execution.SuperExecution;
+                    while (superExection is object)
+                    {
+                        processInstanceId = superExection.ProcessInstanceId;
+                        superExection = superExection.SuperExecution;
+                    }
+                    signalEvents = eventSubscriptionEntityManager.FindSignalEventSubscriptionsByProcessInstanceAndEventName(processInstanceId, eventName);
+                }
+                else
+                {
+
+                    signalEvents = eventSubscriptionEntityManager.FindSignalEventSubscriptionsByNameAndExecution(eventName, executionId);
+                }
 
                 if (signalEvents.Count == 0)
                 {
@@ -92,9 +111,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             foreach (ISignalEventSubscriptionEntity signalEventSubscriptionEntity in signalEvents)
             {
+                // 信号事件是多播，消息事件是单播，所以这里应当只需要GlobalScoped，后增加的
+                // execionId也可以讲信号事件用于单播.
                 // We only throw the event to globally scoped signals.
                 // Process instance scoped signals must be thrown within the process itself
-                if (signalEventSubscriptionEntity.GlobalScoped)
+                if (string.IsNullOrWhiteSpace(executionId) == false || signalEventSubscriptionEntity.GlobalScoped)
                 {
                     Context.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateSignalEvent(ActivitiEventType.ACTIVITY_SIGNALED, signalEventSubscriptionEntity.ActivityId, eventName, payload, signalEventSubscriptionEntity.ExecutionId, signalEventSubscriptionEntity.ProcessInstanceId, signalEventSubscriptionEntity.ProcessDefinitionId));
 

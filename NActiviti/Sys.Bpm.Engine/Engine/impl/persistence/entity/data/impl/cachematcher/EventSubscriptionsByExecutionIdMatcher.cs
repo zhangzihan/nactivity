@@ -10,6 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
 using System.Collections.Generic;
 
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
@@ -21,23 +22,22 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 
 	  public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
 	  {
-            if (eventSubscriptionEntity == null || eventSubscriptionEntity.ExecutionId == null || parameter == null)
+            if (eventSubscriptionEntity is null || eventSubscriptionEntity.ExecutionId is null || parameter is null)
             {
                 return false;
             }
 
-            if (parameter is string)
-            {
-                return eventSubscriptionEntity.ExecutionId == parameter.ToString();
-            }
-
+            string value;
             if (parameter is KeyValuePair<string, object> p)
             {
-                return eventSubscriptionEntity.ExecutionId == p.Value?.ToString(); ;
+                value = p.Value?.ToString();
+            }
+            else
+            {
+                value = parameter.ToString();
             }
 
-            return eventSubscriptionEntity.ExecutionId == parameter.ToString();
-	  }
-
+            return eventSubscriptionEntity.ExecutionId.Equals(value, StringComparison.OrdinalIgnoreCase);
+        }
 	}
 }

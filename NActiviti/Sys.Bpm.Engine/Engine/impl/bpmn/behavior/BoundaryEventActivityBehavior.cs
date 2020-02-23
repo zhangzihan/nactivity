@@ -61,8 +61,6 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
         }
 
-        private static DateTime? cdate = null;
-
         protected internal virtual void ExecuteInterruptingBehavior(IExecutionEntity executionEntity, ICommandContext commandContext)
         {
 

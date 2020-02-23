@@ -36,7 +36,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 string textValue = "this is a string.";
                 string uid = Guid.NewGuid().ToString();
 
-                ProcessInstance[] inst = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }, new Dictionary<string, object>
+                ProcessInstance[] inst = ctx.StartUseFile(bpmnFile, new string[] { uid }, new Dictionary<string, object>
                 {
                     { "guidValue",  guidValue},
                     { "longValue", longValue},
@@ -44,13 +44,13 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     { "decValue", decValue},
                     { "dateValue", dateValue},
                     { "textValue", textValue}
-                }));
+                }).GetAwaiter().GetResult();
 
                 Assert.NotNull(inst);
 
                 IProcessInstanceVariableController varClient = ctx.CreateWorkflowHttpProxy().GetProcessInstanceVariableClient();
 
-                Resources<ProcessInstanceVariable> variables = AsyncHelper.RunSync(() => varClient.GetVariables(inst[0].Id));
+                Resources<ProcessInstanceVariable> variables = varClient.GetVariables(inst[0].Id).GetAwaiter().GetResult();
 
                 foreach (var var in variables.List)
                 {
@@ -91,7 +91,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string uid = Guid.NewGuid().ToString();
-                ProcessInstance[] inst = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }));
+                ProcessInstance[] inst = ctx.StartUseFile(bpmnFile, new string[] { uid }).GetAwaiter().GetResult();
 
                 Assert.True(inst.Length > 0);
 
@@ -104,7 +104,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 DateTime dateValue = DateTime.Now;
                 string textValue = "this is a string.";
 
-                AsyncHelper.RunSync(() => varClient.SetVariables(new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
+                varClient.SetVariables(new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
                  {
                     { "guidValue",  guidValue},
                     { "longValue", longValue},
@@ -112,9 +112,9 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     { "decValue", decValue},
                     { "dateValue", dateValue},
                     { "textValue", textValue}
-                 })));
+                 })).GetAwaiter().GetResult();
 
-                Resources<ProcessInstanceVariable> variables = AsyncHelper.RunSync(() => varClient.GetVariablesLocal(inst[0].Id));
+                Resources<ProcessInstanceVariable> variables = varClient.GetVariablesLocal(inst[0].Id).GetAwaiter().GetResult();
 
                 foreach (var var in variables.List)
                 {
@@ -155,7 +155,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string uid = Guid.NewGuid().ToString();
-                ProcessInstance[] inst = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }));
+                ProcessInstance[] inst = ctx.StartUseFile(bpmnFile, new string[] { uid }).GetAwaiter().GetResult();
 
                 Assert.True(inst.Length > 0);
 
@@ -165,25 +165,25 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 Resources<ProcessInstanceVariable> variables = null;
 
-                AsyncHelper.RunSync(() => varClient.SetVariables(new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
+                varClient.SetVariables(new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
                     {
                         { "guidValue",  guidValue}
-                    })));
+                    })).GetAwaiter().GetResult();
 
-                variables = AsyncHelper.RunSync<Resources<ProcessInstanceVariable>>(() => varClient.GetVariables(inst[0].Id));
+                variables = varClient.GetVariables(inst[0].Id).GetAwaiter().GetResult();
 
                 ProcessInstanceVariable varInst = variables.List.FirstOrDefault(x => x.Name == "guidValue");
 
                 Assert.True(guidValue == new Guid(varInst.Value.ToString()));
 
                 guidValue = Guid.NewGuid();
-
-                AsyncHelper.RunSync(() => varClient.SetVariables(new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
+            
+                varClient.SetVariables(new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
                     {
                         { "guidValue", guidValue }
-                    })));
+                    })).GetAwaiter().GetResult();
 
-                variables = AsyncHelper.RunSync<Resources<ProcessInstanceVariable>>(() => varClient.GetVariables(inst[0].Id));
+                variables = varClient.GetVariables(inst[0].Id).GetAwaiter().GetResult();
 
                 varInst = variables.List.FirstOrDefault(x => x.Name == "guidValue");
 
@@ -200,7 +200,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string uid = Guid.NewGuid().ToString();
-                ProcessInstance[] inst = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }));
+                ProcessInstance[] inst = ctx.StartUseFile(bpmnFile, new string[] { uid }).GetAwaiter().GetResult();
 
                 Assert.True(inst.Length > 0);
 
@@ -208,20 +208,20 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 Guid guidValue = Guid.NewGuid();
 
-                AsyncHelper.RunSync(() => varClient.SetVariables(new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
+                varClient.SetVariables(new SetProcessVariablesCmd(inst[0].Id, new Dictionary<string, object>
                 {
                     { "guidValue",  guidValue}
-                })));
+                })).GetAwaiter().GetResult();
 
-                Resources<ProcessInstanceVariable> variables = AsyncHelper.RunSync<Resources<ProcessInstanceVariable>>(() => varClient.GetVariables(inst[0].Id));
+                Resources<ProcessInstanceVariable> variables = varClient.GetVariables(inst[0].Id).GetAwaiter().GetResult();
 
                 ProcessInstanceVariable varInst = variables.List.FirstOrDefault(x => x.Name == "guidValue");
 
                 Assert.True(guidValue == new Guid(varInst.Value.ToString()));
 
-                AsyncHelper.RunSync(() => varClient.RemoveVariables(new RemoveProcessVariablesCmd(inst[0].Id, new string[] { "guidValue" })));
+                varClient.RemoveVariables(new RemoveProcessVariablesCmd(inst[0].Id, new string[] { "guidValue" })).GetAwaiter().GetResult();
 
-                variables = AsyncHelper.RunSync<Resources<ProcessInstanceVariable>>(() => varClient.GetVariables(inst[0].Id));
+                variables = varClient.GetVariables(inst[0].Id).GetAwaiter().GetResult();
 
                 varInst = variables.List.FirstOrDefault(x => x.Name == "guidValue");
 

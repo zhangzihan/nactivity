@@ -177,7 +177,7 @@ namespace SmartSql.Abstractions
                         }
 
                         if (path.ToLower() == "isnull")
-                        {  
+                        {
                             string[] isnull = m.Groups[1].Value.Split(new char[] { ',' });
                             return $"{exp}({isnull[1]}, {isnull[2]})";
                         }
@@ -228,17 +228,18 @@ namespace SmartSql.Abstractions
                     return;
                 }
 
-                StringBuilder sqlOrderBy = new StringBuilder();
                 string[] orders = orderBy.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string order in orders)
+                string[] sqlOrderBy = new string[orders.Length];
+                for (var idx = 0; idx < orders.Length; idx++)
                 {
-                    int index = order.IndexOf(' ');
-                    string field = order.Substring(0, index);
-                    string dir = index >= order.Length ? "" : order.Substring(index);
-                    sqlOrderBy.Append($"CONVERT({field} using gbk) {dir}");
+                    string order = orders[idx];
+                    string[] fields = order.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string field = fields[0];
+                    string dir = fields[1];
+                    sqlOrderBy[idx] = $"CONVERT({field} using gbk) {dir}";
                 }
 
-                RequestParameters["orderByColumns"] = sqlOrderBy.ToString();
+                RequestParameters["orderByColumns"] = string.Join(",", sqlOrderBy);
             }
         }
 

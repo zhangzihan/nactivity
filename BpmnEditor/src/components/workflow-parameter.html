@@ -1,0 +1,27 @@
+<template>
+  <style>
+    ux-dialog-overlay,
+    ux-dialog-container {
+      visibility: collapse;
+    }
+
+    #dlgWorkflowParameter {
+      position: relative;
+    }
+
+    .e-dlg-content .footer {
+      width: 100%;
+      text-align: center;
+      padding: 16px 16px;
+    }
+  </style>
+
+  <div id="dlgWorkflowParameter">
+    <div id="dgWorkflowParameter"></div>
+    <div class="footer">
+      <button class="e-btn e-primary" click.trigger="ok()">确定</button>
+      <button class="e-btn" click.trigger="cancel()">取消</button>
+    </div>
+  </div>
+
+</template>

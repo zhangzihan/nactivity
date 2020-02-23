@@ -17,5 +17,9 @@ namespace Sys.Workflow.Engine.Repository
             base($"{deployName} Process start form is null")
         {
         }
+
+        protected StartFormNullException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
 }

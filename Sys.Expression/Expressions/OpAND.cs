@@ -42,7 +42,7 @@ namespace Spring.Expressions
         /// Create a new instance
         /// </summary>
         public OpAND(BaseNode left, BaseNode right)
-            :base(left, right)
+            : base(left, right)
         {
         }
 
@@ -53,7 +53,7 @@ namespace Spring.Expressions
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Returns a value for the logical AND operator node.
         /// </summary>
@@ -63,18 +63,24 @@ namespace Spring.Expressions
         protected override object Get(object context, EvaluationContext evalContext)
         {
             object l = GetLeftValue(context, evalContext);
+            object r = GetRightValue(context, evalContext);
 
-            if (NumberUtils.IsInteger(l))
+            if (NumberUtils.IsInteger(l) && NumberUtils.IsInteger(r))
             {
-                object r = GetRightValue(context, evalContext);
-                if (NumberUtils.IsInteger(r))
-                {
-                    return NumberUtils.BitwiseAnd(l, r);
-                }
+                return NumberUtils.BitwiseAnd(l, r);
+            }
+            else if (NumberUtils.IsInteger(l))
+            {
+                r = Convert.ToInt32(r);
+                return NumberUtils.BitwiseAnd(l, r);
+            }
+            else if (NumberUtils.IsInteger(r))
+            {
+                l = Convert.ToInt32(l);
+                return NumberUtils.BitwiseAnd(l, r);
             }
             else if (l is Enum)
             {
-                object r = GetRightValue(context, evalContext);
                 if (l.GetType() == r.GetType())
                 {
                     Type enumType = l.GetType();
@@ -86,8 +92,7 @@ namespace Spring.Expressions
                 }
             }
 
-            return Convert.ToBoolean(l) &&
-                Convert.ToBoolean(GetRightValue(context, evalContext));
+            return Convert.ToBoolean(l) && Convert.ToBoolean(r);
         }
     }
 }

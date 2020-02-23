@@ -53,6 +53,25 @@ namespace Sys.Workflow.Engine.Impl.Events
                 throw new ActivitiException("Cannot start process instance. Process model (id = " + processDefinitionId + ") could not be found");
             }
 
+            IExecutionEntity scopeExecution = null;
+            IExecutionEntity parentExecution = compensatingExecution.Parent;
+            while (scopeExecution == null && parentExecution != null)
+            {
+                if (parentExecution.CurrentFlowElement is SubProcess)
+                {
+                    scopeExecution = parentExecution;
+
+                }
+                else if (parentExecution.ProcessInstanceType)
+                {
+                    scopeExecution = parentExecution;
+                }
+                else
+                {
+                    parentExecution = parentExecution.Parent;
+                }
+            }
+
             FlowElement flowElement = process.GetFlowElement(eventSubscription.ActivityId, true);
 
             if (flowElement is SubProcess && !((SubProcess)flowElement).ForCompensation)
@@ -67,13 +86,22 @@ namespace Sys.Workflow.Engine.Impl.Events
             {
                 try
                 {
+                    //if (flowElement is UserTask)
+                    //{
+                    //    var userexecution = commandContext.ExecutionEntityManager.CreateChildExecution(scopeExecution);
+                    //    userexecution.CurrentFlowElement = flowElement;
+                    //    commandContext.ExecutionEntityManager.Delete(compensatingExecution);
+                    //    Context.Agenda.PlanContinueProcessInCompensation(userexecution);
+                    //}
+                    //else
+                    //{
                     if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
                     {
                         commandContext.ProcessEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityEvent(ActivitiEventType.ACTIVITY_COMPENSATE, flowElement.Id, flowElement.Name, compensatingExecution.Id, compensatingExecution.ProcessInstanceId, compensatingExecution.ProcessDefinitionId, flowElement));
                     }
                     compensatingExecution.CurrentFlowElement = flowElement;
                     Context.Agenda.PlanContinueProcessInCompensation(compensatingExecution);
-
+                    //}
                 }
                 catch (Exception e)
                 {

@@ -176,7 +176,7 @@ namespace Sys.Net.Http
             {
                 sw.Stop();
 
-                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={this.HttpClient.BaseAddress}/{uri}\r\n{(data == null ? "" : JsonConvert.SerializeObject(data))}" + ex.Message + "\r\n" + ex.StackTrace);
+                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={uri}\r\n{(data == null ? "" : JsonConvert.SerializeObject(data))}" + ex.Message + "\r\n" + ex.StackTrace);
 
                 throw;
             }
@@ -199,7 +199,7 @@ namespace Sys.Net.Http
             {
                 sw.Stop();
 
-                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={this.HttpClient.BaseAddress}/{uri}\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={uri}\r\n" + ex.Message + "\r\n" + ex.StackTrace);
 
                 throw;
             }
@@ -220,7 +220,7 @@ namespace Sys.Net.Http
             {
                 sw.Stop();
 
-                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={this.HttpClient.BaseAddress}/{uri}\r\n{(data == null ? "" : JsonConvert.SerializeObject(data))}" + ex.Message + "\r\n" + ex.StackTrace);
+                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={uri}\r\n{(data == null ? "" : JsonConvert.SerializeObject(data))}" + ex.Message + "\r\n" + ex.StackTrace);
 
                 throw;
             }
@@ -241,7 +241,7 @@ namespace Sys.Net.Http
             {
                 sw.Stop();
 
-                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={this.HttpClient.BaseAddress}/{uri}\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={uri}\r\n" + ex.Message + "\r\n" + ex.StackTrace);
 
                 throw;
             }
@@ -279,7 +279,7 @@ namespace Sys.Net.Http
             return await PopulateData<T>(response).ConfigureAwait(false);
         }
 
-        public virtual void SetHttpClientRequestAccessToken(string clientId, string tenantId, string name = null, string email = null, string phone = null)
+        public virtual void SetHttpClientRequestAccessToken(string clientId, string tenantId, string name = null, string email = null, string phone = null, bool isSessionHeader = true)
         {
             Authentication.AuthenticatedUser = new UserInfo
             {

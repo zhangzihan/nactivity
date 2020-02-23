@@ -99,7 +99,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public override string ToString()
         {
-            return "JobEntity [id=" + id + "]";
+            return "JobEntity [id=" + Id + "]";
         }
 
     }

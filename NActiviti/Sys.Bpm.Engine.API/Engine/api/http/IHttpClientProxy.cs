@@ -19,7 +19,8 @@ namespace Sys.Net.Http
         /// <param name="name">用户名</param>
         /// <param name="email">email</param>
         /// <param name="phone">phone</param>
-        void SetHttpClientRequestAccessToken(string clientId, string tenantId, string name = null, string email = null, string phone = null);
+        /// <param name="isSessionHeader">isSessionHeader</param>
+        void SetHttpClientRequestAccessToken(string clientId, string tenantId, string name = null, string email = null, string phone = null, bool isSessionHeader = true);
 
         /// <summary>
         /// http get proxy

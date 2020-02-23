@@ -37,6 +37,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
 
         IList<ISignalEventSubscriptionEntity> FindSignalEventSubscriptionsByNameAndExecution(string name, string executionId);
 
+        IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByProcessInstanceId(string processInstanceId);
+
+        IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByExecutionId(string executionId);
+
+        IList<ICompensateEventSubscriptionEntity> FindCompensateEventSubscriptionsByProcessInstanceAndActivityId(string processInstanceId, string activityId);
+
         IList<IEventSubscriptionEntity> FindEventSubscriptionsByExecutionAndType(string executionId, string type);
 
         IList<IEventSubscriptionEntity> FindEventSubscriptionsByProcessInstanceAndActivityId(string processInstanceId, string activityId, string type);

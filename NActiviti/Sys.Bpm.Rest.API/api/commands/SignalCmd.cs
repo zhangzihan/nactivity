@@ -46,23 +46,14 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         /// <param name="inputVariables">变量</param>
         /// <param name="name">名称</param>
         //[JsonConstructor]
-        public SignalCmd([JsonProperty("Name")]string name,
-            [JsonProperty("InputVariables")]WorkflowVariable inputVariables) : this()
+        public SignalCmd(
+            [JsonProperty("Name")]string name,
+            [JsonProperty("TenantId")]string tenantId,
+            [JsonProperty("InputVariables")]WorkflowVariable inputVariables = null) : this()
         {
             this.name = name;
             this.inputVariables = inputVariables;
-        }
-
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="name">名称</param>
-
-        //[JsonConstructor]
-        public SignalCmd([JsonProperty("Name")]string name) : this()
-        {
-            this.name = name;
+            this.TenantId = tenantId;
         }
 
         /// <summary>
@@ -98,6 +89,21 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
                 return inputVariables;
             }
             set => inputVariables = value;
+        }
+
+        public virtual string TenantId
+        {
+            get; set;
+        }
+
+        public virtual string ExecutionId
+        {
+            get; set;
+        }
+
+        public virtual string BusinessKey
+        {
+            get; set;
         }
     }
 }

@@ -36,5 +36,6 @@ namespace Sys.Workflow.Engine
         public const string LOCALIZATION_LANGUAGE = "language";
         public const string LOCALIZATION_NAME = "name";
         public const string LOCALIZATION_DESCRIPTION = "description";
+        public const string PORCESS_DEBUGMODE_VARIABLE = "debugMode";
     }
 }

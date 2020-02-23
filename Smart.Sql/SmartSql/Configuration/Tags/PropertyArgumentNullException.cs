@@ -9,5 +9,9 @@ namespace SmartSql.Configuration.Tags
         public PropertyArgumentNullException(string message) : base(message)
         {
         }
+
+        protected PropertyArgumentNullException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
 }

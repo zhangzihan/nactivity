@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_TriggerSignal" name="信号触发流程" isExecutable="true">
+    <bpmn2:subProcess id="SubProcess_0c4mcd7" triggeredByEvent="true">
+      <bpmn2:startEvent id="StartEvent_14etvyb">
+        <bpmn2:outgoing>SequenceFlow_19fieqz</bpmn2:outgoing>
+        <bpmn2:messageEventDefinition messageRef="Message_1ggnpn5" />
+      </bpmn2:startEvent>
+      <bpmn2:userTask id="Task_13kkywk" name="子任务" camunda:assignee="${Task_13kkywk}">
+        <bpmn2:extensionElements>
+          <camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
+          <camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>SequenceFlow_19fieqz</bpmn2:incoming>
+        <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${subuser}" camunda:elementVariable="Task_13kkywk">
+          <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${nrOfActiveInstances==0}</bpmn2:completionCondition>
+        </bpmn2:multiInstanceLoopCharacteristics>
+      </bpmn2:userTask>
+      <bpmn2:sequenceFlow id="SequenceFlow_19fieqz" sourceRef="StartEvent_14etvyb" targetRef="Task_13kkywk" />
+    </bpmn2:subProcess>
+    <bpmn2:startEvent id="Start_YsRl0_dv8p">
+      <bpmn2:messageEventDefinition messageRef="Message_1ggnpn5" />
+    </bpmn2:startEvent>
+  </bpmn2:process>
+  <bpmn2:signal id="Signal_1pdsqhn" name="starter" />
+  <bpmn2:message id="Message_1ggnpn5" name="Message_38jm21j" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_TriggerSignal">
+      <bpmndi:BPMNShape id="StartEvent_1naxjs2_di" bpmnElement="StartEvent_14etvyb">
+        <dc:Bounds x="251" y="191" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_19fieqz_di" bpmnElement="SequenceFlow_19fieqz">
+        <di:waypoint x="287" y="209" />
+        <di:waypoint x="366" y="209" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_17l2kh6_di" bpmnElement="Task_13kkywk">
+        <dc:Bounds x="366" y="169" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubProcess_0tysfxy_di" bpmnElement="SubProcess_0c4mcd7" isExpanded="true">
+        <dc:Bounds x="206" y="109" width="350" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0p2pow4_di" bpmnElement="Start_YsRl0_dv8p">
+        <dc:Bounds x="204" y="375" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

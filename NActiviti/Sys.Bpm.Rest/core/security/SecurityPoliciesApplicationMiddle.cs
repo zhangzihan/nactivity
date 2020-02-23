@@ -20,15 +20,6 @@ using System.Net.Http.Headers;
 using Microsoft.Extensions.Options;
 using System.Text.RegularExpressions;
 using Sys.Net.Http;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using System.Linq;
-using System.Reflection;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Mvc.Internal;
-using Microsoft.AspNetCore.Authorization;
 using Sys.Workflow.Engine.Impl.Identities;
 
 namespace Sys.Workflow.Cloud.Services.Core
@@ -73,7 +64,7 @@ namespace Sys.Workflow.Cloud.Services.Core
 
             SecurityPoliciesApplicationService spas = context.RequestServices.GetService<SecurityPoliciesApplicationService>();
 
-            spas.User = await tokenProvider.FromRequestHeaderAsync(context).ConfigureAwait(false);
+            spas.User = await tokenProvider.GetUser(context).ConfigureAwait(false);
 
             Authentication.AuthenticatedUser = spas.User;
 

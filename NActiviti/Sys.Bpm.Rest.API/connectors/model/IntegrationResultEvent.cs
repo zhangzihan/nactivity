@@ -58,7 +58,8 @@ namespace Sys.Workflow.Services.Connectors.Models
             [JsonProperty("ServiceName")]string serviceName,
             [JsonProperty("ServiceFullName")] string serviceFullName,
             [JsonProperty("ServiceType")]string serviceType,
-            [JsonProperty("ServiceVersion")]string serviceVersion) : this()
+            [JsonProperty("ServiceVersion")]string serviceVersion,
+            [JsonProperty("FlowNodeId")]string flowNodeId = null) : this()
         {
             this.executionId = executionId;
             this.variables = variables;
@@ -68,6 +69,7 @@ namespace Sys.Workflow.Services.Connectors.Models
             this.serviceFullName = serviceFullName;
             this.serviceType = serviceType;
             this.serviceVersion = serviceVersion;
+            this.flowNodeId = flowNodeId;
         }
 
 

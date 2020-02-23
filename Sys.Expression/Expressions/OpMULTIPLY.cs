@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Spring.Collections;
 using Spring.Util;
@@ -60,6 +61,14 @@ namespace Spring.Expressions
             object right = GetRightValue( context, evalContext );
 
             if (NumberUtils.IsNumber(left) && NumberUtils.IsNumber(right))
+            {
+                return NumberUtils.Multiply(left, right);
+            }
+            else if (NumberUtils.IsNumber(left) && NumberUtils.TryConvertTo(ref right, ref left))
+            {
+                return NumberUtils.Multiply(left, right);
+            }
+            else if (NumberUtils.IsNumber(right) && NumberUtils.TryConvertTo(ref left, ref right))
             {
                 return NumberUtils.Multiply(left, right);
             }

@@ -44,7 +44,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         protected internal UserTask userTask;
 
-        private readonly IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
+        private IUserServiceProxy UserService => ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
         public UserTaskActivityBehavior(UserTask userTask)
         {
@@ -55,6 +55,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             ICommandContext commandContext = Context.CommandContext;
             ITaskEntityManager taskEntityManager = commandContext.TaskEntityManager;
+
+            //如果当前任务为补偿任务，则修改任务的父级为流程实例
+            if ((execution.CurrentFlowElement as UserTask).ForCompensation)
+            {
+                execution.Parent = execution.ProcessInstance;
+            }
 
             ITaskEntity task = taskEntityManager.Create();
             task.Execution = execution;
@@ -254,7 +260,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             {
                 IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
                 eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_CREATED, task));
-                if (task.Assignee is object)
+                if (string.IsNullOrWhiteSpace(task.Assignee) == false)
                 {
                     eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_ASSIGNED, task));
                 }
@@ -301,7 +307,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 //TODO: 考虑性能问题，暂时不获取人员
                 //if (string.IsNullOrWhiteSpace(assigneeValue) == false)
                 //{
-                //    assigneeUser = AsyncHelper.RunSync(() => userService.GetUser(assigneeValue))?.FullName;
+                //    assigneeUser = userService.GetUser(assigneeValue).GetAwaiter().GetResult()?.FullName;
                 //}
                 taskEntityManager.ChangeTaskAssigneeNoEvents(task, assigneeValue, assigneeUser);
             }

@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 #endregion
 
+using System;
 using System.Runtime.Serialization;
 
 namespace Spring.Expressions
@@ -27,12 +28,13 @@ namespace Spring.Expressions
     /// </summary>
     /// <author>Aleksandar Seovic</author>
     //[Serializable]
+    [Serializable]
     public abstract class UnaryOperator : BaseNode
     {
         /// <summary>
         /// Create a new instance
         /// </summary>
-        public UnaryOperator():base()
+        public UnaryOperator() : base()
         {
         }
 
@@ -51,14 +53,14 @@ namespace Spring.Expressions
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Gets the operand.
         /// </summary>
         /// <value>The operand.</value>
         public BaseNode Operand
         {
-            get { return (BaseNode) this.getFirstChild(); }
+            get { return (BaseNode)this.getFirstChild(); }
         }
     }
 }

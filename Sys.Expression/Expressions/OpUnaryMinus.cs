@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Spring.Util;
 
@@ -34,7 +35,7 @@ namespace Spring.Expressions
         /// <summary>
         /// Create a new instance
         /// </summary>
-        public OpUnaryMinus():base()
+        public OpUnaryMinus() : base()
         {
         }
 
@@ -45,7 +46,7 @@ namespace Spring.Expressions
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Returns a value for the unary plus operator node.
         /// </summary>
@@ -54,12 +55,24 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            object n = GetValue(Operand, context, evalContext );
+            object n = GetValue(Operand, context, evalContext);
 
             if (!NumberUtils.IsNumber(n))
             {
-                throw new ArgumentException(
-                    "Specified operand is not a number. Only numbers support unary minus operator.");
+                TypeConverter converter;
+                if ((n?.ToString().Contains(".")).GetValueOrDefault(false))
+                {
+                    converter = TypeDescriptor.GetConverter(typeof(decimal));
+                    n = converter.ConvertTo(n, typeof(decimal));
+                }
+                else
+                {
+                    converter = TypeDescriptor.GetConverter(typeof(int));
+                    n = converter.ConvertTo(n, typeof(int));
+                }
+
+                //throw new ArgumentException(
+                    //"Specified operand is not a number. Only numbers support unary minus operator.");
             }
             return NumberUtils.Negate(n);
         }

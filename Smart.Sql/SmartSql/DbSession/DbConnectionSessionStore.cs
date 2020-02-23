@@ -60,8 +60,16 @@ namespace SmartSql.DbSession
 
         public void Dispose()
         {
-            _staticSession.Value?.Dispose();
-            _staticSession.Value = null;
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _staticSession.Value?.Dispose();
+                _staticSession.Value = null;
+            }
         }
     }
 }

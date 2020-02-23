@@ -38,24 +38,27 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         protected internal ConcurrentDictionary<Type, ISession> sessions = new ConcurrentDictionary<Type, ISession>();
 
-        protected internal Exception exception_;
+        protected internal Exception _exception;
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
         protected internal IFailedJobCommandFactory failedJobCommandFactory;
         protected internal IList<ICommandContextCloseListener> closeListeners;
-        protected internal ConcurrentDictionary<string, object> attributes; // General-purpose storing of anything during the lifetime of a command context
+        // General-purpose storing of anything during the lifetime of a command context
+        protected internal ConcurrentDictionary<string, object> attributes; 
         protected internal bool reused;
 
         protected internal IActivitiEngineAgenda agenda;
-        protected internal ConcurrentDictionary<string, IExecutionEntity> involvedExecutions = new ConcurrentDictionary<string, IExecutionEntity>(StringComparer.OrdinalIgnoreCase); // The executions involved with the command
-        protected internal ConcurrentQueue<object> resultStack = new ConcurrentQueue<object>(); // needs to be a stack, as JavaDelegates can do api calls again
+        // The executions involved with the command
+        protected internal ConcurrentDictionary<string, IExecutionEntity> involvedExecutions = new ConcurrentDictionary<string, IExecutionEntity>(StringComparer.OrdinalIgnoreCase); 
+        // needs to be a stack, as JavaDelegates can do api calls again
+        protected internal ConcurrentQueue<object> resultStack = new ConcurrentQueue<object>(); 
 
         public CommandContext(ICommand<T1> command, ProcessEngineConfigurationImpl processEngineConfiguration)
         {
             this.command = command;
             this.processEngineConfiguration = processEngineConfiguration;
-            this.failedJobCommandFactory = processEngineConfiguration.FailedJobCommandFactory;
-            this.sessionFactories = processEngineConfiguration.SessionFactories ?? new ConcurrentDictionary<Type, ISessionFactory>();
-            this.agenda = processEngineConfiguration.EngineAgendaFactory.CreateAgenda(this);
+            failedJobCommandFactory = processEngineConfiguration.FailedJobCommandFactory;
+            sessionFactories = processEngineConfiguration.SessionFactories ?? new ConcurrentDictionary<Type, ISessionFactory>();
+            agenda = processEngineConfiguration.EngineAgendaFactory.CreateAgenda(this);
         }
 
         public virtual void Close()
@@ -71,30 +74,30 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                     try
                     {
                         ExecuteCloseListenersClosing();
-                        if (exception_ == null)
+                        if (_exception == null)
                         {
                             FlushSessions();
                         }
                     }
                     catch (Exception exception)
                     {
-                        this.SetException(exception);
+                        SetException(exception);
                     }
                     finally
                     {
                         try
                         {
-                            if (exception_ == null)
+                            if (_exception == null)
                             {
                                 ExecuteCloseListenersAfterSessionFlushed();
                             }
                         }
                         catch (Exception exception)
                         {
-                            this.SetException(exception);
+                            SetException(exception);
                         }
 
-                        if (exception_ != null)
+                        if (_exception != null)
                         {
                             LogException();
                             ExecuteCloseListenersCloseFailure();
@@ -108,7 +111,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 catch (Exception exception)
                 {
                     // Catch exceptions during rollback
-                    this.SetException(exception);
+                    SetException(exception);
                 }
                 finally
                 {
@@ -119,10 +122,10 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             catch (Exception exception)
             {
                 // Catch exceptions during session closing
-                this.SetException(exception);
+                SetException(exception);
             }
 
-            if (exception_ != null)
+            if (_exception != null)
             {
                 RethrowExceptionIfNeeded();
             }
@@ -130,31 +133,31 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         protected virtual void LogException()
         {
-            if (exception_ is JobNotFoundException || exception_ is ActivitiTaskAlreadyClaimedException)
+            if (_exception is JobNotFoundException || _exception is ActivitiTaskAlreadyClaimedException)
             {
                 // reduce log level, because this may have been caused because of job deletion due to cancelActiviti="true"
-                log.LogInformation("Error while closing command context", exception_);
+                log.LogInformation("Error while closing command context", _exception);
             }
-            else if (exception_ is ActivitiOptimisticLockingException)
+            else if (_exception is ActivitiOptimisticLockingException)
             {
                 // reduce log level, as normally we're not interested in logging this exception
-                log.LogError(exception_, $"Optimistic locking exception : {exception_}");
+                log.LogError(_exception, $"Optimistic locking exception : {_exception}");
             }
             else
             {
-                log.LogError(exception_, $"Error while closing command context: {exception_}");
+                log.LogError(_exception, $"Error while closing command context: {_exception}");
             }
         }
 
         protected virtual void RethrowExceptionIfNeeded()
         {
-            if (exception_ is Exception)
+            if (_exception is Exception)
             {
-                throw exception_;
+                throw _exception;
             }
             else
             {
-                throw new ActivitiException("exception while executing command " + command, exception_);
+                throw new ActivitiException("exception while executing command " + command, _exception);
             }
         }
 
@@ -192,7 +195,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         protected virtual void ExecuteCloseListenersClosing()
         {
-            if (closeListeners != null)
+            if (closeListeners is object)
             {
                 try
                 {
@@ -203,16 +206,14 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 }
                 catch (Exception exception)
                 {
-                    this.SetException(exception);
+                    SetException(exception);
                 }
             }
         }
 
-        private readonly object syncRoot = new object();
-
         protected virtual void ExecuteCloseListenersAfterSessionFlushed()
         {
-            if (closeListeners != null)
+            if (closeListeners is object)
             {
                 try
                 {
@@ -223,14 +224,14 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 }
                 catch (Exception exception)
                 {
-                    this.SetException(exception);
+                    SetException(exception);
                 }
             }
         }
 
         protected virtual void ExecuteCloseListenersClosed()
         {
-            if (closeListeners != null)
+            if (closeListeners is object)
             {
                 try
                 {
@@ -241,14 +242,14 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 }
                 catch (Exception exception)
                 {
-                    this.SetException(exception);
+                    SetException(exception);
                 }
             }
         }
 
         protected virtual void ExecuteCloseListenersCloseFailure()
         {
-            if (closeListeners != null)
+            if (closeListeners is object)
             {
                 try
                 {
@@ -259,7 +260,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 }
                 catch (Exception exception)
                 {
-                    this.SetException(exception);
+                    SetException(exception);
                 }
             }
         }
@@ -282,7 +283,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 }
                 catch (Exception exception)
                 {
-                    this.SetException(exception);
+                    SetException(exception);
                 }
             }
         }
@@ -296,9 +297,9 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
         /// </summary>
         public virtual void SetException(Exception exception)
         {
-            if (exception_ is null)
+            if (_exception is null)
             {
-                exception_ = exception;
+                _exception = exception;
             }
             else
             {
@@ -309,7 +310,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         public virtual void AddAttribute(string key, object value)
         {
-            if (attributes == null)
+            if (attributes is null)
             {
                 attributes = new ConcurrentDictionary<string, object>();
             }
@@ -318,7 +319,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         public virtual object GetAttribute(string key)
         {
-            if (attributes != null)
+            if (attributes is object)
             {
                 attributes.TryGetValue(key, out var value);
                 return value;
@@ -328,7 +329,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         public virtual T GetGenericAttribute<T>(string key)
         {
-            if (attributes != null)
+            if (attributes is object)
             {
                 return (T)GetAttribute(key);
             }
@@ -337,17 +338,16 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         public virtual T GetSession<T>() where T : ISession
         {
-            Type sessionClass = typeof(T);
-            sessions.TryGetValue(sessionClass, out ISession session);
-            if (session == null)
+            _ = sessions.TryGetValue(typeof(T), out ISession session);
+            if (session is null)
             {
-                sessionFactories.TryGetValue(sessionClass, out ISessionFactory sessionFactory);
-                if (sessionFactory == null)
+                sessionFactories.TryGetValue(typeof(T), out ISessionFactory sessionFactory);
+                if (sessionFactory is null)
                 {
-                    throw new ActivitiException("no session factory configured for " + sessionClass.FullName);
+                    throw new ActivitiException("no session factory configured for " + typeof(T).FullName);
                 }
                 session = sessionFactory.OpenSession(this);
-                sessions.AddOrUpdate(sessionClass, session, (key, old) => session);
+                sessions.AddOrUpdate(typeof(T), session, (key, old) => session);
             }
 
             return (T)session;
@@ -646,7 +646,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
         {
             get
             {
-                return exception_;
+                return _exception;
             }
         }
 
@@ -701,7 +701,6 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
         {
             resultStack.Enqueue(value);
         }
-
 
         public virtual bool Reused
         {

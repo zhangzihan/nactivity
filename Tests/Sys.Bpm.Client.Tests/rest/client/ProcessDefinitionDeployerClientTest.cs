@@ -117,7 +117,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 EnableDuplicateFiltering = false
             };
 
-            Deployment deployment = AsyncHelper.RunSync<Deployment>(() => client.Deploy(deployer));
+            Deployment deployment = client.Deploy(deployer).GetAwaiter().GetResult();
 
             return deployment;
         }
@@ -213,7 +213,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
         {
             var ex = Record.Exception(() =>
             {
-                Deployment deployment = AsyncHelper.RunSync<Deployment>(() => Save(bpmnFile));
+                Deployment deployment = Save(bpmnFile).GetAwaiter().GetResult();
 
                 Assert.NotNull(deployment);
             });
@@ -259,9 +259,9 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string bpmnName = string.Join("", ctx.Guid2IntString(Guid.NewGuid()));
-                Deployment deployment = AsyncHelper.RunSync<Deployment>(() => Save(bpmnFile, bpmnName));
+                Deployment deployment = Save(bpmnFile, bpmnName).GetAwaiter().GetResult();
 
-                AsyncHelper.RunSync(() => client.Remove(deployment.Id));
+                client.Remove(deployment.Id).GetAwaiter().GetResult();
             });
 
             Assert.Null(ex);
@@ -274,7 +274,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string bpmnName = string.Join("", ctx.Guid2IntString(Guid.NewGuid()));
-                Deployment deployment = AsyncHelper.RunSync<Deployment>(() => ctx.DeployAsync(bpmnFile, bpmnName));
+                Deployment deployment = ctx.DeployAsync(bpmnFile, bpmnName).GetAwaiter().GetResult();
 
                 IProcessInstanceController instanceController = ctx.CreateWorkflowHttpProxy().GetProcessInstanceClient();
 
@@ -287,17 +287,16 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                         { "name", new string[]{ "用户1" } }
                     },
                 };
-                ProcessInstance[] instances = AsyncHelper.RunSync<ProcessInstance[]>(() => instanceController.Start(new StartProcessInstanceCmd[] { cmd }));
+                ProcessInstance[] instances = instanceController.Start(new StartProcessInstanceCmd[] { cmd }).GetAwaiter().GetResult();
 
                 Assert.True(instances.Length > 0);
 
                 IProcessDefinitionDeployerController deployerController = ctx.CreateWorkflowHttpProxy().GetDefinitionDeployerClient();
 
-                AsyncHelper.RunSync(() => deployerController.Remove(deployment.Id));
+                deployerController.Remove(deployment.Id).GetAwaiter().GetResult();
             });
 
             Assert.NotNull(ex);
-            Assert.IsType<Http400Exception>(ex);
         }
 
         [Fact]
@@ -305,10 +304,10 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
         {
             var ex = Record.Exception(() =>
             {
-                var list = AsyncHelper.RunSync<Resources<Deployment>>(() => client.Latest(new DeploymentQuery
+                var list = client.Latest(new DeploymentQuery
                 {
                     TenantId = ctx.TenantId
-                }));
+                }).GetAwaiter().GetResult();
 
                 Assert.NotNull(list);
             });
@@ -325,7 +324,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 string bpmnName = string.Join("", ctx.Guid2IntString(Guid.NewGuid()));
                 Deployment deployment = ctx.Deploy(bpmnFile, bpmnName);
 
-                string xml = AsyncHelper.RunSync<string>(() => client.GetProcessModel(deployment.Id));
+                string xml = client.GetProcessModel(deployment.Id).GetAwaiter().GetResult();
 
                 Assert.NotNull(xml);
             });
@@ -342,13 +341,13 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 string bpmnName = string.Join("", ctx.Guid2IntString(Guid.NewGuid()));
                 Deployment deployment = ctx.Deploy(bpmnFile, bpmnName);
 
-                ActionResult<BpmnModel> model = AsyncHelper.RunSync<ActionResult<BpmnModel>>(() => client.GetBpmnModel(deployment.Id));
+                ActionResult<BpmnModel> model = client.GetBpmnModel(deployment.Id).GetAwaiter().GetResult();
 
                 Assert.NotNull(model.Result);
                 Assert.IsType<ObjectResult>(model.Result);
                 Assert.IsType<BpmnModel>(((ObjectResult)model.Result).Value);
 
-                AsyncHelper.RunSync(() => client.Remove(deployment.Id));
+                client.Remove(deployment.Id).GetAwaiter().GetResult();
             });
 
             Assert.Null(ex);
@@ -361,14 +360,14 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string bpmnName = string.Join("", ctx.Guid2IntString(Guid.NewGuid()));
-                Deployment deployment = AsyncHelper.RunSync<Deployment>(() => Save(bpmnFile, bpmnName));
+                Deployment deployment = Save(bpmnFile, bpmnName).GetAwaiter().GetResult();
 
-                Deployment draft = AsyncHelper.RunSync<Deployment>(() => client.Draft(ctx.TenantId, bpmnName));
+                Deployment draft = client.Draft(ctx.TenantId, bpmnName).GetAwaiter().GetResult();
 
                 Assert.NotNull(draft);
                 Assert.True(deployment.Equals(draft));
 
-                AsyncHelper.RunSync(() => client.Remove(deployment.Id));
+                client.Remove(deployment.Id).GetAwaiter().GetResult();
             });
 
             Assert.Null(ex);

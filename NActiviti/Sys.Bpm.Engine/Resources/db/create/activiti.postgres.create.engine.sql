@@ -304,10 +304,10 @@ create index ACT_IDX_EVENT_SUBSCR_CONFIG_ on ACT_RU_EVENT_SUBSCR(CONFIGURATION_)
 create index ACT_IDX_VARIABLE_TASK_ID on ACT_RU_VARIABLE(TASK_ID_);
 create index ACT_IDX_BYTEAR_DEPL on ACT_GE_BYTEARRAY(DEPLOYMENT_ID_);
 
-create index ACT_IDX_RU_EXECUTION_TENANT_ID on ACT_RU_EXECUTION(TENANT_ID_);
+create index ACT_IDX_RU_EXECUTION_TENANT_ID on ACT_RU_EXECUTION(TENANT_ID_,NAME_);
 create index ACT_IDX_RE_DEPLOYMENT_TENANT_ID on ACT_RE_DEPLOYMENT(TENANT_ID_);
 create index ACT_IDX_RE_MODEL_TENANT_ID on ACT_RE_MODEL(TENANT_ID_);
-create index ACT_IDX_RE_PROCDEF_TENANT_ID on ACT_RE_PROCDEF(TENANT_ID_);
+create index ACT_IDX_RE_PROCDEF_TENANT_ID on ACT_RE_PROCDEF(TENANT_ID_,NAME_);
 create index ACT_IDX_RE_PROCDEF_START_FROM on ACT_RE_PROCDEF(START_FORM_, TENANT_ID_);
 create index ACT_IDX_RU_DEADLETTER_JOB_TENANT_ID on ACT_RU_DEADLETTER_JOB(TENANT_ID_);
 create index ACT_IDX_RU_EVENT_SUBSCR_TENANT_ID on ACT_RU_EVENT_SUBSCR(TENANT_ID_);
@@ -331,26 +331,26 @@ create index ACT_IDX_EXE_PROCINST on ACT_RU_EXECUTION(PROC_INST_ID_);
 alter table ACT_RU_EXECUTION
     add constraint ACT_FK_EXE_PROCINST 
     foreign key (PROC_INST_ID_) 
-    references ACT_RU_EXECUTION (ID_);
+    references ACT_RU_EXECUTION (ID_) on delete cascade on update cascade;
 
 create index ACT_IDX_EXE_PARENT on ACT_RU_EXECUTION(PARENT_ID_);
 alter table ACT_RU_EXECUTION
     add constraint ACT_FK_EXE_PARENT
     foreign key (PARENT_ID_) 
-    references ACT_RU_EXECUTION (ID_);
+    references ACT_RU_EXECUTION (ID_) on delete cascade;
     
 create index ACT_IDX_EXE_SUPER on ACT_RU_EXECUTION(SUPER_EXEC_);
 alter table ACT_RU_EXECUTION
     add constraint ACT_FK_EXE_SUPER
     foreign key (SUPER_EXEC_) 
-    references ACT_RU_EXECUTION (ID_);
+    references ACT_RU_EXECUTION (ID_) on delete cascade;
     
 
 create index ACT_IDX_EXE_PROCDEF on ACT_RU_EXECUTION(PROC_DEF_ID_); 
 alter table ACT_RU_EXECUTION
     add constraint ACT_FK_EXE_PROCDEF 
     foreign key (PROC_DEF_ID_) 
-    references ACT_RE_PROCDEF (ID_);    
+    references ACT_RE_PROCDEF (ID_) on delete cascade;    
     
 
 create index ACT_IDX_TSKASS_TASK on ACT_RU_IDENTITYLINK(TASK_ID_);

@@ -210,9 +210,12 @@ namespace SmartSql
             #endregion
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            _fileWatcherLoader.Dispose();
+            if (disposing)
+            {
+                _fileWatcherLoader.Dispose();
+            }
         }
     }
 }

@@ -235,27 +235,35 @@ namespace Spring.Context.Support
         /// singleton objects in the wrapped
         /// <see cref="Spring.Objects.Factory.IObjectFactory"/>).
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
         {
-            _isInDispose = true;
+            Dispose(true);
+        }
 
-            GC.SuppressFinalize(this);
-
-            if (log.IsEnabled(LogLevel.Debug))
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                log.LogDebug(string.Format(
-                              CultureInfo.InvariantCulture,
-                              "Closing application context [{0}].",
-                              Name));
+                _isInDispose = true;
+
+                GC.SuppressFinalize(this);
+
+                if (log.IsEnabled(LogLevel.Debug))
+                {
+                    log.LogDebug(string.Format(
+                                  CultureInfo.InvariantCulture,
+                                  "Closing application context [{0}].",
+                                  Name));
+                }
+
+                // Closed event is raised before destroying objectfactory to enable registered IApplicationEventListeners
+                // to handle the event before they get disposed.
+                PublishEvent(this, new ContextClosedEventArgs());
+
+                ObjectFactory.Dispose();
+
+                _isInDispose = false;
             }
-
-            // Closed event is raised before destroying objectfactory to enable registered IApplicationEventListeners
-            // to handle the event before they get disposed.
-            PublishEvent(this, new ContextClosedEventArgs());
-
-            ObjectFactory.Dispose();
-
-            _isInDispose = false;
         }
 
         /// <summary>
@@ -594,7 +602,7 @@ namespace Spring.Context.Support
         }
 
         protected virtual void InvokePriorityOrderedObjectFactoryPostProcessors(
-            IReadOnlyList<string> factoryProcessorNames, 
+            IReadOnlyList<string> factoryProcessorNames,
             List<IObjectFactoryPostProcessor> priorityOrderedFactoryProcessors)
         {
             priorityOrderedFactoryProcessors.Sort(OrderComparator<IObjectFactoryPostProcessor>.Instance);
@@ -622,7 +630,7 @@ namespace Spring.Context.Support
         }
 
         private void InvokeObjectFactoryPostProcessors<T>(
-            List<T> objectFactoryPostProcessors, 
+            List<T> objectFactoryPostProcessors,
             IConfigurableListableObjectFactory objectFactory) where T : IObjectFactoryPostProcessor
         {
             if (objectFactoryPostProcessors == null)
@@ -1077,7 +1085,7 @@ namespace Spring.Context.Support
                     object obj = objectFactory.GetSingleton(objectName);
                     if (obj is ILifecycle)
                     {
-                        lifeCycleObjects[objectName] = (ILifecycle) obj;
+                        lifeCycleObjects[objectName] = (ILifecycle)obj;
                     }
                 }
                 return lifeCycleObjects;

@@ -58,5 +58,10 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// 流程任务变量路由基地址
         /// </summary>
         public const string TASK_VAR_ROUTER_V1 = "Api/v1/workflow/tasks/{taskId}/variables";
+
+        /// <summary>
+        /// 流程引擎授权策略名
+        /// </summary>
+        public const string WORKFLOW_AUTHORIZE_POLICY = "WORKFLOWAUTHORIZATION";
     }
 }

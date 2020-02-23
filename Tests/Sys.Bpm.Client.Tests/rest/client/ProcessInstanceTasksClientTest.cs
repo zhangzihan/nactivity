@@ -24,7 +24,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             var ex = Record.Exception(() =>
             {
                 string uid = Guid.NewGuid().ToString();
-                ProcessInstance[] inst = AsyncHelper.RunSync(() => ctx.StartUseFile(bpmnFile, new string[] { uid }));
+                ProcessInstance[] inst = ctx.StartUseFile(bpmnFile, new string[] { uid }).GetAwaiter().GetResult();
 
                 ProcessInstanceTaskQuery query = new ProcessInstanceTaskQuery
                 {
@@ -34,7 +34,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 IProcessInstanceTasksController taskClient = ctx.CreateWorkflowHttpProxy().GetProcessInstanceTasksClient();
 
-                Resources<TaskModel> list = AsyncHelper.RunSync<Resources<TaskModel>>(() => taskClient.GetTasks(query));
+                Resources<TaskModel> list = taskClient.GetTasks(query).GetAwaiter().GetResult();
 
                 Assert.NotNull(list);
                 Assert.True(list.TotalCount == list.List.Count());

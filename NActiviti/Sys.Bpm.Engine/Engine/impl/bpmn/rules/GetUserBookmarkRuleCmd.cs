@@ -16,8 +16,8 @@ using System.Linq;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
-    /// <summary>
-    /// 根据用户id获取用户信息
+    // <summary>
+    // 根据用户id获取用户信息
     /*[
 
   {
@@ -76,10 +76,10 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         {
             IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
-            return AsyncHelper.RunSync(() => proxy.GetUsers(externalConnector.GetUserByUser, new
+            return proxy.GetUsers(externalConnector.GetUserByUser, new
             {
                 idList = Condition.QueryCondition.Select(x => x.Id).ToArray()
-            }));
+            }).GetAwaiter().GetResult();
         }
     }
 }

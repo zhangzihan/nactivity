@@ -13,6 +13,7 @@ using Sys.Workflow.Services.Api.Commands;
 using Sys.Expressions;
 using Newtonsoft.Json.Linq;
 using Sys.Workflow.Engine.Api;
+using Newtonsoft.Json;
 
 namespace Sys.Workflow.Client.Tests.Expression
 {
@@ -305,5 +306,236 @@ namespace Sys.Workflow.Client.Tests.Expression
 
             Assert.True(obj.ToString() == min.ToString());
         }
+
+        [Theory]
+        [InlineData(1, 2)]
+        [InlineData("1", 2)]
+        [InlineData(1, "2")]
+        public void OpAdd(object left, object right)
+        {
+            var data = new
+            {
+                l = left,
+                r = right
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l + r");
+            Assert.True(val.ToString() == "3");
+        }
+
+        [Theory]
+        [InlineData(1, 2.2)]
+        [InlineData("1.2", 2)]
+        [InlineData(1, "2.2")]
+        public void OpAdd_Numeric(object left, object right)
+        {
+            var data = new
+            {
+                l = left,
+                r = right
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l + r");
+            decimal.TryParse(val.ToString(), out decimal v);
+            Assert.True(v == 3.2M);
+        }
+
+        [Theory]
+        [InlineData(1, 2)]
+        [InlineData("1", 2)]
+        [InlineData(1, "2")]
+        public void OpSUBTRACT(object left, object right)
+        {
+            var data = new
+            {
+                l = left,
+                r = right
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l - r");
+            Assert.True(val.ToString() == "-1");
+        }
+
+        [Theory]
+        [InlineData(1.1, 2)]
+        [InlineData("1.1", 2)]
+        [InlineData(1.1, "2")]
+        public void OpSUBTRACT_Numeric(object left, object right)
+        {
+            var data = new
+            {
+                l = left,
+                r = right
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l - r");
+            decimal.TryParse(val.ToString(), out decimal v);
+            Assert.True(v == -0.9M);
+        }
+
+        [Theory]
+        [InlineData(1, 2)]
+        [InlineData("1", 2)]
+        [InlineData(1, "2")]
+        public void OpMULTIPLY(object left, object right)
+        {
+            var data = new
+            {
+                l = left,
+                r = right
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l * r");
+            Assert.True(val.ToString() == "2");
+        }
+
+        [Theory]
+        [InlineData(1.1, 2)]
+        [InlineData("1.1", 2)]
+        [InlineData(1.1, "2")]
+        public void OpMULTIPLY_Numeric(object left, object right)
+        {
+            var data = new
+            {
+                l = left,
+                r = right
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l * r");
+            decimal.TryParse(val.ToString(), out decimal v);
+            Assert.True(v == 2.2M);
+        }
+
+        [Theory]
+        [InlineData(1, 2)]
+        [InlineData("1", 2)]
+        [InlineData(1, "2")]
+        public void OpDIVIDE(object left, object right)
+        {
+            var data = new
+            {
+                l = left,
+                r = right
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l / r");
+            Assert.True(val.ToString() == (1 / 2).ToString());
+        }
+
+        [Theory]
+        [InlineData(1, 2)]
+        [InlineData("1", 2)]
+        [InlineData(1, "2")]
+        public void OpMODULUS(object left, object right)
+        {
+            var data = new
+            {
+                l = left,
+                r = right
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l % r");
+            Assert.Equal(1, int.Parse(val.ToString()));
+        }
+
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData("1", 1)]
+        [InlineData(1, "1")]
+        public void OpEqual(object left, object right)
+        {
+            var data = new
+            {
+                l = left,
+                r = right
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l == r");
+            Assert.True(bool.Parse(val.ToString()));
+        }
+
+        [Theory]
+        [InlineData(1, 2)]
+        [InlineData("1", 2)]
+        [InlineData(1, "2")]
+        public void OpNotEqual(object left, object right)
+        {
+            var data = new
+            {
+                l = left,
+                r = right
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l != r");
+            Assert.True(bool.Parse(val.ToString()));
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData("true")]
+        public void OpNOT(object operand)
+        {
+            var data = new
+            {
+                operand,
+            };
+            var val = ExpressionEvaluator.GetValue(data, "!operand");
+            Assert.False(bool.Parse(val.ToString()));
+        }
+
+        [Theory]
+        [InlineData(1.1, 2)]
+        [InlineData("1.1", 2)]
+        [InlineData(1.1, "2")]
+        public void OpDIVIDE_Numeric(object left, object right)
+        {
+            var data = new
+            {
+                l = left,
+                r = right
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l / r");
+            decimal.TryParse(val.ToString(), out decimal v);
+            Assert.True(v == 1.1M / 2);
+        }
+
+        [Theory]
+        [InlineData(1.1, 2)]
+        [InlineData("1.1", 2)]
+        [InlineData(1.1, "2")]
+        public void OpPower_Numeric(object left, object right)
+        {
+            var data = new
+            {
+                l = left,
+                r = right
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l ^ r");
+            Assert.Equal(Math.Pow(1.1D, 2D).ToString(), double.Parse(val.ToString()).ToString());
+        }
+
+        [Fact]
+        public void OpStrAdd()
+        {
+            string expr = "'str ' + obj + ' str'";
+            var val = ExpressionEvaluator.GetValue(new { obj = 3 }, expr);
+        }
+
+        [Fact]
+        public void OpAdd_DateTime()
+        {
+            DateTime now = DateTime.Now;
+            var data = new
+            {
+                l = now,
+                r = 1
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l + r");
+            Assert.Equal(now.AddDays(1).ToString(), val.ToString());
+        }
+
+        [Fact]
+        public void OpSUBSTRACT_DateTime()
+        {
+            DateTime now = DateTime.Now;
+            var data = new
+            {
+                l = now,
+                r = 1
+            };
+            var val = ExpressionEvaluator.GetValue(data, "l - r");
+            Assert.Equal(now.AddDays(-1).ToString(), val.ToString());
+        }
+
     }
 }

@@ -115,7 +115,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return this.GetType().GetHashCode() >> 2;
+            return this.GetType().GetHashCode() << 2;
         }
     }
 }

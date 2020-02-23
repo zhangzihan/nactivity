@@ -25,12 +25,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
     {
         public abstract PersistentState PersistentState { get; }
 
-        protected internal string id;
-        protected internal int revision = 1;
+        private string id;
+        private int revision = 1;
 
-        protected internal bool isInserted;
-        protected internal bool isUpdated;
-        protected internal bool isDeleted;
+        private bool isInserted;
+        private bool isUpdated;
+        private bool isDeleted;
 
         public virtual string Id
         {

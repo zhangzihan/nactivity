@@ -125,7 +125,15 @@ namespace Sys.Workflow.Engine.Debug
 
         public void Dispose()
         {
-            flattenedListIterator.Dispose();
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                flattenedListIterator.Dispose();
+            }
         }
     }
 }

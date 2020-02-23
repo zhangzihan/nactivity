@@ -28,13 +28,13 @@ namespace Sys.Workflow.Engine.Impl.Cmd
     /// 
     public class StartProcessInstanceByMessageCmd : ICommand<IProcessInstance>
     {
+        private string messageName;
+        private readonly string businessKey;
+        private IDictionary<string, object> processVariables;
+        private IDictionary<string, object> transientVariables;
+        private string tenantId;
 
-        protected internal string messageName;
-        protected internal string businessKey;
-        protected internal IDictionary<string, object> processVariables;
-        protected internal IDictionary<string, object> transientVariables;
-        protected internal string tenantId;
-
+        ///<inheritdoc />
         public StartProcessInstanceByMessageCmd(string messageName, string businessKey, IDictionary<string, object> processVariables, string tenantId)
         {
             this.messageName = messageName;
@@ -43,6 +43,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             this.tenantId = tenantId;
         }
 
+        ///<inheritdoc />
         public StartProcessInstanceByMessageCmd(ProcessInstanceBuilderImpl processInstanceBuilder)
         {
             this.messageName = processInstanceBuilder.MessageName;
@@ -52,6 +53,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             this.tenantId = processInstanceBuilder.TenantId;
         }
 
+        ///<inheritdoc />
         public virtual IProcessInstance Execute(ICommandContext commandContext)
         {
 

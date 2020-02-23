@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +20,7 @@ namespace Sys.Workflow.Engine
     /// 
     /// 
     /// </summary>
+    [Serializable]
     public class ActivitiException : Exception
     {
         private const long serialVersionUID = 1L;
@@ -56,6 +58,10 @@ namespace Sys.Workflow.Engine
                 return _code;
             }
             set => _code = value;
+        }
+
+        protected ActivitiException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
         }
     }
 }

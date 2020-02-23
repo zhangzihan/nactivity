@@ -25,7 +25,6 @@ namespace Sys.Workflow.Engine
     using Sys;
     using Sys.Workflow;
     using Sys.Data;
-    using Sys.Workflow;
     using Sys.Workflow.Engine.Bpmn.Rules;
 
 

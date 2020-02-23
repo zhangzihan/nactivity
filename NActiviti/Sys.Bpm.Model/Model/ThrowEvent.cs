@@ -14,6 +14,10 @@ namespace Sys.Workflow.Bpmn.Models
 {
     public class ThrowEvent : Event
     {
+        public ThrowEvent()
+        {
+
+        }
 
         public override BaseElement Clone()
         {

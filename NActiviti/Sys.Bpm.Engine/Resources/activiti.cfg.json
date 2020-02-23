@@ -17,7 +17,7 @@
   "asyncExecutorActivate": true,
   //异步作业失败重试等待时间(秒)
   "asyncFailedJobWaitTime": 5,
-  //启用打印流程调用树
+  //启用工作流调试日志跟踪模式
   "enableVerboseExecutionTreeLogging": true,
   "mailServerPort": "5025",
   //webapi调用失败错误代码

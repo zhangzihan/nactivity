@@ -3,17 +3,19 @@
 <SmartSqlMapConfig xmlns="http://SmartSql.net/schemas/SmartSqlMapConfig.xsd">
   <Settings IsWatchConfigFile="true" IgnoreParameterCase="true" IsCacheEnabled="true" />
   <Database>
-    <DbProvider Name="MySqlClientFactory" ParameterPrefix="?" Type="MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data"/>
+    <DbProvider Name="MySqlClientFactory" ParameterPrefix="?" Type="MySql.Data.MySqlClient.MySqlClientFactory,MySqlConnector"/>
     <!--
+    <DbProvider Name="SqlClientFactory" ParameterPrefix="@" Type="System.Data.SqlClient.SqlClientFactory,System.Data.SqlClient"/>
+    <DbProvider Name="NpgsqlFactory" ParameterPrefix="@" Type="Npgsql.NpgsqlFactory,Npgsql" />
     <DbProvider Name="H2ClientFactory" ParameterPrefix="?" Type="System.Data.H2.H2ClientFactory,H2Sharp"/>
     <DbProvider Name="OracleClientFactory" ParameterPrefix=":" Type="Oracle.ManagedDataAccess.Client.OracleClientFactory,Oracle.ManagedDataAccess"/>
-    <DbProvider Name="SqlClientFactory" ParameterPrefix="@" Type="System.Data.SqlClient.SqlClientFactory,System.Data.SqlClient"/>-->
+    -->
     <Write Name="WriteDB" ConnectionString="server=;database=;uid=;pwd=;charset='gbk'"/>
     <Read Name="ReadDB-0" ConnectionString="server=;database=;uid=;pwd=;charset='gbk'"/>
   </Database>
-  <TypeHandlers>    
+  <TypeHandlers>
     <TypeHandler Name="文件"
-                 Type="Sys.Workflow.Engine.Impl.Persistence.ByteArrayTypeHandler,Sys.Bpm.Engine"/> 
+                 Type="Sys.Workflow.Engine.Impl.Persistence.ByteArrayTypeHandler,Sys.Bpm.Engine"/>
     <TypeHandler Name="二进制引用"
                  Type="Sys.Workflow.Engine.Impl.Persistence.ByteArrayRefTypeHandler,Sys.Bpm.Engine"/>
     <TypeHandler Name="Json"
@@ -21,7 +23,7 @@
     <TypeHandler Name="变量类型"
                  Type="Sys.Workflow.Engine.Impl.DB.IbatisVariableTypeHandler,Sys.Bpm.Engine"/>
 
-    
+
   </TypeHandlers>
   <SmartSqlMaps>
     <SmartSqlMap Path="entity" Type="Directory"></SmartSqlMap>

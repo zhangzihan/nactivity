@@ -359,6 +359,12 @@ namespace Sys.Workflow.Engine.Runtime
         /// Order by tenant id (needs to be followed by <seealso cref="#asc()"/> or <seealso cref="#desc()"/>).
         /// </summary>
         IExecutionQuery OrderByTenantId();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        IExecutionQuery SetIsWithException();
     }
 
 }

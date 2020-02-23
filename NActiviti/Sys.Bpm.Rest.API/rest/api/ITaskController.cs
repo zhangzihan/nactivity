@@ -35,6 +35,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// <returns>待办项列表</returns>
         Task<Resources<TaskModel>> MyTasks(string userId);
 
+        /*
         /// <summary>
         /// 下一步表单
         /// </summary>
@@ -42,6 +43,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// <param name="taskId">任务id</param>
         /// <returns>返回用户下一步任务详情</returns>
         //Task<TaskModel> Next(string userId, string taskId);
+        */
 
         /// <summary>
         /// 领取任务

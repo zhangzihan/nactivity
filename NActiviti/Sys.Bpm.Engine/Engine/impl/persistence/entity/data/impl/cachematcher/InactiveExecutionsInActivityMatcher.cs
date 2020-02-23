@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +23,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 
         public override bool IsRetained(IExecutionEntity entity, object parameter)
         {
-            IDictionary<string, object> paramMap = (IDictionary<string, object>)parameter ?? new Dictionary<string, object>();
-            paramMap.TryGetValue("activityId", out object activityId);
+            if (parameter is null)
+            {
+                return false;
+            }
+
+            JToken @params = JToken.FromObject(parameter);
+            string activityId = @params[nameof(activityId)]?.ToString();
+
             return !entity.IsActive && entity.ActivityId != null &&
                 string.Compare(entity.ActivityId, activityId?.ToString(), true) == 0;
         }

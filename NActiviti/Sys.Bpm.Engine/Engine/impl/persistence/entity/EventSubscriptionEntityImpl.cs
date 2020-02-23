@@ -28,18 +28,18 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         private const long serialVersionUID = 1L;
 
         // persistent state ///////////////////////////
-        protected internal string eventType;
-        protected internal string eventName;
-        protected internal string executionId;
-        protected internal string processInstanceId;
-        protected internal string activityId;
-        protected internal string configuration;
-        protected internal DateTime created;
-        protected internal string processDefinitionId;
-        protected internal string tenantId;
+        private string eventType;
+        private string eventName;
+        private string executionId;
+        private string processInstanceId;
+        private string activityId;
+        private string configuration;
+        private DateTime created;
+        private string processDefinitionId;
+        private string tenantId;
 
         // runtime state /////////////////////////////
-        protected internal IExecutionEntity execution;
+        private IExecutionEntity execution;
 
         public EventSubscriptionEntityImpl()
         {
@@ -202,43 +202,47 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
+        public static bool operator ==(EventSubscriptionEntityImpl a, EventSubscriptionEntityImpl b)
+        {
+            if (a is null && b is null)
+            {
+                return true;
+            }
+
+            if (a is null && b is object)
+            {
+                return false;
+            }
+
+            if (a is object && b is null)
+            {
+                return false;
+            }
+
+            return a.Id == b.Id;
+        }
+
+        public static bool operator !=(EventSubscriptionEntityImpl a, EventSubscriptionEntityImpl b)
+        {
+            return !(a == b);
+        }
+
         public override int GetHashCode()
         {
             const int prime = 31;
             int result = 1;
-            result = (prime * result) + ((id is null) ? 0 : id.GetHashCode());
+            result = (prime * result) + ((Id is null) ? 0 : Id.GetHashCode());
             return result;
         }
 
         public override bool Equals(object obj)
         {
-            if (this == obj)
+            if (obj is EventSubscriptionEntityImpl ese)
             {
-                return true;
+                return this == ese;
             }
-            if (obj == null)
-            {
-                return false;
-            }
-            if (this.GetType() != obj.GetType())
-            {
-                return false;
-            }
-            EventSubscriptionEntityImpl other = (EventSubscriptionEntityImpl)obj;
-            if (id is null)
-            {
-                if (other.id is object)
-                {
-                    return false;
-                }
-            }
-            else if (!id.Equals(other.id))
-            {
-                return false;
-            }
-            return true;
+
+            return false;
         }
-
     }
-
 }

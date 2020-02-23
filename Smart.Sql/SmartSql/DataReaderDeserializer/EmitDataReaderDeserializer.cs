@@ -17,6 +17,7 @@ namespace SmartSql.DataReaderDeserializer
         {
             _dataRowParserFactory = new DataRowParserFactory();
         }
+
         public IEnumerable<T> ToEnumerable<T>(RequestContext context, IDataReader dataReader)
         {
             try

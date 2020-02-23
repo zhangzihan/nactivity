@@ -14,6 +14,8 @@
 namespace Sys.Workflow.Engine.Delegate
 {
     using Sys.Workflow.Engine.Impl.Bpmn.Parser;
+    using System;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Special exception that can be used to throw a BPMN Error from <seealso cref="ICSharpDelegate"/>s and expressions.
@@ -25,9 +27,9 @@ namespace Sys.Workflow.Engine.Delegate
     /// 
     /// 
     /// </summary>
+    [Serializable]
     public class BpmnError : ActivitiException
     {
-
         private const long serialVersionUID = 1L;
 
         private string errorCode;
@@ -46,7 +48,7 @@ namespace Sys.Workflow.Engine.Delegate
         {
             set
             {
-                if (ReferenceEquals(value, null))
+                if (value is null)
                 {
                     throw new ActivitiIllegalArgumentException("Error Code must not be null.");
                 }
@@ -62,6 +64,8 @@ namespace Sys.Workflow.Engine.Delegate
             }
         }
 
+        protected BpmnError(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
-
 }

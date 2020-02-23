@@ -3,9 +3,11 @@ using SmartSql.Abstractions;
 using SmartSql.Abstractions.Command;
 using SmartSql.Abstractions.DbSession;
 using SmartSql.Abstractions.TypeHandler;
+using SmartSql.Configuration.Maps;
 using Spring.Expressions;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -52,63 +54,64 @@ namespace SmartSql.Command
                         string sql = context.RealSql;
                         if (_sqlParamsTokens.IsMatch(sql))
                         {
+                            HashSet<string> parameters = new HashSet<string>();
                             sql = _sqlParamsTokens.Replace(sql, match =>
-                              {
-                                  string paramName = match.Groups[1].Value;
-                                  var paramMap = context.Statement?.ParameterMap?.Parameters?.FirstOrDefault(p => new Regex(p.Property, RegexOptions.IgnoreCase).IsMatch(paramName));
-                                  string propertyName = paramName; //paramMap != null ? paramMap.Property : paramName;
-                                  string dbParamName = regDbParamName.Replace(paramName, "$2_");
+                            {
+                                string paramName = match.Groups[1].Value;
+                                Parameter paramMap = ParseParameter(context, paramName);
+                                string propertyName = paramName;
+                                string dbParamName = regDbParamName.Replace(paramName, "$2_");
 
-                                  if (context.RequestParameters == null)
-                                  {
-                                      return $"{_smartSqlContext.DbPrefix}{dbParamName}";
-                                  }
+                                if (context.RequestParameters == null)
+                                {
+                                    return $"{_smartSqlContext.DbPrefix}{dbParamName}";
+                                }
 
-                                  object paramVal;
-                                  if (propertyName.Contains("."))
-                                  {
-                                      paramVal = ExpressionEvaluator.GetValue(context.RequestParameters, propertyName);
-                                  }
-                                  else
-                                  {
-                                      context.RequestParameters.TryGetValue(propertyName, out paramVal);
-                                  }
+                                object paramVal;
+                                if (propertyName.Contains("."))
+                                {
+                                    paramVal = ExpressionEvaluator.GetValue(context.RequestParameters, propertyName);
+                                }
+                                else
+                                {
+                                    context.RequestParameters.TryGetValue(propertyName, out paramVal);
+                                }
 
-                                  ITypeHandler typeHandler = paramMap?.Handler;
-                                  if (typeHandler != null)
-                                  {
-                                      AddParameterIfNotExists(dbCommand, dbParamName, paramVal, typeHandler);
-                                      return $"{_smartSqlContext.DbPrefix}{dbParamName}";
-                                  }
-                                  bool isString = paramVal is String;
-                                  if (paramVal is IEnumerable && !isString)
-                                  {
-                                      var enumParams = paramVal as IEnumerable;
-                                      StringBuilder inParamSql = new StringBuilder();
-                                      inParamSql.Append("(");
-                                      int item_Index = 0;
-                                      foreach (var itemVal in enumParams)
-                                      {
-                                          string itemParamName = $"{_smartSqlContext.DbPrefix}{dbParamName}_{item_Index}";
-                                          inParamSql.AppendFormat("{0},", itemParamName);
-                                          AddParameterIfNotExists(dbCommand, itemParamName, itemVal);
-                                          item_Index++;
-                                      }
-                                      inParamSql.Remove(inParamSql.Length - 1, 1);
-                                      inParamSql.Append(")");
-                                      return inParamSql.ToString();
-                                  }
-                                  else
-                                  {
-                                      if (new Regex("\\#{" + dbParamName + "}\\s*\\${wildcardEscapeClause}").IsMatch(context.Sql.ToString()))
-                                      {
-                                          paramVal = $"%{paramVal}%";
-                                      }
+                                ITypeHandler typeHandler = paramMap?.Handler;
+                                if (typeHandler != null)
+                                {
+                                    AddParameterIfNotExists(dbCommand, dbParamName, paramVal, ref parameters, typeHandler);
+                                    return $"{_smartSqlContext.DbPrefix}{dbParamName}";
+                                }
+                                bool isString = paramVal is String;
+                                if (paramVal is IEnumerable && !isString)
+                                {
+                                    var enumParams = paramVal as IEnumerable;
+                                    StringBuilder inParamSql = new StringBuilder();
+                                    inParamSql.Append("(");
+                                    int item_Index = 0;
+                                    foreach (var itemVal in enumParams)
+                                    {
+                                        string itemParamName = $"{_smartSqlContext.DbPrefix}{dbParamName}_{item_Index}";
+                                        inParamSql.AppendFormat("{0},", itemParamName);
+                                        AddParameterIfNotExists(dbCommand, itemParamName, itemVal, ref parameters);
+                                        item_Index++;
+                                    }
+                                    inParamSql.Remove(inParamSql.Length - 1, 1);
+                                    inParamSql.Append(")");
+                                    return inParamSql.ToString();
+                                }
+                                else
+                                {
+                                    if (new Regex("\\#{" + dbParamName + "}\\s*\\${wildcardEscapeClause}").IsMatch(context.Sql.ToString()))
+                                    {
+                                        paramVal = $"%{paramVal}%";
+                                    }
 
-                                      AddParameterIfNotExists(dbCommand, dbParamName, paramVal);
-                                      return $"{_smartSqlContext.DbPrefix}{dbParamName}";
-                                  }
-                              });
+                                    AddParameterIfNotExists(dbCommand, dbParamName, paramVal, ref parameters);
+                                    return $"{_smartSqlContext.DbPrefix}{dbParamName}";
+                                }
+                            });
                         }
                         dbCommand.CommandText = sql;
                         break;
@@ -144,9 +147,34 @@ namespace SmartSql.Command
             return dbCommand;
         }
 
-        private void AddParameterIfNotExists(IDbCommand dbCommand, string paramName, object paramVal, ITypeHandler typeHandler = null)
+        private static Parameter ParseParameter(RequestContext context, string paramName)
         {
-            if (!dbCommand.Parameters.Contains(paramName))
+            if (context.Statement is null)
+            {
+                return null;
+            }
+
+            ParameterMap paramMap = context.Statement.ParameterMap;
+            if (paramMap is null)
+            {
+                return null;
+            }
+
+            IList<Parameter> parameters = paramMap.Parameters;
+            if (parameters is object)
+            {
+                return parameters.FirstOrDefault(p =>
+                {
+                    return new Regex(p.Property, RegexOptions.IgnoreCase).IsMatch(paramName);
+                });
+            }
+
+            return null;
+        }
+
+        private void AddParameterIfNotExists(IDbCommand dbCommand, string paramName, object paramVal, ref HashSet<string> parameters, ITypeHandler typeHandler = null)
+        {
+            if (parameters.Contains(paramName) == false)
             {
                 var cmdParameter = dbCommand.CreateParameter();
                 cmdParameter.ParameterName = paramName;
@@ -181,6 +209,7 @@ namespace SmartSql.Command
                     }
                 }
                 dbCommand.Parameters.Add(cmdParameter);
+                parameters.Add(paramName);
             }
         }
     }

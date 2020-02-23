@@ -33,17 +33,16 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         {
             if (IsValidEvent(@event))
             {
-                //仅是为了执行一次退栈操作
-                _ = Context.CommandContext;
+                var commandContext = Context.CommandContext;
 
                 IExecutionEntity execution = null;
-
                 if (@event.ExecutionId is object)
                 {
-                    // Get the execution based on the event's execution ID instead execution = Context.CommandContext.ExecutionEntityManager.findById<instead>(new KeyValuePair<string, object>("id", @event.ExecutionId));
+                    // Get the execution based on the event's execution ID instead 
+                    execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(@event.ExecutionId);
                 }
 
-                if (execution == null)
+                if (execution is null)
                 {
                     throw new ActivitiException("No execution context active and event is not related to an execution. No compensation event can be thrown.");
                 }

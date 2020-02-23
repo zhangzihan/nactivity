@@ -16,10 +16,13 @@
 namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 {
     using Newtonsoft.Json.Linq;
+    using Sys.Workflow.Bpmn.Constants;
+    using Sys.Workflow.Bpmn.Models;
     using Sys.Workflow.Engine.Delegate;
     using Sys.Workflow.Engine.Impl.Bpmn.Helper;
     using Sys.Workflow.Engine.Impl.Contexts;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using System.Collections.Generic;
 
     /// <summary>
     /// ActivityBehavior that evaluates an expression when executed. Optionally, it sets the result of the expression as a variable on the execution.
@@ -100,7 +103,16 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
                 else
                 {
-                    throw new ActivitiException("Could not execute service task expression", exc);
+                    string errorCode = execution.CurrentFlowElement.GetExtensionElementAttributeValue("errorCode");
+                    if (string.IsNullOrWhiteSpace(errorCode) == false)
+                    {
+                        error = new BpmnError(errorCode, exc.Message);
+                        ErrorPropagation.PropagateError(error, execution);
+                    }
+                    else
+                    {
+                        throw new ActivitiException("Could not execute service task expression", exc);
+                    }
                 }
             }
         }

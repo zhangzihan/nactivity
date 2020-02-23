@@ -34,6 +34,7 @@ namespace Spring.Context.Attributes
     /// A GenericObjectDefinition that provides attribute driven propulation
     /// of properties like LazyInit, Scope or Qualifier
     /// </summary>
+    [Serializable]
     public class ScannedGenericObjectDefinition : GenericObjectDefinition
     {
         private static readonly ILogger Log = LogManager.GetLogger<ScannedGenericObjectDefinition>();

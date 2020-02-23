@@ -10,6 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
+using System.Runtime.Serialization;
+
 namespace Sys.Workflow.Engine
 {
     /// <summary>
@@ -18,6 +21,7 @@ namespace Sys.Workflow.Engine
     /// 
     /// 
     /// </summary>
+    [Serializable]
     public class ActivitiOptimisticLockingException : ActivitiException
     {
 
@@ -27,6 +31,9 @@ namespace Sys.Workflow.Engine
         {
         }
 
+        protected ActivitiOptimisticLockingException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
 
 }

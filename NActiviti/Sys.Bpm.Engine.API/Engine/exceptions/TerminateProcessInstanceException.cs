@@ -10,5 +10,9 @@ namespace Sys.Workflow.Engine.Exceptions
         public TerminateProcessInstanceException(string message) : base(message)
         {
         }
+
+        protected TerminateProcessInstanceException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
 }

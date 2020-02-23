@@ -21,5 +21,9 @@ namespace Sys.Workflow.Engine.Exceptions
         public NotExistsRuleTypeException(string ruleName) : base($"Not exists {ruleName}")
         {
         }
+
+        protected NotExistsRuleTypeException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
 }

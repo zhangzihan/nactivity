@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Sys.Workflow
 {
     /// <summary>
     /// 
     /// </summary>
-    [System.Serializable]
+    [Serializable]
     public sealed class InitProcessEngineFaliedException : Exception
     {
         /// <summary>
@@ -29,6 +30,10 @@ namespace Sys.Workflow
         /// <param name="message"></param>
         /// <param name="innerException"></param>
         public InitProcessEngineFaliedException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        private InitProcessEngineFaliedException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         {
         }
     }

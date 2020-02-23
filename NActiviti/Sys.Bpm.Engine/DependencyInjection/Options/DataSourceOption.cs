@@ -29,9 +29,12 @@ namespace Sys.Workflow.Options
                     return connectionString;
                 }
 
-                if (new Regex("(Connection Timeout)", RegexOptions.IgnoreCase).IsMatch(connectionString) == false)
+                if (ProviderName.ToLower() != "npgsql")
                 {
-                    connectionString = string.Concat("Connection Timeout=300;", connectionString);
+                    if (new Regex("(Connection Timeout)", RegexOptions.IgnoreCase).IsMatch(connectionString) == false)
+                    {
+                        connectionString = string.Concat("Connection Timeout=300;", connectionString);
+                    }
                 }
 
                 if (regDatabase.IsMatch(connectionString))
@@ -76,7 +79,7 @@ namespace Sys.Workflow.Options
 
         public override int GetHashCode()
         {
-            return ConnectionString.GetHashCode() ^ 2;
+            return ConnectionString.GetHashCode() << 2;
         }
     }
 }

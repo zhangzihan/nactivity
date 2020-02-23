@@ -13,6 +13,7 @@
  *
  */
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Sys.Workflow.Api.Runtime.Shared.Query;
@@ -44,7 +45,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
     /// <inheritdoc />
     [Route(WorkflowConstants.PROC_DEF_ROUTER_V1)]
     [ApiController]
-    public class ProcessDefinitionControllerImpl : ControllerBase, IProcessDefinitionController
+    public class ProcessDefinitionControllerImpl : WorkflowController, IProcessDefinitionController
     {
         private readonly IRepositoryService repositoryService;
 

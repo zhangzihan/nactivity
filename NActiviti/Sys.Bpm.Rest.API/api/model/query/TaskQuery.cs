@@ -38,7 +38,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model
         /// <summary>
         /// 是否排除子流程
         /// </summary>
-        public bool? ExcludeSubprocesses { get; set; } = true;
+        public bool ExcludeSubprocesses { get; set; } = true;
 
         /// <summary>
         /// 流程实例id
@@ -48,12 +48,12 @@ namespace Sys.Workflow.Cloud.Services.Api.Model
         /// <summary>
         /// 包含指定业务键的子流程
         /// </summary>
-        public bool? IncludeChildExecutionsWithBusinessKeyQuery { get; set; } = false;
+        public bool IncludeChildExecutionsWithBusinessKeyQuery { get; set; } = false;
 
         /// <summary>
         /// 是否包含流程变量
         /// </summary>
-        public bool? IncludeProcessVariables { get; set; } = false;
+        public bool IncludeProcessVariables { get; set; } = false;
 
         /// <summary>
         /// 查询分配人
@@ -63,27 +63,27 @@ namespace Sys.Workflow.Cloud.Services.Api.Model
         /// <summary>
         /// 是否查询包含异常的作业任务
         /// </summary>
-        public bool? IsWithException { get; set; } = false;
+        public bool IsWithException { get; set; } = false;
 
         /// <summary>
         /// 仅查询子流程
         /// </summary>
-        public bool? OnlyChildExecutions { get; set; } = false;
+        public bool OnlyChildExecutions { get; set; } = false;
 
         /// <summary>
         /// 仅查询包含执行的流程实例
         /// </summary>
-        public bool? OnlyProcessInstanceExecutions { get; set; } = false;
+        public bool OnlyProcessInstanceExecutions { get; set; } = false;
 
         /// <summary>
         /// 仅查询流程实例
         /// </summary>
-        public bool? OnlyProcessInstances { get; set; } = false;
+        public bool OnlyProcessInstances { get; set; } = false;
 
         /// <summary>
         /// 仅查询子流程
         /// </summary>
-        public bool? OnlySubProcessExecutions { get; set; } = false;
+        public bool OnlySubProcessExecutions { get; set; } = false;
 
         /// <summary>
         /// 上级流程实例id
@@ -173,6 +173,6 @@ namespace Sys.Workflow.Cloud.Services.Api.Model
         /// <summary>
         /// 不使用租户id
         /// </summary>
-        public bool? WithoutTenantId { get; set; } = false;
+        public bool WithoutTenantId { get; set; } = false;
     }
 }

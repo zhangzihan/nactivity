@@ -27,7 +27,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
 	  public override string ToString()
 	  {
-		return "SuspendedJobEntity [id=" + id + "]";
+		return "SuspendedJobEntity [id=" + Id + "]";
 	  }
 
 	}

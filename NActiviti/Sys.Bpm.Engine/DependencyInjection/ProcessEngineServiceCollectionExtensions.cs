@@ -76,7 +76,9 @@ namespace Sys.Workflow
             TypeRegistry.RegisterType(typeof(ExternalConnector));
             builder.Services.AddSpringCoreTypeRepository();
 
-            builder.Services.AddSpringCoreService(builder.Services.BuildServiceProvider().GetService<ILoggerFactory>());
+            ILoggerFactory loggerFactory = builder.Services.BuildServiceProvider().GetService<ILoggerFactory>();
+
+            builder.Services.AddSpringCoreService(loggerFactory);
 
             builder.Services.AddSingleton<MemoryCacheProvider>();
 
@@ -137,7 +139,7 @@ namespace Sys.Workflow
 
             builder.Services.AddWorkflowAccessTokenProvider<DefaultAccessTokenProvider>();
 
-            builder.Services.AddSingleton<IUserServiceProxy, DefaultUserServiceProxy>();
+            builder.Services.AddTransient<IUserServiceProxy, DefaultUserServiceProxy>();
 
             builder.Services.AddTransient<IServiceWebApiHttpProxy, ServiceWebApiHttpProxy>();
 

@@ -6,7 +6,7 @@ namespace Sys.Expressions
 {
     public static class ExpressionManager
     {
-        private static readonly Regex EXPTOKEN_PATTERN = new Regex(@"[#]{(([\p{L}\p{N}_]+)(\.[\p{L}\p{N}_]+)*)}", RegexOptions.IgnoreCase);
+        private static readonly Regex EXPTOKEN_PATTERN = new Regex(@"[#]{(([\p{L}\p{N}_]+)(\.[\p{L}\p{N}_]+)*)}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public static object GetValue(object context, string expression, IDictionary<string, object> variables)
         {

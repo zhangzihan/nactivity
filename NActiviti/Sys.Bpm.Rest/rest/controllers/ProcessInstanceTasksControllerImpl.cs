@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sys.Workflow.Api.Runtime.Shared.Query;
 using Sys.Workflow.Bpmn.Models;
@@ -35,7 +36,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
     /// <inheritdoc />
     [Route(WorkflowConstants.PROC_INS_ROUTER_V1)]
     [ApiController]
-    public class ProcessInstanceTasksControllerImpl : ControllerBase, IProcessInstanceTasksController
+    public class ProcessInstanceTasksControllerImpl : WorkflowController, IProcessInstanceTasksController
     {
         private readonly PageableTaskRepositoryService pageableTaskService;
 

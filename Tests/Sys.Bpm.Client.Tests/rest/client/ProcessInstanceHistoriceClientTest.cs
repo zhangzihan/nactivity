@@ -57,7 +57,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                         })
                     };
 
-                    list = AsyncHelper.RunSync<Resources<HistoricInstance>>(() => client.ProcessInstances(query));
+                    list = client.ProcessInstances(query).GetAwaiter().GetResult();
                     if (list.List.Count() < 10)
                     {
                         break;
@@ -87,13 +87,13 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                     PageSize = 1
                 };
 
-                Resources<HistoricInstance> list = AsyncHelper.RunSync<Resources<HistoricInstance>>(() => client.ProcessInstances(query));
+                Resources<HistoricInstance> list = client.ProcessInstances(query).GetAwaiter().GetResult();
                 if (list.TotalCount == 0)
                 {
                     return;
                 }
 
-                HistoricInstance inst = AsyncHelper.RunSync<HistoricInstance>(() => client.GetProcessInstanceById(list.List.First().Id));
+                HistoricInstance inst = client.GetProcessInstanceById(list.List.First().Id).GetAwaiter().GetResult();
 
                 Assert.NotNull(inst);
             });

@@ -48,8 +48,12 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="processDefinitionBusinessKey"></param>
+        /// <param name="processDefinitionKey"></param>
         /// <param name="processDefinitionId">流程定义id</param>
         /// <param name="variables">流程变量</param>
+        /// <param name="businessKey"></param>
+        /// <param name="initialFlowElementId"></param>
         //[JsonConstructor]
         public StartProcessInstanceCmd(
             [JsonProperty("ProcessDefinitionBusinessKey")]string processDefinitionBusinessKey,
@@ -147,6 +151,11 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         {
             get; set;
         }
+
+        /// <summary>
+        /// 使用消息触发流程
+        /// </summary>
+        public string StartByMessage { get; set; }
 
         /// <summary>
         /// 业务键值,主要用来保存启动流程时的业务主键,可以是主键id，

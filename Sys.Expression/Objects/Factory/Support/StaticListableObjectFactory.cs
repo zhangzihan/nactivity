@@ -553,7 +553,7 @@ namespace Spring.Objects.Factory.Support
         /// </returns>
         public IReadOnlyList<string> GetObjectDefinitionNames(bool includeAncestors)
         {
-            throw new NotSupportedException("StaticListableObjectFactory does not contain object definitions.");            
+            throw new NotSupportedException("StaticListableObjectFactory does not contain object definitions.");
         }
 
         /// <summary>
@@ -919,7 +919,7 @@ namespace Spring.Objects.Factory.Support
         {
             Dictionary<string, T> collector = new Dictionary<string, T>();
             DoGetObjectsOfType(typeof(T), includeFactoryObjects, includePrototypes, collector);
-            return collector; 
+            return collector;
         }
 
         /// <summary>
@@ -1022,8 +1022,14 @@ namespace Spring.Objects.Factory.Support
         /// <summary>
         /// Defines a method to release allocated unmanaged resources.
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
         {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+
         }
     }
 }

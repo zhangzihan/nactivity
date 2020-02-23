@@ -25,22 +25,21 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 
         public override bool IsRetained(IEventSubscriptionEntity eventSubscriptionEntity, object parameter)
         {
-            if (parameter == null)
+            if (parameter is null)
             {
                 return false;
             }
 
             JToken @params = JToken.FromObject(parameter);
-            string executionId = @params["executionId"]?.ToString();
-            string name = @params["eventName"]?.ToString();
+            string eventName = @params[nameof(eventName)]?.ToString();
+            string executionId = @params[nameof(executionId)]?.ToString();
 
-            return eventSubscriptionEntity.EventType != null && 
-                eventSubscriptionEntity.EventType.Equals(SignalEventSubscriptionEntityFields.EVENT_TYPE) && 
-                eventSubscriptionEntity.ExecutionId != null && 
-                string.Compare(eventSubscriptionEntity.ExecutionId, executionId, true) == 0 && 
-                eventSubscriptionEntity.EventName != null && 
-                string.Compare(eventSubscriptionEntity.EventName, name, true) == 0;
+            return eventSubscriptionEntity.EventType != null &&
+                eventSubscriptionEntity.EventType.Equals(SignalEventSubscriptionEntityFields.EVENT_TYPE) &&
+                eventSubscriptionEntity.ExecutionId != null &&
+                string.Compare(eventSubscriptionEntity.ExecutionId, executionId, true) == 0 &&
+                eventSubscriptionEntity.EventName != null &&
+                string.Compare(eventSubscriptionEntity.EventName, eventName, true) == 0;
         }
-
     }
 }

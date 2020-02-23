@@ -193,6 +193,13 @@
     where (EXECUTION_ID_ = #{executionId})
   </Select>
 
+  <Select Id="selectEventSubscriptionsByProcessInstanceType" ResultMap="eventSubscriptionResultMap">
+    select *
+    from ACT_RU_EVENT_SUBSCR
+    where (EVENT_TYPE_ = #{eventType})
+    and (PROC_INST_ID_ = #{processInstanceId})
+  </Select>
+
   <Select Id="selectEventSubscriptionsByProcessInstanceTypeAndActivity" ResultMap="eventSubscriptionResultMap">
     select *
     from ACT_RU_EVENT_SUBSCR

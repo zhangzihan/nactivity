@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Sys.Workflow.Engine;
+using Sys.Workflow.Engine.Impl.Identities;
 using Sys.Workflow.Exceptions;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Sys.Workflow.Cloud.Services.Api
@@ -40,22 +42,45 @@ namespace Sys.Workflow.Cloud.Services.Api
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex).ConfigureAwait(false);
+                try
+                {
+                    await HandleExceptionAsync(context, ex).ConfigureAwait(false);
+                }
+                catch { }
+
+                throw;
             }
         }
 
-        private void WriteErrorLogger(Exception ex)
+        private void WriteErrorLogger(HttpContext context, Exception ex)
         {
-            LoggerMessage.Define(LogLevel.Error,
-                                 new EventId(7, "服务异常"),
-                                 $"工作流发生内部异常{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.StackTrace}")(logger, ex);
+            string request = null;
+            var req = context.Request;
+            if (context.Request.Body is object && req.Body.CanSeek)
+            {
+                using (StreamReader reader = new StreamReader(req.Body))
+                {
+                    reader.BaseStream.Seek(0, SeekOrigin.Begin);
+                    request = reader.ReadToEnd();
+                }
+            }
+
+            string message = $"服务发生异常{Environment.NewLine}" +
+                $"Url={req.Scheme}://{req.Host}{req.Path}{req.QueryString}," +
+                $"{(request is object ? $"参数={request}" : "")}" +
+                $"{(ex is WorkflowDebugException ? ex.InnerException.Message : ex.Message)}{Environment.NewLine}" +
+                $"{ex.StackTrace}";
+
+            logger.LogError(message);
         }
 
         private void WriteBizErrorLogger(Exception ex)
         {
-            LoggerMessage.Define(LogLevel.Error,
-                                 new EventId(7, "服务异常"),
-                                 $"工作流发生业务异常{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.StackTrace}")(logger, ex);
+            string message = $"服务发生异常{Environment.NewLine}" +
+                $"{ex.Message}{Environment.NewLine}" +
+                $"{ex.StackTrace}";
+
+            logger.LogError(message);
         }
 
         /// <summary>
@@ -67,40 +92,43 @@ namespace Sys.Workflow.Cloud.Services.Api
         private Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
 
-            if (ex is Http400Exception ex400)
-            {
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = 400;
+            //if (ex is Http400Exception ex400)
+            //{
+            //    context.Response.ContentType = "application/json";
+            //    context.Response.StatusCode = 400;
 
-                return context.Response.WriteAsync(JsonConvert.SerializeObject(ex400.Http400));
-            }
-            else if (ex is ActivitiException actex)
+            //    return context.Response.WriteAsync(JsonConvert.SerializeObject(ex400.Http400));
+            //}
+            //else 
+            if (ex is ActivitiException actex)
             {
                 WriteBizErrorLogger(ex);
 
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = 400;
+                //context.Response.ContentType = "application/json";
+                //context.Response.StatusCode = 400;
 
-                return context.Response.WriteAsync(JsonConvert.SerializeObject(new Http400()
-                {
-                    Code = actex.Code,
-                    Message = actex.Message,
-                    Target = actex.GetType().Name
-                }));
+                //return context.Response.WriteAsync(JsonConvert.SerializeObject(new Http400()
+                //{
+                //    Code = actex.Code,
+                //    Message = actex.Message,
+                //    Target = actex.GetType().Name
+                //}));
             }
             else
             {
-                WriteErrorLogger(ex);
+                WriteErrorLogger(context, ex);
 
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = 500;
+                //context.Response.ContentType = "application/json";
+                //context.Response.StatusCode = 500;
 
-                return context.Response.WriteAsync(JsonConvert.SerializeObject(new Http500()
-                {
-                    Message = ex.Message,
-                    Target = ex.GetType().Name
-                }));
+                //return context.Response.WriteAsync(JsonConvert.SerializeObject(new Http500()
+                //{
+                //    Message = ex.Message,
+                //    Target = ex.GetType().Name
+                //}));
             }
+
+            return Task.CompletedTask;
         }
     }
 }

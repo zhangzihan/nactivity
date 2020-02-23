@@ -22,5 +22,9 @@ namespace Sys.Workflow
         {
             this.ExecutionName = executionName;
         }
+
+        protected NoneCountersignUsersException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
 }

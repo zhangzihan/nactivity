@@ -47,10 +47,9 @@ export interface ITaskService {
   /// <summary>
   /// 处理人已经完该该任务
   /// </summary>
-  /// <param name="taskId">任务id</param>
   /// <param name="completeTaskCmd">任务完成命令</param>
   /// <returns></returns>
-  completeTask(taskId: string, completeTaskCmd: ICompleteTaskCmd): Promise<any>;
+  completeTask(completeTaskCmd: ICompleteTaskCmd): Promise<any>;
 
   /// <summary>
   /// 删除任务

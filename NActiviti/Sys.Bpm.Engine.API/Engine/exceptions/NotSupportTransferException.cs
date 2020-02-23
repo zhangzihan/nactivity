@@ -18,5 +18,9 @@ namespace Sys.Workflow.Engine.Exceptions
         public NotSupportTransferException() : base("不允许转审")
         {
         }
+
+        protected NotSupportTransferException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+        }
     }
 }

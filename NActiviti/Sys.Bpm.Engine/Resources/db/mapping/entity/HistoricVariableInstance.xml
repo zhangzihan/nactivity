@@ -36,6 +36,7 @@
 
   <ParameterMap Id="insupVariableInstance">
     <Parameter Property="(Items_)?byteArrayRef(_p\d)?" TypeHandler="二进制引用" />
+    <Parameter Property="(Items_)?variableType(_p\d)?" TypeHandler="变量类型" />
   </ParameterMap>
 
   <!-- HISTORIC PROCESS VARIABLE INSERT -->

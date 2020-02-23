@@ -300,7 +300,13 @@
       inner join ACT_RE_PROCDEF D on RES.PROC_DEF_ID_ = D.ID_
     </If>
     <If Test="processInstanceBusinessKey != null or processInstanceBusinessKeyLike != null  or processInstanceBusinessKeyLikeIgnoreCase != null">
-      inner join ACT_RU_EXECUTION E on RES.PROC_INST_ID_ = E.ID_
+      inner join ACT_RU_EXECUTION E 
+      <IsTrue Property="isTaskBusinessKey">
+        on RES.EXECUTION_ID_ = E.ID_
+      </IsTrue>
+      <IsFalse Property="isTaskBusinessKey">
+        on RES.PROC_INST_ID_ = E.ID_
+      </IsFalse>
     </If>
     <If Test="deploymentId != null or (deploymentIds != null and CollectionUtil.IsNotEmpty(deploymentIds))">
       left outer join ACT_RE_PROCDEF DEPLOY_P ON RES.PROC_DEF_ID_ = DEPLOY_P.ID_

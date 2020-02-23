@@ -184,5 +184,15 @@ namespace Sys.Workflow.Bpmn.Converters
         {
             return reader.GetAttribute(name, namespaceUri);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (reader != null)
+            {
+                reader.Close();
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Spring.Util;
 
@@ -34,7 +35,7 @@ namespace Spring.Expressions
         /// <summary>
         /// Create a new instance
         /// </summary>
-        public OpNOT():base()
+        public OpNOT() : base()
         {
         }
 
@@ -42,7 +43,7 @@ namespace Spring.Expressions
         /// Create a new instance
         /// </summary>
         public OpNOT(BaseNode operand)
-            :base(operand)
+            : base(operand)
         {
         }
 
@@ -53,7 +54,7 @@ namespace Spring.Expressions
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Returns a value for the logical NOT operator node.
         /// </summary>
@@ -63,8 +64,15 @@ namespace Spring.Expressions
         protected override object Get(object context, EvaluationContext evalContext)
         {
             object operand = GetValue(Operand, context, evalContext);
+            TypeConverter convert = TypeDescriptor.GetConverter(operand.GetType());
+
             if (NumberUtils.IsInteger(operand))
             {
+                return NumberUtils.BitwiseNot(operand);
+            }
+            else if (convert.CanConvertTo(typeof(int)))
+            {
+                operand = Convert.ToInt32(operand);
                 return NumberUtils.BitwiseNot(operand);
             }
             else if (operand is Enum)

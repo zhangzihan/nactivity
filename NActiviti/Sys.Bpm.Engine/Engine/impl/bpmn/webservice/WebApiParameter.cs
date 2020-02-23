@@ -12,6 +12,9 @@ using System.Text.RegularExpressions;
 
 namespace Sys.Workflow.Engine.Impl.Bpmn.Webservice
 {
+    /// <summary>
+    /// WebApi参数
+    /// </summary>
     public class WebApiParameter
     {
         public const string WEBAPI_URL_VARNAME = "url";
@@ -74,9 +77,13 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Webservice
         /// </summary>
         /// <param name="expstr"></param>
         /// <returns></returns>
-        private string GetExpression(string expstr)
+        private static string GetExpression(string expstr)
         {
-            if (string.IsNullOrWhiteSpace(expstr)) return expstr;
+            if (string.IsNullOrWhiteSpace(expstr))
+            {
+                return expstr;
+            }
+
             List<string> sb = new List<string>();
             if (EXPR_PATTERN.IsMatch(expstr))
             {
@@ -129,6 +136,56 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Webservice
         }
 
         /// <summary>
+        /// 请求的远程服务器访问Token
+        /// </summary>
+        public string AccessToken
+        {
+            get
+            {
+                string token = extensionElements.GetAttributeValue("access_token");
+
+                token = GetValue(contextObject, token, execution.Variables).ToString();
+
+                return token;
+            }
+        }
+
+        /// <summary>
+        /// 如果当前流程在debug模式，计算mock数据
+        /// </summary>
+        public JToken MockData
+        {
+            get
+            {
+                string mockData = extensionElements.GetAttributeValue("mockData");
+                if (string.IsNullOrEmpty(mockData))
+                {
+                    return null;
+                }
+
+                return JsonConvert.DeserializeObject<JToken>(mockData);
+            }
+        }
+
+        /// <summary>
+        /// 启用Mock模式，不执行实际的Webapi调用，只计算mock数据
+        /// </summary>
+        public bool? IsMock
+        {
+            get
+            {
+                string isMock = extensionElements.GetAttributeValue("isMock");
+
+                if (bool.TryParse(isMock, out var mock))
+                {
+                    return mock;
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
         /// 请求参数,变量表达式，如果设置包括在{}或[]，则说明该变量为JSON表达式，运行时会先做表达式求值然后再解析为JToken类型，否则返回表达式解析字符串.
         /// </summary>
         public object Request
@@ -137,27 +194,34 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Webservice
             {
                 string taskRequest = extensionElements.GetAttributeValue("taskRequest");
 
-                object parameter = GetValue(contextObject, taskRequest, execution.Variables);
-
-                if (parameter is object)
+                try
                 {
-                    string strParam = parameter.ToString();
+                    object parameter = GetValue(contextObject, taskRequest, execution.Variables);
 
-                    JToken token;
-                    if (JSONOBJECT_PATTERN.IsMatch(strParam))
+                    if (parameter is object)
                     {
-                        token = JsonConvert.DeserializeObject<JToken>(parameter.ToString());
+                        string strParam = parameter.ToString();
 
-                        if (token is JArray == false && token is JValue == false)
+                        JToken token;
+                        if (JSONOBJECT_PATTERN.IsMatch(strParam))
                         {
-                            token["businessKey"] = execution.BusinessKey;
+                            token = JsonConvert.DeserializeObject<JToken>(parameter.ToString());
+
+                            if (token is JArray == false && token is JValue == false)
+                            {
+                                token["businessKey"] = execution.BusinessKey;
+                            }
+
+                            parameter = token;
                         }
-
-                        parameter = token;
                     }
-                }
 
-                return parameter;
+                    return parameter;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"【参数错误】ExecutionId={execution.Id}，TaskRequest={taskRequest}，ContextObject={(contextObject is null ? "【空值】" : JsonConvert.SerializeObject(contextObject, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }))}，Variables={(execution.Variables is null ? "【空值】" : JsonConvert.SerializeObject(execution.Variables, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }))}", ex);
+                }
             }
         }
 

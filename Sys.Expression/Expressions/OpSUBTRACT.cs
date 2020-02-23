@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Spring.Collections;
 using Spring.Util;
@@ -36,7 +37,7 @@ namespace Spring.Expressions
         /// <summary>
         /// Create a new instance
         /// </summary>
-        public OpSUBTRACT():base()
+        public OpSUBTRACT() : base()
         {
         }
 
@@ -47,7 +48,7 @@ namespace Spring.Expressions
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Returns a value for the arithmetic subtraction operator node.
         /// </summary>
@@ -56,10 +57,18 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            object left = GetLeftValue( context, evalContext );
-            object right = GetRightValue( context, evalContext );
+            object left = GetLeftValue(context, evalContext);
+            object right = GetRightValue(context, evalContext);
 
             if (NumberUtils.IsNumber(left) && NumberUtils.IsNumber(right))
+            {
+                return NumberUtils.Subtract(left, right);
+            }
+            else if (NumberUtils.IsNumber(left) && NumberUtils.TryConvertTo(ref right, ref left))
+            {
+                return NumberUtils.Subtract(left, right);
+            }
+            else if (NumberUtils.IsNumber(right) && NumberUtils.TryConvertTo(ref left, ref right))
             {
                 return NumberUtils.Subtract(left, right);
             }
@@ -71,25 +80,25 @@ namespace Spring.Expressions
                 }
                 else if (right is string)
                 {
-                    right = TimeSpan.Parse((string) right);
+                    right = TimeSpan.Parse((string)right);
                 }
-                return (DateTime) left - (TimeSpan) right;
+                return (DateTime)left - (TimeSpan)right;
             }
             else if (left is DateTime && right is DateTime)
             {
-                return (DateTime) left - (DateTime) right;
+                return (DateTime)left - (DateTime)right;
             }
             else if (left is IList || left is ISet)
             {
                 ISet leftset = new HybridSet(left as ICollection);
                 ISet rightset;
-                if(right is IList || right is ISet)
+                if (right is IList || right is ISet)
                 {
                     rightset = new HybridSet(right as ICollection);
                 }
                 else if (right is IDictionary)
                 {
-                    rightset = new HybridSet(((IDictionary) right).Keys);
+                    rightset = new HybridSet(((IDictionary)right).Keys);
                 }
                 else
                 {
@@ -103,7 +112,7 @@ namespace Spring.Expressions
             }
             else if (left is IDictionary)
             {
-                ISet leftset = new HybridSet(((IDictionary) left).Keys);
+                ISet leftset = new HybridSet(((IDictionary)left).Keys);
                 ISet rightset;
                 if (right is IList || right is ISet)
                 {
@@ -111,7 +120,7 @@ namespace Spring.Expressions
                 }
                 else if (right is IDictionary)
                 {
-                    rightset = new HybridSet(((IDictionary) right).Keys);
+                    rightset = new HybridSet(((IDictionary)right).Keys);
                 }
                 else
                 {
@@ -122,7 +131,7 @@ namespace Spring.Expressions
                     + "'.");
                 }
                 IDictionary result = new Hashtable(rightset.Count);
-                foreach(object key in leftset.Minus(rightset))
+                foreach (object key in leftset.Minus(rightset))
                 {
                     result.Add(key, ((IDictionary)left)[key]);
                 }

@@ -52,7 +52,7 @@ namespace Sys.Workflow.Services.Subscriptions.Behavior
                 //eventSubscriptionName = expressionObject.getValue(execution).ToString();
             }
 
-            eventPublisher.PublishEvent(new SignalCmd(eventSubscriptionName, null));
+            eventPublisher.PublishEvent(new SignalCmd(eventSubscriptionName, execution.TenantId));
         }
     }
 }

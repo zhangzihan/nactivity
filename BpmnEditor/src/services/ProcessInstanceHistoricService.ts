@@ -1,29 +1,34 @@
+import { Settings } from 'model/settings';
 import { IHistoricInstance } from 'model/resource/IHistoricInstance';
 import { IHistoricInstanceQuery } from 'model/query/IHistoricInstanceQuery';
 import { HttpInvoker } from 'services/httpInvoker';
 import { IProcessInstanceService } from "./IProcessInstanceService";
-import contants from "contants";
+import contants from "../contants";
 import { IResources } from "model/query/IResources";
 import { IProcessInstance } from "model/resource/IProcessInstance";
 import { IProcessInstanceQuery } from 'model/query/IProcessInstanceQuery'
 import { IProcessInstanceTaskQuery } from "model/query/IProcessInstanceTaskQuery";
-import { inject } from "aurelia-framework";
+import { inject, singleton, autoinject } from "aurelia-framework";
 import { IProcessInstanceAdminService } from './IProcessInstanceAdminService';
 import { IProcessInstanceHistoriceService } from './IProcessInstanceHistoriceService';
+import { LoginUser } from 'model/loginuser';
 
-@inject('httpInvoker')
+@autoinject()
+@singleton()
 export class ProcessInstanceHistoriceService implements IProcessInstanceHistoriceService {
 
   private controller = "history/process-instances";
 
-  constructor(private httpInvoker: HttpInvoker) {
+  constructor(private httpInvoker: HttpInvoker,
+    private loginUser: LoginUser,
+    private settings: Settings) {
 
   }
 
   processInstances(query: IHistoricInstanceQuery): Promise<IResources<IHistoricInstance>> {
-    query.tenantId = contants.tenantId;
+    query.tenantId = this.loginUser.current.tenantId;
     return new Promise((res, rej) => {
-      this.httpInvoker.post(`${contants.serverUrl}/${this.controller}`, query).then(data => {
+      this.httpInvoker.post(this.settings.getUrl(`${this.controller}`), query).then(data => {
         res(data.data.list);
       }).catch(err => rej(err));
     });
@@ -31,7 +36,7 @@ export class ProcessInstanceHistoriceService implements IProcessInstanceHistoric
 
   getProcessInstanceById(processInstanceId: string): Promise<IHistoricInstance> {
     return new Promise((res, rej) => {
-      this.httpInvoker.get(`${contants.serverUrl}/${this.controller}/${processInstanceId}`).then(data => {
+      this.httpInvoker.get(this.settings.getUrl(`${this.controller}/${processInstanceId}`)).then(data => {
         res(data.data);
       }).catch(err => rej(err));
     });

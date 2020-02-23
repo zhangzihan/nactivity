@@ -23,6 +23,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
     using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using Sys.Workflow.Engine.Impl.Util;
+    using System.Linq;
 
 
     /// 
@@ -34,13 +35,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         public override void Execute(IExecutionEntity execution)
         {
-            IExecutionEntity executionEntity = execution;
             ICommandContext commandContext = Context.CommandContext;
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
 
             // find cancel boundary event:
             IExecutionEntity parentScopeExecution = null;
-            IExecutionEntity currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(executionEntity.ParentId);
+            IExecutionEntity currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(execution.ParentId);
             while (currentlyExaminedExecution != null && parentScopeExecution == null)
             {
                 if (currentlyExaminedExecution.CurrentFlowElement is SubProcess)
@@ -66,7 +66,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             if (parentScopeExecution == null)
             {
-                throw new ActivitiException("No sub process execution found for cancel end event " + executionEntity.CurrentActivityId);
+                throw new ActivitiException("No sub process execution found for cancel end event " + execution.CurrentActivityId);
             }
 
             {
@@ -87,7 +87,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                 if (cancelBoundaryEvent == null)
                 {
-                    throw new ActivitiException("Could not find cancel boundary event for cancel end event " + executionEntity.CurrentActivityId);
+                    throw new ActivitiException("Could not find cancel boundary event for cancel end event " + execution.CurrentActivityId);
                 }
 
                 IExecutionEntity newParentScopeExecution = null;
@@ -118,29 +118,33 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                             // end all executions in the scope of the transaction
                             executionsToDelete.Add(multiInstanceExecution);
-                            DeleteChildExecutions(multiInstanceExecution, executionEntity, commandContext, History.DeleteReasonFields.TRANSACTION_CANCELED);
+                            DeleteChildExecutions(multiInstanceExecution, execution, commandContext, History.DeleteReasonFields.TRANSACTION_CANCELED);
 
                         }
                     }
 
                     foreach (IExecutionEntity executionEntityToDelete in executionsToDelete)
                     {
-                        DeleteChildExecutions(executionEntityToDelete, executionEntity, commandContext, History.DeleteReasonFields.TRANSACTION_CANCELED);
+                        DeleteChildExecutions(executionEntityToDelete, execution, commandContext, History.DeleteReasonFields.TRANSACTION_CANCELED);
                     }
                 }
 
                 // The current activity is finished (and will not be ended in the deleteChildExecutions)
-                commandContext.HistoryManager.RecordActivityEnd(executionEntity, null);
+                commandContext.HistoryManager.RecordActivityEnd(execution, null);
+
+                // TODO: 先删除已生成的边界取消执行实例
+                var cancelBoundaryEventExecution = executionEntityManager.FindExecutionsByParentExecutionAndActivityIds(parentScopeExecution.Id, new string[] { cancelBoundaryEvent.Id }).FirstOrDefault();
+                executionEntityManager.Delete(cancelBoundaryEventExecution);
 
                 // set new parent for boundary event execution
-                executionEntity.Parent = newParentScopeExecution ?? throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event " + cancelBoundaryEvent.Id);
-                executionEntity.CurrentFlowElement = cancelBoundaryEvent;
+                execution.Parent = newParentScopeExecution ?? throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event " + cancelBoundaryEvent.Id);
+                execution.CurrentFlowElement = cancelBoundaryEvent;
 
                 // end all executions in the scope of the transaction
-                DeleteChildExecutions(parentScopeExecution, executionEntity, commandContext, History.DeleteReasonFields.TRANSACTION_CANCELED);
+                DeleteChildExecutions(parentScopeExecution, execution, commandContext, History.DeleteReasonFields.TRANSACTION_CANCELED);
                 commandContext.HistoryManager.RecordActivityEnd(parentScopeExecution, History.DeleteReasonFields.TRANSACTION_CANCELED);
 
-                Context.Agenda.PlanTriggerExecutionOperation(executionEntity);
+                Context.Agenda.PlanTriggerExecutionOperation(execution);
             }
         }
 

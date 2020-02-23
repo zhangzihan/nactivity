@@ -1,0 +1,96 @@
+<template>
+  <style>
+    .debugger-output {
+      z-index: 10000;
+      background: dimgray;
+      position: absolute;
+      border: 1px lightblue solid;
+      bottom: 44px;
+      padding: 16px 16px;
+      left: 8px;
+      right: 8px;
+      color: white;
+      max-height: 300px;
+      overflow: auto;
+    }
+
+    .debugger-output .table {
+      font-size: 18px;
+    }
+
+    .debugger-output .header {
+      position: absolute;
+      top: -6px;
+      font-size: 32px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .error-log {
+      color: red
+    }
+
+    .header .e-icons.e-down-icon::before {
+      content: '\e305';
+      color: red;
+    }
+
+    .header .e-icons.e-up-icon::before {
+      content: '\e307';
+      color: red;
+    }
+
+    .header .eraser-message {
+      color: white;
+      font-size: 16px;
+    }
+
+    .close-output .eraser-message {
+      display: none;
+    }
+
+    .hide-output {
+      display: none
+    }
+
+    .close-output.debugger-output {
+      height: 46px;
+      width: 46px;
+      overflow: hidden;
+      background: transparent;
+      border: none;
+      left: 50%;
+    }
+
+    .close-output .table {
+      display: none
+    }
+
+    .close-output .header {
+      left: 0;
+      top: 0
+    }
+  </style>
+  <div class="debugger-output ${loggers.length>0?'':'hide-output'} ${isShowoutput?'':'close-output'}">
+    <div class="header">
+      <a click.trigger="showOutput()">
+        <i class="e-icons ${isShowoutput?'e-down-icon':'e-up-icon'}"></i>
+      </a>
+      <div style="right:26px;position: absolute;top:-14px;">
+        <a click.trigger="loggers=[]" class="eraser-message">
+          <i class="fa fa-eraser"></i>
+        </a>
+      </div>
+    </div>
+    <table class="table">
+      <tr repeat.for="log of loggers">
+        <td>
+          <span class="${log.logLevel==4?'error-log':''}">${log.logLevel==4?'ERROR':'INFO'}</span>:${log.activityId}
+          <br>
+          <span>${log.date | dateFormat}</span>
+        </td>
+        <td innerhtml.bind="log.message"></td>
+      </tr>
+    </table>
+  </div>
+</template>
