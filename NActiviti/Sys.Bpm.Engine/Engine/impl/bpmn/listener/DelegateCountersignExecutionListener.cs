@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Sys.Expressions;
+using Sys.Workflow.Engine.Impl.Identities;
 
 namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 {
@@ -37,6 +38,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
     /// 5.发起者直接汇报对象,上下级结构不在已行政关系为主,而是根据岗位职责形成的一种上下级汇报关系.
     /// 比如组建项目团队时,团队内的成员在项目进行期内的上级领导归属为项目负责人,而该负责人并不一定和干系人存在行政上的上下级关系.策略名:GetDirectReporter.
     /// 6.发起者部门领导,指组织人员行政上下级的归属关系,读取发起者的部门领导.策略名:GetDeptLeader.
+    /// [{"ruleType":"GetUser","ruleName":"GetUser","queryCondition":[{"id":"用户1","name":"用户1"}]},{"ruleType":"GetDept","ruleName":"GetDept","queryCondition":[{"id":"部门1","name":"部门1"}]}{"ruleType":"GetDeptLeader","ruleName":"GetDeptLeader","queryCondition":[{"id":"部门1","name":"部门1"}]},{"ruleType":"GetDirectReporter","ruleName":"GetDirectReporter","queryCondition":[{"id":"部门1","name":"部门1"}]},{"ruleType":"GetDuty","ruleName":"GetDuty","queryCondition":[{"id":"岗位1","name":"岗位1"}]},{"ruleType":"GetUnderling","ruleName":"GetUnderling","queryCondition":[{"id":"领导1","name":"领导1"}]}]
     /// </summary>
     public class DelegateCountersignExecutionListener : IExecutionListener
     {
@@ -91,7 +93,8 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
                     if (users.Count == 0)
                     {
-                        logger.LogError($"调用查询人员服务失败,分组没有人,Duty={getUserPolicy}");
+                        users.Add(Authentication.AuthenticatedUser);
+                        logger.LogWarning($"调用查询人员服务失败,分组没有人,重新指到当前提交人,Duty={getUserPolicy}");
                         //throw new NoneCountersignUsersException(execution.CurrentFlowElement.Name);
                     }
 

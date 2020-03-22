@@ -46,7 +46,7 @@
   //full:完全记录这个是最慢的操作,调试时启用,生产系统不要使用.
   //activity:只记录流程实例和任务及最终完成时的变量值,过程变量值不记录
   //audit:默认,保留流程实例活动实例变量值及同步提交的表单值(form属性中设置的字段,与系统的表单值不是一个概念).
-  "history": "audit",
+  "history": "activity",
   //启用流程信息缓存
   "enableProcessDefinitionInfoCache": true,
   //当前版本,当数据库变更时,修改版本号,用于变更管理

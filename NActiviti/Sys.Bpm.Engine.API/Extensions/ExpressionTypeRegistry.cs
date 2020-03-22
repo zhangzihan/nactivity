@@ -1,4 +1,5 @@
 ﻿using Spring.Core.TypeResolution;
+using Spring.Util;
 using Sys.Workflow.Engine.Api;
 using Sys.Workflow.Engine.Impl.Util;
 using Sys.Workflow.Util;
@@ -18,6 +19,7 @@ namespace Sys.Expressions
             TypeRegistry.RegisterType(typeof(Math));
             TypeRegistry.RegisterType(typeof(String));
             TypeRegistry.RegisterType(typeof(MathHelper));
+            TypeRegistry.RegisterType(typeof(NumberUtils));
         }
 
         private static void LoadFromJson()

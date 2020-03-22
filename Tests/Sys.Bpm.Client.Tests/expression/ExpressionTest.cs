@@ -505,6 +505,18 @@ namespace Sys.Workflow.Client.Tests.Expression
         }
 
         [Fact]
+        public void TestCondition()
+        {
+            var expr = "nrOfCompletedInstances/nrOfActiveInstances>0.5 or (test==0)";
+            var val = ExpressionEvaluator.GetValue(new
+            {
+                nrOfCompletedInstances = 3,
+                nrOfActiveInstances = 4,
+                test = 1
+            }, expr);
+        }
+
+        [Fact]
         public void OpStrAdd()
         {
             string expr = "'str ' + obj + ' str'";
@@ -535,6 +547,20 @@ namespace Sys.Workflow.Client.Tests.Expression
             };
             var val = ExpressionEvaluator.GetValue(data, "l - r");
             Assert.Equal(now.AddDays(-1).ToString(), val.ToString());
+        }
+
+        [Theory]
+        [InlineData(1.1, 2)]
+        [InlineData("1.1", 2)]
+        [InlineData(1.1, "2")]
+        public void OpLess(object left, object right)
+        {
+            var data = new
+            {
+                l = left,
+                r = right
+            };
+            var obj = ExpressionEvaluator.GetValue(data, $"l<r");
         }
 
     }

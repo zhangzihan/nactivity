@@ -59,7 +59,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 return true;
             }
 
-            var tf = (signalData as Dictionary<string, object>)[CompleteConditionVarName];
+            var tf = (signalData as IDictionary<string, object>)[CompleteConditionVarName];
             bool.TryParse(tf?.ToString(), out bool approvaled);
 
             int nrOfInstances = multiInstanceActivity.GetLoopVariable(parent, MultiInstanceActivityBehavior.NUMBER_OF_INSTANCES).GetValueOrDefault(0);

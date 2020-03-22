@@ -10,6 +10,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using Sys.Runtime.Serialization;
+
 namespace Sys.Workflow.Engine.Impl.Variable
 {
     /// 
@@ -34,6 +36,8 @@ namespace Sys.Workflow.Engine.Impl.Variable
         /// </summary>
         /// <returns> whether variables of this type are cacheable. </returns>
         bool Cachable { get; }
+
+        ISerializableTypeSerializer Serializer { get; }
 
         /// <returns> whether this variable type can store the specified value. </returns>
         bool IsAbleToStore(object value);

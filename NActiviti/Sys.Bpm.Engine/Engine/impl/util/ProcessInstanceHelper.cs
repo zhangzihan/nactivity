@@ -14,6 +14,8 @@
  */
 namespace Sys.Workflow.Engine.Impl.Util
 {
+    using Spring.Expressions;
+    using Spring.Objects.Factory.Config;
     using Sys.Workflow.Bpmn.Models;
     using Sys.Workflow.Engine;
     using Sys.Workflow.Engine.Delegate.Events;
@@ -24,6 +26,9 @@ namespace Sys.Workflow.Engine.Impl.Util
     using Sys.Workflow.Engine.Repository;
     using Sys.Workflow.Engine.Runtime;
     using Sys.Workflow.Services.Api.Commands;
+    using System.Linq;
+    using System.Security.Principal;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// 
@@ -147,6 +152,21 @@ namespace Sys.Workflow.Engine.Impl.Util
                 processInstance.SetVariable(WorkflowVariable.GLOBAL_PROCESSINSTANCE_BUSINESSKEY_VARNAME, businessKey);
             }
 
+            var title = process.GetExtensionElementAttributeValue(WorkflowVariable.GLOBAL_PROCESSINSTANCE_TITLE);
+            if (string.IsNullOrWhiteSpace(title) == false)
+            {
+                var reg = new Regex(@"(\$\{)(.*?)(}{1,1})", RegexOptions.Multiline);
+                title = reg.Replace(title, (m) =>
+                {
+                    return ExpressionEvaluator.GetValue(variables, m.Groups[2].Value)?.ToString();
+                });
+                processInstance.SetVariable(WorkflowVariable.GLOBAL_PROCESSINSTANCE_TITLE, title);
+            }
+            else
+            {
+                processInstance.SetVariable(WorkflowVariable.GLOBAL_PROCESSINSTANCE_TITLE, process.Name);
+            }
+
             // Set the variables passed into the start command
             if (variables != null)
             {
@@ -165,7 +185,12 @@ namespace Sys.Workflow.Engine.Impl.Util
             }
 
             // Set processInstance name
-            if (processInstanceName is object)
+            if (title is object)
+            {
+                processInstance.Name = title;
+                commandContext.HistoryManager.RecordProcessInstanceNameChange(processInstance.Id, title);
+            }
+            else if (processInstanceName is object)
             {
                 processInstance.Name = processInstanceName;
                 commandContext.HistoryManager.RecordProcessInstanceNameChange(processInstance.Id, processInstanceName);

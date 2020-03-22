@@ -248,9 +248,9 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<TaskModel> GetTasks(Pageable pageable)
+        public virtual IPage<TaskModel> GetTasks(TaskQuery query)
         {
-            return pageableTaskService.GetTasks(pageable);
+            return pageableTaskService.GetTasks(query);
         }
 
         /// <summary>

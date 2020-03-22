@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
             return proxy.GetUsers(externalConnector.GetUserByDeptLeader, new
             {
                 idList = Condition.QueryCondition.Select(x => x.Id).ToArray()
-            }).GetAwaiter().GetResult();
+            }).ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
 }

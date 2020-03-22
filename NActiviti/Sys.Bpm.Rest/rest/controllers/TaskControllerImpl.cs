@@ -88,7 +88,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         [HttpPost]
         public virtual Task<Resources<TaskModel>> GetTasks(TaskQuery query)
         {
-            IPage<TaskModel> page = processEngine.GetTasks(query.Pageable);
+            IPage<TaskModel> page = processEngine.GetTasks(query);
 
             return Task.FromResult(new Resources<TaskModel>(page.GetContent(), page.GetTotalItems(), query.Pageable));
         }

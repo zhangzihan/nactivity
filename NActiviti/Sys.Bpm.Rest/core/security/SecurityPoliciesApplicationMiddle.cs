@@ -21,6 +21,7 @@ using Microsoft.Extensions.Options;
 using System.Text.RegularExpressions;
 using Sys.Net.Http;
 using Sys.Workflow.Engine.Impl.Identities;
+using Microsoft.Extensions.Logging;
 
 namespace Sys.Workflow.Cloud.Services.Core
 {
@@ -31,14 +32,17 @@ namespace Sys.Workflow.Cloud.Services.Core
     {
         private readonly RequestDelegate next;
         private readonly IOptions<SecurityPoliciesProviderOptions> options;
+        private readonly ILogger<SecurityPoliciesApplicationMiddle> logger;
 
         /// <summary>
         /// 
         /// </summary>
-        public SecurityPoliciesApplicationMiddle(RequestDelegate next, IOptions<SecurityPoliciesProviderOptions> options)
+        public SecurityPoliciesApplicationMiddle(RequestDelegate next, IOptions<SecurityPoliciesProviderOptions> options,
+            ILogger<SecurityPoliciesApplicationMiddle> logger)
         {
             this.next = next;
             this.options = options;
+            this.logger = logger;
         }
 
         /// <summary>

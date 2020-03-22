@@ -3,9 +3,9 @@
 <SmartSqlMapConfig xmlns="http://SmartSql.net/schemas/SmartSqlMapConfig.xsd">
   <Settings IsWatchConfigFile="true" IgnoreParameterCase="true" IsCacheEnabled="true" />
   <Database>
-    <DbProvider Name="MySqlClientFactory" ParameterPrefix="?" Type="MySql.Data.MySqlClient.MySqlClientFactory,MySqlConnector"/>
-    <!--
     <DbProvider Name="SqlClientFactory" ParameterPrefix="@" Type="System.Data.SqlClient.SqlClientFactory,System.Data.SqlClient"/>
+    <!--
+    <DbProvider Name="MySqlClientFactory" ParameterPrefix="?" Type="MySql.Data.MySqlClient.MySqlClientFactory,MySqlConnector"/>
     <DbProvider Name="NpgsqlFactory" ParameterPrefix="@" Type="Npgsql.NpgsqlFactory,Npgsql" />
     <DbProvider Name="H2ClientFactory" ParameterPrefix="?" Type="System.Data.H2.H2ClientFactory,H2Sharp"/>
     <DbProvider Name="OracleClientFactory" ParameterPrefix=":" Type="Oracle.ManagedDataAccess.Client.OracleClientFactory,Oracle.ManagedDataAccess"/>

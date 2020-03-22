@@ -99,13 +99,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
             try
             {
-                string s = JsonConvert.SerializeObject(value, Formatting.Indented,
-                    new JsonSerializerSettings
-                    {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                        TypeNameHandling = TypeNameHandling.All
-                    });
-                return Encoding.UTF8.GetBytes(s);
+                return Serializer.Serialize(value);
             }
             catch (Exception e)
             {
@@ -115,28 +109,9 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public virtual object Deserialize(byte[] bytes, IValueFields valueFields)
         {
-            string s = Encoding.UTF8.GetString(bytes);
-
             try
             {
-                return JsonConvert.DeserializeObject(s, new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    TypeNameHandling = TypeNameHandling.All
-                });
-            }
-            catch (JsonSerializationException e)
-            {
-                if (e.InnerException is FileNotFoundException)
-                {
-                    return JsonConvert.DeserializeObject(s, new JsonSerializerSettings
-                    {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                        TypeNameHandling = TypeNameHandling.None
-                    });
-                }
-
-                throw new ActivitiException("Couldn't deserialize object in variable '" + valueFields.Name + "'", e);
+                return Serializer.Deserialize(bytes);
             }
             catch (Exception e)
             {

@@ -8,5 +8,8 @@
   "boolValue": "1",
   "blobType": "byte[]",
   "top100": "'top 100 percent'",
-  "isNull": "'isnull'"
+  "isNull": "'isnull'",
+  "getDate": "'getdate()'",
+  "dateFormat": "'convert'",
+  "dateAdd": "'dateadd'"
 }

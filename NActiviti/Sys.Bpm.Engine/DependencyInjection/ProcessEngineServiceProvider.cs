@@ -5,7 +5,7 @@ using System;
 
 namespace Sys.Workflow
 {
-    static class ProcessEngineServiceProvider
+    public static class ProcessEngineServiceProvider
     {
         internal static IServiceProvider ServiceProvider { get; set; }
 

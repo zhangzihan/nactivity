@@ -82,10 +82,10 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
         /// <summary>
         /// 
         /// </summary>
-        public virtual IPage<TaskModel> GetTasks(Pageable pageable)
+        public virtual IPage<TaskModel> GetTasks(TaskQuery query)
         {
             string userId = authenticationWrapper.AuthenticatedUser.Id;
-            ITaskQuery query = taskService.CreateTaskQuery();
+            ITaskQuery taskQuery = taskService.CreateTaskQuery();
             if (userId is object)
             {
                 IList<string> groups = null;
@@ -93,11 +93,15 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
                 {
                     groups = userGroupLookupProxy.GetGroupsForCandidateUser(userId);
                 }
-                query = query.SetTaskCandidateOrAssigned(userId, groups);
+                taskQuery = taskQuery.SetTaskCandidateOrAssigned(userId, groups);
             }
-            sortApplier.ApplySort(query, pageable);
+            if (query.BusinessKey is object)
+            {
+                taskQuery.SetProcessInstanceBusinessKey(query.BusinessKey);
+            }
+            sortApplier.ApplySort(taskQuery, query.Pageable);
 
-            return pageRetriever.LoadPage<ITask, TaskModel, ITaskQuery>(taskService as ServiceImpl, query, pageable, taskConverter, (q, firstResult, pageSize) =>
+            return pageRetriever.LoadPage<ITask, TaskModel, ITaskQuery>(taskService as ServiceImpl, taskQuery, query.Pageable, taskConverter, (q, firstResult, pageSize) =>
             {
                 return new GetProcessInstanceTasksCmd(q, firstResult, pageSize);
             });

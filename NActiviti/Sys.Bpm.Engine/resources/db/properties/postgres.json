@@ -3,5 +3,7 @@
   "limitBefore": "",
   "limitBetween": "",
   "orderBy": "'order by #{orderByColumns}' ",
-  "isNull": "'COALESCE'"
+  "isNull": "'COALESCE'",
+  "getDate": "'now()'",
+  "dateFormat": "'to_char'"
 }

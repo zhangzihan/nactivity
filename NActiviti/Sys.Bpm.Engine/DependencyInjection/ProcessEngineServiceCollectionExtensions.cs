@@ -21,6 +21,7 @@ using Polly;
 using System.Net;
 using Polly.Extensions.Http;
 using Sys.Workflow.Polly;
+using Sys.Runtime.Serialization;
 
 namespace Sys.Workflow
 {
@@ -133,7 +134,8 @@ namespace Sys.Workflow
                 }
             });
 
-            builder.Services.AddSingleton<IIdGenerator>(sp => new GuidGenerator());
+            var idGenerator = new GuidGenerator();
+            builder.Services.AddSingleton<IIdGenerator>(sp => idGenerator);
 
             builder.Services.AddUserSession<DefaultUserSession>();
 
@@ -142,6 +144,8 @@ namespace Sys.Workflow
             builder.Services.AddTransient<IUserServiceProxy, DefaultUserServiceProxy>();
 
             builder.Services.AddTransient<IServiceWebApiHttpProxy, ServiceWebApiHttpProxy>();
+
+            builder.Services.AddTransient<ISerializableTypeSerializer, DefaultSerializableTypeSerializer>();
 
             builder.AddDataSource()
                 .AddDataBaseReader()

@@ -19,12 +19,25 @@ namespace Sys.Workflow.Engine.Impl
 
         public GuidGenerator()
         {
-
+            Task.Run(PrepareNextIds);
         }
 
         public string GetNextId()
         {
-            return NewId.NextGuid().ToString();
+            if (ids.Count < 5)
+            {
+                Task.Run(PrepareNextIds);
+            }
+
+            return ids.Dequeue();
+        }
+
+        private void PrepareNextIds()
+        {
+            for (var idx = 0; idx < 100; idx++)
+            {
+                ids.Enqueue(NewId.NextGuid().ToString());
+            }
         }
     }
 }

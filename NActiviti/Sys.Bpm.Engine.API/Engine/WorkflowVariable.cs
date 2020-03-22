@@ -28,6 +28,8 @@ namespace Sys.Workflow.Services.Api.Commands
         /// </summary>
         public const string GLOBAL_PROCESSINSTANCE_BUSINESSKEY_VARNAME = "process_businesskey";
 
+        public const string GLOBAL_PROCESSINSTANCE_TITLE = "process_title";
+
         /// <summary>
         /// 流程运行时业务主键变量名
         /// </summary>
@@ -145,6 +147,8 @@ namespace Sys.Workflow.Services.Api.Commands
         public bool IsSynchronized => idict.IsSynchronized;
 
         public object SyncRoot => idict.SyncRoot;
+
+        public IDictionary<string, object> Variables => workflowVariables;
 
         public object this[object key] { get => this[key.ToString()]; set => this[key.ToString()] = value; }
 

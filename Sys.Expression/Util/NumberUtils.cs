@@ -21,6 +21,7 @@
 #region Imports
 
 using System;
+using System.CodeDom;
 using System.ComponentModel;
 
 #endregion
@@ -74,6 +75,10 @@ namespace Spring.Util
         public static bool IsNumber(object number)
         {
             return (IsInteger(number) || IsDecimal(number));
+        }
+        public static decimal ToDecimal(object number)
+        {
+            return Convert.ToDecimal(number);
         }
 
         /// <summary>
@@ -502,21 +507,49 @@ namespace Spring.Util
 
             if (forceDecimal)
             {
-                return Convert.ToDecimal(m) / Convert.ToDecimal(n);
+                return ToDecimal(m) / ToDecimal(n);
             }
 
-            if (n is Int32)
-                return (Int32)m / (Int32)n;
-            else if (n is Int16)
-                return (Int16)m / (Int16)n;
+            if (n is Int32 || n is Int16)
+            {
+                var l = (int)m;
+                var r = (int)n;
+                if (l % r != 0)
+                {
+                    return (decimal)l / r;
+                }
+                return l / r;
+            }
             else if (n is Int64)
-                return (Int64)m / (Int64)n;
-            else if (n is UInt16)
-                return (UInt16)m / (UInt16)n;
-            else if (n is UInt32)
-                return (UInt32)m / (UInt32)n;
+            {
+                var l = (Int64)m;
+                var r = (Int64)n;
+                if (l % r != 0)
+                {
+                    return (decimal)l / r;
+                }
+                return l / r;
+            }
+            else if (n is UInt16 || n is UInt32)
+            {
+                var l = (uint)m;
+                var r = (uint)n;
+                if (l % r != 0)
+                {
+                    return (decimal)l / r;
+                }
+                return l / r;
+            }
             else if (n is UInt64)
-                return (UInt64)m / (UInt64)n;
+            {
+                var l = (UInt64)m;
+                var r = (UInt64)n;
+                if (l % r != 0)
+                {
+                    return (decimal)l / r;
+                }
+                return l / r;
+            }
             else if (n is Byte)
                 return (Byte)m / (Byte)n;
             else if (n is SByte)
