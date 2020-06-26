@@ -19,6 +19,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using Sys.Workflow;
     using System.Collections.Generic;
+    using System.Threading;
 
     /// 
     public class ValidateExecutionRelatedEntityCountCfgCmd : ICommand<object>

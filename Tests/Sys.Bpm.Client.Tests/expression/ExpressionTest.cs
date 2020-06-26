@@ -412,7 +412,7 @@ namespace Sys.Workflow.Client.Tests.Expression
                 r = right
             };
             var val = ExpressionEvaluator.GetValue(data, "l / r");
-            Assert.True(val.ToString() == (1 / 2).ToString());
+            Assert.True(val.ToString() == (1D / 2D).ToString());
         }
 
         [Theory]

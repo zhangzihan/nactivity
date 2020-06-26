@@ -1,33 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Sys.Bpm</RootNamespace>
-    <AssemblyName>Sys.Bpm.Rest.API</AssemblyName>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>bin</OutputPath>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <LangVersion>latest</LangVersion>
-    <DocumentationFile>bin\Sys.Bpm.Rest.API.xml</DocumentationFile>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Foundatio" Version="8.1.2126" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="7.1.0" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<RootNamespace>Sys.Bpm</RootNamespace>
+		<AssemblyName>Sys.Bpm.Rest.API</AssemblyName>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<OutputPath>bin</OutputPath>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<LangVersion>latest</LangVersion>
+		<DocumentationFile>bin\Sys.Bpm.Rest.API.xml</DocumentationFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Sys.Bpm.Engine.API\Sys.Bpm.Engine.API.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Foundatio" Version="9.1.1" />
+		<PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
+		<PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+		<PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.1.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="connectors\behavior\" />
-    <Folder Include="connectors\channel\" />
-    <Folder Include="connectors\config\" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Sys.Bpm.Engine.API\Sys.Bpm.Engine.API.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="connectors\behavior\" />
+		<Folder Include="connectors\channel\" />
+		<Folder Include="connectors\config\" />
+	</ItemGroup>
 
 </Project>

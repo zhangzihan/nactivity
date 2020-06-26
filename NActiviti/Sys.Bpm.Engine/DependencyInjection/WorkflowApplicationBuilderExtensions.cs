@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Sys.Workflow.Engine;
 using Sys.Workflow.Options;
@@ -13,7 +14,7 @@ namespace Sys.Workflow
     /// </summary>
     public static class WorkflowApplicationBuilderExtensions
     {
-        public static IProcessEngine UseProcessEngine(this IServiceProvider serviceProvider, IApplicationLifetime applicationLifetime, string processEngineName)
+        public static IProcessEngine UseProcessEngine(this IServiceProvider serviceProvider, string processEngineName)
         {
             ProcessEngineServiceProvider.ServiceProvider = serviceProvider;
 
@@ -37,7 +38,7 @@ namespace Sys.Workflow
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseProcessEngine(this IApplicationBuilder app, IApplicationLifetime lifetime)
+        public static IApplicationBuilder UseProcessEngine(this IApplicationBuilder app, IHostApplicationLifetime lifetime)
         {
             app.ApplicationServices.EnsureProcessEngineInit();
 
@@ -51,13 +52,19 @@ namespace Sys.Workflow
                     }
                 });
 
+            ApplicationStopping(app, lifetime);
+
+            return app;
+        }
+
+        private static void ApplicationStopping(IApplicationBuilder app, IHostApplicationLifetime lifetime)
+        {
             lifetime.ApplicationStopping.Register((context) =>
             {
                 IApplicationBuilder builder = context as IApplicationBuilder;
                 ProcessEngineFactory engineFact = builder.ApplicationServices.GetService<ProcessEngineFactory>();
                 engineFact.Destroy();
             }, app, true);
-            return app;
         }
 
         private static void EnsureProcessEngineInit(this IServiceProvider serviceProvider)

@@ -30,6 +30,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Xunit;
+using Microsoft.Extensions.Hosting;
 
 namespace Sys.Workflow.Test
 {
@@ -528,7 +529,7 @@ namespace Sys.Workflow.Test
             return ServiceProvider;
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime lifetime)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IHostApplicationLifetime lifetime)
         {
             app.UseProcessEngine(lifetime);
 

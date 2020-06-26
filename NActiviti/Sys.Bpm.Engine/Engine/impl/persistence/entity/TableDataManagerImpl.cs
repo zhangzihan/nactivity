@@ -305,7 +305,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
 
             }
-            catch (SqlException e)
+            catch (Exception e)
             {
                 throw new ActivitiException("Could not retrieve database metadata: " + e.Message);
             }

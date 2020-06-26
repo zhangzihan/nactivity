@@ -12,6 +12,7 @@ using BpmnWebTest.Hubs;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Sys.Workflow.Cloud.Services.Core;
+using Microsoft.Extensions.Hosting;
 
 namespace BpmnWebTest
 {
@@ -57,9 +58,12 @@ namespace BpmnWebTest
             //注入流程引擎
             services.AddProcessEngine(Configuration);
 
-            services.AddMvc()
-                .AddProcessEngineRestServices(Configuration)
-                .SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddMvc(opts =>
+            {
+                opts.EnableEndpointRouting = false;
+            })
+            .AddProcessEngineRestServices(Configuration)
+            .SetCompatibilityVersion(CompatibilityVersion.Latest);
             //.AddMetrics();
 
 #if DEBUG
@@ -77,7 +81,7 @@ namespace BpmnWebTest
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
             {
