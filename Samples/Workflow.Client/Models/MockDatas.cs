@@ -7,7 +7,7 @@ namespace Workflow.Client.Models
 {
     public class MockDatas
     {
-        public static readonly string TenantId = "cb79f3dd-e84e-49b0-95c2-0bdafc80f09d";
+        public static readonly string TenantId = "3b450000-00f0-5254-168b-08d6f4673e73";
 
         public static readonly IList<User> Users = new List<User>
         {
