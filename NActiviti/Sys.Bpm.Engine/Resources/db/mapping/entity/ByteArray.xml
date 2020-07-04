@@ -8,11 +8,11 @@
       <Result Property="id" Column="ID_" />
       <Result Property="revision" Column="REV_" />
       <Result Property="name" Column="NAME_" />
-      <Result Property="bytes" Column="BYTES_" TypeHandler="文件" />
+      <Result Property="bytes" Column="BYTES_" TypeHandler="二进制" />
     </ResultMap>
 
   <ParameterMap Id="byteArrayParameterMap">
-    <Parameter Property="bytes" TypeHandler="文件" />
+    <Parameter Property="bytes" TypeHandler="二进制" />
   </ParameterMap>
 
   <!-- BYTE ARRAY INSERT -->
@@ -30,7 +30,7 @@
 
 
   <ParameterMap Id="bulkByteArrayParameterMap">
-    <Parameter Property="(Items_)?bytes(_p\d)" TypeHandler="文件" />
+    <Parameter Property="(Items_)?bytes(_p\d)" TypeHandler="二进制" />
   </ParameterMap>
   
   <Insert Id="bulkInsertByteArray" ParameterMap="bulkByteArrayParameterMap">
