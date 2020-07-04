@@ -65,7 +65,7 @@ namespace SmartSql.DyRepository
         /// <summary>
         /// 构建仓储接口实现
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="interfaceType"></param>
         /// <returns></returns>
         public Type BuildRepositoryImpl(Type interfaceType)
         {

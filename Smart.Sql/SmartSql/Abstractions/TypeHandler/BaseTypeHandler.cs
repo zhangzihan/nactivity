@@ -5,39 +5,65 @@ using System.Text;
 
 namespace SmartSql.Abstractions.TypeHandler
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class BaseTypeHandler : ITypeHandler
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataReader"></param>
+        /// <param name="columnName"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
         public virtual object GetValue(IDataReader dataReader, string columnName, Type targetType)
         {
             int ordinal = dataReader.GetOrdinal(columnName);
             return GetValue(dataReader, ordinal, targetType);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataReader"></param>
+        /// <param name="columnIndex"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
         public virtual object GetValue(IDataReader dataReader, int columnIndex, Type targetType)
         {
-            var val = dataReader.GetValue(columnIndex);
-            if (val is DBNull)
+            if (dataReader.IsDBNull(columnIndex))
             {
                 return null;
             }
-            return val;
+            return dataReader.GetValue(columnIndex);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataParameter"></param>
+        /// <param name="parameterValue"></param>
         public virtual void SetParameter(IDataParameter dataParameter, object parameterValue)
         {
-            if (parameterValue == null)
+            dataParameter.Value = ToParameterValue(parameterValue);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public virtual object ToParameterValue(object value)
+        {
+            if (value is null)
             {
-                dataParameter.Value = DBNull.Value;
+                return DBNull.Value;
             }
             else
             {
-                dataParameter.Value = ToParameterValue(parameterValue);
+                return value;
             }
-        }
-
-        public virtual object ToParameterValue(object value)
-        {
-            return value;
         }
     }
 }

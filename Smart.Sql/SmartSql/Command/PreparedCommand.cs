@@ -176,36 +176,30 @@ namespace SmartSql.Command
         {
             if (parameters.Contains(paramName) == false)
             {
-                var cmdParameter = dbCommand.CreateParameter();
+                IDbDataParameter cmdParameter = dbCommand.CreateParameter();
                 cmdParameter.ParameterName = paramName;
-                if (paramVal == null)
+                if (typeHandler != null)
+                {
+                    typeHandler.SetParameter(cmdParameter, paramVal);
+                }
+                else if (paramVal == null)
                 {
                     cmdParameter.Value = DBNull.Value;
                 }
                 else
                 {
-                    if (typeHandler != null)
+                    //if (paramVal is Enum)
+                    //{
+                    //    paramVal = paramVal.GetHashCode();
+                    //}
+                    cmdParameter.Value = paramVal;
+                    try
                     {
-                        typeHandler.SetParameter(cmdParameter, paramVal);
+                        var dbtype = cmdParameter.DbType;
                     }
-                    else
+                    catch
                     {
-                        if (paramVal is Enum)
-                        {
-                            paramVal = paramVal.GetHashCode();
-                        }
-                        cmdParameter.Value = paramVal;
-                        if (paramVal != null)
-                        {
-                            try
-                            {
-                                var dbtype = cmdParameter.DbType;
-                            }
-                            catch
-                            {
-                                cmdParameter.Value = paramVal?.ToString();
-                            }
-                        }
+                        cmdParameter.Value = paramVal?.ToString();
                     }
                 }
                 dbCommand.Parameters.Add(cmdParameter);

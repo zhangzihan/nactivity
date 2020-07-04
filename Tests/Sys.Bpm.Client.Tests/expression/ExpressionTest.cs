@@ -563,5 +563,19 @@ namespace Sys.Workflow.Client.Tests.Expression
             var obj = ExpressionEvaluator.GetValue(data, $"l<r");
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Boolean表达式(bool constBoolean)
+        {
+            var data = new
+            {
+                nrOfActiveInstances = 1,
+            };
+            var obj = ExpressionEvaluator.GetValue(data, $"nrOfActiveInstances == 0 or({constBoolean.ToString().ToLower()})");
+
+            Assert.True(constBoolean ? obj.ToString() == "True" : obj.ToString() == "False");
+        }
+
     }
 }
