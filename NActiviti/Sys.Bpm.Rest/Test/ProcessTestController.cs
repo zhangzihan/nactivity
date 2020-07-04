@@ -34,7 +34,7 @@ namespace BpmnTest.Test
         }
 
         [HttpGet]
-        public void 创建自启动任务([FromServices]IProcessEngine processEngine)
+        public void 创建自启动任务([FromServices] IProcessEngine processEngine)
         {
 
             ProcessEngineConfigurationImpl configuration = processEngine.ProcessEngineConfiguration as ProcessEngineConfigurationImpl;
@@ -74,8 +74,7 @@ namespace BpmnTest.Test
         [HttpPost("注册")]
         public Task<ActionResult> 注册()
         {
-            ///调用系统注册逻辑,返回用户信息
-
+            //调用系统注册逻辑,返回用户信息
             //启动流程
             IProcessInstance instance = processEngine.RuntimeService.StartProcessInstanceByCmd(
                 new Sys.Workflow.Cloud.Services.Api.Commands.StartProcessInstanceCmd()

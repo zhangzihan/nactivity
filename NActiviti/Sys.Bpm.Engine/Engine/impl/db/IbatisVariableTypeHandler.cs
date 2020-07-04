@@ -21,7 +21,9 @@ namespace Sys.Workflow.Engine.Impl.DB
     using System.Data;
     using System.Data.Common;
 
+    /// <summary>
     /// 
+    /// </summary>
     public class IbatisVariableTypeHandler : ITypeHandler<IVariableType>, ITypeHandler
     {
         /// <summary>
@@ -127,7 +129,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// <returns></returns>
         public object ToParameterValue(object value)
         {
-            if (value == null)
+            if (value is null)
             {
                 return DBNull.Value;
             }

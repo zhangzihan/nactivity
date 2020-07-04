@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Sys.Workflow.Api.Runtime.Shared.Query;
 using Sys.Workflow.Bpmn.Models;
 using Sys.Workflow.Cloud.Services.Api.Commands;
@@ -10,18 +12,12 @@ using Sys.Workflow.Cloud.Services.Rest.Api.Resources;
 using Sys.Workflow.Cloud.Services.Rest.Assemblers;
 using Sys.Workflow.Engine;
 using Sys.Workflow.Engine.Runtime;
-using Sys.Workflow.Image.Exceptions;
 using Sys.Workflow.Hateoas;
-using Sys.Workflow.Exceptions;
-using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Authorization;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -108,7 +104,6 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
             return Task.FromResult<Resources<ProcessInstance>>(new Resources<ProcessInstance>(resources.Select(x => x.Content), instances.GetTotalItems(), query.Pageable.PageNo, query.Pageable.PageSize));
         }
-
 
         /// <inheritdoc />
         [HttpPost("start")]
@@ -207,7 +202,8 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         }
 
         /// <inheritdoc />
-        public Task<ProcessInstance> StartByActiviti(string processDefinitionId, string businessKey, string activityId, IDictionary<string, object> variables)
+        [HttpPost("activiti/{processDefifinitionId}/{activityId}/{businessKey?}")]
+        public Task<ProcessInstance> StartByActiviti(string processDefinitionId, string businessKey, string activityId, [FromBody] IDictionary<string, object> variables)
         {
             this.processEngine.ManagementService.ExecuteCommand<IProcessInstance>(new Engine.Impl.Cmd.StartProcessInstanceByActivityCmd(processDefinitionId, businessKey, activityId, variables, securityService.User.TenantId, null));
 

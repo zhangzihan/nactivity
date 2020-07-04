@@ -12,11 +12,11 @@ namespace Sys.Net.Http
 {
     public class DefaultUserSession : IUserSession
     {
-        private readonly HttpContext httpContext;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public DefaultUserSession(IHttpContextAccessor httpContextAccessor)
         {
-            httpContext = httpContextAccessor.HttpContext;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public IUserInfo CreateUser(string userId, string tenantId)
@@ -54,7 +54,7 @@ namespace Sys.Net.Http
 
         public Task<IUserInfo> GetUserAsync(HttpContext context)
         {
-            if (context.User != null)
+            if (context.User is object)
             {
                 return Task.FromResult(CreateUser(context.User));
             }

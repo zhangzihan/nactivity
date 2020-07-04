@@ -24,7 +24,7 @@ namespace Sys.Net.Http
     {
         private HttpClient httpClient;
         protected readonly IAccessTokenProvider accessTokenProvider;
-        protected readonly HttpContext httpContext;
+        protected readonly IHttpContextAccessor httpContextAccessor;
         protected readonly ILogger<DefaultHttpClientProxy> logger;
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Sys.Net.Http
             this.httpClient.Timeout = TimeSpan.FromMinutes(10);
             this.httpClient.DefaultRequestHeaders.ConnectionClose = false;
             this.accessTokenProvider = accessTokenProvider;
-            this.httpContext = httpContextAccessor.HttpContext;
+            this.httpContextAccessor = httpContextAccessor;
             this.logger = loggerFactory.CreateLogger<DefaultHttpClientProxy>();
         }
 
@@ -110,7 +110,7 @@ namespace Sys.Net.Http
 
             try
             {
-                await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContext).ConfigureAwait(false);
+                await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
                 HttpResponseMessage response = await httpClient.GetAsync(uri, cancellation).ConfigureAwait(false);
 
@@ -133,7 +133,7 @@ namespace Sys.Net.Http
 
             try
             {
-                await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContext).ConfigureAwait(false);
+                await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
                 _ = await httpClient.GetAsync(uri, cancellation).ConfigureAwait(false);
             }
@@ -166,7 +166,7 @@ namespace Sys.Net.Http
 
             try
             {
-                await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContext).ConfigureAwait(false);
+                await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
                 HttpResponseMessage response = await httpClient.PostAsync(uri, data == null ? null : new JsonContent(data), cancellation).ConfigureAwait(false);
 
@@ -189,7 +189,7 @@ namespace Sys.Net.Http
 
             try
             {
-                await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContext).ConfigureAwait(false);
+                await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
                 HttpResponseMessage response = await httpClient.PostAsync(uri, post, cancellation).ConfigureAwait(false);
 
@@ -212,7 +212,7 @@ namespace Sys.Net.Http
 
             try
             {
-                await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContext).ConfigureAwait(false);
+                await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
                 await httpClient.PostAsync(uri, data == null ? null : new JsonContent(data), cancellation).ConfigureAwait(false);
             }
@@ -233,7 +233,7 @@ namespace Sys.Net.Http
 
             try
             {
-                await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContext).ConfigureAwait(false);
+                await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
                 await httpClient.PostAsync(uri, post, cancellation).ConfigureAwait(false);
             }
@@ -249,14 +249,14 @@ namespace Sys.Net.Http
 
         public virtual async Task PutAsync(string uri, object data, CancellationToken cancellation)
         {
-            await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContext).ConfigureAwait(false);
+            await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
             await httpClient.PutAsync(uri, data == null ? null : new JsonContent(data), cancellation).ConfigureAwait(false);
         }
 
         public virtual async Task<T> PutAsync<T>(string uri, object data, CancellationToken cancellation)
         {
-            await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContext).ConfigureAwait(false);
+            await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
             HttpResponseMessage response = await httpClient.PutAsync(uri, data == null ? null : new JsonContent(data), cancellation).ConfigureAwait(false);
 
@@ -265,14 +265,14 @@ namespace Sys.Net.Http
 
         public virtual async Task DeleteAsync(string uri, CancellationToken cancellation)
         {
-            await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContext).ConfigureAwait(false);
+            await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
             await httpClient.DeleteAsync(uri, cancellation).ConfigureAwait(false);
         }
 
         public virtual async Task<T> DeleteAsync<T>(string uri, CancellationToken cancellation)
         {
-            await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContext).ConfigureAwait(false);
+            await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
             HttpResponseMessage response = await httpClient.DeleteAsync(uri, cancellation).ConfigureAwait(false);
 

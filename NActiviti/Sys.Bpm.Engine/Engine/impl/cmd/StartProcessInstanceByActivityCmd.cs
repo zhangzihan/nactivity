@@ -40,7 +40,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         private readonly string processInstanceName;
         private readonly bool startProcessInstance;
 
-        public StartProcessInstanceByActivityCmd(string processDefinitionId, string businessKey, string activityId, IDictionary<string, object> processVariables, string tenantId, IDictionary<string, object> transientVariables, bool startProcesInstance = true, string processInstanceName = null)
+        public StartProcessInstanceByActivityCmd(string processDefinitionId, string businessKey, string activityId, IDictionary<string, object> processVariables, string tenantId, IDictionary<string, object> transientVariables, bool startProcessInstance = true, string processInstanceName = null)
         {
             this.processDefinitionId = processDefinitionId;
             this.activityId = activityId;
@@ -48,8 +48,8 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             this.processVariables = processVariables;
             this.tenantId = tenantId;
             this.transientVariables = transientVariables;
-            this.processInstanceName = processInstanceName;
             this.startProcessInstance = startProcessInstance;
+            this.processInstanceName = processInstanceName;
         }
 
         public virtual IProcessInstance Execute(ICommandContext commandContext)

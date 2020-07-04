@@ -43,10 +43,12 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         /// <param name="terminateReason">终止原因</param>
         //[JsonConstructor]
         public TerminateTaskCmd([JsonProperty("TaskId")] string taskId,
-            [JsonProperty("Description")] string terminateReason) : this()
+            [JsonProperty("Description")] string terminateReason,
+            [JsonProperty("TerminateExecution")] bool terminateExecution) : this()
         {
             this.TaskId = taskId;
             this.TerminateReason = terminateReason;
+            this.TerminateExecution = terminateExecution;
         }
 
         /// <summary>
@@ -84,6 +86,14 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
 #endif
             }
             set => _terminateReason = value;
+        }
+
+        /// <summary>
+        /// 同时终止任务
+        /// </summary>
+        public virtual bool TerminateExecution
+        {
+            get; set;
         }
     }
 

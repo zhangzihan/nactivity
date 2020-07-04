@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
 using Sys.Net.Http;
 using Sys.Workflow;
@@ -17,14 +18,14 @@ namespace BpmnWebTest.Controllers
     [ApiController]
     public class WorkflowUsersController : ControllerBase
     {
-        private readonly IApplicationLifetime applicationLifetime;
+        private readonly IHostApplicationLifetime applicationLifetime;
         private readonly ExternalConnectorProvider externalConnectorProvider;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="applicationLifetime"></param>
-        public WorkflowUsersController(IApplicationLifetime applicationLifetime,
+        public WorkflowUsersController(IHostApplicationLifetime applicationLifetime,
             ExternalConnectorProvider externalConnectorProvider)
         {
             this.applicationLifetime = applicationLifetime;
