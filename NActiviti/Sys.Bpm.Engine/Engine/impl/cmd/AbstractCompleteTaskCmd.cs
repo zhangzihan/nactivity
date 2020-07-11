@@ -45,45 +45,49 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             lock (syncRoot)
             {
-                // Task complete logic
-
-                if (taskEntity.DelegationState.HasValue && taskEntity.DelegationState.Value == DelegationState.PENDING)
-                {
-                    throw new ActivitiException("A delegated task cannot be completed, but should be resolved instead.");
-                }
-
-                ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.ProcessEngineConfiguration;
-                processEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(taskEntity, BaseTaskListenerFields.EVENTNAME_COMPLETE);
-
-                IUserInfo user = Authentication.AuthenticatedUser;
-                if (user is object && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
-                {
-                    IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ProcessInstanceId);
-                    commandContext.IdentityLinkEntityManager.InvolveUser(processInstanceEntity, user.Id, IdentityLinkType.PARTICIPANT);
-                }
-
-                IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
-                if (eventDispatcher.Enabled)
-                {
-                    if (variables is null)
-                    {
-                        eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_COMPLETED, taskEntity));
-                    }
-                    else
-                    {
-                        eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityWithVariablesEvent(ActivitiEventType.TASK_COMPLETED, taskEntity, variables, localScope));
-                    }
-                }
-
-                commandContext.TaskEntityManager.DeleteTask(taskEntity, completeReason, false, false);
+                CompleteTask(commandContext, taskEntity, variables, localScope);
 
                 // Continue process (if not a standalone task)
                 if (taskEntity.ExecutionId is object)
                 {
                     IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ExecutionId);
-                    Context.Agenda.PlanTriggerExecutionOperation(executionEntity, variables);
+                    Context.Agenda.PlanTriggerExecutionOperation(executionEntity, variables ?? new Dictionary<string, object>());
                 }
             }
+        }
+
+        protected void CompleteTask(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
+        {
+            // Task complete logic
+            if (taskEntity.DelegationState.HasValue && taskEntity.DelegationState.Value == DelegationState.PENDING)
+            {
+                throw new ActivitiException("A delegated task cannot be completed, but should be resolved instead.");
+            }
+
+            ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.ProcessEngineConfiguration;
+            processEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(taskEntity, BaseTaskListenerFields.EVENTNAME_COMPLETE);
+
+            IUserInfo user = Authentication.AuthenticatedUser;
+            if (user is object && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
+            {
+                IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ProcessInstanceId);
+                commandContext.IdentityLinkEntityManager.InvolveUser(processInstanceEntity, user.Id, IdentityLinkType.PARTICIPANT);
+            }
+
+            IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
+            if (eventDispatcher.Enabled)
+            {
+                if (variables is null)
+                {
+                    eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_COMPLETED, taskEntity));
+                }
+                else
+                {
+                    eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityWithVariablesEvent(ActivitiEventType.TASK_COMPLETED, taskEntity, variables, localScope));
+                }
+            }
+
+            commandContext.TaskEntityManager.DeleteTask(taskEntity, completeReason, false, false);
         }
     }
 }

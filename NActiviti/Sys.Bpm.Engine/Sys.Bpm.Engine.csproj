@@ -6,7 +6,6 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <OutputPath>bin</OutputPath>
-    <LangVersion>latest</LangVersion>
     <Version>1.0.0.2</Version>
     <DocumentationFile>bin\Sys.Bpm.Engine.xml</DocumentationFile>
     <Product>Sys.Bpm.Engine</Product>

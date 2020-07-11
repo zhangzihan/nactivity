@@ -16,12 +16,12 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         private readonly string businessKey;
         private readonly ILogger<TerminateProcessInstanceCmd> logger = ProcessEngineServiceProvider.LoggerService<TerminateProcessInstanceCmd>();
 
-        public TerminateProcessInstanceCmd(string processInstanceId, string businessKey, string reason, IDictionary<string, object> variables = null)
+        public TerminateProcessInstanceCmd(string processInstanceId, string businessKey, string reason, IDictionary<string, object> variables)
         {
             this.processInstanceId = processInstanceId;
             this.businessKey = businessKey;
             this.reason = reason;
-            this.variables = variables;
+            this.variables = variables ?? new Dictionary<string, object>();
         }
 
         public bool Execute(ICommandContext commandContext)

@@ -19,7 +19,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
     /// <summary>
     /// 根据人员id查找直接汇报对象
     /// </summary>
-    [GetBookmarkDescriptor("GetDirectReporter")]
+    [GetBookmarkDescriptor(RequestUserCategory.GETUSER_DIRECTREPOT)]
     public class GetDirectReporterBookmarkRuleCmd : BaseGetBookmarkRule
     {
         private readonly ExternalConnectorProvider externalConnector;
@@ -34,9 +34,10 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         {
             IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
-            return proxy.GetUsers(externalConnector.GetUserByDirectReporter, new
+            return proxy.GetUsers(externalConnector.GetUserByDirectReporter, new RequestUserParameter
             {
-                idList = Condition.QueryCondition.Select(x => x.Id).ToArray()
+                IdList = Condition.QueryCondition.Select(x => x.Id).ToArray(),
+                Category = RequestUserCategory.GETUSER_DIRECTREPOT
             }).ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }

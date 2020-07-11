@@ -20,7 +20,12 @@ namespace Sys.Workflow.Engine.Impl
     /// 
     public interface ICondition
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sequenceFlowId"></param>
+        /// <param name="execution"></param>
+        /// <returns></returns>
         bool Evaluate(string sequenceFlowId, IExecutionEntity execution);
     }
 

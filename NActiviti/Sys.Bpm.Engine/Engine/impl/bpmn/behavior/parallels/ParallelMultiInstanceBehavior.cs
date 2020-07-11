@@ -107,6 +107,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             Leave(execution, null);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="signalData"></param>
         public override void Leave(IExecutionEntity execution, object signalData)
         {
             lock (syncRoot)

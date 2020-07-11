@@ -16,49 +16,73 @@ namespace Sys.Workflow.Engine.Impl.Scripting
 {
     using Sys.Workflow.Engine.Delegate;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
+    using System;
     using System.Collections.Concurrent;
 
+    /// <summary>
     /// 
-    /// 
-    /// 
-    public class ScriptingEngines
+    /// </summary>
+    class ScriptingEngines : IScriptingEngines
     {
-        public const string DEFAULT_SCRIPTING_LANGUAGE = "C#";
-
         //private readonly ScriptEngineManager scriptEngineManager;
         //protected internal ScriptBindingsFactory scriptBindingsFactory;
 
         protected internal bool cacheScriptingEngines = true;
         protected static internal ConcurrentDictionary<string, dynamic> cachedEngines;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ScriptingEngines()
         {
             cachedEngines = new ConcurrentDictionary<string, dynamic>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="script"></param>
+        /// <param name="execution"></param>
+        /// <returns></returns>
         public virtual object Evaluate(string script, IExecutionEntity execution)
         {
             return Evaluate(script, execution, CreateBindings(execution));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool CacheScriptingEngines
         {
-            set
-            {
-                this.cacheScriptingEngines = value;
-            }
             get
             {
                 return cacheScriptingEngines;
             }
+            set
+            {
+                this.cacheScriptingEngines = value;
+            }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="script"></param>
+        /// <param name="execution"></param>
+        /// <param name="bindings"></param>
+        /// <returns></returns>
         protected virtual object Evaluate(string script, IExecutionEntity execution, IDictionary<string, object> bindings)
         {
             //CSScriptLib.CSScript.RoslynEvaluator.
-            return null;
+            //return null;
+            throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableScope"></param>
+        /// <returns></returns>
         protected internal virtual IDictionary<string, object> CreateBindings(IVariableScope variableScope)
         {
             if (variableScope == null)

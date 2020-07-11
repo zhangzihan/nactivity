@@ -39,7 +39,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Inserted
         {
             get
@@ -52,7 +54,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Updated
         {
             get
@@ -65,7 +69,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Deleted
         {
             get

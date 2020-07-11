@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,104 +29,104 @@ using System.Reflection;
 
 namespace Spring.Util.Generic
 {
-	/// <summary>
-	/// Miscellaneous generic collection utility methods.
-	/// </summary>
-	/// <remarks>
-	/// Mainly for internal use within the framework.
-	/// </remarks>
-	/// <author>Mark Pollack (.NET)</author>
-	public sealed class CollectionUtils
-	{
-		#region Methods
+    /// <summary>
+    /// Miscellaneous generic collection utility methods.
+    /// </summary>
+    /// <remarks>
+    /// Mainly for internal use within the framework.
+    /// </remarks>
+    /// <author>Mark Pollack (.NET)</author>
+    public sealed class CollectionUtils
+    {
+        #region Methods
 
-		/// <summary>
-		/// Determine whether a given collection only contains
-		/// a single unique object
-		/// </summary>
-		/// <param name="coll"></param>
-		/// <returns></returns>
-		public static bool HasUniqueObject<T>(ICollection<T> coll)
-		{
-			if (coll.Count == 0)
-			{
-				return false;
-			}
-			object candidate = null;
-			foreach (object elem in coll)
-			{
-				if (candidate == null)
-				{
-					candidate = elem;
-				}
-				else if (candidate != elem)
-				{
-					return false;
-				}
-			}
-			return true;
-		}
+        /// <summary>
+        /// Determine whether a given collection only contains
+        /// a single unique object
+        /// </summary>
+        /// <param name="coll"></param>
+        /// <returns></returns>
+        public static bool HasUniqueObject<T>(ICollection<T> coll)
+        {
+            if (coll.Count == 0)
+            {
+                return false;
+            }
+            object candidate = null;
+            foreach (object elem in coll)
+            {
+                if (candidate == null)
+                {
+                    candidate = elem;
+                }
+                else if (candidate != elem)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-		/// <summary>
-		/// Determines whether the <paramref name="collection"/> contains the specified <paramref name="element"/>.
-		/// </summary>
-		/// <param name="collection">The collection to check.</param>
-		/// <param name="element">The object to locate in the collection.</param>
-		/// <returns><see lang="true"/> if the element is in the collection, <see lang="false"/> otherwise.</returns>
-		public static bool Contains<T>(ICollection<T> collection, Object element)
-		{
-			if (collection == null)
-			{
-				throw new ArgumentNullException("Collection cannot be null.");
-			}
-			MethodInfo method;
-			method = collection.GetType().GetMethod("contains", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
-			if (null == method)
-			{
-				throw new InvalidOperationException("Collection type " + collection.GetType() + " does not implement a Contains() method.");
-			}
-			return (bool) method.Invoke(collection, new Object[] {element});
-		}
+        /// <summary>
+        /// Determines whether the <paramref name="collection"/> contains the specified <paramref name="element"/>.
+        /// </summary>
+        /// <param name="collection">The collection to check.</param>
+        /// <param name="element">The object to locate in the collection.</param>
+        /// <returns><see lang="true"/> if the element is in the collection, <see lang="false"/> otherwise.</returns>
+        public static bool Contains<T>(ICollection<T> collection, object element)
+        {
+            if (collection == null)
+            {
+                throw new ArgumentNullException("Collection cannot be null.");
+            }
+            MethodInfo method;
+            method = collection.GetType().GetMethod("contains", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
+            if (null == method)
+            {
+                throw new InvalidOperationException("Collection type " + collection.GetType() + " does not implement a Contains() method.");
+            }
+            return Convert.ToBoolean(method.Invoke(collection, new object[] { element }));
+        }
 
-		/// <summary>
-		/// Determines whether the collection contains all the elements in the specified collection.
-		/// </summary>
-		/// <param name="targetCollection">The collection to check.</param>
-		/// <param name="sourceCollection">Collection whose elements would be checked for containment.</param>
-		/// <returns>true if the target collection contains all the elements of the specified collection.</returns>
-		public static bool ContainsAll<T>(ICollection<T> targetCollection, ICollection<T> sourceCollection)
-		{
-			if (targetCollection == null || sourceCollection == null)
-			{
-				throw new ArgumentNullException("Collection cannot be null.");
-			}
-			if ( sourceCollection.Count == 0 && targetCollection.Count > 1 )
-				return true;
+        /// <summary>
+        /// Determines whether the collection contains all the elements in the specified collection.
+        /// </summary>
+        /// <param name="targetCollection">The collection to check.</param>
+        /// <param name="sourceCollection">Collection whose elements would be checked for containment.</param>
+        /// <returns>true if the target collection contains all the elements of the specified collection.</returns>
+        public static bool ContainsAll<T>(ICollection<T> targetCollection, ICollection<T> sourceCollection)
+        {
+            if (targetCollection == null || sourceCollection == null)
+            {
+                throw new ArgumentNullException("Collection cannot be null.");
+            }
+            if (sourceCollection.Count == 0 && targetCollection.Count > 1)
+                return true;
 
-			IEnumerator sourceCollectionEnumerator = sourceCollection.GetEnumerator();
+            IEnumerator sourceCollectionEnumerator = sourceCollection.GetEnumerator();
 
-			bool contains = false;
+            bool contains = false;
 
-			MethodInfo method;
-			method = targetCollection.GetType().GetMethod("containsAll", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
+            MethodInfo method;
+            method = targetCollection.GetType().GetMethod("containsAll", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
 
-			if (method != null)
-				contains = (bool) method.Invoke(targetCollection, new Object[] {sourceCollection});
-			else
-			{
-				method = targetCollection.GetType().GetMethod("Contains", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
-				if (method == null)
-				{
-					throw new InvalidOperationException("Target collection does not implment a Contains() or ContainsAll() method.");
-				}
-				while (sourceCollectionEnumerator.MoveNext())
-				{
-					if ((contains = (bool) method.Invoke(targetCollection, new Object[] {sourceCollectionEnumerator.Current})) == false)
-						break;
-				}
-			}
-			return contains;
-		}
+            if (method != null)
+                contains = Convert.ToBoolean(method.Invoke(targetCollection, new object[] { sourceCollection }));
+            else
+            {
+                method = targetCollection.GetType().GetMethod("Contains", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
+                if (method == null)
+                {
+                    throw new InvalidOperationException("Target collection does not implment a Contains() or ContainsAll() method.");
+                }
+                while (sourceCollectionEnumerator.MoveNext())
+                {
+                    if ((contains = Convert.ToBoolean(method.Invoke(targetCollection, new object[] { sourceCollectionEnumerator.Current }))) == false)
+                        break;
+                }
+            }
+            return contains;
+        }
         /// <summary>
 		/// Removes all the elements from the target collection that are contained in the source collection.
 		/// </summary>
@@ -147,10 +147,10 @@ namespace Spring.Util.Generic
             {
                 if (targetCollection.Contains(element))
                 {
-                    targetCollection.Remove(element); 
+                    targetCollection.Remove(element);
                 }
             }
         }
-	    #endregion
-	}
+        #endregion
+    }
 }

@@ -28,22 +28,35 @@ namespace Sys.Workflow.Engine.Impl.EL
 
         private const long serialVersionUID = 1L;
         private readonly object value;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         public FixedValue(object value)
         {
             this.value = value;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableScope"></param>
+        /// <returns></returns>
         public virtual object GetValue(IVariableScope variableScope)
         {
             return value;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="variableScope"></param>
         public virtual void SetValue(object value, IVariableScope variableScope)
         {
             throw new ActivitiException("Cannot change fixed value");
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ExpressionText
         {
             get

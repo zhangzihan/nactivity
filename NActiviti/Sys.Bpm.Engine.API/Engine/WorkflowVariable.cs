@@ -22,6 +22,8 @@ namespace Sys.Workflow.Services.Api.Commands
         public const string GLOBAL_WORKFLOWDATA_VARIABLE = "流程数据";
         public const string GLOBAL_APPROVALED_COMMENTS = "审批意见";
         public const string GLOBAL_APPROVALED_COUNTERSIGN = "会签审批人";
+        public const string GLOBAL_TERMINATE_TASK_VARNAME = "FORCE_TERMINATE_TASK";
+        public const string GLOBAL_TERMINATE_PROCESS_VARNAME = "FORCE_TERMINATE_PROCESS";
 
         /// <summary>
         /// 流程实例业务主键变量名
@@ -103,11 +105,19 @@ namespace Sys.Workflow.Services.Api.Commands
 
         public WorkflowVariable(IDictionary<string, object> @params)
         {
-            workflowVariables = new Dictionary<string, object>(@params ?? new Dictionary<string, object>(), StringComparer.OrdinalIgnoreCase);
+            workflowVariables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
-            this.Approvaled = false;
+            this.Approvaled = true;
             this.WorkflowData = null;
             this.BusinessKey = null;
+
+            if (@params is object)
+            {
+                foreach (var key in @params.Keys)
+                {
+                    this[key] = @params[key];
+                }
+            }
 
             idict = workflowVariables;
         }

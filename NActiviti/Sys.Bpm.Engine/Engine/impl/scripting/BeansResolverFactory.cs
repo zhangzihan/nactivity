@@ -16,23 +16,43 @@ namespace Sys.Workflow.Engine.Impl.Scripting
     using Sys.Workflow.Engine.Delegate;
     using Sys.Workflow.Engine.Impl.Cfg;
 
+    /// <summary>
     /// 
+    /// </summary>
     public class BeansResolverFactory : IResolverFactory, IResolver
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processEngineConfiguration"></param>
+        /// <param name="variableScope"></param>
+        /// <returns></returns>
         public virtual IResolver CreateResolver(ProcessEngineConfigurationImpl processEngineConfiguration, IVariableScope variableScope)
         {
             this.processEngineConfiguration = processEngineConfiguration;
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public virtual bool ContainsKey(object key)
         {
             return processEngineConfiguration.Beans.ContainsKey(key);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public virtual object Get(object key)
         {
             return processEngineConfiguration.Beans[key];

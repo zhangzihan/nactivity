@@ -27,28 +27,37 @@ namespace Sys.Workflow.Engine.Impl.EL
     [Serializable]
     public class UelExpressionCondition : ICondition
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExpression expression;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
         public UelExpressionCondition(IExpression expression)
         {
             this.expression = expression;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sequenceFlowId"></param>
+        /// <param name="execution"></param>
+        /// <returns></returns>
         public virtual bool Evaluate(string sequenceFlowId, IExecutionEntity execution)
         {
             object result = expression.GetValue(execution);
 
-            if (result == null)
+            if (result is null)
             {
                 throw new ActivitiException("condition expression returns null (sequenceFlowId: " + sequenceFlowId + " execution: " + execution + ")");
             }
-            if (!(result is bool?))
+            if (!(result is bool))
             {
                 throw new ActivitiException("condition expression returns non-Boolean (sequenceFlowId: " + sequenceFlowId + " execution: " + execution + "): " + result + " (" + result.GetType().FullName + ")");
             }
-            return ((bool?)result).Value;
+            return Convert.ToBoolean(result);
         }
-
     }
-
 }

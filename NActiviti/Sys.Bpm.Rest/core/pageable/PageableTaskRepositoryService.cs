@@ -95,9 +95,9 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
                 }
                 taskQuery = taskQuery.SetTaskCandidateOrAssigned(userId, groups);
             }
-            if (query.BusinessKey is object)
+            if (query.ProcessInstanceBusinessKey is object)
             {
-                taskQuery.SetProcessInstanceBusinessKey(query.BusinessKey);
+                taskQuery.SetProcessInstanceBusinessKey(query.ProcessInstanceBusinessKey);
             }
             sortApplier.ApplySort(taskQuery, query.Pageable);
 

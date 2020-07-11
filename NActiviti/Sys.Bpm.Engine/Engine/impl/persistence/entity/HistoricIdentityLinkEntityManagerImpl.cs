@@ -71,6 +71,16 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         }
 
+        public override IHistoricIdentityLinkEntity Update(IHistoricIdentityLinkEntity entity)
+        {
+            return base.Update(entity);
+        }
+
+        public override IHistoricIdentityLinkEntity Update(IHistoricIdentityLinkEntity entity, bool fireUpdateEvent)
+        {
+            return base.Update(entity, fireUpdateEvent);
+        }
+
         public virtual IHistoricIdentityLinkDataManager HistoricIdentityLinkDataManager
         {
             get

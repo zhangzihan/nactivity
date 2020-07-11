@@ -13,18 +13,26 @@
 
 namespace Sys.Workflow.Engine.Impl.EL
 {
+    /// <summary>
     /// 
-    /// 
+    /// </summary>
     public class ActivitiElContext : ELContext
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ELResolver elResolver;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="elResolver"></param>
         public ActivitiElContext(ELResolver elResolver)
         {
             this.elResolver = elResolver;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override ELResolver ELResolver
         {
             get
@@ -32,7 +40,9 @@ namespace Sys.Workflow.Engine.Impl.EL
                 return elResolver;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override FunctionMapper FunctionMapper
         {
             get
@@ -40,7 +50,9 @@ namespace Sys.Workflow.Engine.Impl.EL
                 return null;// new ActivitiFunctionMapper();
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override VariableMapper VariableMapper
         {
             get

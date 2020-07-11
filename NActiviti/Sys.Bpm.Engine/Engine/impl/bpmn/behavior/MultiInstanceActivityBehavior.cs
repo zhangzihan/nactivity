@@ -27,6 +27,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
     using Sys.Workflow.Engine.Impl.Util;
     using Sys.Workflow;
     using System.Collections;
+    using Sys.Workflow.Services.Api.Commands;
 
     /// <summary>
     /// Implementation of the multi-instance functionality as described in the BPMN 2.0 spec.
@@ -45,7 +46,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         private static readonly ILogger<MultiInstanceActivityBehavior> log = ProcessEngineServiceProvider.LoggerService<MultiInstanceActivityBehavior>();
 
         private const long serialVersionUID = 1L;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected IMultiinstanceCompletedPolicy completedPolicy;
 
         // Variable names for outer instance(as described in spec)
@@ -54,14 +57,38 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         internal static readonly string NUMBER_OF_COMPLETED_INSTANCES = "nrOfCompletedInstances";
 
         // Instance members
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal Activity activity;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal AbstractBpmnActivityBehavior innerActivityBehavior;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExpression loopCardinalityExpression;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExpression completionConditionExpression;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExpression collectionExpression;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string collectionVariable;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string collectionElementVariable;
         // default variable name for loop counter for inner instances (as described in the spec)
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string collectionElementIndexVariable = "loopCounter";
 
         /// <param name="innerActivityBehavior">
@@ -74,7 +101,10 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             InnerActivityBehavior = innerActivityBehavior;
             completedPolicy = new DefaultMultiInstanceCompletedPolicy();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
         public override void Execute(IExecutionEntity execution)
         {
             if (!GetLocalLoopVariable(execution, CollectionElementIndexVariable).HasValue)
@@ -102,9 +132,17 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 innerActivityBehavior.Execute(execution);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <returns></returns>
         protected internal abstract int CreateInstances(IExecutionEntity execution);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="flowElement"></param>
+        /// <param name="execution"></param>
         protected internal virtual void ExecuteCompensationBoundaryEvents(FlowElement flowElement, IExecutionEntity execution)
         {
             //Execute compensation boundary events
@@ -133,7 +171,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processDefinitionId"></param>
+        /// <param name="flowElement"></param>
+        /// <returns></returns>
         protected internal override ICollection<BoundaryEvent> FindBoundaryEventsForFlowNode(string processDefinitionId, FlowElement flowElement)
         {
             Process process = GetProcessDefinition(processDefinitionId);
@@ -150,19 +193,34 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
             return results;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processDefinitionId"></param>
+        /// <returns></returns>
         protected internal override Process GetProcessDefinition(string processDefinitionId)
         {
             return ProcessDefinitionUtil.GetProcess(processDefinitionId);
         }
 
         // Intercepts signals, and delegates it to the wrapped {@link ActivityBehavior}.
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="signalName"></param>
+        /// <param name="signalData"></param>
+        /// <param name="throwError"></param>
         public override void Trigger(IExecutionEntity execution, string signalName, object signalData, bool throwError = true)
         {
             innerActivityBehavior.Trigger(execution, signalName, signalData, throwError);
         }
 
         // required for supporting embedded subprocesses
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
         public virtual void LastExecutionEnded(IExecutionEntity execution)
         {
             //ScopeUtil.createEventScopeExecution((ExecutionEntity) execution);
@@ -170,11 +228,20 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         }
 
         // required for supporting external subprocesses
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="subProcessInstance"></param>
         public virtual void Completing(IExecutionEntity execution, IExecutionEntity subProcessInstance)
         {
         }
 
         // required for supporting external subprocesses
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
         public virtual void Completed(IExecutionEntity execution)
         {
             Leave(execution);
@@ -182,6 +249,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         // Helpers
         // //////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <returns></returns>
         protected internal virtual int ResolveNrOfInstances(IExecutionEntity execution)
         {
             if (loopCardinalityExpression != null)
@@ -200,7 +272,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 throw new ActivitiIllegalArgumentException("Couldn't resolve collection expression nor variable reference");
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="loopCounter"></param>
         protected internal virtual void ExecuteOriginalBehavior(IExecutionEntity execution, int loopCounter)
         {
             if (UsesCollection() && collectionElementVariable is object)
@@ -225,7 +301,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             execution.CurrentFlowElement = activity;
             Context.Agenda.PlanContinueMultiInstanceOperation(execution);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <returns></returns>
         protected internal virtual ICollection ResolveAndValidateCollection(IExecutionEntity execution)
         {
             object obj = ResolveCollection(execution);
@@ -256,7 +336,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
             return (ICollection)obj;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <returns></returns>
         protected internal virtual object ResolveCollection(IExecutionEntity execution)
         {
             if (collectionExpression != null)
@@ -269,17 +353,28 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
             return null;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected internal virtual bool UsesCollection()
         {
             return collectionExpression is object || collectionVariable is object;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="flowNode"></param>
+        /// <returns></returns>
         protected internal virtual bool IsExtraScopeNeeded(FlowNode flowNode)
         {
             return flowNode.SubProcess is object;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <returns></returns>
         protected internal virtual int ResolveLoopCardinality(IExecutionEntity execution)
         {
             // Using Number since expr can evaluate to eg. Long (which is also the default for Juel)
@@ -299,16 +394,34 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="signalData"></param>
+        /// <returns></returns>
         protected internal virtual bool CompletionConditionSatisfied(IExecutionEntity execution, object signalData)
         {
             return completedPolicy.CompletionConditionSatisfied(execution, this, signalData);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="variableName"></param>
+        /// <param name="value"></param>
         protected internal virtual void SetLoopVariable(IExecutionEntity execution, string variableName, object value)
         {
             execution.SetVariableLocal(variableName, value);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="variableName"></param>
+        /// <returns></returns>
         protected internal virtual int? GetLoopVariable(IExecutionEntity execution, string variableName)
         {
             object value = execution.GetVariableLocal(variableName);
@@ -320,7 +433,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
             return (int?)value;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="variableName"></param>
+        /// <returns></returns>
         protected internal virtual int? GetLocalLoopVariable(IExecutionEntity execution, string variableName)
         {
             object value = execution.GetVariableLocal(variableName);
@@ -331,7 +449,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             return (int?)value;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="variableName"></param>
         protected internal virtual void RemoveLocalLoopVariable(IExecutionEntity execution, string variableName)
         {
             execution.RemoveVariableLocal(variableName);
@@ -345,7 +467,15 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             Context.CommandContext.ProcessEngineConfiguration.ListenerNotificationHelper
                 .ExecuteExecutionListeners(activity, execution, BaseExecutionListenerFields.EVENTNAME_END);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="custom"></param>
+        /// <param name="loopCounter"></param>
+        /// <param name="nrOfCompletedInstances"></param>
+        /// <param name="nrOfActiveInstances"></param>
+        /// <param name="nrOfInstances"></param>
         protected internal virtual void LogLoopDetails(IExecutionEntity execution, string custom, int loopCounter, int nrOfCompletedInstances, int nrOfActiveInstances, int nrOfInstances)
         {
             if (log.IsEnabled(LogLevel.Debug))
@@ -353,7 +483,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 log.LogDebug($"Multi-instance '{(execution.CurrentFlowElement != null ? execution.CurrentFlowElement.Id : "")}' {custom}. Details: loopCounter={loopCounter}, nrOrCompletedInstances={nrOfCompletedInstances},nrOfActiveInstances={nrOfActiveInstances},nrOfInstances={nrOfInstances}");
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntity"></param>
+        /// <returns></returns>
         protected internal virtual IExecutionEntity GetMultiInstanceRootExecution(IExecutionEntity executionEntity)
         {
             return Context.ProcessEngineConfiguration.CommandExecutor.Execute(new GetMultiInstanceRootExecutionCmd(executionEntity));
@@ -361,7 +495,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         // Getters and Setters
         // ///////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExpression LoopCardinalityExpression
         {
             get
@@ -374,7 +510,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExpression CompletionConditionExpression
         {
             get
@@ -387,7 +525,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExpression CollectionExpression
         {
             get
@@ -400,7 +540,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string CollectionVariable
         {
             get
@@ -413,7 +555,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string CollectionElementVariable
         {
             get
@@ -426,7 +570,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string CollectionElementIndexVariable
         {
             get
@@ -439,7 +585,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual AbstractBpmnActivityBehavior InnerActivityBehavior
         {
             set

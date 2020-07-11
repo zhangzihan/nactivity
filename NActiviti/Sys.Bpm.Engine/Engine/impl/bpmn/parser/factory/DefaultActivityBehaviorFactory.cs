@@ -327,6 +327,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
             switch (assigneeType?.Value?.ToLower())
             {
                 case AssigneeType.SINGLE:
+                case AssigneeType.CUSTOM:
                 default:
                     return new ParallelMultiInstanceBehavior(activity, innerActivityBehavior);
                 case AssigneeType.SINGLE_PASS:

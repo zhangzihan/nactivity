@@ -300,7 +300,7 @@ namespace Sys.Workflow.Engine
         /// <param name="processInstanceId"></param>
         /// <param name="busineeKey"></param>
         /// <param name="reason"></param>
-        void TerminateProcessInstance(string processInstanceId, string busineeKey, string reason);
+        void TerminateProcessInstance(string processInstanceId, string busineeKey, string reason, IDictionary<string, object> variables);
 
 
         /// <summary>

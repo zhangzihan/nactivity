@@ -17,34 +17,44 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 {
     using Sys.Workflow.Engine.Delegate;
 
+    /// <summary>
     /// 
+    /// </summary>
     [Serializable]
-	public class ExpressionTaskListener : ITaskListener
-	{
+    public class ExpressionTaskListener : ITaskListener
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal IExpression expression;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        public ExpressionTaskListener(IExpression expression)
+        {
+            this.expression = expression;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="delegateTask"></param>
+        public virtual void Notify(IDelegateTask delegateTask)
+        {
+            expression.GetValue(delegateTask);
+        }
 
-	  protected internal IExpression expression;
+        /// <summary>
+        /// returns the expression text for this task listener. Comes in handy if you want to check which listeners you already have.
+        /// </summary>
+        public virtual string ExpressionText
+        {
+            get
+            {
+                return expression.ExpressionText;
+            }
+        }
 
-	  public ExpressionTaskListener(IExpression expression)
-	  {
-		this.expression = expression;
-	  }
-
-	  public virtual void Notify(IDelegateTask delegateTask)
-	  {
-		expression.GetValue(delegateTask);
-	  }
-
-	  /// <summary>
-	  /// returns the expression text for this task listener. Comes in handy if you want to check which listeners you already have.
-	  /// </summary>
-	  public virtual string ExpressionText
-	  {
-		  get
-		  {
-			return expression.ExpressionText;
-		  }
-	  }
-
-	}
+    }
 
 }

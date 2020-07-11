@@ -19,7 +19,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
     /// <summary>
     /// 获取岗位下所有用户信息
     /// </summary>
-    [GetBookmarkDescriptor("GetDuty")]
+    [GetBookmarkDescriptor(RequestUserCategory.GETUSERS_DUTY)]
     public class GetDutyBookmarkRuleCmd : BaseGetBookmarkRule
     {
         private readonly ExternalConnectorProvider externalConnector;
@@ -33,9 +33,10 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         {
             IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
-            return proxy.GetUsers(externalConnector.GetUserByDuty, new
+            return proxy.GetUsers(externalConnector.GetUserByDuty, new RequestUserParameter
             {
-                idList = Condition.QueryCondition.Select(x => x.Id).ToArray()
+                IdList = Condition.QueryCondition.Select(x => x.Name).ToArray(),
+                Category = RequestUserCategory.GETUSERS_DUTY
             }).ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }

@@ -219,7 +219,7 @@ namespace Spring.Reflection.Dynamic
 #endif
                 dmGetter = CreateDynamicMethodInternal(methodName, returnType, argumentTypes, member, skipVisibility);
             }
-            catch(SecurityException)
+            catch (SecurityException)
             {
                 dmGetter = CreateDynamicMethodInternal(methodName, returnType, argumentTypes, MethodBase.GetCurrentMethod(), false);
             }
@@ -318,7 +318,7 @@ namespace Spring.Reflection.Dynamic
             }
             else if (fieldInfo.IsStatic)
             {
-//                object v = fieldInfo.GetValue(null); // ensure type is initialized...
+                //                object v = fieldInfo.GetValue(null); // ensure type is initialized...
                 il.Emit(OpCodes.Ldsfld, fieldInfo);
             }
             else
@@ -502,7 +502,7 @@ namespace Spring.Reflection.Dynamic
 
         #endregion
 
-        private static OpCode[] LdArgOpCodes = { OpCodes.Ldarg_0, OpCodes.Ldarg_1, OpCodes.Ldarg_2 };
+        private static readonly OpCode[] LdArgOpCodes = { OpCodes.Ldarg_0, OpCodes.Ldarg_1, OpCodes.Ldarg_2 };
 
         private static void SetupOutputArgument(ILGenerator il, int paramsArrayPosition, ParameterInfo argInfo, IDictionary outArgs)
         {
@@ -663,7 +663,7 @@ namespace Spring.Reflection.Dynamic
             il.Emit((isInstanceMethod) ? OpCodes.Ldarg_1 : OpCodes.Ldarg_0);
             if (targetType.IsValueType)
             {
-                LocalBuilder local = il.DeclareLocal(targetType);
+                _ = il.DeclareLocal(targetType);
                 EmitUnbox(il, targetType);
                 il.Emit(OpCodes.Stloc_0);
                 il.Emit(OpCodes.Ldloca_S, 0);
@@ -681,15 +681,15 @@ namespace Spring.Reflection.Dynamic
 
         private static void EmitConstant(ILGenerator il, object value)
         {
-            if (value is String)
+            if (value is string)
             {
-                il.Emit(OpCodes.Ldstr, (string)value);
+                il.Emit(OpCodes.Ldstr, value.ToString());
                 return;
             }
 
             if (value is bool)
             {
-                if ((bool)value)
+                if (Convert.ToBoolean(value))
                 {
                     il.Emit(OpCodes.Ldc_I4_1);
                 }
@@ -700,53 +700,53 @@ namespace Spring.Reflection.Dynamic
                 return;
             }
 
-            if (value is Char)
+            if (value is char)
             {
-                il.Emit(OpCodes.Ldc_I4, (Char)value);
+                il.Emit(OpCodes.Ldc_I4, Convert.ToChar(value));
                 il.Emit(OpCodes.Conv_I2);
                 return;
             }
 
             if (value is byte)
             {
-                il.Emit(OpCodes.Ldc_I4_S, (byte)value);
+                il.Emit(OpCodes.Ldc_I4_S, Convert.ToByte(value));
                 il.Emit(OpCodes.Conv_I1);
             }
             else if (value is Int16)
             {
-                il.Emit(OpCodes.Ldc_I4, (Int16)value);
+                il.Emit(OpCodes.Ldc_I4, Convert.ToInt16(value));
                 il.Emit(OpCodes.Conv_I2);
             }
             else if (value is Int32)
             {
-                il.Emit(OpCodes.Ldc_I4, (Int32)value);
+                il.Emit(OpCodes.Ldc_I4, Convert.ToInt32(value));
             }
             else if (value is Int64)
             {
-                il.Emit(OpCodes.Ldc_I8, (Int64)value);
+                il.Emit(OpCodes.Ldc_I8, Convert.ToInt64(value));
             }
             else if (value is UInt16)
             {
-                il.Emit(OpCodes.Ldc_I4, (UInt16)value);
+                il.Emit(OpCodes.Ldc_I4, Convert.ToUInt16(value));
                 il.Emit(OpCodes.Conv_U2);
             }
             else if (value is UInt32)
             {
-                il.Emit(OpCodes.Ldc_I4, (UInt32)value);
+                il.Emit(OpCodes.Ldc_I4, Convert.ToUInt32(value));
                 il.Emit(OpCodes.Conv_U4);
             }
             else if (value is UInt64)
             {
-                il.Emit(OpCodes.Ldc_I8, (UInt64)value);
+                il.Emit(OpCodes.Ldc_I8, Convert.ToUInt64(value));
                 il.Emit(OpCodes.Conv_U8);
             }
             else if (value is Single)
             {
-                il.Emit(OpCodes.Ldc_R4, (Single)value);
+                il.Emit(OpCodes.Ldc_R4, Convert.ToSingle(value));
             }
             else if (value is Double)
             {
-                il.Emit(OpCodes.Ldc_R8, (Double)value);
+                il.Emit(OpCodes.Ldc_R8, Convert.ToDouble(value));
             }
         }
 

@@ -22,17 +22,16 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (multiInstanceActivity.CompletionConditionExpression is object)
             {
                 object value = multiInstanceActivity.CompletionConditionExpression.GetValue(execution);
-                if (!(value is bool?))
+                if (!(value is bool booleanValue))
                 {
                     throw new ActivitiIllegalArgumentException("completionCondition '" + multiInstanceActivity.CompletionConditionExpression.ExpressionText + "' does not evaluate to a boolean value");
                 }
-
-                bool? booleanValue = (bool?)value;
+                
                 if (log.IsEnabled(LogLevel.Debug))
                 {
                     log.LogDebug($"Completion condition of multi-instance satisfied: {booleanValue}");
                 }
-                return booleanValue.Value;
+                return booleanValue;
             }
 
             return false;

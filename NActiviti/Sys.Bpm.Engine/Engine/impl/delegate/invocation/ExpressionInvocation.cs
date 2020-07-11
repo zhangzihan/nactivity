@@ -25,13 +25,13 @@ namespace Sys.Workflow.Engine.Impl.Delegate.Invocation
         /// <summary>
         /// 
         /// </summary>
-        protected internal readonly ValueExpression valueExpression;
+        protected internal readonly IValueExpression valueExpression;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="valueExpression"></param>
-        public ExpressionInvocation(ValueExpression valueExpression)
+        public ExpressionInvocation(IValueExpression valueExpression)
         {
             this.valueExpression = valueExpression;
         }

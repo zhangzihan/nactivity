@@ -1,6 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using CSScriptLib;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json.Linq;
+using Sys.Workflow.Engine.Impl.Calendars;
+using Sys.Workflow.Engine.Impl.Util.IO;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +88,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         {
             if (context == null)
             {
-                throw new System.NullReferenceException("context is null");
+                throw new NullReferenceException("context is null");
             }
             Type result = null;
             if (IsResolvable(@base))
@@ -125,37 +130,16 @@ namespace Sys.Workflow.Engine.Impl.EL
         {
             if (context == null)
             {
-                throw new System.NullReferenceException("context is null");
+                throw new NullReferenceException("context is null");
             }
             object result = null;
             if (IsResolvable(@base))
             {
-                JToken resultNode = ((JToken)@base)[property.ToString()];
+                string prop = property.ToString();
+                JToken resultNode = ((JToken)@base)[prop];
                 if (resultNode != null)
                 {
-                    //object res = resultNode.ToObject();
-
-                    //if (resultNode.Boolean)
-                    //{
-                    //    result = resultNode.asBoolean();
-                    //}
-                    //else if (resultNode.Long)
-                    //{
-                    //    result = resultNode.asLong();
-                    //}
-                    //else if (resultNode.BigDecimal || resultNode.Double)
-                    //{
-                    //    result = resultNode.asDouble();
-                    //}
-                    //else if (resultNode.Textual)
-                    //{
-                    //    result = resultNode.asText();
-                    //}
-                    //else
-                    //{
-                    //    result = resultNode.ToString();
-                    //}
-
+                    result = ToResult(resultNode);
                 }
                 else
                 {
@@ -164,6 +148,55 @@ namespace Sys.Workflow.Engine.Impl.EL
                 context.IsPropertyResolved = true;
             }
             return result;
+        }
+
+        private static object ToResult(JToken resultNode)
+        {
+            switch (resultNode.Type)
+            {
+                case JTokenType.Null:
+                    return null;
+                case JTokenType.Undefined:
+                case JTokenType.Object:
+                    return resultNode.ToObject<object>();
+                case JTokenType.Boolean:
+                    return resultNode.ToObject<bool>();
+                case JTokenType.String:
+                    return resultNode.ToString();
+                case JTokenType.Comment:
+                    return resultNode.ToString();
+                case JTokenType.Raw:
+                    return resultNode.ToString();
+                case JTokenType.Array:
+                    IList<object> res = new List<object>();
+                    JArray arrs = resultNode.ToObject<JArray>();
+                    foreach (var obj in arrs)
+                    {
+                        ToResult(obj, ref res);
+                    }
+                    break;
+                case JTokenType.Bytes:
+                    return resultNode.ToObject<byte[]>();
+                case JTokenType.Date:
+                    return resultNode.ToObject<DateTime>();
+                case JTokenType.Float:
+                    return resultNode.ToObject<decimal>();
+                case JTokenType.Guid:
+                    return resultNode.ToObject<Guid>();
+                case JTokenType.Integer:
+                    return resultNode.ToObject<int>();
+                case JTokenType.TimeSpan:
+                    return resultNode.ToObject<TimeSpan>();
+                case JTokenType.Uri:
+                    return resultNode.ToObject<Uri>();
+            }
+
+            return null;
+        }
+
+        private static void ToResult(JToken resultNode, ref IList<object> list)
+        {
+            list.Add(ToResult(resultNode));
         }
 
         /// <summary>
@@ -196,7 +229,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         {
             if (context == null)
             {
-                throw new System.NullReferenceException("context is null");
+                throw new NullReferenceException("context is null");
             }
             if (IsResolvable(@base))
             {
@@ -244,43 +277,38 @@ namespace Sys.Workflow.Engine.Impl.EL
         {
             if (context == null)
             {
-                throw new System.NullReferenceException("context is null");
+                throw new NullReferenceException("context is null");
             }
-            if (@base is JToken)
+            if (@base is JToken token)
             {
                 if (readOnly)
                 {
                     throw new Exception("resolver is read-only");
                 }
-                JToken node = (JToken)@base;
-                if (value is decimal)
+                string prop = property.ToString();
+                if (value is decimal @decimal)
                 {
-                    node[property.ToString()] = (decimal)value;
-
+                    token[prop] = @decimal;
                 }
-                else if (value is bool?)
+                else if (value is bool boolean)
                 {
-                    node[property.ToString()] = (bool?)value;
-
+                    token[prop] = boolean;
                 }
-                else if (value is long?)
+                else if (value is long @int)
                 {
-                    node[property.ToString()] = (long?)value;
-
+                    token[prop] = @int;
                 }
-                else if (value is double?)
+                else if (value is double @double)
                 {
-                    node[property.ToString()] = (double?)value;
-
+                    token[prop] = @double;
                 }
                 else if (value != null)
                 {
-                    node[property.ToString()] = value.ToString();
-
+                    token[prop] = value.ToString();
                 }
                 else
                 {
-                    node[property.ToString()] = property.ToString();
+                    token[prop] = null;
                 }
                 context.IsPropertyResolved = true;
             }

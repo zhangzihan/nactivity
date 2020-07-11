@@ -41,8 +41,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.ProcessEngineConfiguration;
                 Interceptor.ICommandExecutor commandExecutor = processEngineConfiguration.CommandExecutor;
 
-                ITaskEntity task = commandExecutor.Execute(new GetTaskByIdCmd(currentTaskId)) as ITaskEntity;
-                if (task is null)
+                if (!(commandExecutor.Execute(new GetTaskByIdCmd(currentTaskId)) is ITaskEntity task))
                 {
                     throw new ActivitiObjectNotFoundException(string.Concat("No task found for id '", currentTaskId));
                 }
@@ -123,6 +122,13 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             DeleteExecutions(execution, true, returnToReason, commandContext);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="deleteExecution"></param>
+        /// <param name="reason"></param>
+        /// <param name="commandContext"></param>
         // TODO: can the ExecutionManager.deleteChildExecution not be used?
         protected internal virtual void DeleteExecutions(IExecutionEntity execution, bool deleteExecution, string reason, ICommandContext commandContext)
         {

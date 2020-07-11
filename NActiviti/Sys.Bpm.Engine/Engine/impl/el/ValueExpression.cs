@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using Sys.Workflow.Engine.Delegate;
 using Sys.Workflow.Engine.Impl.Identities;
 using Sys.Workflow.Engine.Impl.Persistence.Entity;
+using Sys.Workflow.Engine.Impl.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -11,29 +12,46 @@ using System.Text.RegularExpressions;
 
 namespace Sys.Workflow.Engine.Impl.EL
 {
-
-
-    public class ValueExpression
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ValueExpression : IValueExpression
     {
         private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="expectedType"></param>
         public ValueExpression(string expression, Type expectedType)
         {
             this.ExpressionString = expression;
             this.ValueType = expectedType;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string ExpressionString
         {
             get; set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Type ValueType
         {
             get; set;
         }
 
-        internal void SetValue(ELContext elContext, object value)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="elContext"></param>
+        /// <param name="value"></param>
+        public void SetValue(ELContext elContext, object value)
         {
             //if (string.IsNullOrWhiteSpace(this.ExpressionString))
             //{
@@ -53,7 +71,12 @@ namespace Sys.Workflow.Engine.Impl.EL
             throw new NotImplementedException("Value Expression not support!");
         }
 
-        internal object GetValue(ELContext elContext)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="elContext"></param>
+        /// <returns></returns>
+        public object GetValue(ELContext elContext)
         {
             if (string.IsNullOrWhiteSpace(this.ExpressionString))
             {
@@ -81,10 +104,10 @@ namespace Sys.Workflow.Engine.Impl.EL
                 context.IsPropertyResolved = true;
                 return variableScope;
             }
-            else if (VariableScopeElResolver.EXECUTION_KEY.Equals(expstr) && variableScope is ITaskEntity)
+            else if (VariableScopeElResolver.EXECUTION_KEY.Equals(expstr) && variableScope is ITaskEntity entity)
             {
                 context.IsPropertyResolved = true;
-                return ((ITaskEntity)variableScope).Execution;
+                return entity.Execution;
             }
             else if (VariableScopeElResolver.LOGGED_IN_USER_KEY.Equals(expstr))
             {
@@ -92,36 +115,34 @@ namespace Sys.Workflow.Engine.Impl.EL
                 return Authentication.AuthenticatedUser.Id;
             }
 
-            List<string> sb = new List<string>();
-            if (EXPR_PATTERN.IsMatch(expstr))
-            {
-                EXPR_PATTERN.Replace(expstr, (m) =>
-                {
-                    if (sb.Count == 0 && m.Index > 0)
-                    {
-                        sb.Add($"'{expstr.Substring(0, m.Index)}'");
-                    }
-                    var r = m.Result("$1");
-                    sb.Add(r);
-                    var nm = m.NextMatch();
-                    if (nm.Success)
-                    {
-                        sb.Add($"'{expstr.Substring(m.Index + m.Length, nm.Index - (m.Index + m.Length))}'");
-                    }
-                    else
-                    {
-                        if (expstr.Length > (m.Index + m.Length))
-                        {
-                            sb.Add($"'{expstr.Substring(m.Index, expstr.Length - m.Index)}'");
-                        }
-                    }
-                    return r;
-                });
-            }
-            else
+            if (EXPR_PATTERN.IsMatch(expstr) == false)
             {
                 return expstr;
             }
+
+            List<string> sb = new List<string>();
+            EXPR_PATTERN.Replace(expstr, (m) =>
+            {
+                if (sb.Count == 0 && m.Index > 0)
+                {
+                    sb.Add($"'{expstr.Substring(0, m.Index)}'");
+                }
+                var r = m.Result("$1");
+                sb.Add(r);
+                var nm = m.NextMatch();
+                if (nm.Success)
+                {
+                    sb.Add($"'{expstr.Substring(m.Index + m.Length, nm.Index - (m.Index + m.Length))}'");
+                }
+                else
+                {
+                    if (expstr.Length > (m.Index + m.Length))
+                    {
+                        sb.Add($"'{expstr[m.Index..]}'");
+                    }
+                }
+                return r;
+            });
 
             expstr = string.Join("+", sb);
 

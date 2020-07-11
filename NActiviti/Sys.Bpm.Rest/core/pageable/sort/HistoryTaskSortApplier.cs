@@ -25,6 +25,7 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables.Sorts
             orderByProperties["name"] = HistoricTaskInstanceQueryProperty.TASK_NAME;
             orderByProperties["assignee"] = HistoricTaskInstanceQueryProperty.TASK_ASSIGNEE;
             orderByProperties["createTime"] = HistoricTaskInstanceQueryProperty.START;
+            orderByProperties["startTime"] = HistoricTaskInstanceQueryProperty.START;
         }
 
         /// <summary>

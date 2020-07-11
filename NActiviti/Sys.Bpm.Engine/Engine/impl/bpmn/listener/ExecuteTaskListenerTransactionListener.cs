@@ -26,13 +26,20 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
         protected internal ITransactionDependentTaskListener listener;
         protected internal TransactionDependentTaskListenerExecutionScope scope;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listener"></param>
+        /// <param name="scope"></param>
         public ExecuteTaskListenerTransactionListener(ITransactionDependentTaskListener listener, TransactionDependentTaskListenerExecutionScope scope)
         {
             this.listener = listener;
             this.scope = scope;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
         public virtual void Execute(ICommandContext commandContext)
         {
             ICommandExecutor commandExecutor = commandContext.ProcessEngineConfiguration.CommandExecutor;

@@ -1,5 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using DatabaseSchemaReader;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Sys.Workflow.Engine.Impl.Cfg;
+using Sys.Workflow.Engine.Impl.Contexts;
+using Sys.Workflow.Engine.Impl.DB.Upgrade;
+using Sys.Workflow.Engine.Impl.Interceptor;
+using Sys.Workflow.Engine.Impl.Persistence.Caches;
+using Sys.Workflow.Engine.Impl.Persistence.Entity;
+using Sys.Workflow.Engine.Impl.Util;
+using SmartSql.Abstractions;
+using SmartSql.Utils;
+using Sys.Data;
+using Sys.Workflow;
+using System.Collections.Concurrent;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using Sys.Workflow.Engine.Impl.Variable;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,34 +36,23 @@ using System.Collections.Generic;
 
 namespace Sys.Workflow.Engine.Impl.DB
 {
-    using DatabaseSchemaReader;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
-    using Sys.Workflow.Engine.Impl.Cfg;
-    using Sys.Workflow.Engine.Impl.Contexts;
-    using Sys.Workflow.Engine.Impl.DB.Upgrade;
-    using Sys.Workflow.Engine.Impl.Interceptor;
-    using Sys.Workflow.Engine.Impl.Persistence.Caches;
-    using Sys.Workflow.Engine.Impl.Persistence.Entity;
-    using Sys.Workflow.Engine.Impl.Util;
-    using SmartSql.Abstractions;
-    using SmartSql.Utils;
-    using Sys.Data;
-    using Sys.Workflow;
-    using System.Collections.Concurrent;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
 
+    /// <summary>
     /// 
-    /// 
+    /// </summary>
     public class DbSqlSession : ISession
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal class DataObject
         {
-            private Dictionary<string, IEntity> objects = new Dictionary<string, IEntity>();
-
+            private readonly Dictionary<string, IEntity> objects = new Dictionary<string, IEntity>();
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="item"></param>
+            /// <returns></returns>
             public IEntity this[string item]
             {
                 get
@@ -55,7 +64,9 @@ namespace Sys.Workflow.Engine.Impl.DB
                     objects[item] = value;
                 }
             }
-
+            /// <summary>
+            /// 
+            /// </summary>
             public ICollection<IEntity> Values
             {
                 get
@@ -63,7 +74,9 @@ namespace Sys.Workflow.Engine.Impl.DB
                     return objects.Values;
                 }
             }
-
+            /// <summary>
+            /// 
+            /// </summary>
             public ICollection<string> Keys
             {
                 get
@@ -71,38 +84,64 @@ namespace Sys.Workflow.Engine.Impl.DB
                     return objects.Keys;
                 }
             }
-
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
             public bool ContainsKey(string key)
             {
                 return objects.ContainsKey(key);
             }
-
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
             public bool Remove(string key)
             {
                 return objects.Remove(key);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal class DataObjects
         {
-            private ConcurrentDictionary<Type, DataObject> objects = new ConcurrentDictionary<Type, DataObject>();
-
+            private readonly ConcurrentDictionary<Type, DataObject> objects = new ConcurrentDictionary<Type, DataObject>();
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="clazz"></param>
+            /// <param name="datas"></param>
+            /// <returns></returns>
             public DataObject GetOrAdd(Type clazz, DataObject datas)
             {
-                string name = clazz.Name;
                 return objects.GetOrAdd(clazz, datas);
             }
-
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="clazz"></param>
+            /// <param name="hisValues"></param>
+            /// <returns></returns>
             public bool TryGetValue(Type clazz, out DataObject hisValues)
             {
                 return objects.TryGetValue(clazz, out hisValues);
             }
-
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="clazz"></param>
+            /// <param name="value"></param>
+            /// <returns></returns>
             public bool TryRemove(Type clazz, out DataObject value)
             {
                 return objects.TryRemove(clazz, out value);
             }
-
+            /// <summary>
+            /// 
+            /// </summary>
             public ICollection<Type> Keys
             {
                 get
@@ -110,7 +149,9 @@ namespace Sys.Workflow.Engine.Impl.DB
                     return objects.Keys;
                 }
             }
-
+            /// <summary>
+            /// 
+            /// </summary>
             public ICollection<DataObject> Values
             {
                 get
@@ -118,12 +159,16 @@ namespace Sys.Workflow.Engine.Impl.DB
                     return objects.Values;
                 }
             }
-
+            /// <summary>
+            /// 
+            /// </summary>
             public void Clear()
             {
                 objects.Clear();
             }
-
+            /// <summary>
+            /// 
+            /// </summary>
             public int Count
             {
                 get
@@ -171,6 +216,8 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         protected internal IEntityCache entityCache;
 
+        private readonly IDbConnection connection;
+
         /// <summary>
         /// 
         /// </summary>
@@ -215,6 +262,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         {
             this.dbSqlSessionFactory = dbSqlSessionFactory;
             this.entityCache = entityCache;
+            this.connection = connection;
             this.connectionMetadataDefaultCatalog = catalog;
             this.connectionMetadataDefaultSchema = schema;
         }
@@ -226,17 +274,25 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         public virtual void Insert(IEntity entity, Type managedType = null)
         {
-            if (entity.Id is null)
+            try
             {
-                string id = dbSqlSessionFactory.IdGenerator.GetNextId();
-                entity.Id = id;
-            }
+                if (entity.Id is null)
+                {
+                    string id = dbSqlSessionFactory.IdGenerator.GetNextId();
+                    entity.Id = id;
+                }
 
-            Type clazz = managedType ?? entity.GetType();
-            var insObjs = insertedObjects.GetOrAdd(clazz, new Dictionary<string, IEntity>());
-            insObjs[entity.Id] = entity;
-            entityCache.Put(entity, false); // False -> entity is inserted, so always changed
-            entity.Inserted = true;
+                Type clazz = managedType ?? entity.GetType();
+                var insObjs = insertedObjects.GetOrAdd(clazz, new Dictionary<string, IEntity>());
+                insObjs[entity.Id] = entity; 
+                entityCache.Put(entity, false); // False -> entity is inserted, so always changed
+                entity.Inserted = true;
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, $"插入错误managedType={managedType?.GetType()}&entityType={entity?.GetType()}");
+                throw ex;
+            }
         }
 
         // update
@@ -444,9 +500,9 @@ namespace Sys.Workflow.Engine.Impl.DB
 
             var result = SqlMapper.QuerySingle<TOut>(dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, statement, parameter));
 
-            if (result is IEntity)
+            if (result is IEntity entity)
             {
-                CacheLoadOrStore((IEntity)result);
+                CacheLoadOrStore(entity);
             }
 
             return result;
@@ -737,7 +793,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                 if (insertedObjects.TryGetValue(entityClass, out var ec))
                 {
                     FlushInsertEntities(entityClass, ec.Values);
-                    insertedObjects.TryRemove(entityClass, out ec);
+                    _ = insertedObjects.TryRemove(entityClass, out _);
                 }
             }
 
@@ -1003,9 +1059,9 @@ namespace Sys.Workflow.Engine.Impl.DB
                 }
 
                 // See https://activiti.atlassian.net/browse/ACT-1290
-                if (updatedObject is IHasRevision)
+                if (updatedObject is IHasRevision revision)
                 {
-                    ((IHasRevision)updatedObject).Revision = ((IHasRevision)updatedObject).RevisionNext;
+                    revision.Revision = revision.RevisionNext;
                 }
             }
             updatedObjects.Clear();
@@ -1027,7 +1083,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                 if (deletedObjects.TryGetValue(entityClass, out var dec))
                 {
                     FlushDeleteEntities(entityClass, dec.Values);
-                    deletedObjects.TryRemove(entityClass, out dec);
+                    deletedObjects.TryRemove(entityClass, out _);
                 }
                 FlushBulkDeletes(entityClass);
             }

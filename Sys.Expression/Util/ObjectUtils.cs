@@ -336,7 +336,8 @@ namespace Spring.Util
                    type == typeof(short) && obj is short ||
                    type == typeof(long) && obj is long ||
                    type == typeof(float) && obj is float ||
-                   type == typeof(double) && obj is double;
+                   type == typeof(double) && obj is double ||
+                   type == typeof(decimal) && obj is decimal;
         }
 
         /// <summary>

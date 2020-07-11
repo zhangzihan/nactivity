@@ -19,7 +19,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
     /// <summary>
     /// 获取用户的所有下属及子下属
     /// </summary>
-    [GetBookmarkDescriptor("GetUnderling")]
+    [GetBookmarkDescriptor(RequestUserCategory.GETUSERS_UNDERLING)]
     public class GetUnderlingBookmarkRuleCmd : BaseGetBookmarkRule
     {
         private readonly ExternalConnectorProvider externalConnector;
@@ -33,9 +33,10 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         {
             IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
-            return proxy.GetUsers(externalConnector.GetUserByUnderling, new
+            return proxy.GetUsers(externalConnector.GetUserByUnderling, new RequestUserParameter
             {
-                idList = Condition.QueryCondition.Select(x => x.Id).ToArray()
+                IdList = Condition.QueryCondition.Select(x => x.Id).ToArray(),
+                Category = RequestUserCategory.GETUSERS_UNDERLING
             }).ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }

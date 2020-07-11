@@ -43,7 +43,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             }
             catch (Exception ex)
             {
-                throw new WorkflowDebugException(Authentication.AuthenticatedUser.Id, runnable.Execution, ex);
+                throw new WorkflowDebugException(Authentication.AuthenticatedUser?.Id, runnable.Execution, ex);
             }
         }
     }

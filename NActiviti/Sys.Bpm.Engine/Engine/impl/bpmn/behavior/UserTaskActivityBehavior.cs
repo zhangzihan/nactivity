@@ -34,7 +34,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
     using Sys.Workflow.Engine.Bpmn.Rules;
     using System.Collections;
 
+    /// <summary>
     /// 
+    /// </summary>
     [Serializable]
     public class UserTaskActivityBehavior : TaskActivityBehavior
     {
@@ -46,11 +48,19 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         private IUserServiceProxy UserService => ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userTask"></param>
         public UserTaskActivityBehavior(UserTask userTask)
         {
             this.userTask = userTask;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
         public override void Execute(IExecutionEntity execution)
         {
             ICommandContext commandContext = Context.CommandContext;
@@ -72,7 +82,6 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
             ExpressionManager expressionManager = processEngineConfiguration.ExpressionManager;
-
 
             string activeTaskName;
             string activeTaskDescription;
@@ -152,11 +161,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 object dueDate = expressionManager.CreateExpression(activeTaskDueDate).GetValue(execution);
                 if (dueDate != null)
                 {
-                    if (dueDate is DateTime)
+                    if (dueDate is DateTime time)
                     {
-                        task.DueDate = (DateTime)dueDate;
+                        task.DueDate = time;
                     }
-                    else if (dueDate is string)
+                    else if (dueDate is string @string)
                     {
                         string businessCalendarName;
                         if (!string.IsNullOrWhiteSpace(userTask.BusinessCalendarName))
@@ -169,7 +178,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                         }
 
                         IBusinessCalendar businessCalendar = Context.ProcessEngineConfiguration.BusinessCalendarManager.GetBusinessCalendar(businessCalendarName);
-                        task.DueDate = businessCalendar.ResolveDuedate((string)dueDate);
+                        task.DueDate = businessCalendar.ResolveDuedate(@string);
 
                     }
                     else
@@ -184,11 +193,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 object priority = expressionManager.CreateExpression(activeTaskPriority).GetValue(execution);
                 if (priority != null)
                 {
-                    if (priority is string)
+                    if (priority is string @string)
                     {
                         try
                         {
-                            task.Priority = Convert.ToInt32((string)priority);
+                            task.Priority = Convert.ToInt32(@string);
                         }
                         catch (FormatException e)
                         {
@@ -197,7 +206,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     }
                     else if (priority is int || priority is long)
                     {
-                        task.Priority = ((int)priority);
+                        task.Priority = (int)priority;
                     }
                     else
                     {
@@ -273,6 +282,13 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="signalName"></param>
+        /// <param name="signalData"></param>
+        /// <param name="throwError"></param>
         public override void Trigger(IExecutionEntity execution, string signalName, object signalData, bool throwError = true)
         {
             ICommandContext commandContext = Context.CommandContext;
@@ -292,6 +308,17 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             Leave(execution, signalData);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskEntityManager"></param>
+        /// <param name="assignee"></param>
+        /// <param name="owner"></param>
+        /// <param name="candidateUsers"></param>
+        /// <param name="candidateGroups"></param>
+        /// <param name="task"></param>
+        /// <param name="expressionManager"></param>
+        /// <param name="execution"></param>
         protected internal virtual void HandleAssignments(ITaskEntityManager taskEntityManager, string assignee, string owner, IList<string> candidateUsers, IList<string> candidateGroups, ITaskEntity task, ExpressionManager expressionManager, IExecutionEntity execution)
         {
 
@@ -305,11 +332,20 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
                 string assigneeUser = null;
                 //TODO: 考虑性能问题，暂时不获取人员
-                //if (string.IsNullOrWhiteSpace(assigneeValue) == false)
-                //{
-                //    assigneeUser = userService.GetUser(assigneeValue).GetAwaiter().GetResult()?.FullName;
-                //}
-                taskEntityManager.ChangeTaskAssigneeNoEvents(task, assigneeValue, assigneeUser);
+                if (string.IsNullOrWhiteSpace(assigneeValue) == false)
+                {
+                    IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
+
+                    var user = userService.GetUser(assigneeValue)
+                         .ConfigureAwait(false)
+                         .GetAwaiter()
+                         .GetResult();
+
+                    assigneeUser = user?.FullName;
+
+                    task.SetVariableLocal(assigneeValue, user);
+                }
+                taskEntityManager.ChangeTaskAssignee(task, assigneeValue, assigneeUser);
             }
 
             if (!string.IsNullOrWhiteSpace(owner))
@@ -330,9 +366,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 {
                     IExpression groupIdExpr = expressionManager.CreateExpression(candidateGroup);
                     object value = groupIdExpr.GetValue(execution);
-                    if (value is string)
+                    if (value is string @string)
                     {
-                        IList<string> candidates = ExtractCandidates((string)value);
+                        IList<string> candidates = ExtractCandidates(@string);
                         task.AddCandidateGroups(candidates);
                     }
                     else if (value is ICollection)
@@ -352,9 +388,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 {
                     IExpression userIdExpr = expressionManager.CreateExpression(candidateUser);
                     object value = userIdExpr.GetValue(execution);
-                    if (value is string)
+                    if (value is string @string)
                     {
-                        IList<string> candidates = ExtractCandidates((string)value);
+                        IList<string> candidates = ExtractCandidates(@string);
                         task.AddCandidateUsers(candidates);
                     }
                     else if (value is ICollection)
@@ -377,17 +413,17 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     {
                         IExpression idExpression = expressionManager.CreateExpression(userIdentityLink);
                         object value = idExpression.GetValue(execution);
-                        if (value is string)
+                        if (value is string @string)
                         {
-                            IList<string> userIds = ExtractCandidates((string)value);
+                            IList<string> userIds = ExtractCandidates(@string);
                             foreach (string userId in userIds)
                             {
                                 task.AddUserIdentityLink(userId, customUserIdentityLinkType);
                             }
                         }
-                        else if (value is ICollection)
+                        else if (value is ICollection collection)
                         {
-                            IEnumerator userIdSet = ((ICollection)value).GetEnumerator();
+                            IEnumerator userIdSet = collection.GetEnumerator();
                             while (userIdSet.MoveNext())
                             {
                                 task.AddUserIdentityLink((string)userIdSet.Current, customUserIdentityLinkType);
@@ -405,25 +441,23 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             if (userTask.CustomGroupIdentityLinks != null && userTask.CustomGroupIdentityLinks.Count > 0)
             {
-
                 foreach (string customGroupIdentityLinkType in userTask.CustomGroupIdentityLinks.Keys)
                 {
                     foreach (string groupIdentityLink in userTask.CustomGroupIdentityLinks[customGroupIdentityLinkType])
                     {
-
                         IExpression idExpression = expressionManager.CreateExpression(groupIdentityLink);
                         object value = idExpression.GetValue(execution);
-                        if (value is string)
+                        if (value is string @string)
                         {
-                            IList<string> groupIds = ExtractCandidates((string)value);
+                            IList<string> groupIds = ExtractCandidates(@string);
                             foreach (string groupId in groupIds)
                             {
                                 task.AddGroupIdentityLink(groupId, customGroupIdentityLinkType);
                             }
                         }
-                        else if (value is ICollection)
+                        else if (value is ICollection collection)
                         {
-                            IEnumerator groupIdSet = ((ICollection)value).GetEnumerator();
+                            IEnumerator groupIdSet = collection.GetEnumerator();
                             while (groupIdSet.MoveNext())
                             {
                                 task.AddGroupIdentityLink((string)groupIdSet.Current, customGroupIdentityLinkType);
@@ -436,9 +470,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                     }
                 }
-
             }
-
         }
 
         /// <summary>

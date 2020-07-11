@@ -1,13 +1,12 @@
 ﻿using System;
+using Sys.Workflow.Engine.Impl.Cfg;
+using Sys.Workflow.Engine.Impl.Contexts;
+using Sys.Workflow.Engine.Impl.Interceptor;
+using Sys.Workflow;
+using System.Collections.Generic;
 
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
-    using Sys.Workflow.Engine.Impl.Cfg;
-    using Sys.Workflow.Engine.Impl.Contexts;
-    using Sys.Workflow.Engine.Impl.Interceptor;
-    using Sys.Workflow;
-    using System.Collections.Generic;
-
     /// <summary>
     /// <para>
     /// Encapsulates the logic for transparently working with <seealso cref="IByteArrayEntity"/> .
@@ -23,18 +22,29 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         private string id;
         private string name;
         private IByteArrayEntity entity;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool deleted;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ByteArrayRef()
         {
         }
 
-        // Only intended to be used by ByteArrayRefTypeHandler
+        /// <summary>
+        /// Only intended to be used by ByteArrayRefTypeHandler
+        /// </summary>
+        /// <param name="id"></param>
         public ByteArrayRef(string id)
         {
             this.id = id;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Id
         {
             get
@@ -42,7 +52,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return id;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Name
         {
             get
@@ -50,13 +62,15 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return name;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual byte[] Bytes
         {
             get
             {
                 EnsureInitialized();
-                return (entity?.Bytes);
+                return entity?.Bytes;
             }
             set
             {
@@ -79,14 +93,20 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="bytes"></param>
         public virtual void SetValue(string name, byte[] bytes)
         {
             this.name = name;
             Bytes = bytes;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IByteArrayEntity Entity
         {
             get
@@ -95,7 +115,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return entity;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void Delete()
         {
             if (!deleted && id is object)
@@ -115,7 +137,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 deleted = true;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public void EnsureInitialized()
         {
             var ctx = Context.CommandContext;
@@ -123,9 +147,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 if (ctx == null)
                 {
-                    var pi = ProcessEngineServiceProvider.Resolve<IProcessEngine>().ProcessEngineConfiguration as ProcessEngineConfigurationImpl;
-
-                    if (pi == null)
+                    if (!(ProcessEngineServiceProvider.Resolve<IProcessEngine>().ProcessEngineConfiguration is ProcessEngineConfigurationImpl pi))
                     {
                         return;
                     }
@@ -138,7 +160,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 name = entity.Name;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Deleted
         {
             get
@@ -146,7 +170,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return deleted;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return "ByteArrayRef[id=" + id + ", name=" + name + ", entity=" + entity + (deleted ? ", deleted]" : "]");
@@ -168,5 +195,4 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
     }
-
 }

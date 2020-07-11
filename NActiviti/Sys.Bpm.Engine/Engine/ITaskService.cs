@@ -50,7 +50,14 @@ namespace Sys.Workflow.Engine
         ///          the task, cannot be null. </param>
         void SaveTask(ITask task);
 
-        void TerminateTask(string taskId, string terminateReason, bool terminateExecution);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="terminateReason"></param>
+        /// <param name="terminateExecution"></param>
+        /// <param name="variables"></param>
+        void TerminateTask(string taskId, string terminateReason, bool terminateExecution, IDictionary<string, object> variables);
 
         /// <summary>
         /// Deletes the given task, not deleting historic information that is related to this task.

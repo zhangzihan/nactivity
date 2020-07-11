@@ -21,6 +21,9 @@ using Sys.Workflow.Cloud.Services.Core.Pageables.Sorts;
 using Sys.Workflow.Engine;
 using Sys.Workflow.Engine.History;
 using Sys.Workflow;
+using System;
+using Sys.Workflow.Engine.Impl;
+using Sys.Workflow.Engine.Impl.Cmd;
 
 namespace Sys.Workflow.Cloud.Services.Core.Pageables
 {
@@ -40,6 +43,8 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
         private readonly HistoricInstanceConverter processInstanceConverter;
 
         private readonly SecurityPoliciesApplicationService securityService;
+        private readonly HistoryTaskSortApplier historicSortApplier;
+        private readonly HistoricTaskInstanceConverter historicTaskInstanceConverter;
 
 
         /// <summary>
@@ -50,13 +55,17 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
             HistoryInstanceSortApplier sortApplier,
             HistoricInstanceConverter processInstanceConverter,
             SecurityPoliciesApplicationService securityPolicyApplicationService,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            HistoryTaskSortApplier historicSortApplier,
+            HistoricTaskInstanceConverter historicTaskInstanceConverter)
         {
             this.pageRetriever = pageRetriever;
             this.historyService = historyService;
             this.sortApplier = sortApplier;
             this.processInstanceConverter = processInstanceConverter;
             this.securityService = securityPolicyApplicationService;
+            this.historicSortApplier = historicSortApplier;
+            this.historicTaskInstanceConverter = historicTaskInstanceConverter;
             logger = loggerFactory.CreateLogger<PageableProcessHistoryRepositoryService>();
         }
 
@@ -99,6 +108,37 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
             sortApplier.ApplySort(query, pageable);
 
             return pageRetriever.LoadPage(query, pageable, processInstanceConverter);
+        }
+
+        public virtual IPage<TaskModel> GetHistoryTasks(string processInstanceId, string businessKey, bool? finished = null)
+        {
+            IHistoricTaskInstanceQuery query = historyService.CreateHistoricTaskInstanceQuery();
+
+            query.SetProcessInstanceId(processInstanceId)
+                .SetProcessInstanceBusinessKey(businessKey);
+
+            if (finished.GetValueOrDefault(false))
+            {
+                query.SetFinished();
+            }
+
+            var pageable = new Pageable
+            {
+                PageNo = 1,
+                PageSize = int.MaxValue
+            };
+            pageable.Sort = new Sort();
+            pageable.Sort.Add(new Sort.Order()
+            {
+                Property = "startTime",
+                Direction = Sort.Direction.ASC
+            });
+            historicSortApplier.ApplySort(query, pageable);
+
+            return pageRetriever.LoadPage(historyService as ServiceImpl, query, pageable, historicTaskInstanceConverter, (q, firstResult, pageSize) =>
+            {
+                return new GetHistoricInstanceTasksCmd(q, firstResult, pageSize);
+            });
         }
     }
 }

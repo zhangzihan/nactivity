@@ -89,7 +89,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonIgnore]
         public virtual IDictionary<string, IVariableInstance> VariableInstances
         {
@@ -98,17 +100,30 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return CollectVariableInstances(new Dictionary<string, IVariableInstance>());
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableNames"></param>
+        /// <returns></returns>
         public virtual IDictionary<string, object> GetVariables(IEnumerable<string> variableNames)
         {
             return GetVariables(variableNames, true);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableNames"></param>
+        /// <returns></returns>
         public virtual IDictionary<string, IVariableInstance> GetVariableInstances(IEnumerable<string> variableNames)
         {
             return GetVariableInstances(variableNames, true);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableNames"></param>
+        /// <param name="fetchAllVariables"></param>
+        /// <returns></returns>
         public virtual IDictionary<string, object> GetVariables(IEnumerable<string> variableNames, bool fetchAllVariables)
         {
 
@@ -162,7 +177,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return requestedVariables;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableNames"></param>
+        /// <param name="fetchAllVariables"></param>
+        /// <returns></returns>
         public virtual IDictionary<string, IVariableInstance> GetVariableInstances(IEnumerable<string> variableNames, bool fetchAllVariables)
         {
             IDictionary<string, IVariableInstance> requestedVariables = new Dictionary<string, IVariableInstance>();

@@ -1174,8 +1174,8 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 TerminateProcessInstanceCmd[] tcmds = new TerminateProcessInstanceCmd[]
                 {
-                    new TerminateProcessInstanceCmd(null, bkey1, "测试终止流程"),
-                    new TerminateProcessInstanceCmd(null, bkey2, "测试终止流程")
+                    new TerminateProcessInstanceCmd(null, bkey1, "测试终止流程", new WorkflowVariable()),
+                    new TerminateProcessInstanceCmd(null, bkey2, "测试终止流程", new WorkflowVariable())
                 };
 
                 client.Terminate(tcmds).GetAwaiter().GetResult();

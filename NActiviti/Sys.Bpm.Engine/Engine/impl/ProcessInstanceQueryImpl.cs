@@ -216,11 +216,11 @@ namespace Sys.Workflow.Engine.Impl
         {
             if (string.IsNullOrWhiteSpace(tenantId))
             {
-                this.tenantId = null;
                 if (this.currentOrQueryObject != null)
                 {
                     this.currentOrQueryObject.tenantId = null;
                 }
+                this.tenantId = "";
                 return this;
                 //throw new ActivitiIllegalArgumentException("process instance tenant id is null");
             }

@@ -12,12 +12,15 @@
  */
 namespace Sys.Workflow.Engine.Impl.Variable
 {
+    /// <summary>
     /// 
+    /// </summary>
     public class BooleanType : AbstractVariableType
     {
-
         private const long serialVersionUID = 1L;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override string TypeName
         {
             get
@@ -25,7 +28,9 @@ namespace Sys.Workflow.Engine.Impl.Variable
                 return "boolean";
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override bool Cachable
         {
             get
@@ -33,7 +38,11 @@ namespace Sys.Workflow.Engine.Impl.Variable
                 return true;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="valueFields"></param>
+        /// <returns></returns>
         public override object GetValue(IValueFields valueFields)
         {
             if (valueFields.LongValue != null)
@@ -42,7 +51,11 @@ namespace Sys.Workflow.Engine.Impl.Variable
             }
             return null;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="valueFields"></param>
         public override void SetValue(object value, IValueFields valueFields)
         {
             if (value == null)
@@ -63,14 +76,19 @@ namespace Sys.Workflow.Engine.Impl.Variable
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public override bool IsAbleToStore(object value)
         {
             if (value == null)
             {
                 return true;
             }
-            return value.GetType().IsAssignableFrom(typeof(bool)) || value.GetType().IsAssignableFrom(typeof(bool));
+
+            return value.GetType().IsAssignableFrom(typeof(bool));
         }
     }
-
 }

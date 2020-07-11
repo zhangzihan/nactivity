@@ -26,6 +26,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
     {
         private const long serialVersionUID = 1L;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="activity"></param>
+        /// <param name="originalActivityBehavior"></param>
         public AllPassParallelMultiInstanceBehavior(Activity activity, AbstractBpmnActivityBehavior originalActivityBehavior) : base(activity, originalActivityBehavior)
         {
             completedPolicy = new AllPassCompletedPolicy();
@@ -49,16 +54,31 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             Leave(execution, null);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="signalData"></param>
         public override void Leave(IExecutionEntity execution, object signalData)
         {
             base.Leave(execution, signalData);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
         protected internal override void LockFirstParentScope(IExecutionEntity execution)
         {
             base.LockFirstParentScope(execution);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parentExecution"></param>
+        /// <param name="deleteExecution"></param>
+        /// <param name="commandContext"></param>
         // TODO: can the ExecutionManager.deleteChildExecution not be used?
         protected internal override void DeleteChildExecutions(IExecutionEntity parentExecution, bool deleteExecution, ICommandContext commandContext)
         {

@@ -39,7 +39,7 @@ namespace Sys.Workflow.Engine.Impl.Delegate.Invocation
         /// <param name="valueExpression"></param>
         /// <param name="elContext"></param>
         /// <param name="value"></param>
-        public ExpressionSetInvocation(ValueExpression valueExpression, ELContext elContext, object value) : base(valueExpression)
+        public ExpressionSetInvocation(IValueExpression valueExpression, ELContext elContext, object value) : base(valueExpression)
         {
             this.value = value;
             this.elContext = elContext;

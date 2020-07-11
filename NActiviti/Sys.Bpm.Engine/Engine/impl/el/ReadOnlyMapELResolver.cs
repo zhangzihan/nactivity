@@ -24,14 +24,27 @@ namespace Sys.Workflow.Engine.Impl.EL
     /// </summary>
     public class ReadOnlyMapELResolver : ELResolver
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDictionary<object, object> wrappedMap;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="map"></param>
         public ReadOnlyMapELResolver(IDictionary<object, object> map)
         {
             this.wrappedMap = map;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="base"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
         public override object GetValue(ELContext context, object @base, object property)
         {
             if (@base == null)
@@ -45,14 +58,28 @@ namespace Sys.Workflow.Engine.Impl.EL
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="base"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
         public override bool IsReadOnly(ELContext context, object @base, object property)
         {
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="base"></param>
+        /// <param name="property"></param>
+        /// <param name="value"></param>
         public override void SetValue(ELContext context, object @base, object property, object value)
         {
-            if (@base == null)
+            if (@base is null)
             {
                 if (wrappedMap.ContainsKey(property))
                 {
@@ -61,11 +88,24 @@ namespace Sys.Workflow.Engine.Impl.EL
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="arg"></param>
+        /// <returns></returns>
         public override Type GetCommonPropertyType(ELContext context, object arg)
         {
             return typeof(object);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
+        /// <returns></returns>
         public override Type GetType(ELContext context, object arg1, object arg2)
         {
             return typeof(object);

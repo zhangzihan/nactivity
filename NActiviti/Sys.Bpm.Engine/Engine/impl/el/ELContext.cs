@@ -6,17 +6,26 @@ using System.Threading.Tasks;
 
 namespace Sys.Workflow.Engine.Impl.EL
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class ELContext
     {
-        private System.Collections.Generic.Dictionary<Type, object> context;
+        private Dictionary<Type, object> context;
         //private Locale locale;
         private bool resolved;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ELContext()
         {
         }
-
-        public Object GetContext(Type key)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public object GetContext(Type key)
         {
             if (key == null)
             {
@@ -27,14 +36,22 @@ namespace Sys.Workflow.Engine.Impl.EL
                 return context?[key];
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract ELResolver ELResolver { get; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract FunctionMapper FunctionMapper { get; }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public abstract VariableMapper VariableMapper { get; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsPropertyResolved
         {
             get
@@ -46,8 +63,12 @@ namespace Sys.Workflow.Engine.Impl.EL
                 this.resolved = value;
             }
         }
-
-        public void PutContext(Type key, Object contextObject)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="contextObject"></param>
+        public void PutContext(Type key, object contextObject)
         {
             if (key == null)
             {
@@ -64,10 +85,14 @@ namespace Sys.Workflow.Engine.Impl.EL
             }
         }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class FunctionMapper
     { }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class VariableMapper
     {
 

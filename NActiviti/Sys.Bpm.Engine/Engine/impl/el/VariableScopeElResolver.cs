@@ -29,37 +29,60 @@ namespace Sys.Workflow.Engine.Impl.EL
     /// </summary>
     public class VariableScopeElResolver : ELResolver
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly string EXECUTION_KEY = "execution";
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly string TASK_KEY = "task";
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly string LOGGED_IN_USER_KEY = "authenticatedUserId";
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IVariableScope variableScope;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableScope"></param>
         public VariableScopeElResolver(IVariableScope variableScope)
         {
             this.variableScope = variableScope;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public IVariableScope VariableScope => variableScope;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="base"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
         public override object GetValue(ELContext context, object @base, object property)
         {
-            string variable = (string)property; // according to javadoc, can only be a String
-
+            string variable = property.ToString();
             if (@base == null)
             {
-
-                if ((EXECUTION_KEY.Equals(property) && variableScope is IExecutionEntity) || (TASK_KEY.Equals(property) && variableScope is ITaskEntity))
+                if ((EXECUTION_KEY.Equals(variable) && variableScope is IExecutionEntity) || (TASK_KEY.Equals(variable) && variableScope is ITaskEntity))
                 {
                     context.IsPropertyResolved = true;
                     return variableScope;
                 }
-                else if (EXECUTION_KEY.Equals(property) && variableScope is ITaskEntity)
+                else if (EXECUTION_KEY.Equals(variable) && variableScope is ITaskEntity entity)
                 {
                     context.IsPropertyResolved = true;
-                    return ((ITaskEntity)variableScope).Execution;
+                    return entity.Execution;
                 }
-                else if (LOGGED_IN_USER_KEY.Equals(property))
+                else if (LOGGED_IN_USER_KEY.Equals(variable))
                 {
                     context.IsPropertyResolved = true;
                     return Authentication.AuthenticatedUser.Id;
@@ -89,21 +112,34 @@ namespace Sys.Workflow.Engine.Impl.EL
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="base"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
         public override bool IsReadOnly(ELContext context, object @base, object property)
         {
             if (@base == null)
             {
-                string variable = (string)property;
-                return !variableScope.HasVariable(variable);
+                return !variableScope.HasVariable(property.ToString());
             }
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="base"></param>
+        /// <param name="property"></param>
+        /// <param name="value"></param>
         public override void SetValue(ELContext context, object @base, object property, object value)
         {
             if (@base == null)
             {
-                string variable = (string)property;
+                string variable = property.ToString();
                 if (variableScope.HasVariable(variable))
                 {
                     variableScope.SetVariable(variable, value);
@@ -111,6 +147,12 @@ namespace Sys.Workflow.Engine.Impl.EL
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arg0"></param>
+        /// <param name="arg1"></param>
+        /// <returns></returns>
         public override Type GetCommonPropertyType(ELContext arg0, object arg1)
         {
             return typeof(object);
@@ -120,7 +162,13 @@ namespace Sys.Workflow.Engine.Impl.EL
         //{
         //    return null;
         //}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arg0"></param>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
+        /// <returns></returns>
         public override Type GetType(ELContext arg0, object arg1, object arg2)
         {
             return typeof(object);

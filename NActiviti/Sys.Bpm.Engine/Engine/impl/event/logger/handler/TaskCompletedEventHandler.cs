@@ -10,7 +10,11 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
     /// 
     public class TaskCompletedEventHandler : AbstractTaskEventHandler
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <returns></returns>
         public override IEventLogEntryEntity GenerateEventLogEntry(CommandContext<IEventLogEntryEntity> commandContext)
         {
 
@@ -22,9 +26,8 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
             long duration = timeStamp.Value.Ticks - task.CreateTime.Value.Ticks;
             PutInMapIfNotNull(data, FieldsFields.DURATION, duration);
 
-            if (@event is IActivitiEntityWithVariablesEvent)
+            if (@event is IActivitiEntityWithVariablesEvent activitiEntityWithVariablesEvent)
             {
-                IActivitiEntityWithVariablesEvent activitiEntityWithVariablesEvent = (IActivitiEntityWithVariablesEvent)@event;
                 if (activitiEntityWithVariablesEvent.Variables != null && activitiEntityWithVariablesEvent.Variables.Count > 0)
                 {
                     IDictionary<string, object> variableMap = new Dictionary<string, object>();

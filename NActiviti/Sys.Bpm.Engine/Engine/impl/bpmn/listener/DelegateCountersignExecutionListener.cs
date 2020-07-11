@@ -46,6 +46,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
         private static readonly ILogger<DelegateCountersignExecutionListener> logger = ProcessEngineServiceProvider.LoggerService<DelegateCountersignExecutionListener>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DelegateCountersignExecutionListener()
         {
 
@@ -87,7 +90,8 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
                             IGetBookmarkRule rule = ruleProvider.CreateBookmarkRule(query.RuleType.ToString());
                             rule.Execution = execution;
                             rule.Condition = query;
-                            users.AddRange(Context.ProcessEngineConfiguration.CommandExecutor.Execute(rule));
+                            var us = Context.ProcessEngineConfiguration.CommandExecutor.Execute(rule);
+                            users.AddRange(us);
                         }
                     }
 

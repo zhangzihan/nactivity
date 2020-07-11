@@ -39,7 +39,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 this.deleteReason = deleteReason;
                 this.endTime = Context.ProcessEngineConfiguration.Clock.CurrentTime;
-                this.durationInMillis = endTime.Value.Ticks - startTime.Value.Ticks;
+                this.durationInMillis = (endTime.Value.Ticks - startTime.Value.Ticks) / 10000;
             }
         }
 

@@ -24,32 +24,42 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
     /// 
     /// </summary>
     [Serializable]
-	public class ExpressionExecutionListener : IExecutionListener
-	{
+    public class ExpressionExecutionListener : IExecutionListener
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        protected internal IExpression expression;
 
-	  protected internal IExpression expression;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        public ExpressionExecutionListener(IExpression expression)
+        {
+            this.expression = expression;
+        }
 
-	  public ExpressionExecutionListener(IExpression expression)
-	  {
-		this.expression = expression;
-	  }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        public virtual void Notify(IExecutionEntity execution)
+        {
+            // Return value of expression is ignored
+            expression.GetValue(execution);
+        }
 
-	  public virtual void Notify(IExecutionEntity execution)
-	  {
-		// Return value of expression is ignored
-		expression.GetValue(execution);
-	  }
-
-	  /// <summary>
-	  /// returns the expression text for this execution listener. Comes in handy if you want to check which listeners you already have.
-	  /// </summary>
-	  public virtual string ExpressionText
-	  {
-		  get
-		  {
-			return expression.ExpressionText;
-		  }
-	  }
-	}
+        /// <summary>
+        /// returns the expression text for this execution listener. Comes in handy if you want to check which listeners you already have.
+        /// </summary>
+        public virtual string ExpressionText
+        {
+            get
+            {
+                return expression.ExpressionText;
+            }
+        }
+    }
 
 }

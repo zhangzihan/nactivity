@@ -24,7 +24,9 @@ namespace Sys.Workflow.Engine.Impl.EL
     ///  </seealso>
     public class ParsingElContext : ELContext
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override ELResolver ELResolver
         {
             get
@@ -32,7 +34,9 @@ namespace Sys.Workflow.Engine.Impl.EL
                 return null;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override FunctionMapper FunctionMapper
         {
             get
@@ -40,7 +44,9 @@ namespace Sys.Workflow.Engine.Impl.EL
                 return null;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override VariableMapper VariableMapper
         {
             get

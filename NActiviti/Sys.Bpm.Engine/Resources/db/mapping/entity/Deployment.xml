@@ -90,9 +90,6 @@
 			<IsTrue Property="tenantId != null">
 				and RES.TENANT_ID_ = #{tenantId}
 			</IsTrue>
-			<IsTrue Property="tenantId == null">
-				and (RES.TENANT_ID_ = '' OR RES.TENANT_ID_ IS NULL)
-			</IsTrue>
 			<IsTrue Property="tenantIdLike != null">
 				and RES.TENANT_ID_ like #{tenantIdLike}
 			</IsTrue>

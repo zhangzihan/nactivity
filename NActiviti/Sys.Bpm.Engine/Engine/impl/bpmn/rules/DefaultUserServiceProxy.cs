@@ -6,17 +6,11 @@
 //  Original author: 张楠
 ///////////////////////////////////////////////////////////
 
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Sys.Workflow.Engine.Impl.Identities;
-using Sys.Workflow.Engine.Api;
 using Sys.Net.Http;
+using Sys.Workflow.Engine.Impl.Identities;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
@@ -24,7 +18,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
     /// <summary>
     /// 默认用户服务代理
     /// </summary>
-    public class DefaultUserServiceProxy : IUserServiceProxy
+    class DefaultUserServiceProxy : IUserServiceProxy
     {
         private readonly IHttpClientProxy httpProxy;
 
@@ -64,8 +58,6 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         /// <param name="parameter"></param>
         public async Task<IList<IUserInfo>> GetUsers(string apiUrl, object parameter)
         {
-            //this.httpProxy.SetHttpClientRequestAccessToken(apiWorkflowEngine, "");
-
             IUserInfo[] users = await httpProxy.PostAsync<UserInfo[]>(apiUrl, parameter).ConfigureAwait(false);
 
             return new List<IUserInfo>(users ?? new UserInfo[0]);
@@ -86,26 +78,42 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         /// </summary>
         /// <param name="apiUrl"></param>
         /// <param name="userId"></param>
-        public async Task<IUserInfo> GetUser(string apiUrl, string userId)
+        public Task<IUserInfo> GetUser(string apiUrl, string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
             {
                 throw new ArgumentNullException("userId");
             }
 
-            IUserInfo user;
-            try
-            {
-                user = await this.httpProxy.PostAsync<UserInfo>(apiUrl, new { id = userId }).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                logger.LogWarning(ex, "invoke user failed: userId");
+            //IUserInfo user;
+            //try
+            //{
+            //    user = await this.httpProxy.PostAsync<UserInfo>(apiUrl, new { id = userId }).ConfigureAwait(false);
+            //}
+            //catch (Exception ex)
+            //{
+            //    logger.LogWarning(ex, "invoke user failed: userId");
 
-                user = Authentication.AuthenticatedUser;
-            }
+            //    user = Authentication.AuthenticatedUser;
+            //}
 
-            return user;
+            return Task.FromResult<IUserInfo>(new UserInfo
+            {
+                Id = userId,
+                TenantId = Authentication.AuthenticatedUser.TenantId
+            });
+        }
+
+        public async Task<IList<IUserInfo>> GetUsers(string apiUrl, RequestUserParameter parameter)
+        {
+            IUserInfo[] users = await httpProxy.PostAsync<UserInfo[]>(apiUrl, parameter).ConfigureAwait(false);
+
+            return new List<IUserInfo>(users ?? new UserInfo[0]);
+        }
+
+        public async Task<IList<IUserInfo>> GetUsers(RequestUserParameter parameter)
+        {
+            return await GetUsers(connectorProvider.GetUserByUser, parameter).ConfigureAwait(false);
         }
     }
 }

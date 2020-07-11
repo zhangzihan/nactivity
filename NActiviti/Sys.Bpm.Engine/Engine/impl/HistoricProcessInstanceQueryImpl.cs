@@ -456,7 +456,7 @@ namespace Sys.Workflow.Engine.Impl
                 {
                     this.currentOrQueryObject.tenantId = null;
                 }
-                this.tenantId = null;
+                this.tenantId = "";
                 return this;
             }
             if (inOrStatement)

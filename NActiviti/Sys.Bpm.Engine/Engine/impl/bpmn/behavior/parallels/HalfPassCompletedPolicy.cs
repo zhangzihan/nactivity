@@ -51,8 +51,14 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         /// <returns></returns>
         public override bool CompletionConditionSatisfied(IExecutionEntity parent, MultiInstanceActivityBehavior multiInstanceActivity, object signalData)
         {
-            var config = Context.CommandContext.ProcessEngineConfiguration;
+            bool pass = base.CompletionConditionSatisfied(parent, multiInstanceActivity, signalData);
+            if (pass)
+            {
+                parent.SetVariable(CompleteConditionVarName, true);
+                return true;
+            }
 
+            var config = Context.CommandContext.ProcessEngineConfiguration;
             object passed = parent.GetVariable(CompleteConditionVarName, true);
             if (passed is null || (bool.TryParse(passed.ToString(), out var p) && p))
             {

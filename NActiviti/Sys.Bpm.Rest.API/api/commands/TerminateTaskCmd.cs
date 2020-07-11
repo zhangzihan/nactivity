@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Sys.Workflow.Services.Api.Commands;
 using System;
 
 /*
@@ -19,8 +20,6 @@ using System;
 
 namespace Sys.Workflow.Cloud.Services.Api.Commands
 {
-
-
     /// <summary>
     /// 任务更新命令
     /// </summary>
@@ -28,6 +27,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
     {
         private readonly string id = "terminateTaskCmd";
         private string _terminateReason;
+        private WorkflowVariable outputVariables;
 
         /// <summary>
         /// 构造函数
@@ -44,11 +44,13 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         //[JsonConstructor]
         public TerminateTaskCmd([JsonProperty("TaskId")] string taskId,
             [JsonProperty("Description")] string terminateReason,
-            [JsonProperty("TerminateExecution")] bool terminateExecution) : this()
+            [JsonProperty("TerminateExecution")] bool terminateExecution,
+            [JsonProperty("OutputVariables")] WorkflowVariable outputVariables) : this()
         {
             this.TaskId = taskId;
             this.TerminateReason = terminateReason;
             this.TerminateExecution = terminateExecution;
+            this.outputVariables = outputVariables;
         }
 
         /// <summary>
@@ -86,6 +88,22 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
 #endif
             }
             set => _terminateReason = value;
+        }
+
+        /// <summary>
+        /// 提交的数据
+        /// </summary>
+        public virtual WorkflowVariable OutputVariables
+        {
+            get
+            {
+                outputVariables ??= new WorkflowVariable();
+                return outputVariables;
+            }
+            set
+            {
+                outputVariables = value;
+            }
         }
 
         /// <summary>

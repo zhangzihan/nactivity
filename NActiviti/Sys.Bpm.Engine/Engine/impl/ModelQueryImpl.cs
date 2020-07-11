@@ -178,17 +178,22 @@ namespace Sys.Workflow.Engine.Impl
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <returns></returns>
         public virtual IModelQuery SetModelTenantId(string tenantId)
         {
-            if (string.IsNullOrWhiteSpace(tenantId))
-            {
-                this.tenantId = null;
-                return this;
-            }
-            this.tenantId = tenantId;
+            this.tenantId = tenantId?.Trim() ?? "";
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantIdLike"></param>
+        /// <returns></returns>
         public virtual IModelQuery SetModelTenantIdLike(string tenantIdLike)
         {
             if (string.IsNullOrWhiteSpace(tenantIdLike))
@@ -200,6 +205,10 @@ namespace Sys.Workflow.Engine.Impl
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual IModelQuery SetModelWithoutTenantId()
         {
             this.withoutTenantId = true;
@@ -207,37 +216,64 @@ namespace Sys.Workflow.Engine.Impl
         }
 
         // sorting ////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual IModelQuery OrderByModelCategory()
         {
             return SetOrderBy(ModelQueryProperty.MODEL_CATEGORY);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual IModelQuery OrderByModelId()
         {
             return SetOrderBy(ModelQueryProperty.MODEL_ID);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual IModelQuery OrderByModelKey()
         {
             return SetOrderBy(ModelQueryProperty.MODEL_KEY);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual IModelQuery OrderByModelVersion()
         {
             return SetOrderBy(ModelQueryProperty.MODEL_VERSION);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual IModelQuery OrderByModelName()
         {
             return SetOrderBy(ModelQueryProperty.MODEL_NAME);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual IModelQuery OrderByCreateTime()
         {
             return SetOrderBy(ModelQueryProperty.MODEL_CREATE_TIME);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual IModelQuery OrderByLastUpdateTime()
         {
             return SetOrderBy(ModelQueryProperty.MODEL_LAST_UPDATE_TIME);

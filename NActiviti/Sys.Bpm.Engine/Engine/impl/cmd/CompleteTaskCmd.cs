@@ -31,7 +31,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public CompleteTaskCmd(string taskId, IDictionary<string, object> variables) : base(taskId)
         {
-            this.variables = variables;
+            this.variables = variables ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         }
 
         public CompleteTaskCmd(string taskId, IDictionary<string, object> variables, bool localScope) : this(taskId, variables, null, localScope)

@@ -443,7 +443,7 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// <param name="cmd">终止任务命令</param>
         public virtual void TerminateTask(TerminateTaskCmd cmd)
         {
-            taskService.TerminateTask(cmd.TaskId, cmd.TerminateReason, true);
+            taskService.TerminateTask(cmd.TaskId, cmd.TerminateReason, true, cmd.OutputVariables);
         }
 
         /// <summary>
@@ -478,7 +478,7 @@ namespace Sys.Workflow.Cloud.Services.Core
             {
                 try
                 {
-                    runtimeService.TerminateProcessInstance(cmd.ProcessInstanceId, cmd.BusinessKey, cmd.Reason);
+                    runtimeService.TerminateProcessInstance(cmd.ProcessInstanceId, cmd.BusinessKey, cmd.Reason, cmd.OutputVariables);
                 }
                 catch (ActivitiObjectNotFoundException ex)
                 {

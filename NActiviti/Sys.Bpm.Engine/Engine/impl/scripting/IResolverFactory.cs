@@ -15,12 +15,17 @@ namespace Sys.Workflow.Engine.Impl.Scripting
 {
     using Sys.Workflow.Engine.Delegate;
     using Sys.Workflow.Engine.Impl.Cfg;
-
+    /// <summary>
     /// 
-    /// 
+    /// </summary>
     public interface IResolverFactory
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processEngineConfiguration"></param>
+        /// <param name="variableScope"></param>
+        /// <returns></returns>
         IResolver CreateResolver(ProcessEngineConfigurationImpl processEngineConfiguration, IVariableScope variableScope);
 
     }

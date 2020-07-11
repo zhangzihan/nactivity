@@ -33,7 +33,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model
         /// <summary>
         /// 租户id
         /// </summary>
-        public virtual string TenantId { get; set; }
+        public virtual string TenantId { get; set; } = "";
 
         /// <summary>
         /// 实例对象名称

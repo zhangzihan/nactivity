@@ -82,27 +82,27 @@ namespace Spring.Util
         /// <param name="collection">The collection to check.</param>
         /// <param name="element">The object to locate in the collection.</param>
         /// <returns><see lang="true"/> if the element is in the collection, <see lang="false"/> otherwise.</returns>
-        public static bool Contains(IEnumerable collection, Object element)
+        public static bool Contains(IEnumerable collection, object element)
         {
             if (collection == null)
             {
                 return false;
             }
 
-            if (collection is IList)
+            if (collection is IList list)
             {
-                return ((IList) collection).Contains(element);
+                return list.Contains(element);
             }
 
-            if (collection is IDictionary)
+            if (collection is IDictionary dictionary)
             {
-                return ((IDictionary) collection).Contains(element);
+                return dictionary.Contains(element);
             }
 
             MethodInfo method = collection.GetType().GetMethod("contains", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
             if (null != method)
             {
-                return (bool)method.Invoke(collection, new Object[] { element });
+                return Convert.ToBoolean(method.Invoke(collection, new object[] { element }));
             }
             foreach (object item in collection)
             {
@@ -135,9 +135,9 @@ namespace Spring.Util
             {
                 throw new ArgumentNullException("enumerable", "Collection cannot be null.");
             }
-            if (enumerable is IList)
+            if (enumerable is IList list)
             {
-                ((IList)enumerable).Add(element);
+                list.Add(element);
                 return;
             }
             MethodInfo method;
@@ -146,7 +146,7 @@ namespace Spring.Util
             {
                 throw new InvalidOperationException("Enumerable type " + enumerable.GetType() + " does not implement a Add() method.");
             }
-            method.Invoke(enumerable, new Object[] { element });
+            method.Invoke(enumerable, new object[] { element });
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Spring.Util
             method = targetCollection.GetType().GetMethod("containsAll", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
 
             if (method != null)
-                contains = (bool)method.Invoke(targetCollection, new Object[] { sourceCollection });
+                contains = Convert.ToBoolean(method.Invoke(targetCollection, new object[] { sourceCollection }));
             else
             {
                 method = targetCollection.GetType().GetMethod("Contains", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
@@ -186,7 +186,7 @@ namespace Spring.Util
                 }
                 while (sourceCollectionEnumerator.MoveNext() == true)
                 {
-                    if ((contains = (bool)method.Invoke(targetCollection, new Object[] { sourceCollectionEnumerator.Current })) == false)
+                    if ((contains = Convert.ToBoolean(method.Invoke(targetCollection, new object[] { sourceCollectionEnumerator.Current }))) == false)
                         break;
                 }
             }
@@ -210,7 +210,7 @@ namespace Spring.Util
             method = targetCollection.GetType().GetMethod("removeAll", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
 
             if (method != null)
-                method.Invoke(targetCollection, new Object[] { al });
+                method.Invoke(targetCollection, new object[] { al });
             else
             {
                 method = targetCollection.GetType().GetMethod("Remove", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public, null, new Type[1] { typeof(object) }, null);
@@ -226,8 +226,8 @@ namespace Spring.Util
                 IEnumerator e = al.GetEnumerator();
                 while (e.MoveNext() == true)
                 {
-                    while ((bool)methodContains.Invoke(targetCollection, new Object[] { e.Current }) == true)
-                        method.Invoke(targetCollection, new Object[] { e.Current });
+                    while ((bool)methodContains.Invoke(targetCollection, new object[] { e.Current }) == true)
+                        method.Invoke(targetCollection, new object[] { e.Current });
                 }
             }
         }
@@ -275,12 +275,11 @@ namespace Spring.Util
                 return null;
             }
 
-            IList candidateList = candidates as IList;
-            if (candidateList == null)
+            if (!(candidates is IList candidateList))
             {
-                if (candidates is ICollection)
+                if (candidates is ICollection collection)
                 {
-                    candidateList = new ArrayList((ICollection)candidates);
+                    candidateList = new ArrayList(collection);
                 }
                 else
                 {
@@ -315,7 +314,7 @@ namespace Spring.Util
             {
                 return null;
             }
-            Type typeToUse = (type != null ? type : typeof(object));
+            Type typeToUse = type ?? typeof(object);
             object val = null;
             foreach (object obj in collection)
             {
@@ -343,7 +342,7 @@ namespace Spring.Util
             {
                 return null;
             }
-            Type typeToUse = (type != null ? type : typeof(object));
+            Type typeToUse = type ?? typeof(object);
             ArrayList results = new ArrayList();
             foreach (object obj in collection)
             {
@@ -393,9 +392,9 @@ namespace Spring.Util
             if (enumerable == null)
                 return true;
 
-            if (enumerable is ICollection)
+            if (enumerable is ICollection collection)
             {
-                return (0 == ((ICollection)enumerable).Count);
+                return 0 == collection.Count;
             }
 
             IEnumerator it = enumerable.GetEnumerator();
@@ -415,7 +414,7 @@ namespace Spring.Util
         /// </returns>
         public static bool IsEmpty(ICollection collection)
         {
-            return (collection == null || collection.Count == 0);
+            return collection == null || collection.Count == 0;
         }
 
         /// <summary>
@@ -427,7 +426,7 @@ namespace Spring.Util
         /// </returns>
         public static bool IsEmpty(IDictionary dictionary)
         {
-            return (dictionary == null || dictionary.Count == 0);
+            return dictionary == null || dictionary.Count == 0;
         }
 
         /// <summary>

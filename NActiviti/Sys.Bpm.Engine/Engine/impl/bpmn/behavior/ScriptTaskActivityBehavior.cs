@@ -36,11 +36,25 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         private static readonly ILogger logger = ProcessEngineServiceProvider.LoggerService<ScriptTaskActivityBehavior>();
 
         private const long serialVersionUID = 1L;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string scriptTaskId;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string script;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string language;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string resultVariable;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool storeScriptVariables = false; // see https://activiti.atlassian.net/browse/ACT-1626
 
         public ScriptTaskActivityBehavior(string script, string language, string resultVariable)
@@ -50,15 +64,27 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             this.resultVariable = resultVariable;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scriptTaskId"></param>
+        /// <param name="script"></param>
+        /// <param name="language"></param>
+        /// <param name="resultVariable"></param>
+        /// <param name="storeScriptVariables"></param>
         public ScriptTaskActivityBehavior(string scriptTaskId, string script, string language, string resultVariable, bool storeScriptVariables) : this(script, language, resultVariable)
         {
             this.scriptTaskId = scriptTaskId;
             this.storeScriptVariables = storeScriptVariables;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
         public override void Execute(IExecutionEntity execution)
         {
-            ScriptingEngines scriptingEngines = Context.ProcessEngineConfiguration.ScriptingEngines;
+            IScriptingEngines scriptingEngines = Context.ProcessEngineConfiguration.ScriptingEnginesProvider.Create(language);
 
             if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
             {
@@ -82,16 +108,15 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 {
                     execution.SetVariable(resultVariable, result);
                 }
-
             }
             catch (ActivitiException e)
             {
                 logger.LogWarning("Exception while executing " + execution.CurrentFlowElement.Id + " : " + e.Message);
 
                 noErrors = false;
-                if (e is BpmnError)
+                if (e is BpmnError error)
                 {
-                    ErrorPropagation.PropagateError((BpmnError)e, execution);
+                    ErrorPropagation.PropagateError(error, execution);
                 }
                 else
                 {

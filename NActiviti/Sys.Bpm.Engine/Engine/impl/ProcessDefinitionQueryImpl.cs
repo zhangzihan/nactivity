@@ -281,12 +281,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IProcessDefinitionQuery SetProcessDefinitionTenantId(string tenantId)
         {
-            if (string.IsNullOrWhiteSpace(tenantId))
-            {
-                this.tenantId = null;
-                return this;
-            }
-            this.tenantId = tenantId;
+            this.tenantId = tenantId?.Trim();
             return this;
         }
 

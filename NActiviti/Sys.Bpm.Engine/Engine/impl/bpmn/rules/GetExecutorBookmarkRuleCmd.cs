@@ -25,7 +25,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
     /// <summary>
     /// 获取当前执行人的用户信息
     /// </summary>
-    [GetBookmarkDescriptor("GetExecutor")]
+    [GetBookmarkDescriptor(RequestUserCategory.GETUSER_EXECUTOR)]
     public class GetExecutorBookmarkRuleCmd : BaseGetBookmarkRule
     {
         private readonly ExternalConnectorProvider externalConnector;
@@ -63,7 +63,13 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
                 });
             }
 
-            return users;
+            IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
+
+            return proxy.GetUsers(externalConnector.GetUser, new RequestUserParameter
+            {
+                IdList = users.Select(x => x.Id).ToArray(),
+                Category = RequestUserCategory.GETUSER_EXECUTOR
+            }).ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
 }

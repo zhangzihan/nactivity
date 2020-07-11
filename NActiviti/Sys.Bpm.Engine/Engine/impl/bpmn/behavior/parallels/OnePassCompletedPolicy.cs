@@ -49,29 +49,20 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         /// <returns></returns>
         public override bool CompletionConditionSatisfied(IExecutionEntity parent, MultiInstanceActivityBehavior multiInstanceActivity, object signalData)
         {
-            //bool pass = base.CompletionConditionSatisfied(parent, multiInstanceActivity, signalData);
-
-            object passed = parent.GetVariable(CompleteConditionVarName, true);
-            if (passed is null || (bool.TryParse(passed.ToString(), out var p) && p))
+            bool pass = base.CompletionConditionSatisfied(parent, multiInstanceActivity, signalData);
+            if (pass)
             {
-                //return pass;
+                parent.SetVariable(CompleteConditionVarName, true);
                 return true;
             }
 
+            int nrOfActiveInstances = multiInstanceActivity.GetLoopVariable(parent, MultiInstanceActivityBehavior.NUMBER_OF_ACTIVE_INSTANCES).GetValueOrDefault(0);
+
             var tf = (signalData as IDictionary<string, object>)[CompleteConditionVarName];
             bool.TryParse(tf?.ToString(), out bool approvaled);
+            parent.SetVariable(CompleteConditionVarName, approvaled);
 
-            if (approvaled)
-            {
-                parent.SetVariable(CompleteConditionVarName, true);
-            }
-            else
-            {
-                parent.SetVariable(CompleteConditionVarName, false);
-            }
-
-            //return pass || approvaled;
-            return approvaled;
+            return approvaled || nrOfActiveInstances == 0;
         }
     }
 }

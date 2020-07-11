@@ -62,7 +62,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
   }
 ]*/
     /// </summary>
-    [GetBookmarkDescriptor("GetUser")]
+    [GetBookmarkDescriptor(RequestUserCategory.GETUSER_USER)]
     public class GetUserBookmarkRuleCmd : BaseGetBookmarkRule
     {
         private readonly ExternalConnectorProvider externalConnector;
@@ -76,9 +76,10 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         {
             IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
-            return proxy.GetUsers(externalConnector.GetUserByUser, new
+            return proxy.GetUsers(externalConnector.GetUserByUser, new RequestUserParameter
             {
-                idList = Condition.QueryCondition.Select(x => x.Id).ToArray()
+                IdList = Condition.QueryCondition.Select(x => x.Id).ToArray(),
+                Category = RequestUserCategory.GETUSER_USER
             }).GetAwaiter().GetResult();
         }
     }

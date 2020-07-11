@@ -22,6 +22,9 @@ using System.Net;
 using Polly.Extensions.Http;
 using Sys.Workflow.Polly;
 using Sys.Runtime.Serialization;
+using Sys.Workflow.Engine.Impl.Scripting;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Sys.Workflow.Engine.Impl.EL;
 
 namespace Sys.Workflow
 {
@@ -146,6 +149,10 @@ namespace Sys.Workflow
             builder.Services.AddTransient<IServiceWebApiHttpProxy, ServiceWebApiHttpProxy>();
 
             builder.Services.AddTransient<ISerializableTypeSerializer, DefaultSerializableTypeSerializer>();
+
+            builder.Services.TryAddSingleton<IExpressionFactory, ExpressionFactory>();
+            builder.Services.TryAddSingleton<IScriptingEngines, ScriptingEngines>();
+            builder.Services.TryAddSingleton<IScriptingEnginesProvider, ScriptingEnginesProvider>();
 
             builder.AddDataSource()
                 .AddDataBaseReader()

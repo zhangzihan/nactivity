@@ -24,14 +24,29 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         /// </summary>
         /// <param name="apiUrl">服务地址</param>
         /// <param name="parameter">请求参数</param>
+        [Obsolete("使用GetUsers(string apiUrl, RequestUserParameter parameter)")]
         Task<IList<IUserInfo>> GetUsers(string apiUrl, object parameter);
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="apiUrl">服务地址</param>
+        /// <param name="parameter">请求参数</param>
+        Task<IList<IUserInfo>> GetUsers(string apiUrl, RequestUserParameter parameter);
 
         /// <summary>
         /// 获取用户信息
         /// </summary>
         /// <param name="apiUrl">服务地址</param>
         /// <param name="parameter">请求参数</param>
+        [Obsolete("使用GetUsers(RequestUserParameter parameter)")]
         Task<IList<IUserInfo>> GetUsers(object parameter);
+
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="apiUrl">服务地址</param>
+        /// <param name="parameter">请求参数</param>
+        Task<IList<IUserInfo>> GetUsers(RequestUserParameter parameter);
 
         /// <summary>
         /// 获取用户信息

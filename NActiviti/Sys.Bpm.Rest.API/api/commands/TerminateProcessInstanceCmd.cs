@@ -1,6 +1,7 @@
 ﻿namespace Sys.Workflow.Cloud.Services.Api.Commands
 {
     using Newtonsoft.Json;
+    using Sys.Workflow.Services.Api.Commands;
     using System;
 
 
@@ -22,15 +23,16 @@
         /// <param name="processInstanceId">流程实例id</param>
         /// <param name="reason">终止原因</param>
         //[JsonConstructor]
-        public TerminateProcessInstanceCmd([JsonProperty("ProcessInstanceId")]string processInstanceId,
-            [JsonProperty("BusinessKey")]string businessKey,
-            [JsonProperty("Reason")]string reason)
+        public TerminateProcessInstanceCmd([JsonProperty("ProcessInstanceId")] string processInstanceId,
+            [JsonProperty("BusinessKey")] string businessKey,
+            [JsonProperty("Reason")] string reason,
+            [JsonProperty("OutputVariables")] WorkflowVariable outputVariables)
         {
-            this.BusinessKey = businessKey;
-            this.ProcessInstanceId = processInstanceId;
-            this.Reason = reason;
+            BusinessKey = businessKey;
+            ProcessInstanceId = processInstanceId;
+            Reason = reason;
+            OutputVariables = outputVariables;
         }
-
 
         /// <summary>
         /// 命令id
@@ -68,6 +70,11 @@
             get;
             set;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public WorkflowVariable OutputVariables { get; set; }
     }
 
 }

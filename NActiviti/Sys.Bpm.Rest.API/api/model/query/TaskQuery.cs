@@ -23,7 +23,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model
         /// <summary>
         /// 业务键
         /// </summary>
-        public string BusinessKey { get; set; }
+        public string ProcessInstanceBusinessKey { get; set; }
 
         /// <summary>
         /// 流程部署id

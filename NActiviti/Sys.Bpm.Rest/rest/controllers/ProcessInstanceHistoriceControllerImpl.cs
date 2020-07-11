@@ -26,6 +26,7 @@ using Sys.Workflow.Cloud.Services.Rest.Assemblers;
 using Sys.Workflow.Engine;
 using Sys.Workflow.Engine.History;
 using Sys.Workflow.Hateoas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,19 +44,22 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         private readonly IRuntimeService runtimeService;
         private readonly IHistoryService historyService;
         private readonly SecurityPoliciesApplicationService securityService;
+        private readonly TaskResourceAssembler taskResourceAssembler;
         private readonly PageableProcessHistoryRepositoryService pageableProcessHistoryService;
 
         /// <inheritdoc />
         public ProcessInstanceHistoriceControllerImpl(ProcessEngineWrapper processEngine,
             PageableProcessHistoryRepositoryService pageableProcessHistoryService,
             IProcessEngine engine,
-            SecurityPoliciesApplicationService securityPoliciesApplicationService)
+            SecurityPoliciesApplicationService securityPoliciesApplicationService,
+            TaskResourceAssembler taskResourceAssembler)
         {
             this.processEngine = processEngine;
             this.repositoryService = engine.RepositoryService;
             this.runtimeService = engine.RuntimeService;
             this.historyService = engine.HistoryService;
             this.securityService = securityPoliciesApplicationService;
+            this.taskResourceAssembler = taskResourceAssembler;
             this.pageableProcessHistoryService = pageableProcessHistoryService;
         }
 
@@ -101,6 +105,22 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             Resources<HistoricVariableInstance> resources = new Resources<HistoricVariableInstance>(resourcesList);
 
             return Task.FromResult(resources);
+        }
+
+        [HttpGet("{processInstanceId}/tasks/{businessKey}/{finished?}")]
+        public virtual Task<Resources<TaskModel>> GetTasks(string processInstanceId, string businessKey, bool? finished)
+        {
+            IPage<TaskModel> historics = null;
+
+            historics = pageableProcessHistoryService.GetHistoryTasks(processInstanceId, businessKey, finished);
+
+            var res = taskResourceAssembler.ToResources(historics.GetContent());
+
+            long total = historics.GetTotalItems();
+
+            Resources<TaskModel> tasks = new Resources<TaskModel>(res.Select(x => x.Content), total, 1, total);
+
+            return Task.FromResult(tasks);
         }
     }
 }

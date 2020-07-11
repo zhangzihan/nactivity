@@ -16,6 +16,7 @@
     <Folder Include="Engine\impl\db\upgrade\" />
     <Folder Include="Engine\impl\delegate\invocation\" />
     <Folder Include="Engine\impl\persistence\entity\data\integration\" />
+    <Folder Include="Engine\impl\scripting\" />
   </ItemGroup>
 
   <ItemGroup>

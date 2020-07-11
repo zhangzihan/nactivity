@@ -109,9 +109,9 @@ namespace Sys.Workflow.Engine.Impl
         }
 
         ///<inheritdoc />
-        public virtual void TerminateProcessInstance(string processInstanceId, string businessKey, string reason)
+        public virtual void TerminateProcessInstance(string processInstanceId, string businessKey, string reason, IDictionary<string, object> variables)
         {
-            commandExecutor.Execute(new TerminateProcessInstanceCmd(processInstanceId, businessKey, reason));
+            commandExecutor.Execute(new TerminateProcessInstanceCmd(processInstanceId, businessKey, reason, variables));
         }
 
         ///<inheritdoc />

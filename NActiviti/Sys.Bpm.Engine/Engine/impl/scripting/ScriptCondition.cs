@@ -18,11 +18,12 @@ namespace Sys.Workflow.Engine.Impl.Scripting
     using Sys.Workflow.Engine.Impl.Contexts;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
+    /// <summary>
     /// 
+    /// </summary>
     [Serializable]
     public class ScriptCondition : ICondition
     {
-
         private readonly string expression;
         private readonly string language;
 
@@ -32,20 +33,27 @@ namespace Sys.Workflow.Engine.Impl.Scripting
             this.language = language;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sequenceFlowId"></param>
+        /// <param name="execution"></param>
+        /// <returns></returns>
         public virtual bool Evaluate(string sequenceFlowId, IExecutionEntity execution)
         {
-            ScriptingEngines scriptingEngines = Context.ProcessEngineConfiguration.ScriptingEngines;
+            IScriptingEnginesProvider scriptingEnginesProvider = ProcessEngineServiceProvider.Resolve<IScriptingEnginesProvider>();
+            IScriptingEngines scriptingEngines = scriptingEnginesProvider.Create(language);
 
             object result = scriptingEngines.Evaluate(expression, execution);
-            if (result == null)
+            if (result is null)
             {
                 throw new ActivitiException("condition script returns null: " + expression);
             }
-            if (!(result is bool?))
+            if (!(result is bool))
             {
                 throw new ActivitiException("condition script returns non-Boolean: " + result + " (" + result.GetType().FullName + ")");
             }
-            return bool.Parse(result?.ToString());
+            return Convert.ToBoolean(result);
         }
     }
 }

@@ -33,13 +33,18 @@ namespace Sys.Workflow.Engine.Impl.EL
     /// </summary>
     public class ExpressionManager
     {
-        //ExpressionContext expressionContext = new ExpressionContext();
-
-        protected internal ExpressionFactory expressionFactory;
-        // Default implementation (does nothing)
+        /// <summary>
+        /// Default implementation (does nothing)
+        /// </summary>
         protected internal ELContext parsingElContext = new ParsingElContext();
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IDictionary<object, object> beans;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ExpressionManager() : this(null)
         {
             //expressionContext = new ExpressionContext();
@@ -47,47 +52,45 @@ namespace Sys.Workflow.Engine.Impl.EL
             //expressionContext.Imports.AddType(typeof(Math));
         }
 
-        public ExpressionManager(bool initFactory) : this(null, initFactory)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="beans"></param>
+        public ExpressionManager(IDictionary<object, object> beans)
         {
-        }
-
-        public ExpressionManager(IDictionary<object, object> beans) : this(beans, true)
-        {
-        }
-
-        public ExpressionManager(IDictionary<object, object> beans, bool initFactory)
-        {
-            // Use the ExpressionFactoryImpl in activiti build in version of juel,
-            // with parametrised method expressions enabled
-            if (initFactory)
-            {
-                //expressionFactory = new ExpressionFactoryImpl();
-            }
             this.beans = beans;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
         public virtual IExpression CreateExpression(string expression)
         {
-            ValueExpression valueExpression = CreateValueExpression(expression.Trim(), typeof(object));
+            var expr = expression.Trim();
 
-            var expr = new JuelExpression(valueExpression, expression);
+            IValueExpression valueExpression = ExpressionFactory.CreateValueExpression(parsingElContext, expr, typeof(object));
 
-            return expr;
+            return new JuelExpression(valueExpression, expression);
         }
 
-        private ValueExpression CreateValueExpression(string expression, Type type)
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IExpressionFactory ExpressionFactory
         {
-            return new ValueExpression(expression, type);
-        }
-
-        public virtual ExpressionFactory ExpressionFactory
-        {
-            set
+            get
             {
-                this.expressionFactory = value;
+                return ProcessEngineServiceProvider.Resolve<IExpressionFactory>();
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableScope"></param>
+        /// <returns></returns>
         public virtual ELContext GetElContext(IVariableScope variableScope)
         {
             ELContext elContext = null;
@@ -98,22 +101,32 @@ namespace Sys.Workflow.Engine.Impl.EL
 
             if (elContext == null)
             {
-                elContext = CreateElContext(variableScope as IVariableScope);
-                if (variableScope is VariableScopeImpl)
+                elContext = CreateElContext(variableScope);
+                if (variableScope is VariableScopeImpl impl)
                 {
-                    ((VariableScopeImpl)variableScope).CachedElContext = elContext;
+                    impl.CachedElContext = elContext;
                 }
             }
 
             return elContext;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableScope"></param>
+        /// <returns></returns>
         protected internal virtual ActivitiElContext CreateElContext(IVariableScope variableScope)
         {
             ELResolver elResolver = CreateElResolver(variableScope);
             return new ActivitiElContext(elResolver);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableScope"></param>
+        /// <returns></returns>
         protected internal virtual ELResolver CreateElResolver(IVariableScope variableScope)
         {
             CompositeELResolver elResolver = new CompositeELResolver();
@@ -136,6 +149,9 @@ namespace Sys.Workflow.Engine.Impl.EL
             return elResolver;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDictionary<object, object> Beans
         {
             get
@@ -147,10 +163,5 @@ namespace Sys.Workflow.Engine.Impl.EL
                 this.beans = value;
             }
         }
-
-    }
-
-    public class ExpressionFactory
-    {
     }
 }

@@ -1,5 +1,16 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using Sys.Net.Http;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Engine.Delegate.Events;
+using Sys.Workflow.Engine.Delegate.Events.Impl;
+using Sys.Workflow.Engine.Impl.Cfg;
+using Sys.Workflow.Engine.Impl.Contexts;
+using Sys.Workflow.Engine.Impl.Interceptor;
+using Sys.Workflow.Engine.Impl.Util;
+using Sys.Workflow.Engine.Runtime;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,25 +28,9 @@ using System.Text;
 
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
-    using Newtonsoft.Json.Linq;
-    using Sys.Net.Http;
-    using Sys.Workflow;
-    using Sys.Workflow.Bpmn.Models;
-    using Sys.Workflow.Engine.Delegate.Events;
-    using Sys.Workflow.Engine.Delegate.Events.Impl;
-    using Sys.Workflow.Engine.Impl.Cfg;
-    using Sys.Workflow.Engine.Impl.Contexts;
-    using Sys.Workflow.Engine.Impl.Interceptor;
-    using Sys.Workflow.Engine.Impl.Util;
-    using Sys.Workflow.Engine.Runtime;
-    using System.Linq;
-
+    /// <summary>
     /// 
-    /// 
-    /// 
-    /// 
-    /// 
-
+    /// </summary>
     [Serializable]
     public class ExecutionEntityImpl : VariableScopeImpl, IExecutionEntity, ICountingExecutionEntity
     {
@@ -194,7 +189,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         private bool forcedUpdate;
 
         private IList<IVariableInstanceEntity> queryVariables;
-        
+        /// <summary>
+        /// 
+        /// </summary>
         public ExecutionEntityImpl()
         {
 
@@ -223,7 +220,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
 
         //persistent state /////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override PersistentState PersistentState
         {
             get
@@ -263,7 +262,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // The current flow element, will be filled during operation execution
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual FlowElement CurrentFlowElement
         {
             get
@@ -293,7 +294,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ActivitiListener CurrentActivitiListener
         {
             get
@@ -319,13 +322,19 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return executions;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntity"></param>
         public virtual void AddChildExecution(IExecutionEntity executionEntity)
         {
             EnsureExecutionsInitialized();
             executions.Add((ExecutionEntityImpl)executionEntity);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual void EnsureExecutionsInitialized()
         {
             var ctx = Context.CommandContext;
@@ -336,7 +345,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // business key ////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string BusinessKey
         {
             get
@@ -349,7 +360,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ProcessInstanceBusinessKey
         {
             get
@@ -359,7 +372,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // process definition ///////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ProcessDefinitionId
         {
             set
@@ -372,7 +387,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ProcessDefinitionKey
         {
             get
@@ -385,7 +402,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ProcessDefinitionName
         {
             get
@@ -398,7 +417,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int? ProcessDefinitionVersion
         {
             get
@@ -411,7 +432,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DeploymentId
         {
             get
@@ -446,6 +469,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual void EnsureProcessInstanceInitialized()
         {
             var ctx = Context.CommandContext;
@@ -454,7 +480,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 processInstance = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(processInstanceId);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool ProcessInstanceType
         {
             get
@@ -483,7 +511,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual void EnsureParentInitialized()
         {
             var ctx = Context.CommandContext;
@@ -492,7 +522,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 parent = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(parentId);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parent"></param>
         public virtual void SetParent(IExecutionEntity parent)
         {
             this.parent = (ExecutionEntityImpl)parent;
@@ -508,7 +541,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // super- and subprocess executions /////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string SuperExecutionId
         {
             get
@@ -520,7 +555,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 superExecutionId = value;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecutionEntity SuperExecution
         {
             get
@@ -547,7 +584,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual void EnsureSuperExecutionInitialized()
         {
             var ctx = Context.CommandContext;
@@ -556,7 +595,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 superExecution = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(superExecutionId);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecutionEntity SubProcessInstance
         {
             get
@@ -569,7 +610,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.subProcessInstance = value;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual void EnsureSubProcessInstanceInitialized()
         {
             var ctx = Context.CommandContext;
@@ -578,7 +621,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 subProcessInstance = ctx.ExecutionEntityManager.FindSubProcessInstanceBySuperExecutionId(Id);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecutionEntity RootProcessInstance
         {
             get
@@ -600,7 +645,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual void EnsureRootProcessInstanceInitialized()
         {
             var ctx = Context.CommandContext;
@@ -610,7 +657,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string RootProcessInstanceId
         {
             get
@@ -625,7 +674,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
 
         // scopes ///////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool IsScope
         {
             get
@@ -638,7 +689,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void ForceUpdate()
         {
             this.forcedUpdate = true;
@@ -647,6 +700,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         // VariableScopeImpl methods //////////////////////////////////////////////////////////////////
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         // TODO: this should ideally move to another place  
         protected internal override void InitializeVariableInstanceBackPointer(IVariableInstanceEntity variableInstance)
         {
@@ -660,12 +716,17 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             variableInstance.ExecutionId = Id;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected internal override IList<IVariableInstanceEntity> LoadVariableInstances()
         {
             return Context.CommandContext.VariableInstanceEntityManager.FindVariableInstancesByExecutionId(Id) as IList<IVariableInstanceEntity>;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal override VariableScopeImpl ParentVariableScope
         {
             get
@@ -684,7 +745,13 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return this;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableName"></param>
+        /// <param name="value"></param>
+        /// <param name="sourceActivityExecution"></param>
+        /// <returns></returns>
         protected internal override IVariableInstanceEntity CreateVariableInstance(string variableName, object value, IExecutionEntity sourceActivityExecution)
         {
             IVariableInstanceEntity result = base.CreateVariableInstance(variableName, value, sourceActivityExecution);
@@ -697,7 +764,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             return result;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableInstance"></param>
+        /// <param name="value"></param>
+        /// <param name="sourceActivityExecution"></param>
         protected internal override void UpdateVariableInstance(IVariableInstanceEntity variableInstance, object value, IExecutionEntity sourceActivityExecution)
         {
             base.UpdateVariableInstance(variableInstance, value, sourceActivityExecution);
@@ -709,7 +781,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateVariableEvent(ActivitiEventType.VARIABLE_UPDATED, variableInstance.Name, value, variableInstance.Type, variableInstance.TaskId, variableInstance.ExecutionId, ProcessInstanceId, ProcessDefinitionId));
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableName"></param>
+        /// <returns></returns>
         protected internal override IVariableInstanceEntity GetSpecificVariable(string variableName)
         {
 
@@ -722,7 +798,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             return variableInstance;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableNames"></param>
+        /// <returns></returns>
         protected internal override IList<IVariableInstanceEntity> GetSpecificVariables(IEnumerable<string> variableNames)
         {
             ICommandContext commandContext = Context.CommandContext;
@@ -734,7 +814,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // event subscription support //////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IEventSubscriptionEntity> EventSubscriptions
         {
             get
@@ -743,7 +825,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return eventSubscriptions;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual void EnsureEventSubscriptionsInitialized()
         {
             var ctx = Context.CommandContext;
@@ -754,7 +838,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // referenced job entities //////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IJobEntity> Jobs
         {
             get
@@ -763,7 +849,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return jobs;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual void EnsureJobsInitialized()
         {
             var ctx = Context.CommandContext;
@@ -772,7 +860,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 jobs = ctx.JobEntityManager.FindJobsByExecutionId(Id);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<ITimerJobEntity> TimerJobs
         {
             get
@@ -781,7 +871,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return timerJobs;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual void EnsureTimerJobsInitialized()
         {
             var ctx = Context.CommandContext;
@@ -792,7 +884,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // referenced task entities ///////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual void EnsureTasksInitialized()
         {
             var ctx = Context.CommandContext;
@@ -801,7 +895,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 tasks = ctx.TaskEntityManager.FindTasksByExecutionId(Id);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<ITaskEntity> Tasks
         {
             get
@@ -812,7 +908,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // identity links ///////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IIdentityLinkEntity> IdentityLinks
         {
             get
@@ -821,7 +919,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return identityLinks;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual void EnsureIdentityLinksInitialized()
         {
             var ctx = Context.CommandContext;
@@ -832,7 +932,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // getters and setters //////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ProcessInstanceId
         {
             get
@@ -862,7 +964,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.processInstanceId = value;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string ParentId
         {
@@ -875,7 +979,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.parentId = value;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
 
         public virtual string ActivityId
         {
@@ -891,7 +997,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool IsConcurrent
         {
             get
@@ -903,8 +1011,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.isConcurrent = value;
             }
         }
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool IsActive
         {
             get
@@ -916,13 +1025,16 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.isActive = value;
             }
         }
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void Inactivate()
         {
             this.isActive = false;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Ended
         {
             get
@@ -934,8 +1046,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.isEnded = value;
             }
         }
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string EventName
         {
             get
@@ -947,8 +1060,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.eventName = value;
             }
         }
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DeleteReason
         {
             get
@@ -960,8 +1074,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.deleteReason = value;
             }
         }
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int SuspensionState
         {
             get
@@ -973,8 +1088,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.suspensionState = value;
             }
         }
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Suspended
         {
             get
@@ -983,6 +1099,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool IsEventScope
         {
             get
@@ -996,6 +1115,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool IsMultiInstanceRoot
         {
             get
@@ -1009,6 +1131,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool IsCountEnabled
         {
             get
@@ -1022,6 +1147,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string CurrentActivityId
         {
             get
@@ -1030,6 +1158,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Name
         {
             get
@@ -1050,6 +1181,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Description
         {
             get
@@ -1070,6 +1204,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string LocalizedName
         {
             get
@@ -1083,6 +1220,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string LocalizedDescription
         {
             get
@@ -1096,6 +1236,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string TenantId
         {
             get
@@ -1109,6 +1252,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DateTime? LockTime
         {
             get
@@ -1122,6 +1268,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDictionary<string, object> ProcessVariables
         {
             get
@@ -1141,6 +1290,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IVariableInstanceEntity> QueryVariables
         {
             get
@@ -1157,6 +1309,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ActivityName
         {
             get
@@ -1172,6 +1327,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string StartUserId
         {
             get
@@ -1238,17 +1396,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return null;
             }
 
-            //if (string.IsNullOrWhiteSpace(StartUser) == false)
-            //{
-            //    starter = new UserInfo
-            //    {
-            //        Id = startUserId,
-            //        Name = StartUser
-            //    };
-
-            //    return starter;
-            //}
-
             //由于缓存问题，先不要从变量里获取用户
             if (Context.CommandContext != null && (starter == null || starter.Id != this.startUserId))
             {
@@ -1263,14 +1410,17 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             starter = new UserInfo
             {
                 Id = startUserId,
-                FullName = startUserId
+                FullName = startUserId,
+                TenantId = this.tenantId
             };
 
             return starter;
         }
 
         private IUserInfo starter = null;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IUserInfo Starter
         {
             get
@@ -1283,13 +1433,17 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return starter;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string StartUser
         {
             get; set;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DateTime StartTime
         {
             get
@@ -1302,7 +1456,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int EventSubscriptionCount
         {
             get
@@ -1315,7 +1471,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int TaskCount
         {
             get
@@ -1328,7 +1486,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int JobCount
         {
             get
@@ -1341,7 +1501,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int TimerJobCount
         {
             get
@@ -1354,7 +1516,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int SuspendedJobCount
         {
             get
@@ -1367,7 +1531,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int DeadLetterJobCount
         {
             get
@@ -1380,7 +1546,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int VariableCount
         {
             get
@@ -1393,7 +1561,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int IdentityLinkCount
         {
             get
@@ -1407,7 +1577,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         //toString /////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             if (ProcessInstanceType)

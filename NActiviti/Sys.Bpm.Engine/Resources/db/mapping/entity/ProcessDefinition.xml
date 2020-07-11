@@ -112,9 +112,6 @@
 				<IsTrue Property="tenantId != null">
 					TENANT_ID_ = #{tenantId}
 				</IsTrue>
-				<IsTrue Property="tenantId == null">
-					and (TENANT_ID_ = '' or TENANT_ID_ is null)
-				</IsTrue>
 				<IsTrue Property="name != null">
 					and NAME_ = #{name}
 				</IsTrue>
@@ -201,9 +198,6 @@
 			</IsTrue>
 			<IsTrue Property="tenantId != null">
 				and RES.TENANT_ID_ = #{tenantId}
-			</IsTrue>
-			<IsTrue Property="tenantId == null">
-				and (RES.TENANT_ID_ = '' or RES.TENANT_ID_ is null)
 			</IsTrue>
 			<IsTrue Property="tenantIdLike != null">
 				and RES.TENANT_ID_ like #{tenantIdLike}${wildcardEscapeClause}

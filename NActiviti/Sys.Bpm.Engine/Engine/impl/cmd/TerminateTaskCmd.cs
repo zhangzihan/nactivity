@@ -27,6 +27,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
     using Sys.Workflow.Engine.Impl.Util;
     using Sys.Workflow.Engine.Tasks;
     using Sys.Workflow;
+    using Sys.Workflow.Services.Api.Commands;
 
     /// 
     /// 
@@ -58,34 +59,9 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             lock (syncRoot)
             {
                 // Task complete logic
-
-                if (taskEntity.DelegationState.HasValue && taskEntity.DelegationState.Value == DelegationState.PENDING)
-                {
-                    throw new ActivitiException("A delegated task cannot be completed, but should be resolved instead.");
-                }
-
-                commandContext.ProcessEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(taskEntity, BaseTaskListenerFields.EVENTNAME_COMPLETE);
-                IUserInfo user = Authentication.AuthenticatedUser;
-                if (user != null && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
-                {
-                    IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ProcessInstanceId);
-                    commandContext.IdentityLinkEntityManager.InvolveUser(processInstanceEntity, user.Id, IdentityLinkType.PARTICIPANT);
-                }
+                CompleteTask(commandContext, taskEntity, variables, localScope);
 
                 IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
-                if (eventDispatcher.Enabled)
-                {
-                    if (variables != null)
-                    {
-                        eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityWithVariablesEvent(ActivitiEventType.TASK_COMPLETED, taskEntity, variables, localScope));
-                    }
-                    else
-                    {
-                        eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_COMPLETED, taskEntity));
-                    }
-                }
-
-                commandContext.TaskEntityManager.DeleteTask(taskEntity, completeReason, false, false);
 
                 if (eventDispatcher.Enabled)
                 {
@@ -96,7 +72,8 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 if (taskEntity.ExecutionId is object && isTerminateExecution)
                 {
                     IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ExecutionId);
-                    Context.Agenda.PlanTriggerExecutionOperation(executionEntity);
+                    executionEntity.SetVariableLocal(WorkflowVariable.GLOBAL_TERMINATE_TASK_VARNAME, true);
+                    Context.Agenda.PlanTriggerExecutionOperation(executionEntity, variables ?? new Dictionary<string, object>());
                 }
             }
         }

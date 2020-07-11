@@ -168,7 +168,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
                 try
                 {
-                    bool result = (bool)ExpressionEvaluator.GetValue(x, predicate);
+                    bool result = Convert.ToBoolean(ExpressionEvaluator.GetValue(x, predicate));
                     return result;
                 }
                 catch (Exception)

@@ -18,5 +18,6 @@ namespace Sys.Workflow.Bpmn.Constants
         public const string SINGLE_PASS = "singlepass";
         public const string HALF_PASSED = "halfpassed";
         public const string HALF_REJECT = "halfreject";
+        public const string CUSTOM = "custom";
     }
 }

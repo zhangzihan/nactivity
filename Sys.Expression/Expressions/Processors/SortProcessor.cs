@@ -68,7 +68,7 @@ namespace Spring.Expressions.Processors
             bool sortAscending = true;
             if (args != null && args.Length == 1 && args[0] is bool)
             {
-                sortAscending = (bool) args[0];
+                sortAscending = Convert.ToBoolean(args[0]);
             }
 
             ArrayList list = new ArrayList(source);

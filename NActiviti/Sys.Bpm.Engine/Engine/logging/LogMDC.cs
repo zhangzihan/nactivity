@@ -37,14 +37,9 @@
 
 
         public static void PutMDCExecution(IExecutionEntity e)
-        {
-            IDictionary<string, object> mdc;
-            if (logger.IsValueCreated)
-            {
-                logger.Value = new Dictionary<string, object>();
-            }
-
-            mdc = logger.Value;
+        {            
+            logger.Value ??= new Dictionary<string, object>();
+            IDictionary<string, object> mdc = logger.Value;
             if (e.Id is object)
             {
                 mdc.Add(LOG_MDC_EXECUTION_ID, e.Id);

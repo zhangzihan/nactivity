@@ -48,8 +48,8 @@ namespace Spring.Util
         /// </returns>
         public static bool IsInteger(object number)
         {
-            return (number is Int32 || number is Int16 || number is Int64 || number is UInt32
-                || number is UInt16 || number is UInt64 || number is Byte || number is SByte);
+            return number is Int32 || number is Int16 || number is Int64 || number is UInt32
+                || number is UInt16 || number is UInt64 || number is Byte || number is SByte;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Spring.Util
         public static bool IsDecimal(object number)
         {
 
-            return (number is Single || number is Double || number is Decimal);
+            return number is Single || number is Double || number is Decimal;
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Spring.Util
         /// </returns>
         public static bool IsNumber(object number)
         {
-            return (IsInteger(number) || IsDecimal(number));
+            return IsInteger(number) || IsDecimal(number);
         }
         public static decimal ToDecimal(object number)
         {
@@ -91,14 +91,14 @@ namespace Spring.Util
         public static bool CanConvertToInteger(object number)
         {
             TypeConverter converter = TypeDescriptor.GetConverter(number);
-            return (converter.CanConvertTo(typeof(Int32))
+            return converter.CanConvertTo(typeof(Int32))
                 || converter.CanConvertTo(typeof(Int16))
                 || converter.CanConvertTo(typeof(Int64))
                 || converter.CanConvertTo(typeof(UInt16))
                 || converter.CanConvertTo(typeof(UInt64))
                 || converter.CanConvertTo(typeof(Byte))
                 || converter.CanConvertTo(typeof(SByte))
-                   );
+                   ;
         }
 
         /// <summary>
@@ -111,10 +111,10 @@ namespace Spring.Util
         public static bool CanConvertToDecimal(object number)
         {
             TypeConverter converter = TypeDescriptor.GetConverter(number);
-            return (converter.CanConvertTo(typeof(Single))
+            return converter.CanConvertTo(typeof(Single))
                 || converter.CanConvertTo(typeof(Double))
                 || converter.CanConvertTo(typeof(Decimal))
-                   );
+                   ;
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Spring.Util
         /// </returns>
         public static bool CanConvertToNumber(object number)
         {
-            return (CanConvertToInteger(number) || CanConvertToDecimal(number));
+            return CanConvertToInteger(number) || CanConvertToDecimal(number);
         }
 
         internal static bool TryConvertTo(ref object from, ref object to)
@@ -178,27 +178,27 @@ namespace Spring.Util
         public static bool IsZero(object number)
         {
             if (number is Int32)
-                return ((Int32)number) == 0;
+                return (Convert.ToInt32(number)) == 0;
             else if (number is Int16)
-                return ((Int16)number) == 0;
+                return (Convert.ToInt16(number)) == 0;
             else if (number is Int64)
-                return ((Int64)number) == 0;
+                return (Convert.ToInt64(number)) == 0;
             else if (number is UInt16)
-                return ((UInt16)number) == 0;
+                return (Convert.ToUInt16(number)) == 0;
             else if (number is UInt32)
-                return ((UInt32)number) == 0;
+                return (Convert.ToUInt32(number)) == 0;
             else if (number is UInt64)
-                return (Convert.ToDecimal(number) == 0);
+                return Convert.ToDecimal(number) == 0;
             else if (number is Byte)
-                return ((Byte)number) == 0;
+                return (Convert.ToByte(number)) == 0;
             else if (number is SByte)
-                return ((SByte)number) == 0;
+                return (Convert.ToSByte(number)) == 0;
             else if (number is Single)
-                return ((Single)number) == 0f;
+                return (Convert.ToSingle(number)) == 0f;
             else if (number is Double)
-                return ((Double)number) == 0d;
+                return (Convert.ToDouble(number)) == 0d;
             else if (number is Decimal)
-                return ((Decimal)number) == 0m;
+                return (Convert.ToDecimal(number)) == 0m;
             return false;
         }
 
@@ -213,27 +213,27 @@ namespace Spring.Util
         public static object Negate(object number)
         {
             if (number is Int32)
-                return -((Int32)number);
+                return -Convert.ToInt32(number);
             else if (number is Int16)
-                return -((Int16)number);
+                return -Convert.ToInt16(number);
             else if (number is Int64)
-                return -((Int64)number);
+                return -Convert.ToInt64(number);
             else if (number is UInt16)
-                return -((Int32)number);
+                return -Convert.ToInt32(number);
             else if (number is UInt32)
-                return -((Int64)number);
+                return -Convert.ToInt64(number);
             else if (number is UInt64)
-                return -(Convert.ToDecimal(number));
+                return -Convert.ToDecimal(number);
             else if (number is Byte)
-                return -((Int16)number);
+                return -Convert.ToInt16(number);
             else if (number is SByte)
-                return -((Int16)number);
+                return -Convert.ToInt16(number);
             else if (number is Single)
-                return -((Single)number);
+                return -Convert.ToSingle(number);
             else if (number is Double)
-                return -((Double)number);
+                return -Convert.ToDouble(number);
             else if (number is Decimal)
-                return -((Decimal)number);
+                return -Convert.ToDecimal(number);
             else
             {
                 throw new ArgumentException(string.Format("'{0}' is not one of the supported numeric types.", number));
@@ -251,23 +251,23 @@ namespace Spring.Util
         public static object BitwiseNot(object number)
         {
             if (number is bool)
-                return !((bool)number);
+                return !Convert.ToBoolean(number);
             else if (number is Int32)
-                return ~((Int32)number);
+                return ~Convert.ToInt32(number);
             else if (number is Int16)
-                return ~((Int16)number);
+                return ~Convert.ToInt16(number);
             else if (number is Int64)
-                return ~((Int64)number);
+                return ~Convert.ToInt64(number);
             else if (number is UInt16)
-                return ~((UInt16)number);
+                return ~Convert.ToUInt16(number);
             else if (number is UInt32)
-                return ~((UInt32)number);
+                return ~Convert.ToUInt32(number);
             else if (number is UInt64)
-                return ~((UInt64)number);
+                return ~Convert.ToUInt64(number);
             else if (number is Byte)
-                return ~((Byte)number);
+                return ~Convert.ToByte(number);
             else if (number is SByte)
-                return ~((SByte)number);
+                return ~Convert.ToSByte(number);
             else
             {
                 throw new ArgumentException(string.Format("'{0}' is not one of the supported integer types.", number));
@@ -287,23 +287,23 @@ namespace Spring.Util
             CoerceTypes(ref m, ref n);
 
             if (n is bool)
-                return (bool)m & (bool)n;
+                return Convert.ToBoolean(m) & Convert.ToBoolean(n);
             else if (n is Int32)
-                return (Int32)m & (Int32)n;
+                return Convert.ToInt32(m) & Convert.ToInt32(n);
             else if (n is Int16)
-                return (Int16)m & (Int16)n;
+                return Convert.ToInt16(m) & Convert.ToInt16(n);
             else if (n is Int64)
-                return (Int64)m & (Int64)n;
+                return Convert.ToInt64(m) & Convert.ToInt64(n);
             else if (n is UInt16)
-                return (UInt16)m & (UInt16)n;
+                return Convert.ToUInt16(m) & Convert.ToUInt16(n);
             else if (n is UInt32)
-                return (UInt32)m & (UInt32)n;
+                return Convert.ToUInt32(m) & Convert.ToUInt32(n);
             else if (n is UInt64)
-                return (UInt64)m & (UInt64)n;
+                return Convert.ToUInt64(m) & Convert.ToUInt64(n);
             else if (n is Byte)
-                return (Byte)m & (Byte)n;
+                return Convert.ToByte(m) & Convert.ToByte(n);
             else if (n is SByte)
-                return (SByte)m & (SByte)n;
+                return Convert.ToSByte(m) & Convert.ToSByte(n);
             else
             {
                 throw new ArgumentException(string.Format("'{0}' and/or '{1}' are not one of the supported integral types.", m, n));
@@ -325,29 +325,29 @@ namespace Spring.Util
             if (n is bool)
                 return (bool)m | (bool)n;
             else if (n is Int32)
-                return (Int32)m | (Int32)n;
+                return Convert.ToInt32(m) | Convert.ToInt32(n);
             else if (n is Int16)
-                return (Int16)m | (Int16)n;
+                return Convert.ToInt16(m) | Convert.ToInt16(n);
             else if (n is Int64)
-                return (Int64)m | (Int64)n;
+                return Convert.ToInt64(m) | Convert.ToInt64(n);
             else if (n is UInt16)
-                return (UInt16)m | (UInt16)n;
+                return Convert.ToUInt16(m) | Convert.ToUInt16(n);
             else if (n is UInt32)
-                return (UInt32)m | (UInt32)n;
+                return Convert.ToUInt32(m) | Convert.ToUInt32(n);
             else if (n is UInt64)
-                return (UInt64)m | (UInt64)n;
+                return Convert.ToUInt64(m) | Convert.ToUInt64(n);
             else if (n is Byte)
-                return (Byte)m | (Byte)n;
+                return Convert.ToByte(m) | Convert.ToByte(n);
             else if (n is SByte)
             {
                 if (SystemUtils.MonoRuntime)
                 {
-                    SByte x = (sbyte)n;
-                    SByte y = (sbyte)m;
+                    SByte x = Convert.ToSByte(n);
+                    SByte y = Convert.ToSByte(m);
                     int result = (int)x | (int)y;
                     return SByte.Parse(result.ToString());
                 }
-                return (SByte)((SByte)m | (SByte)n);
+                return (SByte)(Convert.ToSByte(m) | Convert.ToSByte(n));
             }
             throw new ArgumentException(string.Format("'{0}' and/or '{1}' are not one of the supported integral types.", m, n));
         }
@@ -367,21 +367,21 @@ namespace Spring.Util
             if (n is bool)
                 return (bool)m ^ (bool)n;
             else if (n is Int32)
-                return (Int32)m ^ (Int32)n;
+                return Convert.ToInt32(m) ^ Convert.ToInt32(n);
             else if (n is Int16)
-                return (Int16)m ^ (Int16)n;
+                return Convert.ToInt16(m) ^ Convert.ToInt16(n);
             else if (n is Int64)
-                return (Int64)m ^ (Int64)n;
+                return Convert.ToInt64(m) ^ Convert.ToInt64(n);
             else if (n is UInt16)
-                return (UInt16)m ^ (UInt16)n;
+                return Convert.ToUInt16(m) ^ Convert.ToUInt16(n);
             else if (n is UInt32)
-                return (UInt32)m ^ (UInt32)n;
+                return Convert.ToUInt32(m) ^ Convert.ToUInt32(n);
             else if (n is UInt64)
-                return (UInt64)m ^ (UInt64)n;
+                return Convert.ToUInt64(m) ^ Convert.ToUInt64(n);
             else if (n is Byte)
-                return (Byte)m ^ (Byte)n;
+                return Convert.ToByte(m) ^ Convert.ToByte(n);
             else if (n is SByte)
-                return (SByte)m ^ (SByte)n;
+                return Convert.ToSByte(m) ^ Convert.ToSByte(n);
             else
             {
                 throw new ArgumentException(string.Format("'{0}' and/or '{1}' are not one of the supported integral types.", m, n));
@@ -398,27 +398,27 @@ namespace Spring.Util
             CoerceTypes(ref m, ref n);
 
             if (n is Int32)
-                return (Int32)m + (Int32)n;
+                return Convert.ToInt32(m) + Convert.ToInt32(n);
             else if (n is Int16)
-                return (Int16)m + (Int16)n;
+                return Convert.ToInt16(m) + Convert.ToInt16(n);
             else if (n is Int64)
-                return (Int64)m + (Int64)n;
+                return Convert.ToInt64(m) + Convert.ToInt64(n);
             else if (n is UInt16)
-                return (UInt16)m + (UInt16)n;
+                return Convert.ToUInt16(m) + Convert.ToUInt16(n);
             else if (n is UInt32)
-                return (UInt32)m + (UInt32)n;
+                return Convert.ToUInt32(m) + Convert.ToUInt32(n);
             else if (n is UInt64)
-                return (UInt64)m + (UInt64)n;
+                return Convert.ToUInt64(m) + Convert.ToUInt64(n);
             else if (n is Byte)
-                return (Byte)m + (Byte)n;
+                return Convert.ToByte(m) + Convert.ToByte(n);
             else if (n is SByte)
-                return (SByte)m + (SByte)n;
+                return Convert.ToSByte(m) + Convert.ToSByte(n);
             else if (n is Single)
-                return (Single)m + (Single)n;
+                return Convert.ToSingle(m) + Convert.ToSingle(n);
             else if (n is Double)
-                return (Double)m + (Double)n;
+                return Convert.ToDouble(m) + Convert.ToDouble(n);
             else if (n is Decimal)
-                return (Decimal)m + (Decimal)n;
+                return Convert.ToDecimal(m) + Convert.ToDecimal(n);
             else
             {
                 throw new ArgumentException(string.Format("'{0}' and/or '{1}' are not one of the supported numeric types.", m, n));
@@ -435,21 +435,21 @@ namespace Spring.Util
             CoerceTypes(ref m, ref n);
 
             if (n is Int32)
-                return (Int32)m - (Int32)n;
+                return Convert.ToInt32(m) - Convert.ToInt32(n);
             else if (n is Int16)
-                return (Int16)m - (Int16)n;
+                return Convert.ToInt16(m) - Convert.ToInt16(n);
             else if (n is Int64)
-                return (Int64)m - (Int64)n;
+                return Convert.ToInt64(m) - Convert.ToInt64(n);
             else if (n is UInt16)
-                return (UInt16)m - (UInt16)n;
+                return Convert.ToUInt16(m) - Convert.ToUInt16(n);
             else if (n is UInt32)
-                return (UInt32)m - (UInt32)n;
+                return Convert.ToUInt32(m) - Convert.ToUInt32(n);
             else if (n is UInt64)
-                return (UInt64)m - (UInt64)n;
+                return Convert.ToUInt64(m) - Convert.ToUInt64(n);
             else if (n is Byte)
-                return (Byte)m - (Byte)n;
+                return Convert.ToByte(m) - Convert.ToByte(n);
             else if (n is SByte)
-                return (SByte)m - (SByte)n;
+                return Convert.ToSByte(m) - Convert.ToSByte(n);
             else if (n is Double || n is Decimal || n is Single)
                 return Convert.ToDecimal(m) - Convert.ToDecimal(n);
             else
@@ -468,27 +468,27 @@ namespace Spring.Util
             CoerceTypes(ref m, ref n);
 
             if (n is Int32)
-                return (Int32)m * (Int32)n;
+                return Convert.ToInt32(m) * Convert.ToInt32(n);
             else if (n is Int16)
-                return (Int16)m * (Int16)n;
+                return Convert.ToInt16(m) * Convert.ToInt16(n);
             else if (n is Int64)
-                return (Int64)m * (Int64)n;
+                return Convert.ToInt64(m) * Convert.ToInt64(n);
             else if (n is UInt16)
-                return (UInt16)m * (UInt16)n;
+                return Convert.ToUInt16(m) * Convert.ToUInt16(n);
             else if (n is UInt32)
-                return (UInt32)m * (UInt32)n;
+                return Convert.ToUInt32(m) * Convert.ToUInt32(n);
             else if (n is UInt64)
-                return (UInt64)m * (UInt64)n;
+                return Convert.ToUInt64(m) * Convert.ToUInt64(n);
             else if (n is Byte)
-                return (Byte)m * (Byte)n;
+                return Convert.ToByte(m) * Convert.ToByte(n);
             else if (n is SByte)
-                return (SByte)m * (SByte)n;
+                return Convert.ToSByte(m) * Convert.ToSByte(n);
             else if (n is Single)
-                return (Single)m * (Single)n;
+                return Convert.ToSingle(m) * Convert.ToSingle(n);
             else if (n is Double)
-                return (Double)m * (Double)n;
+                return Convert.ToDouble(m) * Convert.ToDouble(n);
             else if (n is Decimal)
-                return (Decimal)m * (Decimal)n;
+                return Convert.ToDecimal(m) * Convert.ToDecimal(n);
             else
             {
                 throw new ArgumentException(string.Format("'{0}' and/or '{1}' are not one of the supported numeric types.", m, n));
@@ -512,21 +512,21 @@ namespace Spring.Util
 
             if (n is Int32 || n is Int16)
             {
-                var l = (int)m;
-                var r = (int)n;
+                var l = Convert.ToInt32(m);
+                var r = Convert.ToInt32(n);
                 if (l % r != 0)
                 {
-                    return (decimal)l / r;
+                    return Convert.ToDecimal(l) / r;
                 }
                 return l / r;
             }
             else if (n is Int64)
             {
-                var l = (Int64)m;
-                var r = (Int64)n;
+                var l = Convert.ToInt64(m);
+                var r = Convert.ToInt64(n);
                 if (l % r != 0)
                 {
-                    return (decimal)l / r;
+                    return Convert.ToDecimal(l) / r;
                 }
                 return l / r;
             }
@@ -536,30 +536,30 @@ namespace Spring.Util
                 var r = (uint)n;
                 if (l % r != 0)
                 {
-                    return (decimal)l / r;
+                    return Convert.ToDecimal(l) / r;
                 }
                 return l / r;
             }
             else if (n is UInt64)
             {
-                var l = (UInt64)m;
-                var r = (UInt64)n;
+                var l = Convert.ToUInt64(m);
+                var r = Convert.ToUInt64(n);
                 if (l % r != 0)
                 {
-                    return (decimal)l / r;
+                    return Convert.ToDecimal(l) / r;
                 }
                 return l / r;
             }
             else if (n is Byte)
-                return (Byte)m / (Byte)n;
+                return Convert.ToByte(m) / Convert.ToByte(n);
             else if (n is SByte)
-                return (SByte)m / (SByte)n;
+                return Convert.ToSByte(m) / Convert.ToSByte(n);
             else if (n is Single)
-                return (Single)m / (Single)n;
+                return Convert.ToSingle(m) / Convert.ToSingle(n);
             else if (n is Double)
-                return (Double)m / (Double)n;
+                return Convert.ToDouble(m) / Convert.ToDouble(n);
             else if (n is Decimal)
-                return (Decimal)m / (Decimal)n;
+                return Convert.ToDecimal(m) / Convert.ToDecimal(n);
             else
             {
                 throw new ArgumentException(string.Format("'{0}' and/or '{1}' are not one of the supported numeric types.", m, n));
@@ -576,27 +576,27 @@ namespace Spring.Util
             CoerceTypes(ref m, ref n);
 
             if (n is Int32)
-                return (Int32)m % (Int32)n;
+                return Convert.ToInt32(m) % Convert.ToInt32(n);
             else if (n is Int16)
-                return (Int16)m % (Int16)n;
+                return Convert.ToInt16(m) % Convert.ToInt16(n);
             else if (n is Int64)
-                return (Int64)m % (Int64)n;
+                return Convert.ToInt64(m) % Convert.ToInt64(n);
             else if (n is UInt16)
-                return (UInt16)m % (UInt16)n;
+                return Convert.ToUInt16(m) % Convert.ToUInt16(n);
             else if (n is UInt32)
-                return (UInt32)m % (UInt32)n;
+                return Convert.ToUInt32(m) % Convert.ToUInt32(n);
             else if (n is UInt64)
-                return (UInt64)m % (UInt64)n;
+                return Convert.ToUInt64(m) % Convert.ToUInt64(n);
             else if (n is Byte)
-                return (Byte)m % (Byte)n;
+                return Convert.ToByte(m) % Convert.ToByte(n);
             else if (n is SByte)
-                return (SByte)m % (SByte)n;
+                return Convert.ToSByte(m) % Convert.ToSByte(n);
             else if (n is Single)
-                return (Single)m % (Single)n;
+                return Convert.ToSingle(m) % Convert.ToSingle(n);
             else if (n is Double)
-                return (Double)m % (Double)n;
+                return Convert.ToDouble(m) % Convert.ToDouble(n);
             else if (n is Decimal)
-                return (Decimal)m % (Decimal)n;
+                return Convert.ToDecimal(m) % Convert.ToDecimal(n);
             else
             {
                 throw new ArgumentException(string.Format("'{0}' and/or '{1}' are not one of the supported numeric types.", m, n));

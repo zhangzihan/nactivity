@@ -19,7 +19,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
     /// <summary>
     /// 根据人员id查找所在部门领导
     /// </summary>
-    [GetBookmarkDescriptor("GetDeptLeader")]
+    [GetBookmarkDescriptor(RequestUserCategory.GETUSER_DEPTLEADER)]
     public class GetDeptLeaderBookmarkRuleCmd : BaseGetBookmarkRule
     {
         private readonly ExternalConnectorProvider externalConnector;
@@ -35,9 +35,10 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         {
             IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
-            return proxy.GetUsers(externalConnector.GetUserByDeptLeader, new
+            return proxy.GetUsers(externalConnector.GetUserByDeptLeader, new RequestUserParameter
             {
-                idList = Condition.QueryCondition.Select(x => x.Id).ToArray()
+                IdList = Condition.QueryCondition.Select(x => x.Name).ToArray(),
+                Category = RequestUserCategory.GETUSER_DEPTLEADER
             }).ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }

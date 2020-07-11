@@ -6,13 +6,8 @@
 //  Original author: 张楠
 ///////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using Sys.Workflow.Engine.Impl.Interceptor;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
@@ -20,7 +15,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
     /// <summary>
     /// 根据部门id获取部门下的所有用户信息
     /// </summary>
-    [GetBookmarkDescriptor("GetDept")]
+    [GetBookmarkDescriptor(RequestUserCategory.GETUSERS_DEPT)]
     public class GetDeptBookmarkRuleCmd : BaseGetBookmarkRule
     {
         private readonly ExternalConnectorProvider externalConnector;
@@ -36,9 +31,10 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         {
             IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
-            return proxy.GetUsers(externalConnector.GetUserByDept, new
+            return proxy.GetUsers(externalConnector.GetUserByDept, new RequestUserParameter
             {
-                idList = Condition.QueryCondition.Select(x => x.Id).ToArray()
+                IdList = Condition.QueryCondition.Select(x => x.Name).ToArray(),
+                Category = RequestUserCategory.GETUSERS_DEPT
             }).ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }

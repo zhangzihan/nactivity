@@ -976,7 +976,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// <summary>
         /// 
         /// </summary>
-        protected internal ScriptingEngines scriptingEngines;
+        protected internal IScriptingEngines scriptingEngines;
 
         /// <summary>
         /// 
@@ -2700,10 +2700,10 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                     new BeansResolverFactory()
                 };
             }
-            if (scriptingEngines == null)
-            {
-                scriptingEngines = new ScriptingEngines();
-            }
+            //if (scriptingEngines == null)
+            //{
+            //    scriptingEngines = new ScriptingEngines();
+            //}
         }
 
         /// <summary>
@@ -3387,15 +3387,30 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// <summary>
         /// 
         /// </summary>
-        public virtual ScriptingEngines ScriptingEngines
+        public virtual IScriptingEngines ScriptingEngines
         {
             get
             {
+                if (scriptingEngines is null)
+                {
+                    scriptingEngines = ProcessEngineServiceProvider.Resolve<IScriptingEngines>();
+                }
                 return scriptingEngines;
             }
             set
             {
                 this.scriptingEngines = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IScriptingEnginesProvider ScriptingEnginesProvider
+        {
+            get
+            {
+                return ProcessEngineServiceProvider.Resolve<IScriptingEnginesProvider>();
             }
         }
 

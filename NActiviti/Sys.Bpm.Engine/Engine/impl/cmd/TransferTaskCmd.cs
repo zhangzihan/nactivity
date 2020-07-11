@@ -52,8 +52,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             ITaskService taskService = commandContext.ProcessEngineConfiguration.TaskService;
 
-            ITaskEntity task = taskService.CreateTaskQuery().SetTaskId(taskCmd.TaskId).SingleResult() as ITaskEntity;
-            if (task == null)
+            if (!(taskService.CreateTaskQuery().SetTaskId(taskCmd.TaskId).SingleResult() is ITaskEntity task))
             {
                 throw new ActivitiObjectNotFoundException("Parent task with id " + taskCmd.TaskId + " was not found");
             }
@@ -81,34 +80,9 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             Transfer(commandContext);
 
             // Task complete logic
-
-            if (taskEntity.DelegationState.HasValue && taskEntity.DelegationState.Value == DelegationState.PENDING)
-            {
-                throw new ActivitiException("A delegated task cannot be completed, but should be resolved instead.");
-            }
-
-            commandContext.ProcessEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(taskEntity, BaseTaskListenerFields.EVENTNAME_COMPLETE);
-            IUserInfo user = Authentication.AuthenticatedUser;
-            if (user != null && string.IsNullOrWhiteSpace(taskEntity.ProcessInstanceId) == false)
-            {
-                IExecutionEntity processInstanceEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ProcessInstanceId);//这里为什么取ProcessInstance而不是Exceution.
-                commandContext.IdentityLinkEntityManager.InvolveUser(processInstanceEntity, user.Id, IdentityLinkType.PARTICIPANT);
-            }
+            CompleteTask(commandContext, taskEntity, variables, localScope);
 
             IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
-            if (eventDispatcher.Enabled)
-            {
-                if (variables != null)
-                {
-                    eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityWithVariablesEvent(ActivitiEventType.TASK_COMPLETED, taskEntity, variables, localScope));
-                }
-                else
-                {
-                    eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_COMPLETED, taskEntity));
-                }
-            }
-
-            commandContext.TaskEntityManager.DeleteTask(taskEntity, completeReason, false, false);
 
             if (eventDispatcher.Enabled)
             {
@@ -119,7 +93,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             if (taskEntity.ExecutionId is object)
             {
                 IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ExecutionId);
-                Context.Agenda.PlanTriggerExecutionOperation(executionEntity);
+                Context.Agenda.PlanTriggerExecutionOperation(executionEntity, variables ?? new Dictionary<string, object>());
             }
         }
     }

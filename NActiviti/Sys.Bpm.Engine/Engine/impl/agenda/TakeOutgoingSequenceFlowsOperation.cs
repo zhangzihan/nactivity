@@ -241,7 +241,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             if (adhocSubProcess.CompletionCondition is object)
             {
                 IExpression expr = Context.ProcessEngineConfiguration.ExpressionManager.CreateExpression(adhocSubProcess.CompletionCondition);
-                bool adHoc = (bool)expr.GetValue(execution);
+                bool adHoc = Convert.ToBoolean(expr.GetValue(execution));
                 if (adHoc)
                 {
                     completeAdhocSubProcess = true;

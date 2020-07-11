@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-/* Licensed under the Apache License, Version 2.0 (the "License");
+﻿/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -13,86 +10,177 @@ using System.Collections.Generic;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using Newtonsoft.Json.Linq;
+using Sys.Net.Http;
+using Sys.Workflow.Bpmn.Constants;
+using Sys.Workflow.Bpmn.Models;
+using Sys.Workflow.Engine.Delegate.Events;
+using Sys.Workflow.Engine.Delegate.Events.Impl;
+using Sys.Workflow.Engine.Impl.Cfg;
+using Sys.Workflow.Engine.Impl.Cmd;
+using Sys.Workflow.Engine.Impl.Contexts;
+using Sys.Workflow.Engine.Impl.DB;
+using Sys.Workflow.Engine.Impl.Interceptor;
+using Sys.Workflow.Engine.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
-    using Newtonsoft.Json.Linq;
-    using Sys.Net.Http;
-    using Sys.Workflow;
-    using Sys.Workflow.Bpmn.Constants;
-    using Sys.Workflow.Bpmn.Models;
-    using Sys.Workflow.Engine.Delegate.Events;
-    using Sys.Workflow.Engine.Delegate.Events.Impl;
-    using Sys.Workflow.Engine.Impl.Cfg;
-    using Sys.Workflow.Engine.Impl.Cmd;
-    using Sys.Workflow.Engine.Impl.Contexts;
-    using Sys.Workflow.Engine.Impl.DB;
-    using Sys.Workflow.Engine.Impl.Interceptor;
-    using Sys.Workflow.Engine.Tasks;
-    using System.Linq;
 
+    /// <summary>
     /// 
-    /// 
-    /// 
-    /// 
+    /// </summary>
     [Serializable]
     public class TaskEntityImpl : VariableScopeImpl, ITaskEntity, IBulkDeleteable
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DELETE_REASON_COMPLETED = "completed";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DELETE_REASON_DELETED = "deleted";
 
         private const long serialVersionUID = 1L;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string owner;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int assigneeUpdatedCount; // needed for v5 compatibility
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string originalAssignee; // needed for v5 compatibility
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string assignee;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal DelegationState? delegationState;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string parentTaskId;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string name;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string localizedName;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string description;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string localizedDescription;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int? priority = TaskFields.DEFAULT_PRIORITY;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal DateTime? createTime; // The time when the task has been created
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal DateTime? dueDate;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal int suspensionState = SuspensionStateProvider.ACTIVE.StateCode;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string category;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool isIdentityLinksInitialized;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IIdentityLinkEntity> taskIdentityLinkEntities = new List<IIdentityLinkEntity>();
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string executionId;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExecutionEntity execution;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string processInstanceId;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExecutionEntity processInstance;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string processDefinitionId;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string taskDefinitionKey;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string formKey;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool isCanceled;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string eventName;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ActivitiListener currentActivitiListener;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string tenantId = ProcessEngineConfiguration.NO_TENANT_ID;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IVariableInstanceEntity> queryVariables;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal bool forcedUpdate;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal DateTime? claimTime;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public TaskEntityImpl()
         {
 
         }
 
         private string businessKey;
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string BusinessKey
         {
             get
@@ -106,7 +194,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return businessKey;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override PersistentState PersistentState
         {
             get
@@ -161,7 +251,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return persistentState;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override int RevisionNext
         {
             get
@@ -169,14 +261,18 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return Revision + 1;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void ForceUpdate()
         {
             this.forcedUpdate = true;
         }
 
         // variables //////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal override VariableScopeImpl ParentVariableScope
         {
             get
@@ -189,6 +285,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableInstance"></param>
         protected internal override void InitializeVariableInstanceBackPointer(IVariableInstanceEntity variableInstance)
         {
             variableInstance.TaskId = Id;
@@ -196,11 +296,21 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             variableInstance.ProcessInstanceId = processInstanceId;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected internal override IList<IVariableInstanceEntity> LoadVariableInstances()
         {
             return Context.CommandContext.VariableInstanceEntityManager.FindVariableInstancesByTaskId(Id);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableName"></param>
+        /// <param name="value"></param>
+        /// <param name="sourceActivityExecution"></param>
+        /// <returns></returns>
         protected internal override IVariableInstanceEntity CreateVariableInstance(string variableName, object value, IExecutionEntity sourceActivityExecution)
         {
             IVariableInstanceEntity result = base.CreateVariableInstance(variableName, value, sourceActivityExecution);
@@ -213,7 +323,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             return result;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableInstance"></param>
+        /// <param name="value"></param>
+        /// <param name="sourceActivityExecution"></param>
         protected internal override void UpdateVariableInstance(IVariableInstanceEntity variableInstance, object value, IExecutionEntity sourceActivityExecution)
         {
             base.UpdateVariableInstance(variableInstance, value, sourceActivityExecution);
@@ -227,7 +342,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // execution //////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecutionEntity Execution
         {
             get
@@ -246,37 +363,59 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // task assignment ////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
         public virtual void AddCandidateUser(string userId)
         {
             Context.CommandContext.IdentityLinkEntityManager.AddCandidateUser(this, userId);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="candidateUsers"></param>
         public virtual void AddCandidateUsers(IEnumerable<string> candidateUsers)
         {
             Context.CommandContext.IdentityLinkEntityManager.AddCandidateUsers(this, candidateUsers);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="groupId"></param>
         public virtual void AddCandidateGroup(string groupId)
         {
             Context.CommandContext.IdentityLinkEntityManager.AddCandidateGroup(this, groupId);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="candidateGroups"></param>
         public virtual void AddCandidateGroups(IEnumerable<string> candidateGroups)
         {
             Context.CommandContext.IdentityLinkEntityManager.AddCandidateGroups(this, candidateGroups);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="identityLinkType"></param>
         public virtual void AddUserIdentityLink(string userId, string identityLinkType)
         {
             Context.CommandContext.IdentityLinkEntityManager.AddUserIdentityLink(this, userId, identityLinkType);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="identityLinkType"></param>
         public virtual void AddGroupIdentityLink(string groupId, string identityLinkType)
         {
             Context.CommandContext.IdentityLinkEntityManager.AddGroupIdentityLink(this, groupId, identityLinkType);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ISet<IIdentityLink> Candidates
         {
             get
@@ -292,17 +431,27 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return potentialOwners;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="groupId"></param>
         public virtual void DeleteCandidateGroup(string groupId)
         {
             DeleteGroupIdentityLink(groupId, IdentityLinkType.CANDIDATE);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
         public virtual void DeleteCandidateUser(string userId)
         {
             DeleteUserIdentityLink(userId, IdentityLinkType.CANDIDATE);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="identityLinkType"></param>
         public virtual void DeleteGroupIdentityLink(string groupId, string identityLinkType)
         {
             if (groupId is object)
@@ -310,7 +459,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 Context.CommandContext.IdentityLinkEntityManager.DeleteIdentityLink(this, null, groupId, identityLinkType);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="identityLinkType"></param>
         public virtual void DeleteUserIdentityLink(string userId, string identityLinkType)
         {
             if (userId is object)
@@ -318,7 +471,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 Context.CommandContext.IdentityLinkEntityManager.DeleteIdentityLink(this, userId, null, identityLinkType);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IIdentityLinkEntity> IdentityLinks
         {
             get
@@ -333,7 +488,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return taskIdentityLinkEntities;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDictionary<string, object> ExecutionVariables
         {
             set
@@ -344,7 +501,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Name
         {
             set
@@ -363,7 +522,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Description
         {
             set
@@ -382,7 +543,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Assignee
         {
             set
@@ -396,7 +559,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return assignee;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string AssigneeUser
         {
             get; set;
@@ -438,7 +603,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     task.assigner = new UserInfo
                     {
-                        Id = task.assignee
+                        Id = task.assignee,
+                        FullName = task.assignee,
+                        TenantId = task.tenantId
                     };
                 }
 
@@ -457,18 +624,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return null;
             }
 
-            //if (AssigneeUser != null)
-            //{
-            //    assigner = new UserInfo
-            //    {
-            //        Id = assignee,
-            //        Name = AssigneeUser
-            //    };
-
-            //    return assigner;
-            //}
-
-            //由于缓存问题，先不要从变量里获取用户
             if (Context.CommandContext != null && (assigner == null || assigner.Id != this.assignee))
             {
                 if (this.VariablesLocal.TryGetValue(this.assignee, out var userInfo) && userInfo != null)
@@ -482,14 +637,17 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             assigner = new UserInfo
             {
                 Id = assignee,
-                FullName = assignee
+                FullName = assignee,
+                TenantId = this.tenantId
             };
 
             return assigner;
         }
 
         internal IUserInfo assigner = null;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IUserInfo Assigner
         {
             get
@@ -502,7 +660,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return assigner;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Owner
         {
             set
@@ -514,7 +674,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return owner;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DateTime? DueDate
         {
             set
@@ -526,7 +688,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return dueDate;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int? Priority
         {
             set
@@ -538,7 +702,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return priority;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Category
         {
             set
@@ -550,7 +716,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return category;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ParentTaskId
         {
             set
@@ -562,7 +730,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return parentTaskId;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string FormKey
         {
             get
@@ -577,7 +747,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
 
         // Override from VariableScopeImpl
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal override bool ActivityIdUsedForDetails
         {
             get
@@ -585,7 +757,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return false;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableName"></param>
+        /// <returns></returns>
         // Overridden to avoid fetching *all* variables (as is the case in the super // call)
         protected internal override IVariableInstanceEntity GetSpecificVariable(string variableName)
         {
@@ -598,7 +774,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             return variableInstance;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableNames"></param>
+        /// <returns></returns>
         protected internal override IList<IVariableInstanceEntity> GetSpecificVariables(IEnumerable<string> variableNames)
         {
             ICommandContext commandContext = Context.CommandContext;
@@ -610,7 +790,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // regular getters and setters ////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string LocalizedName
         {
             get
@@ -622,7 +804,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.localizedName = value;
             }
         }
-        
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string LocalizedDescription
         {
             get
@@ -635,9 +819,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DateTime? CreateTime
         {
             get
@@ -650,7 +834,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ExecutionId
         {
             get
@@ -663,6 +849,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ProcessInstanceId
         {
             get
@@ -674,7 +863,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.processInstanceId = value;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ProcessDefinitionId
         {
             get
@@ -688,7 +879,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string OriginalAssignee
         {
             get
@@ -704,7 +897,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string TaskDefinitionKey
         {
             get
@@ -717,7 +912,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string EventName
         {
             get
@@ -730,7 +927,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual ActivitiListener CurrentActivitiListener
         {
             get
@@ -744,7 +943,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecutionEntity ProcessInstance
         {
             get
@@ -762,10 +963,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
-
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DelegationState? DelegationState
         {
             get
@@ -778,7 +978,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string DelegationStateString
         {
             get
@@ -804,6 +1006,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Canceled
         {
             get
@@ -816,8 +1021,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override IDictionary<string, IVariableInstanceEntity> VariableInstanceEntities
         {
             get
@@ -826,7 +1032,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return variableInstances;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual int SuspensionState
         {
             get
@@ -838,9 +1046,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.suspensionState = value;
             }
         }
-
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual bool Suspended
         {
             get
@@ -852,7 +1060,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDictionary<string, object> TaskLocalVariables
         {
             get
@@ -872,6 +1082,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDictionary<string, object> ProcessVariables
         {
             get
@@ -890,7 +1103,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return variables;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string TenantId
         {
             get
@@ -902,8 +1117,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.tenantId = value;
             }
         }
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IList<IVariableInstanceEntity> QueryVariables
         {
             get
@@ -920,7 +1136,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DateTime? ClaimTime
         {
             get
@@ -932,17 +1150,29 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.claimTime = value;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool? IsAppend { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool? IsTransfer { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool? CanTransfer { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool? OnlyAssignee { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool? IsRuntime { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void IsRuntimeAssignee()
         {
             UserTask task = this.Execution.CurrentFlowElement as UserTask;
@@ -957,7 +1187,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             this.IsRuntime = false;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return "Task[id=" + Id + ", name=" + name + "]";

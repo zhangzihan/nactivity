@@ -20,9 +20,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
     using Sys.Workflow.Engine.Impl.DB;
     using Sys.Workflow.Engine.Impl.Variable;
 
+    /// <summary>
     /// 
-    /// 
-    /// 
+    /// </summary>
     [Serializable]
     public class VariableInstanceEntityImpl : AbstractEntity, IVariableInstanceEntity, IValueFields, IBulkDeleteable
     {
@@ -45,11 +45,16 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         private object cachedValue;
         private bool forcedUpdate;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public VariableInstanceEntityImpl()
         {
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override PersistentState PersistentState
         {
             get
@@ -82,7 +87,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return persistentState;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecutionEntity Execution
         {
             set
@@ -92,12 +99,16 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 ForceUpdate();
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void ForceUpdate()
         {
             forcedUpdate = true;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ProcessInstanceId
         {
             set
@@ -109,7 +120,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return processInstanceId;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ExecutionId
         {
             set
@@ -123,7 +136,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // byte array value ///////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual byte[] Bytes
         {
             get
@@ -138,7 +153,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IByteArrayRef ByteArrayRef
         {
             get
@@ -150,7 +167,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 byteArrayRef = value as ByteArrayRef;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal virtual void EnsureByteArrayRefInitialized()
         {
             if (byteArrayRef == null)
@@ -160,7 +179,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // value //////////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual object Value
         {
             get
@@ -181,7 +202,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
 
         // getters and setters ////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string Name
         {
             set
@@ -194,7 +217,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string TypeName
         {
             get
@@ -217,7 +242,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.typeName = value;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IVariableType Type
         {
             get
@@ -231,7 +258,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string TaskId
         {
             get
@@ -245,7 +274,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual long? LongValue
         {
             get
@@ -258,7 +289,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual double? DoubleValue
         {
             get
@@ -271,7 +304,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string TextValue
         {
             get
@@ -284,7 +319,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string TextValue2
         {
             get
@@ -297,7 +334,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual object CachedValue
         {
             get
@@ -312,7 +351,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
 
         // misc methods ///////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -343,7 +385,5 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             sb.Append("]");
             return sb.ToString();
         }
-
     }
-
 }

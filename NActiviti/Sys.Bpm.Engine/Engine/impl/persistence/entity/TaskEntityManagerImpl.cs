@@ -1,4 +1,10 @@
 ﻿using System.Collections.Generic;
+using Sys.Workflow.Engine.Delegate;
+using Sys.Workflow.Engine.Delegate.Events;
+using Sys.Workflow.Engine.Delegate.Events.Impl;
+using Sys.Workflow.Engine.Impl.Cfg;
+using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
+using Sys.Workflow.Engine.Tasks;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +21,27 @@
 
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
-    using Sys.Workflow.Engine.Delegate;
-    using Sys.Workflow.Engine.Delegate.Events;
-    using Sys.Workflow.Engine.Delegate.Events.Impl;
-    using Sys.Workflow.Engine.Impl.Cfg;
-    using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
-    using Sys.Workflow.Engine.Tasks;
-
+    /// <summary>
     /// 
-    /// 
+    /// </summary>
     public class TaskEntityManagerImpl : AbstractEntityManager<ITaskEntity>, ITaskEntityManager
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ITaskDataManager taskDataManager;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processEngineConfiguration"></param>
+        /// <param name="taskDataManager"></param>
         public TaskEntityManagerImpl(ProcessEngineConfigurationImpl processEngineConfiguration, ITaskDataManager taskDataManager) : base(processEngineConfiguration)
         {
             this.taskDataManager = taskDataManager;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal override IDataManager<ITaskEntity> DataManager
         {
             get
@@ -41,14 +49,21 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return taskDataManager;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override ITaskEntity Create()
         {
             ITaskEntity taskEntity = base.Create();
             taskEntity.CreateTime = Clock.CurrentTime;
             return taskEntity;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskEntity"></param>
+        /// <param name="fireCreateEvent"></param>
         public override void Insert(ITaskEntity taskEntity, bool fireCreateEvent)
         {
             if (taskEntity.Owner is object)
@@ -63,7 +78,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             base.Insert(taskEntity, fireCreateEvent);
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskEntity"></param>
+        /// <param name="execution"></param>
         public virtual void Insert(ITaskEntity taskEntity, IExecutionEntity execution)
         {
 
@@ -99,17 +118,33 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskEntity"></param>
+        /// <param name="assignee"></param>
+        /// <param name="assigneeUser"></param>
         public virtual void ChangeTaskAssignee(ITaskEntity taskEntity, string assignee, string assigneeUser)
         {
             ChangeTaskAssignee(taskEntity, assignee, true, assigneeUser);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskEntity"></param>
+        /// <param name="assignee"></param>
+        /// <param name="assigneeUser"></param>
         public virtual void ChangeTaskAssigneeNoEvents(ITaskEntity taskEntity, string assignee, string assigneeUser)
         {
             ChangeTaskAssignee(taskEntity, assignee, false, assigneeUser);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskEntity"></param>
+        /// <param name="assignee"></param>
+        /// <param name="fireEvents"></param>
+        /// <param name="assigneeUser"></param>
         private void ChangeTaskAssignee(ITaskEntity taskEntity, string assignee, bool fireEvents, string assigneeUser)
         {
             if ((taskEntity.Assignee is object && !taskEntity.Assignee.Equals(assignee)) || (taskEntity.Assignee is null && assignee is object))
@@ -133,7 +168,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskEntity"></param>
+        /// <param name="owner"></param>
         public virtual void ChangeTaskOwner(ITaskEntity taskEntity, string owner)
         {
             if ((taskEntity.Owner is object && !taskEntity.Owner.Equals(owner)) || (taskEntity.Owner is null && owner is object))
@@ -148,7 +187,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskEntity"></param>
         protected internal virtual void FireAssignmentEvents(ITaskEntity taskEntity)
         {
             RecordTaskAssignment(taskEntity);
@@ -158,14 +200,20 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskEntity"></param>
         protected internal virtual void RecordTaskAssignment(ITaskEntity taskEntity)
         {
             ProcessEngineConfiguration.ListenerNotificationHelper.ExecuteTaskListeners(taskEntity, BaseTaskListenerFields.EVENTNAME_ASSIGNMENT);
             HistoryManager.RecordTaskAssignment(taskEntity);
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskEntity"></param>
         private void AddAssigneeIdentityLinks(ITaskEntity taskEntity)
         {
             if (taskEntity.Assignee is object && taskEntity.ProcessInstance is object)
@@ -173,7 +221,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 IdentityLinkEntityManager.InvolveUser(taskEntity.ProcessInstance, taskEntity.Assignee, IdentityLinkType.PARTICIPANT);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="taskEntity"></param>
+        /// <param name="owner"></param>
         protected internal virtual void AddOwnerIdentityLink(ITaskEntity taskEntity, string owner)
         {
             if (owner is null && taskEntity.Owner is null)
@@ -186,7 +238,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 IdentityLinkEntityManager.InvolveUser(taskEntity.ProcessInstance, owner, IdentityLinkType.PARTICIPANT);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstanceId"></param>
+        /// <param name="deleteReason"></param>
+        /// <param name="cascade"></param>
         public virtual void DeleteTasksByProcessInstanceId(string processInstanceId, string deleteReason, bool cascade)
         {
             IList<ITaskEntity> tasks = FindTasksByProcessInstanceId(processInstanceId);
@@ -202,7 +259,13 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 DeleteTask(task, deleteReason, cascade, false);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="deleteReason"></param>
+        /// <param name="cascade"></param>
+        /// <param name="cancel"></param>
         public virtual void DeleteTask(ITaskEntity task, string deleteReason, bool cascade, bool cancel)
         {
             if (!task.Deleted)

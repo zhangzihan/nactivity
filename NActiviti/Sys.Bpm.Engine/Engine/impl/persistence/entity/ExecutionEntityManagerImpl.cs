@@ -1,5 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using Sys.Net.Http;
+using Sys.Workflow;
+using Sys.Workflow.Engine.Bpmn.Rules;
+using Sys.Workflow.Engine.Delegate.Events;
+using Sys.Workflow.Engine.Delegate.Events.Impl;
+using Sys.Workflow.Engine.History;
+using Sys.Workflow.Engine.Impl.Cfg;
+using Sys.Workflow.Engine.Impl.Contexts;
+using Sys.Workflow.Engine.Impl.Identities;
+using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
+using Sys.Workflow.Engine.Repository;
+using Sys.Workflow.Engine.Runtime;
+using Sys.Workflow.Engine.Tasks;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,37 +30,29 @@ using System.Collections.Generic;
 
 namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 {
-    using Microsoft.Extensions.Logging;
-    using Sys.Workflow.Engine.Delegate.Events;
-    using Sys.Workflow.Engine.Delegate.Events.Impl;
-    using Sys.Workflow.Engine.History;
-    using Sys.Workflow.Engine.Impl.Cfg;
-    using Sys.Workflow.Engine.Impl.Cmd;
-    using Sys.Workflow.Engine.Impl.Contexts;
-    using Sys.Workflow.Engine.Impl.Identities;
-    using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
-    using Sys.Workflow.Engine.Repository;
-    using Sys.Workflow.Engine.Runtime;
-    using Sys.Workflow.Engine.Tasks;
-    using Sys;
-    using Sys.Net.Http;
-    using Sys.Workflow;
-    using Sys.Workflow.Engine.Bpmn.Rules;
-    using System.Globalization;
-
+    /// <summary>
     /// 
-    /// 
+    /// </summary>
     public class ExecutionEntityManagerImpl : AbstractEntityManager<IExecutionEntity>, IExecutionEntityManager
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IExecutionDataManager executionDataManager;
 
         private readonly ILogger<ExecutionEntityManagerImpl> logger = ProcessEngineServiceProvider.LoggerService<ExecutionEntityManagerImpl>();
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processEngineConfiguration"></param>
+        /// <param name="executionDataManager"></param>
         public ExecutionEntityManagerImpl(ProcessEngineConfigurationImpl processEngineConfiguration, IExecutionDataManager executionDataManager) : base(processEngineConfiguration)
         {
             this.executionDataManager = executionDataManager;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal override IDataManager<IExecutionEntity> DataManager
         {
             get
@@ -56,70 +62,122 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // Overriding the default delete methods to set the 'isDeleted' flag
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
         public override void Delete(IExecutionEntity entity)
         {
             Delete(entity, true);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="fireDeleteEvent"></param>
         public override void Delete(IExecutionEntity entity, bool fireDeleteEvent)
         {
             base.Delete(entity, fireDeleteEvent);
             entity.Deleted = true;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
         public override void Insert(IExecutionEntity entity)
         {
             base.Insert(entity);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="fireCreateEvent"></param>
         public override void Insert(IExecutionEntity entity, bool fireCreateEvent)
         {
             base.Insert(entity, fireCreateEvent);
         }
 
         // FIND METHODS
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="superExecutionId"></param>
+        /// <returns></returns>
         public virtual IExecutionEntity FindSubProcessInstanceBySuperExecutionId(string superExecutionId)
         {
             return executionDataManager.FindSubProcessInstanceBySuperExecutionId(superExecutionId);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parentExecutionId"></param>
+        /// <returns></returns>
         public virtual IList<IExecutionEntity> FindChildExecutionsByParentExecutionId(string parentExecutionId)
         {
             return executionDataManager.FindChildExecutionsByParentExecutionId(parentExecutionId);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstanceId"></param>
+        /// <returns></returns>
         public virtual IList<IExecutionEntity> FindChildExecutionsByProcessInstanceId(string processInstanceId)
         {
             return executionDataManager.FindChildExecutionsByProcessInstanceId(processInstanceId);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parentExecutionId"></param>
+        /// <param name="activityIds"></param>
+        /// <returns></returns>
         public virtual IList<IExecutionEntity> FindExecutionsByParentExecutionAndActivityIds(string parentExecutionId, ICollection<string> activityIds)
         {
             return executionDataManager.FindExecutionsByParentExecutionAndActivityIds(parentExecutionId, activityIds);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionQuery"></param>
+        /// <returns></returns>
         public virtual long FindExecutionCountByQueryCriteria(IExecutionQuery executionQuery)
         {
             return executionDataManager.FindExecutionCountByQueryCriteria(executionQuery);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionQuery"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
         public virtual IList<IExecutionEntity> FindExecutionsByQueryCriteria(IExecutionQuery executionQuery, Page page)
         {
             return executionDataManager.FindExecutionsByQueryCriteria(executionQuery, page);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionQuery"></param>
+        /// <returns></returns>
         public virtual long FindProcessInstanceCountByQueryCriteria(IProcessInstanceQuery executionQuery)
         {
             return executionDataManager.FindProcessInstanceCountByQueryCriteria(executionQuery);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionQuery"></param>
+        /// <returns></returns>
         public virtual IList<IProcessInstance> FindProcessInstanceByQueryCriteria(IProcessInstanceQuery executionQuery)
         {
             return executionDataManager.FindProcessInstanceByQueryCriteria(executionQuery);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootProcessInstanceId"></param>
+        /// <returns></returns>
         public virtual IExecutionEntity FindByRootProcessInstanceId(string rootProcessInstanceId)
         {
             IList<IExecutionEntity> executions = executionDataManager.FindExecutionsByRootProcessInstanceId(rootProcessInstanceId);
@@ -183,39 +241,75 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             return rootExecution;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionQuery"></param>
+        /// <returns></returns>
         public virtual IList<IProcessInstance> FindProcessInstanceAndVariablesByQueryCriteria(ProcessInstanceQueryImpl executionQuery)
         {
             return executionDataManager.FindProcessInstanceAndVariablesByQueryCriteria(executionQuery);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstanceId"></param>
+        /// <returns></returns>
         public virtual ICollection<IExecutionEntity> FindInactiveExecutionsByProcessInstanceId(string processInstanceId)
         {
             return executionDataManager.FindInactiveExecutionsByProcessInstanceId(processInstanceId);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="activityId"></param>
+        /// <param name="processInstanceId"></param>
+        /// <returns></returns>
         public virtual ICollection<IExecutionEntity> FindInactiveExecutionsByActivityIdAndProcessInstanceId(string activityId, string processInstanceId)
         {
             return executionDataManager.FindInactiveExecutionsByActivityIdAndProcessInstanceId(activityId, processInstanceId);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterMap"></param>
+        /// <param name="firstResult"></param>
+        /// <param name="maxResults"></param>
+        /// <returns></returns>
         public virtual IList<IExecution> FindExecutionsByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
             return executionDataManager.FindExecutionsByNativeQuery(parameterMap, firstResult, maxResults);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterMap"></param>
+        /// <param name="firstResult"></param>
+        /// <param name="maxResults"></param>
+        /// <returns></returns>
         public virtual IList<IProcessInstance> FindProcessInstanceByNativeQuery(IDictionary<string, object> parameterMap, int firstResult, int maxResults)
         {
             return executionDataManager.FindProcessInstanceByNativeQuery(parameterMap, firstResult, maxResults);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterMap"></param>
+        /// <returns></returns>
         public virtual long FindExecutionCountByNativeQuery(IDictionary<string, object> parameterMap)
         {
             return executionDataManager.FindExecutionCountByNativeQuery(parameterMap);
         }
 
         // CREATE METHODS
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processDefinition"></param>
+        /// <param name="businessKey"></param>
+        /// <param name="tenantId"></param>
+        /// <param name="initiatorVariableName"></param>
+        /// <returns></returns>
         public virtual IExecutionEntity CreateProcessInstanceExecution(IProcessDefinition processDefinition, string businessKey, string tenantId, string initiatorVariableName)
         {
             IExecutionEntity processInstanceExecution = executionDataManager.Create();
@@ -242,41 +336,19 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             processInstanceExecution.StartTime = Context.ProcessEngineConfiguration.Clock.CurrentTime;
             processInstanceExecution.StartUserId = authenticatedUserId;
-            processInstanceExecution.StartUser = Authentication.AuthenticatedUser.FullName;
 
             // Store in database
             Insert(processInstanceExecution, false);
 
-            if (string.IsNullOrWhiteSpace(processInstanceExecution.StartUserId) == false)
+            IUserInfo starter = null;
+            if (string.IsNullOrWhiteSpace(authenticatedUserId) == false)
             {
-                IUserInfo starter = null;
-                IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
-                ExternalConnectorProvider externalConnector = ProcessEngineServiceProvider.Resolve<ExternalConnectorProvider>();
-
-                starter = new UserInfo
-                {
-                    Id = processInstanceExecution.StartUserId,
-                    FullName = processInstanceExecution.StartUserId
-                };
-                //TODO: 考虑性能问题，暂时不要获取人员信息
-                //try
-                //{
-                //    starter = AsyncHelper.RunSync<IUserInfo>(() => userService.GetUser(processInstanceExecution.StartUserId));
-                //    starter.TenantId = processInstanceExecution.TenantId;
-                //}
-                //catch (Exception ex)
-                //{
-                //    logger.LogError(ex, ex.Message);
-                //    starter = new UserInfo
-                //    {
-                //        Id = processInstanceExecution.StartUserId,
-                //        FullName = processInstanceExecution.StartUserId
-                //    };
-                //}
+                starter = GetUser(processInstanceExecution, authenticatedUserId);
 
                 //保存调用用户变量
                 processInstanceExecution.SetVariable(processInstanceExecution.StartUserId, starter);
             }
+            processInstanceExecution.StartUser = starter.FullName;
 
             if (initiatorVariableName is object)
             {
@@ -299,6 +371,33 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
 
             return processInstanceExecution;
+        }
+
+        private IUserInfo GetUser(IExecutionEntity execution, string authenticatedUserId)
+        {
+            IUserInfo starter;
+            IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
+
+            try
+            {
+                starter = userService.GetUser(authenticatedUserId)
+                    .ConfigureAwait(false)
+                    .GetAwaiter()
+                    .GetResult();
+                starter.TenantId = execution.TenantId;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, ex.Message);
+                starter = new UserInfo
+                {
+                    Id = execution.StartUserId,
+                    FullName = execution.StartUserId,
+                    TenantId = execution.TenantId
+                };
+            }
+
+            return starter;
         }
 
         /// <summary>
@@ -338,7 +437,13 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             return childExecution;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processDefinition"></param>
+        /// <param name="superExecutionEntity"></param>
+        /// <param name="businessKey"></param>
+        /// <returns></returns>
         public virtual IExecutionEntity CreateSubprocessInstance(IProcessDefinition processDefinition, IExecutionEntity superExecutionEntity, string businessKey)
         {
             IExecutionEntity subProcessInstance = executionDataManager.Create();
@@ -353,11 +458,19 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             // Store in database
             Insert(subProcessInstance, false);
+            IUserInfo starter = null;
+            if (string.IsNullOrWhiteSpace(Authentication.AuthenticatedUser.Id) == false)
+            {
+                starter = GetUser(subProcessInstance, Authentication.AuthenticatedUser.Id);
 
-            //if (logger.DebugEnabled)
-            //{
-            //    logger.debug("Child execution {} created with super execution {}", subProcessInstance, superExecutionEntity.Id);
-            //}
+                //保存调用用户变量
+                subProcessInstance.SetVariable(subProcessInstance.StartUserId, starter);
+            }
+            subProcessInstance.StartUser = starter.FullName;
+            if (logger.IsEnabled(LogLevel.Debug))
+            {
+                logger.LogDebug("Child execution {} created with super execution {}", subProcessInstance, superExecutionEntity.Id);
+            }
 
             subProcessInstance.ProcessInstanceId = subProcessInstance.Id;
             superExecutionEntity.SubProcessInstance = subProcessInstance;
@@ -370,7 +483,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             return subProcessInstance;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parentExecutionEntity"></param>
+        /// <param name="childExecution"></param>
         protected internal virtual void InheritCommonProperties(IExecutionEntity parentExecutionEntity, IExecutionEntity childExecution)
         {
 
@@ -394,14 +511,23 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // UPDATE METHODS
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deploymentId"></param>
+        /// <param name="newTenantId"></param>
         public virtual void UpdateExecutionTenantIdForDeployment(string deploymentId, string newTenantId)
         {
             executionDataManager.UpdateExecutionTenantIdForDeployment(deploymentId, newTenantId);
         }
 
         // DELETE METHODS
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processDefinitionId"></param>
+        /// <param name="deleteReason"></param>
+        /// <param name="cascade"></param>
         public virtual void DeleteProcessInstancesByProcessDefinition(string processDefinitionId, string deleteReason, bool cascade)
         {
             IList<string> processInstanceIds = executionDataManager.FindProcessInstanceIdsByProcessDefinitionId(processDefinitionId);
@@ -416,7 +542,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 HistoricProcessInstanceEntityManager.DeleteHistoricProcessInstanceByProcessDefinitionId(processDefinitionId);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstanceId"></param>
+        /// <param name="deleteReason"></param>
+        /// <param name="cascade"></param>
         public virtual void DeleteProcessInstance(string processInstanceId, string deleteReason, bool cascade)
         {
             IExecutionEntity execution = FindById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
@@ -428,7 +559,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             DeleteProcessInstanceCascade(execution, deleteReason, cascade);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="execution"></param>
+        /// <param name="deleteReason"></param>
+        /// <param name="deleteHistory"></param>
         protected internal virtual void DeleteProcessInstanceCascade(IExecutionEntity execution, string deleteReason, bool deleteHistory)
         {
 
@@ -490,14 +626,26 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             HistoryManager.RecordProcessInstanceEnd(processInstanceExecutionEntity.Id, deleteReason, null);
             processInstanceExecutionEntity.Deleted = true;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntity"></param>
+        /// <param name="deleteReason"></param>
+        /// <param name="cancel"></param>
         public virtual void DeleteExecutionAndRelatedData(IExecutionEntity executionEntity, string deleteReason, bool cancel)
         {
             HistoryManager.RecordActivityEnd(executionEntity, deleteReason);
             DeleteDataForExecution(executionEntity, deleteReason, cancel);
             Delete(executionEntity);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstanceId"></param>
+        /// <param name="currentFlowElementId"></param>
+        /// <param name="deleteReason"></param>
+        /// <param name="cascade"></param>
+        /// <param name="cancel"></param>
         public virtual void DeleteProcessInstanceExecutionEntity(string processInstanceId, string currentFlowElementId, string deleteReason, bool cascade, bool cancel)
         {
 
@@ -550,7 +698,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             HistoryManager.RecordProcessInstanceEnd(processInstanceEntity.Id, deleteReason, currentFlowElementId);
             processInstanceEntity.Deleted = true;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntity"></param>
+        /// <param name="deleteReason"></param>
+        /// <param name="cancel"></param>
         public virtual void DeleteChildExecutions(IExecutionEntity executionEntity, string deleteReason, bool cancel)
         {
 
@@ -567,14 +720,22 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntity"></param>
+        /// <returns></returns>
         public virtual IList<IExecutionEntity> CollectChildren(IExecutionEntity executionEntity)
         {
             IList<IExecutionEntity> childExecutions = new List<IExecutionEntity>();
             CollectChildren(executionEntity, childExecutions);
             return childExecutions;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntity"></param>
+        /// <param name="collectedChildExecution"></param>
         protected internal virtual void CollectChildren(IExecutionEntity executionEntity, IList<IExecutionEntity> collectedChildExecution)
         {
             IList<IExecutionEntity> childExecutions = executionEntity.Executions;
@@ -597,7 +758,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 CollectChildren(subProcessInstance, collectedChildExecution);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntity"></param>
+        /// <returns></returns>
         public virtual IExecutionEntity FindFirstScope(IExecutionEntity executionEntity)
         {
             IExecutionEntity currentExecutionEntity = executionEntity;
@@ -617,7 +782,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             return null;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntity"></param>
+        /// <returns></returns>
         public virtual IExecutionEntity FindFirstMultiInstanceRoot(IExecutionEntity executionEntity)
         {
             IExecutionEntity currentExecutionEntity = executionEntity;
@@ -637,7 +806,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             return null;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntity"></param>
+        /// <param name="deleteReason"></param>
+        /// <param name="cancel"></param>
         public virtual void DeleteDataForExecution(IExecutionEntity executionEntity, string deleteReason, bool cancel)
         {
 
@@ -758,7 +932,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         }
 
         // OTHER METHODS
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstanceId"></param>
         public virtual void UpdateProcessInstanceLockTime(string processInstanceId)
         {
             DateTime expirationTime = Clock.CurrentTime;
@@ -769,12 +946,20 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             executionDataManager.UpdateProcessInstanceLockTime(processInstanceId, lockCal, expirationTime);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processInstanceId"></param>
         public virtual void ClearProcessInstanceLockTime(string processInstanceId)
         {
             executionDataManager.ClearProcessInstanceLockTime(processInstanceId);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executionEntity"></param>
+        /// <param name="businessKey"></param>
+        /// <returns></returns>
         public virtual string UpdateProcessInstanceBusinessKey(IExecutionEntity executionEntity, string businessKey)
         {
             if (executionEntity.ProcessInstanceType && businessKey is object)
@@ -791,7 +976,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             return null;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IExecutionDataManager ExecutionDataManager
         {
             get
@@ -803,8 +990,5 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 this.executionDataManager = value;
             }
         }
-
-
     }
-
 }

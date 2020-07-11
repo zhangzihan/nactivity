@@ -60,7 +60,7 @@ namespace Spring.Expressions.Processors
             {
                 if (args[0] is bool)
                 {
-                    includeNulls = (bool) args[0];
+                    includeNulls = Convert.ToBoolean(args[0]);
                 }
                 else
                 {

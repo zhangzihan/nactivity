@@ -34,7 +34,7 @@ namespace Spring.Expressions
         /// <summary>
         /// Create a new instance
         /// </summary>
-        public SelectionLastNode():base()
+        public SelectionLastNode() : base()
         {
         }
 
@@ -45,7 +45,7 @@ namespace Spring.Expressions
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Returns the last context item that matches selection expression.
         /// </summary>
@@ -64,12 +64,12 @@ namespace Spring.Expressions
 
             using (evalContext.SwitchThisContext())
             {
-                BaseNode expression = (BaseNode) this.getFirstChild();
+                BaseNode expression = (BaseNode)this.getFirstChild();
                 for (int i = list.Count - 1; i >= 0; i--)
                 {
                     object listItem = list[i];
                     evalContext.ThisContext = listItem;
-                    bool isMatch = (bool)GetValue(expression, listItem, evalContext );
+                    bool isMatch = Convert.ToBoolean(GetValue(expression, listItem, evalContext));
                     if (isMatch)
                     {
                         return listItem;

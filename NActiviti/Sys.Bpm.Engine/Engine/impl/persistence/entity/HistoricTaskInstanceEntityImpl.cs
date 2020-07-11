@@ -449,7 +449,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     return null;
                 }
-                return endTime.Value.Ticks - claimTime.Value.Ticks;
+                return (endTime.Value.Ticks - claimTime.Value.Ticks) / 10000;
             }
         }
 

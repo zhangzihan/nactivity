@@ -20,8 +20,15 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
     /// </summary>
     public class CustomTaskCompletedEventListener : BaseDelegateEventListener
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public override bool FailOnException => true;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="event"></param>
         public override void OnEvent(IActivitiEvent @event)
         {
             if (@event is CustomTaskCompletedEntityEventImpl taskEvent)

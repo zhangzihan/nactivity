@@ -193,7 +193,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 }
                 processDefinitionId = definition.Id;
             }
-            else if (string.IsNullOrWhiteSpace(processName) == false && string.IsNullOrWhiteSpace(tenantId) == false)
+            else if (string.IsNullOrWhiteSpace(processName) == false)
             {
                 definition = repositoryService.CreateProcessDefinitionQuery()
                     .SetProcessDefinitionName(startCmd.ProcessName)

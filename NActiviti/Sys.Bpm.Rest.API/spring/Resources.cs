@@ -30,7 +30,7 @@ namespace Sys.Workflow.Hateoas
         public Resources([JsonProperty("list")]IEnumerable<T> resourcesList,
             [JsonProperty("totalCount")]long total,
             [JsonProperty("pageNo")]int pageNo,
-            [JsonProperty("pageSize")]int pageSize)
+            [JsonProperty("pageSize")]long pageSize)
         {
             this.resourcesList = resourcesList;
             this.total = total;
@@ -61,7 +61,7 @@ namespace Sys.Workflow.Hateoas
         /// <summary>
         /// 每页大小
         /// </summary>
-        public int PageSize { get; } = 0;
+        public long PageSize { get; } = 0;
 
         /// <summary>
         /// 总页数

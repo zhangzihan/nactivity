@@ -82,17 +82,7 @@ namespace Sys.Workflow.Services.Rest
 
             services.AddTransient<HistoryInstanceSortApplier>();
 
-            services.AddTransient<PageableProcessHistoryRepositoryService>(sp =>
-            {
-                return new PageableProcessHistoryRepositoryService(
-                    sp.GetService<PageRetriever>(),
-                    sp.GetService<IProcessEngine>().HistoryService,
-                    sp.GetService<HistoryInstanceSortApplier>(),
-                    sp.GetService<HistoricInstanceConverter>(),
-                    sp.GetService<SecurityPoliciesApplicationService>(),
-                    sp.GetService<ILoggerFactory>()
-                    );
-            });
+            services.AddTransient<PageableProcessHistoryRepositoryService>();
 
             services.AddTransient<PageableProcessInstanceRepositoryService>(sp =>
             {

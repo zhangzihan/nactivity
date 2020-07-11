@@ -13,12 +13,22 @@
 
 namespace Sys.Workflow.Engine.Impl.Scripting
 {
+    /// <summary>
     /// 
+    /// </summary>
     public interface IResolver
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         bool ContainsKey(object key);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         object Get(object key);
     }
 

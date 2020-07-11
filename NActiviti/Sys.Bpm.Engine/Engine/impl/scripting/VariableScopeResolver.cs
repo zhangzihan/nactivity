@@ -19,27 +19,62 @@ namespace Sys.Workflow.Engine.Impl.Scripting
     using Sys.Workflow.Engine.Impl.Cfg;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class VariableScopeResolver : IResolver
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ProcessEngineConfigurationImpl processEngineConfiguration;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IVariableScope variableScope;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string variableScopeKey = "execution";
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal const string processEngineConfigurationKey = "processEngineConfiguration";
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal const string runtimeServiceKey = "runtimeService";
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal const string taskServiceKey = "taskService";
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal const string repositoryServiceKey = "repositoryService";
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal const string managementServiceKey = "managementService";
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal const string historyServiceKey = "historyService";
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal const string formServiceKey = "formService";
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal static readonly IList<string> KEYS = new List<string>(new string[]{
         processEngineConfigurationKey, runtimeServiceKey, taskServiceKey, repositoryServiceKey, managementServiceKey, historyServiceKey, formServiceKey });
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processEngineConfiguration"></param>
+        /// <param name="variableScope"></param>
         public VariableScopeResolver(ProcessEngineConfigurationImpl processEngineConfiguration, IVariableScope variableScope)
         {
 
@@ -63,12 +98,20 @@ namespace Sys.Workflow.Engine.Impl.Scripting
             }
             this.variableScope = variableScope;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public virtual bool ContainsKey(object key)
         {
             return variableScopeKey.Equals(key?.ToString()) || KEYS.Contains(key?.ToString()) || variableScope.HasVariable(key?.ToString());
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public virtual object Get(object key)
         {
             if (variableScopeKey.Equals(key))

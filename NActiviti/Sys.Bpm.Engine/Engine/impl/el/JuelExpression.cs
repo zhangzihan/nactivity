@@ -29,15 +29,28 @@ namespace Sys.Workflow.Engine.Impl.EL
     [Serializable]
     public class JuelExpression : IExpression
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal string expressionText;
-        private readonly ValueExpression valueExpression;
+        private readonly IValueExpression valueExpression;
 
-        public JuelExpression(ValueExpression valueExpression, string expressionText)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="valueExpression"></param>
+        /// <param name="expressionText"></param>
+        public JuelExpression(IValueExpression valueExpression, string expressionText)
         {
             this.valueExpression = valueExpression;
             this.expressionText = expressionText;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableScope"></param>
+        /// <returns></returns>
         public virtual object GetValue(IVariableScope variableScope)
         {
             ELContext elContext = Context.ProcessEngineConfiguration.ExpressionManager.GetElContext(variableScope);
@@ -65,6 +78,11 @@ namespace Sys.Workflow.Engine.Impl.EL
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="variableScope"></param>
         public virtual void SetValue(object value, IVariableScope variableScope)
         {
             ELContext elContext = Context.ProcessEngineConfiguration.ExpressionManager.GetElContext(variableScope);
@@ -79,15 +97,18 @@ namespace Sys.Workflow.Engine.Impl.EL
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            if (valueExpression != null)
-            {
-                return valueExpression.ExpressionString;
-            }
-            return base.ToString();
+            return valueExpression?.ExpressionString ?? string.Empty;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual string ExpressionText
         {
             get

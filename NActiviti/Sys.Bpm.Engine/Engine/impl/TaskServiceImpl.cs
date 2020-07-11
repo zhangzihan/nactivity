@@ -67,9 +67,9 @@ namespace Sys.Workflow.Engine.Impl
             ExecuteCommand(new SaveTaskCmd(task));
         }
 
-        public virtual void TerminateTask(string taskId, string terminateReason, bool terminateExecution)
+        public virtual void TerminateTask(string taskId, string terminateReason, bool terminateExecution, IDictionary<string, object> variables)
         {
-            ExecuteCommand(new TerminateTaskCmd(taskId, terminateReason, terminateExecution));
+            ExecuteCommand(new TerminateTaskCmd(taskId, terminateReason, terminateExecution, variables));
         }
 
         public virtual void DeleteTasks(ICollection<string> taskIds)
