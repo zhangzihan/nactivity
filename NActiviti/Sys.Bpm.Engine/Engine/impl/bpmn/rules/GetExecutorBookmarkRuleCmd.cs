@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
                })
                .ToList<IUserInfo>();
 
-            if (Condition.QueryCondition.Any(x => string.Equals("startuserid", x.Id, StringComparison.OrdinalIgnoreCase)))
+            if (Condition.QueryCondition.Any(x => string.Equals("", x.Id)))
             {
                 var hisInst = commandContext.ProcessEngineConfiguration.HistoryService
                     .CreateHistoricProcessInstanceQuery()

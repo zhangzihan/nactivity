@@ -33,7 +33,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
 
             return proxy.GetUsers(externalConnector.GetUserByDept, new RequestUserParameter
             {
-                IdList = Condition.QueryCondition.Select(x => x.Name).ToArray(),
+                IdList = Condition.QueryCondition.Select(x => x.Id).ToArray(),
                 Category = RequestUserCategory.GETUSERS_DEPT
             }).ConfigureAwait(false).GetAwaiter().GetResult();
         }

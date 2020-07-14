@@ -22,7 +22,9 @@ namespace Sys.Workflow.Engine.Impl.Cmd
     using Sys.Workflow.Engine.Tasks;
     using System.Linq;
 
+    /// <summary>
     /// 
+    /// </summary>
     [Serializable]
     public class GetTaskByIdCmd : ICommand<ITask>
     {

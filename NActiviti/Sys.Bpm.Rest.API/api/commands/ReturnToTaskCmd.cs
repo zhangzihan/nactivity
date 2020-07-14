@@ -36,18 +36,21 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         /// 构造函数
         /// </summary>
         /// <param name="taskId">任务id</param>
-        /// <param name="rejectReason">拒绝原因</param>
+        /// <param name="returnReason">回退原因</param>
         /// <param name="variables">任务附件变量</param>
+        /// <param name="tenantId">租户ID</param>
         //[JsonConstructor]
         public ReturnToTaskCmd([JsonProperty("TaskId")] string taskId,
             [JsonProperty("ActivityId")] string activityId,
             [JsonProperty("ReturnReason")] string returnReason,
+            [JsonProperty("TenantId")] string tenantId,
             [JsonProperty("Variables")] WorkflowVariable variables)
         {
             this.TaskId = taskId;
             this.ReturnReason = returnReason;
             this.ActivityId = activityId;
             this.Variables = variables;
+            this.TenantId = tenantId;
         }
 
         /// <summary>
@@ -74,6 +77,8 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         /// </summary>
 
         public virtual string ReturnReason { get; set; }
+
+        public virtual string TenantId { get; set; }
 
         /// <summary>
         /// 任务描述

@@ -19,11 +19,22 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
     using System.Collections.Concurrent;
     using System.Linq;
 
+    /// <summary>
     /// 
+    /// </summary>
     public class EntityCacheImpl : IEntityCache
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal readonly ConcurrentDictionary<Type, IDictionary<string, CachedEntity>> cachedObjects = new ConcurrentDictionary<Type, IDictionary<string, CachedEntity>>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="storeState"></param>
+        /// <returns></returns>
         public virtual CachedEntity Put(IEntity entity, bool storeState)
         {
             ConcurrentDictionary<string, CachedEntity> classCache = cachedObjects.GetOrAdd(entity.GetType(), new ConcurrentDictionary<string, CachedEntity>()) as ConcurrentDictionary<string, CachedEntity>;
@@ -31,14 +42,24 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
             classCache.AddOrUpdate(entity.Id, cachedObject, (id, cacheObject) => cachedObject);
             return cachedObject;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public virtual T FindInCache<T>(string id)
         {
             Type entityClass = typeof(T);
 
             return (T)FindInCache(entityClass, id);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityClass"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public virtual object FindInCache(Type entityClass, string id)
         {
             CachedEntity cachedObject = null;
@@ -60,7 +81,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
 
             return null;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityClass"></param>
+        /// <returns></returns>
         protected internal virtual IDictionary<string, CachedEntity> FindClassCacheByCheckingSubclasses(Type entityClass)
         {
             foreach (Type clazz in cachedObjects.Keys)
@@ -74,7 +99,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
             }
             return null;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityClass"></param>
+        /// <param name="entityId"></param>
         public virtual void CacheRemove(Type entityClass, string entityId)
         {
             cachedObjects.TryGetValue(entityClass, out IDictionary<string, CachedEntity> classCache);
@@ -83,14 +112,22 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
                 dict.TryRemove(entityId, out _);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public virtual ICollection<CachedEntity> FindInCacheAsCachedObjects<T>()
         {
             Type entityClass = typeof(T);
 
             return FindInCacheAsCachedObjects(entityClass);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityClass"></param>
+        /// <returns></returns>
         public virtual ICollection<CachedEntity> FindInCacheAsCachedObjects(Type entityClass)
         {
             cachedObjects.TryGetValue(entityClass, out IDictionary<string, CachedEntity> classCache);
@@ -101,7 +138,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
 
             return null;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public virtual IList<T> FindInCache<T>()
         {
             Type entityClass = typeof(T);
@@ -114,7 +155,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
 
             return null;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityClass"></param>
+        /// <returns></returns>
         public virtual IList<object> FindInCache(Type entityClass)
         {
             cachedObjects.TryGetValue(entityClass, out IDictionary<string, CachedEntity> classCache);
@@ -136,7 +181,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
 
             return new List<object>();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual IDictionary<Type, IDictionary<string, CachedEntity>> AllCachedEntities
         {
             get
@@ -144,12 +191,16 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
                 return cachedObjects;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void Close()
         {
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void Flush()
         {
 

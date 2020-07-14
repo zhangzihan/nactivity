@@ -13,6 +13,7 @@ using System.IO;
 using Sys.Workflow.Engine.Impl.Interceptor;
 using Microsoft.Extensions.Options;
 using System.Linq;
+using Sys.Workflow.Engine.History;
 
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
@@ -34,9 +35,29 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         {
             IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
+            string id = Condition.QueryCondition.FirstOrDefault().Id;
+            string[] users = null;
+            var hisService = commandContext.ProcessEngineConfiguration.HistoryService;
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                var uid = hisService.CreateHistoricProcessInstanceQuery()
+                    .SetProcessInstanceId(this.Execution.ProcessInstanceId)
+                    .SingleResult().StartUserId;
+                users = new string[] { uid };
+            }
+            else
+            {
+                users = hisService.CreateHistoricTaskInstanceQuery()
+                    .SetProcessInstanceId(this.Execution.ProcessInstanceId)
+                    .SetTaskDefinitionKey(id)
+                    .List()
+                    .Select(x => x.Assignee)
+                    .ToArray();
+            }
+
             return proxy.GetUsers(externalConnector.GetUserByDirectReporter, new RequestUserParameter
             {
-                IdList = Condition.QueryCondition.Select(x => x.Id).ToArray(),
+                IdList = users,
                 Category = RequestUserCategory.GETUSER_DIRECTREPOT
             }).ConfigureAwait(false).GetAwaiter().GetResult();
         }

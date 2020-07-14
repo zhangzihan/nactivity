@@ -186,10 +186,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 IExecutionEntity execution = Execution;
-                if (string.IsNullOrWhiteSpace(businessKey) && execution is object)
-                {
-                    businessKey = execution.BusinessKey;
-                }
+                businessKey = execution?.BusinessKey;
 
                 return businessKey;
             }

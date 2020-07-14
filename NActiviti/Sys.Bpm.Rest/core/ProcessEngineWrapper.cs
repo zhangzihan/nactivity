@@ -295,7 +295,7 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// <param name="cmd"></param>
         public void ReturnTo(ReturnToTaskCmd cmd)
         {
-            (taskService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.ReturnToActivityCmd(cmd.TaskId, cmd.ActivityId, cmd.ReturnReason, cmd.Variables));
+            _ = (taskService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.ReturnToActivityCmd(cmd.TaskId, cmd.ActivityId, cmd.ReturnReason, cmd.TenantId, cmd.Variables));
         }
 
         /// <summary>

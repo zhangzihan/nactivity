@@ -13,8 +13,9 @@ namespace Sys.Workflow.Engine.Impl.Cmd
     using Sys.Workflow.Engine.Tasks;
     using System.Linq;
 
+    /// <summary>
     /// 
-    /// 
+    /// </summary>
     [Serializable]
     public class ReturnToActivityCmd : ICommand<object>
     {
@@ -22,18 +23,25 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         private readonly string currentTaskId;
         private readonly string returnToActivityId;
+        private readonly string tenantId;
         private readonly string returnToReason;
         private readonly IDictionary<string, object> variables;
         private readonly object syncRoot = new object();
 
-        public ReturnToActivityCmd(string currentTaskId, string returnToActivityId, string returnToReason, IDictionary<string, object> variables = null)
+        public ReturnToActivityCmd(string currentTaskId, string returnToActivityId, string returnToReason, string tenantId, IDictionary<string, object> variables = null)
         {
             this.currentTaskId = currentTaskId;
             this.returnToActivityId = returnToActivityId;
+            this.tenantId = tenantId;
             this.returnToReason = string.IsNullOrWhiteSpace(returnToReason) ? "已退回" : returnToReason;
             this.variables = variables ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandContext"></param>
+        /// <returns></returns>
         public virtual object Execute(ICommandContext commandContext)
         {
             lock (syncRoot)
@@ -98,7 +106,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     tasks.Add(task);
                 }
 
-                ReturnToTasks(commandContext, commandExecutor, miRoot != null ? miRoot : execution, executionEntityManager, tasks);
+                ReturnToTasks(commandContext, commandExecutor, miRoot ?? execution, executionEntityManager, tasks);
 
                 return null;
             }

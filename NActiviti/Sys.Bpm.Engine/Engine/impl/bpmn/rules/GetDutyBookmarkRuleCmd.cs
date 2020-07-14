@@ -35,7 +35,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
 
             return proxy.GetUsers(externalConnector.GetUserByDuty, new RequestUserParameter
             {
-                IdList = Condition.QueryCondition.Select(x => x.Name).ToArray(),
+                IdList = Condition.QueryCondition.Select(x => x.Id).ToArray(),
                 Category = RequestUserCategory.GETUSERS_DUTY
             }).ConfigureAwait(false).GetAwaiter().GetResult();
         }

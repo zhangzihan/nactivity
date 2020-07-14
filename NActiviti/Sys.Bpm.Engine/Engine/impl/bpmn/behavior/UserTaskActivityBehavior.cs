@@ -331,7 +331,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     assigneeValue = assigneeExpressionValue.ToString();
                 }
                 string assigneeUser = null;
-                //TODO: 考虑性能问题，暂时不获取人员
+
                 if (string.IsNullOrWhiteSpace(assigneeValue) == false)
                 {
                     IUserServiceProxy userService = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
@@ -345,7 +345,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                     task.SetVariableLocal(assigneeValue, user);
                 }
-                taskEntityManager.ChangeTaskAssignee(task, assigneeValue, assigneeUser);
+                taskEntityManager.ChangeTaskAssigneeNoEvents(task, assigneeValue, assigneeUser);
             }
 
             if (!string.IsNullOrWhiteSpace(owner))

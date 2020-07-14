@@ -35,6 +35,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         protected internal string executionId;
         protected internal string name;
+        protected internal string businessKey;
         protected internal string localizedName;
         protected internal string parentTaskId;
         protected internal string description;
@@ -58,17 +59,19 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public HistoricTaskInstanceEntityImpl(ITaskEntity task, IExecutionEntity execution)
         {
             this.id = task.Id;
-            if (execution != null)
+            if (execution is object)
             {
                 this.processDefinitionId = execution.ProcessDefinitionId;
                 this.processInstanceId = execution.ProcessInstanceId;
                 this.executionId = execution.Id;
+                this.businessKey = execution.BusinessKey;
             }
             else
             {
                 this.processDefinitionId = task.ProcessDefinitionId;
                 this.ProcessInstanceId = task.ProcessInstanceId;
                 this.executionId = task.ExecutionId;
+                this.businessKey = task.BusinessKey;
             }
             this.name = task.Name;
             this.parentTaskId = task.ParentTaskId;
@@ -76,7 +79,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             this.owner = task.Owner;
             this.assignee = task.Assignee;
             this.AssigneeUser = task.AssigneeUser;
-            this.startTime = Context.ProcessEngineConfiguration.Clock.CurrentTime;
+            this.startTime = task.CreateTime;
             this.taskDefinitionKey = task.TaskDefinitionKey;
 
             this.Priority = task.Priority;
@@ -87,10 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             this.IsTransfer = task.IsTransfer;
 
             // Inherit tenant id (if applicable)
-            if (task.TenantId is object)
-            {
-                tenantId = task.TenantId;
-            }
+            tenantId = task.TenantId;
         }
 
         // persistence //////////////////////////////////////////////////////////////
@@ -147,7 +147,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
         }
 
-        private string businessKey;
         public virtual string BusinessKey
         {
             get
@@ -520,5 +519,4 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         /// <inheritdoc />
         public bool? IsRuntime { get; set; }
     }
-
 }

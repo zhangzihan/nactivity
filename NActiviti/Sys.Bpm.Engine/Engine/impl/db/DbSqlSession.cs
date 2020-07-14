@@ -103,80 +103,6 @@ namespace Sys.Workflow.Engine.Impl.DB
                 return objects.Remove(key);
             }
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        protected internal class DataObjects
-        {
-            private readonly ConcurrentDictionary<Type, DataObject> objects = new ConcurrentDictionary<Type, DataObject>();
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="clazz"></param>
-            /// <param name="datas"></param>
-            /// <returns></returns>
-            public DataObject GetOrAdd(Type clazz, DataObject datas)
-            {
-                return objects.GetOrAdd(clazz, datas);
-            }
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="clazz"></param>
-            /// <param name="hisValues"></param>
-            /// <returns></returns>
-            public bool TryGetValue(Type clazz, out DataObject hisValues)
-            {
-                return objects.TryGetValue(clazz, out hisValues);
-            }
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="clazz"></param>
-            /// <param name="value"></param>
-            /// <returns></returns>
-            public bool TryRemove(Type clazz, out DataObject value)
-            {
-                return objects.TryRemove(clazz, out value);
-            }
-            /// <summary>
-            /// 
-            /// </summary>
-            public ICollection<Type> Keys
-            {
-                get
-                {
-                    return objects.Keys;
-                }
-            }
-            /// <summary>
-            /// 
-            /// </summary>
-            public ICollection<DataObject> Values
-            {
-                get
-                {
-                    return objects.Values;
-                }
-            }
-            /// <summary>
-            /// 
-            /// </summary>
-            public void Clear()
-            {
-                objects.Clear();
-            }
-            /// <summary>
-            /// 
-            /// </summary>
-            public int Count
-            {
-                get
-                {
-                    return objects.Count;
-                }
-            }
-        }
 
         /// <summary>
         /// 
@@ -221,11 +147,11 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// <summary>
         /// 
         /// </summary>
-        protected internal ConcurrentDictionary<Type, Dictionary<string, IEntity>> insertedObjects = new ConcurrentDictionary<Type, Dictionary<string, IEntity>>();
+        protected internal ConcurrentDictionary<Type, ConcurrentDictionary<string, IEntity>> insertedObjects = new ConcurrentDictionary<Type, ConcurrentDictionary<string, IEntity>>();
         /// <summary>
         /// 
         /// </summary>
-        protected internal ConcurrentDictionary<Type, Dictionary<string, IEntity>> deletedObjects = new ConcurrentDictionary<Type, Dictionary<string, IEntity>>();
+        protected internal ConcurrentDictionary<Type, ConcurrentDictionary<string, IEntity>> deletedObjects = new ConcurrentDictionary<Type, ConcurrentDictionary<string, IEntity>>();
         /// <summary>
         /// 
         /// </summary>
@@ -274,23 +200,22 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         public virtual void Insert(IEntity entity, Type managedType = null)
         {
+            Type clazz = managedType ?? entity.GetType();
+            if (entity.Id is null)
+            {
+                string id = dbSqlSessionFactory.IdGenerator.GetNextId();
+                entity.Id = id;
+            }
             try
             {
-                if (entity.Id is null)
-                {
-                    string id = dbSqlSessionFactory.IdGenerator.GetNextId();
-                    entity.Id = id;
-                }
-
-                Type clazz = managedType ?? entity.GetType();
-                var insObjs = insertedObjects.GetOrAdd(clazz, new Dictionary<string, IEntity>());
-                insObjs[entity.Id] = entity; 
+                var insObjs = insertedObjects.GetOrAdd(clazz, new ConcurrentDictionary<string, IEntity>());
+                insObjs.AddOrUpdate(entity.Id, entity, (id, ent) => entity);
                 entityCache.Put(entity, false); // False -> entity is inserted, so always changed
                 entity.Inserted = true;
             }
             catch (Exception ex)
             {
-                log.LogError(ex, $"插入错误managedType={managedType?.GetType()}&entityType={entity?.GetType()}");
+                log.LogError(ex, $"插入错误managedType={managedType?.GetType()}&entityType={entity?.GetType()}&clazz={clazz}&entiyId={entity.Id}");
                 throw ex;
             }
         }
@@ -337,8 +262,8 @@ namespace Sys.Workflow.Engine.Impl.DB
         public virtual object Delete(IEntity entity)
         {
             Type clazz = entity.GetType();
-            var dec = deletedObjects.GetOrAdd(clazz, new Dictionary<string, IEntity>()); // order of insert is important, hence LinkedHashMap
-            dec[entity.Id] = entity;
+            var dec = deletedObjects.GetOrAdd(clazz, new ConcurrentDictionary<string, IEntity>()); // order of insert is important, hence LinkedHashMap
+            dec.AddOrUpdate(entity.Id, entity, (id, ent) => entity);
             entity.Deleted = true;
 
             //if (insertedObjects is object && insertedObjects.TryGetValue(clazz, out var insObj))
@@ -634,7 +559,7 @@ namespace Sys.Workflow.Engine.Impl.DB
 
                     if (hisValues.Values.Any(x => x.Id == val.Id))
                     {
-                        values.Remove(key);
+                        values.TryRemove(key, out _);
                     }
                 }
             }
@@ -665,7 +590,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                     }
                     else
                     {
-                        entities.Remove(key); // Removing duplicate deletes
+                        entities.TryRemove(key, out _); // Removing duplicate deletes
                     }
                 }
 
@@ -674,10 +599,10 @@ namespace Sys.Workflow.Engine.Impl.DB
                 {
                     if (insertedObjects.TryGetValue(entityClass, out var iec) && iec.ContainsKey(id))
                     {
-                        iec.Remove(id);
+                        iec.TryRemove(id, out _);
                         if (deletedObjects.TryGetValue(entityClass, out var dec))
                         {
-                            dec.Remove(id);
+                            dec.TryRemove(id, out _);
                         }
                     }
                 }
