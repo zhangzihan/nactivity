@@ -378,6 +378,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             {
                 request.Add("maxResults", maxResults);
             }
+            request["maxresults"] = Convert.ToInt64(request["maxresults"]);
 
             if (request.ContainsKey("firstRow") == false)
             {
@@ -388,6 +389,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             {
                 request.Add("lastRow", firstResult + maxResults + 1);
             }
+            request["lastRow"] = Convert.ToInt64(request["lastRow"]);
 
             RequestContext ctx = dbSqlSessionFactory.CreateRequestContext(typeof(TEntityImpl).FullName, statement, request);
 

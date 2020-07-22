@@ -16,7 +16,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence
         /// <summary>
         /// 
         /// </summary>
-        public PersistentState() : base()
+        public PersistentState() : base(StringComparer.OrdinalIgnoreCase)
         {
         }
 

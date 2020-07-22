@@ -10,9 +10,9 @@
     <Product>Sys.Expression</Product>
     <Description>Sys.Expression</Description>
     <PackageId>Sys.Expression</PackageId>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>Sys.Expression</PackageReleaseNotes>
-    <Version>1.0.0.2</Version>
+    <Version>1.0.0.3</Version>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Company>Sys.Expression</Company>
     <Authors>Sys.Expression</Authors>

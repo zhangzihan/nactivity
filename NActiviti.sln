@@ -54,6 +54,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sys.Expression", "Sys.Expre
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sys.Bpm.Features", "NActiviti\Sys.Bpm.Features\Sys.Bpm.Features.csproj", "{F1CF16E4-58EF-428D-8E0F-72F2B40C815D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Buildscripts", "Buildscripts", "{6463E314-BC62-4BC3-B8D5-A97C344724C3}"
+	ProjectSection(SolutionItems) = preProject
+		BuildScripts\NActiviti.Rest.nuspec = BuildScripts\NActiviti.Rest.nuspec
+		BuildScripts\NActiviti.RestfulClient.nuspec = BuildScripts\NActiviti.RestfulClient.nuspec
+		BuildScripts\NuGetPack.bat = BuildScripts\NuGetPack.bat
+		BuildScripts\PubNuGetPack.bat = BuildScripts\PubNuGetPack.bat
+		BuildScripts\RmvPackCache.bat = BuildScripts\RmvPackCache.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

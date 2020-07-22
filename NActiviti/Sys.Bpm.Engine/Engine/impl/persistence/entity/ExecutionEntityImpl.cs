@@ -943,24 +943,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-
-                //if (this.name == "管理员")
-                //{
-                //System.Diagnostics.StackFrame[] frames = new System.Diagnostics.StackTrace().GetFrames();
-                //string dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"logs\\{value}");
-                //Directory.CreateDirectory(dir);
-                //string fileName = Path.Combine(dir, $"{GetHashCode()}.txt");
-                //using (FileStream file = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-                //{
-                //    StreamWriter sw = new StreamWriter(file);
-                //    foreach (var sf in frames)
-                //    {
-                //        sw.WriteLine($"{sf.ToString()}");
-                //    }
-
-                //    file.Flush();
-                //}
-                //}
                 this.processInstanceId = value;
             }
         }

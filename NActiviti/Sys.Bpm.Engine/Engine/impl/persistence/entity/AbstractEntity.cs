@@ -23,7 +23,17 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
     /// </summary>
     public abstract class AbstractEntity : IEntity, IHasRevision
     {
-        public abstract PersistentState PersistentState { get; }
+        public virtual PersistentState PersistentState
+        {
+            get
+            {
+                return new PersistentState()
+                {
+                    ["id"] = this.id,
+                    ["revision"] = this.revision,
+                };
+            }
+        }
 
         private string id;
         private int revision = 1;

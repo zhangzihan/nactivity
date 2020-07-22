@@ -29,29 +29,21 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
     [Serializable]
     public abstract class AbstractJobEntityImpl : AbstractEntity, IAbstractJobEntity, IBulkDeleteable
     {
-
         private const long serialVersionUID = 1L;
 
         protected internal DateTime? duedate;
-
         protected internal string executionId;
         protected internal string processInstanceId;
         protected internal string processDefinitionId;
-
         protected internal bool isExclusive = JobFields.DEFAULT_EXCLUSIVE;
-
         protected internal int retries;
-
         protected internal int maxIterations;
         protected internal string repeat;
         protected internal DateTime? endDate;
-
         protected internal string jobHandlerType;
         protected internal string jobHandlerConfiguration;
-
         protected internal ByteArrayRef exceptionByteArrayRef;
         protected internal string exceptionMessage;
-
         protected internal string tenantId = ProcessEngineConfiguration.NO_TENANT_ID;
         protected internal string jobType;
 
@@ -59,19 +51,31 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                PersistentState persistentState = new PersistentState
-                {
-                    ["retries"] = retries,
-                    ["duedate"] = duedate,
-                    ["exceptionMessage"] = exceptionMessage
-                };
+                PersistentState ps = base.PersistentState;
+                ps[nameof(Duedate)] = duedate;
+                ps[nameof(ExecutionId)] = executionId;
+                ps[nameof(ProcessDefinitionId)] = processDefinitionId;
+                ps[nameof(ProcessInstanceId)] = processDefinitionId;
+                ps[nameof(Exclusive)] = isExclusive;
+                ps[nameof(processDefinitionId)] = processDefinitionId;
+                ps[nameof(processDefinitionId)] = processDefinitionId;
+                ps[nameof(Retries)] = retries;
+                ps[nameof(Repeat)] = repeat;
+                ps[nameof(EndDate)] = endDate;
+                ps[nameof(MaxIterations)] = maxIterations;
+                ps[nameof(JobHandlerType)] = jobHandlerType;
+                ps[nameof(JobHandlerConfiguration)] = jobHandlerConfiguration;
+                ps[nameof(JobType)] = jobType;
+                ps[nameof(TenantId)] = tenantId; ;
+                ps[nameof(ExceptionStacktrace)] = ExceptionStacktrace;
+                ps[nameof(ExceptionMessage)] = exceptionMessage;
 
-                if (exceptionByteArrayRef != null)
+                if (exceptionByteArrayRef is object)
                 {
-                    persistentState["exceptionByteArrayId"] = exceptionByteArrayRef.Id;
+                    ps["exceptionByteArrayId"] = exceptionByteArrayRef.Id;
                 }
 
-                return persistentState;
+                return ps;
             }
         }
 

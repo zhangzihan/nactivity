@@ -54,7 +54,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
             var res = invoker.Invoke(db, new object[] { dbQueryName, parameter });
             if (res == null)
             {
-                return default;
+                return new List<EntityImpl>();
             }
 
             return ToEntityImpl(res as IEnumerable).ToList();

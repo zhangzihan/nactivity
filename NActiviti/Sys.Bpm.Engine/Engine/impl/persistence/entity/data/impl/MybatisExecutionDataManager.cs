@@ -19,6 +19,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
     using Sys.Workflow.Engine.Impl.Cfg;
     using Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher;
     using Sys.Workflow.Engine.Runtime;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
     /// 

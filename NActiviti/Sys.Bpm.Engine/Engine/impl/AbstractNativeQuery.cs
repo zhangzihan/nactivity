@@ -127,7 +127,7 @@ namespace Sys.Workflow.Engine.Impl
                 IDictionary<string, object> parameterMap = ParameterMap;
                 parameterMap["resultType"] = "LIST_PAGE";
                 parameterMap["firstResult"] = firstResult;
-                parameterMap["maxResults"] = maxResults;
+                parameterMap["maxResults"] = Convert.ToInt64(maxResults);
                 parameterMap.TryGetValue("orderBy", out var orderBy);
                 if (!string.IsNullOrWhiteSpace(orderBy?.ToString()))
                 {
@@ -140,7 +140,7 @@ namespace Sys.Workflow.Engine.Impl
 
                 int firstRow = firstResult + 1;
                 parameterMap["firstRow"] = firstRow;
-                int lastRow;
+                long lastRow;
                 if (maxResults == int.MaxValue)
                 {
                     lastRow = maxResults;
