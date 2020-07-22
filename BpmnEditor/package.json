@@ -24,7 +24,7 @@
     "cldr-data": "^35.1.0",
     "diagram-js": "^3.0.1",
     "diagram-js-minimap": "^2.0.1",
-    "jquery": "3.2.1",
+    "jquery": "3.5.0",
     "jquery-ui": "^1.12.1",
     "min-dash": "^3.5.2",
     "moment": "^2.24.0",
