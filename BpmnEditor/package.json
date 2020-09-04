@@ -19,7 +19,7 @@
     "aurelia-fetch-client": "^1.8.2",
     "axios": "0.18.0",
     "bpmn-js": "^3.0.2",
-    "bpmn-js-properties-panel": "^0.27.0",
+    "bpmn-js-properties-panel": "^0.31.0",
     "camunda-bpmn-moddle": "^3.0.0",
     "cldr-data": "^35.1.0",
     "diagram-js": "^3.0.1",
