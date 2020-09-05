@@ -72,7 +72,7 @@
     "script-loader": "^0.7.2",
     "style-loader": "^0.23.1",
     "through2": "^3.0.0",
-    "tree-kill": "^1.2.1",
+    "tree-kill": "^1.2.2",
     "ts-jest": "^24.0.0",
     "ts-loader": "^5.2.1",
     "ts-node": "^7.0.1",
