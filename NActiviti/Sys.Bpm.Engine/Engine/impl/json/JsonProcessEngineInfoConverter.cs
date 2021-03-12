@@ -16,10 +16,16 @@ namespace Sys.Workflow.Engine.Impl.Json
     using Newtonsoft.Json.Linq;
     using System.IO;
 
+    /// <summary>
     /// 
+    /// </summary>
     public class JsonProcessEngineInfoConverter : JsonObjectConverter<IProcessEngineInfo>
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processEngineInfo"></param>
+        /// <returns></returns>
         public override JToken ToJsonObject(IProcessEngineInfo processEngineInfo)
         {
             ProcessEngineInfoImpl processEngineInfoImpl = (ProcessEngineInfoImpl)processEngineInfo;
@@ -32,7 +38,11 @@ namespace Sys.Workflow.Engine.Impl.Json
 
             return jsonObject;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         public override IProcessEngineInfo ToObject(StreamReader reader)
         {
             var str = reader.ReadToEnd();

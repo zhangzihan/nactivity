@@ -18,12 +18,18 @@ namespace Sys.Workflow.Engine.Impl.JobExecutors
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using System;
 
+    /// <summary>
     /// 
+    /// </summary>
     public class TimerActivateProcessDefinitionHandler : TimerChangeProcessDefinitionSuspensionStateJobHandler
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         public const string TYPE = "activate-processdefinition";
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override string Type
         {
             get
@@ -32,6 +38,13 @@ namespace Sys.Workflow.Engine.Impl.JobExecutors
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="job"></param>
+        /// <param name="configuration"></param>
+        /// <param name="execution"></param>
+        /// <param name="commandContext"></param>
         public override void Execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
         {
             JToken cfgJson = JToken.FromObject(configuration);

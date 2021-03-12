@@ -18,19 +18,29 @@ namespace Sys.Workflow.Engine.Impl.Json
     using Sys.Workflow.Engine.Tasks;
     using System.IO;
 
+    /// <summary>
     /// 
+    /// </summary>
     public class JsonTaskConverter : JsonObjectConverter<ITask>
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         public override ITask ToObject(StreamReader reader)
         {
             string str = reader.ReadToEnd();
             ITask task = JsonConvert.DeserializeObject<TaskEntityImpl>(str);
 
             return task;
-            //throw new ActivitiException("not yet implemented");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="task"></param>
+        /// <returns></returns>
         public override JToken ToJsonObject(ITask task)
         {
             ITaskEntity taskEntity = (ITaskEntity)task;

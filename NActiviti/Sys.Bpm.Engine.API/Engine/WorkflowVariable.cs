@@ -122,6 +122,10 @@ namespace Sys.Workflow.Services.Api.Commands
             idict = workflowVariables;
         }
 
+        public WorkflowVariable(Dictionary<string, object> @params) : this(@params as IDictionary<string, object>)
+        {
+        }
+
         /// <inheritdoc />
         public object this[string key]
         {
@@ -288,9 +292,9 @@ namespace Sys.Workflow.Services.Api.Commands
                     return true;
                 }
 
-                if (res is T)
+                if (res is T t)
                 {
-                    value = (T)res;
+                    value = t;
                 }
                 else
                 {
@@ -352,7 +356,7 @@ namespace Sys.Workflow.Services.Api.Commands
                 return null;
             }
 
-            return @params.workflowVariables as Dictionary<string, object>;
+            return @params.workflowVariables;
         }
 
         public static implicit operator WorkflowVariable(Dictionary<string, object> dict)

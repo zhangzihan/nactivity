@@ -12,18 +12,27 @@
  */
 namespace Sys.Workflow.Engine.Impl.Json
 {
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System.IO;
 
     /// 
     public abstract class JsonObjectConverter<T>
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="object"></param>
+        /// <param name="writer"></param>
         public virtual void ToJson(T @object, StreamWriter writer)
         {
             writer.Write(ToJson(@object));
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="object"></param>
+        /// <returns></returns>
         public virtual string ToJson(T @object)
         {
             if (@object == null)
@@ -33,7 +42,12 @@ namespace Sys.Workflow.Engine.Impl.Json
 
             return ToJsonObject(@object).ToString();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="object"></param>
+        /// <param name="indentFactor"></param>
+        /// <returns></returns>
         public virtual string ToJson(T @object, int indentFactor)
         {
             if (@object == null)
@@ -41,12 +55,19 @@ namespace Sys.Workflow.Engine.Impl.Json
                 return "";
             }
 
-            return JToken.FromObject(@object).ToString(indentFactor > 0 ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None);
+            return JToken.FromObject(@object).ToString(Formatting.Indented);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="object"></param>
+        /// <returns></returns>
         public abstract JToken ToJsonObject(T @object);
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         public abstract T ToObject(StreamReader reader);
     }
 

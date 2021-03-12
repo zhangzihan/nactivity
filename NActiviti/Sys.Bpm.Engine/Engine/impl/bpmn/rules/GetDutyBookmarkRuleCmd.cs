@@ -37,7 +37,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
             {
                 IdList = Condition.QueryCondition.Select(x => x.Id).ToArray(),
                 Category = RequestUserCategory.GETUSERS_DUTY
-            }).ConfigureAwait(false).GetAwaiter().GetResult();
+            }).GetAwaiter().GetResult();
         }
     }
 }

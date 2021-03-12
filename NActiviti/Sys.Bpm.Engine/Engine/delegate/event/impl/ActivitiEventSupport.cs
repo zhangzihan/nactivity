@@ -27,17 +27,29 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
     /// </summary>
     public class ActivitiEventSupport
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal IList<IActivitiEventListener> eventListeners;
+        /// <summary>
+        /// 
+        /// </summary>
         protected internal ConcurrentDictionary<ActivitiEventType, IList<IActivitiEventListener>> typedListeners;
 
         private static readonly ILogger<ActivitiEventSupport> log = ProcessEngineServiceProvider.LoggerService<ActivitiEventSupport>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ActivitiEventSupport()
         {
             eventListeners = new List<IActivitiEventListener>();
             typedListeners = new ConcurrentDictionary<ActivitiEventType, IList<IActivitiEventListener>>();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listenerToAdd"></param>
         public virtual void AddEventListener(IActivitiEventListener listenerToAdd)
         {
             if (listenerToAdd == null)
@@ -49,7 +61,11 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
                 eventListeners.Add(listenerToAdd);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listenerToAdd"></param>
+        /// <param name="types"></param>
         public virtual void AddEventListener(IActivitiEventListener listenerToAdd, params ActivitiEventType[] types)
         {
             if (listenerToAdd == null)
@@ -70,7 +86,10 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listenerToRemove"></param>
         public virtual void RemoveEventListener(IActivitiEventListener listenerToRemove)
         {
             eventListeners.Remove(listenerToRemove);
@@ -80,7 +99,10 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
                 listeners.Remove(listenerToRemove);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="event"></param>
         public virtual void DispatchEvent(IActivitiEvent @event)
         {
             if (@event == null)
@@ -96,25 +118,29 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
             // Call global listeners
             if (eventListeners.Count > 0)
             {
-                var listeners = eventListeners.ToArray();
-                foreach (IActivitiEventListener listener in listeners)
+                foreach (IActivitiEventListener listener in eventListeners)
                 {
                     DispatchEvent(@event, listener);
                 }
             }
 
             // Call typed listeners, if any
-            typedListeners.TryGetValue(@event.Type, out IList<IActivitiEventListener> typed);
-            if (typed != null && typed.Count > 0)
+            if (typedListeners.TryGetValue(@event.Type, out IList<IActivitiEventListener> listeners))
             {
-                var listeners = typed.ToArray();
-                foreach (IActivitiEventListener listener in listeners)
+                if (listeners?.Count > 0)
                 {
-                    DispatchEvent(@event, listener);
+                    foreach (IActivitiEventListener listener in listeners)
+                    {
+                        DispatchEvent(@event, listener);
+                    }
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="event"></param>
+        /// <param name="listener"></param>
         protected internal virtual void DispatchEvent(IActivitiEvent @event, IActivitiEventListener listener)
         {
             try
@@ -125,17 +151,22 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
             {
                 if (listener.FailOnException)
                 {
-                    throw new ActivitiException("Exception while executing event-listener", t);
+                    log.LogError(t, $"Exception while executing event-listener.{t.Message}");
+                    throw new ActivitiException("Exception while executing event-listener.", t);
                 }
                 else
                 {
                     // Ignore the exception and continue notifying remaining listeners. The listener
                     // explicitly states that the exception should not bubble up
-                    log.LogError(t, $"Exception while executing event-listener, which was ignored");
+                    log.LogError(t, $"Exception while executing event-listener, which was ignored. ${t.Message}");
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listener"></param>
+        /// <param name="type"></param>
         protected internal virtual void AddTypedEventListener(IActivitiEventListener listener, ActivitiEventType type)
         {
             typedListeners.TryGetValue(type, out IList<IActivitiEventListener> listeners);

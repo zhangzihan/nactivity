@@ -60,7 +60,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
             {
                 IdList = users,
                 Category = RequestUserCategory.GETUSER_DEPTLEADER
-            }).ConfigureAwait(false).GetAwaiter().GetResult();
+            }).GetAwaiter().GetResult();
         }
     }
 }

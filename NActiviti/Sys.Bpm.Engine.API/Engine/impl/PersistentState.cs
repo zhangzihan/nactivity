@@ -62,19 +62,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence
             var equal = JsonConvert.SerializeObject(this, Formatting.None) == JsonConvert.SerializeObject(other, Formatting.None);
 
             return equal;
-
-            //foreach (string key in this.Keys)
-            //{
-            //    if (other.TryGetValue(key, out var ov))
-            //    {
-            //        if (ov != this[key])
-            //        {
-            //            return false;
-            //        }
-            //    }
-            //}
-
-            //return true;
         }
 
         /// <summary>

@@ -19,6 +19,11 @@ namespace Sys.Runtime.Serialization
             serializer = new CerasSerializer();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
         public object Deserialize(byte[] bytes)
         {
             string s = Encoding.UTF8.GetString(bytes);
@@ -50,19 +55,28 @@ namespace Sys.Runtime.Serialization
             return serializer.Deserialize<T>(bytes);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public byte[] Serialize(object value)
         {
-            string s = JsonConvert.SerializeObject(value, Formatting.Indented,
-                new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    TypeNameHandling = TypeNameHandling.All
-                });
+            string s = JsonConvert.SerializeObject(value, new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                TypeNameHandling = TypeNameHandling.All
+            });
             return Encoding.UTF8.GetBytes(s);
-
-            //return serializer.Serialize(value);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public byte[] Serialize<T>(T value)
         {
             return serializer.Serialize(value);

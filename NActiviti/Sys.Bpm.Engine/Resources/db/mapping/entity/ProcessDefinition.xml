@@ -118,9 +118,6 @@
 				<IsTrue Property="deploymentId != null">
 					and DEPLOYMENT_ID_ = #{deploymentId}
 				</IsTrue>
-				<IsTrue Property="startForm != null">
-					and START_FORM_ = #{startForm}
-				</IsTrue>
 			</Where> group by NAME_, TENANT_ID_) v on RES.VERSION_ = v.VERSION_ and  v.NAME_ = RES.NAME_ and v.TENANT_ID_ = RES.TENANT_ID_
 		</IsTrue>
 		<Where>

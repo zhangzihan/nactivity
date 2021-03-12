@@ -44,11 +44,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public override void Insert(ICommentEntity commentEntity)
         {
-            if (HistoryManager.HistoryEnabled == false)
-            {
-                return;
-            }
-
             CheckHistoryEnabled();
 
             Insert(commentEntity, false);

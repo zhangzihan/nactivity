@@ -12,7 +12,10 @@ namespace Sys.Workflow
     {
         public JToken ReadTree(string value)
         {
-            return JsonConvert.DeserializeObject<JToken>(value);
+            return JsonConvert.DeserializeObject<JToken>(value, new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
         }
 
         public JToken ReadTree(byte[] infoBytes)
@@ -58,7 +61,10 @@ namespace Sys.Workflow
                 return null;
             }
 
-            return JsonConvert.SerializeObject(variableValue);
+            return JsonConvert.SerializeObject(variableValue, new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
         }
 
         public JArray CreateArrayNode()

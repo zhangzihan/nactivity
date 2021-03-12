@@ -18,26 +18,39 @@ namespace Sys.Workflow.Engine.Impl.Json
     using Sys.Workflow.Engine.Repository;
     using System.IO;
 
+    /// <summary>
     /// 
+    /// </summary>
     public class JsonProcessDefinitionConverter : JsonObjectConverter<IProcessDefinition>
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processDefinition"></param>
+        /// <returns></returns>
         public override JToken ToJsonObject(IProcessDefinition processDefinition)
         {
             IProcessDefinitionEntity processDefinitionEntity = (IProcessDefinitionEntity)processDefinition;
-            JToken jsonObject = new JObject();
-            jsonObject["id"] = processDefinitionEntity.Id;
-            if (!ReferenceEquals(processDefinitionEntity.Key, null))
+            JToken jsonObject = new JObject
+            {
+                ["id"] = processDefinitionEntity.Id
+            };
+            if (processDefinitionEntity.Key is object)
             {
                 jsonObject["key"] = processDefinitionEntity.Key;
             }
-            if (!ReferenceEquals(processDefinitionEntity.DeploymentId, null))
+            if (processDefinitionEntity.DeploymentId is object)
             {
                 jsonObject["deploymentId"] = processDefinitionEntity.DeploymentId;
             }
             return jsonObject;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         public override IProcessDefinition ToObject(StreamReader reader)
         {
             var str = reader.ReadToEnd();

@@ -80,7 +80,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
             {
                 IdList = Condition.QueryCondition.Select(x => x.Id).ToArray(),
                 Category = RequestUserCategory.GETUSER_USER
-            }).GetAwaiter().GetResult();
+            }).ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
 }

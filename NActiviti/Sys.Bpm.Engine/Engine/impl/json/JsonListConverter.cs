@@ -18,27 +18,50 @@ namespace Sys.Workflow.Engine.Impl.Json
     using Newtonsoft.Json.Linq;
     using System.IO;
 
+    /// <summary>
     /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class JsonListConverter<T>
     {
 
         internal JsonObjectConverter<T> jsonObjectConverter;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonObjectConverter"></param>
         public JsonListConverter(JsonObjectConverter<T> jsonObjectConverter)
         {
             this.jsonObjectConverter = jsonObjectConverter;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="writer"></param>
         public virtual void ToJson(IList<T> list, StreamWriter writer)
         {
             writer.Write(ToJson(list, 1));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
         public virtual string ToJson(IList<T> list)
         {
-            return ToJsonArray(list).ToString();
+            return ToJson(list, 1);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="indentFactor"></param>
+        /// <returns></returns>
         public virtual string ToJson(IList<T> list, int indentFactor = 0)
         {
             if (list == null)
@@ -46,19 +69,18 @@ namespace Sys.Workflow.Engine.Impl.Json
                 return "";
             }
 
-            return JsonConvert.SerializeObject(list, indentFactor > 0 ? Formatting.Indented : Formatting.None);//.ToString(indentFactor);
-        }
-
-        private JArray ToJsonArray(IList<T> objects)
-        {
-            JArray jsonArray = new JArray();
-            foreach (T @object in objects)
+            return JsonConvert.SerializeObject(list, new JsonSerializerSettings
             {
-                jsonArray.Add(jsonObjectConverter.ToJsonObject(@object));
-            }
-            return jsonArray;
+                Formatting = Formatting.Indented,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         public virtual IList<T> ToObject(StreamReader reader)
         {
             string str = reader.ReadToEnd();
@@ -66,6 +88,9 @@ namespace Sys.Workflow.Engine.Impl.Json
             return JsonConvert.DeserializeObject<List<T>>(str);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual JsonObjectConverter<T> JsonObjectConverter
         {
             get

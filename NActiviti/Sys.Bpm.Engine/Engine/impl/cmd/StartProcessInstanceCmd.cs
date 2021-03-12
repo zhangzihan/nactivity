@@ -131,7 +131,6 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 }
                 else if (processDefinitionKey is object && tenantId is object && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
                 {
-
                     processDefinition = deploymentCache.FindDeployedLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
                     if (processDefinition == null)
                     {

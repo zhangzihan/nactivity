@@ -107,9 +107,9 @@ namespace Sys.Workflow.Engine.Impl.Util
             {
                 if (flowElement is StartEvent startEvent)
                 {
-                    if (CollectionUtil.IsNotEmpty(startEvent.EventDefinitions) && startEvent.EventDefinitions[0] is MessageEventDefinition)
+                    if (CollectionUtil.IsNotEmpty(startEvent.EventDefinitions) && startEvent.EventDefinitions[0] is MessageEventDefinition definition)
                     {
-                        MessageEventDefinition messageEventDefinition = (MessageEventDefinition)startEvent.EventDefinitions[0];
+                        MessageEventDefinition messageEventDefinition = definition;
                         if (messageEventDefinition.MessageRef.Equals(messageName))
                         {
                             initialFlowElement = flowElement;
@@ -136,9 +136,9 @@ namespace Sys.Workflow.Engine.Impl.Util
 
             // Create the process instance
             string initiatorVariableName = null;
-            if (initialFlowElement is StartEvent)
+            if (initialFlowElement is StartEvent @event)
             {
-                initiatorVariableName = ((StartEvent)initialFlowElement).Initiator;
+                initiatorVariableName = @event.Initiator;
             }
 
             IExecutionEntity processInstance = commandContext.ExecutionEntityManager.CreateProcessInstanceExecution(processDefinition, businessKey, processDefinition.TenantId, initiatorVariableName);
@@ -155,10 +155,10 @@ namespace Sys.Workflow.Engine.Impl.Util
             var title = process.GetExtensionElementAttributeValue(WorkflowVariable.GLOBAL_PROCESSINSTANCE_TITLE);
             if (string.IsNullOrWhiteSpace(title) == false)
             {
-                var reg = new Regex(@"(\$\{)(.*?)(}{1,1})", RegexOptions.Multiline);
+                var reg = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
                 title = reg.Replace(title, (m) =>
                 {
-                    return ExpressionEvaluator.GetValue(variables, m.Groups[2].Value)?.ToString();
+                    return ExpressionEvaluator.GetValue(variables, m.Groups[1].Value)?.ToString();
                 });
                 processInstance.SetVariable(WorkflowVariable.GLOBAL_PROCESSINSTANCE_TITLE, title);
             }
@@ -185,16 +185,21 @@ namespace Sys.Workflow.Engine.Impl.Util
             }
 
             // Set processInstance name
-            if (title is object)
-            {
-                processInstance.Name = title;
-                commandContext.HistoryManager.RecordProcessInstanceNameChange(processInstance.Id, title);
-            }
-            else if (processInstanceName is object)
+            if (processInstanceName is object)
             {
                 processInstance.Name = processInstanceName;
-                commandContext.HistoryManager.RecordProcessInstanceNameChange(processInstance.Id, processInstanceName);
             }
+            else if (title is object)
+            {
+                processInstanceName = title;
+                processInstance.Name = title;
+            }
+            else
+            {
+                processInstanceName = process.Name;
+                processInstance.Name = process.Name;
+            }
+            commandContext.HistoryManager.RecordProcessInstanceNameChange(processInstance.Id, processInstanceName);
 
             // Fire events
             if (Context.ProcessEngineConfiguration.EventDispatcher.Enabled)

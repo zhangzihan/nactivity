@@ -37,7 +37,7 @@ namespace Sys.Net.Http
                 Email = email,
                 Phone = phone,
                 TenantId = tenantId
-            }));
+            }, Formatting.Indented));
 
             httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + accessToken);
         }
@@ -53,7 +53,7 @@ namespace Sys.Net.Http
             string accessToken = null;
             if (Authentication.AuthenticatedUser != null)
             {
-                accessToken = WebUtility.UrlEncode(JsonConvert.SerializeObject(Authentication.AuthenticatedUser));
+                accessToken = WebUtility.UrlEncode(JsonConvert.SerializeObject(Authentication.AuthenticatedUser, Formatting.Indented));
             }
             else if (httpContext != null)
             {
@@ -65,7 +65,7 @@ namespace Sys.Net.Http
                 accessToken = WebUtility.UrlEncode(JsonConvert.SerializeObject(new
                 {
                     Id = WORKFLOW_CLIENT_ID
-                }));
+                }, Formatting.Indented));
             }
 
             httpClient.DefaultRequestHeaders.Remove("Authorization");
@@ -80,7 +80,7 @@ namespace Sys.Net.Http
         /// </summary>
         /// <param name="context">Http请求上下文</param>
         /// <returns></returns>
-        public Task<IUserInfo> FromRequestHeaderAsync(HttpContext context)
+        public async Task<IUserInfo> FromRequestHeaderAsync(HttpContext context)
         {
             context.Request.Headers.TryGetValue(Enum.GetName(typeof(HttpRequestHeader), HttpRequestHeader.Authorization), out StringValues authHeader);
 
@@ -96,14 +96,13 @@ namespace Sys.Net.Http
 
                 Authentication.AuthenticatedUser = user;
 
-                return Task.FromResult(user);
+                return user;
             }
             catch (IndexOutOfRangeException ex)
             {
-                //context.Request.Body.Seek(0, System.IO.SeekOrigin.Begin);
                 MemoryStream ms = new MemoryStream();
-                context.Request.Body.CopyTo(ms);
-                context.Request.Body.Flush();
+                await context.Request.Body.CopyToAsync(ms);
+                await ms.FlushAsync();
                 ms.Seek(0, SeekOrigin.Begin);
                 byte[] data = new byte[ms.Length];
                 ms.Read(data, 0, data.Length);

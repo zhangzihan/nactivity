@@ -59,7 +59,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
             {
                 IdList = users,
                 Category = RequestUserCategory.GETUSER_DIRECTREPOT
-            }).ConfigureAwait(false).GetAwaiter().GetResult();
+            }).GetAwaiter().GetResult();
         }
     }
 }
