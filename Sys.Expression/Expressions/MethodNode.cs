@@ -87,7 +87,7 @@ namespace Spring.Expressions
         {
         }
 
-        private object syncRoot = new object();
+        private object syncRoot = new();
 
         /// <summary>
         /// Returns node's value for the given context.
@@ -106,16 +106,15 @@ namespace Spring.Expressions
             lock (syncRoot)
             {
                 // check if it is a collection and the methodname denotes a collection processor
-                if ((context == null || context is ICollection))
+                if ((context is null || context is ICollection))
                 {
                     // predefined collection processor?
                     localCollectionProcessor = (ICollectionProcessor)collectionProcessorMap[methodName];
 
                     // user-defined collection processor?
-                    if (localCollectionProcessor == null && evalContext.Variables != null)
+                    if (localCollectionProcessor is null && evalContext.Variables is object)
                     {
-                        object temp;
-                        evalContext.Variables.TryGetValue(methodName, out temp);
+                        evalContext.Variables.TryGetValue(methodName, out object temp);
                         localCollectionProcessor = temp as ICollectionProcessor;
                     }
                 }
@@ -124,16 +123,15 @@ namespace Spring.Expressions
                 methodCallProcessor = (IMethodCallProcessor)extensionMethodProcessorMap[methodName];
                 {
                     // user-defined extension method processor?
-                    if (methodCallProcessor == null && evalContext.Variables != null)
+                    if (methodCallProcessor is null && evalContext.Variables is object)
                     {
-                        object temp;
-                        evalContext.Variables.TryGetValue(methodName, out temp);
+                        evalContext.Variables.TryGetValue(methodName, out object temp);
                         methodCallProcessor = temp as IMethodCallProcessor;
                     }
                 }
 
                 // try instance method
-                if (context != null)
+                if (context is object)
                 {
                     // calculate checksum, if the cached method matches the current context
                     if (initialized)
@@ -150,15 +148,15 @@ namespace Spring.Expressions
                 }
             }
 
-            if (localCollectionProcessor != null)
+            if (localCollectionProcessor is object)
             {
                 return localCollectionProcessor.Process((ICollection)context, argValues);
             }
-            else if (methodCallProcessor != null)
+            else if (methodCallProcessor is object)
             {
                 return methodCallProcessor.Process(context, argValues);
             }
-            else if (cachedInstanceMethod != null)
+            else if (cachedInstanceMethod is object)
             {
                 object[] paramValues = (cachedIsParamArray)
                                         ? ReflectionUtils.PackageParamArray(argValues, argumentCount, paramArrayType)
@@ -177,7 +175,7 @@ namespace Spring.Expressions
             for (int i = 0; i < argValues.Length; i++)
             {
                 object arg = argValues[i];
-                if (arg != null)
+                if (arg is object)
                     hash += s_primes[i] * arg.GetType().GetHashCode();
             }
             return hash;
@@ -251,7 +249,7 @@ namespace Spring.Expressions
         private static IList<MethodInfo> GetCandidateMethods(Type type, string methodName, BindingFlags bindingFlags, int argCount)
         {
             MethodInfo[] methods = type.GetMethods(bindingFlags | BindingFlags.FlattenHierarchy);
-            List<MethodInfo> matches = new List<MethodInfo>();
+            List<MethodInfo> matches = new();
 
             foreach (MethodInfo method in methods)
             {

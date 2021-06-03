@@ -44,7 +44,7 @@ namespace Spring.Expressions.Parser.antlr
 		/*Copy an ASTPair.  Don't call it clone() because we want type-safety */
 		public ASTPair copy()
 		{
-			ASTPair tmp = new ASTPair();
+			ASTPair tmp = new();
 			tmp.root = root;
 			tmp.child = child;
 			return tmp;

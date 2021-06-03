@@ -34,7 +34,7 @@ namespace Spring.Expressions
         /// <summary>
         /// Create a new instance
         /// </summary>
-        public OpIn():base()
+        public OpIn() : base()
         {
         }
 
@@ -45,7 +45,7 @@ namespace Spring.Expressions
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Returns a value for the logical IN operator node.
         /// </summary>
@@ -56,26 +56,17 @@ namespace Spring.Expressions
         /// </returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            object left = GetLeftValue( context, evalContext );
-            object right = GetRightValue( context, evalContext );
+            object left = GetLeftValue(context, evalContext);
+            object right = GetRightValue(context, evalContext);
 
-            if (right == null)
+            return right switch
             {
-                return false;
-            }
-            else if (right is IList)
-            {
-                return ((IList) right).Contains(left);
-            }
-            else if (right is IDictionary)
-            {
-                return ((IDictionary) right).Contains(left);
-            }
-            else
-            {
-                throw new ArgumentException(
-                    "Right hand parameter for 'in' operator has to be an instance of IList or IDictionary.");
-            }
+                null => false,
+                IList => ((IList)right).Contains(left),
+                IDictionary => ((IDictionary)right).Contains(left),
+                _ => throw new ArgumentException(
+"Right hand parameter for 'in' operator has to be an instance of IList or IDictionary."),
+            };
         }
     }
 }

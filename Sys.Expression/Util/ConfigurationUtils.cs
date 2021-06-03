@@ -29,7 +29,7 @@ namespace Spring.Util
     public static class ConfigurationUtils
     {
         private static readonly ConcurrentDictionary<string, object> cachedSections =
-            new ConcurrentDictionary<string, object>();
+            new();
         
         /// <summary>
         /// Parses the configuration section.

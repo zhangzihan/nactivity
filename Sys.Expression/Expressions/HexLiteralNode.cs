@@ -48,7 +48,7 @@ namespace Spring.Expressions
         {
         }
 
-        private object syncRoot = new object();
+        private object syncRoot = new();
 
         /// <summary>
         /// Returns a value for the hexadecimal integer literal node.

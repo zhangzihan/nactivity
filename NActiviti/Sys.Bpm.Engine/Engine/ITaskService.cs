@@ -793,7 +793,7 @@ namespace Sys.Workflow.Engine
         /// </summary>
         /// <param name="assignee">me</param>
         /// <returns></returns>
-        IList<ITask> GetMyTasks(string assignee);
+        IList<ITask> GetMyTasks(string assignee, string businessKey = null);
 
         /// <summary>
         /// 重新替换当前任务节点的执行人

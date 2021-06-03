@@ -239,7 +239,7 @@ namespace Spring.Objects.Factory.Config
         {
             try
             {
-                NameValueCollection properties = new NameValueCollection();
+                NameValueCollection properties = new();
                 InitializeWithDefaultProperties(properties);
                 LoadProperties(properties);
                 ProcessProperties(factory, properties);

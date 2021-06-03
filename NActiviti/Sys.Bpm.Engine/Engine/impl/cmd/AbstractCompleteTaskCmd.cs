@@ -43,16 +43,13 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         protected internal virtual void ExecuteTaskComplete(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
         {
-            lock (syncRoot)
-            {
-                CompleteTask(commandContext, taskEntity, variables, localScope);
+            CompleteTask(commandContext, taskEntity, variables, localScope);
 
-                // Continue process (if not a standalone task)
-                if (taskEntity.ExecutionId is object)
-                {
-                    IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ExecutionId);
-                    Context.Agenda.PlanTriggerExecutionOperation(executionEntity, variables ?? new Dictionary<string, object>());
-                }
+            // Continue process (if not a standalone task)
+            if (taskEntity.ExecutionId is object)
+            {
+                IExecutionEntity executionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(taskEntity.ExecutionId);
+                Context.Agenda.PlanTriggerExecutionOperation(executionEntity, variables ?? new Dictionary<string, object>());
             }
         }
 

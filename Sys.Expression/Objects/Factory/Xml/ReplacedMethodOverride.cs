@@ -46,7 +46,7 @@ namespace Spring.Objects.Factory.Support
     public sealed class ReplacedMethodOverride : MethodOverride
 	{
 		private readonly string methodReplacerObjectName;
-		private StringCollection typeIdentifiers = new StringCollection();
+		private StringCollection typeIdentifiers = new();
 
 		/// <summary>
 		/// Creates a new instance of the

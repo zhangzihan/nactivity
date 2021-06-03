@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ namespace Spring.Expressions
         {
             string varName = this.getText();
             IDictionary locals = evalContext.LocalVariables;
-            if (locals != null)
+            if (locals is object)
             {
                 return locals[varName];
             }

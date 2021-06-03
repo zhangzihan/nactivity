@@ -36,7 +36,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		/// Each new rule invocation must have it's own subtree. Tokens are
 		/// added to the current root so we must have a stack of subtree roots.
 		/// </summary>
-		protected Stack currentParseTreeRoot = new Stack();
+		protected Stack currentParseTreeRoot = new();
 
 		/// <summary>
 		/// Track most recently created parse subtree so that when parsing
@@ -135,7 +135,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 			{
 				return;
 			}
-			ParseTreeRule subRoot = new ParseTreeRule(s);
+			ParseTreeRule subRoot = new(s);
 			if ( currentParseTreeRoot.Count > 0 ) 
 			{
 				ParseTreeRule oldRoot = (ParseTreeRule) currentParseTreeRoot.Peek();

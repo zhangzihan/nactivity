@@ -50,7 +50,7 @@ namespace Spring.Context.Support
         /// The canonical instance of the
         /// <see cref="Spring.Context.Support.NullMessageSource"/> class.
         /// </summary>
-        public static readonly NullMessageSource Null = new NullMessageSource();
+        public static readonly NullMessageSource Null = new();
 
         /// <summary>
         /// Creates a new instance of the <see cref="NullMessageSource"/> class.

@@ -159,7 +159,7 @@ namespace Spring.Objects.Factory
             IListableObjectFactory factory, Type type,
             bool includePrototypes, bool includeFactoryObjects)
         {
-            List<string> result = new List<string>();
+            List<string> result = new();
             result.AddRange(factory.GetObjectNamesForType(type, includePrototypes, includeFactoryObjects));
             IListableObjectFactory pof = GetParentListableObjectFactoryIfAny(factory);
             if (pof != null)
@@ -239,7 +239,7 @@ namespace Spring.Objects.Factory
             IListableObjectFactory factory, Type type,
             bool includePrototypes, bool includeFactoryObjects)
         {
-            Dictionary<string, object> result = new Dictionary<string, object>();
+            Dictionary<string, object> result = new();
             foreach (var entry in factory.GetObjectsOfType(type, includePrototypes, includeFactoryObjects))
             {
                 result.Add(entry.Key, entry.Value);

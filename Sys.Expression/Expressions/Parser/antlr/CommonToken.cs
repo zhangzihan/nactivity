@@ -17,7 +17,7 @@ namespace Spring.Expressions.Parser.antlr
 
 	public class CommonToken : Token
 	{
-		public static readonly CommonToken.CommonTokenCreator Creator = new CommonTokenCreator();
+		public static readonly CommonToken.CommonTokenCreator Creator = new();
 
 		// most tokens will want line and text information
 		protected internal int line;

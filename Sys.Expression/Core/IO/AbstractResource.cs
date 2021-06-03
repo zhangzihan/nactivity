@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -619,7 +619,7 @@ namespace Spring.Core.IO
                                                 " does not support relative resources. Please use fully qualified resource name.");
             }
 
-            StringBuilder fullResourceName = new StringBuilder(256);
+            StringBuilder fullResourceName = new(256);
             if (Protocol != null && Protocol != String.Empty)
             {
                 fullResourceName.Append(Protocol).Append(ConfigurableResourceLoader.ProtocolSeparator);
@@ -676,7 +676,7 @@ namespace Spring.Core.IO
         /// <returns>The newly calculated resource path.</returns>
         private string CalculateResourcePath(string relativePath )
         {
-            StringBuilder path = new StringBuilder(256);
+            StringBuilder path = new(256);
             if (relativePath.StartsWith("..")) // back level navigation
             {
                 string[] pathElements = ResourcePath.Split(PathSeparatorChars);

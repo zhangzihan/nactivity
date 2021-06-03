@@ -75,7 +75,7 @@ namespace Spring.Util
             }
         }
 
-        private readonly CurrentTextPositionHolder _currentTextPositionHolder = new CurrentTextPositionHolder();
+        private readonly CurrentTextPositionHolder _currentTextPositionHolder = new();
 
         /// <summary>
         /// Get info about the current text position during loading a document.
@@ -132,7 +132,7 @@ namespace Spring.Util
         {
             try
             {
-                Uri baseUri = new Uri(Directory.GetCurrentDirectory());
+                Uri baseUri = new(Directory.GetCurrentDirectory());
                 Stream istm = (Stream) new XmlUrlResolver().GetEntity(new Uri(baseUri, filePath), null, typeof (Stream));
                 base.Load(istm);
             }
@@ -153,7 +153,7 @@ namespace Spring.Util
             try
             {
                 _currentTextPositionHolder.CurrentResourceName = resourceName;
-                Uri baseUri = new Uri(Directory.GetCurrentDirectory());
+                Uri baseUri = new(Directory.GetCurrentDirectory());
                 Stream istm = (Stream) new XmlUrlResolver().GetEntity(new Uri(baseUri, filePath), null, typeof (Stream));
                 base.Load(istm);
             }

@@ -62,7 +62,7 @@ namespace Spring.Threading
             nPermits = initialPermits;
         }
 
-        private object syncRoot = new object();
+        private object syncRoot = new();
 
         /// <summary>
         /// Release a permit

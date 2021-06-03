@@ -139,7 +139,7 @@ namespace Spring.Util
             int[] delimiterPositions = new int[s.Length];
             int count = MakeDelimiterPositionList(s, delimiterChars, quoteChars, delimiterPositions);
 
-            List<string> tokens = new List<string>(count+1);
+            List<string> tokens = new(count+1);
             int startIndex = 0;
             for (int ixSep = 0; ixSep < count; ixSep++)
             {
@@ -306,7 +306,7 @@ namespace Spring.Util
             {
                 return "null";
             }
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             int i = 0;
             foreach (object obj in c)
             {
@@ -502,7 +502,7 @@ namespace Spring.Util
         /// </exception>
         public static IList<string> GetAntExpressions(string text)
         {
-            List<string> expressions = new List<string>();
+            List<string> expressions = new();
             if (HasText(text))
             {
                 int start = text.IndexOf(AntExpressionPrefix);
@@ -639,7 +639,7 @@ namespace Spring.Util
         public static string ConvertEscapedCharacters(string inputString)
         {
             if (inputString == null) return null;
-            StringBuilder sb = new StringBuilder(inputString.Length);
+            StringBuilder sb = new(inputString.Length);
             for (int i = 0; i < inputString.Length; i++)
             {
                 if (inputString[i].Equals('\\'))

@@ -56,8 +56,7 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            IEnumerable enumerable = context as IEnumerable;
-            if (enumerable == null)
+            if (context is not IEnumerable enumerable)
             {
                 throw new ArgumentException(
                     "Selection can only be used on an instance of the type that implements IEnumerable.");
@@ -68,10 +67,10 @@ namespace Spring.Expressions
             BaseNode maxIndexExpression = (minIndexExpression == null) ? null : (BaseNode)minIndexExpression.getNextSibling();
 
             int minIndex = (int)((minIndexExpression == null)
-                                      ? Int32.MinValue
+                                      ? int.MinValue
                                       : GetValue(minIndexExpression, context, evalContext));
             int maxIndex = (int)((maxIndexExpression == null)
-                                      ? Int32.MaxValue
+                                      ? int.MaxValue
                                       : GetValue(maxIndexExpression, context, evalContext));
 
             IList selectionList = new ArrayList();

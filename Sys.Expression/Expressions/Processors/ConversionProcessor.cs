@@ -75,7 +75,7 @@ namespace Spring.Expressions.Processors
                 throw new ArgumentException("Only a single argument can be specified for a convert() processor.");
             }        
     
-            ArrayList result = new ArrayList();
+            ArrayList result = new();
             foreach(object val in source)
             {
                 object newVal = TypeConversionUtils.ConvertValueIfNecessary(targetType, val, null);

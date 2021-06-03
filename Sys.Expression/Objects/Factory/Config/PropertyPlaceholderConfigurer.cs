@@ -235,8 +235,8 @@ namespace Spring.Objects.Factory.Config
 	    /// </exception>
 	    protected override void ProcessProperties(IConfigurableListableObjectFactory factory, NameValueCollection props)
 	    {
-	        PlaceholderResolveHandlerAdapter resolveAdapter = new PlaceholderResolveHandlerAdapter(this, props);
-	        ObjectDefinitionVisitor visitor = new ObjectDefinitionVisitor(resolveAdapter.ParseAndResolveVariables);
+	        PlaceholderResolveHandlerAdapter resolveAdapter = new(this, props);
+	        ObjectDefinitionVisitor visitor = new(resolveAdapter.ParseAndResolveVariables);
 
 	        var objectDefinitionNames = factory.GetObjectDefinitionNames(includeAncestors);
 	        for (int i = 0; i < objectDefinitionNames.Count; ++i)

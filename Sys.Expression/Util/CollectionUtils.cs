@@ -343,7 +343,7 @@ namespace Spring.Util
                 return null;
             }
             Type typeToUse = type ?? typeof(object);
-            ArrayList results = new ArrayList();
+            ArrayList results = new();
             foreach (object obj in collection)
             {
                 if (typeToUse.IsAssignableFrom(obj.GetType()))
@@ -463,7 +463,7 @@ namespace Spring.Util
         /// <returns>a new collection of stable sorted items.</returns>
         public static ICollection StableSort(IEnumerable input, CompareCallback comparer)
         {
-            ArrayList ehancedInput = new ArrayList();
+            ArrayList ehancedInput = new();
             IEnumerator it = input.GetEnumerator();
             int index = 0;
             while (it.MoveNext())
@@ -507,7 +507,7 @@ namespace Spring.Util
         /// <returns>a new collection of stable sorted items.</returns>
         public static void StableSortInPlace(IList input, CompareCallback comparer)
         {
-            ArrayList ehancedInput = new ArrayList();
+            ArrayList ehancedInput = new();
             IEnumerator it = input.GetEnumerator();
             int index = 0;
             while (it.MoveNext())

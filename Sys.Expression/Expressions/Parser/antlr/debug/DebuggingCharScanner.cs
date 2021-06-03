@@ -190,7 +190,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		}
 		public override void  match(string s)
 		{
-			System.Text.StringBuilder la_s = new System.Text.StringBuilder("");
+			System.Text.StringBuilder la_s = new("");
 			int len = s.Length;
 			// peek at the next len worth of characters
 			try

@@ -95,7 +95,7 @@ namespace Spring.Objects.Support
 			AssertUtils.ArgumentNotNull(source, "source");
 			AssertUtils.ArgumentNotNull(handler, "handler");
 			// simply delegate so that after wiring, state is wiped clean...
-			AutoWirer wirer = new AutoWirer(source, EventName, handler, MethodName);
+			AutoWirer wirer = new(source, EventName, handler, MethodName);
 			wirer.Wire();
 		}
 
@@ -183,12 +183,12 @@ namespace Spring.Objects.Support
 			private void WireEvent(EventInfo theEvent)
 			{
 				// grab some info (such as the delegate's method signature) about the event
-				DelegateInfo eventDelegate = new DelegateInfo(theEvent);
+				DelegateInfo eventDelegate = new(theEvent);
 				// if the method name needs to be customised on a per event basis, do so
 				string customMethodName = GetMethodNameCustomisedForEvent(theEvent.Name);
 
 				// create the criteria for the handler method search...
-				ComposedCriteria methodCriteria = new ComposedCriteria();
+				ComposedCriteria methodCriteria = new();
 				// a candidate handlers method name must match the custom method name
 				methodCriteria.Add(new RegularExpressionMethodNameCriteria(customMethodName));
 				// the return Type of a candidate handlers method must be the same as the return type of the event

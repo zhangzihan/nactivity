@@ -177,7 +177,7 @@ namespace Spring.Expressions.Parser.antlr
 		/// <summary>
 		/// Which (whitespace) token(s) to throw out
 		/// </summary>
-		protected BitSet discardMask = new BitSet();
+		protected BitSet discardMask = new();
 
 		public TokenStreamRewriteEngine(TokenStream upstream) : this(upstream, 1000)
 		{
@@ -407,7 +407,7 @@ namespace Spring.Expressions.Parser.antlr
 
 		public string ToOriginalString(int start, int end) 
 		{
-			StringBuilder buf = new StringBuilder();
+			StringBuilder buf = new();
 			for (int i = start; (i >= MIN_TOKEN_INDEX) && (i <= end) && (i < tokens.Count); i++) 
 			{
 				buf.Append(getToken(i).getText());
@@ -437,7 +437,7 @@ namespace Spring.Expressions.Parser.antlr
 			{
 				return null; // invalid program
 			}
-			StringBuilder buf = new StringBuilder();
+			StringBuilder buf = new();
 
 			// Index of first rewrite we have not done
 			int rewriteOpIndex = 0;
@@ -488,7 +488,7 @@ namespace Spring.Expressions.Parser.antlr
 
 		public string ToDebugString(int start, int end) 
 		{
-			StringBuilder buf = new StringBuilder();
+			StringBuilder buf = new();
 			for (int i = start; (i >= MIN_TOKEN_INDEX) && (i <= end) && (i < tokens.Count); i++) 
 			{
 				buf.Append(getToken(i));
@@ -535,7 +535,7 @@ namespace Spring.Expressions.Parser.antlr
 
 		public class RewriteOperationComparer : IComparer
 		{
-			public static readonly RewriteOperationComparer Default = new RewriteOperationComparer();
+			public static readonly RewriteOperationComparer Default = new();
 		
 			public virtual int Compare(object o1, object o2)
 			{

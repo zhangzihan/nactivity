@@ -40,7 +40,7 @@ namespace Spring.Util
         /// </remarks>
         public static byte[] ToByteArray(Stream src)
         {
-            MemoryStream stm = new MemoryStream();
+            MemoryStream stm = new();
             CopyStream(src, stm);
             stm.Close();
             return stm.ToArray();

@@ -64,7 +64,7 @@ namespace Spring.Util
         {
             if (SystemUtils.MonoRuntime)
             {
-                ArrayList list = new ArrayList(array);
+                ArrayList list = new(array);
                 list.Sort(comparer);
                 list.ToArray().CopyTo(array, list.Count);
                 return;
@@ -177,7 +177,7 @@ namespace Spring.Util
                 return "null";
             }
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.Append('{');
 
             for (int i = 0; i < array.Length; i++)

@@ -17,7 +17,7 @@ namespace Spring.Expressions.Parser.antlr
 	
 	public class CommonHiddenStreamToken : CommonToken, IHiddenStreamToken
 	{
-		new public static readonly CommonHiddenStreamToken.CommonHiddenStreamTokenCreator Creator = new CommonHiddenStreamTokenCreator();
+		new public static readonly CommonHiddenStreamToken.CommonHiddenStreamTokenCreator Creator = new();
 
 		protected internal IHiddenStreamToken hiddenBefore;
 		protected internal IHiddenStreamToken hiddenAfter;

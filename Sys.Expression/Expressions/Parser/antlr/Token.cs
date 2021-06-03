@@ -32,7 +32,7 @@ namespace Spring.Expressions.Parser.antlr
 		protected int type_;
 		
 		// the illegal token object
-		public static Token badToken = new Token(INVALID_TYPE, "<no text>");
+		public static Token badToken = new(INVALID_TYPE, "<no text>");
 		
 		public Token()
 		{

@@ -68,7 +68,7 @@ namespace Spring.Expressions
         {
         }
 
-        private object syncRoot = new object();
+        private object syncRoot = new();
 
         /// <summary>
         /// Initializes the node. 
@@ -79,7 +79,7 @@ namespace Spring.Expressions
             {
                 if (args == null)
                 {
-                    List<BaseNode> argList = new List<BaseNode>();
+                    List<BaseNode> argList = new();
                     namedArgs = new Hashtable();
 
                     AST node = this.getFirstChild();

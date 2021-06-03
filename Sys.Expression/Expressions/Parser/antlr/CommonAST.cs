@@ -22,7 +22,7 @@ namespace Spring.Expressions.Parser.antlr
 	/*Common AST node implementation */
 	public class CommonAST : BaseAST
 	{
-		public static readonly CommonAST.CommonASTCreator Creator = new CommonASTCreator();
+		public static readonly CommonAST.CommonASTCreator Creator = new();
 
 		internal int ttype = Token.INVALID_TYPE;
 		internal string text;

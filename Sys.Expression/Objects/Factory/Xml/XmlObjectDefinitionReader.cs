@@ -290,7 +290,7 @@ namespace Spring.Objects.Factory.Xml
                     XmlReader reader = null;
                     try
                     {
-                        MemoryStream xmlDataStream = new MemoryStream(xmlData);
+                        MemoryStream xmlDataStream = new(xmlData);
                         reader = CreateValidatingReader(xmlDataStream);
                         doc = new ConfigXmlDocument();
                         doc.Load(reader);

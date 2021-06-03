@@ -81,7 +81,7 @@ namespace Spring.Util
         public static string GetSignature(
             Type type, string method, Type[] argumentTypes)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.Append(type.FullName).Append("::").Append(method).Append("(");
             string separator = "";
             for (int i = 0; i < argumentTypes.Length; i++)
@@ -550,7 +550,7 @@ namespace Spring.Util
                                   intf.FullName));
             }
 
-            List<Type> interfaces = new List<Type>(intf.GetInterfaces());
+            List<Type> interfaces = new(intf.GetInterfaces());
             interfaces.Add(intf);
 
             return interfaces;
@@ -1223,7 +1223,7 @@ namespace Spring.Util
         /// </returns>
         public static IList GetCustomAttributes(MemberInfo member)
         {
-            ArrayList attributes = new ArrayList();
+            ArrayList attributes = new();
 
             // add attributes that apply to the target type or method
             object[] attrs = member.GetCustomAttributes(false);
@@ -1446,7 +1446,7 @@ namespace Spring.Util
 
             if (type.IsInterface)
             {
-                List<Type> interfaces = new List<Type>();
+                List<Type> interfaces = new();
                 interfaces.Add(type);
                 interfaces.AddRange(type.GetInterfaces());
                 return interfaces.ToArray();
@@ -1581,7 +1581,7 @@ namespace Spring.Util
 
         private delegate void MemberwiseCopyHandler(object a, object b);
 
-        private static readonly Dictionary<Type, MemberwiseCopyHandler> s_handlerCache = new Dictionary<Type, MemberwiseCopyHandler>();
+        private static readonly Dictionary<Type, MemberwiseCopyHandler> s_handlerCache = new();
 
         private static MemberwiseCopyHandler GetImpl(Type type)
         {
@@ -1601,7 +1601,7 @@ namespace Spring.Util
                 FieldInfo[] fields = GetFields(type);
                 Action callback = () =>
                 {
-                    DynamicMethod dm = new DynamicMethod(type.FullName + ".ShallowCopy", null, new Type[] {typeof(object), typeof(object)}, type.Module, true);
+                    DynamicMethod dm = new(type.FullName + ".ShallowCopy", null, new Type[] {typeof(object), typeof(object)}, type.Module, true);
                     ILGenerator ilGen = dm.GetILGenerator();
                     ilGen.DeclareLocal(type);
                     ilGen.DeclareLocal(type);
@@ -1642,7 +1642,7 @@ namespace Spring.Util
         private const BindingFlags FIELDBINDINGS =
             BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic;
 
-        private static readonly Dictionary<Type, FieldInfo[]> s_fieldCache = new Dictionary<Type, FieldInfo[]>();
+        private static readonly Dictionary<Type, FieldInfo[]> s_fieldCache = new();
 
         private static FieldInfo[] GetFields(Type type)
         {
@@ -1651,7 +1651,7 @@ namespace Spring.Util
                 FieldInfo[] fields;
                 if (!s_fieldCache.TryGetValue(type, out fields))
                 {
-                    List<FieldInfo> fieldList = new List<FieldInfo>();
+                    List<FieldInfo> fieldList = new();
                     CollectFieldsRecursive(type, fieldList);
                     fields = fieldList.ToArray();
                     s_fieldCache[type] = fields;

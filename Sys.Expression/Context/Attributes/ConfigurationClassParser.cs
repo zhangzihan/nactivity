@@ -34,7 +34,7 @@ namespace Spring.Context.Attributes
     {
         private Collections.Generic.ISet<ConfigurationClass> _configurationClasses = new HashedSet<ConfigurationClass>();
 
-        private Stack<ConfigurationClass> _importStack = new Stack<ConfigurationClass>();
+        private Stack<ConfigurationClass> _importStack = new();
 
         private IProblemReporter _problemReporter;
 

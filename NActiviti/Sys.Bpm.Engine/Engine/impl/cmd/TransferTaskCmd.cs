@@ -71,7 +71,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
             else
             {
-                tasks = commandContext.ProcessEngineConfiguration.ManagementService.ExecuteCommand(new AddCountersignCmd(task.Id, users, task.TenantId));
+                tasks = taskService.AddCountersign(task.Id, users, task.TenantId);
             }
         }
 

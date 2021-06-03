@@ -51,7 +51,7 @@ namespace Spring.Expressions.Processors
                 return source;
             }
 
-            ArrayList list = new ArrayList(source);
+            ArrayList list = new(source);
             list.Reverse();
 
             return list;            

@@ -51,7 +51,7 @@ namespace Spring.Objects.Factory.Support
         /// <summary>
         /// Map from object name to object instance.
         /// </summary>
-        private Dictionary<string, object> objects = new Dictionary<string, object>();
+        private Dictionary<string, object> objects = new();
 
         /// <summary>
         /// Determine whether this object factory treats object names case-sensitive or not.
@@ -538,7 +538,7 @@ namespace Spring.Objects.Factory.Support
         /// </returns>
         public IReadOnlyList<string> GetObjectDefinitionNames()
         {
-            List<string> names = new List<string>(objects.Keys);
+            List<string> names = new(objects.Keys);
             return names;
         }
 
@@ -576,7 +576,7 @@ namespace Spring.Objects.Factory.Support
         /// </returns>
         public IList<string> GetObjectDefinitionNames(Type type)
         {
-            List<string> matches = new List<string>();
+            List<string> matches = new();
             foreach (string name in objects.Keys)
             {
                 Type t = objects[name].GetType();
@@ -676,7 +676,7 @@ namespace Spring.Objects.Factory.Support
         public IReadOnlyList<string> GetObjectNamesForType(Type type, bool includePrototypes, bool includeFactoryObjects)
         {
             bool isFactoryType = (type != null && typeof(IFactoryObject).IsAssignableFrom(type));
-            List<string> matches = new List<string>();
+            List<string> matches = new();
             foreach (string name in objects.Keys)
             {
                 object instance = objects[name];
@@ -816,7 +816,7 @@ namespace Spring.Objects.Factory.Support
         /// </exception>
         public IReadOnlyDictionary<string, T> GetObjects<T>()
         {
-            Dictionary<string, T> collector = new Dictionary<string, T>();
+            Dictionary<string, T> collector = new();
             DoGetObjectsOfType(typeof(T), true, true, collector);
             return collector;
         }
@@ -849,7 +849,7 @@ namespace Spring.Objects.Factory.Support
         /// </exception>
         public IReadOnlyDictionary<string, object> GetObjectsOfType(Type type, bool includePrototypes, bool includeFactoryObjects)
         {
-            Dictionary<string, object> collector = new Dictionary<string, object>();
+            Dictionary<string, object> collector = new();
             DoGetObjectsOfType(type, includeFactoryObjects, includePrototypes, collector);
             return collector;
         }
@@ -917,7 +917,7 @@ namespace Spring.Objects.Factory.Support
         /// </exception>
         public IReadOnlyDictionary<string, T> GetObjects<T>(bool includePrototypes, bool includeFactoryObjects)
         {
-            Dictionary<string, T> collector = new Dictionary<string, T>();
+            Dictionary<string, T> collector = new();
             DoGetObjectsOfType(typeof(T), includeFactoryObjects, includePrototypes, collector);
             return collector;
         }

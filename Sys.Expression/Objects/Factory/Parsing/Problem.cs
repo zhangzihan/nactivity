@@ -85,7 +85,7 @@ namespace Spring.Objects.Factory.Parsing
         public override string ToString()
         {
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.Append("Configuration problem: ");
             sb.Append(Message);
             sb.Append("\nOffending resource: ").Append(ResourceDescription);

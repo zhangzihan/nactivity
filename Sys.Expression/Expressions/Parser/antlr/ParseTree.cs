@@ -29,14 +29,14 @@ namespace Spring.Expressions.Parser.antlr
 			{
 				return ToString();
 			}
-			StringBuilder buf = new StringBuilder (2000);
+			StringBuilder buf = new(2000);
 			getLeftmostDerivation(buf, step);
 			return buf.ToString();
 		}
 
 		public string getLeftmostDerivation(int maxSteps)
 		{
-			StringBuilder buf = new StringBuilder(2000);
+			StringBuilder buf = new(2000);
 			buf.Append("    " + this.ToString());
 			buf.Append("\n");
 			for (int d=1; d < maxSteps; d++) 

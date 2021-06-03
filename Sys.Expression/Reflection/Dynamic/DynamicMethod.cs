@@ -118,7 +118,7 @@ namespace Spring.Reflection.Dynamic
             state = (SafeMethodState)stateCache[methodInfo];
             if (state == null)
             {
-                SafeMethodState newState = new SafeMethodState(DynamicReflectionManager.CreateMethod(methodInfo),
+                SafeMethodState newState = new(DynamicReflectionManager.CreateMethod(methodInfo),
                 new object[methodInfo.GetParameters().Length]
                 );
 

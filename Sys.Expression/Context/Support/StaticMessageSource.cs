@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -185,7 +185,7 @@ namespace Spring.Context.Support
         /// </returns>
         public override string ToString()
         {
-            StringBuilder output = new StringBuilder();
+            StringBuilder output = new();
             output.Append(GetType().Name);
             output.Append(" : ");
             foreach (string code in _messages.Keys)

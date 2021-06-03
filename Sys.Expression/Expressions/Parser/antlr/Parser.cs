@@ -43,7 +43,7 @@ namespace Spring.Expressions.Parser.antlr
 	public abstract class Parser : IParserDebugSubject
 	{
 		// Used to store event delegates
-		private EventHandlerList events_ = new EventHandlerList();
+		private EventHandlerList events_ = new();
 
 		protected internal EventHandlerList Events 
 		{
@@ -51,22 +51,22 @@ namespace Spring.Expressions.Parser.antlr
 		}
 
 		// The unique keys for each event that Parser [objects] can generate
-		internal static readonly object EnterRuleEventKey		= new object();
-		internal static readonly object ExitRuleEventKey			= new object();
-		internal static readonly object DoneEventKey				= new object();
-		internal static readonly object ReportErrorEventKey		= new object();
-		internal static readonly object ReportWarningEventKey	= new object();
-		internal static readonly object NewLineEventKey			= new object();
-		internal static readonly object MatchEventKey			= new object();
-		internal static readonly object MatchNotEventKey			= new object();
-		internal static readonly object MisMatchEventKey			= new object();
-		internal static readonly object MisMatchNotEventKey		= new object();
-		internal static readonly object ConsumeEventKey			= new object();
-		internal static readonly object LAEventKey				= new object();
-		internal static readonly object SemPredEvaluatedEventKey	= new object();
-		internal static readonly object SynPredStartedEventKey	= new object();
-		internal static readonly object SynPredFailedEventKey	= new object();
-		internal static readonly object SynPredSucceededEventKey	= new object();
+		internal static readonly object EnterRuleEventKey		= new();
+		internal static readonly object ExitRuleEventKey			= new();
+		internal static readonly object DoneEventKey				= new();
+		internal static readonly object ReportErrorEventKey		= new();
+		internal static readonly object ReportWarningEventKey	= new();
+		internal static readonly object NewLineEventKey			= new();
+		internal static readonly object MatchEventKey			= new();
+		internal static readonly object MatchNotEventKey			= new();
+		internal static readonly object MisMatchEventKey			= new();
+		internal static readonly object MisMatchNotEventKey		= new();
+		internal static readonly object ConsumeEventKey			= new();
+		internal static readonly object LAEventKey				= new();
+		internal static readonly object SemPredEvaluatedEventKey	= new();
+		internal static readonly object SynPredStartedEventKey	= new();
+		internal static readonly object SynPredFailedEventKey	= new();
+		internal static readonly object SynPredSucceededEventKey	= new();
 
 		protected internal ParserSharedInputState inputState;
 		
@@ -80,7 +80,7 @@ namespace Spring.Expressions.Parser.antlr
 		protected internal AST returnAST;
 		
 		/*AST support code; parser and treeparser delegate to this object */
-		protected internal ASTFactory astFactory = new ASTFactory();
+		protected internal ASTFactory astFactory = new();
 		
 		private bool ignoreInvalidDebugCalls = false;
 		

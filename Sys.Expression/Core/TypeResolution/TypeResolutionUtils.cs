@@ -126,7 +126,7 @@ namespace Spring.Core.TypeResolution
         {
             AssertUtils.ArgumentNotNull(interfaceNames, "interfaceNames");
 
-            List<Type> interfaces = new List<Type>();
+            List<Type> interfaces = new();
             for (int i = 0; i < interfaceNames.Length; i++)
             {
                 string interfaceName = interfaceNames[i];
@@ -150,7 +150,7 @@ namespace Spring.Core.TypeResolution
 
         // TODO : Use the future Pointcut expression language instead
 
-        private readonly static Regex methodMatchRegex = new Regex(
+        private readonly static Regex methodMatchRegex = new(
             @"(?<methodName>([\w]+\.)*[\w\*]+)(?<parameters>(\((?<parameterTypes>[\w\.]+(,[\w\.]+)*)*\))?)", RegexOptions.ExplicitCapture);
 
         /// <summary>

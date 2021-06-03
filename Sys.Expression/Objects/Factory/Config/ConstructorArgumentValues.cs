@@ -39,7 +39,7 @@ namespace Spring.Objects.Factory.Config
 	[Serializable]
 	public class ConstructorArgumentValues
 	{
-		private static readonly CultureInfo enUSCultureInfo = new CultureInfo("en-US", false);
+		private static readonly CultureInfo enUSCultureInfo = new("en-US", false);
 		
 		private static readonly IReadOnlyDictionary<int, ValueHolder> _emptyIndexedArgumentValues = new Dictionary<int, ValueHolder>();
 		private Dictionary<int, ValueHolder>  _indexedArgumentValues = null;
@@ -624,7 +624,7 @@ namespace Spring.Objects.Factory.Config
 
 		    public ValueHolder Copy()
             {
-                ValueHolder copy = new ValueHolder(this._ctorValue, this.typeName);
+                ValueHolder copy = new(this._ctorValue, this.typeName);
                 return copy;
             }
 

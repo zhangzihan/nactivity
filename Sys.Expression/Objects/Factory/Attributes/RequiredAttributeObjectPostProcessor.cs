@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ namespace Spring.Objects.Factory.Attributes
         {
             if (!validatedObjectNames.Contains(objectName))
             {
-                List<string> invalidProperties = new List<string>();
+                List<string> invalidProperties = new();
 
                 foreach (PropertyInfo pi in pis)
                 {
@@ -156,7 +156,7 @@ namespace Spring.Objects.Factory.Attributes
         private string BuildExceptionMessage(IList<string> invalidProperties, ICloneable objectName)
         {
             int size = invalidProperties.Count;
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.Append(size == 1 ? "Property" : "Properties");
             for (int i=0; i < size; i++)
             {

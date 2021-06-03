@@ -101,7 +101,7 @@ namespace Spring.Core.IO
         /// </summary>
         private const string ResourcesSectionName = "spring/resourceHandlers";
 
-        private static object syncRoot = new object();
+        private static object syncRoot = new();
         private static IDictionary<string, IDynamicConstructor> resourceHandlers = new Dictionary<string, IDynamicConstructor>();
 
         /// <summary>

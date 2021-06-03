@@ -92,7 +92,7 @@ namespace Spring.Util
                 ModuleBuilder module = (ModuleBuilder) s_moduleCache[assemblyName];
                 if (module == null)
                 {
-                    AssemblyName an = new AssemblyName();
+                    AssemblyName an = new();
                     an.Name = assemblyName;
                     module = BuildModule(an);
                     s_moduleCache[assemblyName] = module;

@@ -80,7 +80,7 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            if(bodyExpression == null)
+            if(bodyExpression is null)
             {
                 InitializeLambda();
             }
@@ -115,7 +115,7 @@ namespace Spring.Expressions
             }
         }
 
-        private object syncRoot = new object();
+        private object syncRoot = new();
 
         private void InitializeLambda()
         {

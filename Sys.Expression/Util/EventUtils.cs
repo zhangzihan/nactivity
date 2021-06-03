@@ -93,7 +93,7 @@ namespace Spring.Util
         /// <returns>a map of sink/exception entries that occurred during event raising</returns>
         public virtual IEventExceptionsCollector Raise(Delegate source, params object[] arguments)
         {
-            EventExceptionsCollector exceptions = new EventExceptionsCollector();
+            EventExceptionsCollector exceptions = new();
 
             if (source != null)
             {

@@ -36,7 +36,7 @@ namespace Spring.Expressions
         /// <summary>
         /// Create a new instance
         /// </summary>
-        public RealLiteralNode():base()
+        public RealLiteralNode() : base()
         {
         }
 
@@ -48,7 +48,7 @@ namespace Spring.Expressions
         {
         }
 
-        private object syncRoot = new object();
+        private object syncRoot = new();
 
         /// <summary>
         /// Returns a value for the real literal node.
@@ -58,32 +58,32 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            if (nodeValue == null)
+            if (nodeValue is null)
             {
                 lock (syncRoot)
                 {
-                    if (nodeValue == null)
+                    if (nodeValue is null)
                     {
                         string n = this.getText();
                         char lastChar = n.ToLower()[n.Length - 1];
-                        if (Char.IsDigit(lastChar))
+                        if (char.IsDigit(lastChar))
                         {
-                            nodeValue = Double.Parse(n, NumberFormatInfo.InvariantInfo);
+                            nodeValue = double.Parse(n, NumberFormatInfo.InvariantInfo);
                         }
                         else
                         {
                             n = n.Substring(0, n.Length - 1);
                             if (lastChar == 'm')
                             {
-                                nodeValue = Decimal.Parse(n, NumberFormatInfo.InvariantInfo);
+                                nodeValue = decimal.Parse(n, NumberFormatInfo.InvariantInfo);
                             }
                             else if (lastChar == 'f')
                             {
-                                nodeValue = Single.Parse(n, NumberFormatInfo.InvariantInfo);
+                                nodeValue = float.Parse(n, NumberFormatInfo.InvariantInfo);
                             }
                             else
                             {
-                                nodeValue = Double.Parse(n, NumberFormatInfo.InvariantInfo);
+                                nodeValue = double.Parse(n, NumberFormatInfo.InvariantInfo);
                             }
                         }
                     }

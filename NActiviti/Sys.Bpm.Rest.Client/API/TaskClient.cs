@@ -36,9 +36,9 @@ namespace Sys.Workflow.Rest.Client.API
         }
 
         /// <inheritdoc />
-        public async Task<Resources<TaskModel>> MyTasks(string userId)
+        public async Task<Resources<TaskModel>> MyTasks(string userId, string businessKey = null)
         {
-            return await httpProxy.GetAsync<Resources<TaskModel>>($"{serviceUrl}/{userId}/mytasks").ConfigureAwait(false);
+            return await httpProxy.GetAsync<Resources<TaskModel>>($"{serviceUrl}/{userId}/mytasks{(businessKey is object ? $"/{businessKey}" : "")}").ConfigureAwait(false);
         }
 
 

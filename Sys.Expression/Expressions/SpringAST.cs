@@ -37,7 +37,7 @@ namespace Spring.Expressions
         /// <summary>
         /// The global SpringAST node factory
         /// </summary>
-        internal static readonly SpringASTCreator Creator = new SpringASTCreator();
+        internal static readonly SpringASTCreator Creator = new();
 
         #endregion
 

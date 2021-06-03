@@ -396,12 +396,12 @@ namespace Spring.Objects.Support
         {
             MethodInfo theMethod = null;
             Type targetType = (TargetObject != null) ? TargetObject.GetType() : TargetType;
-            GenericArgumentsHolder genericInfo = new GenericArgumentsHolder(TargetMethod);
+            GenericArgumentsHolder genericInfo = new(TargetMethod);
 
             // if we don't have any named arguments, we can try to get the exact method first...
 			if (NamedArguments.Count == 0)
 			{
-                ComposedCriteria searchCriteria = new ComposedCriteria();
+                ComposedCriteria searchCriteria = new();
                 searchCriteria.Add(new MethodNameMatchCriteria(genericInfo.GenericMethodName));
                 searchCriteria.Add(new MethodParametersCountCriteria(ArgumentCount));
                 searchCriteria.Add(new MethodGenericArgumentsCountCriteria(genericInfo.GetGenericArguments().Length));
@@ -421,7 +421,7 @@ namespace Spring.Objects.Support
             if (theMethod == null)
             {
                 // search for a method with a matching signature...
-                ComposedCriteria searchCriteria = new ComposedCriteria();
+                ComposedCriteria searchCriteria = new();
                 searchCriteria.Add(new MethodNameMatchCriteria(genericInfo.GenericMethodName));
                 searchCriteria.Add(new MethodParametersCountCriteria(ArgumentCount));
                 searchCriteria.Add(new MethodGenericArgumentsCountCriteria(genericInfo.GetGenericArguments().Length));

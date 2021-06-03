@@ -51,7 +51,7 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public static ObjectDefinitionBuilder GenericObjectDefinition()
         {
-           ObjectDefinitionBuilder builder = new ObjectDefinitionBuilder();
+           ObjectDefinitionBuilder builder = new();
             builder.objectDefinition = new GenericObjectDefinition();
             return builder;
         }
@@ -62,7 +62,7 @@ namespace Spring.Objects.Factory.Support
         /// <param name="objectType">the <see cref="Type"/> of the object that the definition is being created for</param>
         public static ObjectDefinitionBuilder GenericObjectDefinition(Type objectType)
         {
-           ObjectDefinitionBuilder builder = new ObjectDefinitionBuilder();
+           ObjectDefinitionBuilder builder = new();
             builder.objectDefinition = new GenericObjectDefinition();
             builder.objectDefinition.ObjectType = objectType;
             return builder;
@@ -74,7 +74,7 @@ namespace Spring.Objects.Factory.Support
         /// <param name="objectTypeName">the name of the <see cref="Type"/> of the object that the definition is being created for</param>
         public static ObjectDefinitionBuilder GenericObjectDefinition(string objectTypeName)
         {
-           ObjectDefinitionBuilder builder = new ObjectDefinitionBuilder();
+           ObjectDefinitionBuilder builder = new();
             builder.objectDefinition = new GenericObjectDefinition();
             builder.objectDefinition.ObjectTypeName = objectTypeName;
             return builder;
@@ -103,7 +103,7 @@ namespace Spring.Objects.Factory.Support
                                                                    string objectTypeName,
                                                                    string factoryMethodName)
         {
-            ObjectDefinitionBuilder builder = new ObjectDefinitionBuilder();
+            ObjectDefinitionBuilder builder = new();
 
             builder.objectDefinitionFactory = objectDefinitionFactory;
 
@@ -139,7 +139,7 @@ namespace Spring.Objects.Factory.Support
         public static ObjectDefinitionBuilder RootObjectDefinition(IObjectDefinitionFactory objectDefinitionFactory,
                                                                    Type objectType, string factoryMethodName)
         {
-            ObjectDefinitionBuilder builder = new ObjectDefinitionBuilder();
+            ObjectDefinitionBuilder builder = new();
             
             builder.objectDefinitionFactory = objectDefinitionFactory;
 
@@ -160,7 +160,7 @@ namespace Spring.Objects.Factory.Support
         public static ObjectDefinitionBuilder ChildObjectDefinition(IObjectDefinitionFactory objectDefinitionFactory,
                                                                     string parentObjectName)
         {
-            ObjectDefinitionBuilder builder = new ObjectDefinitionBuilder();
+            ObjectDefinitionBuilder builder = new();
 
             builder.objectDefinitionFactory = objectDefinitionFactory;
 

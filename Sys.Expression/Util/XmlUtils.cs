@@ -69,7 +69,7 @@ namespace Spring.Util
                     schemas.Compile();
                 }
 
-                XmlReaderSettings settings = new XmlReaderSettings();
+                XmlReaderSettings settings = new();
                 settings.Schemas.XmlResolver = xmlResolver;
                 settings.Schemas.Add(schemas);
                 settings.ValidationType = ValidationType.Schema;

@@ -55,7 +55,7 @@ namespace Spring.Expressions
         {
         }
 
-        private object syncRoot = new object();
+        private object syncRoot = new();
 
         /// <summary>
         /// Returns a value for the integer literal node.
@@ -65,20 +65,20 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            if (nodeValue == null)
+            if (nodeValue is null)
             {
                 lock (syncRoot)
                 {
-                    if (nodeValue == null)
+                    if (nodeValue is null)
                     {
                         string n = this.getText();
                         try
                         {
-                            nodeValue = Int32.Parse(n);
+                            nodeValue = int.Parse(n);
                         }
                         catch (OverflowException)
                         {
-                            nodeValue = Int64.Parse(n);
+                            nodeValue = long.Parse(n);
                         }
                     }
                 }

@@ -55,32 +55,32 @@ namespace Spring.Context.Attributes
         /// <summary>
         /// Assembly Inclusion Predicates.
         /// </summary>
-        protected readonly List<Func<Assembly, bool>> AssemblyInclusionPredicates = new List<Func<Assembly, bool>>();
+        protected readonly List<Func<Assembly, bool>> AssemblyInclusionPredicates = new();
 
         /// <summary>
         /// Type Exclusion Predicates.
         /// </summary>
-        protected readonly List<Func<Type, bool>> TypeExclusionPredicates = new List<Func<Type, bool>>();
+        protected readonly List<Func<Type, bool>> TypeExclusionPredicates = new();
 
         /// <summary>
         /// Type Exclusion Predicates.
         /// </summary>
-        protected readonly List<ITypeFilter> TypeExclusionTypeFilters = new List<ITypeFilter>();
+        protected readonly List<ITypeFilter> TypeExclusionTypeFilters = new();
 
         /// <summary>
         /// Type Inclusion Predicates.
         /// </summary>
-        protected readonly List<Func<Type, bool>> TypeInclusionPredicates = new List<Func<Type, bool>>();
+        protected readonly List<Func<Type, bool>> TypeInclusionPredicates = new();
 
         /// <summary>
         /// Type Inclusion TypeFilters.
         /// </summary>
-        protected readonly List<ITypeFilter> TypeInclusionTypeFilter = new List<ITypeFilter>();
+        protected readonly List<ITypeFilter> TypeInclusionTypeFilter = new();
 
         /// <summary>
         /// Assemblies to scan.
         /// </summary>
-        protected readonly List<IEnumerable<Type>> TypeSources = new List<IEnumerable<Type>>();
+        protected readonly List<IEnumerable<Type>> TypeSources = new();
 
         /// <summary>
         /// Stores the object default definitons defined in the XML configuration documnet

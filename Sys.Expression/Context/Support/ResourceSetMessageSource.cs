@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,7 +143,7 @@ namespace Spring.Context.Support
 		{
 		    if(value != null) 
 		    {
-		        ComponentResourceManager crm = new ComponentResourceManager(value.GetType());
+		        ComponentResourceManager crm = new(value.GetType());
 		        crm.ApplyResources(value, objectName, culture);
 		    }
 		}
@@ -185,7 +185,7 @@ namespace Spring.Context.Support
 	    /// <see cref="Spring.Context.Support.ResourceSetMessageSource"/>.</returns>
 	    public override string ToString()
 	    {
-	        StringBuilder sb = new StringBuilder();
+	        StringBuilder sb = new();
 	        sb.Append(GetType().Name);
 	        sb.Append(" with ResourceManagers of base names = [");
 	        foreach (ResourceManager rm in ResourceManagers)
@@ -215,7 +215,7 @@ namespace Spring.Context.Support
 	    /// </exception>
 	    public void AfterPropertiesSet()
 	    {
-	        ResourceManagerConverter cvt = new ResourceManagerConverter();
+	        ResourceManagerConverter cvt = new();
 	        for (int i = 0; i < _resourceManagers.Count; i++)
 	        {
 	            object o = _resourceManagers[i];

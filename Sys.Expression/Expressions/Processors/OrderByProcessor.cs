@@ -63,11 +63,11 @@ namespace Spring.Expressions.Processors
 
             public LambdaComparer(LambdaExpressionNode lambdaExpression)
             {
-                FunctionNode functionNode = new FunctionNode();
+                FunctionNode functionNode = new();
                 functionNode.Text = "compare";
-                VariableNode x = new VariableNode();
+                VariableNode x = new();
                 x.Text = "x";
-                VariableNode y = new VariableNode();
+                VariableNode y = new();
                 y.Text = "y";
 
                 functionNode.addChild(x);
@@ -158,7 +158,7 @@ namespace Spring.Expressions.Processors
 
             AssertUtils.ArgumentNotNull(comparer, "comparer", "orderBy(comparer) argument 'comparer' does not evaluate to a supported type");
 
-            ArrayList list = new ArrayList(source);
+            ArrayList list = new(source);
             list.Sort(comparer);
             return list;
         }

@@ -58,9 +58,9 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            if (type == null)
+            if (type is null)
             {
-                lock(this)
+                lock (this)
                 {
                     type = TypeResolutionUtils.ResolveType(getText());
                 }
@@ -79,14 +79,14 @@ namespace Spring.Expressions
         public override string getText()
         {
             string tmp = base.getText();
-//            if (tmp != null && TypeRegistry.ContainsAlias(tmp))
-//            {
-//                Type type = TypeRegistry.ResolveType(tmp);
-//                if (type != null)
-//                {
-//                    tmp = type.AssemblyQualifiedName;
-//                }                
-//            }
+            //            if (tmp != null && TypeRegistry.ContainsAlias(tmp))
+            //            {
+            //                Type type = TypeRegistry.ResolveType(tmp);
+            //                if (type != null)
+            //                {
+            //                    tmp = type.AssemblyQualifiedName;
+            //                }                
+            //            }
             AST node = this.getFirstChild();
             while (node != null)
             {

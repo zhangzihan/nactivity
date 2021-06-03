@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ namespace Spring.Util
 		/// <param name="stream">The stream to load from.</param>
 		public static void Load(IDictionary dictionary, Stream stream)
 		{
-			using (StreamReader streamReader = new StreamReader(stream))
+			using (StreamReader streamReader = new(stream))
 			{
 				Load(dictionary, streamReader);
 			}
@@ -277,7 +277,7 @@ namespace Spring.Util
 		/// <param name="stream">The stream to write to.</param>
 		public void List(Stream stream)
 		{
-			using (StreamWriter sw = new StreamWriter(stream))
+			using (StreamWriter sw = new(stream))
 			{
 				foreach (DictionaryEntry de in this)
 				{
@@ -303,7 +303,7 @@ namespace Spring.Util
 		/// <param name="header">Arbitrary header information.</param>
 		public void Store(Stream stream, string header)
 		{
-			using (StreamWriter sw = new StreamWriter(stream))
+			using (StreamWriter sw = new(stream))
 			{
 				sw.WriteLine(header);
 

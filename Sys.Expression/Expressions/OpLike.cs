@@ -80,7 +80,7 @@ namespace Spring.Expressions
             RegexOptions options = RegexOptions.Singleline | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase;
 
             string regexString = ConvertLikeExpression(Pattern);
-            Regex regexpr = new Regex(regexString, options);
+            Regex regexpr = new(regexString, options);
 
             //Console.WriteLine("{0} --> {1}", Pattern, regexString)
 
@@ -89,7 +89,7 @@ namespace Spring.Expressions
 
         private static string ConvertLikeExpression(string expression)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             sb.Append("^");
 
@@ -127,7 +127,7 @@ namespace Spring.Expressions
 
         private static StringBuilder ConvertGroupSubexpression(string carr, ref int pos)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             bool negate = false;
 
             while (carr[pos] != ']')

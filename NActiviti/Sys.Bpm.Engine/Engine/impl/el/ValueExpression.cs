@@ -17,7 +17,7 @@ namespace Sys.Workflow.Engine.Impl.EL
     /// </summary>
     public class ValueExpression : IValueExpression
     {
-        private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
+        protected static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
 
         /// <summary>
         /// 
@@ -51,7 +51,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         /// </summary>
         /// <param name="elContext"></param>
         /// <param name="value"></param>
-        public void SetValue(ELContext elContext, object value)
+        public virtual void SetValue(ELContext elContext, object value)
         {
             //if (string.IsNullOrWhiteSpace(this.ExpressionString))
             //{
@@ -76,7 +76,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         /// </summary>
         /// <param name="elContext"></param>
         /// <returns></returns>
-        public object GetValue(ELContext elContext)
+        public virtual object GetValue(ELContext elContext)
         {
             if (string.IsNullOrWhiteSpace(this.ExpressionString))
             {
@@ -95,7 +95,7 @@ namespace Sys.Workflow.Engine.Impl.EL
             throw new NotImplementedException("Value Expression not support!");
         }
 
-        private object GetValue(ELContext context, IVariableScope variableScope)
+        protected virtual object GetValue(ELContext context, IVariableScope variableScope)
         {
             string expstr = ExpressionString;
 
@@ -168,7 +168,7 @@ namespace Sys.Workflow.Engine.Impl.EL
             return null;
         }
 
-        private object ToObject(object value)
+        protected virtual object ToObject(object value)
         {
             if (value == null)
             {

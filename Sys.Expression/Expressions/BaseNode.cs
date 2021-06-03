@@ -92,7 +92,7 @@ namespace Spring.Expressions
             /// <summary>
             /// Gets the type of the <see cref="RootContext"/>
             /// </summary>
-            public Type RootContextType { get { return (RootContext == null) ? null : RootContext.GetType(); } }
+            public Type RootContextType { get { return RootContext?.GetType(); } }
             /// <summary>
             /// Gets/Sets the current context of the current evaluation
             /// </summary>
@@ -178,7 +178,7 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         public object GetValue(object context, IDictionary<string, object> variables)
         {
-            EvaluationContext evalContext = new EvaluationContext(context, variables);
+            EvaluationContext evalContext = new(context, variables);
             return Get(context, evalContext);
         }
 
@@ -214,7 +214,7 @@ namespace Spring.Expressions
         /// <param name="newValue">New value for this node.</param>
         public void SetValue(object context, IDictionary<string, object> variables, object newValue)
         {
-            EvaluationContext evalContext = new EvaluationContext(context, variables);
+            EvaluationContext evalContext = new(context, variables);
             Set(context, evalContext, newValue);
         }
 

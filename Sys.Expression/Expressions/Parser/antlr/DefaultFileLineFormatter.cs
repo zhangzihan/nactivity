@@ -21,7 +21,7 @@ namespace Spring.Expressions.Parser.antlr
 	{
 		public override string getFormatString(string fileName, int line, int column)
 		{
-			StringBuilder buf = new StringBuilder();
+			StringBuilder buf = new();
 			
 			if (fileName != null)
 				buf.Append(fileName + ":");

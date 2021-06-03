@@ -63,8 +63,8 @@ namespace Spring.Collections
     {
         private IDictionary _internalDictionary;
 
-        private static readonly object PlaceholderObject = new object();
-        private static readonly object NullPlaceHolderKey = new object();
+        private static readonly object PlaceholderObject = new();
+        private static readonly object NullPlaceHolderKey = new();
 
         /// <summary>
         /// Provides the storage for elements in the

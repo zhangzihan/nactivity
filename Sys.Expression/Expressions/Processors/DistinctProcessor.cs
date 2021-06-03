@@ -72,7 +72,7 @@ namespace Spring.Expressions.Processors
                 throw new ArgumentException("Only a single argument can be specified for a distinct() processor.");
             }
 
-            HybridSet set = new HybridSet(source);
+            HybridSet set = new(source);
             if (!includeNulls)
             {
                 set.Remove(null);

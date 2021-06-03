@@ -56,9 +56,11 @@ namespace Sys.Workflow.Cloud.Services.Api
         {
             string request = null;
             var req = context.Request;
-            if (context.Request.Body is object && req.Body.CanSeek)
+            if (context.Request.Body is object)
             {
-                using (StreamReader reader = new StreamReader(req.Body))
+                context.Request.EnableBuffering();
+
+                using (StreamReader reader = new(req.Body))
                 {
                     reader.BaseStream.Seek(0, SeekOrigin.Begin);
                     request = reader.ReadToEnd();

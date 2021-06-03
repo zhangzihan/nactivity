@@ -227,9 +227,9 @@ namespace Spring.Objects.Factory.Config
         /// </exception>
         protected virtual void ProcessProperties( IConfigurableListableObjectFactory factory )
         {
-            CompositeVariableSource compositeVariableSource = new CompositeVariableSource(variableSourceList);
-            TextProcessor tp = new TextProcessor(this, compositeVariableSource);
-            ObjectDefinitionVisitor visitor = new ObjectDefinitionVisitor(new ObjectDefinitionVisitor.ResolveHandler(tp.ParseAndResolveVariables));
+            CompositeVariableSource compositeVariableSource = new(variableSourceList);
+            TextProcessor tp = new(this, compositeVariableSource);
+            ObjectDefinitionVisitor visitor = new(new ObjectDefinitionVisitor.ResolveHandler(tp.ParseAndResolveVariables));
 
             var objectDefinitionNames = factory.GetObjectDefinitionNames(includeAncestors);
             for (int i = 0; i < objectDefinitionNames.Count; ++i)

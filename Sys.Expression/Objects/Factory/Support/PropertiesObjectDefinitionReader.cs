@@ -184,7 +184,7 @@ namespace Spring.Objects.Factory.Support
         /// <returns>the number of object definitions found</returns>
         public int LoadObjectDefinitions(IResource resource, string prefix)
         {
-            Properties props = new Properties();
+            Properties props = new();
             try
             {
                 Stream str = resource.InputStream;
@@ -417,7 +417,7 @@ namespace Spring.Objects.Factory.Support
             bool singleton = true;
             bool lazyInit = false;
 
-            MutablePropertyValues pvs = new MutablePropertyValues();
+            MutablePropertyValues pvs = new();
             foreach (string key in id.Keys)
             {
                 if (key.StartsWith(prefix + Separator))

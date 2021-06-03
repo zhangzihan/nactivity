@@ -45,7 +45,7 @@ namespace Spring.Expressions
     /// </summary>
     /// <author>Aleksandar Seovic</author>
     [Serializable]
-    public class PropertyOrFieldNode : BaseNode
+    public partial class PropertyOrFieldNode : BaseNode
     {
         private const BindingFlags BINDING_FLAGS =
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static |
@@ -54,7 +54,7 @@ namespace Spring.Expressions
         private string memberName;
         private IValueAccessor accessor;
 
-        private object syncObject = new object();
+        private readonly object syncObject = new();
 
         /// <summary>
         /// Create a new instance
@@ -77,26 +77,28 @@ namespace Spring.Expressions
         /// <param name="context">The parent.</param>
         private void InitializeNode(object context)
         {
-            Type contextType = (context == null || context is Type ? context as Type : context.GetType());
+            Type contextType = (context is null || context is Type ? context as Type : context.GetType());
 
-            if (accessor == null || accessor.RequiresRefresh(contextType))
+            if (accessor is null || accessor.RequiresRefresh(contextType))
             {
                 memberName = this.getText();
 
                 // clear cached member info if context type has changed (for example, when ASP.NET page is recompiled)
-                if (accessor != null && accessor.RequiresRefresh(contextType))
+                if (accessor is object && accessor.RequiresRefresh(contextType))
                 {
                     accessor = null;
                 }
 
                 // initialize this node if necessary
-                if (contextType != null && accessor == null)
+                if (contextType is object && accessor is null)
                 {
+                    accessor = ValueAccessorResolver.GetValueAccessor(contextType, memberName);
+
                     // try to initialize node as ExpandoObject value
                     if (contextType == typeof(ExpandoObject))
                     {
                         Type type = TypeRegistry.ResolveType(memberName);
-                        if (type != null)
+                        if (type is object)
                         {
                             accessor = new TypeValueAccessor(TypeResolutionUtils.ResolveType(memberName));
                         }
@@ -121,13 +123,13 @@ namespace Spring.Expressions
                     }
 
                     // then try to initialize node as property or field value
-                    if (accessor == null)
+                    if (accessor is null)
                     {
                         // check the context type first
                         accessor = GetPropertyOrFieldAccessor(contextType, memberName, BINDING_FLAGS);
 
                         // if not found, probe the Type type
-                        if (accessor == null && context is Type)
+                        if (accessor is null && context is Type)
                         {
                             accessor = GetPropertyOrFieldAccessor(typeof(Type), memberName, BINDING_FLAGS);
                         }
@@ -135,7 +137,7 @@ namespace Spring.Expressions
                 }
 
                 // if there is still no match, try to initialize node as type accessor
-                if (accessor == null)
+                if (accessor is null)
                 {
                     try
                     {
@@ -143,7 +145,7 @@ namespace Spring.Expressions
                         {
                             accessor = new IDictionaryValueAccessor(memberName);
                         }
-                        else if (evalContext != null && evalContext.Variables != null && evalContext.Variables.ContainsKey(memberName))
+                        else if (evalContext is object && evalContext.Variables is object && evalContext.Variables.ContainsKey(memberName))
                         {
                             accessor = new IDictionaryValueAccessor(memberName);
                         }
@@ -153,23 +155,25 @@ namespace Spring.Expressions
                         }
                         else
                         {
-                            accessor = new TypeValueAccessor(TypeResolutionUtils.ResolveType(memberName));
+                            if (accessor is null)
+                            {
+                                var targetType = TypeResolutionUtils.ResolveType(memberName);
+                                accessor = new TypeValueAccessor(targetType);
+                            }
                         }
                     }
                     catch (TypeLoadException)
                     {
                         if (context == null)
                         {
-                            throw new NullValueInNestedPathException("Cannot initialize property or field node '" +
-                                                                     memberName +
-                                                                     "' because the specified context is null.");
+                            throw new NullValueInNestedPathException($"Cannot initialize property or field node '{memberName}' because the specified context is null.");
                         }
                         else
                         {
-                            throw new InvalidPropertyException(contextType, memberName,
-                                                               "'" + memberName +
-                                                               "' node cannot be resolved for the specified context [" +
-                                                               context + "].");
+                            throw new InvalidPropertyException(
+                                contextType,
+                                memberName,
+                                $"'{memberName}' node cannot be resolved for the specified context [{context}].");
                         }
                     }
                 }
@@ -200,7 +204,7 @@ namespace Spring.Expressions
                 if (pi == null)
                 {
                     FieldInfo fi = contextType.GetField(memberName, bindingFlags);
-                    if (fi != null)
+                    if (fi is object)
                     {
                         return new FieldValueAccessor(fi);
                     }
@@ -212,16 +216,15 @@ namespace Spring.Expressions
             }
             catch (AmbiguousMatchException)
             {
-                PropertyInfo pi = null;
 
                 // search type hierarchy
                 while (contextType != typeof(object))
                 {
-                    pi = contextType.GetProperty(memberName, bindingFlags | BindingFlags.DeclaredOnly);
+                    PropertyInfo pi = contextType.GetProperty(memberName, bindingFlags | BindingFlags.DeclaredOnly);
                     if (pi == null)
                     {
                         FieldInfo fi = contextType.GetField(memberName, bindingFlags | BindingFlags.DeclaredOnly);
-                        if (fi != null)
+                        if (fi is object)
                         {
                             return new FieldValueAccessor(fi);
                         }
@@ -252,7 +255,7 @@ namespace Spring.Expressions
                 this.evalContext = evalContext;
                 InitializeNode(context);
 
-                if (context == null && accessor.RequiresContext)
+                if (context is null && accessor.RequiresContext)
                 {
                     throw new NullValueInNestedPathException(
                         "Cannot retrieve the value of a field or property '" + this.memberName
@@ -269,7 +272,7 @@ namespace Spring.Expressions
             }
         }
 
-        private object syncRoot = new object();
+        private readonly object syncRoot = new();
 
         /// <summary>
         /// Sets node's value for the given context.
@@ -403,7 +406,7 @@ namespace Spring.Expressions
             catch (TargetInvocationException ex)
             {
                 PropertyChangeEventArgs propertyChangeEvent =
-                    new PropertyChangeEventArgs(this.memberName, null, newValue);
+                    new(this.memberName, null, newValue);
                 if (ex.GetBaseException() is InvalidCastException)
                 {
                     throw new TypeMismatchException(propertyChangeEvent, targetType, ex.GetBaseException());
@@ -428,7 +431,7 @@ namespace Spring.Expressions
             catch (ArgumentException ex)
             {
                 PropertyChangeEventArgs propertyChangeEvent =
-                    new PropertyChangeEventArgs(this.memberName, null, newValue);
+                    new(this.memberName, null, newValue);
                 throw new TypeMismatchException(propertyChangeEvent, targetType, ex);
             }
         }
@@ -462,12 +465,12 @@ namespace Spring.Expressions
             bool added = false;
 
             // try adding values if property is a list...
-            if (newValue is IList && !RemotingServices.IsTransparentProxy(newValue))
+            if (newValue is IList list && !RemotingServices.IsTransparentProxy(newValue))
             {
                 IList currentValue = (IList)Get(context, evalContext);
-                if (currentValue != null && !currentValue.IsFixedSize && !currentValue.IsReadOnly)
+                if (currentValue is object && !currentValue.IsFixedSize && !currentValue.IsReadOnly)
                 {
-                    foreach (object el in (IList)newValue)
+                    foreach (object el in list)
                     {
                         currentValue.Add(el);
                     }
@@ -475,12 +478,12 @@ namespace Spring.Expressions
                 }
             }
             // try adding values if property is a dictionary...
-            else if (newValue is IDictionary && !RemotingServices.IsTransparentProxy(newValue))
+            else if (newValue is IDictionary dictionary && !RemotingServices.IsTransparentProxy(newValue))
             {
                 IDictionary currentValue = (IDictionary)Get(context, evalContext);
-                if (currentValue != null && !currentValue.IsFixedSize && !currentValue.IsReadOnly)
+                if (currentValue is object && !currentValue.IsFixedSize && !currentValue.IsReadOnly)
                 {
-                    foreach (DictionaryEntry entry in (IDictionary)newValue)
+                    foreach (DictionaryEntry entry in dictionary)
                     {
                         currentValue[entry.Key] = entry.Value;
                     }
@@ -491,7 +494,7 @@ namespace Spring.Expressions
             else if (newValue is ISet && !RemotingServices.IsTransparentProxy(newValue))
             {
                 ISet currentValue = (ISet)Get(context, evalContext);
-                if (currentValue != null)
+                if (currentValue is object)
                 {
                     currentValue.AddAll((ICollection)newValue);
                     added = true;
@@ -524,23 +527,6 @@ namespace Spring.Expressions
             //        "Cannot obtain PropertyInfo from an expression that does not resolve to a property.");
             //}
         }
-
-        #region IValueAccessor interface
-
-        private interface IValueAccessor
-        {
-            object Get(object context);
-            void Set(object context, object value);
-
-            bool IsReadable { get; }
-            bool IsWriteable { get; }
-            bool RequiresContext { get; }
-            Type TargetType { get; }
-            MemberInfo MemberInfo { get; }
-            bool RequiresRefresh(Type contextType);
-        }
-
-        #endregion
 
         #region BaseValueAccessor implementation
 
@@ -587,12 +573,12 @@ namespace Spring.Expressions
 
         private class PropertyValueAccessor : BaseValueAccessor
         {
-            private SafeProperty property;
-            private string name;
-            private bool isReadable;
-            private bool isWriteable;
-            private Type targetType;
-            private Type contextType;
+            private readonly SafeProperty property;
+            private readonly string name;
+            private readonly bool isReadable;
+            private readonly bool isWriteable;
+            private readonly Type targetType;
+            private readonly Type contextType;
 
             public PropertyValueAccessor(PropertyInfo propertyInfo)
             {
@@ -659,10 +645,10 @@ namespace Spring.Expressions
 
         private class FieldValueAccessor : BaseValueAccessor
         {
-            private SafeField field;
-            private bool isWriteable;
-            private Type targetType;
-            private Type contextType;
+            private readonly SafeField field;
+            private readonly bool isWriteable;
+            private readonly Type targetType;
+            private readonly Type contextType;
 
             public FieldValueAccessor(FieldInfo fieldInfo)
             {
@@ -714,7 +700,7 @@ namespace Spring.Expressions
 
         private class EnumValueAccessor : BaseValueAccessor
         {
-            private object enumValue;
+            private readonly object enumValue;
 
             public EnumValueAccessor(object enumValue)
             {
@@ -738,7 +724,7 @@ namespace Spring.Expressions
 
         private class IDictionaryValueAccessor : BaseValueAccessor
         {
-            private string memberName;
+            private readonly string memberName;
 
             public IDictionaryValueAccessor(string memberName)
             {
@@ -772,7 +758,7 @@ namespace Spring.Expressions
 
         private class ExpandoObjectValueAccessor : BaseValueAccessor
         {
-            private string memberName;
+            private readonly string memberName;
 
             public ExpandoObjectValueAccessor(string memberName)
             {
@@ -783,13 +769,12 @@ namespace Spring.Expressions
             {
                 var dictionary = context as IDictionary<string, object>;
 
-                object value;
-                if (dictionary.TryGetValue(memberName, out value))
+                if (dictionary.TryGetValue(memberName, out object value))
+                {
                     return value;
-                throw new InvalidPropertyException(typeof(System.Dynamic.ExpandoObject), memberName,
-                                                  "'" + memberName +
-                                                  "' node cannot be resolved for the specified context [" +
-                                                  context + "].");
+                }
+                throw new InvalidPropertyException(typeof(ExpandoObject), memberName,
+                                                  $"'{memberName}' node cannot be resolved for the specified context [{context}].");
             }
 
             public override void Set(object context, object value)
@@ -804,7 +789,7 @@ namespace Spring.Expressions
 
         private class TypeValueAccessor : BaseValueAccessor
         {
-            private Type type;
+            private readonly Type type;
 
             public TypeValueAccessor(Type type)
             {

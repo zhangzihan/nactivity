@@ -54,7 +54,7 @@ namespace Spring.Objects.Factory.Xml
 
         private readonly ObjectsNamespaceParser objectsNamespaceParser;
 
-        private readonly HashSet<string> usedNames = new HashSet<string>();
+        private readonly HashSet<string> usedNames = new();
 
         #endregion
 
@@ -108,7 +108,7 @@ namespace Spring.Objects.Factory.Xml
         /// <param name="root">The root element</param>
         public void InitDefaults(XmlElement root)
         {
-            DocumentDefaultsDefinition ddd = new DocumentDefaultsDefinition();
+            DocumentDefaultsDefinition ddd = new();
             #region Instrumentation
 
             if (log.IsEnabled(LogLevel.Debug))
@@ -328,7 +328,7 @@ namespace Spring.Objects.Factory.Xml
         {
             string id = GetAttributeValue(element, ObjectDefinitionConstants.IdAttribute);
             string nameAttr = GetAttributeValue(element, ObjectDefinitionConstants.NameAttribute);
-            List<string> aliases = new List<string>();
+            List<string> aliases = new();
             if (StringUtils.HasText(nameAttr))
             {
                 aliases.AddRange(GetObjectNames(nameAttr));
@@ -356,7 +356,7 @@ namespace Spring.Objects.Factory.Xml
                 CheckNameUniqueness(objectName, aliases, element);
             }
 
-            ParserContext parserContext = new ParserContext(this, containingDefinition);
+            ParserContext parserContext = new(this, containingDefinition);
             IConfigurableObjectDefinition definition = objectsNamespaceParser.ParseObjectDefinitionElement(element, objectName, parserContext);
             if (definition != null)
             {

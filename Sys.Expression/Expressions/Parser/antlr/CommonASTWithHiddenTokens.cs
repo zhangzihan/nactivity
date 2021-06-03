@@ -25,7 +25,7 @@ namespace Spring.Expressions.Parser.antlr
 
 	public class CommonASTWithHiddenTokens : CommonAST
 	{
-		new public static readonly CommonASTWithHiddenTokens.CommonASTWithHiddenTokensCreator Creator = new CommonASTWithHiddenTokensCreator();
+		new public static readonly CommonASTWithHiddenTokens.CommonASTWithHiddenTokensCreator Creator = new();
 
 		protected internal IHiddenStreamToken hiddenBefore, hiddenAfter; // references to hidden tokens
 		

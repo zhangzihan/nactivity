@@ -1,56 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:process id="Process_9PoKARBVT" name="会签流程" isExecutable="true">
-    <bpmn2:extensionElements>
-      <camunda:properties>
-        <camunda:property />
-      </camunda:properties>
-    </bpmn2:extensionElements>
-    <bpmn2:startEvent id="Start_LyvmWffqX4">
-      <bpmn2:outgoing>SequenceFlow_1gi8lyw</bpmn2:outgoing>
-    </bpmn2:startEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_1gi8lyw" sourceRef="Start_LyvmWffqX4" targetRef="Task_0u3ok8f" />
-    <bpmn2:userTask id="Task_0kj32zf" name="service" camunda:assignee="${countersignUser}">
-      <bpmn2:extensionElements>
-        <camunda:properties>
-          <camunda:property name="url" value="http://localhost:11015/process-test/timer-datetime" />
-          <camunda:property name="taskRequest" />
-          <camunda:property name="dataObj" value="timerDateTime" />
-          <camunda:property name="method" value="post" />
-          <camunda:property name="userPolicy" value="[{&#34;ruleType&#34;:&#34;GetExecutor&#34;,&#34;ruleName&#34;:&#34;GetExecutor&#34;,&#34;queryCondition&#34;:[{&#34;id&#34;:&#34;Task_0u3ok8f&#34;,&#34;name&#34;:&#34;&#34;}]}]" />
-        </camunda:properties>
-        <camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.DelegateCountersignExecutionListener" event="start" />
-      </bpmn2:extensionElements>
-      <bpmn2:incoming>SequenceFlow_0qhmjxw</bpmn2:incoming>
-      <bpmn2:multiInstanceLoopCharacteristics camunda:collection="${countersignUsers}" camunda:elementVariable="countersignUser">
-        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${nrOfActiveInstances==0}</bpmn2:completionCondition>
-      </bpmn2:multiInstanceLoopCharacteristics>
-    </bpmn2:userTask>
-    <bpmn2:userTask id="Task_0u3ok8f" name="分配用户" camunda:assignee="评审员">
-      <bpmn2:incoming>SequenceFlow_1gi8lyw</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_0qhmjxw</bpmn2:outgoing>
-    </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_0qhmjxw" sourceRef="Task_0u3ok8f" targetRef="Task_0kj32zf" />
-  </bpmn2:process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_9PoKARBVT">
-      <bpmndi:BPMNShape id="_BPMNShape_Start_LyvmWffqX4" bpmnElement="Start_LyvmWffqX4">
-        <dc:Bounds x="214" y="159" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_1gi8lyw_di" bpmnElement="SequenceFlow_1gi8lyw">
-        <di:waypoint x="250" y="177" />
-        <di:waypoint x="345" y="177" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_1m1rzag_di" bpmnElement="Task_0kj32zf">
-        <dc:Bounds x="548" y="137" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="UserTask_0f8emgx_di" bpmnElement="Task_0u3ok8f">
-        <dc:Bounds x="346" y="137" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_0qhmjxw_di" bpmnElement="SequenceFlow_0qhmjxw">
-        <di:waypoint x="446" y="177" />
-        <di:waypoint x="548" y="177" />
-      </bpmndi:BPMNEdge>
-    </bpmndi:BPMNPlane>
-  </bpmndi:BPMNDiagram>
+	<bpmn2:process id="Process_9PoKARBVT" name="会签流程" isExecutable="true">
+		<bpmn2:documentation />
+		<bpmn2:extensionElements>
+			<camunda:properties>
+				<camunda:property />
+				<camunda:property name="form" value="" />
+				<camunda:property name="category" value="" />
+			</camunda:properties>
+			<camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyExecutionListener,Sys.Bpm.Engine" event="start" />
+			<camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyExecutionListener,Sys.Bpm.Engine" event="end" />
+		</bpmn2:extensionElements>
+		<bpmn2:startEvent id="Start_LyvmWffqX4">
+			<bpmn2:outgoing>SequenceFlow_1gi8lyw</bpmn2:outgoing>
+		</bpmn2:startEvent>
+		<bpmn2:sequenceFlow id="SequenceFlow_1gi8lyw" sourceRef="Start_LyvmWffqX4" targetRef="Task_0u3ok8f" />
+		<bpmn2:userTask id="Task_0u3ok8f" name="分配用户" camunda:assignee="${Task_0u3ok8f_}">
+			<bpmn2:documentation />
+			<bpmn2:extensionElements>
+				<camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyExecutionListener,Sys.Bpm.Engine" event="start" />
+				<camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.UserTaskAssignmentListener,Sys.Bpm.Engine" event="assignment" />
+				<camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyTaskListener,Sys.Bpm.Engine" event="create" />
+				<camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyTaskListener,Sys.Bpm.Engine" event="complete" />
+				<camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyTaskListener,Sys.Bpm.Engine" event="delete" />
+				<camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyTaskListener,Sys.Bpm.Engine" event="update" />
+				<camunda:taskListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyTaskListener,Sys.Bpm.Engine" event="timeout" />
+				<camunda:properties>
+					<camunda:property name="assigneeType" value="custom" />
+				</camunda:properties>
+				<camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyExecutionListener,Sys.Bpm.Engine" event="end" />
+				<camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.DelegateCountersignExecutionListener,Sys.Bpm.Engine" event="start" />
+			</bpmn2:extensionElements>
+			<bpmn2:incoming>SequenceFlow_1gi8lyw</bpmn2:incoming>
+			<bpmn2:incoming>SequenceFlow_1ycmjsi</bpmn2:incoming>
+			<bpmn2:outgoing>SequenceFlow_05pbsf3</bpmn2:outgoing>
+			<bpmn2:multiInstanceLoopCharacteristics camunda:collection="${Task_0u3ok8f}" camunda:elementVariable="Task_0u3ok8f_">
+				<bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${nrOfActiveInstances==0}</bpmn2:completionCondition>
+			</bpmn2:multiInstanceLoopCharacteristics>
+		</bpmn2:userTask>
+		<bpmn2:exclusiveGateway id="ExclusiveGateway_1afvv5d" default="SequenceFlow_1ycmjsi">
+			<bpmn2:documentation />
+			<bpmn2:extensionElements>
+				<camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyExecutionListener,Sys.Bpm.Engine" event="start" />
+				<camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyExecutionListener,Sys.Bpm.Engine" event="end" />
+			</bpmn2:extensionElements>
+			<bpmn2:incoming>SequenceFlow_05pbsf3</bpmn2:incoming>
+			<bpmn2:outgoing>SequenceFlow_0lw18eh</bpmn2:outgoing>
+			<bpmn2:outgoing>SequenceFlow_1ycmjsi</bpmn2:outgoing>
+		</bpmn2:exclusiveGateway>
+		<bpmn2:sequenceFlow id="SequenceFlow_05pbsf3" sourceRef="Task_0u3ok8f" targetRef="ExclusiveGateway_1afvv5d" />
+		<bpmn2:endEvent id="EndEvent_13d6xff">
+			<bpmn2:documentation />
+			<bpmn2:extensionElements>
+				<camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyExecutionListener,Sys.Bpm.Engine" event="start" />
+				<camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyExecutionListener,Sys.Bpm.Engine" event="end" />
+			</bpmn2:extensionElements>
+			<bpmn2:incoming>SequenceFlow_0lw18eh</bpmn2:incoming>
+		</bpmn2:endEvent>
+		<bpmn2:sequenceFlow id="SequenceFlow_0lw18eh" sourceRef="ExclusiveGateway_1afvv5d" targetRef="EndEvent_13d6xff">
+			<bpmn2:documentation />
+			<bpmn2:extensionElements>
+				<camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyExecutionListener,Sys.Bpm.Engine" event="start" />
+				<camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyExecutionListener,Sys.Bpm.Engine" event="end" />
+			</bpmn2:extensionElements>
+			<bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${同意==true}</bpmn2:conditionExpression>
+		</bpmn2:sequenceFlow>
+		<bpmn2:sequenceFlow id="SequenceFlow_1ycmjsi" sourceRef="ExclusiveGateway_1afvv5d" targetRef="Task_0u3ok8f">
+			<bpmn2:documentation />
+			<bpmn2:extensionElements>
+				<camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyExecutionListener,Sys.Bpm.Engine" event="start" />
+				<camunda:executionListener class="Sys.Workflow.Engine.Impl.Bpmn.Listeners.EmptyExecutionListener,Sys.Bpm.Engine" event="end" />
+			</bpmn2:extensionElements>
+		</bpmn2:sequenceFlow>
+	</bpmn2:process>
+	<bpmndi:BPMNDiagram id="BPMNDiagram_1">
+		<bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_9PoKARBVT">
+			<bpmndi:BPMNShape id="_BPMNShape_Start_LyvmWffqX4" bpmnElement="Start_LyvmWffqX4">
+				<dc:Bounds x="214" y="159" width="36" height="36" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNEdge id="SequenceFlow_1gi8lyw_di" bpmnElement="SequenceFlow_1gi8lyw">
+				<di:waypoint x="250" y="177" />
+				<di:waypoint x="345" y="177" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNShape id="UserTask_0f8emgx_di" bpmnElement="Task_0u3ok8f">
+				<dc:Bounds x="346" y="137" width="100" height="80" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="ExclusiveGateway_1afvv5d_di" bpmnElement="ExclusiveGateway_1afvv5d" isMarkerVisible="true">
+				<dc:Bounds x="536" y="152" width="50" height="50" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNEdge id="SequenceFlow_05pbsf3_di" bpmnElement="SequenceFlow_05pbsf3">
+				<di:waypoint x="446" y="177" />
+				<di:waypoint x="536" y="177" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNShape id="EndEvent_13d6xff_di" bpmnElement="EndEvent_13d6xff">
+				<dc:Bounds x="688" y="159" width="36" height="36" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNEdge id="SequenceFlow_0lw18eh_di" bpmnElement="SequenceFlow_0lw18eh">
+				<di:waypoint x="586" y="177" />
+				<di:waypoint x="688" y="177" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge id="SequenceFlow_1ycmjsi_di" bpmnElement="SequenceFlow_1ycmjsi">
+				<di:waypoint x="561" y="152" />
+				<di:waypoint x="561" y="75" />
+				<di:waypoint x="396" y="75" />
+				<di:waypoint x="396" y="137" />
+			</bpmndi:BPMNEdge>
+		</bpmndi:BPMNPlane>
+	</bpmndi:BPMNDiagram>
 </bpmn2:definitions>

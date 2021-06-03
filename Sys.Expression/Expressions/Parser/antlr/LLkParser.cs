@@ -44,7 +44,7 @@ namespace Spring.Expressions.Parser.antlr
 		public LLkParser(TokenStream lexer, int k_)
 		{
 			k = k_;
-			TokenBuffer tokenBuf = new TokenBuffer(lexer);
+			TokenBuffer tokenBuf = new(lexer);
 			setTokenBuffer(tokenBuf);
 		}
 		/*Consume another token from the input stream.  Can only write sequentially!

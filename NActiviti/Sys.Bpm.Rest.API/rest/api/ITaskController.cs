@@ -33,7 +33,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Api
         /// </summary>
         /// <param name="userId">用户id</param>
         /// <returns>待办项列表</returns>
-        Task<Resources<TaskModel>> MyTasks(string userId);
+        Task<Resources<TaskModel>> MyTasks(string userId, string businessKey = null);
 
         /*
         /// <summary>

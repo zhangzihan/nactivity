@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ namespace Spring.Expressions
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Returns the value of the named argument defined by this node.
         /// </summary>
@@ -53,7 +53,7 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            return GetValue(((BaseNode) this.getFirstChild()), evalContext.RootContext, evalContext);
+            return GetValue(((BaseNode)this.getFirstChild()), evalContext.RootContext, evalContext);
         }
     }
 }

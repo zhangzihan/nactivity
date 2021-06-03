@@ -121,7 +121,7 @@ namespace Spring.Objects.Factory.Xml
                         parserContext.ReaderContext.ReportException(element, "null",
                                 "Id is required for element '" + element.LocalName + "' when used as a top-level tag", null);
                     }
-                    ObjectDefinitionHolder holder = new ObjectDefinitionHolder(definition, id);
+                    ObjectDefinitionHolder holder = new(definition, id);
                     RegisterObjectDefinition(holder, parserContext.Registry);
                 }
                 catch (ObjectDefinitionStoreException ex)

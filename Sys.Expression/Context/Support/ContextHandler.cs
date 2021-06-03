@@ -447,7 +447,7 @@ namespace Spring.Context.Support
         /// </summary>
         private IList<string> GetResources(XmlElement contextElement)
         {
-            List<string> resourceNodes = new List<string>(contextElement.ChildNodes.Count);
+            List<string> resourceNodes = new(contextElement.ChildNodes.Count);
             foreach (XmlNode possibleResourceNode in contextElement.ChildNodes)
             {
                 XmlElement possibleResourceElement = possibleResourceNode as XmlElement;
@@ -469,7 +469,7 @@ namespace Spring.Context.Support
         /// </summary>
         private IList<XmlNode> GetChildContexts(XmlElement contextElement)
         {
-            List<XmlNode> contextNodes = new List<XmlNode>(contextElement.ChildNodes.Count);
+            List<XmlNode> contextNodes = new(contextElement.ChildNodes.Count);
             foreach (XmlNode possibleContextNode in contextElement.ChildNodes)
             {
                 XmlElement possibleContextElement = possibleContextNode as XmlElement;

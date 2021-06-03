@@ -93,7 +93,7 @@ namespace Spring.Context.Attributes
             }
 
             // no Object definition exists yet -> this must be an imported configuration class ([Import]).
-            GenericObjectDefinition configObjectDef = new GenericObjectDefinition();
+            GenericObjectDefinition configObjectDef = new();
             String className = configClass.ConfigurationClassType.Name;
             configObjectDef.ObjectTypeName = className;
             configObjectDef.ObjectType = configClass.ConfigurationClassType;
@@ -180,7 +180,7 @@ namespace Spring.Context.Attributes
             // consider name and any aliases
             //Dictionary<String, Object> ObjectAttributes = metadata.getAnnotationAttributes(Object.class.getName());
             object[] objectAttributes = metadata.GetCustomAttributes(typeof(ObjectDefAttribute), true);
-            List<string> names = new List<string>();
+            List<string> names = new();
             foreach (object t in objectAttributes)
             {
                 string[] namesAndAliases = ((ObjectDefAttribute)t).NamesToArray;

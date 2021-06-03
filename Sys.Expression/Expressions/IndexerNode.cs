@@ -57,7 +57,7 @@ namespace Spring.Expressions
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Returns node's value for the given context.
         /// </summary>
@@ -66,33 +66,21 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            if (context == null)
+            if (context is null)
             {
                 throw new NullValueInNestedPathException("Cannot retrieve the value of the indexer because the context for its resolution is null.");
             }
 
             try
             {
-                if (context is Array)
+                return context switch
                 {
-                    return GetArrayValue( (Array) context, evalContext );
-                }
-                else if (context is IList)
-                {
-                    return GetListValue( (IList) context, evalContext );
-                }
-                else if (context is IDictionary)
-                {
-                    return GetDictionaryValue( (IDictionary) context, evalContext );
-                }
-                else if (context is string)
-                {
-                    return GetCharacter( (string) context, evalContext );
-                }
-                else
-                {
-                    return GetGenericIndexer( context, evalContext );
-                }
+                    Array => GetArrayValue((Array)context, evalContext),
+                    IList => GetListValue((IList)context, evalContext),
+                    IDictionary => GetDictionaryValue((IDictionary)context, evalContext),
+                    string => GetCharacter((string)context, evalContext),
+                    _ => GetGenericIndexer(context, evalContext)
+                };
             }
             catch (TargetInvocationException e)
             {
@@ -100,23 +88,23 @@ namespace Spring.Expressions
             }
             catch (UnauthorizedAccessException e)
             {
-                throw new InvalidPropertyException( evalContext.RootContextType,this.ToString(),"Illegal attempt to get value for the indexer.",e );
+                throw new InvalidPropertyException(evalContext.RootContextType, this.ToString(), "Illegal attempt to get value for the indexer.", e);
             }
             catch (IndexOutOfRangeException e)
             {
-                throw new InvalidPropertyException( evalContext.RootContextType,this.ToString(),"Index out of range.",e );
+                throw new InvalidPropertyException(evalContext.RootContextType, this.ToString(), "Index out of range.", e);
             }
             catch (ArgumentOutOfRangeException e)
             {
-                throw new InvalidPropertyException( evalContext.RootContextType,this.ToString(),"Argument out of range.",e );
+                throw new InvalidPropertyException(evalContext.RootContextType, this.ToString(), "Argument out of range.", e);
             }
             catch (InvalidCastException e)
             {
-                throw new InvalidPropertyException( evalContext.RootContextType,this.ToString(),"Invalid index type.",e );
+                throw new InvalidPropertyException(evalContext.RootContextType, this.ToString(), "Invalid index type.", e);
             }
             catch (ArgumentException e)
             {
-                throw new InvalidPropertyException( evalContext.RootContextType,this.ToString(),"Invalid argument.",e );
+                throw new InvalidPropertyException(evalContext.RootContextType, this.ToString(), "Invalid argument.", e);
             }
         }
 
@@ -128,57 +116,56 @@ namespace Spring.Expressions
         /// <param name="newValue">New value for this node.</param>
         protected override void Set(object context, EvaluationContext evalContext, object newValue)
         {
-            if (context == null)
+            if (context is null)
             {
                 throw new NullValueInNestedPathException("Cannot set the value of the indexer because the context for its resolution is null.");
             }
-            
+
             try
             {
-                if (context is Array)
+                switch (context)
                 {
-                    SetArrayValue( (Array) context, evalContext,newValue );
-                }
-                else if (context is IList)
-                {
-                    SetListValue( (IList) context, evalContext,newValue );
-                }
-                else if (context is IDictionary)
-                {
-                    SetDictionaryValue( (IDictionary) context, evalContext,newValue );
-                }
-                else
-                {
-                    SetGenericIndexer( context, evalContext,newValue );
+                    case Array:
+                        SetArrayValue((Array)context, evalContext, newValue);
+                        break;
+                    case IList:
+                        SetListValue((IList)context, evalContext, newValue);
+                        break;
+                    case IDictionary:
+                        SetDictionaryValue((IDictionary)context, evalContext, newValue);
+                        break;
+                    default:
+                        SetGenericIndexer(context, evalContext, newValue);
+                        break;
                 }
             }
             catch (TargetInvocationException e)
             {
-                throw new InvalidPropertyException( evalContext.RootContextType,this.ToString(),"Setter for indexer threw an exception.",e );
+                throw new InvalidPropertyException(evalContext.RootContextType, this.ToString(), "Setter for indexer threw an exception.", e);
             }
             catch (UnauthorizedAccessException e)
             {
-                throw new InvalidPropertyException( evalContext.RootContextType,this.ToString(),"Illegal attempt to set value for the indexer.",e );
+                throw new InvalidPropertyException(evalContext.RootContextType, this.ToString(), "Illegal attempt to set value for the indexer.", e);
             }
             catch (IndexOutOfRangeException e)
             {
-                throw new InvalidPropertyException( evalContext.RootContextType,this.ToString(),"Index out of range.",e );
+                throw new InvalidPropertyException(evalContext.RootContextType, this.ToString(), "Index out of range.", e);
             }
             catch (ArgumentOutOfRangeException e)
             {
-                throw new InvalidPropertyException( evalContext.RootContextType,this.ToString(),"Argument out of range.",e );
+                throw new InvalidPropertyException(evalContext.RootContextType, this.ToString(), "Argument out of range.", e);
             }
             catch (InvalidCastException e)
             {
-                throw new InvalidPropertyException( evalContext.RootContextType,this.ToString(),"Invalid index type.",e );
+                throw new InvalidPropertyException(evalContext.RootContextType, this.ToString(), "Invalid index type.", e);
             }
             catch (ArgumentException e)
             {
-                throw new InvalidPropertyException( evalContext.RootContextType,this.ToString(),"Invalid argument.",e );
+                throw new InvalidPropertyException(evalContext.RootContextType, this.ToString(), "Invalid argument.", e);
             }
         }
 
-        private object syncRoot = new object();
+        private object syncRoot = new();
 
         /// <summary>
         /// Utility method that is needed by ObjectWrapper and AbstractAutowireCapableObjectFactory.
@@ -190,7 +177,7 @@ namespace Spring.Expressions
         {
             lock (syncRoot)
             {
-                EvaluationContext evalContext = new EvaluationContext(context, variables);
+                EvaluationContext evalContext = new(context, variables);
                 InitializeIndexerProperty(context, evalContext);
 
                 return indexer.PropertyInfo;
@@ -205,7 +192,7 @@ namespace Spring.Expressions
             Int32[] indices = new Int32[argCount];
             for (int i = 0; i < argCount; i++)
             {
-                indices[i] = (Int32) ResolveArgument(i, evalContext);
+                indices[i] = (Int32)ResolveArgument(i, evalContext);
             }
             return array.GetValue(indices);
         }
@@ -213,28 +200,28 @@ namespace Spring.Expressions
         private object GetListValue(IList list, EvaluationContext evalContext)
         {
             AssertArgumentCount(1);
-            return list[(int) ResolveArgument(0, evalContext)];
+            return list[(int)ResolveArgument(0, evalContext)];
         }
 
         private object GetDictionaryValue(IDictionary dictionary, EvaluationContext evalContext)
         {
             AssertArgumentCount(1);
-            return dictionary[ResolveArgument( 0,evalContext )];
+            return dictionary[ResolveArgument(0, evalContext)];
         }
 
         private object GetCharacter(string character, EvaluationContext evalContext)
         {
             AssertArgumentCount(1);
-            return character[(int)ResolveArgument( 0,evalContext )];
+            return character[(int)ResolveArgument(0, evalContext)];
         }
 
         private object GetGenericIndexer(object context, EvaluationContext evalContext)
         {
-            object[] indices = InitializeIndexerProperty( context, evalContext );
+            object[] indices = InitializeIndexerProperty(context, evalContext);
             return indexer.GetValue(context, indices);
         }
 
-        private void SetArrayValue(Array array, EvaluationContext evalContext,object newValue)
+        private void SetArrayValue(Array array, EvaluationContext evalContext, object newValue)
         {
             int argCount = array.Rank;
             AssertArgumentCount(argCount);
@@ -242,32 +229,32 @@ namespace Spring.Expressions
             Int32[] indices = new Int32[argCount];
             for (int i = 0; i < argCount; i++)
             {
-                indices[i] = (Int32) ResolveArgument(i, evalContext);
+                indices[i] = (Int32)ResolveArgument(i, evalContext);
             }
             array.SetValue(newValue, indices);
         }
 
-        private void SetListValue(IList list, EvaluationContext evalContext,object newValue)
+        private void SetListValue(IList list, EvaluationContext evalContext, object newValue)
         {
             AssertArgumentCount(1);
-            list[(int) ResolveArgument(0, evalContext)] = newValue;
+            list[(int)ResolveArgument(0, evalContext)] = newValue;
         }
 
-        private void SetDictionaryValue(IDictionary dictionary, EvaluationContext evalContext,object newValue)
+        private void SetDictionaryValue(IDictionary dictionary, EvaluationContext evalContext, object newValue)
         {
             AssertArgumentCount(1);
-            dictionary[ResolveArgument( 0,evalContext )] = newValue;
+            dictionary[ResolveArgument(0, evalContext)] = newValue;
         }
 
-        private void SetGenericIndexer(object context, EvaluationContext evalContext,object newValue)
+        private void SetGenericIndexer(object context, EvaluationContext evalContext, object newValue)
         {
-            object[] indices = InitializeIndexerProperty( context, evalContext );
-            indexer.SetValue( context, newValue, indices );
+            object[] indices = InitializeIndexerProperty(context, evalContext);
+            indexer.SetValue(context, newValue, indices);
         }
 
         private object[] InitializeIndexerProperty(object context, EvaluationContext evalContext)
         {
-            object[] indices = ResolveArguments( evalContext );
+            object[] indices = ResolveArguments(evalContext);
 
             if (indexer == null)
             {
@@ -281,7 +268,7 @@ namespace Spring.Expressions
                         object[] atts = contextType.GetCustomAttributes(typeof(DefaultMemberAttribute), true);
                         if (atts != null && atts.Length > 0)
                         {
-                            defaultMember = ((DefaultMemberAttribute) atts[0]).MemberName;
+                            defaultMember = ((DefaultMemberAttribute)atts[0]).MemberName;
                         }
                         PropertyInfo indexerProperty = contextType.GetProperty(defaultMember, BINDING_FLAGS, null, null, argTypes, null);
                         if (indexerProperty == null)

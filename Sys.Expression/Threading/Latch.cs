@@ -64,7 +64,7 @@ namespace Spring.Threading
         /// </summary>
         protected bool latched_ = false;
 
-        private object syncRoot = new object();
+        private object syncRoot = new();
 
         /// <summary>
         /// Method mainly used by clients who are trying to get the latch

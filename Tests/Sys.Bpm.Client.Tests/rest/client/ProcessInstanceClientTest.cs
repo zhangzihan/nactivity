@@ -25,6 +25,10 @@ using Xunit;
 using Xunit.Extensions.Ordering;
 using Task = System.Threading.Tasks.Task;
 using Sys.Workflow.Bpmn.Converters;
+using Sys.Workflow.Engine;
+using Sys.Workflow.Engine.Runtime;
+using Sys.Workflow.Engine.Impl.Identities;
+using Sys.Net.Http;
 
 namespace Sys.Workflow.Client.Tests.Rest.Client
 {
@@ -970,29 +974,85 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
         {
             var ex = Record.Exception(() =>
             {
-                StartProcessInstanceCmd cmd = new StartProcessInstanceCmd()
+                //StartProcessInstanceCmd cmd = new StartProcessInstanceCmd()
+                //{
+                //    ProcessDefinitionId = ctx.GetOrAddProcessDefinition(bpmnFile).Id,
+                //    TenantId = ctx.TenantId
+                //};      
+
+                //string id = "1d3a0000-6416-e86a-a796-08d91b672ce2";          
+
+                string id = Task.Factory.StartNew<string>(() =>
                 {
-                    ProcessDefinitionId = ctx.GetOrAddProcessDefinition(bpmnFile).Id,
-                    TenantId = ctx.TenantId
-                };
+                    Authentication.AuthenticatedUser = new UserInfo
+                    {
+                        Id = ctx.AuthUserId
+                    };
 
-                ProcessInstance[] instances = client.Start(new StartProcessInstanceCmd[] { cmd }).GetAwaiter().GetResult();
+                    IRuntimeService runtimeService = ctx.Resolve<IRuntimeService>();
+                    IProcessInstance processInstance = runtimeService.StartProcessInstanceById("1d3a0000-6416-e86a-a09b-08d91b521174", "1504ec90-0fcb-dfea-a451-508e515fe414");
 
-                Assert.NotNull(instances);
-                Assert.True(instances.Count() > 0);
+                    //ProcessInstance[] instances = client.Start(new StartProcessInstanceCmd[] { cmd }).GetAwaiter().GetResult();
 
-                var pit = ctx.CreateWorkflowHttpProxy().GetProcessInstanceTasksClient();
+                    Assert.NotNull(processInstance);
+                    //Assert.True(instances.Count() > 0);
 
-                var tasks = pit.GetTasks(new ProcessInstanceTaskQuery() { ProcessInstanceId = instances[0].Id }).GetAwaiter().GetResult();
+                    ITaskService taskService = ctx.Resolve<ITaskService>();
+                    var tasks = taskService.GetMyTasks(ctx.AuthUserId);
 
-                TaskModel task = tasks.List.FirstOrDefault(x => x.Status == "ASSIGNED");
+                    //var pit = ctx.CreateWorkflowHttpProxy().GetProcessInstanceTasksClient();
 
-                Assert.NotNull(task);
+                    //var tasks = pit.GetTasks(new ProcessInstanceTaskQuery() { ProcessInstanceId = processInstance.Id }).GetAwaiter().GetResult();
 
-                ctx.CreateWorkflowHttpProxy().GetTaskClient().CompleteTask(new CompleteTaskCmd
-                {
-                    TaskId = task.Id
+                    //TaskModel task = tasks.FirstOrDefault(x => x.s == "ASSIGNED");
+
+                    Assert.NotEmpty(tasks);
+
+                    return tasks.First().Id;
                 }).GetAwaiter().GetResult();
+
+                id = Task.Factory.StartNew<string>(() =>
+                {
+                    ITaskService taskService = ctx.Resolve<ITaskService>();
+                    Authentication.AuthenticatedUser = new UserInfo
+                    {
+                        Id = ctx.AuthUserId
+                    };
+
+                    var tasks = taskService.Transfer(new TransferTaskCmd
+                    {
+                        Assignees = new string[] { "c387e505-92ab-c759-b0c1-375a14f95483" },
+                        TaskId = id,
+                        Description = "测试"
+                    });
+
+                    Assert.NotEmpty(tasks);
+
+                    return tasks.First().Id;
+                }).GetAwaiter().GetResult();
+
+                Task.Run(() =>
+                {
+                    ITaskService taskService = ctx.Resolve<ITaskService>();
+                    Authentication.AuthenticatedUser = new UserInfo
+                    {
+                        Id = "c387e505-92ab-c759-b0c1-375a14f95483"
+                    };
+
+                    var tasks = taskService.Transfer(new TransferTaskCmd
+                    {
+                        Assignees = new string[] { ctx.AuthUserId },
+                        TaskId = id,
+                        Description = "测试"
+                    });
+
+                    Assert.NotEmpty(tasks);
+                }).GetAwaiter().GetResult();
+
+                //ctx.CreateWorkflowHttpProxy().GetTaskClient().CompleteTask(new CompleteTaskCmd
+                //{
+                //    TaskId = task.Id
+                //}).GetAwaiter().GetResult();
             });
 
             Assert.Null(ex);

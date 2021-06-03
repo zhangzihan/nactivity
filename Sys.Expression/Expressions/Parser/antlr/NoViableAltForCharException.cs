@@ -42,7 +42,7 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			get
 			{
-				StringBuilder mesg = new StringBuilder("unexpected char: ");
+				StringBuilder mesg = new("unexpected char: ");
 			
 				// I'm trying to mirror a change in the C++ stuff.
 				// But java seems to lack something isprint-ish..

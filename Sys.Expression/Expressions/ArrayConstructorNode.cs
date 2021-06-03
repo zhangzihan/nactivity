@@ -49,7 +49,7 @@ namespace Spring.Expressions
         {
         }
 
-        private object syncRoot = new object();
+        private object syncRoot = new();
 
         /// <summary>
         /// Creates new instance of the type defined by this node.
@@ -59,11 +59,11 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            if (arrayType == null)
+            if (arrayType is null)
             {
                 lock (syncRoot)
                 {
-                    if (arrayType == null)
+                    if (arrayType is null)
                     {
                         arrayType = TypeResolutionUtils.ResolveType(getText());
                     }

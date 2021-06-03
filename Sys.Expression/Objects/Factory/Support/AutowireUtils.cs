@@ -253,7 +253,7 @@ namespace Spring.Objects.Factory.Support
 
 	    private sealed class ConstructorComparer : IComparer
 	    {
-		    internal static readonly ConstructorComparer Instance = new ConstructorComparer();
+		    internal static readonly ConstructorComparer Instance = new();
 			
 			public int Compare(object lhs, object rhs)
 			{
@@ -337,7 +337,7 @@ namespace Spring.Objects.Factory.Support
         /// <returns>the filtered list. Is never <c>null</c></returns>
         public static IList<PropertyInfo> GetUnsatisfiedDependencies(IList<PropertyInfo> propertyInfos, IPropertyValues properties, DependencyCheckingMode dependencyCheck)
         {
-            List<PropertyInfo> unsatisfiedDependenciesList = new List<PropertyInfo>();
+            List<PropertyInfo> unsatisfiedDependenciesList = new();
             foreach (PropertyInfo property in propertyInfos)
             {
                 if (property.CanWrite && properties.GetPropertyValue(property.Name) == null)

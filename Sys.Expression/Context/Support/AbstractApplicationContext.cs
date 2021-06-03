@@ -647,7 +647,7 @@ namespace Spring.Context.Support
         {
             RefreshObjectPostProcessorChecker(objectFactory);
             var dict = GetObjects<IObjectPostProcessor>(true, false);
-            List<IObjectPostProcessor> objectProcessors = new List<IObjectPostProcessor>(dict.Values);
+            List<IObjectPostProcessor> objectProcessors = new(dict.Values);
 
             //            objectProcessors.Sort(new OrderComparator());
             for (var i = 0; i < objectProcessors.Count; i++)

@@ -20,10 +20,10 @@ namespace Sys.Workflow.Engine.Impl.EL
     /// <summary>
     /// 
     /// </summary>
-    class ExpressionFactory : IExpressionFactory
+    public class ExpressionFactory : IExpressionFactory
     {
-        private static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
-        private static readonly Regex RETURN_PATTERN = new Regex(@"^\s*return\s+|;\s*return\s+", RegexOptions.Multiline);
+        protected static readonly Regex EXPR_PATTERN = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
+        protected static readonly Regex RETURN_PATTERN = new Regex(@"^\s*return\s+|;\s*return\s+", RegexOptions.Multiline);
 
         /// <summary>
         /// 
@@ -32,7 +32,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         /// <param name="expression"></param>
         /// <param name="expectedType"></param>
         /// <returns></returns>
-        public IValueExpression CreateValueExpression(ELContext elContext, string expression, Type expectedType)
+        public virtual IValueExpression CreateValueExpression(ELContext elContext, string expression, Type expectedType)
         {
             if (EXPR_PATTERN.IsMatch(expression) || RETURN_PATTERN.IsMatch(expression) == false)
             {

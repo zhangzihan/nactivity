@@ -14,6 +14,7 @@ using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
 using Sys.Workflow.Engine.Repository;
 using Sys.Workflow.Engine.Runtime;
 using Sys.Workflow.Engine.Tasks;
+using Sys.Workflow.Services.Api.Commands;
 
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

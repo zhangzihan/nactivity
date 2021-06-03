@@ -50,7 +50,7 @@ namespace Spring.Core.TypeConversion
         /// </summary>
         private const string TypeConvertersSectionName = "spring/typeConverters";
 
-        private static readonly object syncRoot = new object();
+        private static readonly object syncRoot = new();
         private static IDictionary<Type, TypeConverter> converters = new Dictionary<Type, TypeConverter>();
         
         /// <summary>

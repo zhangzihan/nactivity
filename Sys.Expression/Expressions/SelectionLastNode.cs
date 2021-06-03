@@ -54,9 +54,7 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            IList list = context as IList;
-
-            if (list == null)
+            if (context is not IList list)
             {
                 throw new ArgumentException(
                     "Selection can only be used on an instance of the type that implements IList.");

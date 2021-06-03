@@ -49,7 +49,7 @@ namespace Spring.Core.TypeConversion
     /// <author>Bruno Baia</author>
     public class CredentialConverter : TypeConverter
     {
-        private readonly static Regex credentialRegex = new Regex(
+        private readonly static Regex credentialRegex = new(
             @"(((?<domain>[\w_.]+)\\)?)(?<userName>([\w_.]+))((:(?<password>([\w_.]+)))?)");
 
         /// <summary>

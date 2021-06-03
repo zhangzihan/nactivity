@@ -58,7 +58,7 @@ namespace Spring.Core.TypeResolution
             {
                 throw BuildTypeLoadException(typeName);
             }
-            TypeAssemblyHolder typeInfo = new TypeAssemblyHolder(typeName);
+            TypeAssemblyHolder typeInfo = new(typeName);
             Type type = null;
             try
             {

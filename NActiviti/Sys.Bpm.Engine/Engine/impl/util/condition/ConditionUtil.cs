@@ -29,12 +29,7 @@
             {
                 IExpression expression = Context.ProcessEngineConfiguration.ExpressionManager.CreateExpression(conditionExpression);
                 ICondition condition = new UelExpressionCondition(expression);
-                if (condition.Evaluate(sequenceFlow.Id, execution))
-                {
-                    return true;
-                }
-
-                return false;
+                return condition.Evaluate(sequenceFlow.Id, execution);
             }
             else
             {

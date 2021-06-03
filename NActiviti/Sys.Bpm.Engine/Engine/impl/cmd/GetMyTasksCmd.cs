@@ -31,19 +31,27 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         private const long serialVersionUID = 1L;
         protected internal string assignee;
+        protected readonly string businessKey;
 
-        public GetMyTasksCmd(string assignee)
+        public GetMyTasksCmd(string assignee, string businessKey = null)
         {
             this.assignee = assignee;
+            this.businessKey = businessKey;
         }
 
         public virtual IList<ITask> Execute(ICommandContext commandContext)
         {
             var taskService = commandContext.ProcessEngineConfiguration.TaskService;
 
-            List<ITask> tasks = taskService.CreateTaskQuery()
-                .SetTaskCandidateOrAssigned(assignee)
-                .OrderByTaskCreateTime()
+            var query = taskService.CreateTaskQuery()
+                .SetTaskCandidateOrAssigned(assignee);
+
+            if (businessKey is object)
+            {
+                query.SetProcessInstanceBusinessKey(businessKey);
+            }
+
+            List<ITask> tasks = query.OrderByTaskCreateTime()
                 .Desc()
                 .List()
                 .ToList();

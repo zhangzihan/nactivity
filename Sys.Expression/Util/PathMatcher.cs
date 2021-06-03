@@ -2,7 +2,7 @@
 #region License
 
 /*
-* Copyright © 2002-2011 the original author or authors.
+* Copyright ?2002-2011 the original author or authors.
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -124,7 +124,7 @@ namespace Spring.Util
 			string[] parts = pattern.Split('/');
 			int indexOfLastSplittedPart = parts.Length - 1;
 			int indexOfTheCurrentSplittedPart = 0;
-			StringBuilder regex = new StringBuilder();
+			StringBuilder regex = new();
 			foreach (string currentSplittedPart in parts)
 			{
 				bool currentPartIsTheLast = indexOfTheCurrentSplittedPart == indexOfLastSplittedPart;

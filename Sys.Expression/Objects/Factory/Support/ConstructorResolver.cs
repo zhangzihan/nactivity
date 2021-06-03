@@ -87,7 +87,7 @@ namespace Spring.Objects.Factory.Support
                                                   ConstructorInfo[] chosenCtors, object[] explicitArgs)
         {
 
-            ObjectWrapper wrapper = new ObjectWrapper();
+            ObjectWrapper wrapper = new();
 
             ConstructorInstantiationInfo constructorInstantiationInfo = GetConstructorInstantiationInfo(
                 objectName, rod, chosenCtors, explicitArgs);
@@ -120,7 +120,7 @@ namespace Spring.Objects.Factory.Support
             object[] explicitArgs)
         {
 
-            ObjectWrapper wrapper = new ObjectWrapper();
+            ObjectWrapper wrapper = new();
 
             ConstructorInfo constructorToUse = null;
             object[] argsToUse = null;
@@ -271,13 +271,13 @@ namespace Spring.Objects.Factory.Support
         /// </returns>
         public virtual IObjectWrapper InstantiateUsingFactoryMethod(string name, RootObjectDefinition definition, object[] arguments)
         {
-            ObjectWrapper wrapper = new ObjectWrapper();
+            ObjectWrapper wrapper = new();
             Type factoryClass = null;
             bool isStatic = true;
 
 
             ConstructorArgumentValues cargs = definition.ConstructorArgumentValues;
-            ConstructorArgumentValues resolvedValues = new ConstructorArgumentValues();
+            ConstructorArgumentValues resolvedValues = new();
             int expectedArgCount = 0;
 
             // we don't have arguments passed in programmatically, so we need to resolve the
@@ -306,7 +306,7 @@ namespace Spring.Objects.Factory.Support
                 factoryClass = definition.ObjectType;
             }
 
-            GenericArgumentsHolder genericArgsInfo = new GenericArgumentsHolder(definition.FactoryMethodName);
+            GenericArgumentsHolder genericArgsInfo = new(definition.FactoryMethodName);
             IList<MethodInfo> factoryMethodCandidates = FindMethods(genericArgsInfo.GenericMethodName, expectedArgCount, isStatic, factoryClass);
 
             bool autowiring = (definition.AutowireMode == AutoWiringMode.Constructor);
@@ -386,7 +386,7 @@ namespace Spring.Objects.Factory.Support
             string methodType = (methodOrCtorInfo is ConstructorInfo) ? "constructor" : "factory method";
             unsatisfiedDependencyExceptionData = null;
 
-            ArgumentsHolder args = new ArgumentsHolder(paramTypes.Length);
+            ArgumentsHolder args = new(paramTypes.Length);
             var usedValueHolders = new HybridSet();
             List<string> autowiredObjectNames = null;
             bool resolveNecessary = false;
@@ -615,7 +615,7 @@ namespace Spring.Objects.Factory.Support
         /// </returns>
         private static IList<MethodInfo> FindMethods(string methodName, int expectedArgumentCount, bool isStatic, Type searchType)
         {
-            ComposedCriteria methodCriteria = new ComposedCriteria();
+            ComposedCriteria methodCriteria = new();
             methodCriteria.Add(new MethodNameMatchCriteria(methodName));
             methodCriteria.Add(new MethodParametersCountCriteria(expectedArgumentCount));
             BindingFlags methodFlags = BindingFlags.Public | BindingFlags.IgnoreCase | (isStatic ? BindingFlags.Static : BindingFlags.Instance);

@@ -279,7 +279,7 @@ namespace Spring.Objects.Factory
 			ObjectCreationException ocex = ex as ObjectCreationException;
 			if (ocex != null)
 			{
-				StringBuilder newCause = new StringBuilder();
+				StringBuilder newCause = new();
 				newCause.AppendFormat("{0} while resolving '{1}' to '{2}' ",
 				                      Environment.NewLine, propertyName, ocex._objectName);
 				if (StringUtils.HasText(ocex._resourceDescription))

@@ -39,7 +39,7 @@ namespace Spring.Objects.Factory.Attributes
     public class QualifierAnnotationAutowireCandidateResolver : IAutowireCandidateResolver, IObjectFactoryAware, ISerializable
     {
         private IObjectFactory _objectFactory;
-        private readonly HashSet<Type> _qualifierTypes = new HashSet<Type>();
+        private readonly HashSet<Type> _qualifierTypes = new();
 
         private Type _valueAttributeType = typeof(ValueAttribute);
 

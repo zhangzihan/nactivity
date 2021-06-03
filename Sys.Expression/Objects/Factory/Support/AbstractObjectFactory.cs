@@ -54,14 +54,14 @@ namespace Spring.Objects.Factory.Support
         /// Marker object to be temporarily registered in the singleton cache,
         /// while instantiating an object (in order to be able to detect circular references).
         /// </summary>
-        private static readonly object CurrentlyInCreation = new object();
+        private static readonly object CurrentlyInCreation = new();
 
         /// <summary>
         /// Used as value in hashtable that keeps track of singleton names currently in the
         /// process of being created.  Would not be necessary if we created a case insensitive implementation of
         /// ISet.
         /// </summary>
-        private static readonly object EmptyObject = new object();
+        private static readonly object EmptyObject = new();
 
         /// <summary>
         /// The <see cref="Common.Logging.ILog"/> instance for this class.
@@ -71,17 +71,17 @@ namespace Spring.Objects.Factory.Support
         /// <summary>
         /// Cache of singleton objects created by <see cref="IFactoryObject"/>s: FactoryObject name -> product
         /// </summary>
-        private readonly Dictionary<string, object> factoryObjectProductCache = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> factoryObjectProductCache = new();
 
         /// <summary>
         /// Disposable object instances: object name --> disposable instance
         /// </summary>
-        private readonly Dictionary<string, object> disposableObjects = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> disposableObjects = new();
 
         /// <summary>
         /// root object definitons: object name --> Root Object Definition
         /// </summary>
-        protected ConcurrentDictionary<string, RootObjectDefinition> mergedObjectDefinitions = new ConcurrentDictionary<string, RootObjectDefinition>();
+        protected ConcurrentDictionary<string, RootObjectDefinition> mergedObjectDefinitions = new();
 
         /// <summary>
         /// Whether to cache object metadata or rather reobtain it for every access
@@ -91,7 +91,7 @@ namespace Spring.Objects.Factory.Support
         /// <summary>
         /// Names of object that have already been created at least once
         /// </summary>
-        private readonly HashSet<string> alreadyCreated = new HashSet<string>();
+        private readonly HashSet<string> alreadyCreated = new();
 
         /// <summary>
         /// Creates a new instance of the
@@ -1206,7 +1206,7 @@ namespace Spring.Objects.Factory.Support
         {
             lock (singletonCache)
             {
-                List<string> matches = new List<string>();
+                List<string> matches = new();
                 foreach (string name in singletonCache.Keys)
                 {
                     object singletonObject = singletonCache[name];
@@ -1611,17 +1611,17 @@ namespace Spring.Objects.Factory.Support
         /// Dependency types to ignore on dependency check and autowire, as Set of
         /// Type objects: for example, string.  Default is none.
         /// </summary>
-        private HybridSet ignoreDependencyTypes = new HybridSet();
+        private HybridSet ignoreDependencyTypes = new();
 
         /// <summary>
         /// ObjectPostProcessors to apply in CreateObject
         /// </summary>
-        private List<IObjectPostProcessor> objectPostProcessors = new List<IObjectPostProcessor>();
+        private List<IObjectPostProcessor> objectPostProcessors = new();
 
         /// <summary>
         /// String Resolver applied to Autowired value injections
         /// </summary>
-        private SortedSet embeddedValueResolvers = new SortedSet(ObjectOrderComparator.ObjectOrderComparatorInstance);
+        private SortedSet embeddedValueResolvers = new(ObjectOrderComparator.ObjectOrderComparatorInstance);
 
         /// <summary>
         /// Indicates whether any IInstantiationAwareBeanPostProcessors have been registered
@@ -1641,7 +1641,7 @@ namespace Spring.Objects.Factory.Support
         /// <summary>
         /// Set of registered singletons, containing the instance names in registration order 
         /// </summary>
-        private HashSet<string> registeredSingletons = new HashSet<string>();
+        private HashSet<string> registeredSingletons = new();
 
         private readonly IDictionary singletonsInCreation;
 
@@ -1651,7 +1651,7 @@ namespace Spring.Objects.Factory.Support
         /// Set that holds all inner objects created by this factory that implement the IDisposable
         /// interface, to be destroyed on call to Dispose.
         /// </summary>
-        private SynchronizedSet disposableInnerObjects = new SynchronizedSet(new HybridSet());
+        private SynchronizedSet disposableInnerObjects = new(new HybridSet());
 
         /// <summary>
         /// Set that holds all inner objects created by this factory that implement the IDisposable
@@ -2096,7 +2096,7 @@ namespace Spring.Objects.Factory.Support
         /// <seealso cref="Spring.Objects.Factory.IObjectFactory.GetObject(string, Type, object[])"/>
         protected object GetObjectInternal(string name, Type requiredType, object[] arguments, bool suppressConfigure)
         {
-            object monitor = new object();
+            object monitor = new();
             const int indent = 3;
             bool hasErrors = false;
             try
@@ -2384,7 +2384,7 @@ namespace Spring.Objects.Factory.Support
                     // copy the keys into a new set, 'cos we are going to modifying the
                     // original collection (_singletonCache) as we destroy each singleton.
                     // we also want to traverse the keys in reverse order to destroy correctly
-                    ArrayList keys = new ArrayList(singletonCache.Keys);
+                    ArrayList keys = new(singletonCache.Keys);
                     keys.Reverse();
                     foreach (string name in keys)
                     {
@@ -2755,7 +2755,7 @@ namespace Spring.Objects.Factory.Support
         [Serializable]
         private class ObjectOrderComparator : OrderComparator
         {
-            public static readonly ObjectOrderComparator ObjectOrderComparatorInstance = new ObjectOrderComparator();
+            public static readonly ObjectOrderComparator ObjectOrderComparatorInstance = new();
             /// <summary>
             /// Handle the case when both objects have equal sort order priority. By default returns 0, 
             /// but may be overriden for handling special cases.

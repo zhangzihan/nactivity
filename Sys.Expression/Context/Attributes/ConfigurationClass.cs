@@ -171,7 +171,7 @@ namespace Spring.Context.Attributes
             // A [ObjectDef] method may only be overloaded through inheritance. No single
             // [Configuration] class may declare two [ObjectDef] methods with the same name.
             const char hashDelim = '#';
-            Dictionary<String, int> methodNameCounts = new Dictionary<String, int>();
+            Dictionary<String, int> methodNameCounts = new();
             foreach (ConfigurationClassMethod method in _methods)
             {
                 String dClassName = method.MethodMetadata.DeclaringType.FullName;

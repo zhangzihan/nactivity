@@ -331,7 +331,7 @@ namespace Spring.Objects
         /// <seealso cref="Spring.Objects.IObjectWrapper.SetPropertyValues(IPropertyValues, bool)"/>
         public virtual void SetPropertyValues(IPropertyValues propertyValues, bool ignoreUnknown)
         {
-            List<PropertyAccessException> propertyAccessExceptions = new List<PropertyAccessException>();
+            List<PropertyAccessException> propertyAccessExceptions = new();
             foreach (PropertyValue pv in propertyValues)
             {
                 try
@@ -484,7 +484,7 @@ namespace Spring.Objects
         /// </returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             try
             {
                 sb.Append("ObjectWrapper: wrapping class [");

@@ -27,7 +27,7 @@ namespace Spring.Expressions.Parser.antlr
 		*  token type of a node without having to have tests for null
 		*  everywhere.
 		*/
-		public static ASTNULLType ASTNULL = new ASTNULLType();
+		public static ASTNULLType ASTNULL = new();
 		
 		/*Where did this rule leave off parsing; avoids a return parameter */
 		protected internal AST retTree_;
@@ -47,7 +47,7 @@ namespace Spring.Expressions.Parser.antlr
 		protected internal AST returnAST;
 		
 		/*AST support code; parser and treeparser delegate to this object */
-		protected internal ASTFactory astFactory = new ASTFactory();
+		protected internal ASTFactory astFactory = new();
 		
 		/*Used to keep track of indentdepth for traceIn/Out */
 		protected internal int traceDepth = 0;

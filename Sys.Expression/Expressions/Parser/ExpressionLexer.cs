@@ -1932,7 +1932,7 @@ _loop206_breakloop:			;
 		for (int i = 639; i<=2503; i++) { data[i]=0L; }
 		return data;
 	}
-	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());
+	public static readonly BitSet tokenSet_0_ = new(mk_tokenSet_0_());
 	private static long[] mk_tokenSet_1_()
 	{
 		long[] data = new long[1025];
@@ -1940,7 +1940,7 @@ _loop206_breakloop:			;
 		for (int i = 1; i<=1024; i++) { data[i]=0L; }
 		return data;
 	}
-	public static readonly BitSet tokenSet_1_ = new BitSet(mk_tokenSet_1_());
+	public static readonly BitSet tokenSet_1_ = new(mk_tokenSet_1_());
 	private static long[] mk_tokenSet_2_()
 	{
 		long[] data = new long[2048];
@@ -1950,7 +1950,7 @@ _loop206_breakloop:			;
 		for (int i = 1024; i<=2047; i++) { data[i]=0L; }
 		return data;
 	}
-	public static readonly BitSet tokenSet_2_ = new BitSet(mk_tokenSet_2_());
+	public static readonly BitSet tokenSet_2_ = new(mk_tokenSet_2_());
 	private static long[] mk_tokenSet_3_()
 	{
 		long[] data = new long[1025];
@@ -1959,7 +1959,7 @@ _loop206_breakloop:			;
 		for (int i = 2; i<=1024; i++) { data[i]=0L; }
 		return data;
 	}
-	public static readonly BitSet tokenSet_3_ = new BitSet(mk_tokenSet_3_());
+	public static readonly BitSet tokenSet_3_ = new(mk_tokenSet_3_());
 	private static long[] mk_tokenSet_4_()
 	{
 		long[] data = new long[1025];
@@ -1968,7 +1968,7 @@ _loop206_breakloop:			;
 		for (int i = 2; i<=1024; i++) { data[i]=0L; }
 		return data;
 	}
-	public static readonly BitSet tokenSet_4_ = new BitSet(mk_tokenSet_4_());
+	public static readonly BitSet tokenSet_4_ = new(mk_tokenSet_4_());
 	private static long[] mk_tokenSet_5_()
 	{
 		long[] data = new long[1025];
@@ -1977,7 +1977,7 @@ _loop206_breakloop:			;
 		for (int i = 2; i<=1024; i++) { data[i]=0L; }
 		return data;
 	}
-	public static readonly BitSet tokenSet_5_ = new BitSet(mk_tokenSet_5_());
+	public static readonly BitSet tokenSet_5_ = new(mk_tokenSet_5_());
 	private static long[] mk_tokenSet_6_()
 	{
 		long[] data = new long[1025];
@@ -1986,7 +1986,7 @@ _loop206_breakloop:			;
 		for (int i = 2; i<=1024; i++) { data[i]=0L; }
 		return data;
 	}
-	public static readonly BitSet tokenSet_6_ = new BitSet(mk_tokenSet_6_());
+	public static readonly BitSet tokenSet_6_ = new(mk_tokenSet_6_());
 	private static long[] mk_tokenSet_7_()
 	{
 		long[] data = new long[1025];
@@ -1995,7 +1995,7 @@ _loop206_breakloop:			;
 		for (int i = 2; i<=1024; i++) { data[i]=0L; }
 		return data;
 	}
-	public static readonly BitSet tokenSet_7_ = new BitSet(mk_tokenSet_7_());
+	public static readonly BitSet tokenSet_7_ = new(mk_tokenSet_7_());
 	
 }
 }

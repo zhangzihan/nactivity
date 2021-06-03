@@ -71,7 +71,7 @@ namespace Spring.Expressions.Processors
                 sortAscending = Convert.ToBoolean(args[0]);
             }
 
-            ArrayList list = new ArrayList(source);
+            ArrayList list = new(source);
             list.Sort();
             if (!sortAscending)
             {

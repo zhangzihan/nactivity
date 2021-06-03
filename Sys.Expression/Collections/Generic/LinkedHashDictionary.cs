@@ -129,7 +129,7 @@ namespace Spring.Collections.Generic
 
         protected override IEnumerable<KeyValuePair<TKey, TValue>> EntriesSet()
         {
-            List<KeyValuePair<TKey, TValue>> entries = new List<KeyValuePair<TKey, TValue>>();
+            List<KeyValuePair<TKey, TValue>> entries = new();
             for (Node node = linkedHead; node != null; node = node.nextLinked)
                 entries.Add(new KeyValuePair<TKey, TValue>(node.key, node.value));
             return entries;
@@ -138,6 +138,6 @@ namespace Spring.Collections.Generic
         private Node linkedHead = null;
         private Node linkedTail = null;
 
-        private Dictionary<TKey, Node> items = new Dictionary<TKey, Node>();
+        private Dictionary<TKey, Node> items = new();
     }
 }

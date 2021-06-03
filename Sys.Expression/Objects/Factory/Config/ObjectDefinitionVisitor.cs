@@ -321,7 +321,7 @@ namespace Spring.Objects.Factory.Config
                 }
             }
 
-            Hashtable mods = new Hashtable();
+            Hashtable mods = new();
             bool entriesModified = false;
             foreach (DictionaryEntry entry in dictVal)
             {

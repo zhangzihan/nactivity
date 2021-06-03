@@ -46,40 +46,37 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
         {
-            lock (syncRoot)
+            if (variables != null)
             {
-                if (variables != null)
+                if (localScope)
                 {
-                    if (localScope)
-                    {
-                        task.VariablesLocal = variables;
-                    }
-                    else if (task.ExecutionId is object)
-                    {
-                        task.ExecutionVariables = variables;
-                    }
-                    else
-                    {
-                        task.Variables = variables;
-                    }
+                    task.VariablesLocal = variables;
                 }
-
-                if (transientVariables != null)
+                else if (task.ExecutionId is object)
                 {
-                    if (localScope)
-                    {
-                        task.TransientVariablesLocal = transientVariables;
-                    }
-                    else
-                    {
-                        task.TransientVariables = transientVariables;
-                    }
+                    task.ExecutionVariables = variables;
                 }
-
-                ExecuteTaskComplete(commandContext, task, variables, localScope);
-
-                return null;
+                else
+                {
+                    task.Variables = variables;
+                }
             }
+
+            if (transientVariables != null)
+            {
+                if (localScope)
+                {
+                    task.TransientVariablesLocal = transientVariables;
+                }
+                else
+                {
+                    task.TransientVariables = transientVariables;
+                }
+            }
+
+            ExecuteTaskComplete(commandContext, task, variables, localScope);
+
+            return null;
         }
 
         protected internal override string SuspendedTaskException

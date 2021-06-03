@@ -21,11 +21,13 @@ namespace Sys.Workflow.Engine.Impl.Util
     using Sys.Workflow.Engine.Delegate.Events;
     using Sys.Workflow.Engine.Delegate.Events.Impl;
     using Sys.Workflow.Engine.Impl.Contexts;
+    using Sys.Workflow.Engine.Impl.Identities;
     using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys.Workflow.Engine.Impl.Persistence.Entity;
     using Sys.Workflow.Engine.Repository;
     using Sys.Workflow.Engine.Runtime;
     using Sys.Workflow.Services.Api.Commands;
+    using System;
     using System.Linq;
     using System.Security.Principal;
     using System.Text.RegularExpressions;
@@ -152,13 +154,25 @@ namespace Sys.Workflow.Engine.Impl.Util
                 processInstance.SetVariable(WorkflowVariable.GLOBAL_PROCESSINSTANCE_BUSINESSKEY_VARNAME, businessKey);
             }
 
+            if (!string.IsNullOrWhiteSpace(Authentication.AuthenticatedUser?.Id))
+            {
+                processInstance.SetVariable(WorkflowVariable.PROCESS_START_USERID, Authentication.AuthenticatedUser.Id);
+            }
+
             var title = process.GetExtensionElementAttributeValue(WorkflowVariable.GLOBAL_PROCESSINSTANCE_TITLE);
             if (string.IsNullOrWhiteSpace(title) == false)
             {
                 var reg = new Regex(@"\${(.*?)}", RegexOptions.Multiline);
                 title = reg.Replace(title, (m) =>
                 {
-                    return ExpressionEvaluator.GetValue(variables, m.Groups[1].Value)?.ToString();
+                    try
+                    {
+                        return ExpressionEvaluator.GetValue(variables, m.Groups[1].Value)?.ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        return $"流程标题计算错误:{process.Name}--{ex.Message}";
+                    }
                 });
                 processInstance.SetVariable(WorkflowVariable.GLOBAL_PROCESSINSTANCE_TITLE, title);
             }

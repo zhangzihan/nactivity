@@ -40,7 +40,7 @@ namespace Spring.Core.TypeResolution
     {
         #region Constants
 
-        private static readonly Regex ClrPattern = new Regex(
+        private static readonly Regex ClrPattern = new(
               "^"
               + @"(?'name'\w[\w\d\.]+)"
               + @"`\d+\s*\["
@@ -51,7 +51,7 @@ namespace Spring.Core.TypeResolution
               , RegexOptions.CultureInvariant
             );
 
-        private static readonly Regex CSharpPattern = new Regex(
+        private static readonly Regex CSharpPattern = new(
               "^"
               + @"(?'name'\w[\w\d\.]+)"
               + @"<"
@@ -62,7 +62,7 @@ namespace Spring.Core.TypeResolution
               , RegexOptions.CultureInvariant
             );
 
-        private static Regex GenericArgumentListPattern = new Regex(
+        private static Regex GenericArgumentListPattern = new(
             @",("
             + @"(\[(?>[^\[\]]+|\[(?<DEPTH>)|\](?<-DEPTH>))*(?(DEPTH)(?!))\])" // capture anything between matching brackets
             + @"|"

@@ -78,7 +78,7 @@ namespace Spring.Expressions.Parser.antlr
 		
 		public virtual string getLAChars()
 		{
-			StringBuilder la = new StringBuilder();
+			StringBuilder la = new();
 
 			// copy buffer contents to array before looping thru contents (it's usually faster)
 			char[] fastBuf = new char[queue.Count-markerOffset];
@@ -90,7 +90,7 @@ namespace Spring.Expressions.Parser.antlr
 		
 		public virtual string getMarkedChars()
 		{
-			StringBuilder marked = new StringBuilder();
+			StringBuilder marked = new();
 
 			// copy buffer contents to array before looping thru contents (it's usually faster)
 			char[] fastBuf = new char[queue.Count-markerOffset];

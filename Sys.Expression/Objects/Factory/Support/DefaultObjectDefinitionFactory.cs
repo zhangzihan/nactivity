@@ -1,5 +1,5 @@
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ namespace Spring.Objects.Factory.Support
                 }
                 else
                 {
-                    RootObjectDefinition rootObjectDefinition = new RootObjectDefinition();
+                    RootObjectDefinition rootObjectDefinition = new();
                     rootObjectDefinition.ObjectTypeName = typeName;
                     return rootObjectDefinition;
                 }
@@ -82,13 +82,13 @@ namespace Spring.Objects.Factory.Support
             {
                 if (objectType != null)
                 {
-                    ChildObjectDefinition childObjectDefinition = new ChildObjectDefinition(parent);
+                    ChildObjectDefinition childObjectDefinition = new(parent);
                     childObjectDefinition.ObjectType = objectType;
                     return childObjectDefinition;
                 }
                 else
                 {
-                    ChildObjectDefinition childObjectDefinition = new ChildObjectDefinition(parent);
+                    ChildObjectDefinition childObjectDefinition = new(parent);
                     childObjectDefinition.ObjectTypeName = typeName;
                     return childObjectDefinition;
                 }

@@ -70,13 +70,13 @@ namespace Spring.Objects.Factory.Attributes
 
         private IConfigurableListableObjectFactory objectFactory;
 
-        private readonly HashSet<string> lookupMethodsChecked = new HashSet<string>();
+        private readonly HashSet<string> lookupMethodsChecked = new();
 
-        private readonly SynchronizedHashtable candidateConstructorsCache = new SynchronizedHashtable();
+        private readonly SynchronizedHashtable candidateConstructorsCache = new();
 
-        private readonly Dictionary<string, InjectionMetadata> injectionMetadataCache = new Dictionary<string, InjectionMetadata>();
+        private readonly Dictionary<string, InjectionMetadata> injectionMetadataCache = new();
 
-        private readonly List<Type> autowiredPropertyTypes = new List<Type>();
+        private readonly List<Type> autowiredPropertyTypes = new();
 
         /// <summary>
         /// Return the order value of this object, where a higher value means greater in
@@ -481,7 +481,7 @@ namespace Spring.Objects.Factory.Attributes
                 this.required = required;
             }
 
-            private object syncRoot = new object();
+            private object syncRoot = new();
 
             public override void Inject(object instance, string objectName, IPropertyValues pvs)
             {
@@ -555,7 +555,7 @@ namespace Spring.Objects.Factory.Attributes
                 this.required = required;
             }
 
-            private object syncRoot = new object();
+            private object syncRoot = new();
 
             public override void Inject(object instance, string objectName, IPropertyValues pvs)
             {
@@ -629,7 +629,7 @@ namespace Spring.Objects.Factory.Attributes
                 this.required = required;
             }
 
-            private object syncRoot = new object();
+            private object syncRoot = new();
 
             public override void Inject(object target, string objectName, IPropertyValues pvs)
             {
@@ -649,7 +649,7 @@ namespace Spring.Objects.Factory.Attributes
                         var autowiredBeanNames = new List<string>();
                         for (int i = 0; i < arguments.Length; i++)
                         {
-                            MethodParameter methodParam = new MethodParameter(method, i);
+                            MethodParameter methodParam = new(method, i);
                             descriptors[i] = new DependencyDescriptor(methodParam, required);
                             arguments[i] = processor.objectFactory.ResolveDependency(descriptors[i], objectName, autowiredBeanNames);
                             if (arguments[i] == null && !required)

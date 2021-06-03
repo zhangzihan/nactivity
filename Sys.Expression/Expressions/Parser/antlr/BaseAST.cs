@@ -244,7 +244,7 @@ namespace Spring.Expressions.Parser.antlr
 		*/
 		public virtual IEnumerator findAll(AST target)
 		{
-			ArrayList roots = new ArrayList(10);
+			ArrayList roots = new(10);
 			//AST sibling;
 			
 			// the empty tree cannot result in an enumeration
@@ -264,7 +264,7 @@ namespace Spring.Expressions.Parser.antlr
 		*/
 		public virtual IEnumerator findAllPartial(AST sub)
 		{
-			ArrayList roots = new ArrayList(10);
+			ArrayList roots = new(10);
 			//AST sibling;
 			
 			// the empty tree cannot result in an enumeration
@@ -365,7 +365,7 @@ namespace Spring.Expressions.Parser.antlr
 		
 		override public string ToString()
 		{
-			StringBuilder b = new StringBuilder();
+			StringBuilder b = new();
 			// if verbose and type name not same as text (keyword probably)
 			if (verboseStringConversion && 
 					(0 != String.Compare(getText(), (tokenNames[Type]), true)) &&
@@ -429,7 +429,7 @@ namespace Spring.Expressions.Parser.antlr
 		
 		public virtual string ToTree(string prefix) 
 		{
-			StringBuilder sb = new StringBuilder(prefix);
+			StringBuilder sb = new(prefix);
 		
 			// Replace vertical bar if there is no next sibling.
 			if ( (getNextSibling() == null) )
@@ -458,7 +458,7 @@ namespace Spring.Expressions.Parser.antlr
 		public static string decode(string text)
 		{
 			char c, c1, c2, c3, c4, c5;
-			StringBuilder n = new StringBuilder();
+			StringBuilder n = new();
 			 for (int i = 0; i < text.Length; i++)
 			{
 				c = text[i];
@@ -507,7 +507,7 @@ namespace Spring.Expressions.Parser.antlr
 		public static string encode(string text)
 		{
 			char c;
-			StringBuilder n = new StringBuilder();
+			StringBuilder n = new();
 			 for (int i = 0; i < text.Length; i++)
 			{
 				c = text[i];
@@ -556,7 +556,7 @@ namespace Spring.Expressions.Parser.antlr
 		
 		public virtual void  xmlSerializeNode(TextWriter outWriter)
 		{
-			StringBuilder buf = new StringBuilder(100);
+			StringBuilder buf = new(100);
 			buf.Append("<");
 			buf.Append(GetType().FullName + " ");
 			buf.Append("text=\"" + encode(getText()) + "\" type=\"" + Type + "\"/>");
@@ -565,7 +565,7 @@ namespace Spring.Expressions.Parser.antlr
 		
 		public virtual void  xmlSerializeRootOpen(TextWriter outWriter)
 		{
-			StringBuilder buf = new StringBuilder(100);
+			StringBuilder buf = new(100);
 			buf.Append("<");
 			buf.Append(GetType().FullName + " ");
 			buf.Append("text=\"" + encode(getText()) + "\" type=\"" + Type + "\">\n");

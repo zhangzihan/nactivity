@@ -69,7 +69,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual void TerminateTask(string taskId, string terminateReason, bool terminateExecution, IDictionary<string, object> variables)
         {
-            ExecuteCommand(new TerminateTaskCmd(taskId, terminateReason, terminateExecution, variables));
+            commandExecutor.Execute(new CommandConfig(true), new TerminateTaskCmd(taskId, terminateReason, terminateExecution, variables));
         }
 
         public virtual void DeleteTasks(ICollection<string> taskIds)
@@ -170,7 +170,7 @@ namespace Sys.Workflow.Engine.Impl
                 {
                     return;
                 }
-                ExecuteCommand(new CompleteTaskCmd(taskId, null, null));
+                _ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, null, null));
             }
             catch (ActivitiObjectNotFoundException)
             {
@@ -189,7 +189,7 @@ namespace Sys.Workflow.Engine.Impl
                 {
                     return;
                 }
-                ExecuteCommand(new CompleteTaskCmd(taskId, variables, null));
+                _ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, null));
             }
             catch (ActivitiObjectNotFoundException)
             {
@@ -208,7 +208,7 @@ namespace Sys.Workflow.Engine.Impl
                 {
                     return;
                 }
-                ExecuteCommand(new CompleteTaskCmd(taskId, variables, transientVariables));
+                _ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, transientVariables));
             }
             catch (ActivitiObjectNotFoundException)
             {
@@ -230,7 +230,7 @@ namespace Sys.Workflow.Engine.Impl
                         throw new ActivitiObjectNotFoundException($"Cannot find task for 'taskId={taskId}'", typeof(ITask));
                     }
                 }
-                ExecuteCommand(new CompleteTaskCmd(taskId, variables, localScope));
+                _ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, localScope));
             }
             catch (ActivitiObjectNotFoundException ex)
             {
@@ -263,8 +263,7 @@ namespace Sys.Workflow.Engine.Impl
                 {
                     AddComment(taskId, task.ProcessInstanceId, comment);
                 }
-
-                ExecuteCommand(new CompleteTaskCmd(taskId, variables, transientVariables, localScope));
+                _ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, transientVariables, localScope));
             }
             catch (ActivitiObjectNotFoundException)
             {
@@ -287,8 +286,7 @@ namespace Sys.Workflow.Engine.Impl
                     }
                     return;
                 }
-
-                ExecuteCommand(new CompleteTaskCmd(task.Id, variables, transientVariables, localScope));
+                _ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(task.Id, variables, transientVariables, localScope));
             }
             catch (ActivitiObjectNotFoundException)
             {
@@ -422,7 +420,7 @@ namespace Sys.Workflow.Engine.Impl
                     .FirstOrDefault();
             }
 
-            return task != null;
+            return task is object;
         }
 
         public virtual bool TryGetTask(string taskId, out ITask task)
@@ -436,7 +434,7 @@ namespace Sys.Workflow.Engine.Impl
                 task = CreateTaskQuery().SetTaskId(taskId).SingleResult();
             }
 
-            return task != null;
+            return task is object;
         }
 
         public virtual void SetVariable(string taskId, string variableName, object value)
@@ -677,7 +675,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             var cmd = new CreateNewSubtaskCmd(taskName, description, dueDate, priority, parentTaskId, assignee, tenantId);
 
-            return ExecuteCommand(cmd);
+            return commandExecutor.Execute(new CommandConfig(true), cmd);
         }
 
         /// <inheritdoc />
@@ -685,13 +683,17 @@ namespace Sys.Workflow.Engine.Impl
         {
             try
             {
-                return ExecuteCommand(new TransferTaskCmd(cmd)) as ITask[];
+
+                lock (syncRoot)
+                {
+                    return commandExecutor.Execute(new CommandConfig(true), new TransferTaskCmd(cmd)) as ITask[];
+                }
             }
             catch (ActivitiObjectNotFoundException e)
             {
                 if (logger.IsEnabled(LogLevel.Warning))
                 {
-                    logger.LogWarning("任务可能已经终止或无效.");
+                    logger.LogWarning($"任务可能已经终止或无效.{e.Message}{e.ObjectClass}");
                 }
                 return null;
             }
@@ -704,7 +706,7 @@ namespace Sys.Workflow.Engine.Impl
             {
                 var cmd = new AddCountersignCmd(taskId, assignees, tenantId);
 
-                return ExecuteCommand(cmd);
+                return commandExecutor.Execute(new CommandConfig(true), cmd);
             }
         }
 
@@ -716,9 +718,9 @@ namespace Sys.Workflow.Engine.Impl
             return ExecuteCommand(cmd);
         }
 
-        public IList<ITask> GetMyTasks(string assignee)
+        public IList<ITask> GetMyTasks(string assignee, string businessKey = null)
         {
-            var cmd = new GetMyTasksCmd(assignee);
+            var cmd = new GetMyTasksCmd(assignee, businessKey);
 
             return ExecuteCommand(cmd);
         }

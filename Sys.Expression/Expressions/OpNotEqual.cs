@@ -34,7 +34,7 @@ namespace Spring.Expressions
         /// <summary>
         /// Create a new instance
         /// </summary>
-        public OpNotEqual():base()
+        public OpNotEqual() : base()
         {
         }
 
@@ -45,7 +45,7 @@ namespace Spring.Expressions
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Returns a value for the logical inequality operator node.
         /// </summary>
@@ -54,14 +54,14 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            object leftVal = GetLeftValue( context, evalContext );
-            object rightVal = GetRightValue( context, evalContext );
+            object leftVal = GetLeftValue(context, evalContext);
+            object rightVal = GetRightValue(context, evalContext);
 
-            if (leftVal == null)
+            if (leftVal is null)
             {
-                return (rightVal != null);
+                return rightVal is object;
             }
-            else if (rightVal == null)
+            else if (rightVal is null)
             {
                 return true;
             }

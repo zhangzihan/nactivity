@@ -53,7 +53,7 @@ namespace Spring.Core.TypeResolution
             {
                 throw BuildTypeLoadException(typeName);
             }
-            GenericArgumentsHolder genericInfo = new GenericArgumentsHolder(typeName);
+            GenericArgumentsHolder genericInfo = new(typeName);
             Type type = null;
             try
             {

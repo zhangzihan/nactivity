@@ -269,7 +269,7 @@ namespace Spring.Objects.Factory.Xml
                 case ObjectDefinitionConstants.LocalRefAttribute:
                 case ObjectDefinitionConstants.ObjectRefAttribute:
                     // we're wiring up to an event exposed on another managed object (instance)
-                    RuntimeObjectReference ror = new RuntimeObjectReference(sourceAtt.Value);
+                    RuntimeObjectReference ror = new(sourceAtt.Value);
                     myHandler.Source = ror;
                     break;
                 case ObjectDefinitionConstants.TypeAttribute:
@@ -443,7 +443,7 @@ namespace Spring.Objects.Factory.Xml
                     = parserContext.ReaderContext.ObjectDefinitionFactory.CreateObjectDefinition(
                         typeName, parent, parserContext.ReaderContext.Reader.Domain);
 
-                ParserContext childParserContext = new ParserContext(parserContext.ParserHelper, od);
+                ParserContext childParserContext = new(parserContext.ParserHelper, od);
 
                 ParseMetaElements(element, od);
                 ParseQualifierElements(id, element, parserContext, od);
@@ -578,7 +578,7 @@ namespace Spring.Objects.Factory.Xml
         protected MethodOverrides ParseMethodOverrideSubElements(
             string name, XmlElement element, ParserContext parserContext)
         {
-            MethodOverrides overrides = new MethodOverrides();
+            MethodOverrides overrides = new();
             foreach (XmlNode node in this.SelectNodes(element, ObjectDefinitionConstants.LookupMethodElement))
             {
                 ParseLookupMethodElement(name, overrides, (XmlElement)node, parserContext);
@@ -637,7 +637,7 @@ namespace Spring.Objects.Factory.Xml
                     string.Format("The '{0}' attribute is required for the '{1}' element.",
                                   ObjectDefinitionConstants.ReplacedMethodReplacerNameAttribute, ObjectDefinitionConstants.ReplacedMethodElement));
             }
-            ReplacedMethodOverride theOverride = new ReplacedMethodOverride(methodName, targetReplacerObjectName);
+            ReplacedMethodOverride theOverride = new(methodName, targetReplacerObjectName);
             foreach (XmlNode node in this.SelectNodes(element, ObjectDefinitionConstants.ReplacedMethodArgumentTypeElement))
             {
                 XmlElement argElement = (XmlElement)node;
@@ -660,7 +660,7 @@ namespace Spring.Objects.Factory.Xml
         protected ConstructorArgumentValues ParseConstructorArgSubElements(
             string name, XmlElement element, ParserContext parserContext)
         {
-            ConstructorArgumentValues arguments = new ConstructorArgumentValues();
+            ConstructorArgumentValues arguments = new();
             foreach (XmlNode node in this.SelectNodes(element, ObjectDefinitionConstants.ConstructorArgElement))
             {
                 ParseConstructorArgElement(name, arguments, (XmlElement)node, parserContext);
@@ -674,7 +674,7 @@ namespace Spring.Objects.Factory.Xml
         protected EventValues ParseEventHandlerSubElements(
             string name, XmlElement element, ParserContext parserContext)
         {
-            EventValues events = new EventValues();
+            EventValues events = new();
             foreach (XmlNode node in this.SelectNodes(element, ObjectDefinitionConstants.ListenerElement))
             {
                 ParseEventListenerDefinition(name, events, (XmlElement)node, parserContext);
@@ -692,7 +692,7 @@ namespace Spring.Objects.Factory.Xml
                 string key = GetAttributeValue((XmlElement)node, ObjectDefinitionConstants.KeyAttribute);
                 string value = GetAttributeValue((XmlElement)node, ObjectDefinitionConstants.ValueAttribute);
 
-                ObjectMetadataAttribute attribute = new ObjectMetadataAttribute(key, value);
+                ObjectMetadataAttribute attribute = new(key, value);
                 attribute.Source = (XmlElement)node;
                 attributeAccessor.AddMetadataAttribute(attribute);
             }
@@ -770,7 +770,7 @@ namespace Spring.Objects.Factory.Xml
         protected virtual MutablePropertyValues ParsePropertyElements(
             string name, XmlElement element, ParserContext parserContext)
         {
-            MutablePropertyValues properties = new MutablePropertyValues();
+            MutablePropertyValues properties = new();
             foreach (XmlNode node in this.SelectNodes(element, ObjectDefinitionConstants.PropertyElement))
             {
                 ParsePropertyElement(name, properties, (XmlElement)node, parserContext);
@@ -1114,7 +1114,7 @@ namespace Spring.Objects.Factory.Xml
         private object ParseExpressionElement(XmlElement element, string name, ParserContext parserContext)
         {
             string expression = GetAttributeValue(element, ObjectDefinitionConstants.ValueAttribute);
-            ExpressionHolder holder = new ExpressionHolder(expression);
+            ExpressionHolder holder = new(expression);
             holder.Properties = ParsePropertyElements(name, element, parserContext);
             return holder;
         }
@@ -1136,7 +1136,7 @@ namespace Spring.Objects.Factory.Xml
         {
             string elementTypeName = GetAttributeValue(collectionEle, "element-type");
             XmlNodeList nl = collectionEle.ChildNodes;
-            ManagedList target = new ManagedList(nl.Count);
+            ManagedList target = new(nl.Count);
 
             if (StringUtils.HasText(elementTypeName))
             {
@@ -1182,7 +1182,7 @@ namespace Spring.Objects.Factory.Xml
         {
             string elementTypeName = GetAttributeValue(collectionEle, "element-type");
             XmlNodeList nl = collectionEle.ChildNodes;
-            ManagedSet target = new ManagedSet(nl.Count);
+            ManagedSet target = new(nl.Count);
 
             if (StringUtils.HasText(elementTypeName))
             {
@@ -1211,7 +1211,7 @@ namespace Spring.Objects.Factory.Xml
         /// <returns>The dictionary definition.</returns>
         protected IDictionary ParseDictionaryElement(XmlElement mapEle, string name, ParserContext parserContext)
         {
-            ManagedDictionary dictionary = new ManagedDictionary();
+            ManagedDictionary dictionary = new();
             string keyTypeName = GetAttributeValue(mapEle, "key-type");
             string valueTypeName = GetAttributeValue(mapEle, "value-type");
             if (StringUtils.HasText(keyTypeName))
@@ -1287,14 +1287,14 @@ namespace Spring.Objects.Factory.Xml
                 {
                     // ok, we're using the value-ref attribute shortcut...
                     XmlAttribute inlineValueRefAtt = entryEle.Attributes[ObjectDefinitionConstants.DictionaryValueRefShortcutAttribute];
-                    RuntimeObjectReference ror = new RuntimeObjectReference(inlineValueRefAtt.Value);
+                    RuntimeObjectReference ror = new(inlineValueRefAtt.Value);
                     dictionary[key] = ror;
                 }
                 else if (entryEle.Attributes[ObjectDefinitionConstants.ExpressionAttribute] != null)
                 {
                     // ok, we're using the expression attribute shortcut...
                     XmlAttribute inlineExpressionAtt = entryEle.Attributes[ObjectDefinitionConstants.ExpressionAttribute];
-                    ExpressionHolder expHolder = new ExpressionHolder(inlineExpressionAtt.Value);
+                    ExpressionHolder expHolder = new(inlineExpressionAtt.Value);
                     dictionary[key] = expHolder;
                 }
                 else
@@ -1345,7 +1345,7 @@ namespace Spring.Objects.Factory.Xml
         [Obsolete("not used anymore - ObjectsNamespaceParser will be dropped with 2.x, use ObjectDefinitionParserHelper instead", false)]
         protected virtual XmlNodeList SelectNodes(XmlElement element, string childElementName)
         {
-            XmlNamespaceManager nsManager = new XmlNamespaceManager(new NameTable());
+            XmlNamespaceManager nsManager = new(new NameTable());
             nsManager.AddNamespace(GetNamespacePrefix(element), element.NamespaceURI);
             return element.SelectNodes(GetNamespacePrefix(element) + ":" + childElementName, nsManager);
         }
@@ -1373,7 +1373,7 @@ namespace Spring.Objects.Factory.Xml
         [Obsolete("not used anymore - ObjectsNamespaceParser will be dropped with 2.x, use ObjectDefinitionParserHelper instead", false)]
         protected XmlNode SelectSingleNode(XmlElement element, string childElementName)
         {
-            XmlNamespaceManager nsManager = new XmlNamespaceManager(new NameTable());
+            XmlNamespaceManager nsManager = new(new NameTable());
             nsManager.AddNamespace(GetNamespacePrefix(element), element.NamespaceURI);
             return element.SelectSingleNode(GetNamespacePrefix(element) + ":" + childElementName, nsManager);
         }
@@ -1392,7 +1392,7 @@ namespace Spring.Objects.Factory.Xml
         /// <returns>The name value collection definition.</returns>
         protected NameValueCollection ParseNameValueCollectionElement(XmlElement nameValueEle, string name, ParserContext parserContext)
         {
-            ManagedNameValueCollection nvc = new ManagedNameValueCollection();
+            ManagedNameValueCollection nvc = new();
             nvc.MergeEnabled = ParseMergeAttribute(nameValueEle, parserContext.ParserHelper);
 
             XmlNodeList addElements = nameValueEle.GetElementsByTagName(ObjectDefinitionConstants.AddElement);

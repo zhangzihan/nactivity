@@ -43,10 +43,10 @@ namespace Spring.Objects.Factory.Support
         private const string ScopeSingleton = "singleton";
         private const string ScopePrototype = "prototype";
 
-        private ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
-        private MutablePropertyValues propertyValues = new MutablePropertyValues();
-        private EventValues eventHandlerValues = new EventValues();
-        private MethodOverrides methodOverrides = new MethodOverrides();
+        private ConstructorArgumentValues constructorArgumentValues = new();
+        private MutablePropertyValues propertyValues = new();
+        private EventValues eventHandlerValues = new();
+        private MethodOverrides methodOverrides = new();
         private string resourceDescription;
         private bool isSingleton = true;
         private bool isPrototype;
@@ -835,7 +835,7 @@ namespace Spring.Objects.Factory.Support
         /// </returns>
         public override string ToString()
         {
-            StringBuilder buffer = new StringBuilder(string.Format("Class [{0}]", ObjectTypeName));
+            StringBuilder buffer = new(string.Format("Class [{0}]", ObjectTypeName));
             buffer.Append("; Abstract = ").Append(IsAbstract);
             buffer.Append("; Parent = ").Append(ParentName);
             buffer.Append("; Scope = ").Append(Scope);

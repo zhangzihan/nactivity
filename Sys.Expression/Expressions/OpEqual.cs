@@ -57,11 +57,11 @@ namespace Spring.Expressions
             object left = GetLeftValue(context, evalContext);
             object right = GetRightValue(context, evalContext);
 
-            if (left == null)
+            if (left is null)
             {
                 return (right == null);
             }
-            else if (right == null)
+            else if (right is null)
             {
                 return false;
             }
@@ -76,13 +76,13 @@ namespace Spring.Expressions
                     return left.Equals(right);
                 }
             }
-            else if (left.GetType().IsEnum && right is string)
+            else if (left.GetType().IsEnum && right is string @string)
             {
-                return left.Equals(Enum.Parse(left.GetType(), (string)right));
+                return left.Equals(Enum.Parse(left.GetType(), @string));
             }
-            else if (right.GetType().IsEnum && left is string)
+            else if (right.GetType().IsEnum && left is string string1)
             {
-                return right.Equals(Enum.Parse(right.GetType(), (string)left));
+                return right.Equals(Enum.Parse(right.GetType(), string1));
             }
             else
             {

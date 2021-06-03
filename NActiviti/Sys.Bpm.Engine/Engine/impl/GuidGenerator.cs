@@ -7,28 +7,34 @@ namespace Sys.Workflow.Engine.Impl
 {
     public class GuidGenerator : IIdGenerator
     {
-        private readonly Queue<string> ids = new Queue<string>();
+        private static readonly Queue<string> ids = new Queue<string>();
 
         public GuidGenerator()
         {
-            Task.Run(PrepareNextIds);
+            PrepareNextIds();
         }
 
         public string GetNextId()
         {
-            if (ids.Count < 5)
+            var id = ids.Dequeue();
+            if (ids.Count < 10)
             {
                 Task.Run(PrepareNextIds);
             }
-
-            return ids.Dequeue();
+            return id;
         }
 
         private void PrepareNextIds()
         {
             for (var idx = 0; idx < 100; idx++)
             {
-                ids.Enqueue(NewId.NextGuid().ToString());
+                var id = NewId.NextGuid().ToString();
+                if (id is null)
+                {
+                    idx -= 1;
+                    continue;
+                }
+                ids.Enqueue(id);
             }
         }
     }

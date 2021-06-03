@@ -166,7 +166,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST expr_AST = null;
 
             try
@@ -198,7 +198,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST expression_AST = null;
 
             try
@@ -299,7 +299,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST exprList_AST = null;
 
             try
@@ -365,7 +365,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST logicalOrExpression_AST = null;
 
             try
@@ -419,7 +419,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST parenExpr_AST = null;
 
             try
@@ -452,7 +452,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST logicalXorExpression_AST = null;
 
             try
@@ -506,7 +506,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST logicalAndExpression_AST = null;
 
             try
@@ -560,7 +560,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST relationalExpression_AST = null;
             Spring.Expressions.SpringAST e1_AST = null;
             Spring.Expressions.SpringAST op_AST = null;
@@ -630,7 +630,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST sumExpr_AST = null;
 
             try
@@ -701,7 +701,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST relationalOperator_AST = null;
 
             try
@@ -832,7 +832,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST prodExpr_AST = null;
 
             try
@@ -915,7 +915,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST powExpr_AST = null;
 
             try
@@ -968,7 +968,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST unaryExpression_AST = null;
 
             try
@@ -1049,7 +1049,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST primaryExpression_AST = null;
 
             try
@@ -1109,7 +1109,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST unaryOperator_AST = null;
 
             try
@@ -1168,7 +1168,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST startNode_AST = null;
 
             try
@@ -1388,7 +1388,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST node_AST = null;
 
             try
@@ -1504,7 +1504,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST methodOrProperty_AST = null;
 
             try
@@ -1576,7 +1576,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST functionOrVar_AST = null;
 
             try
@@ -1645,7 +1645,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST localFunctionOrVar_AST = null;
 
             try
@@ -1714,7 +1714,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST reference_AST = null;
             Spring.Expressions.SpringAST cn_AST = null;
             Spring.Expressions.SpringAST id_AST = null;
@@ -1821,7 +1821,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST indexer_AST = null;
 
             try
@@ -1877,7 +1877,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST literal_AST = null;
 
             try
@@ -1965,7 +1965,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST type_AST = null;
             Spring.Expressions.SpringAST tn_AST = null;
 
@@ -2010,7 +2010,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST constructor_AST = null;
             Spring.Expressions.SpringAST type_AST = null;
 
@@ -2097,7 +2097,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST projection_AST = null;
 
             try
@@ -2133,7 +2133,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST selection_AST = null;
 
             try
@@ -2189,7 +2189,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST firstSelection_AST = null;
 
             try
@@ -2225,7 +2225,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST lastSelection_AST = null;
 
             try
@@ -2261,7 +2261,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST listInitializer_AST = null;
 
             try
@@ -2317,7 +2317,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST mapInitializer_AST = null;
 
             try
@@ -2374,7 +2374,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST lambda_AST = null;
 
             try
@@ -2437,7 +2437,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST attribute_AST = null;
             Spring.Expressions.SpringAST tn_AST = null;
 
@@ -2501,7 +2501,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST function_AST = null;
 
             try
@@ -2537,7 +2537,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST var_AST = null;
 
             try
@@ -2568,7 +2568,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST methodArgs_AST = null;
 
             try
@@ -2634,7 +2634,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST localFunction_AST = null;
 
             try
@@ -2670,7 +2670,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST localVar_AST = null;
 
             try
@@ -2701,7 +2701,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST property_AST = null;
 
             try
@@ -2731,7 +2731,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST argument_AST = null;
 
             try
@@ -2762,7 +2762,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST quotableName_AST = null;
 
             try
@@ -2809,7 +2809,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST name_AST = null;
 
             try
@@ -2859,7 +2859,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST qualifiedId_AST = null;
 
             try
@@ -2911,7 +2911,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST ctorArgs_AST = null;
 
             try
@@ -2977,7 +2977,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST argList_AST = null;
 
             try
@@ -3039,7 +3039,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST arrayConstructor_AST = null;
             Spring.Expressions.SpringAST type_AST = null;
 
@@ -3106,7 +3106,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST arrayRank_AST = null;
 
             try
@@ -3175,7 +3175,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST mapEntry_AST = null;
 
             try
@@ -3223,7 +3223,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST namedArgument_AST = null;
 
             try
@@ -3296,7 +3296,7 @@ namespace Spring.Expressions.Parser
         {
 
             returnAST = null;
-            ASTPair currentAST = new ASTPair();
+            ASTPair currentAST = new();
             Spring.Expressions.SpringAST boolLiteral_AST = null;
 
             try
@@ -3436,145 +3436,145 @@ namespace Spring.Expressions.Parser
             long[] data = { 2L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());
+        public static readonly BitSet tokenSet_0_ = new(mk_tokenSet_0_());
         private static long[] mk_tokenSet_1_()
         {
             long[] data = { 1408758448130L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_1_ = new BitSet(mk_tokenSet_1_());
+        public static readonly BitSet tokenSet_1_ = new(mk_tokenSet_1_());
         private static long[] mk_tokenSet_2_()
         {
             long[] data = { 1134924607015288578L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_2_ = new BitSet(mk_tokenSet_2_());
+        public static readonly BitSet tokenSet_2_ = new(mk_tokenSet_2_());
         private static long[] mk_tokenSet_3_()
         {
             long[] data = { 1408765788162L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_3_ = new BitSet(mk_tokenSet_3_());
+        public static readonly BitSet tokenSet_3_ = new(mk_tokenSet_3_());
         private static long[] mk_tokenSet_4_()
         {
             long[] data = { 1408765788674L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_4_ = new BitSet(mk_tokenSet_4_());
+        public static readonly BitSet tokenSet_4_ = new(mk_tokenSet_4_());
         private static long[] mk_tokenSet_5_()
         {
             long[] data = { 1408765789698L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_5_ = new BitSet(mk_tokenSet_5_());
+        public static readonly BitSet tokenSet_5_ = new(mk_tokenSet_5_());
         private static long[] mk_tokenSet_6_()
         {
             long[] data = { 1134907106097428480L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_6_ = new BitSet(mk_tokenSet_6_());
+        public static readonly BitSet tokenSet_6_ = new(mk_tokenSet_6_());
         private static long[] mk_tokenSet_7_()
         {
             long[] data = { 1408765789954L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_7_ = new BitSet(mk_tokenSet_7_());
+        public static readonly BitSet tokenSet_7_ = new(mk_tokenSet_7_());
         private static long[] mk_tokenSet_8_()
         {
             long[] data = { 1134908514863218434L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_8_ = new BitSet(mk_tokenSet_8_());
+        public static readonly BitSet tokenSet_8_ = new(mk_tokenSet_8_());
         private static long[] mk_tokenSet_9_()
         {
             long[] data = { 17696327240712384L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_9_ = new BitSet(mk_tokenSet_9_());
+        public static readonly BitSet tokenSet_9_ = new(mk_tokenSet_9_());
         private static long[] mk_tokenSet_10_()
         {
             long[] data = { 1134908514913550082L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_10_ = new BitSet(mk_tokenSet_10_());
+        public static readonly BitSet tokenSet_10_ = new(mk_tokenSet_10_());
         private static long[] mk_tokenSet_11_()
         {
             long[] data = { 1134908515383312130L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_11_ = new BitSet(mk_tokenSet_11_());
+        public static readonly BitSet tokenSet_11_ = new(mk_tokenSet_11_());
         private static long[] mk_tokenSet_12_()
         {
             long[] data = { 17696326116638912L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_12_ = new BitSet(mk_tokenSet_12_());
+        public static readonly BitSet tokenSet_12_ = new(mk_tokenSet_12_());
         private static long[] mk_tokenSet_13_()
         {
             long[] data = { 1134908515920183042L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_13_ = new BitSet(mk_tokenSet_13_());
+        public static readonly BitSet tokenSet_13_ = new(mk_tokenSet_13_());
         private static long[] mk_tokenSet_14_()
         {
             long[] data = { 16091095105536L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_14_ = new BitSet(mk_tokenSet_14_());
+        public static readonly BitSet tokenSet_14_ = new(mk_tokenSet_14_());
         private static long[] mk_tokenSet_15_()
         {
             long[] data = { 309238169600L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_15_ = new BitSet(mk_tokenSet_15_());
+        public static readonly BitSet tokenSet_15_ = new(mk_tokenSet_15_());
         private static long[] mk_tokenSet_16_()
         {
             long[] data = { 8912896L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_16_ = new BitSet(mk_tokenSet_16_());
+        public static readonly BitSet tokenSet_16_ = new(mk_tokenSet_16_());
         private static long[] mk_tokenSet_17_()
         {
             long[] data = { -35184381001744L, 255L, 0L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_17_ = new BitSet(mk_tokenSet_17_());
+        public static readonly BitSet tokenSet_17_ = new(mk_tokenSet_17_());
         private static long[] mk_tokenSet_18_()
         {
             long[] data = { 412316991488L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_18_ = new BitSet(mk_tokenSet_18_());
+        public static readonly BitSet tokenSet_18_ = new(mk_tokenSet_18_());
         private static long[] mk_tokenSet_19_()
         {
             long[] data = { 281474976710656L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_19_ = new BitSet(mk_tokenSet_19_());
+        public static readonly BitSet tokenSet_19_ = new(mk_tokenSet_19_());
         private static long[] mk_tokenSet_20_()
         {
             long[] data = { 1136050506922131202L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_20_ = new BitSet(mk_tokenSet_20_());
+        public static readonly BitSet tokenSet_20_ = new(mk_tokenSet_20_());
         private static long[] mk_tokenSet_21_()
         {
             long[] data = { 1133871366144L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_21_ = new BitSet(mk_tokenSet_21_());
+        public static readonly BitSet tokenSet_21_ = new(mk_tokenSet_21_());
         private static long[] mk_tokenSet_22_()
         {
             long[] data = { 1152884945836572608L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_22_ = new BitSet(mk_tokenSet_22_());
+        public static readonly BitSet tokenSet_22_ = new(mk_tokenSet_22_());
         private static long[] mk_tokenSet_23_()
         {
             long[] data = { 34360262656L, 0L };
             return data;
         }
-        public static readonly BitSet tokenSet_23_ = new BitSet(mk_tokenSet_23_());
+        public static readonly BitSet tokenSet_23_ = new(mk_tokenSet_23_());
 
     }
 }

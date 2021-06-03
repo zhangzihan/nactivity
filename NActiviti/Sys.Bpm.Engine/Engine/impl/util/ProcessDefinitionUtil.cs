@@ -56,20 +56,35 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static Process GetProcess(string processDefinitionId)
         {
-            DeploymentManager deploymentManager = Context.ProcessEngineConfiguration.DeploymentManager;
+            if (Context.ProcessEngineConfiguration is object)
+            {
+                DeploymentManager deploymentManager = Context.ProcessEngineConfiguration.DeploymentManager;
 
-            // This will check the cache in the findDeployedProcessDefinitionById and resolveProcessDefinition method
-            IProcessDefinition processDefinitionEntity = deploymentManager.FindDeployedProcessDefinitionById(processDefinitionId);
-            return deploymentManager.ResolveProcessDefinition(processDefinitionEntity).Process;
+                // This will check the cache in the findDeployedProcessDefinitionById and resolveProcessDefinition method
+                IProcessDefinition processDefinitionEntity = deploymentManager.FindDeployedProcessDefinitionById(processDefinitionId);
+                return deploymentManager.ResolveProcessDefinition(processDefinitionEntity).Process;
+            }
+            else
+            {
+                return GetBpmnModel(processDefinitionId)?.MainProcess;
+            }
         }
 
         public static BpmnModel GetBpmnModel(string processDefinitionId)
         {
-            DeploymentManager deploymentManager = Context.ProcessEngineConfiguration.DeploymentManager;
+            if (Context.ProcessEngineConfiguration is object)
+            {
+                DeploymentManager deploymentManager = Context.ProcessEngineConfiguration.DeploymentManager;
 
-            // This will check the cache in the findDeployedProcessDefinitionById and resolveProcessDefinition method
-            IProcessDefinition processDefinitionEntity = deploymentManager.FindDeployedProcessDefinitionById(processDefinitionId);
-            return deploymentManager.ResolveProcessDefinition(processDefinitionEntity).BpmnModel;
+                // This will check the cache in the findDeployedProcessDefinitionById and resolveProcessDefinition method
+                IProcessDefinition processDefinitionEntity = deploymentManager.FindDeployedProcessDefinitionById(processDefinitionId);
+                return deploymentManager.ResolveProcessDefinition(processDefinitionEntity).BpmnModel;
+            }
+            else
+            {
+                var processEngineConfig = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
+                return processEngineConfig.CommandExecutor.Execute(new Cmd.GetBpmnModelCmd(processDefinitionId));
+            }
         }
 
         public static BpmnModel GetBpmnModelFromCache(string processDefinitionId)

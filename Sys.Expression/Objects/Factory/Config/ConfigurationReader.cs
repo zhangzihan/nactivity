@@ -236,7 +236,7 @@ namespace Spring.Objects.Factory.Config
         {
             using (Stream istm = resource.InputStream)
             {
-                ConfigXmlDocument doc = new ConfigXmlDocument();
+                ConfigXmlDocument doc = new();
                 doc.Load(istm);
                 return GetSectionFromXmlDocument(doc, configSectionName, defaultConfigurationSectionHandlerType);
             }
@@ -353,7 +353,7 @@ namespace Spring.Objects.Factory.Config
                 // none specified, use machine inherited
                 try
                 {
-                    XmlDocument machineConfig = new XmlDocument();
+                    XmlDocument machineConfig = new();
                     machineConfig.Load(RuntimeEnvironment.SystemConfigurationFile);
                     xmlConfig = machineConfig.SelectSingleNode(sectionHandlerPath);
                     if (xmlConfig == null)

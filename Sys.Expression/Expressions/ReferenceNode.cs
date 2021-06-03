@@ -35,7 +35,7 @@ namespace Spring.Context.Support
         /// <summary>
         /// Create a new instance
         /// </summary>
-        public ReferenceNode():base()
+        public ReferenceNode() : base()
         {
         }
 
@@ -46,7 +46,7 @@ namespace Spring.Context.Support
             : base(info, context)
         {
         }
-        
+
         /// <summary>
         /// Returns a value for the integer literal node.
         /// </summary>

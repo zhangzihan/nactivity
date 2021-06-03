@@ -219,7 +219,7 @@ namespace Spring.Objects.Factory.Support
         /// </returns>
         public override string ToString()
         {
-            StringBuilder buffer = new StringBuilder();
+            StringBuilder buffer = new();
             buffer.Append(GetType().Name).Append(" with parent '");
             buffer.Append(ParentName).Append("' : ").Append(base.ToString());
             return buffer.ToString();

@@ -78,7 +78,7 @@ namespace Spring.Expressions
 
             public override AST Create()
             {
-                return (AST) ctor.Invoke(new object[0]);
+                return (AST)ctor.Invoke(new object[0]);
             }
 
             public override string ASTNodeTypeName
@@ -94,7 +94,7 @@ namespace Spring.Expressions
 
             static SpringASTFactory()
             {
-                BASENODE_TYPE = typeof (SpringAST);
+                BASENODE_TYPE = typeof(SpringAST);
 
                 Typename2Creator = new Hashtable();
                 foreach (Type type in typeof(SpringASTFactory).Assembly.GetTypes())
@@ -104,7 +104,7 @@ namespace Spring.Expressions
                         ConstructorInfo ctor = type.GetConstructor(new Type[0]);
                         if (ctor != null)
                         {
-                            ASTNodeCreator creator = new ASTNodeCreator(ctor);
+                            ASTNodeCreator creator = new(ctor);
                             Typename2Creator[creator.ASTNodeTypeName] = creator;
                         }
                     }
@@ -121,8 +121,8 @@ namespace Spring.Expressions
 
         private class SpringExpressionParser : ExpressionParser
         {
-            public SpringExpressionParser( TokenStream lexer )
-                : base( lexer )
+            public SpringExpressionParser(TokenStream lexer)
+                : base(lexer)
             {
                 astFactory = new SpringASTFactory();
                 initialize();
@@ -132,7 +132,7 @@ namespace Spring.Expressions
         static Expression()
         {
             // Ensure antlr is loaded (fixes GAC issues)!
-            Assembly antlrAss = typeof( Parser.antlr.LLkParser ).Assembly;
+            Assembly antlrAss = typeof(LLkParser).Assembly;
         }
 
         /// <summary>
@@ -140,12 +140,12 @@ namespace Spring.Expressions
         /// by parsing specified expression string.
         /// </summary>
         /// <param name="expression">Expression to parse.</param>
-        public static IExpression Parse( string expression )
+        public static IExpression Parse(string expression)
         {
-            if (StringUtils.HasText( expression ))
+            if (StringUtils.HasText(expression))
             {
-                ExpressionLexer lexer = new ExpressionLexer( new StringReader( expression ) );
-                ExpressionParser parser = new SpringExpressionParser( lexer );
+                ExpressionLexer lexer = new(new StringReader(expression));
+                ExpressionParser parser = new SpringExpressionParser(lexer);
 
                 try
                 {
@@ -153,7 +153,7 @@ namespace Spring.Expressions
                 }
                 catch (TokenStreamRecognitionException ex)
                 {
-                    throw new SyntaxErrorException( ex.recog.Message, ex.recog.getLine(), ex.recog.getColumn(), expression );
+                    throw new SyntaxErrorException(ex.recog.Message, ex.recog.getLine(), ex.recog.getColumn(), expression);
                 }
                 return (IExpression)parser.getAST();
             }
@@ -169,13 +169,13 @@ namespace Spring.Expressions
         /// <param name="functionName">Function name to register expression as.</param>
         /// <param name="lambdaExpression">Lambda expression to register.</param>
         /// <param name="variables">Variables dictionary that the function will be registered in.</param>
-        public static void RegisterFunction( string functionName, string lambdaExpression, IDictionary variables )
+        public static void RegisterFunction(string functionName, string lambdaExpression, IDictionary variables)
         {
-            AssertUtils.ArgumentHasText( functionName, "functionName" );
-            AssertUtils.ArgumentHasText( lambdaExpression, "lambdaExpression" );
+            AssertUtils.ArgumentHasText(functionName, "functionName");
+            AssertUtils.ArgumentHasText(lambdaExpression, "lambdaExpression");
 
-            ExpressionLexer lexer = new ExpressionLexer( new StringReader( lambdaExpression ) );
-            ExpressionParser parser = new SpringExpressionParser( lexer );
+            ExpressionLexer lexer = new(new StringReader(lambdaExpression));
+            ExpressionParser parser = new SpringExpressionParser(lexer);
 
             try
             {
@@ -183,7 +183,7 @@ namespace Spring.Expressions
             }
             catch (TokenStreamRecognitionException ex)
             {
-                throw new SyntaxErrorException( ex.recog.Message, ex.recog.getLine(), ex.recog.getColumn(), lambdaExpression );
+                throw new SyntaxErrorException(ex.recog.Message, ex.recog.getLine(), ex.recog.getColumn(), lambdaExpression);
             }
             variables[functionName] = parser.getAST();
         }
@@ -193,12 +193,12 @@ namespace Spring.Expressions
         /// by parsing specified primary expression string.
         /// </summary>
         /// <param name="expression">Primary expression to parse.</param>
-        internal static IExpression ParsePrimary( string expression )
+        internal static IExpression ParsePrimary(string expression)
         {
-            if (StringUtils.HasText( expression ))
+            if (StringUtils.HasText(expression))
             {
-                ExpressionLexer lexer = new ExpressionLexer( new StringReader( expression ) );
-                ExpressionParser parser = new SpringExpressionParser( lexer );
+                ExpressionLexer lexer = new(new StringReader(expression));
+                ExpressionParser parser = new SpringExpressionParser(lexer);
 
                 try
                 {
@@ -206,7 +206,7 @@ namespace Spring.Expressions
                 }
                 catch (TokenStreamRecognitionException ex)
                 {
-                    throw new SyntaxErrorException( ex.recog.Message, ex.recog.getLine(), ex.recog.getColumn(), expression );
+                    throw new SyntaxErrorException(ex.recog.Message, ex.recog.getLine(), ex.recog.getColumn(), expression);
                 }
                 return (IExpression)parser.getAST();
             }
@@ -221,12 +221,12 @@ namespace Spring.Expressions
         /// by parsing specified property expression string.
         /// </summary>
         /// <param name="expression">Property expression to parse.</param>
-        internal static IExpression ParseProperty( string expression )
+        internal static IExpression ParseProperty(string expression)
         {
-            if (StringUtils.HasText( expression ))
+            if (StringUtils.HasText(expression))
             {
-                ExpressionLexer lexer = new ExpressionLexer( new StringReader( expression ) );
-                ExpressionParser parser = new SpringExpressionParser( lexer );
+                ExpressionLexer lexer = new(new StringReader(expression));
+                ExpressionParser parser = new SpringExpressionParser(lexer);
 
                 try
                 {
@@ -234,7 +234,7 @@ namespace Spring.Expressions
                 }
                 catch (TokenStreamRecognitionException ex)
                 {
-                    throw new SyntaxErrorException( ex.recog.Message, ex.recog.getLine(), ex.recog.getColumn(), expression );
+                    throw new SyntaxErrorException(ex.recog.Message, ex.recog.getLine(), ex.recog.getColumn(), expression);
                 }
                 return (IExpression)parser.getAST();
             }
@@ -253,8 +253,8 @@ namespace Spring.Expressions
         /// <summary>
         /// Create a new instance from SerializationInfo
         /// </summary>
-        protected Expression( SerializationInfo info, StreamingContext context )
-            : base( info, context )
+        protected Expression(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         { }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace Spring.Expressions
                 AST node = this.getFirstChild();
                 while (node != null)
                 {
-                    result = GetValue(((BaseNode)node), result, evalContext );
+                    result = GetValue(((BaseNode)node), result, evalContext);
 
                     node = node.getNextSibling();
                 }
@@ -290,7 +290,7 @@ namespace Spring.Expressions
         /// <param name="evalContext">Current expression evaluation context.</param>
         /// <param name="newValue">Value to set last node to.</param>
         /// <exception cref="NotSupportedException">If navigation expression is empty.</exception>
-        protected override void Set( object context, EvaluationContext evalContext, object newValue )
+        protected override void Set(object context, EvaluationContext evalContext, object newValue)
         {
             object target = context;
 
@@ -307,14 +307,14 @@ namespace Spring.Expressions
                     }
                     catch (NotReadablePropertyException e)
                     {
-                        throw new NotWritablePropertyException( "Cannot read the value of '" + node.getText() + "' property in the expression.", e );
+                        throw new NotWritablePropertyException("Cannot read the value of '" + node.getText() + "' property in the expression.", e);
                     }
                 }
                 SetValue(((BaseNode)node), target, evalContext, newValue);
             }
             else
             {
-                throw new NotSupportedException( "You cannot set the value for an empty expression." );
+                throw new NotSupportedException("You cannot set the value for an empty expression.");
             }
         }
 
@@ -325,7 +325,7 @@ namespace Spring.Expressions
         /// <param name="context">Context to evaluate expression against.</param>
         /// <param name="variables">Expression variables map.</param>
         /// <returns>Value of the last node.</returns>
-        internal PropertyInfo GetPropertyInfo( object context, IDictionary<string, object> variables )
+        internal PropertyInfo GetPropertyInfo(object context, IDictionary<string, object> variables)
         {
             if (this.getNumberOfChildren() > 0)
             {
@@ -334,25 +334,25 @@ namespace Spring.Expressions
 
                 for (int i = 0; i < this.getNumberOfChildren() - 1; i++)
                 {
-                    target = ((IExpression)node).GetValue( target, variables );
+                    target = ((IExpression)node).GetValue(target, variables);
                     node = node.getNextSibling();
                 }
 
                 if (node is PropertyOrFieldNode)
                 {
-                    return (PropertyInfo)((PropertyOrFieldNode)node).GetMemberInfo( target );
+                    return (PropertyInfo)((PropertyOrFieldNode)node).GetMemberInfo(target);
                 }
                 else if (node is IndexerNode)
                 {
-                    return ((IndexerNode)node).GetPropertyInfo( target, variables );
+                    return ((IndexerNode)node).GetPropertyInfo(target, variables);
                 }
                 else
                 {
-                    throw new FatalReflectionException( "Cannot obtain PropertyInfo from an expression that does not resolve to a property or an indexer." );
+                    throw new FatalReflectionException("Cannot obtain PropertyInfo from an expression that does not resolve to a property or an indexer.");
                 }
             }
 
-            throw new FatalReflectionException( "Cannot obtain PropertyInfo for empty property name." );
+            throw new FatalReflectionException("Cannot obtain PropertyInfo for empty property name.");
         }
     }
 }

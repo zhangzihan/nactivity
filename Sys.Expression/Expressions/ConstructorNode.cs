@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ namespace Spring.Expressions
         /// Create a new instance
         /// </summary>
         public ConstructorNode(Type type)
-            :base(type.FullName)
+            : base(type.FullName)
         {
         }
 
@@ -77,11 +77,11 @@ namespace Spring.Expressions
             object[] argValues = ResolveArguments(evalContext);
             IDictionary namedArgValues = ResolveNamedArguments(evalContext);
 
-            if (constructor == null)
+            if (constructor is null)
             {
-                lock(this)
+                lock (this)
                 {
-                    if (constructor == null)
+                    if (constructor is null)
                     {
                         constructor = InitializeNode(argValues, namedArgValues);
                     }
@@ -90,11 +90,11 @@ namespace Spring.Expressions
 
             object[] paramValues = (isParamArray ? ReflectionUtils.PackageParamArray(argValues, argumentCount, paramArrayType) : argValues);
             object instance = constructor.Invoke(paramValues);
-            if (namedArgValues != null)
+            if (namedArgValues is object)
             {
                 SetNamedArguments(instance, namedArgValues);
             }
-            
+
             return instance;
         }
 
@@ -124,17 +124,17 @@ namespace Spring.Expressions
         {
             SafeConstructor ctor = null;
             Type objectType = GetObjectType(this.getText().Trim());
-                
+
             // cache constructor info
             ConstructorInfo ci = GetBestConstructor(objectType, argValues);
-            if (ci == null)
+            if (ci is null)
             {
                 throw new ArgumentException(
-                    String.Format("Constructor for the type [{0}] with a specified " +
+                    string.Format("Constructor for the type [{0}] with a specified " +
                                   "number and types of arguments does not exist.",
                                   objectType.FullName));
             }
-            else 
+            else
             {
                 ParameterInfo[] parameters = ci.GetParameters();
                 if (parameters.Length > 0)
@@ -149,7 +149,7 @@ namespace Spring.Expressions
                 }
                 ctor = new SafeConstructor(ci);
             }
-                
+
             // cache named args info
             if (namedArgValues != null)
             {
@@ -172,7 +172,7 @@ namespace Spring.Expressions
         {
             foreach (string name in namedArgValues.Keys)
             {
-                IExpression property = (IExpression) namedArgs[name];
+                IExpression property = (IExpression)namedArgs[name];
                 property.SetValue(instance, namedArgValues[name]);
             }
         }
@@ -189,8 +189,8 @@ namespace Spring.Expressions
 
         private static IList<ConstructorInfo> GetCandidateConstructors(Type type, int argCount)
         {
-            ConstructorInfo[] ctors = type.GetConstructors(BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic);
-            List<ConstructorInfo> matches = new List<ConstructorInfo>();
+            ConstructorInfo[] ctors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            List<ConstructorInfo> matches = new();
 
             foreach (ConstructorInfo ctor in ctors)
             {

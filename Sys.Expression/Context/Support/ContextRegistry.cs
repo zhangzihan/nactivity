@@ -56,8 +56,8 @@ namespace Spring.Context.Support
         /// </summary>
         private static readonly ILogger log = LogManager.GetLogger<ContextRegistry>();
 
-        private static readonly object syncRoot = new Object();
-        private static readonly ContextRegistry instance = new ContextRegistry();
+        private static readonly object syncRoot = new();
+        private static readonly ContextRegistry instance = new();
         private static string rootContextName = null;
 
         private IDictionary<string, IApplicationContext> contextMap = new Dictionary<string, IApplicationContext>(StringComparer.OrdinalIgnoreCase);
@@ -105,7 +105,7 @@ namespace Spring.Context.Support
         {
             IApplicationContext parent = context.ParentContext;
 
-            Dictionary<int, IApplicationContext> contexts = new Dictionary<int, IApplicationContext>();
+            Dictionary<int, IApplicationContext> contexts = new();
 
             int contextIndex = 0;
 

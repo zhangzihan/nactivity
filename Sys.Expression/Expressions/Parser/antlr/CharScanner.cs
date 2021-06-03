@@ -33,7 +33,7 @@ namespace Spring.Expressions.Parser.antlr
 		public static readonly char EOF_CHAR = Char.MaxValue;
 
 		// Used to store event delegates
-		private EventHandlerList events_ = new EventHandlerList();
+		private EventHandlerList events_ = new();
 
 		protected internal EventHandlerList Events 
 		{
@@ -41,22 +41,22 @@ namespace Spring.Expressions.Parser.antlr
 		}
 
 		// The unique keys for each event that CharScanner [objects] can generate
-		internal static readonly object EnterRuleEventKey			= new object();
-		internal static readonly object ExitRuleEventKey			= new object();
-		internal static readonly object DoneEventKey				= new object();
-		internal static readonly object ReportErrorEventKey			= new object();
-		internal static readonly object ReportWarningEventKey		= new object();
-		internal static readonly object NewLineEventKey				= new object();
-		internal static readonly object MatchEventKey				= new object();
-		internal static readonly object MatchNotEventKey			= new object();
-		internal static readonly object MisMatchEventKey			= new object();
-		internal static readonly object MisMatchNotEventKey			= new object();
-		internal static readonly object ConsumeEventKey				= new object();
-		internal static readonly object LAEventKey					= new object();
-		internal static readonly object SemPredEvaluatedEventKey	= new object();
-		internal static readonly object SynPredStartedEventKey		= new object();
-		internal static readonly object SynPredFailedEventKey		= new object();
-		internal static readonly object SynPredSucceededEventKey	= new object();
+		internal static readonly object EnterRuleEventKey			= new();
+		internal static readonly object ExitRuleEventKey			= new();
+		internal static readonly object DoneEventKey				= new();
+		internal static readonly object ReportErrorEventKey			= new();
+		internal static readonly object ReportWarningEventKey		= new();
+		internal static readonly object NewLineEventKey				= new();
+		internal static readonly object MatchEventKey				= new();
+		internal static readonly object MatchNotEventKey			= new();
+		internal static readonly object MisMatchEventKey			= new();
+		internal static readonly object MisMatchNotEventKey			= new();
+		internal static readonly object ConsumeEventKey				= new();
+		internal static readonly object LAEventKey					= new();
+		internal static readonly object SemPredEvaluatedEventKey	= new();
+		internal static readonly object SynPredStartedEventKey		= new();
+		internal static readonly object SynPredFailedEventKey		= new();
+		internal static readonly object SynPredSucceededEventKey	= new();
 
 		protected internal StringBuilder text;				// text of current token
 		

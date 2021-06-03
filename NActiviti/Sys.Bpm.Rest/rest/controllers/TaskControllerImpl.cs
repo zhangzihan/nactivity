@@ -57,8 +57,6 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         private readonly ITaskService taskService;
 
-        private readonly IProcessEngine engine;
-
         private readonly ILogger<TaskControllerImpl> logger;
 
         /// <inheritdoc />
@@ -69,7 +67,6 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             TaskConverter taskConverter,
             ILoggerFactory loggerFactory)
         {
-            this.engine = engine;
             this.taskService = engine.TaskService;
             this.authenticationWrapper = authenticationWrapper;
             this.processEngine = processEngine;
@@ -95,10 +92,10 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
 
         /// <inheritdoc />
-        [HttpGet("{userId}/mytasks")]
-        public Task<Resources<TaskModel>> MyTasks(string userId)
+        [HttpGet("{userId}/mytasks/{businessKey?}")]
+        public Task<Resources<TaskModel>> MyTasks(string userId, string businessKey)
         {
-            IList<ITask> tasks = this.taskService.GetMyTasks(userId);
+            IList<ITask> tasks = this.taskService.GetMyTasks(userId, businessKey);
 
             IList<TaskResource> resources = this.taskResourceAssembler.ToResources(taskConverter.From(tasks.OrderByDescending(x => x.CreateTime)));
 
@@ -158,7 +155,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         /// <inheritdoc />
         [HttpPost("complete")]
-        public virtual Task<bool> CompleteTask([FromBody]CompleteTaskCmd completeTaskCmd)
+        public virtual Task<bool> CompleteTask([FromBody] CompleteTaskCmd completeTaskCmd)
         {
             processEngine.CompleteTask(completeTaskCmd);
 
@@ -167,14 +164,14 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         /// <inheritdoc />
         [HttpPost("completes")]
-        public virtual Task<CompleteTaskCmd[]> CompleteTask([FromBody]CompleteTaskCmd[] cmds)
+        public virtual Task<CompleteTaskCmd[]> CompleteTask([FromBody] CompleteTaskCmd[] cmds)
         {
-            Stopwatch sw = new Stopwatch();
+            Stopwatch sw = new();
             sw.Start();
 
             logger.LogInformation("开始调用工作流完成事件\r\n" + JsonConvert.SerializeObject(cmds));
 
-            List<CompleteTaskCmd> errors = new List<CompleteTaskCmd>();
+            List<CompleteTaskCmd> errors = new();
             foreach (var cmd in cmds)
             {
                 try
@@ -264,7 +261,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         /// <inheritdoc />
         [HttpPost("create")]
-        public virtual Task<TaskModel> CreateNewTask([FromBody]CreateTaskCmd createTaskCmd)
+        public virtual Task<TaskModel> CreateNewTask([FromBody] CreateTaskCmd createTaskCmd)
         {
             return Task.FromResult(taskResourceAssembler.ToResource(processEngine.CreateNewTask(createTaskCmd)).Content);
         }
@@ -282,7 +279,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
 
         /// <inheritdoc />
         [HttpPost("subtask")]
-        public virtual Task<TaskModel> CreateSubtask([FromBody]CreateTaskCmd createSubtaskCmd)
+        public virtual Task<TaskModel> CreateSubtask([FromBody] CreateTaskCmd createSubtaskCmd)
         {
             TaskModel task = processEngine.CreateNewSubtask(createSubtaskCmd);
 

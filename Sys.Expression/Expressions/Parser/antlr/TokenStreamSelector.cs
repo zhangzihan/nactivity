@@ -34,7 +34,7 @@ namespace Spring.Expressions.Parser.antlr
 		protected internal TokenStream input;
 		
 		/*Used to track stack of input streams */
-		protected internal Stack streamStack = new Stack();
+		protected internal Stack streamStack = new();
 		
 		public TokenStreamSelector() : base()
 		{

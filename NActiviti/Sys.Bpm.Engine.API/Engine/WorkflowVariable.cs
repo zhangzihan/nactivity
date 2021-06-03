@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
+using Sys.Workflow.Engine.Delegate;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Sys.Workflow.Services.Api.Commands
 {
@@ -24,6 +23,7 @@ namespace Sys.Workflow.Services.Api.Commands
         public const string GLOBAL_APPROVALED_COUNTERSIGN = "会签审批人";
         public const string GLOBAL_TERMINATE_TASK_VARNAME = "FORCE_TERMINATE_TASK";
         public const string GLOBAL_TERMINATE_PROCESS_VARNAME = "FORCE_TERMINATE_PROCESS";
+        public const string PROCESS_START_USERID = "process_start_user_id";
 
         /// <summary>
         /// 流程实例业务主键变量名
@@ -75,6 +75,31 @@ namespace Sys.Workflow.Services.Api.Commands
             {
                 this[GLOBAL_BUSINESSKEY_VARIABLE] = value;
             }
+        }
+
+        public static T BusinessData<T>(IVariableScope variableScope)
+        {
+            return variableScope.GetVariable<T>(GLOBAL_WORKFLOWDATA_VARIABLE);
+        }
+
+        public static string ProcessInstanceTitle(IVariableScope variableScope)
+        {
+            return variableScope.GetVariable<string>(GLOBAL_PROCESSINSTANCE_TITLE);
+        }
+
+        public static string ProcessStartUserId(IVariableScope variableScope)
+        {
+            return variableScope.GetVariable<string>(PROCESS_START_USERID);
+        }
+
+        public static IUserInfo ProcessStartUser(IVariableScope variableScope)
+        {
+            var id = variableScope.GetVariable<string>(PROCESS_START_USERID);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return null;
+            }
+            return variableScope.GetVariable<Net.Http.UserInfo>(id);
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -282,7 +282,7 @@ namespace Spring.Objects.Factory.Config
 
         private void ParseAndSetFromStaticFieldValue()
         {
-            TypeAssemblyHolder info = new TypeAssemblyHolder(this.staticField);
+            TypeAssemblyHolder info = new(this.staticField);
             // the info.TypeName should now contains the Type name, followed by a
             // period, followed by the name of the field
             int lastDotIndex = info.TypeName.LastIndexOf('.');
@@ -296,7 +296,7 @@ namespace Spring.Objects.Factory.Config
             }
             string typeName = info.TypeName.Substring(0, lastDotIndex);
             string fieldName = info.TypeName.Substring(lastDotIndex + 1);
-            StringBuilder buffer = new StringBuilder(typeName);
+            StringBuilder buffer = new(typeName);
             if (info.IsAssemblyQualified)
             {
                 buffer.Append(TypeAssemblyHolder.TypeAssemblySeparator);

@@ -188,8 +188,13 @@ namespace Sys.Workflow.Services.Rest
 
             SecurityPoliciesProviderOptions options = new SecurityPoliciesProviderOptions(config.GetSection("SecurityPoliciesProvider"));
 
-            _ = app.UseMiddleware<SecurityPoliciesApplicationMiddle>(Microsoft.Extensions.Options.Options.Create(options))
-                .UseMiddleware<ErrorHandlingMiddleware>();
+            _ = app.UseMiddleware<SecurityPoliciesApplicationMiddle>(Microsoft.Extensions.Options.Options.Create(options));
+
+            string enableErrorHandling = config["applicationSettings:workflow:enableErrorHandling"];
+            if (!bool.TryParse(enableErrorHandling, out var b) || !b)
+            {
+                app.UseMiddleware<ErrorHandlingMiddleware>();
+            }
 
             return app;
         }

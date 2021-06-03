@@ -157,7 +157,7 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			get 
 			{
-				StringBuilder sb = new StringBuilder();
+				StringBuilder sb = new();
 			
 				switch (mismatchType)
 				{

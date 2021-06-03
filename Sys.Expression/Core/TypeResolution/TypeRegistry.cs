@@ -431,7 +431,7 @@ namespace Spring.Core.TypeResolution
 
         #region Fields
 
-        private static readonly object syncRoot = new object();
+        private static readonly object syncRoot = new();
         private static IDictionary<string, Type> types = new Dictionary<string, Type>();
 
         #endregion

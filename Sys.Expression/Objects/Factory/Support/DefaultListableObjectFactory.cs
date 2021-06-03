@@ -72,7 +72,7 @@ namespace Spring.Objects.Factory.Support
         private readonly Dictionary<string, IObjectDefinition> objectDefinitionMap;
 
         // List of object definition names, in registration order.
-        private List<string> objectDefinitionNames = new List<string>(256);
+        private List<string> objectDefinitionNames = new(256);
 
         // Resolver to use for checking if an object definition is an autowire candidate
         private IAutowireCandidateResolver autowireCandidateResolver = AutowireUtils.CreateAutowireCandidateResolver();
@@ -81,13 +81,13 @@ namespace Spring.Objects.Factory.Support
         private readonly IDictionary<Type, object> resolvableDependencies = new Dictionary<Type, object>();
         
         // map of singleton and non-singleton bean names, keyed by dependency type
-        private readonly ConcurrentDictionary<Type, List<string>> allObjectNamesByType = new ConcurrentDictionary<Type, List<string>>();
+        private readonly ConcurrentDictionary<Type, List<string>> allObjectNamesByType = new();
 
         // map of singleton-only bean names, keyed by dependency type
-        private readonly ConcurrentDictionary<Type, List<string>> singletonObjectNamesByType = new ConcurrentDictionary<Type, List<string>>();
+        private readonly ConcurrentDictionary<Type, List<string>> singletonObjectNamesByType = new();
 
         // list of names of manually registered singletons, in registration order
-        private volatile OrderedSet<string> manualSingletonNames = new OrderedSet<string>();
+        private volatile OrderedSet<string> manualSingletonNames = new();
 
         // cached array of bean definition names in case of frozen configuration
         private volatile string[] frozenObjectDefinitionNames;
@@ -232,7 +232,7 @@ namespace Spring.Objects.Factory.Support
         /// </exception>
         protected override IList<string> GetDependingObjectNames(string objectName)
         {
-            List<string> dependingObjectNames = new List<string>();
+            List<string> dependingObjectNames = new();
 			if (dependingObjectNamesCache == null)
 			{
 				dependingObjectNamesCache = new Dictionary<string, List<string>>();
@@ -386,7 +386,7 @@ namespace Spring.Objects.Factory.Support
                         objectDefinitionNames = updatedDefinitions;
                         if (manualSingletonNames.Contains(name))
                         {
-                            OrderedSet<string> updatedSingletons = new OrderedSet<string>(manualSingletonNames);
+                            OrderedSet<string> updatedSingletons = new(manualSingletonNames);
                             updatedSingletons.Remove(name);
                             manualSingletonNames = updatedSingletons;
                         }
@@ -750,7 +750,7 @@ namespace Spring.Objects.Factory.Support
 
         public IList<string> GetObjectDefinitionNames(Type type, bool includeAncestor)
         {
-            List<string> matches = new List<string>();
+            List<string> matches = new();
             foreach (string name in GetObjectDefinitionNames(includeAncestor))
             {
                 if (IsObjectDefinitionTypeMatch(name, type, includeAncestor))
@@ -942,7 +942,7 @@ namespace Spring.Objects.Factory.Support
         /// </exception>
         public IReadOnlyDictionary<string, T> GetObjects<T>()
         {
-            Dictionary<string, T> result = new Dictionary<string, T>();
+            Dictionary<string, T> result = new();
             DoGetObjectsOfType(typeof(T), true, true, result);
             return result;
         }
@@ -973,7 +973,7 @@ namespace Spring.Objects.Factory.Support
         /// <seealso cref="Spring.Objects.Factory.IListableObjectFactory.GetObjectsOfType(Type, bool, bool)"/>
         public IReadOnlyDictionary<string, object> GetObjectsOfType(Type type, bool includePrototypes, bool includeFactoryObjects)
         {
-            Dictionary<string, object> result = new Dictionary<string, object>();
+            Dictionary<string, object> result = new();
             DoGetObjectsOfType(type, includePrototypes, includeFactoryObjects, result);
             return result;
         }
@@ -1039,7 +1039,7 @@ namespace Spring.Objects.Factory.Support
         /// </exception>
         public IReadOnlyDictionary<string, T> GetObjects<T>(bool includePrototypes, bool includeFactoryObjects)
         {
-            Dictionary<string, T> result = new Dictionary<string, T>();
+            Dictionary<string, T> result = new();
             DoGetObjectsOfType(typeof(T), includePrototypes, includeFactoryObjects, result);
             return result;
         }
@@ -1140,7 +1140,7 @@ namespace Spring.Objects.Factory.Support
         /// <seealso cref="Spring.Objects.Factory.IListableObjectFactory.GetObjectsOfType(Type, bool, bool)"/>
         protected List<string> DoGetObjectNamesForType(Type type, bool includeNonSingletons, bool allowEagerInit)
         {
-            List<string> result = new List<string>();
+            List<string> result = new();
             var objectNames = GetObjectDefinitionNames(true);
             for (var i = 0; i < objectNames.Count; i++)
             {

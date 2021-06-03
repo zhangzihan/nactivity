@@ -279,7 +279,7 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 		
 		public static BitSet of(int el)
 		{
-			BitSet s = new BitSet(el + 1);
+			BitSet s = new(el + 1);
 			s.add(el);
 			return s;
 		}
@@ -454,7 +454,7 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 		*/
 		public virtual string toStringOfHalfWords()
 		{
-			string s = new string("".ToCharArray());
+			string s = new("".ToCharArray());
 			 for (int i = 0; i < dataBits.Length; i++)
 			{
 				if (i != 0)
@@ -476,7 +476,7 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 		*/
 		public virtual string toStringOfWords()
 		{
-			string s = new string("".ToCharArray());
+			string s = new("".ToCharArray());
 			 for (int i = 0; i < dataBits.Length; i++)
 			{
 				if (i != 0)

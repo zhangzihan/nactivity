@@ -59,14 +59,14 @@ namespace Spring.Objects.Factory.Support
         /// <summary>
         /// Cache of filtered PropertyInfos: object Type -> PropertyInfo array 
         /// </summary>
-        private readonly ConcurrentDictionary<Type, List<PropertyInfo>> filteredPropertyDescriptorsCache = new ConcurrentDictionary<Type, List<PropertyInfo>>();
+        private readonly ConcurrentDictionary<Type, List<PropertyInfo>> filteredPropertyDescriptorsCache = new();
 
         /// <summary>
         /// Dependency interfaces to ignore on dependency check and autowire, as Set of
         /// Class objects. By default, only the IObjectFactoryAware and IObjectNameAware 
         /// interfaces are ignored.
         /// </summary>
-        private readonly HybridSet ignoredDependencyInterfaces = new HybridSet();
+        private readonly HybridSet ignoredDependencyInterfaces = new();
 
         [NonSerialized]
         private ObjectDefinitionValueResolver cachedValueResolver;
@@ -193,7 +193,7 @@ namespace Spring.Objects.Factory.Support
             ISet returnTypes = new HybridSet();
             foreach (MethodInfo factoryMethod in candidates)
             {
-                GenericArgumentsHolder genericArgsInfo = new GenericArgumentsHolder(definition.FactoryMethodName);
+                GenericArgumentsHolder genericArgsInfo = new(definition.FactoryMethodName);
                 if (factoryMethod.IsStatic == isStatic && factoryMethod.Name.Equals(genericArgsInfo.GenericMethodName)
                     && ReflectionUtils.GetParameterTypes(factoryMethod).Length >= minNrOfArgs
                     && factoryMethod.GetGenericArguments().Length == genericArgsInfo.GetGenericArguments().Length)
@@ -376,7 +376,7 @@ namespace Spring.Objects.Factory.Support
             }
             ObjectDefinitionValueResolver valueResolver = CreateValueResolver();
 
-            MutablePropertyValues deepCopy = new MutablePropertyValues(properties);
+            MutablePropertyValues deepCopy = new(properties);
             var copiedProperties = deepCopy.PropertyValues;
             for (int i = 0; i < copiedProperties.Count; ++i)
             {
@@ -384,7 +384,7 @@ namespace Spring.Objects.Factory.Support
                 //(string name, RootObjectDefinition definition, string argumentName, object argumentValue)
                 object value = valueResolver.ResolveValueIfNecessary(name, definition, copiedProperty.Name, copiedProperty.Value);
                 // object value = ResolveValueIfNecessary(name, definition, copiedProperty.Name, copiedProperty.Value);
-                PropertyValue propertyValue = new PropertyValue(copiedProperty.Name, value, copiedProperty.Expression);
+                PropertyValue propertyValue = new(copiedProperty.Name, value, copiedProperty.Expression);
                 // update mutable copy...
                 deepCopy.SetPropertyValueAt(propertyValue, i);
             }
@@ -429,7 +429,7 @@ namespace Spring.Objects.Factory.Support
         /// </param>
         protected string[] UnsatisfiedNonSimpleProperties(RootObjectDefinition definition, IObjectWrapper wrapper)
         {
-            ListSet results = new ListSet();
+            ListSet results = new();
             IPropertyValues pvs = definition.PropertyValues;
             PropertyInfo[] properties = wrapper.GetPropertyInfos();
             foreach (PropertyInfo property in properties)
@@ -536,7 +536,7 @@ namespace Spring.Objects.Factory.Support
 
             if (definition.ResolvedAutowireMode == AutoWiringMode.ByName || definition.ResolvedAutowireMode == AutoWiringMode.ByType)
             {
-                MutablePropertyValues mpvs = new MutablePropertyValues(properties);
+                MutablePropertyValues mpvs = new(properties);
                 // add property values based on autowire by name if it's applied
                 if (definition.ResolvedAutowireMode == AutoWiringMode.ByName)
                 {
@@ -1094,7 +1094,7 @@ namespace Spring.Objects.Factory.Support
         protected virtual IObjectWrapper InstantiateUsingFactoryMethod(string name, RootObjectDefinition definition, object[] arguments)
         {
             ConstructorResolver constructorResolver =
-                    new ConstructorResolver(this, this, InstantiationStrategy, CreateValueResolver());
+                    new(this, this, InstantiationStrategy, CreateValueResolver());
             return constructorResolver.InstantiateUsingFactoryMethod(name, definition, arguments);
         }
 
@@ -1123,7 +1123,7 @@ namespace Spring.Objects.Factory.Support
         protected IObjectWrapper AutowireConstructor(string name, RootObjectDefinition definition, ConstructorInfo[] ctors, object[] explicitArgs)
         {
             ConstructorResolver constructorResolver =
-                new ConstructorResolver(this, this, InstantiationStrategy, CreateValueResolver());
+                new(this, this, InstantiationStrategy, CreateValueResolver());
             return constructorResolver.AutowireConstructor(name, definition, ctors, explicitArgs);
 
         }
@@ -1839,7 +1839,7 @@ namespace Spring.Objects.Factory.Support
         /// <seealso cref="Spring.Objects.Factory.Config.AutoWiringMode"/>
         public virtual object Autowire(Type type, AutoWiringMode autowireMode, bool dependencyCheck)
         {
-            RootObjectDefinition rod = new RootObjectDefinition(type, autowireMode, dependencyCheck);
+            RootObjectDefinition rod = new(type, autowireMode, dependencyCheck);
             if (rod.ResolvedAutowireMode == AutoWiringMode.Constructor)
             {
                 return AutowireConstructor(type.Name, rod, null, null).WrappedInstance;
@@ -1880,7 +1880,7 @@ namespace Spring.Objects.Factory.Support
                 throw new ArgumentException("Just AutoWiringMode.ByName and AutoWiringMode.ByType allowed.");
             }
 
-            RootObjectDefinition rod = new RootObjectDefinition(instance.GetType(), autowireMode, dependencyCheck);
+            RootObjectDefinition rod = new(instance.GetType(), autowireMode, dependencyCheck);
             PopulateObject(instance.GetType().Name, rod, new ObjectWrapper(instance));
         }
 

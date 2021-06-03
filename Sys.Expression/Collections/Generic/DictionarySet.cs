@@ -1,4 +1,4 @@
-/* Copyright © 2002-2011 by Aidant Systems, Inc., and by Jason Smith. */
+/* Copyright ?2002-2011 by Aidant Systems, Inc., and by Jason Smith. */
 
 using System;
 using System.Collections;
@@ -33,7 +33,7 @@ namespace Spring.Collections.Generic
         /// </summary>
         protected IDictionary<T, object> InternalDictionary = null;
 
-        private static readonly object PlaceholderObject = new object();
+        private static readonly object PlaceholderObject = new();
 
         /// <summary>
         /// The placeholder object used as the value for the <c>IDictionary</c> instance.

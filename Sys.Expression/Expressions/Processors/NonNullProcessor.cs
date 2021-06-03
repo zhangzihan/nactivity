@@ -47,7 +47,7 @@ namespace Spring.Expressions.Processors
                 return null;
             }
 
-            ArrayList list = new ArrayList();
+            ArrayList list = new();
             foreach (object item in source)
             {
                 if (item != null)

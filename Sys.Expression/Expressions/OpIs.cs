@@ -58,7 +58,7 @@ namespace Spring.Expressions
             object instance = GetLeftValue( context, evalContext );
             Type type = GetRightValue( context, evalContext ) as Type;
 
-            if (instance == null || type == null)
+            if (instance is null || type is null)
             {
                 return false;
             }

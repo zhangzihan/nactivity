@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ namespace Spring.Objects.Factory.Config
 			set
 			{
 				AssertUtils.ArgumentNotNull(value, "StaticProperty");
-                TypeAssemblyHolder info = new TypeAssemblyHolder(value);
+                TypeAssemblyHolder info = new(value);
 				string typeName = info.TypeName;
 				int indexWherePropertyStarts = 0;
 				do
@@ -92,7 +92,7 @@ namespace Spring.Objects.Factory.Config
 						#endregion
 
 						typeName = typeName.Substring(0, indexWherePropertyStarts);
-						StringBuilder buffer = new StringBuilder(typeName);
+						StringBuilder buffer = new(typeName);
 						if (info.IsAssemblyQualified)
 						{
                             buffer.Append(TypeAssemblyHolder.TypeAssemblySeparator);
@@ -220,7 +220,7 @@ namespace Spring.Objects.Factory.Config
 				}
 				else
 				{
-					// $£%#@! a nested static property... recurse to the end property
+					// $?#@! a nested static property... recurse to the end property
 					string property = TargetProperty;
 					int propertyIndex = property.IndexOf(".");
 					string startProperty = property.Substring(0, propertyIndex);

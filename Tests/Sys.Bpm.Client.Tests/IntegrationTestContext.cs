@@ -116,9 +116,9 @@ namespace Sys.Workflow.Test
             return TestServer.Host.Services.GetService<T>();
         }
 
-        public string TenantId => "3b450000-00f0-5254-168b-08d6f4673e73";
+        public string TenantId => "9c1482c3-3b7d-2255-b0e8-a5b309142354";
 
-        public string AuthUserId => "8a010000-5d88-0015-e013-08d6bd87c815";
+        public string AuthUserId => "f488e1e2-8b2f-d372-b446-d577ef7e5937";
 
         internal static IntegrationTestContext testContext;
 
