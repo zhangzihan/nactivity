@@ -1280,7 +1280,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitFailedJobCommandFactory()
         {
-            if (failedJobCommandFactory == null)
+            if (failedJobCommandFactory is null)
             {
                 failedJobCommandFactory = new DefaultFailedJobCommandFactory();
             }
@@ -1308,7 +1308,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitDefaultCommandConfig()
         {
-            if (defaultCommandConfig == null)
+            if (defaultCommandConfig is null)
             {
                 defaultCommandConfig = new CommandConfig();
             }
@@ -1319,7 +1319,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitSchemaCommandConfig()
         {
-            if (schemaCommandConfig == null)
+            if (schemaCommandConfig is null)
             {
                 schemaCommandConfig = (new CommandConfig()).TransactionNotSupported();
             }
@@ -1331,7 +1331,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitCommandInvoker()
         {
-            if (commandInvoker == null)
+            if (commandInvoker is null)
             {
                 if (enableVerboseExecutionTreeLogging)
                 {
@@ -1349,7 +1349,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitCommandInterceptors()
         {
-            if (commandInterceptors == null)
+            if (commandInterceptors is null)
             {
                 commandInterceptors = new List<ICommandInterceptor>();
                 if (customPreCommandInterceptors != null)
@@ -1410,7 +1410,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitCommandExecutor()
         {
-            if (commandExecutor == null)
+            if (commandExecutor is null)
             {
                 //初始化命令拦截器链，并返回第一个拦截器
                 ICommandInterceptor first = InitInterceptorChain(commandInterceptors);
@@ -1425,7 +1425,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// <returns></returns>
         public virtual ICommandInterceptor InitInterceptorChain(IList<ICommandInterceptor> chain)
         {
-            if (chain == null || chain.Count == 0)
+            if (chain is null || chain.Count == 0)
             {
                 throw new ActivitiException("invalid command interceptor chain configuration: " + chain);
             }
@@ -1575,7 +1575,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitTransactionFactory()
         {
-            if (transactionFactory == null)
+            if (transactionFactory is null)
             {
                 if (transactionsExternallyManaged)
                 {
@@ -1595,7 +1595,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public override Properties GetProperties()
         {
-            if (properties == null)
+            if (properties is null)
             {
                 InitProperties();
             }
@@ -1698,103 +1698,103 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitDataManagers()
         {
-            if (attachmentDataManager == null)
+            if (attachmentDataManager is null)
             {
                 attachmentDataManager = new MybatisAttachmentDataManager(this);
             }
-            if (byteArrayDataManager == null)
+            if (byteArrayDataManager is null)
             {
                 byteArrayDataManager = new MybatisByteArrayDataManager(this);
             }
-            if (commentDataManager == null)
+            if (commentDataManager is null)
             {
                 commentDataManager = new MybatisCommentDataManager(this);
             }
-            if (deploymentDataManager == null)
+            if (deploymentDataManager is null)
             {
                 deploymentDataManager = new MybatisDeploymentDataManager(this);
             }
-            if (eventLogEntryDataManager == null)
+            if (eventLogEntryDataManager is null)
             {
                 eventLogEntryDataManager = new MybatisEventLogEntryDataManager(this);
             }
-            if (eventSubscriptionDataManager == null)
+            if (eventSubscriptionDataManager is null)
             {
                 eventSubscriptionDataManager = new MybatisEventSubscriptionDataManager(this);
             }
-            if (executionDataManager == null)
+            if (executionDataManager is null)
             {
                 executionDataManager = new MybatisExecutionDataManager(this);
             }
-            if (historicActivityInstanceDataManager == null)
+            if (historicActivityInstanceDataManager is null)
             {
                 historicActivityInstanceDataManager = new MybatisHistoricActivityInstanceDataManager(this);
             }
-            if (historicDetailDataManager == null)
+            if (historicDetailDataManager is null)
             {
                 historicDetailDataManager = new MybatisHistoricDetailDataManager(this);
             }
-            if (historicIdentityLinkDataManager == null)
+            if (historicIdentityLinkDataManager is null)
             {
                 historicIdentityLinkDataManager = new MybatisHistoricIdentityLinkDataManager(this);
             }
-            if (historicProcessInstanceDataManager == null)
+            if (historicProcessInstanceDataManager is null)
             {
                 historicProcessInstanceDataManager = new MybatisHistoricProcessInstanceDataManager(this);
             }
-            if (historicTaskInstanceDataManager == null)
+            if (historicTaskInstanceDataManager is null)
             {
                 historicTaskInstanceDataManager = new MybatisHistoricTaskInstanceDataManager(this);
             }
-            if (historicVariableInstanceDataManager == null)
+            if (historicVariableInstanceDataManager is null)
             {
                 historicVariableInstanceDataManager = new MybatisHistoricVariableInstanceDataManager(this);
             }
-            if (identityLinkDataManager == null)
+            if (identityLinkDataManager is null)
             {
                 identityLinkDataManager = new MybatisIdentityLinkDataManager(this);
             }
-            if (jobDataManager == null)
+            if (jobDataManager is null)
             {
                 jobDataManager = new MybatisJobDataManager(this);
             }
-            if (timerJobDataManager == null)
+            if (timerJobDataManager is null)
             {
                 timerJobDataManager = new MybatisTimerJobDataManager(this);
             }
-            if (suspendedJobDataManager == null)
+            if (suspendedJobDataManager is null)
             {
                 suspendedJobDataManager = new MybatisSuspendedJobDataManager(this);
             }
-            if (deadLetterJobDataManager == null)
+            if (deadLetterJobDataManager is null)
             {
                 deadLetterJobDataManager = new MybatisDeadLetterJobDataManager(this);
             }
-            if (modelDataManager == null)
+            if (modelDataManager is null)
             {
                 modelDataManager = new MybatisModelDataManager(this);
             }
-            if (processDefinitionDataManager == null)
+            if (processDefinitionDataManager is null)
             {
                 processDefinitionDataManager = new MybatisProcessDefinitionDataManager(this);
             }
-            if (processDefinitionInfoDataManager == null)
+            if (processDefinitionInfoDataManager is null)
             {
                 processDefinitionInfoDataManager = new MybatisProcessDefinitionInfoDataManager(this);
             }
-            if (propertyDataManager == null)
+            if (propertyDataManager is null)
             {
                 propertyDataManager = new MybatisPropertyDataManager(this);
             }
-            if (resourceDataManager == null)
+            if (resourceDataManager is null)
             {
                 resourceDataManager = new MybatisResourceDataManager(this);
             }
-            if (taskDataManager == null)
+            if (taskDataManager is null)
             {
                 taskDataManager = new MybatisTaskDataManager(this);
             }
-            if (variableInstanceDataManager == null)
+            if (variableInstanceDataManager is null)
             {
                 variableInstanceDataManager = new MybatisVariableInstanceDataManager(this);
             }
@@ -1807,108 +1807,108 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitEntityManagers()
         {
-            if (attachmentEntityManager == null)
+            if (attachmentEntityManager is null)
             {
                 attachmentEntityManager = new AttachmentEntityManagerImpl(this, attachmentDataManager);
             }
-            if (byteArrayEntityManager == null)
+            if (byteArrayEntityManager is null)
             {
                 byteArrayEntityManager = new ByteArrayEntityManagerImpl(this, byteArrayDataManager);
             }
-            if (commentEntityManager == null)
+            if (commentEntityManager is null)
             {
                 commentEntityManager = new CommentEntityManagerImpl(this, commentDataManager);
             }
-            if (deploymentEntityManager == null)
+            if (deploymentEntityManager is null)
             {
                 deploymentEntityManager = new DeploymentEntityManagerImpl(this, deploymentDataManager);
             }
-            if (eventLogEntryEntityManager == null)
+            if (eventLogEntryEntityManager is null)
             {
                 eventLogEntryEntityManager = new EventLogEntryEntityManagerImpl(this, eventLogEntryDataManager);
             }
-            if (eventSubscriptionEntityManager == null)
+            if (eventSubscriptionEntityManager is null)
             {
                 eventSubscriptionEntityManager = new EventSubscriptionEntityManagerImpl(this, eventSubscriptionDataManager);
             }
-            if (executionEntityManager == null)
+            if (executionEntityManager is null)
             {
                 executionEntityManager = new ExecutionEntityManagerImpl(this, executionDataManager);
             }
-            if (historicActivityInstanceEntityManager == null)
+            if (historicActivityInstanceEntityManager is null)
             {
                 historicActivityInstanceEntityManager = new HistoricActivityInstanceEntityManagerImpl(this, historicActivityInstanceDataManager);
             }
-            if (historicDetailEntityManager == null)
+            if (historicDetailEntityManager is null)
             {
                 historicDetailEntityManager = new HistoricDetailEntityManagerImpl(this, historicDetailDataManager);
             }
-            if (historicIdentityLinkEntityManager == null)
+            if (historicIdentityLinkEntityManager is null)
             {
                 historicIdentityLinkEntityManager = new HistoricIdentityLinkEntityManagerImpl(this, historicIdentityLinkDataManager);
             }
-            if (historicProcessInstanceEntityManager == null)
+            if (historicProcessInstanceEntityManager is null)
             {
                 historicProcessInstanceEntityManager = new HistoricProcessInstanceEntityManagerImpl(this, historicProcessInstanceDataManager);
             }
-            if (historicTaskInstanceEntityManager == null)
+            if (historicTaskInstanceEntityManager is null)
             {
                 historicTaskInstanceEntityManager = new HistoricTaskInstanceEntityManagerImpl(this, historicTaskInstanceDataManager);
             }
-            if (historicVariableInstanceEntityManager == null)
+            if (historicVariableInstanceEntityManager is null)
             {
                 historicVariableInstanceEntityManager = new HistoricVariableInstanceEntityManagerImpl(this, historicVariableInstanceDataManager);
             }
 
-            if (identityLinkEntityManager == null)
+            if (identityLinkEntityManager is null)
             {
                 identityLinkEntityManager = new IdentityLinkEntityManagerImpl(this, identityLinkDataManager);
             }
-            if (jobEntityManager == null)
+            if (jobEntityManager is null)
             {
                 jobEntityManager = new JobEntityManagerImpl(this, jobDataManager);
             }
-            if (timerJobEntityManager == null)
+            if (timerJobEntityManager is null)
             {
                 timerJobEntityManager = new TimerJobEntityManagerImpl(this, timerJobDataManager);
             }
-            if (suspendedJobEntityManager == null)
+            if (suspendedJobEntityManager is null)
             {
                 suspendedJobEntityManager = new SuspendedJobEntityManagerImpl(this, suspendedJobDataManager);
             }
-            if (deadLetterJobEntityManager == null)
+            if (deadLetterJobEntityManager is null)
             {
                 deadLetterJobEntityManager = new DeadLetterJobEntityManagerImpl(this, deadLetterJobDataManager);
             }
-            if (modelEntityManager == null)
+            if (modelEntityManager is null)
             {
                 modelEntityManager = new ModelEntityManagerImpl(this, modelDataManager);
             }
-            if (processDefinitionEntityManager == null)
+            if (processDefinitionEntityManager is null)
             {
                 processDefinitionEntityManager = new ProcessDefinitionEntityManagerImpl(this, processDefinitionDataManager);
             }
-            if (processDefinitionInfoEntityManager == null)
+            if (processDefinitionInfoEntityManager is null)
             {
                 processDefinitionInfoEntityManager = new ProcessDefinitionInfoEntityManagerImpl(this, processDefinitionInfoDataManager);
             }
-            if (propertyEntityManager == null)
+            if (propertyEntityManager is null)
             {
                 propertyEntityManager = new PropertyEntityManagerImpl(this, propertyDataManager);
             }
-            if (resourceEntityManager == null)
+            if (resourceEntityManager is null)
             {
                 resourceEntityManager = new ResourceEntityManagerImpl(this, resourceDataManager);
             }
-            if (tableDataManager == null)
+            if (tableDataManager is null)
             {
                 tableDataManager = new TableDataManagerImpl(this);
             }
-            if (taskEntityManager == null)
+            if (taskEntityManager is null)
             {
                 taskEntityManager = new TaskEntityManagerImpl(this, taskDataManager);
             }
-            if (variableInstanceEntityManager == null)
+            if (variableInstanceEntityManager is null)
             {
                 variableInstanceEntityManager = new VariableInstanceEntityManagerImpl(this, variableInstanceDataManager);
             }
@@ -1921,7 +1921,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitHistoryManager()
         {
-            if (historyManager == null)
+            if (historyManager is null)
             {
                 historyManager = new DefaultHistoryManager(this, historyLevel);
             }
@@ -1934,7 +1934,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitJobManager()
         {
-            if (jobManager == null)
+            if (jobManager is null)
             {
                 jobManager = new DefaultJobManager(this);
             }
@@ -1949,7 +1949,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitSessionFactories()
         {
-            if (sessionFactories == null)
+            if (sessionFactories is null)
             {
                 sessionFactories = new ConcurrentDictionary<Type, ISessionFactory>();
 
@@ -1975,7 +1975,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitDbSqlSessionFactory()
         {
-            if (dbSqlSessionFactory == null)
+            if (dbSqlSessionFactory is null)
             {
                 dbSqlSessionFactory = CreateDbSqlSessionFactory();
             }
@@ -2028,7 +2028,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
             if (enableConfiguratorServiceLoader)
             {
                 ClassLoader classLoader = ClassLoader;
-                if (classLoader == null)
+                if (classLoader is null)
                 {
                     classLoader = ReflectUtil.ClassLoader;
                 }
@@ -2120,7 +2120,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitProcessDefinitionCache()
         {
-            if (processDefinitionCache == null)
+            if (processDefinitionCache is null)
             {
                 if (processDefinitionCacheLimit <= 0)
                 {
@@ -2138,7 +2138,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitProcessDefinitionInfoCache()
         {
-            if (processDefinitionInfoCache == null)
+            if (processDefinitionInfoCache is null)
             {
                 if (processDefinitionInfoCacheLimit <= 0)
                 {
@@ -2156,7 +2156,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitKnowledgeBaseCache()
         {
-            if (knowledgeBaseCache == null)
+            if (knowledgeBaseCache is null)
             {
                 if (knowledgeBaseCacheLimit <= 0)
                 {
@@ -2174,7 +2174,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitDeployers()
         {
-            if (this.deployers == null)
+            if (this.deployers is null)
             {
                 this.deployers = new List<IDeployer>();
                 if (customPreDeployers != null)
@@ -2188,7 +2188,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 }
             }
 
-            if (deploymentManager == null)
+            if (deploymentManager is null)
             {
                 deploymentManager = new DeploymentManager
                 {
@@ -2208,39 +2208,39 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitBpmnDeployerDependencies()
         {
-            if (parsedDeploymentBuilderFactory == null)
+            if (parsedDeploymentBuilderFactory is null)
             {
                 parsedDeploymentBuilderFactory = new ParsedDeploymentBuilderFactory();
             }
-            if (parsedDeploymentBuilderFactory.BpmnParser == null)
+            if (parsedDeploymentBuilderFactory.BpmnParser is null)
             {
                 parsedDeploymentBuilderFactory.BpmnParser = bpmnParser;
             }
 
-            if (timerManager == null)
+            if (timerManager is null)
             {
                 timerManager = new TimerManager();
             }
 
-            if (eventSubscriptionManager == null)
+            if (eventSubscriptionManager is null)
             {
                 eventSubscriptionManager = new EventSubscriptionManager();
             }
 
-            if (bpmnDeploymentHelper == null)
+            if (bpmnDeploymentHelper is null)
             {
                 bpmnDeploymentHelper = new BpmnDeploymentHelper();
             }
-            if (bpmnDeploymentHelper.TimerManager == null)
+            if (bpmnDeploymentHelper.TimerManager is null)
             {
                 bpmnDeploymentHelper.TimerManager = timerManager;
             }
-            if (bpmnDeploymentHelper.EventSubscriptionManager == null)
+            if (bpmnDeploymentHelper.EventSubscriptionManager is null)
             {
                 bpmnDeploymentHelper.EventSubscriptionManager = eventSubscriptionManager;
             }
 
-            if (cachingAndArtifactsManager == null)
+            if (cachingAndArtifactsManager is null)
             {
                 cachingAndArtifactsManager = new CachingAndArtifactsManager();
             }
@@ -2256,7 +2256,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
             {
                 IList<IDeployer> defaultDeployers = new List<IDeployer>();
 
-                if (bpmnDeployer == null)
+                if (bpmnDeployer is null)
                 {
                     bpmnDeployer = new BpmnDeployer();
                 }
@@ -2278,7 +2278,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitListenerFactory()
         {
-            if (listenerFactory == null)
+            if (listenerFactory is null)
             {
                 DefaultListenerFactory defaultListenerFactory = new DefaultListenerFactory
                 {
@@ -2286,7 +2286,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 };
                 listenerFactory = defaultListenerFactory;
             }
-            else if ((listenerFactory is AbstractBehaviorFactory) && ((AbstractBehaviorFactory)listenerFactory).ExpressionManager == null)
+            else if ((listenerFactory is AbstractBehaviorFactory) && ((AbstractBehaviorFactory)listenerFactory).ExpressionManager is null)
             {
                 ((AbstractBehaviorFactory)listenerFactory).ExpressionManager = expressionManager;
             }
@@ -2297,7 +2297,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitBehaviorFactory()
         {
-            if (activityBehaviorFactory == null)
+            if (activityBehaviorFactory is null)
             {
                 DefaultActivityBehaviorFactory defaultActivityBehaviorFactory = new DefaultActivityBehaviorFactory
                 {
@@ -2305,7 +2305,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 };
                 activityBehaviorFactory = defaultActivityBehaviorFactory;
             }
-            else if ((activityBehaviorFactory is AbstractBehaviorFactory) && ((AbstractBehaviorFactory)activityBehaviorFactory).ExpressionManager == null)
+            else if ((activityBehaviorFactory is AbstractBehaviorFactory) && ((AbstractBehaviorFactory)activityBehaviorFactory).ExpressionManager is null)
             {
                 ((AbstractBehaviorFactory)activityBehaviorFactory).ExpressionManager = expressionManager;
             }
@@ -2316,12 +2316,12 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitBpmnParser()
         {
-            if (bpmnParser == null)
+            if (bpmnParser is null)
             {
                 bpmnParser = new BpmnParser();
             }
 
-            if (bpmnParseFactory == null)
+            if (bpmnParseFactory is null)
             {
                 bpmnParseFactory = ProcessEngineServiceProvider.Resolve<IBpmnParseFactory>();
             }
@@ -2435,7 +2435,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitClock()
         {
-            if (clock == null)
+            if (clock is null)
             {
                 clock = new DefaultClockImpl();
             }
@@ -2446,7 +2446,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitAgendaFactory()
         {
-            if (this.engineAgendaFactory == null)
+            if (this.engineAgendaFactory is null)
             {
                 this.engineAgendaFactory = ProcessEngineServiceProvider.Resolve<IActivitiEngineAgendaFactory>();
             }
@@ -2495,7 +2495,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitAsyncExecutor()
         {
-            if (asyncExecutor == null)
+            if (asyncExecutor is null)
             {
                 IAsyncExecutor defaultAsyncExecutor = ProcessEngineServiceProvider.Resolve<IAsyncExecutor>();
 
@@ -2551,7 +2551,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitHistoryLevel()
         {
-            if (historyLevel == null)
+            if (historyLevel is null)
             {
                 historyLevel = HistoryLevel.GetHistoryLevelForKey(History);
             }
@@ -2565,7 +2565,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitIdGenerator()
         {
-            if (idGenerator == null)
+            if (idGenerator is null)
             {
                 idGenerator = ProcessEngineServiceProvider.Resolve<IIdGenerator>();
                 //interceptor.ICommandExecutor idGeneratorCommandExecutor = CommandExecutor;
@@ -2586,7 +2586,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitCommandContextFactory()
         {
-            if (commandContextFactory == null)
+            if (commandContextFactory is null)
             {
                 commandContextFactory = new CommandContextFactory();
             }
@@ -2598,7 +2598,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitTransactionContextFactory()
         {
-            if (transactionContextFactory == null)
+            if (transactionContextFactory is null)
             {
                 transactionContextFactory = new StandaloneMybatisTransactionContextFactory();
             }
@@ -2609,11 +2609,11 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitHelpers()
         {
-            if (processInstanceHelper == null)
+            if (processInstanceHelper is null)
             {
                 processInstanceHelper = new ProcessInstanceHelper();
             }
-            if (listenerNotificationHelper == null)
+            if (listenerNotificationHelper is null)
             {
                 listenerNotificationHelper = new ListenerNotificationHelper();
             }
@@ -2624,7 +2624,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitVariableTypes()
         {
-            if (variableTypes == null)
+            if (variableTypes is null)
             {
                 variableTypes = new DefaultVariableTypes();
                 if (customPreVariableTypes != null)
@@ -2692,7 +2692,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitScriptingEngines()
         {
-            if (resolverFactories == null)
+            if (resolverFactories is null)
             {
                 resolverFactories = new List<IResolverFactory>
                 {
@@ -2700,7 +2700,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                     new BeansResolverFactory()
                 };
             }
-            //if (scriptingEngines == null)
+            //if (scriptingEngines is null)
             //{
             //    scriptingEngines = new ScriptingEngines();
             //}
@@ -2711,7 +2711,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitExpressionManager()
         {
-            if (expressionManager == null)
+            if (expressionManager is null)
             {
                 expressionManager = new ExpressionManager(beans);
             }
@@ -2722,7 +2722,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitBusinessCalendarManager()
         {
-            if (businessCalendarManager == null)
+            if (businessCalendarManager is null)
             {
                 MapBusinessCalendarManager mapBusinessCalendarManager = new MapBusinessCalendarManager();
                 mapBusinessCalendarManager.AddBusinessCalendar(DurationBusinessCalendar.NAME, new DurationBusinessCalendar(this.clock));
@@ -2738,7 +2738,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitDelegateInterceptor()
         {
-            if (delegateInterceptor == null)
+            if (delegateInterceptor is null)
             {
                 delegateInterceptor = new DefaultDelegateInterceptor();
             }
@@ -2749,7 +2749,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitEventHandlers()
         {
-            if (eventHandlers == null)
+            if (eventHandlers is null)
             {
                 eventHandlers = new Dictionary<string, IEventHandler>();
 
@@ -2777,7 +2777,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitBeans()
         {
-            if (beans == null)
+            if (beans is null)
             {
                 beans = new Dictionary<object, object>();
             }
@@ -2788,7 +2788,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitEventDispatcher()
         {
-            if (this.eventDispatcher == null)
+            if (this.eventDispatcher is null)
             {
                 this.eventDispatcher = new ActivitiEventDispatcherImpl();
             }
@@ -2824,7 +2824,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitProcessValidator()
         {
-            if (this.processValidator == null)
+            if (this.processValidator is null)
             {
                 this.processValidator = ProcessEngineServiceProvider.Resolve<IProcessValidator>();
             }
@@ -3078,7 +3078,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         {
             get
             {
-                if (integrationContextManager == null)
+                if (integrationContextManager is null)
                 {
                     integrationContextManager = new IntegrationContextManagerImpl(this, IntegrationContextDataManager);
                 }
@@ -3090,7 +3090,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         {
             get
             {
-                if (integrationContextDataManager == null)
+                if (integrationContextDataManager is null)
                 {
                     integrationContextDataManager = new MybatisIntegrationContextDataManager(this);
                 }
@@ -3105,7 +3105,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         {
             get
             {
-                if (integrationContextService == null)
+                if (integrationContextService is null)
                 {
                     integrationContextService = new IntegrationContextServiceImpl(commandExecutor);
                 }
@@ -3159,7 +3159,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual ProcessEngineConfigurationImpl AddConfigurator(IProcessEngineConfigurator configurator)
         {
-            if (this.configurators == null)
+            if (this.configurators is null)
             {
                 this.configurators = new List<IProcessEngineConfigurator>();
             }
@@ -5108,7 +5108,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
             }
             set
             {
-                if (this.clock == null)
+                if (this.clock is null)
                 {
                     this.clock = value;
                 }

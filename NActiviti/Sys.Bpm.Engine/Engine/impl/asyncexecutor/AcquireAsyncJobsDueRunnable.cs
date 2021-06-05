@@ -156,7 +156,7 @@ You can ignore this message if you indeed have multiple async executor acquisiti
                     {
                         if (log.IsEnabled(LogLevel.Debug))
                         {
-                            log.LogDebug("async job acquisition wait interrupted");
+                            log.LogDebug($"async job acquisition wait interrupted.{e.Message}");
                         }
                     }
                     finally

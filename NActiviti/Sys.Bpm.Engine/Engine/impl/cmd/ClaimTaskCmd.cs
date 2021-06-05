@@ -57,9 +57,9 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 else
                 {
                     //TODO: 考虑性能问题，暂时不要获取人员信息
-                    //IUserInfo user = userService.GetUser(userId).GetAwaiter().GetResult();
+                    IUserInfo user = userService.GetUser(userId).GetAwaiter().GetResult();
                     task.SetVariable(userId, new { id = userId });
-                    commandContext.TaskEntityManager.ChangeTaskAssignee(task, userId, null);
+                    commandContext.TaskEntityManager.ChangeTaskAssignee(task, userId, user?.FullName);
                 }
             }
             else

@@ -42,10 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
     /// </summary>
     public class DelegateCountersignExecutionListener : IExecutionListener
     {
-        private static readonly Regex EXPR_PATTERN = new Regex(@"\$\{(.*?)\}", RegexOptions.Multiline);
-
-        private static readonly ILogger<DelegateCountersignExecutionListener> logger = ProcessEngineServiceProvider.LoggerService<DelegateCountersignExecutionListener>();
-
+        private static readonly IUserDelegateAssignProxy userDelegateAssignProxy = ProcessEngineServiceProvider.Resolve<IUserDelegateAssignProxy>();
         /// <summary>
         /// 
         /// </summary>
@@ -59,6 +56,23 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
         /// </summary>
         /// <param name="execution"></param>
         public void Notify(IExecutionEntity execution)
+        {
+            userDelegateAssignProxy.Assign(execution);
+        }
+    }
+
+    class DefaultUserDelegateAssignProxy : IUserDelegateAssignProxy
+    {
+        private static readonly Regex EXPR_PATTERN = new Regex(@"\$\{(.*?)\}", RegexOptions.Multiline);
+
+        private static readonly ILogger<DefaultUserDelegateAssignProxy> logger = ProcessEngineServiceProvider.LoggerService<DefaultUserDelegateAssignProxy>();
+
+        public DefaultUserDelegateAssignProxy()
+        {
+
+        }
+
+        public void Assign(IExecutionEntity execution)
         {
             if (execution.CurrentFlowElement is UserTask userTask && userTask.HasMultiInstanceLoopCharacteristics())
             {

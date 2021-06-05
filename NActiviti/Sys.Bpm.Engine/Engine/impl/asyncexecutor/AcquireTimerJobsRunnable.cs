@@ -163,7 +163,7 @@ Exception message: {ex.Message}");
                     {
                         if (log.IsEnabled(LogLevel.Debug))
                         {
-                            log.LogDebug("timer job acquisition wait interrupted");
+                            log.LogDebug($"timer job acquisition wait interrupted.{e.Message}");
                         }
                     }
                     finally

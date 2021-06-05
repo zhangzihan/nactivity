@@ -16,12 +16,16 @@ namespace Sys.Workflow.Engine.Impl
 
         public string GetNextId()
         {
-            var id = ids.Dequeue();
+            if (ids.TryDequeue(out var id) && !string.IsNullOrWhiteSpace(id))
+            {
+                return id;
+            }
             if (ids.Count < 10)
             {
                 Task.Run(PrepareNextIds);
+                Task.Delay(10).GetAwaiter().GetResult();
             }
-            return id;
+            return GetNextId();
         }
 
         private void PrepareNextIds()

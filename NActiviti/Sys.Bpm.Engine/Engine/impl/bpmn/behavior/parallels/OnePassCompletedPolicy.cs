@@ -58,8 +58,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             int nrOfActiveInstances = multiInstanceActivity.GetLoopVariable(parent, MultiInstanceActivityBehavior.NUMBER_OF_ACTIVE_INSTANCES).GetValueOrDefault(0);
 
-            var tf = (signalData as IDictionary<string, object>)[CompleteConditionVarName];
-            bool.TryParse(tf?.ToString(), out bool approvaled);
+            bool approvaled = false;
+            if (signalData is IDictionary<string, object> dict)
+            {
+                _ = dict.TryGetValue(CompleteConditionVarName, out var tf);
+                _ = bool.TryParse(tf?.ToString(), out approvaled);
+            }
             parent.SetVariable(CompleteConditionVarName, approvaled);
 
             return approvaled || nrOfActiveInstances == 0;

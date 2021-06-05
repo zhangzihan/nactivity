@@ -40,7 +40,6 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public virtual T Execute(ICommandContext commandContext)
         {
-
             if (taskId is null)
             {
                 throw new ActivitiIllegalArgumentException("taskId is null");

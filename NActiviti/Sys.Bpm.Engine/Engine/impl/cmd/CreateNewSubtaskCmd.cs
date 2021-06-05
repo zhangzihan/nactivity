@@ -65,10 +65,10 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             task.ParentTaskId = parentTaskId;
             task.Assignee = assignee;
             //TODO: 考虑性能问题，暂时不要获取人员信息
-            //if (string.IsNullOrWhiteSpace(assignee) == false)
-            //{
-            //    task.AssigneeUser = userService.GetUser(assignee).GetAwaiter().GetResult()?.FullName;
-            //}
+            if (string.IsNullOrWhiteSpace(assignee) == false)
+            {
+                task.AssigneeUser = userService.GetUser(assignee).GetAwaiter().GetResult()?.FullName;
+            }
             task.TenantId = tenantId;
             taskService.SaveTask(task);
 

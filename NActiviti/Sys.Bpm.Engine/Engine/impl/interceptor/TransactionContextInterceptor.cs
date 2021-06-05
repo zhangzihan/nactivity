@@ -50,10 +50,6 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
                 return next.Execute(config, command);
             }
-            catch(Exception e)
-            {
-                throw;
-            }
             finally
             {
                 if (transactionContextFactory != null && !isReused)

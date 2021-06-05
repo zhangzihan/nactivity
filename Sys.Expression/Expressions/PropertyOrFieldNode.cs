@@ -748,7 +748,10 @@ namespace Spring.Expressions
 
             public override void Set(object context, object value)
             {
-                throw new NotSupportedException("Cannot set the value of an expando object.");
+                if (context is IDictionary dict)
+                {
+                    dict[memberName] = value;
+                }
             }
         }
 

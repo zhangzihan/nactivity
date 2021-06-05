@@ -44,10 +44,10 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
             task.Assignee = updateTaskCmd.Assignee;
             //TODO: 考虑性能问题，暂时不要获取人员信息
-            //if (string.IsNullOrWhiteSpace(task.Assignee) == false)
-            //{
-            //    task.AssigneeUser = userService.GetUser(task.Assignee).GetAwaiter().GetResult()?.FullName;
-            //}
+            if (string.IsNullOrWhiteSpace(task.Assignee) == false)
+            {
+                task.AssigneeUser = userService.GetUser(task.Assignee).GetAwaiter().GetResult()?.FullName;
+            }
             task.Name = updateTaskCmd.Name;
             task.Description = updateTaskCmd.Description;
             task.DueDate = updateTaskCmd.DueDate;

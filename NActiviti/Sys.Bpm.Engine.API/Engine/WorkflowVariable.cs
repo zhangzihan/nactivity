@@ -77,11 +77,6 @@ namespace Sys.Workflow.Services.Api.Commands
             }
         }
 
-        public static T BusinessData<T>(IVariableScope variableScope)
-        {
-            return variableScope.GetVariable<T>(GLOBAL_WORKFLOWDATA_VARIABLE);
-        }
-
         public static string ProcessInstanceTitle(IVariableScope variableScope)
         {
             return variableScope.GetVariable<string>(GLOBAL_PROCESSINSTANCE_TITLE);
@@ -131,10 +126,6 @@ namespace Sys.Workflow.Services.Api.Commands
         public WorkflowVariable(IDictionary<string, object> @params)
         {
             workflowVariables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-
-            this.Approvaled = true;
-            this.WorkflowData = null;
-            this.BusinessKey = null;
 
             if (@params is object)
             {

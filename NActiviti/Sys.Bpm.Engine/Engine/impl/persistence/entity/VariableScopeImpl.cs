@@ -40,7 +40,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected IDictionary<string, IVariableInstanceEntity> variableInstances; // needs to be null, the logic depends on it for checking if vars were already fetched
 
         // The cache is used when fetching/setting specific variables
-        private IDictionary<string, IVariableInstanceEntity> usedVariablesCache = new Dictionary<string, IVariableInstanceEntity>();
+        private readonly IDictionary<string, IVariableInstanceEntity> usedVariablesCache = new Dictionary<string, IVariableInstanceEntity>();
 
         private IDictionary<string, IVariableInstance> transientVariabes;
 
@@ -54,12 +54,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         protected internal virtual void EnsureVariableInstancesInitialized()
         {
-            if (variableInstances == null)
+            if (variableInstances is null)
             {
                 variableInstances = new Dictionary<string, IVariableInstanceEntity>();
 
                 ICommandContext commandContext = Context.CommandContext;
-                if (commandContext == null)
+                if (commandContext is null)
                 {
                     throw new ActivitiException("lazy loading outside command context");
                 }
@@ -80,7 +80,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                if (value != null)
+                if (value is object)
                 {
                     foreach (string variableName in value.Keys)
                     {
@@ -134,7 +134,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             // The values in the fetch-cache will be more recent, so they can override any existing ones
             foreach (string variableName in variableNames)
             {
-                if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
+                if (transientVariabes is object && transientVariabes.ContainsKey(variableName))
                 {
                     requestedVariables[variableName] = transientVariabes[variableName].Value;
                     variableNamesToFetch.Remove(variableName);
@@ -162,7 +162,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 // Go up if needed
                 IVariableScope parent = ParentVariableScope;
-                if (parent != null)
+                if (parent is object)
                 {
                     requestedVariables.PutAll(parent.GetVariables(variableNamesToFetch, fetchAllVariables));
                 }
@@ -191,7 +191,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             // The values in the fetch-cache will be more recent, so they can override any existing ones
             foreach (string variableName in variableNames)
             {
-                if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
+                if (transientVariabes is object && transientVariabes.ContainsKey(variableName))
                 {
                     requestedVariables[variableName] = transientVariabes[variableName];
                     variableNamesToFetch.Remove(variableName);
@@ -220,7 +220,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
                 // Go up if needed
                 IVariableScope parent = ParentVariableScope;
-                if (parent != null)
+                if (parent is object)
                 {
                     requestedVariables.PutAll(parent.GetVariableInstances(variableNamesToFetch, fetchAllVariables));
                 }
@@ -242,7 +242,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             EnsureVariableInstancesInitialized();
             VariableScopeImpl parentScope = ParentVariableScope;
-            if (parentScope != null)
+            if (parentScope is object)
             {
                 variables.PutAll(parentScope.CollectVariables(variables));
             }
@@ -257,7 +257,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 variables[variableName] = usedVariablesCache[variableName].Value;
             }
 
-            if (transientVariabes != null)
+            if (transientVariabes is object)
             {
                 foreach (string variableName in transientVariabes.Keys)
                 {
@@ -272,7 +272,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             EnsureVariableInstancesInitialized();
             VariableScopeImpl parentScope = ParentVariableScope;
-            if (parentScope != null)
+            if (parentScope is object)
             {
                 variables.PutAll(parentScope.CollectVariableInstances(variables));
             }
@@ -287,7 +287,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 variables[variableName] = usedVariablesCache[variableName];
             }
 
-            if (transientVariabes != null)
+            if (transientVariabes is object)
             {
                 variables.PutAll(transientVariabes);
             }
@@ -320,7 +320,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             object value = null;
             IVariableInstance variable = GetVariableInstance(variableName, fetchAllVariables);
-            if (variable != null)
+            if (variable is object)
             {
                 value = variable.Value;
             }
@@ -330,7 +330,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual IVariableInstance GetVariableInstance(string variableName, bool fetchAllVariables)
         {
             // Transient variable
-            if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
+            if (transientVariabes is object && transientVariabes.ContainsKey(variableName))
             {
                 return transientVariabes[variableName];
             }
@@ -345,14 +345,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 EnsureVariableInstancesInitialized();
                 variableInstances.TryGetValue(variableName, out IVariableInstanceEntity variableInstance);
-                if (variableInstance != null)
+                if (variableInstance is object)
                 {
                     return variableInstance;
                 }
 
                 // Go up the hierarchy
                 IVariableScope parentScope = ParentVariableScope;
-                if (parentScope != null)
+                if (parentScope is object)
                 {
                     return parentScope.GetVariableInstance(variableName, true);
                 }
@@ -362,13 +362,13 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             else
             {
 
-                if (variableInstances != null && variableInstances.ContainsKey(variableName))
+                if (variableInstances is object && variableInstances.ContainsKey(variableName))
                 {
                     return variableInstances[variableName];
                 }
 
                 IVariableInstanceEntity variable = GetSpecificVariable(variableName);
-                if (variable != null)
+                if (variable is object)
                 {
                     usedVariablesCache[variableName] = variable;
                     return variable;
@@ -376,7 +376,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
                 // Go up the hierarchy
                 IVariableScope parentScope = ParentVariableScope;
-                if (parentScope != null)
+                if (parentScope is object)
                 {
                     return parentScope.GetVariableInstance(variableName, false);
                 }
@@ -401,7 +401,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             object value = null;
             IVariableInstance variable = GetVariableInstanceLocal(variableName, fetchAllVariables);
-            if (variable != null)
+            if (variable is object)
             {
                 value = variable.Value;
             }
@@ -411,7 +411,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual IVariableInstance GetVariableInstanceLocal(string variableName, bool fetchAllVariables)
         {
 
-            if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
+            if (transientVariabes is object && transientVariabes.ContainsKey(variableName))
             {
                 return transientVariabes[variableName];
             }
@@ -427,7 +427,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 EnsureVariableInstancesInitialized();
 
                 variableInstances.TryGetValue(variableName, out IVariableInstanceEntity variableInstance);
-                if (variableInstance != null)
+                if (variableInstance is object)
                 {
                     return variableInstance;
                 }
@@ -437,17 +437,17 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             else
             {
 
-                if (variableInstances != null && variableInstances.ContainsKey(variableName))
+                if (variableInstances is object && variableInstances.ContainsKey(variableName))
                 {
                     IVariableInstanceEntity v = variableInstances[variableName];
-                    if (v != null)
+                    if (v is object)
                     {
                         return variableInstances[variableName];
                     }
                 }
 
                 IVariableInstanceEntity variable = GetSpecificVariable(variableName);
-                if (variable != null)
+                if (variable is object)
                 {
                     usedVariablesCache[variableName] = variable;
                     return variable;
@@ -459,7 +459,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual bool HasVariables()
         {
-            if (transientVariabes != null && transientVariabes.Count > 0)
+            if (transientVariabes is object && transientVariabes.Count > 0)
             {
                 return true;
             }
@@ -470,7 +470,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return true;
             }
             IVariableScope parentScope = ParentVariableScope;
-            if (parentScope != null)
+            if (parentScope is object)
             {
                 return parentScope.HasVariables();
             }
@@ -479,7 +479,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual bool HasVariablesLocal()
         {
-            if (transientVariabes != null && transientVariabes.Count > 0)
+            if (transientVariabes is object && transientVariabes.Count > 0)
             {
                 return true;
             }
@@ -494,7 +494,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return true;
             }
             IVariableScope parentScope = ParentVariableScope;
-            if (parentScope != null)
+            if (parentScope is object)
             {
                 return parentScope.HasVariable(variableName);
             }
@@ -503,7 +503,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual bool HasVariableLocal(string variableName)
         {
-            if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
+            if (transientVariabes is object && transientVariabes.ContainsKey(variableName))
             {
                 return true;
             }
@@ -513,7 +513,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         protected internal virtual ISet<string> CollectVariableNames(ISet<string> variableNames)
         {
-            if (transientVariabes != null)
+            if (transientVariabes is object)
             {
                 transientVariabes.Keys.ToList().ForEach(x =>
                 {
@@ -523,7 +523,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             EnsureVariableInstancesInitialized();
             VariableScopeImpl parentScope = ParentVariableScope;
-            if (parentScope != null)
+            if (parentScope is object)
             {
                 parentScope.CollectVariableNames(variableNames).ToList().ForEach(x =>
                 {
@@ -561,7 +561,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     variables[variableName] = usedVariablesCache[variableName].Value;
                 }
-                if (transientVariabes != null)
+                if (transientVariabes is object)
                 {
                     foreach (string variableName in transientVariabes.Keys)
                     {
@@ -572,7 +572,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                if (value != null)
+                if (value is object)
                 {
                     foreach (string variableName in value.Keys)
                     {
@@ -597,7 +597,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     variables[variableName] = usedVariablesCache[variableName];
                 }
-                if (transientVariabes != null)
+                if (transientVariabes is object)
                 {
                     variables.PutAll(transientVariabes);
                 }
@@ -623,7 +623,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             ISet<string> variableNamesToFetch = new HashSet<string>(variableNames);
             foreach (string variableName in variableNames)
             {
-                if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
+                if (transientVariabes is object && transientVariabes.ContainsKey(variableName))
                 {
                     requestedVariables[variableName] = transientVariabes[variableName].Value;
                     variableNamesToFetch.Remove(variableName);
@@ -667,7 +667,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             ISet<string> variableNamesToFetch = new HashSet<string>(variableNames);
             foreach (string variableName in variableNames)
             {
-                if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
+                if (transientVariabes is object && transientVariabes.ContainsKey(variableName))
                 {
                     requestedVariables[variableName] = transientVariabes[variableName];
                     variableNamesToFetch.Remove(variableName);
@@ -709,7 +709,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 ISet<string> variableNames = new HashSet<string>();
-                if (transientVariabes != null)
+                if (transientVariabes is object)
                 {
                     transientVariabes.Keys.ToList().ForEach(x =>
                     {
@@ -745,7 +745,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void CreateVariablesLocal<T1>(IDictionary<string, T1> variables)
         {
-            if (variables != null)
+            if (variables is object)
             {
                 foreach (var entry in variables)
                 {
@@ -775,7 +775,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void RemoveVariables(IEnumerable<string> variableNames)
         {
-            if (variableNames != null)
+            if (variableNames is object)
             {
                 foreach (string variableName in variableNames)
                 {
@@ -786,7 +786,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void RemoveVariablesLocal(IEnumerable<string> variableNames)
         {
-            if (variableNames != null)
+            if (variableNames is object)
             {
                 foreach (string variableName in variableNames)
                 {
@@ -838,9 +838,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
                 // Otherwise, go up the hierarchy (we're trying to put it as high as possible)
                 VariableScopeImpl parentVariableScope = ParentVariableScope;
-                if (parentVariableScope != null)
+                if (parentVariableScope is object)
                 {
-                    if (sourceExecution == null)
+                    if (sourceExecution is null)
                     {
                         parentVariableScope.SetVariable(variableName, value);
                     }
@@ -853,7 +853,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
                 // We're as high as possible and the variable doesn't exist yet, so
                 // we're creating it
-                if (sourceExecution != null)
+                if (sourceExecution is object)
                 {
                     CreateVariableLocal(variableName, value, sourceExecution);
                 }
@@ -873,7 +873,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     UpdateVariableInstance(usedVariablesCache[variableName], value, sourceExecution);
 
                 }
-                else if (variableInstances != null && variableInstances.ContainsKey(variableName))
+                else if (variableInstances is object && variableInstances.ContainsKey(variableName))
                 {
 
                     UpdateVariableInstance(variableInstances[variableName], value, sourceExecution);
@@ -884,7 +884,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     // Not in local cache, check if defined on this scope
                     // Create it if it doesn't exist yet
                     IVariableInstanceEntity variable = GetSpecificVariable(variableName);
-                    if (variable != null)
+                    if (variable is object)
                     {
                         UpdateVariableInstance(variable, value, sourceExecution);
                         usedVariablesCache[variableName] = variable;
@@ -893,9 +893,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     {
 
                         VariableScopeImpl parent = ParentVariableScope;
-                        if (parent != null)
+                        if (parent is object)
                         {
-                            if (sourceExecution == null)
+                            if (sourceExecution is null)
                             {
                                 parent.SetVariable(variableName, value, fetchAllVariables);
                             }
@@ -949,12 +949,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 EnsureVariableInstancesInitialized();
 
                 variableInstances.TryGetValue(variableName, out IVariableInstanceEntity variableInstance);
-                if (variableInstance == null)
+                if (variableInstance is null)
                 {
                     usedVariablesCache.TryGetValue(variableName, out variableInstance);
                 }
 
-                if (variableInstance == null)
+                if (variableInstance is null)
                 {
                     CreateVariableLocal(variableName, value);
                 }
@@ -972,7 +972,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     UpdateVariableInstance(usedVariablesCache[variableName], value, sourceActivityExecution);
                 }
-                else if (variableInstances != null && variableInstances.ContainsKey(variableName))
+                else if (variableInstances is object && variableInstances.ContainsKey(variableName))
                 {
                     UpdateVariableInstance(variableInstances[variableName], value, sourceActivityExecution);
                 }
@@ -980,7 +980,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
 
                     IVariableInstanceEntity variable = GetSpecificVariable(variableName);
-                    if (variable != null)
+                    if (variable is object)
                     {
                         UpdateVariableInstance(variable, value, sourceActivityExecution);
                     }
@@ -1031,9 +1031,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return;
             }
             VariableScopeImpl parentVariableScope = ParentVariableScope;
-            if (parentVariableScope != null)
+            if (parentVariableScope is object)
             {
-                if (sourceActivityExecution == null)
+                if (sourceActivityExecution is null)
                 {
                     parentVariableScope.RemoveVariable(variableName);
                 }
@@ -1062,7 +1062,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             EnsureVariableInstancesInitialized();
             variableInstances.TryGetValue(variableName, out IVariableInstanceEntity variableInstance);
             variableInstances.Remove(variableName);
-            if (variableInstance != null)
+            if (variableInstance is object)
             {
                 DeleteVariableInstanceForExplicitUserCall(variableInstance, sourceActivityExecution);
             }
@@ -1093,7 +1093,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             IVariableType newType = variableTypes.FindVariableType(value);
 
-            if (newType != null && !newType.Equals(variableInstance.Type))
+            if (newType is object && !newType.Equals(variableInstance.Type))
             {
                 variableInstance.Value = null;
                 variableInstance.Type = newType;
@@ -1120,7 +1120,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             InitializeVariableInstanceBackPointer(variableInstance);
             Context.CommandContext.VariableInstanceEntityManager.Insert(variableInstance);
 
-            if (variableInstances != null)
+            if (variableInstances is object)
             {
                 variableInstances[variableName] = variableInstance;
             }
@@ -1150,7 +1150,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             get
             {
-                if (transientVariabes != null)
+                if (transientVariabes is object)
                 {
                     IDictionary<string, object> variables = new Dictionary<string, object>();
                     foreach (string variableName in transientVariabes.Keys)
@@ -1168,7 +1168,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void SetTransientVariableLocal(string variableName, object variableValue)
         {
-            if (transientVariabes == null)
+            if (transientVariabes is null)
             {
                 transientVariabes = new Dictionary<string, IVariableInstance>();
             }
@@ -1193,7 +1193,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual void SetTransientVariable(string variableName, object variableValue)
         {
             VariableScopeImpl parentVariableScope = ParentVariableScope;
-            if (parentVariableScope != null)
+            if (parentVariableScope is object)
             {
                 parentVariableScope.SetTransientVariable(variableName, variableValue);
                 return;
@@ -1203,7 +1203,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual object GetTransientVariableLocal(string variableName)
         {
-            if (transientVariabes != null)
+            if (transientVariabes is object)
             {
                 return transientVariabes[variableName].Value;
             }
@@ -1213,13 +1213,13 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual object GetTransientVariable(string variableName)
         {
-            if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
+            if (transientVariabes is object && transientVariabes.ContainsKey(variableName))
             {
                 return transientVariabes[variableName].Value;
             }
 
             VariableScopeImpl parentScope = ParentVariableScope;
-            if (parentScope != null)
+            if (parentScope is object)
             {
                 return parentScope.GetTransientVariable(variableName);
             }
@@ -1231,12 +1231,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual IDictionary<string, object> CollectTransientVariables(Dictionary<string, object> variables)
         {
             VariableScopeImpl parentScope = ParentVariableScope;
-            if (parentScope != null)
+            if (parentScope is object)
             {
                 variables.PutAll(parentScope.CollectVariables(variables));
             }
 
-            if (transientVariabes != null)
+            if (transientVariabes is object)
             {
                 foreach (string variableName in transientVariabes.Keys)
                 {
@@ -1249,7 +1249,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void RemoveTransientVariableLocal(string variableName)
         {
-            if (transientVariabes != null)
+            if (transientVariabes is object)
             {
                 transientVariabes.Remove(variableName);
             }
@@ -1257,7 +1257,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void RemoveTransientVariablesLocal()
         {
-            if (transientVariabes != null)
+            if (transientVariabes is object)
             {
                 transientVariabes.Clear();
             }
@@ -1265,13 +1265,13 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void RemoveTransientVariable(string variableName)
         {
-            if (transientVariabes != null && transientVariabes.ContainsKey(variableName))
+            if (transientVariabes is object && transientVariabes.ContainsKey(variableName))
             {
                 RemoveTransientVariableLocal(variableName);
                 return;
             }
             VariableScopeImpl parentVariableScope = ParentVariableScope;
-            if (parentVariableScope != null)
+            if (parentVariableScope is object)
             {
                 parentVariableScope.RemoveTransientVariable(variableName);
             }
@@ -1281,7 +1281,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             RemoveTransientVariablesLocal();
             VariableScopeImpl parentVariableScope = ParentVariableScope;
-            if (parentVariableScope != null)
+            if (parentVariableScope is object)
             {
                 parentVariableScope.RemoveTransientVariablesLocal();
             }

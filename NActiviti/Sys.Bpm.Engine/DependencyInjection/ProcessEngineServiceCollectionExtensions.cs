@@ -25,6 +25,8 @@ using Sys.Runtime.Serialization;
 using Sys.Workflow.Engine.Impl.Scripting;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sys.Workflow.Engine.Impl.EL;
+using Sys.Workflow.Engine;
+using Sys.Workflow.Engine.Impl.Bpmn.Listeners;
 
 namespace Sys.Workflow
 {
@@ -81,6 +83,8 @@ namespace Sys.Workflow
             builder.Services.AddSpringCoreTypeRepository();
 
             ILoggerFactory loggerFactory = builder.Services.BuildServiceProvider().GetService<ILoggerFactory>();
+
+            builder.Services.AddSingleton<IUserDelegateAssignProxy, DefaultUserDelegateAssignProxy>();
 
             builder.Services.AddSpringCoreService(loggerFactory);
 

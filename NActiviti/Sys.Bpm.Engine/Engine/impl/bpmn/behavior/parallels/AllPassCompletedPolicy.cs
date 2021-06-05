@@ -47,16 +47,15 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 return true;
             }
 
-            var tf = (signalData as IDictionary<string, object>)[CompleteConditionVarName];
-            if (bool.TryParse(tf?.ToString(), out bool approvaled))
+            if (signalData is IDictionary<string, object> dict)
             {
+                _ = dict.TryGetValue(CompleteConditionVarName, out var tf);
+                _ = bool.TryParse(tf?.ToString(), out bool approvaled);
+                parent.SetVariable(CompleteConditionVarName, approvaled);
                 if (!approvaled)
                 {
-                    parent.SetVariable(CompleteConditionVarName, false);
                     return true;
                 }
-
-                parent.SetVariable(CompleteConditionVarName, true);
             }
 
             return nrOfActiveInstances == 0;

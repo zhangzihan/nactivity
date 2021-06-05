@@ -38,7 +38,8 @@ namespace Sys.Workflow.Engine.Impl.Variable
         public virtual void VerifyIfBytesOfSerializedObjectChanged()
         {
             // this first check verifies if the variable value was not overwritten with another object
-            if (deserializedObject == variableInstanceEntity.CachedValue && !variableInstanceEntity.Deleted)
+            if (deserializedObject == variableInstanceEntity.CachedValue 
+                && !variableInstanceEntity.Deleted)
             {
                 byte[] bytes = type.Serialize(deserializedObject, variableInstanceEntity);
                 if (!StructuralComparisons.StructuralEqualityComparer.Equals(originalBytes, bytes))

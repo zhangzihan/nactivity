@@ -76,7 +76,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 if (id is null)
                 {
-                    if (value != null)
+                    if (value is object)
                     {
                         IByteArrayEntityManager byteArrayEntityManager = Context.CommandContext.ByteArrayEntityManager;
                         entity = byteArrayEntityManager.Create();
@@ -122,7 +122,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             if (!deleted && id is object)
             {
-                if (entity != null)
+                if (entity is object)
                 {
                     // if the entity has been loaded already,
                     // we might as well use the safer optimistic locking delete.
@@ -143,9 +143,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public void EnsureInitialized()
         {
             var ctx = Context.CommandContext;
-            if (id != null && entity == null)
+            if (id is object && entity is null)
             {
-                if (ctx == null)
+                if (ctx is null)
                 {
                     if (!(ProcessEngineServiceProvider.Resolve<IProcessEngine>().ProcessEngineConfiguration is ProcessEngineConfigurationImpl pi))
                     {

@@ -46,10 +46,10 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
             string userName = null;
             //TODO: 考虑性能问题，暂时不要获取人员信息
-            //if (string.IsNullOrWhiteSpace(userId) == false)
-            //{
-            //    userName = userService.GetUser(userId).GetAwaiter().GetResult()?.FullName;
-            //}
+            if (string.IsNullOrWhiteSpace(userId) == false)
+            {
+                userName = userService.GetUser(userId).GetAwaiter().GetResult()?.FullName;
+            }
             commandContext.TaskEntityManager.ChangeTaskAssignee(task, userId, userName);
             return null;
         }

@@ -26,6 +26,10 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         /// </summary>
         public const string GETUSERS_DUTY = "GetDuty";
         /// <summary>
+        /// 从流程变量中获取
+        /// </summary>
+        public const string GETUSERS_FROM_PROCESS = "GetFromProcess";
+        /// <summary>
         /// 获取流程执行人信息
         /// </summary>
         public const string GETUSER_EXECUTOR = "GetExecutor";

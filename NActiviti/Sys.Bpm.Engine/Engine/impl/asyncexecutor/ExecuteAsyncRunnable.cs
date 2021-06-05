@@ -140,7 +140,10 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             }
             catch (InvalidCastException ex)
             {
-                System.Diagnostics.Debugger.Break();
+                if (log.IsEnabled(LogLevel.Debug))
+                {
+                    log.LogDebug($"【无效CAST异常】:{ex.Message}");
+                }
             }
             catch (ActivitiOptimisticLockingException e)
             {

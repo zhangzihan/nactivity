@@ -65,9 +65,6 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 return true;
             }
 
-            var tf = (signalData as IDictionary<string, object>)[CompleteConditionVarName];
-            bool.TryParse(tf?.ToString(), out bool approvaled);
-
             int nrOfInstances = multiInstanceActivity.GetLoopVariable(parent, MultiInstanceActivityBehavior.NUMBER_OF_INSTANCES).GetValueOrDefault(0);
 
             int nrOfActiveInstances = multiInstanceActivity.GetLoopVariable(parent, MultiInstanceActivityBehavior.NUMBER_OF_ACTIVE_INSTANCES).GetValueOrDefault(0);
@@ -84,6 +81,13 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 .List()
                 .Where(x => string.IsNullOrWhiteSpace(x.TaskId) == false)
                 .Count();
+
+            bool approvaled = false;
+            if (signalData is IDictionary<string, object> dict)
+            {
+                _ = dict.TryGetValue(CompleteConditionVarName, out var tf);
+                _ = bool.TryParse(tf?.ToString(), out approvaled);
+            }
 
             if ((votes + (approvaled & halfPassed ? 1 : !approvaled ? 1 : 0)) >= Math.Ceiling(nrOfInstances / 2M))
             {

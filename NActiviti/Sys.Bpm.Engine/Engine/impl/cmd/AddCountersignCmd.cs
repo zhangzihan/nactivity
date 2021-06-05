@@ -23,22 +23,23 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Sys.Workflow.Engine.Delegate;
+using Sys.Workflow.Services.Api.Commands;
 
 namespace Sys.Workflow.Engine.Impl.Cmd
 {
     /// <summary>
     /// 加签
     /// </summary>
-    public class AddCountersignCmd : ICommand<ITask[]>
+    public class AddCountersignCmd : NeedsActiveTaskCmd<ITask[]>
     {
-        private readonly string taskId;
         private readonly string[] assignees;
         private readonly string tenantId;
         private readonly IUserServiceProxy userService;
 
         private static readonly Regex VARNAME_PATTERN = new Regex("\\$\\{(.*?)\\}");
 
-        public AddCountersignCmd(string taskId, string[] assignees, string tenantId)
+        public AddCountersignCmd(string taskId, string[] assignees, string tenantId) : base(taskId)
         {
             this.taskId = taskId;
             this.assignees = assignees;
@@ -64,15 +65,14 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
         }
 
-        public ITask[] Execute(ICommandContext commandContext)
+        protected internal override ITask[] Execute(ICommandContext commandContext, ITaskEntity task)
         {
             ProcessEngineConfigurationImpl pec = commandContext.ProcessEngineConfiguration;
             IRuntimeService runtimeService = pec.RuntimeService;
             ITaskService taskService = pec.TaskService;
             IIdGenerator idGenerator = pec.IdGenerator;
 
-            ITask task = taskService.CreateTaskQuery().SetTaskId(taskId).SingleResult();
-            IExecutionEntity execution = runtimeService.CreateExecutionQuery().SetExecutionId(task.ExecutionId).SingleResult() as IExecutionEntity;
+            IExecutionEntity execution = task.Execution;
             IExecutionEntity parent = execution.Parent;
 
             //查找当前待追加人员是否已经存在在任务列表中,proc_inst_id_
@@ -85,7 +85,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             if (users.Count == 0)
             {
-                throw new NotFoundAssigneeException();
+                return Array.Empty<ITaskEntity>();
             }
 
             if (parent.IsMultiInstanceRoot && parent.CurrentFlowElement is UserTask mTask)
@@ -128,12 +128,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 if (string.IsNullOrWhiteSpace(assignee) == false)
                 {
                     //TODO: 考虑性能问题，暂时不要获取人员信息
-                    //taskEntity.AssigneeUser = userService.GetUser(assignee).GetAwaiter().GetResult()?.FullName;
+                    taskEntity.AssigneeUser = userService.GetUser(assignee).GetAwaiter().GetResult()?.FullName;
                 }
                 taskEntity.TenantId = task.TenantId;
                 taskEntity.FormKey = task.FormKey;
                 taskEntity.IsAppend = true;
-
                 taskService.SaveTask(taskEntity);
 
                 tasks.Add(taskEntity);
@@ -146,6 +145,13 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             parent.SetLoopVariable(MultiInstanceActivityBehavior.NUMBER_OF_INSTANCES, nrOfInstances + users.Count);
             parent.SetLoopVariable(MultiInstanceActivityBehavior.NUMBER_OF_ACTIVE_INSTANCES, nrOfInstances - nrOfCompletedInstances + users.Count);
+
+            foreach (ITaskEntity taskEntity in tasks)
+            {
+                var listenerHelper = commandContext.ProcessEngineConfiguration.ListenerNotificationHelper;
+
+                listenerHelper.ExecuteTaskListeners(taskEntity, BaseTaskListenerFields.EVENTNAME_ASSIGNMENT);
+            }
 
             return tasks.ToArray();
         }
