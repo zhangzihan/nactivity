@@ -45,12 +45,12 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         protected internal override object Execute(ICommandContext commandContext, IExecutionEntity execution)
         {
-            if (processVariables != null)
+            if (processVariables is object)
             {
                 execution.Variables = processVariables;
             }
 
-            if (transientVariables != null)
+            if (transientVariables is object)
             {
                 execution.TransientVariables = transientVariables;
             }

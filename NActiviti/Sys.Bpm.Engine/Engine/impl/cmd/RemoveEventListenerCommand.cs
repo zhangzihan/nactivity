@@ -32,7 +32,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public  virtual object  Execute(ICommandContext commandContext)
         {
-            if (listener == null)
+            if (listener is null)
             {
                 throw new ActivitiIllegalArgumentException("listener is null.");
             }

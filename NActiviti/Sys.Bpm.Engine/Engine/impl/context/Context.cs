@@ -142,7 +142,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         protected internal static Stack<T> GetStack<T>(ThreadLocal<Stack<T>> threadLocal)
         {
             Stack<T> stack = threadLocal.Value;
-            if (stack == null)
+            if (stack is null)
             {
                 stack = new Stack<T>();
                 threadLocal.Value = stack;
@@ -160,7 +160,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         {
             JToken definitionInfoNode = GetProcessDefinitionInfoNode(processDefinitionId);
             JToken elementProperties = null;
-            if (definitionInfoNode != null)
+            if (definitionInfoNode is object)
             {
                 elementProperties = ProcessEngineConfiguration.DynamicBpmnService.GetBpmnElementProperties(id, definitionInfoNode);
             }
@@ -179,7 +179,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         {
             JToken definitionInfoNode = GetProcessDefinitionInfoNode(processDefinitionId);
             JToken localizationProperties = null;
-            if (definitionInfoNode != null)
+            if (definitionInfoNode is object)
             {
                 if (!useFallback)
                 {
@@ -194,7 +194,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
                     {
                         localizationProperties = ProcessEngineConfiguration.DynamicBpmnService.GetLocalizationElementProperties("zh-cn", id, definitionInfoNode);// locale.toLanguageTag(), id, definitionInfoNode);
 
-                        if (localizationProperties != null)
+                        if (localizationProperties is object)
                         {
                             break;
                         }
@@ -243,7 +243,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
             get
             {
                 IDictionary<string, JToken> bpmnOverrideMap = bpmnOverrideContextThreadLocal.Value;
-                if (bpmnOverrideMap == null)
+                if (bpmnOverrideMap is null)
                 {
                     bpmnOverrideMap = new Dictionary<string, JToken>();
                 }
@@ -259,7 +259,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
         protected internal static void AddBpmnOverrideElement(string id, JToken infoNode)
         {
             IDictionary<string, JToken> bpmnOverrideMap = bpmnOverrideContextThreadLocal.Value;
-            if (bpmnOverrideMap == null)
+            if (bpmnOverrideMap is null)
             {
                 bpmnOverrideMap = new Dictionary<string, JToken>();
                 bpmnOverrideContextThreadLocal.Value = bpmnOverrideMap;

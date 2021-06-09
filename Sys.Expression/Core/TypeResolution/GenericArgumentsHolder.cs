@@ -154,7 +154,7 @@ namespace Spring.Core.TypeResolution
         {
             get
             {
-                return (unresolvedGenericArguments != null &&
+                return (unresolvedGenericArguments is object &&
                     unresolvedGenericArguments.Length > 0);
             }
         }
@@ -166,7 +166,7 @@ namespace Spring.Core.TypeResolution
         {
             get
             {
-                if (unresolvedGenericArguments == null)
+                if (unresolvedGenericArguments is null)
                     return false;
 
                 foreach (string arg in unresolvedGenericArguments)
@@ -192,7 +192,7 @@ namespace Spring.Core.TypeResolution
         /// </summary>
         public bool IsArrayDeclaration
         {
-            get { return arrayDeclaration != null; }
+            get { return arrayDeclaration is object; }
         }
 
         #endregion
@@ -214,7 +214,7 @@ namespace Spring.Core.TypeResolution
         /// </returns>
         public string[] GetGenericArguments()
         {
-            if (unresolvedGenericArguments == null)
+            if (unresolvedGenericArguments is null)
                 return StringUtils.EmptyStrings;
 
             return unresolvedGenericArguments;
@@ -238,7 +238,7 @@ namespace Spring.Core.TypeResolution
                           ? ClrPattern.Match(originalString)
                           : CSharpPattern.Match(originalString);
 
-            if (m == null || !m.Success)
+            if (m is null || !m.Success)
             {
                 unresolvedGenericTypeName = originalString;
                 unresolvedGenericMethodName = originalString;
@@ -330,7 +330,7 @@ namespace Spring.Core.TypeResolution
 //            }
 
             //            Match m = GenericArgumentListPattern.Match(originalArgs);
-            //            if (m != null && m.Success)
+            //            if (m is object && m.Success)
             //            {
             //                Group g = m.Groups[0];
             //                foreach (Capture capture in g.Captures)

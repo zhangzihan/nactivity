@@ -46,7 +46,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             IJob job = commandContext.JobEntityManager.FindById<IJob>(new KeyValuePair<string, object>("id", jobId));
 
-            if (job == null)
+            if (job is null)
             {
                 throw new JobNotFoundException(jobId);
             }

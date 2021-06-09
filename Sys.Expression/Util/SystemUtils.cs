@@ -41,7 +41,7 @@ namespace Spring.Util
 
         static SystemUtils()
         {
-            isMono = Type.GetType("Mono.Runtime") != null;
+            isMono = Type.GetType("Mono.Runtime") is object;
             assemblyResolverLock = new object();
         }
 

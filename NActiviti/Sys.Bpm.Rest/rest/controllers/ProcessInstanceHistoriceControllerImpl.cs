@@ -78,7 +78,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         public Task<HistoricInstance> GetProcessInstanceById(string processInstanceId)
         {
             HistoricInstance processInstance = processEngine.GetHistoryProcessInstanceById(processInstanceId);
-            if (processInstance == null)
+            if (processInstance is null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + processInstanceId + "'");
             }

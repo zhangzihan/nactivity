@@ -165,15 +165,15 @@ namespace Spring.Objects.Factory.Support
                 object context = null;
                 IDictionary<string, object> variables = null;
 
-                if (expHolder.Properties != null)
+                if (expHolder.Properties is object)
                 {
                     PropertyValue contextProperty = expHolder.Properties.GetPropertyValue("Context");
-                    context = contextProperty == null
+                    context = contextProperty is null
                                   ? null
                                   : ResolveValueIfNecessary(name, definition, "Context",
                                                             contextProperty.Value);
                     PropertyValue variablesProperty = expHolder.Properties.GetPropertyValue("Variables");
-                    object vars = (variablesProperty == null
+                    object vars = (variablesProperty is null
                                        ? null
                                        : ResolveValueIfNecessary(name, definition, "Variables",
                                                                  variablesProperty.Value));
@@ -192,11 +192,11 @@ namespace Spring.Objects.Factory.Support
                     }
                     else
                     {
-                        if (vars != null) throw new ArgumentException("'Variables' must resolve to an IDictionary");
+                        if (vars is object) throw new ArgumentException("'Variables' must resolve to an IDictionary");
                     }
                 }
 
-                if (variables == null) variables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                if (variables is null) variables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
                 // add 'this' objectfactory reference to variables
                 variables.Add(Expression.ReservedVariableNames.CurrentObjectFactory, objectFactory);
 
@@ -213,7 +213,7 @@ namespace Spring.Objects.Factory.Support
                 try
                 {
                     Type resolvedTargetType = ResolveTargetType(tsv);
-                    if (resolvedTargetType != null)
+                    if (resolvedTargetType is object)
                     {
                         resolvedValue = TypeConversionUtils.ConvertValueIfNecessary(tsv.TargetType, tsv.Value, null);
                     }

@@ -400,7 +400,7 @@ namespace Spring.Expressions.Parser.antlr
 		/*Parser error-reporting function can be overridden in subclass */
 		public virtual void reportError(string s)
 		{
-			if (getFilename() == null)
+			if (getFilename() is null)
 			{
 				Console.Error.WriteLine("error: " + s);
 			}
@@ -413,7 +413,7 @@ namespace Spring.Expressions.Parser.antlr
 		/*Parser warning-reporting function can be overridden in subclass */
 		public virtual void  reportWarning(string s)
 		{
-			if (getFilename() == null)
+			if (getFilename() is null)
 			{
 				Console.Error.WriteLine("warning: " + s);
 			}

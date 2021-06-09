@@ -1,4 +1,4 @@
-/* Copyright © 2002-2011 by Aidant Systems, Inc., and by Jason Smith. */
+/* Copyright ?2002-2011 by Aidant Systems, Inc., and by Jason Smith. */
 
 using System;
 using System.Collections;
@@ -26,7 +26,7 @@ namespace Spring.Collections.Generic
         {
             mBasisSet = basisSet;
             mSyncRoot = ((ICollection)basisSet).SyncRoot;
-            if (mSyncRoot == null)
+            if (mSyncRoot is null)
                 throw new NullReferenceException("The Set you specified returned a null SyncRoot.");
         }
 

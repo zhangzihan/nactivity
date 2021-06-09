@@ -72,7 +72,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 var ctx = Context.CommandContext;
-                if (!isIdentityLinksInitialized && ctx != null)
+                if (!isIdentityLinksInitialized && ctx is object)
                 {
                     definitionIdentityLinkEntities = ctx.IdentityLinkEntityManager.FindIdentityLinksByProcessDefinitionId(Id);
                     isIdentityLinksInitialized = true;

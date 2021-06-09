@@ -47,7 +47,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public virtual void ExecuteCommand(IExecutionEntity execution)
         {
-            if (argList != null && argList.Count > 0)
+            if (argList is object && argList.Count > 0)
             {
                 //ProcessBuilder processBuilder = new ProcessBuilder(argList);
                 //processBuilder.redirectErrorStream(RedirectErrorFlag);
@@ -91,7 +91,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         private string ConvertStreamToStr(System.IO.Stream @is)
         {
 
-            if (@is != null)
+            if (@is is object)
             {
                 return new StreamReader(@is).ReadToEnd();
                 //StringWriter writer = new StringWriter();

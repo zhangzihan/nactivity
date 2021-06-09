@@ -111,7 +111,7 @@ namespace Spring.Objects.Factory.Config
             }
 
             ISharedStateAware ssa = instance as ISharedStateAware;
-            if (ssa != null && ssa.SharedState == null)
+            if (ssa is object && ssa.SharedState is null)
             {
                 // probe for first factory willing to serve shared state
                 foreach (ISharedStateFactory ssf in _sharedStateFactories)
@@ -119,7 +119,7 @@ namespace Spring.Objects.Factory.Config
                     if (ssf.CanProvideState(ssa, name))
                     {
                         IDictionary sharedState = ssf.GetSharedStateFor(ssa, name);
-                        if (sharedState != null)
+                        if (sharedState is object)
                         {
                             ssa.SharedState = sharedState;
                             break;

@@ -110,7 +110,7 @@ namespace Spring.Objects.Factory
             string name,
             string message)
             : this
-                (resourceLocation == null ? string.Empty : resourceLocation.Description,
+                (resourceLocation is null ? string.Empty : resourceLocation.Description,
                 name, message)
         {
         }
@@ -136,7 +136,7 @@ namespace Spring.Objects.Factory
             string name,
             string message,
             Exception rootCause)
-            : this((resourceLocation == null ? string.Empty : resourceLocation.Description), name, message, rootCause)
+            : this((resourceLocation is null ? string.Empty : resourceLocation.Description), name, message, rootCause)
         {
         }
 
@@ -163,7 +163,7 @@ namespace Spring.Objects.Factory
             : base(
                 string.Format(
                     "Error registering object {0}defined in '{1}' : {2}",
-                    name == null ? string.Empty : string.Format("with name '{0}' ", name),
+                    name is null ? string.Empty : string.Format("with name '{0}' ", name),
                     resourceDescription,
                     message),
                 rootCause)

@@ -66,12 +66,12 @@ namespace Spring.Util
 
             public int LineNumber
             {
-                get { return (_currentXmlLineInfo != null) ? _currentXmlLineInfo.LineNumber : 0; }
+                get { return (_currentXmlLineInfo is object) ? _currentXmlLineInfo.LineNumber : 0; }
             }
 
             public int LinePosition
             {
-                get { return (_currentXmlLineInfo != null) ? _currentXmlLineInfo.LinePosition : 0; }
+                get { return (_currentXmlLineInfo is object) ? _currentXmlLineInfo.LinePosition : 0; }
             }
         }
 

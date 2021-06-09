@@ -137,7 +137,7 @@ namespace Spring.Context.Support
             DefaultListableObjectFactory oldObjectFactory = _objectFactory;
             _objectFactory = null;
 
-            if (oldObjectFactory != null)
+            if (oldObjectFactory is object)
             {
                 oldObjectFactory.Dispose();
             }
@@ -225,13 +225,13 @@ namespace Spring.Context.Support
         protected virtual void LoadObjectDefinitions(XmlObjectDefinitionReader objectDefinitionReader)
         {
             string[] locations = ConfigurationLocations;
-            if (locations != null)
+            if (locations is object)
             {
                 objectDefinitionReader.LoadObjectDefinitions(locations);
             }
 
             IResource[] resources = ConfigurationResources;
-            if (resources != null)
+            if (resources is object)
             {
                 objectDefinitionReader.LoadObjectDefinitions(resources);
             }
@@ -329,7 +329,7 @@ namespace Spring.Context.Support
         {
             base.Dispose(disposing);
 
-            if (_objectFactory != null)
+            if (_objectFactory is object)
             {
                 _objectFactory.Dispose();
             }

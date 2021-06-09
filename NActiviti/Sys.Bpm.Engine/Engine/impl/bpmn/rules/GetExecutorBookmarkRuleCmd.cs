@@ -56,7 +56,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
                     .SetProcessInstanceId(this.Execution.ProcessInstanceId)
                     .SingleResult();
 
-                string uid = hisInst == null ? this.Execution.Parent.StartUserId : hisInst.StartUserId;
+                string uid = hisInst is null ? this.Execution.Parent.StartUserId : hisInst.StartUserId;
                 users.Add(new UserInfo
                 {
                     Id = uid

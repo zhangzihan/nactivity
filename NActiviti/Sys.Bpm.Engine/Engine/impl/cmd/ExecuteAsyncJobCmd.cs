@@ -54,7 +54,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             // A refetch is thus needed here to be sure that it exists for this transaction.
 
             IJob job = commandContext.JobEntityManager.FindById<IJobEntity>( jobId);
-            if (job == null)
+            if (job is null)
             {
                 log.LogDebug("Job does not exist anymore and will not be executed. It has most likely been deleted as part of another concurrent part of the process instance.");
                 return null;

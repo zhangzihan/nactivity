@@ -103,7 +103,7 @@ namespace Spring.Objects.Factory.Config
 					catch (TypeLoadException)
 					{
 					}
-				} while (TargetType == null);
+				} while (TargetType is null);
 				TargetProperty = info.TypeName.Substring(indexWherePropertyStarts + 1);
 			}
 		}
@@ -122,7 +122,7 @@ namespace Spring.Objects.Factory.Config
 			get { return _arguments; }
 			set
 			{
-				if (value != null)
+				if (value is object)
 				{
 					this._arguments = value;
 				}
@@ -173,7 +173,7 @@ namespace Spring.Objects.Factory.Config
 		/// </summary>
 		public override Type ObjectType
 		{
-			get { return (Property == null) ? null : Property.PropertyType; }
+			get { return (Property is null) ? null : Property.PropertyType; }
 		}
 
 		private PropertyInfo Property
@@ -198,18 +198,18 @@ namespace Spring.Objects.Factory.Config
 		/// </exception>
 		public override void AfterPropertiesSet()
 		{
-			if (TargetType == null
-				&& TargetObject == null)
+			if (TargetType is null
+				&& TargetObject is null)
 			{
 				throw new ArgumentException("One of the TargetType or TargetObject properties must be set.");
 			}
-			if (TargetProperty == null)
+			if (TargetProperty is null)
 			{
 				throw new ArgumentException("The TargetProperty property is required.");
 			}
 			Type targetType = null;
 			BindingFlags propertyFlags = BindingFlags.Public | BindingFlags.IgnoreCase;
-			if (TargetObject == null)
+			if (TargetObject is null)
 			{
 				// a static property...
 				propertyFlags |= BindingFlags.Static;
@@ -239,7 +239,7 @@ namespace Spring.Objects.Factory.Config
 				// using the object wrapper does nested property lookup
 				Property = _targetObjectWrapper.GetPropertyInfo(TargetProperty);
 			}
-			if (Property == null)
+			if (Property is null)
 			{
 				throw new InvalidPropertyException(targetType, TargetProperty);
 			}
@@ -262,13 +262,13 @@ namespace Spring.Objects.Factory.Config
 		{
 			object instance = null;
 			object target = null;
-			if (TargetObject != null)
+			if (TargetObject is object)
 			{
 				target = TargetObject;
 			}
 			try
 			{
-				if (Arguments.Length == 0 && target != null)
+				if (Arguments.Length == 0 && target is object)
 				{
 					// using object wrapper supports nested property lookup...               
 					instance = _targetObjectWrapper.GetPropertyValue(_targetProperty);

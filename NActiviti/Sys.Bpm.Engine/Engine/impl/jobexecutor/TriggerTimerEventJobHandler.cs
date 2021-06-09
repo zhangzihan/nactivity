@@ -59,7 +59,7 @@ namespace Sys.Workflow.Engine.Impl.JobExecutors
             if (currentElement is BoundaryEvent)
             {
                 BoundaryEvent boundaryEvent = (BoundaryEvent)execution.CurrentFlowElement;
-                if (boundaryEvent.CancelActivity && boundaryEvent.AttachedToRef != null)
+                if (boundaryEvent.CancelActivity && boundaryEvent.AttachedToRef is object)
                 {
 
                     if (!processedElements.Contains(boundaryEvent.Id))
@@ -105,7 +105,7 @@ namespace Sys.Workflow.Engine.Impl.JobExecutors
                 else if (execution.CurrentFlowElement is CallActivity)
                 {
                     IExecutionEntity subProcessInstance = commandContext.ExecutionEntityManager.FindSubProcessInstanceBySuperExecutionId(execution.Id);
-                    if (subProcessInstance != null)
+                    if (subProcessInstance is object)
                     {
                         IList<IExecutionEntity> childExecutions = subProcessInstance.Executions;
                         foreach (IExecutionEntity subExecution in childExecutions)

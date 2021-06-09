@@ -64,12 +64,12 @@ namespace Spring.Expressions
 
             BaseNode expression = (BaseNode)this.getFirstChild();
             BaseNode minIndexExpression = (BaseNode)expression.getNextSibling();
-            BaseNode maxIndexExpression = (minIndexExpression == null) ? null : (BaseNode)minIndexExpression.getNextSibling();
+            BaseNode maxIndexExpression = (minIndexExpression is null) ? null : (BaseNode)minIndexExpression.getNextSibling();
 
-            int minIndex = (int)((minIndexExpression == null)
+            int minIndex = (int)((minIndexExpression is null)
                                       ? int.MinValue
                                       : GetValue(minIndexExpression, context, evalContext));
-            int maxIndex = (int)((maxIndexExpression == null)
+            int maxIndex = (int)((maxIndexExpression is null)
                                       ? int.MaxValue
                                       : GetValue(maxIndexExpression, context, evalContext));
 

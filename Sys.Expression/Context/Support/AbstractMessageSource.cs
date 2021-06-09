@@ -225,9 +225,9 @@ namespace Spring.Context.Support
         public string GetMessage(string name, CultureInfo culture, params object[] arguments)
         {
             string msg = GetMessageInternal(name, arguments, culture);
-            if (msg != null) return msg;
+            if (msg is object) return msg;
             string fallback = GetDefaultMessage(name);
-            if (fallback != null) return fallback;
+            if (fallback is object) return fallback;
             throw new NoSuchMessageException(name, culture);
         }
 
@@ -258,11 +258,11 @@ namespace Spring.Context.Support
         public string GetMessage(string name, string defaultMessage, CultureInfo culture, params object[] arguments)
         {
             string msg = GetMessageInternal(name, arguments, culture);
-            if (msg != null) return msg;
-            if (defaultMessage == null)
+            if (msg is object) return msg;
+            if (defaultMessage is null)
             {
                 string fallback = GetDefaultMessage(name);
-                if (fallback != null) return fallback;
+                if (fallback is object) return fallback;
             }
             return RenderDefaultMessage(defaultMessage, arguments, culture);
         }
@@ -285,18 +285,18 @@ namespace Spring.Context.Support
         public string GetMessage(IMessageSourceResolvable resolvable, CultureInfo culture)
         {
             IList<string> codes = resolvable.GetCodes();
-            if (codes == null) codes = new string[0];
+            if (codes is null) codes = new string[0];
             for (int i = 0; i < codes.Count; i++)
             {
                 string msg = GetMessageInternal(codes[i], resolvable.GetArguments(), culture);
-                if (msg != null) return msg;
+                if (msg is object) return msg;
             }
-            if (resolvable.DefaultMessage != null)
+            if (resolvable.DefaultMessage is object)
                 return RenderDefaultMessage(resolvable.DefaultMessage, resolvable.GetArguments(), culture);
             if (codes.Count > 0)
             {
                 string fallback = GetDefaultMessage(codes[0]);
-                if (fallback != null) return fallback;
+                if (fallback is object) return fallback;
             }
             throw new NoSuchMessageException(codes.Count > 0 ? codes[codes.Count - 1] : null, culture);
         }
@@ -315,8 +315,8 @@ namespace Spring.Context.Support
         public object GetResourceObject(string name)
         {
             object resource = GetResourceInternal(name, CultureInfo.CurrentUICulture);
-            if (resource != null) return resource;
-            if (ParentMessageSource != null)
+            if (resource is object) return resource;
+            if (ParentMessageSource is object)
                 return ParentMessageSource.GetResourceObject(name, CultureInfo.CurrentUICulture);
             return null;
         }
@@ -346,8 +346,8 @@ namespace Spring.Context.Support
         public object GetResourceObject(string name, CultureInfo culture)
         {
             object resource = GetResourceInternal(name, culture);
-            if (resource != null) return resource;
-            if (ParentMessageSource != null) return ParentMessageSource.GetResourceObject(name, culture);
+            if (resource is object) return resource;
+            if (ParentMessageSource is object) return ParentMessageSource.GetResourceObject(name, culture);
             return null;
         }
 
@@ -369,7 +369,7 @@ namespace Spring.Context.Support
             object value, string objectName, CultureInfo culture)
         {
             ApplyResourcesInternal(value, objectName, culture);
-            if (ParentMessageSource != null) ParentMessageSource.ApplyResources(value, objectName, culture);
+            if (ParentMessageSource is object) ParentMessageSource.ApplyResources(value, objectName, culture);
         }
 
         #endregion
@@ -390,10 +390,10 @@ namespace Spring.Context.Support
         /// </returns>
         protected string GetMessageInternal(string code, object[] args, CultureInfo culture)
         {
-            if (code == null) return null;
-            if (culture == null) culture = CultureInfo.CurrentUICulture;
+            if (code is null) return null;
+            if (culture is null) culture = CultureInfo.CurrentUICulture;
 
-            if ((args != null && args.Length > 0))
+            if ((args is object && args.Length > 0))
             {
                 // Resolve arguments eagerly, for the case where the message
                 // is defined in a parent MessageSource but resolvable arguments
@@ -403,7 +403,7 @@ namespace Spring.Context.Support
 
             string message = ResolveMessage(code, culture);
 
-            if (message != null) return FormatMessage(message, args, culture);
+            if (message is object) return FormatMessage(message, args, culture);
 
             // Not found -> check parent, if any.
             return GetMessageFromParent(code, args, culture);
@@ -423,10 +423,10 @@ namespace Spring.Context.Support
         /// </returns>
         protected string GetMessageFromParent(string code, object[] args, CultureInfo culture)
         {
-            if (ParentMessageSource != null)
+            if (ParentMessageSource is object)
             {
                 AbstractMessageSource parent = ParentMessageSource as AbstractMessageSource;
-                if (parent != null)
+                if (parent is object)
                 {
                     // Call internal method to avoid getting the default code back
                     // in case of "useCodeAsDefaultMessage" being activated.
@@ -492,7 +492,7 @@ namespace Spring.Context.Support
         /// <returns>The formatted message (with resolved arguments)</returns>
         protected virtual string FormatMessage(string msg, object[] args, CultureInfo culture)
         {
-            if (msg == null || ((args == null || args.Length == 0))) return msg;
+            if (msg is null || ((args is null || args.Length == 0))) return msg;
             return String.Format(culture, msg, args);
         }
 
@@ -511,13 +511,13 @@ namespace Spring.Context.Support
         /// <returns>An array of arguments with any IMessageSourceResolvables resolved</returns>
         protected virtual object[] ResolveArguments(object[] args, CultureInfo culture)
         {
-            if (args == null) return new object[0];
+            if (args is null) return new object[0];
             object[] resolvedArgs = new object[args.Length];
 
             for (int i = 0; i < args.Length; i++)
             {
                 IMessageSourceResolvable resolvable = args[i] as IMessageSourceResolvable;
-                if (resolvable != null) resolvedArgs[i] = GetMessage(resolvable, culture);
+                if (resolvable is object) resolvedArgs[i] = GetMessage(resolvable, culture);
                 else resolvedArgs[i] = args[i];
             }
 
@@ -535,8 +535,8 @@ namespace Spring.Context.Support
         /// <returns>The resource if found. <see langword="null"/> otherwise.</returns>
         protected object GetResourceInternal(string name, CultureInfo cultureInfo)
         {
-            if (cultureInfo == null) cultureInfo = CultureInfo.CurrentUICulture;
-            if (name == null) return null;
+            if (cultureInfo is null) cultureInfo = CultureInfo.CurrentUICulture;
+            if (name is null) return null;
             return ResolveObject(name, cultureInfo);
         }
 
@@ -555,7 +555,7 @@ namespace Spring.Context.Support
         /// </param>
         protected void ApplyResourcesInternal(object value, string objectName, CultureInfo cultureInfo)
         {
-            if (cultureInfo == null) cultureInfo = CultureInfo.CurrentUICulture;
+            if (cultureInfo is null) cultureInfo = CultureInfo.CurrentUICulture;
             ApplyResourcesToObject(value, objectName, cultureInfo);
         }
 

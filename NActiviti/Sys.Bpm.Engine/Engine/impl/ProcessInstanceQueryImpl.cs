@@ -120,7 +120,7 @@ namespace Sys.Workflow.Engine.Impl
             if (string.IsNullOrWhiteSpace(processInstanceId))
             {
                 this.executionId = null;
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     currentOrQueryObject.executionId = null;
                 }
@@ -139,7 +139,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IProcessInstanceQuery SetProcessInstanceIds(string[] processInstanceIds)
         {
-            //if (processInstanceIds == null)
+            //if (processInstanceIds is null)
             //{
             //    throw new ActivitiIllegalArgumentException("Set of process instance ids is null");
             //}
@@ -150,7 +150,7 @@ namespace Sys.Workflow.Engine.Impl
             if ((processInstanceIds ?? new string[0]).Length == 0)
             {
                 this._processInstanceIds = null;
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     this.currentOrQueryObject._processInstanceIds = null;
                 }
@@ -172,7 +172,7 @@ namespace Sys.Workflow.Engine.Impl
             if (string.IsNullOrWhiteSpace(businessKey))
             {
                 this.businessKey = null;
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     this.currentOrQueryObject.businessKey = null;
                 }
@@ -195,7 +195,7 @@ namespace Sys.Workflow.Engine.Impl
             if (string.IsNullOrWhiteSpace(businessKey))
             {
                 this.businessKey = null;
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     this.currentOrQueryObject.businessKey = null;
                 }
@@ -216,7 +216,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             if (string.IsNullOrWhiteSpace(tenantId))
             {
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     this.currentOrQueryObject.tenantId = null;
                 }
@@ -240,7 +240,7 @@ namespace Sys.Workflow.Engine.Impl
             if (string.IsNullOrWhiteSpace(tenantIdLike))
             {
                 this.tenantIdLike = null;
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     this.currentOrQueryObject.tenantIdLike = null;
                 }
@@ -276,7 +276,7 @@ namespace Sys.Workflow.Engine.Impl
             if (string.IsNullOrWhiteSpace(processDefinitionCategory))
             {
                 this._processDefinitionCategory = null;
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     this.currentOrQueryObject._processDefinitionCategory = null;
                 }
@@ -300,7 +300,7 @@ namespace Sys.Workflow.Engine.Impl
             if (string.IsNullOrWhiteSpace(processDefinitionName))
             {
                 this._processDefinitionName = null;
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     this.currentOrQueryObject._processDefinitionName = null;
                 }
@@ -324,7 +324,7 @@ namespace Sys.Workflow.Engine.Impl
             if (processDefinitionVersion.HasValue == false)
             {
                 this._processDefinitionVersion = null;
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     this.currentOrQueryObject._processDefinitionVersion = null;
                 }
@@ -348,7 +348,7 @@ namespace Sys.Workflow.Engine.Impl
             if (string.IsNullOrWhiteSpace(processDefinitionId))
             {
                 this._processDefinitionId = null;
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     this.currentOrQueryObject._processDefinitionId = null;
                 }
@@ -372,7 +372,7 @@ namespace Sys.Workflow.Engine.Impl
             if ((processDefinitionIds ?? new string[0]).Length == 0)
             {
                 this._processDefinitionIds = null;
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     this.currentOrQueryObject._processDefinitionIds = null;
                 }
@@ -396,7 +396,7 @@ namespace Sys.Workflow.Engine.Impl
             if (string.IsNullOrWhiteSpace(processDefinitionKey))
             {
                 this._processDefinitionKey = null;
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     this.currentOrQueryObject._processDefinitionKey = null;
                 }
@@ -420,7 +420,7 @@ namespace Sys.Workflow.Engine.Impl
             if ((processDefinitionKeys ?? new string[0]).Length == 0)
             {
                 this._processDefinitionKeys = null;
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     this.currentOrQueryObject._processDefinitionKeys = null;
                 }
@@ -509,7 +509,7 @@ namespace Sys.Workflow.Engine.Impl
             if (string.IsNullOrWhiteSpace(involvedUser))
             {
                 this._involvedUser = null;
-                if (this.currentOrQueryObject != null)
+                if (this.currentOrQueryObject is object)
                 {
                     this.currentOrQueryObject._involvedUser = null;
                 }
@@ -933,16 +933,16 @@ namespace Sys.Workflow.Engine.Impl
                 if (!string.IsNullOrWhiteSpace(processDefinitionId))
                 {
                     JToken languageNode = Context.GetLocalizationElementProperties(_locale, processInstanceExecution.ProcessDefinitionKey, processDefinitionId, _withLocalizationFallback.GetValueOrDefault());
-                    if (languageNode != null)
+                    if (languageNode is object)
                     {
                         JToken languageNameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
-                        if (languageNameNode != null)
+                        if (languageNameNode is object)
                         {
                             processInstanceExecution.LocalizedName = languageNameNode.ToString();
                         }
 
                         JToken languageDescriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
-                        if (languageDescriptionNode != null)
+                        if (languageDescriptionNode is object)
                         {
                             processInstanceExecution.LocalizedDescription = languageDescriptionNode.ToString();
                         }
@@ -1176,7 +1176,7 @@ namespace Sys.Workflow.Engine.Impl
                 else
                 {
                     withoutTenantId = false;
-                    if (currentOrQueryObject != null)
+                    if (currentOrQueryObject is object)
                     {
                         currentOrQueryObject.withoutTenantId = false;
                     }

@@ -53,7 +53,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
                 IExecutionEntityManager executionEntityManager = Context.CommandContext.ExecutionEntityManager;
                 IExecutionEntity processInstanceExecution = executionEntityManager.FindById<IExecutionEntity>(execution.ProcessInstanceId);
-                if (processInstanceExecution != null)
+                if (processInstanceExecution is object)
                 {
                     IExecutionEntity parentExecution = processInstanceExecution.SuperExecution;
 
@@ -62,7 +62,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                         execution.ProcessInstanceId
                     };
 
-                    while (parentExecution != null && eventMap.Count == 0)
+                    while (parentExecution is object && eventMap.Count == 0)
                     {
                         eventMap = FindCatchingEventsForProcess(parentExecution.ProcessDefinitionId, errorCode);
                         if (eventMap.Count > 0)
@@ -88,7 +88,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                         {
                             toDeleteProcessInstanceIds.Add(parentExecution.ProcessInstanceId);
                             IExecutionEntity superExecution = parentExecution.SuperExecution;
-                            if (superExecution != null)
+                            if (superExecution is object)
                             {
                                 parentExecution = superExecution;
                             }
@@ -136,7 +136,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                 parentExecution = currentExecution.Parent;
 
                 // Traverse parents until one is found that is a scope and matches the activity the boundary event is defined on
-                while (matchingEvent == null && parentExecution != null)
+                while (matchingEvent is null && parentExecution is object)
                 {
                     IFlowElementsContainer currentContainer = null;
                     if (parentExecution.CurrentFlowElement is IFlowElementsContainer)
@@ -153,14 +153,14 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                         IList<Event> events = eventMap[refId];
                         if (CollectionUtil.IsNotEmpty(events) && events[0] is StartEvent)
                         {
-                            if (currentContainer.FindFlowElement(refId) != null)
+                            if (currentContainer.FindFlowElement(refId) is object)
                             {
                                 matchingEvent = events[0];
                             }
                         }
                     }
 
-                    if (matchingEvent == null)
+                    if (matchingEvent is null)
                     {
                         if ((eventMap?.ContainsKey(parentExecution.ActivityId)).GetValueOrDefault(false))
                         {
@@ -185,7 +185,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                 }
             }
 
-            if (matchingEvent != null && parentExecution != null)
+            if (matchingEvent is object && parentExecution is object)
             {
                 ExecuteEventHandler(matchingEvent, parentExecution, currentExecution, errorId);
             }
@@ -201,7 +201,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
             if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
             {
                 BpmnModel bpmnModel = ProcessDefinitionUtil.GetBpmnModel(parentExecution.ProcessDefinitionId);
-                if (bpmnModel != null)
+                if (bpmnModel is object)
                 {
                     bpmnModel.Errors.TryGetValue(errorId, out string errorCode);
                     if (errorCode is null)
@@ -319,11 +319,11 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
             {
                 IExecutionEntity callActivityExecution = null;
                 IExecutionEntity parentExecution = execution.Parent;
-                while (parentExecution != null && callActivityExecution == null)
+                while (parentExecution is object && callActivityExecution is null)
                 {
                     if (parentExecution.Id.Equals(parentExecution.ProcessInstanceId))
                     {
-                        if (parentExecution.SuperExecution != null)
+                        if (parentExecution.SuperExecution is object)
                         {
                             callActivityExecution = parentExecution.SuperExecution;
                         }
@@ -338,7 +338,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                     }
                 }
 
-                if (callActivityExecution != null)
+                if (callActivityExecution is object)
                 {
                     CallActivity callActivity = (CallActivity)callActivityExecution.CurrentFlowElement;
                     if (CollectionUtil.IsNotEmpty(callActivity.MapExceptions))

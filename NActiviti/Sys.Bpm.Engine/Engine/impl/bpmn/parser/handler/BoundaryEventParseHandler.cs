@@ -32,7 +32,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
 
         protected internal override void ExecuteParse(BpmnParse bpmnParse, BoundaryEvent boundaryEvent)
         {
-            if (boundaryEvent.AttachedToRef == null)
+            if (boundaryEvent.AttachedToRef is null)
             {
                 logger.LogWarning("Invalid reference in boundary event. Make sure that the referenced activity " + "is defined in the same scope as the boundary event " + boundaryEvent.Id);
                 return;

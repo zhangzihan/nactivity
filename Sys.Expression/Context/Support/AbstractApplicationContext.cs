@@ -323,7 +323,7 @@ namespace Spring.Context.Support
         {
             get
             {
-                if (_messageSource == null)
+                if (_messageSource is null)
                 {
                     throw new InvalidOperationException(
                         "MessageSource not initialized - call 'Refresh()' " +
@@ -343,7 +343,7 @@ namespace Spring.Context.Support
         {
             get
             {
-                if (_eventRegistry == null)
+                if (_eventRegistry is null)
                 {
                     throw new InvalidOperationException(
                         "EventRegistry not initialized - call 'Refresh()' " +
@@ -616,7 +616,7 @@ namespace Spring.Context.Support
             priorityOrderedFactoryProcessors.Clear();
             foreach (string factoryProcessorName in factoryProcessorNamesAfterTypeAlias)
             {
-                if (processorNames == null || !processorNames.Contains(factoryProcessorName))
+                if (processorNames is null || !processorNames.Contains(factoryProcessorName))
                 {
                     if (IsTypeMatch(factoryProcessorName, typeof(IPriorityOrdered)))
                     {
@@ -633,7 +633,7 @@ namespace Spring.Context.Support
             List<T> objectFactoryPostProcessors,
             IConfigurableListableObjectFactory objectFactory) where T : IObjectFactoryPostProcessor
         {
-            if (objectFactoryPostProcessors == null)
+            if (objectFactoryPostProcessors is null)
             {
                 return;
             }
@@ -738,7 +738,7 @@ namespace Spring.Context.Support
         {
             AbstractApplicationContext parent
                 = ParentContext as AbstractApplicationContext;
-            return parent == null ? ParentContext : parent._messageSource;
+            return parent is null ? ParentContext : parent._messageSource;
         }
 
         /// <summary>
@@ -761,11 +761,11 @@ namespace Spring.Context.Support
                         = (IMessageSource)GetObject(MessageSourceObjectName);
 
                     // make IMessageSource aware of any parent IMessageSource...
-                    if (ParentContext != null)
+                    if (ParentContext is object)
                     {
                         IHierarchicalMessageSource hierSource
                             = MessageSource as IHierarchicalMessageSource;
-                        if (hierSource != null)
+                        if (hierSource is object)
                         {
                             IMessageSource parentMessageSource
                                 = GetInternalParentMessageSource();
@@ -794,7 +794,7 @@ namespace Spring.Context.Support
                     }
                 }
             }
-            else if (ParentContext != null)
+            else if (ParentContext is object)
             {
                 _messageSource = new DelegatingMessageSource(
                     GetInternalParentMessageSource());
@@ -997,7 +997,7 @@ namespace Spring.Context.Support
             {
                 //TODO start dependencies of the lifecycle objects
                 ILifecycle obj = dictionaryEntry.Value;
-                if (obj != null)
+                if (obj is object)
                 {
                     if (!obj.IsRunning)
                     {
@@ -1026,7 +1026,7 @@ namespace Spring.Context.Support
             {
                 //TODO stop dependencies of the lifecycle objects
                 ILifecycle obj = dictionaryEntry.Value;
-                if (obj != null)
+                if (obj is object)
                 {
                     if (obj.IsRunning)
                     {
@@ -1056,7 +1056,7 @@ namespace Spring.Context.Support
                 foreach (KeyValuePair<string, ILifecycle> dictionaryEntry in lifecycleObjects)
                 {
                     ILifecycle obj = dictionaryEntry.Value;
-                    if (obj != null)
+                    if (obj is object)
                     {
                         if (!obj.IsRunning)
                         {
@@ -1456,7 +1456,7 @@ namespace Spring.Context.Support
         public T GetObject<T>()
         {
             var objectNamesForType = GetObjectNamesForType(typeof(T));
-            if ((objectNamesForType == null) || (objectNamesForType.Count == 0))
+            if ((objectNamesForType is null) || (objectNamesForType.Count == 0))
             {
                 throw new NoSuchObjectDefinitionException(typeof(T).FullName, "Requested Type not Defined in the Context.");
             }
@@ -2356,7 +2356,7 @@ namespace Spring.Context.Support
 
             OnContextEvent(sender, e);
 
-            if (ParentContext != null)
+            if (ParentContext is object)
             {
                 ParentContext.PublishEvent(sender, e);
             }

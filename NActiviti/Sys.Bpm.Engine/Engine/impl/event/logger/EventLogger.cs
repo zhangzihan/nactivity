@@ -62,18 +62,18 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger
         public virtual void OnEvent(IActivitiEvent @event)
         {
             IEventLoggerEventHandler eventHandler = GetEventHandler(@event);
-            if (eventHandler != null)
+            if (eventHandler is object)
             {
 
                 // Events are flushed when command context is closed
                 ICommandContext currentCommandContext = Context.CommandContext;
                 IEventFlusher eventFlusher = (IEventFlusher)currentCommandContext.GetAttribute(EVENT_FLUSHER_KEY);
 
-                if (eventFlusher == null)
+                if (eventFlusher is null)
                 {
 
                     eventFlusher = CreateEventFlusher();
-                    if (eventFlusher == null)
+                    if (eventFlusher is null)
                     {
                         eventFlusher = new DatabaseEventFlusher(); // Default
                     }
@@ -104,7 +104,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger
             public virtual void Closed(ICommandContext commandContext)
             {
                 // For those who are interested: we can now broadcast the events were added
-                if (outerInstance.listeners != null)
+                if (outerInstance.listeners is object)
                 {
                     foreach (IEventLoggerListener listener in outerInstance.listeners)
                     {
@@ -156,7 +156,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger
                 eventHandlerClass = eventHandlers[@event.Type];
             }
 
-            if (eventHandlerClass != null)
+            if (eventHandlerClass is object)
             {
                 return InstantiateEventHandler(@event, eventHandlerClass);
             }
@@ -196,7 +196,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger
 
         public virtual void AddEventLoggerListener(IEventLoggerListener listener)
         {
-            if (listeners == null)
+            if (listeners is null)
             {
                 listeners = new List<IEventLoggerListener>(1);
             }

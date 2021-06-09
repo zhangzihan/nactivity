@@ -17,7 +17,7 @@ namespace Sys.Workflow.Exceptions
         {
             get
             {
-                if (details == null)
+                if (details is null)
                 {
                     details = new List<HttpException>();
                 }

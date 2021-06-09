@@ -220,7 +220,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                     // or not (when executed in the acquire thread runnable)
 
                     ICommandContext commandContext = Context.CommandContext;
-                    if (commandContext != null)
+                    if (commandContext is object)
                     {
                         commandContext.JobManager.Unacquire(job);
                     }
@@ -267,7 +267,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// <returns></returns>
         protected internal virtual ThreadStart CreateRunnableForJob(IJob job)
         {
-            if (executeAsyncRunnableFactory == null)
+            if (executeAsyncRunnableFactory is null)
             {
                 var runable = new ExecuteAsyncRunnable(job, processEngineConfiguration);
 
@@ -290,17 +290,17 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
 
             logger.LogInformation($"Starting up the default async job executor [{this.GetType().FullName}].");
 
-            if (timerJobRunnable == null)
+            if (timerJobRunnable is null)
             {
                 timerJobRunnable = new AcquireTimerJobsRunnable(this, processEngineConfiguration.JobManager);
             }
 
-            if (resetExpiredJobsRunnable == null)
+            if (resetExpiredJobsRunnable is null)
             {
                 resetExpiredJobsRunnable = new ResetExpiredJobsRunnable(this);
             }
 
-            if (!isMessageQueueMode && asyncJobsDueRunnable == null)
+            if (!isMessageQueueMode && asyncJobsDueRunnable is null)
             {
                 asyncJobsDueRunnable = new AcquireAsyncJobsDueRunnable(this);
             }
@@ -348,15 +348,15 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
 
                 logger.LogInformation($"Shutting down the default async job executor [{this.GetType().FullName}].");
 
-                if (timerJobRunnable != null)
+                if (timerJobRunnable is object)
                 {
                     timerJobRunnable.Stop();
                 }
-                if (asyncJobsDueRunnable != null)
+                if (asyncJobsDueRunnable is object)
                 {
                     asyncJobsDueRunnable.Stop();
                 }
-                if (resetExpiredJobsRunnable != null)
+                if (resetExpiredJobsRunnable is object)
                 {
                     resetExpiredJobsRunnable.Stop();
                 }
@@ -379,13 +379,13 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// </summary>
         protected internal virtual void InitAsyncJobExecutionThreadPool()
         {
-            if (threadPoolQueue == null)
+            if (threadPoolQueue is null)
             {
                 logger.LogInformation($"Creating thread pool queue of size {queueSize}");
                 threadPoolQueue = new ConcurrentQueue<ThreadStart>();
             }
 
-            if (executorService == null)
+            if (executorService is null)
             {
                 logger.LogInformation($"Creating executor service with corePoolSize {corePoolSize}, maxPoolSize {maxPoolSize} and keepAliveTime {keepAliveTime}");
                 //throw new NotImplementedException();
@@ -399,7 +399,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// </summary>
         protected internal virtual void StopExecutingAsyncJobs()
         {
-            if (executorService != null)
+            if (executorService is object)
             {
                 // Ask the thread pool to finish and exit
                 executorService.Shutdown();
@@ -425,7 +425,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// Starts the acquisition thread </summary>
         protected internal virtual void StartJobAcquisitionThread()
         {
-            if (asyncJobAcquisitionThread == null)
+            if (asyncJobAcquisitionThread is null)
             {
                 asyncJobAcquisitionThread = new Thread(asyncJobsDueRunnable.Runable);
             }
@@ -437,7 +437,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// </summary>
         protected internal virtual void StartTimerAcquisitionThread()
         {
-            if (timerJobAcquisitionThread == null)
+            if (timerJobAcquisitionThread is null)
             {
                 timerJobAcquisitionThread = new Thread(timerJobRunnable.Runable);
             }
@@ -448,7 +448,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// Stops the acquisition thread </summary>
         protected internal virtual void StopJobAcquisitionThread()
         {
-            if (asyncJobAcquisitionThread != null)
+            if (asyncJobAcquisitionThread is object)
             {
                 try
                 {
@@ -467,7 +467,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// </summary>
         protected internal virtual void StopTimerAcquisitionThread()
         {
-            if (timerJobAcquisitionThread != null)
+            if (timerJobAcquisitionThread is object)
             {
                 try
                 {
@@ -485,7 +485,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// Starts the reset expired jobs thread </summary>
         protected internal virtual void StartResetExpiredJobsThread()
         {
-            if (resetExpiredJobThread == null)
+            if (resetExpiredJobThread is null)
             {
                 resetExpiredJobThread = new Thread(resetExpiredJobsRunnable.Runable);
             }
@@ -496,7 +496,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// Stops the reset expired jobs thread </summary>
         protected internal virtual void StopResetExpiredJobsThread()
         {
-            if (resetExpiredJobThread != null)
+            if (resetExpiredJobThread is object)
             {
                 try
                 {

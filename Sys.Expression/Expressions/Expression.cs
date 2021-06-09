@@ -102,7 +102,7 @@ namespace Spring.Expressions
                     if (BASENODE_TYPE.IsAssignableFrom(type))
                     {
                         ConstructorInfo ctor = type.GetConstructor(new Type[0]);
-                        if (ctor != null)
+                        if (ctor is object)
                         {
                             ASTNodeCreator creator = new(ctor);
                             Typename2Creator[creator.ASTNodeTypeName] = creator;
@@ -271,7 +271,7 @@ namespace Spring.Expressions
             if (this.getNumberOfChildren() > 0)
             {
                 AST node = this.getFirstChild();
-                while (node != null)
+                while (node is object)
                 {
                     result = GetValue(((BaseNode)node), result, evalContext);
 

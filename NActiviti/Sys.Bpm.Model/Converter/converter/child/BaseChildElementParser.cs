@@ -52,7 +52,7 @@ namespace Sys.Workflow.Bpmn.Converters.Childs
 
         public virtual bool Accepts(BaseElement element)
         {
-            return element != null;
+            return element is object;
         }
     }
 

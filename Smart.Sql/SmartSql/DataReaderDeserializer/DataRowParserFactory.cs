@@ -147,11 +147,11 @@ namespace SmartSql.DataReaderDeserializer
             {
                 colIndex++;
                 var result = context.Statement?.ResultMap?.Results?.FirstOrDefault(r => string.Compare(r.Column, colName, true) == 0);
-                bool hasTypeHandler = result?.Handler != null;
-                string propertyName = result != null ? result.Property : colName;
+                bool hasTypeHandler = result?.Handler is object;
+                string propertyName = result is object ? result.Property : colName;
                 var property = properties.FirstOrDefault(x => string.Compare(x.Name, propertyName, true) == 0);
 
-                if (property == null) { continue; }
+                if (property is null) { continue; }
                 if (!property.CanWrite) { continue; }
 
                 var fieldType = dataReader.GetFieldType(colIndex);
@@ -173,7 +173,7 @@ namespace SmartSql.DataReaderDeserializer
                     var nullUnderType = Nullable.GetUnderlyingType(propertyType);
                     var realType = nullUnderType ?? propertyType;
 
-                    if (nullUnderType != null || realType == TypeUtils.StringType)
+                    if (nullUnderType is object || realType == TypeUtils.StringType)
                     {
                         iLGenerator.Emit(OpCodes.Ldarg_0);// [dataReader]
                         EmitUtils.LoadInt32(iLGenerator, colIndex);// [dataReader][index]
@@ -192,7 +192,7 @@ namespace SmartSql.DataReaderDeserializer
                     #region GetValue
                     iLGenerator.Emit(OpCodes.Ldarg_0);// [dataReader]
                     EmitUtils.LoadInt32(iLGenerator, colIndex);// [dataReader][index]
-                    if (getRealValueMethod != null)
+                    if (getRealValueMethod is object)
                     {
                         iLGenerator.Emit(OpCodes.Callvirt, getRealValueMethod);//[prop-value]
                     }
@@ -217,7 +217,7 @@ namespace SmartSql.DataReaderDeserializer
                     {
                         EmitUtils.ChangeType(iLGenerator, fieldType, realType);
                     }
-                    if (nullUnderType != null)
+                    if (nullUnderType is object)
                     {
                         iLGenerator.Emit(OpCodes.Newobj, propertyType.GetConstructor(new[] { nullUnderType }));
                     }

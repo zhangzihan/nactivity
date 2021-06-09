@@ -68,7 +68,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
                     {
                         JToken taskElementProperties = Context.GetBpmnOverrideElementProperties(serviceTaskId, execution.ProcessDefinitionId);
-                        if (taskElementProperties != null && taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_DELEGATE_EXPRESSION] != null)
+                        if (taskElementProperties is object && taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_DELEGATE_EXPRESSION] is object)
                         {
                             string overrideExpression = taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_DELEGATE_EXPRESSION].ToString();
                             if (!string.IsNullOrWhiteSpace(overrideExpression) && !overrideExpression.Equals(expression.ExpressionText))
@@ -111,7 +111,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                 Exception cause = exc;
                 BpmnError error = null;
-                while (cause != null)
+                while (cause is object)
                 {
                     if (cause is BpmnError)
                     {
@@ -121,7 +121,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     cause = cause.InnerException;
                 }
 
-                if (error != null)
+                if (error is object)
                 {
                     ErrorPropagation.PropagateError(error, execution);
                 }

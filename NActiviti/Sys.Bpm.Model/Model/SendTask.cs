@@ -88,7 +88,7 @@ namespace Sys.Workflow.Bpmn.Models
                 OperationRef = val.OperationRef;
 
                 fieldExtensions = new List<FieldExtension>();
-                if (val.FieldExtensions != null && val.FieldExtensions.Count > 0)
+                if (val.FieldExtensions is object && val.FieldExtensions.Count > 0)
                 {
                     foreach (FieldExtension extension in val.FieldExtensions)
                     {

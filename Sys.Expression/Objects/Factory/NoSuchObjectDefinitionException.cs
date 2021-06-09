@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,7 +126,7 @@ namespace Spring.Objects.Factory
 			: base(string.Format(
 				CultureInfo.CurrentCulture,
 				"No unique object of type [{0}] is defined : {1}",
-				type != null ? type.FullName : "<< no Type specified >>",
+				type is object ? type.FullName : "<< no Type specified >>",
 				StringUtils.HasText(message) ? message : "not found."))
 		{
 			_objectType = type;
@@ -149,7 +149,7 @@ namespace Spring.Objects.Factory
 		{
 			_objectName = info.GetString("ObjectName");
 			var typeName = info.GetString("ObjectTypeName");
-			_objectType = typeName != null ? Type.GetType(typeName) : null;
+			_objectType = typeName is object ? Type.GetType(typeName) : null;
 		}
 
 		#endregion

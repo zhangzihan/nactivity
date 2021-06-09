@@ -42,7 +42,7 @@ namespace Sys.Workflow.Cloud.Services.Events.Converters
         {
             IActivitiVariableEvent variableEvent = (IActivitiVariableEvent)@event;
 
-            return new VariableCreatedEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, RuntimeBundleProperties.ServiceName, RuntimeBundleProperties.ServiceFullName, RuntimeBundleProperties.ServiceType, RuntimeBundleProperties.ServiceVersion, @event.ExecutionId, @event.ProcessDefinitionId, @event.ProcessInstanceId, variableEvent.VariableName, (variableEvent.VariableValue != null) ? variableEvent.VariableValue.ToString() : "", (variableEvent.VariableType != null) ? variableEvent.VariableType.TypeName : "", variableEvent.TaskId);
+            return new VariableCreatedEventImpl(RuntimeBundleProperties.AppName, RuntimeBundleProperties.AppVersion, RuntimeBundleProperties.ServiceName, RuntimeBundleProperties.ServiceFullName, RuntimeBundleProperties.ServiceType, RuntimeBundleProperties.ServiceVersion, @event.ExecutionId, @event.ProcessDefinitionId, @event.ProcessInstanceId, variableEvent.VariableName, (variableEvent.VariableValue is object) ? variableEvent.VariableValue.ToString() : "", (variableEvent.VariableType is object) ? variableEvent.VariableType.TypeName : "", variableEvent.TaskId);
         }
 
         /// <summary>

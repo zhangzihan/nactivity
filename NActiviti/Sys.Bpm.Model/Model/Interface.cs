@@ -69,7 +69,7 @@ namespace Sys.Workflow.Bpmn.Models
                 ImplementationRef = val.ImplementationRef;
 
                 operations = new List<Operation>();
-                if (val.Operations != null && val.Operations.Count > 0)
+                if (val.Operations is object && val.Operations.Count > 0)
                 {
                     foreach (Operation operation in val.Operations)
                     {

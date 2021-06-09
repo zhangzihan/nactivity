@@ -41,7 +41,7 @@ namespace Spring.Collections
             AssertUtils.ArgumentNotNull(culture, "culture");
             _culture = culture;
 
-            if (d != null)
+            if (d is object)
             {
                 IDictionaryEnumerator enumerator = d.GetEnumerator();
                 while (enumerator.MoveNext())

@@ -54,7 +54,7 @@ namespace Spring.Expressions.Parser.antlr
 		public virtual TokenStream getStream(string sname)
 		{
 			TokenStream stream = (TokenStream) inputStreamNames[sname];
-			if (stream == null)
+			if (stream is null)
 			{
 				throw new System.ArgumentException("TokenStream " + sname + " not found");
 			}

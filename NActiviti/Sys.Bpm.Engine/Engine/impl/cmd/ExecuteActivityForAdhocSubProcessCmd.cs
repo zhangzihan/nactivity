@@ -39,7 +39,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         public virtual IExecution Execute(ICommandContext commandContext)
         {
             IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
-            if (execution == null)
+            if (execution is null)
             {
                 throw new ActivitiObjectNotFoundException("No execution found for id '" + executionId + "'", typeof(IExecutionEntity));
             }

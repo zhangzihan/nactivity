@@ -90,7 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg.Multitenants
         public override void initAsyncExecutor()
         {
 
-            if (asyncExecutor == null)
+            if (asyncExecutor is null)
             {
                 asyncExecutor = new ExecutorPerTenantAsyncExecutor(tenantInfoHolder);
             }
@@ -131,7 +131,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg.Multitenants
             }
 
             // Start async executor
-            if (asyncExecutor != null && originalIsAutoActivateAsyncExecutor)
+            if (asyncExecutor is object && originalIsAutoActivateAsyncExecutor)
             {
                 asyncExecutor.start();
             }

@@ -83,7 +83,7 @@ namespace Spring.Expressions.Parser.antlr
 		protected internal virtual void  match(AST t, int ttype)
 		{
 			//System.out.println("match("+ttype+"); cursor is "+t);
-			if (t == null || t == ASTNULL || t.Type != ttype)
+			if (t is null || t == ASTNULL || t.Type != ttype)
 			{
 				throw new MismatchedTokenException(getTokenNames(), t, ttype, false);
 			}
@@ -94,7 +94,7 @@ namespace Spring.Expressions.Parser.antlr
 		*/
 		public virtual void  match(AST t, BitSet b)
 		{
-			if (t == null || t == ASTNULL || !b.member(t.Type))
+			if (t is null || t == ASTNULL || !b.member(t.Type))
 			{
 				throw new MismatchedTokenException(getTokenNames(), t, b, false);
 			}
@@ -102,7 +102,7 @@ namespace Spring.Expressions.Parser.antlr
 		protected internal virtual void  matchNot(AST t, int ttype)
 		{
 			//System.out.println("match("+ttype+"); cursor is "+t);
-			if (t == null || t == ASTNULL || t.Type == ttype)
+			if (t is null || t == ASTNULL || t.Type == ttype)
 			{
 				throw new MismatchedTokenException(getTokenNames(), t, ttype, true);
 			}
@@ -167,12 +167,12 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			traceDepth += 1;
 			traceIndent();
-			Console.Out.WriteLine("> " + rname + "(" + ((t != null) ? t.ToString() : "null") + ")" + ((inputState.guessing > 0) ? " [guessing]" : ""));
+			Console.Out.WriteLine("> " + rname + "(" + ((t is object) ? t.ToString() : "null") + ")" + ((inputState.guessing > 0) ? " [guessing]" : ""));
 		}
 		public virtual void  traceOut(string rname, AST t)
 		{
 			traceIndent();
-			Console.Out.WriteLine("< " + rname + "(" + ((t != null) ? t.ToString() : "null") + ")" + ((inputState.guessing > 0) ? " [guessing]" : ""));
+			Console.Out.WriteLine("< " + rname + "(" + ((t is object) ? t.ToString() : "null") + ")" + ((inputState.guessing > 0) ? " [guessing]" : ""));
 			traceDepth--;
 		}
 	}

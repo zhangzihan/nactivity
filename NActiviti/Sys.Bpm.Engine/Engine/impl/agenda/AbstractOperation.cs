@@ -93,7 +93,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         /// </summary>
         protected internal virtual FlowElement GetCurrentFlowElement(IExecutionEntity execution)
         {
-            if (execution.CurrentFlowElement != null)
+            if (execution.CurrentFlowElement is object)
             {
                 return execution.CurrentFlowElement;
             }
@@ -134,7 +134,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
             IExecutionEntity parentScopeExecution = null;
             IExecutionEntity currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(executionEntity.ParentId);
-            while (currentlyExaminedExecution != null && parentScopeExecution == null)
+            while (currentlyExaminedExecution is object && parentScopeExecution is null)
             {
                 if (currentlyExaminedExecution.IsScope)
                 {

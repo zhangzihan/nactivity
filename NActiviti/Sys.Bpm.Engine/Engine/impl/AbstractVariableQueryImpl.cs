@@ -194,7 +194,7 @@ namespace Sys.Workflow.Engine.Impl
             {
                 throw new ActivitiIllegalArgumentException("name is null");
             }
-            if (value == null || IsBoolean(value))
+            if (value is null || IsBoolean(value))
             {
                 // Null-values and booleans can only be used in EQUALS and
                 // NOT_EQUALS
@@ -230,7 +230,7 @@ namespace Sys.Workflow.Engine.Impl
 
         protected internal virtual bool IsBoolean(object value)
         {
-            if (value == null)
+            if (value is null)
             {
                 return false;
             }

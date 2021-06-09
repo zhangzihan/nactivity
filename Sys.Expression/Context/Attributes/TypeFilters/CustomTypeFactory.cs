@@ -58,7 +58,7 @@ namespace Spring.Context.Attributes.TypeFilters
         private static object GetCustomType(string expression)
         {
             var customTypeFilterType = LoadType(expression);
-            if (customTypeFilterType == null)
+            if (customTypeFilterType is null)
                 return null;
 
             try

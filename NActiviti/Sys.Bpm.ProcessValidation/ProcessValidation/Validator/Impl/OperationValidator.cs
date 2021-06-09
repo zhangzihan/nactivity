@@ -22,15 +22,15 @@ namespace Sys.Workflow.Validation.Validators.Impl
 
         public override void Validate(BpmnModel bpmnModel, IList<ValidationError> errors)
         {
-            if (bpmnModel.Interfaces != null)
+            if (bpmnModel.Interfaces is object)
             {
                 foreach (Interface bpmnInterface in bpmnModel.Interfaces)
                 {
-                    if (bpmnInterface.Operations != null)
+                    if (bpmnInterface.Operations is object)
                     {
                         foreach (Operation operation in bpmnInterface.Operations)
                         {
-                            if (bpmnModel.GetMessage(operation.InMessageRef) == null)
+                            if (bpmnModel.GetMessage(operation.InMessageRef) is null)
                             {
                                 AddError(errors, ProblemsConstants.OPERATION_INVALID_IN_MESSAGE_REFERENCE, null, operation, ProcessValidatorResource.OPERATION_INVALID_IN_MESSAGE_REFERENCE);
                             }

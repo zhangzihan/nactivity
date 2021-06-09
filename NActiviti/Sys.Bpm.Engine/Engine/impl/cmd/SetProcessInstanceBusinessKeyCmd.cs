@@ -54,7 +54,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             IExecutionEntityManager executionManager = commandContext.ExecutionEntityManager;
             IExecutionEntity processInstance = executionManager.FindById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
-            if (processInstance == null)
+            if (processInstance is null)
             {
                 throw new ActivitiObjectNotFoundException("No process instance found for id = '" + processInstanceId + "'.", typeof(IProcessInstance));
             }

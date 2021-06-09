@@ -50,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         {
             get
             {
-                if (delegateInstance != null)
+                if (delegateInstance is object)
                 {
                     return delegateInstance.FailOnException;
                 }
@@ -62,7 +62,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         {
             get
             {
-                if (delegateInstance == null)
+                if (delegateInstance is null)
                 {
                     object instance = ReflectUtil.Instantiate(className);
                     if (instance is IActivitiEventListener)

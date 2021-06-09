@@ -101,7 +101,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             Context.CommandContext.HistoryManager.RecordActivityEnd(execution, null);
 
             // Leave the gateway
-            if (outgoingSequenceFlow != null)
+            if (outgoingSequenceFlow is object)
             {
                 execution.CurrentFlowElement = outgoingSequenceFlow;
 
@@ -109,7 +109,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
             else
             {
-                if (defaultSequenceFlow != null)
+                if (defaultSequenceFlow is object)
                 {
                     execution.CurrentFlowElement = defaultSequenceFlow;
 

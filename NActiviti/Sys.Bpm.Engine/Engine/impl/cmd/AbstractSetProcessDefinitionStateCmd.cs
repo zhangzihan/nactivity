@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             // If process definition is already provided (eg. when command is called through the DeployCmd)
             // we don't need to do an extra database fetch and we can simply return it, wrapped in a list
-            if (processDefinitionEntity != null)
+            if (processDefinitionEntity is object)
             {
                 return new List<IProcessDefinitionEntity>(new IProcessDefinitionEntity[] { processDefinitionEntity });
             }
@@ -92,7 +92,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             {
 
                 IProcessDefinitionEntity processDefinitionEntity = processDefinitionManager.FindById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("id", processDefinitionId));
-                if (processDefinitionEntity == null)
+                if (processDefinitionEntity is null)
                 {
                     throw new ActivitiObjectNotFoundException("Cannot find process definition for id '" + processDefinitionId + "'", typeof(IProcessDefinition));
                 }

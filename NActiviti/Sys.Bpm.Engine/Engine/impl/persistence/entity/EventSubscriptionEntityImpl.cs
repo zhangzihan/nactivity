@@ -106,7 +106,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 var ctx = Context.CommandContext;
-                if (execution == null && executionId != null && ctx != null)
+                if (execution is null && executionId is object && ctx is object)
                 {
                     execution = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(executionId);
                 }
@@ -115,7 +115,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             set
             {
                 this.execution = value;
-                if (value != null)
+                if (value is object)
                 {
                     this.executionId = value.Id;
                     this.processInstanceId = value.ProcessInstanceId;

@@ -42,7 +42,7 @@ namespace Spring.Collections.Generic
 		public bool			Contains(KeyValuePair<TKey, TValue> item)
 		{
 			TValue value;
-			return TryGetValue(item.Key, out value) && (item.Value == null ? value == null : item.Value.Equals(value));
+			return TryGetValue(item.Key, out value) && (item.Value is null ? value is null : item.Value.Equals(value));
 		}
 
 		public void			CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)

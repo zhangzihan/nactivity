@@ -197,7 +197,7 @@ namespace Spring.Objects.Factory.Attributes
                 {
                     var initAttribute =
                         Attribute.GetCustomAttribute(methodInfo, initAttributeType) as PostConstructAttribute;
-                    if (initAttribute != null && methodInfo.DeclaringType == instanceType)
+                    if (initAttribute is object && methodInfo.DeclaringType == instanceType)
                     {
                         logger.LogDebug(string.Format("Found init method on class [{0}]: {1}", instanceType.Name, methodInfo.Name));
                         curInitMethods.Add(new LifecycleElement(methodInfo, initAttribute.Order));
@@ -205,7 +205,7 @@ namespace Spring.Objects.Factory.Attributes
 
                     var destroyAttribute =
                         Attribute.GetCustomAttribute(methodInfo, destroyAttributeType) as PreDestroyAttribute;
-                    if (destroyAttribute != null && methodInfo.DeclaringType == instanceType)
+                    if (destroyAttribute is object && methodInfo.DeclaringType == instanceType)
                     {
                         logger.LogDebug(
                             string.Format("Found destroy method on class [{0}]: {1}", instanceType.Name, methodInfo.Name));
@@ -216,7 +216,7 @@ namespace Spring.Objects.Factory.Attributes
                 initMethods.InsertRange(0, curInitMethods.OrderBy(e => e.Order));
                 destroyMethods.InsertRange(0, curDestroyMethods.OrderBy(e => e.Order));
                 instanceType = instanceType.BaseType;
-            } while (instanceType != null && instanceType != typeof(Object));
+            } while (instanceType is object && instanceType != typeof(Object));
 
             var objectDef = objectFactory.GetObjectDefinition(name);
             var metadata = new LifecycleLifecycleMetadata(initMethods, destroyMethods);

@@ -69,16 +69,16 @@ namespace Sys.Workflow.Services.Connectors.Channels
         {
             IList<IIntegrationContextEntity> integrationContexts = integrationContextService.findIntegrationContextByExecutionId(integrationResultEvent.ExecutionId);
 
-            if (integrationContexts == null || integrationContexts.Count == 0)
+            if (integrationContexts is null || integrationContexts.Count == 0)
             {
                 logger.LogDebug("No integration contexts found in this RB for execution Id `" + integrationResultEvent.ExecutionId + ", flow node id `" + integrationResultEvent.FlowNodeId + "`");
             }
 
-            if (integrationContexts != null)
+            if (integrationContexts is object)
             {
                 foreach (IIntegrationContextEntity integrationContext in integrationContexts)
                 {
-                    if (integrationContext != null)
+                    if (integrationContext is object)
                     {
                         integrationContextService.deleteIntegrationContext(integrationContext);
                     }

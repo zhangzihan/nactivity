@@ -28,7 +28,7 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
 
         public ActivitiEntityExceptionEventImpl(object entity, ActivitiEventType type, Exception cause) : base(type)
         {
-            if (entity == null)
+            if (entity is null)
             {
                 throw new ActivitiIllegalArgumentException("Entity cannot be null.");
             }

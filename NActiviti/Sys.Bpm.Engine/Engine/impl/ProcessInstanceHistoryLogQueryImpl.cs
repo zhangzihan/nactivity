@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl
             // Fetch historic process instance
             IHistoricProcessInstanceEntity historicProcessInstance = commandContext.HistoricProcessInstanceEntityManager.FindById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("id", processInstanceId));
 
-            if (historicProcessInstance == null)
+            if (historicProcessInstance is null)
             {
                 return null;
             }

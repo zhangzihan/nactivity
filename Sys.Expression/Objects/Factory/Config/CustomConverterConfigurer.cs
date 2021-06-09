@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -151,7 +151,7 @@ namespace Spring.Objects.Factory.Config
 	/// 		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
 	/// 		{
 	/// 			string text = value as string;
-	/// 			if(text != null) 
+	/// 			if(text is object) 
 	/// 			{
 	/// 				MailSettings mailSettings = new MailSettings();
 	/// 				string[] tokens = text.Split(',');
@@ -181,7 +181,7 @@ namespace Spring.Objects.Factory.Config
 	///			public void Log(object value)
 	///			{
 	///				Exception ex = value as Exception;
-	///				if(ex != null) 
+	///				if(ex is object) 
 	///				{
 	///					// use _mailSettings instance...
 	///				}
@@ -259,7 +259,7 @@ namespace Spring.Objects.Factory.Config
 		public override void PostProcessObjectFactory(
 			IConfigurableListableObjectFactory factory)
 		{
-			if (_customConverters != null)
+			if (_customConverters is object)
 			{
 				foreach (DictionaryEntry entry in _customConverters)
 				{
@@ -288,7 +288,7 @@ namespace Spring.Objects.Factory.Config
 		protected virtual TypeConverter ResolveConverter(object value)
 		{
 			TypeConverter converter = value as TypeConverter;
-			if (converter == null)
+			if (converter is null)
 			{
 				throw new ObjectInitializationException(
 					"Mapped value for custom converter is not a " +

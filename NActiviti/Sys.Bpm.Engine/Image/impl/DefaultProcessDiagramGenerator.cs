@@ -203,7 +203,7 @@ namespace Sys.Workflow.Image.Impl
 			{
 				GraphicInfo graphicInfo = bpmnModel.getGraphicInfo(flowNode.Id);
 				StartEvent startEvent = (StartEvent) flowNode;
-				if (startEvent.EventDefinitions != null && startEvent.EventDefinitions.Count > 0)
+				if (startEvent.EventDefinitions is object && startEvent.EventDefinitions.Count > 0)
 				{
 					EventDefinition eventDefinition = startEvent.EventDefinitions[0];
 					if (eventDefinition is TimerEventDefinition)
@@ -248,7 +248,7 @@ namespace Sys.Workflow.Image.Impl
 			{
 				GraphicInfo graphicInfo = bpmnModel.getGraphicInfo(flowNode.Id);
 				IntermediateCatchEvent intermediateCatchEvent = (IntermediateCatchEvent) flowNode;
-				if (intermediateCatchEvent.EventDefinitions != null && intermediateCatchEvent.EventDefinitions.Count > 0)
+				if (intermediateCatchEvent.EventDefinitions is object && intermediateCatchEvent.EventDefinitions.Count > 0)
 				{
 					if (intermediateCatchEvent.EventDefinitions[0] is SignalEventDefinition)
 					{
@@ -280,7 +280,7 @@ namespace Sys.Workflow.Image.Impl
 			{
 				GraphicInfo graphicInfo = bpmnModel.getGraphicInfo(flowNode.Id);
 				ThrowEvent throwEvent = (ThrowEvent) flowNode;
-				if (throwEvent.EventDefinitions != null && throwEvent.EventDefinitions.Count > 0)
+				if (throwEvent.EventDefinitions is object && throwEvent.EventDefinitions.Count > 0)
 				{
 					if (throwEvent.EventDefinitions[0] is SignalEventDefinition)
 					{
@@ -316,7 +316,7 @@ namespace Sys.Workflow.Image.Impl
 			{
 				GraphicInfo graphicInfo = bpmnModel.getGraphicInfo(flowNode.Id);
 				EndEvent endEvent = (EndEvent) flowNode;
-				if (endEvent.EventDefinitions != null && endEvent.EventDefinitions.Count > 0)
+				if (endEvent.EventDefinitions is object && endEvent.EventDefinitions.Count > 0)
 				{
 					if (endEvent.EventDefinitions[0] is ErrorEventDefinition)
 					{
@@ -553,7 +553,7 @@ namespace Sys.Workflow.Image.Impl
 			{
 				GraphicInfo graphicInfo = bpmnModel.getGraphicInfo(flowNode.Id);
 				BoundaryEvent boundaryEvent = (BoundaryEvent) flowNode;
-				if (boundaryEvent.EventDefinitions != null && boundaryEvent.EventDefinitions.Count > 0)
+				if (boundaryEvent.EventDefinitions is object && boundaryEvent.EventDefinitions.Count > 0)
 				{
 					if (boundaryEvent.EventDefinitions[0] is TimerEventDefinition)
 					{
@@ -594,7 +594,7 @@ namespace Sys.Workflow.Image.Impl
 			public virtual void draw(DefaultProcessDiagramCanvas processDiagramCanvas, BpmnModel bpmnModel, FlowNode flowNode)
 			{
 				GraphicInfo graphicInfo = bpmnModel.getGraphicInfo(flowNode.Id);
-				if (graphicInfo.Expanded != null && !graphicInfo.Expanded)
+				if (graphicInfo.Expanded is object && !graphicInfo.Expanded)
 				{
 					processDiagramCanvas.drawCollapsedSubProcess(flowNode.Id, flowNode.Name, graphicInfo, false);
 				}
@@ -618,7 +618,7 @@ namespace Sys.Workflow.Image.Impl
 			public virtual void draw(DefaultProcessDiagramCanvas processDiagramCanvas, BpmnModel bpmnModel, FlowNode flowNode)
 			{
 				GraphicInfo graphicInfo = bpmnModel.getGraphicInfo(flowNode.Id);
-				if (graphicInfo.Expanded != null && !graphicInfo.Expanded)
+				if (graphicInfo.Expanded is object && !graphicInfo.Expanded)
 				{
 					processDiagramCanvas.drawCollapsedSubProcess(flowNode.Id, flowNode.Name, graphicInfo, true);
 				}
@@ -683,11 +683,11 @@ namespace Sys.Workflow.Image.Impl
 				// source and target can be instance of FlowElement or Artifact
 				BaseElement sourceElement = bpmnModel.getFlowElement(sourceRef);
 				BaseElement targetElement = bpmnModel.getFlowElement(targetRef);
-				if (sourceElement == null)
+				if (sourceElement is null)
 				{
 					sourceElement = bpmnModel.getArtifact(sourceRef);
 				}
-				if (targetElement == null)
+				if (targetElement is null)
 				{
 					targetElement = bpmnModel.getArtifact(targetRef);
 				}
@@ -747,7 +747,7 @@ namespace Sys.Workflow.Image.Impl
 		{
 			string imageFileName = !string.ReferenceEquals(diagramImageFileName, null) ? diagramImageFileName : DefaultDiagramImageFileName;
 			System.IO.Stream imageStream = this.GetType().getResourceAsStream(imageFileName);
-			if (imageStream == null)
+			if (imageStream is null)
 			{
 				throw new ActivitiImageException("Error occurred while getting default diagram image from file: " + imageFileName);
 			}
@@ -813,7 +813,7 @@ namespace Sys.Workflow.Image.Impl
 				}
 
 				IList<SubProcess> subProcesses = process.findFlowElementsOfType(typeof(SubProcess), true);
-				if (subProcesses != null)
+				if (subProcesses is object)
 				{
 					foreach (SubProcess subProcess in subProcesses)
 					{
@@ -835,15 +835,15 @@ namespace Sys.Workflow.Image.Impl
 			// Check all graphicInfo and update the elements accordingly
 
 			IList<GraphicInfo> allGraphicInfos = new List<GraphicInfo>();
-			if (bpmnModel.LocationMap != null)
+			if (bpmnModel.LocationMap is object)
 			{
 				((List<GraphicInfo>)allGraphicInfos).AddRange(bpmnModel.LocationMap.Values);
 			}
-			if (bpmnModel.LabelLocationMap != null)
+			if (bpmnModel.LabelLocationMap is object)
 			{
 				((List<GraphicInfo>)allGraphicInfos).AddRange(bpmnModel.LabelLocationMap.Values);
 			}
-			if (bpmnModel.FlowLocationMap != null)
+			if (bpmnModel.FlowLocationMap is object)
 			{
 				foreach (IList<GraphicInfo> flowGraphicInfos in bpmnModel.FlowLocationMap.Values)
 				{
@@ -905,7 +905,7 @@ namespace Sys.Workflow.Image.Impl
 		{
 
 			ActivityDrawInstruction drawInstruction = activityDrawInstructions[flowNode.GetType()];
-			if (drawInstruction != null)
+			if (drawInstruction is object)
 			{
 
 				drawInstruction.draw(processDiagramCanvas, bpmnModel, flowNode);
@@ -918,7 +918,7 @@ namespace Sys.Workflow.Image.Impl
 				{
 					Activity activity = (Activity) flowNode;
 					MultiInstanceLoopCharacteristics multiInstanceLoopCharacteristics = activity.LoopCharacteristics;
-					if (multiInstanceLoopCharacteristics != null)
+					if (multiInstanceLoopCharacteristics is object)
 					{
 						multiInstanceSequential = multiInstanceLoopCharacteristics.Sequential;
 						multiInstanceParallel = !multiInstanceSequential;
@@ -929,7 +929,7 @@ namespace Sys.Workflow.Image.Impl
 				GraphicInfo graphicInfo = bpmnModel.getGraphicInfo(flowNode.Id);
 				if (flowNode is SubProcess)
 				{
-					collapsed = graphicInfo.Expanded != null && !graphicInfo.Expanded;
+					collapsed = graphicInfo.Expanded is object && !graphicInfo.Expanded;
 				}
 				else if (flowNode is CallActivity)
 				{
@@ -972,7 +972,7 @@ namespace Sys.Workflow.Image.Impl
 				FlowElement sourceElement = bpmnModel.getFlowElement(sourceRef);
 				FlowElement targetElement = bpmnModel.getFlowElement(targetRef);
 				IList<GraphicInfo> graphicInfoList = bpmnModel.getFlowLocationGraphicInfo(sequenceFlow.Id);
-				if (graphicInfoList != null && graphicInfoList.Count > 0)
+				if (graphicInfoList is object && graphicInfoList.Count > 0)
 				{
 					graphicInfoList = connectionPerfectionizer(processDiagramCanvas, bpmnModel, sourceElement, targetElement, graphicInfoList);
 					int[] xPoints = new int[graphicInfoList.Count];
@@ -996,7 +996,7 @@ namespace Sys.Workflow.Image.Impl
 
 					// Draw sequenceflow label
 					GraphicInfo labelGraphicInfo = bpmnModel.getLabelGraphicInfo(sequenceFlow.Id);
-					if (labelGraphicInfo != null)
+					if (labelGraphicInfo is object)
 					{
 						processDiagramCanvas.drawLabel(sequenceFlow.Name, labelGraphicInfo, false);
 					}
@@ -1121,7 +1121,7 @@ namespace Sys.Workflow.Image.Impl
 		{
 
 			ArtifactDrawInstruction drawInstruction = artifactDrawInstructions[artifact.GetType()];
-			if (drawInstruction != null)
+			if (drawInstruction is object)
 			{
 				drawInstruction.draw(processDiagramCanvas, bpmnModel, artifact);
 			}
@@ -1156,7 +1156,7 @@ namespace Sys.Workflow.Image.Impl
 
 				GraphicInfo flowNodeGraphicInfo = bpmnModel.getGraphicInfo(flowNode.Id);
 
-				if (flowNodeGraphicInfo == null)
+				if (flowNodeGraphicInfo is null)
 				{
 					continue;
 				}
@@ -1183,7 +1183,7 @@ namespace Sys.Workflow.Image.Impl
 				foreach (SequenceFlow sequenceFlow in flowNode.OutgoingFlows)
 				{
 					IList<GraphicInfo> graphicInfoList = bpmnModel.getFlowLocationGraphicInfo(sequenceFlow.Id);
-					if (graphicInfoList != null)
+					if (graphicInfoList is object)
 					{
 						foreach (GraphicInfo graphicInfo in graphicInfoList)
 						{
@@ -1216,7 +1216,7 @@ namespace Sys.Workflow.Image.Impl
 
 				GraphicInfo artifactGraphicInfo = bpmnModel.getGraphicInfo(artifact.Id);
 
-				if (artifactGraphicInfo != null)
+				if (artifactGraphicInfo is object)
 				{
 					// width
 					if (artifactGraphicInfo.X + artifactGraphicInfo.Width > maxX)
@@ -1239,7 +1239,7 @@ namespace Sys.Workflow.Image.Impl
 				}
 
 				IList<GraphicInfo> graphicInfoList = bpmnModel.getFlowLocationGraphicInfo(artifact.Id);
-				if (graphicInfoList != null)
+				if (graphicInfoList is object)
 				{
 					foreach (GraphicInfo graphicInfo in graphicInfoList)
 					{
@@ -1274,7 +1274,7 @@ namespace Sys.Workflow.Image.Impl
 					nrOfLanes++;
 
 					GraphicInfo graphicInfo = bpmnModel.getGraphicInfo(l.Id);
-					if (graphicInfo != null)
+					if (graphicInfo is object)
 					{
 						// width
 						if (graphicInfo.X + graphicInfo.Width > maxX)

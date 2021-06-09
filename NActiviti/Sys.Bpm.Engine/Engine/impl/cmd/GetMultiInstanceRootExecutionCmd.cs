@@ -34,7 +34,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             IExecutionEntity multiInstanceRootExecution = null;
             IExecutionEntity currentExecution = execution;
-            while (currentExecution != null && multiInstanceRootExecution == null && currentExecution.Parent != null)
+            while (currentExecution is object && multiInstanceRootExecution is null && currentExecution.Parent is object)
             {
                 if (currentExecution.IsMultiInstanceRoot)
                 {

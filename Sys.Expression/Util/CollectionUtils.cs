@@ -64,7 +64,7 @@ namespace Spring.Util
             object candidate = null;
             foreach (object elem in coll)
             {
-                if (candidate == null)
+                if (candidate is null)
                 {
                     candidate = elem;
                 }
@@ -84,7 +84,7 @@ namespace Spring.Util
         /// <returns><see lang="true"/> if the element is in the collection, <see lang="false"/> otherwise.</returns>
         public static bool Contains(IEnumerable collection, object element)
         {
-            if (collection == null)
+            if (collection is null)
             {
                 return false;
             }
@@ -131,7 +131,7 @@ namespace Spring.Util
         /// <param name="element">The object to add to the collection.</param>
         public static void Add(IEnumerable enumerable, object element)
         {
-            if (enumerable == null)
+            if (enumerable is null)
             {
                 throw new ArgumentNullException("enumerable", "Collection cannot be null.");
             }
@@ -157,11 +157,11 @@ namespace Spring.Util
         /// <returns>true if the target collection contains all the elements of the specified collection.</returns>
         public static bool ContainsAll(ICollection targetCollection, ICollection sourceCollection)
         {
-            if (targetCollection == null)
+            if (targetCollection is null)
             {
                 throw new ArgumentNullException("targetCollection", "Collection cannot be null.");
             }
-            if (sourceCollection == null)
+            if (sourceCollection is null)
             {
                 throw new ArgumentNullException("sourceCollection", "Collection cannot be null.");
             }
@@ -175,12 +175,12 @@ namespace Spring.Util
             MethodInfo method;
             method = targetCollection.GetType().GetMethod("containsAll", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
 
-            if (method != null)
+            if (method is object)
                 contains = Convert.ToBoolean(method.Invoke(targetCollection, new object[] { sourceCollection }));
             else
             {
                 method = targetCollection.GetType().GetMethod("Contains", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
-                if (method == null)
+                if (method is null)
                 {
                     throw new InvalidOperationException("Target collection does not implment a Contains() or ContainsAll() method.");
                 }
@@ -200,7 +200,7 @@ namespace Spring.Util
         /// <param name="sourceCollection">Elements to remove from the target collection.</param>
         public static void RemoveAll(ICollection targetCollection, ICollection sourceCollection)
         {
-            if (targetCollection == null || sourceCollection == null)
+            if (targetCollection is null || sourceCollection is null)
             {
                 throw new ArgumentNullException("Collection cannot be null.");
             }
@@ -209,17 +209,17 @@ namespace Spring.Util
             MethodInfo method;
             method = targetCollection.GetType().GetMethod("removeAll", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
 
-            if (method != null)
+            if (method is object)
                 method.Invoke(targetCollection, new object[] { al });
             else
             {
                 method = targetCollection.GetType().GetMethod("Remove", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public, null, new Type[1] { typeof(object) }, null);
                 MethodInfo methodContains = targetCollection.GetType().GetMethod("Contains", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
-                if (method == null)
+                if (method is null)
                 {
                     throw new InvalidOperationException("Target Collection must implement either a RemoveAll() or Remove() method.");
                 }
-                if (methodContains == null)
+                if (methodContains is null)
                 {
                     throw new InvalidOperationException("TargetCollection must implement a Contains() method.");
                 }
@@ -240,7 +240,7 @@ namespace Spring.Util
         /// <exception cref="System.ArgumentNullException">if the <paramref name="inputCollection"/> is null.</exception>
         public static ArrayList ToArrayList(ICollection inputCollection)
         {
-            if (inputCollection == null)
+            if (inputCollection is null)
             {
                 throw new ArgumentNullException("Collection cannot be null.");
             }
@@ -320,7 +320,7 @@ namespace Spring.Util
             {
                 if (typeToUse.IsAssignableFrom(obj.GetType()))
                 {
-                    if (val != null)
+                    if (val is object)
                     {
                         throw new ArgumentException("More than one value of type[" + typeToUse.Name + "] found.");
                     }
@@ -372,7 +372,7 @@ namespace Spring.Util
             foreach (Type type in types)
             {
                 object val = FindValueOfType(collection, type);
-                if (val != null)
+                if (val is object)
                 {
                     return val;
                 }
@@ -389,7 +389,7 @@ namespace Spring.Util
         /// </returns>
         public static bool IsEmpty(IEnumerable enumerable)
         {
-            if (enumerable == null)
+            if (enumerable is null)
                 return true;
 
             if (enumerable is ICollection collection)
@@ -414,7 +414,7 @@ namespace Spring.Util
         /// </returns>
         public static bool IsEmpty(ICollection collection)
         {
-            return collection == null || collection.Count == 0;
+            return collection is null || collection.Count == 0;
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace Spring.Util
         /// </returns>
         public static bool IsEmpty(IDictionary dictionary)
         {
-            return dictionary == null || dictionary.Count == 0;
+            return dictionary is null || dictionary.Count == 0;
         }
 
         /// <summary>

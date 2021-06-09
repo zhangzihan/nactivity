@@ -85,7 +85,7 @@ namespace Spring.Context.Attributes
         {
             DoProcessConfigurationClass(configurationClass);
 
-            if (ConfigurationClasses.Contains(configurationClass) && configurationClass.ObjectName != null)
+            if (ConfigurationClasses.Contains(configurationClass) && configurationClass.ObjectName is object)
             {
                 // Explicit object definition found, probably replacing an import.
                 // Let's remove the old one and go with the new one.
@@ -150,7 +150,7 @@ namespace Spring.Context.Attributes
 
             foreach (MethodInfo method in theClass.GetMethods())
             {
-                if (Attribute.GetCustomAttribute(method, customAttribute) != null)
+                if (Attribute.GetCustomAttribute(method, customAttribute) is object)
                 {
                     methods.Add(method);
                 }

@@ -43,7 +43,7 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			get 
 			{
-				if (token != null)
+				if (token is object)
 				{
 					//return "unexpected token: " + token.getText();
 					return "unexpected token: " + token.ToString();

@@ -169,9 +169,9 @@ namespace Spring.Objects.Factory.Attributes
                     foreach (var method in objectType.GetMethods())
                     {
                         ValueAttribute lookup = method.GetCustomAttribute<ValueAttribute>(true);
-                        if (lookup != null)
+                        if (lookup is object)
                         {
-                            AssertUtils.State(objectFactory != null, "No ObjectFactory available");
+                            AssertUtils.State(objectFactory is object, "No ObjectFactory available");
                             var lookupMethodOverride = new LookupMethodOverride(method.Name, lookup.Expression);
                             try
                             {
@@ -198,14 +198,14 @@ namespace Spring.Objects.Factory.Attributes
             ConstructorInfo[] candidateConstructors = candidateConstructorsCache.ContainsKey(objectType)
                 ? (ConstructorInfo[])candidateConstructorsCache[objectType]
                 : null;
-            if (candidateConstructors == null)
+            if (candidateConstructors is null)
             {
                 lock (candidateConstructorsCache)
                 {
                     candidateConstructors = candidateConstructorsCache.ContainsKey(objectType)
                         ? (ConstructorInfo[])candidateConstructorsCache[objectType]
                         : null;
-                    if (candidateConstructors == null)
+                    if (candidateConstructors is null)
                     {
                         ConstructorInfo[] rawCandidates = objectType.GetConstructors();
                         IList<ConstructorInfo> candidates = new List<ConstructorInfo>(rawCandidates.Length);
@@ -215,7 +215,7 @@ namespace Spring.Objects.Factory.Attributes
                         {
                             if (Attribute.GetCustomAttribute(candidate, typeof(AutowiredAttribute)) is AutowiredAttribute attr)
                             {
-                                if (requiredConstructor != null)
+                                if (requiredConstructor is object)
                                 {
                                     throw new ObjectCreationException("Invalid autowire-marked constructor: " + candidate +
                                                                       ". Found another constructor with 'required' Autowired annotation: " +
@@ -246,7 +246,7 @@ namespace Spring.Objects.Factory.Attributes
                         if (candidates.Count > 0)
                         {
                             // Add default constructor to list of optional constructors, as fallback.
-                            if (requiredConstructor == null && defaultConstructor != null)
+                            if (requiredConstructor is null && defaultConstructor is object)
                             {
                                 candidates.Add(defaultConstructor);
                             }
@@ -285,7 +285,7 @@ namespace Spring.Objects.Factory.Attributes
         public override object PostProcessBeforeInstantiation(Type objectType, string objectName)
         {
             var objectDefinition = objectFactory.GetObjectDefinition(objectName) as RootObjectDefinition;
-            if (objectType != null)
+            if (objectType is object)
             {
                 var metadata = FindAutowiringMetadata(objectName, objectType, null);
                 metadata.CheckConfigMembers(objectDefinition);
@@ -361,7 +361,7 @@ namespace Spring.Objects.Factory.Attributes
                             required = autowiredAttribute.Required;
                         }
 
-                        if (attr != null && property.DeclaringType == objectType)
+                        if (attr is object && property.DeclaringType == objectType)
                         {
                             currElements.Add(new AutowiredPropertyElement(this, property, required));
                         }
@@ -377,7 +377,7 @@ namespace Spring.Objects.Factory.Attributes
                             required = autowiredAttribute.Required;
                         }
 
-                        if (attr != null && field.DeclaringType == objectType)
+                        if (attr is object && field.DeclaringType == objectType)
                         {
                             currElements.Add(new AutowiredFieldElement(this, field, required));
                         }
@@ -393,7 +393,7 @@ namespace Spring.Objects.Factory.Attributes
                             required = autowiredAttribute.Required;
                         }
 
-                        if (attr != null && method.DeclaringType == objectType)
+                        if (attr is object && method.DeclaringType == objectType)
                         {
                             if (method.IsStatic)
                             {
@@ -415,7 +415,7 @@ namespace Spring.Objects.Factory.Attributes
                 }
 
                 objectType = objectType.BaseType;
-            } while (objectType != null && objectType != typeof(object));
+            } while (objectType is object && objectType != typeof(object));
 
             return new InjectionMetadata(objectType, elements);
         }
@@ -425,13 +425,13 @@ namespace Spring.Objects.Factory.Attributes
         /// </summary>
         private void RegisterDependentObjects(string objectName, List<string> autowiredObjectNames)
         {
-            if (objectName == null)
+            if (objectName is null)
             {
                 return;
             }
 
             var objectDefinition = objectFactory.GetObjectDefinition(objectName) as RootObjectDefinition;
-            if (objectDefinition == null)
+            if (objectDefinition is null)
             {
                 return;
             }
@@ -502,7 +502,7 @@ namespace Spring.Objects.Factory.Attributes
                         {
                             if (!cached)
                             {
-                                if (value != null || required)
+                                if (value is object || required)
                                 {
                                     cachedFieldValue = descriptor;
                                     processor.RegisterDependentObjects(objectName, autowiredObjectNames);
@@ -526,7 +526,7 @@ namespace Spring.Objects.Factory.Attributes
                             }
                         }
                     }
-                    if (value != null)
+                    if (value is object)
                     {
                         property.SetValue(instance, value, null);
                     }
@@ -576,7 +576,7 @@ namespace Spring.Objects.Factory.Attributes
                         {
                             if (!cached)
                             {
-                                if (value != null || required)
+                                if (value is object || required)
                                 {
                                     cachedFieldValue = descriptor;
                                     processor.RegisterDependentObjects(objectName, autowiredObjectNames);
@@ -600,7 +600,7 @@ namespace Spring.Objects.Factory.Attributes
                             }
                         }
                     }
-                    if (value != null)
+                    if (value is object)
                     {
                         field.SetValue(instance, value);
                     }
@@ -652,7 +652,7 @@ namespace Spring.Objects.Factory.Attributes
                             MethodParameter methodParam = new(method, i);
                             descriptors[i] = new DependencyDescriptor(methodParam, required);
                             arguments[i] = processor.objectFactory.ResolveDependency(descriptors[i], objectName, autowiredBeanNames);
-                            if (arguments[i] == null && !required)
+                            if (arguments[i] is null && !required)
                             {
                                 arguments = null;
                                 break;
@@ -662,7 +662,7 @@ namespace Spring.Objects.Factory.Attributes
                         {
                             if (!cached)
                             {
-                                if (arguments != null)
+                                if (arguments is object)
                                 {
                                     cachedMethodArguments = new object[arguments.Length];
                                     for (int i = 0; i < arguments.Length; i++)
@@ -694,7 +694,7 @@ namespace Spring.Objects.Factory.Attributes
                             }
                         }
                     }
-                    if (arguments != null)
+                    if (arguments is object)
                     {
                         method.Invoke(target, arguments);
                     }
@@ -707,7 +707,7 @@ namespace Spring.Objects.Factory.Attributes
 
             private object[] ResolveCachedArguments(string objectName)
             {
-                if (cachedMethodArguments == null)
+                if (cachedMethodArguments is null)
                 {
                     return null;
                 }

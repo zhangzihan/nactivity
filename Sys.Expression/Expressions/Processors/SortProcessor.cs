@@ -60,13 +60,13 @@ namespace Spring.Expressions.Processors
         /// </exception>
         public object Process(ICollection source, object[] args)
         {
-            if (source == null || source.Count == 0)
+            if (source is null || source.Count == 0)
             {
                 return source;
             }
 
             bool sortAscending = true;
-            if (args != null && args.Length == 1 && args[0] is bool)
+            if (args is object && args.Length == 1 && args[0] is bool)
             {
                 sortAscending = Convert.ToBoolean(args[0]);
             }
@@ -87,7 +87,7 @@ namespace Spring.Expressions.Processors
             for(int i=0;i<list.Count;i++)
             {
                 object element = list[i];
-                if (element != null) return element.GetType();
+                if (element is object) return element.GetType();
             }
             return typeof (object);
         }

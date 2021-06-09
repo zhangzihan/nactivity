@@ -46,7 +46,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
 
             IDeadLetterJobEntity job = commandContext.DeadLetterJobEntityManager.FindById<IDeadLetterJobEntity>(new KeyValuePair<string, object>("id", jobId));
-            if (job == null)
+            if (job is null)
             {
                 throw new JobNotFoundException(jobId);
             }

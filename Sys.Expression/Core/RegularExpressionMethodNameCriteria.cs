@@ -90,7 +90,7 @@ namespace Spring.Core
         {
             bool satisfied = false;
             MethodInfo method = datum as MethodInfo;
-            if (method != null)
+            if (method is object)
             {
                 satisfied = IsMatch(method.Name);
             }

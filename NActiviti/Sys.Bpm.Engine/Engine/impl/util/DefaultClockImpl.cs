@@ -26,14 +26,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         {
             private set
             {
-                DateTime? time = null;
-
-                if (value != null)
-                {
-                    time = new DateTime(value.Ticks);
-                }
-
-                CurrentCalendar = time.GetValueOrDefault();
+                CurrentCalendar = new DateTime(value.Ticks);
             }
             get
             {

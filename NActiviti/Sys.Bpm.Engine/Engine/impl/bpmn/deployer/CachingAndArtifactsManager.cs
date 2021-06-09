@@ -71,7 +71,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
             if (definitionInfoEntity is object && definitionInfoEntity.InfoJsonId is object)
             {
                 byte[] infoBytes = definitionInfoEntityManager.FindInfoJsonById(definitionInfoEntity.InfoJsonId);
-                if (infoBytes != null)
+                if (infoBytes is object)
                 {
                     try
                     {
@@ -85,7 +85,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
             }
 
             ProcessDefinitionInfoCacheObject definitionCacheObject = new ProcessDefinitionInfoCacheObject();
-            if (definitionInfoEntity == null)
+            if (definitionInfoEntity is null)
             {
                 definitionCacheObject.Revision = 0;
             }
@@ -95,7 +95,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                 definitionCacheObject.Revision = definitionInfoEntity.Revision;
             }
 
-            if (infoNode == null)
+            if (infoNode is null)
             {
                 infoNode = objectMapper.CreateObjectNode();
             }

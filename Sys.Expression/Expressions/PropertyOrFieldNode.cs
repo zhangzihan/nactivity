@@ -164,7 +164,7 @@ namespace Spring.Expressions
                     }
                     catch (TypeLoadException)
                     {
-                        if (context == null)
+                        if (context is null)
                         {
                             throw new NullValueInNestedPathException($"Cannot initialize property or field node '{memberName}' because the specified context is null.");
                         }
@@ -201,7 +201,7 @@ namespace Spring.Expressions
             try
             {
                 PropertyInfo pi = contextType.GetProperty(memberName, bindingFlags);
-                if (pi == null)
+                if (pi is null)
                 {
                     FieldInfo fi = contextType.GetField(memberName, bindingFlags);
                     if (fi is object)
@@ -221,7 +221,7 @@ namespace Spring.Expressions
                 while (contextType != typeof(object))
                 {
                     PropertyInfo pi = contextType.GetProperty(memberName, bindingFlags | BindingFlags.DeclaredOnly);
-                    if (pi == null)
+                    if (pi is null)
                     {
                         FieldInfo fi = contextType.GetField(memberName, bindingFlags | BindingFlags.DeclaredOnly);
                         if (fi is object)
@@ -287,7 +287,7 @@ namespace Spring.Expressions
                 this.evalContext = evalContext;
                 InitializeNode(context);
 
-                if (context == null && accessor.RequiresContext)
+                if (context is null && accessor.RequiresContext)
                 {
                     throw new NullValueInNestedPathException(
                         "Cannot set the value of a field or property '" + this.memberName
@@ -377,13 +377,13 @@ namespace Spring.Expressions
                             "Can't change the value of the read-only property or field '" + this.memberName + "'.");
                     }
                 }
-                else if (targetType.IsPrimitive && (newValue == null || String.Empty.Equals(newValue)))
+                else if (targetType.IsPrimitive && (newValue is null || String.Empty.Equals(newValue)))
                 {
                     throw new ArgumentException("Invalid value [" + newValue + "] for property or field '" +
                                                 this.memberName + "' of primitive type ["
                                                 + targetType + "]");
                 }
-                else if (newValue == null || ObjectUtils.IsAssignable(targetType, newValue)) // targetType.IsAssignableFrom(newValue.GetType())
+                else if (newValue is null || ObjectUtils.IsAssignable(targetType, newValue)) // targetType.IsAssignableFrom(newValue.GetType())
                 {
                     SetPropertyOrFieldValueInternal(context, newValue);
                 }

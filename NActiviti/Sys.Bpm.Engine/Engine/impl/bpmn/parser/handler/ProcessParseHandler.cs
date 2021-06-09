@@ -82,7 +82,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
         protected internal virtual void CreateEventListeners(BpmnParse bpmnParse, IList<EventListener> eventListeners)
         {
 
-            if (eventListeners != null && eventListeners.Count > 0)
+            if (eventListeners is object && eventListeners.Count > 0)
             {
                 foreach (EventListener eventListener in eventListeners)
                 {

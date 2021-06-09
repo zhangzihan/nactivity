@@ -85,7 +85,7 @@ namespace Sys.Workflow.Engine.Impl.Scripting
         /// <returns></returns>
         protected internal virtual IDictionary<string, object> CreateBindings(IVariableScope variableScope)
         {
-            if (variableScope == null)
+            if (variableScope is null)
             {
                 return null;
             }

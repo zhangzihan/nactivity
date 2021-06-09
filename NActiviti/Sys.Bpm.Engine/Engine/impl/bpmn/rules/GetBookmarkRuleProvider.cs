@@ -31,7 +31,7 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
                     .FirstOrDefault(x => typeof(GetBookmarkDescriptorAttribute) == x.GetType()) as GetBookmarkDescriptorAttribute;
 
                 string name = type.Name;
-                if (desc != null)
+                if (desc is object)
                 {
                     name = desc.Name;
                 }

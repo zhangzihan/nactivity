@@ -1,4 +1,4 @@
-/* Copyright © 2002-2011 by Aidant Systems, Inc., and by Jason Smith. */
+/* Copyright ?2002-2011 by Aidant Systems, Inc., and by Jason Smith. */
 
 using System;
 using System.Collections;
@@ -65,7 +65,7 @@ namespace Spring.Collections.Generic
         public virtual ISet<T> Union(ISet<T> a)
         {
             ISet<T> resultSet = (ISet<T>)this.Clone();
-            if (a != null)
+            if (a is object)
             {
                 resultSet.AddAll(a);
             }
@@ -83,11 +83,11 @@ namespace Spring.Collections.Generic
         /// <returns>A set containing the union of the input sets.  <see langword="null" /> if both sets are <see langword="null" />.</returns>
         public static ISet<T> Union(ISet<T> a, ISet<T> b)
         {
-            if (a == null && b == null)
+            if (a is null && b is null)
                 return null;
-            else if (a == null)
+            else if (a is null)
                 return (ISet<T>)b.Clone();
-            else if (b == null)
+            else if (b is null)
                 return (ISet<T>)a.Clone();
             else
                 return a.Union(b);
@@ -118,7 +118,7 @@ namespace Spring.Collections.Generic
         public virtual ISet<T> Intersect(ISet<T> a)
         {
             ISet<T> resultSet = (ISet<T>)this.Clone();
-            if (a != null)
+            if (a is object)
                 resultSet.RetainAll(a);
             else
                 resultSet.Clear();
@@ -137,9 +137,9 @@ namespace Spring.Collections.Generic
         /// <returns>The intersection of the two input sets.  <see langword="null" /> if both sets are <see langword="null" />.</returns>
         public static ISet<T> Intersect(ISet<T> a, ISet<T> b)
         {
-            if (a == null && b == null)
+            if (a is null && b is null)
                 return null;
-            else if (a == null)
+            else if (a is null)
             {
                 return b.Intersect(a);
             }
@@ -173,7 +173,7 @@ namespace Spring.Collections.Generic
         public virtual ISet<T> Minus(ISet<T> a)
         {
             ISet<T> resultSet = (ISet<T>)this.Clone();
-            if (a != null)
+            if (a is object)
                 resultSet.RemoveAll(a);
             return resultSet;
         }
@@ -189,7 +189,7 @@ namespace Spring.Collections.Generic
         /// <returns>A set containing <c>A - B</c> elements.  <see langword="null" /> if <c>a</c> is <see langword="null" />.</returns>
         public static ISet<T> Minus(ISet<T> a, ISet<T> b)
         {
-            if (a == null)
+            if (a is null)
                 return null;
             else
                 return a.Minus(b);
@@ -243,11 +243,11 @@ namespace Spring.Collections.Generic
         /// <returns>A set containing the result of <c>a ^ b</c>.  <see langword="null" /> if both sets are <see langword="null" />.</returns>
         public static ISet<T> ExclusiveOr(ISet<T> a, ISet<T> b)
         {
-            if (a == null && b == null)
+            if (a is null && b is null)
                 return null;
-            else if (a == null)
+            else if (a is null)
                 return (ISet<T>)b.Clone();
-            else if (b == null)
+            else if (b is null)
                 return (ISet<T>)a.Clone();
             else
                 return a.ExclusiveOr(b);
@@ -413,7 +413,7 @@ namespace Spring.Collections.Generic
         protected virtual ISet NonGenericUnion(ISet a)
         {
             ISet resultSet = (ISet)this.Clone();
-            if (a != null)
+            if (a is object)
                 resultSet.AddAll(a);
             return resultSet;
         }
@@ -426,7 +426,7 @@ namespace Spring.Collections.Generic
         protected virtual ISet NonGenericMinus(ISet a)
         {
             ISet resultSet = (ISet)this.Clone();
-            if (a != null)
+            if (a is object)
                 resultSet.RemoveAll(a);
             return resultSet;
         }
@@ -439,7 +439,7 @@ namespace Spring.Collections.Generic
         protected virtual ISet NonGenericIntersect(ISet a)
         {
             ISet resultSet = (ISet)this.Clone();
-            if (a != null)
+            if (a is object)
                 resultSet.RetainAll(a);
             else
                 resultSet.Clear();

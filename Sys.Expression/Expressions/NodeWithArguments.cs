@@ -77,14 +77,14 @@ namespace Spring.Expressions
         {
             lock (syncRoot)
             {
-                if (args == null)
+                if (args is null)
                 {
                     List<BaseNode> argList = new();
                     namedArgs = new Hashtable();
 
                     AST node = this.getFirstChild();
 
-                    while (node != null)
+                    while (node is object)
                     {
                         if (node.getFirstChild() is LambdaExpressionNode)
                         {
@@ -128,7 +128,7 @@ namespace Spring.Expressions
         /// <returns>An array of argument values</returns>
         protected object[] ResolveArguments(EvaluationContext evalContext)
         {
-            if (args == null)
+            if (args is null)
             {
                 InitializeNode();
             }
@@ -149,7 +149,7 @@ namespace Spring.Expressions
         /// <returns>A dictionary of argument name to value mappings.</returns>
         protected IDictionary ResolveNamedArguments(EvaluationContext evalContext)
         {
-            if (args == null)
+            if (args is null)
             {
                 InitializeNode();
             }
@@ -175,7 +175,7 @@ namespace Spring.Expressions
         /// <returns>Resolved argument value.</returns>
         protected object ResolveArgument(int position, EvaluationContext evalContext)
         {
-            if (args == null)
+            if (args is null)
             {
                 InitializeNode();
             }

@@ -140,7 +140,7 @@ namespace Sys.Workflow.Engine.Impl
                 tasks = commandContext.HistoricTaskInstanceEntityManager.FindHistoricTaskInstancesByQueryCriteria(this);
             }
 
-            if (tasks != null && Context.ProcessEngineConfiguration.PerformanceSettings.EnableLocalization)
+            if (tasks is object && Context.ProcessEngineConfiguration.PerformanceSettings.EnableLocalization)
             {
                 foreach (IHistoricTaskInstance task in tasks)
                 {
@@ -181,7 +181,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IHistoricTaskInstanceQuery SetExecutionIdIn(string[] executionIds)
         {
-            var ids = executionIds is null ? new List<string>() : executionIds.Where(x => x != null).ToList();
+            var ids = executionIds is null ? new List<string>() : executionIds.Where(x => x is object).ToList();
 
             if (inOrStatement)
             {
@@ -434,7 +434,7 @@ namespace Sys.Workflow.Engine.Impl
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameIn and taskNameLikeIgnoreCase");
             }
 
-            var taskNames = taskNameList is null ? new List<string>() : taskNameList.Where(x => x != null).ToList();
+            var taskNames = taskNameList is null ? new List<string>() : taskNameList.Where(x => x is object).ToList();
 
             if (inOrStatement)
             {
@@ -449,20 +449,20 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IHistoricTaskInstanceQuery SetTaskNameInIgnoreCase(IList<string> taskNameList)
         {
-            if (taskName_ != null)
+            if (taskName_ is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and name");
             }
-            if (taskNameLike_ != null)
+            if (taskNameLike_ is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and nameLike");
             }
-            if (taskNameLikeIgnoreCase_ != null)
+            if (taskNameLikeIgnoreCase_ is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and nameLikeIgnoreCase");
             }
 
-            var taskNames = taskNameList is null ? new List<string>() : taskNameList.Where(x => x != null).Select(x => x.ToLower()).ToList();
+            var taskNames = taskNameList is null ? new List<string>() : taskNameList.Where(x => x is object).Select(x => x.ToLower()).ToList();
 
             if (inOrStatement)
             {
@@ -620,17 +620,17 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IHistoricTaskInstanceQuery SetTaskAssigneeIds(IList<string> assigneeIds)
         {
-            var ids = assigneeIds is null ? new List<string>() : assigneeIds.Where(x => x != null).ToList();
+            var ids = assigneeIds is null ? new List<string>() : assigneeIds.Where(x => x is object).ToList();
 
-            if (taskAssignee_ != null && ids.Count > 0)
+            if (taskAssignee_ is object && ids.Count > 0)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssignee");
             }
-            if (taskAssigneeLike_ != null && ids.Count > 0)
+            if (taskAssigneeLike_ is object && ids.Count > 0)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssigneeLike");
             }
-            if (taskAssigneeLikeIgnoreCase_ != null && ids.Count > 0)
+            if (taskAssigneeLikeIgnoreCase_ is object && ids.Count > 0)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskAssigneeIds and taskAssigneeLikeIgnoreCase");
             }
@@ -1290,7 +1290,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IHistoricTaskInstanceQuery SetTaskCandidateGroupIn(IList<string> candidateGroups)
         {
-            var groups = candidateGroups is null ? new List<string>() : candidateGroups.Where(x => x != null).ToList();
+            var groups = candidateGroups is null ? new List<string>() : candidateGroups.Where(x => x is object).ToList();
 
             if (string.IsNullOrWhiteSpace(candidateGroup) == false && groups.Count > 0)
             {
@@ -1323,7 +1323,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IHistoricTaskInstanceQuery SetTaskInvolvedGroupsIn(IList<string> involvedGroups)
         {
-            var groups = involvedGroups is null ? new List<string>() : involvedGroups.Where(x => x != null).ToList();
+            var groups = involvedGroups is null ? new List<string>() : involvedGroups.Where(x => x is object).ToList();
 
             if (inOrStatement)
             {
@@ -1451,16 +1451,16 @@ namespace Sys.Workflow.Engine.Impl
                 if (!string.IsNullOrWhiteSpace(processDefinitionId))
                 {
                     JToken languageNode = Context.GetLocalizationElementProperties(locale_, task.TaskDefinitionKey, processDefinitionId, withLocalizationFallback_.GetValueOrDefault());
-                    if (languageNode != null)
+                    if (languageNode is object)
                     {
                         JToken languageNameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
-                        if (languageNameNode != null)
+                        if (languageNameNode is object)
                         {
                             taskEntity.LocalizedName = languageNameNode.ToString();
                         }
 
                         JToken languageDescriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
-                        if (languageDescriptionNode != null)
+                        if (languageDescriptionNode is object)
                         {
                             taskEntity.LocalizedDescription = languageDescriptionNode.ToString();
                         }
@@ -1634,7 +1634,7 @@ namespace Sys.Workflow.Engine.Impl
                     return candidateGroupList;
 
                 }
-                else if (candidateGroups != null)
+                else if (candidateGroups is object)
                 {
                     return candidateGroups;
 
@@ -1650,7 +1650,7 @@ namespace Sys.Workflow.Engine.Impl
         protected internal virtual IList<string> GetGroupsForCandidateUser(string candidateUser)
         {
             IUserGroupLookupProxy userGroupLookupProxy = Context.ProcessEngineConfiguration.UserGroupLookupProxy;
-            if (userGroupLookupProxy != null)
+            if (userGroupLookupProxy is object)
             {
                 return userGroupLookupProxy.GetGroupsForCandidateUser(candidateUser);
             }

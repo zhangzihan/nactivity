@@ -144,7 +144,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
             //        period = end.Value.Subtract(start.Value);
             //    }
             //}
-            if (start == null)
+            if (start is null)
             {
                 start = clockReader.CurrentCalendar;
             }
@@ -169,7 +169,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
                 return GetDateAfterRepeat(time);
             }
             // TODO: is this correct?
-            if (end != null)
+            if (end is object)
             {
                 return end.Value;
             }
@@ -178,7 +178,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
         public virtual bool? IsValidDate(DateTime? newTimer)
         {
-            return end == null || end > newTimer || end.Equals(newTimer);
+            return end is null || end > newTimer || end.Equals(newTimer);
         }
 
         public virtual DateTime? DateAfter

@@ -107,7 +107,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         public virtual Task<TaskModel> GetTaskById(string taskId)
         {
             TaskModel task = processEngine.GetTaskById(taskId);
-            if (task == null)
+            if (task is null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find task for the given id: " + taskId);
             }
@@ -207,6 +207,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
                 OutputVariables = new WorkflowVariable(cmd.Variables)
                 {
                     [WorkflowVariable.GLOBAL_APPROVALED_VARIABLE] = true,
+                    [WorkflowVariable.GLOBAL_OPERATOR_STATE] = 1,
                     [WorkflowVariable.GLOBAL_APPROVALED_COMMENTS] = string.IsNullOrWhiteSpace(cmd.Comments) ? "同意" : cmd.Comments,
                 }
             });
@@ -225,6 +226,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
                 OutputVariables = new WorkflowVariable(cmd.Variables)
                 {
                     [WorkflowVariable.GLOBAL_APPROVALED_VARIABLE] = false,
+                    [WorkflowVariable.GLOBAL_OPERATOR_STATE] = 0,
                     [WorkflowVariable.GLOBAL_APPROVALED_COMMENTS] = string.IsNullOrWhiteSpace(cmd.RejectReason) ? "拒绝" : cmd.RejectReason,
                 }
             });

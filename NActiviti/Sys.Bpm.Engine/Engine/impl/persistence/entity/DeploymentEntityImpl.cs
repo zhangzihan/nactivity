@@ -60,7 +60,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void AddResource(IResourceEntity resource)
         {
-            if (resources == null)
+            if (resources is null)
             {
                 resources = new Dictionary<string, IResourceEntity>();
             }
@@ -72,7 +72,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual IDictionary<string, IResourceEntity> GetResources()
         {
             var ctx = Context.CommandContext;
-            if (resources == null && id != null && ctx != null)
+            if (resources is null && id is object && ctx is object)
             {
                 IList<IResourceEntity> resourcesList = ctx.ResourceEntityManager.FindResourcesByDeploymentId(id);
                 resources = new Dictionary<string, IResourceEntity>();
@@ -108,14 +108,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         public virtual void AddDeployedArtifact(object deployedArtifact)
         {
-            if (deployedArtifacts == null)
+            if (deployedArtifacts is null)
             {
                 deployedArtifacts = new Dictionary<Type, IList<object>>();
             }
 
             Type clazz = deployedArtifact.GetType();
             deployedArtifacts.TryGetValue(clazz, out IList<object> artifacts);
-            if (artifacts == null)
+            if (artifacts is null)
             {
                 artifacts = new List<object>();
                 deployedArtifacts[clazz] = artifacts;

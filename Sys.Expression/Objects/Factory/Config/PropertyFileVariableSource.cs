@@ -87,7 +87,7 @@ namespace Spring.Objects.Factory.Config
         {
             lock (objectMonitor)
             {
-                if (properties == null)
+                if (properties is null)
                 {
                     properties = new Properties();
                     InitProperties();
@@ -109,7 +109,7 @@ namespace Spring.Objects.Factory.Config
         {
             lock (objectMonitor)
             {
-                if (properties == null)
+                if (properties is null)
                 {
                     properties = new Properties();
                     InitProperties();

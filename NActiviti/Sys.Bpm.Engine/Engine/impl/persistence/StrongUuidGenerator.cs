@@ -12,9 +12,9 @@
     /// </summary>
     public class StrongUuidGenerator : IIdGenerator
     {
-
         // different ProcessEngines on the same classloader share one generator.
-        protected internal static Guid timeBasedGenerator;
+        protected internal static Guid? timeBasedGenerator;
+        private readonly object syncRoot = new object();
 
         public StrongUuidGenerator()
         {
@@ -23,11 +23,11 @@
 
         protected internal virtual void EnsureGeneratorInitialized()
         {
-            if (timeBasedGenerator == null)
+            if (timeBasedGenerator is null)
             {
-                lock (typeof(StrongUuidGenerator))
+                lock (syncRoot)
                 {
-                    if (timeBasedGenerator == null)
+                    if (timeBasedGenerator is null)
                     {
                         timeBasedGenerator = NewId.NextGuid();
                     }

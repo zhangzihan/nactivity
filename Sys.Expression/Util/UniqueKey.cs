@@ -69,7 +69,7 @@ namespace Spring.Util
         /// </summary>
         public bool Equals(UniqueKey uniqueKey)
         {
-            if (uniqueKey == null) return false;
+            if (uniqueKey is null) return false;
             return Equals(_generatedKey, uniqueKey._generatedKey);
         }
 
@@ -164,7 +164,7 @@ namespace Spring.Util
         {
             StringBuilder sb = new();
             sb.Append(type.FullName);
-            if (instance != null) sb.Append('[').Append(instance.GetHashCode()).Append(']');
+            if (instance is object) sb.Append('[').Append(instance.GetHashCode()).Append(']');
             sb.Append('.').Append(partialKey);
             return sb.ToString();
         }

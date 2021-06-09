@@ -44,7 +44,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
-            if (execution == null)
+            if (execution is null)
             {
                 throw new ActivitiObjectNotFoundException("process instance " + processInstanceId + " doesn't exist", typeof(IProcessInstance));
             }

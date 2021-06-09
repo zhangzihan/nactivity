@@ -70,7 +70,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 //IFlowElementsContainer process = ProcessDefinitionUtil.GetProcess(execution.ProcessDefinitionId);
 
                 //IFlowElementsContainer flowElementsContainer;
-                //if (throwEvent.SubProcess == null)
+                //if (throwEvent.SubProcess is null)
                 //{
                 //    flowElementsContainer = process;
                 //}

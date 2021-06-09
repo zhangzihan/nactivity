@@ -93,7 +93,7 @@ namespace Sys.Workflow.Engine.Delegate.Events
             bool valid = false;
             if (@event is IActivitiEntityEvent)
             {
-                if (entityClass == null)
+                if (entityClass is null)
                 {
                     valid = true;
                 }

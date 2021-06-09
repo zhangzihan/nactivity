@@ -57,7 +57,7 @@ namespace Spring.Expressions
             object result = context;
 
             AST node = this.getFirstChild();
-            while (node != null)
+            while (node is object)
             {
                 result = GetValue(((BaseNode) node), context, evalContext);
                 node = node.getNextSibling();

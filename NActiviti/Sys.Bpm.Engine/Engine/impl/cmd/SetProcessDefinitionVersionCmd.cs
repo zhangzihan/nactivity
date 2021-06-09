@@ -56,7 +56,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             {
                 throw new ActivitiIllegalArgumentException("The process instance id is mandatory, but '" + processInstanceId + "' has been provided.");
             }
-            if (processDefinitionVersion == null)
+            if (processDefinitionVersion is null)
             {
                 throw new ActivitiIllegalArgumentException("The process definition version is mandatory, but 'null' has been provided.");
             }
@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             // process definition that the process instance is using
             IExecutionEntityManager executionManager = commandContext.ExecutionEntityManager;
             IExecutionEntity processInstance = executionManager.FindById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
-            if (processInstance == null)
+            if (processInstance is null)
             {
                 throw new ActivitiObjectNotFoundException("No process instance found for id = '" + processInstanceId + "'.", typeof(IProcessInstance));
             }

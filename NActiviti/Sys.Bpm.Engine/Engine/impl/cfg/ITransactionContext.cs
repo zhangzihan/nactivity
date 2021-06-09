@@ -10,6 +10,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System.Data;
+
 namespace Sys.Workflow.Engine.Impl.Cfg
 {
     /// 

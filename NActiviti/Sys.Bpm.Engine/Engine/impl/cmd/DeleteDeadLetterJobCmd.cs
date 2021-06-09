@@ -55,7 +55,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             //}
 
             IDeadLetterJobEntity job = commandContext.DeadLetterJobEntityManager.FindById<IDeadLetterJobEntity>(new KeyValuePair<string, object>("id", timerJobId));
-            if (job == null)
+            if (job is null)
             {
                 throw new ActivitiObjectNotFoundException("No dead letter job found with id '" + timerJobId + "'", typeof(IJob));
             }

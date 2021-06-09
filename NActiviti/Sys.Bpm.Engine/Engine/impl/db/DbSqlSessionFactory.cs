@@ -212,7 +212,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         protected internal static void AddDatabaseSpecificStatement(string databaseType, string activitiStatement, string ibatisStatement)
         {
             databaseSpecificStatements.TryGetValue(databaseType, out IDictionary<string, string> specificStatements);
-            if (specificStatements == null)
+            if (specificStatements is null)
             {
                 specificStatements = new Dictionary<string, string>();
                 databaseSpecificStatements[databaseType] = specificStatements;
@@ -308,7 +308,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// <returns></returns>
         public virtual bool? IsBulkInsertable(Type entityClass)
         {
-            return bulkInsertableMap != null && bulkInsertableMap.ContainsKey(entityClass) && bulkInsertableMap[entityClass];
+            return bulkInsertableMap is object && bulkInsertableMap.ContainsKey(entityClass) && bulkInsertableMap[entityClass];
         }
 
         // getters and setters //////////////////////////////////////////////////////

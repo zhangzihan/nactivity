@@ -104,7 +104,7 @@ namespace Spring.Objects.Factory.Xml
         /// <value><c>true</c> if this instance is nested; otherwise, <c>false</c>.</value>
         public bool IsNested
         {
-            get { return containingObjectDefinition != null; }
+            get { return containingObjectDefinition is object; }
         }
 
         /// <summary>

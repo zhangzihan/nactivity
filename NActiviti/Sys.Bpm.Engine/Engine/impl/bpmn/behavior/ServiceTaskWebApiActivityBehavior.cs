@@ -78,7 +78,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             }
             else
             {
-                if (pElements != null)
+                if (pElements is object)
                 {
                     Stopwatch sw = new Stopwatch();
                     string url = null;
@@ -97,7 +97,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                         HttpContext httpContext = ProcessEngineServiceProvider.Resolve<IHttpContextAccessor>()?.HttpContext;
 
-                        if (httpContext == null)
+                        if (httpContext is null)
                         {
                             var uid = string.IsNullOrWhiteSpace(execution.StartUserId) ? Guid.NewGuid().ToString() : execution.StartUserId;
                             httpProxy.SetHttpClientRequestAccessToken(uid, execution.TenantId, isSessionHeader: false);
@@ -148,7 +148,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             execution.CurrentFlowElement.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY,
                 out IList<ExtensionElement> pElements);
 
-            if (pElements != null)
+            if (pElements is object)
             {
                 var parameter = new WebApiParameter(execution, pElements);
 

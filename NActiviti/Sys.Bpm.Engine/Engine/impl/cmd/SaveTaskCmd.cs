@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public  virtual object  Execute(ICommandContext commandContext)
         {
-            if (task == null)
+            if (task is null)
             {
                 throw new ActivitiIllegalArgumentException("task is null");
             }
@@ -70,7 +70,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     originalTaskEntity = commandContext.HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", task.Id));
                 }
 
-                if (originalTaskEntity == null)
+                if (originalTaskEntity is null)
                 {
                     originalTaskEntity = commandContext.TaskEntityManager.FindById<ITaskEntity>(task.Id);
                 }

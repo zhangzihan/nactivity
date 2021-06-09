@@ -90,7 +90,7 @@ namespace Spring.Core
         {
             bool satisfied = false;
             EventInfo evt = datum as EventInfo;
-            if (evt != null)
+            if (evt is object)
             {
                 satisfied = IsMatch(evt.Name);
             }

@@ -40,7 +40,7 @@ namespace Sys.Workflow.Bpmn.Converters.Childs
             }
             MultiInstanceLoopCharacteristics multiInstanceDef = new MultiInstanceLoopCharacteristics();
             BpmnXMLUtil.AddXMLLocation(multiInstanceDef, xtr);
-            if (xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_SEQUENTIAL) != null)
+            if (xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_SEQUENTIAL) is object)
             {
                 multiInstanceDef.Sequential = Convert.ToBoolean(xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_MULTIINSTANCE_SEQUENTIAL));
             }
@@ -65,7 +65,7 @@ namespace Sys.Workflow.Bpmn.Converters.Childs
                     }
                     else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_MULTIINSTANCE_DATAITEM.Equals(xtr.LocalName, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        if (xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME) != null)
+                        if (xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME) is object)
                         {
                             multiInstanceDef.ElementVariable = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_NAME);
                         }

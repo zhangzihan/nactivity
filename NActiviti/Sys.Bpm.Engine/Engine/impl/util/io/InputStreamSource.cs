@@ -39,7 +39,7 @@ namespace Sys.Workflow.Engine.Impl.Util.IO
         {
             get
             {
-                if (bytes == null)
+                if (bytes is null)
                 {
                     try
                     {

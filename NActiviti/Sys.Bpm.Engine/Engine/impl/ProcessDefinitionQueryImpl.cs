@@ -154,7 +154,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IProcessDefinitionQuery SetDeploymentIds(string[] deploymentIds)
         {
-            if (deploymentIds == null)
+            if (deploymentIds is null)
             {
                 this._deploymentIds = null;
                 return this;
@@ -176,7 +176,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IProcessDefinitionQuery SetProcessDefinitionKeys(string[] keys)
         {
-            if (keys == null)
+            if (keys is null)
             {
                 this.keys = null;
                 return this;
@@ -342,7 +342,7 @@ namespace Sys.Workflow.Engine.Impl
                 if (authorizationUserId is object)
                 {
                     IUserGroupLookupProxy userGroupLookupProxy = Context.ProcessEngineConfiguration.UserGroupLookupProxy;
-                    if (userGroupLookupProxy != null)
+                    if (userGroupLookupProxy is object)
                     {
                         return userGroupLookupProxy.GetGroupsForCandidateUser(authorizationUserId);
                     }

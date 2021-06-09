@@ -65,7 +65,7 @@ namespace Sys.Workflow.Validation.Validators
 
         public virtual void AddValidator(IValidator validator)
         {
-            if (validators == null)
+            if (validators is null)
             {
                 validators = new Dictionary<Type, IValidator>();
             }

@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Util
             strb.Append(executionEntity.Id).Append(" : ").Append(executionEntity.ActivityId).Append(", parent id ").Append(executionEntity.ParentId).AppendLine();
 
             IList<IExecutionEntity> children = executionEntity.Executions;
-            if (children != null)
+            if (children is object)
             {
                 foreach (IExecutionEntity childExecution in children)
                 {
@@ -53,7 +53,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Util
             strb.Append(prefix).Append(isTail ? "└── " : "├── ").Append(execution.Id).Append(" : ").Append("activityId=" + execution.ActivityId).Append(", parent id ").Append(execution.ParentId).Append(execution.IsScope ? " (scope)" : "").Append(execution.IsMultiInstanceRoot ? " (multi instance root)" : "").AppendLine();
 
             IList<IExecutionEntity> children = executionEntity.Executions;
-            if (children != null)
+            if (children is object)
             {
                 for (int i = 0; i < children.Count - 1; i++)
                 {

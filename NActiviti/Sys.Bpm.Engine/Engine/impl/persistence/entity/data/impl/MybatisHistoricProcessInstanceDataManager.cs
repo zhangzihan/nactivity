@@ -80,7 +80,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
             int maxResults = hisQuery.MaxResults;
 
             // setting max results, limit to 20000 results for performance reasons
-            if (hisQuery.ProcessInstanceVariablesLimit != null)
+            if (hisQuery.ProcessInstanceVariablesLimit is object)
             {
                 hisQuery.MaxResults = hisQuery.ProcessInstanceVariablesLimit.GetValueOrDefault();
             }
@@ -92,7 +92,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
 
             IList<IHistoricProcessInstance> instanceList = DbSqlSession.SelectListWithRawParameterWithoutFilter<HistoricProcessInstanceEntityImpl, IHistoricProcessInstance>("selectHistoricProcessInstancesWithVariablesByQueryCriteria", hisQuery, hisQuery.FirstResult, hisQuery.MaxResults);
 
-            if (instanceList != null && instanceList.Count > 0)
+            if (instanceList is object && instanceList.Count > 0)
             {
                 if (firstResult > 0)
                 {

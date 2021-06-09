@@ -136,26 +136,26 @@ namespace Spring.Objects.Factory.Config
 		/// </param>
 		public void AddAll(ConstructorArgumentValues other)
 		{
-			if (other != null)
+			if (other is object)
 			{
-				if (other._genericArgumentValues != null && other._genericArgumentValues.Count > 0)
+				if (other._genericArgumentValues is object && other._genericArgumentValues.Count > 0)
 				{
 					GetAndInitializeGenericArgumentValuesIfNeeded().AddRange(other._genericArgumentValues);
 				}
 
-				if (other._indexedArgumentValues != null && other._indexedArgumentValues.Count > 0)
+				if (other._indexedArgumentValues is object && other._indexedArgumentValues.Count > 0)
 				{
 					foreach (var entry in other._indexedArgumentValues)
 					{
 						ValueHolder vh = entry.Value;
-						if (vh != null)
+						if (vh is object)
 						{
 							AddOrMergeIndexedArgumentValues(entry.Key, vh.Copy());
 						}
 					}
 				}
 
-				if (other._namedArgumentValues != null && other._namedArgumentValues.Count > 0)
+				if (other._namedArgumentValues is object && other._namedArgumentValues.Count > 0)
 				{
 					foreach (var entry in other._namedArgumentValues)
 					{
@@ -254,7 +254,7 @@ namespace Spring.Objects.Factory.Config
 			ValueHolder valueHolder;
             if (IndexedArgumentValues.TryGetValue(index, out valueHolder))
 			{
-				if (valueHolder.Type == null
+				if (valueHolder.Type is null
 					|| requiredType.FullName.Equals(valueHolder.Type)
 					|| requiredType.AssemblyQualifiedName.Equals(valueHolder.Type))
 				{
@@ -276,7 +276,7 @@ namespace Spring.Objects.Factory.Config
 		public ValueHolder GetNamedArgumentValue(string name)
 		{
 			ValueHolder valueHolder = null;
-			if (name != null && ContainsNamedArgument(name))
+			if (name is object && ContainsNamedArgument(name))
 			{
 				valueHolder = (ValueHolder) GetAndInitializeNamedArgumentValuesIfNeeded()[GetCanonicalNamedArgument(name)];
 			}
@@ -301,7 +301,7 @@ namespace Spring.Objects.Factory.Config
 		/// </returns>
 		public bool ContainsNamedArgument(string argument)
 		{
-			return _namedArgumentValues != null && _namedArgumentValues.ContainsKey(GetCanonicalNamedArgument(argument));
+			return _namedArgumentValues is object && _namedArgumentValues.ContainsKey(GetCanonicalNamedArgument(argument));
 		}
 
 		/// <summary>
@@ -369,7 +369,7 @@ namespace Spring.Objects.Factory.Config
 			Type requiredType,
 			ISet usedValues)
 		{
-			if (_genericArgumentValues == null)
+			if (_genericArgumentValues is null)
 			{
 				return null;
 			}
@@ -377,9 +377,9 @@ namespace Spring.Objects.Factory.Config
 			for (var i = 0; i < _genericArgumentValues.Count; i++)
 			{
 				ValueHolder valueHolder = _genericArgumentValues[i];
-				if (usedValues == null || !usedValues.Contains(valueHolder))
+				if (usedValues is null || !usedValues.Contains(valueHolder))
 				{
-					if (requiredType != null)
+					if (requiredType is object)
 					{
 						if (StringUtils.HasText(valueHolder.Type))
 						{
@@ -551,10 +551,10 @@ namespace Spring.Objects.Factory.Config
 			{
 				valueHolder = GetIndexedArgumentValue(index, requiredType);
 			}
-			if (valueHolder == null)
+			if (valueHolder is null)
 			{
 				valueHolder = GetNamedArgumentValue(name);
-				if (valueHolder == null)
+				if (valueHolder is null)
 				{
 					valueHolder = GetGenericArgumentValue(requiredType, usedValues);
 				}
@@ -564,7 +564,7 @@ namespace Spring.Objects.Factory.Config
 
 		private string GetCanonicalNamedArgument(string argument)
 		{
-            return argument != null ? argument.ToLower(enUSCultureInfo) : argument;
+            return argument is object ? argument.ToLower(enUSCultureInfo) : argument;
 		}
 		
 		private Dictionary<int, ValueHolder> GetAndInitializeIndexedArgumentValuesIfNeeded()

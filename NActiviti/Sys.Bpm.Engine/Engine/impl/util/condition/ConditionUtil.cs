@@ -41,10 +41,10 @@
         protected internal static string GetActiveValue(string originalValue, string propertyName, JToken elementProperties)
         {
             string activeValue = originalValue;
-            if (elementProperties != null)
+            if (elementProperties is object)
             {
                 JToken overrideValueNode = elementProperties[propertyName];
-                if (overrideValueNode == null)
+                if (overrideValueNode is null)
                 {
                     activeValue = null;
                 }

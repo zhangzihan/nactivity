@@ -29,7 +29,7 @@ namespace Sys.Workflow.Cloud.Services.Core
                 //only take policies for this app
                 //or if we don't know our own appName (just being defensive) then include everything
                 //ignore hyphens and case due to values getting set via env vars
-                if ((runtimeBundleProperties == null || string.ReferenceEquals(runtimeBundleProperties.ServiceName, null)) || (!string.ReferenceEquals(appName, null) && appName.Replace("-", "").Equals(runtimeBundleProperties.ServiceName.Replace("-", ""), StringComparison.CurrentCultureIgnoreCase)) || (!string.ReferenceEquals(runtimeBundleProperties.ServiceFullName, null) && !string.ReferenceEquals(appName, null) && appName.Replace("-", "").Equals(runtimeBundleProperties.ServiceFullName.Replace("-", ""), StringComparison.CurrentCultureIgnoreCase)))
+                if ((runtimeBundleProperties is null || string.ReferenceEquals(runtimeBundleProperties.ServiceName, null)) || (!string.ReferenceEquals(appName, null) && appName.Replace("-", "").Equals(runtimeBundleProperties.ServiceName.Replace("-", ""), StringComparison.CurrentCultureIgnoreCase)) || (!string.ReferenceEquals(runtimeBundleProperties.ServiceFullName, null) && !string.ReferenceEquals(appName, null) && appName.Replace("-", "").Equals(runtimeBundleProperties.ServiceFullName.Replace("-", ""), StringComparison.CurrentCultureIgnoreCase)))
                 {
                     keys.addAll(restrictions[appName]);
                 }
@@ -52,7 +52,7 @@ namespace Sys.Workflow.Cloud.Services.Core
 
             ISet<string> keys = definitionKeysAllowedForRBPolicy(securityPolicy);
 
-            if (keys != null && keys.Count > 0)
+            if (keys is object && keys.Count > 0)
             {
 
                 if (keys.Contains(securityPoliciesService.Wildcard))
@@ -64,7 +64,7 @@ namespace Sys.Workflow.Cloud.Services.Core
             }
 
             //policies are in place but if we've got here then none for this user
-            if (keys != null && securityPoliciesService.policiesDefined())
+            if (keys is object && securityPoliciesService.policiesDefined())
             {
                 restrictionApplier.denyAll(query);
             }

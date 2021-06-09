@@ -112,7 +112,7 @@ namespace BpmnTest.Test
                  .SetTaskTenantId("cb79f3dd-e84e-49b0-95c2-0bdafc80f09d")
                  .SingleResult();
 
-            if (task == null)
+            if (task is null)
             {
                 return Ok();
             }
@@ -137,7 +137,7 @@ namespace BpmnTest.Test
                  .SetTaskTenantId("cb79f3dd-e84e-49b0-95c2-0bdafc80f09d")
                  .SingleResult();
 
-            if (task == null)
+            if (task is null)
             {
                 return Ok();
             }
@@ -162,7 +162,7 @@ namespace BpmnTest.Test
                  .SetTaskTenantId("cb79f3dd-e84e-49b0-95c2-0bdafc80f09d")
                  .SingleResult();
 
-            if (task == null)
+            if (task is null)
             {
                 return Ok();
             }

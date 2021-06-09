@@ -66,7 +66,7 @@ namespace SmartSql.Abstractions
         }
         internal void SetupParameters()
         {
-            if (CommandType == CommandType.StoredProcedure || Request == null)
+            if (CommandType == CommandType.StoredProcedure || Request is null)
             {
                 return;
             }
@@ -139,7 +139,7 @@ namespace SmartSql.Abstractions
         private object ToParameterValue(string paramName, object value)
         {
             var paramMap = Statement?.ParameterMap?.Parameters?.FirstOrDefault(p => p.Name == paramName);
-            if (paramMap != null)
+            if (paramMap is object)
             {
                 paramMap.Handler.ToParameterValue(value);
             }
@@ -250,7 +250,7 @@ namespace SmartSql.Abstractions
         {
             get
             {
-                if (RequestParameters == null) { return "Null"; }
+                if (RequestParameters is null) { return "Null"; }
                 StringBuilder strBuilder = new StringBuilder();
                 var reqParams = RequestParameters;
                 foreach (var reqParam in reqParams)

@@ -64,10 +64,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
             ProcessDefinitionCacheEntry cacheEntry = processDefinitionCache.Get(processDefinitionId);
             IProcessDefinition processDefinition = cacheEntry?.ProcessDefinition;
 
-            if (processDefinition == null)
+            if (processDefinition is null)
             {
                 processDefinition = processDefinitionEntityManager.FindById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("processDefinitionId", processDefinitionId));
-                if (processDefinition == null)
+                if (processDefinition is null)
                 {
                     throw new ActivitiObjectNotFoundException("no deployed process definition found with id '" + processDefinitionId + "'", typeof(IProcessDefinition));
                 }
@@ -80,7 +80,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
         {
             IProcessDefinition processDefinition = processDefinitionEntityManager.FindLatestProcessDefinitionByKey(processDefinitionKey);
 
-            if (processDefinition == null)
+            if (processDefinition is null)
             {
                 throw new ActivitiObjectNotFoundException("no processes deployed with key '" + processDefinitionKey + "'", typeof(IProcessDefinition));
             }
@@ -91,7 +91,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
         public virtual IProcessDefinition FindDeployedLatestProcessDefinitionByKeyAndTenantId(string processDefinitionKey, string tenantId)
         {
             IProcessDefinition processDefinition = processDefinitionEntityManager.FindLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
-            if (processDefinition == null)
+            if (processDefinition is null)
             {
                 throw new ActivitiObjectNotFoundException("no processes deployed with key '" + processDefinitionKey + "' for tenant identifier '" + tenantId + "'", typeof(IProcessDefinition));
             }
@@ -102,7 +102,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
         public virtual IProcessDefinition FindDeployedProcessDefinitionByKeyAndVersionAndTenantId(string processDefinitionKey, int? processDefinitionVersion, string tenantId)
         {
             IProcessDefinition processDefinition = (IProcessDefinitionEntity)processDefinitionEntityManager.FindProcessDefinitionByKeyAndVersionAndTenantId(processDefinitionKey, processDefinitionVersion, tenantId);
-            if (processDefinition == null)
+            if (processDefinition is null)
             {
                 throw new ActivitiObjectNotFoundException("no processes deployed with key = '" + processDefinitionKey + "' and version = '" + processDefinitionVersion + "'", typeof(IProcessDefinition));
             }
@@ -120,14 +120,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
 
             ProcessDefinitionCacheEntry cachedProcessDefinition = processDefinitionCache.Get(processDefinitionId);
 
-            if (cachedProcessDefinition == null)
+            if (cachedProcessDefinition is null)
             {
                 IDeploymentEntity deployment = deploymentEntityManager.FindById<IDeploymentEntity>(new KeyValuePair<string, object>("id", deploymentId));
                 deployment.New = false;
                 Deploy(deployment, null);
                 cachedProcessDefinition = processDefinitionCache.Get(processDefinitionId);
 
-                if (cachedProcessDefinition == null)
+                if (cachedProcessDefinition is null)
                 {
                     throw new ActivitiException("deployment '" + deploymentId + "' didn't put process definition '" + processDefinitionId + "' in the cache");
                 }
@@ -139,7 +139,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
         {
 
             IDeploymentEntity deployment = deploymentEntityManager.FindById<IDeploymentEntity>(new KeyValuePair<string, object>("id", deploymentId));
-            if (deployment == null)
+            if (deployment is null)
             {
                 throw new ActivitiObjectNotFoundException("Could not find a deployment with id '" + deploymentId + "'.", typeof(IDeploymentEntity));
             }

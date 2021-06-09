@@ -119,7 +119,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
 
                 bool enableSafeBpmnXml = false;
                 string encoding = null;
-                if (processEngineConfiguration != null)
+                if (processEngineConfiguration is object)
                 {
                     enableSafeBpmnXml = processEngineConfiguration.EnableSafeBpmnXml;
                     encoding = processEngineConfiguration.XmlEncoding;
@@ -138,14 +138,14 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
                 if (validateProcess)
                 {
                     IProcessValidator processValidator = processEngineConfiguration.ProcessValidator;
-                    if (processValidator == null)
+                    if (processValidator is null)
                     {
                         logger.LogWarning("Process should be validated, but no process validator is configured on the process engine configuration!");
                     }
                     else
                     {
                         IList<ValidationError> validationErrors = processValidator.Validate(bpmnModel);
-                        if (validationErrors != null && validationErrors.Count > 0)
+                        if (validationErrors is object && validationErrors.Count > 0)
                         {
 
                             StringBuilder warningBuilder = new StringBuilder();
@@ -285,7 +285,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
         {
             set
             {
-                if (this.streamSource != null)
+                if (this.streamSource is object)
                 {
                     throw new ActivitiIllegalArgumentException("invalid: multiple sources " + this.streamSource + " and " + value);
                 }
@@ -384,13 +384,13 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
                 // Verify if all referenced elements exist
                 foreach (string bpmnReference in bpmnModel.LocationMap.Keys)
                 {
-                    if (bpmnModel.GetFlowElement(bpmnReference) == null)
+                    if (bpmnModel.GetFlowElement(bpmnReference) is null)
                     {
                         // ACT-1625: don't warn when artifacts are referenced from DI
-                        if (bpmnModel.GetArtifact(bpmnReference) == null)
+                        if (bpmnModel.GetArtifact(bpmnReference) is null)
                         {
                             // Check if it's a Pool or Lane, then DI is ok
-                            if (bpmnModel.GetPool(bpmnReference) == null && bpmnModel.GetLane(bpmnReference) == null)
+                            if (bpmnModel.GetPool(bpmnReference) is null && bpmnModel.GetLane(bpmnReference) is null)
                             {
                                 logger.LogWarning($"Invalid reference in diagram interchange definition: could not find {bpmnReference}");
                             }
@@ -404,10 +404,10 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
 
                 foreach (string bpmnReference in bpmnModel.FlowLocationMap.Keys)
                 {
-                    if (bpmnModel.GetFlowElement(bpmnReference) == null)
+                    if (bpmnModel.GetFlowElement(bpmnReference) is null)
                     {
                         // ACT-1625: don't warn when artifacts are referenced from DI
-                        if (bpmnModel.GetArtifact(bpmnReference) == null)
+                        if (bpmnModel.GetArtifact(bpmnReference) is null)
                         {
                             logger.LogWarning($"Invalid reference in diagram interchange definition: could not find {bpmnReference}");
                         }
@@ -427,13 +427,13 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
 
                     // Parse diagram interchange information
                     IProcessDefinitionEntity processDefinition = GetProcessDefinition(process.Id);
-                    if (processDefinition != null)
+                    if (processDefinition is object)
                     {
                         processDefinition.IsGraphicalNotationDefined = true;
 
                         foreach (string edgeId in bpmnModel.FlowLocationMap.Keys)
                         {
-                            if (bpmnModel.GetFlowElement(edgeId) != null)
+                            if (bpmnModel.GetFlowElement(edgeId) is object)
                             {
                                 CreateBPMNEdge(edgeId, bpmnModel.GetFlowLocationGraphicInfo(edgeId));
                             }
@@ -456,7 +456,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
                 }
                 sequenceFlow.Waypoints = waypoints;
             }
-            else if (bpmnModel.GetArtifact(key) != null)
+            else if (bpmnModel.GetArtifact(key) is object)
             {
                 // it's an association, so nothing to do
             }

@@ -79,16 +79,16 @@ namespace Spring.Expressions
         public override string getText()
         {
             string tmp = base.getText();
-            //            if (tmp != null && TypeRegistry.ContainsAlias(tmp))
+            //            if (tmp is object && TypeRegistry.ContainsAlias(tmp))
             //            {
             //                Type type = TypeRegistry.ResolveType(tmp);
-            //                if (type != null)
+            //                if (type is object)
             //                {
             //                    tmp = type.AssemblyQualifiedName;
             //                }                
             //            }
             AST node = this.getFirstChild();
-            while (node != null)
+            while (node is object)
             {
                 tmp += node.getText();
                 node = node.getNextSibling();

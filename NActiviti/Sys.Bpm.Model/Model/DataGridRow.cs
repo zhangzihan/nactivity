@@ -63,7 +63,7 @@ namespace Sys.Workflow.Bpmn.Models
                 Index = value.Index;
 
                 fields = new List<DataGridField>();
-                if (value.Fields != null && value.Fields.Count > 0)
+                if (value.Fields is object && value.Fields.Count > 0)
                 {
                     foreach (DataGridField field in value.Fields)
                     {

@@ -59,7 +59,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
 
             IJobEntity job = commandContext.JobEntityManager.FindById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
-            if (job == null)
+            if (job is null)
             {
                 throw new ActivitiObjectNotFoundException("No job found with id '" + jobId + "'", typeof(IJob));
             }

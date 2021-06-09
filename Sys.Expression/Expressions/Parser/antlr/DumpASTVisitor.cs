@@ -41,22 +41,22 @@ namespace Spring.Expressions.Parser.antlr
 			// Flatten this level of the tree if it has no children
 			bool flatten = /*true*/ false;
 			AST node2;
-			for (node2 = node; node2 != null; node2 = node2.getNextSibling()) 
+			for (node2 = node; node2 is object; node2 = node2.getNextSibling()) 
 			{
-				if (node2.getFirstChild() != null) 
+				if (node2.getFirstChild() is object) 
 				{
 					flatten = false;
 					break;
 				}
 			}
 
-			for (node2 = node; node2 != null; node2 = node2.getNextSibling()) 
+			for (node2 = node; node2 is object; node2 = node2.getNextSibling()) 
 			{
 				if (!flatten || node2 == node) 
 				{
 					tabs();
 				}
-				if (node2.getText() == null) 
+				if (node2.getText() is null) 
 				{
 					Console.Out.Write("nil");
 				}
@@ -76,7 +76,7 @@ namespace Spring.Expressions.Parser.antlr
 					Console.Out.WriteLine("");
 				}
 
-				if (node2.getFirstChild() != null) 
+				if (node2.getFirstChild() is object) 
 				{
 					level++;
 					visit(node2.getFirstChild());

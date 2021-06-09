@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             IDeploymentEntity deployment = commandContext.DeploymentEntityManager.FindById<IDeploymentEntity>(deploymentId);
 
-            if (deployment == null)
+            if (deployment is null)
             {
                 throw new ActivitiObjectNotFoundException("No deployment found for id = '" + deploymentId + "'", typeof(IDeployment));
             }

@@ -39,12 +39,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         protected internal virtual bool IsValidEvent(IActivitiEvent @event)
         {
             bool valid = false;
-            if (entityClass != null)
+            if (entityClass is object)
             {
                 if (@event is IActivitiEntityEvent)
                 {
                     object entity = ((IActivitiEntityEvent)@event).Entity;
-                    if (entity != null)
+                    if (entity is object)
                     {
                         valid = entityClass.IsAssignableFrom(entity.GetType());
                     }

@@ -44,7 +44,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             {
                 // Delete for an individual comment
                 IComment comment = commentManager.FindComment(commentId);
-                if (comment == null)
+                if (comment is null)
                 {
                     throw new ActivitiObjectNotFoundException("Comment with id '" + commentId + "' doesn't exists.", typeof(IComment));
                 }

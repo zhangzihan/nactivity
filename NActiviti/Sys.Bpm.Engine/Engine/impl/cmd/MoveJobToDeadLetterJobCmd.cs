@@ -44,12 +44,12 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
 
             IAbstractJobEntity job = commandContext.TimerJobEntityManager.FindById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
-            if (job == null)
+            if (job is null)
             {
                 job = commandContext.JobEntityManager.FindById<IAbstractJobEntity>(new KeyValuePair<string, object>("id", jobId));
             }
 
-            if (job == null)
+            if (job is null)
             {
                 throw new JobNotFoundException(jobId);
             }

@@ -90,7 +90,7 @@ namespace Spring.Util
             lock(s_moduleCache.SyncRoot)
             {
                 ModuleBuilder module = (ModuleBuilder) s_moduleCache[assemblyName];
-                if (module == null)
+                if (module is null)
                 {
                     AssemblyName an = new();
                     an.Name = assemblyName;
@@ -145,7 +145,7 @@ namespace Spring.Util
                 module = (ModuleBuilder) s_moduleCache[assemblyName];
             }
             
-            if(module == null)
+            if(module is null)
             {
                 throw new ArgumentException(string.Format("'{0}' is not a valid dynamic assembly name", assemblyName), "assemblyName");
             }

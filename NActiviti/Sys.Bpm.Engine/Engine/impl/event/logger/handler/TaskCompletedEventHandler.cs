@@ -28,7 +28,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
 
             if (@event is IActivitiEntityWithVariablesEvent activitiEntityWithVariablesEvent)
             {
-                if (activitiEntityWithVariablesEvent.Variables != null && activitiEntityWithVariablesEvent.Variables.Count > 0)
+                if (activitiEntityWithVariablesEvent.Variables is object && activitiEntityWithVariablesEvent.Variables.Count > 0)
                 {
                     IDictionary<string, object> variableMap = new Dictionary<string, object>();
                     foreach (object variableName in activitiEntityWithVariablesEvent.Variables.Keys)

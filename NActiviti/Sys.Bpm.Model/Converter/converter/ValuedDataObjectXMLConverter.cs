@@ -82,7 +82,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 structureRef = "xsd:string";
             }
 
-            if (dataObject != null)
+            if (dataObject is object)
             {
                 dataObject.Id = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_ID);
                 dataObject.Name = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_DATA_NAME);
@@ -95,7 +95,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 ParseChildElements(XMLElementName, dataObject, model, xtr);
 
                  dataObject.ExtensionElements.TryGetValue("value", out IList<ExtensionElement> valuesElement);
-                if (valuesElement != null && valuesElement.Count > 0)
+                if (valuesElement is object && valuesElement.Count > 0)
                 {
                     ExtensionElement valueElement = valuesElement[0];
                     if (!string.IsNullOrWhiteSpace(valueElement.ElementText))
@@ -130,7 +130,7 @@ namespace Sys.Workflow.Bpmn.Converters
         protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             ValuedDataObject dataObject = (ValuedDataObject)element;
-            if (dataObject.ItemSubjectRef != null && !string.IsNullOrWhiteSpace(dataObject.ItemSubjectRef.StructureRef))
+            if (dataObject.ItemSubjectRef is object && !string.IsNullOrWhiteSpace(dataObject.ItemSubjectRef.StructureRef))
             {
                 WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_DATA_ITEM_REF, dataObject.ItemSubjectRef.StructureRef, xtw);
             }
@@ -139,7 +139,7 @@ namespace Sys.Workflow.Bpmn.Converters
         {
             ValuedDataObject dataObject = (ValuedDataObject)element;
 
-            if (!string.IsNullOrWhiteSpace(dataObject.Id) && dataObject.Value != null)
+            if (!string.IsNullOrWhiteSpace(dataObject.Id) && dataObject.Value is object)
             {
 
                 if (!didWriteExtensionStartElement)
@@ -149,7 +149,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 }
 
                 xtw.WriteStartElement(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.ELEMENT_DATA_VALUE, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE);
-                if (dataObject.Value != null)
+                if (dataObject.Value is object)
                 {
                     string value;
                     if (dataObject is DateDataObject)

@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ namespace Spring.Core
         public Type ReturnType
         {
             get { return _type; }
-            set { _type = value == null ? DefaultType : value; }
+            set { _type = value is null ? DefaultType : value; }
         }
 
         #endregion
@@ -101,7 +101,7 @@ namespace Spring.Core
         {
             bool satisfied = false;
             MethodInfo method = datum as MethodInfo;
-            if (method != null)
+            if (method is object)
             {
                 satisfied = method.ReturnType.Equals(ReturnType);
             }

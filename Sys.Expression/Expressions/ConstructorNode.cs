@@ -151,7 +151,7 @@ namespace Spring.Expressions
             }
 
             // cache named args info
-            if (namedArgValues != null)
+            if (namedArgValues is object)
             {
                 namedArgs = new Hashtable(namedArgValues.Count);
                 foreach (string name in namedArgValues.Keys)

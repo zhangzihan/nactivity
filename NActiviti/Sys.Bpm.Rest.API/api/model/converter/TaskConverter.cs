@@ -48,7 +48,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model.Converters
         public virtual TaskModel From(ITask source)
         {
             TaskModel task = null;
-            if (source != null)
+            if (source is object)
             {
                 task = new TaskModel(source.Id,
                     source.Owner,
@@ -72,7 +72,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model.Converters
                     source.BusinessKey,
                     source.TaskDefinitionKey);
 
-                if (source.Assigner != null)
+                if (source.Assigner is object)
                 {
                     task.Assigner = JToken.FromObject(source.Assigner).ToObject<UserInfo>();
                 }

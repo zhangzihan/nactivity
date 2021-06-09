@@ -129,7 +129,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IModelQuery SetModelVersion(int? version)
         {
-            if (version == null)
+            if (version is null)
             {
                 this.version = null;
             }

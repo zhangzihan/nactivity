@@ -134,7 +134,7 @@ namespace Spring.Core
 				public bool IsSatisfied(object datum)
 				{
 					MethodBase method = datum as MethodBase;
-					if(method != null && method.DeclaringType != null) 
+					if(method is object && method.DeclaringType is object) 
 					{
 						return method.DeclaringType.Equals(_typeToMatch);
 					}

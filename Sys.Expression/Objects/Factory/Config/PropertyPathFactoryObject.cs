@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -135,7 +135,7 @@ namespace Spring.Objects.Factory.Config
 		{
 			set
 			{
-				if (value != null)
+				if (value is object)
 				{
 					value = value.Trim();
 				}
@@ -175,7 +175,7 @@ namespace Spring.Objects.Factory.Config
 		{
 			set
 			{
-				if (value != null)
+				if (value is object)
 				{
 					value = value.Trim();
 				}
@@ -221,13 +221,13 @@ namespace Spring.Objects.Factory.Config
 		public object GetObject()
 		{
 			IObjectWrapper target = this.targetObjectWrapper;
-			if (target == null)
+			if (target is null)
 			{
 				// fetch the prototype object object...
 				target = new ObjectWrapper(this.objectFactory[this.targetObjectName]);
 			}
 			object value = target.GetPropertyValue(this.propertyPath);
-			if (value == null)
+			if (value is null)
 			{
 				throw new FatalObjectException("PropertyPathFactoryObject is not allowed to return null, " +
 					"but property value for path '" + this.propertyPath + "' is null.");
@@ -295,13 +295,13 @@ namespace Spring.Objects.Factory.Config
 			set
 			{
 				this.objectFactory = value;
-				if (this.targetObjectWrapper != null && this.targetObjectName != null)
+				if (this.targetObjectWrapper is object && this.targetObjectName is object)
 				{
 					throw new ArgumentException("Only one of the TargetObjectName or TargetObject properties can be set, not both.");
 				}
-				if (this.targetObjectWrapper == null && this.targetObjectName == null)
+				if (this.targetObjectWrapper is null && this.targetObjectName is null)
 				{
-					if (this.propertyPath != null)
+					if (this.propertyPath is object)
 					{
 						throw new ArgumentException(
 							"Specify TargetObject or TargetObjectName property in combination with PropertyPath.");
@@ -318,11 +318,11 @@ namespace Spring.Objects.Factory.Config
 					this.targetObjectName = strippedObjectname.Substring(0, dotIndex);
 					this.propertyPath = strippedObjectname.Substring(dotIndex + 1);
 				}
-				else if (this.propertyPath == null)
+				else if (this.propertyPath is null)
 				{
 					throw new ArgumentException("The 'PropertyPath' property has not been set.");
 				}
-				if (this.targetObjectWrapper == null
+				if (this.targetObjectWrapper is null
 					&& this.objectFactory.IsSingleton(this.targetObjectName))
 				{
 					// eagerly fetch singleton target object, and determine result type...

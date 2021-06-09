@@ -33,7 +33,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public  virtual object  Execute(ICommandContext commandContext)
         {
-            if (model == null)
+            if (model is null)
             {
                 throw new ActivitiIllegalArgumentException("model is null");
             }

@@ -78,7 +78,7 @@
 //            services.AddSingleton<IUserServiceProxy, DefaultUserServiceProxy>();
 
 //            var sd = services.FirstOrDefault(x => x.ServiceType == typeof(IServiceWebApiHttpProxy));
-//            if (sd != null)
+//            if (sd is object)
 //            {
 //                services.Remove(sd);
 //            }

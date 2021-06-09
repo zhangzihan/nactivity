@@ -168,7 +168,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IExecutionQuery SetProcessDefinitionVersion(int? processDefinitionVersion)
         {
-            //if (processDefinitionVersion == null)
+            //if (processDefinitionVersion is null)
             //{
             //    throw new ActivitiIllegalArgumentException("Process definition version is null");
             //}
@@ -226,7 +226,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IExecutionQuery SetProcessDefinitionKeys(string[] processDefinitionKeys)
         {
-            //if (processDefinitionKeys == null)
+            //if (processDefinitionKeys is null)
             //{
             //    throw new ActivitiIllegalArgumentException("Process definition keys is null");
             //}
@@ -285,7 +285,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IExecutionQuery SetExecutionTenantId(string tenantId)
         {
-            //if (tenantId == null)
+            //if (tenantId is null)
             //{
             //    throw new ActivitiIllegalArgumentException("execution tenant id is null");
             //}
@@ -295,7 +295,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IExecutionQuery SetExecutionTenantIdLike(string tenantIdLike)
         {
-            //if (tenantIdLike == null)
+            //if (tenantIdLike is null)
             //{
             //    throw new ActivitiIllegalArgumentException("execution tenant id is null");
             //}
@@ -334,7 +334,7 @@ namespace Sys.Workflow.Engine.Impl
             {
                 throw new ActivitiIllegalArgumentException("event type is null");
             }
-            if (eventSubscriptions == null)
+            if (eventSubscriptions is null)
             {
                 eventSubscriptions = new List<EventSubscriptionQueryValue>();
             }
@@ -391,7 +391,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IExecutionQuery SetStartedBefore(DateTime beforeTime)
         {
-            //if (beforeTime == null)
+            //if (beforeTime is null)
             //{
             //    throw new ActivitiIllegalArgumentException("before time is null");
             //}
@@ -402,7 +402,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual IExecutionQuery SetStartedAfter(DateTime afterTime)
         {
-            //if (afterTime == null)
+            //if (afterTime is null)
             //{
             //    throw new ActivitiIllegalArgumentException("after time is null");
             //}
@@ -503,16 +503,16 @@ namespace Sys.Workflow.Engine.Impl
             if (!string.IsNullOrWhiteSpace(locale_Renamed) && !string.IsNullOrWhiteSpace(processDefinitionId))
             {
                 JToken languageNode = Context.GetLocalizationElementProperties(locale_Renamed, activityId, processDefinitionId, withLocalizationFallback_);
-                if (languageNode != null)
+                if (languageNode is object)
                 {
                     JToken languageNameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
-                    if (languageNameNode != null)
+                    if (languageNameNode is object)
                     {
                         executionEntity.LocalizedName = languageNameNode.ToString();
                     }
 
                     JToken languageDescriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
-                    if (languageDescriptionNode != null)
+                    if (languageDescriptionNode is object)
                     {
                         executionEntity.LocalizedDescription = languageDescriptionNode.ToString();
                     }

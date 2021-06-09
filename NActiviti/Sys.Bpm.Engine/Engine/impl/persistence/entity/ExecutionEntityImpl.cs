@@ -283,7 +283,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             set
             {
                 this.currentFlowElement = value;
-                if (value != null)
+                if (value is object)
                 {
                     this.activityId = value.Id;
                 }
@@ -338,7 +338,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureExecutionsInitialized()
         {
             var ctx = Context.CommandContext;
-            if (executions is null && ctx != null)
+            if (executions is null && ctx is object)
             {
                 this.executions = ctx.ExecutionEntityManager.FindChildExecutionsByParentExecutionId(Id);
             }
@@ -356,7 +356,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                this.businessKey = value;
+                this.businessKey = string.Empty.Equals(value?.Trim()) ? null : value?.Trim();
             }
         }
 
@@ -462,7 +462,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             set
             {
                 this.processInstance = (ExecutionEntityImpl)processInstance;
-                if (processInstance != null)
+                if (processInstance is object)
                 {
                     this.processInstanceId = this.processInstance.Id;
                 }
@@ -475,7 +475,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureProcessInstanceInitialized()
         {
             var ctx = Context.CommandContext;
-            if (processInstance is null && processInstanceId != null && ctx != null)
+            if (processInstance is null && processInstanceId is object && ctx is object)
             {
                 processInstance = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(processInstanceId);
             }
@@ -517,7 +517,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureParentInitialized()
         {
             var ctx = Context.CommandContext;
-            if (parent is null && parentId != null && ctx != null)
+            if (parent is null && parentId is object && ctx is object)
             {
                 parent = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(parentId);
             }
@@ -530,7 +530,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             this.parent = (ExecutionEntityImpl)parent;
 
-            if (parent != null)
+            if (parent is object)
             {
                 this.parentId = parent.Id;
             }
@@ -569,12 +569,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 this.superExecution = value;
 
-                if (superExecution != null)
+                if (superExecution is object)
                 {
                     superExecution.SubProcessInstance = null;
                 }
 
-                if (superExecution != null)
+                if (superExecution is object)
                 {
                     this.superExecutionId = ((ExecutionEntityImpl)superExecution).Id;
                 }
@@ -590,7 +590,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureSuperExecutionInitialized()
         {
             var ctx = Context.CommandContext;
-            if (superExecution is null && superExecutionId != null && ctx != null)
+            if (superExecution is null && superExecutionId is object && ctx is object)
             {
                 superExecution = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(superExecutionId);
             }
@@ -616,7 +616,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureSubProcessInstanceInitialized()
         {
             var ctx = Context.CommandContext;
-            if (subProcessInstance is null && ctx != null)
+            if (subProcessInstance is null && ctx is object)
             {
                 subProcessInstance = ctx.ExecutionEntityManager.FindSubProcessInstanceBySuperExecutionId(Id);
             }
@@ -635,7 +635,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 this.rootProcessInstance = (ExecutionEntityImpl)value;
 
-                if (value != null)
+                if (value is object)
                 {
                     this.rootProcessInstanceId = value.Id;
                 }
@@ -651,7 +651,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureRootProcessInstanceInitialized()
         {
             var ctx = Context.CommandContext;
-            if (rootProcessInstanceId is null && ctx != null)
+            if (rootProcessInstanceId is null && ctx is object)
             {
                 rootProcessInstance = ctx.ExecutionEntityManager.FindById<ExecutionEntityImpl>(rootProcessInstanceId);
             }
@@ -831,7 +831,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureEventSubscriptionsInitialized()
         {
             var ctx = Context.CommandContext;
-            if (eventSubscriptions is null && ctx != null)
+            if (eventSubscriptions is null && ctx is object)
             {
                 eventSubscriptions = ctx.EventSubscriptionEntityManager.FindEventSubscriptionsByExecution(Id);
             }
@@ -855,7 +855,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureJobsInitialized()
         {
             var ctx = Context.CommandContext;
-            if (jobs is null && ctx != null)
+            if (jobs is null && ctx is object)
             {
                 jobs = ctx.JobEntityManager.FindJobsByExecutionId(Id);
             }
@@ -877,7 +877,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureTimerJobsInitialized()
         {
             var ctx = Context.CommandContext;
-            if (timerJobs is null && ctx != null)
+            if (timerJobs is null && ctx is object)
             {
                 timerJobs = ctx.TimerJobEntityManager.FindJobsByExecutionId(Id);
             }
@@ -890,7 +890,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureTasksInitialized()
         {
             var ctx = Context.CommandContext;
-            if (tasks is null && ctx != null)
+            if (tasks is null && ctx is object)
             {
                 tasks = ctx.TaskEntityManager.FindTasksByExecutionId(Id);
             }
@@ -925,7 +925,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void EnsureIdentityLinksInitialized()
         {
             var ctx = Context.CommandContext;
-            if (identityLinks is null && ctx != null)
+            if (identityLinks is null && ctx is object)
             {
                 identityLinks = ctx.IdentityLinkEntityManager.FindIdentityLinksByProcessInstanceId(Id);
             }
@@ -1258,7 +1258,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 IDictionary<string, object> variables = new Dictionary<string, object>();
-                if (queryVariables != null)
+                if (queryVariables is object)
                 {
                     foreach (IVariableInstanceEntity variableInstance in queryVariables)
                     {
@@ -1279,7 +1279,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (queryVariables is null && Context.CommandContext != null)
+                if (queryVariables is null && Context.CommandContext is object)
                 {
                     queryVariables = new VariableInitializingList();
                 }
@@ -1352,7 +1352,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             foreach (ExecutionEntityImpl inst in executions)
             {
                 var variable = variables.FirstOrDefault(x => x.ExecutionId == inst.Id && x.Name == inst.StartUserId);
-                if (variable != null)
+                if (variable is object)
                 {
                     inst.starter = variable.Value as UserInfo;
                 }
@@ -1379,9 +1379,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
 
             //由于缓存问题，先不要从变量里获取用户
-            if (Context.CommandContext != null && (starter is null || starter.Id != this.startUserId))
+            if (Context.CommandContext is object && (starter is null || starter.Id != this.startUserId))
             {
-                if (this.VariablesLocal.TryGetValue(this.startUserId, out var userInfo) && userInfo != null)
+                if (this.VariablesLocal.TryGetValue(this.startUserId, out var userInfo) && userInfo is object)
                 {
                     starter = JToken.FromObject(userInfo).ToObject<UserInfo>();
 

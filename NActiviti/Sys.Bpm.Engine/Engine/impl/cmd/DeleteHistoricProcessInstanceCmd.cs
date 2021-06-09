@@ -44,11 +44,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             // Check if process instance is still running
             IHistoricProcessInstance instance = commandContext.HistoricProcessInstanceEntityManager.FindById<IHistoricProcessInstance>(new KeyValuePair<string, object>("id", processInstanceId));
 
-            if (instance == null)
+            if (instance is null)
             {
                 throw new ActivitiObjectNotFoundException("No historic process instance found with id: " + processInstanceId, typeof(IHistoricProcessInstance));
             }
-            if (instance.EndTime == null)
+            if (instance.EndTime is null)
             {
                 throw new ActivitiException("Process instance is still running, cannot delete historic process instance: " + processInstanceId);
             }

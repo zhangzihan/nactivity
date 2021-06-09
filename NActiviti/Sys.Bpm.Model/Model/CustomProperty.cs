@@ -76,7 +76,7 @@ namespace Sys.Workflow.Bpmn.Models
                 Name = val.Name;
                 SimpleValue = val.SimpleValue;
 
-                if (val.ComplexValue != null && val.ComplexValue is DataGrid)
+                if (val.ComplexValue is object && val.ComplexValue is DataGrid)
                 {
                     ComplexValue = ((DataGrid)val.ComplexValue).Clone();
                 }

@@ -21,7 +21,7 @@ namespace Sys.Extentions
         public static IServiceCollection AddWorkflowAccessTokenProvider<T>(this IServiceCollection services) where T : class, IAccessTokenProvider
         {
             var sp = services.FirstOrDefault(x => x.ServiceType == typeof(IAccessTokenProvider));
-            if (sp != null)
+            if (sp is object)
             {
                 services.Remove(sp);
             }

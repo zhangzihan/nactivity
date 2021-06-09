@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public override void SetValue(object value, IValueFields valueFields)
         {
-            if (value != null)
+            if (value is object)
             {
                 valueFields.TextValue = value.ToString();
             }
@@ -61,7 +61,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public override bool IsAbleToStore(object value)
         {
-            if (value == null)
+            if (value is null)
             {
                 return true;
             }

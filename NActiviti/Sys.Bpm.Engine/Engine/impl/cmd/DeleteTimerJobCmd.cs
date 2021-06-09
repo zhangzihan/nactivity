@@ -55,7 +55,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             //}
 
             ITimerJobEntity job = commandContext.TimerJobEntityManager.FindById<ITimerJobEntity>(new KeyValuePair<string, object>("id", timerJobId));
-            if (job == null)
+            if (job is null)
             {
                 throw new ActivitiObjectNotFoundException("No timer job found with id '" + timerJobId + "'", typeof(IJob));
             }

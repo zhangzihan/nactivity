@@ -49,11 +49,11 @@ namespace Spring.Objects.Factory.Support
 
             string definedDestroyMethodName = objectDefinition.DestroyMethodName;
 
-            if (definedDestroyMethodName != null && !(this.invokeDisposableObject && "Destroy".Equals(definedDestroyMethodName))) // && !beanDefinition.isExternallyManagedDestroyMethod(destroyMethodName)) 
+            if (definedDestroyMethodName is object && !(this.invokeDisposableObject && "Destroy".Equals(definedDestroyMethodName))) // && !beanDefinition.isExternallyManagedDestroyMethod(destroyMethodName)) 
             {
                 this.destroyMethodName = definedDestroyMethodName;
                 this.destroyMethod = DetermineDestroyMethod();
-                if (this.destroyMethod == null)
+                if (this.destroyMethod is null)
                 {
                     //TODO: add support for Enforcing Destroy Method
                     //if (beanDefinition.IsEnforceDestroyMethod()) {
@@ -107,7 +107,7 @@ namespace Spring.Objects.Factory.Support
         private List<IDestructionAwareObjectPostProcessor> FilterPostProcessors(IReadOnlyCollection<IObjectPostProcessor> postProcessors)
         {
             List<IDestructionAwareObjectPostProcessor> filteredPostProcessors = null;
-            if (postProcessors != null && postProcessors.Count != 0)
+            if (postProcessors is object && postProcessors.Count != 0)
             {
                 filteredPostProcessors = new List<IDestructionAwareObjectPostProcessor>(postProcessors.Count);
                 filteredPostProcessors.AddRange(postProcessors.OfType<IDestructionAwareObjectPostProcessor>());
@@ -127,7 +127,7 @@ namespace Spring.Objects.Factory.Support
         {
             if (disposing)
             {
-                if (this.objectPostProcessors != null && this.objectPostProcessors.Count != 0)
+                if (this.objectPostProcessors is object && this.objectPostProcessors.Count != 0)
                 {
                     foreach (IDestructionAwareObjectPostProcessor processor in this.objectPostProcessors)
                     {
@@ -171,14 +171,14 @@ namespace Spring.Objects.Factory.Support
                     }
                 }
 
-                if (this.destroyMethod != null)
+                if (this.destroyMethod is object)
                 {
                     InvokeCustomDestroyMethod(this.destroyMethod);
                 }
-                else if (this.destroyMethodName != null)
+                else if (this.destroyMethodName is object)
                 {
                     MethodInfo methodToCall = DetermineDestroyMethod();
-                    if (methodToCall != null)
+                    if (methodToCall is object)
                     {
                         InvokeCustomDestroyMethod(methodToCall);
                     }

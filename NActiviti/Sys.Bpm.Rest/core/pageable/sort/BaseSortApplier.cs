@@ -30,7 +30,7 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables.Sorts
         /// </summary>
         public virtual void ApplySort(T query, Pageable pageable)
         {
-            if (pageable.Sort != null && pageable.Sort != Sort.UnSorted())
+            if (pageable.Sort is object && pageable.Sort != Sort.UnSorted())
             {
                 ApplyPageableSort(query, pageable.Sort);
             }
@@ -63,7 +63,7 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables.Sorts
         private void ApplyOrder(T query, Sort.Order order)
         {
             IQueryProperty property = GetOrderByProperty(order);
-            if (property != null)
+            if (property is object)
             {
                 query.SetOrderBy(property);
             }

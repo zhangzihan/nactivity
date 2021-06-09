@@ -93,11 +93,11 @@ namespace Sys.Workflow.Engine.Impl.Util
                 targetElement = (FlowNode)((SequenceFlow)targetFlowElement).TargetFlowElement;
             }
 
-            if (sourceElement == null)
+            if (sourceElement is null)
             {
                 throw new ActivitiException("Invalid sourceElementId '" + sourceElementId + "': no element found for this id n process definition '" + processDefinitionId + "'");
             }
-            if (targetElement == null)
+            if (targetElement is null)
             {
                 throw new ActivitiException("Invalid targetElementId '" + targetElementId + "': no element found for this id n process definition '" + processDefinitionId + "'");
             }
@@ -136,13 +136,13 @@ namespace Sys.Workflow.Engine.Impl.Util
             visitedElements.Add(sourceElement.Id);
 
             IList<SequenceFlow> sequenceFlows = sourceElement.OutgoingFlows;
-            if (sequenceFlows != null && sequenceFlows.Count > 0)
+            if (sequenceFlows is object && sequenceFlows.Count > 0)
             {
                 foreach (SequenceFlow sequenceFlow in sequenceFlows)
                 {
                     string targetRef = sequenceFlow.TargetRef;
                     FlowNode sequenceFlowTarget = (FlowNode)process.GetFlowElement(targetRef, true);
-                    if (sequenceFlowTarget != null && !visitedElements.Contains(sequenceFlowTarget.Id))
+                    if (sequenceFlowTarget is object && !visitedElements.Contains(sequenceFlowTarget.Id))
                     {
                         bool reachable = IsReachable(process, sequenceFlowTarget, targetElement, visitedElements);
 

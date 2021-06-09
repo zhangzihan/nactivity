@@ -67,13 +67,13 @@ namespace Spring.Context.Attributes
         private void ParseName()
         {
             var attr = Attribute.GetCustomAttribute(ObjectType, typeof (ComponentAttribute), true) as ComponentAttribute;
-            if (attr != null && !string.IsNullOrEmpty(attr.Name))
+            if (attr is object && !string.IsNullOrEmpty(attr.Name))
                 _componentName = attr.Name;
         }
 
         private void ApplyDefaults(DocumentDefaultsDefinition defaults)
         {
-            if (defaults == null)
+            if (defaults is null)
                 return;
 
             bool lazyInit = false;
@@ -97,7 +97,7 @@ namespace Spring.Context.Attributes
         private void ParseScopeAttribute()
         {
             var attr = Attribute.GetCustomAttribute(ObjectType, typeof(ScopeAttribute), true) as ScopeAttribute;
-            if (attr != null)
+            if (attr is object)
             {
                 Scope = attr.ObjectScope.ToString().ToLower();
 
@@ -111,14 +111,14 @@ namespace Spring.Context.Attributes
         private void ParseLazyAttribute()
         {
             var attr = Attribute.GetCustomAttribute(ObjectType, typeof(LazyAttribute), true) as LazyAttribute;
-            if (attr != null)
+            if (attr is object)
                 IsLazyInit = attr.LazyInitialize;
         }
 
         private void ParseQualifierAttribute()
         {
             var attr = Attribute.GetCustomAttribute(ObjectType, typeof(QualifierAttribute), true) as QualifierAttribute;
-            if (attr != null)
+            if (attr is object)
             {
                 var qualifier = new AutowireCandidateQualifier(attr.GetType());
 
@@ -138,7 +138,7 @@ namespace Spring.Context.Attributes
                 if (!property.Name.Equals("TypeId") && !property.Name.Equals("Value"))
                 {
                     object value = property.GetValue(attr, null);
-                    if (value != null)
+                    if (value is object)
                     {
                         var attribute = new ObjectMetadataAttribute(property.Name, value);
                         qualifier.AddMetadataAttribute(attribute);

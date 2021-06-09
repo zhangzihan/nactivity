@@ -51,7 +51,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             {
                 IJobEntity jobToDelete = commandContext.JobEntityManager.FindById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
 
-                if (jobToDelete != null)
+                if (jobToDelete is object)
                 {
                     // When given job doesn't exist, ignore
                     if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)
@@ -66,7 +66,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 {
                     ITimerJobEntity timerJobToDelete = commandContext.TimerJobEntityManager.FindById<ITimerJobEntity>(new KeyValuePair<string, object>("id", jobId));
 
-                    if (timerJobToDelete != null)
+                    if (timerJobToDelete is object)
                     {
                         // When given job doesn't exist, ignore
                         if (commandContext.ProcessEngineConfiguration.EventDispatcher.Enabled)

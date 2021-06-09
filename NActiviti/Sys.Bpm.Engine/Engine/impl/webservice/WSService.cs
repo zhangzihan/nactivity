@@ -62,7 +62,7 @@ namespace Sys.Workflow.Engine.Impl.Webservice
         {
             get
             {
-                if (this.client == null)
+                if (this.client is null)
                 {
                     // TODO refactor to use configuration
                     ISyncWebServiceClientFactory factory = (ISyncWebServiceClientFactory)ReflectUtil.Instantiate(ProcessEngineConfigurationImpl.DEFAULT_WS_SYNC_FACTORY);

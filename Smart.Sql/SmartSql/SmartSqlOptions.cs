@@ -38,44 +38,44 @@ namespace SmartSql
             {
                 ConfigPath = "SmartSqlMapConfig.xml";
             }
-            if (LoggerFactory == null)
+            if (LoggerFactory is null)
             {
                 LoggerFactory = NullLoggerFactory.Instance;
             }
 
-            if (ConfigLoader == null)
+            if (ConfigLoader is null)
             {
                 ConfigLoader = new LocalFileConfigLoader(ConfigPath, LoggerFactory);
             }
             var sqlMapConfig = ConfigLoader.Load();
             SmartSqlContext = new SmartSqlContext(LoggerFactory.CreateLogger<SmartSqlContext>(), sqlMapConfig);
-            if (DbSessionStore == null)
+            if (DbSessionStore is null)
             {
                 var dbProviderFactory = DbProviderFactoryFactory.Create(SmartSqlContext.DbProvider.Type);
                 DbSessionStore = new DbConnectionSessionStore(LoggerFactory, dbProviderFactory);
             }
-            if (DataSourceFilter == null)
+            if (DataSourceFilter is null)
             {
                 DataSourceFilter = new DataSourceFilter(LoggerFactory.CreateLogger<DataSourceFilter>(), DbSessionStore, SmartSqlContext);
             }
-            if (SqlBuilder == null)
+            if (SqlBuilder is null)
             {
                 SqlBuilder = new SqlBuilder(LoggerFactory.CreateLogger<SqlBuilder>(), SmartSqlContext);
             }
 
-            if (PreparedCommand == null)
+            if (PreparedCommand is null)
             {
                 PreparedCommand = new PreparedCommand(LoggerFactory.CreateLogger<PreparedCommand>(), SmartSqlContext);
             }
-            if (CommandExecuter == null)
+            if (CommandExecuter is null)
             {
                 CommandExecuter = new CommandExecuter(LoggerFactory.CreateLogger<CommandExecuter>(), PreparedCommand);
             }
-            if (DataReaderDeserializerFactory == null)
+            if (DataReaderDeserializerFactory is null)
             {
                 DataReaderDeserializerFactory = new EmitDataReaderDeserializerFactory();
             }
-            if (CacheManager == null)
+            if (CacheManager is null)
             {
                 if (SmartSqlContext.IsCacheEnabled)
                 {

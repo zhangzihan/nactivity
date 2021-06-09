@@ -28,7 +28,7 @@ namespace Sys.Workflow.Engine.Impl.Scripting
         /// <returns></returns>
         public virtual IResolver CreateResolver(ProcessEngineConfigurationImpl processEngineConfiguration, IVariableScope variableScope)
         {
-            if (variableScope != null)
+            if (variableScope is object)
             {
                 return new VariableScopeResolver(processEngineConfiguration, variableScope);
             }

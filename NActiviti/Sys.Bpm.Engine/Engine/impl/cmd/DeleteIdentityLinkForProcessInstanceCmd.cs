@@ -69,7 +69,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             IExecutionEntity processInstance = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
-            if (processInstance == null)
+            if (processInstance is null)
             {
                 throw new ActivitiObjectNotFoundException("Cannot find process instance with id " + processInstanceId, typeof(IExecutionEntity));
             }

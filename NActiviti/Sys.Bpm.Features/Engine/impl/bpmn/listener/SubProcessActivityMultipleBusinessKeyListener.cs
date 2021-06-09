@@ -37,7 +37,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
                     string varBusiKey = string.Format(SUBPROCESS_BUSINESS_KEY, execution.Id);
 
-                    if (GetVariable<object>(miRoot, varBusiKey) != null)
+                    if (GetVariable<object>(miRoot, varBusiKey) is object)
                     {
                         return;
                     }
@@ -72,7 +72,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
         {
             object value = execution.GetVariableLocal(variableName);
             IExecutionEntity parent = execution.Parent;
-            while (value == null && parent != null)
+            while (value is null && parent is object)
             {
                 value = parent.GetVariableLocal(variableName);
                 parent = parent.Parent;

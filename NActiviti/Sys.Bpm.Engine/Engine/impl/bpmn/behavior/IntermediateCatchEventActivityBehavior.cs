@@ -48,7 +48,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         public virtual void LeaveIntermediateCatchEvent(IExecutionEntity execution)
         {
             EventGateway eventGateway = GetPrecedingEventBasedGateway(execution);
-            if (eventGateway != null)
+            if (eventGateway is object)
             {
                 DeleteOtherEventsRelatedToEventBasedGateway(execution, eventGateway);
             }
@@ -73,7 +73,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 IList<SequenceFlow> incomingSequenceFlow = intermediateCatchEvent.IncomingFlows;
 
                 // If behind an event based gateway, there is only one incoming sequence flow that originates from said gateway
-                if (incomingSequenceFlow != null && incomingSequenceFlow.Count == 1)
+                if (incomingSequenceFlow is object && incomingSequenceFlow.Count == 1)
                 {
                     SequenceFlow sequenceFlow = incomingSequenceFlow[0];
                     FlowElement sourceFlowElement = sequenceFlow.SourceFlowElement;
@@ -101,7 +101,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             ISet<string> eventActivityIds = new HashSet<string>();//outgoingSequenceFlows.Count - 1); // -1, the event being triggered does not need to be deleted
             foreach (SequenceFlow outgoingSequenceFlow in outgoingSequenceFlows)
             {
-                if (outgoingSequenceFlow.TargetFlowElement != null && !outgoingSequenceFlow.TargetFlowElement.Id.Equals(execution.CurrentActivityId))
+                if (outgoingSequenceFlow.TargetFlowElement is object && !outgoingSequenceFlow.TargetFlowElement.Id.Equals(execution.CurrentActivityId))
                 {
                     eventActivityIds.Add(outgoingSequenceFlow.TargetFlowElement.Id);
                 }

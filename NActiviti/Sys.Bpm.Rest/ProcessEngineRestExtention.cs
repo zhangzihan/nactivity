@@ -54,7 +54,7 @@ namespace Sys.Workflow.Services.Rest
 #if !NETCORE3
                 JsonOutputFormatter jsonFormatter = opts.OutputFormatters.FirstOrDefault(x => x.GetType() == typeof(JsonOutputFormatter)) as JsonOutputFormatter;
 
-                if (jsonFormatter != null)
+                if (jsonFormatter is object)
                 {
                     jsonFormatter.PublicSerializerSettings.ReferenceLoopHandling =
                         ReferenceLoopHandling.Ignore;

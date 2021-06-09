@@ -40,7 +40,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public override bool IsAbleToStore(object value)
         {
-            if (value == null)
+            if (value is null)
             {
                 return true;
             }
@@ -54,7 +54,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public override byte[] Serialize(object value, IValueFields valueFields)
         {
-            if (value == null)
+            if (value is null)
             {
                 return null;
             }

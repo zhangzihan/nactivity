@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +118,7 @@ namespace Spring.Objects.Factory.Config
         protected TypedStringValue(SerializationInfo info, StreamingContext context)
         {
             var type = info.GetString("TargetTypeName");
-            targetType = type != null ? Type.GetType(type) : null;
+            targetType = type is object ? Type.GetType(type) : null;
             theValue = info.GetString("Value");
         }
 
@@ -206,7 +206,7 @@ namespace Spring.Objects.Factory.Config
         /// <returns>The resolved type to convert to.</returns>    
         public Type ResolveTargetType()
         {
-            if (this.targetType == null)
+            if (this.targetType is null)
             {
                 return null;
             }

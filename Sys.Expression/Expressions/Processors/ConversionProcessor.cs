@@ -48,14 +48,14 @@ namespace Spring.Expressions.Processors
         /// </returns>
         public object Process(ICollection source, object[] args)
         {
-            if (source == null
+            if (source is null
                 || source.Count == 0)
             {
                 return source;
             }
 
             Type targetType = typeof(double);
-            if (args == null || args.Length == 0)
+            if (args is null || args.Length == 0)
             {
                 throw new ArgumentNullException("args", "convert() processor requires a Type value argument.");
             }

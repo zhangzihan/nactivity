@@ -182,7 +182,7 @@ namespace Spring.Objects.Factory.Config
         /// </summary>
         public Type ObjectType
         {
-            get { return (this.field == null) ? null : this.field.FieldType; }
+            get { return (this.field is null) ? null : this.field.FieldType; }
         }
 
         /// <summary>
@@ -212,14 +212,14 @@ namespace Spring.Objects.Factory.Config
         /// </exception>
         public void AfterPropertiesSet()
         {
-            if (TargetType != null && TargetObject != null)
+            if (TargetType is object && TargetObject is object)
             {
                 throw new ArgumentException(
                     "Only one of the TargetType or TargetObject properties can be set, not both.");
             }
-            if (TargetType == null && TargetObject == null)
+            if (TargetType is null && TargetObject is null)
             {
-                if (TargetField != null)
+                if (TargetField is object)
                 {
                     throw new ArgumentException(
                         "Specify the TargetType or TargetObject property in combination with the TargetField property.");
@@ -232,12 +232,12 @@ namespace Spring.Objects.Factory.Config
                 }
                 ParseAndSetFromStaticFieldValue();
             }
-            if (TargetField == null)
+            if (TargetField is null)
             {
                 throw new ArgumentException("The TargetField property is required.");
             }
             BindingFlags fieldFlags = BindingFlags.Public | BindingFlags.IgnoreCase;
-            if (TargetObject == null)
+            if (TargetObject is null)
             {
                 // a static field...
                 fieldFlags |= BindingFlags.Static;
@@ -249,13 +249,13 @@ namespace Spring.Objects.Factory.Config
                 TargetType = TargetObject.GetType();
             }
             this.field = targetType.GetField(TargetField, fieldFlags);
-            if (this.field == null)
+            if (this.field is null)
             {
                 throw new ObjectDefinitionStoreException(
                     string.Format(
                         CultureInfo.InvariantCulture,
                         "No such field '{0}' on [{1}].", TargetField,
-                        TargetObject == null ? TargetType : TargetObject));
+                        TargetObject is null ? TargetType : TargetObject));
             }
         }
 
@@ -270,7 +270,7 @@ namespace Spring.Objects.Factory.Config
         /// <see cref="Spring.Objects.Factory.IFactoryObject.GetObject"/>
         public object GetObject()
         {
-            if (TargetObject != null)
+            if (TargetObject is object)
             {
                 return this.field.GetValue(TargetObject);
             }

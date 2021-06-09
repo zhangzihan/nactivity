@@ -26,14 +26,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         private const long serialVersionUID = 1L;
 
-        protected internal string activityId;
-        protected internal string activityName;
-        protected internal string activityType;
-        protected internal string executionId;
-        protected internal string assignee;
-        protected internal string taskId;
-        protected internal string calledProcessInstanceId;
-        protected internal string tenantId = ProcessEngineConfiguration.NO_TENANT_ID;
+        private string activityId;
+        private string activityName;
+        private string activityType;
+        private string executionId;
+        private string assignee;
+        private string taskId;
+        private string calledProcessInstanceId;
+        private string tenantId = ProcessEngineConfiguration.NO_TENANT_ID;
 
         public HistoricActivityInstanceEntityImpl()
         {
@@ -118,7 +118,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                this.assignee = value;
+                this.assignee = string.Empty.Equals(value?.Trim()) ? null : value?.Trim();
             }
         }
 

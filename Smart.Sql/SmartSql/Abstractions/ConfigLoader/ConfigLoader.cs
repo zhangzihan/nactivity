@@ -38,7 +38,7 @@ namespace SmartSql.Abstractions.Config
                 SqlMapConfig = xmlSerializer.Deserialize(configStream.Stream) as SmartSqlMapConfig;
                 SqlMapConfig.Path = configStream.Path;
                 SqlMapConfig.SmartSqlMaps = new List<SmartSqlMap> { };
-                if (SqlMapConfig.TypeHandlers != null)
+                if (SqlMapConfig.TypeHandlers is object)
                 {
                     foreach (var typeHandler in SqlMapConfig.TypeHandlers)
                     {

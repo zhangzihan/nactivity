@@ -53,7 +53,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         [HttpPost("tasks")]
         public virtual Task<Resources<TaskModel>> GetTasks([FromBody]ProcessInstanceTaskQuery query)
         {
-            if (query == null)
+            if (query is null)
             {
                 throw new ArgumentNullException("query");
             }

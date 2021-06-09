@@ -343,7 +343,7 @@ namespace Spring.Objects.Factory.Support
         public int RegisterObjectDefinitions(
             IDictionary id, string prefix, string resourceDescription)
         {
-            if (prefix == null)
+            if (prefix is null)
             {
                 prefix = string.Empty;
             }
@@ -430,7 +430,7 @@ namespace Spring.Objects.Factory.Support
                     else if (property.Equals(SingletonKey))
                     {
                         string val = (string) id[key];
-                        singleton = (val == null) || val.Equals(TrueValue);
+                        singleton = (val is null) || val.Equals(TrueValue);
                     }
                     else if (property.Equals(LazyInitKey))
                     {
@@ -485,12 +485,12 @@ namespace Spring.Objects.Factory.Support
             {
                 log.LogDebug(pvs.ToString());
             }
-            if (parent == null)
+            if (parent is null)
             {
                 log.LogDebug(this.DefaultParentObject);
                 parent = this.DefaultParentObject;
             }
-            if (typeName == null && parent == null)
+            if (typeName is null && parent is null)
             {
                 throw new ObjectDefinitionStoreException(resourceDescription, name,
                                                          "Either 'type' or 'parent' is required");

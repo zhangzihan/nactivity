@@ -56,7 +56,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             IHistoricTaskInstanceEntity task = commandContext.HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
 
-            if (task == null)
+            if (task is null)
             {
                 throw new ActivitiObjectNotFoundException("No historic task exists with the given id: " + taskId, typeof(IHistoricTaskInstance));
             }

@@ -117,7 +117,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// <param name="timerJob"></param>
         public virtual void ScheduleTimerJob(ITimerJobEntity timerJob)
         {
-            if (timerJob == null)
+            if (timerJob is null)
             {
                 throw new ActivitiException("Empty timer job can not be scheduled");
             }
@@ -139,7 +139,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// <returns></returns>
         public virtual IJobEntity MoveTimerJobToExecutableJob(ITimerJobEntity timerJob)
         {
-            if (timerJob == null)
+            if (timerJob is null)
             {
                 throw new ActivitiException("Empty timer job can not be scheduled");
             }
@@ -257,7 +257,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// <returns></returns>
         public virtual IJobEntity MoveDeadLetterJobToExecutableJob(IDeadLetterJobEntity deadLetterJobEntity, int retries)
         {
-            if (deadLetterJobEntity == null)
+            if (deadLetterJobEntity is null)
             {
                 throw new ActivitiIllegalArgumentException("Null job provided");
             }
@@ -304,7 +304,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// <param name="job"></param>
         public virtual void Unacquire(IJob job)
         {
-            if (job == null)
+            if (job is null)
             {
                 return;
             }
@@ -363,7 +363,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
                 variableScope = ExecutionEntityManager.FindById<VariableScopeImpl>(timerEntity.ExecutionId);
             }
 
-            if (variableScope == null)
+            if (variableScope is null)
             {
                 variableScope = NoExecutionVariableScope.SharedInstance;
             }
@@ -371,7 +371,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             // set endDate if it was set to the definition
             RestoreExtraData(timerEntity, variableScope);
 
-            if (timerEntity.Duedate != null && !IsValidTime(timerEntity, timerEntity.Duedate.GetValueOrDefault(DateTime.Now), variableScope))
+            if (timerEntity.Duedate is object && !IsValidTime(timerEntity, timerEntity.Duedate.GetValueOrDefault(DateTime.Now), variableScope))
             {
                 if (logger.IsEnabled(LogLevel.Debug))
                 {
@@ -392,7 +392,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
             if (timerEntity.Repeat is object)
             {
                 ITimerJobEntity newTimerJobEntity = timerJobEntityManager.CreateAndCalculateNextTimer(timerEntity, variableScope);
-                if (newTimerJobEntity != null)
+                if (newTimerJobEntity is object)
                 {
                     ScheduleTimerJob(newTimerJobEntity);
                 }
@@ -438,7 +438,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
 
                     IBusinessCalendar businessCalendar = processEngineConfiguration.BusinessCalendarManager.GetBusinessCalendar(GetBusinessCalendarName(TimerEventHandler.GeCalendarNameFromConfiguration(timerEntity.JobHandlerConfiguration), variableScope));
 
-                    if (endDateExpression != null)
+                    if (endDateExpression is object)
                     {
                         object endDateValue = endDateExpression.GetValue(variableScope);
                         if (endDateValue is string)
@@ -484,13 +484,13 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         protected internal virtual int GetMaxIterations(Process process, string activityId)
         {
             FlowElement flowElement = process.GetFlowElement(activityId, true);
-            if (flowElement != null)
+            if (flowElement is object)
             {
                 if (flowElement is Event @event)
                 {
                     IList<EventDefinition> eventDefinitions = @event.EventDefinitions;
 
-                    if (eventDefinitions != null)
+                    if (eventDefinitions is object)
                     {
                         foreach (EventDefinition eventDefinition in eventDefinitions)
                         {

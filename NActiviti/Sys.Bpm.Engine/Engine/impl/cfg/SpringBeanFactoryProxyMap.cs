@@ -31,7 +31,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
 
 	  public virtual object get(object key)
 	  {
-		if ((key == null) || (!key.GetType().IsAssignableFrom(typeof(string))))
+		if ((key is null) || (!key.GetType().IsAssignableFrom(typeof(string))))
 		{
 		  return null;
 		}
@@ -40,7 +40,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
 
 	  public virtual bool ContainsKey(object key)
 	  {
-		if ((key == null) || (!key.GetType().IsAssignableFrom(typeof(string))))
+		if ((key is null) || (!key.GetType().IsAssignableFrom(typeof(string))))
 		{
 		  return false;
 		}

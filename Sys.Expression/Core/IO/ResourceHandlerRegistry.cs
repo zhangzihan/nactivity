@@ -280,7 +280,7 @@ namespace Spring.Core.IO
         private static IDynamicConstructor GetResourceConstructor(Type handlerType)
         {
             ConstructorInfo ctor = handlerType.GetConstructor(new Type[] { typeof(string) });
-            if (ctor == null)
+            if (ctor is null)
             {
                 throw new ArgumentException(
                         string.Format("[{0}] does not have a constructor that takes a single string as an argument (it must).", handlerType.FullName));

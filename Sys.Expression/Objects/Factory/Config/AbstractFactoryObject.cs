@@ -91,7 +91,7 @@ namespace Spring.Objects.Factory.Config
         /// <seealso cref="Spring.Objects.Factory.IInitializingObject.AfterPropertiesSet"/>
         public virtual void AfterPropertiesSet()
         {
-            if (this.isSingleton && this.singletonInstance == null)
+            if (this.isSingleton && this.singletonInstance is null)
             {
                 this.singletonInstance = CreateInstance();
             }
@@ -156,10 +156,10 @@ namespace Spring.Objects.Factory.Config
         {
             if (disposing)
             {
-                if (this.isSingleton && this.singletonInstance != null)
+                if (this.isSingleton && this.singletonInstance is object)
                 {
                     IDisposable disposableSingletonInstance = this.singletonInstance as IDisposable;
-                    if (disposableSingletonInstance != null)
+                    if (disposableSingletonInstance is object)
                     {
                         disposableSingletonInstance.Dispose();
                     }

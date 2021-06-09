@@ -35,7 +35,7 @@ namespace Sys.Workflow.Engine.Impl.Json
         /// <returns></returns>
         public virtual string ToJson(T @object)
         {
-            if (@object == null)
+            if (@object is null)
             {
                 return "";
             }
@@ -50,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Json
         /// <returns></returns>
         public virtual string ToJson(T @object, int indentFactor)
         {
-            if (@object == null)
+            if (@object is null)
             {
                 return "";
             }

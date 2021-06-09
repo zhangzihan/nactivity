@@ -101,7 +101,7 @@ namespace Spring.Core.IO
         /// <returns></returns>
         public TextReader OpenReader()
         {
-            if (this.encoding != null)
+            if (this.encoding is object)
             {
                 return new StreamReader(this.resource.InputStream, this.encoding, autoDetectEncoding);
             }

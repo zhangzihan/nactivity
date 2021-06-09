@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ namespace Spring.Core.IO
 			AssertUtils.ArgumentNotNull(inputStream, "inputStream");
 
 			_inputStream = inputStream;
-			_description = description == null ? string.Empty : description;
+			_description = description is null ? string.Empty : description;
 		}
 
 		#endregion
@@ -89,7 +89,7 @@ namespace Spring.Core.IO
 		{
 			get
 			{
-				if (_inputStream == null)
+				if (_inputStream is null)
 				{
 					throw new InvalidOperationException(
 						"InputStream has already been read - " +

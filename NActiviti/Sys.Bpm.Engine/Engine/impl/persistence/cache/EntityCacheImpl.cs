@@ -64,17 +64,17 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
         {
             CachedEntity cachedObject = null;
             cachedObjects.TryGetValue(entityClass, out IDictionary<string, CachedEntity> classCache);
-            if (classCache == null)
+            if (classCache is null)
             {
                 classCache = FindClassCacheByCheckingSubclasses(entityClass);
             }
 
-            if (classCache != null)
+            if (classCache is object)
             {
                 classCache.TryGetValue(id, out cachedObject);
             }
 
-            if (cachedObject != null)
+            if (cachedObject is object)
             {
                 return cachedObject.Entity;
             }
@@ -148,7 +148,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
             Type entityClass = typeof(T);
 
             var ret = FindInCache(entityClass);
-            if (ret != null)
+            if (ret is object)
             {
                 return ret.Select(x => (T)x).ToList();
             }

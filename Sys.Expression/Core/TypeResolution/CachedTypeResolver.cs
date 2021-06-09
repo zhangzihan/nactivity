@@ -93,7 +93,7 @@ namespace Spring.Core.TypeResolution
                 lock (this.typeCache.SyncRoot)
                 {
                     type = this.typeCache[typeName] as Type;
-                    if (type == null)
+                    if (type is null)
                     {
                         type = this.typeResolver.Resolve(typeName);
                         this.typeCache[typeName] = type;

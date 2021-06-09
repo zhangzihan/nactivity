@@ -43,7 +43,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             // end date should be ignored for intermediate timer events.
             ITimerJobEntity timerJob = jobManager.CreateTimerJob(timerEventDefinition, false, execution, TriggerTimerEventJobHandler.TYPE, TimerEventHandler.CreateConfiguration(execution.CurrentActivityId, null, timerEventDefinition.CalendarName));
 
-            if (timerJob != null)
+            if (timerJob is object)
             {
                 jobManager.ScheduleTimerJob(timerJob);
             }

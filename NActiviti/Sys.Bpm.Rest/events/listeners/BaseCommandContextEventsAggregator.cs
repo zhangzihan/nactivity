@@ -37,7 +37,7 @@ namespace Sys.Workflow.Cloud.Services.Events.Listeners
         {
             ICommandContext currentCommandContext = CurrentCommandContext;
             IList<E> attributes = currentCommandContext.GetGenericAttribute<IList<E>>(AttributeKey);
-            if (attributes == null)
+            if (attributes is null)
             {
                 attributes = new List<E>();
                 currentCommandContext.AddAttribute(AttributeKey, attributes);

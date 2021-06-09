@@ -33,23 +33,23 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         private const long serialVersionUID = 1L;
 
-        protected internal string executionId;
-        protected internal string name;
-        protected internal string businessKey;
-        protected internal string localizedName;
-        protected internal string parentTaskId;
-        protected internal string description;
-        protected internal string localizedDescription;
-        protected internal string owner;
-        protected internal string assignee;
-        protected internal string taskDefinitionKey;
-        protected internal string formKey;
-        protected internal int? priority;
-        protected internal DateTime? dueDate;
-        protected internal DateTime? claimTime;
-        protected internal string category;
-        protected internal string tenantId = ProcessEngineConfiguration.NO_TENANT_ID;
-        protected internal IList<IHistoricVariableInstanceEntity> queryVariables;
+        private string executionId;
+        private string name;
+        private string businessKey;
+        private string localizedName;
+        private string parentTaskId;
+        private string description;
+        private string localizedDescription;
+        private string owner;
+        private string assignee;
+        private string taskDefinitionKey;
+        private string formKey;
+        private int? priority;
+        private DateTime? dueDate;
+        private DateTime? claimTime;
+        private string category;
+        private string tenantId = ProcessEngineConfiguration.NO_TENANT_ID;
+        private IList<IHistoricVariableInstanceEntity> queryVariables;
 
         public HistoricTaskInstanceEntityImpl()
         {
@@ -121,11 +121,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     persistentState["parentTaskId"] = parentTaskId;
                 }
-                if (dueDate != null)
+                if (dueDate is object)
                 {
                     persistentState["dueDate"] = dueDate;
                 }
-                if (claimTime != null)
+                if (claimTime is object)
                 {
                     persistentState["claimTime"] = claimTime;
                 }
@@ -155,7 +155,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                businessKey = value;
+                businessKey = string.Empty.Equals(value?.Trim()) ? null : value?.Trim();
             }
         }
 
@@ -230,7 +230,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                this.assignee = value;
+                this.assignee = string.Empty.Equals(value?.Trim()) ? null : value?.Trim();
             }
         }
 
@@ -253,13 +253,13 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         private IUserInfo EnsureAssignerInitialized()
         {
-            if (assignee == null)
+            if (assignee is null)
             {
                 assigner = null;
                 return null;
             }
 
-            if (AssigneeUser != null)
+            if (AssigneeUser is object)
             {
                 assigner = new UserInfo
                 {
@@ -270,11 +270,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return assigner;
             }
 
-            if (Context.CommandContext != null && (assigner == null || assigner.Id != this.assignee))
+            if (Context.CommandContext is object && (assigner is null || assigner.Id != this.assignee))
             {
                 var hisTask = this.QueryVariables.FirstOrDefault(x => x.VariableName == this.assignee);
 
-                if (hisTask != null)
+                if (hisTask is object)
                 {
                     assigner = JToken.FromObject(hisTask.Value).ToObject<UserInfo>();
 
@@ -296,7 +296,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (assigner == null)
+                if (assigner is null)
                 {
                     assigner = EnsureAssignerInitialized();
                 }
@@ -457,7 +457,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 IDictionary<string, object> variables = new Dictionary<string, object>();
-                if (queryVariables != null)
+                if (queryVariables is object)
                 {
                     foreach (IHistoricVariableInstanceEntity variableInstance in queryVariables)
                     {
@@ -476,7 +476,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 IDictionary<string, object> variables = new Dictionary<string, object>();
-                if (queryVariables != null)
+                if (queryVariables is object)
                 {
                     foreach (IHistoricVariableInstanceEntity variableInstance in queryVariables)
                     {
@@ -494,7 +494,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (queryVariables == null && Context.CommandContext != null)
+                if (queryVariables is null && Context.CommandContext is object)
                 {
                     queryVariables = new HistoricVariableInitializingList();
                 }

@@ -608,7 +608,7 @@ namespace Spring.Core.IO
             if (ConfigurableResourceLoader.HasProtocol(resourceName))
             {
                 IResource resource = loader.GetResource(resourceName);
-                if (resource != null)
+                if (resource is object)
                 {
                     return resource;
                 }
@@ -620,7 +620,7 @@ namespace Spring.Core.IO
             }
 
             StringBuilder fullResourceName = new(256);
-            if (Protocol != null && Protocol != String.Empty)
+            if (Protocol is object && Protocol != String.Empty)
             {
                 fullResourceName.Append(Protocol).Append(ConfigurableResourceLoader.ProtocolSeparator);
             }
@@ -646,7 +646,7 @@ namespace Spring.Core.IO
                 }
 
                 fullResourceName.Append(RootLocation.TrimEnd('\\','/'));
-                if (resourcePath != null && resourcePath != String.Empty)
+                if (resourcePath is object && resourcePath != String.Empty)
                 {
                     fullResourceName.Append('/').Append(resourcePath);
                 }
@@ -659,7 +659,7 @@ namespace Spring.Core.IO
             {
                 // give derived resource classes a chance to create an instance on their own
                 IResource resultResource = CreateResourceInstance( resultResourceName );
-                if (resultResource != null) return resultResource;
+                if (resultResource is object) return resultResource;
             }
             
             // create resource instance using default loader
@@ -714,7 +714,7 @@ namespace Spring.Core.IO
             }
             else // relative to current namespace...
             {
-                if (ResourcePath != null && ResourcePath != String.Empty)
+                if (ResourcePath is object && ResourcePath != String.Empty)
                 {
                     path.Append(ResourcePath.TrimEnd(PathSeparatorChars)).Append(PathSeparatorChars[0]);
                 }

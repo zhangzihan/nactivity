@@ -1,13 +1,13 @@
 ﻿using MassTransit;
 using Sys.Workflow.Engine.Impl.Cfg;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
 namespace Sys.Workflow.Engine.Impl
 {
     public class GuidGenerator : IIdGenerator
     {
-        private static readonly Queue<string> ids = new Queue<string>();
+        private static readonly ConcurrentQueue<string> ids = new ConcurrentQueue<string>();
 
         public GuidGenerator()
         {

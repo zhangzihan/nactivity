@@ -232,7 +232,7 @@ namespace Sys.Workflow.Bpmn.Converters
         {
 
             IDictionary<string, BaseChildElementParser> childParsers = new Dictionary<string, BaseChildElementParser>();
-            if (additionalParsers != null)
+            if (additionalParsers is object)
             {
                 childParsers.PutAll(additionalParsers);
             }
@@ -344,7 +344,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 propertyList = ((StartEvent)flowElement).FormProperties;
             }
 
-            if (propertyList != null)
+            if (propertyList is object)
             {
 
                 foreach (FormProperty property in propertyList)

@@ -35,7 +35,6 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
             IVariableType variableType = variableEvent.VariableType;
             if (variableType is BooleanType)
             {
-
                 PutInMapIfNotNull(data, FieldsFields.VALUE_BOOLEAN, (bool?)variableEvent.VariableValue);
                 PutInMapIfNotNull(data, FieldsFields.VALUE, variableEvent.VariableValue);
                 PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_BOOLEAN);
@@ -55,7 +54,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
                 PutInMapIfNotNull(data, FieldsFields.VALUE_SHORT, value);
                 PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_SHORT);
 
-                if (value != null)
+                if (value is object)
                 {
                     PutInMapIfNotNull(data, FieldsFields.VALUE_INTEGER, value.Value);
                     PutInMapIfNotNull(data, FieldsFields.VALUE_LONG, value.Value);
@@ -70,7 +69,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
                 PutInMapIfNotNull(data, FieldsFields.VALUE_INTEGER, value);
                 PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_INTEGER);
 
-                if (value != null)
+                if (value is object)
                 {
                     PutInMapIfNotNull(data, FieldsFields.VALUE_LONG, value.Value);
                     PutInMapIfNotNull(data, FieldsFields.VALUE_DOUBLE, value.Value);
@@ -84,7 +83,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
                 PutInMapIfNotNull(data, FieldsFields.VALUE_LONG, value);
                 PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_LONG);
 
-                if (value != null)
+                if (value is object)
                 {
                     PutInMapIfNotNull(data, FieldsFields.VALUE_DOUBLE, value.Value);
                 }
@@ -92,12 +91,11 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
             }
             else if (variableType is DoubleType)
             {
-
                 double? value = (double?)variableEvent.VariableValue;
                 PutInMapIfNotNull(data, FieldsFields.VALUE_DOUBLE, value);
                 PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_DOUBLE);
 
-                if (value != null)
+                if (value is object)
                 {
                     PutInMapIfNotNull(data, FieldsFields.VALUE_INTEGER, value.Value);
                     PutInMapIfNotNull(data, FieldsFields.VALUE_LONG, value.Value);
@@ -106,11 +104,11 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
             }
             else if (variableType is DateType)
             {
-
-                DateTime value = (DateTime)variableEvent.VariableValue;
-                PutInMapIfNotNull(data, FieldsFields.VALUE_DATE, value != null ? (long?)value.Ticks : null);
+                if (variableEvent.VariableValue is DateTime value)
+                {
+                    PutInMapIfNotNull(data, FieldsFields.VALUE_DATE, value.Ticks);
+                }
                 PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_DATE);
-
             }
             else if (variableType is UUIDType)
             {
@@ -130,7 +128,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
                 PutInMapIfNotNull(data, FieldsFields.VARIABLE_TYPE, TYPE_UUID);
 
             }
-            else if (variableType is SerializableType || (variableEvent.VariableValue != null && (variableEvent.VariableValue is object)))
+            else if (variableType is SerializableType || (variableEvent.VariableValue is object && (variableEvent.VariableValue is object)))
             {
 
                 // Last try: serialize it to json

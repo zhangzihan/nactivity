@@ -63,7 +63,7 @@ namespace Spring.Context.Support
                 string contextName = this.getFirstChild().getText();
                 objectName = this.getFirstChild().getNextSibling().getText();
                 ctx = ContextRegistry.GetContext(contextName);
-                if (ctx == null)
+                if (ctx is null)
                 {
                     throw new ArgumentException(string.Format("Context '{0}' is not registered.", contextName));
                 }
@@ -71,19 +71,19 @@ namespace Spring.Context.Support
             else
             {
                 objectName = this.getFirstChild().getText();
-                IObjectFactory currentObjectFactory = (evalContext.Variables != null)
+                IObjectFactory currentObjectFactory = (evalContext.Variables is object)
                                                           ? (IObjectFactory)evalContext.Variables[Expression.ReservedVariableNames.CurrentObjectFactory]
                                                           : null;
 
                 // this is a local reference within an object factory
-                if (currentObjectFactory != null)
+                if (currentObjectFactory is object)
                 {
                     return currentObjectFactory.GetObject(objectName);
                 }
 
                 // else lookup in default context
                 ctx = ContextRegistry.GetContext();
-                if (ctx == null)
+                if (ctx is null)
                 {
                     throw new ArgumentException("No context registered.");
                 }

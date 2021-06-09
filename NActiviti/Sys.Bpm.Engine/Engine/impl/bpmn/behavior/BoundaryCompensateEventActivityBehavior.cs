@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             BoundaryEvent boundaryEvent = (BoundaryEvent)execution.CurrentFlowElement;
 
             Process process = ProcessDefinitionUtil.GetProcess(execution.ProcessDefinitionId);
-            if (process == null)
+            if (process is null)
             {
                 throw new ActivitiException("Process model (id = " + execution.Id + ") could not be found");
             }
@@ -62,7 +62,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
             }
 
-            if (compensationActivity == null)
+            if (compensationActivity is null)
             {
                 throw new ActivitiException("Compensation activity could not be found (or it is missing 'isForCompensation=\"true\"'");
             }
@@ -70,7 +70,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             // find SubProcess or Process instance execution
             IExecutionEntity scopeExecution = null;
             IExecutionEntity parentExecution = executionEntity.Parent;
-            while (scopeExecution == null && parentExecution != null)
+            while (scopeExecution is null && parentExecution is object)
             {
                 if (parentExecution.CurrentFlowElement is SubProcess)
                 {
@@ -87,7 +87,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
             }
 
-            if (scopeExecution == null)
+            if (scopeExecution is null)
             {
                 throw new ActivitiException("Could not find a scope execution for compensation boundary event " + boundaryEvent.Id);
             }

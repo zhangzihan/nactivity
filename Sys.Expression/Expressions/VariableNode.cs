@@ -78,7 +78,7 @@ namespace Spring.Expressions
             {
                 throw new ArgumentException("You cannot assign a value to intrinsic variable '" + varName + "'.");
             }
-            if (evalContext.Variables == null)
+            if (evalContext.Variables is null)
             {
                 throw new InvalidOperationException(
                     "You need to provide variables dictionary to expression evaluation engine in order to be able to set variable values.");

@@ -121,7 +121,7 @@ namespace Spring.Objects.Factory.Xml
         /// <returns><c>true</c> if the parser could be registered, <c>false</c> otherwise</returns>
         internal static bool RegisterWellknownNamespaceParserType(string namespaceUri)
         {
-            if (parsers[namespaceUri] != null) return true;
+            if (parsers[namespaceUri] is object) return true;
 
             if (wellknownNamespaceParserTypeNames.Contains(namespaceUri))
             {
@@ -147,7 +147,7 @@ namespace Spring.Objects.Factory.Xml
         /// </summary>
         public static string GetAssemblySchemaLocation(Type schemaLocationAssemblyHint, string schemaLocation)
         {
-            if (schemaLocationAssemblyHint != null)
+            if (schemaLocationAssemblyHint is object)
             {
                 return "assembly://" + schemaLocationAssemblyHint.Assembly.FullName + schemaLocation;
             }
@@ -168,7 +168,7 @@ namespace Spring.Objects.Factory.Xml
         public static INamespaceParser GetParser(string namespaceURI)
         {
             INamespaceParser parser = (INamespaceParser) parsers[namespaceURI];
-            if (parser == null)
+            if (parser is null)
             {
                 bool ok = RegisterWellknownNamespaceParserType(namespaceURI);
                 if (ok)
@@ -176,7 +176,7 @@ namespace Spring.Objects.Factory.Xml
                     parser = (INamespaceParser) parsers[namespaceURI];
 
                     //work-around for SPRNET-1277 where we're inconsistent re: exposing /db or /database as the final namespace element
-                    if (parser == null && namespaceURI == "http://www.springframework.net/db")
+                    if (parser is null && namespaceURI == "http://www.springframework.net/db")
                     {
                         parser = (INamespaceParser) parsers["http://www.springframework.net/database"];
                     }
@@ -261,7 +261,7 @@ namespace Spring.Objects.Factory.Xml
                 if (StringUtils.IsNullOrEmpty(namespaceUri) || StringUtils.IsNullOrEmpty(schemaLocation))
                 {
                     NamespaceParserAttribute defaults = GetDefaults(parserType);
-                    if (defaults == null)
+                    if (defaults is null)
                     {
                         throw new ArgumentNullException(
                             "Either default or an explicit namespace value must be specified for a configuration parser.");
@@ -275,7 +275,7 @@ namespace Spring.Objects.Factory.Xml
                     if (StringUtils.IsNullOrEmpty(schemaLocation))
                     {
                         schemaLocation = defaults.SchemaLocation;
-                        if (defaults.SchemaLocationAssemblyHint != null)
+                        if (defaults.SchemaLocationAssemblyHint is object)
                         {
                             schemaLocation =
                                 GetAssemblySchemaLocation(defaults.SchemaLocationAssemblyHint, schemaLocation);
@@ -345,7 +345,7 @@ namespace Spring.Objects.Factory.Xml
             if (StringUtils.IsNullOrEmpty(namespaceUri) || StringUtils.IsNullOrEmpty(schemaLocation))
             {
                 NamespaceParserAttribute defaults = GetDefaults(parser.GetType());
-                if (defaults == null)
+                if (defaults is null)
                 {
                     throw new ArgumentNullException(
                         "Either default or an explicit namespace value must be specified for a configuration parser.");
@@ -359,7 +359,7 @@ namespace Spring.Objects.Factory.Xml
                 if (StringUtils.IsNullOrEmpty(schemaLocation))
                 {
                     schemaLocation = defaults.SchemaLocation;
-                    if (defaults.SchemaLocationAssemblyHint != null)
+                    if (defaults.SchemaLocationAssemblyHint is object)
                     {
                         schemaLocation = GetAssemblySchemaLocation(defaults.SchemaLocationAssemblyHint, schemaLocation);
                     }

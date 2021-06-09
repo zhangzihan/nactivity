@@ -817,16 +817,16 @@ namespace Sys.Workflow.Engine.Impl
                 IProcessDefinition processDefinition = commandContext.ProcessEngineConfiguration.DeploymentManager.FindDeployedProcessDefinitionById(processInstanceEntity.ProcessDefinitionId);
                 JToken languageNode = Context.GetLocalizationElementProperties(_locale, processDefinition.Key, processInstanceEntity.ProcessDefinitionId, _withLocalizationFallback);
 
-                if (languageNode != null)
+                if (languageNode is object)
                 {
                     JToken languageNameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
-                    if (languageNameNode != null)
+                    if (languageNameNode is object)
                     {
                         processInstanceEntity.LocalizedName = languageNameNode.ToString();
                     }
 
                     JToken languageDescriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
-                    if (languageDescriptionNode != null)
+                    if (languageDescriptionNode is object)
                     {
                         processInstanceEntity.LocalizedDescription = languageDescriptionNode.ToString();
                     }

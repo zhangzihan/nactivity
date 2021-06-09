@@ -38,8 +38,8 @@ namespace Spring.Core
 
 	    public virtual void SetAttribute(string name, object value)
         {
-		    Trace.Assert(name != null, "Name must not be null");
-		    if (value != null) {
+		    Trace.Assert(name is object, "Name must not be null");
+		    if (value is object) {
 			    _attributes.Add(name, value);
 		    }
 		    else {
@@ -49,14 +49,14 @@ namespace Spring.Core
 
 	    public virtual object GetAttribute(string name)
         {
-		    Trace.Assert(name != null, "Name must not be null");
+		    Trace.Assert(name is object, "Name must not be null");
             if (_attributes.ContainsKey(name))
                 return _attributes[name];
 	        return null;
         }
 
 	    public virtual object RemoveAttribute(string name) {
-            Trace.Assert(name != null, "Name must not be null");
+            Trace.Assert(name is object, "Name must not be null");
             if (_attributes.ContainsKey(name))
                 return _attributes.Remove(name);
 	        return false;
@@ -64,7 +64,7 @@ namespace Spring.Core
 
 	    public bool HasAttribute(string name)
         {
-            Trace.Assert(name != null, "Name must not be null");
+            Trace.Assert(name is object, "Name must not be null");
 		    return _attributes.ContainsKey(name);
 	    }
 
@@ -82,7 +82,7 @@ namespace Spring.Core
 	     * @param source the AttributeAccessor to copy from
 	     */
 	    protected void CopyAttributesFrom(IAttributeAccessor source) {
-		    Trace.Assert(source != null, "Source must not be null");
+		    Trace.Assert(source is object, "Source must not be null");
 		    string[] attributeNames = source.AttributeNames;
 		    foreach(string attributeName in attributeNames)
             {

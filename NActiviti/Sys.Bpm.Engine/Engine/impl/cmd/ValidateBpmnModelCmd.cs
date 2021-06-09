@@ -21,7 +21,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         public virtual IList<ValidationError> Execute(ICommandContext commandContext)
         {
             IProcessValidator processValidator = commandContext.ProcessEngineConfiguration.ProcessValidator;
-            if (processValidator == null)
+            if (processValidator is null)
             {
                 throw new ActivitiException("No process validator defined");
             }

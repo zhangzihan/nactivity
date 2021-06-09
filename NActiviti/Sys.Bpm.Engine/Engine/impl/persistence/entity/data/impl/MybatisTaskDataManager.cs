@@ -75,7 +75,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
             int maxResults = taskQueyImpl.MaxResults;
 
             // setting max results, limit to 20000 results for performance reasons
-            if (taskQueyImpl.TaskVariablesLimit != null)
+            if (taskQueyImpl.TaskVariablesLimit is object)
             {
                 taskQueyImpl.MaxResults = taskQueyImpl.TaskVariablesLimit.GetValueOrDefault();
             }
@@ -87,7 +87,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
 
             IList<ITask> instanceList = DbSqlSession.SelectListWithRawParameterWithoutFilter<TaskEntityImpl, ITask>(query, taskQueyImpl, taskQueyImpl.FirstResult, taskQueyImpl.MaxResults);
 
-            if (instanceList != null && instanceList.Count > 0)
+            if (instanceList is object && instanceList.Count > 0)
             {
                 if (firstResult > 0)
                 {

@@ -43,7 +43,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
         protected internal virtual void RemoveObsoleteMessageEventSubscriptions(IProcessDefinitionEntity previousProcessDefinition)
         {
             // remove all subscriptions for the previous version
-            if (previousProcessDefinition != null)
+            if (previousProcessDefinition is object)
             {
                 RemoveObsoleteEventSubscriptionsImpl(previousProcessDefinition, MessageEventHandler.EVENT_HANDLER_TYPE);
             }
@@ -52,7 +52,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
         protected internal virtual void RemoveObsoleteSignalEventSubScription(IProcessDefinitionEntity previousProcessDefinition)
         {
             // remove all subscriptions for the previous version
-            if (previousProcessDefinition != null)
+            if (previousProcessDefinition is object)
             {
                 RemoveObsoleteEventSubscriptionsImpl(previousProcessDefinition, SignalEventHandler.EVENT_HANDLER_TYPE);
             }
@@ -96,7 +96,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                 // throw exception only if there's already a subscription as start event
                 if (eventSubscriptionEntity.ProcessInstanceId is null || eventSubscriptionEntity.ProcessInstanceId.Length == 0)
                 { 
-                    // processInstanceId != null or not empty -> it's a message related to an execution
+                    // processInstanceId is object or not empty -> it's a message related to an execution
                     // the event subscription has no instance-id, so it's a message start event
                     throw new ActivitiException("Cannot deploy process definition '" + processDefinition.ResourceName + "': there already is a message event subscription for the message with name '" + messageEventDefinition.MessageRef + "'.");
                 }
@@ -131,7 +131,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                             {
                                 ISignalEventSubscriptionEntity subscriptionEntity = commandContext.EventSubscriptionEntityManager.CreateSignalEventSubscription();
                                 Signal signal = bpmnModel.GetSignal(signalEventDefinition.SignalRef);
-                                if (signal != null)
+                                if (signal is object)
                                 {
                                     subscriptionEntity.EventName = signal.Name;
                                 }

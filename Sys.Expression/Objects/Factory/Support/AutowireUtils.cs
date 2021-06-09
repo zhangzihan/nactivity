@@ -137,11 +137,11 @@ namespace Spring.Objects.Factory.Support
 				{
 					return Int32.MaxValue;
 				}
-				if (args[i] != null
+				if (args[i] is object
 					&& !(args[i].GetType().Equals(theParameterType)))
 				{
 					Type superType = args[i].GetType().BaseType;
-					while (superType != null)
+					while (superType is object)
 					{
 						if (theParameterType.IsAssignableFrom(superType))
 						{
@@ -187,11 +187,11 @@ namespace Spring.Objects.Factory.Support
                 {
                     return int.MaxValue;
                 }
-                if (args[i] != null)
+                if (args[i] is object)
                 {
                     Type paramType = paramTypes[i];
                     Type superType = args[i].GetType().BaseType;
-                    while (superType != null)
+                    while (superType is object)
                     {
                         if (paramType == superType)
                         {
@@ -226,7 +226,7 @@ namespace Spring.Objects.Factory.Support
         /// </returns>
         public static Boolean IsExcludedFromDependencyCheck(PropertyInfo pi)
         {
-            return pi.GetSetMethod() != null;
+            return pi.GetSetMethod() is object;
         }
 
 		/// <summary>
@@ -245,7 +245,7 @@ namespace Spring.Objects.Factory.Support
 		/// </param>
 		public static void SortConstructors(ConstructorInfo[] constructors)
 		{
-			if (constructors != null && constructors.Length > 0)
+			if (constructors is object && constructors.Length > 0)
 			{
 				Array.Sort(constructors, ConstructorComparer.Instance);
 			}
@@ -307,13 +307,13 @@ namespace Spring.Objects.Factory.Support
 	    public static bool IsSetterDefinedInInterface(PropertyInfo propertyInfo, ISet interfaces)
 	    {
 	        MethodInfo setter = propertyInfo.GetSetMethod();
-            if (setter != null)
+            if (setter is object)
             {
                 Type targetType = setter.DeclaringType;
                 foreach (Type interfaceType in interfaces)
                 {
                     if (interfaceType.IsAssignableFrom(targetType) &&
-                        ReflectionUtils.GetMethod(interfaceType, setter.Name, ReflectionUtils.GetParameterTypes(setter)) != null)                    
+                        ReflectionUtils.GetMethod(interfaceType, setter.Name, ReflectionUtils.GetParameterTypes(setter)) is object)                    
                     {
                         return true;
                     }
@@ -340,7 +340,7 @@ namespace Spring.Objects.Factory.Support
             List<PropertyInfo> unsatisfiedDependenciesList = new();
             foreach (PropertyInfo property in propertyInfos)
             {
-                if (property.CanWrite && properties.GetPropertyValue(property.Name) == null)
+                if (property.CanWrite && properties.GetPropertyValue(property.Name) is null)
                 {
                     bool isSimple = ObjectUtils.IsSimpleProperty(property.PropertyType);
                     bool unsatisfied = (dependencyCheck == DependencyCheckingMode.All) || (isSimple && dependencyCheck == DependencyCheckingMode.Simple)

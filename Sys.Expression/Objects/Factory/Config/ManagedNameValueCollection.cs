@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,12 +76,12 @@ namespace Spring.Objects.Factory.Config
                 throw new InvalidOperationException(
                     "Not allowed to merge when the 'MergeEnabled' property is set to 'false'");
             }
-            if (parent == null)
+            if (parent is null)
             {
                 return this;
             }
             NameValueCollection pDict = parent as NameValueCollection;
-            if (pDict == null)
+            if (pDict is null)
             {
                 throw new InvalidOperationException("Cannot merge with object of type [" + parent.GetType() + "]");
             }

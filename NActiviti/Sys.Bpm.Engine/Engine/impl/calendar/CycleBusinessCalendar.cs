@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
         public override bool? ValidateDuedate(string duedateDescription, int maxIterations, DateTime? endDate, DateTime? newTimer)
         {
-            if (endDate != null)
+            if (endDate is object)
             {
                 return base.ValidateDuedate(duedateDescription, maxIterations, endDate, newTimer);
             }

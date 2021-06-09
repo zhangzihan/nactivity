@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             ITaskService taskService = commandContext.ProcessEngineConfiguration.TaskService;
             ITask task = taskService.CreateTaskQuery().SetTaskId(updateTaskCmd.TaskId).SingleResult();
-            if (task == null)
+            if (task is null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find task for the given id: " + updateTaskCmd.TaskId);
             }

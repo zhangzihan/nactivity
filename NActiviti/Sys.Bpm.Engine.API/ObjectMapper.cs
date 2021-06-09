@@ -32,7 +32,7 @@ namespace Sys.Workflow
 
         public byte[] WriteValueAsBytes(JToken data)
         {
-            if (data == null)
+            if (data is null)
             {
                 return new byte[0];
             }
@@ -44,7 +44,7 @@ namespace Sys.Workflow
 
         public byte[] WriteValueAsBytes(IDictionary<string, object> data)
         {
-            if (data == null)
+            if (data is null)
             {
                 return new byte[0];
             }
@@ -56,7 +56,7 @@ namespace Sys.Workflow
 
         public string WriteValueAsString(object variableValue)
         {
-            if (variableValue == null)
+            if (variableValue is null)
             {
                 return null;
             }

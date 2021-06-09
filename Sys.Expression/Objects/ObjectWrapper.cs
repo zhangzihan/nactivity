@@ -148,7 +148,7 @@ namespace Spring.Objects
             get { return wrappedObject; }
             set
             {
-                if (value == null)
+                if (value is null)
                 {
                     throw new FatalObjectException("Wraped instance cannot be null.");
                 }
@@ -493,7 +493,7 @@ namespace Spring.Objects
                 foreach (PropertyDescriptor p in PropertyDescriptors)
                 {
                     object val = GetPropertyValue(p.Name);
-                    string valStr = (val != null) ? val.ToString() : "null";
+                    string valStr = (val is object) ? val.ToString() : "null";
                     sb.Append(p.Name).Append("={").Append(valStr).Append("}");
                 }
             }

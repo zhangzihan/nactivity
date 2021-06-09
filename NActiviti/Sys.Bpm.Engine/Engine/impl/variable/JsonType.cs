@@ -70,7 +70,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public override bool IsAbleToStore(object value)
         {
-            if (value == null)
+            if (value is null)
             {
                 return true;
             }

@@ -134,14 +134,14 @@ namespace Spring.Core.IO
         public IResource GetResource(string resourceName)
         {
             string protocol = GetProtocol(resourceName);
-            if (protocol == null)
+            if (protocol is null)
             {
                 protocol = DefaultResourceProtocol;
                 resourceName = protocol + ProtocolSeparator + resourceName;
             }
 
             IDynamicConstructor handler = ResourceHandlerRegistry.GetResourceHandler(protocol);
-            if (handler == null)
+            if (handler is null)
             {
                 throw new UriFormatException("Resource handler for the '" + protocol + "' protocol is not defined.");
             }
@@ -164,7 +164,7 @@ namespace Spring.Core.IO
         public static bool HasProtocol(string resourceName)
         {
             string protocol = GetProtocol(resourceName);
-            return protocol != null && ResourceHandlerRegistry.IsHandlerRegistered(protocol);
+            return protocol is object && ResourceHandlerRegistry.IsHandlerRegistered(protocol);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace Spring.Core.IO
         /// </returns>
         internal static string GetProtocol(string resourceName)
         {
-            if (resourceName == null)
+            if (resourceName is null)
             {
                 return null;
             }

@@ -61,7 +61,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 return true;
             }
-            if (obj == null)
+            if (obj is null)
             {
                 return false;
             }

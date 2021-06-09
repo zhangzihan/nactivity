@@ -43,7 +43,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
              * 
              * bpmnParse.removeCurrentScope(); bpmnParse.removeCurrentSubProcess();
              * 
-             * if (subProcess.getIoSpecification() != null) { IOSpecification ioSpecification = createIOSpecification(bpmnParse, subProcess.getIoSpecification()); activity.setIoSpecification(ioSpecification);
+             * if (subProcess.getIoSpecification() is object) { IOSpecification ioSpecification = createIOSpecification(bpmnParse, subProcess.getIoSpecification()); activity.setIoSpecification(ioSpecification);
              * }
              */
 

@@ -116,7 +116,7 @@ namespace Spring.Reflection.Dynamic
             AssertUtils.ArgumentNotNull(methodInfo, "You cannot create a dynamic method for a null value.");
 
             state = (SafeMethodState)stateCache[methodInfo];
-            if (state == null)
+            if (state is null)
             {
                 SafeMethodState newState = new(DynamicReflectionManager.CreateMethod(methodInfo),
                 new object[methodInfo.GetParameters().Length]
@@ -125,7 +125,7 @@ namespace Spring.Reflection.Dynamic
                 lock (stateCache.SyncRoot)
                 {
                     state = (SafeMethodState)stateCache[methodInfo];
-                    if (state == null)
+                    if (state is null)
                     {
                         state = newState; 
                         stateCache[methodInfo] = state;
@@ -152,8 +152,8 @@ namespace Spring.Reflection.Dynamic
         {
             // special case - when calling Invoke(null,null) it is undecidible if the second null is an argument or the argument array
             object[] nullArguments = state.nullArguments;
-            if (arguments == null && nullArguments.Length == 1) arguments = nullArguments;
-            int arglen = (arguments == null ? 0 : arguments.Length);
+            if (arguments is null && nullArguments.Length == 1) arguments = nullArguments;
+            int arglen = (arguments is null ? 0 : arguments.Length);
             if (nullArguments.Length != arglen)
             {
                 throw new ArgumentException(string.Format("Invalid number of arguments passed into method {0} - expected {1}, but was {2}", methodInfo.Name, nullArguments.Length, arglen));

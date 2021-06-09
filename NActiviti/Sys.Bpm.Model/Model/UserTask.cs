@@ -193,7 +193,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             ISet<string> userIdentitySet = customUserIdentityLinks[type];
 
-            if (userIdentitySet == null)
+            if (userIdentitySet is null)
             {
                 userIdentitySet = new HashSet<string>();
                 customUserIdentityLinks[type] = userIdentitySet;
@@ -206,7 +206,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             ISet<string> groupIdentitySet = customGroupIdentityLinks[type];
 
-            if (groupIdentitySet == null)
+            if (groupIdentitySet is null)
             {
                 groupIdentitySet = new HashSet<string>();
                 customGroupIdentityLinks[type] = groupIdentitySet;
@@ -257,7 +257,7 @@ namespace Sys.Workflow.Bpmn.Models
             {
                 ExtensionElement formData = ExtensionElements.GetValueOrNull(BpmnXMLConstants.ELEMENT_EXTENSIONS_FORMDATA)?.FirstOrDefault();
 
-                if (formData == null)
+                if (formData is null)
                 {
                     yield break;
                 }
@@ -360,7 +360,7 @@ namespace Sys.Workflow.Bpmn.Models
                 CustomUserIdentityLinks = val.customUserIdentityLinks;
 
                 formProperties = new List<FormProperty>();
-                if (val.FormProperties != null && val.FormProperties.Count > 0)
+                if (val.FormProperties is object && val.FormProperties.Count > 0)
                 {
                     foreach (FormProperty property in val.FormProperties)
                     {
@@ -369,7 +369,7 @@ namespace Sys.Workflow.Bpmn.Models
                 }
 
                 taskListeners = new List<ActivitiListener>();
-                if (val.TaskListeners != null && val.TaskListeners.Count > 0)
+                if (val.TaskListeners is object && val.TaskListeners.Count > 0)
                 {
                     foreach (ActivitiListener listener in val.TaskListeners)
                     {

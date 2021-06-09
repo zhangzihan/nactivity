@@ -30,7 +30,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
             // in case with JPA Enhancement
             // method should iterate over superclasses list
             // to find @Entity and @Id annotations
-            while (clazz != null && !clazz.Equals(typeof(object)))
+            while (clazz is object && !clazz.Equals(typeof(object)))
             {
 
                 // Class should have @Entity annotation
@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
                     metaData.IsEntity = true;
                     // Try to find a field annotated with @Id
                     FieldInfo idField = GetIdField(clazz);
-                    if (idField != null)
+                    if (idField is object)
                     {
                         metaData.IdField = idField;
                     }
@@ -50,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
                     {
                         // Try to find a method annotated with @Id
                         MethodInfo idMethod = GetIdMethod(clazz);
-                        if (idMethod != null)
+                        if (idMethod is object)
                         {
                             metaData.IdMethod = idMethod;
                         }
@@ -97,13 +97,13 @@ namespace Sys.Workflow.Engine.Impl.Variable
                 }
             }
 
-            if (idField == null)
+            if (idField is null)
             {
                 // Check superClass for fields with @Id, since getDeclaredFields
                 // does
                 // not return superclass-fields.
                 Type superClass = clazz.BaseType;
-                if (superClass != null && !superClass.Equals(typeof(object)))
+                if (superClass is object && !superClass.Equals(typeof(object)))
                 {
                     // Recursively go up class hierarchy
                     idField = GetIdField(superClass);
@@ -114,7 +114,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         private bool IsEntityAnnotationPresent(Type clazz)
         {
-            return (clazz.GetCustomAttribute(typeof(EntityAttribute)) != null);
+            return (clazz.GetCustomAttribute(typeof(EntityAttribute)) is object);
         }
     }
 

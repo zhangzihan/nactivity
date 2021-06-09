@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     if (deployment.TenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(deployment.TenantId))
                     {
                         IDeploymentEntity existingDeployment = commandContext.DeploymentEntityManager.FindLatestDeploymentByName(deployment.Name);
-                        if (existingDeployment != null)
+                        if (existingDeployment is object)
                         {
                             existingDeployments.Add(existingDeployment);
                         }
@@ -102,7 +102,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                             existingDeployment = (IDeploymentEntity)existingDeployments[0];
                         }
 
-                        if ((existingDeployment != null) && !DeploymentsDiffer(deployment, existingDeployment))
+                        if ((existingDeployment is object) && !DeploymentsDiffer(deployment, existingDeployment))
                         {
                             commandContext.ProcessEngineConfiguration.DeploymentEntityManager.RemoveDrafts(deployment.TenantId, deployment.Name);
 
@@ -131,7 +131,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 // Actually deploy
                 commandContext.ProcessEngineConfiguration.DeploymentManager.Deploy(deployment, deploymentSettings);
 
-                if (deploymentBuilder.ProcessDefinitionsActivationDate != null)
+                if (deploymentBuilder.ProcessDefinitionsActivationDate is object)
                 {
                     ScheduleProcessDefinitionActivation(commandContext, deployment);
                 }
@@ -152,7 +152,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             IDictionary<string, IResourceEntity> resources = deployment.GetResources();
             IDictionary<string, IResourceEntity> savedResources = saved.GetResources();
 
-            if (resources == null || savedResources == null)
+            if (resources is null || savedResources is null)
             {
                 return true;
             }
@@ -161,7 +161,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             {
                 IResourceEntity savedResource = savedResources[resourceName];
 
-                if (savedResource == null)
+                if (savedResource is null)
                 {
                     return true;
                 }

@@ -43,7 +43,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                 // Find parent scope execution
                 IExecutionEntity scopeExecution = execution.IsScope ? execution : FindFirstParentScopeExecution(execution);
 
-                if (scopeExecution == null)
+                if (scopeExecution is null)
                 {
                     throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event");
                 }

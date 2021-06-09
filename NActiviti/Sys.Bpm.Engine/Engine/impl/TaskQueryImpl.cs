@@ -171,7 +171,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetTaskNameIn(IList<string> nameList)
         {
-            if (nameList == null)
+            if (nameList is null)
             {
                 throw new ActivitiIllegalArgumentException("Task name list is null");
             }
@@ -213,7 +213,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetTaskNameInIgnoreCase(IList<string> nameList)
         {
-            if (nameList == null)
+            if (nameList is null)
             {
                 throw new ActivitiIllegalArgumentException("Task name list is null");
             }
@@ -229,15 +229,15 @@ namespace Sys.Workflow.Engine.Impl
                 }
             }
 
-            if (name != null)
+            if (name is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and name");
             }
-            if (nameLike != null)
+            if (nameLike is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and nameLike");
             }
-            if (nameLikeIgnoreCase != null)
+            if (nameLikeIgnoreCase is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both taskNameInIgnoreCase and nameLikeIgnoreCase");
             }
@@ -414,7 +414,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetTaskAssigneeIds(IList<string> assigneeIds)
         {
-            if (assigneeIds == null)
+            if (assigneeIds is null)
             {
                 throw new ActivitiIllegalArgumentException("Task assignee list is null");
             }
@@ -578,7 +578,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetTaskInvolvedGroupsIn(IList<string> involvedGroups)
         {
-            if (involvedGroups == null || involvedGroups.Count == 0)
+            if (involvedGroups is null || involvedGroups.Count == 0)
             {
                 throw new ActivitiIllegalArgumentException("Involved groups list is null or empty.");
             }
@@ -602,7 +602,7 @@ namespace Sys.Workflow.Engine.Impl
                 throw new ActivitiIllegalArgumentException("Candidate group is null");
             }
 
-            if (candidateGroups != null)
+            if (candidateGroups is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both candidateGroup and candidateGroupIn");
             }
@@ -673,7 +673,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetTaskCandidateGroupIn(IList<string> candidateGroups)
         {
-            if (candidateGroups == null)
+            if (candidateGroups is null)
             {
                 throw new ActivitiIllegalArgumentException("Candidate group list is null");
             }
@@ -761,7 +761,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetProcessInstanceIdIn(string[] processInstanceIds)
         {
-            var ids = processInstanceIds is null ? new List<string>() : processInstanceIds.Where(x => x != null).ToList();
+            var ids = processInstanceIds is null ? new List<string>() : processInstanceIds.Where(x => x is object).ToList();
 
             if (orActive)
             {
@@ -776,7 +776,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetExecutionIdIn(string[] executionIds)
         {
-            var ids = executionIds is null ? new List<string>() : executionIds.Where(x => x != null).ToList();
+            var ids = executionIds is null ? new List<string>() : executionIds.Where(x => x is object).ToList();
 
             if (orActive)
             {
@@ -1298,7 +1298,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetProcessCategoryIn(IList<string> processCategoryInList)
         {
-            if (processCategoryInList == null)
+            if (processCategoryInList is null)
             {
                 throw new ActivitiIllegalArgumentException("Process category list is null");
             }
@@ -1327,7 +1327,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual ITaskQuery SetProcessCategoryNotIn(IList<string> processCategoryNotInList)
         {
-            if (processCategoryNotInList == null)
+            if (processCategoryNotInList is null)
             {
                 throw new ActivitiIllegalArgumentException("Process category list is null");
             }
@@ -1562,7 +1562,7 @@ namespace Sys.Workflow.Engine.Impl
                     return candidateGroupList;
 
                 }
-                else if (candidateGroups != null)
+                else if (candidateGroups is object)
                 {
                     return candidateGroups;
 
@@ -1583,7 +1583,7 @@ namespace Sys.Workflow.Engine.Impl
         protected internal virtual IList<string> GetGroupsForCandidateUser(string candidateUser)
         {
             IUserGroupLookupProxy userGroupLookupProxy = Context.ProcessEngineConfiguration.UserGroupLookupProxy;
-            if (userGroupLookupProxy != null)
+            if (userGroupLookupProxy is object)
             {
                 return userGroupLookupProxy.GetGroupsForCandidateUser(candidateUser);
             }
@@ -1747,7 +1747,7 @@ namespace Sys.Workflow.Engine.Impl
                 tasks = commandContext.TaskEntityManager.FindTasksByQueryCriteria(this);
             }
 
-            if (tasks != null && Context.ProcessEngineConfiguration.PerformanceSettings.EnableLocalization)
+            if (tasks is object && Context.ProcessEngineConfiguration.PerformanceSettings.EnableLocalization)
             {
                 foreach (ITask task in tasks)
                 {
@@ -1776,16 +1776,16 @@ namespace Sys.Workflow.Engine.Impl
                 if (!string.IsNullOrWhiteSpace(processDefinitionId))
                 {
                     JToken languageNode = Context.GetLocalizationElementProperties(_locale, task.TaskDefinitionKey, processDefinitionId, _withLocalizationFallback);
-                    if (languageNode != null)
+                    if (languageNode is object)
                     {
                         JToken languageNameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
-                        if (languageNameNode != null)
+                        if (languageNameNode is object)
                         {
                             task.LocalizedName = languageNameNode.ToString();
                         }
 
                         JToken languageDescriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
-                        if (languageDescriptionNode != null)
+                        if (languageDescriptionNode is object)
                         {
                             task.LocalizedDescription = languageDescriptionNode.ToString();
                         }

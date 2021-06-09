@@ -69,7 +69,7 @@ namespace SmartSql.DbSession
 
         public void CloseConnection()
         {
-            if ((Connection != null) && (Connection.State != ConnectionState.Closed))
+            if ((Connection is object) && (Connection.State != ConnectionState.Closed))
             {
                 //if (_logger.IsEnabled(LogLevel.Debug))
                 //{
@@ -87,7 +87,7 @@ namespace SmartSql.DbSession
             //{
             //    _logger.LogDebug("CommitTransaction.");
             //}
-            if (Transaction == null)
+            if (Transaction is null)
             {
                 if (_logger.IsEnabled(LogLevel.Error))
                 {
@@ -116,7 +116,7 @@ namespace SmartSql.DbSession
                 //    _logger.LogWarning("Dispose.");
                 //}
 
-                if (Transaction != null)
+                if (Transaction is object)
                 {
                     if (Connection.State != ConnectionState.Closed)
                     {
@@ -190,7 +190,7 @@ namespace SmartSql.DbSession
             //{
             //    _logger.LogDebug("RollbackTransaction .");
             //}
-            if (Transaction == null)
+            if (Transaction is null)
             {
                 if (_logger.IsEnabled(LogLevel.Error))
                 {

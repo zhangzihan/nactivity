@@ -71,10 +71,10 @@ namespace BpmnWebTest.Hubs
             {
                 WorkflowDebuggerEvent evt = @event as WorkflowDebuggerEvent;
                 ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-                if ((processEngineConfiguration?.EnableVerboseExecutionTreeLogging).GetValueOrDefault(false) && evt?.Execution != null)
+                if ((processEngineConfiguration?.EnableVerboseExecutionTreeLogging).GetValueOrDefault(false) && evt?.Execution is object)
                 {
                     string startUserId = evt.Execution.ProcessInstance.StartUserId;
-                    if (startUserId != null && users.TryGetValue(startUserId, out HashSet<string> clients))
+                    if (startUserId is object && users.TryGetValue(startUserId, out HashSet<string> clients))
                     {
                         foreach (var clientId in clients)
                         {
@@ -200,7 +200,7 @@ namespace BpmnWebTest.Hubs
         {
             if (processEngineConfiguration.EnableEventDispatcher)
             {
-                if (debuggerEventListener == null)
+                if (debuggerEventListener is null)
                 {
                     debuggerEventListener = new WorkflowDebuggerEventListener(hubContext);
                     processEngineConfiguration.EventDispatcher.AddEventListener(debuggerEventListener);

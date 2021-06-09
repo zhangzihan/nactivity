@@ -199,7 +199,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual T ExecuteCommand<T>(ICommand<T> command)
         {
-            if (command == null)
+            if (command is null)
             {
                 throw new ActivitiIllegalArgumentException("The command is null");
             }
@@ -208,11 +208,11 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual T ExecuteCommand<T>(CommandConfig config, ICommand<T> command)
         {
-            if (config == null)
+            if (config is null)
             {
                 throw new ActivitiIllegalArgumentException("The config is null");
             }
-            if (command == null)
+            if (command is null)
             {
                 throw new ActivitiIllegalArgumentException("The command is null");
             }

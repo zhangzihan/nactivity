@@ -31,7 +31,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
             JToken @params = JToken.FromObject(parameter);
             string activityId = @params[nameof(activityId)]?.ToString();
 
-            return !entity.IsActive && entity.ActivityId != null &&
+            return !entity.IsActive && entity.ActivityId is object &&
                 string.Compare(entity.ActivityId, activityId?.ToString(), true) == 0;
         }
 

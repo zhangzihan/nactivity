@@ -134,7 +134,7 @@ namespace Spring.Objects.Factory.Support
 	        get { return _objectNameGenerator; }
 	        set
 	        {
-                if (value != null)
+                if (value is object)
                 {
                     _objectNameGenerator = value;
                 }
@@ -216,7 +216,7 @@ namespace Spring.Objects.Factory.Support
         /// </returns>
         public int LoadObjectDefinitions(string location)
 	    {
-            if (ResourceLoader == null)
+            if (ResourceLoader is null)
             {
                 throw new ObjectDefinitionStoreException("Cannot import object definitions from location [" + location +
                                                          "]:" +

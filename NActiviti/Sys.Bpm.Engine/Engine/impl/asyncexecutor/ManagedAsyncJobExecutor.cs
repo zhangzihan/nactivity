@@ -54,20 +54,20 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// </summary>
         protected internal override void InitAsyncJobExecutionThreadPool()
         {
-            if (threadFactory == null)
+            if (threadFactory is null)
             {
                 log.LogWarning("A managed thread factory was not found, falling back to self-managed threads");
                 base.InitAsyncJobExecutionThreadPool();
             }
             else
             {
-                if (threadPoolQueue == null)
+                if (threadPoolQueue is null)
                 {
                     log.LogInformation($"Creating thread pool queue of size {queueSize}");
                     threadPoolQueue = new ConcurrentQueue<ThreadStart>();
                 }
 
-                if (executorService == null)
+                if (executorService is null)
                 {
                     log.LogInformation($"Creating executor service with corePoolSize {corePoolSize}, maxPoolSize {maxPoolSize} and keepAliveTime {keepAliveTime}");
 

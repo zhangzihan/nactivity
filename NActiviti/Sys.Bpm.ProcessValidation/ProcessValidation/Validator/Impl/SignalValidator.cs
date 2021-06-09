@@ -24,7 +24,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
         public override void Validate(BpmnModel bpmnModel, IList<ValidationError> errors)
         {
             ICollection<Signal> signals = bpmnModel.Signals;
-            if (signals != null && signals.Count > 0)
+            if (signals is object && signals.Count > 0)
             {
 
                 foreach (Signal signal in signals)

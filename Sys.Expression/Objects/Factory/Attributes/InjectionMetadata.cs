@@ -109,7 +109,7 @@ namespace Spring.Objects.Factory.Attributes
 
         public static bool NeedsRefresh(InjectionMetadata metadata, Type type)
         {
-            return (metadata == null || metadata.targetType != type);
+            return (metadata is null || metadata.targetType != type);
         }
     }
 }

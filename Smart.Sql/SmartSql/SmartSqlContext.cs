@@ -103,8 +103,8 @@ namespace SmartSql
             {
                 foreach (var statement in sqlMap.Statements)
                 {
-                    if (statement.Cache == null) { continue; }
-                    if (statement.Cache.FlushOnExecutes == null) { continue; }
+                    if (statement.Cache is null) { continue; }
+                    if (statement.Cache.FlushOnExecutes is null) { continue; }
                     foreach (var triggerStatement in statement.Cache.FlushOnExecutes)
                     {
                         if (!ExecuteMappedCacheFlush.TryGetValue(triggerStatement.Statement, out IList<Statement> triggerStatements))

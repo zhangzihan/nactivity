@@ -32,10 +32,10 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
             string activityId = @params[nameof(activityId)]?.ToString();
             string executionId = @params[nameof(executionId)]?.ToString();
 
-            return entity.ExecutionId != null &&
+            return entity.ExecutionId is object &&
                 string.Compare(entity.ExecutionId, executionId, true) == 0 &&
-                entity.ActivityId != null &&
-                string.Compare(entity.ActivityId, activityId, true) == 0 && entity.EndTime == null;
+                entity.ActivityId is object &&
+                string.Compare(entity.ActivityId, activityId, true) == 0 && entity.EndTime is null;
         }
     }
 }

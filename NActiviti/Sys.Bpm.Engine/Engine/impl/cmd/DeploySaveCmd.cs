@@ -61,7 +61,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             //    if (ReferenceEquals(deployment.TenantId, null) || ProcessEngineConfiguration.NO_TENANT_ID.Equals(deployment.TenantId))
             //    {
             //        IDeploymentEntity existingDeployment = commandContext.DeploymentEntityManager.findLatestDeploymentByName(deployment.Name);
-            //        if (existingDeployment != null)
+            //        if (existingDeployment is object)
             //        {
             //            existingDeployments.Add(existingDeployment);
             //        }
@@ -83,7 +83,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             //            existingDeployment = (IDeploymentEntity)existingDeployments[0];
             //        }
 
-            //        if ((existingDeployment != null) && !deploymentsDiffer(deployment, existingDeployment))
+            //        if ((existingDeployment is object) && !deploymentsDiffer(deployment, existingDeployment))
             //        {
             //            return existingDeployment;
             //        }
@@ -110,7 +110,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             // Actually deploy
             commandContext.ProcessEngineConfiguration.DeploymentManager.Deploy(deployment, deploymentSettings);
 
-            if (deploymentBuilder.ProcessDefinitionsActivationDate != null)
+            if (deploymentBuilder.ProcessDefinitionsActivationDate is object)
             {
                 ScheduleProcessDefinitionActivation(commandContext, deployment);
             }
@@ -126,7 +126,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         protected internal virtual bool DeploymentsDiffer(IDeploymentEntity deployment, IDeploymentEntity saved)
         {
 
-            if (deployment.GetResources() == null || saved.GetResources() == null)
+            if (deployment.GetResources() is null || saved.GetResources() is null)
             {
                 return true;
             }
@@ -138,7 +138,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             {
                 IResourceEntity savedResource = savedResources[resourceName];
 
-                if (savedResource == null)
+                if (savedResource is null)
                 {
                     return true;
                 }

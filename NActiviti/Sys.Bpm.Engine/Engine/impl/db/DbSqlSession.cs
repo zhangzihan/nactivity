@@ -313,7 +313,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         public virtual IList<TOut> SelectList<TEntityImpl, TOut>(string statement, object parameter, Page page, bool useCache = true)
         {
-            if (page != null)
+            if (page is object)
             {
                 return SelectList<TEntityImpl, TOut>(statement, parameter, page.FirstResult, page.MaxResults, useCache);
             }
@@ -342,7 +342,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                 Parameter = parameter
             };
 
-            if (page != null)
+            if (page is object)
             {
                 parameterToUse.FirstResult = page.FirstResult;
                 parameterToUse.MaxResults = page.MaxResults;
@@ -441,7 +441,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         public virtual TOut SelectById<TEntityImpl, TOut>(KeyValuePair<string, object> id, bool useCache = true) where TEntityImpl : IEntity where TOut : IEntity
         {
             Type entityClass = typeof(TEntityImpl);
-            if (id.Value == null)
+            if (id.Value is null)
             {
                 return default;
             }
@@ -450,7 +450,7 @@ namespace Sys.Workflow.Engine.Impl.DB
             if (useCache)
             {
                 entity = entityCache.FindInCache(entityClass, id.Value.ToString()) as IEntity;
-                if (entity != null)
+                if (entity is object)
                 {
                     return (TOut)entity;
                 }
@@ -464,7 +464,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                 { id.Key, id.Value }
             }));
 
-            if (entity == null)
+            if (entity is null)
             {
                 return default;
             }
@@ -504,7 +504,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         protected virtual IEntity CacheLoadOrStore(IEntity entity)
         {
-            if (entity == null)
+            if (entity is null)
             {
                 return null;
             }
@@ -532,9 +532,9 @@ namespace Sys.Workflow.Engine.Impl.DB
                 DebugFlush();
             }
 
-            if (SqlMapper.SessionStore.LocalSession == null && (insertedObjects.Count > 0 || updatedObjects.Count > 0 || deletedObjects.Count > 0))
+            if (SqlMapper.SessionStore.LocalSession is null && (insertedObjects.Count > 0 || updatedObjects.Count > 0 || deletedObjects.Count > 0))
             {
-                SqlMapper.BeginTransaction();// IsolationLevel.ReadUncommitted);
+                SqlMapper.BeginTransaction((ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl).IsolationLevel);
 
                 RemoveInstanceIncludeHis();
             }
@@ -847,7 +847,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         {
             IList<IExecutionEntity> childExecutionEntities = parentToChildrenMapping[parentId];
 
-            if (childExecutionEntities == null)
+            if (childExecutionEntities is null)
             {
                 return;
             }
@@ -927,7 +927,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                     IEntity entity = entityIterator.Current;
                     subList.Add(entity);
 
-                    if (hasRevision == null)
+                    if (hasRevision is null)
                     {
                         hasRevision = entity is IHasRevision;
                     }
@@ -1089,7 +1089,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         public virtual void Commit()
         {
-            if (SqlMapper.SessionStore?.LocalSession != null)
+            if (SqlMapper.SessionStore?.LocalSession is object)
             {
                 SqlMapper.CommitTransaction();
             }
@@ -1100,7 +1100,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         /// </summary>
         public virtual void Rollback()
         {
-            if (SqlMapper.SessionStore?.LocalSession != null)
+            if (SqlMapper.SessionStore?.LocalSession is object)
             {
                 SqlMapper.RollbackTransaction();
             }
@@ -1547,7 +1547,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         {
             using (Stream inputStream = ReflectUtil.GetResourceAsStream(resourceName))
             {
-                if (inputStream == null)
+                if (inputStream is null)
                 {
                     if (isOptional)
                     {
@@ -1667,7 +1667,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                             }
                             catch (Exception e)
                             {
-                                if (exception == null)
+                                if (exception is null)
                                 {
                                     exception = e;
                                     exceptionSqlStatement = sqlStatement;
@@ -1689,7 +1689,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                     line = ReadNextTrimmedLine(reader);
                 }
 
-                if (exception != null)
+                if (exception is object)
                 {
                     throw exception;
                 }
@@ -1740,7 +1740,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         protected virtual bool IsMissingTablesException(Exception e)
         {
             string exceptionMessage = e.Message;
-            if (e.Message != null)
+            if (e.Message is object)
             {
                 // Matches message returned from H2
                 if ((exceptionMessage.IndexOf("Table", StringComparison.Ordinal) != -1) && (exceptionMessage.IndexOf("not found", StringComparison.Ordinal) != -1))

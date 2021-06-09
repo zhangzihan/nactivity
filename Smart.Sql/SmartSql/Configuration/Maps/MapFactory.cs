@@ -22,7 +22,7 @@ namespace SmartSql.Configuration.Maps
             {
                 resultMap.ResultType = Type.GetType(type);
             }
-            if (resultMap.ResultType == null)
+            if (resultMap.ResultType is null)
             {
                 throw new SmartSqlException($"Entity map {resultMap.Id} 找不到类型{resultMap.ResultType}!");
             }

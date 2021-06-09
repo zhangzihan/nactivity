@@ -59,11 +59,11 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            if (identifier == null)
+            if (identifier is null)
             {
                 lock (syncRoot)
                 {
-                    if (identifier == null)
+                    if (identifier is null)
                     {
                         identifier = this.getText();
                     }
@@ -83,12 +83,12 @@ namespace Spring.Expressions
         public override string getText()
         {
             string tmp = base.getText();
-//            if (tmp != null)
+//            if (tmp is object)
 //            {
 //                tmp = tmp.Replace(ESCAPE_CHAR, ""); // remove all occurrences of escape char
 //            }
             AST node = this.getFirstChild();
-            while (node != null)
+            while (node is object)
             {
                 tmp = string.Concat(tmp, node.getText());
                 node = node.getNextSibling();

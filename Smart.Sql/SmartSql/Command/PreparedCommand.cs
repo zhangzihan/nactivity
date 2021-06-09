@@ -62,7 +62,7 @@ namespace SmartSql.Command
                                 string propertyName = paramName;
                                 string dbParamName = regDbParamName.Replace(paramName, "$2_");
 
-                                if (context.RequestParameters == null)
+                                if (context.RequestParameters is null)
                                 {
                                     return $"{_smartSqlContext.DbPrefix}{dbParamName}";
                                 }
@@ -78,7 +78,7 @@ namespace SmartSql.Command
                                 }
 
                                 ITypeHandler typeHandler = paramMap?.Handler;
-                                if (typeHandler != null)
+                                if (typeHandler is object)
                                 {
                                     AddParameterIfNotExists(dbCommand, dbParamName, paramVal, ref parameters, typeHandler);
                                     return $"{_smartSqlContext.DbPrefix}{dbParamName}";
@@ -178,11 +178,11 @@ namespace SmartSql.Command
             {
                 IDbDataParameter cmdParameter = dbCommand.CreateParameter();
                 cmdParameter.ParameterName = paramName;
-                if (typeHandler != null)
+                if (typeHandler is object)
                 {
                     typeHandler.SetParameter(cmdParameter, paramVal);
                 }
-                else if (paramVal == null)
+                else if (paramVal is null)
                 {
                     cmdParameter.Value = DBNull.Value;
                 }

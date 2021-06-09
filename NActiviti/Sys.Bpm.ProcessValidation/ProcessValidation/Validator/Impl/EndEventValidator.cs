@@ -26,7 +26,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
             IList<EndEvent> endEvents = process.FindFlowElementsOfType<EndEvent>();
             foreach (EndEvent endEvent in endEvents)
             {
-                if (endEvent.EventDefinitions != null && endEvent.EventDefinitions.Count > 0)
+                if (endEvent.EventDefinitions is object && endEvent.EventDefinitions.Count > 0)
                 {
 
                     EventDefinition eventDefinition = endEvent.EventDefinitions[0];

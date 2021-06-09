@@ -12,7 +12,7 @@ namespace SmartSql.Configuration.Tags
         public override bool IsCondition(RequestContext context)
         {
             Object reqVal = GetPropertyValue(context);
-            if (reqVal == null) { return false; }
+            if (reqVal is null) { return false; }
             string reqValStr = string.Empty;
             if (reqVal is Enum)
             {

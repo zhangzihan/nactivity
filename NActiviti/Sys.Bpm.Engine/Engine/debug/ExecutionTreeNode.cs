@@ -105,7 +105,7 @@ namespace Sys.Workflow.Engine.Debug
                 strb.Append(" (process instance)");
             }
             strb.Append(System.Environment.NewLine);
-            if (children != null)
+            if (children is object)
             {
                 foreach (ExecutionTreeNode childNode in children)
                 {
@@ -118,7 +118,7 @@ namespace Sys.Workflow.Engine.Debug
         protected internal virtual void InternalToString(StringBuilder strb, string prefix, bool isTail)
         {
             strb.Append(prefix + (isTail ? "└── " : "├── ") + ExecutionEntity.Id + " : " + CurrentFlowElementId + ", parent id " + ExecutionEntity.ParentId + (ExecutionEntity.IsActive ? " (active)" : " (not active)") + (ExecutionEntity.IsScope ? " (scope)" : "") + (ExecutionEntity.IsMultiInstanceRoot ? " (multi instance root)" : "") + (ExecutionEntity.Ended ? " (ended)" : "") + System.Environment.NewLine);
-            if (children != null)
+            if (children is object)
             {
                 for (int i = 0; i < children.Count - 1; i++)
                 {
@@ -140,7 +140,7 @@ namespace Sys.Workflow.Engine.Debug
                 {
                     return sequenceFlow.SourceRef + " -> " + sequenceFlow.TargetRef;
                 }
-                else if (flowElement != null)
+                else if (flowElement is object)
                 {
                     return flowElement.Id + " (" + flowElement.GetType().Name;
                 }

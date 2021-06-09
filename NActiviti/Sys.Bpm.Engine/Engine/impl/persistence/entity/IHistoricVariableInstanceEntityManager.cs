@@ -39,5 +39,6 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         void DeleteHistoricVariableInstanceByProcessInstanceId(string historicProcessInstanceId);
 
+        IVariableInstanceEntity RecordHistoricTaskVariableInstance(ITaskEntity taskEntity, string variableName, object value);
     }
 }

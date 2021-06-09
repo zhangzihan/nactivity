@@ -47,7 +47,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             deploymentManager.FindDeployedProcessDefinitionById(processDefinitionId);
 
             ProcessDefinitionInfoCacheObject definitionInfoCacheObject = deploymentManager.ProcessDefinitionInfoCache.Get(processDefinitionId);
-            if (definitionInfoCacheObject != null)
+            if (definitionInfoCacheObject is object)
             {
                 resultNode = definitionInfoCacheObject.InfoNode;
             }

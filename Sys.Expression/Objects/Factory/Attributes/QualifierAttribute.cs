@@ -42,7 +42,7 @@ namespace Spring.Objects.Factory.Attributes
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj == null || GetType() != obj.GetType())
+            if (obj is null || GetType() != obj.GetType())
             {
                 return false;
             }
@@ -55,7 +55,7 @@ namespace Spring.Objects.Factory.Attributes
 
         public override int GetHashCode()
         {
-            return _value != null ? _value.GetHashCode() : 0;
+            return _value is object ? _value.GetHashCode() : 0;
         }
     }
 }

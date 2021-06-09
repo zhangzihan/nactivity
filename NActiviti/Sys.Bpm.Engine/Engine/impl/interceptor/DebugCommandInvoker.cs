@@ -33,7 +33,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
                 if (processEngineConfiguration.EnableEventDispatcher)
                 {
-                    if (runnable.Execution != null)
+                    if (runnable.Execution is object)
                     {
                         processEngineConfiguration.EventDispatcher.DispatchEvent(new WorkflowDebuggerEvent(runnable.Execution));
                     }

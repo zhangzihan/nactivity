@@ -79,7 +79,7 @@ namespace Spring.Objects.Support
         protected override Delegate GetHandler(object instance, EventInfo info)
         {
             Type type = instance as Type;
-            if (type == null) 
+            if (type is null) 
             {
                 throw new FatalObjectException (string.Format (
                     CultureInfo.InvariantCulture,

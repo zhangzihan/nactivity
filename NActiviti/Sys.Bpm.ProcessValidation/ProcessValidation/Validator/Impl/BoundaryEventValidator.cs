@@ -38,7 +38,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
 
                 BoundaryEvent boundaryEvent = boundaryEvents[i];
 
-                if (boundaryEvent.EventDefinitions != null && boundaryEvent.EventDefinitions.Count > 0)
+                if (boundaryEvent.EventDefinitions is object && boundaryEvent.EventDefinitions.Count > 0)
                 {
 
                     EventDefinition eventDefinition = boundaryEvent.EventDefinitions[0];
@@ -89,7 +89,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                                 BoundaryEvent otherBoundaryEvent = boundaryEvents[j];
                                 if (otherBoundaryEvent.AttachedToRefId is object && otherBoundaryEvent.AttachedToRefId.Equals(boundaryEvent.AttachedToRefId))
                                 {
-                                    if (otherBoundaryEvent.EventDefinitions != null && otherBoundaryEvent.EventDefinitions.Count > 0)
+                                    if (otherBoundaryEvent.EventDefinitions is object && otherBoundaryEvent.EventDefinitions.Count > 0)
                                     {
                                         EventDefinition otherEventDefinition = otherBoundaryEvent.EventDefinitions[0];
                                         if (otherEventDefinition is MessageEventDefinition)

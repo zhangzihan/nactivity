@@ -103,7 +103,7 @@ namespace Spring.Objects.Factory.Config
         {
             lock (objectMonitor)
             {
-                if (variables == null)
+                if (variables is null)
                 {
                     variables = new NameValueCollection();
                     InitVariables();
@@ -125,7 +125,7 @@ namespace Spring.Objects.Factory.Config
         {
             lock (objectMonitor)
             {
-                if (variables == null)
+                if (variables is null)
                 {
                     variables = new NameValueCollection();
                     InitVariables();

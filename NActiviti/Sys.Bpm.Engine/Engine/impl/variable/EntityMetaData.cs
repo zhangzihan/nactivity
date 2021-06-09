@@ -87,11 +87,11 @@ namespace Sys.Workflow.Engine.Impl.Variable
             get
             {
                 Type idType = null;
-                if (idField != null)
+                if (idField is object)
                 {
                     idType = idField.FieldType;
                 }
-                else if (idMethod != null)
+                else if (idMethod is object)
                 {
                     idType = idMethod.ReturnType;
                 }

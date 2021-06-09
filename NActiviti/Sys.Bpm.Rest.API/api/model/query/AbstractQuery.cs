@@ -16,7 +16,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model
         {
             get
             {
-                if (_pageable == null)
+                if (_pageable is null)
                 {
                     _pageable = new Pageable();
                 }

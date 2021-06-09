@@ -51,7 +51,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual void DeleteProcessDefinitionInfo(string processDefinitionId)
         {
             IProcessDefinitionInfoEntity processDefinitionInfo = FindProcessDefinitionInfoByProcessDefinitionId(processDefinitionId);
-            if (processDefinitionInfo != null)
+            if (processDefinitionInfo is object)
             {
                 Delete(processDefinitionInfo);
                 DeleteInfoJson(processDefinitionInfo);
@@ -61,7 +61,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual void UpdateInfoJson(string id, byte[] json)
         {
             IProcessDefinitionInfoEntity processDefinitionInfo = FindById<IProcessDefinitionInfoEntity>(id);
-            if (processDefinitionInfo != null)
+            if (processDefinitionInfo is object)
             {
                 ByteArrayRef @ref = new ByteArrayRef(processDefinitionInfo.InfoJsonId);
                 @ref.SetValue("json", json);

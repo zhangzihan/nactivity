@@ -107,7 +107,7 @@ namespace Spring.Expressions.Parser.antlr
 		public CharScanner(LexerSharedInputState sharedState) : this()
 		{
 			inputState = sharedState;
-			if (inputState != null)
+			if (inputState is object)
 			{
 				cached_LA2 = inputState.input.LA(2);
 				cached_LA1 = inputState.input.LA(1);
@@ -383,7 +383,7 @@ namespace Spring.Expressions.Parser.antlr
 			try
 			{
 				newToken = tokenCreator.Create();
-				if (newToken != null)
+				if (newToken is object)
 				{
 					newToken.Type = t;
 					newToken.setColumn(inputState.tokenStartColumn);
@@ -533,7 +533,7 @@ namespace Spring.Expressions.Parser.antlr
 		/*Parser error-reporting function can be overridden in subclass */
 		public virtual void  reportError(string s)
 		{
-			if (getFilename() == null)
+			if (getFilename() is null)
 			{
 				Console.Error.WriteLine("error: " + s);
 			}
@@ -546,7 +546,7 @@ namespace Spring.Expressions.Parser.antlr
 		/*Parser warning-reporting function can be overridden in subclass */
 		public virtual void  reportWarning(string s)
 		{
-			if (getFilename() == null)
+			if (getFilename() is null)
 			{
 				Console.Error.WriteLine("warning: " + s);
 			}
@@ -663,12 +663,12 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			string tokenText = text.ToString();
 
-			if ( (tokenText == null) || (tokenText == string.Empty) )
+			if ( (tokenText is null) || (tokenText == string.Empty) )
 				return ttype;
 			else
 			{
 				object typeAsObject = literals[tokenText];
-				return (typeAsObject == null) ? ttype : ((int) typeAsObject);
+				return (typeAsObject is null) ? ttype : ((int) typeAsObject);
 			}
 		}
 		
@@ -679,12 +679,12 @@ namespace Spring.Expressions.Parser.antlr
 		*/
 		public virtual int testLiteralsTable(string someText, int ttype)
 		{
-			if ( (someText == null) || (someText == string.Empty) )
+			if ( (someText is null) || (someText == string.Empty) )
 				return ttype;
 			else
 			{
 				object typeAsObject = literals[someText];
-				return (typeAsObject == null) ? ttype : ((int) typeAsObject);
+				return (typeAsObject is null) ? ttype : ((int) typeAsObject);
 			}
 		}
 		
@@ -767,7 +767,7 @@ namespace Spring.Expressions.Parser.antlr
 					try
 					{
 						tokenTypeObject = assem.GetType(tokenTypeName);
-						if (tokenTypeObject != null)
+						if (tokenTypeObject is object)
 						{
 							break;
 						}

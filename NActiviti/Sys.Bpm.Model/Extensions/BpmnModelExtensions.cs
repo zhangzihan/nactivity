@@ -85,7 +85,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             XElement milc = userTask.Descendants(XName.Get(BpmnXMLConstants.ELEMENT_MULTIINSTANCE, BpmnXMLConstants.BPMN2_NAMESPACE)).FirstOrDefault();
 
-            if (milc == null)
+            if (milc is null)
             {
                 string id = userTask.Attribute(BpmnXMLConstants.ATTRIBUTE_ID).Value;
 
@@ -113,7 +113,7 @@ namespace Sys.Workflow.Bpmn.Models
 
             XElement ccElem = milc.Descendants(XName.Get(BpmnXMLConstants.ELEMENT_COMPLETION_CONDITION, BpmnXMLConstants.BPMN2_NAMESPACE)).FirstOrDefault();
 
-            if (ccElem == null)
+            if (ccElem is null)
             {
                 formalExpr = formalExpr ?? "nrOfActiveInstances==0";
 

@@ -75,7 +75,7 @@ namespace Spring.Expressions
         {
             string varName = this.getText();
             IDictionary locals = evalContext.LocalVariables;
-            if (locals == null)
+            if (locals is null)
             {
                 locals = new Hashtable();
                 evalContext.LocalVariables = locals;

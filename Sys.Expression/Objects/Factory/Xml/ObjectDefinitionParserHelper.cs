@@ -76,7 +76,7 @@ namespace Spring.Objects.Factory.Xml
             log = LogManager.GetLogger<ObjectDefinitionParserHelper>();
             this.readerContext = readerContext;
             this.objectsNamespaceParser = (ObjectsNamespaceParser) readerContext.NamespaceParserResolver.Resolve(ObjectsNamespaceParser.Namespace);
-            if (root != null)
+            if (root is object)
             {
                 InitDefaults(root);
             }
@@ -351,18 +351,18 @@ namespace Spring.Objects.Factory.Xml
 
             objectName = PostProcessObjectNameAndAliases(objectName, aliases, element, containingDefinition);
 
-            if (containingDefinition == null)
+            if (containingDefinition is null)
             {
                 CheckNameUniqueness(objectName, aliases, element);
             }
 
             ParserContext parserContext = new(this, containingDefinition);
             IConfigurableObjectDefinition definition = objectsNamespaceParser.ParseObjectDefinitionElement(element, objectName, parserContext);
-            if (definition != null)
+            if (definition is object)
             {
                 if (StringUtils.IsNullOrEmpty(objectName))
                 {
-                    if (containingDefinition != null)
+                    if (containingDefinition is object)
                     {
                         objectName =
                             ObjectDefinitionReaderUtils.GenerateObjectName(definition, readerContext.Registry, true);
@@ -372,7 +372,7 @@ namespace Spring.Objects.Factory.Xml
                         objectName = readerContext.GenerateObjectName(definition);
                         // Register an alias for the plain object type name, if possible.
                         string objectTypeName = definition.ObjectTypeName;
-                        if (objectTypeName != null
+                        if (objectTypeName is object
                             && objectName.StartsWith(objectTypeName)
                             && objectName.Length>objectTypeName.Length
                             && !readerContext.Registry.IsObjectNameInUse(objectTypeName))
@@ -430,7 +430,7 @@ namespace Spring.Objects.Factory.Xml
             if (!StringUtils.HasText(objectName) && aliases.Count == 0)
             {
                 string result = this.objectsNamespaceParser.CalculateId(element, aliases);
-                if (result != null)
+                if (result is object)
                 {
                     return result;
                 }
@@ -449,11 +449,11 @@ namespace Spring.Objects.Factory.Xml
             {
                 foundName = objectName;
             }
-            if (foundName == null)
+            if (foundName is null)
             {
                 foundName = (string) CollectionUtils.FindFirstMatch(this.usedNames, aliases);
             }
-            if(foundName != null)
+            if(foundName is object)
             {
                 Error("Object name '" + foundName + "' is already used in this file", element);
             }
@@ -485,7 +485,7 @@ namespace Spring.Objects.Factory.Xml
         {
             String namespaceUri = ele.NamespaceURI;
             INamespaceParser handler = NamespaceParserRegistry.GetParser(namespaceUri);
-            if (handler == null)
+            if (handler is null)
             {
                 Error("Unable to locate Spring NamespaceHandler for XML schema namespace [" + namespaceUri + "]", ele);
                 return null;

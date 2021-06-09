@@ -54,7 +54,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
         protected internal virtual void HandleMultiInstanceLoopCharacteristics(Process process, Activity activity, IList<ValidationError> errors)
         {
             MultiInstanceLoopCharacteristics multiInstanceLoopCharacteristics = activity.LoopCharacteristics;
-            if (multiInstanceLoopCharacteristics != null)
+            if (multiInstanceLoopCharacteristics is object)
             {
 
                 if (string.IsNullOrWhiteSpace(multiInstanceLoopCharacteristics.LoopCardinality) && string.IsNullOrWhiteSpace(multiInstanceLoopCharacteristics.InputDataItem))
@@ -68,7 +68,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
 
         protected internal virtual void HandleDataAssociations(Process process, Activity activity, IList<ValidationError> errors)
         {
-            if (activity.DataInputAssociations != null)
+            if (activity.DataInputAssociations is object)
             {
                 foreach (DataAssociation dataAssociation in activity.DataInputAssociations)
                 {
@@ -78,7 +78,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                     }
                 }
             }
-            if (activity.DataOutputAssociations != null)
+            if (activity.DataOutputAssociations is object)
             {
                 foreach (DataAssociation dataAssociation in activity.DataOutputAssociations)
                 {

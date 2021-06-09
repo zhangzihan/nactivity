@@ -145,7 +145,7 @@ namespace Spring.Core.TypeConversion
 			CultureInfo culture, object value)
 		{
 			string text = value as string;
-			if (text != null)
+			if (text is object)
 			{
 				XmlDocument doc = new();
 				doc.LoadXml(text);

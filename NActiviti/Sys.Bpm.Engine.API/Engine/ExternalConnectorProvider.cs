@@ -156,7 +156,7 @@ namespace Sys.Workflow
 
         public virtual string ResolveUrl(string url)
         {
-            if (ExternalConnectorContext == null)
+            if (ExternalConnectorContext is null)
             {
                 IEnumerable<IConfigurationSection> childs = Configuration.GetSection("ExternalConnectorUrl").GetChildren();
 

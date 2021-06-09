@@ -72,7 +72,7 @@ namespace Sys.Workflow
             ProcessEngineServiceProvider.ServiceProvider = serviceProvider;
 
             var engine = serviceProvider.GetService<IProcessEngine>();
-            if (engine == null)
+            if (engine is null)
             {
                 throw new InitProcessEngineFaliedException();
             }

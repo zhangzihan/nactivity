@@ -52,10 +52,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 _ = dict.TryGetValue(CompleteConditionVarName, out var tf);
                 _ = bool.TryParse(tf?.ToString(), out bool approvaled);
                 parent.SetVariable(CompleteConditionVarName, approvaled);
-                if (!approvaled)
-                {
-                    return true;
-                }
+                return nrOfActiveInstances == 0 && approvaled;
             }
 
             return nrOfActiveInstances == 0;

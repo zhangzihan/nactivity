@@ -97,9 +97,9 @@ namespace Spring.Objects.Support
             int result = 0;
             try
             {
-                if (v1 != null)
+                if (v1 is object)
                 {
-                    if (v2 != null)
+                    if (v2 is object)
                     {
                         result = ((IComparable)v1).CompareTo(v2);
                     }
@@ -110,7 +110,7 @@ namespace Spring.Objects.Support
                 }
                 else
                 {
-                    if (v2 != null)
+                    if (v2 is object)
                     {
                         result = 1;
                     }
@@ -145,10 +145,10 @@ namespace Spring.Objects.Support
         private object GetPropertyValue(object obj)
         {
             object propertyValue = null;
-            if (obj != null)
+            if (obj is object)
             {
                 IObjectWrapper ow = (IObjectWrapper)this.cachedObjectWrappers[obj];
-                if (ow == null)
+                if (ow is null)
                 {
                     ow = new ObjectWrapper(obj);
                     this.cachedObjectWrappers.Add(obj, ow);

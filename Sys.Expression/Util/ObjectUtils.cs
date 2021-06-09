@@ -95,7 +95,7 @@ namespace Spring.Util
             AssertUtils.ArgumentNotNull(assembly, "assembly");
             AssertUtils.ArgumentNotNull(typeName, "typeName");
             Type resolvedType = assembly.GetType(typeName, false, false);
-            if (resolvedType == null)
+            if (resolvedType is null)
             {
                 throw new FatalReflectionException(
                     string.Format(
@@ -144,7 +144,7 @@ namespace Spring.Util
         {
             IsInstantiable(type);
             ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes);
-            if (constructor == null)
+            if (constructor is null)
             {
                 throw new FatalReflectionException(
                     string.Format(
@@ -296,7 +296,7 @@ namespace Spring.Util
         public static bool IsAssignable(Type type, object obj)
         {
             AssertUtils.ArgumentNotNull(type, "type");
-            if (!type.IsPrimitive && obj == null)
+            if (!type.IsPrimitive && obj is null)
             {
                 return true;
             }
@@ -310,12 +310,12 @@ namespace Spring.Util
                     return remotingTypeInfo.CanCastTo(type, obj);
                 }
 
-                if (rp != null)
+                if (rp is object)
                 {
                     type = rp.GetProxiedType();
                 }
 
-                if (type == null)
+                if (type is null)
                 {
                     // cannot decide
                     return false;
@@ -390,7 +390,7 @@ namespace Spring.Util
         /// </returns>
         public static bool IsEmpty(object[] array)
         {
-            return (array == null || array.Length == 0);
+            return (array is null || array.Length == 0);
         }
         /// <summary>
         /// Determine if the given objects are equal, returning <see langword="true"/>
@@ -404,7 +404,7 @@ namespace Spring.Util
         /// </returns>
         public static bool NullSafeEquals(object o1, object o2)
         {
-            return (o1 == o2 || (o1 != null && o1.Equals(o2)));
+            return (o1 == o2 || (o1 is object && o1.Equals(o2)));
         }
 
 
@@ -417,7 +417,7 @@ namespace Spring.Util
         /// </summary>
         public static int NullSafeHashCode(object o1)
         {
-            return (o1 != null ? o1.GetHashCode() : 0);
+            return (o1 is object ? o1.GetHashCode() : 0);
         }
 
         /// <summary>
@@ -553,7 +553,7 @@ namespace Spring.Util
         /// </returns>
         public static string IdentityToString(object obj)
         {
-            if (obj == null)
+            if (obj is null)
             {
                 return string.Empty;
             }

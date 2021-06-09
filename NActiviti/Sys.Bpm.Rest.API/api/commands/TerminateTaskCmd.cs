@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Sys.Workflow.Services.Api.Commands;
 using System;
+using System.Collections.Generic;
 
 /*
  * Copyright 2018 Alfresco, Inc. and/or its affiliates.
@@ -113,6 +114,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         {
             get; set;
         }
+        public IDictionary<string, object> TransientVariables { get; set; }
     }
 
 }

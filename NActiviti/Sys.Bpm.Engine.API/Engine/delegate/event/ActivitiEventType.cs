@@ -29,119 +29,119 @@ namespace Sys.Workflow.Engine.Delegate.Events
         /// <summary>
         /// New entity is created.
         /// </summary>
-        public static readonly ActivitiEventType ENTITY_CREATED = new ActivitiEventType("ENTITY_CREATED", InnerEnum.ENTITY_CREATED);
+        public static readonly ActivitiEventType ENTITY_CREATED = new("ENTITY_CREATED", InnerEnum.ENTITY_CREATED);
 
         /// <summary>
         /// New entity has been created and all child-entities that are created as a result of the creation of this particular entity are also created and initialized.
         /// </summary>
-        public static readonly ActivitiEventType ENTITY_INITIALIZED = new ActivitiEventType("ENTITY_INITIALIZED", InnerEnum.ENTITY_INITIALIZED);
+        public static readonly ActivitiEventType ENTITY_INITIALIZED = new("ENTITY_INITIALIZED", InnerEnum.ENTITY_INITIALIZED);
 
         /// <summary>
         /// Existing entity us updated.
         /// </summary>
-        public static readonly ActivitiEventType ENTITY_UPDATED = new ActivitiEventType("ENTITY_UPDATED", InnerEnum.ENTITY_UPDATED);
+        public static readonly ActivitiEventType ENTITY_UPDATED = new("ENTITY_UPDATED", InnerEnum.ENTITY_UPDATED);
 
         /// <summary>
         /// Existing entity is deleted.
         /// </summary>
-        public static readonly ActivitiEventType ENTITY_DELETED = new ActivitiEventType("ENTITY_DELETED", InnerEnum.ENTITY_DELETED);
+        public static readonly ActivitiEventType ENTITY_DELETED = new("ENTITY_DELETED", InnerEnum.ENTITY_DELETED);
 
         /// <summary>
         /// Existing entity has been suspended.
         /// </summary>
-        public static readonly ActivitiEventType ENTITY_SUSPENDED = new ActivitiEventType("ENTITY_SUSPENDED", InnerEnum.ENTITY_SUSPENDED);
+        public static readonly ActivitiEventType ENTITY_SUSPENDED = new("ENTITY_SUSPENDED", InnerEnum.ENTITY_SUSPENDED);
 
         /// <summary>
         /// Existing entity has been activated.
         /// </summary>
-        public static readonly ActivitiEventType ENTITY_ACTIVATED = new ActivitiEventType("ENTITY_ACTIVATED", InnerEnum.ENTITY_ACTIVATED);
+        public static readonly ActivitiEventType ENTITY_ACTIVATED = new("ENTITY_ACTIVATED", InnerEnum.ENTITY_ACTIVATED);
 
         /// <summary>
         /// A Timer has been scheduled.
         /// </summary>
-        public static readonly ActivitiEventType TIMER_SCHEDULED = new ActivitiEventType("TIMER_SCHEDULED", InnerEnum.TIMER_SCHEDULED);
+        public static readonly ActivitiEventType TIMER_SCHEDULED = new("TIMER_SCHEDULED", InnerEnum.TIMER_SCHEDULED);
 
         /// <summary>
         /// Timer has been fired successfully.
         /// </summary>
-        public static readonly ActivitiEventType TIMER_FIRED = new ActivitiEventType("TIMER_FIRED", InnerEnum.TIMER_FIRED);
+        public static readonly ActivitiEventType TIMER_FIRED = new("TIMER_FIRED", InnerEnum.TIMER_FIRED);
 
         /// <summary>
         /// Timer has been cancelled (e.g. user task on which it was bounded has been completed earlier than expected)
         /// </summary>
-        public static readonly ActivitiEventType JOB_CANCELED = new ActivitiEventType("JOB_CANCELED", InnerEnum.JOB_CANCELED);
+        public static readonly ActivitiEventType JOB_CANCELED = new("JOB_CANCELED", InnerEnum.JOB_CANCELED);
 
         /// <summary>
         /// A job has been successfully executed.
         /// </summary>
-        public static readonly ActivitiEventType JOB_EXECUTION_SUCCESS = new ActivitiEventType("JOB_EXECUTION_SUCCESS", InnerEnum.JOB_EXECUTION_SUCCESS);
+        public static readonly ActivitiEventType JOB_EXECUTION_SUCCESS = new("JOB_EXECUTION_SUCCESS", InnerEnum.JOB_EXECUTION_SUCCESS);
 
         /// <summary>
         /// A job has been executed, but failed. Event should be an instance of a <seealso cref="IActivitiExceptionEvent"/>.
         /// </summary>
-        public static readonly ActivitiEventType JOB_EXECUTION_FAILURE = new ActivitiEventType("JOB_EXECUTION_FAILURE", InnerEnum.JOB_EXECUTION_FAILURE);
+        public static readonly ActivitiEventType JOB_EXECUTION_FAILURE = new("JOB_EXECUTION_FAILURE", InnerEnum.JOB_EXECUTION_FAILURE);
 
         /// <summary>
         /// The retry-count on a job has been decremented.
         /// </summary>
-        public static readonly ActivitiEventType JOB_RETRIES_DECREMENTED = new ActivitiEventType("JOB_RETRIES_DECREMENTED", InnerEnum.JOB_RETRIES_DECREMENTED);
+        public static readonly ActivitiEventType JOB_RETRIES_DECREMENTED = new("JOB_RETRIES_DECREMENTED", InnerEnum.JOB_RETRIES_DECREMENTED);
 
         /// <summary>
         /// An event type to be used by custom events. These types of events are never thrown by the engine itself, only be an external API call to dispatch an event.
         /// </summary>
-        public static readonly ActivitiEventType CUSTOM = new ActivitiEventType("CUSTOM", InnerEnum.CUSTOM);
+        public static readonly ActivitiEventType CUSTOM = new("CUSTOM", InnerEnum.CUSTOM);
 
         /// <summary>
         /// The process-engine that dispatched this event has been created and is ready for use.
         /// </summary>
-        public static readonly ActivitiEventType ENGINE_CREATED = new ActivitiEventType("ENGINE_CREATED", InnerEnum.ENGINE_CREATED);
+        public static readonly ActivitiEventType ENGINE_CREATED = new("ENGINE_CREATED", InnerEnum.ENGINE_CREATED);
 
         /// <summary>
         /// The process-engine that dispatched this event has been closed and cannot be used anymore.
         /// </summary>
-        public static readonly ActivitiEventType ENGINE_CLOSED = new ActivitiEventType("ENGINE_CLOSED", InnerEnum.ENGINE_CLOSED);
+        public static readonly ActivitiEventType ENGINE_CLOSED = new("ENGINE_CLOSED", InnerEnum.ENGINE_CLOSED);
 
         /// <summary>
         /// An activity is starting to execute. This event is dispatch right before an activity is executed.
         /// </summary>
-        public static readonly ActivitiEventType ACTIVITY_STARTED = new ActivitiEventType("ACTIVITY_STARTED", InnerEnum.ACTIVITY_STARTED);
+        public static readonly ActivitiEventType ACTIVITY_STARTED = new("ACTIVITY_STARTED", InnerEnum.ACTIVITY_STARTED);
 
         /// <summary>
         /// An activity has been completed successfully.
         /// </summary>
-        public static readonly ActivitiEventType ACTIVITY_COMPLETED = new ActivitiEventType("ACTIVITY_COMPLETED", InnerEnum.ACTIVITY_COMPLETED);
+        public static readonly ActivitiEventType ACTIVITY_COMPLETED = new("ACTIVITY_COMPLETED", InnerEnum.ACTIVITY_COMPLETED);
 
         /// <summary>
         /// An activity has been cancelled because of boundary event.
         /// </summary>
-        public static readonly ActivitiEventType ACTIVITY_CANCELLED = new ActivitiEventType("ACTIVITY_CANCELLED", InnerEnum.ACTIVITY_CANCELLED);
+        public static readonly ActivitiEventType ACTIVITY_CANCELLED = new("ACTIVITY_CANCELLED", InnerEnum.ACTIVITY_CANCELLED);
 
         /// <summary>
         /// An activity has received a signal. Dispatched after the activity has responded to the signal.
         /// </summary>
-        public static readonly ActivitiEventType ACTIVITY_SIGNALED = new ActivitiEventType("ACTIVITY_SIGNALED", InnerEnum.ACTIVITY_SIGNALED);
+        public static readonly ActivitiEventType ACTIVITY_SIGNALED = new("ACTIVITY_SIGNALED", InnerEnum.ACTIVITY_SIGNALED);
 
         /// <summary>
         /// An activity is about to be executed as a compensation for another activity. The event targets the activity that is about to be executed for compensation.
         /// </summary>
-        public static readonly ActivitiEventType ACTIVITY_COMPENSATE = new ActivitiEventType("ACTIVITY_COMPENSATE", InnerEnum.ACTIVITY_COMPENSATE);
+        public static readonly ActivitiEventType ACTIVITY_COMPENSATE = new("ACTIVITY_COMPENSATE", InnerEnum.ACTIVITY_COMPENSATE);
 
         /// <summary>
         /// A boundary, intermediate, or subprocess start message catching event has started and it is waiting for message.
         /// </summary>
-        public static readonly ActivitiEventType ACTIVITY_MESSAGE_WAITING = new ActivitiEventType("ACTIVITY_MESSAGE_WAITING", InnerEnum.ACTIVITY_MESSAGE_WAITING);
+        public static readonly ActivitiEventType ACTIVITY_MESSAGE_WAITING = new("ACTIVITY_MESSAGE_WAITING", InnerEnum.ACTIVITY_MESSAGE_WAITING);
 
         /// <summary>
         /// An activity has received a message event. Dispatched before the actual message has been received by the activity. This event will be either followed by a <seealso cref="ACTIVITY_SIGNALLED"/> event or
         /// <seealso cref="ACTIVITY_COMPLETE"/> for the involved activity, if the message was delivered successfully.
         /// </summary>
-        public static readonly ActivitiEventType ACTIVITY_MESSAGE_RECEIVED = new ActivitiEventType("ACTIVITY_MESSAGE_RECEIVED", InnerEnum.ACTIVITY_MESSAGE_RECEIVED);
+        public static readonly ActivitiEventType ACTIVITY_MESSAGE_RECEIVED = new("ACTIVITY_MESSAGE_RECEIVED", InnerEnum.ACTIVITY_MESSAGE_RECEIVED);
 
         /// <summary>
         /// An activity has received an error event. Dispatched before the actual error has been received by the activity. This event will be either followed by a <seealso cref="ACTIVITY_SIGNALLED"/> event or
         /// <seealso cref="ACTIVITY_COMPLETE"/> for the involved activity, if the error was delivered successfully.
         /// </summary>
-        public static readonly ActivitiEventType ACTIVITY_ERROR_RECEIVED = new ActivitiEventType("ACTIVITY_ERROR_RECEIVED", InnerEnum.ACTIVITY_ERROR_RECEIVED);
+        public static readonly ActivitiEventType ACTIVITY_ERROR_RECEIVED = new("ACTIVITY_ERROR_RECEIVED", InnerEnum.ACTIVITY_ERROR_RECEIVED);
 
         /// <summary>
         /// A event dispatched when a <seealso cref="IHistoricActivityInstance"/> is created. 
@@ -153,7 +153,7 @@ namespace Sys.Workflow.Engine.Delegate.Events
         /// 
         /// Note that history (minimum level ACTIVITY) must be enabled to receive this event.  
         /// </summary>
-        public static readonly ActivitiEventType HISTORIC_ACTIVITY_INSTANCE_CREATED = new ActivitiEventType("HISTORIC_ACTIVITY_INSTANCE_CREATED", InnerEnum.HISTORIC_ACTIVITY_INSTANCE_CREATED);
+        public static readonly ActivitiEventType HISTORIC_ACTIVITY_INSTANCE_CREATED = new("HISTORIC_ACTIVITY_INSTANCE_CREATED", InnerEnum.HISTORIC_ACTIVITY_INSTANCE_CREATED);
 
         /// <summary>
         /// A event dispatched when a <seealso cref="IHistoricActivityInstance"/> is marked as ended. 
@@ -163,88 +163,88 @@ namespace Sys.Workflow.Engine.Delegate.Events
         /// 
         /// Note that history (minimum level ACTIVITY) must be enabled to receive this event.  
         /// </summary>
-        public static readonly ActivitiEventType HISTORIC_ACTIVITY_INSTANCE_ENDED = new ActivitiEventType("HISTORIC_ACTIVITY_INSTANCE_ENDED", InnerEnum.HISTORIC_ACTIVITY_INSTANCE_ENDED);
+        public static readonly ActivitiEventType HISTORIC_ACTIVITY_INSTANCE_ENDED = new("HISTORIC_ACTIVITY_INSTANCE_ENDED", InnerEnum.HISTORIC_ACTIVITY_INSTANCE_ENDED);
 
         /// <summary>
         /// Indicates the engine has taken (ie. followed) a sequenceflow from a source activity to a target activity.
         /// </summary>
-        public static readonly ActivitiEventType SEQUENCEFLOW_TAKEN = new ActivitiEventType("SEQUENCEFLOW_TAKEN", InnerEnum.SEQUENCEFLOW_TAKEN);
+        public static readonly ActivitiEventType SEQUENCEFLOW_TAKEN = new("SEQUENCEFLOW_TAKEN", InnerEnum.SEQUENCEFLOW_TAKEN);
 
         /// <summary>
         /// When a BPMN Error was thrown, but was not caught within in the process.
         /// </summary>
-        public static readonly ActivitiEventType UNCAUGHT_BPMN_ERROR = new ActivitiEventType("UNCAUGHT_BPMN_ERROR", InnerEnum.UNCAUGHT_BPMN_ERROR);
+        public static readonly ActivitiEventType UNCAUGHT_BPMN_ERROR = new("UNCAUGHT_BPMN_ERROR", InnerEnum.UNCAUGHT_BPMN_ERROR);
 
         /// <summary>
         /// A new variable has been created.
         /// </summary>
-        public static readonly ActivitiEventType VARIABLE_CREATED = new ActivitiEventType("VARIABLE_CREATED", InnerEnum.VARIABLE_CREATED);
+        public static readonly ActivitiEventType VARIABLE_CREATED = new("VARIABLE_CREATED", InnerEnum.VARIABLE_CREATED);
 
         /// <summary>
         /// An existing variable has been updated.
         /// </summary>
-        public static readonly ActivitiEventType VARIABLE_UPDATED = new ActivitiEventType("VARIABLE_UPDATED", InnerEnum.VARIABLE_UPDATED);
+        public static readonly ActivitiEventType VARIABLE_UPDATED = new("VARIABLE_UPDATED", InnerEnum.VARIABLE_UPDATED);
 
         /// <summary>
         /// An existing variable has been deleted.
         /// </summary>
-        public static readonly ActivitiEventType VARIABLE_DELETED = new ActivitiEventType("VARIABLE_DELETED", InnerEnum.VARIABLE_DELETED);
+        public static readonly ActivitiEventType VARIABLE_DELETED = new("VARIABLE_DELETED", InnerEnum.VARIABLE_DELETED);
 
         /// <summary>
         /// A task has been created. This is thrown when task is fully initialized (before TaskListener.EVENTNAME_CREATE).
         /// </summary>
-        public static readonly ActivitiEventType TASK_CREATED = new ActivitiEventType("TASK_CREATED", InnerEnum.TASK_CREATED);
+        public static readonly ActivitiEventType TASK_CREATED = new("TASK_CREATED", InnerEnum.TASK_CREATED);
 
         /// <summary>
         /// A task as been assigned. This is thrown alongside with an <seealso cref="#ENTITY_UPDATED"/> event.
         /// </summary>
-        public static readonly ActivitiEventType TASK_ASSIGNED = new ActivitiEventType("TASK_ASSIGNED", InnerEnum.TASK_ASSIGNED);
+        public static readonly ActivitiEventType TASK_ASSIGNED = new("TASK_ASSIGNED", InnerEnum.TASK_ASSIGNED);
 
         /// <summary>
         /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="#ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
         /// result of the task completion. In that case, a <seealso cref="ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
         /// </summary>
-        public static readonly ActivitiEventType TASK_COMPLETED = new ActivitiEventType("TASK_COMPLETED", InnerEnum.TASK_COMPLETED);
+        public static readonly ActivitiEventType TASK_COMPLETED = new("TASK_COMPLETED", InnerEnum.TASK_COMPLETED);
 
         /// <summary>
         /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="#ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
         /// result of the task completion. In that case, a <seealso cref="ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
         /// </summary>
-        public static readonly ActivitiEventType TASK_RETURN_TO = new ActivitiEventType("TASK_RETURN_TO", InnerEnum.TASK_RETURN_TO);
+        public static readonly ActivitiEventType TASK_RETURN_TO = new("TASK_RETURN_TO", InnerEnum.TASK_RETURN_TO);
 
         /// <summary>
         /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
         /// result of the task completion. In that case, a <seealso cref="ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
         /// </summary>
-        public static readonly ActivitiEventType TASK_TERMINATED = new ActivitiEventType("TASK_TERMINATED", InnerEnum.TASK_TERMINATED);
+        public static readonly ActivitiEventType TASK_TERMINATED = new("TASK_TERMINATED", InnerEnum.TASK_TERMINATED);
 
         /// <summary>
         /// A task has been completed. Dispatched before the task entity is deleted ( <seealso cref="ENTITY_DELETED"/>). If the task is part of a process, this event is dispatched before the process moves on, as a
         /// result of the task completion. In that case, a <seealso cref="ACTIVITY_COMPLETED"/> will be dispatched after an event of this type for the activity corresponding to the task.
         /// </summary>
-        public static readonly ActivitiEventType TASK_TRANSFERED = new ActivitiEventType("TASK_TERMINATED", InnerEnum.TASK_TRANSFERED);
+        public static readonly ActivitiEventType TASK_TRANSFERED = new("TASK_TERMINATED", InnerEnum.TASK_TRANSFERED);
 
         /// <summary>
         /// A process instance has been started. Dispatched when starting a process instance previously created. The event
         /// PROCESS_STARTED is dispatched after the associated event ENTITY_INITIALIZED.
         /// </summary>
-        public static readonly ActivitiEventType PROCESS_STARTED = new ActivitiEventType("PROCESS_STARTED", InnerEnum.PROCESS_STARTED);
+        public static readonly ActivitiEventType PROCESS_STARTED = new("PROCESS_STARTED", InnerEnum.PROCESS_STARTED);
 
         /// <summary>
         /// A process has been completed. Dispatched after the last activity is ACTIVITY_COMPLETED. Process is completed when it reaches state in which process instance does not have any transition to take.
         /// </summary>
-        public static readonly ActivitiEventType PROCESS_COMPLETED = new ActivitiEventType("PROCESS_COMPLETED", InnerEnum.PROCESS_COMPLETED);
+        public static readonly ActivitiEventType PROCESS_COMPLETED = new("PROCESS_COMPLETED", InnerEnum.PROCESS_COMPLETED);
 
         /// <summary>
         /// A process has been completed with an error end event.
         /// </summary>
-        public static readonly ActivitiEventType PROCESS_COMPLETED_WITH_ERROR_END_EVENT = new ActivitiEventType("PROCESS_COMPLETED_WITH_ERROR_END_EVENT", InnerEnum.PROCESS_COMPLETED_WITH_ERROR_END_EVENT);
+        public static readonly ActivitiEventType PROCESS_COMPLETED_WITH_ERROR_END_EVENT = new("PROCESS_COMPLETED_WITH_ERROR_END_EVENT", InnerEnum.PROCESS_COMPLETED_WITH_ERROR_END_EVENT);
 
         /// <summary>
         /// A process has been cancelled. Dispatched when process instance is deleted by
         /// </summary>
         /// <seealso cref="IRuntimeService.DeleteProcessInstance(string, string)">, before DB delete. </seealso>
-        public static readonly ActivitiEventType PROCESS_CANCELLED = new ActivitiEventType("PROCESS_CANCELLED", InnerEnum.PROCESS_CANCELLED);
+        public static readonly ActivitiEventType PROCESS_CANCELLED = new("PROCESS_CANCELLED", InnerEnum.PROCESS_CANCELLED);
 
         /// <summary>
         /// A event dispatched when a <seealso cref="IHistoricProcessInstance"/> is created. 
@@ -256,7 +256,7 @@ namespace Sys.Workflow.Engine.Delegate.Events
         /// 
         /// Note that history (minimum level ACTIVITY) must be enabled to receive this event.  
         /// </summary>
-        public static readonly ActivitiEventType HISTORIC_PROCESS_INSTANCE_CREATED = new ActivitiEventType("HISTORIC_PROCESS_INSTANCE_CREATED", InnerEnum.HISTORIC_PROCESS_INSTANCE_CREATED);
+        public static readonly ActivitiEventType HISTORIC_PROCESS_INSTANCE_CREATED = new("HISTORIC_PROCESS_INSTANCE_CREATED", InnerEnum.HISTORIC_PROCESS_INSTANCE_CREATED);
 
         /// <summary>
         /// A event dispatched when a <seealso cref="IHistoricProcessInstance"/> is marked as ended. 
@@ -266,25 +266,25 @@ namespace Sys.Workflow.Engine.Delegate.Events
         /// 
         /// Note that history (minimum level ACTIVITY) must be enabled to receive this event.  
         /// </summary>
-        public static readonly ActivitiEventType HISTORIC_PROCESS_INSTANCE_ENDED = new ActivitiEventType("HISTORIC_PROCESS_INSTANCE_ENDED", InnerEnum.HISTORIC_PROCESS_INSTANCE_ENDED);
+        public static readonly ActivitiEventType HISTORIC_PROCESS_INSTANCE_ENDED = new("HISTORIC_PROCESS_INSTANCE_ENDED", InnerEnum.HISTORIC_PROCESS_INSTANCE_ENDED);
 
         /// <summary>
         /// A new membership has been created.
         /// </summary>
-        public static readonly ActivitiEventType MEMBERSHIP_CREATED = new ActivitiEventType("MEMBERSHIP_CREATED", InnerEnum.MEMBERSHIP_CREATED);
+        public static readonly ActivitiEventType MEMBERSHIP_CREATED = new("MEMBERSHIP_CREATED", InnerEnum.MEMBERSHIP_CREATED);
 
         /// <summary>
         /// A single membership has been deleted.
         /// </summary>
-        public static readonly ActivitiEventType MEMBERSHIP_DELETED = new ActivitiEventType("MEMBERSHIP_DELETED", InnerEnum.MEMBERSHIP_DELETED);
+        public static readonly ActivitiEventType MEMBERSHIP_DELETED = new("MEMBERSHIP_DELETED", InnerEnum.MEMBERSHIP_DELETED);
 
         /// <summary>
         /// All memberships in the related group have been deleted. No individual <seealso cref="MEMBERSHIP_DELETED"/> events will be dispatched due to possible performance reasons. The event is dispatched before the
         /// memberships are deleted, so they can still be accessed in the dispatch method of the listener.
         /// </summary>
-        public static readonly ActivitiEventType MEMBERSHIPS_DELETED = new ActivitiEventType("MEMBERSHIPS_DELETED", InnerEnum.MEMBERSHIPS_DELETED);
+        public static readonly ActivitiEventType MEMBERSHIPS_DELETED = new("MEMBERSHIPS_DELETED", InnerEnum.MEMBERSHIPS_DELETED);
 
-        public static readonly ActivitiEventType DEBUG_LOGGER = new ActivitiEventType("DEBUG_LOGGER", InnerEnum.DEBUG_LOGGER);
+        public static readonly ActivitiEventType DEBUG_LOGGER = new("DEBUG_LOGGER", InnerEnum.DEBUG_LOGGER);
 
         private static readonly IList<ActivitiEventType> valueList = new List<ActivitiEventType>();
 

@@ -69,13 +69,13 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             try
             {
                 FlowElement currentFlowElement = GetCurrentFlowElement(execution);
-                if (currentFlowElement is FlowNode)
+                if (currentFlowElement is FlowNode node)
                 {
-                    ContinueThroughFlowNode((FlowNode)currentFlowElement);
+                    ContinueThroughFlowNode(node);
                 }
-                else if (currentFlowElement is SequenceFlow)
+                else if (currentFlowElement is SequenceFlow flow)
                 {
-                    ContinueThroughSequenceFlow((SequenceFlow)currentFlowElement);
+                    ContinueThroughSequenceFlow(flow);
                 }
                 else
                 {
@@ -106,7 +106,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         {
 
             // Check if it's the initial flow element. If so, we must fire the execution listeners for the process too
-            if (flowNode.IncomingFlows != null && flowNode.IncomingFlows.Count == 0 && flowNode.SubProcess == null)
+            if (flowNode.IncomingFlows is object && flowNode.IncomingFlows.Count == 0 && flowNode.SubProcess is null)
             {
                 ExecuteProcessStartExecutionListeners();
             }
@@ -114,12 +114,12 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             // For a subprocess, a new child execution is created that will visit the steps of the subprocess
             // The original execution that arrived here will wait until the subprocess is finished
             // and will then be used to continue the process instance.
-            if (flowNode is SubProcess)
+            if (flowNode is SubProcess process)
             {
-                CreateChildExecutionForSubProcess((SubProcess)flowNode);
+                CreateChildExecutionForSubProcess(process);
             }
 
-            if (flowNode is Activity && ((Activity)flowNode).HasMultiInstanceLoopCharacteristics())
+            if (flowNode is Activity activity && activity.HasMultiInstanceLoopCharacteristics())
             {
                 // the multi instance execution will look at async
                 ExecuteMultiInstanceSynchronous(flowNode);
@@ -169,9 +169,9 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             }
 
             // Execute any boundary events, sub process boundary events will be executed from the activity behavior
-            if (!inCompensation && flowNode is Activity)
+            if (!inCompensation && flowNode is Activity activity)
             { // Only activities can have boundary events
-                IList<BoundaryEvent> boundaryEvents = ((Activity)flowNode).BoundaryEvents;
+                IList<BoundaryEvent> boundaryEvents = activity.BoundaryEvents;
                 if (CollectionUtil.IsNotEmpty(boundaryEvents))
                 {
                     if (string.IsNullOrWhiteSpace(execution.Name))
@@ -185,7 +185,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             // Execute actual behavior
             IActivityBehavior activityBehavior = (IActivityBehavior)flowNode.Behavior;
 
-            if (activityBehavior != null)
+            if (activityBehavior is object)
             {
                 ExecuteActivityBehavior(activityBehavior, flowNode);
             }
@@ -219,9 +219,9 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             }
 
             // Execute any boundary events, sub process boundary events will be executed from the activity behavior
-            if (!inCompensation && flowNode is Activity)
+            if (!inCompensation && flowNode is Activity activity)
             { // Only activities can have boundary events
-                IList<BoundaryEvent> boundaryEvents = ((Activity)flowNode).BoundaryEvents;
+                IList<BoundaryEvent> boundaryEvents = activity.BoundaryEvents;
                 if (CollectionUtil.IsNotEmpty(boundaryEvents))
                 {
                     ExecuteBoundaryEvents(boundaryEvents, execution);
@@ -231,7 +231,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             // Execute the multi instance behavior
             IActivityBehavior activityBehavior = (IActivityBehavior)flowNode.Behavior;
 
-            if (activityBehavior != null)
+            if (activityBehavior is object)
             {
                 ExecuteActivityBehavior(activityBehavior, flowNode);
             }
@@ -251,7 +251,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             log.LogDebug($"Executing activityBehavior {activityBehavior.GetType()} on activity '{flowNode.Id}' with execution {execution.Id}");
 
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            if (processEngineConfiguration != null && processEngineConfiguration.EventDispatcher.Enabled)
+            if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
             {
                 processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityEvent(ActivitiEventType.ACTIVITY_STARTED, flowNode.Id, flowNode.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, flowNode));
             }
@@ -282,7 +282,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
 
             // Firing event that transition is being taken
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            if (processEngineConfiguration != null && processEngineConfiguration.EventDispatcher.Enabled)
+            if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
             {
                 FlowElement sourceFlowElement = sequenceFlow.SourceFlowElement;
                 FlowElement targetFlowElement = sequenceFlow.TargetFlowElement;
@@ -291,11 +291,11 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                     sourceFlowElement?.Id,
                     sourceFlowElement?.Name,
                     sourceFlowElement?.GetType().FullName,
-                    sourceFlowElement == null ? null : ((FlowNode)sourceFlowElement).Behavior,
+                    sourceFlowElement is null ? null : ((FlowNode)sourceFlowElement).Behavior,
                     targetFlowElement?.Id,
                     targetFlowElement?.Name,
                     targetFlowElement?.GetType().FullName,
-                    targetFlowElement == null ? null : ((FlowNode)targetFlowElement).Behavior);
+                    targetFlowElement is null ? null : ((FlowNode)targetFlowElement).Behavior);
                 processEngineConfiguration.EventDispatcher.DispatchEvent(asft);
             }
 

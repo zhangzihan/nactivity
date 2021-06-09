@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ namespace Spring.Collections
 		public virtual object Remove()
 		{
 			object element = Poll();
-			if(element != null)
+			if(element is object)
 			{
 				return element;
 			}
@@ -148,7 +148,7 @@ namespace Spring.Collections
 		public virtual object Element()
 		{
 			object element = Peek();
-			if(element != null)
+			if(element is object)
 			{
 				return element;
 			}
@@ -173,7 +173,7 @@ namespace Spring.Collections
 		/// </remarks>
 		public virtual void Clear()
 		{
-			while(Poll() != null)
+			while(Poll() is object)
 			{
 				;
 			}
@@ -215,7 +215,7 @@ namespace Spring.Collections
 		/// </exception>
 		public virtual bool AddAll(ICollection collection)
 		{
-			if(collection == null)
+			if(collection is null)
 			{
 				throw new ArgumentNullException("Collection cannot be null.");
 			}
@@ -230,7 +230,7 @@ namespace Spring.Collections
 			bool modified = false;
 			foreach(object element in collection)
 			{
-				if(element == null)
+				if(element is null)
 				{
 					throw new ArgumentNullException("Cannot add null elements to this queue.");
 				}

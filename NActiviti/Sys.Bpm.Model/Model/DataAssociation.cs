@@ -83,7 +83,7 @@ namespace Sys.Workflow.Bpmn.Models
                 Transformation = val.Transformation;
 
                 assignments = new List<Assignment>();
-                if (val.Assignments != null && val.Assignments.Count > 0)
+                if (val.Assignments is object && val.Assignments.Count > 0)
                 {
                     foreach (Assignment assignment in val.Assignments)
                     {

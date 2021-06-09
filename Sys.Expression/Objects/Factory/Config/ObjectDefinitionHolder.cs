@@ -84,7 +84,7 @@ namespace Spring.Objects.Factory.Config
         {
             objectDefinition = definition;
             objectName = name;
-            this.aliases = aliases != null && aliases.Count > 0 
+            this.aliases = aliases is object && aliases.Count > 0 
                 ? new List<string>(aliases)
                 : null;
         }

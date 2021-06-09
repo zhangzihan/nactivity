@@ -57,14 +57,14 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
 
-            if (task == null)
+            if (task is null)
             {
                 throw new ActivitiObjectNotFoundException("task " + taskId + " doesn't exist", typeof(TaskActivity));
             }
 
             IDictionary<string, IDataObject> dataObjects = null;
             IDictionary<string, IVariableInstance> variables;
-            if (variableNames == null)
+            if (variableNames is null)
             {
                 variables = task.VariableInstances;
             }
@@ -73,7 +73,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 variables = task.GetVariableInstances(variableNames, false);
             }
 
-            if (variables != null)
+            if (variables is object)
             {
                 dataObjects = new Dictionary<string, IDataObject>(variables.Count);
 
@@ -120,22 +120,22 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     {
                         JToken languageNode = Context.GetLocalizationElementProperties(locale, foundDataObject.Id, task.ProcessDefinitionId, withLocalizationFallback);
 
-                        if (languageNode != null)
+                        if (languageNode is object)
                         {
                             JToken nameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
-                            if (nameNode != null)
+                            if (nameNode is object)
                             {
                                 localizedName = nameNode.ToString();
                             }
                             JToken descriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
-                            if (descriptionNode != null)
+                            if (descriptionNode is object)
                             {
                                 localizedDescription = descriptionNode.ToString();
                             }
                         }
                     }
 
-                    if (foundDataObject != null)
+                    if (foundDataObject is object)
                     {
                         dataObjects[variableEntity.Name] = new DataObjectImpl(variableEntity.Name, variableEntity.Value, foundDataObject.Documentation, foundDataObject.Type, localizedName, localizedDescription, foundDataObject.Id);
                     }

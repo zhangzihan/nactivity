@@ -71,7 +71,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         protected internal virtual IExecutionEntity DeleteSignalEventSubscription(IExecutionEntity execution)
         {
             string eventName;
-            if (signal != null)
+            if (signal is object)
             {
                 eventName = signal.Name;
             }

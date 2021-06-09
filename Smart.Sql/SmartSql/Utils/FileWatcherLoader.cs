@@ -14,7 +14,7 @@ namespace SmartSql.Utils
 
         public void Watch(FileInfo fileInfo, Action onFileChanged)
         {
-            if (onFileChanged != null)
+            if (onFileChanged is object)
             {
                 WatchFileChange(fileInfo, onFileChanged);
             }

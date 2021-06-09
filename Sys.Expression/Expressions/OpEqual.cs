@@ -59,7 +59,7 @@ namespace Spring.Expressions
 
             if (left is null)
             {
-                return (right == null);
+                return (right is null);
             }
             else if (right is null)
             {

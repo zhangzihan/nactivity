@@ -45,7 +45,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model.Converters
         public virtual ProcessInstance From(IProcessInstance source)
         {
             ProcessInstance processInstance = null;
-            if (source != null)
+            if (source is object)
             {
                 processInstance = new ProcessInstance()
                 {

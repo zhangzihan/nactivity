@@ -79,7 +79,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
             BpmnParse bpmnParse = bpmnParser.CreateParse().SourceInputStream(inputStream).SetSourceSystemId(resourceName).SetName(resourceName);
             bpmnParse.Deployment = deployment;
 
-            if (deploymentSettings != null)
+            if (deploymentSettings is object)
             {
                 // Schema validation if needed
                 if (deploymentSettings.ContainsKey(Cmd.DeploymentSettingsFields.IS_BPMN20_XSD_VALIDATION_ENABLED))

@@ -78,7 +78,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
         public virtual int GetTypeIndex(string typeName)
         {
             IVariableType type = typesMap[typeName];
-            if (type != null)
+            if (type is object)
             {
                 return GetTypeIndex(type);
             }

@@ -47,5 +47,6 @@ namespace Sys.Workflow.Services.Api.Commands
         /// 流程变量
         /// </summary>
         WorkflowVariable Variables { get; set; }
+        IDictionary<string, object> TransientVariables { get; set; }
     }
 }

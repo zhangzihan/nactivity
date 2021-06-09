@@ -32,7 +32,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                     serviceTask.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY,
                     out IList<ExtensionElement> pElements);
 
-                    if (pElements == null || pElements.Count == 0 || string.IsNullOrWhiteSpace(pElements.GetAttributeValue("url")))
+                    if (pElements is null || pElements.Count == 0 || string.IsNullOrWhiteSpace(pElements.GetAttributeValue("url")))
                     {
                         AddError(errors, ProblemsConstants.SERVICE_TASK_WEBSERVICE_INVALID_URL, process, serviceTask, ProcessValidatorResource.SERVICE_TASK_WEBSERVICE_INVALID_URL);
                     }
@@ -102,11 +102,11 @@ namespace Sys.Workflow.Validation.Validators.Impl
             {
 
                 bool operationFound = false;
-                if (bpmnModel.Interfaces != null && bpmnModel.Interfaces.Count > 0)
+                if (bpmnModel.Interfaces is object && bpmnModel.Interfaces.Count > 0)
                 {
                     foreach (Interface bpmnInterface in bpmnModel.Interfaces)
                     {
-                        if (bpmnInterface.Operations != null && bpmnInterface.Operations.Count > 0)
+                        if (bpmnInterface.Operations is object && bpmnInterface.Operations.Count > 0)
                         {
                             foreach (Operation operation in bpmnInterface.Operations)
                             {

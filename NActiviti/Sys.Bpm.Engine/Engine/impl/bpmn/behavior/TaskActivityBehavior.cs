@@ -32,10 +32,10 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         protected internal virtual string GetActiveValue(string originalValue, string propertyName, JToken taskElementProperties)
         {
             string activeValue = originalValue;
-            if (taskElementProperties != null)
+            if (taskElementProperties is object)
             {
                 JToken overrideValueNode = taskElementProperties[propertyName];
-                if (overrideValueNode == null)
+                if (overrideValueNode is null)
                 {
                     activeValue = null;
                 }
@@ -50,12 +50,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         protected internal virtual IList<string> GetActiveValueList(IList<string> originalValues, string propertyName, JToken taskElementProperties)
         {
             IList<string> activeValues = originalValues;
-            if (taskElementProperties != null)
+            if (taskElementProperties is object)
             {
                 JToken overrideValuesNode = taskElementProperties[propertyName];
-                if (overrideValuesNode != null)
+                if (overrideValuesNode is object)
                 {
-                    if (overrideValuesNode == null || !(overrideValuesNode is JArray))
+                    if (overrideValuesNode is null || !(overrideValuesNode is JArray))
                     {
                         activeValues = null;
                     }

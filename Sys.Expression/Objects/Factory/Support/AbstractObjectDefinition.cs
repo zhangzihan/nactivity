@@ -122,7 +122,7 @@ namespace Spring.Objects.Factory.Support
             OverrideFrom(other);
 
             AbstractObjectDefinition aod = other as AbstractObjectDefinition;
-            if (aod != null)
+            if (aod is object)
             {
                 if (aod.HasObjectType)
                 {
@@ -354,7 +354,7 @@ namespace Spring.Objects.Factory.Support
         /// <value>
         /// <see langword="true"/> if this object definition is a "template".
         /// </value>
-        public bool IsTemplate => isAbstract || (objectType == null && StringUtils.IsNullOrEmpty(factoryObjectName));
+        public bool IsTemplate => isAbstract || (objectType is null && StringUtils.IsNullOrEmpty(factoryObjectName));
 
         /// <summary>
         /// Is this object definition "abstract", i.e. not meant to be
@@ -385,7 +385,7 @@ namespace Spring.Objects.Factory.Support
         {
             get
             {
-                if (objectType == null)
+                if (objectType is null)
                 {
                     ThrowApplicationException("Object definition does not carry a resolved System.Type");
                     return null;
@@ -404,7 +404,7 @@ namespace Spring.Objects.Factory.Support
         /// Is the <see cref="System.Type"/> of the object definition a resolved
         /// <see cref="System.Type"/>?
         /// </summary>
-        public bool HasObjectType => objectType != null;
+        public bool HasObjectType => objectType is object;
 
         /// <summary>
         /// Returns the <see cref="System.Type.FullName"/> of the
@@ -516,7 +516,7 @@ namespace Spring.Objects.Factory.Support
         public IReadOnlyList<string> DependsOn
         {
             get => dependsOn ?? StringUtils.EmptyStringsList;
-            set => dependsOn = value != null && value.Count > 0 ? new List<string>(value) : null;
+            set => dependsOn = value is object && value.Count > 0 ? new List<string>(value) : null;
         }
 
         /// <summary>
@@ -560,7 +560,7 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public bool HasQualifier(string typeName)
         {
-            return qualifiers != null && qualifiers.ContainsKey(typeName);
+            return qualifiers is object && qualifiers.ContainsKey(typeName);
         }
 
         /// <summary>
@@ -568,7 +568,7 @@ namespace Spring.Objects.Factory.Support
         /// </summary>
         public AutowireCandidateQualifier GetQualifier(string typeName)
         {
-            if (qualifiers != null && qualifiers.TryGetValue(typeName, out var qualifier))
+            if (qualifiers is object && qualifiers.TryGetValue(typeName, out var qualifier))
             {
                 return qualifier;
             }
@@ -582,7 +582,7 @@ namespace Spring.Objects.Factory.Support
         /// <returns>the Set of <see cref="AutowireCandidateQualifier"/> objects.</returns>
         public Set<AutowireCandidateQualifier> GetQualifiers()
         {
-            return qualifiers != null
+            return qualifiers is object
                 ? new OrderedSet<AutowireCandidateQualifier>(qualifiers.Values)
                 : new OrderedSet<AutowireCandidateQualifier>();
         }
@@ -593,8 +593,8 @@ namespace Spring.Objects.Factory.Support
         /// <param name="source">the AbstractBeanDefinition to copy from</param>
         public void CopyQualifiersFrom(AbstractObjectDefinition source)
         {
-            Trace.Assert(source != null, "Source must not be null");
-            if (source.qualifiers != null && source.qualifiers.Count > 0)
+            Trace.Assert(source is object, "Source must not be null");
+            if (source.qualifiers is object && source.qualifiers.Count > 0)
             {
                 qualifiers = qualifiers ?? new Dictionary<string, AutowireCandidateQualifier>();
                 foreach (var qualifier in source.qualifiers)
@@ -672,7 +672,7 @@ namespace Spring.Objects.Factory.Support
         /// <see cref="Spring.Objects.Factory.Support.AbstractObjectDefinition.ConstructorArgumentValues"/>
         /// property.
         /// </value>
-        public virtual bool HasConstructorArgumentValues => ConstructorArgumentValues != null
+        public virtual bool HasConstructorArgumentValues => ConstructorArgumentValues is object
                                                             && !ConstructorArgumentValues.Empty;
 
         /// <summary>
@@ -688,7 +688,7 @@ namespace Spring.Objects.Factory.Support
         public Type ResolveObjectType()
         {
             string typeName = ObjectTypeName;
-            if (typeName == null)
+            if (typeName is null)
             {
                 return null;
             }
@@ -793,11 +793,11 @@ namespace Spring.Objects.Factory.Support
             {
                 FactoryMethodName = other.FactoryMethodName;
             }
-            if (other.DependsOn != null && other.DependsOn.Count > 0)
+            if (other.DependsOn is object && other.DependsOn.Count > 0)
             {
                 var deps = new List<string>(other.DependsOn.Count + (DependsOn?.Count).GetValueOrDefault());
                 deps.AddRange(other.DependsOn);
-                if (DependsOn != null && DependsOn.Count > 0)
+                if (DependsOn is object && DependsOn.Count > 0)
                 {
                     deps.AddRange(DependsOn);
                 }
@@ -810,7 +810,7 @@ namespace Spring.Objects.Factory.Support
 
             if (other is AbstractObjectDefinition aod)
             {
-                if (other.ObjectTypeName != null)
+                if (other.ObjectTypeName is object)
                 {
                     ObjectTypeName = other.ObjectTypeName;
                 }
@@ -871,7 +871,7 @@ namespace Spring.Objects.Factory.Support
             role = (ObjectRole) info.GetValue("role", typeof(ObjectRole));
             
             var objectTypeName = info.GetString("objectTypeName");
-            objectType = objectTypeName != null ? Type.GetType(objectTypeName) : null;
+            objectType = objectTypeName is object ? Type.GetType(objectTypeName) : null;
             
             autowireMode = (AutoWiringMode) info.GetValue("autowireMode", typeof(AutoWiringMode));
             dependencyCheck= (DependencyCheckingMode) info.GetValue("dependencyCheck", typeof(DependencyCheckingMode));

@@ -104,7 +104,7 @@ namespace Sys.Workflow.Bpmn.Models
                 Documentation = val.Documentation;
 
                 executionListeners = new List<ActivitiListener>();
-                if (val.ExecutionListeners != null && val.ExecutionListeners.Count > 0)
+                if (val.ExecutionListeners is object && val.ExecutionListeners.Count > 0)
                 {
                     foreach (ActivitiListener listener in val.ExecutionListeners)
                     {

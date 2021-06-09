@@ -30,7 +30,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 XElement extElem = task.Descendants(XName.Get(BpmnXMLConstants.ELEMENT_EXTENSIONS, BpmnXMLConstants.BPMN2_NAMESPACE)).FirstOrDefault();
 
-                if (extElem != null)
+                if (extElem is object)
                 {
                     changed = AddStartListener(extElem) | AddEndedListener(extElem);
                 }
@@ -48,7 +48,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                (x.Attribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS)?.Value.Contains(endListenerType.FullName)).GetValueOrDefault()
                                     select x).FirstOrDefault();
 
-            if (endListener != null)
+            if (endListener is object)
             {
                 return false;
             }
@@ -59,7 +59,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                                  where BpmnXMLConstants.ACTIITI_RUNTIME_ASSIGNEE.Equals(x.Attribute(BpmnXMLConstants.ATTRIBUTE_DATA_NAME)?.Value, StringComparison.OrdinalIgnoreCase)
                                  select x).FirstOrDefault();
 
-            if (assignee != null && bool.TryParse(assignee.Attribute(BpmnXMLConstants.ELEMENT_DATA_VALUE)?.Value, out bool isRuntime) && isRuntime)
+            if (assignee is object && bool.TryParse(assignee.Attribute(BpmnXMLConstants.ELEMENT_DATA_VALUE)?.Value, out bool isRuntime) && isRuntime)
             {
                 endListener = new XElement(XName.Get(BpmnXMLConstants.ELEMENT_EXECUTION_LISTENER, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE),
                     new XAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS, $"{endListenerType.FullName},{endListenerType.Assembly.GetName().Name}"),
@@ -81,7 +81,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                  (x.Attribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS)?.Value.Contains(runListenerType.FullName)).GetValueOrDefault()
                                       select x).FirstOrDefault();
 
-            if (startListener != null)
+            if (startListener is object)
             {
                 return false;
             }
@@ -92,7 +92,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                                  where BpmnXMLConstants.ACTIITI_RUNTIME_ASSIGNEE.Equals(x.Attribute(BpmnXMLConstants.ATTRIBUTE_DATA_NAME)?.Value, StringComparison.OrdinalIgnoreCase)
                                  select x).FirstOrDefault();
 
-            if (assignee != null && bool.TryParse(assignee.Attribute(BpmnXMLConstants.ELEMENT_DATA_VALUE)?.Value, out bool isRuntime) && isRuntime)
+            if (assignee is object && bool.TryParse(assignee.Attribute(BpmnXMLConstants.ELEMENT_DATA_VALUE)?.Value, out bool isRuntime) && isRuntime)
             {
                 startListener = new XElement(XName.Get(BpmnXMLConstants.ELEMENT_EXECUTION_LISTENER, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE),
                     new XAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS, $"{runListenerType.FullName},{runListenerType.Assembly.GetName().Name}"),

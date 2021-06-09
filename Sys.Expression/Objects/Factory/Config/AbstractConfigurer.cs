@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,10 +90,10 @@ namespace Spring.Objects.Factory.Config
         protected virtual Type ResolveRequiredType(object value, string errorContextSource, string errorContext)
         {
             Type requiredType = value as Type;
-            if (requiredType == null)
+            if (requiredType is null)
             {
                 string typeName = value as string;
-                if (typeName != null)
+                if (typeName is object)
                 {
                     try
                     {

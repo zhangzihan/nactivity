@@ -104,7 +104,7 @@ namespace Spring.Collections
         public override bool Add(object element)
         {
             element = MaskNull(element);
-            if (_internalDictionary[element] != null)
+            if (_internalDictionary[element] is object)
             {
                 return false;
             }
@@ -153,7 +153,7 @@ namespace Spring.Collections
         public override bool Contains(object element)
         {
             element = MaskNull(element);
-            return _internalDictionary[element] != null;
+            return _internalDictionary[element] is object;
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace Spring.Collections
         /// </returns>
         public override bool ContainsAll(ICollection collection)
         {
-            if (collection == null)
+            if (collection is null)
             {
                 return false;
             }

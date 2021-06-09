@@ -43,7 +43,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             IProcessDefinitionEntity processDefinition = commandContext.ProcessDefinitionEntityManager.FindById<IProcessDefinitionEntity>(processDefinitionId);
 
-            if (processDefinition == null)
+            if (processDefinition is null)
             {
                 throw new ActivitiObjectNotFoundException("No process definition found for id = '" + processDefinitionId + "'", typeof(IProcessDefinition));
             }
@@ -53,7 +53,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             // Remove process definition from cache, it will be refetched later
             IDeploymentCache<ProcessDefinitionCacheEntry> processDefinitionCache = commandContext.ProcessEngineConfiguration.ProcessDefinitionCache;
-            if (processDefinitionCache != null)
+            if (processDefinitionCache is object)
             {
                 processDefinitionCache.Remove(processDefinitionId);
             }

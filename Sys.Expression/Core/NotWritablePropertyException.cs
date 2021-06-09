@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,7 +123,7 @@ namespace Spring.Core
                    string.Format(CultureInfo.InvariantCulture,
                                  "Property '{0}' is not writable in class [{1}].",
                                  offendingProperty,
-                                 offendingType != null ? offendingType.FullName : "null"),
+                                 offendingType is object ? offendingType.FullName : "null"),
                    rootCause)
         {
         }

@@ -16,7 +16,7 @@ namespace Spring.Threading
         {
             get
             {
-                if (data == null) data = new Hashtable();
+                if (data is null) data = new Hashtable();
                 return data;
             }
         }

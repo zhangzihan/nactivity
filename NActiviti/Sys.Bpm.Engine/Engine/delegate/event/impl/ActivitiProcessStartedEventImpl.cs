@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
                 }
 
                 IExecutionEntity superExecution = executionEntity.SuperExecution;
-                if (superExecution != null)
+                if (superExecution is object)
                 {
                     this.nestedProcessDefinitionId = superExecution.ProcessDefinitionId;
                     this.nestedProcessInstanceId = superExecution.ProcessInstanceId;

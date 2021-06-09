@@ -64,7 +64,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     ["longValue"] = longValue
                 };
 
-                if (byteArrayRef != null)
+                if (byteArrayRef is object)
                 {
                     persistentState["byteArrayRef"] = byteArrayRef.Id;
                 }
@@ -80,7 +80,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (!variableType.Cachable || cachedValue == null)
+                if (!variableType.Cachable || cachedValue is null)
                 {
                     cachedValue = variableType.GetValue(this);
                 }
@@ -94,7 +94,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (byteArrayRef != null)
+                if (byteArrayRef is object)
                 {
                     return byteArrayRef.Bytes;
                 }
@@ -102,7 +102,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                if (byteArrayRef == null)
+                if (byteArrayRef is null)
                 {
                     byteArrayRef = new ByteArrayRef();
                 }
@@ -315,12 +315,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             sb.Append("id=").Append(Id);
             sb.Append(", name=").Append(name);
             sb.Append(", revision=").Append(Revision);
-            sb.Append(", type=").Append(variableType != null ? variableType.TypeName : "null");
-            if (longValue != null)
+            sb.Append(", type=").Append(variableType is object ? variableType.TypeName : "null");
+            if (longValue is object)
             {
                 sb.Append(", longValue=").Append(longValue);
             }
-            if (doubleValue != null)
+            if (doubleValue is object)
             {
                 sb.Append(", doubleValue=").Append(doubleValue);
             }
@@ -332,7 +332,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             {
                 sb.Append(", textValue2=").Append(textValue2.PadLeft(40, ' '));
             }
-            if (byteArrayRef != null && byteArrayRef.Id is object)
+            if (byteArrayRef is object && byteArrayRef.Id is object)
             {
                 sb.Append(", byteArrayValueId=").Append(byteArrayRef.Id);
             }

@@ -47,7 +47,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             if (!ReferenceEquals(updateAttachment.ProcessInstanceId, null))
             {
                 IExecutionEntity process = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
-                if (process != null)
+                if (process is object)
                 {
                     processDefinitionId = process.ProcessDefinitionId;
                 }

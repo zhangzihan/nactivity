@@ -47,7 +47,7 @@ namespace Spring.Objects.Factory.Support
         public string GenerateObjectName(IObjectDefinition definition, IObjectDefinitionRegistry registry)
         {
             IConfigurableObjectDefinition objectDef = definition as IConfigurableObjectDefinition;
-            if (objectDef == null)
+            if (objectDef is null)
             {
                 throw new ArgumentException(
                     "DefaultObjectNameGenerator is only able to handle IConfigurableObjectDefinition subclasses: " +

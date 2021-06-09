@@ -78,7 +78,7 @@ namespace Spring.Objects
         /// </remarks>
         public MutablePropertyValues(IPropertyValues other)
         {
-            if (other != null)
+            if (other is object)
             {
                 AddAll(other.PropertyValues);
             }
@@ -174,7 +174,7 @@ namespace Spring.Objects
         /// </param>
         public void AddAll(IReadOnlyDictionary<string, object> map)
         {
-            if (map != null)
+            if (map is object)
             {
                 foreach (KeyValuePair<string, object> pair in map)
                 {
@@ -193,7 +193,7 @@ namespace Spring.Objects
         /// </param>
         public void AddAll(IDictionary<string, object> map)
         {
-            if (map != null)
+            if (map is object)
             {
                 foreach (KeyValuePair<string, object> pair in map)
                 {
@@ -212,7 +212,7 @@ namespace Spring.Objects
         /// </param>
         public void AddAll(IReadOnlyList<PropertyValue> values)
         {
-            if (values != null)
+            if (values is object)
             {
                 for (var i = 0; i < values.Count; i++)
                 {
@@ -266,7 +266,7 @@ namespace Spring.Objects
         /// </returns>
         public PropertyValue GetPropertyValue(string propertyName)
         {
-            if (propertyValuesList == null)
+            if (propertyValuesList is null)
             {
                 return null;
             }
@@ -293,7 +293,7 @@ namespace Spring.Objects
         /// </returns>
         public bool Contains(string propertyName)
         {
-            return GetPropertyValue(propertyName) != null;
+            return GetPropertyValue(propertyName) is object;
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace Spring.Objects
         public IPropertyValues ChangesSince(IPropertyValues old)
         {
             var changes = new MutablePropertyValues();
-            if (old == this || propertyValuesList == null)
+            if (old == this || propertyValuesList is null)
             {
                 return changes;
             }
@@ -317,7 +317,7 @@ namespace Spring.Objects
             foreach (PropertyValue newProperty in propertyValuesList)
             {
                 PropertyValue oldProperty = old.GetPropertyValue(newProperty.Name);
-                if (oldProperty == null)
+                if (oldProperty is null)
                 {
                     // if there wasn't an old one, add it
                     changes.Add(newProperty);

@@ -65,7 +65,7 @@ namespace Sys.Workflow.Engine.Delegate
         /// </summary>
         public static BpmnModel GetBpmnModel(IExecutionEntity execution)
         {
-            if (execution == null)
+            if (execution is null)
             {
                 throw new ActivitiException("Null execution passed");
             }
@@ -79,7 +79,7 @@ namespace Sys.Workflow.Engine.Delegate
         {
             BpmnModel bpmnModel = GetBpmnModel(execution);
             FlowElement flowElement = bpmnModel.GetFlowElement(execution.CurrentActivityId);
-            if (flowElement == null)
+            if (flowElement is null)
             {
                 throw new ActivitiException("Could not find a FlowElement for activityId " + execution.CurrentActivityId);
             }
@@ -91,7 +91,7 @@ namespace Sys.Workflow.Engine.Delegate
         /// </summary>
         public static bool IsExecutingExecutionListener(IExecutionEntity execution)
         {
-            return execution.CurrentActivitiListener != null;
+            return execution.CurrentActivitiListener is object;
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace Sys.Workflow.Engine.Delegate
         public static FieldExtension GetFlowElementField(IExecutionEntity execution, string fieldName)
         {
             IList<FieldExtension> fieldExtensions = GetFlowElementFields(execution);
-            if (fieldExtensions == null || fieldExtensions.Count == 0)
+            if (fieldExtensions is null || fieldExtensions.Count == 0)
             {
                 return null;
             }
@@ -216,7 +216,7 @@ namespace Sys.Workflow.Engine.Delegate
         public static FieldExtension GetListenerField(IExecutionEntity execution, string fieldName)
         {
             IList<FieldExtension> fieldExtensions = GetListenerFields(execution);
-            if (fieldExtensions == null || fieldExtensions.Count == 0)
+            if (fieldExtensions is null || fieldExtensions.Count == 0)
             {
                 return null;
             }
@@ -278,10 +278,10 @@ namespace Sys.Workflow.Engine.Delegate
         /// </summary>
         public static IExpression GetFieldExpression(IDelegateTask task, string fieldName)
         {
-            if (task.CurrentActivitiListener != null)
+            if (task.CurrentActivitiListener is object)
             {
                 IList<FieldExtension> fieldExtensions = task.CurrentActivitiListener.FieldExtensions;
-                if (fieldExtensions != null && fieldExtensions.Count > 0)
+                if (fieldExtensions is object && fieldExtensions.Count > 0)
                 {
                     foreach (FieldExtension fieldExtension in fieldExtensions)
                     {
@@ -298,7 +298,7 @@ namespace Sys.Workflow.Engine.Delegate
         public static IExpression GetFlowElementFieldExpression(IExecutionEntity execution, string fieldName)
         {
             FieldExtension fieldExtension = GetFlowElementField(execution, fieldName);
-            if (fieldExtension != null)
+            if (fieldExtension is object)
             {
                 return CreateExpressionForField(fieldExtension);
             }
@@ -308,7 +308,7 @@ namespace Sys.Workflow.Engine.Delegate
         public static IExpression GetListenerFieldExpression(IExecutionEntity execution, string fieldName)
         {
             FieldExtension fieldExtension = GetListenerField(execution, fieldName);
-            if (fieldExtension != null)
+            if (fieldExtension is object)
             {
                 return CreateExpressionForField(fieldExtension);
             }

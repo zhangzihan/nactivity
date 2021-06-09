@@ -60,7 +60,7 @@ namespace Sys.Net.Http
         /// <returns></returns>
         protected virtual async Task<T> PopulateData<T>(HttpResponseMessage response)
         {
-            if (response.StatusCode == HttpStatusCode.BadRequest && response.Content != null)
+            if (response.StatusCode == HttpStatusCode.BadRequest && response.Content is object)
             {
                 Http400 h400 = JsonConvert.DeserializeObject<Http400>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 
@@ -168,7 +168,7 @@ namespace Sys.Net.Http
             {
                 await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
-                HttpResponseMessage response = await httpClient.PostAsync(uri, data == null ? null : new JsonContent(data), cancellation).ConfigureAwait(false);
+                HttpResponseMessage response = await httpClient.PostAsync(uri, data is null ? null : new JsonContent(data), cancellation).ConfigureAwait(false);
 
                 return await PopulateData<T>(response).ConfigureAwait(false);
             }
@@ -176,7 +176,7 @@ namespace Sys.Net.Http
             {
                 sw.Stop();
 
-                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={uri}\r\n{(data == null ? "" : JsonConvert.SerializeObject(data))}" + ex.Message + "\r\n" + ex.StackTrace);
+                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={uri}\r\n{(data is null ? "" : JsonConvert.SerializeObject(data))}" + ex.Message + "\r\n" + ex.StackTrace);
 
                 throw;
             }
@@ -214,13 +214,13 @@ namespace Sys.Net.Http
             {
                 await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
-                await httpClient.PostAsync(uri, data == null ? null : new JsonContent(data), cancellation).ConfigureAwait(false);
+                await httpClient.PostAsync(uri, data is null ? null : new JsonContent(data), cancellation).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 sw.Stop();
 
-                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={uri}\r\n{(data == null ? "" : JsonConvert.SerializeObject(data))}" + ex.Message + "\r\n" + ex.StackTrace);
+                logger.LogError($"调用外部服务失败({sw.ElapsedMilliseconds}ms) url={uri}\r\n{(data is null ? "" : JsonConvert.SerializeObject(data))}" + ex.Message + "\r\n" + ex.StackTrace);
 
                 throw;
             }
@@ -251,14 +251,14 @@ namespace Sys.Net.Http
         {
             await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
-            await httpClient.PutAsync(uri, data == null ? null : new JsonContent(data), cancellation).ConfigureAwait(false);
+            await httpClient.PutAsync(uri, data is null ? null : new JsonContent(data), cancellation).ConfigureAwait(false);
         }
 
         public virtual async Task<T> PutAsync<T>(string uri, object data, CancellationToken cancellation)
         {
             await accessTokenProvider.SetRequestAccessTokenAsync(httpClient, httpContextAccessor.HttpContext).ConfigureAwait(false);
 
-            HttpResponseMessage response = await httpClient.PutAsync(uri, data == null ? null : new JsonContent(data), cancellation).ConfigureAwait(false);
+            HttpResponseMessage response = await httpClient.PutAsync(uri, data is null ? null : new JsonContent(data), cancellation).ConfigureAwait(false);
 
             return await PopulateData<T>(response).ConfigureAwait(false);
         }

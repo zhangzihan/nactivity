@@ -84,7 +84,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
         {
             // If it's in the cache, the tree must have been fetched before
             IExecutionEntity cachedEntity = (IExecutionEntity)EntityCache.FindInCache(ManagedEntityClass, executionId);
-            if (cachedEntity != null)
+            if (cachedEntity is object)
             {
                 return cachedEntity;
             }
@@ -264,7 +264,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
             int maxResults = executionQuery.MaxResults;
 
             // setting max results, limit to 20000 results for performance reasons
-            if (executionQuery.ProcessInstanceVariablesLimit != null)
+            if (executionQuery.ProcessInstanceVariablesLimit is object)
             {
                 executionQuery.MaxResults = executionQuery.ProcessInstanceVariablesLimit.GetValueOrDefault();
             }
@@ -276,7 +276,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
 
             IList<IProcessInstance> instanceList = DbSqlSession.SelectListWithRawParameterWithoutFilter<ExecutionEntityImpl, IProcessInstance>("selectProcessInstanceWithVariablesByQueryCriteria", executionQuery, executionQuery.FirstResult, executionQuery.MaxResults);
 
-            if (instanceList != null && instanceList.Count > 0)
+            if (instanceList is object && instanceList.Count > 0)
             {
                 if (firstResult > 0)
                 {

@@ -72,7 +72,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg.Multitenants
             {
                 string tenantId = tenantInfoHolder.CurrentTenantId;
                 IDataSource dataSource = dataSources[tenantId];
-                if (dataSource == null)
+                if (dataSource is null)
                 {
                     throw new ActivitiException("Could not find a dataSource for tenant " + tenantId);
                 }

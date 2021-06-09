@@ -77,7 +77,7 @@ namespace Sys.Workflow.Engine.Impl
         public virtual U SingleResult()
         {
             this.resultType = ResultType.SINGLE_RESULT;
-            if (commandExecutor != null)
+            if (commandExecutor is object)
             {
                 return (U)commandExecutor.Execute(this);
             }
@@ -87,7 +87,7 @@ namespace Sys.Workflow.Engine.Impl
         public virtual IList<U> List()
         {
             this.resultType = ResultType.LIST;
-            if (commandExecutor != null)
+            if (commandExecutor is object)
             {
                 return (IList<U>)commandExecutor.Execute(this);
             }
@@ -99,7 +99,7 @@ namespace Sys.Workflow.Engine.Impl
             this.firstResult = firstResult;
             this.maxResults = maxResults;
             this.resultType = ResultType.LIST_PAGE;
-            if (commandExecutor != null)
+            if (commandExecutor is object)
             {
                 return (IList<U>)commandExecutor.Execute(this);
             }
@@ -109,7 +109,7 @@ namespace Sys.Workflow.Engine.Impl
         public virtual long Count()
         {
             this.resultType = ResultType.COUNT;
-            if (commandExecutor != null)
+            if (commandExecutor is object)
             {
                 return ((long?)commandExecutor.Execute(this)).GetValueOrDefault();
             }

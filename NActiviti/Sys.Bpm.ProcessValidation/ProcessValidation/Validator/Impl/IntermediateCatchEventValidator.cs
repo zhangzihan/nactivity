@@ -32,7 +32,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                     eventDefinition = intermediateCatchEvent.EventDefinitions[0];
                 }
 
-                if (eventDefinition == null)
+                if (eventDefinition is null)
                 {
                     AddError(errors, ProblemsConstants.INTERMEDIATE_CATCH_EVENT_NO_EVENTDEFINITION, process, intermediateCatchEvent, ProcessValidatorResource.INTERMEDIATE_CATCH_EVENT_NO_EVENTDEFINITION);
                 }

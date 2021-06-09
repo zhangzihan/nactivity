@@ -24,7 +24,7 @@ namespace SmartSql.Configuration.Tags
         {
             get
             {
-                if (_childTags == null)
+                if (_childTags is null)
                 {
                     _childTags = new List<ITag>();
                 }
@@ -71,7 +71,7 @@ namespace SmartSql.Configuration.Tags
 
         public virtual void BuildChildSql(RequestContext context)
         {
-            if (ChildTags != null && ChildTags.Count > 0)
+            if (ChildTags is object && ChildTags.Count > 0)
             {
                 foreach (var childTag in ChildTags)
                 {
@@ -87,17 +87,17 @@ namespace SmartSql.Configuration.Tags
         protected virtual object GetPropertyValue(RequestContext context)
         {
             var reqParams = context.RequestParameters;
-            if (reqParams == null)
+            if (reqParams is null)
             {
                 return null;
             }
 
-            if (Property == null)
+            if (Property is null)
             {
                 throw new PropertyArgumentNullException($"Tag property null {ToString()}");
             }
 
-            if (!string.IsNullOrWhiteSpace(Property) && context.Request != null)
+            if (!string.IsNullOrWhiteSpace(Property) && context.Request is object)
             {
                 return ExpressionManager.GetValue(context.Request, Property, context.RequestParameters);
             }

@@ -50,11 +50,11 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
         /// <param name="variables">流程变量</param>
         ////[JsonConstructor]
         public TransferTaskCmd([JsonProperty("Name")] string name,
-            [JsonProperty("Description")]string description,
+            [JsonProperty("Description")] string description,
             [JsonProperty("DueDate")] DateTime? dueDate,
-            [JsonProperty("Priority")]int? priority,
-            [JsonProperty("Assignees")]string[] assignees,
-            [JsonProperty("TaskId")]string taskId,
+            [JsonProperty("Priority")] int? priority,
+            [JsonProperty("Assignees")] string[] assignees,
+            [JsonProperty("TaskId")] string taskId,
             [JsonProperty("TenantId")] string tenantId,
             [JsonProperty("Variables")] WorkflowVariable variables)
         {
@@ -153,6 +153,11 @@ namespace Sys.Workflow.Cloud.Services.Api.Commands
 
         /// <inheritdoc />
         public WorkflowVariable Variables
+        {
+            get; set;
+        }
+
+        public IDictionary<string, object> TransientVariables
         {
             get; set;
         }

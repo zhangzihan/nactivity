@@ -197,7 +197,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         [HttpPost("processmodel")]
         public Task<string> GetProcessModel(DeploymentQuery queryObj)
         {
-            if (queryObj == null)
+            if (queryObj is null)
             {
                 throw new ArgumentNullException("queryObj");
             }

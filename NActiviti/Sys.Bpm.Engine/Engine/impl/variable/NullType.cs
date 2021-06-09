@@ -41,7 +41,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public override bool IsAbleToStore(object value)
         {
-            return (value == null);
+            return (value is null);
         }
 
         public override void SetValue(object value, IValueFields valueFields)

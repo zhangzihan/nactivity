@@ -61,7 +61,7 @@ namespace Sys.Workflow.Engine.Impl.Repositories
 
         public virtual IDeploymentBuilder AddInputStream(string resourceName, Stream inputStream)
         {
-            if (inputStream == null)
+            if (inputStream is null)
             {
                 throw new ActivitiIllegalArgumentException("inputStream for resource '" + resourceName + "' is null");
             }
@@ -76,7 +76,7 @@ namespace Sys.Workflow.Engine.Impl.Repositories
         public virtual IDeploymentBuilder AddClasspathResource(string resource)
         {
             System.IO.Stream inputStream = ReflectUtil.GetResourceAsStream(resource);
-            if (inputStream == null)
+            if (inputStream is null)
             {
                 throw new ActivitiIllegalArgumentException("resource '" + resource + "' not found");
             }
@@ -118,7 +118,7 @@ namespace Sys.Workflow.Engine.Impl.Repositories
             //try
             //{
             //    ZipEntry entry = zipInputStream.NextEntry;
-            //    while (entry != null)
+            //    while (entry is object)
             //    {
             //        if (!entry.Directory)
             //        {
@@ -221,7 +221,7 @@ namespace Sys.Workflow.Engine.Impl.Repositories
                              .Descendants(XName.Get(BpmnXMLConstants.ELEMENT_EVENT_START, BpmnXMLConstants.BPMN2_NAMESPACE))
                              .FirstOrDefault();
 
-                        if (start != null)
+                        if (start is object)
                         {
                             string formKey = start.Attribute(XName.Get(BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE))?.Value;
 

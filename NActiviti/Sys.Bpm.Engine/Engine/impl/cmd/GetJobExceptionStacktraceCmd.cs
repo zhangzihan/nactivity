@@ -61,7 +61,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     break;
             }
 
-            if (job == null)
+            if (job is null)
             {
                 throw new ActivitiObjectNotFoundException("No job found with id " + jobId, typeof(IJob));
             }

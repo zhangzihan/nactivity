@@ -68,7 +68,7 @@ namespace Sys.Workflow.Bpmn.Converters
         protected internal override void WriteAdditionalAttributes(BaseElement element, BpmnModel model, XMLStreamWriter xtw)
         {
             BoundaryEvent boundaryEvent = (BoundaryEvent)element;
-            if (boundaryEvent.AttachedToRef != null)
+            if (boundaryEvent.AttachedToRef is object)
             {
                 WriteDefaultAttribute(BpmnXMLConstants.ATTRIBUTE_BOUNDARY_ATTACHEDTOREF, boundaryEvent.AttachedToRef.Id, xtw);
             }

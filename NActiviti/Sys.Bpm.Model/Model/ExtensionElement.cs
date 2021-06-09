@@ -68,7 +68,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             get
             {
-                if (childElements == null)
+                if (childElements is null)
                 {
                     childElements = new ConcurrentDictionary<string, IList<ExtensionElement>>();
                 }
@@ -83,7 +83,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddChildElement(ExtensionElement childElement)
         {
-            if (childElement != null && !string.IsNullOrWhiteSpace(childElement.Name))
+            if (childElement is object && !string.IsNullOrWhiteSpace(childElement.Name))
             {
                 if (!this.childElements.ContainsKey(childElement.Name))
                 {
@@ -117,12 +117,12 @@ namespace Sys.Workflow.Bpmn.Models
                 Attributes = val.Attributes;
 
                 childElements = new Dictionary<string, IList<ExtensionElement>>();
-                if (val.ChildElements != null && val.ChildElements.Count > 0)
+                if (val.ChildElements is object && val.ChildElements.Count > 0)
                 {
                     foreach (string key in val.ChildElements.Keys)
                     {
                         IList<ExtensionElement> otherElementList = val.ChildElements[key];
-                        if (otherElementList != null && otherElementList.Count > 0)
+                        if (otherElementList is object && otherElementList.Count > 0)
                         {
                             IList<ExtensionElement> elementList = new List<ExtensionElement>();
                             foreach (ExtensionElement extensionElement in otherElementList)

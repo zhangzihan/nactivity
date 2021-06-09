@@ -76,7 +76,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
         {
             get
             {
-                return defaultScheduleVersion == null ? DEFAULT_VERSION : defaultScheduleVersion;
+                return defaultScheduleVersion is null ? DEFAULT_VERSION : defaultScheduleVersion;
             }
             set
             {

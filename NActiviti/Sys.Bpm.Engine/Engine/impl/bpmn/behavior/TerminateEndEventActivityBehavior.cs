@@ -87,7 +87,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 commandContext.HistoryManager.RecordProcessInstanceEnd(scopeExecutionEntity.Id, deleteReason, execution.CurrentActivityId);
 
             }
-            else if (scopeExecutionEntity.CurrentFlowElement != null && scopeExecutionEntity.CurrentFlowElement is SubProcess)
+            else if (scopeExecutionEntity.CurrentFlowElement is object && scopeExecutionEntity.CurrentFlowElement is SubProcess)
             { // SubProcess
 
                 SubProcess subProcess = (SubProcess)scopeExecutionEntity.CurrentFlowElement;
@@ -148,7 +148,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                 // Fire event
                 ProcessEngineConfigurationImpl config = Context.ProcessEngineConfiguration;
-                if (config != null && config.EventDispatcher.Enabled)
+                if (config is object && config.EventDispatcher.Enabled)
                 {
                     config.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_ENDED, historicActivityInstance));
                 }
@@ -160,7 +160,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             // When terminateMultiInstance is 'true', we look for the multi instance root and delete it from there.
             IExecutionEntity miRootExecutionEntity = executionEntityManager.FindFirstMultiInstanceRoot(execution);
-            if (miRootExecutionEntity != null)
+            if (miRootExecutionEntity is object)
             {
                 // Create sibling execution to continue process instance execution before deletion
                 IExecutionEntity siblingExecution = executionEntityManager.CreateChildExecution(miRootExecutionEntity.Parent);
@@ -211,7 +211,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             // call activities
             IExecutionEntity subProcessInstance = Context.CommandContext.ExecutionEntityManager.FindSubProcessInstanceBySuperExecutionId(execution.Id);
-            if (subProcessInstance != null)
+            if (subProcessInstance is object)
             {
                 DispatchExecutionCancelled(subProcessInstance, terminateEndEvent);
             }

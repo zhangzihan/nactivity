@@ -197,7 +197,7 @@ namespace Sys.Workflow.Engine.Impl
                     valuesNode = (JArray)infoNode[DynamicBpmnConstants.BPMN_NODE][id][DynamicBpmnConstants.USER_TASK_CANDIDATE_USERS];
                 }
 
-                if (valuesNode == null)
+                if (valuesNode is null)
                 {
                     valuesNode = processEngineConfiguration.ObjectMapper.CreateArrayNode();
                 }
@@ -228,7 +228,7 @@ namespace Sys.Workflow.Engine.Impl
                     valuesNode = (JArray)infoNode[DynamicBpmnConstants.BPMN_NODE][id][DynamicBpmnConstants.USER_TASK_CANDIDATE_GROUPS];
                 }
 
-                if (valuesNode == null)
+                if (valuesNode is null)
                 {
                     valuesNode = processEngineConfiguration.ObjectMapper.CreateArrayNode();
                 }
@@ -266,7 +266,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             JToken propertiesNode = null;
             JToken bpmnNode = GetBpmnNode(infoNode);
-            if (bpmnNode != null)
+            if (bpmnNode is object)
             {
                 propertiesNode = (JToken)bpmnNode[id];
             }
@@ -301,10 +301,10 @@ namespace Sys.Workflow.Engine.Impl
         {
             JToken propertiesNode = null;
             JToken localizationNode = GetLocalizationNode(infoNode);
-            if (localizationNode != null)
+            if (localizationNode is object)
             {
                 JToken languageNode = localizationNode[language];
-                if (languageNode != null)
+                if (languageNode is object)
                 {
                     propertiesNode = (JToken)languageNode[id];
                 }
@@ -315,10 +315,10 @@ namespace Sys.Workflow.Engine.Impl
         protected internal virtual bool DoesElementPropertyExist(string id, string propertyName, JToken infoNode)
         {
             bool exists = false;
-            if (infoNode[DynamicBpmnConstants.BPMN_NODE] != null && infoNode[DynamicBpmnConstants.BPMN_NODE][id] != null && infoNode[DynamicBpmnConstants.BPMN_NODE][id][propertyName] != null)
+            if (infoNode[DynamicBpmnConstants.BPMN_NODE] is object && infoNode[DynamicBpmnConstants.BPMN_NODE][id] is object && infoNode[DynamicBpmnConstants.BPMN_NODE][id][propertyName] is object)
             {
                 JToken propNode = infoNode.SelectToken($"{DynamicBpmnConstants.BPMN_NODE}.{id}.{propertyName}");
-                if (propNode != null)
+                if (propNode is object)
                 {
                     exists = true;
                 }
@@ -329,7 +329,7 @@ namespace Sys.Workflow.Engine.Impl
         protected internal virtual void SetElementProperty(string id, string propertyName, string propertyValue, JToken infoNode)
         {
             JToken bpmnNode = CreateOrGetBpmnNode(infoNode);
-            if (bpmnNode[id] == null)
+            if (bpmnNode[id] is null)
             {
                 bpmnNode.AddAfterSelf(id);
             }
@@ -340,7 +340,7 @@ namespace Sys.Workflow.Engine.Impl
         protected internal virtual void SetElementProperty(string id, string propertyName, JToken propertyValue, JToken infoNode)
         {
             JToken bpmnNode = CreateOrGetBpmnNode(infoNode);
-            if (bpmnNode[id] == null)
+            if (bpmnNode[id] is null)
             {
                 bpmnNode.AddAfterSelf(id);
             }
@@ -350,7 +350,7 @@ namespace Sys.Workflow.Engine.Impl
 
         protected internal virtual JToken CreateOrGetBpmnNode(JToken infoNode)
         {
-            if (infoNode[DynamicBpmnConstants.BPMN_NODE] == null)
+            if (infoNode[DynamicBpmnConstants.BPMN_NODE] is null)
             {
                 infoNode.AddAfterSelf(DynamicBpmnConstants.BPMN_NODE);
             }
@@ -365,13 +365,13 @@ namespace Sys.Workflow.Engine.Impl
         protected internal virtual void SetLocalizationProperty(string language, string id, string propertyName, string propertyValue, JToken infoNode)
         {
             JToken localizationNode = CreateOrGetLocalizationNode(infoNode);
-            if (localizationNode[language] == null)
+            if (localizationNode[language] is null)
             {
                 localizationNode.AddAfterSelf(language);
             }
 
             JToken languageNode = (JToken)localizationNode[language];
-            if (languageNode[id] == null)
+            if (languageNode[id] is null)
             {
                 languageNode.AddAfterSelf(id);
             }
@@ -381,7 +381,7 @@ namespace Sys.Workflow.Engine.Impl
 
         protected internal virtual JToken CreateOrGetLocalizationNode(JToken infoNode)
         {
-            if (infoNode[DynamicBpmnConstants.LOCALIZATION_NODE] == null)
+            if (infoNode[DynamicBpmnConstants.LOCALIZATION_NODE] is null)
             {
                 infoNode.AddAfterSelf(DynamicBpmnConstants.LOCALIZATION_NODE);
             }

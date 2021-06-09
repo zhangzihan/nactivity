@@ -39,7 +39,7 @@ namespace Sys.Extentions
             var id = identity as ClaimsIdentity;
             var claim = id.FindFirst(JwtClaimTypes.Subject);
 
-            if (claim == null) throw new InvalidOperationException("sub claim is missing");
+            if (claim is null) throw new InvalidOperationException("sub claim is missing");
             return claim.Value;
         }
 
@@ -55,7 +55,7 @@ namespace Sys.Extentions
             if (!string.IsNullOrWhiteSpace(name)) return name;
 
             var sub = principal.FindFirst(JwtClaimTypes.Subject);
-            if (sub != null) return sub.Value;
+            if (sub is object) return sub.Value;
 
             return string.Empty;
         }
@@ -69,7 +69,7 @@ namespace Sys.Extentions
         public static string GetEmail(this ClaimsPrincipal principal)
         {
             var email = principal.FindFirst(JwtClaimTypes.Email);
-            if (email != null) return email.Value;
+            if (email is object) return email.Value;
 
             return string.Empty;
         }
@@ -83,7 +83,7 @@ namespace Sys.Extentions
         public static string GetPhone(this ClaimsPrincipal principal)
         {
             var phone = principal.FindFirst(JwtClaimTypes.PhoneNumber);
-            if (phone != null) return phone.Value;
+            if (phone is object) return phone.Value;
 
             return string.Empty;
         }
@@ -97,7 +97,7 @@ namespace Sys.Extentions
         public static string GetTenantId(this ClaimsPrincipal principal)
         {
             var tenantId = principal.FindFirst(JwtClaimTypes.TenantId);
-            if (tenantId != null) return tenantId.Value;
+            if (tenantId is object) return tenantId.Value;
 
             return string.Empty;
         }
@@ -137,7 +137,7 @@ namespace Sys.Extentions
             var id = identity as ClaimsIdentity;
             var claim = id.FindFirst("amr");
 
-            if (claim == null) throw new InvalidOperationException("amr claim is missing");
+            if (claim is null) throw new InvalidOperationException("amr claim is missing");
             return claim.Value;
         }
 
@@ -176,7 +176,7 @@ namespace Sys.Extentions
             var id = identity as ClaimsIdentity;
             var claim = id.FindFirst("idp");
 
-            if (claim == null) throw new InvalidOperationException("idp claim is missing");
+            if (claim is null) throw new InvalidOperationException("idp claim is missing");
             return claim.Value;
         }
 
@@ -190,7 +190,7 @@ namespace Sys.Extentions
         [DebuggerStepThrough]
         public static bool IsAuthenticated(this IPrincipal principal)
         {
-            return principal != null && principal.Identity != null && principal.Identity.IsAuthenticated;
+            return principal is object && principal.Identity is object && principal.Identity.IsAuthenticated;
         }
     }
 }

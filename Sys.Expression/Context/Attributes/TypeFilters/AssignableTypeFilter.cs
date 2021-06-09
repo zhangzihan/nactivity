@@ -45,7 +45,7 @@ namespace Spring.Context.Attributes.TypeFilters
         /// <returns>true if there is a match; false is there is no match</returns>
         public override bool Match(Type type)
         {
-            if (RequiredType == null)
+            if (RequiredType is null)
             {
                 return false;
             }
@@ -75,7 +75,7 @@ namespace Spring.Context.Attributes.TypeFilters
         /// <filterpriority>2</filterpriority>
         public override string ToString()
         {
-            return string.Format("Required Type: {0}", RequiredType != null ? RequiredType.FullName : "");
+            return string.Format("Required Type: {0}", RequiredType is object ? RequiredType.FullName : "");
         }
     }
 }

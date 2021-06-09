@@ -77,7 +77,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             while (!commandContext.Agenda.Empty)
             {
                 AbstractOperation runnable = commandContext.Agenda.NextOperation();
-                if (runnable != null)
+                if (runnable is object)
                 {
                     ExecuteOperation(runnable);
                 }
@@ -90,7 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             {
                 // Execute the operation if the operation has no execution (i.e. it's an operation not working on a process instance)
                 // or the operation has an execution and it is not ended
-                if (operation.Execution == null || !operation.Execution.Ended)
+                if (operation.Execution is null || !operation.Execution.Ended)
                 {
                     //if (log.IsEnabled(LogLevel.Debug))
                     //{

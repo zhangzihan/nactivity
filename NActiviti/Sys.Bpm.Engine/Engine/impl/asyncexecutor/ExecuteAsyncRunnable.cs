@@ -83,7 +83,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         /// </summary>
         public virtual void Run()
         {
-            if (job == null)
+            if (job is null)
             {
                 job = processEngineConfiguration.CommandExecutor.Execute(new CommandAnonymousInnerClass(this));
             }
@@ -230,7 +230,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor
         protected internal virtual void UnacquireJob()
         {
             ICommandContext commandContext = Context.CommandContext;
-            if (commandContext != null)
+            if (commandContext is object)
             {
                 commandContext.JobManager.Unacquire(job);
             }

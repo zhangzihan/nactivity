@@ -32,7 +32,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public  virtual object  Execute(ICommandContext commandContext)
         {
-            if (@event == null)
+            if (@event is null)
             {
                 throw new ActivitiIllegalArgumentException("event is null");
             }

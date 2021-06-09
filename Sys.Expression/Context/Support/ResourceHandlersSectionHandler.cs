@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ namespace Spring.Context.Support
         /// </returns>
         public object Create(object parent, object configContext, XmlNode section)
         {
-            if (section != null)
+            if (section is object)
             {
                 XmlNodeList resourceHandlers = ((XmlElement) section).GetElementsByTagName(HandlerElement);
 
@@ -121,7 +121,7 @@ namespace Spring.Context.Support
         private static string GetRequiredAttributeValue(XmlElement resourceElement, string requiredAttributeName, XmlNode section)
         {
             XmlAttribute attribute = resourceElement.GetAttributeNode(requiredAttributeName);
-            if (attribute == null)
+            if (attribute is null)
             {
                 string errorMessage =
                         string.Format(CultureInfo.InvariantCulture, "The '{0}' attribute is required for the resource handler definition.",

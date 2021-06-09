@@ -58,7 +58,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         public override void Execute(IExecutionEntity execution)
         {
             string finalProcessDefinitonKey;
-            if (processDefinitionExpression != null)
+            if (processDefinitionExpression is object)
             {
                 finalProcessDefinitonKey = (string)processDefinitionExpression.GetValue(execution);
             }
@@ -71,13 +71,13 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             // Get model from cache
             Process subProcess = ProcessDefinitionUtil.GetProcess(processDefinition.Id);
-            if (subProcess == null)
+            if (subProcess is null)
             {
                 throw new ActivitiException("Cannot start a sub process instance. Process model " + processDefinition.Name + " (id = " + processDefinition.Id + ") could not be found");
             }
 
             FlowElement initialFlowElement = subProcess.InitialFlowElement;
-            if (initialFlowElement == null)
+            if (initialFlowElement is null)
             {
                 throw new ActivitiException("No start element found for process definition " + processDefinition.Id);
             }
@@ -200,7 +200,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             IDictionary<string, object> variablesMap = new Dictionary<string, object>();
             // convert data objects to process variables
-            if (dataObjects != null)
+            if (dataObjects is object)
             {
                 variablesMap = new Dictionary<string, object>(dataObjects.Count);
                 foreach (ValuedDataObject dataObject in dataObjects)

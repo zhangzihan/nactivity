@@ -51,7 +51,7 @@ namespace Sys.Workflow.Engine.Impl.Events
                 string processDefinitionId = eventSubscription.ProcessDefinitionId;
                 IProcessDefinition processDefinition = ProcessDefinitionUtil.GetProcessDefinition(processDefinitionId);
 
-                if (processDefinition == null)
+                if (processDefinition is null)
                 {
                     throw new ActivitiObjectNotFoundException("No process definition found for id '" + processDefinitionId + "'", typeof(IProcessDefinition));
                 }
@@ -63,7 +63,7 @@ namespace Sys.Workflow.Engine.Impl.Events
 
                 Process process = ProcessDefinitionUtil.GetProcess(processDefinitionId);
                 FlowElement flowElement = process.GetFlowElement(eventSubscription.ActivityId, true);
-                if (flowElement == null)
+                if (flowElement is null)
                 {
                     throw new ActivitiException("Could not find matching FlowElement for activityId " + eventSubscription.ActivityId);
                 }

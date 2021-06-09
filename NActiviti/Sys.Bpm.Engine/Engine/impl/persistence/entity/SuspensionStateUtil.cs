@@ -51,7 +51,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         protected internal static void DispatchStateChangeEvent(object entity, ISuspensionState state)
         {
-            if (Context.CommandContext != null && Context.CommandContext.EventDispatcher.Enabled)
+            if (Context.CommandContext is object && Context.CommandContext.EventDispatcher.Enabled)
             {
                 ActivitiEventType eventType;
                 if (state == SuspensionStateProvider.ACTIVE)

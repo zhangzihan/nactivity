@@ -228,7 +228,7 @@ namespace Spring.Util
         {
             FieldInfo s_configSystem = typeof(ConfigurationManager).GetField("s_configSystem", BindingFlags.Static | BindingFlags.NonPublic);
             // for MONO
-            if (s_configSystem == null)
+            if (s_configSystem is null)
             {
                 s_configSystem = typeof(ConfigurationManager).GetField("configSystem", BindingFlags.Static | BindingFlags.NonPublic);
             }
@@ -241,7 +241,7 @@ namespace Spring.Util
             try
             {
                 MethodInfo mi = typeof(ConfigurationManager).GetMethod("SetConfigurationSystem", BindingFlags.Static | BindingFlags.NonPublic);
-                if (mi == null)
+                if (mi is null)
                 {
                     mi = typeof(ConfigurationManager).GetMethod("ChangeConfigurationSystem", BindingFlags.Static | BindingFlags.NonPublic);
                     mi.Invoke(null, new object[] { configSystem });

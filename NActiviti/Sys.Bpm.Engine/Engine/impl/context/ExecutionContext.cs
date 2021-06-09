@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Contexts
             {
                 string deploymentId = ProcessDefinition.DeploymentId;
                 var ctx = Context.CommandContext;
-                if (ctx != null)
+                if (ctx is object)
                 {
                     IDeploymentEntity deployment = ctx.DeploymentEntityManager.FindById<IDeploymentEntity>(deploymentId);
                     return deployment;

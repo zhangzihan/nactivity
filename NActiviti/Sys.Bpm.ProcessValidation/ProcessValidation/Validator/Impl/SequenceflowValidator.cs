@@ -46,29 +46,29 @@ namespace Sys.Workflow.Validation.Validators.Impl
                 FlowElement target = process.GetFlowElement(targetRef, true);
 
                 // Src and target validation
-                if (source == null)
+                if (source is null)
                 {
                     AddError(errors, ProblemsConstants.SEQ_FLOW_INVALID_SRC, process, sequenceFlow, ProcessValidatorResource.SEQ_FLOW_INVALID_SRC);
                 }
-                if (target == null)
+                if (target is null)
                 {
                     AddError(errors, ProblemsConstants.SEQ_FLOW_INVALID_TARGET, process, sequenceFlow, ProcessValidatorResource.SEQ_FLOW_INVALID_TARGET);
                 }
 
-                if (source != null && target != null)
+                if (source is object && target is object)
                 {
                     IFlowElementsContainer sourceContainer = process.GetFlowElementsContainer(source.Id);
                     IFlowElementsContainer targetContainer = process.GetFlowElementsContainer(target.Id);
 
-                    if (sourceContainer == null)
+                    if (sourceContainer is null)
                     {
                         AddError(errors, ProblemsConstants.SEQ_FLOW_INVALID_SRC, process, sequenceFlow, ProcessValidatorResource.SEQ_FLOW_INVALID_SRC);
                     }
-                    if (targetContainer == null)
+                    if (targetContainer is null)
                     {
                         AddError(errors, ProblemsConstants.SEQ_FLOW_INVALID_TARGET, process, sequenceFlow, ProcessValidatorResource.SEQ_FLOW_INVALID_TARGET);
                     }
-                    if (sourceContainer != null && targetContainer != null && !sourceContainer.Equals(targetContainer))
+                    if (sourceContainer is object && targetContainer is object && !sourceContainer.Equals(targetContainer))
                     {
                         AddError(errors, ProblemsConstants.SEQ_FLOW_INVALID_TARGET, process, sequenceFlow, ProcessValidatorResource.SEQ_FLOW_INVALID_TARGET);
                     }

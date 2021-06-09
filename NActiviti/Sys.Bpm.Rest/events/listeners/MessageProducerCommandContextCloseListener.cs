@@ -49,7 +49,7 @@ namespace Sys.Workflow.Cloud.Services.Events.Listeners
         public virtual void Closed(ICommandContext commandContext)
         {
             IList<IProcessEngineEvent> events = commandContext.GetGenericAttribute<IList<IProcessEngineEvent>>(PROCESS_ENGINE_EVENTS);
-            if (events != null && events.Count > 0)
+            if (events is object && events.Count > 0)
             {
                 producer.AuditProducer().Send(MessageBuilder<IList<IProcessEngineEvent>>.WithPayload(events).Build());
             }

@@ -28,7 +28,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		}
 		public virtual void  addInputBufferListener(InputBufferListener l)
 		{
-			if (inputBufferListeners == null)
+			if (inputBufferListeners is null)
 				inputBufferListeners = new ArrayList();
 			inputBufferListeners.Add(l);
 		}
@@ -65,12 +65,12 @@ namespace Spring.Expressions.Parser.antlr.debug
 			
 			lock(this)
 			{
-				if (listeners == null)
+				if (listeners is null)
 					return ;
 				targets = (ArrayList) listeners.Clone();
 			}
 			
-			if (targets != null)
+			if (targets is object)
 				 for (int i = 0; i < targets.Count; i++)
 				{
 					l = (Listener) targets[i];
@@ -99,7 +99,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 			{
 				v = (ArrayList) listeners.Clone();
 			}
-			if (v != null)
+			if (v is object)
 				 for (int i = 0; i < v.Count; i++)
 					((Listener) v[i]).refresh();
 		}
@@ -109,7 +109,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		}
 		public virtual void  removeInputBufferListener(InputBufferListener l)
 		{
-			if (inputBufferListeners != null)
+			if (inputBufferListeners is object)
 			{
 				ArrayList temp_arraylist;
 				object temp_object;

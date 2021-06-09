@@ -185,7 +185,7 @@ namespace Spring.Objects.Factory.Xml
             try
             {
                 ObjectDefinitionHolder bdHolder = helper.ParseObjectDefinitionElement(element);
-                if (bdHolder == null)
+                if (bdHolder is null)
                 {
                     return;
                 }
@@ -315,7 +315,7 @@ namespace Spring.Objects.Factory.Xml
 //        private INamespaceParser GetNamespaceParser(XmlElement element, ObjectDefinitionParserHelper helper)
 //        {
 //            INamespaceParser parser = NamespaceParserRegistry.GetParser(element.NamespaceURI);
-//            if (parser == null)
+//            if (parser is null)
 //            {
 //                helper.ReaderContext.ReportException(element, null, GetNoParserForNamespaceMessage(element.NamespaceURI));
 //            }

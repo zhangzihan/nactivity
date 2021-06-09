@@ -63,7 +63,7 @@ namespace Sys.Workflow.Engine.Debug
                     flattenedList.AddLast(currentNode);
                 }
 
-                if (currentNode.Children != null && currentNode.Children.Count > 0)
+                if (currentNode.Children is object && currentNode.Children.Count > 0)
                 {
                     foreach (ExecutionTreeNode childNode in currentNode.Children)
                     {
@@ -77,7 +77,7 @@ namespace Sys.Workflow.Engine.Debug
 
         public bool HasNext()
         {
-            if (flattenedList == null)
+            if (flattenedList is null)
             {
                 FlattenTree();
             }
@@ -97,12 +97,12 @@ namespace Sys.Workflow.Engine.Debug
 
         public void Remove()
         {
-            if (flattenedList == null)
+            if (flattenedList is null)
             {
                 FlattenTree();
             }
 
-            if (flattenedListIterator.Current != null)
+            if (flattenedListIterator.Current is object)
             {
                 flattenedList.Remove(flattenedListIterator.Current);
             }
@@ -110,7 +110,7 @@ namespace Sys.Workflow.Engine.Debug
 
         public bool MoveNext()
         {
-            if (flattenedList == null)
+            if (flattenedList is null)
             {
                 FlattenTree();
             }

@@ -170,7 +170,7 @@ namespace Spring.Objects.Factory.Support
                         "IFactoryObject threw an exception on object creation", ex);
                 }
             }
-            if (instance == null)
+            if (instance is null)
             {
                 throw new NoSuchObjectDefinitionException(name, GrabDefinedObjectsString());
             }
@@ -440,7 +440,7 @@ namespace Spring.Objects.Factory.Support
         {
             string objectName = ObjectFactoryUtils.TransformedObjectName(name);
             object instance = objects[objectName];
-            if (instance == null)
+            if (instance is null)
             {
                 throw new NoSuchObjectDefinitionException(name, GrabDefinedObjectsString());
             }
@@ -466,7 +466,7 @@ namespace Spring.Objects.Factory.Support
         public bool IsTypeMatch(string name, Type targetType)
         {
             Type type = GetType(name);
-            return (targetType == null || (type != null && targetType.IsAssignableFrom(type)));
+            return (targetType is null || (type is object && targetType.IsAssignableFrom(type)));
         }
 
         private string GrabDefinedObjectsString()
@@ -675,7 +675,7 @@ namespace Spring.Objects.Factory.Support
         /// <seealso cref="Spring.Objects.Factory.IListableObjectFactory.GetObjectNamesForType(Type, bool, bool)"/>
         public IReadOnlyList<string> GetObjectNamesForType(Type type, bool includePrototypes, bool includeFactoryObjects)
         {
-            bool isFactoryType = (type != null && typeof(IFactoryObject).IsAssignableFrom(type));
+            bool isFactoryType = (type is object && typeof(IFactoryObject).IsAssignableFrom(type));
             List<string> matches = new();
             foreach (string name in objects.Keys)
             {
@@ -685,7 +685,7 @@ namespace Spring.Objects.Factory.Support
                     if (includeFactoryObjects)
                     {
                         Type objectType = ((IFactoryObject)instance).ObjectType;
-                        if (objectType != null && type.IsAssignableFrom(objectType))
+                        if (objectType is object && type.IsAssignableFrom(objectType))
                         {
                             matches.Add(name);
                         }
@@ -856,7 +856,7 @@ namespace Spring.Objects.Factory.Support
 
         private void DoGetObjectsOfType(Type type, bool includeFactoryObjects, bool includePrototypes, IDictionary collector)
         {
-            bool isFactoryType = (type != null && typeof(IFactoryObject).IsAssignableFrom(type));
+            bool isFactoryType = (type is object && typeof(IFactoryObject).IsAssignableFrom(type));
             foreach (string name in objects.Keys)
             {
                 object instance = objects[name];
@@ -864,9 +864,9 @@ namespace Spring.Objects.Factory.Support
                 {
                     IFactoryObject factory = (IFactoryObject)instance;
                     Type objectType = factory.ObjectType;
-                    if ((objectType == null && factory.IsSingleton) ||
+                    if ((objectType is null && factory.IsSingleton) ||
                         ((factory.IsSingleton || includePrototypes) &&
-                         objectType != null && type.IsAssignableFrom(objectType)))
+                         objectType is object && type.IsAssignableFrom(objectType)))
                     {
                         object createdObject = GetObject(name);
                         if (type.IsInstanceOfType(createdObject))
@@ -954,7 +954,7 @@ namespace Spring.Objects.Factory.Support
         public T GetObject<T>()
         {
             var objectNamesForType = GetObjectNamesForType(typeof(T));
-            if ((objectNamesForType == null) || (objectNamesForType.Count == 0))
+            if ((objectNamesForType is null) || (objectNamesForType.Count == 0))
             {
                 throw new NoSuchObjectDefinitionException(typeof(T).FullName, "Requested Type not Defined in the Context.");
             }

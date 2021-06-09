@@ -72,12 +72,12 @@ namespace Sys.Workflow.Engine.Impl
 
             ProcessEngineFactory.RegisterProcessEngine(this);
 
-            if (asyncExecutor != null && asyncExecutor.AutoActivate)
+            if (asyncExecutor is object && asyncExecutor.AutoActivate)
             {
                 asyncExecutor.Start();
             }
 
-            if (processEngineConfiguration.ProcessEngineLifecycleListener != null)
+            if (processEngineConfiguration.ProcessEngineLifecycleListener is object)
             {
                 processEngineConfiguration.ProcessEngineLifecycleListener.OnProcessEngineBuilt(this);
             }
@@ -88,14 +88,14 @@ namespace Sys.Workflow.Engine.Impl
         public virtual void Close()
         {
             ProcessEngineFactory.Unregister(this);
-            if (asyncExecutor != null && asyncExecutor.Active)
+            if (asyncExecutor is object && asyncExecutor.Active)
             {
                 asyncExecutor.Shutdown();
             }
 
             commandExecutor.Execute(processEngineConfiguration.SchemaCommandConfig, new SchemaOperationProcessEngineClose());
 
-            if (processEngineConfiguration.ProcessEngineLifecycleListener != null)
+            if (processEngineConfiguration.ProcessEngineLifecycleListener is object)
             {
                 processEngineConfiguration.ProcessEngineLifecycleListener.OnProcessEngineClosed(this);
             }

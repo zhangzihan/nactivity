@@ -32,9 +32,9 @@ namespace Spring.Expressions.Parser.antlr
 		/*Make sure that child is the last sibling */
 		public void  advanceChildToEnd()
 		{
-			if (child != null)
+			if (child is object)
 			{
-				while (child.getNextSibling() != null)
+				while (child.getNextSibling() is object)
 				{
 					child = child.getNextSibling();
 				}
@@ -58,8 +58,8 @@ namespace Spring.Expressions.Parser.antlr
 		
 		override public string ToString()
 		{
-			string r = (root == null) ? "null" : root.getText();
-			string c = (child == null) ? "null" : child.getText();
+			string r = (root is null) ? "null" : root.getText();
+			string c = (child is null) ? "null" : child.getText();
 			return "[" + r + "," + c + "]";
 		}
 	}

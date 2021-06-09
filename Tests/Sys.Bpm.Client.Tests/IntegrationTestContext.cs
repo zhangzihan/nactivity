@@ -134,7 +134,7 @@ namespace Sys.Workflow.Test
         {
             lock (syncRoot)
             {
-                if (testContext == null)
+                if (testContext is null)
                 {
                     testContext = new IntegrationTestContext
                     {
@@ -211,17 +211,17 @@ namespace Sys.Workflow.Test
             {
                 //ILogger logger = unitTestContext.Resolve<ILoggerFactory>().CreateLogger<IntegrationTestContext>();
 
-                //logger.LogError($"{(sender == null ? "" : sender.GetType().FullName)}{ex.Message}");
+                //logger.LogError($"{(sender is null ? "" : sender.GetType().FullName)}{ex.Message}");
             }
         }
 
         private static void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
         {
-            if (e.Exception != null)
+            if (e.Exception is object)
             {
                 //ILogger logger = unitTestContext.Resolve<ILoggerFactory>().CreateLogger<IntegrationTestContext>();
 
-                //logger.LogError($"{(sender == null ? "" : sender.GetType().FullName)}{e.Exception.Message}{e.Exception.StackTrace}");
+                //logger.LogError($"{(sender is null ? "" : sender.GetType().FullName)}{e.Exception.Message}{e.Exception.StackTrace}");
             }
         }
 
@@ -501,7 +501,7 @@ namespace Sys.Workflow.Test
             services.AddProcessEngine(Configuration);
 
             var sd = services.FirstOrDefault(x => x.ServiceType == typeof(IServiceWebApiHttpProxy));
-            if (sd != null)
+            if (sd is object)
             {
                 services.Remove(sd);
             }

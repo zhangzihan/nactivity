@@ -60,7 +60,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             IProcessDefinitionEntity processDefinition = commandContext.ProcessDefinitionEntityManager.FindById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("id", processDefinitionId));
 
-            if (processDefinition == null)
+            if (processDefinition is null)
             {
                 throw new ActivitiObjectNotFoundException("Cannot find process definition with id " + processDefinitionId, typeof(IProcessDefinition));
             }

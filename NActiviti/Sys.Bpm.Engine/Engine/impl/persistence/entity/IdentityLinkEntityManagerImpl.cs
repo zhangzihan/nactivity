@@ -223,7 +223,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             foreach (var il in identityLinks)
             {
                 var item = executionEntity.IdentityLinks.FirstOrDefault(x => x.Id == il.Id);
-                if (item != null)
+                if (item is object)
                 {
                     executionEntity.IdentityLinks.Remove(item);
                 }
@@ -261,7 +261,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             foreach (var il in identityLinks)
             {
                 var item = taskEntity.IdentityLinks.FirstOrDefault(x => x.Id == il.Id);
-                if (item != null)
+                if (item is object)
                 {
                     taskEntity.IdentityLinks.Remove(item);
                 }

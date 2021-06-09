@@ -1,9 +1,9 @@
-/* Copyright © 2002-2011 by Aidant Systems, Inc., and by Jason Smith. */
+/* Copyright ?2002-2011 by Aidant Systems, Inc., and by Jason Smith. */
 
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ namespace Spring.Collections
 		public virtual ISet Union(ISet setOne)
 		{
 			ISet resultSet = (ISet) this.Clone();
-			if (setOne != null) 
+			if (setOne is object) 
 			{
 				resultSet.AddAll(setOne);
 			}
@@ -78,15 +78,15 @@ namespace Spring.Collections
 		/// </returns>
 		public static ISet Union(ISet setOne, ISet anotherSet)
 		{
-			if (setOne == null && anotherSet == null)
+			if (setOne is null && anotherSet is null)
 			{
 				return null;
 			}
-			else if (setOne == null)
+			else if (setOne is null)
 			{
 				return (ISet) anotherSet.Clone();
 			}
-			else if (anotherSet == null)
+			else if (anotherSet is null)
 			{
 				return (ISet) setOne.Clone();
 			}
@@ -124,7 +124,7 @@ namespace Spring.Collections
 		public virtual ISet Intersect(ISet setOne)
 		{
 			ISet resultSet = (ISet) this.Clone();
-			if (setOne != null)
+			if (setOne is object)
 			{
 				resultSet.RetainAll(setOne);
 			}
@@ -157,11 +157,11 @@ namespace Spring.Collections
 		/// </returns>
 		public static ISet Intersect(ISet setOne, ISet anotherSet)
 		{
-			if (setOne == null && anotherSet == null)
+			if (setOne is null && anotherSet is null)
 			{
 				return null;
 			}
-			else if (setOne == null)
+			else if (setOne is null)
 			{
 				return anotherSet.Intersect(setOne);
 			}
@@ -200,7 +200,7 @@ namespace Spring.Collections
 		public virtual ISet Minus(ISet setOne)
 		{
 			ISet resultSet = (ISet) this.Clone();
-			if (setOne != null)
+			if (setOne is object)
 			{
 				resultSet.RemoveAll(setOne);
 			}
@@ -230,7 +230,7 @@ namespace Spring.Collections
 		/// </returns>
 		public static ISet Minus(ISet setOne, ISet anotherSet)
 		{
-			if (setOne == null)
+			if (setOne is null)
 			{
 				return null;
 			}
@@ -307,15 +307,15 @@ namespace Spring.Collections
 		/// </returns>
 		public static ISet ExclusiveOr(ISet setOne, ISet anotherSet)
 		{
-			if (setOne == null && anotherSet == null)
+			if (setOne is null && anotherSet is null)
 			{
 				return null;
 			}
-			else if (setOne == null)
+			else if (setOne is null)
 			{
 				return (Set) anotherSet.Clone();
 			}
-			else if (anotherSet == null)
+			else if (anotherSet is null)
 			{
 				return (Set) setOne.Clone();
 			}
@@ -533,7 +533,7 @@ namespace Spring.Collections
 		public override bool Equals(object obj)
 		{
 			Set theOtherSet = obj as Set;
-			if (theOtherSet == null || theOtherSet.Count != Count)
+			if (theOtherSet is null || theOtherSet.Count != Count)
 			{
 				return false;
 			}

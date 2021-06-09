@@ -36,7 +36,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public virtual IList<IVariableInstance> Execute(ICommandContext commandContext)
         {
-            if (taskIds == null)
+            if (taskIds is null)
             {
                 throw new ActivitiIllegalArgumentException("taskIds is null");
             }

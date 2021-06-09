@@ -111,7 +111,7 @@ namespace Spring.Context.Support
 
             contexts.Add(contextIndex, context);
 
-            while (parent != null)
+            while (parent is object)
             {
                 contextIndex++;
                 contexts.Add(contextIndex, parent);
@@ -137,7 +137,7 @@ namespace Spring.Context.Support
         private static void EnsureHierarchicalNameIfDefault(IApplicationContext context)
         {
             //if there is no parent context there is no change needed
-            if (context.ParentContext == null)
+            if (context.ParentContext is null)
                 return;
 
             if (context.Name == AbstractApplicationContext.DefaultRootContextName)
@@ -186,7 +186,7 @@ namespace Spring.Context.Support
 
                 #endregion
 
-                if (rootContextName == null)
+                if (rootContextName is null)
                 {
                     rootContextName = context.Name;
                 }
@@ -201,7 +201,7 @@ namespace Spring.Context.Support
         private static void OnContextEvent(object sender, ApplicationEventArgs e)
         {
             ContextEventArgs cea = e as ContextEventArgs;
-            if (cea != null
+            if (cea is object
                 && cea.Event == ContextEventArgs.ContextEvent.Closed
                 && sender is IApplicationContext)
             {
@@ -249,7 +249,7 @@ namespace Spring.Context.Support
             lock (syncRoot)
             {
                 InitializeContextIfNeeded();
-                if (rootContextName == null)
+                if (rootContextName is null)
                 {
                     throw new ApplicationContextException(
                         "No context registered. Use the 'RegisterContext' method or the 'spring/context' section from your configuration file.");
@@ -360,7 +360,7 @@ namespace Spring.Context.Support
             {
                 IApplicationContext temp;
                 instance.contextMap.TryGetValue(name, out temp);
-                return temp != null;
+                return temp is object;
             }
         }
 
@@ -368,7 +368,7 @@ namespace Spring.Context.Support
 
         private static void InitializeContextIfNeeded()
         {
-            if (rootContextName != null)
+            if (rootContextName is object)
             {
                 return;
             }

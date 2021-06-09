@@ -32,7 +32,7 @@ namespace Spring.Expressions.Parser.antlr
 
 		public override string ToString()
 		{
-			if ( token != null ) 
+			if ( token is object ) 
 			{
 				return token.getText();
 			}

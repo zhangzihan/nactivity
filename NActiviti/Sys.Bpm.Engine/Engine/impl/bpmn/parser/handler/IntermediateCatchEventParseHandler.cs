@@ -37,7 +37,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
                 eventDefinition = @event.EventDefinitions[0];
             }
 
-            if (eventDefinition == null)
+            if (eventDefinition is null)
             {
                 @event.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateCatchEventActivityBehavior(@event);
 

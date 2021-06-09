@@ -162,7 +162,7 @@ namespace Spring.Objects.Factory
             List<string> result = new();
             result.AddRange(factory.GetObjectNamesForType(type, includePrototypes, includeFactoryObjects));
             IListableObjectFactory pof = GetParentListableObjectFactoryIfAny(factory);
-            if (pof != null)
+            if (pof is object)
             {
                 IHierarchicalObjectFactory hof = (IHierarchicalObjectFactory)factory;
                 IList<string> parentsResult = ObjectNamesForTypeIncludingAncestors(pof, type, includePrototypes, includeFactoryObjects);
@@ -246,7 +246,7 @@ namespace Spring.Objects.Factory
             }
 
             IListableObjectFactory pof = GetParentListableObjectFactoryIfAny(factory);
-            if (pof != null)
+            if (pof is object)
             {
                 IHierarchicalObjectFactory hof = (IHierarchicalObjectFactory)factory;
                 Dictionary<string, object> parentResult = ObjectsOfTypeIncludingAncestors(pof, type, includePrototypes, includeFactoryObjects);
@@ -421,7 +421,7 @@ namespace Spring.Objects.Factory
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsFactoryDereference(string name)
         {
-            return name != null && name.Length > 1 && name[0] == '&';
+            return name is object && name.Length > 1 && name[0] == '&';
         }
 
         private static IListableObjectFactory GetParentListableObjectFactoryIfAny(IListableObjectFactory factory)

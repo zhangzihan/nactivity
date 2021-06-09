@@ -63,7 +63,7 @@ namespace Sys.Workflow.Validation
 
         public virtual void AddValidatorSet(ValidatorSet validatorSet)
         {
-            if (validatorSets == null)
+            if (validatorSets is null)
             {
                 validatorSets = new List<ValidatorSet>();
             }

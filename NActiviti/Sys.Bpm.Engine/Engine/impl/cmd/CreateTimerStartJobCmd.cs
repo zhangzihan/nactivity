@@ -39,7 +39,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             timer.JobType = JobFields.JOB_TYPE_TIMER;
 
             IProcessDefinitionEntity pd = commandContext.ProcessDefinitionEntityManager.FindLatestProcessDefinitionByKey(processDefinitionId);
-            if (pd == null)
+            if (pd is null)
             {
                 throw new ActivitiException("Could not find process definition needed for timer start event");
             }

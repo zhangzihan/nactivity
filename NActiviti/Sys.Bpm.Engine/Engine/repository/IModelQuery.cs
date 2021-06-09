@@ -70,7 +70,7 @@ namespace Sys.Workflow.Engine.Repository
         IModelQuery SetDeploymentId(string deploymentId);
 
         /// <summary>
-        /// Only select models that are deployed (ie deploymentId != null) </summary>
+        /// Only select models that are deployed (ie deploymentId is object) </summary>
         IModelQuery SetDeployed();
 
         /// <summary>

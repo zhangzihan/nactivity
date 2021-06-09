@@ -55,7 +55,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
             ICommand<object> cacheCommand = new CommandAnonymousInnerClass(this, processDefinitionId);
 
             ProcessDefinitionInfoCacheObject infoCacheObject;
-            if (Context.CommandContext != null)
+            if (Context.CommandContext is object)
             {
                 infoCacheObject = RetrieveProcessDefinitionInfoCacheObject(processDefinitionId, Context.CommandContext);
             }
@@ -115,7 +115,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
             });
 
             IProcessDefinitionInfoEntity infoEntity = infoEntityManager.FindProcessDefinitionInfoByProcessDefinitionId(processDefinitionId);
-            if (infoEntity != null && infoEntity.Revision != cacheObject.Revision)
+            if (infoEntity is object && infoEntity.Revision != cacheObject.Revision)
             {
                 cacheObject.Revision = infoEntity.Revision;
                 if (infoEntity.InfoJsonId is object)
@@ -132,7 +132,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
                     }
                 }
             }
-            else if (infoEntity == null)
+            else if (infoEntity is null)
             {
                 cacheObject.Revision = 0;
                 cacheObject.InfoNode = objectMapper.CreateObjectNode();

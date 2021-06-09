@@ -79,7 +79,7 @@ namespace Sys.Workflow.Engine.Impl.Webservice
 
             results = this.service.Client.send(this.name, arguments, overridenEndpointAddresses);
 
-            if (results == null)
+            if (results is null)
             {
                 results = new object[] { };
             }
@@ -90,7 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Webservice
         {
             MessageInstance message = null;
             MessageDefinition outMessage = operation.OutMessage;
-            if (outMessage != null)
+            if (outMessage is object)
             {
                 message = outMessage.CreateInstance();
                 message.StructureInstance.LoadFrom(results);

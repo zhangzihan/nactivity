@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 string timerConfig = TimerEventHandler.CreateConfiguration(execution.CurrentActivityId, timerEventDefinition.EndDate, timerEventDefinition.CalendarName);
                 ITimerJobEntity timerJob = jobManager.CreateTimerJob(timerEventDefinition, interrupting, execution, TriggerTimerEventJobHandler.TYPE, timerConfig);
 
-                if (timerJob != null)
+                if (timerJob is object)
                 {
                     jobManager.ScheduleTimerJob(timerJob);
                 }

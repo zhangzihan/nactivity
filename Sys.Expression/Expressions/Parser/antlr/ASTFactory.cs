@@ -141,7 +141,7 @@ namespace Spring.Expressions.Parser.antlr
 			if (tokenType > (heteroList_.Length+1))
 				setMaxNodeType(tokenType);
 			// And add new thing..
-			if (heteroList_[tokenType] == null)
+			if (heteroList_[tokenType] is null)
                 heteroList_[tokenType] = new FactoryEntry(loadNodeTypeObject(NodeTypeName));
 			else
 				heteroList_[tokenType].NodeTypeObject = loadNodeTypeObject(NodeTypeName);
@@ -174,7 +174,7 @@ namespace Spring.Expressions.Parser.antlr
 			if (NodeType > (heteroList_.Length+1))
 				setMaxNodeType(NodeType);
 			// And add new thing..
-			if (heteroList_[NodeType] == null)
+			if (heteroList_[NodeType] is null)
 				heteroList_[NodeType] = new FactoryEntry(creator);
 			else
 				heteroList_[NodeType].Creator = creator;
@@ -202,7 +202,7 @@ namespace Spring.Expressions.Parser.antlr
 		public void setMaxNodeType( int NodeType )
 		{
 			//Debug.WriteLine(this, "NodeType = " + NodeType + " and NodeList.Length = " + nodeTypeList_.Length);
-			if (heteroList_ == null)
+			if (heteroList_ is null)
 			{
 				heteroList_ = new FactoryEntry[NodeType+1];
 			}
@@ -233,16 +233,16 @@ namespace Spring.Expressions.Parser.antlr
 		/// <param name="child">The child AST to be added</param>
 		public virtual void  addASTChild(ref ASTPair currentAST, AST child)
 		{
-			if (child != null)
+			if (child is object)
 			{
-				if (currentAST.root == null)
+				if (currentAST.root is null)
 				{
 					// Make new child the current root
 					currentAST.root = child;
 				}
 				else
 				{
-					if (currentAST.child == null)
+					if (currentAST.child is null)
 					{
 						// Add new child to current root
 						currentAST.root.setFirstChild(child);
@@ -268,7 +268,7 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			AST newNode;
 			
-			if (defaultCreator_ == null)
+			if (defaultCreator_ is null)
 				newNode = createFromNodeTypeObject(defaultASTNodeTypeObject_);
 			else
 				newNode = defaultCreator_.Create();
@@ -365,7 +365,7 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			AST	newNode;
 
-			if (aNode == null)
+			if (aNode is null)
 				newNode = null;
 			else
 			{			
@@ -390,7 +390,7 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			AST newNode;
 
-			if (tok == null)
+			if (tok is null)
 				newNode = null;
 			else
 			{
@@ -409,7 +409,7 @@ namespace Spring.Expressions.Parser.antlr
 		public virtual AST dup(AST t)
 		{
 			// The Java version is implemented using code like this:
-			if (t == null)
+			if (t is null)
 				return null;
 
 			AST dup_edNode = createFromAST(t);
@@ -424,9 +424,9 @@ namespace Spring.Expressions.Parser.antlr
 		/// <returns>Root node of new AST Node tree (or null if <c>t</c> is null).</returns>
 		public virtual AST dupList(AST t)
 		{
-			AST result = dupTree(t); // if t == null, then result==null
+			AST result = dupTree(t); // if t is null, then result==null
 			AST nt = result;
-			while (t != null)
+			while (t is object)
 			{
 				// for each sibling of the root
 				t = t.getNextSibling();
@@ -445,7 +445,7 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			AST result = dup(t); // make copy of root
 			// copy all children of root.
-			if (t != null)
+			if (t is object)
 			{
 				result.setFirstChild(dupList(t.getFirstChild()));
 			}
@@ -463,26 +463,26 @@ namespace Spring.Expressions.Parser.antlr
 		/// <returns>AST Node tree.</returns>
 		public virtual AST make(params AST[] nodes)
 		{
-			if (nodes == null || nodes.Length == 0)
+			if (nodes is null || nodes.Length == 0)
 				return null;
 			AST root = nodes[0];
 			AST tail = null;
-			if (root != null)
+			if (root is object)
 			{
 				root.setFirstChild(null); // don't leave any old pointers set
 			}
 			// link in children;
 			for (int i = 1; i < nodes.Length; i++)
 			{
-				if (nodes[i] == null)
+				if (nodes[i] is null)
 					continue;
 				// ignore null nodes
-				if (root == null)
+				if (root is null)
 				{
 					// Set the root and set it up for a flat list
 					root = (tail = nodes[i]);
 				}
-				else if (tail == null)
+				else if (tail is null)
 				{
 					root.setFirstChild(nodes[i]);
 					tail = root.getFirstChild();
@@ -493,7 +493,7 @@ namespace Spring.Expressions.Parser.antlr
 					tail = tail.getNextSibling();
 				}
 				// Chase tail to last sibling
-				while (tail.getNextSibling() != null)
+				while (tail.getNextSibling() is object)
 				{
 					tail = tail.getNextSibling();
 				}
@@ -519,7 +519,7 @@ namespace Spring.Expressions.Parser.antlr
 		/// <param name="root"></param>
 		public virtual void  makeASTRoot(ref ASTPair currentAST, AST root)
 		{
-			if (root != null)
+			if (root is object)
 			{
 				// Add the current root as a child of new root
 				root.addChild(currentAST.root);
@@ -539,7 +539,7 @@ namespace Spring.Expressions.Parser.antlr
 		/// <param name="t">Fully qualified AST Node Type name.</param>
 		public virtual void  setASTNodeType(string t)
 		{
-			if (defaultCreator_ != null)
+			if (defaultCreator_ is object)
 			{
 				if (t != defaultCreator_.ASTNodeTypeName)
 				{
@@ -569,14 +569,14 @@ namespace Spring.Expressions.Parser.antlr
 			Type	nodeTypeObject	= null;
 			bool	typeCreated		= false;
 
-			if (nodeTypeName != null)
+			if (nodeTypeName is object)
 			{
 				foreach (Assembly assem in AppDomain.CurrentDomain.GetAssemblies())
 				{
 					try
 					{
 						nodeTypeObject = assem.GetType(nodeTypeName);
-						if (nodeTypeObject != null)
+						if (nodeTypeObject is object)
 						{
 							typeCreated = true;
 							break;
@@ -601,10 +601,10 @@ namespace Spring.Expressions.Parser.antlr
 			Type	nodeAsTypeObj	= node.GetType();
 
 			ASTNodeCreator creator = (ASTNodeCreator) typename2creator_[nodeAsTypeObj.FullName];
-			if (creator != null)
+			if (creator is object)
 			{
 				newNode = creator.Create();
-				if (newNode == null)
+				if (newNode is null)
 				{
 					throw new ArgumentException("Unable to create AST Node Type: '" + nodeAsTypeObj.FullName + "'");
 				}
@@ -621,10 +621,10 @@ namespace Spring.Expressions.Parser.antlr
 			AST		newNode			= null;
 
 			ASTNodeCreator creator = (ASTNodeCreator) typename2creator_[nodeTypeName];
-			if (creator != null)
+			if (creator is object)
 			{
 				newNode = creator.Create();
-				if (newNode == null)
+				if (newNode is null)
 				{
 					throw new ArgumentException("Unable to create AST Node Type: '" + nodeTypeName + "'");
 				}
@@ -642,15 +642,15 @@ namespace Spring.Expressions.Parser.antlr
 			AST newNode = null;
 
 			FactoryEntry	entry = heteroList_[nodeTypeIndex];
-			if ((entry != null) && (entry.Creator != null))
+			if ((entry is object) && (entry.Creator is object))
 			{
 				newNode = entry.Creator.Create();
 			}
 			else
 			{
-				if ((entry == null) || (entry.NodeTypeObject == null))
+				if ((entry is null) || (entry.NodeTypeObject is null))
 				{
-					if (defaultCreator_ == null)
+					if (defaultCreator_ is null)
 					{
 						newNode = createFromNodeTypeObject(defaultASTNodeTypeObject_);
 					}
@@ -670,7 +670,7 @@ namespace Spring.Expressions.Parser.antlr
 			try
 			{
 				newNode = (AST) Activator.CreateInstance(nodeTypeObject);
-				if (newNode == null)
+				if (newNode is null)
 				{
 					throw new ArgumentException("Unable to create AST Node Type: '" + nodeTypeObject.FullName + "'");
 				}

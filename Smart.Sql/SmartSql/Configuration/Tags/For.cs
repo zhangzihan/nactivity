@@ -25,7 +25,7 @@ namespace SmartSql.Configuration.Tags
         public override bool IsCondition(RequestContext context)
         {
             var reqVal = GetPropertyValue(context);
-            if (reqVal == null) { return false; }
+            if (reqVal is null) { return false; }
             if (reqVal is IEnumerable)
             {
                 return (reqVal as IEnumerable).GetEnumerator().MoveNext();
@@ -187,7 +187,7 @@ namespace SmartSql.Configuration.Tags
                     string key_name_dbPrefix = $"{dbPrefix}{key_name}";
 
                     var paramMap = context.Statement?.ParameterMap?.Parameters?.FirstOrDefault(p => string.Compare(p.Name, property.Name, true) == 0);
-                    if (paramMap != null && paramMap.Handler != null)
+                    if (paramMap is object && paramMap.Handler is object)
                     {
                         propertyVal = paramMap.Handler.ToParameterValue(propertyVal);
                     }

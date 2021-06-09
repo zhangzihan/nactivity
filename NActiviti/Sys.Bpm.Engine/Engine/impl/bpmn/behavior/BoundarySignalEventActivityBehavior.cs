@@ -64,7 +64,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (boundaryEvent.CancelActivity)
             {
                 string eventName;
-                if (signal != null)
+                if (signal is object)
                 {
                     eventName = signal.Name;
                 }

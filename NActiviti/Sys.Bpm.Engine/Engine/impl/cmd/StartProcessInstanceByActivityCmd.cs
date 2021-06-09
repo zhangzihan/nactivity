@@ -57,7 +57,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             DeploymentManager deploymentCache = commandContext.ProcessEngineConfiguration.DeploymentManager;
 
             IProcessDefinition processDefinition = deploymentCache.FindDeployedProcessDefinitionById(processDefinitionId);
-            if (processDefinition == null)
+            if (processDefinition is null)
             {
                 throw new ActivitiObjectNotFoundException("No process definition found for id '" + processDefinitionId + "'", typeof(IProcessDefinition));
             }
@@ -66,7 +66,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             // Get model from cache
             Process process = ProcessDefinitionUtil.GetProcess(processDefinition.Id);
-            if (process == null)
+            if (process is null)
             {
                 throw new ActivitiException("Cannot start process instance. Process model " + processDefinition.Name + " (id = " + processDefinition.Id + ") could not be found");
             }

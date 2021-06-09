@@ -48,7 +48,7 @@ namespace Sys.Workflow.Engine
         {
             get
             {
-                if (processEngineFactory == null)
+                if (processEngineFactory is null)
                 {
                     processEngineFactory = new ProcessEngineFactory();
                 }
@@ -79,7 +79,7 @@ namespace Sys.Workflow.Engine
             {
                 if (!Initialized)
                 {
-                    if (processEngines == null)
+                    if (processEngines is null)
                     {
                         processEngines = new ConcurrentDictionary<string, IProcessEngine>();
                     }

@@ -22,7 +22,7 @@ namespace SmartSql.Configuration.Tags
 
         public static XmlLineInfo Create(IXmlLineInfo node)
         {
-            if (node == null)
+            if (node is null)
             {
                 throw new ArgumentNullException("node");
             }

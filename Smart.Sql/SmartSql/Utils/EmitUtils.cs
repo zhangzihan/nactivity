@@ -128,7 +128,7 @@ namespace SmartSql.Utils
                 return;
             }
 
-            if ((convertOp = GetConvertOperator(from, to)) != null)
+            if ((convertOp = GetConvertOperator(from, to)) is object)
             {
                 il.Emit(OpCodes.Call, convertOp);
             }
@@ -204,7 +204,7 @@ namespace SmartSql.Utils
 
         private static MethodInfo GetConvertOperator(Type from, Type to)
         {
-            if (to == null) return null;
+            if (to is null) return null;
             MethodInfo[] fromMethods, toMethods;
             return ResolveOperator(fromMethods = from.GetMethods(BindingFlags.Static | BindingFlags.Public), from, to, "op_Implicit")
                 ?? ResolveOperator(toMethods = to.GetMethods(BindingFlags.Static | BindingFlags.Public), from, to, "op_Implicit")

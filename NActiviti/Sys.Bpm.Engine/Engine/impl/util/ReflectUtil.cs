@@ -39,7 +39,7 @@ namespace Sys.Workflow.Engine.Impl.Util
             get
             {
                 ClassLoader loader = CustomClassLoader;
-                if (loader == null)
+                if (loader is null)
                 {
                     loader = new ClassLoader();
                 }
@@ -56,7 +56,7 @@ namespace Sys.Workflow.Engine.Impl.Util
             // no class is found in any of them
             Exception throwable = null;
 
-            if (classLoader != null)
+            if (classLoader is object)
             {
                 try
                 {
@@ -68,7 +68,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                     throwable = t;
                 }
             }
-            if (clazz == null)
+            if (clazz is null)
             {
                 try
                 {
@@ -77,12 +77,12 @@ namespace Sys.Workflow.Engine.Impl.Util
                 }
                 catch (Exception t)
                 {
-                    if (throwable == null)
+                    if (throwable is null)
                     {
                         throwable = t;
                     }
                 }
-                if (clazz == null)
+                if (clazz is null)
                 {
                     try
                     {
@@ -91,7 +91,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                     }
                     catch (Exception t)
                     {
-                        if (throwable == null)
+                        if (throwable is null)
                         {
                             throwable = t;
                         }
@@ -99,7 +99,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 }
             }
 
-            if (clazz == null)
+            if (clazz is null)
             {
                 throw new ActivitiClassLoadingException(className, throwable);
             }
@@ -110,12 +110,12 @@ namespace Sys.Workflow.Engine.Impl.Util
         {
             System.IO.Stream resourceStream = null;
             ClassLoader classLoader = CustomClassLoader;
-            if (classLoader != null)
+            if (classLoader is object)
             {
                 resourceStream = classLoader.GetResourceAsStream(name);
             }
 
-            if (resourceStream == null)
+            if (resourceStream is null)
             {
                 // Try the current Thread context classloader
                 //classLoader = Thread.CurrentThread.ContextClassLoader;
@@ -128,11 +128,11 @@ namespace Sys.Workflow.Engine.Impl.Util
         {
             Uri url = null;
             ClassLoader classLoader = CustomClassLoader;
-            if (classLoader != null)
+            if (classLoader is object)
             {
                 url = classLoader.GetResource(name);
             }
-            if (url == null)
+            if (url is null)
             {
                 // Try the current Thread context classloader
                 //classLoader = Thread.CurrentThread.ContextClassLoader;
@@ -193,7 +193,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 // for some reason getDeclaredFields doesn't search superclasses
                 // (which getFields() does ... but that gives only public fields)
                 Type superClass = clazz.BaseType;
-                if (superClass != null)
+                if (superClass is object)
                 {
                     return GetField(fieldName, superClass);
                 }
@@ -241,7 +241,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 //    if (method.Name.Equals(setterName))
                 //    {
                 //        Type[] paramTypes = method.ParameterTypes;
-                //        if (paramTypes != null && paramTypes.Length == 1 && paramTypes[0].IsAssignableFrom(fieldType))
+                //        if (paramTypes is object && paramTypes.Length == 1 && paramTypes[0].IsAssignableFrom(fieldType))
                 //        {
                 //            return method;
                 //        }
@@ -266,7 +266,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 }
             }
             Type superClass = clazz.BaseType;
-            if (superClass != null)
+            if (superClass is object)
             {
                 return FindMethod(superClass, methodName, args);
             }
@@ -277,7 +277,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         {
             Type clazz = LoadClass(className);
             ConstructorInfo constructor = FindMatchingConstructor(clazz, args);
-            if (constructor == null)
+            if (constructor is null)
             {
                 throw new ActivitiException("couldn't find constructor for " + className + " with args " + args?.ToList());
             }
@@ -314,17 +314,17 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         private static bool Matches(Type[] parameterTypes, object[] args)
         {
-            if ((parameterTypes == null) || (parameterTypes.Length == 0))
+            if ((parameterTypes is null) || (parameterTypes.Length == 0))
             {
-                return ((args == null) || (args.Length == 0));
+                return ((args is null) || (args.Length == 0));
             }
-            if ((args == null) || (parameterTypes.Length != args.Length))
+            if ((args is null) || (parameterTypes.Length != args.Length))
             {
                 return false;
             }
             for (int i = 0; i < parameterTypes.Length; i++)
             {
-                if ((args[i] != null) && (!parameterTypes[i].IsAssignableFrom(args[i].GetType())))
+                if ((args[i] is object) && (!parameterTypes[i].IsAssignableFrom(args[i].GetType())))
                 {
                     return false;
                 }
@@ -337,10 +337,10 @@ namespace Sys.Workflow.Engine.Impl.Util
             get
             {
                 ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-                if (processEngineConfiguration != null)
+                if (processEngineConfiguration is object)
                 {
                     ClassLoader classLoader = processEngineConfiguration.ClassLoader;
-                    if (classLoader != null)
+                    if (classLoader is object)
                     {
                         return classLoader;
                     }
@@ -352,7 +352,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         private static Type LoadClass(ClassLoader classLoader, string className)
         {
             ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-            _ = processEngineConfiguration == null || processEngineConfiguration.UseClassForNameClassLoading;
+            _ = processEngineConfiguration is null || processEngineConfiguration.UseClassForNameClassLoading;
             return Type.GetType(className, true);
         }
 

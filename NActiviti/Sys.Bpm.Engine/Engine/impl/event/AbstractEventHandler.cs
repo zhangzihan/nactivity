@@ -33,7 +33,7 @@ namespace Sys.Workflow.Engine.Impl.Events
             IExecutionEntity execution = eventSubscription.Execution;
             FlowNode currentFlowElement = (FlowNode)execution.CurrentFlowElement;
 
-            if (currentFlowElement == null)
+            if (currentFlowElement is null)
             {
                 throw new ActivitiException("Error while sending signal for event subscription '" + eventSubscription.Id + "': " + "no activity associated with event subscription");
             }
@@ -81,7 +81,7 @@ namespace Sys.Workflow.Engine.Impl.Events
 
             // call activities
             IExecutionEntity subProcessInstance = commandContext.ExecutionEntityManager.FindSubProcessInstanceBySuperExecutionId(execution.Id);
-            if (subProcessInstance != null)
+            if (subProcessInstance is object)
             {
                 DispatchExecutionCancelled(eventSubscription, subProcessInstance, commandContext);
             }
@@ -90,7 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Events
             FlowElement flowElement = execution.CurrentFlowElement;
             if (flowElement is BoundaryEvent boundaryEvent)
             {
-                if (boundaryEvent.AttachedToRef != null)
+                if (boundaryEvent.AttachedToRef is object)
                 {
                     DispatchActivityCancelled(eventSubscription, execution, boundaryEvent.AttachedToRef, commandContext);
                 }
@@ -106,7 +106,7 @@ namespace Sys.Workflow.Engine.Impl.Events
             {
                 // The parent of the boundary event execution will be the one on which the boundary event is set
                 IExecutionEntity parentExecutionEntity = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(boundaryEventExecution.ParentId);
-                if (parentExecutionEntity != null)
+                if (parentExecutionEntity is object)
                 {
                     DispatchActivityCancelledForChildExecution(eventSubscription, parentExecutionEntity, boundaryEventExecution, commandContext);
                 }
@@ -119,7 +119,7 @@ namespace Sys.Workflow.Engine.Impl.Events
             foreach (IExecutionEntity childExecution in executionEntities)
             {
 
-                if (!boundaryEventExecution.Id.Equals(childExecution.Id) && childExecution.CurrentFlowElement != null && childExecution.CurrentFlowElement is FlowNode)
+                if (!boundaryEventExecution.Id.Equals(childExecution.Id) && childExecution.CurrentFlowElement is object && childExecution.CurrentFlowElement is FlowNode)
                 {
 
                     FlowNode flowNode = (FlowNode)childExecution.CurrentFlowElement;

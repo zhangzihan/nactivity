@@ -62,14 +62,14 @@ namespace Spring.Expressions
 
             // delegate?
             Delegate callback = function as Delegate;
-            if (callback != null)
+            if (callback is object)
             {
                 return InvokeDelegate(callback, argValues);
             }
 
             // lambda?
             LambdaExpressionNode lambda = function as LambdaExpressionNode;
-            if (lambda != null)
+            if (lambda is object)
             {
                 try
                 {
@@ -81,7 +81,7 @@ namespace Spring.Expressions
                 }
             }
 
-            if (function == null)
+            if (function is null)
             {
                 throw new InvalidOperationException("Function '" + name + "' is not defined.");
             }

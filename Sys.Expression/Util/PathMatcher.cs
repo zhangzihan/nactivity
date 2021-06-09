@@ -149,7 +149,7 @@ namespace Spring.Util
 
         private static string ToLower(string pattern)
         {
-            return pattern == null ? pattern : pattern.ToLower();
+            return pattern is null ? pattern : pattern.ToLower();
         }
 
         private static string TranslateLiteral(string part, bool isLastPart)

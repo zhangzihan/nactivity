@@ -32,7 +32,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
 
         protected internal virtual void ValidateListeners(Process process, BaseElement baseElement, IList<ActivitiListener> listeners, IList<ValidationError> errors)
         {
-            if (listeners != null)
+            if (listeners is object)
             {
                 foreach (ActivitiListener listener in listeners)
                 {

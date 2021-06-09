@@ -56,7 +56,7 @@ namespace Sys.Workflow.Engine.Debug
                 CollectChildExecutions(childExecutionEntity, allExecutions);
             }
 
-            if (rootExecutionEntity.SubProcessInstance != null)
+            if (rootExecutionEntity.SubProcessInstance is object)
             {
                 allExecutions.Add(rootExecutionEntity.SubProcessInstance);
                 CollectChildExecutions(rootExecutionEntity.SubProcessInstance, allExecutions);
@@ -154,7 +154,7 @@ namespace Sys.Workflow.Engine.Debug
 
         protected internal static void FillExecutionTree(ExecutionTree executionTree, IDictionary<string, IList<IExecutionEntity>> parentMapping)
         {
-            if (executionTree.Root == null)
+            if (executionTree.Root is null)
             {
                 throw new ActivitiException("Programmatic error: the list of passed executions in the argument of the method should contain the process instance execution");
             }

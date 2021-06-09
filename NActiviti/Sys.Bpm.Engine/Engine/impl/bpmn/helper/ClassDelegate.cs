@@ -84,7 +84,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         // Execution listener
         public virtual void Notify(IExecutionEntity execution)
         {
-            if (executionListenerInstance == null)
+            if (executionListenerInstance is null)
             {
                 executionListenerInstance = ExecutionListenerInstance;
             }
@@ -94,7 +94,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         // Transaction Dependent execution listener
         public virtual void Notify(string processInstanceId, string executionId, FlowElement flowElement, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap)
         {
-            if (transactionDependentExecutionListenerInstance == null)
+            if (transactionDependentExecutionListenerInstance is null)
             {
                 transactionDependentExecutionListenerInstance = TransactionDependentExecutionListenerInstance;
             }
@@ -105,7 +105,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
         public virtual IDictionary<string, object> GetCustomPropertiesMap(IExecutionEntity execution)
         {
-            if (customPropertiesResolverInstance == null)
+            if (customPropertiesResolverInstance is null)
             {
                 customPropertiesResolverInstance = CustomPropertiesResolverInstance;
             }
@@ -115,7 +115,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         // Task listener
         public virtual void Notify(IDelegateTask delegateTask)
         {
-            if (taskListenerInstance == null)
+            if (taskListenerInstance is null)
             {
                 taskListenerInstance = TaskListenerInstance;
             }
@@ -131,7 +131,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
         public virtual void Notify(string processInstanceId, string executionId, TaskActivity task, IDictionary<string, object> executionVariables, IDictionary<string, object> customPropertiesMap)
         {
-            if (transactionDependentTaskListenerInstance == null)
+            if (transactionDependentTaskListenerInstance is null)
             {
                 transactionDependentTaskListenerInstance = TransactionDependentTaskListenerInstance;
             }
@@ -232,7 +232,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                 if (Context.ProcessEngineConfiguration.EnableProcessDefinitionInfoCache)
                 {
                     JToken taskElementProperties = Context.GetBpmnOverrideElementProperties(serviceTaskId, execution.ProcessDefinitionId);
-                    if (taskElementProperties != null && taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_CLASS_NAME] != null)
+                    if (taskElementProperties is object && taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_CLASS_NAME] is object)
                     {
                         string overrideClassName = taskElementProperties[DynamicBpmnConstants.SERVICE_TASK_CLASS_NAME].ToString();
                         if (!string.IsNullOrWhiteSpace(overrideClassName) && !overrideClassName.Equals(className))
@@ -243,7 +243,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
                     }
                 }
 
-                if (activityBehaviorInstance == null)
+                if (activityBehaviorInstance is null)
                 {
                     activityBehaviorInstance = ActivityBehaviorInstance;
                 }
@@ -269,7 +269,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         // Signallable activity behavior
         public override void Trigger(IExecutionEntity execution, string signalName, object signalData, bool throwError = true)
         {
-            if (activityBehaviorInstance == null)
+            if (activityBehaviorInstance is null)
             {
                 activityBehaviorInstance = ActivityBehaviorInstance;
             }
@@ -287,7 +287,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         // Subprocess activityBehaviour
         public virtual void Completing(IExecutionEntity execution, IExecutionEntity subProcessInstance)
         {
-            if (activityBehaviorInstance == null)
+            if (activityBehaviorInstance is null)
             {
                 activityBehaviorInstance = ActivityBehaviorInstance;
             }
@@ -304,7 +304,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
         public virtual void Completed(IExecutionEntity execution)
         {
-            if (activityBehaviorInstance == null)
+            if (activityBehaviorInstance is null)
             {
                 activityBehaviorInstance = ActivityBehaviorInstance;
             }
@@ -379,7 +379,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
         public static void ApplyFieldDeclaration(IList<FieldDeclaration> fieldDeclarations, object target, bool throwExceptionOnMissingField)
         {
-            if (fieldDeclarations != null)
+            if (fieldDeclarations is object)
             {
                 foreach (FieldDeclaration declaration in fieldDeclarations)
                 {
@@ -397,7 +397,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         {
             MethodInfo setterMethod = ReflectUtil.GetSetter(declaration.Name, target.GetType(), declaration.Value.GetType());
 
-            if (setterMethod != null)
+            if (setterMethod is object)
             {
                 try
                 {
@@ -419,7 +419,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
             else
             {
                 FieldInfo field = ReflectUtil.GetField(declaration.Name, target);
-                if (field == null)
+                if (field is null)
                 {
                     if (throwExceptionOnMissingField)
                     {
@@ -443,7 +443,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
         public static bool FieldTypeCompatible(FieldDeclaration declaration, FieldInfo field)
         {
-            if (declaration.Value != null)
+            if (declaration.Value is object)
             {
                 return declaration.Value.GetType().IsAssignableFrom(field.DeclaringType);
             }

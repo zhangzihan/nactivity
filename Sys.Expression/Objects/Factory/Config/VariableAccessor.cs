@@ -1,7 +1,7 @@
 #region Licence
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -597,7 +597,7 @@ namespace Spring.Objects.Factory.Config
             try
             {
                 string text = GetString(name, defaultValue.ToString());
-                if (format == null)
+                if (format is null)
                 {
                     return DateTime.Parse(text);
                 }
@@ -775,7 +775,7 @@ namespace Spring.Objects.Factory.Config
         public string GetString(string name, string defaultValue)
         {
             string value = null;
-            if (variableSource != null && variableSource.CanResolveVariable(name))
+            if (variableSource is object && variableSource.CanResolveVariable(name))
             {
                 value = variableSource.ResolveVariable(name);
             }

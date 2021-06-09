@@ -49,7 +49,7 @@ namespace Sys.Workflow.Bpmn.Models
             if (!string.IsNullOrWhiteSpace(element.Id))
             {
                 flowElementMap[element.Id] = element;
-                if (ParentContainer != null)
+                if (ParentContainer is object)
                 {
                     ParentContainer.AddFlowElementToMap(element);
                 }
@@ -58,10 +58,10 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddFlowElementToMap(FlowElement element)
         {
-            if (element != null && !string.IsNullOrWhiteSpace(element.Id))
+            if (element is object && !string.IsNullOrWhiteSpace(element.Id))
             {
                 flowElementMap[element.Id] = element;
-                if (ParentContainer != null)
+                if (ParentContainer is object)
                 {
                     ParentContainer.AddFlowElementToMap(element);
                 }
@@ -71,11 +71,11 @@ namespace Sys.Workflow.Bpmn.Models
         public virtual void RemoveFlowElement(string elementId)
         {
             FlowElement element = FindFlowElement(elementId);
-            if (element != null)
+            if (element is object)
             {
                 flowElementList.Remove(element);
                 flowElementMap.Remove(elementId);
-                if (element.ParentContainer != null)
+                if (element.ParentContainer is object)
                 {
                     element.ParentContainer.RemoveFlowElementFromMap(elementId);
                 }
@@ -138,7 +138,7 @@ namespace Sys.Workflow.Bpmn.Models
         public virtual void RemoveArtifact(string artifactId)
         {
             Artifact artifact = GetArtifact(artifactId);
-            if (artifact != null)
+            if (artifact is object)
             {
                 artifactList.Remove(artifact);
             }
@@ -184,7 +184,7 @@ namespace Sys.Workflow.Bpmn.Models
                 }
 
                 dataObjects = new List<ValuedDataObject>();
-                if (val.DataObjects != null && val.DataObjects.Count > 0)
+                if (val.DataObjects is object && val.DataObjects.Count > 0)
                 {
                     foreach (ValuedDataObject dataObject in val.DataObjects)
                     {

@@ -24,7 +24,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
     /// 
     public class ValidateExecutionRelatedEntityCountCfgCmd : ICommand<object>
     {
-        private ILogger<ValidateExecutionRelatedEntityCountCfgCmd> log = ProcessEngineServiceProvider.LoggerService<ValidateExecutionRelatedEntityCountCfgCmd>();
+        private readonly ILogger<ValidateExecutionRelatedEntityCountCfgCmd> log = ProcessEngineServiceProvider.LoggerService<ValidateExecutionRelatedEntityCountCfgCmd>();
 
         public static string PROPERTY_EXECUTION_RELATED_ENTITY_COUNT = "cfg.execution-related-entities-count";
 
@@ -52,9 +52,8 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             bool configProperty = commandContext.ProcessEngineConfiguration.PerformanceSettings.EnableExecutionRelationshipCounts;
             IPropertyEntity propertyEntity = propertyEntityManager.FindById<PropertyEntityImpl>(new KeyValuePair<string, object>("name", PROPERTY_EXECUTION_RELATED_ENTITY_COUNT));
 
-            if (propertyEntity == null)
+            if (propertyEntity is null)
             {
-
                 // 'not there' case in the table above: easy, simply insert the value
                 IPropertyEntity newPropertyEntity = propertyEntityManager.Create();
                 newPropertyEntity.Name = PROPERTY_EXECUTION_RELATED_ENTITY_COUNT;
@@ -64,7 +63,6 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
             else
             {
-
                 bool propertyValue = Convert.ToBoolean(propertyEntity.Value.ToString().ToLower());
                 if (!configProperty && propertyValue)
                 {

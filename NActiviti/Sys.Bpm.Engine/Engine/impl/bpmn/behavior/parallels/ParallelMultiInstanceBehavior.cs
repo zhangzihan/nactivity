@@ -117,7 +117,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             lock (syncRoot)
             {
                 ICommandContext commandContext = Context.CommandContext;
-                if (commandContext == null)
+                if (commandContext is null)
                 {
                     throw new ActivitiException("lazy loading outside command context");
                 }
@@ -148,7 +148,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
 
                 IExecutionEntity miRootExecution = GetMultiInstanceRootExecution(execution);
-                if (miRootExecution != null)
+                if (miRootExecution is object)
                 { // will be null in case of empty collection
                     SetLoopVariable(miRootExecution, NUMBER_OF_COMPLETED_INSTANCES, nrOfCompletedInstances);
                     SetLoopVariable(miRootExecution, NUMBER_OF_ACTIVE_INSTANCES, nrOfActiveInstances < 0 ? 0 : nrOfActiveInstances);
@@ -158,7 +158,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                 LogLoopDetails(execution, "instance completed", loopCounter, nrOfCompletedInstances, nrOfActiveInstances, nrOfActiveInstances < 0 ? 0 : nrOfActiveInstances);
 
-                if (execution.Parent != null)
+                if (execution.Parent is object)
                 {
                     execution.Inactivate();
                     LockFirstParentScope(execution);
@@ -210,13 +210,13 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                         if (activity is CallActivity)
                         {
                             IExecutionEntityManager executionEntityManager = Context.CommandContext.ExecutionEntityManager;
-                            if (executionToUse != null)
+                            if (executionToUse is object)
                             {
                                 IList<string> callActivityExecutionIds = new List<string>();
 
                                 // Find all execution entities that are at the call activity
                                 IList<IExecutionEntity> childExecutions = executionEntityManager.CollectChildren(executionToUse);
-                                if (childExecutions != null)
+                                if (childExecutions is object)
                                 {
                                     foreach (IExecutionEntity childExecution in childExecutions)
                                     {
@@ -267,7 +267,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             while (!found && currentExecution is object && currentExecution.ParentId is object)
             {
                 parentScopeExecution = executionEntityManager.FindById<IExecutionEntity>(currentExecution.ParentId);
-                if (parentScopeExecution != null && parentScopeExecution.IsScope)
+                if (parentScopeExecution is object && parentScopeExecution.IsScope)
                 {
                     found = true;
                 }

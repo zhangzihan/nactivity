@@ -35,7 +35,7 @@ namespace Sys.Workflow.Engine.Impl.Util
             // ACT-1415: timer-declaration on start-event may contain expressions NOT
             // evaluating variables but other context, evaluating should happen nevertheless
             IVariableScope scopeForExpression = executionEntity;
-            if (scopeForExpression == null)
+            if (scopeForExpression is null)
             {
                 //scopeForExpression = NoExecutionVariableScope.SharedInstance;
             }
@@ -68,7 +68,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 businessCalendarRef = businessCalendarExpression.GetValue(scopeForExpression).ToString();
             }
 
-            if (expression == null)
+            if (expression is null)
             {
                 throw new ActivitiException("Timer needs configuration (either timeDate, timeCycle or timeDuration is needed) (" + timerEventDefinition.Id + ")");
             }
@@ -92,18 +92,18 @@ namespace Sys.Workflow.Engine.Impl.Util
                 //JodaTime support
                 duedate = (DateTime?)dueDateValue;
             }
-            else if (dueDateValue != null)
+            else if (dueDateValue is object)
             {
                 throw new ActivitiException("Timer '" + executionEntity.ActivityId + "' was not configured with a valid duration/time, either hand in a java.util.Date or a String in format 'yyyy-MM-dd'T'hh:mm:ss'");
             }
 
-            if (duedate == null && !string.IsNullOrWhiteSpace(dueDateString))
+            if (duedate is null && !string.IsNullOrWhiteSpace(dueDateString))
             {
                 duedate = businessCalendar.ResolveDuedate(dueDateString);
             }
 
             ITimerJobEntity timer = null;
-            if (duedate != null)
+            if (duedate is object)
             {
                 timer = Context.CommandContext.TimerJobEntityManager.Create();
                 timer.JobType = JobFields.JOB_TYPE_TIMER;
@@ -113,7 +113,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 timer.Exclusive = true;
                 timer.Retries = processEngineConfiguration.AsyncExecutorNumberOfRetries;
                 timer.Duedate = duedate;
-                if (executionEntity != null)
+                if (executionEntity is object)
                 {
                     timer.Execution = executionEntity;
                     timer.ProcessDefinitionId = executionEntity.ProcessDefinitionId;
@@ -133,7 +133,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 bool repeat = !isInterruptingTimer;
 
                 // ACT-1951: intermediate catching timer events shouldn't repeat according to spec
-                if (executionEntity != null)
+                if (executionEntity is object)
                 {
                     FlowElement currentElement = executionEntity.CurrentFlowElement;
                     if (currentElement is IntermediateCatchEvent)
@@ -149,7 +149,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 }
             }
 
-            if (timer != null && executionEntity != null)
+            if (timer is object && executionEntity is object)
             {
                 timer.Execution = executionEntity;
                 timer.ProcessDefinitionId = executionEntity.ProcessDefinitionId;

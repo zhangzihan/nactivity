@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         public IntermediateThrowSignalEventActivityBehavior(SignalEventDefinition signalEventDefinition, Signal signal)
         {
-            if (signal != null)
+            if (signal is object)
             {
                 signalEventName = signal.Name;
                 if (Signal.SCOPE_PROCESS_INSTANCE.Equals(signal.Scope))

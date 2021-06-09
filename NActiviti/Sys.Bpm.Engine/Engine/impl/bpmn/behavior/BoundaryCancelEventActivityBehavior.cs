@@ -49,14 +49,14 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             IList<IExecutionEntity> processInstanceExecutions = executionEntityManager.FindChildExecutionsByProcessInstanceId(execution.ProcessInstanceId);
             foreach (IExecutionEntity childExecution in processInstanceExecutions)
             {
-                if (childExecution.CurrentFlowElement != null && childExecution.CurrentFlowElement.Id.Equals(boundaryEvent.AttachedToRefId))
+                if (childExecution.CurrentFlowElement is object && childExecution.CurrentFlowElement.Id.Equals(boundaryEvent.AttachedToRefId))
                 {
                     subProcessExecution = childExecution;
                     break;
                 }
             }
 
-            if (subProcessExecution == null)
+            if (subProcessExecution is null)
             {
                 throw new ActivitiException("No execution found for sub process of boundary cancel event " + boundaryEvent.Id);
             }
@@ -79,7 +79,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 executionEntityManager.DeleteExecutionAndRelatedData(subProcessExecution, deleteReason, false);
                 if (subProcessExecution.CurrentFlowElement is Activity activity)
                 {
-                    if (activity.LoopCharacteristics != null)
+                    if (activity.LoopCharacteristics is object)
                     {
                         IExecutionEntity miExecution = subProcessExecution.Parent;
                         IList<IExecutionEntity> miChildExecutions = executionEntityManager.FindChildExecutionsByParentExecutionId(miExecution.Id);

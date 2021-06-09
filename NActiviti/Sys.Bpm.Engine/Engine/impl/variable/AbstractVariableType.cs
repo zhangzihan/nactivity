@@ -17,7 +17,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
             get
             {
                 var serializer = ProcessEngineServiceProvider.Resolve<ISerializableTypeSerializer>();
-                if (serializer == null)
+                if (serializer is null)
                 {
                     serializer = new DefaultSerializableTypeSerializer();
                 }

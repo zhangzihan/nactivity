@@ -44,7 +44,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model.Converters
         public virtual HistoricInstance From(IHistoricProcessInstance source)
         {
             HistoricInstance processInstance = null;
-            if (source != null)
+            if (source is object)
             {
                 processInstance = new HistoricInstance()
                 {

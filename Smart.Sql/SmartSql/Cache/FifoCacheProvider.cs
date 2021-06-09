@@ -59,7 +59,7 @@ namespace SmartSql.Cache
         public void Initialize(IDictionary properties)
         {
             string size = (string)properties["CacheSize"]; ;
-            if (size != null)
+            if (size is object)
             {
                 _cacheSize = Convert.ToInt32(size);
             }

@@ -37,7 +37,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public override bool IsAbleToStore(object value)
         {
-            if (value == null)
+            if (value is null)
             {
                 return true;
             }
@@ -47,7 +47,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
         public override object GetValue(IValueFields valueFields)
         {
             long? longValue = valueFields.LongValue;
-            if (longValue != null)
+            if (longValue is object)
             {
                 return new DateTime(longValue.Value);
             }
@@ -56,7 +56,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public override void SetValue(object value, IValueFields valueFields)
         {
-            if (value != null)
+            if (value is object)
             {
                 valueFields.LongValue = ((DateTime)value).Ticks;
             }

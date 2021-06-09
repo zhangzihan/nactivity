@@ -58,11 +58,11 @@ namespace Spring.Expressions
         /// <returns>Node's value.</returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            if (nodeValue == null)
+            if (nodeValue is null)
             {
                 lock (syncRoot)
                 {
-                    if (nodeValue == null)
+                    if (nodeValue is null)
                     {
                         string n = this.getText();
                         try

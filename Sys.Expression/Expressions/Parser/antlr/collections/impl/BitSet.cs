@@ -172,7 +172,7 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 		/*code "inherited" from java.util.BitSet */
 		override public bool Equals(object obj)
 		{
-			if ((obj != null) && (obj is BitSet))
+			if ((obj is object) && (obj is BitSet))
 			{
 				BitSet bset = (BitSet) obj;
 				
@@ -345,7 +345,7 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 		/*Is this contained within a? */
 		public virtual bool subset(BitSet a)
 		{
-			if (a == null) //(a == null || !(a is BitSet))
+			if (a is null) //(a is null || !(a is BitSet))
 				return false;
 			return this.and(a).Equals(this);
 		}
@@ -355,7 +355,7 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 		*/
 		public virtual void  subtractInPlace(BitSet a)
 		{
-			if (a == null)
+			if (a is null)
 				return ;
 			// for all words of 'a', turn off corresponding bits of 'this'
 			 for (int i = 0; i < dataBits.Length && i < a.dataBits.Length; i++)
@@ -417,7 +417,7 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 		*/
 		public virtual string ToString(string separator, ArrayList vocabulary)
 		{
-			if (vocabulary == null)
+			if (vocabulary is null)
 			{
 				return ToString(separator);
 			}
@@ -434,7 +434,7 @@ namespace Spring.Expressions.Parser.antlr.collections.impl
 					{
 						str += "<bad element " + i + ">";
 					}
-					else if (vocabulary[i] == null)
+					else if (vocabulary[i] is null)
 					{
 						str += "<" + i + ">";
 					}

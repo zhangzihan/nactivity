@@ -49,7 +49,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         public virtual ProcessDefinitionMetaResource GetProcessDefinitionMetadata(string id)
         {
             IProcessDefinition processDefinition = repositoryService.CreateProcessDefinitionQuery().SetProcessDefinitionId(id).SingleResult();
-            if (processDefinition == null)
+            if (processDefinition is null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + id + "'");
             }

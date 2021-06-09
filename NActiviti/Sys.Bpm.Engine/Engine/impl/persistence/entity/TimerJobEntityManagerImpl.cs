@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     SetNewRepeat(timerEntity, repeatValue);
                 }
                 DateTime? newTimer = CalculateNextTimer(timerEntity, variableScope);
-                if (newTimer != null && IsValidTime(timerEntity, newTimer, variableScope))
+                if (newTimer is object && IsValidTime(timerEntity, newTimer, variableScope))
                 {
                     ITimerJobEntity te = CreateTimer(timerEntity);
                     te.Duedate = newTimer;
@@ -125,7 +125,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             if (jobEntity.ExecutionId is object)
             {
                 IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
-                if (execution != null)
+                if (execution is object)
                 {
                     execution.TimerJobs.Add(jobEntity);
 
@@ -186,7 +186,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             if (jobEntity.ExecutionId is object)
             {
                 IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
-                if (execution != null)
+                if (execution is object)
                 {
                     execution.TimerJobs.Remove(jobEntity);
                 }

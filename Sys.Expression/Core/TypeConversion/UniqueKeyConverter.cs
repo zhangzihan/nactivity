@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ namespace Spring.Core.TypeConversion
         ///<exception cref="T:System.NotSupportedException">The conversion cannot be performed. </exception>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (value == null) return null;
+            if (value is null) return null;
 
             if (!CanConvertFrom(context, value.GetType()))
             {
@@ -128,7 +128,7 @@ namespace Spring.Core.TypeConversion
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
             // check destinationType
-            if (destinationType == null)
+            if (destinationType is null)
             {
                 throw new ArgumentNullException("destinationType", "destinationType must not be null");
             }
@@ -138,12 +138,12 @@ namespace Spring.Core.TypeConversion
             }
 
             // value must either be null or a UniqueKey
-            if ( (value != null) && (typeof(UniqueKey) != value.GetType()) )
+            if ( (value is object) && (typeof(UniqueKey) != value.GetType()) )
             {
                 throw new NotSupportedException(string.Format("value is not of type '{0}'", typeof(UniqueKey).FullName));
             }
 
-            if (value == null) return null;
+            if (value is null) return null;
 
             if (typeof(string)==destinationType)
             {

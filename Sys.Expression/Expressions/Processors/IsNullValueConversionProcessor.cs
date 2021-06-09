@@ -31,13 +31,13 @@ namespace Spring.Expressions.Processors
     {
         public object Process(object context, object[] args)
         {
-            int argc = args != null ? args.Length : 0;
+            int argc = args is object ? args.Length : 0;
             switch (argc)
             {
                 case 1:
                     return args[0];
                 case 2:
-                    return args[0] == null ? args[1] : args[0];
+                    return args[0] is null ? args[1] : args[0];
                 default:
                     throw new ArgumentException("isnull(<value> [,<defaultValue>]) expects 1 or 2 arguments");
             }

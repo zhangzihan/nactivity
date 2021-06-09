@@ -101,7 +101,7 @@ namespace SmartSql
             }
             finally
             {
-                if (dbSession != null && dbSession.LifeCycle == DbSessionLifeCycle.Transient)
+                if (dbSession is object && dbSession.LifeCycle == DbSessionLifeCycle.Transient)
                 {
                     SessionStore.Dispose();
                 }
@@ -131,7 +131,7 @@ namespace SmartSql
                 var dataReader = CommandExecuter.ExecuteReader(dbSession, context);
                 var deser = DeserializerFactory.Create();
                 Type resultType = context.Statement.ResultType ?? context.Statement?.ResultMap?.ResultType;
-                if (resultType != null)
+                if (resultType is object)
                 {
                     var method = deser.GetType().GetMethod("ToEnumerable", BindingFlags.CreateInstance | BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
 
@@ -149,7 +149,7 @@ namespace SmartSql
                 var dataReader = CommandExecuter.ExecuteReader(dbSession, context);
                 var deser = DeserializerFactory.Create();
                 Type resultType = context.Statement.ResultType ?? context.Statement?.ResultMap?.ResultType;
-                if (resultType != null)
+                if (resultType is object)
                 {
                     var method = deser.GetType().GetMethod("ToSingle", BindingFlags.CreateInstance | BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
 
@@ -171,7 +171,7 @@ namespace SmartSql
                 }
                 finally
                 {
-                    if (dataReader != null)
+                    if (dataReader is object)
                     {
                         dataReader.Dispose();
                     }
@@ -192,7 +192,7 @@ namespace SmartSql
                 }
                 finally
                 {
-                    if (dataReader != null)
+                    if (dataReader is object)
                     {
                         dataReader.Dispose();
                     }
@@ -276,7 +276,7 @@ namespace SmartSql
                 }
                 finally
                 {
-                    if (dataReader != null)
+                    if (dataReader is object)
                     {
                         dataReader.Dispose();
                     }
@@ -297,7 +297,7 @@ namespace SmartSql
                 }
                 finally
                 {
-                    if (dataReader != null)
+                    if (dataReader is object)
                     {
                         dataReader.Dispose();
                     }
@@ -340,7 +340,7 @@ namespace SmartSql
         public void CommitTransaction()
         {
             var session = SessionStore.LocalSession;
-            if (session == null)
+            if (session is null)
             {
                 throw new SmartSqlException("SmartSqlMapper could not invoke CommitTransaction(). No Transaction was started. Call BeginTransaction() first.");
             }
@@ -362,7 +362,7 @@ namespace SmartSql
         public void RollbackTransaction()
         {
             var session = SessionStore.LocalSession;
-            if (session == null)
+            if (session is null)
             {
                 throw new SmartSqlException("SmartSqlMapper could not invoke RollBackTransaction(). No Transaction was started. Call BeginTransaction() first.");
             }
@@ -384,7 +384,7 @@ namespace SmartSql
         #region Scoped Session
         public IDbConnectionSession BeginSession(RequestContext context)
         {
-            if (SessionStore.LocalSession != null)
+            if (SessionStore.LocalSession is object)
             {
                 throw new SmartSqlException("SmartSqlMapper could not invoke BeginSession(). A LocalSession is already existed.");
             }
@@ -397,7 +397,7 @@ namespace SmartSql
         public void EndSession()
         {
             var dbSession = SessionStore.LocalSession;
-            if (dbSession == null)
+            if (dbSession is null)
             {
                 throw new SmartSqlException("SmartSqlMapper could not invoke EndSession(). No LocalSession was existed. ");
             }

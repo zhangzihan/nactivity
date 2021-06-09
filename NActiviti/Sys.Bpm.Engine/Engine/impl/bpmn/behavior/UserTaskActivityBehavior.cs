@@ -159,7 +159,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (!string.IsNullOrWhiteSpace(activeTaskDueDate))
             {
                 object dueDate = expressionManager.CreateExpression(activeTaskDueDate).GetValue(execution);
-                if (dueDate != null)
+                if (dueDate is object)
                 {
                     if (dueDate is DateTime time)
                     {
@@ -191,7 +191,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (!string.IsNullOrWhiteSpace(activeTaskPriority))
             {
                 object priority = expressionManager.CreateExpression(activeTaskPriority).GetValue(execution);
-                if (priority != null)
+                if (priority is object)
                 {
                     if (priority is string @string)
                     {
@@ -218,7 +218,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (!string.IsNullOrWhiteSpace(activeTaskCategory))
             {
                 object category = expressionManager.CreateExpression(activeTaskCategory).GetValue(execution);
-                if (category != null)
+                if (category is object)
                 {
                     if (category is string)
                     {
@@ -234,7 +234,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (!string.IsNullOrWhiteSpace(activeTaskFormKey))
             {
                 object formKey = expressionManager.CreateExpression(activeTaskFormKey).GetValue(execution);
-                if (formKey != null)
+                if (formKey is object)
                 {
                     if (formKey is string)
                     {
@@ -326,7 +326,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             {
                 object assigneeExpressionValue = expressionManager.CreateExpression(assignee).GetValue(execution);
                 string assigneeValue = null;
-                if (assigneeExpressionValue != null)
+                if (assigneeExpressionValue is object)
                 {
                     assigneeValue = assigneeExpressionValue.ToString();
                 }
@@ -352,7 +352,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             {
                 object ownerExpressionValue = expressionManager.CreateExpression(owner).GetValue(execution);
                 string ownerValue = null;
-                if (ownerExpressionValue != null)
+                if (ownerExpressionValue is object)
                 {
                     ownerValue = ownerExpressionValue.ToString();
                 }
@@ -360,7 +360,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 taskEntityManager.ChangeTaskOwner(task, ownerValue);
             }
 
-            if (candidateGroups != null && candidateGroups.Count > 0)
+            if (candidateGroups is object && candidateGroups.Count > 0)
             {
                 foreach (string candidateGroup in candidateGroups)
                 {
@@ -382,7 +382,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
             }
 
-            if (candidateUsers != null && candidateUsers.Count > 0)
+            if (candidateUsers is object && candidateUsers.Count > 0)
             {
                 foreach (string candidateUser in candidateUsers)
                 {
@@ -404,7 +404,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
             }
 
-            if (userTask.CustomUserIdentityLinks != null && userTask.CustomUserIdentityLinks.Count > 0)
+            if (userTask.CustomUserIdentityLinks is object && userTask.CustomUserIdentityLinks.Count > 0)
             {
 
                 foreach (string customUserIdentityLinkType in userTask.CustomUserIdentityLinks.Keys)
@@ -439,7 +439,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             }
 
-            if (userTask.CustomGroupIdentityLinks != null && userTask.CustomGroupIdentityLinks.Count > 0)
+            if (userTask.CustomGroupIdentityLinks is object && userTask.CustomGroupIdentityLinks.Count > 0)
             {
                 foreach (string customGroupIdentityLinkType in userTask.CustomGroupIdentityLinks.Keys)
                 {

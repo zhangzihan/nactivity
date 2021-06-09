@@ -35,7 +35,7 @@ namespace Sys.Workflow
             try
             {
                 ILoggerFactory logFac = ServiceProvider.GetService<ILoggerFactory>();
-                if (logFac != null)
+                if (logFac is object)
                 {
                     return logFac.CreateLogger<T>();
                 }

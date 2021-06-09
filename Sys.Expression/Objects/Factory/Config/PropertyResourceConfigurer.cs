@@ -194,7 +194,7 @@ namespace Spring.Objects.Factory.Config
         {
             get
             {
-                if (_configSections == null
+                if (_configSections is null
                     || _configSections.Length == 0)
                 {
                     _configSections = new string[] {DefaultConfigSectionName};
@@ -266,7 +266,7 @@ namespace Spring.Objects.Factory.Config
         protected virtual void LoadProperties(NameValueCollection properties)
         {
             string[] configSections = ConfigSections;
-            if (_locations != null)
+            if (_locations is object)
             {
                 ValidateConfigSections(configSections);
                 bool usingMultipleConfigSections = configSections.Length > 1;
@@ -384,7 +384,7 @@ namespace Spring.Objects.Factory.Config
         /// </param>
         private void InitializeWithDefaultProperties(NameValueCollection properties)
         {
-            if (Properties != null)
+            if (Properties is object)
             {
                 properties.Add(Properties);
             }

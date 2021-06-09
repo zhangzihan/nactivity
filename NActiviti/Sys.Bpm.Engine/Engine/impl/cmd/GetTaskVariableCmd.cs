@@ -52,7 +52,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(taskId);
 
-            if (task == null)
+            if (task is null)
             {
                 throw new ActivitiObjectNotFoundException("task " + taskId + " doesn't exist", typeof(ITask));
             }

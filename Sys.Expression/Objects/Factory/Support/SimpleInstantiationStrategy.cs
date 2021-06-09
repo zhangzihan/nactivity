@@ -109,7 +109,7 @@ namespace Spring.Objects.Factory.Support
                 BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
             ConstructorInfo constructor = type.GetConstructor(flags, null, Type.EmptyTypes, null);
-            if (constructor == null)
+            if (constructor is null)
             {
                 throw new FatalReflectionException(string.Format(
                     CultureInfo.InvariantCulture, "Cannot instantiate a class that does not have a no-argument constructor [{0}].", type));

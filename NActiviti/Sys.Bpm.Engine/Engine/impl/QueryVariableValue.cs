@@ -45,7 +45,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual void Initialize(IVariableTypes types)
         {
-            if (variableInstanceEntity == null)
+            if (variableInstanceEntity is null)
             {
                 IVariableType type = types.FindVariableType(value);
                 if (type is ByteArrayType)
@@ -80,7 +80,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             get
             {
-                if (@operator != null)
+                if (@operator is object)
                 {
                     return @operator.ToString();
                 }
@@ -93,7 +93,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             get
             {
-                if (variableInstanceEntity != null)
+                if (variableInstanceEntity is object)
                 {
                     return variableInstanceEntity.TextValue;
                 }
@@ -105,7 +105,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             get
             {
-                if (variableInstanceEntity != null)
+                if (variableInstanceEntity is object)
                 {
                     return variableInstanceEntity.LongValue;
                 }
@@ -117,7 +117,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             get
             {
-                if (variableInstanceEntity != null)
+                if (variableInstanceEntity is object)
                 {
                     return variableInstanceEntity.DoubleValue;
                 }
@@ -129,7 +129,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             get
             {
-                if (variableInstanceEntity != null)
+                if (variableInstanceEntity is object)
                 {
                     return variableInstanceEntity.TextValue2;
                 }
@@ -141,7 +141,7 @@ namespace Sys.Workflow.Engine.Impl
         {
             get
             {
-                if (variableInstanceEntity != null)
+                if (variableInstanceEntity is object)
                 {
                     return variableInstanceEntity.Type.TypeName;
                 }

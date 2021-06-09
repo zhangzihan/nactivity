@@ -72,7 +72,7 @@ namespace Spring.Objects.Factory.Config
         {
             get
             {
-                if (_eventHandlers == null || !_eventHandlers.TryGetValue(eventName, out var handlers))
+                if (_eventHandlers is null || !_eventHandlers.TryGetValue(eventName, out var handlers))
                 {
                     return EmptyHandlers;
                 }
@@ -90,7 +90,7 @@ namespace Spring.Objects.Factory.Config
         /// </param>
         public void AddAll(EventValues other)
         {
-            if (other?._eventHandlers != null)
+            if (other?._eventHandlers is object)
             {
                 foreach (var pair in other._eventHandlers)
                 {

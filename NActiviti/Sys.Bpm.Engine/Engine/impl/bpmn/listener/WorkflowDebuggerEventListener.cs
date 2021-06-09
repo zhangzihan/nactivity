@@ -37,12 +37,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listener
             this.Execution = execution;
             this.Exception = exception;
 
-            if (execution != null)
+            if (execution is object)
             {
                 ExecutionTree eTree = ExecutionTreeUtil.BuildExecutionTree(execution);
                 ExecutionTrace = eTree.ToString();
             }
-            if (exception != null)
+            if (exception is object)
             {
                 LogLevel = LogLevel.Error;
             }

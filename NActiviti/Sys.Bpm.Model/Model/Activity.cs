@@ -103,7 +103,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual bool HasMultiInstanceLoopCharacteristics()
         {
-            return LoopCharacteristics != null;
+            return LoopCharacteristics is object;
         }
 
         public virtual IOSpecification IoSpecification
@@ -166,17 +166,17 @@ namespace Sys.Workflow.Bpmn.Models
                 FailedJobRetryTimeCycleValue = val.FailedJobRetryTimeCycleValue;
                 DefaultFlow = val.DefaultFlow;
                 ForCompensation = val.ForCompensation;
-                if (val.LoopCharacteristics != null)
+                if (val.LoopCharacteristics is object)
                 {
                     LoopCharacteristics = val.LoopCharacteristics.Clone() as MultiInstanceLoopCharacteristics;
                 }
-                if (val.IoSpecification != null)
+                if (val.IoSpecification is object)
                 {
                     IoSpecification = val.IoSpecification.Clone() as IOSpecification;
                 }
 
                 dataInputAssociations = new List<DataAssociation>();
-                if (val.DataInputAssociations != null && val.DataInputAssociations.Count > 0)
+                if (val.DataInputAssociations is object && val.DataInputAssociations.Count > 0)
                 {
                     foreach (DataAssociation association in val.DataInputAssociations)
                     {
@@ -185,7 +185,7 @@ namespace Sys.Workflow.Bpmn.Models
                 }
 
                 dataOutputAssociations = new List<DataAssociation>();
-                if (val.DataOutputAssociations != null && val.DataOutputAssociations.Count > 0)
+                if (val.DataOutputAssociations is object && val.DataOutputAssociations.Count > 0)
                 {
                     foreach (DataAssociation association in val.DataOutputAssociations)
                     {

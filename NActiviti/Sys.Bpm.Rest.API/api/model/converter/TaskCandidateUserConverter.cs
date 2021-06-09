@@ -30,7 +30,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model.Converters
         {
             TaskCandidateUser taskCandidateUser = null;
 
-            if (source != null)
+            if (source is object)
             {
                 taskCandidateUser = new TaskCandidateUser(source.UserId, source.TaskId);
             }

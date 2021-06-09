@@ -98,13 +98,13 @@ namespace Sys.Workflow.Engine.Impl.DB
             }
             else
             {
-                if (alternativeVersionStrings != null)
+                if (alternativeVersionStrings is object)
                 {
                     return alternativeVersionStrings == other.alternativeVersionStrings;
                 }
                 else
                 {
-                    return other.alternativeVersionStrings == null;
+                    return other.alternativeVersionStrings is null;
                 }
             }
         }

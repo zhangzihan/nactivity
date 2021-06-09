@@ -54,13 +54,13 @@ namespace Sys.Workflow.Validation.Validators
                 Warning = isWarning
             };
 
-            if (process != null)
+            if (process is object)
             {
                 error.ProcessDefinitionId = process.Id;
                 error.ProcessDefinitionName = process.Name;
             }
 
-            if (baseElement != null)
+            if (baseElement is object)
             {
                 error.XmlLineNumber = baseElement.XmlRowNumber;
                 error.XmlColumnNumber = baseElement.XmlColumnNumber;
@@ -81,7 +81,7 @@ namespace Sys.Workflow.Validation.Validators
         {
             ValidationError error = new ValidationError();
 
-            if (process != null)
+            if (process is object)
             {
                 error.ProcessDefinitionId = process.Id;
                 error.ProcessDefinitionName = process.Name;

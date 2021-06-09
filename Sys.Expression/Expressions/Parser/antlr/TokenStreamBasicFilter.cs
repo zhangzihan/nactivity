@@ -45,7 +45,7 @@ namespace Spring.Expressions.Parser.antlr
 		public virtual IToken nextToken()
 		{
 			IToken tok = input.nextToken();
-			while (tok != null && discardMask.member(tok.Type))
+			while (tok is object && discardMask.member(tok.Type))
 			{
 				tok = input.nextToken();
 			}

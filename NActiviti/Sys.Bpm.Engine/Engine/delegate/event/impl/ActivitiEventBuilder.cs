@@ -147,7 +147,7 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
 
             ActivitiSequenceFlowTakenEventImpl newEvent = new ActivitiSequenceFlowTakenEventImpl(type);
 
-            if (executionEntity != null)
+            if (executionEntity is object)
             {
                 newEvent.ExecutionId = executionEntity.Id;
                 newEvent.ProcessInstanceId = executionEntity.ProcessInstanceId;
@@ -218,7 +218,7 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
             {
                 newEvent.ActivityType = ParseActivityType(flowNode);
                 object behaviour = flowNode.Behavior;
-                if (behaviour != null)
+                if (behaviour is object)
                 {
                     newEvent.BehaviorClass = behaviour.GetType().FullName;
                 }

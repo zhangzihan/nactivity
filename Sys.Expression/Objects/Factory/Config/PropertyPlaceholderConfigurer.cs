@@ -244,7 +244,7 @@ namespace Spring.Objects.Factory.Config
 	            string name = objectDefinitionNames[i];
 	            IObjectDefinition definition = factory.GetObjectDefinition(name, includeAncestors);
 
-	            if (definition == null)
+	            if (definition is null)
 	            {
 	                logger.LogError(string.Format("'{0}' can't be found in factorys'  '{1}' object definition (includeAncestor {2})",
 	                                   name, factory, includeAncestors));
@@ -303,7 +303,7 @@ namespace Spring.Objects.Factory.Config
                     }
 				    visitedPlaceholders.Add(placeholder);
 					string resolvedValue = ResolvePlaceholder(placeholder, properties, environmentVariableMode);
-					if (resolvedValue != null)
+					if (resolvedValue is object)
 					{
                         resolvedValue = ParseString(properties, resolvedValue, visitedPlaceholders);
 
@@ -373,11 +373,11 @@ namespace Spring.Objects.Factory.Config
 			{
 				propertyValue = Environment.GetEnvironmentVariable(placeholder);
 			}
-			if (propertyValue == null)
+			if (propertyValue is null)
 			{
 				propertyValue = ResolvePlaceholder(placeholder, props);
 			}
-			if (propertyValue == null
+			if (propertyValue is null
 				&& mode == EnvironmentVariableMode.Fallback)
 			{
 				propertyValue = Environment.GetEnvironmentVariable(placeholder);

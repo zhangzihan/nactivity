@@ -45,7 +45,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             // Update all entities
 
             IDeploymentEntity deployment = commandContext.DeploymentEntityManager.FindById<IDeploymentEntity>(new KeyValuePair<string, object>("id", deploymentId));
-            if (deployment == null)
+            if (deployment is null)
             {
                 throw new ActivitiObjectNotFoundException("Could not find deployment with id " + deploymentId, typeof(IDeployment));
             }

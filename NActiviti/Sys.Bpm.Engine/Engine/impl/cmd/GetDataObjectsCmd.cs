@@ -62,7 +62,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
 
-            if (execution == null)
+            if (execution is null)
             {
                 throw new ActivitiObjectNotFoundException("execution " + executionId + " doesn't exist", typeof(IExecution));
             }
@@ -95,7 +95,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
 
             IDictionary<string, IDataObject> dataObjects = null;
-            if (variables != null)
+            if (variables is object)
             {
                 dataObjects = new Dictionary<string, IDataObject>(variables.Count);
 
@@ -143,22 +143,22 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     {
                         JToken languageNode = Context.GetLocalizationElementProperties(locale, foundDataObject.Id, execution.ProcessDefinitionId, withLocalizationFallback);
 
-                        if (languageNode != null)
+                        if (languageNode is object)
                         {
                             JToken nameNode = languageNode[DynamicBpmnConstants.LOCALIZATION_NAME];
-                            if (nameNode != null)
+                            if (nameNode is object)
                             {
                                 localizedName = nameNode.ToString();
                             }
                             JToken descriptionNode = languageNode[DynamicBpmnConstants.LOCALIZATION_DESCRIPTION];
-                            if (descriptionNode != null)
+                            if (descriptionNode is object)
                             {
                                 localizedDescription = descriptionNode.ToString();
                             }
                         }
                     }
 
-                    if (foundDataObject != null)
+                    if (foundDataObject is object)
                     {
                         dataObjects[name] = new DataObjectImpl(variableEntity.Name, variableEntity.Value, foundDataObject.Documentation, foundDataObject.Type, localizedName, localizedDescription, foundDataObject.Id);
                     }

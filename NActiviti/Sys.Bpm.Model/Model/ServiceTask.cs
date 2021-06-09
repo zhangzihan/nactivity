@@ -173,7 +173,7 @@ namespace Sys.Workflow.Bpmn.Models
                 SkipExpression = val.SkipExpression;
 
                 fieldExtensions = new List<FieldExtension>();
-                if (val.FieldExtensions != null && val.FieldExtensions.Count > 0)
+                if (val.FieldExtensions is object && val.FieldExtensions.Count > 0)
                 {
                     foreach (FieldExtension extension in val.FieldExtensions)
                     {
@@ -182,7 +182,7 @@ namespace Sys.Workflow.Bpmn.Models
                 }
 
                 customProperties = new List<CustomProperty>();
-                if (val.CustomProperties != null && val.CustomProperties.Count > 0)
+                if (val.CustomProperties is object && val.CustomProperties.Count > 0)
                 {
                     foreach (CustomProperty property in val.CustomProperties)
                     {

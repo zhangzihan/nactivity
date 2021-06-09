@@ -23,7 +23,7 @@ namespace Sys.Workflow.Engine.Impl
         public object Execute(ICommandContext commandContext)
         {
             DbSqlSession dbSqlSession = commandContext.DbSqlSession;
-            if (dbSqlSession != null)
+            if (dbSqlSession is object)
             {
                 dbSqlSession.PerformSchemaOperationsProcessEngineBuild();
             }

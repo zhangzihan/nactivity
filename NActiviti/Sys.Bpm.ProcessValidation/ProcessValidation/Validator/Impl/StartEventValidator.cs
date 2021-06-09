@@ -32,7 +32,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
         {
             foreach (StartEvent startEvent in startEvents)
             {
-                if (startEvent.EventDefinitions != null && startEvent.EventDefinitions.Count > 0)
+                if (startEvent.EventDefinitions is object && startEvent.EventDefinitions.Count > 0)
                 {
                     EventDefinition eventDefinition = startEvent.EventDefinitions[0];
                     if (!(eventDefinition is MessageEventDefinition) && !(eventDefinition is TimerEventDefinition) && !(eventDefinition is SignalEventDefinition))
@@ -50,7 +50,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
             IList<StartEvent> noneStartEvents = new List<StartEvent>();
             foreach (StartEvent startEvent in startEvents)
             {
-                if (startEvent.EventDefinitions == null || startEvent.EventDefinitions.Count == 0)
+                if (startEvent.EventDefinitions is null || startEvent.EventDefinitions.Count == 0)
                 {
                     noneStartEvents.Add(startEvent);
                 }

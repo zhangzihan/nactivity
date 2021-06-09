@@ -98,7 +98,7 @@ namespace Spring.Objects.Factory.Config
         {
             lock (objectMonitor)
             {
-                if (arguments == null)
+                if (arguments is null)
                 {
                     InitArguments();
                 }
@@ -119,7 +119,7 @@ namespace Spring.Objects.Factory.Config
         {
             lock (objectMonitor)
             {
-                if (arguments == null)
+                if (arguments is null)
                 {
                     InitArguments();
                 }

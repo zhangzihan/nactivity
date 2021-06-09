@@ -45,13 +45,13 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(taskId);
 
-            if (task == null)
+            if (task is null)
             {
                 throw new ActivitiObjectNotFoundException("task " + taskId + " doesn't exist", typeof(ITask));
             }
 
             IDictionary<string, IVariableInstance> variables = null;
-            if (variableNames == null)
+            if (variableNames is null)
             {
 
                 if (isLocal)

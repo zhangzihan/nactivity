@@ -26,12 +26,12 @@ namespace Sys.Workflow.Engine.Impl.Util
         {
             object value = execution.GetVariableLocal(variableName);
             IExecutionEntity parent = execution.Parent;
-            while (value == null && parent != null)
+            while (value is null && parent is object)
             {
                 value = parent.GetLoopVariable<T>(variableName);
                 parent = parent.Parent;
             }
-            return value == null ? default : JToken.FromObject(value).ToObject<T>();
+            return value is null ? default : JToken.FromObject(value).ToObject<T>();
         }
 
         /// <summary>
@@ -49,28 +49,28 @@ namespace Sys.Workflow.Engine.Impl.Util
         {
             miRoot = execution.FindMultiInstanceParentExecution();
 
-            return miRoot != null;
+            return miRoot is object;
         }
 
         internal static IExecutionEntity FindMultiInstanceParentExecution(this IExecutionEntity execution)
         {
             IExecutionEntity multiInstanceExecution = null;
             IExecutionEntity parentExecution = execution.Parent;
-            if (parentExecution != null && parentExecution.CurrentFlowElement != null)
+            if (parentExecution is object && parentExecution.CurrentFlowElement is object)
             {
                 FlowElement flowElement = parentExecution.CurrentFlowElement;
                 if (flowElement is Activity activity)
                 {
-                    if (activity.LoopCharacteristics != null)
+                    if (activity.LoopCharacteristics is object)
                     {
                         multiInstanceExecution = parentExecution;
                     }
                 }
 
-                if (multiInstanceExecution == null)
+                if (multiInstanceExecution is null)
                 {
                     IExecutionEntity potentialMultiInstanceExecution = FindMultiInstanceParentExecution(parentExecution);
-                    if (potentialMultiInstanceExecution != null)
+                    if (potentialMultiInstanceExecution is object)
                     {
                         multiInstanceExecution = potentialMultiInstanceExecution;
                     }
@@ -81,12 +81,12 @@ namespace Sys.Workflow.Engine.Impl.Util
         }
         internal static IExecutionEntity FindRootParent(this IExecutionEntity execution)
         {
-            if (execution == null)
+            if (execution is null)
             {
                 return null;
             }
             IExecutionEntity parentExecution = execution.Parent;
-            if (parentExecution != null && parentExecution.CurrentFlowElement != null)
+            if (parentExecution is object && parentExecution.CurrentFlowElement is object)
             {
                 return FindRootParent(parentExecution);
             }

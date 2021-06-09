@@ -66,7 +66,7 @@ namespace Spring.Context.Support
 			builder.Append("codes=[");
 			builder.Append(StringUtils.ArrayToDelimitedString(resolvable.GetCodes(), ","));
 			builder.Append("]; arguments=[");
-			if (resolvable.GetArguments() == null)
+			if (resolvable.GetArguments() is null)
 			{
 				builder.Append("null");
 			}

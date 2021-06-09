@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ namespace Spring.Util
             {
                 return true;
             }
-            if (pattern == null || str == null)
+            if (pattern is null || str is null)
             {
                 return false;
             }
@@ -79,7 +79,7 @@ namespace Spring.Util
         /// </returns>
         public static bool SimpleMatch(System.String[] patterns, System.String str)
         {
-            if (patterns != null)
+            if (patterns is object)
             {
                 for (int i = 0; i < patterns.Length; i++)
                 {

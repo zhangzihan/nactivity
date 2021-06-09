@@ -65,12 +65,12 @@ namespace Sys.Workflow.Bpmn.Converters
             UserTask userTask = null;
             if (!string.IsNullOrWhiteSpace(formKey))
             {
-                if (model.UserTaskFormTypes != null && model.UserTaskFormTypes.Contains(formKey))
+                if (model.UserTaskFormTypes is object && model.UserTaskFormTypes.Contains(formKey))
                 {
                     userTask = new AlfrescoUserTask();
                 }
             }
-            if (userTask == null)
+            if (userTask is null)
             {
                 userTask = new UserTask();
             }
@@ -121,7 +121,7 @@ namespace Sys.Workflow.Bpmn.Converters
             WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_BUSINESS_CALENDAR_NAME, userTask.BusinessCalendarName, xtw);
             WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_CATEGORY, userTask.Category, xtw);
             WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY, userTask.FormKey, xtw);
-            if (userTask.Priority != null)
+            if (userTask.Priority is object)
 
             {
                 WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_PRIORITY, userTask.Priority.ToString(), xtw);
@@ -131,7 +131,7 @@ namespace Sys.Workflow.Bpmn.Converters
             {
                 WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_SERVICE_EXTENSIONID, userTask.ExtensionId, xtw);
             }
-            if (userTask.SkipExpression != null)
+            if (userTask.SkipExpression is object)
 
             {
                 WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_TASK_USER_SKIP_EXPRESSION, userTask.SkipExpression, xtw);
@@ -199,7 +199,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
             IList<string> identityList = new List<string>();
 
-            if (users != null)
+            if (users is object)
             {
                 foreach (string userId in users)
                 {
@@ -207,7 +207,7 @@ namespace Sys.Workflow.Bpmn.Converters
                 }
             }
 
-            if (groups != null)
+            if (groups is object)
             {
                 foreach (string groupId in groups)
                 {

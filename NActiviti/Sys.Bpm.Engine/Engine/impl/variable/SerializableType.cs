@@ -55,13 +55,13 @@ namespace Sys.Workflow.Engine.Impl.Variable
         public override object GetValue(IValueFields valueFields)
         {
             object cachedObject = valueFields.CachedValue;
-            if (cachedObject != null)
+            if (cachedObject is object)
             {
                 return cachedObject;
             }
 
             byte[] bytes = (byte[])base.GetValue(valueFields);
-            if (bytes != null)
+            if (bytes is object)
             {
                 object deserializedObject = Deserialize(bytes, valueFields);
                 valueFields.CachedValue = deserializedObject;
@@ -92,7 +92,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
 
         public virtual byte[] Serialize(object value, IValueFields valueFields)
         {
-            if (value == null)
+            if (value is null)
             {
                 return null;
             }

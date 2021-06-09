@@ -41,7 +41,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
             try
             {
-                if (transactionContextFactory != null && !isReused)
+                if (transactionContextFactory is object && !isReused)
                 {
                     ITransactionContext transactionContext = transactionContextFactory.OpenTransactionContext(commandContext);
                     Context.TransactionContext = transactionContext;
@@ -52,7 +52,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             }
             finally
             {
-                if (transactionContextFactory != null && !isReused)
+                if (transactionContextFactory is object && !isReused)
                 {
                     Context.RemoveTransactionContext();
                 }

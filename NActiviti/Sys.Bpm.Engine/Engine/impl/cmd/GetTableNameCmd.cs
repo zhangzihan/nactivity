@@ -20,7 +20,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public  virtual string  Execute(ICommandContext  commandContext)
         {
-            if (entityClass == null)
+            if (entityClass is null)
             {
                 throw new ActivitiIllegalArgumentException("entityClass is null");
             }

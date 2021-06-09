@@ -69,7 +69,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		}
 		public virtual void  removeInputBufferListener(InputBufferListener l)
 		{
-			if (inputBufferEventSupport != null)
+			if (inputBufferEventSupport is object)
 				inputBufferEventSupport.removeInputBufferListener(l);
 		}
 		public override void  rewind(int mark)

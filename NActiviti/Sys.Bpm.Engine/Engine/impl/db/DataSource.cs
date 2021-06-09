@@ -44,7 +44,7 @@ namespace Sys.Data
             this.oldOption = options.CurrentValue;
             this.options.OnChange((opts) =>
             {
-                if (opts != this.oldOption && this.changed != null)
+                if (opts != this.oldOption && this.changed is object)
                 {
                     this.oldOption = opts;
                     this.changed(this);
@@ -103,7 +103,7 @@ namespace Sys.Data
             log.LogWarning("DataSource forceCloseAll");
             try
             {
-                if (this.Connection != null && this.Connection.State == ConnectionState.Open)
+                if (this.Connection is object && this.Connection.State == ConnectionState.Open)
                 {
                     this.Connection.Close();
                 }

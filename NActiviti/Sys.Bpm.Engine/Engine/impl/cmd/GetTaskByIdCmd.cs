@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             ITask task = taskService.CreateTaskQuery().SetTaskId(taskId).SingleResult();
 
-            if (task != null)
+            if (task is object)
             {
                 TaskEntityImpl.EnsureAssignerInitialized(new TaskEntityImpl[] { task as TaskEntityImpl });
             }

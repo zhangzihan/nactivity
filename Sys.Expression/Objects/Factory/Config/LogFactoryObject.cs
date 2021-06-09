@@ -110,7 +110,7 @@ namespace Spring.Objects.Factory.Config
         /// <seealso cref="Spring.Objects.Factory.IFactoryObject.GetObject"/>
         public object GetObject()
         {
-            if (this.log == null)
+            if (this.log is null)
             {
                 ValidateProperties();
                 this.log = LogManager.GetLogger<LogFactoryObject>();

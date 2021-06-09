@@ -75,7 +75,7 @@ namespace Sys.Workflow.Engine.Impl.Scripting
             {
                 lock (syncRoot)
                 {
-                    if (scriptEngineFactory == null)
+                    if (scriptEngineFactory is null)
                     {
                         scriptEngineFactory = new JuelScriptEngineFactory();
                     }
@@ -160,7 +160,7 @@ namespace Sys.Workflow.Engine.Impl.Scripting
             scriptCtx.setAttribute("out:print", PrintMethod, ScriptContext.ENGINE_SCOPE);
 
             SecurityManager securityManager = System.SecurityManager;
-            if (securityManager == null)
+            if (securityManager is null)
             {
                 scriptCtx.setAttribute("lang:import", ImportMethod, ScriptContext.ENGINE_SCOPE);
             }

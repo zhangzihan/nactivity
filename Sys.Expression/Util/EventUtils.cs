@@ -95,7 +95,7 @@ namespace Spring.Util
         {
             EventExceptionsCollector exceptions = new();
 
-            if (source != null)
+            if (source is object)
             {
                 Delegate[] delegates = source.GetInvocationList();
                 foreach (Delegate sink in delegates)

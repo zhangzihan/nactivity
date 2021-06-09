@@ -42,7 +42,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 
 		public virtual void checkController()
 		{
-			//if (controller != null)
+			//if (controller is object)
 			//	controller.checkBreak();
 		}
 
@@ -112,7 +112,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireConsume(int c)
 		{
 			TokenEventHandler eventDelegate = (TokenEventHandler)((CharScanner)source).Events[Parser.LAEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				tokenEvent.setValues(TokenEventArgs.CONSUME, 1, c);
 				eventDelegate(source, tokenEvent);
@@ -122,7 +122,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireDoneParsing()
 		{
 			TraceEventHandler eventDelegate = (TraceEventHandler)((CharScanner)source).Events[Parser.DoneEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				traceEvent.setValues(TraceEventArgs.DONE_PARSING, 0, 0, 0);
 				eventDelegate(source, traceEvent);
@@ -133,7 +133,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		{
 			ruleDepth++;
 			TraceEventHandler eventDelegate = (TraceEventHandler)((CharScanner)source).Events[Parser.EnterRuleEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				traceEvent.setValues(TraceEventArgs.ENTER, ruleNum, guessing, data);
 				eventDelegate(source, traceEvent);
@@ -143,7 +143,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireExitRule(int ruleNum, int guessing, int data)
 		{
 			TraceEventHandler eventDelegate = (TraceEventHandler)((CharScanner)source).Events[Parser.ExitRuleEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				traceEvent.setValues(TraceEventArgs.EXIT, ruleNum, guessing, data);
 				eventDelegate(source, traceEvent);
@@ -158,7 +158,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireLA(int k, int la)
 		{
 			TokenEventHandler eventDelegate = (TokenEventHandler)((CharScanner)source).Events[Parser.LAEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				tokenEvent.setValues(TokenEventArgs.LA, k, la);
 				eventDelegate(source, tokenEvent);
@@ -168,7 +168,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMatch(char c, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MatchEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.CHAR, c, c, null, guessing, false, true);
 				eventDelegate(source, matchEvent);
@@ -178,7 +178,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMatch(char c, BitSet b, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MatchEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.CHAR_BITSET, c, b, null, guessing, false, true);
 				eventDelegate(source, matchEvent);
@@ -188,7 +188,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMatch(char c, string target, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MatchEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.CHAR_RANGE, c, target, null, guessing, false, true);
 				eventDelegate(source, matchEvent);
@@ -198,7 +198,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMatch(int c, BitSet b, string text, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MatchEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.BITSET, c, b, text, guessing, false, true);
 				eventDelegate(source, matchEvent);
@@ -208,7 +208,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMatch(int n, string text, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MatchEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.TOKEN, n, n, text, guessing, false, true);
 				eventDelegate(source, matchEvent);
@@ -218,7 +218,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMatch(string s, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MatchEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.STRING, 0, s, null, guessing, false, true);
 				eventDelegate(source, matchEvent);
@@ -228,7 +228,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMatchNot(char c, char n, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MatchNotEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.CHAR, c, n, null, guessing, true, true);
 				eventDelegate(source, matchEvent);
@@ -238,7 +238,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMatchNot(int c, int n, string text, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MatchNotEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.TOKEN, c, n, text, guessing, true, true);
 				eventDelegate(source, matchEvent);
@@ -248,7 +248,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMismatch(char c, char n, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MisMatchEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.CHAR, c, n, null, guessing, false, false);
 				eventDelegate(source, matchEvent);
@@ -258,7 +258,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMismatch(char c, BitSet b, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MisMatchEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.CHAR_BITSET, c, b, null, guessing, false, true);
 				eventDelegate(source, matchEvent);
@@ -268,7 +268,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMismatch(char c, string target, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MisMatchEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.CHAR_RANGE, c, target, null, guessing, false, true);
 				eventDelegate(source, matchEvent);
@@ -278,7 +278,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMismatch(int i, int n, string text, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MisMatchEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.TOKEN, i, n, text, guessing, false, false);
 				eventDelegate(source, matchEvent);
@@ -288,7 +288,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMismatch(int i, BitSet b, string text, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MisMatchEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.BITSET, i, b, text, guessing, false, true);
 				eventDelegate(source, matchEvent);
@@ -298,7 +298,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMismatch(string s, string text, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MisMatchEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.STRING, 0, text, s, guessing, false, true);
 				eventDelegate(source, matchEvent);
@@ -308,7 +308,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMismatchNot(char v, char c, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MisMatchNotEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.CHAR, v, c, null, guessing, true, true);
 				eventDelegate(source, matchEvent);
@@ -318,7 +318,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireMismatchNot(int i, int n, string text, int guessing)
 		{
 			MatchEventHandler eventDelegate = (MatchEventHandler)((CharScanner)source).Events[Parser.MisMatchNotEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				matchEvent.setValues(MatchEventArgs.TOKEN, i, n, text, guessing, true, true);
 				eventDelegate(source, matchEvent);
@@ -328,7 +328,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireNewLine(int line)
 		{
 			NewLineEventHandler eventDelegate = (NewLineEventHandler)((CharScanner)source).Events[Parser.NewLineEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				newLineEvent.Line = line;
 				eventDelegate(source, newLineEvent);
@@ -338,7 +338,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireReportError(System.Exception e)
 		{
 			MessageEventHandler eventDelegate = (MessageEventHandler)((CharScanner)source).Events[Parser.ReportErrorEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				messageEvent.setValues(MessageEventArgs.ERROR, e.ToString());
 				eventDelegate(source, messageEvent);
@@ -348,7 +348,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireReportError(string s)
 		{
 			MessageEventHandler eventDelegate = (MessageEventHandler)((CharScanner)source).Events[Parser.ReportErrorEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				messageEvent.setValues(MessageEventArgs.ERROR, s);
 				eventDelegate(source, messageEvent);
@@ -358,7 +358,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireReportWarning(string s)
 		{
 			MessageEventHandler eventDelegate = (MessageEventHandler)((CharScanner)source).Events[Parser.ReportWarningEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				messageEvent.setValues(MessageEventArgs.WARNING, s);
 				eventDelegate(source, messageEvent);
@@ -368,7 +368,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual bool fireSemanticPredicateEvaluated(int type, int condition, bool result, int guessing)
 		{
 			SemanticPredicateEventHandler eventDelegate = (SemanticPredicateEventHandler)((CharScanner)source).Events[Parser.SemPredEvaluatedEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				semPredEvent.setValues(type, condition, result, guessing);
 				eventDelegate(source, semPredEvent);
@@ -380,7 +380,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireSyntacticPredicateFailed(int guessing)
 		{
 			SyntacticPredicateEventHandler eventDelegate = (SyntacticPredicateEventHandler)((CharScanner)source).Events[Parser.SynPredFailedEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				synPredEvent.setValues(0, guessing);
 				eventDelegate(source, synPredEvent);
@@ -390,7 +390,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireSyntacticPredicateStarted(int guessing)
 		{
 			SyntacticPredicateEventHandler eventDelegate = (SyntacticPredicateEventHandler)((CharScanner)source).Events[Parser.SynPredStartedEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				synPredEvent.setValues(0, guessing);
 				eventDelegate(source, synPredEvent);
@@ -400,7 +400,7 @@ namespace Spring.Expressions.Parser.antlr.debug
 		public virtual void  fireSyntacticPredicateSucceeded(int guessing)
 		{
 			SyntacticPredicateEventHandler eventDelegate = (SyntacticPredicateEventHandler)((CharScanner)source).Events[Parser.SynPredSucceededEventKey];
-			if (eventDelegate != null) 
+			if (eventDelegate is object) 
 			{
 				synPredEvent.setValues(0, guessing);
 				eventDelegate(source, synPredEvent);

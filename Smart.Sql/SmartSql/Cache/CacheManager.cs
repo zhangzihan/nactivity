@@ -34,7 +34,7 @@ namespace SmartSql.Cahce
         public void RequestExecuted(IDbConnectionSession dbSession, RequestContext context)
         {
             var sessionId = dbSession.Id;
-            if (dbSession.Transaction == null)
+            if (dbSession.Transaction is null)
             {
                 FlushOnExecute(context);
             }
@@ -79,7 +79,7 @@ namespace SmartSql.Cahce
             _cacheMappedLastFlushTime = new Dictionary<string, DateTime>();
             foreach (var cache in _smartSqlContext.Caches)
             {
-                if (cache.FlushInterval == null) { continue; }
+                if (cache.FlushInterval is null) { continue; }
                 _cacheMappedLastFlushTime.Add(cache.Id, DateTime.Now);
             }
         }
@@ -90,7 +90,7 @@ namespace SmartSql.Cahce
             {
                 foreach (var cache in _smartSqlContext.Caches)
                 {
-                    if (cache.FlushInterval == null) { continue; }
+                    if (cache.FlushInterval is null) { continue; }
                     var lastFlushTime = _cacheMappedLastFlushTime[cache.Id];
                     var nextFlushTime = lastFlushTime.Add(cache.FlushInterval.Interval);
                     if (DateTime.Now >= nextFlushTime)
@@ -156,29 +156,29 @@ namespace SmartSql.Cahce
         public bool TryGet<T>(RequestContext context, out T cachedResult)
         {
             cachedResult = default(T);
-            if (context.Statement == null) { return false; }
+            if (context.Statement is null) { return false; }
             var cachedType = typeof(T);
             string fullSqlId = context.FullSqlId;
             var statement = context.Statement;
-            if (statement.Cache == null) { return false; }
+            if (statement.Cache is null) { return false; }
             var cacheKey = new CacheKey(context);
             var cache = statement.Cache.Provider[cacheKey, cachedType];
             if (_logger.IsEnabled(LogLevel.Debug))
             {
-                _logger.LogDebug($"CacheManager GetCache FullSqlId:{fullSqlId}，Success:{cache != null} !");
+                _logger.LogDebug($"CacheManager GetCache FullSqlId:{fullSqlId}，Success:{cache is object} !");
             }
-            if (cache == null) { return false; }
+            if (cache is null) { return false; }
             cachedResult = (T)cache;
             return true;
         }
 
         public void TryAdd<T>(RequestContext context, T cacheItem)
         {
-            if (context.Statement == null) { return; }
+            if (context.Statement is null) { return; }
             var cachedType = typeof(T);
             string fullSqlId = context.FullSqlId;
             var statement = context.Statement;
-            if (statement.Cache == null) { return; }
+            if (statement.Cache is null) { return; }
             var cacheKey = new CacheKey(context);
             statement.Cache.Provider[cacheKey, cachedType] = cacheItem;
             if (_logger.IsEnabled(LogLevel.Debug))

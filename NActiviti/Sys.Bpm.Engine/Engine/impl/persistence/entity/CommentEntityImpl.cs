@@ -58,7 +58,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                fullMessage = value != null ? StringHelper.NewString(value) : null;
+                fullMessage = value is object ? StringHelper.NewString(value) : null;
             }
         }
 

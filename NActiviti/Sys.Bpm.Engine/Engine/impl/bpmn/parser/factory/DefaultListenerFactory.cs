@@ -137,7 +137,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
                 ((ErrorThrowingEventListener)result).ErrorCode = eventListener.Implementation;
             }
 
-            if (result == null)
+            if (result is null)
             {
                 throw new ActivitiIllegalArgumentException("Cannot create an event-throwing event-listener, unknown implementation type: " + eventListener.ImplementationType);
             }
@@ -171,7 +171,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
             if (entityType is object)
             {
                 Type entityClass = ENTITY_MAPPING[entityType.Trim()];
-                if (entityClass == null)
+                if (entityClass is null)
                 {
                     throw new ActivitiIllegalArgumentException("Unsupported entity-type for an ActivitiEventListener: " + entityType);
                 }

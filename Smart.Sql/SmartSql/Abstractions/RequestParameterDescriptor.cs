@@ -18,7 +18,7 @@ namespace SmartSql.Abstractions
         public static RequestParameterDescriptor Create(object value)
         {
             var req = new RequestParameterDescriptor();
-            if (value != null)
+            if (value is object)
             {
                 req.ParameterType = value.GetType();
             }

@@ -134,7 +134,7 @@ namespace Spring.Context.Support
 		/// <seealso cref="Spring.Context.Support.AbstractMessageSource.ApplyResourcesToObject(object, string, CultureInfo)"/>
 		protected override void ApplyResourcesToObject(object value, string objectName, CultureInfo cultureInfo)
 		{
-		    if(value != null) 
+		    if(value is object) 
 		    {
 		        new ComponentResourceManager(value.GetType()).ApplyResources(value, objectName, cultureInfo);
 		    }

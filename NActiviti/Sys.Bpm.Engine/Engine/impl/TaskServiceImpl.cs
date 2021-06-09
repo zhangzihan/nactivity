@@ -67,9 +67,9 @@ namespace Sys.Workflow.Engine.Impl
             ExecuteCommand(new SaveTaskCmd(task));
         }
 
-        public virtual void TerminateTask(string taskId, string terminateReason, bool terminateExecution, IDictionary<string, object> variables)
+        public virtual void TerminateTask(string taskId, string terminateReason, bool terminateExecution, IDictionary<string, object> variables, IDictionary<string, object> transientVariables = null)
         {
-            commandExecutor.Execute(new CommandConfig(true), new TerminateTaskCmd(taskId, terminateReason, terminateExecution, variables));
+            commandExecutor.Execute(new CommandConfig(true), new TerminateTaskCmd(taskId, terminateReason, terminateExecution, variables, transientVariables));
         }
 
         public virtual void DeleteTasks(ICollection<string> taskIds)
@@ -263,7 +263,7 @@ namespace Sys.Workflow.Engine.Impl
                 {
                     AddComment(taskId, task.ProcessInstanceId, comment);
                 }
-                _ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, transientVariables, localScope));
+                _ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(taskId, variables, transientVariables, localScope, completeReason: comment));
             }
             catch (ActivitiObjectNotFoundException)
             {
@@ -286,7 +286,11 @@ namespace Sys.Workflow.Engine.Impl
                     }
                     return;
                 }
-                _ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(task.Id, variables, transientVariables, localScope));
+                if (string.IsNullOrWhiteSpace(comment) == false)
+                {
+                    AddComment(task.Id, task.ProcessInstanceId, comment);
+                }
+                _ = commandExecutor.Execute(new CommandConfig(true), new CompleteTaskCmd(task.Id, variables, transientVariables, localScope, completeReason: comment));
             }
             catch (ActivitiObjectNotFoundException)
             {

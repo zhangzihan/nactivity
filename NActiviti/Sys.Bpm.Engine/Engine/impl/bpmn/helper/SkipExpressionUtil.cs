@@ -30,7 +30,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
         public static bool IsSkipExpressionEnabled(IExecutionEntity execution, IExpression skipExpression)
         {
-            if (skipExpression == null)
+            if (skipExpression is null)
             {
                 return false;
             }
@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
             const string skipExpressionEnabledVariable = "_ACTIVITI_SKIP_EXPRESSION_ENABLED";
             object isSkipExpressionEnabled = execution.GetVariable(skipExpressionEnabledVariable);
 
-            if (isSkipExpressionEnabled == null)
+            if (isSkipExpressionEnabled is null)
             {
                 return false;
 

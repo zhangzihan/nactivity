@@ -33,11 +33,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
             string eventName = @params[nameof(eventName)]?.ToString();
             string processInstanceId = @params[nameof(processInstanceId)]?.ToString();
 
-            return eventSubscriptionEntity.EventType != null &&
+            return eventSubscriptionEntity.EventType is object &&
                 string.Compare(eventSubscriptionEntity.EventType, SignalEventSubscriptionEntityFields.EVENT_TYPE, true) == 0 &&
-                eventSubscriptionEntity.EventName != null &&
+                eventSubscriptionEntity.EventName is object &&
                 string.Compare(eventSubscriptionEntity.EventName, eventName, true) == 0 &&
-                eventSubscriptionEntity.ProcessInstanceId != null &&
+                eventSubscriptionEntity.ProcessInstanceId is object &&
                 string.Compare(eventSubscriptionEntity.ProcessInstanceId, processInstanceId?.ToString(), true) == 0;
         }
 

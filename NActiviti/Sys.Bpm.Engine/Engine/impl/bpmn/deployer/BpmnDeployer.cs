@@ -94,7 +94,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
         //      if (processDefinitionDiagramHelper.shouldCreateDiagram(processDefinition, deploymentEntity)) {
         //        ResourceEntity resource = processDefinitionDiagramHelper.createDiagramForProcessDefinition(
         //            processDefinition, parsedDeployment.getBpmnParseForProcessDefinition(processDefinition));
-        //        if (resource != null) {
+        //        if (resource is object) {
         //          resourceEntityManager.insert(resource, false);
         //          deploymentEntity.addResource(resource);  // now we'll find it if we look for the diagram name later.
         //        }
@@ -132,7 +132,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
             {
                 IProcessDefinitionEntity existingDefinition = bpmnDeploymentHelper.GetMostRecentVersionOfProcessDefinition(newDefinition);
 
-                if (existingDefinition != null)
+                if (existingDefinition is object)
                 {
                     result[newDefinition] = existingDefinition;
                 }
@@ -155,7 +155,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                 int version = 1;
 
                 mapNewToOldProcessDefinitions.TryGetValue(processDefinition, out IProcessDefinitionEntity latest);
-                if (latest != null)
+                if (latest is object)
                 {
                     version = latest.Version + 1;
                 }
@@ -240,7 +240,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
             {
                 IProcessDefinitionEntity persistedProcessDefinition = bpmnDeploymentHelper.GetPersistedInstanceOfProcessDefinition(processDefinition);
 
-                if (persistedProcessDefinition != null)
+                if (persistedProcessDefinition is object)
                 {
                     processDefinition.Id = persistedProcessDefinition.Id;
                     processDefinition.Version = persistedProcessDefinition.Version;
@@ -251,7 +251,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
 
         protected internal virtual void CreateLocalizationValues(string processDefinitionId, Process process)
         {
-            if (process == null)
+            if (process is null)
             {
                 return;
             }
@@ -262,7 +262,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
 
             bool localizationValuesChanged = false;
             process.ExtensionElements.TryGetValue("localization", out IList<ExtensionElement> localizationElements);
-            if (localizationElements != null)
+            if (localizationElements is object)
             {
                 foreach (ExtensionElement localizationElement in localizationElements)
                 {
@@ -272,7 +272,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                         string name = localizationElement.GetAttributeValue(null, "name");
                         string documentation = null;
                         localizationElement.ChildElements.TryGetValue("documentation", out IList<ExtensionElement> documentationElements);
-                        if (documentationElements != null)
+                        if (documentationElements is object)
                         {
                             foreach (ExtensionElement documentationElement in documentationElements)
                             {
@@ -316,7 +316,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
         {
             bool localizationValuesChanged = false;
 
-            if (flowElements == null)
+            if (flowElements is null)
             {
                 return localizationValuesChanged;
             }
@@ -329,7 +329,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                 if (flowElement is UserTask || flowElement is SubProcess)
                 {
                     flowElement.ExtensionElements.TryGetValue("localization", out IList<ExtensionElement> localizationElements);
-                    if (localizationElements != null)
+                    if (localizationElements is object)
                     {
                         foreach (ExtensionElement localizationElement in localizationElements)
                         {
@@ -339,7 +339,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                                 string name = localizationElement.GetAttributeValue(null, "name");
                                 string documentation = null;
                                 localizationElement.ChildElements.TryGetValue("documentation", out IList<ExtensionElement> documentationElements);
-                                if (documentationElements != null)
+                                if (documentationElements is object)
                                 {
                                     foreach (ExtensionElement documentationElement in documentationElements)
                                     {
@@ -385,7 +385,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
         {
             bool isEqual = false;
             JToken localizationNode = infoNode.SelectToken("localization.language.id.propertyName");
-            if (localizationNode != null && localizationNode.ToString().Equals(propertyValue))
+            if (localizationNode is object && localizationNode.ToString().Equals(propertyValue))
             {
                 isEqual = true;
             }
@@ -401,7 +401,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
             foreach (ValuedDataObject dataObject in dataObjects)
             {
                 dataObject.ExtensionElements.TryGetValue("localization", out IList<ExtensionElement> localizationElements);
-                if (localizationElements != null)
+                if (localizationElements is object)
                 {
                     foreach (ExtensionElement localizationElement in localizationElements)
                     {
@@ -412,7 +412,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                             string documentation = null;
 
                             localizationElement.ChildElements.TryGetValue("documentation", out IList<ExtensionElement> documentationElements);
-                            if (documentationElements != null)
+                            if (documentationElements is object)
                             {
                                 foreach (ExtensionElement documentationElement in documentationElements)
                                 {

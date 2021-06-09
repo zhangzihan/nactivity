@@ -40,7 +40,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                 jobsToDelete = Context.CommandContext.TimerJobEntityManager.FindJobsByTypeAndProcessDefinitionKeyNoTenantId(TimerStartEventJobHandler.TYPE, processDefinition.Key);
             }
 
-            if (jobsToDelete != null)
+            if (jobsToDelete is object)
             {
                 foreach (ITimerJobEntity job in jobsToDelete)
                 {
@@ -76,7 +76,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
                             {
                                 ITimerJobEntity timerJob = jobManager.CreateTimerJob(timerEventDefinition, false, null, TimerStartEventJobHandler.TYPE, TimerEventHandler.CreateConfiguration(startEvent.Id, timerEventDefinition.EndDate, timerEventDefinition.CalendarName));
 
-                                if (timerJob != null)
+                                if (timerJob is object)
                                 {
                                     timerJob.ProcessDefinitionId = processDefinition.Id;
 

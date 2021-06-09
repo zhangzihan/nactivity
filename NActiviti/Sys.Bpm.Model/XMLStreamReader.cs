@@ -189,7 +189,7 @@ namespace Sys.Workflow.Bpmn.Converters
         {
             base.Dispose(disposing);
 
-            if (reader != null)
+            if (reader is object)
             {
                 reader.Close();
             }

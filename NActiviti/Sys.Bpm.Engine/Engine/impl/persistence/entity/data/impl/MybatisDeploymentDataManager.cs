@@ -43,7 +43,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
         public virtual IDeploymentEntity FindLatestDeploymentByName(string deploymentName)
         {
             IList<IDeploymentEntity> list = DbSqlSession.SelectList<DeploymentEntityImpl, IDeploymentEntity>("selectDeploymentsByName", new { deploymentName }, 0, 1);
-            if (list != null && list.Count > 0)
+            if (list is object && list.Count > 0)
             {
                 return list[0];
             }

@@ -30,7 +30,7 @@ namespace SmartSql
 
         public IDataSource Elect(RequestContext context)
         {
-            if (_dbSessionStore.LocalSession != null)
+            if (_dbSessionStore.LocalSession is object)
             {
                 return _dbSessionStore.LocalSession.DataSource;
             }

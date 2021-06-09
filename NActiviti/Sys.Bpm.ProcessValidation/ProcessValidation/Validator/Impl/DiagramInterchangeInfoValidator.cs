@@ -27,14 +27,14 @@ namespace Sys.Workflow.Validation.Validators.Impl
                 // Location map
                 foreach (string bpmnReference in bpmnModel.LocationMap.Keys)
                 {
-                    if (bpmnModel.GetFlowElement(bpmnReference) == null)
+                    if (bpmnModel.GetFlowElement(bpmnReference) is null)
                     {
                         // ACT-1625: don't warn when artifacts are referenced from
                         // DI
-                        if (bpmnModel.GetArtifact(bpmnReference) == null)
+                        if (bpmnModel.GetArtifact(bpmnReference) is null)
                         {
                             // check if it's a Pool or Lane, then DI is ok
-                            if (bpmnModel.GetPool(bpmnReference) == null && bpmnModel.GetLane(bpmnReference) == null)
+                            if (bpmnModel.GetPool(bpmnReference) is null && bpmnModel.GetLane(bpmnReference) is null)
                             {
                                 AddWarning(errors, ProblemsConstants.DI_INVALID_REFERENCE, null, bpmnModel.GetFlowElement(bpmnReference), string.Format(ProcessValidatorResource.DI_INVALID_REFERENCE, bpmnReference));
                             }
@@ -53,11 +53,11 @@ namespace Sys.Workflow.Validation.Validators.Impl
                 // flowlocation map
                 foreach (string bpmnReference in bpmnModel.FlowLocationMap.Keys)
                 {
-                    if (bpmnModel.GetFlowElement(bpmnReference) == null)
+                    if (bpmnModel.GetFlowElement(bpmnReference) is null)
                     {
                         // ACT-1625: don't warn when artifacts are referenced from
                         // DI
-                        if (bpmnModel.GetArtifact(bpmnReference) == null)
+                        if (bpmnModel.GetArtifact(bpmnReference) is null)
                         {
                             AddWarning(errors, ProblemsConstants.DI_INVALID_REFERENCE, null, bpmnModel.GetFlowElement(bpmnReference), string.Format(ProcessValidatorResource.DI_INVALID_REFERENCE, bpmnReference));
                         }

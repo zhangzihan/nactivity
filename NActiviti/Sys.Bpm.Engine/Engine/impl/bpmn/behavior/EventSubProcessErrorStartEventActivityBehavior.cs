@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             // initialize the template-defined data objects as variables
             IDictionary<string, object> dataObjectVars = ProcessDataObjects(eventSubProcess.DataObjects);
-            if (dataObjectVars != null)
+            if (dataObjectVars is object)
             {
                 execution.VariablesLocal = dataObjectVars;
             }
@@ -56,7 +56,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             IDictionary<string, object> variablesMap = new Dictionary<string, object>();
             // convert data objects to process variables
-            if (dataObjects != null)
+            if (dataObjects is object)
             {
                 foreach (ValuedDataObject dataObject in dataObjects)
                 {

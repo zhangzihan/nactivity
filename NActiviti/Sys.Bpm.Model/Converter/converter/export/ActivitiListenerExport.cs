@@ -43,7 +43,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
         protected internal static bool WriteEventListeners(IList<EventListener> eventListeners, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
 
-            if (eventListeners != null && eventListeners.Count > 0)
+            if (eventListeners is object && eventListeners.Count > 0)
             {
                 foreach (EventListener eventListener in eventListeners)
                 {
@@ -99,7 +99,7 @@ namespace Sys.Workflow.Bpmn.Converters.Exports
         }
         private static bool WriteListeners(string xmlElementName, IList<ActivitiListener> listenerList, bool didWriteExtensionStartElement, XMLStreamWriter xtw)
         {
-            if (listenerList != null)
+            if (listenerList is object)
             {
 
                 foreach (ActivitiListener listener in listenerList)

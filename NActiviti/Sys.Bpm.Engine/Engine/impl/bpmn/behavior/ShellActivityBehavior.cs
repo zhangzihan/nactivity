@@ -100,7 +100,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
 
             ICommandExecutor commandExecutor;
-            if (shellCommandExecutorFactory != null)
+            if (shellCommandExecutorFactory is object)
             {
                 // if there is a ShellExecutorFactoryProvided
                 // then it will be used to create a desired shell command executor.
@@ -126,10 +126,10 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         protected internal virtual string GetStringFromField(IExpression expression, IExecutionEntity execution)
         {
-            if (expression != null)
+            if (expression is object)
             {
                 object value = expression.GetValue(execution);
-                if (value != null)
+                if (value is object)
                 {
                     return value.ToString();
                 }

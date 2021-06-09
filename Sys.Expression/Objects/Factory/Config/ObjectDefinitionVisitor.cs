@@ -78,7 +78,7 @@ namespace Spring.Objects.Factory.Config
             VisitPropertyValues(definition);
 
 			ConstructorArgumentValues cas = definition.ConstructorArgumentValues;
-            if (cas != null)
+            if (cas is object)
             {
                 VisitIndexedArgumentValues(cas.IndexedArgumentValues);
                 VisitNamedArgumentValues(cas.NamedArgumentValues);
@@ -94,7 +94,7 @@ namespace Spring.Objects.Factory.Config
         protected virtual void VisitObjectTypeName(IObjectDefinition objectDefinition)
         {
             string objectTypeName = objectDefinition.ObjectTypeName;
-            if (objectTypeName != null)
+            if (objectTypeName is object)
             {
                 string resolvedName = ResolveStringValue(objectTypeName);
                 if (!objectTypeName.Equals(resolvedName))
@@ -113,7 +113,7 @@ namespace Spring.Objects.Factory.Config
         protected virtual void VisitPropertyValues(IObjectDefinition objectDefinition)
         {
             MutablePropertyValues pvs = objectDefinition.PropertyValues;
-            if (pvs != null)
+            if (pvs is object)
             {
                 for (int j = 0; j < pvs.PropertyValues.Count; j++)
                 {
@@ -222,7 +222,7 @@ namespace Spring.Objects.Factory.Config
             else if (value is TypedStringValue typedStringValue)
             {
                 String stringValue = typedStringValue.Value;
-                if (stringValue != null)
+                if (stringValue is object)
                 {
                     String visitedString = ResolveStringValue(stringValue);
                     typedStringValue.Value = visitedString;
@@ -247,7 +247,7 @@ namespace Spring.Objects.Factory.Config
         protected virtual void VisitManagedList(ManagedList listVal)
         {            
             string elementTypeName = listVal.ElementTypeName;
-            if (elementTypeName != null)
+            if (elementTypeName is object)
             {
                 string resolvedName = ResolveStringValue(elementTypeName);
                 if (!elementTypeName.Equals(resolvedName))
@@ -274,7 +274,7 @@ namespace Spring.Objects.Factory.Config
         protected virtual void VisitManagedSet(ManagedSet setVal)
         {
             string elementTypeName = setVal.ElementTypeName;
-            if (elementTypeName != null)
+            if (elementTypeName is object)
             {
                 string resolvedName = ResolveStringValue(elementTypeName);
                 if (!elementTypeName.Equals(resolvedName))
@@ -302,7 +302,7 @@ namespace Spring.Objects.Factory.Config
         protected virtual void VisitManagedDictionary(ManagedDictionary dictVal)
         {
             string keyTypeName = dictVal.KeyTypeName;
-            if (keyTypeName != null)
+            if (keyTypeName is object)
             {
                 string resolvedName = ResolveStringValue(keyTypeName);
                 if (!keyTypeName.Equals(resolvedName))
@@ -312,7 +312,7 @@ namespace Spring.Objects.Factory.Config
             }
 
             string valueTypeName = dictVal.ValueTypeName;
-            if (valueTypeName != null)
+            if (valueTypeName is object)
             {
                 string resolvedName = ResolveStringValue(valueTypeName);
                 if (!valueTypeName.Equals(resolvedName))
@@ -382,7 +382,7 @@ namespace Spring.Objects.Factory.Config
         /// <returns>the resolved string, having variables being replaced, if any</returns>
         protected virtual string ResolveStringValue(string rawStringValue)
         {
-            if (resolveHandler == null)
+            if (resolveHandler is null)
             {
                 throw new InvalidOperationException("No resolveHandler specified - pass an instance " +
                                                     "into the constructor or override the 'ResolveStringValue' method");

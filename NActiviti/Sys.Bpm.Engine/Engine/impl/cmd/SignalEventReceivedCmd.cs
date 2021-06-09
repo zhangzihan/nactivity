@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             this.eventName = eventName;
             this.executionId = executionId;
-            if (processVariables != null)
+            if (processVariables is object)
             {
                 this.payload = new Dictionary<string, object>(processVariables);
 
@@ -76,7 +76,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
                 IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(executionId);
 
-                if (execution == null)
+                if (execution is null)
                 {
                     throw new ActivitiObjectNotFoundException("Cannot find execution with id '" + executionId + "'", typeof(IExecution));
                 }

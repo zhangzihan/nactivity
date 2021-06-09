@@ -39,7 +39,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             this.messageName = messageName;
 
-            if (processVariables != null)
+            if (processVariables is object)
             {
                 this.payload = new Dictionary<string, object>(processVariables);
 

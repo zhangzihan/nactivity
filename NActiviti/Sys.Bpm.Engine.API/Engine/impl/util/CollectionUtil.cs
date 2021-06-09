@@ -31,7 +31,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         //    foreach (var il in removeItems)
         //    {
         //        var item = items.FirstOrDefault(x => x.Id == il.Id);
-        //        if (item != null)
+        //        if (item is object)
         //        {
         //            executionEntity.IdentityLinks.Remove(item);
         //        }
@@ -114,7 +114,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static object First(this IEnumerable list)
         {
-            if (list == null)
+            if (list is null)
             {
                 return null;
             }
@@ -124,7 +124,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static decimal Sum(this IEnumerable list, string expression)
         {
-            if (list == null)
+            if (list is null)
             {
                 return 0;
             }
@@ -154,7 +154,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static int Count(IEnumerable list, string predicate)
         {
-            if (list == null)
+            if (list is null)
             {
                 return 0;
             }
@@ -180,7 +180,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static decimal Avg(this IEnumerable list, string expression)
         {
-            if (list == null)
+            if (list is null)
             {
                 return 0;
             }
@@ -210,7 +210,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static object Max(this IEnumerable list, string expression)
         {
-            if (list == null)
+            if (list is null)
             {
                 return null;
             }
@@ -230,7 +230,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static object Min(this IEnumerable list, string expression)
         {
-            if (list == null)
+            if (list is null)
             {
                 return null;
             }
@@ -250,7 +250,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static bool IsZero(IEnumerable<object> list, string property)
         {
-            if (list == null)
+            if (list is null)
             {
                 return true;
             }
@@ -260,7 +260,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static decimal Sub(IEnumerable<object> list, string property)
         {
-            if (list == null)
+            if (list is null)
             {
                 return 0;
             }
@@ -291,7 +291,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static object Last(this IEnumerable list)
         {
-            if (list == null)
+            if (list is null)
             {
                 return null;
             }
@@ -301,7 +301,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static IEnumerable Take(this IEnumerable list, int skip, int take)
         {
-            if (list == null)
+            if (list is null)
             {
                 return null;
             }
@@ -311,7 +311,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
         public static IEnumerable Sort(this IEnumerable list, string field)
         {
-            if (list == null)
+            if (list is null)
             {
                 return null;
             }

@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ namespace Spring.Objects.Factory.Config
 		/// <returns>The new <see cref="System.Collections.IDictionary"/> instance.</returns>
 		protected override object CreateInstance()
 		{
-			if (this._sourceDictionary == null)
+			if (this._sourceDictionary is null)
 			{
 				throw new ArgumentException("The 'SourceDictionary' property cannot be null (Nothing in Visual Basic.NET).");
 			}

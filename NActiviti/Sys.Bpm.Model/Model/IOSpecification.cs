@@ -79,7 +79,7 @@ namespace Sys.Workflow.Bpmn.Models
                 var val = value as IOSpecification;
 
                 dataInputs = new List<DataSpec>();
-                if (val.DataInputs != null && val.DataInputs.Count > 0)
+                if (val.DataInputs is object && val.DataInputs.Count > 0)
                 {
                     foreach (DataSpec dataSpec in val.DataInputs)
                     {
@@ -88,7 +88,7 @@ namespace Sys.Workflow.Bpmn.Models
                 }
 
                 dataOutputs = new List<DataSpec>();
-                if (val.DataOutputs != null && val.DataOutputs.Count > 0)
+                if (val.DataOutputs is object && val.DataOutputs.Count > 0)
                 {
                     foreach (DataSpec dataSpec in val.DataOutputs)
                     {

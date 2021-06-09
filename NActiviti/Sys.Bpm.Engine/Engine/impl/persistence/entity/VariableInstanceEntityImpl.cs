@@ -60,11 +60,11 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 PersistentState persistentState = new PersistentState();
-                if (longValue != null)
+                if (longValue is object)
                 {
                     persistentState["longValue"] = longValue;
                 }
-                if (doubleValue != null)
+                if (doubleValue is object)
                 {
                     persistentState["doubleValue"] = doubleValue;
                 }
@@ -172,7 +172,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         /// </summary>
         protected internal virtual void EnsureByteArrayRefInitialized()
         {
-            if (byteArrayRef == null)
+            if (byteArrayRef is null)
             {
                 byteArrayRef = new ByteArrayRef();
             }
@@ -186,7 +186,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (!type.Cachable || cachedValue == null)
+                if (!type.Cachable || cachedValue is null)
                 {
                     cachedValue = type.GetValue(this);
                 }
@@ -228,7 +228,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     return typeName;
                 }
-                else if (type != null)
+                else if (type is object)
                 {
                     return type.TypeName;
                 }
@@ -361,12 +361,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             sb.Append("VariableInstanceEntity[");
             sb.Append("id=").Append(Id);
             sb.Append(", name=").Append(name);
-            sb.Append(", type=").Append(type != null ? type.TypeName : "null");
-            if (longValue != null)
+            sb.Append(", type=").Append(type is object ? type.TypeName : "null");
+            if (longValue is object)
             {
                 sb.Append(", longValue=").Append(longValue);
             }
-            if (doubleValue != null)
+            if (doubleValue is object)
             {
                 sb.Append(", doubleValue=").Append(doubleValue);
             }

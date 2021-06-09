@@ -90,7 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             if (operation is AbstractOperation)
             {
                 IExecutionEntity execution = operation.Execution;
-                if (execution != null)
+                if (execution is object)
                 {
                     commandContext.AddInvolvedExecution(execution);
                 }

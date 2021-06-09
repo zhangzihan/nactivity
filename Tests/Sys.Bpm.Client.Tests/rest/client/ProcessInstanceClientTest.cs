@@ -186,7 +186,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
 
                 //ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                 //{
-                //    ["同意"] = false
+                //    [WorkflowVariable.GLOBAL_APPROVALED_VARIABLE] = false
                 //}).GetAwaiter().GetResult();
 
                 Assert.NotNull(instances);
@@ -204,7 +204,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             {
                 ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                 {
-                    ["同意"] = false
+                    [WorkflowVariable.GLOBAL_APPROVALED_VARIABLE] = false
                 }).GetAwaiter().GetResult();
 
                 Assert.NotNull(instances);
@@ -228,7 +228,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 {
                     instances.AddRange(ctx.StartUseFile(process, new Dictionary<string, object>
                     {
-                        ["同意"] = false
+                        [WorkflowVariable.GLOBAL_APPROVALED_VARIABLE] = false
                     }).GetAwaiter().GetResult());
                     count += 1;
                 }
@@ -270,7 +270,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             {
                 ProcessInstance[] instances = ctx.StartUseFile(bpmnFile, null, new Dictionary<string, object>
                 {
-                    ["同意"] = false
+                    [WorkflowVariable.GLOBAL_APPROVALED_VARIABLE] = false
                 }).GetAwaiter().GetResult();
 
                 ITaskController tc = ctx.CreateWorkflowHttpProxy().GetTaskClient();
@@ -730,7 +730,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                             { "gender", 1 }
                         }).ConfigureAwait(false);
 
-                //if (myTasks == null || myTasks.TotalCount <= 0)
+                //if (myTasks is null || myTasks.TotalCount <= 0)
                 //{
                 //    break;
                 //}
@@ -901,7 +901,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                             { "gender", 2 }
                         }).ConfigureAwait(false);
 
-                //    if (myTasks == null || myTasks.TotalCount <= 0)
+                //    if (myTasks is null || myTasks.TotalCount <= 0)
                 //    {
                 //        break;
                 //    }
@@ -1741,7 +1741,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
                 return;
             }
 
-            if (passed1 == null && needEdit)
+            if (passed1 is null && needEdit)
             {
                 tsks = CompleteProductApproval(taskClient, attendeeItems[0].Id, startUser, false, false, 1).GetAwaiter().GetResult();
 
@@ -1757,7 +1757,7 @@ namespace Sys.Workflow.Client.Tests.Rest.Client
             //二审
             CompleteProductApproval(taskClient, attendeeItems[0].Id, gup2[0], passed2, needEdit, 2).GetAwaiter().GetResult();
 
-            if (passed2 == null && needEdit)
+            if (passed2 is null && needEdit)
             {
                 tsks = CompleteProductApproval(taskClient, attendeeItems[0].Id, startUser, false, false, 2).GetAwaiter().GetResult();
 

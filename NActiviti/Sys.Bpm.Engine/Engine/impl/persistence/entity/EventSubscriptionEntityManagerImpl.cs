@@ -69,7 +69,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             ISignalEventSubscriptionEntity subscriptionEntity = CreateSignalEventSubscription();
             subscriptionEntity.Execution = execution;
-            if (signal != null)
+            if (signal is object)
             {
                 subscriptionEntity.EventName = signal.Name;
                 if (signal.Scope is object)
@@ -193,7 +193,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             // add reference in execution
             IExecutionEntity execution = eventSubscriptionEntity.Execution;
-            if (execution != null)
+            if (execution is object)
             {
                 execution.EventSubscriptions.Add(eventSubscriptionEntity);
             }
@@ -315,7 +315,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
 
             IEventHandler eventHandler = ProcessEngineConfiguration.GetEventHandler(eventSubscriptionEntity.EventType);
-            if (eventHandler == null)
+            if (eventHandler is null)
             {
                 throw new ActivitiException("Could not find eventhandler for event of type '" + eventSubscriptionEntity.EventType + "'.");
             }
@@ -332,7 +332,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             message.TenantId = eventSubscriptionEntity.TenantId;
 
             // TODO: support payload
-            // if(payload != null) {
+            // if(payload is object) {
             // message.setEventPayload(payload);
             // }
 

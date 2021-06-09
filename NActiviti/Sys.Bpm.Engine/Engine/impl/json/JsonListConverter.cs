@@ -64,7 +64,7 @@ namespace Sys.Workflow.Engine.Impl.Json
         /// <returns></returns>
         public virtual string ToJson(IList<T> list, int indentFactor = 0)
         {
-            if (list == null)
+            if (list is null)
             {
                 return "";
             }

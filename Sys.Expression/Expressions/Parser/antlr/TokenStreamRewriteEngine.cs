@@ -129,7 +129,7 @@ namespace Spring.Expressions.Parser.antlr
 			
 			public override int execute(StringBuilder buf) 
 			{
-				if ( text != null ) 
+				if ( text is object ) 
 				{
 					buf.Append(text);
 				}
@@ -200,7 +200,7 @@ namespace Spring.Expressions.Parser.antlr
 			do 
 			{
 				t = (TokenWithIndex) stream.nextToken();
-				if ( t != null ) 
+				if ( t is object ) 
 				{
 					t.setIndex(index);  // what is t's index in list?
 					if ( t.Type != Token.EOF_TYPE ) 
@@ -209,7 +209,7 @@ namespace Spring.Expressions.Parser.antlr
 					}
 					index++;			// move to next position
 				}
-			} while ( (t != null) && (discardMask.member(t.Type)) );
+			} while ( (t is object) && (discardMask.member(t.Type)) );
 
 			return t;
 		}
@@ -232,7 +232,7 @@ namespace Spring.Expressions.Parser.antlr
 		public void rollback(string programName, int instructionIndex) 
 		{
 			ArrayList il = (ArrayList) programs[programName];
-			if ( il != null ) 
+			if ( il is object ) 
 			{
 				programs[programName] = il.GetRange(MIN_TOKEN_INDEX, (instructionIndex - MIN_TOKEN_INDEX));
 			}
@@ -433,7 +433,7 @@ namespace Spring.Expressions.Parser.antlr
 		public string ToString(string programName, int start, int end) 
 		{
 			IList rewrites = (IList) programs[programName];
-			if (rewrites == null) 
+			if (rewrites is null) 
 			{
 				return null; // invalid program
 			}
@@ -504,7 +504,7 @@ namespace Spring.Expressions.Parser.antlr
 		protected int getLastRewriteTokenIndex(string programName) 
 		{
 			object i = lastRewriteTokenIndexes[programName];
-			if (i == null)
+			if (i is null)
 			{
 				return -1;
 			}
@@ -519,7 +519,7 @@ namespace Spring.Expressions.Parser.antlr
 		protected IList getProgram(string name) 
 		{
 			IList il = (IList) programs[name];
-			if ( il == null ) 
+			if ( il is null ) 
 			{
 				il = initializeProgram(name);
 			}

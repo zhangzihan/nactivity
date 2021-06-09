@@ -134,7 +134,7 @@ namespace Spring.Objects.Factory.Support
         protected override Type PredictObjectType(string objectName, RootObjectDefinition mod)
         {
             Type objectType;
-            if (mod == null)
+            if (mod is null)
             {
                 return null;
             }
@@ -181,7 +181,7 @@ namespace Spring.Objects.Factory.Support
             {
                 factoryType = ResolveObjectType(definition, objectName);
             }
-            if (factoryType == null)
+            if (factoryType is null)
             {
                 return null;
             }
@@ -239,7 +239,7 @@ namespace Spring.Objects.Factory.Support
         public override void ApplyObjectPropertyValues(object instance, string name)
         {
             RootObjectDefinition definition = GetMergedObjectDefinition(name, true);
-            if (definition != null)
+            if (definition is object)
             {
                 log.LogDebug($"configuring object '{instance}' using definition '{name}'");
                 ApplyPropertyValues(name, definition, new ObjectWrapper(instance), definition.PropertyValues);
@@ -302,7 +302,7 @@ namespace Spring.Objects.Factory.Support
                 IObjectPostProcessor processor = ObjectPostProcessors[i];
                 IInstantiationAwareObjectPostProcessor inProc = processor as IInstantiationAwareObjectPostProcessor;
                 object theObject = inProc?.PostProcessBeforeInstantiation(objectType, objectName);
-                if (theObject != null)
+                if (theObject is object)
                 {
                     return theObject;
                 }
@@ -370,7 +370,7 @@ namespace Spring.Objects.Factory.Support
         /// </remarks>
         protected void ApplyPropertyValues(string name, RootObjectDefinition definition, IObjectWrapper wrapper, IPropertyValues properties)
         {
-            if (properties == null || properties.PropertyValues.Count == 0)
+            if (properties is null || properties.PropertyValues.Count == 0)
             {
                 return;
             }
@@ -522,7 +522,7 @@ namespace Spring.Objects.Factory.Support
 
             IPropertyValues properties = definition.PropertyValues;
 
-            if (wrapper == null)
+            if (wrapper is null)
             {
                 if (properties.PropertyValues.Count > 0)
                 {
@@ -568,7 +568,7 @@ namespace Spring.Objects.Factory.Support
                             filteredPropInfo = filteredPropInfo ?? FilterPropertyInfoForDependencyCheck(wrapper);
                             properties = instantiationAwareObjectPostProcessor.PostProcessPropertyValues(properties,
                                 filteredPropInfo, wrapper.WrappedInstance, name);
-                            if (properties == null)
+                            if (properties is null)
                             {
                                 return;
                             }
@@ -714,7 +714,7 @@ namespace Spring.Objects.Factory.Support
                 // look for a matching type
                 Type requiredType = wrapper.GetPropertyType(propertyName);
                 IDictionary<string, object> matchingObjects = FindMatchingObjects(requiredType);
-                if (matchingObjects != null && matchingObjects.Count == 1)
+                if (matchingObjects is object && matchingObjects.Count == 1)
                 {
                     properties.Add(propertyName, ObjectUtils.EnumerateFirstElement(matchingObjects.Values));
 
@@ -726,7 +726,7 @@ namespace Spring.Objects.Factory.Support
                                               propertyName, ObjectUtils.EnumerateFirstElement(matchingObjects.Keys)));
                     }
                 }
-                else if (matchingObjects != null && matchingObjects.Count > 1)
+                else if (matchingObjects is object && matchingObjects.Count > 1)
                 {
                     throw new UnsatisfiedDependencyException(string.Empty, name, propertyName,
                                                              string.Format(CultureInfo.InvariantCulture,
@@ -841,7 +841,7 @@ namespace Spring.Objects.Factory.Support
         protected internal override object InstantiateObject(string name, RootObjectDefinition definition, object[] arguments, bool allowEagerCaching, bool suppressConfigure)
         {
             // guarantee the initialization of objects that the current one depends on..
-            if (definition.DependsOn != null && definition.DependsOn.Count > 0)
+            if (definition.DependsOn is object && definition.DependsOn.Count > 0)
             {
                 foreach (string dependant in definition.DependsOn)
                 {
@@ -886,7 +886,7 @@ namespace Spring.Objects.Factory.Support
                 if (definition.HasObjectType)
                 {
                     instance = ApplyObjectPostProcessorsBeforeInstantiation(definition.ObjectType, name);
-                    if (instance != null)
+                    if (instance is object)
                     {
                         return instance;
                     }
@@ -981,7 +981,7 @@ namespace Spring.Objects.Factory.Support
             //TODO perf optimization when creating the same object
 
             ConstructorInfo[] ctors = DetermineConstructorsFromObjectPostProcessors(objectType, objectName);
-            if (ctors != null ||
+            if (ctors is object ||
                 objectDefinition.ResolvedAutowireMode == AutoWiringMode.Constructor ||
                 objectDefinition.HasConstructorArgumentValues || !ObjectUtils.IsEmpty(arguments))
             {
@@ -998,7 +998,7 @@ namespace Spring.Objects.Factory.Support
                 instanceWrapper = InstantiateUsingFactoryMethod(name, definition, arguments);
             }
             //Handle case when arguments are passed in explicitly.
-            else if (arguments != null && arguments.Length > 0)
+            else if (arguments is object && arguments.Length > 0)
             {
                 instanceWrapper = AutowireConstructor(name, definition, arguments);
             }
@@ -1050,7 +1050,7 @@ namespace Spring.Objects.Factory.Support
                         SmartInstantiationAwareObjectPostProcessor iop =
                             (SmartInstantiationAwareObjectPostProcessor)objectPostProcessor;
                         ConstructorInfo[] ctors = iop.DetermineCandidateConstructors(objectType, objectName);
-                        if (ctors != null)
+                        if (ctors is object)
                         {
                             return ctors;
                         }
@@ -1169,7 +1169,7 @@ namespace Spring.Objects.Factory.Support
                     if (processor is IInstantiationAwareObjectPostProcessor inProc)
                     {
                         properties = inProc.PostProcessPropertyValues(properties, filteredPropInfo, wrapper.WrappedInstance, name);
-                        if (properties == null)
+                        if (properties is null)
                         {
                             return;
                         }
@@ -1286,7 +1286,7 @@ namespace Spring.Objects.Factory.Support
                 try
                 {
                     MethodInfo targetMethod = target.GetType().GetMethod(definition.InitMethodName, MethodResolutionFlags, null, Type.EmptyTypes, null);
-                    if (targetMethod == null)
+                    if (targetMethod is null)
                     {
                         throw new ObjectCreationException(definition.ResourceDescription, name,
                                                           "Could not find the named initialization method '" + definition.InitMethodName + "'.");
@@ -1327,16 +1327,16 @@ namespace Spring.Objects.Factory.Support
         {
             bool usingForcingVersion = false;
             MethodInfo targetMethod = target.GetType().GetMethod(destroyMethodName, MethodResolutionFlags, null, Type.EmptyTypes, null);
-            if (targetMethod == null)
+            if (targetMethod is null)
             {
                 // #%&^! try to find the method with a boolean "force" parameter
                 targetMethod = target.GetType().GetMethod(destroyMethodName, MethodResolutionFlags, null, new Type[] { typeof(bool) }, null);
-                if (targetMethod != null)
+                if (targetMethod is object)
                 {
                     usingForcingVersion = true;
                 }
             }
-            if (targetMethod == null)
+            if (targetMethod is null)
             {
                 log.LogError("Couldn't find a method named '" + destroyMethodName + "' on object with name '" + name + "'");
             }
@@ -1492,15 +1492,15 @@ namespace Spring.Objects.Factory.Support
         //                object context = null;
         //                IDictionary variables = null;
         //
-        //                if (expHolder.Properties != null)
+        //                if (expHolder.Properties is object)
         //                {
         //                    PropertyValue contextProperty = expHolder.Properties.GetPropertyValue("Context");
-        //                    context = contextProperty == null
+        //                    context = contextProperty is null
         //                                         ? null
         //                                         : ResolveValueIfNecessary2(name, definition, "Context",
         //                                                                   contextProperty.Value);
         //                    PropertyValue variablesProperty = expHolder.Properties.GetPropertyValue("Variables");
-        //                    object vars = (variablesProperty == null
+        //                    object vars = (variablesProperty is null
         //                                                   ? null
         //                                                   : ResolveValueIfNecessary2(name, definition, "Variables",
         //                                                                             variablesProperty.Value));
@@ -1510,11 +1510,11 @@ namespace Spring.Objects.Factory.Support
         //                    }
         //                    else
         //                    {
-        //                        if (vars != null) throw new ArgumentException("'Variables' must resolve to an IDictionary");
+        //                        if (vars is object) throw new ArgumentException("'Variables' must resolve to an IDictionary");
         //                    }
         //                }
         //
-        //                if (variables == null) variables = CollectionsUtil.CreateCaseInsensitiveHashtable();
+        //                if (variables is null) variables = CollectionsUtil.CreateCaseInsensitiveHashtable();
         //                // add 'this' objectfactory reference to variables
         //                variables.Add(Expression.ReservedVariableNames.CurrentObjectFactory, this);
         //
@@ -1532,7 +1532,7 @@ namespace Spring.Objects.Factory.Support
         //                try
         //                {
         //                    Type resolvedTargetType = ResolveTargetType(tsv);
-        //                    if (resolvedTargetType != null)
+        //                    if (resolvedTargetType is object)
         //                    {
         //                        resolvedValue = TypeConversionUtils.ConvertValueIfNecessary(tsv.TargetType, tsv.Value, null);
         //                    }
@@ -1720,7 +1720,7 @@ namespace Spring.Objects.Factory.Support
         {
             MarkObjectAsCreated(name);
             RootObjectDefinition definition = GetMergedObjectDefinition(name, true);
-            if (definition != null)
+            if (definition is object)
             {
                 return ConfigureObject(name, definition, new ObjectWrapper(target));
             }
@@ -1915,7 +1915,7 @@ namespace Spring.Objects.Factory.Support
             {
                 IObjectPostProcessor objectProcessor = ObjectPostProcessors[i];
                 result = objectProcessor.PostProcessBeforeInitialization(result, name);
-                if (result == null)
+                if (result is null)
                 {
                     throw new ObjectCreationException(name,
                         $"PostProcessBeforeInitialization method of IObjectPostProcessor [{objectProcessor}] " +
@@ -1957,7 +1957,7 @@ namespace Spring.Objects.Factory.Support
             {
                 IObjectPostProcessor objectProcessor = ObjectPostProcessors[i];
                 result = objectProcessor.PostProcessAfterInitialization(result, name);
-                if (result == null)
+                if (result is null)
                 {
                     throw new ObjectCreationException(name,
                         string.Format(CultureInfo.InvariantCulture,

@@ -48,14 +48,14 @@ namespace Sys.Workflow.Engine.Impl.Events
 
             string processDefinitionId = compensatingExecution.ProcessDefinitionId;
             Process process = ProcessDefinitionUtil.GetProcess(processDefinitionId);
-            if (process == null)
+            if (process is null)
             {
                 throw new ActivitiException("Cannot start process instance. Process model (id = " + processDefinitionId + ") could not be found");
             }
 
             IExecutionEntity scopeExecution = null;
             IExecutionEntity parentExecution = compensatingExecution.Parent;
-            while (scopeExecution == null && parentExecution != null)
+            while (scopeExecution is null && parentExecution is object)
             {
                 if (parentExecution.CurrentFlowElement is SubProcess)
                 {

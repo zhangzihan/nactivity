@@ -40,7 +40,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             if (isLocal)
             {
-                if (variables != null)
+                if (variables is object)
                 {
                     foreach (string variableName in variables.Keys)
                     {
@@ -51,7 +51,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
             else
             {
-                if (variables != null)
+                if (variables is object)
                 {
                     foreach (string variableName in variables.Keys)
                     {

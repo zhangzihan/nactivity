@@ -70,7 +70,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             get
             {
-                if (extensionElements == null)
+                if (extensionElements is null)
                 {
                     extensionElements = new ConcurrentDictionary<string, IList<ExtensionElement>>();
                 }
@@ -85,7 +85,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddExtensionElement(ExtensionElement extensionElement)
         {
-            if (extensionElement != null && !string.IsNullOrWhiteSpace(extensionElement.Name))
+            if (extensionElement is object && !string.IsNullOrWhiteSpace(extensionElement.Name))
             {
                 if (!this.extensionElements.ContainsKey(extensionElement.Name))
                 {
@@ -126,7 +126,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddAttribute(ExtensionAttribute attribute)
         {
-            if (attribute != null && !string.IsNullOrWhiteSpace(attribute.Name))
+            if (attribute is object && !string.IsNullOrWhiteSpace(attribute.Name))
             {
                 if (!this.attributes.ContainsKey(attribute.Name))
                 {
@@ -145,12 +145,12 @@ namespace Sys.Workflow.Bpmn.Models
                 Id = value.Id;
 
                 extensionElements = new ConcurrentDictionary<string, IList<ExtensionElement>>();
-                if (value.ExtensionElements != null && value.ExtensionElements.Count > 0)
+                if (value.ExtensionElements is object && value.ExtensionElements.Count > 0)
                 {
                     foreach (string key in value.ExtensionElements.Keys)
                     {
                         IList<ExtensionElement> otherElementList = value.ExtensionElements[key];
-                        if (otherElementList != null && otherElementList.Count > 0)
+                        if (otherElementList is object && otherElementList.Count > 0)
                         {
                             IList<ExtensionElement> elementList = new List<ExtensionElement>();
                             foreach (ExtensionElement extensionElement in otherElementList)
@@ -163,12 +163,12 @@ namespace Sys.Workflow.Bpmn.Models
                 }
 
                 attributes = new Dictionary<string, IList<ExtensionAttribute>>();
-                if (value.Attributes != null && value.Attributes.Count > 0)
+                if (value.Attributes is object && value.Attributes.Count > 0)
                 {
                     foreach (string key in value.Attributes.Keys)
                     {
                         IList<ExtensionAttribute> otherAttributeList = value.Attributes[key];
-                        if (otherAttributeList != null && otherAttributeList.Count > 0)
+                        if (otherAttributeList is object && otherAttributeList.Count > 0)
                         {
                             IList<ExtensionAttribute> attributeList = new List<ExtensionAttribute>();
                             foreach (ExtensionAttribute extensionAttribute in otherAttributeList)

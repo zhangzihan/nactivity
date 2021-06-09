@@ -36,7 +36,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
             // execution can change: eg. delegateExpression='${mySpringBeanFactory.randomSpringBean()}'
             object @delegate = expression.GetValue(variableScope);
 
-            if (fieldDeclarations != null && fieldDeclarations.Count > 0)
+            if (fieldDeclarations is object && fieldDeclarations.Count > 0)
             {
 
                 DelegateExpressionFieldInjectionMode injectionMode = Context.ProcessEngineConfiguration.DelegateExpressionFieldInjectionMode;

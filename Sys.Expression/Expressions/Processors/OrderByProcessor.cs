@@ -50,7 +50,7 @@ namespace Spring.Expressions.Processors
 
                 if (x==y) return 0;
 
-                if (x != null) return ((IComparable) x).CompareTo(y);
+                if (x is object) return ((IComparable) x).CompareTo(y);
                 
                 return ((IComparable)y).CompareTo(x)*-1;
             }
@@ -121,12 +121,12 @@ namespace Spring.Expressions.Processors
         /// </returns>
         public object Process(ICollection source, object[] args)
         {
-            if (source == null || source.Count == 0)
+            if (source is null || source.Count == 0)
             {
                 return source;
             }
 
-            if (args == null || args.Length != 1)
+            if (args is null || args.Length != 1)
             {
                 throw new ArgumentException("compare expression is a required argument for orderBy");
             }

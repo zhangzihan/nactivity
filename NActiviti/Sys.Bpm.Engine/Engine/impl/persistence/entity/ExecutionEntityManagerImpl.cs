@@ -232,7 +232,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
 
                 // Super - sub execution relationship
-                if (executionEntity.SuperExecution != null)
+                if (executionEntity.SuperExecution is object)
                 {
                     IExecutionEntity superExecutionEntity = executionMap[executionEntity.SuperExecutionId];
                     executionEntity.SuperExecution = superExecutionEntity;
@@ -553,7 +553,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             IExecutionEntity execution = FindById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
 
-            if (execution == null)
+            if (execution is null)
             {
                 throw new ActivitiObjectNotFoundException("No process instance found for id '" + processInstanceId + "'", typeof(IProcessInstance));
             }
@@ -581,14 +581,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 {
                     foreach (IExecutionEntity miExecutionEntity in subExecutionEntity.Executions)
                     {
-                        if (miExecutionEntity.SubProcessInstance != null)
+                        if (miExecutionEntity.SubProcessInstance is object)
                         {
                             DeleteProcessInstanceCascade(miExecutionEntity.SubProcessInstance, deleteReason, deleteHistory);
                         }
                     }
 
                 }
-                else if (subExecutionEntity.SubProcessInstance != null)
+                else if (subExecutionEntity.SubProcessInstance is object)
                 {
                     DeleteProcessInstanceCascade(subExecutionEntity.SubProcessInstance, deleteReason, deleteHistory);
                 }
@@ -605,7 +605,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             // produce orphan HistoricVariableInstance instances
 
             IExecutionEntity processInstanceExecutionEntity = execution.ProcessInstance;
-            if (processInstanceExecutionEntity == null)
+            if (processInstanceExecutionEntity is null)
             {
                 return;
             }
@@ -652,7 +652,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             IExecutionEntity processInstanceEntity = FindById<IExecutionEntity>(new KeyValuePair<string, object>("id", processInstanceId));
 
-            if (processInstanceEntity == null)
+            if (processInstanceEntity is null)
             {
                 throw new ActivitiObjectNotFoundException("No process instance found for id '" + processInstanceId + "'", typeof(IProcessInstance));
             }
@@ -665,7 +665,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             // Call activities
             foreach (IExecutionEntity subExecutionEntity in processInstanceEntity.Executions)
             {
-                if (subExecutionEntity.SubProcessInstance != null && !subExecutionEntity.Ended)
+                if (subExecutionEntity.SubProcessInstance is object && !subExecutionEntity.Ended)
                 {
                     DeleteProcessInstanceCascade(subExecutionEntity.SubProcessInstance, deleteReason, cascade);
                 }
@@ -740,7 +740,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void CollectChildren(IExecutionEntity executionEntity, IList<IExecutionEntity> collectedChildExecution)
         {
             IList<IExecutionEntity> childExecutions = executionEntity.Executions;
-            if (childExecutions != null && childExecutions.Count > 0)
+            if (childExecutions is object && childExecutions.Count > 0)
             {
                 foreach (IExecutionEntity childExecution in childExecutions)
                 {
@@ -753,7 +753,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
 
             IExecutionEntity subProcessInstance = executionEntity.SubProcessInstance;
-            if (subProcessInstance != null && !subProcessInstance.Deleted)
+            if (subProcessInstance is object && !subProcessInstance.Deleted)
             {
                 collectedChildExecution.Add(subProcessInstance);
                 CollectChildren(subProcessInstance, collectedChildExecution);
@@ -767,7 +767,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual IExecutionEntity FindFirstScope(IExecutionEntity executionEntity)
         {
             IExecutionEntity currentExecutionEntity = executionEntity;
-            while (currentExecutionEntity != null)
+            while (currentExecutionEntity is object)
             {
                 if (currentExecutionEntity.IsScope)
                 {
@@ -775,7 +775,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
 
                 IExecutionEntity parentExecutionEntity = currentExecutionEntity.Parent;
-                if (parentExecutionEntity == null)
+                if (parentExecutionEntity is null)
                 {
                     parentExecutionEntity = currentExecutionEntity.SuperExecution;
                 }
@@ -791,7 +791,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual IExecutionEntity FindFirstMultiInstanceRoot(IExecutionEntity executionEntity)
         {
             IExecutionEntity currentExecutionEntity = executionEntity;
-            while (currentExecutionEntity != null)
+            while (currentExecutionEntity is object)
             {
                 if (currentExecutionEntity.IsMultiInstanceRoot)
                 {
@@ -799,7 +799,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 }
 
                 IExecutionEntity parentExecutionEntity = currentExecutionEntity.Parent;
-                if (parentExecutionEntity == null)
+                if (parentExecutionEntity is null)
                 {
                     parentExecutionEntity = currentExecutionEntity.SuperExecution;
                 }
@@ -842,7 +842,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                     {
                         IVariableInstanceEntityManager variableInstanceEntityManager = VariableInstanceEntityManager;
                         variableInstanceEntityManager.Delete(variableInstanceEntity);
-                        if (variableInstanceEntity.ByteArrayRef != null && variableInstanceEntity.ByteArrayRef.Id is object)
+                        if (variableInstanceEntity.ByteArrayRef is object && variableInstanceEntity.ByteArrayRef.Id is object)
                         {
                             ByteArrayEntityManager.DeleteByteArrayById(variableInstanceEntity.ByteArrayRef.Id);
                         }

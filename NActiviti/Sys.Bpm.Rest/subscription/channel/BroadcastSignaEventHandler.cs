@@ -33,7 +33,7 @@ namespace Sys.Workflow.Services.Subscription.Channels
         /// <param name="signalCmd"></param>
         public virtual void Receive(SignalCmd signalCmd)
         {
-            if ((signalCmd.InputVariables == null) || (signalCmd.InputVariables.Count == 0))
+            if ((signalCmd.InputVariables is null) || (signalCmd.InputVariables.Count == 0))
             {
                 runtimeService.SignalEventReceived(signalCmd.Name);
             }

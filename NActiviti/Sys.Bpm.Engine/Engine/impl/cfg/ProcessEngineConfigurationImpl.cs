@@ -65,6 +65,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
     using System.IO;
     using System.Linq;
     using Sys.Workflow.Transactions;
+    using System.Data;
 
     /// <inheritdoc />
     public abstract class ProcessEngineConfigurationImpl : ProcessEngineConfiguration
@@ -125,6 +126,11 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         }
 
         #region fields
+
+        internal static readonly IActivitiEventListener DelegateCountersignExecutionListener = new DelegateCountersignExecutionListener();
+
+        internal static readonly IActivitiEventListener UserTaskAssignmentListener = new UserTaskAssignmentListener();
+
         /// <summary>
         /// 
         /// </summary>
@@ -1352,14 +1358,14 @@ namespace Sys.Workflow.Engine.Impl.Cfg
             if (commandInterceptors is null)
             {
                 commandInterceptors = new List<ICommandInterceptor>();
-                if (customPreCommandInterceptors != null)
+                if (customPreCommandInterceptors is object)
                 {
                     //客户自定义前置拦截器 
                     ((List<ICommandInterceptor>)commandInterceptors).AddRange(customPreCommandInterceptors);
                 }
                 //默认拦截器
                 ((List<ICommandInterceptor>)commandInterceptors).AddRange(DefaultCommandInterceptors);
-                if (customPostCommandInterceptors != null)
+                if (customPostCommandInterceptors is object)
                 {
                     //后置拦截器
                     ((List<ICommandInterceptor>)commandInterceptors).AddRange(customPostCommandInterceptors);
@@ -1384,19 +1390,19 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 };
 
                 ICommandInterceptor transactionInterceptor = CreateTransactionInterceptor();
-                if (transactionInterceptor != null)
+                if (transactionInterceptor is object)
                 {
                     //添加一个事务控制拦截器
                     interceptors.Add(transactionInterceptor);
                 }
 
-                if (commandContextFactory != null)
+                if (commandContextFactory is object)
                 {
                     //CommandContext拦截器，进行命令的保存
                     interceptors.Add(new CommandContextInterceptor(commandContextFactory, this));
                 }
 
-                if (transactionContextFactory != null)
+                if (transactionContextFactory is object)
                 {
                     interceptors.Add(new TransactionContextInterceptor(transactionContextFactory));
                 }
@@ -1459,10 +1465,10 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void InitService(object service)
         {
-            if (service is ServiceImpl)
+            if (service is ServiceImpl impl)
             {
                 //将命令执行器set进runtimeService中
-                ((ServiceImpl)service).CommandExecutor = commandExecutor;
+                impl.CommandExecutor = commandExecutor;
             }
         }
 
@@ -1961,7 +1967,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 AddSessionFactory(new GenericManagerFactory(typeof(IEntityCache), typeof(EntityCacheImpl)));
             }
 
-            if (customSessionFactories != null)
+            if (customSessionFactories is object)
             {
                 foreach (ISessionFactory sessionFactory in customSessionFactories)
                 {
@@ -2016,7 +2022,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
             allConfigurators = new List<IProcessEngineConfigurator>();
 
             // Configurators that are explicitly added to the config
-            if (configurators != null)
+            if (configurators is object)
             {
                 foreach (IProcessEngineConfigurator configurator in configurators)
                 {
@@ -2050,7 +2056,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 {
                     // Order them according to the priorities (useful for dependent
                     // configurator)
-                    allConfigurators.OrderBy(x => x, new ComparatorAnonymousInnerClass(this));
+                    allConfigurators.OrderBy(x => x, new ComparatorAnonymousInnerClass());
 
                     // Execute the configurators
                     log.LogInformation($"Found {allConfigurators.Count} Process Engine Configurators in total:");
@@ -2064,11 +2070,8 @@ namespace Sys.Workflow.Engine.Impl.Cfg
 
         private class ComparatorAnonymousInnerClass : IComparer<IProcessEngineConfigurator>
         {
-            private readonly ProcessEngineConfigurationImpl outerInstance;
-
-            public ComparatorAnonymousInnerClass(ProcessEngineConfigurationImpl outerInstance)
+            public ComparatorAnonymousInnerClass()
             {
-                this.outerInstance = outerInstance;
             }
 
             public virtual int Compare(IProcessEngineConfigurator configurator1, IProcessEngineConfigurator configurator2)
@@ -2177,12 +2180,12 @@ namespace Sys.Workflow.Engine.Impl.Cfg
             if (this.deployers is null)
             {
                 this.deployers = new List<IDeployer>();
-                if (customPreDeployers != null)
+                if (customPreDeployers is object)
                 {
                     ((List<IDeployer>)this.deployers).AddRange(customPreDeployers);
                 }
               ((List<IDeployer>)this.deployers).AddRange(DefaultDeployers);
-                if (customPostDeployers != null)
+                if (customPostDeployers is object)
                 {
                     ((List<IDeployer>)this.deployers).AddRange(customPostDeployers);
                 }
@@ -2286,9 +2289,9 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 };
                 listenerFactory = defaultListenerFactory;
             }
-            else if ((listenerFactory is AbstractBehaviorFactory) && ((AbstractBehaviorFactory)listenerFactory).ExpressionManager is null)
+            else if ((listenerFactory is AbstractBehaviorFactory factory) && factory.ExpressionManager is null)
             {
-                ((AbstractBehaviorFactory)listenerFactory).ExpressionManager = expressionManager;
+                factory.ExpressionManager = expressionManager;
             }
         }
 
@@ -2305,9 +2308,9 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 };
                 activityBehaviorFactory = defaultActivityBehaviorFactory;
             }
-            else if ((activityBehaviorFactory is AbstractBehaviorFactory) && ((AbstractBehaviorFactory)activityBehaviorFactory).ExpressionManager is null)
+            else if ((activityBehaviorFactory is AbstractBehaviorFactory factory) && factory.ExpressionManager is null)
             {
-                ((AbstractBehaviorFactory)activityBehaviorFactory).ExpressionManager = expressionManager;
+                factory.ExpressionManager = expressionManager;
             }
         }
 
@@ -2331,12 +2334,12 @@ namespace Sys.Workflow.Engine.Impl.Cfg
             bpmnParser.ListenerFactory = listenerFactory;
 
             List<IBpmnParseHandler> parseHandlers = new List<IBpmnParseHandler>();
-            if (PreBpmnParseHandlers != null)
+            if (PreBpmnParseHandlers is object)
             {
                 parseHandlers.AddRange(PreBpmnParseHandlers);
             }
             parseHandlers.AddRange(DefaultBpmnParseHandlers);
-            if (PostBpmnParseHandlers != null)
+            if (PostBpmnParseHandlers is object)
             {
                 parseHandlers.AddRange(PostBpmnParseHandlers);
             }
@@ -2389,7 +2392,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 };
 
                 // Replace any default handler if the user wants to replace them
-                if (customDefaultBpmnParseHandlers != null)
+                if (customDefaultBpmnParseHandlers is object)
                 {
                     IDictionary<Type, IBpmnParseHandler> customParseHandlerMap = new Dictionary<Type, IBpmnParseHandler>();
                     foreach (IBpmnParseHandler bpmnParseHandler in customDefaultBpmnParseHandlers)
@@ -2478,7 +2481,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
             jobHandlers[processEventJobHandler.Type] = processEventJobHandler;
 
             // if we have custom job handlers, register them
-            if (CustomJobHandlers != null)
+            if (CustomJobHandlers is object)
             {
                 foreach (IJobHandler customJobHandler in CustomJobHandlers)
                 {
@@ -2508,7 +2511,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 defaultAsyncExecutor.KeepAliveTime = asyncExecutorThreadKeepAliveTime;
 
                 // Threadpool queue
-                if (asyncExecutorThreadPoolQueue != null)
+                if (asyncExecutorThreadPoolQueue is object)
                 {
                     defaultAsyncExecutor.ThreadPoolQueue = asyncExecutorThreadPoolQueue;
                 }
@@ -2627,7 +2630,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
             if (variableTypes is null)
             {
                 variableTypes = new DefaultVariableTypes();
-                if (customPreVariableTypes != null)
+                if (customPreVariableTypes is object)
                 {
                     foreach (IVariableType customVariableType in customPreVariableTypes)
                     {
@@ -2652,7 +2655,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 variableTypes.AddType(new SerializableType(serializableVariableTypeTrackDeserializedObjects));
                 variableTypes.AddType(new CustomObjectType("item", typeof(ItemInstance)));
                 variableTypes.AddType(new CustomObjectType("message", typeof(MessageInstance)));
-                if (customPostVariableTypes != null)
+                if (customPostVariableTypes is object)
                 {
                     foreach (IVariableType customVariableType in customPostVariableTypes)
                     {
@@ -2763,7 +2766,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 eventHandlers[messageEventHandler.EventHandlerType] = messageEventHandler;
 
             }
-            if (customEventHandlers != null)
+            if (customEventHandlers is object)
             {
                 foreach (IEventHandler eventHandler in customEventHandlers)
                 {
@@ -2793,9 +2796,17 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 this.eventDispatcher = new ActivitiEventDispatcherImpl();
             }
 
+            this.eventDispatcher.AddEventListener(
+                DelegateCountersignExecutionListener,
+                ActivitiEventType.SEQUENCEFLOW_TAKEN);
+
+            this.eventDispatcher.AddEventListener(
+                UserTaskAssignmentListener,
+                ActivitiEventType.TASK_ASSIGNED);
+
             this.eventDispatcher.Enabled = enableEventDispatcher;
 
-            if (eventListeners != null)
+            if (eventListeners is object)
             {
                 foreach (IActivitiEventListener listenerToAdd in eventListeners)
                 {
@@ -2803,7 +2814,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 }
             }
 
-            if (typedEventListeners != null)
+            if (typedEventListeners is object)
             {
                 foreach (KeyValuePair<string, IList<IActivitiEventListener>> listenersToAdd in typedEventListeners.SetOfKeyValuePairs())
                 {
@@ -3654,6 +3665,8 @@ namespace Sys.Workflow.Engine.Impl.Cfg
                 this.dbSqlSessionFactory = value;
             }
         }
+
+        public virtual IsolationLevel IsolationLevel { get; set; } = IsolationLevel.ReadCommitted;
 
         /// <summary>
         /// 
@@ -5124,7 +5137,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg
         /// </summary>
         public virtual void ResetClock()
         {
-            if (this.clock != null)
+            if (this.clock is object)
             {
                 clock.Reset();
             }

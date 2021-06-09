@@ -107,7 +107,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             GetScopeExecution(executionEntityManager, ref scopeExecution, ref currentlyExaminedExecution);
 
-            if (scopeExecution == null)
+            if (scopeExecution is null)
             {
                 throw new ActivitiException("Programmatic error: no parent scope execution found for boundary event");
             }
@@ -120,7 +120,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         private static void GetScopeExecution(IExecutionEntityManager executionEntityManager, ref IExecutionEntity scopeExecution, ref IExecutionEntity currentlyExaminedExecution)
         {
-            while (currentlyExaminedExecution != null && scopeExecution == null)
+            while (currentlyExaminedExecution is object && scopeExecution is null)
             {
                 if (currentlyExaminedExecution.IsScope)
                 {
@@ -158,7 +158,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             if (parentExecution.CurrentFlowElement is CallActivity)
             {
                 IExecutionEntity subProcessExecution = executionEntityManager.FindSubProcessInstanceBySuperExecutionId(parentExecution.Id);
-                if (subProcessExecution != null)
+                if (subProcessExecution is object)
                 {
                     executionEntityManager.DeleteProcessInstanceExecutionEntity(subProcessExecution.Id, subProcessExecution.CurrentActivityId, deleteReason, true, true);
                 }

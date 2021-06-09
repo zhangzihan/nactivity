@@ -40,8 +40,13 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         private readonly object syncRoot = new object();
 
-        public TerminateTaskCmd(string taskId, string terminateReason, bool isTerminateExecution, IDictionary<string, object> variables = null)
-            : base(taskId, variables)
+        public TerminateTaskCmd(
+            string taskId,
+            string terminateReason,
+            bool isTerminateExecution,
+            IDictionary<string, object> variables = null,
+            IDictionary<string, object> transientVariables = null)
+            : base(taskId, variables, transientVariables: transientVariables)
         {
             this.completeReason = terminateReason;
             this.isTerminateExecution = isTerminateExecution;
@@ -58,8 +63,16 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             lock (syncRoot)
             {
+                taskEntity.SetVariable(WorkflowVariable.GLOBAL_APPROVALED_VARIABLE, false);
+                taskEntity.SetVariableLocal(WorkflowVariable.GLOBAL_OPERATOR_STATE, 4);
                 // Task complete logic
                 CompleteTask(commandContext, taskEntity, variables, localScope);
+
+                if (!string.IsNullOrWhiteSpace(completeReason))
+                {
+                    commandContext.ProcessEngineConfiguration.commandExecutor
+                        .Execute(new AddCommentCmd(taskId, taskEntity.ProcessInstanceId, completeReason));
+                }
 
                 IActivitiEventDispatcher eventDispatcher = Context.ProcessEngineConfiguration.EventDispatcher;
 

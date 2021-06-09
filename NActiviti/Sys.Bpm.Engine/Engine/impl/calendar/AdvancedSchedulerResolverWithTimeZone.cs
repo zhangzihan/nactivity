@@ -34,7 +34,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
                 throw new ActivitiException("Failed to parse scheduler expression: " + duedateDescription, e);
             }
 
-            return nextRun == null ? null : nextRun;
+            return nextRun is null ? null : nextRun;
         }
 
     }

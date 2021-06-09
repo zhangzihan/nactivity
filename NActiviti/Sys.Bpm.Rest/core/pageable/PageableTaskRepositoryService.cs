@@ -89,7 +89,7 @@ namespace Sys.Workflow.Cloud.Services.Core.Pageables
             if (userId is object)
             {
                 IList<string> groups = null;
-                if (userGroupLookupProxy != null)
+                if (userGroupLookupProxy is object)
                 {
                     groups = userGroupLookupProxy.GetGroupsForCandidateUser(userId);
                 }

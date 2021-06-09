@@ -37,7 +37,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         public IntermediateThrowMessageEventActivityBehavior(MessageEventDefinition messageEventDefinition, Message message)
         {
-            if (message != null)
+            if (message is object)
             {
                 messageEventName = message.Name;
             }

@@ -30,7 +30,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
             IList<Event> events = process.FindFlowElementsOfType<Event>();
             foreach (Event @event in events)
             {
-                if (@event.EventDefinitions != null)
+                if (@event.EventDefinitions is object)
                 {
                     foreach (EventDefinition eventDefinition in @event.EventDefinitions)
                     {
@@ -112,7 +112,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
             CompensateEventDefinition compensateEventDefinition = (CompensateEventDefinition)eventDefinition;
 
             // Check activityRef
-            if ((!string.IsNullOrWhiteSpace(compensateEventDefinition.ActivityRef) && process.GetFlowElement(compensateEventDefinition.ActivityRef, true) == null))
+            if ((!string.IsNullOrWhiteSpace(compensateEventDefinition.ActivityRef) && process.GetFlowElement(compensateEventDefinition.ActivityRef, true) is null))
             {
                 AddError(errors, ProblemsConstants.COMPENSATE_EVENT_INVALID_ACTIVITY_REF, process, @event, ProcessValidatorResource.COMPENSATE_EVENT_INVALID_ACTIVITY_REF);
             }

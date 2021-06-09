@@ -29,7 +29,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                 foreach (SequenceFlow sequenceFlow in eventGateway.OutgoingFlows)
                 {
                     FlowElement flowElement = process.GetFlowElement(sequenceFlow.TargetRef, true);
-                    if (flowElement != null && !(flowElement is IntermediateCatchEvent))
+                    if (flowElement is object && !(flowElement is IntermediateCatchEvent))
                     {
                         AddError(errors, ProblemsConstants.EVENT_GATEWAY_ONLY_CONNECTED_TO_INTERMEDIATE_EVENTS, process, eventGateway, ProcessValidatorResource.EVENT_GATEWAY_ONLY_CONNECTED_TO_INTERMEDIATE_EVENTS);
                     }

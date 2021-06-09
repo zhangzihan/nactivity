@@ -48,9 +48,9 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
 
             IResourceEntity resource = commandContext.ResourceEntityManager.FindResourceByDeploymentIdAndResourceName(deploymentId, resourceName);
-            if (resource == null)
+            if (resource is null)
             {
-                if (commandContext.DeploymentEntityManager.FindById<IDeployment>(new KeyValuePair<string, object>("id", deploymentId)) == null)
+                if (commandContext.DeploymentEntityManager.FindById<IDeployment>(new KeyValuePair<string, object>("id", deploymentId)) is null)
                 {
                     throw new ActivitiObjectNotFoundException("deployment does not exist: " + deploymentId, typeof(IDeployment));
                 }

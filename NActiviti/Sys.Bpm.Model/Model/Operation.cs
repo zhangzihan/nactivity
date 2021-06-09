@@ -99,7 +99,7 @@ namespace Sys.Workflow.Bpmn.Models
                 OutMessageRef = val.OutMessageRef;
 
                 errorMessageRef = new List<string>();
-                if (val.ErrorMessageRef != null && val.ErrorMessageRef.Count > 0)
+                if (val.ErrorMessageRef is object && val.ErrorMessageRef.Count > 0)
                 {
                     ((List<string>)errorMessageRef).AddRange(val.ErrorMessageRef);
                 }

@@ -53,7 +53,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             {
                 ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(taskId);
 
-                if (task == null)
+                if (task is null)
                 {
                     logger.LogWarning("Cannot find task with id " + taskId, typeof(ITask));
                     return null;
@@ -69,7 +69,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             {
                 IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
-                if (execution == null)
+                if (execution is null)
                 {
                     logger.LogWarning("Cannot find task with id " + taskId, typeof(ITask));
                     return null;
@@ -91,12 +91,12 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             comment.ProcessInstanceId = processInstanceId;
             comment.Action = EventFields.ACTION_ADD_COMMENT;
 
-            string eventMessage = message.Replace("\\s+", " ");
-            if (eventMessage.Length > 163)
-            {
-                eventMessage = eventMessage.Substring(0, 160) + "...";
-            }
-            comment.Message = eventMessage;
+            //string eventMessage = message.Replace("\\s+", " ");
+            //if (eventMessage.Length > 163)
+            //{
+            //    eventMessage = eventMessage.Substring(0, 160) + "...";
+            //}
+            comment.Message = message;
 
             comment.FullMessage = message;
 

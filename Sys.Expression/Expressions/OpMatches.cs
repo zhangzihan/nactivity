@@ -60,11 +60,11 @@ namespace Spring.Expressions
         /// </returns>
         protected override object Get(object context, EvaluationContext evalContext)
         {
-            if (regex == null)
+            if (regex is null)
             {
                 lock (syncRoot)
                 {
-                    if (regex == null)
+                    if (regex is null)
                     {
                         string pattern = GetRightValue( context, evalContext ) as string;
                         regex = new Regex(pattern);

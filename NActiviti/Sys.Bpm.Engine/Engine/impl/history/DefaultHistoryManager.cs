@@ -89,14 +89,14 @@ namespace Sys.Workflow.Engine.Impl.Histories
             {
                 IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.FindById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("processInstanceId", processInstanceId));
 
-                if (historicProcessInstance != null)
+                if (historicProcessInstance is object)
                 {
                     historicProcessInstance.MarkEnded(deleteReason);
                     historicProcessInstance.EndActivityId = activityId;
 
                     // Fire event
                     IActivitiEventDispatcher activitiEventDispatcher = EventDispatcher;
-                    if (activitiEventDispatcher != null && activitiEventDispatcher.Enabled)
+                    if (activitiEventDispatcher is object && activitiEventDispatcher.Enabled)
                     {
                         activitiEventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.HISTORIC_PROCESS_INSTANCE_ENDED, historicProcessInstance));
                     }
@@ -111,7 +111,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             {
                 IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.FindById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("processInstanceId", processInstanceId));
 
-                if (historicProcessInstance != null)
+                if (historicProcessInstance is object)
                 {
                     historicProcessInstance.Name = newName;
                 }
@@ -135,7 +135,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
 
                 // Fire event
                 IActivitiEventDispatcher activitiEventDispatcher = EventDispatcher;
-                if (activitiEventDispatcher != null && activitiEventDispatcher.Enabled)
+                if (activitiEventDispatcher is object && activitiEventDispatcher.Enabled)
                 {
                     activitiEventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.HISTORIC_PROCESS_INSTANCE_CREATED, historicProcessInstance));
                 }
@@ -165,13 +165,13 @@ namespace Sys.Workflow.Engine.Impl.Histories
 
                 // Fire event
                 IActivitiEventDispatcher activitiEventDispatcher = EventDispatcher;
-                if (activitiEventDispatcher != null && activitiEventDispatcher.Enabled)
+                if (activitiEventDispatcher is object && activitiEventDispatcher.Enabled)
                 {
                     activitiEventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.HISTORIC_PROCESS_INSTANCE_CREATED, historicProcessInstance));
                 }
 
                 IHistoricActivityInstanceEntity activitiyInstance = FindActivityInstance(parentExecution, false, true);
-                if (activitiyInstance != null)
+                if (activitiyInstance is object)
                 {
                     activitiyInstance.CalledProcessInstanceId = subProcessInstance.ProcessInstanceId;
                 }
@@ -189,14 +189,14 @@ namespace Sys.Workflow.Engine.Impl.Histories
         {
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                if (executionEntity.ActivityId != null && executionEntity.CurrentFlowElement != null)
+                if (executionEntity.ActivityId is object && executionEntity.CurrentFlowElement is object)
                 {
 
                     // Historic activity instance could have been created (but only in cache, never persisted)
                     // for example when submitting form properties
                     IHistoricActivityInstanceEntity historicActivityInstanceEntityFromCache = GetHistoricActivityInstanceFromCache(executionEntity.Id, executionEntity.ActivityId, true);
                     IHistoricActivityInstanceEntity historicActivityInstanceEntity;
-                    if (historicActivityInstanceEntityFromCache != null)
+                    if (historicActivityInstanceEntityFromCache is object)
                     {
                         historicActivityInstanceEntity = historicActivityInstanceEntityFromCache;
                     }
@@ -207,7 +207,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
 
                     // Fire event
                     IActivitiEventDispatcher activitiEventDispatcher = EventDispatcher;
-                    if (activitiEventDispatcher != null && activitiEventDispatcher.Enabled)
+                    if (activitiEventDispatcher is object && activitiEventDispatcher.Enabled)
                     {
                         activitiEventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_CREATED, historicActivityInstanceEntity));
                     }
@@ -226,13 +226,13 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
                 IHistoricActivityInstanceEntity historicActivityInstance = FindActivityInstance(executionEntity, false, true);
-                if (historicActivityInstance != null)
+                if (historicActivityInstance is object)
                 {
                     historicActivityInstance.MarkEnded(deleteReason);
 
                     // Fire event
                     IActivitiEventDispatcher activitiEventDispatcher = EventDispatcher;
-                    if (activitiEventDispatcher != null && activitiEventDispatcher.Enabled)
+                    if (activitiEventDispatcher is object && activitiEventDispatcher.Enabled)
                     {
                         activitiEventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_ENDED, historicActivityInstance));
                     }
@@ -247,7 +247,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             {
                 activityId = execution.CurrentFlowElement.Id;
             }
-            else if (execution.CurrentFlowElement is SequenceFlow && execution.CurrentActivitiListener == null)
+            else if (execution.CurrentFlowElement is SequenceFlow && execution.CurrentActivitiListener is null)
             { // while executing sequence flow listeners, we don't want historic activities
                 activityId = ((SequenceFlow)(execution.CurrentFlowElement)).SourceFlowElement.Id;
             }
@@ -274,7 +274,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
 
             // Check the cache
             IHistoricActivityInstanceEntity historicActivityInstanceEntityFromCache = GetHistoricActivityInstanceFromCache(executionId, activityId, endTimeMustBeNull);
-            if (historicActivityInstanceEntityFromCache != null)
+            if (historicActivityInstanceEntityFromCache is object)
             {
                 return historicActivityInstanceEntityFromCache;
             }
@@ -295,13 +295,13 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (execution.ParentId is object)
             {
                 IHistoricActivityInstanceEntity historicActivityInstanceFromParent = FindActivityInstance(execution.Parent, activityId, false, endTimeMustBeNull); // always false for create, we only check if it can be found
-                if (historicActivityInstanceFromParent != null)
+                if (historicActivityInstanceFromParent is object)
                 {
                     return historicActivityInstanceFromParent;
                 }
             }
 
-            if (createOnNotFound && activityId is object && ((execution.CurrentFlowElement != null && execution.CurrentFlowElement is FlowNode) || execution.CurrentFlowElement == null))
+            if (createOnNotFound && activityId is object && ((execution.CurrentFlowElement is object && execution.CurrentFlowElement is FlowNode) || execution.CurrentFlowElement is null))
             {
                 return CreateHistoricActivityInstanceEntity(execution);
             }
@@ -314,7 +314,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             IList<IHistoricActivityInstanceEntity> cachedHistoricActivityInstances = EntityCache.FindInCache(typeof(HistoricActivityInstanceEntityImpl)) as IList<IHistoricActivityInstanceEntity>;
             foreach (IHistoricActivityInstanceEntity cachedHistoricActivityInstance in cachedHistoricActivityInstances ?? new List<IHistoricActivityInstanceEntity>())
             {
-                if (activityId is object && activityId.Equals(cachedHistoricActivityInstance.ActivityId) && (!endTimeMustBeNull || cachedHistoricActivityInstance.EndTime == null))
+                if (activityId is object && activityId.Equals(cachedHistoricActivityInstance.ActivityId) && (!endTimeMustBeNull || cachedHistoricActivityInstance.EndTime is null))
                 {
                     if (executionId.Equals(cachedHistoricActivityInstance.ExecutionId))
                     {
@@ -339,7 +339,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             historicActivityInstance.ProcessInstanceId = processInstanceId;
             historicActivityInstance.ExecutionId = execution.Id;
             historicActivityInstance.ActivityId = execution.ActivityId;
-            if (execution.CurrentFlowElement != null)
+            if (execution.CurrentFlowElement is object)
             {
                 historicActivityInstance.ActivityName = execution.CurrentFlowElement.Name;
                 historicActivityInstance.ActivityType = ParseActivityType(execution.CurrentFlowElement);
@@ -367,7 +367,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
                 IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.FindById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("id", processInstanceId));
-                if (historicProcessInstance != null)
+                if (historicProcessInstance is object)
                 {
                     historicProcessInstance.ProcessDefinitionId = processDefinitionId;
                 }
@@ -401,10 +401,10 @@ namespace Sys.Workflow.Engine.Impl.Histories
             IExecutionEntity executionEntity = task.Execution;
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
-                if (executionEntity != null)
+                if (executionEntity is object)
                 {
                     IHistoricActivityInstanceEntity historicActivityInstance = FindActivityInstance(executionEntity, false, true);
-                    if (historicActivityInstance != null)
+                    if (historicActivityInstance is object)
                     {
                         historicActivityInstance.Assignee = task.Assignee;
                         historicActivityInstance.AssigneeUser = task.AssigneeUser;
@@ -423,7 +423,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", task.Id));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.ClaimTime = task.ClaimTime;
                 }
@@ -439,10 +439,10 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
                 IExecutionEntity execution = task.Execution;
-                if (execution != null)
+                if (execution is object)
                 {
                     IHistoricActivityInstanceEntity historicActivityInstance = FindActivityInstance(execution, false, true);
-                    if (historicActivityInstance != null)
+                    if (historicActivityInstance is object)
                     {
                         historicActivityInstance.TaskId = task.Id;
                     }
@@ -460,7 +460,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.MarkEnded(deleteReason);
                 }
@@ -478,7 +478,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.Assignee = assignee;
                     historicTaskInstance.AssigneeUser = assigneeUser;
@@ -496,7 +496,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.Owner = owner;
                 }
@@ -513,7 +513,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.Name = taskName;
                 }
@@ -530,7 +530,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.Description = description;
                 }
@@ -547,7 +547,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.DueDate = dueDate;
                 }
@@ -564,7 +564,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.Priority = priority;
                 }
@@ -581,7 +581,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.Category = category;
                 }
@@ -593,7 +593,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.FormKey = formKey;
                 }
@@ -610,7 +610,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.ParentTaskId = parentTaskId;
                 }
@@ -626,7 +626,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.ExecutionId = executionId;
                 }
@@ -643,7 +643,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.AUDIT))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.TaskDefinitionKey = taskDefinitionKey;
                 }
@@ -659,7 +659,7 @@ namespace Sys.Workflow.Engine.Impl.Histories
             if (IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     historicTaskInstance.ProcessDefinitionId = processDefinitionId;
                 }
@@ -694,10 +694,10 @@ namespace Sys.Workflow.Engine.Impl.Histories
 
                 IHistoricDetailVariableInstanceUpdateEntity historicVariableUpdate = HistoricDetailEntityManager.CopyAndInsertHistoricDetailVariableInstanceUpdateEntity(variable);
 
-                if (useActivityId && sourceActivityExecution != null)
+                if (useActivityId && sourceActivityExecution is object)
                 {
                     IHistoricActivityInstanceEntity historicActivityInstance = FindActivityInstance(sourceActivityExecution, false, false);
-                    if (historicActivityInstance != null)
+                    if (historicActivityInstance is object)
                     {
                         historicVariableUpdate.ActivityInstanceId = historicActivityInstance.Id;
                     }
@@ -711,14 +711,14 @@ namespace Sys.Workflow.Engine.Impl.Histories
         /// <param name="variable"></param>
         public virtual void RecordVariableUpdate(IVariableInstanceEntity variable)
         {
-            if (variable != null && IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (variable is object && IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
                 if (!(EntityCache.FindInCache(variable.GetType(), variable.Id) is IHistoricVariableInstanceEntity historicProcessVariable))
                 {
                     historicProcessVariable = HistoricVariableInstanceEntityManager.FindHistoricVariableInstanceByVariableInstanceId(variable.Id);
                 }
 
-                if (historicProcessVariable != null)
+                if (historicProcessVariable is object)
                 {
                     HistoricVariableInstanceEntityManager.CopyVariableValue(historicProcessVariable, variable);
                 }
@@ -929,10 +929,10 @@ namespace Sys.Workflow.Engine.Impl.Histories
                 //{
                 //    log.debug("updateProcessBusinessKeyInHistory : {}", processInstance.Id);
                 //}
-                if (processInstance != null)
+                if (processInstance is object)
                 {
                     IHistoricProcessInstanceEntity historicProcessInstance = HistoricProcessInstanceEntityManager.FindById<IHistoricProcessInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", processInstance.Id));
-                    if (historicProcessInstance != null)
+                    if (historicProcessInstance is object)
                     {
                         historicProcessInstance.BusinessKey = processInstance.ProcessInstanceBusinessKey;
                         HistoricProcessInstanceEntityManager.Update(historicProcessInstance, false);
@@ -943,14 +943,14 @@ namespace Sys.Workflow.Engine.Impl.Histories
 
         public virtual void RecordVariableRemoved(IVariableInstanceEntity variable)
         {
-            if (variable != null && IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
+            if (variable is object && IsHistoryLevelAtLeast(HistoryLevel.ACTIVITY))
             {
                 if (!(EntityCache.FindInCache(variable.GetType(), variable.Id) is IHistoricVariableInstanceEntity historicProcessVariable))
                 {
                     historicProcessVariable = HistoricVariableInstanceEntityManager.FindHistoricVariableInstanceByVariableInstanceId(variable.Id);
                 }
 
-                if (historicProcessVariable != null)
+                if (historicProcessVariable is object)
                 {
                     HistoricVariableInstanceEntityManager.Delete(historicProcessVariable);
                 }

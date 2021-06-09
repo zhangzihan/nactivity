@@ -49,11 +49,11 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
         {
-            if (variables != null)
+            if (variables is object)
             {
                 task.Variables = variables;
             }
-            if (transientVariables != null)
+            if (transientVariables is object)
             {
                 task.TransientVariables = transientVariables;
             }

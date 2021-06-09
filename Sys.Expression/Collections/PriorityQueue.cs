@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -270,7 +270,7 @@ namespace Spring.Collections
 		/// </remarks>
 		private void fixUp(int k)
 		{
-			if (_comparator == null)
+			if (_comparator is null)
 			{
 				while (k > 1)
 				{
@@ -311,7 +311,7 @@ namespace Spring.Collections
 		private void fixDown(int k)
 		{
 			int j;
-			if (_comparator == null)
+			if (_comparator is null)
 			{
 				while ((j = k << 1) <= _priorityQueueSize && (j > 0))
 				{
@@ -515,7 +515,7 @@ namespace Spring.Collections
 		/// </exception>
 		public override bool Offer(Object objectToAdd)
 		{
-			if (objectToAdd == null)
+			if (objectToAdd is null)
 				throw new ArgumentNullException("objectToAdd");
 			_queueModificationCount++;
 			++_priorityQueueSize;
@@ -584,12 +584,12 @@ namespace Spring.Collections
 		/// </summary>
 		public virtual bool Remove(Object objectToRemove)
 		{
-			if (objectToRemove == null)
+			if (objectToRemove is null)
 			{
 				return false;
 			}
 
-			if (_comparator == null)
+			if (_comparator is null)
 			{
 				for (int i = 1; i <= _priorityQueueSize; i++)
 				{
@@ -667,11 +667,11 @@ namespace Spring.Collections
 		/// <see lang="false"/> otherwise.</returns>
 		public bool Contains( object element )
 		{
-			if (element == null)
+			if (element is null)
 			{
 				for (int num1 = 0; num1 < Capacity; num1++)
 				{
-					if (_queue[num1] == null)
+					if (_queue[num1] is null)
 					{
 						return true;
 					}

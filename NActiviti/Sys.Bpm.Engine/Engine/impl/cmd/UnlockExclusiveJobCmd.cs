@@ -39,7 +39,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         public virtual object Execute(ICommandContext commandContext)
         {
 
-            if (job == null)
+            if (job is null)
             {
                 throw new ActivitiIllegalArgumentException("job is null");
             }
@@ -54,7 +54,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 if (job.ProcessInstanceId is object)
                 {
                     IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(job.ProcessInstanceId);
-                    if (execution != null)
+                    if (execution is object)
                     {
                         commandContext.ExecutionEntityManager.ClearProcessInstanceLockTime(execution.Id);
                     }

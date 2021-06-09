@@ -19,6 +19,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg.Jta
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
+    using System.Data;
 
     /// 
     public class JtaTransactionContext : ITransactionContext

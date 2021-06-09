@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -142,7 +142,7 @@ namespace Spring.Objects.Events.Support
                 MethodInfo eventHandler
                     = EventManipulationUtils.GetMethodInfoMatchingSignature(
                         invoke, currentSubscriberType);
-                if (eventHandler != null)
+                if (eventHandler is object)
                 {
                     if (wire)
                     {

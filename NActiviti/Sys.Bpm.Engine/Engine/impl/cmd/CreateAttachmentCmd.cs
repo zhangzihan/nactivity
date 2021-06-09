@@ -69,7 +69,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             commandContext.AttachmentEntityManager.Insert(attachment, false);
 
-            if (content != null)
+            if (content is object)
             {
                 byte[] bytes = IoUtil.ReadInputStream(content, attachmentName);
                 IByteArrayEntity byteArray = commandContext.ByteArrayEntityManager.Create();
@@ -89,7 +89,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 if (attachment.ProcessInstanceId is object)
                 {
                     IExecutionEntity process = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
-                    if (process != null)
+                    if (process is object)
                     {
                         processDefinitionId = process.ProcessDefinitionId;
                     }
@@ -106,7 +106,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(new KeyValuePair<string, object>("id", taskId));
 
-            if (task == null)
+            if (task is null)
             {
                 throw new ActivitiObjectNotFoundException("Cannot find task with id " + taskId, typeof(ITask));
             }
@@ -123,7 +123,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             IExecutionEntity execution = commandContext.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
 
-            if (execution == null)
+            if (execution is null)
             {
                 throw new ActivitiObjectNotFoundException("Process instance " + processInstanceId + " doesn't exist", typeof(IProcessInstance));
             }

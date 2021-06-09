@@ -51,7 +51,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
             {
                 intermediateEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateThrowMessgeEventActivityBehavior(intermediateEvent, messageEventDefinition, bpmnParse.BpmnModel.GetMessage(messageEventDefinition.MessageRef));
             }
-            else if (eventDefinition == null)
+            else if (eventDefinition is null)
             {
                 intermediateEvent.Behavior = bpmnParse.ActivityBehaviorFactory.CreateIntermediateThrowNoneEventActivityBehavior(intermediateEvent);
             }
@@ -69,7 +69,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
         // Sys.Workflow.Bpmn.Models.CompensateEventDefinition eventDefinition,
         // ScopeImpl scopeElement) {
         // if(!string.IsNullOrWhiteSpace(eventDefinition.getActivityRef())) {
-        // if(scopeElement.findActivity(eventDefinition.getActivityRef()) == null) {
+        // if(scopeElement.findActivity(eventDefinition.getActivityRef()) is null) {
         // bpmnParse.getBpmnModel().addProblem("Invalid attribute value for 'activityRef': no activity with id '"
         // + eventDefinition.getActivityRef() +
         // "' in current scope " + scopeElement.getId(), eventDefinition);

@@ -32,7 +32,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
 
         protected internal override void ExecuteParse(BpmnParse bpmnParse, StartEvent element)
         {
-            if (element.SubProcess != null && element.SubProcess is EventSubProcess)
+            if (element.SubProcess is object && element.SubProcess is EventSubProcess)
             {
                 if (CollectionUtil.IsNotEmpty(element.EventDefinitions))
                 {
@@ -62,7 +62,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Handlers
                 element.Behavior = bpmnParse.ActivityBehaviorFactory.CreateNoneStartEventActivityBehavior(element);
             }
 
-            if (element.SubProcess == null && (CollectionUtil.IsEmpty(element.EventDefinitions) || bpmnParse.CurrentProcess.InitialFlowElement == null))
+            if (element.SubProcess is null && (CollectionUtil.IsEmpty(element.EventDefinitions) || bpmnParse.CurrentProcess.InitialFlowElement is null))
             {
 
                 bpmnParse.CurrentProcess.InitialFlowElement = element;

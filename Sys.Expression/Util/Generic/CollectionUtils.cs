@@ -55,7 +55,7 @@ namespace Spring.Util.Generic
             object candidate = null;
             foreach (object elem in coll)
             {
-                if (candidate == null)
+                if (candidate is null)
                 {
                     candidate = elem;
                 }
@@ -75,7 +75,7 @@ namespace Spring.Util.Generic
         /// <returns><see lang="true"/> if the element is in the collection, <see lang="false"/> otherwise.</returns>
         public static bool Contains<T>(ICollection<T> collection, object element)
         {
-            if (collection == null)
+            if (collection is null)
             {
                 throw new ArgumentNullException("Collection cannot be null.");
             }
@@ -96,7 +96,7 @@ namespace Spring.Util.Generic
         /// <returns>true if the target collection contains all the elements of the specified collection.</returns>
         public static bool ContainsAll<T>(ICollection<T> targetCollection, ICollection<T> sourceCollection)
         {
-            if (targetCollection == null || sourceCollection == null)
+            if (targetCollection is null || sourceCollection is null)
             {
                 throw new ArgumentNullException("Collection cannot be null.");
             }
@@ -110,12 +110,12 @@ namespace Spring.Util.Generic
             MethodInfo method;
             method = targetCollection.GetType().GetMethod("containsAll", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
 
-            if (method != null)
+            if (method is object)
                 contains = Convert.ToBoolean(method.Invoke(targetCollection, new object[] { sourceCollection }));
             else
             {
                 method = targetCollection.GetType().GetMethod("Contains", BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
-                if (method == null)
+                if (method is null)
                 {
                     throw new InvalidOperationException("Target collection does not implment a Contains() or ContainsAll() method.");
                 }
@@ -134,12 +134,12 @@ namespace Spring.Util.Generic
 		/// <param name="sourceCollection">Elements to remove from the target collection.</param>
         public static void RemoveAll<T>(ICollection<T> targetCollection, ICollection<T> sourceCollection)
         {
-            if (targetCollection == null)
+            if (targetCollection is null)
             {
                 throw new ArgumentNullException("targetCollection", "Collection cannot be null.");
             }
 
-            if (sourceCollection == null)
+            if (sourceCollection is null)
             {
                 throw new ArgumentNullException("sourceCollection", "Collection cannot be null.");
             }

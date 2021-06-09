@@ -42,7 +42,7 @@ namespace Sys.Workflow.Engine.Impl.Util.IO
             get
             {
                 Stream inputStream;
-                if (classLoader == null)
+                if (classLoader is null)
                 {
                     inputStream = ReflectUtil.GetResourceAsStream(resource);
                 }
@@ -50,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Util.IO
                 {
                     inputStream = classLoader.GetResourceAsStream(resource);
                 }
-                if (inputStream == null)
+                if (inputStream is null)
                 {
                     throw new ActivitiIllegalArgumentException("resource '" + resource + "' doesn't exist");
                 }

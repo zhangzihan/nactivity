@@ -125,22 +125,22 @@ namespace Spring.Util
 			string key = null;
 			string value = null;
 			string line = null;
-			while ((line = textReader.ReadLine()) != null)
+			while ((line = textReader.ReadLine()) is object)
 			{
 				line = RemoveLeadingWhitespace(line);
-				if (line != null && line.Length>0 && Comments.IndexOf(line[0]) == -1)
+				if (line is object && line.Length>0 && Comments.IndexOf(line[0]) == -1)
 				{
 					if (!isContinuation)
 					{
 						string[] keyvalue = SplitLine(line);
-						if (keyvalue == null)
+						if (keyvalue is null)
 						{
 							continue;
 						}
 						key = keyvalue[0];
 						value = keyvalue[1];
 
-						if (value != null && value.EndsWith("\\"))
+						if (value is object && value.EndsWith("\\"))
 						{
 							value = value.Substring(0, value.Length - 1);
 							isContinuation = true;
@@ -174,7 +174,7 @@ namespace Spring.Util
 		/// <returns>The string with all leading whitespace removed.</returns>
 		private static string RemoveLeadingWhitespace(string line)
 		{
-            if (line == null) return null;
+            if (line is null) return null;
 
 			string trimmed = string.Empty;
 			for (int i = 0; i < line.Length; i++)
@@ -237,7 +237,7 @@ namespace Spring.Util
                 value = RemoveLeadingWhitespace(value);
             }
 
-		    if (value != null && value.Length > 0 
+		    if (value is object && value.Length > 0 
                 && Separators.IndexOf(value[0]) != -1)
 			{
 				value = value.Substring(1);
@@ -268,7 +268,7 @@ namespace Spring.Util
 		public string GetProperty(string key, string def)
 		{
 			string val = this[key] as string;
-			return (val != null ? val : def);
+			return (val is object ? val : def);
 		}
 
 		/// <summary>

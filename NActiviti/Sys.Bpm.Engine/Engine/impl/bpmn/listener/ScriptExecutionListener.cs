@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
             //ScriptingEngines scriptingEngines = Context.ProcessEngineConfiguration.ScriptingEngines;
             //object result = scriptingEngines.evaluate(script.ExpressionText, language.ExpressionText, execution);
 
-            //if (resultVariable != null)
+            //if (resultVariable is object)
             //{
             //  execution.setVariable(resultVariable.ExpressionText, result);
             //}
@@ -46,12 +46,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
         protected internal virtual void ValidateParameters()
         {
-            if (script == null)
+            if (script is null)
             {
                 throw new ArgumentException("The field 'script' should be set on the ExecutionListener");
             }
 
-            if (language == null)
+            if (language is null)
             {
                 throw new ArgumentException("The field 'language' should be set on the ExecutionListener");
             }

@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ namespace Spring.Core.TypeConversion
 			get { return this.listSeparator; }
 			set
 			{
-				if (value != null)
+				if (value is object)
 				{
 					if (value.Length != 1)
 					{
@@ -172,7 +172,7 @@ namespace Spring.Core.TypeConversion
 			ITypeDescriptorContext context, CultureInfo culture, object value)
 		{
 			string values = value as string;
-			if (values != null)
+			if (values is object)
 			{
 				return StringUtils.DelimitedListToStringArray(values, this.ListSeparator);
 			}

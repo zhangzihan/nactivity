@@ -71,13 +71,13 @@ namespace Sys.Workflow.Engine.Impl.Util
 
             // Get model from cache
             Process process = ProcessDefinitionUtil.GetProcess(processDefinition.Id);
-            if (process == null)
+            if (process is null)
             {
                 throw new ActivitiException("Cannot start process instance. Process model " + processDefinition.Name + " (id = " + processDefinition.Id + ") could not be found");
             }
 
             FlowElement initialFlowElement = string.IsNullOrWhiteSpace(initialFlowElementId) ? process.InitialFlowElement : process.FindFlowElement(initialFlowElementId);
-            if (initialFlowElement == null)
+            if (initialFlowElement is null)
             {
                 throw new ActivitiException("No start element found for process definition " + processDefinition.Id);
             }
@@ -99,7 +99,7 @@ namespace Sys.Workflow.Engine.Impl.Util
 
             // Get model from cache
             Process process = ProcessDefinitionUtil.GetProcess(processDefinition.Id);
-            if (process == null)
+            if (process is null)
             {
                 throw new ActivitiException("Cannot start process instance. Process model " + processDefinition.Name + " (id = " + processDefinition.Id + ") could not be found");
             }
@@ -120,7 +120,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                     }
                 }
             }
-            if (initialFlowElement == null)
+            if (initialFlowElement is null)
             {
                 throw new ActivitiException("No message start event found for process definition " + processDefinition.Id + " and message name " + messageName);
             }
@@ -182,7 +182,7 @@ namespace Sys.Workflow.Engine.Impl.Util
             }
 
             // Set the variables passed into the start command
-            if (variables != null)
+            if (variables is object)
             {
                 foreach (string varName in variables.Keys)
                 {
@@ -190,7 +190,7 @@ namespace Sys.Workflow.Engine.Impl.Util
                 }
             }
 
-            if (transientVariables != null)
+            if (transientVariables is object)
             {
                 foreach (string varName in transientVariables.Keys)
                 {
@@ -295,7 +295,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         {
             IDictionary<string, object> variablesMap = new Dictionary<string, object>();
             // convert data objects to process variables
-            if (dataObjects != null)
+            if (dataObjects is object)
             {
                 foreach (ValuedDataObject dataObject in dataObjects)
                 {

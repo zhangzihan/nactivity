@@ -86,7 +86,7 @@ namespace Spring.Core.TypeResolution
                 throw BuildTypeLoadException(typeName, ex);
             }
 
-            if (type == null)
+            if (type is null)
             {
                 type = base.Resolve(typeName);
             }

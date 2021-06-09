@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Impl.Scripting
 		foreach (IResolverFactory scriptResolverFactory in resolverFactories)
 		{
 		  IResolver resolver = scriptResolverFactory.createResolver(processEngineConfiguration, variableScope);
-		  if (resolver != null)
+		  if (resolver is object)
 		  {
 			scriptResolvers.Add(resolver);
 		  }

@@ -136,7 +136,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         public virtual Task<ProcessInstance> GetProcessInstanceById(string processInstanceId)
         {
             ProcessInstance processInstance = processEngineWrapper.GetProcessInstanceById(processInstanceId);
-            if (processInstance == null)
+            if (processInstance is null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + processInstanceId + "'");
             }
@@ -149,7 +149,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         public virtual Task<string> GetProcessDiagram(string processInstanceId)
         {
             ProcessInstance processInstance = processEngineWrapper.GetProcessInstanceById(processInstanceId);
-            if (processInstance == null)
+            if (processInstance is null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find process instance for the given id:'" + processInstanceId + "'");
             }

@@ -51,7 +51,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         public virtual ITask Execute(ICommandContext commandContext)
         {
             ITaskService taskService = commandContext.ProcessEngineConfiguration.TaskService;
-            if (taskService.CreateTaskQuery().SetTaskId(parentTaskId).SingleResult() == null)
+            if (taskService.CreateTaskQuery().SetTaskId(parentTaskId).SingleResult() is null)
             {
                 throw new ActivitiObjectNotFoundException("Parent task with id " + parentTaskId + " was not found");
             }

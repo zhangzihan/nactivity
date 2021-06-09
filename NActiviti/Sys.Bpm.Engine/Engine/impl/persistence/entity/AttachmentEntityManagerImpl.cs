@@ -64,12 +64,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             string processDefinitionId = null;
             string executionId = null;
 
-            if (dispatchEvents && attachments != null && attachments.Count > 0)
+            if (dispatchEvents && attachments is object && attachments.Count > 0)
             {
                 // Forced to fetch the task to get hold of the process definition
                 // for event-dispatching, if available
                 ITask task = TaskEntityManager.FindById<ITask>(new KeyValuePair<string, object>("id", taskId));
-                if (task != null)
+                if (task is object)
                 {
                     processDefinitionId = task.ProcessDefinitionId;
                     processInstanceId = task.ProcessInstanceId;

@@ -38,15 +38,16 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
         }
 
-        public CompleteTaskCmd(string taskId, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, bool localScope = false) : this(taskId, variables)
+        public CompleteTaskCmd(string taskId, IDictionary<string, object> variables, IDictionary<string, object> transientVariables, bool localScope = false, string completeReason = null) : this(taskId, variables)
         {
             this.localScope = localScope;
             this.transientVariables = transientVariables;
+            this.completeReason = completeReason;
         }
 
         protected internal override object Execute(ICommandContext commandContext, ITaskEntity task)
         {
-            if (variables != null)
+            if (variables is object)
             {
                 if (localScope)
                 {
@@ -62,7 +63,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 }
             }
 
-            if (transientVariables != null)
+            if (transientVariables is object)
             {
                 if (localScope)
                 {

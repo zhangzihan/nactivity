@@ -79,7 +79,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
             int maxResults = query.MaxResults;
 
             // setting max results, limit to 20000 results for performance reasons
-            if (query.TaskVariablesLimit != null)
+            if (query.TaskVariablesLimit is object)
             {
                 query.MaxResults = query.TaskVariablesLimit.GetValueOrDefault();
             }
@@ -91,7 +91,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
 
             IList<IHistoricTaskInstance> instanceList = DbSqlSession.SelectListWithRawParameterWithoutFilter<HistoricTaskInstanceEntityImpl, IHistoricTaskInstance>("selectHistoricTaskInstancesWithVariablesByQueryCriteria", historicTaskInstanceQuery, query.FirstResult, query.MaxResults);
 
-            if (instanceList != null && instanceList.Count > 0)
+            if (instanceList is object && instanceList.Count > 0)
             {
                 if (firstResult > 0)
                 {

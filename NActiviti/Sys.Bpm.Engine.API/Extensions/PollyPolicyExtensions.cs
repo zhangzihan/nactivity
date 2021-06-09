@@ -40,7 +40,7 @@ namespace Sys.Workflow.Polly
 
         private static void CreateLogger(IHttpClientBuilder clientBuilder)
         {
-            if (logger == null)
+            if (logger is null)
             {
                 logger = clientBuilder.Services.BuildServiceProvider().GetService<ILoggerFactory>().CreateLogger<IHttpClientProxy>();
             }

@@ -35,7 +35,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             IExecutionEntityManager executionEntityManager = commandContext.ExecutionEntityManager;
             IExecutionEntity scopeExecution = null;
             IExecutionEntity currentExecution = currentlyExaminedExecution;
-            while (currentExecution != null && scopeExecution == null)
+            while (currentExecution is object && scopeExecution is null)
             {
                 if (currentExecution.IsScope)
                 {
@@ -47,9 +47,9 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     currentExecution = currentExecution.Parent;
                 }
             }
-            if (scopeExecution == null)
+            if (scopeExecution is null)
             {
-                while (currentlyExaminedExecution != null && scopeExecution == null)
+                while (currentlyExaminedExecution is object && scopeExecution is null)
                 {
                     if (currentlyExaminedExecution.IsScope)
                     {

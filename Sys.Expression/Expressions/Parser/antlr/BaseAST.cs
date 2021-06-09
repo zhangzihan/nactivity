@@ -61,12 +61,12 @@ namespace Spring.Expressions.Parser.antlr
 		/*Add a node to the end of the child list for this node */
 		public virtual void  addChild(AST node)
 		{
-			if (node == null)
+			if (node is null)
 				return ;
 			BaseAST t = this.down;
-			if (t != null)
+			if (t is object)
 			{
-				while (t.right != null)
+				while (t.right is object)
 				{
 					t = t.right;
 				}
@@ -84,14 +84,14 @@ namespace Spring.Expressions.Parser.antlr
 			
 			// Start walking sibling lists, looking for matches.
 //siblingWalk: 
-			 for (sibling = this; sibling != null; sibling = sibling.getNextSibling())
+			 for (sibling = this; sibling is object; sibling = sibling.getNextSibling())
 			{
 				if ((partialMatch && sibling.EqualsTreePartial(target)) || (!partialMatch && sibling.EqualsTree(target)))
 				{
 					v.Add(sibling);
 				}
 				// regardless of match or not, check any children for matches
-				if (sibling.getFirstChild() != null)
+				if (sibling.getFirstChild() is object)
 				{
 					((BaseAST) sibling.getFirstChild()).doWorkForFindAll(v, target, partialMatch);
 				}
@@ -100,7 +100,7 @@ namespace Spring.Expressions.Parser.antlr
 		
 		public override bool Equals(object obj) 
 		{      
-			if (obj == null) 
+			if (obj is null) 
 				return false;       			
 			if (this.GetType() != obj.GetType()) 
 				return false;       			
@@ -110,7 +110,7 @@ namespace Spring.Expressions.Parser.antlr
 		/*Is node t equal to this in terms of token type and text? */
 		public virtual bool Equals(AST t)
 		{
-			if (t == null)
+			if (t is null)
 				return false;
 
 			return	(object.Equals(this.getText(), t.getText())) && 
@@ -125,13 +125,13 @@ namespace Spring.Expressions.Parser.antlr
 			AST sibling;
 			
 			// the empty tree is not a match of any non-null tree.
-			if (t == null)
+			if (t is null)
 			{
 				return false;
 			}
 			
 			// Otherwise, start walking sibling lists.  First mismatch, return false.
-			 for (sibling = this; sibling != null && t != null; sibling = sibling.getNextSibling(), t = t.getNextSibling())
+			 for (sibling = this; sibling is object && t is object; sibling = sibling.getNextSibling(), t = t.getNextSibling())
 			{
 				// as a quick optimization, check roots first.
 				if (!sibling.Equals(t))
@@ -139,19 +139,19 @@ namespace Spring.Expressions.Parser.antlr
 					return false;
 				}
 				// if roots match, do full list match test on children.
-				if (sibling.getFirstChild() != null)
+				if (sibling.getFirstChild() is object)
 				{
 					if (!sibling.getFirstChild().EqualsList(t.getFirstChild()))
 					{
 						return false;
 					}
 				}
-				else if (t.getFirstChild() != null)
+				else if (t.getFirstChild() is object)
 				{
 					return false;
 				}
 			}
-			if (sibling == null && t == null)
+			if (sibling is null && t is null)
 			{
 				return true;
 			}
@@ -167,25 +167,25 @@ namespace Spring.Expressions.Parser.antlr
 			AST sibling;
 			
 			// the empty tree is always a subset of any tree.
-			if (sub == null)
+			if (sub is null)
 			{
 				return true;
 			}
 			
 			// Otherwise, start walking sibling lists.  First mismatch, return false.
-			 for (sibling = this; sibling != null && sub != null; sibling = sibling.getNextSibling(), sub = sub.getNextSibling())
+			 for (sibling = this; sibling is object && sub is object; sibling = sibling.getNextSibling(), sub = sub.getNextSibling())
 			{
 				// as a quick optimization, check roots first.
 				if (!sibling.Equals(sub))
 					return false;
 				// if roots match, do partial list match test on children.
-				if (sibling.getFirstChild() != null)
+				if (sibling.getFirstChild() is object)
 				{
 					if (!sibling.getFirstChild().EqualsListPartial(sub.getFirstChild()))
 						return false;
 				}
 			}
-			if (sibling == null && sub != null)
+			if (sibling is null && sub is object)
 			{
 				// nothing left to match in this tree, but subtree has more
 				return false;
@@ -203,12 +203,12 @@ namespace Spring.Expressions.Parser.antlr
 			if (!this.Equals(t))
 				return false;
 			// if roots match, do full list match test on children.
-			if (this.getFirstChild() != null)
+			if (this.getFirstChild() is object)
 			{
 				if (!this.getFirstChild().EqualsList(t.getFirstChild()))
 					return false;
 			}
-			else if (t.getFirstChild() != null)
+			else if (t.getFirstChild() is object)
 			{
 				return false;
 			}
@@ -221,7 +221,7 @@ namespace Spring.Expressions.Parser.antlr
 		public virtual bool EqualsTreePartial(AST sub)
 		{
 			// the empty tree is always a subset of any tree.
-			if (sub == null)
+			if (sub is null)
 			{
 				return true;
 			}
@@ -230,7 +230,7 @@ namespace Spring.Expressions.Parser.antlr
 			if (!this.Equals(sub))
 				return false;
 			// if roots match, do full list partial match test on children.
-			if (this.getFirstChild() != null)
+			if (this.getFirstChild() is object)
 			{
 				if (!this.getFirstChild().EqualsListPartial(sub.getFirstChild()))
 					return false;
@@ -248,7 +248,7 @@ namespace Spring.Expressions.Parser.antlr
 			//AST sibling;
 			
 			// the empty tree cannot result in an enumeration
-			if (target == null)
+			if (target is null)
 			{
 				return null;
 			}
@@ -268,7 +268,7 @@ namespace Spring.Expressions.Parser.antlr
 			//AST sibling;
 			
 			// the empty tree cannot result in an enumeration
-			if (sub == null)
+			if (sub is null)
 			{
 				return null;
 			}
@@ -311,10 +311,10 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			BaseAST t = this.down;
 			int n = 0;
-			if (t != null) 
+			if (t is object) 
 			{
 				n = 1;
-				while (t.right != null) 
+				while (t.right is object) 
 				{
 					t = t.right;
 					n++;
@@ -386,16 +386,16 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			AST t = this;
 			string ts = "";
-			if (t.getFirstChild() != null)
+			if (t.getFirstChild() is object)
 				ts += " (";
 			ts += " " + this.ToString();
-			if (t.getFirstChild() != null)
+			if (t.getFirstChild() is object)
 			{
 				ts += ((BaseAST) t.getFirstChild()).ToStringList();
 			}
-			if (t.getFirstChild() != null)
+			if (t.getFirstChild() is object)
 				ts += " )";
-			if (t.getNextSibling() != null)
+			if (t.getNextSibling() is object)
 			{
 				ts += ((BaseAST) t.getNextSibling()).ToStringList();
 			}
@@ -406,16 +406,16 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			AST t = this;
 			string ts = "";
-			if (t.getFirstChild() != null) 
+			if (t.getFirstChild() is object) 
 			{
 				ts += " (";
 			}
 			ts += " " + this.ToString();
-			if (t.getFirstChild() != null)
+			if (t.getFirstChild() is object)
 			{
 				ts += ((BaseAST) t.getFirstChild()).ToStringList();
 			}
-			if (t.getFirstChild() != null)
+			if (t.getFirstChild() is object)
 			{
 				ts += " )";
 			}
@@ -432,7 +432,7 @@ namespace Spring.Expressions.Parser.antlr
 			StringBuilder sb = new(prefix);
 		
 			// Replace vertical bar if there is no next sibling.
-			if ( (getNextSibling() == null) )
+			if ( (getNextSibling() is null) )
 				sb.Append("+--");
 			else
 				sb.Append("|--");
@@ -440,16 +440,16 @@ namespace Spring.Expressions.Parser.antlr
 			sb.Append( ToString() );
 			sb.Append( Environment.NewLine );
 
-			if ( getFirstChild() != null ) 
+			if ( getFirstChild() is object ) 
 			{
 				// Replace vertical bar if there is no next sibling.
-				if ( getNextSibling() == null )
+				if ( getNextSibling() is null )
 					sb.Append( ((BaseAST) getFirstChild()).ToTree(prefix + "   ") );
 				else
 					sb.Append( ((BaseAST) getFirstChild()).ToTree(prefix + "|  ") );
 			}
 
-			if ( getNextSibling() != null )
+			if ( getNextSibling() is object )
 				sb.Append( ((BaseAST) getNextSibling()).ToTree(prefix) );
 
 			return sb.ToString();
@@ -580,9 +580,9 @@ namespace Spring.Expressions.Parser.antlr
 		public virtual void  xmlSerialize(TextWriter outWriter)
 		{
 			// print out this node and all siblings
-			 for (AST node = this; node != null; node = node.getNextSibling())
+			 for (AST node = this; node is object; node = node.getNextSibling())
 			{
-				if (node.getFirstChild() == null)
+				if (node.getFirstChild() is null)
 				{
 					// print guts (class name, attributes)
 					((BaseAST) node).xmlSerializeNode(outWriter);

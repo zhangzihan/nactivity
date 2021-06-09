@@ -286,7 +286,7 @@ namespace Sys.Workflow.Image.Impl
             g.Paint = originalPaint;
 
             // calculate coordinates to center image
-            if (icon != null)
+            if (icon is object)
             {
                 int imageX = (int)Math.Round(graphicInfo.X + (graphicInfo.Width / 2) - (icon.Width / 2));
                 int imageY = (int)Math.Round(graphicInfo.Y + (graphicInfo.Height / 2) - (icon.Height / 2));
@@ -364,7 +364,7 @@ namespace Sys.Workflow.Image.Impl
             g.Paint = originalPaint;
             g.draw(innerCircle);
 
-            if (icon != null)
+            if (icon is object)
             {
                 // calculate coordinates to center image
                 int imageX = (int)(graphicInfo.X + (graphicInfo.Width / 2) - (icon.Width / 2));
@@ -1260,16 +1260,16 @@ namespace Sys.Workflow.Image.Impl
             Shape shapeFirst = createShape(sourceShapeType, sourceGraphicInfo);
             Shape shapeLast = createShape(targetShapeType, targetGraphicInfo);
 
-            if (graphicInfoList != null && graphicInfoList.Count > 0)
+            if (graphicInfoList is object && graphicInfoList.Count > 0)
             {
                 GraphicInfo graphicInfoFirst = graphicInfoList[0];
                 GraphicInfo graphicInfoLast = graphicInfoList[graphicInfoList.Count - 1];
-                if (shapeFirst != null)
+                if (shapeFirst is object)
                 {
                     graphicInfoFirst.X = shapeFirst.Bounds2D.CenterX;
                     graphicInfoFirst.Y = shapeFirst.Bounds2D.CenterY;
                 }
-                if (shapeLast != null)
+                if (shapeLast is object)
                 {
                     graphicInfoLast.X = shapeLast.Bounds2D.CenterX;
                     graphicInfoLast.Y = shapeLast.Bounds2D.CenterY;
@@ -1277,22 +1277,22 @@ namespace Sys.Workflow.Image.Impl
 
                 Point p = null;
 
-                if (shapeFirst != null)
+                if (shapeFirst is object)
                 {
                     Line2D.Double lineFirst = new Line2D.Double(graphicInfoFirst.X, graphicInfoFirst.Y, graphicInfoList[1].X, graphicInfoList[1].Y);
                     p = getIntersection(shapeFirst, lineFirst);
-                    if (p != null)
+                    if (p is object)
                     {
                         graphicInfoFirst.X = p.X;
                         graphicInfoFirst.Y = p.Y;
                     }
                 }
 
-                if (shapeLast != null)
+                if (shapeLast is object)
                 {
                     Line2D.Double lineLast = new Line2D.Double(graphicInfoLast.X, graphicInfoLast.Y, graphicInfoList[graphicInfoList.Count - 2].X, graphicInfoList[graphicInfoList.Count - 2].Y);
                     p = getIntersection(shapeLast, lineLast);
-                    if (p != null)
+                    if (p is object)
                     {
                         graphicInfoLast.X = p.X;
                         graphicInfoLast.Y = p.Y;

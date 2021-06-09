@@ -56,7 +56,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             if (jobEntity.ExecutionId is object)
             {
                 IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
-                if (execution != null)
+                if (execution is object)
                 {
                     execution.Jobs.Add(jobEntity);
 
@@ -169,7 +169,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             if (jobEntity.ExecutionId is object)
             {
                 IExecutionEntity execution = ExecutionEntityManager.FindById<IExecutionEntity>(jobEntity.ExecutionId);
-                if (execution != null)
+                if (execution is object)
                 {
                     execution.Jobs.Remove(jobEntity);
                 }

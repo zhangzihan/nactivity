@@ -189,7 +189,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 var ctx = Context.CommandContext;
-                if (task == null && taskId != null && ctx != null)
+                if (task is null && taskId is object && ctx is object)
                 {
                     this.task = ctx.TaskEntityManager.FindById<ITaskEntity>(taskId);
                 }
@@ -208,7 +208,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 var ctx = Context.CommandContext;
-                if (processInstance == null && processInstanceId != null && ctx != null)
+                if (processInstance is null && processInstanceId is object && ctx is object)
                 {
                     this.processInstance = ctx.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
                 }
@@ -227,7 +227,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 var ctx = Context.CommandContext;
-                if (processDef == null && processDefId != null && ctx != null)
+                if (processDef is null && processDefId is object && ctx is object)
                 {
                     this.processDef = ctx.ProcessDefinitionEntityManager.FindById<IProcessDefinitionEntity>(processDefId);
                 }

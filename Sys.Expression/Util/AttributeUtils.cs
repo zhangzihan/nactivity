@@ -32,12 +32,12 @@ namespace Spring.Util
             foreach (Type interfaceType in type.GetInterfaces())
             {
                 Attribute attrib = FindAttribute(interfaceType, attributeType);
-                if (attrib != null)
+                if (attrib is object)
                 {
                     return attrib;
                 }
             }
-            if (type.BaseType == null)
+            if (type.BaseType is null)
             {
                 return null;
             }
@@ -73,7 +73,7 @@ namespace Spring.Util
             try
             {
                 var property = attributeType.GetProperty(propertyName);
-                if (property == null)
+                if (property is null)
                     return null;
                 var instance = Activator.CreateInstance(attributeType);
 

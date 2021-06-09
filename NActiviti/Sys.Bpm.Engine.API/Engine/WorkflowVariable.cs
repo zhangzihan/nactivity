@@ -16,6 +16,7 @@ namespace Sys.Workflow.Services.Api.Commands
 
         private readonly IDictionary idict = null;
 
+        public const string GLOBAL_OPERATOR_STATE = "OPERATOR_STATE";
         public const string GLOBAL_APPROVALED_VARIABLE = "同意";
         public const string GLOBAL_BUSINESSKEY_VARIABLE = "事项编号";
         public const string GLOBAL_WORKFLOWDATA_VARIABLE = "流程数据";
@@ -302,7 +303,7 @@ namespace Sys.Workflow.Services.Api.Commands
         {
             if (workflowVariables.TryGetValue(key, out object res))
             {
-                if (res == null)
+                if (res is null)
                 {
                     value = default;
                     return true;

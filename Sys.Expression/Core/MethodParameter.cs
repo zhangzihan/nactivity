@@ -73,9 +73,9 @@ namespace Spring.Core
         {
             get
             {
-                if (this.parameterType == null)
+                if (this.parameterType is null)
                 {
-                    this.parameterType = (this.methodInfo != null
+                    this.parameterType = (this.methodInfo is object
                                               ? ReflectionUtils.GetParameterTypes(this.methodInfo.GetParameters())[parameterIndex]
                                               : ReflectionUtils.GetParameterTypes(this.constructorInfo.GetParameters())[parameterIndex]);                                        
                 }
@@ -111,7 +111,7 @@ namespace Spring.Core
         /// <returns>the parameter name.</returns>
         public string ParameterName()
         {
-            if (methodInfo != null)
+            if (methodInfo is object)
             {
                 return methodInfo.GetParameters()[parameterIndex].Name;
             } else
@@ -145,7 +145,7 @@ namespace Spring.Core
         {
             get
             {
-                if (methodInfo != null)
+                if (methodInfo is object)
                     return Attribute.GetCustomAttributes(methodInfo.GetParameters()[parameterIndex]);
                 else
                     return Attribute.GetCustomAttributes(constructorInfo.GetParameters()[parameterIndex]);
@@ -159,7 +159,7 @@ namespace Spring.Core
         {
             get
             {
-                if (methodInfo != null)
+                if (methodInfo is object)
                     return Attribute.GetCustomAttributes(methodInfo);
                 else
                     return Attribute.GetCustomAttributes(constructorInfo);

@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ namespace Spring.Context.Support
         {
             get
             {
-                if (_parentMessageSource == null)
+                if (_parentMessageSource is null)
                 {
                     _parentMessageSource = new SpecialCaseNullMessageSource();
                 }
@@ -354,7 +354,7 @@ namespace Spring.Context.Support
                     return resolvable.DefaultMessage;
                 }
                 IList<string> codes = resolvable.GetCodes();
-                string code = (codes != null && codes.Count > 0 ? codes[0] : string.Empty);
+                string code = (codes is object && codes.Count > 0 ? codes[0] : string.Empty);
                 throw new NoSuchMessageException(code, culture);
             }
 

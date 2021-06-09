@@ -64,7 +64,7 @@ namespace Spring.Expressions
         {
             get
             {
-                if(bodyExpression == null)
+                if(bodyExpression is null)
                 {
                     InitializeLambda();
                 }
@@ -121,7 +121,7 @@ namespace Spring.Expressions
         {
             lock (syncRoot)
             {
-                if (bodyExpression == null)
+                if (bodyExpression is null)
                 {
                     if (this.getNumberOfChildren() == 1)
                     {
@@ -134,7 +134,7 @@ namespace Spring.Expressions
                         argumentNames = new string[argsNode.getNumberOfChildren()];
                         AST argNode = argsNode.getFirstChild();
                         int i = 0;
-                        while (argNode != null)
+                        while (argNode is object)
                         {
                             argumentNames[i++] = argNode.getText();
                             argNode = argNode.getNextSibling();

@@ -63,7 +63,7 @@ namespace Spring.Objects.Factory.Config
 
         public void PostProcessObjectFactory(IConfigurableListableObjectFactory factory)
         {
-            if (_configurationHandler != null)
+            if (_configurationHandler is object)
             {
                 _configurationHandler(factory);
             }

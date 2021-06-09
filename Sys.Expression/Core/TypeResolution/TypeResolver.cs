@@ -74,7 +74,7 @@ namespace Spring.Core.TypeResolution
                 }
                 throw BuildTypeLoadException(typeName, ex);
             }
-            if (type == null)
+            if (type is null)
             {
                 throw BuildTypeLoadException(typeName);
             }
@@ -116,7 +116,7 @@ namespace Spring.Core.TypeResolution
 #else
 			Assembly assembly = Assembly.Load(typeInfo.AssemblyName);
 #endif
-            if (assembly != null)
+            if (assembly is object)
             {
                 type = assembly.GetType(typeInfo.TypeName, true, true);
             }
@@ -141,7 +141,7 @@ namespace Spring.Core.TypeResolution
             foreach (Assembly assembly in assemblies)
             {
                 type = assembly.GetType(typeInfo.TypeName, false, false);
-                if (type != null)
+                if (type is object)
                 {
                     break;
                 }

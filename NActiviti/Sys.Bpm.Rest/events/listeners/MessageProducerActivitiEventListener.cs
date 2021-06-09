@@ -48,7 +48,7 @@ namespace Sys.Workflow.Cloud.Services.Events.Listeners
         public virtual void OnEvent(IActivitiEvent @event)
         {
             IProcessEngineEvent newEvent = converterContext.From(@event);
-            if (newEvent != null)
+            if (newEvent is object)
             {
                 eventsAggregator.Add(newEvent);
             }

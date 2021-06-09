@@ -35,8 +35,6 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         protected string completeReason = null;
 
-        private readonly object syncRoot = new object();
-
         public AbstractCompleteTaskCmd(string taskId) : base(taskId)
         {
         }

@@ -43,21 +43,21 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 throw new ActivitiIllegalArgumentException("process definition id is null");
             }
 
-            if (infoNode == null)
+            if (infoNode is null)
             {
                 throw new ActivitiIllegalArgumentException("process definition info node is null");
             }
 
             IProcessDefinitionInfoEntityManager definitionInfoEntityManager = commandContext.ProcessDefinitionInfoEntityManager;
             IProcessDefinitionInfoEntity definitionInfoEntity = definitionInfoEntityManager.FindProcessDefinitionInfoByProcessDefinitionId(processDefinitionId);
-            if (definitionInfoEntity == null)
+            if (definitionInfoEntity is null)
             {
                 definitionInfoEntity = definitionInfoEntityManager.Create();
                 definitionInfoEntity.ProcessDefinitionId = processDefinitionId;
                 commandContext.ProcessDefinitionInfoEntityManager.InsertProcessDefinitionInfo(definitionInfoEntity);
             }
 
-            if (infoNode != null)
+            if (infoNode is object)
             {
                 try
                 {

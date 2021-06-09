@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
         public static void ApplyFieldDeclaration(IList<FieldDeclaration> fieldDeclarations, object target)
         {
-            if (fieldDeclarations != null)
+            if (fieldDeclarations is object)
             {
                 foreach (FieldDeclaration declaration in fieldDeclarations)
                 {
@@ -51,7 +51,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
         {
             MethodInfo setterMethod = ReflectUtil.GetSetter(declaration.Name, target.GetType(), declaration.Value.GetType());
 
-            if (setterMethod != null)
+            if (setterMethod is object)
             {
                 try
                 {
@@ -73,7 +73,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
             else
             {
                 FieldInfo field = ReflectUtil.GetField(declaration.Name, target);
-                if (field == null)
+                if (field is null)
                 {
                     throw new ActivitiIllegalArgumentException("Field definition uses non-existing field '" + declaration.Name + "' on class " + target.GetType().FullName);
                 }
@@ -88,7 +88,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Helper
 
         public static bool FieldTypeCompatible(FieldDeclaration declaration, FieldInfo field)
         {
-            if (declaration.Value != null)
+            if (declaration.Value is object)
             {
                 return declaration.Value.GetType().IsAssignableFrom(field.DeclaringType);
             }

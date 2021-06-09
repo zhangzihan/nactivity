@@ -21,7 +21,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 
         public virtual bool IsRetained(IExecutionEntity executionEntity, object parameter)
         {
-            if (executionEntity == null || executionEntity.SuperExecutionId == null || parameter == null)
+            if (executionEntity is null || executionEntity.SuperExecutionId is null || parameter is null)
             {
                 return false;
             }

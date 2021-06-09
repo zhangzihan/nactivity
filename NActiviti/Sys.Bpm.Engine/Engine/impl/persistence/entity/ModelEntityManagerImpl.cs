@@ -70,7 +70,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual void InsertEditorSourceForModel(string modelId, byte[] modelSource)
         {
             IModelEntity model = FindById<IModelEntity>(new KeyValuePair<string, object>("id", modelId));
-            if (model != null)
+            if (model is object)
             {
                 ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceValueId);
                 @ref.SetValue("source", modelSource);
@@ -104,7 +104,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual void InsertEditorSourceExtraForModel(string modelId, byte[] modelSource)
         {
             IModelEntity model = FindById<IModelEntity>(modelId);
-            if (model != null)
+            if (model is object)
             {
                 ByteArrayRef @ref = new ByteArrayRef(model.EditorSourceExtraValueId);
                 @ref.SetValue("source-extra", modelSource);
@@ -130,7 +130,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual byte[] FindEditorSourceByModelId(string modelId)
         {
             IModelEntity model = FindById<IModelEntity>(modelId);
-            if (model == null || model.EditorSourceValueId is null)
+            if (model is null || model.EditorSourceValueId is null)
             {
                 return null;
             }
@@ -142,7 +142,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual byte[] FindEditorSourceExtraByModelId(string modelId)
         {
             IModelEntity model = FindById<IModelEntity>(modelId);
-            if (model == null || model.EditorSourceExtraValueId is null)
+            if (model is null || model.EditorSourceExtraValueId is null)
             {
                 return null;
             }

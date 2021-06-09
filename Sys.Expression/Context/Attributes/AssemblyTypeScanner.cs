@@ -221,7 +221,7 @@ namespace Spring.Context.Attributes
         /// <returns></returns>
         public IAssemblyTypeScanner WithExcludeFilter(ITypeFilter filter)
         {
-            if (filter != null)
+            if (filter is object)
                 TypeExclusionTypeFilters.Add(filter);
 
             return this;
@@ -245,7 +245,7 @@ namespace Spring.Context.Attributes
         /// <returns></returns>
         public IAssemblyTypeScanner WithIncludeFilter(ITypeFilter filter)
         {
-            if (filter != null)
+            if (filter is object)
                 TypeInclusionTypeFilter.Add(filter);
 
             return this;

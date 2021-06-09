@@ -68,7 +68,7 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
         public static void ParseChildElements(string elementName, BaseElement parentElement, XMLStreamReader xtr, IDictionary<string, BaseChildElementParser> childParsers, BpmnModel model)
         {
             IDictionary<string, BaseChildElementParser> localParserMap = new Dictionary<string, BaseChildElementParser>(genericChildParserMap);
-            if (childParsers != null)
+            if (childParsers is object)
             {
                 localParserMap.PutAll(childParsers);
             }
@@ -235,7 +235,7 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
                     didWriteExtensionStartElement = true;
                 }
 
-                if (namespaceMap == null)
+                if (namespaceMap is null)
                 {
                     namespaceMap = new Dictionary<string, string>();
                 }
@@ -284,7 +284,7 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
                 {
                     foreach (ExtensionAttribute attribute in attributes)
                     {
-                        if (!string.IsNullOrWhiteSpace(attribute.Name) && attribute.Value != null)
+                        if (!string.IsNullOrWhiteSpace(attribute.Name) && attribute.Value is object)
                         {
                             if (!string.IsNullOrWhiteSpace(attribute.Namespace))
                             {
@@ -313,7 +313,7 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
                     }
                 }
 
-                if (extensionElement.ElementText != null)
+                if (extensionElement.ElementText is object)
                 {
                     xtw.WriteCData(extensionElement.ElementText);
                 }
@@ -390,7 +390,7 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
         {
             StringBuilder resultString = new StringBuilder();
 
-            if (stringList != null)
+            if (stringList is object)
             {
                 foreach (string result in stringList)
                 {
@@ -449,15 +449,15 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
         {
             foreach (IList<ExtensionAttribute> attributeList in attributes)
             {
-                if (attributeList != null && attributeList.Count > 0)
+                if (attributeList is object && attributeList.Count > 0)
                 {
                     foreach (ExtensionAttribute attribute in attributeList)
                     {
                         if (!IsBlacklisted(attribute, blackLists))
                         {
-                            if (attribute.NamespacePrefix == null)
+                            if (attribute.NamespacePrefix is null)
                             {
-                                if (attribute.Namespace == null)
+                                if (attribute.Namespace is null)
                                 {
                                     xtw.WriteAttribute(attribute.Name, attribute.Value);
                                 }
@@ -483,7 +483,7 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
 
         public static bool IsBlacklisted(ExtensionAttribute attribute, params IList<ExtensionAttribute>[] blackLists)
         {
-            if (blackLists != null)
+            if (blackLists is object)
             {
                 foreach (IList<ExtensionAttribute> blackList in blackLists)
                 {
@@ -491,11 +491,11 @@ namespace Sys.Workflow.Bpmn.Converters.Utils
                     {
                         if (blackAttribute.Name.Equals(attribute.Name))
                         {
-                            if (blackAttribute.Namespace != null && attribute.Namespace != null && blackAttribute.Namespace.Equals(attribute.Namespace))
+                            if (blackAttribute.Namespace is object && attribute.Namespace is object && blackAttribute.Namespace.Equals(attribute.Namespace))
                             {
                                 return true;
                             }
-                            if (blackAttribute.Namespace == null && attribute.Namespace == null)
+                            if (blackAttribute.Namespace is null && attribute.Namespace is null)
                             {
                                 return true;
                             }

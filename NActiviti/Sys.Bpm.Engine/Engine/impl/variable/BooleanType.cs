@@ -45,7 +45,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
         /// <returns></returns>
         public override object GetValue(IValueFields valueFields)
         {
-            if (valueFields.LongValue != null)
+            if (valueFields.LongValue is object)
             {
                 return valueFields.LongValue == 1;
             }
@@ -58,7 +58,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
         /// <param name="valueFields"></param>
         public override void SetValue(object value, IValueFields valueFields)
         {
-            if (value == null)
+            if (value is null)
             {
                 valueFields.LongValue = null;
             }
@@ -83,7 +83,7 @@ namespace Sys.Workflow.Engine.Impl.Variable
         /// <returns></returns>
         public override bool IsAbleToStore(object value)
         {
-            if (value == null)
+            if (value is null)
             {
                 return true;
             }

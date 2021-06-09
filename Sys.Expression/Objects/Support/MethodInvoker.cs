@@ -207,7 +207,7 @@ namespace Spring.Objects.Support
 			get { return _arguments; }
 			set
 			{
-				if (value != null)
+				if (value is object)
 				{
 					this._arguments = value;
 				}
@@ -242,7 +242,7 @@ namespace Spring.Objects.Support
 			get { return _preparedArguments; }
 			set
 			{
-				if (value != null)
+				if (value is object)
 				{
 					this._preparedArguments = value;
 				}
@@ -273,7 +273,7 @@ namespace Spring.Objects.Support
 			get { return _namedArguments; }
 			set
 			{
-				if (value != null)
+				if (value is object)
 				{
 					this._namedArguments = value;
 				}
@@ -305,16 +305,16 @@ namespace Spring.Objects.Support
 		/// </exception>
 		public virtual void Prepare()
 		{
-			if (_targetMethod == null)
+			if (_targetMethod is null)
 			{
 				throw new ArgumentException("The 'TargetMethod' property is required.");
 			}
-			if (_targetType == null && _targetObject == null)
+			if (_targetType is null && _targetObject is null)
 			{
 				throw new ArgumentException("One of either the 'TargetType' or 'TargetObject' properties is required.");
 			}
 			_methodObject = FindTheMethodToInvoke();
-			if (TargetObject == null && !_methodObject.IsStatic)
+			if (TargetObject is null && !_methodObject.IsStatic)
 			{
 				throw new ArgumentException(
 					"The target method cannot be an instance method without a corresponding target instance on which to invoke it.");
@@ -395,7 +395,7 @@ namespace Spring.Objects.Support
         protected virtual MethodInfo FindTheMethodToInvoke()
         {
             MethodInfo theMethod = null;
-            Type targetType = (TargetObject != null) ? TargetObject.GetType() : TargetType;
+            Type targetType = (TargetObject is object) ? TargetObject.GetType() : TargetType;
             GenericArgumentsHolder genericInfo = new(TargetMethod);
 
             // if we don't have any named arguments, we can try to get the exact method first...
@@ -413,12 +413,12 @@ namespace Spring.Objects.Support
                     new MemberFilter(new CriteriaMemberFilter().FilterMemberByCriteria),
                     searchCriteria);
 
-                if (matchingMethods != null && matchingMethods.Length == 1)
+                if (matchingMethods is object && matchingMethods.Length == 1)
                 {
                     theMethod = matchingMethods[0] as MethodInfo;
                 }
 			}
-            if (theMethod == null)
+            if (theMethod is null)
             {
                 // search for a method with a matching signature...
                 ComposedCriteria searchCriteria = new();
@@ -532,7 +532,7 @@ namespace Spring.Objects.Support
 					              "At least one of the arguments passed to this {0} was " +
 					              	"incompatible with the signature of the invoked method.", GetType().Name), ex);
 			}
-			return (result == null ? Void : result);
+			return (result is null ? Void : result);
 		}
 
 		#endregion

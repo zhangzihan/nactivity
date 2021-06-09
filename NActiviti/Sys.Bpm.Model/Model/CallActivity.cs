@@ -134,7 +134,7 @@ namespace Sys.Workflow.Bpmn.Models
                 InheritBusinessKey = val.InheritBusinessKey;
 
                 inParameters = new List<IOParameter>();
-                if (val.InParameters != null && val.InParameters.Count > 0)
+                if (val.InParameters is object && val.InParameters.Count > 0)
                 {
                     foreach (IOParameter parameter in val.InParameters)
                     {
@@ -143,7 +143,7 @@ namespace Sys.Workflow.Bpmn.Models
                 }
 
                 outParameters = new List<IOParameter>();
-                if (val.OutParameters != null && val.OutParameters.Count > 0)
+                if (val.OutParameters is object && val.OutParameters.Count > 0)
                 {
                     foreach (IOParameter parameter in val.OutParameters)
                     {

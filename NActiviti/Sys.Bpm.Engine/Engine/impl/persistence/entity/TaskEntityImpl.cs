@@ -48,127 +48,127 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         /// <summary>
         /// 
         /// </summary>
-        protected internal string owner;
+        private string owner;
         /// <summary>
         /// 
         /// </summary>
-        protected internal int assigneeUpdatedCount; // needed for v5 compatibility
+        private int assigneeUpdatedCount; // needed for v5 compatibility
         /// <summary>
         /// 
         /// </summary>
-        protected internal string originalAssignee; // needed for v5 compatibility
+        private string originalAssignee; // needed for v5 compatibility
         /// <summary>
         /// 
         /// </summary>
-        protected internal string assignee;
+        private string assignee;
         /// <summary>
         /// 
         /// </summary>
-        protected internal DelegationState? delegationState;
+        private DelegationState? delegationState;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string parentTaskId;
+        private string parentTaskId;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string name;
+        private string name;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string localizedName;
+        private string localizedName;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string description;
+        private string description;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string localizedDescription;
+        private string localizedDescription;
         /// <summary>
         /// 
         /// </summary>
-        protected internal int? priority = TaskFields.DEFAULT_PRIORITY;
+        private int? priority = TaskFields.DEFAULT_PRIORITY;
         /// <summary>
         /// 
         /// </summary>
-        protected internal DateTime? createTime; // The time when the task has been created
+        private DateTime? createTime; // The time when the task has been created
         /// <summary>
         /// 
         /// </summary>
-        protected internal DateTime? dueDate;
+        private DateTime? dueDate;
         /// <summary>
         /// 
         /// </summary>
-        protected internal int suspensionState = SuspensionStateProvider.ACTIVE.StateCode;
+        private int suspensionState = SuspensionStateProvider.ACTIVE.StateCode;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string category;
+        private string category;
         /// <summary>
         /// 
         /// </summary>
-        protected internal bool isIdentityLinksInitialized;
+        private bool isIdentityLinksInitialized;
         /// <summary>
         /// 
         /// </summary>
-        protected internal IList<IIdentityLinkEntity> taskIdentityLinkEntities = new List<IIdentityLinkEntity>();
+        private IList<IIdentityLinkEntity> taskIdentityLinkEntities = new List<IIdentityLinkEntity>();
         /// <summary>
         /// 
         /// </summary>
-        protected internal string executionId;
+        private string executionId;
         /// <summary>
         /// 
         /// </summary>
-        protected internal IExecutionEntity execution;
+        private IExecutionEntity execution;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string processInstanceId;
+        private string processInstanceId;
         /// <summary>
         /// 
         /// </summary>
-        protected internal IExecutionEntity processInstance;
+        private IExecutionEntity processInstance;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string processDefinitionId;
+        private string processDefinitionId;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string taskDefinitionKey;
+        private string taskDefinitionKey;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string formKey;
+        private string formKey;
         /// <summary>
         /// 
         /// </summary>
-        protected internal bool isCanceled;
+        private bool isCanceled;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string eventName;
+        private string eventName;
         /// <summary>
         /// 
         /// </summary>
-        protected internal ActivitiListener currentActivitiListener;
+        private ActivitiListener currentActivitiListener;
         /// <summary>
         /// 
         /// </summary>
-        protected internal string tenantId = ProcessEngineConfiguration.NO_TENANT_ID;
+        private string tenantId = ProcessEngineConfiguration.NO_TENANT_ID;
         /// <summary>
         /// 
         /// </summary>
-        protected internal IList<IVariableInstanceEntity> queryVariables;
+        private IList<IVariableInstanceEntity> queryVariables;
         /// <summary>
         /// 
         /// </summary>
-        protected internal bool forcedUpdate;
+        private bool forcedUpdate;
         /// <summary>
         /// 
         /// </summary>
-        protected internal DateTime? claimTime;
+        private DateTime? claimTime;
         /// <summary>
         /// 
         /// </summary>
@@ -274,7 +274,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (Execution != null)
+                if (Execution is object)
                 {
                     return (ExecutionEntityImpl)execution;
                 }
@@ -347,7 +347,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 var config = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
-                if (execution == null && !string.IsNullOrWhiteSpace(executionId))
+                if (execution is null && !string.IsNullOrWhiteSpace(executionId))
                 {
                     this.execution = config.CommandExecutor.Execute(new GetExecutionByIdCmd(executionId));
                 }
@@ -476,7 +476,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 var ctx = Context.CommandContext;
-                if (!isIdentityLinksInitialized && ctx != null)
+                if (!isIdentityLinksInitialized && ctx is object)
                 {
                     taskIdentityLinkEntities = ctx.IdentityLinkEntityManager.FindIdentityLinksByTaskId(Id);
                     isIdentityLinksInitialized = true;
@@ -492,7 +492,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             set
             {
-                if (Execution != null)
+                if (Execution is object)
                 {
                     execution.Variables = value;
                 }
@@ -548,7 +548,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             set
             {
                 this.originalAssignee = this.assignee;
-                this.assignee = value;
+                this.assignee = string.Empty.Equals(value?.Trim()) ? null : value?.Trim();
                 assigneeUpdatedCount++;
             }
             get
@@ -566,7 +566,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         internal static IEnumerable<ITask> EnsureAssignerInitialized(IEnumerable<TaskEntityImpl> tasks)
         {
-            if (tasks == null || tasks.Count() == 0)
+            if (tasks is null || tasks.Count() == 0)
             {
                 yield break;
             }
@@ -592,7 +592,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             foreach (TaskEntityImpl task in taskEntities)
             {
                 var variable = variables.FirstOrDefault(x => x.TaskId == task.Id && x.Name == task.Assignee);
-                if (variable != null)
+                if (variable is object)
                 {
                     task.assigner = variable.Value as IUserInfo;
                 }
@@ -614,16 +614,16 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         private IUserInfo EnsureAssignerInitialized()
         {
-            if (assignee == null)
+            if (assignee is null)
             {
                 assigner = null;
 
                 return null;
             }
 
-            if (Context.CommandContext != null && (assigner == null || assigner.Id != this.assignee))
+            if (Context.CommandContext is object && (assigner is null || assigner.Id != this.assignee))
             {
-                if (this.VariablesLocal.TryGetValue(this.assignee, out var userInfo) && userInfo != null)
+                if (this.VariablesLocal.TryGetValue(this.assignee, out var userInfo) && userInfo is object)
                 {
                     assigner = JToken.FromObject(userInfo).ToObject<UserInfo>();
 
@@ -649,7 +649,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (assigner == null)
+                if (assigner is null)
                 {
                     assigner = EnsureAssignerInitialized();
                 }
@@ -763,7 +763,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal override IVariableInstanceEntity GetSpecificVariable(string variableName)
         {
             ICommandContext commandContext = Context.CommandContext;
-            if (commandContext == null)
+            if (commandContext is null)
             {
                 throw new ActivitiException("lazy loading outside command context");
             }
@@ -779,7 +779,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal override IList<IVariableInstanceEntity> GetSpecificVariables(IEnumerable<string> variableNames)
         {
             ICommandContext commandContext = Context.CommandContext;
-            if (commandContext == null)
+            if (commandContext is null)
             {
                 throw new ActivitiException("lazy loading outside command context");
             }
@@ -948,7 +948,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 var ctx = Context.CommandContext;
-                if (processInstance == null && processInstanceId != null && ctx != null)
+                if (processInstance is null && processInstanceId is object && ctx is object)
                 {
                     processInstance = ctx.ExecutionEntityManager.FindById<IExecutionEntity>(processInstanceId);
                 }
@@ -1065,7 +1065,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 IDictionary<string, object> variables = new Dictionary<string, object>();
-                if (queryVariables != null)
+                if (queryVariables is object)
                 {
                     foreach (IVariableInstanceEntity variableInstance in queryVariables)
                     {
@@ -1087,7 +1087,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 IDictionary<string, object> variables = new Dictionary<string, object>();
-                if (queryVariables != null)
+                if (queryVariables is object)
                 {
                     foreach (IVariableInstanceEntity variableInstance in queryVariables)
                     {
@@ -1121,7 +1121,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (queryVariables == null && Context.CommandContext != null)
+                if (queryVariables is null && Context.CommandContext is object)
                 {
                     queryVariables = new VariableInitializingList();
                 }

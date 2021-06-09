@@ -55,7 +55,7 @@ namespace Spring.Expressions
         protected override object Get(object context, EvaluationContext evalContext)
         {
             IEnumerable enumerable = context as IEnumerable;
-            if (enumerable == null)
+            if (enumerable is null)
             {
                 throw new ArgumentException(
                     "Selection can only be used on an instance of the type that implements IEnumerable.");

@@ -88,7 +88,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         {
             IDictionary<string, IVariableInstance> variableInstancesMap = runtimeService.GetVariableInstancesLocal(processInstanceId);
             IList<IVariableInstance> variableInstances = new List<IVariableInstance>();
-            if (variableInstancesMap != null)
+            if (variableInstancesMap is object)
             {
                 ((List<IVariableInstance>)variableInstances).AddRange(variableInstancesMap.Values);
             }

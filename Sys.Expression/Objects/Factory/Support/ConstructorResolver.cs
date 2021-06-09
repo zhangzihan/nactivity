@@ -125,7 +125,7 @@ namespace Spring.Objects.Factory.Support
             ConstructorInfo constructorToUse = null;
             object[] argsToUse = null;
 
-            if (explicitArgs != null)
+            if (explicitArgs is object)
             {
                 argsToUse = explicitArgs;
             }
@@ -136,12 +136,12 @@ namespace Spring.Objects.Factory.Support
 
 
             // Need to resolve the constructor.
-            bool autowiring = (chosenCtors != null ||
+            bool autowiring = (chosenCtors is object ||
                                rod.ResolvedAutowireMode == AutoWiringMode.Constructor);
             ConstructorArgumentValues resolvedValues = null;
 
             int minNrOfArgs = 0;
-            if (explicitArgs != null)
+            if (explicitArgs is object)
             {
                 minNrOfArgs = explicitArgs.Length;
             }
@@ -160,7 +160,7 @@ namespace Spring.Objects.Factory.Support
             {
                 ConstructorInfo candidate = candidates[i];
                 Type[] paramTypes = ReflectionUtils.GetParameterTypes(candidate.GetParameters());
-                if (constructorToUse != null && argsToUse.Length > paramTypes.Length)
+                if (constructorToUse is object && argsToUse.Length > paramTypes.Length)
                 {
                     // already found greedy constructor that can be satisfied, so
                     // don't look any further, there are only less greedy constructors left...
@@ -176,7 +176,7 @@ namespace Spring.Objects.Factory.Support
                 }
 
                 ArgumentsHolder args;
-                if (resolvedValues != null)
+                if (resolvedValues is object)
                 {
                     // Try to resolve arguments for current constructor
 
@@ -192,9 +192,9 @@ namespace Spring.Objects.Factory.Support
                         autowiring,
                         out var unsatisfiedDependencyExceptionData);
 
-                    if (args == null)
+                    if (args is null)
                     {
-                        if (i == candidates.Length - 1 && constructorToUse == null)
+                        if (i == candidates.Length - 1 && constructorToUse is null)
                         {
                             throw new UnsatisfiedDependencyException(rod.ResourceDescription,
                                             objectName,
@@ -228,7 +228,7 @@ namespace Spring.Objects.Factory.Support
             }
 
 
-            if (constructorToUse == null)
+            if (constructorToUse is null)
             {
                 throw new ObjectCreationException(rod.ResourceDescription, objectName, "Could not resolve matching constructor.");
             }
@@ -282,7 +282,7 @@ namespace Spring.Objects.Factory.Support
 
             // we don't have arguments passed in programmatically, so we need to resolve the
             // arguments specified in the constructor arguments held in the object definition...
-            if (arguments == null || arguments.Length == 0)
+            if (arguments is null || arguments.Length == 0)
             {
                 expectedArgCount = cargs.ArgumentCount;
                 ResolveConstructorArguments(name, definition, wrapper, cargs, resolvedValues);
@@ -328,14 +328,14 @@ namespace Spring.Objects.Factory.Support
                     }
                     factoryMethodCandidate = factoryMethodCandidate.MakeGenericMethod(paramTypes);
                 }
-                if (arguments == null || arguments.Length == 0)
+                if (arguments is null || arguments.Length == 0)
                 {
                     Type[] paramTypes = ReflectionUtils.GetParameterTypes(factoryMethodCandidate.GetParameters());
                     // try to create the required arguments...
                     UnsatisfiedDependencyExceptionData unsatisfiedDependencyExceptionData = null;
                     ArgumentsHolder args = CreateArgumentArray(name, definition, resolvedValues, wrapper, paramTypes,
                                                                factoryMethodCandidate, autowiring, out unsatisfiedDependencyExceptionData);
-                    if (args == null)
+                    if (args is null)
                     {
                         arguments = null;
                         // if we failed to match this method, keep
@@ -350,7 +350,7 @@ namespace Spring.Objects.Factory.Support
 
                 // if we get here, we found a usable candidate factory method - check, if arguments match
                 //arguments = (arguments.Length == 0 ? null : arguments);
-                if (ReflectionUtils.GetMethodByArgumentValues(new MethodInfo[] { factoryMethodCandidate }, arguments) == null)
+                if (ReflectionUtils.GetMethodByArgumentValues(new MethodInfo[] { factoryMethodCandidate }, arguments) is null)
                 {
                     continue;
                 }
@@ -402,7 +402,7 @@ namespace Spring.Objects.Factory.Support
                 // let's try the next generic, untyped argument value as fallback:
                 // it could match after type conversion (for example, String -> int).               
                 ConstructorArgumentValues.ValueHolder valueHolder = null;
-                if (resolvedValues.GetNamedArgumentValue(parameterName) != null)
+                if (resolvedValues.GetNamedArgumentValue(parameterName) is object)
                 {
                     valueHolder = resolvedValues.GetArgumentValue(parameterName, paramType, usedValueHolders);
                 }
@@ -412,11 +412,11 @@ namespace Spring.Objects.Factory.Support
                 }
 
 
-                if (valueHolder == null && !autowiring)
+                if (valueHolder is null && !autowiring)
                 {
                     valueHolder = resolvedValues.GetGenericArgumentValue(null, usedValueHolders);
                 }
-                if (valueHolder != null)
+                if (valueHolder is object)
                 {
                     // We found a potential match - let's give it a try.
                     // Do not consider the same value definition multiple times!
@@ -476,7 +476,7 @@ namespace Spring.Objects.Factory.Support
                 }
             }
 
-            if (log.IsEnabled(LogLevel.Debug) && autowiredObjectNames != null)
+            if (log.IsEnabled(LogLevel.Debug) && autowiredObjectNames is object)
             {
                 for (var i = 0; i < autowiredObjectNames.Count; i++)
                 {

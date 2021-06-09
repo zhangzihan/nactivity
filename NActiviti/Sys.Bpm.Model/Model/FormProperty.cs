@@ -186,7 +186,7 @@ namespace Sys.Workflow.Bpmn.Models
                 Required = val.Required;
 
                 formValues = new List<FormValue>();
-                if (val.FormValues != null && val.FormValues.Count > 0)
+                if (val.FormValues is object && val.FormValues.Count > 0)
                 {
                     foreach (FormValue formValue in val.FormValues)
                     {

@@ -127,7 +127,7 @@ namespace Sys.Workflow.Engine.Impl.EL
 
         private object ToObject(object value)
         {
-            if (value == null)
+            if (value is null)
             {
                 return value;
             }

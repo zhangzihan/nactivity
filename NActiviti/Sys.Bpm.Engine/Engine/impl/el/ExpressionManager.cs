@@ -99,7 +99,7 @@ namespace Sys.Workflow.Engine.Impl.EL
                 elContext = variableScopeImpl.CachedElContext;
             }
 
-            if (elContext == null)
+            if (elContext is null)
             {
                 elContext = CreateElContext(variableScope);
                 if (variableScope is VariableScopeImpl impl)
@@ -132,7 +132,7 @@ namespace Sys.Workflow.Engine.Impl.EL
             CompositeELResolver elResolver = new CompositeELResolver();
             elResolver.Add(new VariableScopeElResolver(variableScope));
 
-            if (beans != null)
+            if (beans is object)
             {
                 // ACT-1102: Also expose all beans in configuration when using
                 // standalone activiti, not

@@ -28,7 +28,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
         public MapBusinessCalendarManager(IDictionary<string, IBusinessCalendar> businessCalendars)
         {
-            if (businessCalendars == null)
+            if (businessCalendars is null)
             {
                 throw new System.ArgumentException("businessCalendars can not be null");
             }
@@ -39,7 +39,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
         public virtual IBusinessCalendar GetBusinessCalendar(string businessCalendarRef)
         {
             IBusinessCalendar businessCalendar = businessCalendars[businessCalendarRef];
-            if (businessCalendar == null)
+            if (businessCalendar is null)
             {
                 throw new ActivitiException("Requested business calendar " + businessCalendarRef + " does not exist. Allowed calendars are " + this.businessCalendars.Keys + ".");
             }

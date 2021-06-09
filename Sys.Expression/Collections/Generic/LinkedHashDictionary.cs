@@ -40,11 +40,11 @@ namespace Spring.Collections.Generic
                 node = new Node();
                 node.key = key;
                 node.value = value;
-                if ((node.previousLinked = linkedTail) != null)
+                if ((node.previousLinked = linkedTail) is object)
                     node.previousLinked.nextLinked = node;
                 node.nextLinked = null;
                 linkedTail = node;
-                if (linkedHead == null)
+                if (linkedHead is null)
                     linkedHead = node;
                 items.Add(key, node);
             }
@@ -61,7 +61,7 @@ namespace Spring.Collections.Generic
             if (!items.TryGetValue(key, out node))
                 return false;
 
-            if (node.previousLinked != null)
+            if (node.previousLinked is object)
             {
                 node.previousLinked.nextLinked = node.nextLinked;
             }
@@ -70,7 +70,7 @@ namespace Spring.Collections.Generic
                 linkedHead = node.nextLinked;
             }
 
-            if (node.nextLinked != null)
+            if (node.nextLinked is object)
             {
                 node.nextLinked.previousLinked = node.previousLinked;
             }
@@ -130,7 +130,7 @@ namespace Spring.Collections.Generic
         protected override IEnumerable<KeyValuePair<TKey, TValue>> EntriesSet()
         {
             List<KeyValuePair<TKey, TValue>> entries = new();
-            for (Node node = linkedHead; node != null; node = node.nextLinked)
+            for (Node node = linkedHead; node is object; node = node.nextLinked)
                 entries.Add(new KeyValuePair<TKey, TValue>(node.key, node.value));
             return entries;
         }

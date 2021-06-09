@@ -44,7 +44,7 @@ namespace Sys.Workflow.Cloud.Services.Core.Commands
         public virtual void execute(StartProcessInstanceCmd cmd)
         {
             ProcessInstance[] processInstance = processEngine.startProcess(new StartProcessInstanceCmd[] { cmd });
-            if (processInstance != null)
+            if (processInstance is object)
             {
                 StartProcessInstanceResults cmdResult = new StartProcessInstanceResults(cmd.Id, processInstance);
                 commandResults.send(MessageBuilder<StartProcessInstanceResults>.withPayload(cmdResult).build());

@@ -63,7 +63,7 @@ namespace Spring.Objects.Factory.Config
         public DictionaryVariableSource(params string[] args)
             : this(true)
         {
-            if (args != null)
+            if (args is object)
             {
                 if (args.Length % 2 != 0)
                 {
@@ -102,12 +102,12 @@ namespace Spring.Objects.Factory.Config
                 variables = new Dictionary<string, string>();
             }
 
-            if (dictionary != null)
+            if (dictionary is object)
             {
                 foreach (DictionaryEntry entry in dictionary)
                 {
                     string key = "" + entry.Key;
-                    string value = entry.Value != null ? "" + entry.Value : null;
+                    string value = entry.Value is object ? "" + entry.Value : null;
 
                     variables[key] = value;
                 }

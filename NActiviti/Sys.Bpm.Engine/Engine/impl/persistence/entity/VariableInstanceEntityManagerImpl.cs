@@ -111,7 +111,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             base.Delete(entity, false);
             IByteArrayRef byteArrayRef = entity.ByteArrayRef;
-            if (byteArrayRef != null)
+            if (byteArrayRef is object)
             {
                 byteArrayRef.Delete();
             }
@@ -142,7 +142,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             if (variableInstance.ProcessInstanceId is object)
             {
                 IExecutionEntity executionEntity = ExecutionEntityManager.FindById<IExecutionEntity>(variableInstance.ProcessInstanceId);
-                if (executionEntity != null)
+                if (executionEntity is object)
                 {
                     processDefinitionId = executionEntity.ProcessDefinitionId;
                 }
@@ -154,7 +154,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         public virtual void DeleteVariableInstanceByTask(ITaskEntity task)
         {
             IDictionary<string, IVariableInstanceEntity> variableInstances = task.VariableInstanceEntities;
-            if (variableInstances != null)
+            if (variableInstances is object)
             {
                 foreach (IVariableInstanceEntity variableInstance in variableInstances.Values)
                 {

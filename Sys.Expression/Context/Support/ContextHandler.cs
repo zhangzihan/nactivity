@@ -243,14 +243,14 @@ namespace Spring.Context.Support
 
             #region Sanity Checks
 
-            if (contextElement == null)
+            if (contextElement is null)
             {
                 throw ConfigurationUtils.CreateConfigurationException(
                     "Context configuration section must be an XmlElement.");
             }
 
             // sanity check on parent
-            if ((parent != null) && !(parent is IApplicationContext))
+            if ((parent is object) && !(parent is IApplicationContext))
             {
                 throw ConfigurationUtils.CreateConfigurationException(
                     String.Format("Parent context must be of type IApplicationContext, but was '{0}'", parent.GetType().FullName));
@@ -333,7 +333,7 @@ namespace Spring.Context.Support
             IApplicationContext context;
             ContextInstantiator instantiator;
 
-            if (parentContext == null)
+            if (parentContext is null)
             {
                 instantiator = new RootContextInstantiator(contextType, contextName, caseSensitive, new List<string>(resources).ToArray());
             }
@@ -369,7 +369,7 @@ namespace Spring.Context.Support
         private Type GetContextType(XmlElement contextElement, IApplicationContext parentContext)
         {
             Type contextType;
-            if (parentContext != null)
+            if (parentContext is object)
             {
                 // set default context type to parent's type (allows for type inheritance)
                 contextType = GetConfiguredContextType(contextElement, parentContext.GetType());
@@ -451,7 +451,7 @@ namespace Spring.Context.Support
             foreach (XmlNode possibleResourceNode in contextElement.ChildNodes)
             {
                 XmlElement possibleResourceElement = possibleResourceNode as XmlElement;
-                if (possibleResourceElement != null &&
+                if (possibleResourceElement is object &&
                    possibleResourceElement.LocalName == ContextSchema.ResourceElement)
                 {
                     string resourceName = possibleResourceElement.GetAttribute(ContextSchema.URIAttribute);
@@ -473,7 +473,7 @@ namespace Spring.Context.Support
             foreach (XmlNode possibleContextNode in contextElement.ChildNodes)
             {
                 XmlElement possibleContextElement = possibleContextNode as XmlElement;
-                if (possibleContextElement != null &&
+                if (possibleContextElement is object &&
                    possibleContextElement.LocalName == ContextSchema.ContextElement)
                 {
                     contextNodes.Add(possibleContextElement);
@@ -498,7 +498,7 @@ namespace Spring.Context.Support
             public IApplicationContext InstantiateContext()
             {
                 ConstructorInfo ctor = GetContextConstructor();
-                if (ctor == null)
+                if (ctor is null)
                 {
                     string errorMessage = "No constructor with string[] argument found for context type [" + ContextType.Name + "]";
                     throw ConfigurationUtils.CreateConfigurationException(errorMessage);

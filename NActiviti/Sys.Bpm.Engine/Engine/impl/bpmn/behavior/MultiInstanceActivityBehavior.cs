@@ -256,7 +256,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         /// <returns></returns>
         protected internal virtual int ResolveNrOfInstances(IExecutionEntity execution)
         {
-            if (loopCardinalityExpression != null)
+            if (loopCardinalityExpression is object)
             {
                 return ResolveLoopCardinality(execution);
 
@@ -343,7 +343,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         /// <returns></returns>
         protected internal virtual object ResolveCollection(IExecutionEntity execution)
         {
-            if (collectionExpression != null)
+            if (collectionExpression is object)
             {
                 return collectionExpression.GetValue(execution);
             }
@@ -426,7 +426,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             object value = execution.GetVariableLocal(variableName);
             IExecutionEntity parent = execution.Parent;
-            while (value == null && parent != null)
+            while (value is null && parent is object)
             {
                 value = parent.GetVariableLocal(variableName);
                 parent = parent.Parent;
@@ -480,7 +480,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             if (log.IsEnabled(LogLevel.Debug))
             {
-                log.LogDebug($"Multi-instance '{(execution.CurrentFlowElement != null ? execution.CurrentFlowElement.Id : "")}' {custom}. Details: loopCounter={loopCounter}, nrOrCompletedInstances={nrOfCompletedInstances},nrOfActiveInstances={nrOfActiveInstances},nrOfInstances={nrOfInstances}");
+                log.LogDebug($"Multi-instance '{(execution.CurrentFlowElement is object ? execution.CurrentFlowElement.Id : "")}' {custom}. Details: loopCounter={loopCounter}, nrOrCompletedInstances={nrOfCompletedInstances},nrOfActiveInstances={nrOfActiveInstances},nrOfInstances={nrOfInstances}");
             }
         }
         /// <summary>

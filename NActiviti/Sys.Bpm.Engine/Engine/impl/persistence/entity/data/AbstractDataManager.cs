@@ -37,7 +37,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
             var invoker = m.MakeGenericMethod(new Type[] { managedType, outType });
 
             var res = invoker.Invoke(db, new object[] { id, useCache });
-            if (res == null)
+            if (res is null)
             {
                 return default;
             }
@@ -52,7 +52,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
             var invoker = m.MakeGenericMethod(new Type[] { managedType, outType });
 
             var res = invoker.Invoke(db, new object[] { dbQueryName, parameter });
-            if (res == null)
+            if (res is null)
             {
                 return new List<EntityImpl>();
             }
@@ -77,7 +77,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
             var invoker = m.MakeGenericMethod(new Type[] { managedType, outType });
 
             var res = invoker.Invoke(db, new object[] { selectQuery, parameter });
-            if (res == null)
+            if (res is null)
             {
                 return default;
             }
@@ -116,14 +116,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
 
         public virtual TOut FindById<TOut>(KeyValuePair<string, object> id)
         {
-            if (id.Value == null)
+            if (id.Value is null)
             {
                 return default;
             }
 
             // Cache
             TOut cachedEntity = (TOut)EntityCache.FindInCache(ManagedEntityClass, id.Value?.ToString());
-            if (cachedEntity != null)
+            if (cachedEntity is object)
             {
                 return cachedEntity;
             }
@@ -205,7 +205,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
             {
                 ICollection<CachedEntity> cachedObjects = EntityCache.FindInCacheAsCachedObjects(ManagedEntityClass);
 
-                if ((cachedObjects != null && cachedObjects.Count > 0) || ManagedEntitySubClasses != null)
+                if ((cachedObjects is object && cachedObjects.Count > 0) || ManagedEntitySubClasses is object)
                 {
                     Dictionary<string, EntityImpl> entityMap = new Dictionary<string, EntityImpl>(result.Count);
 
@@ -216,7 +216,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
                     }
 
                     // Cache entities
-                    if (cachedObjects != null && cachedEntityMatcher != null)
+                    if (cachedObjects is object && cachedEntityMatcher is object)
                     {
                         foreach (CachedEntity cachedObject in cachedObjects)
                         {
@@ -228,12 +228,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
                         }
                     }
 
-                    if (ManagedEntitySubClasses != null && cachedEntityMatcher != null)
+                    if (ManagedEntitySubClasses is object && cachedEntityMatcher is object)
                     {
                         foreach (Type entitySubClass in ManagedEntitySubClasses)
                         {
                             ICollection<CachedEntity> subclassCachedObjects = EntityCache.FindInCacheAsCachedObjects(entitySubClass);
-                            if (subclassCachedObjects != null)
+                            if (subclassCachedObjects is object)
                             {
                                 foreach (CachedEntity subclassCachedObject in subclassCachedObjects)
                                 {
@@ -278,7 +278,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
             DbSqlSession dbSqlSession = DbSqlSession;
 
             IList<EntityImpl> result = new List<EntityImpl>(cachedObjects.Count);
-            if (cachedObjects != null && entityMatcher != null)
+            if (cachedObjects is object && entityMatcher is object)
             {
                 foreach (CachedEntity cachedObject in cachedObjects)
                 {
@@ -290,12 +290,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data
                 }
             }
 
-            if (ManagedEntitySubClasses != null && entityMatcher != null)
+            if (ManagedEntitySubClasses is object && entityMatcher is object)
             {
                 foreach (Type entitySubClass in ManagedEntitySubClasses)
                 {
                     ICollection<CachedEntity> subclassCachedObjects = EntityCache.FindInCacheAsCachedObjects(entitySubClass);
-                    if (subclassCachedObjects != null)
+                    if (subclassCachedObjects is object)
                     {
                         foreach (CachedEntity subclassCachedObject in subclassCachedObjects)
                         {

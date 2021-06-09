@@ -31,7 +31,7 @@ namespace Spring.Expressions.Processors
     {
         public object Process(object context, object[] args)
         {
-            int argc = args != null ? args.Length : 0;
+            int argc = args is object ? args.Length : 0;
             switch (argc)
             {
                 case 1:

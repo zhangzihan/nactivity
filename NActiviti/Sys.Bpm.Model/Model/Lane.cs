@@ -83,7 +83,7 @@ namespace Sys.Workflow.Bpmn.Models
                 ParentProcess = val.ParentProcess;
 
                 flowReferences = new List<string>();
-                if (val.FlowReferences != null && val.FlowReferences.Count > 0)
+                if (val.FlowReferences is object && val.FlowReferences.Count > 0)
                 {
                     ((List<string>)flowReferences).AddRange(val.FlowReferences);
                 }

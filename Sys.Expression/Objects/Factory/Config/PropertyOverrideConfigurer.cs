@@ -160,14 +160,14 @@ namespace Spring.Objects.Factory.Config
             string name = key.Substring(0, dotIndex);
             string objectProperty = key.Substring(dotIndex + 1);
             IObjectDefinition definition = factory.GetObjectDefinition(name);
-            if (definition != null)
+            if (definition is object)
             {
                 PropertyValue pv = definition.PropertyValues.GetPropertyValue(objectProperty);
-                if (pv != null && pv.Value is RuntimeObjectReference)
+                if (pv is object && pv.Value is RuntimeObjectReference)
                 {
                     definition.PropertyValues.Add(objectProperty, new RuntimeObjectReference(value));
                 }
-                else if (pv != null && pv.Value is ExpressionHolder)
+                else if (pv is object && pv.Value is ExpressionHolder)
                 {
                     definition.PropertyValues.Add(objectProperty, new ExpressionHolder(value));
                 }

@@ -63,7 +63,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             if (HistoryManager.HistoryEnabled)
             {
-                if (historicProcessInstanceId == null)
+                if (historicProcessInstanceId is null)
                 {
                     return;
                 }

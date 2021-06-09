@@ -26,7 +26,7 @@ namespace Sys.Workflow.Engine.Impl.Transformers
             {
                 lock (typeof(Identity))
                 {
-                    if (instance == null)
+                    if (instance is null)
                     {
                         instance = new Identity();
                     }

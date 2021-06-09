@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -109,7 +109,7 @@ namespace Spring.Objects
         {
             get
             {
-                if (propertyExpression == null)
+                if (propertyExpression is null)
                 {
                     try
                     {
@@ -175,7 +175,7 @@ namespace Spring.Objects
             PropertyValue otherPv = (PropertyValue) other;
             return
                     (propertyName.Equals(otherPv.propertyName)
-                     && ((propertyValue == null && otherPv.propertyValue == null) || propertyValue.Equals(otherPv.propertyValue)));
+                     && ((propertyValue is null && otherPv.propertyValue is null) || propertyValue.Equals(otherPv.propertyValue)));
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Spring.Objects
         /// </returns>
         public override int GetHashCode()
         {
-            return propertyName.GetHashCode() * 29 + (propertyValue != null ? propertyValue.GetHashCode() : 0);
+            return propertyName.GetHashCode() * 29 + (propertyValue is object ? propertyValue.GetHashCode() : 0);
         }
     }
 }

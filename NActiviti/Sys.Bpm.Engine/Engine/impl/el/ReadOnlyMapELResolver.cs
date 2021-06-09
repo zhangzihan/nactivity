@@ -47,7 +47,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         /// <returns></returns>
         public override object GetValue(ELContext context, object @base, object property)
         {
-            if (@base == null)
+            if (@base is null)
             {
                 if (wrappedMap.ContainsKey(property))
                 {

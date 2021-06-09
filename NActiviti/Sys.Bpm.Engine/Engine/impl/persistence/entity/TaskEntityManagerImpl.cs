@@ -87,12 +87,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
 
             // Inherit tenant id (if applicable)
-            if (execution != null && execution.TenantId is object)
+            if (execution is object && execution.TenantId is object)
             {
                 taskEntity.TenantId = execution.TenantId;
             }
 
-            if (execution != null)
+            if (execution is object)
             {
                 execution.Tasks.Add(taskEntity);
                 taskEntity.ProcessInstanceId = execution.ProcessInstanceId;
@@ -104,7 +104,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             Insert(taskEntity, true);
 
-            if (execution != null && IsExecutionRelatedEntityCountEnabled(execution))
+            if (execution is object && IsExecutionRelatedEntityCountEnabled(execution))
             {
                 ICountingExecutionEntity countingExecutionEntity = (ICountingExecutionEntity)execution;
                 countingExecutionEntity.TaskCount += 1;
@@ -367,7 +367,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
             ITaskEntity task = FindById<ITaskEntity>(taskId);
 
-            if (task != null)
+            if (task is object)
             {
                 if (task.ExecutionId is object)
                 {

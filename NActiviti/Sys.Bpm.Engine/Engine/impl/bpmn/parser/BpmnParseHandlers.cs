@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser
             // Execute parse handlers
             parseHandlers.TryGetValue(element.GetType(), out IList<IBpmnParseHandler> handlers);
 
-            if (handlers == null)
+            if (handlers is null)
             {
                 logger.LogWarning("Could not find matching parse handler for + " + element.Id + " this is likely a bug.");
             }

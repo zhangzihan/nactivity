@@ -45,7 +45,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             ITimerJobEntity timerJob = commandContext.TimerJobEntityManager.FindById<ITimerJobEntity>(new KeyValuePair<string, object>("id", jobId));
 
-            if (timerJob == null)
+            if (timerJob is null)
             {
                 throw new JobNotFoundException(jobId);
             }

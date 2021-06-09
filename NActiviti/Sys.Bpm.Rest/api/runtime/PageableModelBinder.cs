@@ -22,7 +22,7 @@ namespace Sys.Workflow.Api.Runtime.Shared.Query
         /// </summary>
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            if (context is null) throw new ArgumentNullException(nameof(context));
             if (context.Metadata.ModelType == (typeof(Pageable)))
             {
                 return new PageableModelBinder(context.Metadata.ModelType);
@@ -41,7 +41,7 @@ namespace Sys.Workflow.Api.Runtime.Shared.Query
         /// </summary>
         public PageableModelBinder(Type type)
         {
-            if (type == null)
+            if (type is null)
             {
                 throw new ArgumentNullException("type");
             }
@@ -52,7 +52,7 @@ namespace Sys.Workflow.Api.Runtime.Shared.Query
         /// </summary>
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            if (bindingContext == null)
+            if (bindingContext is null)
             {
                 throw new ArgumentNullException(nameof(bindingContext));
             }
@@ -72,7 +72,7 @@ namespace Sys.Workflow.Api.Runtime.Shared.Query
                     {
                         case "body":
                             var body = context.Request.Body;
-                            if (body != null)
+                            if (body is object)
                             {
                                 var ms = new MemoryStream();
                                 var reader = new StreamReader(ms);
@@ -117,7 +117,7 @@ namespace Sys.Workflow.Api.Runtime.Shared.Query
             }
             catch (Exception exception)
             {
-                if (!(exception is FormatException) && (exception.InnerException != null))
+                if (!(exception is FormatException) && (exception.InnerException is object))
                 {
                     exception = ExceptionDispatchInfo.Capture(exception.InnerException).SourceException;
                 }

@@ -20,7 +20,7 @@ namespace Spring.Expressions
             }
 
             _ = items.TryGetValue(targetType, out var accessorType);
-            if (accessorType == null)
+            if (accessorType is null)
             {
                 foreach (var key in items.Keys)
                 {

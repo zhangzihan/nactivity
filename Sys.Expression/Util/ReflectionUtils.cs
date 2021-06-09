@@ -191,7 +191,7 @@ namespace Spring.Util
                     select method).Single();*/
 
 
-            if (retMethod == null)
+            if (retMethod is null)
             {
                 // try explicit interface implementation...
                 int idx = method.LastIndexOf('.');
@@ -307,7 +307,7 @@ namespace Spring.Util
         {
             MethodInfo methodInfo = null;
 
-            if (typeArguments == null)
+            if (typeArguments is null)
             {
                 // Non-Generic Method
                 methodInfo = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, parameterTypes, null);
@@ -410,7 +410,7 @@ namespace Spring.Util
                 ParameterInfo[] parameters = m.GetParameters();
                 bool isMatch = true;
                 bool isExactMatch = true;
-                object[] paramValues = (argValues == null) ? new object[0] : argValues;
+                object[] paramValues = (argValues is null) ? new object[0] : argValues;
 
                 try
                 {
@@ -436,14 +436,14 @@ namespace Spring.Util
                             Type paramType = parameters[i].ParameterType;
                             object paramValue = paramValues[i];
 
-                            if ((paramValue == null && paramType.IsValueType && !IsNullableType(paramType))
-                                || (paramValue != null && !paramType.IsAssignableFrom(paramValue.GetType())))
+                            if ((paramValue is null && paramType.IsValueType && !IsNullableType(paramType))
+                                || (paramValue is object && !paramType.IsAssignableFrom(paramValue.GetType())))
                             {
                                 isMatch = false;
                                 break;
                             }
 
-                            if (paramValue == null || paramType != paramValue.GetType())
+                            if (paramValue is null || paramType != paramValue.GetType())
                             {
                                 isExactMatch = false;
                             }
@@ -608,7 +608,7 @@ namespace Spring.Util
         public static bool MethodIsOnOneOfTheseInterfaces(MethodBase method, Type[] interfaces)
         {
             AssertUtils.ArgumentNotNull(method, "method");
-            if (interfaces == null)
+            if (interfaces is null)
             {
                 return false;
             }
@@ -627,7 +627,7 @@ namespace Spring.Util
                         method.Name,
                         BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly,
                         null, paramTypes, null);
-                    if (mi != null)
+                    if (mi is object)
                     {
                         // found it...
                         return true;
@@ -682,7 +682,7 @@ namespace Spring.Util
             if (type.IsEnum)
             {
                 Array values = Enum.GetValues(type);
-                if (values == null || values.Length == 0)
+                if (values is null || values.Length == 0)
                 {
                     throw new ArgumentException("Bad 'enum' Type : cannot get default value because 'enum' has no values.");
                 }
@@ -783,7 +783,7 @@ namespace Spring.Util
         /// </example>
         public static Type[] GetTypes(object[] args)
         {
-            if (args == null || args.Length == 0)
+            if (args is null || args.Length == 0)
             {
                 return Type.EmptyTypes;
             }
@@ -791,7 +791,7 @@ namespace Spring.Util
             for (int i = 0; i < args.Length; ++i)
             {
                 object arg = args[i];
-                paramsType[i] = (arg != null) ? args[i].GetType() : typeof(object);
+                paramsType[i] = (arg is object) ? args[i].GetType() : typeof(object);
             }
             return paramsType;
         }
@@ -843,7 +843,7 @@ namespace Spring.Util
         /// </returns>
         public static bool HasAtLeastOneMethodWithName(Type type, string name)
         {
-            if (type == null || StringUtils.IsNullOrEmpty(name))
+            if (type is null || StringUtils.IsNullOrEmpty(name))
             {
                 return false;
             }
@@ -923,13 +923,13 @@ namespace Spring.Util
             #endregion
 
             ConstructorInfo ci = type.GetConstructor(GetTypes(ctorArgs));
-            if (ci == null && ctorArgs.Length == 0)
+            if (ci is null && ctorArgs.Length == 0)
             {
                 ci = type.GetConstructors()[0];
                 ctorArgs = GetDefaultValues(GetParameterTypes(ci.GetParameters()));
             }
 
-            if (sourceAttribute != null)
+            if (sourceAttribute is object)
             {
                 object defaultAttribute = null;
                 try
@@ -954,11 +954,11 @@ namespace Spring.Util
                         if (pi.CanWrite)
                         {
                             object propValue = pi.GetValue(sourceAttribute, null);
-                            if (defaultAttribute != null)
+                            if (defaultAttribute is object)
                             {
                                 object defaultValue = pi.GetValue(defaultAttribute, null);
-                                if ((propValue == null && defaultValue == null) ||
-                                    (propValue != null && propValue.Equals(defaultValue)))
+                                if ((propValue is null && defaultValue is null) ||
+                                    (propValue is object && propValue.Equals(defaultValue)))
                                     continue;
                             }
                             getSetProps.Add(pi);
@@ -976,7 +976,7 @@ namespace Spring.Util
                 {
                     PropertyInfo pi = readOnlyProps[0];
                     ConstructorInfo ciTemp = type.GetConstructor(new Type[1] { pi.PropertyType });
-                    if (ciTemp != null)
+                    if (ciTemp is object)
                     {
                         ci = ciTemp;
                         ctorArgs = new object[1] { readOnlyValues[0] };
@@ -984,7 +984,7 @@ namespace Spring.Util
                     else
                     {
                         ciTemp = type.GetConstructor(new Type[1] { readOnlyValues[0].GetType() });
-                        if (ciTemp != null)
+                        if (ciTemp is object)
                         {
                             ci = ciTemp;
                             ctorArgs = new object[1] { readOnlyValues[0] };
@@ -1194,12 +1194,12 @@ namespace Spring.Util
 
         private static object ConvertConstructorArgsToObjectArrayIfNecessary(object value)
         {
-            if (value == null)
+            if (value is null)
                 return value;
 
             IList<CustomAttributeTypedArgument> constructorArguments = value as IList<CustomAttributeTypedArgument>;
 
-            if (constructorArguments == null)
+            if (constructorArguments is null)
                 return value;
 
             object[] arguments = new object[constructorArguments.Count];
@@ -1303,7 +1303,7 @@ namespace Spring.Util
             {
                 MethodInfo method = methods[i];
                 MethodInfo match = type.GetMethod(method.Name, flags, null, GetParameterTypes(method), null);
-                if ((match == null || match.ReturnType != method.ReturnType) && strict)
+                if ((match is null || match.ReturnType != method.ReturnType) && strict)
                 {
                     throw new Exception(
                         string.Format("Method '{0}' could not be matched in the target class [{1}].",
@@ -1411,7 +1411,7 @@ namespace Spring.Util
             }
             else
             {
-                if (friendlyAssemblyName != null
+                if (friendlyAssemblyName is object
                     && friendlyAssemblyName.Length > 0
                     && (!type.IsNested || type.IsNestedPublic ||
                      (!type.IsNestedPrivate && (type.IsNestedAssembly || type.IsNestedFamORAssem))))
@@ -1471,7 +1471,7 @@ namespace Spring.Util
         public static Exception GetExplicitBaseException(Exception ex)
         {
             Exception innerEx = ex.InnerException;
-            while (innerEx != null &&
+            while (innerEx is object &&
                 !(innerEx is NullReferenceException))
             {
                 ex = innerEx;
@@ -1527,13 +1527,13 @@ namespace Spring.Util
         /// <returns></returns>
         public static object GetInstanceFieldValue(object obj, string fieldName)
         {
-            if (obj == null)
+            if (obj is null)
                 throw new ArgumentNullException("obj", "obj is null.");
             if (StringUtils.IsNullOrEmpty(fieldName))
                 throw new ArgumentException("fieldName is null or empty.", "fieldName");
 
             FieldInfo f = obj.GetType().GetField(fieldName, BindingFlags.SetField | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            if (f != null)
+            if (f is object)
                 return f.GetValue(obj);
             else
             {
@@ -1551,16 +1551,16 @@ namespace Spring.Util
         public static void SetInstanceFieldValue(object obj, string fieldName, object fieldValue)
         {
 
-            if (obj == null)
+            if (obj is null)
                 throw new ArgumentNullException("obj", "obj is null.");
             if (StringUtils.IsNullOrEmpty(fieldName))
                 throw new ArgumentException("fieldName is null or empty.", "fieldName");
-            if (fieldValue == null)
+            if (fieldValue is null)
                 throw new ArgumentNullException("fieldValue", "fieldValue is null.");
 
             FieldInfo f = obj.GetType().GetField(fieldName, BindingFlags.SetField | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
-            if (f != null)
+            if (f is object)
             {
                 if (f.FieldType != fieldValue.GetType())
                     throw new ArgumentException(string.Format("fieldValue for fieldName '{0}' of object type '{1}' must be of type '{2}' but was of type '{3}'", fieldName, obj.GetType().ToString(), f.FieldType.ToString(), fieldValue.GetType().ToString()), "fieldValue");
@@ -1746,7 +1746,7 @@ namespace Spring.Util
             public void AddPropertyValue(string name, object value)
             {
                 PropertyInfo propertyInfo = this.type.GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
-                if (propertyInfo == null)
+                if (propertyInfo is null)
                 {
                     throw new ArgumentException(
                         String.Format("The property '{0}' does no exist in the attribute '{1}'.", name, this.type));
@@ -1764,7 +1764,7 @@ namespace Spring.Util
             {
                 object[] caArray = (object[])this.constructorArgs.ToArray(typeof(object));
                 ConstructorInfo ci = this.type.GetConstructor(GetTypes(caArray));
-                if (ci == null && caArray.Length == 0)
+                if (ci is null && caArray.Length == 0)
                 {
                     ci = this.type.GetConstructors()[0];
                     caArray = GetDefaultValues(GetParameterTypes(ci.GetParameters()));

@@ -47,7 +47,7 @@ namespace Sys.Workflow.Bpmn.Models
             set
             {
                 rows = new List<DataGridRow>();
-                if (value.Rows != null && value.Rows.Count > 0)
+                if (value.Rows is object && value.Rows.Count > 0)
                 {
                     foreach (DataGridRow row in value.Rows)
                     {

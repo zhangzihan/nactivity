@@ -10,7 +10,7 @@ namespace Sys.Workflow
     {
         public static IDictionary<TKey, TValue> PutAll<TKey, TValue>(this IDictionary<TKey, TValue> target, IDictionary<TKey, TValue> source)
         {
-            if (source != null)
+            if (source is object)
             {
                 foreach (var key in source.Keys)
                 {
@@ -26,7 +26,7 @@ namespace Sys.Workflow
 
         public static ConcurrentDictionary<TKey, TValue> PutAll<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> target, ConcurrentDictionary<TKey, TValue> source)
         {
-            if (source != null)
+            if (source is object)
             {
                 foreach (var key in source.Keys)
                 {

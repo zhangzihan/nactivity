@@ -269,7 +269,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
         {
             get
             {
-                if (timeZone == null)
+                if (timeZone is null)
                 {
                     timeZone = clockReader.CurrentTimeZone;
                 }
@@ -305,31 +305,31 @@ namespace Sys.Workflow.Engine.Impl.Calendars
             try
             {
 
-                if (seconds == null)
+                if (seconds is null)
                 {
                     seconds = new SortedSet<int>();
                 }
-                if (minutes == null)
+                if (minutes is null)
                 {
                     minutes = new SortedSet<int>();
                 }
-                if (hours == null)
+                if (hours is null)
                 {
                     hours = new SortedSet<int>();
                 }
-                if (daysOfMonth == null)
+                if (daysOfMonth is null)
                 {
                     daysOfMonth = new SortedSet<int>();
                 }
-                if (months == null)
+                if (months is null)
                 {
                     months = new SortedSet<int>();
                 }
-                if (daysOfWeek == null)
+                if (daysOfWeek is null)
                 {
                     daysOfWeek = new SortedSet<int>();
                 }
-                if (years == null)
+                if (years is null)
                 {
                     years = new SortedSet<int>();
                 }
@@ -1072,7 +1072,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
         {
             int? integer = (int?)monthMap[s];
 
-            if (integer == null)
+            if (integer is null)
             {
                 return -1;
             }
@@ -1084,7 +1084,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
         {
             int? integer = dayMap[s];
 
-            if (integer == null)
+            if (integer is null)
             {
                 return -1;
             }
@@ -1105,7 +1105,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
         //    DateTime after = getTimeAfter(date);
 
-        //    return after == null ? null : after;
+        //    return after is null ? null : after;
         //}
 
         public virtual DateTime? GetTimeAfter(DateTime afterTime)
@@ -1126,7 +1126,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
             while (!gotOne)
             {
 
-                // if (endTime != null && cl.getTime().after(endTime)) return null;
+                // if (endTime is object && cl.getTime().after(endTime)) return null;
                 if (cl.Year > 2999)
                 { // prevent endless loop...
                     return null;
@@ -1140,7 +1140,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
                 // get second.................................................
                 st = new SortedSet<int>(seconds.Where(x => x >= sec));
-                if (st != null && st.Count > 0)
+                if (st is object && st.Count > 0)
                 {
                     sec = ((int?)st.Min).Value;
                 }
@@ -1158,7 +1158,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
                 // get minute.................................................
                 st = new SortedSet<int>(minutes.Where(x => x >= min));
-                if (st != null && st.Count > 0)
+                if (st is object && st.Count > 0)
                 {
                     t = min;
                     min = ((int?)st.Min).Value;
@@ -1182,7 +1182,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
                 // get hour...................................................
                 st = new SortedSet<int>(hours.Where(x => x >= hr));
-                if (st != null && st.Count > 0)
+                if (st is object && st.Count > 0)
                 {
                     t = hr;
                     hr = ((int?)st.Min).Value;
@@ -1298,7 +1298,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
                             mon++;
                         }
                     }
-                    else if (st != null && st.Count > 0)
+                    else if (st is object && st.Count > 0)
                     {
                         t = day;
                         day = ((int?)st.Min).Value;
@@ -1420,7 +1420,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
                         int dow = ((int?)daysOfWeek.Min).Value; // desired
                                                                 // d-o-w
                         st = new SortedSet<int>(daysOfWeek.Where(x => x >= cDow));
-                        if (st != null && st.Count > 0)
+                        if (st is object && st.Count > 0)
                         {
                             dow = ((int?)st.Min).Value;
                         }
@@ -1475,7 +1475,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
                 // get month...................................................
                 st = new SortedSet<int>(months.Where(x => x >= mon));
-                if (st != null && st.Count > 0)
+                if (st is object && st.Count > 0)
                 {
                     t = mon;
                     mon = ((int?)st.Min).Value;
@@ -1501,7 +1501,7 @@ namespace Sys.Workflow.Engine.Impl.Calendars
 
                 // get year...................................................
                 st = new SortedSet<int>(years.Where(x => x >= year));
-                if (st != null && st.Count > 0)
+                if (st is object && st.Count > 0)
                 {
                     t = year;
                     year = ((int?)st.Min).Value;

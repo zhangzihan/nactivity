@@ -25,6 +25,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Sys.Workflow.Engine.Delegate;
 using Sys.Workflow.Services.Api.Commands;
+using Sys.Workflow.Engine.Delegate.Events;
+using Sys.Workflow.Engine.Delegate.Events.Impl;
 
 namespace Sys.Workflow.Engine.Impl.Cmd
 {
@@ -99,6 +101,8 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 parent.SetLoopVariable(varName, users.Union(list).Distinct().ToArray());
             }
 
+            var curTask = commandContext.TaskEntityManager.FindById<ITaskEntity>(taskId);
+
             IList<ITask> tasks = new List<ITask>(users.Count);
             foreach (var assignee in users)
             {
@@ -117,7 +121,10 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 taskEntity.ProcessInstanceId = task.ProcessInstanceId;
                 taskEntity.ExecutionId = newExecution.Id;
                 taskEntity.Name = task.Name;
-
+                taskEntity.ExecutionVariables = curTask.Variables;
+                taskEntity.Variables = curTask.Variables;
+                taskEntity.VariablesLocal = curTask.VariablesLocal;
+                taskEntity.CanTransfer = curTask.CanTransfer;
                 if (string.IsNullOrWhiteSpace(taskEntity.Id))
                 {
                     string taskId = idGenerator.GetNextId();
@@ -146,11 +153,17 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             parent.SetLoopVariable(MultiInstanceActivityBehavior.NUMBER_OF_INSTANCES, nrOfInstances + users.Count);
             parent.SetLoopVariable(MultiInstanceActivityBehavior.NUMBER_OF_ACTIVE_INSTANCES, nrOfInstances - nrOfCompletedInstances + users.Count);
 
+            IActivitiEventDispatcher eventDispatcher = pec.EventDispatcher;
             foreach (ITaskEntity taskEntity in tasks)
             {
                 var listenerHelper = commandContext.ProcessEngineConfiguration.ListenerNotificationHelper;
 
                 listenerHelper.ExecuteTaskListeners(taskEntity, BaseTaskListenerFields.EVENTNAME_ASSIGNMENT);
+
+                if (eventDispatcher.Enabled)
+                {
+                    eventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateEntityEvent(ActivitiEventType.TASK_ASSIGNED, taskEntity));
+                }
             }
 
             return tasks.ToArray();

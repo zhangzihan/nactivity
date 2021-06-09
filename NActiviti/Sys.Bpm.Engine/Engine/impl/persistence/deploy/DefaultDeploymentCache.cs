@@ -63,7 +63,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Deploies
 
         public virtual void Remove(string id)
         {
-            if (id == null)
+            if (id is null)
             {
                 return;
             }

@@ -387,7 +387,7 @@ namespace Spring.Objects.Factory.Support
         /// <returns>The current <code>ObjectDefinitionBuilder</code>.</returns>
         public ObjectDefinitionBuilder AddDependsOn(string objectName)
         {
-            if (objectDefinition.DependsOn == null)
+            if (objectDefinition.DependsOn is null)
             {
                 objectDefinition.DependsOn = new[] {objectName};
             }

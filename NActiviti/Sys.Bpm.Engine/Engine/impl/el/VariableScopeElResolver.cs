@@ -70,7 +70,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         public override object GetValue(ELContext context, object @base, object property)
         {
             string variable = property.ToString();
-            if (@base == null)
+            if (@base is null)
             {
                 if ((EXECUTION_KEY.Equals(variable) && variableScope is IExecutionEntity) || (TASK_KEY.Equals(variable) && variableScope is ITaskEntity))
                 {
@@ -121,7 +121,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         /// <returns></returns>
         public override bool IsReadOnly(ELContext context, object @base, object property)
         {
-            if (@base == null)
+            if (@base is null)
             {
                 return !variableScope.HasVariable(property.ToString());
             }
@@ -137,7 +137,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         /// <param name="value"></param>
         public override void SetValue(ELContext context, object @base, object property, object value)
         {
-            if (@base == null)
+            if (@base is null)
             {
                 string variable = property.ToString();
                 if (variableScope.HasVariable(variable))

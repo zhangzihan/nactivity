@@ -113,11 +113,11 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
         /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetVariables(IDictionary<string, object> variables)
         {
-            if (this._variables == null)
+            if (this._variables is null)
             {
                 this._variables = new Dictionary<string, object>();
             }
-            if (variables != null)
+            if (variables is object)
             {
                 foreach (string variableName in variables.Keys)
                 {
@@ -130,7 +130,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
         /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetVariable(string variableName, object value)
         {
-            if (this._variables == null)
+            if (this._variables is null)
             {
                 this._variables = new Dictionary<string, object>();
             }
@@ -141,11 +141,11 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
         /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetTransientVariables(IDictionary<string, object> transientVariables)
         {
-            if (this._transientVariables == null)
+            if (this._transientVariables is null)
             {
                 this._transientVariables = new Dictionary<string, object>();
             }
-            if (transientVariables != null)
+            if (transientVariables is object)
             {
                 foreach (string variableName in transientVariables.Keys)
                 {
@@ -158,7 +158,7 @@ namespace Sys.Workflow.Engine.Impl.Runtimes
         /// <inheritdoc />
         public virtual IProcessInstanceBuilder SetTransientVariable(string variableName, object value)
         {
-            if (this._transientVariables == null)
+            if (this._transientVariables is null)
             {
                 this._transientVariables = new Dictionary<string, object>();
             }

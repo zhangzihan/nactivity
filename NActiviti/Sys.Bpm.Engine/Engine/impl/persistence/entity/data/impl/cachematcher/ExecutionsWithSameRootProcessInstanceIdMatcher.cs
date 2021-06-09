@@ -33,7 +33,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 		// Doing some preprocessing here: we need to find the execution that matches the provided execution id,
 		// as we need to match the root process instance id later on.
 
-		if (cachedEntities != null)
+		if (cachedEntities is object)
 		{
 		  foreach (CachedEntity cachedEntity in cachedEntities)
 		  {
@@ -45,7 +45,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
 		  }
 		}
 
-		if (databaseEntities != null)
+		if (databaseEntities is object)
 		{
 		  foreach (IExecutionEntity databaseExecutionEntity in databaseEntities)
 		  {

@@ -39,7 +39,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             ITaskEntity task = commandContext.TaskEntityManager.Create();
             task.Id = taskId;
             task.CreateTime = commandContext.ProcessEngineConfiguration.Clock.CurrentTime;
-            task.Revision = 0;
+            task.Revision = 0;           
             return task;
         }
 

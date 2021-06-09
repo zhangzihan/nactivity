@@ -120,7 +120,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
         protected internal virtual bool HasMultiInstanceCharacteristics()
         {
-            return multiInstanceActivityBehavior != null;
+            return multiInstanceActivityBehavior is object;
         }
 
         public virtual MultiInstanceActivityBehavior MultiInstanceActivityBehavior

@@ -48,7 +48,7 @@ namespace Spring.Util
 
             foreach (var item in collection)
             {
-                if (item == null)
+                if (item is null)
                 {
                     return false;
                 }
@@ -78,7 +78,7 @@ namespace Spring.Util
         /// <returns></returns>
         public static bool HasLength(ICollection collection)
         {
-            return collection != null && collection.Count > 0;
+            return collection is object && collection.Count > 0;
         }
 
         /// <summary>
@@ -90,12 +90,12 @@ namespace Spring.Util
         /// <returns>True if arrays are the same, false otherwise.</returns>
         public static bool AreEqual(Array a, Array b)
         {
-            if (a == null && b == null)
+            if (a is null && b is null)
             {
                 return true;
             }
 
-            if (a != null && b != null)
+            if (a is object && b is object)
             {
                 if (a.Length == b.Length)
                 {
@@ -139,12 +139,12 @@ namespace Spring.Util
         {
             int hashCode = 0;
 
-            if (array != null)
+            if (array is object)
             {
                 for (int i = 0; i < array.Length; i++)
                 {
                     object el = array.GetValue(i);
-                    if (el != null)
+                    if (el is object)
                     {
                         if (el is Array)
                         {
@@ -172,7 +172,7 @@ namespace Spring.Util
         /// </returns>
         public static string ToString(Array array)
         {
-            if (array == null)
+            if (array is null)
             {
                 return "null";
             }
@@ -183,7 +183,7 @@ namespace Spring.Util
             for (int i = 0; i < array.Length; i++)
             {
                 object val = array.GetValue(i);
-                sb.Append(val == null ? "null" : val.ToString());
+                sb.Append(val is null ? "null" : val.ToString());
                 
                 if (i < array.Length - 1)
                 {
@@ -205,8 +205,8 @@ namespace Spring.Util
         /// </remarks>
         public static Array Concat(Array first, Array second)
         {
-            if (first == null) return second;
-            if (second == null) return first;
+            if (first is null) return second;
+            if (second is null) return first;
 
             Type resultElementType;
             Type firstElementType = first.GetType().GetElementType();

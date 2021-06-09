@@ -264,13 +264,13 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (exceptionByteArrayRef == null)
+                if (exceptionByteArrayRef is null)
                 {
                     return null;
                 }
 
                 byte[] bytes = exceptionByteArrayRef.Bytes;
-                if (bytes == null)
+                if (bytes is null)
                 {
                     return null;
                 }
@@ -286,7 +286,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                if (exceptionByteArrayRef == null)
+                if (exceptionByteArrayRef is null)
                 {
                     exceptionByteArrayRef = new ByteArrayRef();
                 }

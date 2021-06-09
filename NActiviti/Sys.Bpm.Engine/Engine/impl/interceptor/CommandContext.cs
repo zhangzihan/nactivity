@@ -74,7 +74,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                     try
                     {
                         ExecuteCloseListenersClosing();
-                        if (_exception == null)
+                        if (_exception is null)
                         {
                             FlushSessions();
                         }
@@ -87,7 +87,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                     {
                         try
                         {
-                            if (_exception == null)
+                            if (_exception is null)
                             {
                                 ExecuteCloseListenersAfterSessionFlushed();
                             }
@@ -97,7 +97,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                             SetException(exception);
                         }
 
-                        if (_exception != null)
+                        if (_exception is object)
                         {
                             LogException();
                             ExecuteCloseListenersCloseFailure();
@@ -125,7 +125,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
                 SetException(exception);
             }
 
-            if (_exception != null)
+            if (_exception is object)
             {
                 RethrowExceptionIfNeeded();
             }
@@ -163,7 +163,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         public virtual void AddCloseListener(ICommandContextCloseListener commandContextCloseListener)
         {
-            if (closeListeners == null)
+            if (closeListeners is null)
             {
                 closeListeners = new List<ICommandContextCloseListener>(1);
             }
@@ -180,7 +180,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         public virtual bool HasCloseListener(Type type)
         {
-            if (closeListeners != null && closeListeners.Count != 0)
+            if (closeListeners is object && closeListeners.Count != 0)
             {
                 foreach (ICommandContextCloseListener listener in closeListeners)
                 {

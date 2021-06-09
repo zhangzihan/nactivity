@@ -35,7 +35,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         private ITask[] tasks = null;
 
-        public TransferTaskCmd(ITransferTaskCmd transferTaskCmd) : base(transferTaskCmd.TaskId, transferTaskCmd.Variables)
+        public TransferTaskCmd(ITransferTaskCmd transferTaskCmd) : base(transferTaskCmd.TaskId, transferTaskCmd.Variables, transferTaskCmd.TransientVariables)
         {
             this.taskCmd = transferTaskCmd;
             this.completeReason = transferTaskCmd.Description;
@@ -48,14 +48,9 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             return tasks;
         }
 
-        private void Transfer(ICommandContext commandContext)
+        private void Transfer(ICommandContext commandContext, ITaskEntity task)
         {
             ITaskService taskService = commandContext.ProcessEngineConfiguration.TaskService;
-
-            if (!(taskService.CreateTaskQuery().SetTaskId(taskCmd.TaskId).SingleResult() is ITaskEntity task))
-            {
-                throw new ActivitiObjectNotFoundException("Parent task with id " + taskCmd.TaskId + " was not found");
-            }
 
             //查找当前待追加人员是否已经存在在任务列表中,proc_inst_id_
             IList<ITask> assignTasks = taskService.CreateTaskQuery()
@@ -77,8 +72,24 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         protected internal override void ExecuteTaskComplete(ICommandContext commandContext, ITaskEntity taskEntity, IDictionary<string, object> variables, bool localScope)
         {
-            Transfer(commandContext);
+            var userTask = taskEntity.Execution.CurrentFlowElement as UserTask;
+            if (userTask is null)
+            {
+                throw new Exception("当前任务不是用户任务");
+            }
 
+            if (!userTask.CanTransfer)
+            {
+                throw new Exception("当前任务不允许转办.");
+            }
+
+            Transfer(commandContext, taskEntity);
+
+            if (string.IsNullOrWhiteSpace(completeReason) == false)
+            {
+                commandContext.ProcessEngineConfiguration.commandExecutor
+                     .Execute(new CommandConfig(true), new AddCommentCmd(taskEntity.Id, taskEntity.ProcessInstanceId, completeReason));
+            }
             // Task complete logic
             CompleteTask(commandContext, taskEntity, variables, localScope);
 

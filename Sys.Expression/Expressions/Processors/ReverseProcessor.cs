@@ -46,7 +46,7 @@ namespace Spring.Expressions.Processors
         /// </returns>
         public object Process(ICollection source, object[] args)
         {
-            if (source == null || source.Count == 0)
+            if (source is null || source.Count == 0)
             {
                 return source;
             }

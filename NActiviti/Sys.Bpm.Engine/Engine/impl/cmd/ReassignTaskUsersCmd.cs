@@ -45,7 +45,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public virtual ITask[] Execute(ICommandContext commandContext)
         {
-            if (users == null)
+            if (users is null)
             {
                 throw new ActivitiException("There are no personnel to be assigned.");
             }

@@ -35,7 +35,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
 
                 sendTask.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY, out IList<ExtensionElement> pElements);
 
-                if (pElements == null)
+                if (pElements is null)
                 {
                     AddError(errors, ProblemsConstants.SEND_TASK_INVALID_IMPLEMENTATION, process, sendTask, ProcessValidatorResource.SEND_TASK_TEMPLATE_NULL);
                     continue;
@@ -86,11 +86,11 @@ namespace Sys.Workflow.Validation.Validators.Impl
         //    {
 
         //        bool operationFound = false;
-        //        if (bpmnModel.Interfaces != null && bpmnModel.Interfaces.Count > 0)
+        //        if (bpmnModel.Interfaces is object && bpmnModel.Interfaces.Count > 0)
         //        {
         //            foreach (Interface bpmnInterface in bpmnModel.Interfaces)
         //            {
-        //                if (bpmnInterface.Operations != null && bpmnInterface.Operations.Count > 0)
+        //                if (bpmnInterface.Operations is object && bpmnInterface.Operations.Count > 0)
         //                {
         //                    foreach (Operation operation in bpmnInterface.Operations)
         //                    {

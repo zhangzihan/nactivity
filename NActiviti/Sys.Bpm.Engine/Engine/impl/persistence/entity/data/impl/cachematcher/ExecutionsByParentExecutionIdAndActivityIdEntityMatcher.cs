@@ -35,9 +35,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl.Cachematcher
             JArray list = @params["activityIds"] as JArray;
             string[] activityIds = list.Select(x => x.ToString())?.ToArray() ?? new string[0];
 
-            return executionEntity.ParentId != null &&
+            return executionEntity.ParentId is object &&
                 string.Compare(executionEntity.ParentId, parentExecutionId, true) == 0 &&
-                executionEntity.ActivityId != null &&
+                executionEntity.ActivityId is object &&
                 activityIds.Any(x => string.Compare(x, executionEntity.ActivityId, true) == 0);
         }
     }

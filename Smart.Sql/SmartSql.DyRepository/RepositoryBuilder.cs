@@ -114,7 +114,7 @@ namespace SmartSql.DyRepository
         {
             var sqlmapAttr = interfaceType.GetCustomAttribute<SqlMapAttribute>();
             string scope = String.Empty;
-            if (sqlmapAttr != null)
+            if (sqlmapAttr is object)
             {
                 scope = !String.IsNullOrEmpty(sqlmapAttr.Scope) ? sqlmapAttr.Scope : GetScope(interfaceType.Name);
             }
@@ -290,7 +290,7 @@ namespace SmartSql.DyRepository
                 methodName = methodName.Substring(0, methodName.Length - 5);
             }
 
-            if (statementAttr != null)
+            if (statementAttr is object)
             {
                 statementAttr.Id = !String.IsNullOrEmpty(statementAttr.Id) ? statementAttr.Id
                     : methodName;
@@ -314,7 +314,7 @@ namespace SmartSql.DyRepository
             }
             if (statementAttr.Execute == ExecuteBehavior.Auto)
             {
-                if (returnType == typeof(int) || returnType == _voidType || returnType == null)
+                if (returnType == typeof(int) || returnType == _voidType || returnType is null)
                 {
                     statementAttr.Execute = ExecuteBehavior.Execute;
                 }

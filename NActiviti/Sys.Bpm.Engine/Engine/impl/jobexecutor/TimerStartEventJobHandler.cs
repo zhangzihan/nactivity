@@ -41,7 +41,7 @@ namespace Sys.Workflow.Engine.Impl.JobExecutors
         public virtual void Execute(IJobEntity job, string configuration, IExecutionEntity execution, ICommandContext commandContext)
         {
             IProcessDefinitionEntity processDefinitionEntity = ProcessDefinitionUtil.GetProcessDefinitionFromDatabase(job.ProcessDefinitionId); // From DB -> need to get latest suspended state
-            if (processDefinitionEntity == null)
+            if (processDefinitionEntity is null)
             {
                 throw new ActivitiException("Could not find process definition needed for timer start event");
             }
@@ -61,7 +61,7 @@ namespace Sys.Workflow.Engine.Impl.JobExecutors
                     if (string.IsNullOrWhiteSpace(activityId) == false)
                     {
                         FlowElement flowElement = process.GetFlowElement(activityId, true);
-                        if (flowElement == null)
+                        if (flowElement is null)
                         {
                             throw new ActivitiException("Could not find matching FlowElement for activityId " + activityId);
                         }

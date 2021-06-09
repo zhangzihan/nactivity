@@ -67,7 +67,7 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			tokenNames = tokenNames_;
 			node = node_;
-			if (node_ == null)
+			if (node_ is null)
 			{
 				tokenText = "<empty tree>";
 			}
@@ -86,7 +86,7 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			tokenNames = tokenNames_;
 			node = node_;
-			if (node_ == null)
+			if (node_ is null)
 			{
 				tokenText = "<empty tree>";
 			}
@@ -104,7 +104,7 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			tokenNames = tokenNames_;
 			node = node_;
-			if (node_ == null)
+			if (node_ is null)
 			{
 				tokenText = "<empty tree>";
 			}

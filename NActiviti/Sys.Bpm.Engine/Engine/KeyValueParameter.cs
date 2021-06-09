@@ -21,7 +21,7 @@ namespace Sys.Workflow.Engine
 
         public static implicit operator string(KeyValueParameter<TKey, TValue> parameter)
         {
-            if (parameter == null || !(parameter is KeyValueParameter<TKey, TValue>))
+            if (parameter is null || !(parameter is KeyValueParameter<TKey, TValue>))
             {
                 return null;
             }

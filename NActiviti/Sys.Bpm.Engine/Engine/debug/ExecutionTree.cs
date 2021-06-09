@@ -57,13 +57,13 @@ namespace Sys.Workflow.Engine.Debug
             }
 
             IList<ExecutionTreeNode> children = currentNode.Children;
-            if (currentNode.Children != null && children.Count > 0)
+            if (currentNode.Children is object && children.Count > 0)
             {
                 int index = 0;
                 while (index < children.Count)
                 {
                     ExecutionTreeNode result = GetTreeNode(executionId, children[index]);
-                    if (result != null)
+                    if (result is object)
                     {
                         return result;
                     }
@@ -94,7 +94,7 @@ namespace Sys.Workflow.Engine.Debug
 
         public override string ToString()
         {
-            return root != null ? root.ToString() : "";
+            return root is object ? root.ToString() : "";
         }
 
         IEnumerator IEnumerable.GetEnumerator()

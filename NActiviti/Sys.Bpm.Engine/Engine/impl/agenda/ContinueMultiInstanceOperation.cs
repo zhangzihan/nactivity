@@ -92,12 +92,12 @@ namespace Sys.Workflow.Engine.Impl.Agenda
 
             // Execute actual behavior
             IActivityBehavior activityBehavior = (IActivityBehavior)flowNode.Behavior;
-            if (activityBehavior != null)
+            if (activityBehavior is object)
             {
                 //logger.LogDebug($"Executing activityBehavior {activityBehavior.GetType()} on activity '{flowNode.Id}' with execution {execution.Id}");
 
                 ProcessEngineConfigurationImpl processEngineConfiguration = Context.ProcessEngineConfiguration;
-                if (processEngineConfiguration != null && processEngineConfiguration.EventDispatcher.Enabled)
+                if (processEngineConfiguration is object && processEngineConfiguration.EventDispatcher.Enabled)
                 {
                     processEngineConfiguration.EventDispatcher.DispatchEvent(ActivitiEventBuilder.CreateActivityEvent(ActivitiEventType.ACTIVITY_STARTED, flowNode.Id, flowNode.Name, execution.Id, execution.ProcessInstanceId, execution.ProcessDefinitionId, flowNode));
                 }

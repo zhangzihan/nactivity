@@ -21,6 +21,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
     using Sys.Workflow.Engine.Impl.Cfg;
     using Sys.Workflow.Engine.Impl.Histories;
     using Sys.Workflow.Engine.Impl.Persistence.Entity.Data;
+    using Sys.Workflow.Engine.Impl.Variable;
 
     /// 
     /// 
@@ -72,7 +73,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             historicVariableInstance.LongValue = variableInstance.LongValue;
 
             historicVariableInstance.VariableType = variableInstance.Type;
-            if (variableInstance.ByteArrayRef != null)
+            if (variableInstance.ByteArrayRef is object)
             {
                 historicVariableInstance.Bytes = variableInstance.Bytes;
             }
@@ -80,11 +81,33 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             historicVariableInstance.LastUpdatedTime = Clock.CurrentTime;
         }
 
+        public virtual IVariableInstanceEntity RecordHistoricTaskVariableInstance(ITaskEntity taskEntity, string variableName, object value)
+        {
+            var pec = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
+            IVariableTypes variableTypes = pec.VariableTypes;
+
+            IVariableType type = variableTypes.FindVariableType(value);
+
+            IVariableInstanceEntity variableInstance =
+                pec.VariableInstanceEntityManager
+                .Create(variableName, type, value);
+            variableInstance.TaskId = taskEntity.Id;
+            variableInstance.ExecutionId = taskEntity.ExecutionId;
+            variableInstance.ProcessInstanceId = taskEntity.Execution.ProcessInstanceId;
+            // Record historic variable
+            pec.HistoryManager.RecordVariableCreate(variableInstance);
+
+            // Record historic detail
+            pec.HistoryManager.RecordHistoricDetailVariableCreate(variableInstance, taskEntity.Execution, true);
+
+            return variableInstance;
+        }
+
         public override void Delete(IHistoricVariableInstanceEntity entity, bool fireDeleteEvent)
         {
             base.Delete(entity, fireDeleteEvent);
 
-            if (entity.ByteArrayRef != null)
+            if (entity.ByteArrayRef is object)
             {
                 entity.ByteArrayRef.Delete();
             }

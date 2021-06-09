@@ -228,7 +228,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
             {
                 ICollection<CachedEntity> cachedObjects = EntityCache.FindInCacheAsCachedObjects(managedEntityClass);
 
-                if ((cachedObjects != null && cachedObjects.Count > 0) || ManagedEntitySubClasses != null)
+                if ((cachedObjects is object && cachedObjects.Count > 0) || ManagedEntitySubClasses is object)
                 {
                     Dictionary<string, IEventSubscriptionEntity> entityMap = new Dictionary<string, IEventSubscriptionEntity>(result.Count);
 
@@ -239,7 +239,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
                     }
 
                     // Cache entities
-                    if (cachedObjects != null && cachedEntityMatcher != null)
+                    if (cachedObjects is object && cachedEntityMatcher is object)
                     {
                         foreach (CachedEntity cachedObject in cachedObjects)
                         {
@@ -251,12 +251,12 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity.Data.Impl
                         }
                     }
 
-                    if (ManagedEntitySubClasses != null && cachedEntityMatcher != null)
+                    if (ManagedEntitySubClasses is object && cachedEntityMatcher is object)
                     {
                         foreach (Type entitySubClass in ManagedEntitySubClasses)
                         {
                             ICollection<CachedEntity> subclassCachedObjects = EntityCache.FindInCacheAsCachedObjects(entitySubClass);
-                            if (subclassCachedObjects != null)
+                            if (subclassCachedObjects is object)
                             {
                                 foreach (CachedEntity subclassCachedObject in subclassCachedObjects)
                                 {

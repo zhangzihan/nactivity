@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
         /// </summary>
         public ActivitiEventImpl(ActivitiEventType type, string executionId, string processInstanceId, string processDefinitionId)
         {
-            if (type == null)
+            if (type is null)
             {
                 throw new ActivitiIllegalArgumentException("type is null");
             }

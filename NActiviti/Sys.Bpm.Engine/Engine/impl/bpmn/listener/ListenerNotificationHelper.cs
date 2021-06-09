@@ -32,7 +32,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
         public virtual void ExecuteExecutionListeners(IHasExecutionListeners elementWithExecutionListeners, IExecutionEntity execution, string eventType)
         {
             IList<ActivitiListener> listeners = elementWithExecutionListeners.ExecutionListeners;
-            if (listeners != null && listeners.Count > 0)
+            if (listeners is object && listeners.Count > 0)
             {
                 IListenerFactory listenerFactory = Context.ProcessEngineConfiguration.ListenerFactory;
                 foreach (ActivitiListener activitiListener in listeners)
@@ -67,7 +67,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
                             executionListener = (IExecutionListener)activitiListener.Instance;
                         }
 
-                        if (executionListener != null)
+                        if (executionListener is object)
                         {
                             if (activitiListener.OnTransaction is object)
                             {
@@ -209,7 +209,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
         protected internal virtual IDictionary<string, object> InvokeCustomPropertiesResolver(IExecutionEntity execution, ICustomPropertiesResolver customPropertiesResolver)
         {
             IDictionary<string, object> customPropertiesMapToUse = null;
-            if (customPropertiesResolver != null)
+            if (customPropertiesResolver is object)
             {
                 customPropertiesMapToUse = customPropertiesResolver.GetCustomPropertiesMap(execution);
             }

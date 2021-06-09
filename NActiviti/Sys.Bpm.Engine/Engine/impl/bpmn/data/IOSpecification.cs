@@ -151,7 +151,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Datas
         {
             get
             {
-                if (this.dataOutputs != null && this.dataOutputs.Count > 0)
+                if (this.dataOutputs is object && this.dataOutputs.Count > 0)
                 {
                     return this.dataOutputs[0].Name;
                 }

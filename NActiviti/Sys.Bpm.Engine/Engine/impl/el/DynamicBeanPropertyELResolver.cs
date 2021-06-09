@@ -65,7 +65,7 @@ namespace Sys.Workflow.Engine.Impl.EL
 
         public override Type getType(ELContext context, object @base, object property)
         {
-            if (@base == null || this.getCommonPropertyType(context, @base) == null)
+            if (@base is null || this.getCommonPropertyType(context, @base) is null)
             {
                 return null;
             }
@@ -76,7 +76,7 @@ namespace Sys.Workflow.Engine.Impl.EL
 
         public override object getValue(ELContext context, object @base, object property)
         {
-            if (@base == null || this.getCommonPropertyType(context, @base) == null)
+            if (@base is null || this.getCommonPropertyType(context, @base) is null)
             {
                 return null;
             }
@@ -102,7 +102,7 @@ namespace Sys.Workflow.Engine.Impl.EL
 
         public override void setValue(ELContext context, object @base, object property, object value)
         {
-            if (@base == null || this.getCommonPropertyType(context, @base) == null)
+            if (@base is null || this.getCommonPropertyType(context, @base) is null)
             {
                 return;
             }

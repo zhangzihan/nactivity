@@ -80,7 +80,7 @@ namespace Sys.Workflow.Engine.Impl.Scripting
 
             this.processEngineConfiguration = processEngineConfiguration;
 
-            if (variableScope == null)
+            if (variableScope is null)
             {
                 throw new ActivitiIllegalArgumentException("variableScope cannot be null");
             }

@@ -47,7 +47,7 @@ namespace Sys.Workflow.Bpmn.Models
                 var val = value as Event;
 
                 eventDefinitions = new List<EventDefinition>();
-                if (val.EventDefinitions != null && val.EventDefinitions.Count > 0)
+                if (val.EventDefinitions is object && val.EventDefinitions.Count > 0)
                 {
                     foreach (EventDefinition eventDef in val.EventDefinitions)
                     {

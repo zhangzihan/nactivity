@@ -89,7 +89,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             if (HistoryManager.HistoryEnabled)
             {
                 IHistoricTaskInstanceEntity historicTaskInstance = FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", id.Value));
-                if (historicTaskInstance != null)
+                if (historicTaskInstance is object)
                 {
                     IList<IHistoricTaskInstanceEntity> subTasks = historicTaskInstanceDataManager.FindHistoricTasksByParentTaskId(historicTaskInstance.Id);
                     foreach (IHistoricTaskInstance subTask in subTasks)

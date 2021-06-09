@@ -83,7 +83,7 @@ namespace SmartSql.Configuration
             foreach (XNode tagNode in tagNodes)
             {
                 var tag = LoadTag(tagNode, includes);
-                if (tag != null) { statement.SqlTags.Add(tag); }
+                if (tag is object) { statement.SqlTags.Add(tag); }
             }
             #region Init Include
             foreach (var include in includes)
@@ -407,7 +407,7 @@ namespace SmartSql.Configuration
                     };
             }
             #endregion
-            if (tag != null)
+            if (tag is object)
             {
                 tag.LineInfo = XmlLineInfo.Create(xmlNode);
             }
@@ -416,7 +416,7 @@ namespace SmartSql.Configuration
                 foreach (XNode childNode in ell.Nodes())
                 {
                     ITag childTag = LoadTag(childNode, includes);
-                    if (childTag != null && tag != null)
+                    if (childTag is object && tag is object)
                     {
                         childTag.Parent = tag;
                         (tag as Tag).ChildTags.Add(childTag);

@@ -41,7 +41,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model.Converters
         public virtual ProcessDefinition From(IProcessDefinition source)
         {
             ProcessDefinition processDefinition = null;
-            if (source != null)
+            if (source is object)
             {
                 processDefinition = new ProcessDefinition(source.Id,
                     source.Name,

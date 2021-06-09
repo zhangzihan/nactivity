@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             {
                 DeleteTask(commandContext, taskId);
             }
-            else if (taskIds != null)
+            else if (taskIds is object)
             {
                 foreach (string taskId in taskIds)
                 {

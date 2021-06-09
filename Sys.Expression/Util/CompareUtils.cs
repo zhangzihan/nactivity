@@ -43,11 +43,11 @@ namespace Spring.Util
         public static int Compare(object first, object second)
         {
             // anything is greater than null, unless both operands are null
-            if (first == null)
+            if (first is null)
             {
-                return (second == null ? 0 : -1);
+                return (second is null ? 0 : -1);
             }
-            else if (second == null)
+            else if (second is null)
             {
                 return 1;
             }

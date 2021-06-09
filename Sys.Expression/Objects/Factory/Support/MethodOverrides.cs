@@ -63,7 +63,7 @@ namespace Spring.Objects.Factory.Support
 		/// <summary>
 		/// Returns true if this instance contains no overrides.
 		/// </summary>
-		public bool IsEmpty => _overrides== null || _overrides.Count == 0;
+		public bool IsEmpty => _overrides is null || _overrides.Count == 0;
 
 		/// <summary>
 		/// Copy all given method overrides into this object.
@@ -75,7 +75,7 @@ namespace Spring.Objects.Factory.Support
 		{
 			if (other != null)
 			{
-				if (other._overrides != null && other._overrides.Count > 0)
+				if (other._overrides is object && other._overrides.Count > 0)
 				{
 					_overrides = _overrides ?? new HashSet<MethodOverride>();
 					foreach (var @override in other._overrides)
@@ -84,7 +84,7 @@ namespace Spring.Objects.Factory.Support
 					}
 				}
 
-				if (other._overloadedMethodNames != null && other._overloadedMethodNames.Count > 0)
+				if (other._overloadedMethodNames is object && other._overloadedMethodNames.Count > 0)
 				{
 					_overloadedMethodNames = _overloadedMethodNames ?? new HashSet<string>();
 					foreach (var methodName in other._overloadedMethodNames)

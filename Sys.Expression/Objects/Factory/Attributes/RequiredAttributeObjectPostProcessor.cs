@@ -144,7 +144,7 @@ namespace Spring.Objects.Factory.Attributes
         /// </returns>
         protected virtual bool IsRequiredProperty(PropertyInfo pi)
         {
-            return (pi.GetSetMethod() != null && pi.GetCustomAttributes(RequiredAttributeType, true).Length > 0);
+            return (pi.GetSetMethod() is object && pi.GetCustomAttributes(RequiredAttributeType, true).Length > 0);
         }
 
         /// <summary>

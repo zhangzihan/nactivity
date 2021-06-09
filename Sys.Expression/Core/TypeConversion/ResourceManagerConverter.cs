@@ -117,12 +117,12 @@ namespace Spring.Core.TypeConversion
                     throw new ArgumentException ("The string to specify a ResourceManager must be a comma delimited list of length two.  i.e. resourcename, assembly parial name.");
                 }
                 string resourceName = resourceManagerDescription[0].Trim();
-                if (resourceName != null && resourceName.Length == 0)
+                if (resourceName is object && resourceName.Length == 0)
                 {
                     throw new ArgumentException("Empty value set for the resource name in ResourceManager string.");
                 }
                 string assemblyName = resourceManagerDescription[1].Trim();
-                if (assemblyName != null && assemblyName.Length == 0)
+                if (assemblyName is object && assemblyName.Length == 0)
                 {
                     throw new ArgumentException("Empty value set for the assembly name in ResourceManager string.");
                 }
@@ -141,7 +141,7 @@ namespace Spring.Core.TypeConversion
                     }
                 }
                 Assembly ass = Assembly.Load(assemblyName);
-                if (ass == null)
+                if (ass is null)
                 {
                     throw new ArgumentException("Could not find assembly with name = '" + assemblyName + "'.");
                 }

@@ -50,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         public virtual object Execute(ICommandContext commandContext)
         {
             ITimerJobEntity job = commandContext.TimerJobEntityManager.FindById<ITimerJobEntity>(jobId);
-            if (job != null)
+            if (job is object)
             {
                 job.Retries = retries;
 

@@ -39,12 +39,12 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
         public virtual object Execute(ICommandContext commandContext)
         {
-            if (listener == null)
+            if (listener is null)
             {
                 throw new ActivitiIllegalArgumentException("listener is null.");
             }
 
-            if (types != null)
+            if (types is object)
             {
                 commandContext.ProcessEngineConfiguration.EventDispatcher.AddEventListener(listener, types);
             }

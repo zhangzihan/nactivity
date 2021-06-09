@@ -18,7 +18,7 @@ namespace Spring.Core
         {
             get
             {
-                if (instance == null)
+                if (instance is null)
                 {
                     instance = new LogManager(NullLoggerFactory.Instance);
                 }

@@ -120,7 +120,7 @@ namespace Spring.Objects.Factory.Config
                 valueType = TypeResolutionUtils.ResolveType(this.valueTypeName);
             }
 
-            if ((keyType == null) && (valueType == null))
+            if ((keyType is null) && (valueType is null))
             {
                 dictionary = new HybridDictionary();
             }
@@ -128,8 +128,8 @@ namespace Spring.Objects.Factory.Config
             {
                 Type type = typeof(Dictionary<,>);
                 Type[] genericArgs = new Type[2] { 
-                    (keyType == null) ? typeof(object) : keyType,
-                    (valueType == null) ? typeof(object) : valueType };
+                    (keyType is null) ? typeof(object) : keyType,
+                    (valueType is null) ? typeof(object) : valueType };
                 type = type.MakeGenericType(genericArgs);
 
                 dictionary = (IDictionary)ObjectUtils.InstantiateType(type);
@@ -141,7 +141,7 @@ namespace Spring.Objects.Factory.Config
 				object resolvedKey = resolver(objectName, definition, elementName, key);
 				object resolvedValue = resolver(objectName, definition, elementName, this[key]);
 
-                if (keyType != null)
+                if (keyType is object)
                 {
                     try
                     {
@@ -157,7 +157,7 @@ namespace Spring.Objects.Factory.Config
                     }
                 }
 
-                if (valueType != null)
+                if (valueType is object)
                 {
                     try
                     {
@@ -209,18 +209,18 @@ namespace Spring.Objects.Factory.Config
             		throw new InvalidOperationException(
                     		"Not allowed to merge when the 'MergeEnabled' property is set to 'false'");
             	}
-            	if (parent == null)
+            	if (parent is null)
             	{
                 	return this;
             	}
             	var pDict = parent as IDictionary;
-            	if (pDict == null)
+            	if (pDict is null)
             	{
             		throw new InvalidOperationException("Cannot merge with object of type [" + parent.GetType() + "]");
             	}
             	var merged = new ManagedDictionary();
             	var pManagedDict = pDict as ManagedDictionary;
-            	if (pManagedDict != null)
+            	if (pManagedDict is object)
             	{
             		merged.KeyTypeName = pManagedDict.keyTypeName;
             		merged.valueTypeName = pManagedDict.valueTypeName;

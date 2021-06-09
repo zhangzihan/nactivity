@@ -116,7 +116,7 @@ namespace Spring.Util
 		/// </returns>
 		public bool IsSignatureCompatible(MethodInfo method)
 		{
-			if (method != null &&
+			if (method is object &&
 				method.ReturnType.Equals(GetReturnType()))
 			{
 				ParameterInfo[] methodParameters =
@@ -157,7 +157,7 @@ namespace Spring.Util
 		public Type[] GetParameterTypes()
 		{
 			ParameterInfo[] parameters = GetMethod().GetParameters();
-			if (parameters != null
+			if (parameters is object
 				&& parameters.Length > 0)
 			{
 				Type[] types = new Type[parameters.Length];
@@ -208,7 +208,7 @@ namespace Spring.Util
 		/// </returns>
 		public static bool IsDelegate(Type type)
 		{
-			return type == null ?
+			return type is null ?
 				false :
 				type.IsSubclassOf(typeof (Delegate));
 		}
@@ -234,7 +234,7 @@ namespace Spring.Util
 			EventInfo eventMeta, MethodInfo handlerMethod)
 		{
 			bool compatible = false;
-			if (eventMeta != null
+			if (eventMeta is object
 				&& IsDelegate(eventMeta.EventHandlerType))
 			{
 				compatible = new DelegateInfo(eventMeta.EventHandlerType)

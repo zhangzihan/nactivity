@@ -102,7 +102,7 @@ namespace Sys.Workflow.Engine.Impl.Asyncexecutor.Multitenants
         public virtual void AddTenantAsyncExecutor(string tenantId, bool startExecutor)
         {
             IAsyncExecutor tenantExecutor;
-            if (tenantAwareAyncExecutorFactory == null)
+            if (tenantAwareAyncExecutorFactory is null)
             {
                 tenantExecutor = new DefaultAsyncJobExecutor();
             }

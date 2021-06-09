@@ -189,12 +189,12 @@ namespace Spring.Expressions
             MethodInfo mi = GetBestMethod(contextType, methodName, BINDING_FLAGS, argValues);
 
             // if not found, probe the Type's type          
-            if (mi == null)
+            if (mi is null)
             {
                 mi = GetBestMethod(typeof(Type), methodName, BINDING_FLAGS, argValues);
             }
 
-            if (mi == null)
+            if (mi is null)
             {
                 return;
             }

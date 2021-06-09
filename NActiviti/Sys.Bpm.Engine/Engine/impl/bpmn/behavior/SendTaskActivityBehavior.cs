@@ -67,7 +67,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             execution.CurrentFlowElement.ExtensionElements.TryGetValue(BpmnXMLConstants.ELEMENT_EXTENSIONS_PROPERTY,
                 out IList<ExtensionElement> pElements);
 
-            if (pElements != null)
+            if (pElements is object)
             {
                 try
                 {

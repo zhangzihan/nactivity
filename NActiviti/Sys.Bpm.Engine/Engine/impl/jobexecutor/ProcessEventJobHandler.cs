@@ -41,7 +41,7 @@ namespace Sys.Workflow.Engine.Impl.JobExecutors
             IEventSubscriptionEntity eventSubscriptionEntity = eventSubscriptionEntityManager.FindById<IEventSubscriptionEntity>(new KeyValuePair<string, object>("id", configuration));
 
             // if event subscription is null, ignore
-            if (eventSubscriptionEntity != null)
+            if (eventSubscriptionEntity is object)
             {
                 eventSubscriptionEntityManager.EventReceived(eventSubscriptionEntity, null, false);
             }

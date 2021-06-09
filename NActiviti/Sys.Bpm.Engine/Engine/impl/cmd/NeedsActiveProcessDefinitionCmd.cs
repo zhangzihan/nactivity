@@ -38,7 +38,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             IProcessDefinitionEntity processDefinition = ProcessDefinitionUtil.GetProcessDefinitionFromDatabase(processDefinitionId);
 
-            if (processDefinition == null)
+            if (processDefinition is null)
             {
                 throw new ActivitiObjectNotFoundException("No process definition found for id = '" + processDefinitionId + "'", typeof(IProcessDefinition));
             }

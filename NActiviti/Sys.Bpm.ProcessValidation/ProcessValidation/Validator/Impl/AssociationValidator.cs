@@ -26,7 +26,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
 
             // Global associations
             ICollection<Artifact> artifacts = bpmnModel.GlobalArtifacts;
-            if (artifacts != null)
+            if (artifacts is object)
             {
                 foreach (Artifact artifact in artifacts)
                 {

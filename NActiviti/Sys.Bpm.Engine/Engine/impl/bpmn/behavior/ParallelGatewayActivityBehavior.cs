@@ -75,7 +75,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
             IExecutionEntityManager executionEntityManager = Context.CommandContext.ExecutionEntityManager;
             ICollection<IExecutionEntity> joinedExecutions = executionEntityManager.FindInactiveExecutionsByActivityIdAndProcessInstanceId(execution.CurrentActivityId, execution.ProcessInstanceId);
-            if (multiInstanceExecution != null)
+            if (multiInstanceExecution is object)
             {
                 joinedExecutions = CleanJoinedExecutions(joinedExecutions, multiInstanceExecution);
             }
@@ -139,7 +139,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             bool isChild = false;
             IExecutionEntity parentExecution = executionEntity.Parent;
-            if (parentExecution != null)
+            if (parentExecution is object)
             {
                 if (parentExecution.Id.Equals(multiInstanceExecution.Id))
                 {
@@ -161,9 +161,9 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         protected internal virtual bool HasMultiInstanceParent(FlowNode flowNode)
         {
             bool hasMultiInstanceParent = false;
-            if (flowNode.SubProcess != null)
+            if (flowNode.SubProcess is object)
             {
-                if (flowNode.SubProcess.LoopCharacteristics != null)
+                if (flowNode.SubProcess.LoopCharacteristics is object)
                 {
                     hasMultiInstanceParent = true;
                 }
@@ -184,21 +184,21 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             IExecutionEntity multiInstanceExecution = null;
             IExecutionEntity parentExecution = execution.Parent;
-            if (parentExecution != null && parentExecution.CurrentFlowElement != null)
+            if (parentExecution is object && parentExecution.CurrentFlowElement is object)
             {
                 FlowElement flowElement = parentExecution.CurrentFlowElement;
                 if (flowElement is Activity activity)
                 {
-                    if (activity.LoopCharacteristics != null)
+                    if (activity.LoopCharacteristics is object)
                     {
                         multiInstanceExecution = parentExecution;
                     }
                 }
 
-                if (multiInstanceExecution == null)
+                if (multiInstanceExecution is null)
                 {
                     IExecutionEntity potentialMultiInstanceExecution = FindMultiInstanceParentExecution(parentExecution);
-                    if (potentialMultiInstanceExecution != null)
+                    if (potentialMultiInstanceExecution is object)
                     {
                         multiInstanceExecution = potentialMultiInstanceExecution;
                     }

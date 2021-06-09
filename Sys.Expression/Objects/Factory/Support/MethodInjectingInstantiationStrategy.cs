@@ -188,7 +188,7 @@ namespace Spring.Objects.Factory.Support
 			lock (typeCache.SyncRoot)
 			{
                 Type generatedType = (Type) typeCache[objectName];			    
-				if (generatedType == null)
+				if (generatedType is null)
 				{
 					#region Instrumentation
 
@@ -370,7 +370,7 @@ namespace Spring.Objects.Factory.Support
 					MethodInfo method = methods[i];
 					MethodOverride methodOverride
 						= this.objectDefinition.MethodOverrides.GetOverride(method);
-					if (methodOverride != null)
+					if (methodOverride is object)
 					{
 						if (!method.IsVirtual || method.IsFinal)
 						{
@@ -488,7 +488,7 @@ namespace Spring.Objects.Factory.Support
 			/// </param>
 			private static void SetupTheReturnValueIfAny(LocalBuilder returnValue, ILGenerator il)
 			{
-				if (returnValue != null)
+				if (returnValue is object)
 				{
 					il.Emit(OpCodes.Castclass, returnValue.LocalType);
 					il.Emit(OpCodes.Stloc, returnValue);

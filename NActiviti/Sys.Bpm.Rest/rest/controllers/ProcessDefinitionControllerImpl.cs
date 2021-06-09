@@ -131,7 +131,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             IProcessDefinitionQuery query = repositoryService.CreateProcessDefinitionQuery().SetProcessDefinitionId(id);
             //query = securityService.restrictProcessDefQuery(query, SecurityPolicy.READ);
             IProcessDefinition processDefinition = query.SingleResult();
-            if (processDefinition == null)
+            if (processDefinition is null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find process definition for the given id:'" + id + "'");
             }
@@ -143,7 +143,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
         [HttpPost("processmodel")]
         public virtual Task<string> GetProcessModel(ProcessDefinitionQuery query)
         {
-            if (query == null)
+            if (query is null)
             {
                 throw new ArgumentNullException("query");
             }

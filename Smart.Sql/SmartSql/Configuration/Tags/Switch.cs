@@ -25,11 +25,11 @@ namespace SmartSql.Configuration.Tags
                 }
                 return false;
             });
-            if (matchedTag == null)
+            if (matchedTag is null)
             {
                 matchedTag = ChildTags.FirstOrDefault(tag => tag.Type == TagType.SwitchDefault);
             }
-            if (matchedTag != null)
+            if (matchedTag is object)
             {
                 matchedTag.BuildSql(context);
             }
@@ -58,7 +58,7 @@ namespace SmartSql.Configuration.Tags
                     else
                     {
                         var reqVal = GetPropertyValue(context);
-                        if (reqVal == null) { return false; }
+                        if (reqVal is null) { return false; }
                         string reqValStr = string.Empty;
                         if (reqVal is Enum)
                         {

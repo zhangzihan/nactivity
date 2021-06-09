@@ -90,7 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         protected internal virtual void HandleFlowNode(FlowNode flowNode)
         {
             HandleActivityEnd(flowNode);
-            if (flowNode.ParentContainer != null && flowNode.ParentContainer is AdhocSubProcess)
+            if (flowNode.ParentContainer is object && flowNode.ParentContainer is AdhocSubProcess)
             {
                 HandleAdhocSubProcess(flowNode);
             }
@@ -181,7 +181,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             // No outgoing found. Ending the execution
             if (outgoingSequenceFlows.Count == 0)
             {
-                if (flowNode.OutgoingFlows == null || flowNode.OutgoingFlows.Count == 0)
+                if (flowNode.OutgoingFlows is null || flowNode.OutgoingFlows.Count == 0)
                 {
                     log.LogDebug($"No outgoing sequence flow found for flow node '{flowNode.Id}'.");
                     Context.Agenda.PlanEndExecutionOperation(execution);
@@ -315,7 +315,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
 
                     IExecutionEntity executionEntityToEnd = parentExecutionEntity;
                     IExecutionEntity scopeExecutionEntity = FindNextParentScopeExecutionWithAllEndedChildExecutions(parentExecutionEntity, parentExecutionEntity);
-                    while (scopeExecutionEntity != null)
+                    while (scopeExecutionEntity is object)
                     {
                         executionEntityToEnd = scopeExecutionEntity;
                         scopeExecutionEntity = FindNextParentScopeExecutionWithAllEndedChildExecutions(scopeExecutionEntity, parentExecutionEntity);
@@ -365,7 +365,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                     ICollection<IExecutionEntity> childExecutions = commandContext.ExecutionEntityManager.FindChildExecutionsByParentExecutionId(execution.Id);
                     foreach (IExecutionEntity childExecution in childExecutions)
                     {
-                        if (childExecution.CurrentFlowElement == null || !notToDeleteEvents.Contains(childExecution.CurrentFlowElement.Id))
+                        if (childExecution.CurrentFlowElement is null || !notToDeleteEvents.Contains(childExecution.CurrentFlowElement.Id))
                         {
                             commandContext.ExecutionEntityManager.DeleteExecutionAndRelatedData(childExecution, null, false);
                         }
@@ -412,13 +412,13 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         {
             foreach (IExecutionEntity childExecutionEntity in parentExecutionEntity.Executions)
             {
-                if (executionEntityToIgnore == null || !executionEntityToIgnore.Id.Equals(childExecutionEntity.Id))
+                if (executionEntityToIgnore is null || !executionEntityToIgnore.Id.Equals(childExecutionEntity.Id))
                 {
                     if (!childExecutionEntity.Ended)
                     {
                         return false;
                     }
-                    if (childExecutionEntity.Executions != null && childExecutionEntity.Executions.Count > 0)
+                    if (childExecutionEntity.Executions is object && childExecutionEntity.Executions.Count > 0)
                     {
                         if (!AllChildExecutionsEnded(childExecutionEntity, executionEntityToIgnore))
                         {

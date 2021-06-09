@@ -24,7 +24,7 @@
 
                 var val = value as ValuedDataObject;
 
-                if (val.Value != null)
+                if (val.Value is object)
                 {
                     Value = val.Value;
                 }
@@ -42,7 +42,7 @@
 
         public override int GetHashCode()
         {
-            if (this.Value == null)
+            if (this.Value is null)
             {
                 return base.GetHashCode();
             }
@@ -56,7 +56,7 @@
             {
                 return true;
             }
-            if (o == null || this.GetType() != o.GetType())
+            if (o is null || this.GetType() != o.GetType())
             {
                 return false;
             }

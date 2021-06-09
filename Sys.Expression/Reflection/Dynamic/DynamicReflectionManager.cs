@@ -237,13 +237,13 @@ namespace Spring.Reflection.Dynamic
          * 
                 private static bool IsPublic(MemberInfo member)
                 {
-                    if (member == null) return true;
+                    if (member is null) return true;
 
                     switch(member.MemberType)
                     {
                         case MemberTypes.Event:
                             {
-                                bool isPublic = ((EventInfo) member).GetAddMethod() != null;
+                                bool isPublic = ((EventInfo) member).GetAddMethod() is object;
                                 return isPublic && IsPublic(member.DeclaringType);
                             }
                         case MemberTypes.Field:
@@ -618,7 +618,7 @@ namespace Spring.Reflection.Dynamic
         /// </remarks>
         public static object ConvertValueTypeArgumentIfNecessary(object value, Type targetType, int argIndex)
         {
-            if (value == null)
+            if (value is null)
             {
                 if (ReflectionUtils.IsNullableType(targetType))
                 {

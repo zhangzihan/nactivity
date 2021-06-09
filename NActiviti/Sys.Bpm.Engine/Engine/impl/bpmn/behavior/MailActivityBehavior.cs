@@ -59,8 +59,8 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             //    string ccStr = getStringFromField(cc, execution);
             //    string bccStr = getStringFromField(bcc, execution);
             //    string subjectStr = getStringFromField(subject, execution);
-            //    string textStr = textVar == null ? getStringFromField(text, execution) : getStringFromField(getExpression(execution, textVar), execution);
-            //    string htmlStr = htmlVar == null ? getStringFromField(html, execution) : getStringFromField(getExpression(execution, htmlVar), execution);
+            //    string textStr = textVar is null ? getStringFromField(text, execution) : getStringFromField(getExpression(execution, textVar), execution);
+            //    string htmlStr = htmlVar is null ? getStringFromField(html, execution) : getStringFromField(getExpression(execution, htmlVar), execution);
             //    string charSetStr = getStringFromField(charset, execution);
             //    IList<File> files = new LinkedList<File>();
             //    IList<DataSource> dataSources = new LinkedList<DataSource>();
@@ -94,7 +94,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         private bool AttachmentsExist(IList<File> files, IList<IDataSource> dataSources)
         {
             throw new NotImplementedException();
-            //return !((files == null || files.Count == 0) && (dataSources == null || dataSources.Count == 0));
+            //return !((files is null || files.Count == 0) && (dataSources is null || dataSources.Count == 0));
         }
 
         protected internal virtual Email CreateEmail(string text, string html, bool attachmentsExist)
@@ -174,7 +174,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             throw new NotImplementedException();
             //string[] tos = splitAndTrim(to);
-            //    if (tos != null)
+            //    if (tos is object)
             //    {
             //        foreach (string t in tos)
             //        {
@@ -208,7 +208,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             //    if (!string.ReferenceEquals(tenantId, null) && tenantId.Length > 0)
             //    {
             //        IDictionary<string, MailServerInfo> mailServers = Context.ProcessEngineConfiguration.MailServers;
-            //        if (mailServers != null && mailServers.ContainsKey(tenantId))
+            //        if (mailServers is object && mailServers.ContainsKey(tenantId))
             //        {
             //            MailServerInfo mailServerInfo = mailServers[tenantId];
             //            fromAddress = mailServerInfo.MailServerDefaultFrom;
@@ -235,7 +235,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             throw new NotImplementedException();
             //string[] ccs = splitAndTrim(cc);
-            //if (ccs != null)
+            //if (ccs is object)
             //{
             //    foreach (string c in ccs)
             //    {
@@ -255,7 +255,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             throw new NotImplementedException();
             //string[] bccs = splitAndTrim(bcc);
-            //if (bccs != null)
+            //if (bccs is object)
             //{
             //    foreach (string b in bccs)
             //    {
@@ -285,7 +285,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             //}
             //foreach (DataSource ds in dataSources)
             //{
-            //    if (ds != null)
+            //    if (ds is object)
             //    {
             //        mpEmail.attach(ds, ds.Name, null);
             //    }
@@ -312,7 +312,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             //        isMailServerSet = true;
 
             //    }
-            //    else if (processEngineConfiguration.getMailServer(tenantId) != null)
+            //    else if (processEngineConfiguration.getMailServer(tenantId) is object)
             //    {
             //        MailServerInfo mailServerInfo = processEngineConfiguration.getMailServer(tenantId);
             //        string host = mailServerInfo.MailServerHost;
@@ -387,7 +387,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         protected internal virtual void SetCharset(Email email, string charSetStr)
         {
             throw new NotImplementedException();
-            //if (charset != null)
+            //if (charset is object)
             //{
             //    email.Charset = charSetStr;
             //}
@@ -411,10 +411,10 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         protected internal virtual string GetStringFromField(IExpression expression, IExecutionEntity execution)
         {
             throw new NotImplementedException();
-            //if (expression != null)
+            //if (expression is object)
             //{
             //    object value = expression.getValue(execution);
-            //    if (value != null)
+            //    if (value is object)
             //    {
             //        return value.ToString();
             //    }
@@ -426,7 +426,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         {
             throw new NotImplementedException();
             //object value = checkAllowedTypes(expression, execution);
-            //if (value != null)
+            //if (value is object)
             //{
             //    if (value is File)
             //    {
@@ -456,7 +456,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             //    {
             //        foreach (DataSource ds in (DataSource[])value)
             //        {
-            //            if (ds != null)
+            //            if (ds is object)
             //            {
             //                dataSources.Add(ds);
             //            }
@@ -476,12 +476,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         private object CheckAllowedTypes(IExpression expression, IExecutionEntity execution)
         {
             throw new NotImplementedException();
-            //if (expression == null)
+            //if (expression is null)
             //{
             //    return null;
             //}
             //object value = expression.getValue(execution);
-            //if (value == null)
+            //if (value is null)
             //{
             //    return null;
             //}
@@ -498,7 +498,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
         protected internal virtual bool FileExists(File file)
         {
             throw new NotImplementedException();
-            //return file != null && file.exists() && file.File && file.canRead();
+            //return file is object && file.exists() && file.File && file.canRead();
         }
 
         protected internal virtual IExpression GetExpression(IExecutionEntity execution, IExpression var)

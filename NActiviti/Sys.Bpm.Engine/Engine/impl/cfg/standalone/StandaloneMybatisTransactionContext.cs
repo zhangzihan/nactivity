@@ -19,6 +19,7 @@ namespace Sys.Workflow.Engine.Impl.Cfg.Standalone
     using Sys.Workflow.Engine.Impl.DB;
     using Sys.Workflow.Engine.Impl.Interceptor;
     using Sys.Workflow;
+    using System.Data;
 
     /// 
     public class StandaloneMybatisTransactionContext : ITransactionContext
@@ -51,12 +52,12 @@ namespace Sys.Workflow.Engine.Impl.Cfg.Standalone
         /// <param name="transactionListener"></param>
         public virtual void AddTransactionListener(TransactionState transactionState, ITransactionListener transactionListener)
         {
-            if (stateTransactionListeners == null)
+            if (stateTransactionListeners is null)
             {
                 stateTransactionListeners = new Dictionary<TransactionState, IList<ITransactionListener>>();
             }
             IList<ITransactionListener> transactionListeners = stateTransactionListeners[transactionState];
-            if (transactionListeners == null)
+            if (transactionListeners is null)
             {
                 transactionListeners = new List<ITransactionListener>();
                 stateTransactionListeners[transactionState] = transactionListeners;
@@ -90,13 +91,13 @@ namespace Sys.Workflow.Engine.Impl.Cfg.Standalone
         ///                            and the internal flags have not been correctly set). </param>
         protected internal virtual void FireTransactionEvent(TransactionState transactionState, bool executeInNewContext)
         {
-            if (stateTransactionListeners == null)
+            if (stateTransactionListeners is null)
             {
                 return;
             }
 
             IList<ITransactionListener> transactionListeners = stateTransactionListeners[transactionState];
-            if (transactionListeners == null)
+            if (transactionListeners is null)
             {
                 return;
             }

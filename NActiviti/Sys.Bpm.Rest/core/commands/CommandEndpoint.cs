@@ -40,7 +40,7 @@ namespace Sys.Workflow.Cloud.Services.Core.Commands
         private void ProcessCommand(ICommand cmd)
         {
             ICommandExecutor<ICommand> cmdExecutor = commandExecutors[cmd.GetType()];
-            if (cmdExecutor != null)
+            if (cmdExecutor is object)
             {
                 cmdExecutor.Execute(cmd);
                 return;

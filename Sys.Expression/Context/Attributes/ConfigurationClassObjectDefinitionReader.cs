@@ -64,7 +64,7 @@ namespace Spring.Context.Attributes
                                                                                                          attributeType);
             foreach (MethodInfo method in methods)
             {
-                if (Attribute.GetCustomAttribute(method, attributeType) != null)
+                if (Attribute.GetCustomAttribute(method, attributeType) is object)
                 {
                     return true;
                 }
@@ -86,7 +86,7 @@ namespace Spring.Context.Attributes
 
         private void LoadObjectDefinitionForConfigurationClassIfNecessary(ConfigurationClass configClass)
         {
-            if (configClass.ObjectName != null)
+            if (configClass.ObjectName is object)
             {
                 // a Object definition already exists for this configuration class -> nothing to do
                 return;
@@ -123,18 +123,18 @@ namespace Spring.Context.Attributes
                 }
                 else
                 {
-                    if (definition.ObjectTypeName != null && !definition.IsAbstract)
+                    if (definition.ObjectTypeName is object && !definition.IsAbstract)
                     {
                         objectType = TypeResolutionUtils.ResolveType(definition.ObjectTypeName);
                     }
                 }
-                if (objectType != null)
+                if (objectType is object)
                 {
-                    if (Attribute.GetCustomAttribute(objectType, typeof(ConfigurationAttribute)) != null)
+                    if (Attribute.GetCustomAttribute(objectType, typeof(ConfigurationAttribute)) is object)
                     {
                         return true;
                     }
-                    if (Attribute.GetCustomAttribute(objectType, typeof(ComponentAttribute)) != null ||
+                    if (Attribute.GetCustomAttribute(objectType, typeof(ComponentAttribute)) is object ||
                         HasAttributeOnMethods(objectType, typeof(ObjectDefAttribute)))
                     {
                         return true;
@@ -146,9 +146,9 @@ namespace Spring.Context.Attributes
 
         private bool CheckConfigurationClassCandidate(Type type)
         {
-            if (type != null)
+            if (type is object)
             {
-                return (Attribute.GetCustomAttribute(type, typeof(ConfigurationAttribute)) != null);
+                return (Attribute.GetCustomAttribute(type, typeof(ConfigurationAttribute)) is object);
             }
 
             return false;
@@ -185,7 +185,7 @@ namespace Spring.Context.Attributes
             {
                 string[] namesAndAliases = ((ObjectDefAttribute)t).NamesToArray;
 
-                if (namesAndAliases != null)
+                if (namesAndAliases is object)
                 {
                     names.Add(metadata.Name);
                 }
@@ -218,19 +218,19 @@ namespace Spring.Context.Attributes
             }
 
             //TODO: container does not presently support the concept of Primary object definition for type resolution
-            //if (Attribute.GetCustomAttribute(metadata, typeof(PrimaryAttribute)) != null)
+            //if (Attribute.GetCustomAttribute(metadata, typeof(PrimaryAttribute)) is object)
             //{
             //    ObjectDef.isPrimary = true;
             //}
 
             // is this Object to be instantiated lazily?
-            if (Attribute.GetCustomAttribute(metadata, typeof(LazyAttribute)) != null)
+            if (Attribute.GetCustomAttribute(metadata, typeof(LazyAttribute)) is object)
             {
                 objDef.IsLazyInit =
                     (Attribute.GetCustomAttribute(metadata, typeof(LazyAttribute)) as LazyAttribute).LazyInitialize;
             }
 
-            if (Attribute.GetCustomAttribute(metadata, typeof(DependsOnAttribute)) != null)
+            if (Attribute.GetCustomAttribute(metadata, typeof(DependsOnAttribute)) is object)
             {
                 objDef.DependsOn =
                     (Attribute.GetCustomAttribute(metadata, typeof(DependsOnAttribute)) as DependsOnAttribute).Name;
@@ -242,7 +242,7 @@ namespace Spring.Context.Attributes
             //	ObjectDef.setAutowireMode(autowire.value());
             //}
 
-            if (Attribute.GetCustomAttribute(metadata, typeof(ObjectDefAttribute)) != null)
+            if (Attribute.GetCustomAttribute(metadata, typeof(ObjectDefAttribute)) is object)
             {
                 objDef.InitMethodName =
                     (Attribute.GetCustomAttribute(metadata, typeof(ObjectDefAttribute)) as ObjectDefAttribute).
@@ -253,7 +253,7 @@ namespace Spring.Context.Attributes
             }
 
             // consider scoping
-            if (Attribute.GetCustomAttribute(metadata, typeof(ScopeAttribute)) != null)
+            if (Attribute.GetCustomAttribute(metadata, typeof(ScopeAttribute)) is object)
             {
                 objDef.Scope =
                     (Attribute.GetCustomAttribute(metadata, typeof(ScopeAttribute)) as ScopeAttribute).ObjectScope.ToString();

@@ -32,21 +32,21 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         private const long serialVersionUID = 1L;
 
-        protected internal string endActivityId;
-        protected internal string businessKey;
-        protected internal string startUserId;
-        protected internal string startActivityId;
-        protected internal string superProcessInstanceId;
-        protected internal string tenantId = ProcessEngineConfiguration.NO_TENANT_ID;
-        protected internal string name;
-        protected internal string localizedName;
-        protected internal string description;
-        protected internal string localizedDescription;
-        protected internal string processDefinitionKey;
-        protected internal string processDefinitionName;
-        protected internal int? processDefinitionVersion;
-        protected internal string deploymentId;
-        protected internal IList<IHistoricVariableInstanceEntity> queryVariables;
+        private string endActivityId;
+        private string businessKey;
+        private string startUserId;
+        private string startActivityId;
+        private string superProcessInstanceId;
+        private string tenantId = ProcessEngineConfiguration.NO_TENANT_ID;
+        private string name;
+        private string localizedName;
+        private string description;
+        private string localizedDescription;
+        private string processDefinitionKey;
+        private string processDefinitionName;
+        private int? processDefinitionVersion;
+        private string deploymentId;
+        private IList<IHistoricVariableInstanceEntity> queryVariables;
 
         public HistoricProcessInstanceEntityImpl()
         {
@@ -121,7 +121,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                this.businessKey = value;
+                this.businessKey = string.Empty.Equals(value?.Trim()) ? null : value?.Trim();
             }
         }
 
@@ -134,7 +134,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             }
             set
             {
-                this.startUserId = value;
+                this.startUserId = string.Empty.Equals(value?.Trim()) ? null : value?.Trim();
             }
         }
 
@@ -157,7 +157,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
         private IUserInfo EnsureStarterInitialized()
         {
-            if (StartUser != null)
+            if (StartUser is object)
             {
                 starter = new UserInfo
                 {
@@ -167,9 +167,9 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
                 return starter;
             }
 
-            if (Context.CommandContext != null && (starter == null || starter.Id != this.startUserId))
+            if (Context.CommandContext is object && (starter is null || starter.Id != this.startUserId))
             {
-                if (this.ProcessVariables.TryGetValue(this.startUserId, out var userInfo) && userInfo != null)
+                if (this.ProcessVariables.TryGetValue(this.startUserId, out var userInfo) && userInfo is object)
                 {
                     starter = JToken.FromObject(userInfo).ToObject<UserInfo>();
 
@@ -191,7 +191,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (starter == null)
+                if (starter is null)
                 {
                     starter = EnsureStarterInitialized();
                 }
@@ -365,7 +365,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             get
             {
                 IDictionary<string, object> variables = new Dictionary<string, object>();
-                if (queryVariables != null)
+                if (queryVariables is object)
                 {
                     foreach (IHistoricVariableInstanceEntity variableInstance in queryVariables)
                     {
@@ -383,7 +383,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (queryVariables == null && Context.CommandContext != null)
+                if (queryVariables is null && Context.CommandContext is object)
                 {
                     queryVariables = new HistoricVariableInitializingList();
                 }

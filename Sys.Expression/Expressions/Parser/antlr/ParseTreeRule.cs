@@ -57,7 +57,7 @@ namespace Spring.Expressions.Parser.antlr
 			AST child = getFirstChild();
 			numReplacements = 1;
 			// walk child printing them out, descending into at most one
-			while ( child != null ) 
+			while ( child is object ) 
 			{
 				if ( (numReplacements >= step) || (child is ParseTreeToken) )
 				{

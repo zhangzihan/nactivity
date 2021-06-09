@@ -96,7 +96,7 @@ namespace Spring.Core.IO
                 throw new UriFormatException(string.Format("Invalid resource name. Name has to be in 'assembly:<assemblyName>/<namespace>/<resourceName>' format:{0}", resourceName));
             }
             this._assembly = Assembly.Load(info[0]);
-            if (this._assembly == null)
+            if (this._assembly is null)
             {
                 throw new FileNotFoundException("Unable to load assembly [" + info[0] + "]");
             }
@@ -130,7 +130,7 @@ namespace Spring.Core.IO
             get
             {
                 Stream stream = _assembly.GetManifestResourceStream(_resourceName);
-                if (stream == null)
+                if (stream is null)
                 {
                     log.LogError("Could not load resource with name = [" + _resourceName +
                         "] from assembly + " + _assembly);
@@ -156,7 +156,7 @@ namespace Spring.Core.IO
         {
             get
             {
-                if (_resources == null)
+                if (_resources is null)
                 {
                     _resources = _assembly.GetManifestResourceNames();
                     Array.Sort(_resources);

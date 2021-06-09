@@ -140,7 +140,7 @@ namespace Sys.Workflow.Engine.Impl
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
-            if (variableValue == null)
+            if (variableValue is null)
             {
                 throw new ActivitiIllegalArgumentException("variableValue is null");
             }
@@ -155,7 +155,7 @@ namespace Sys.Workflow.Engine.Impl
             {
                 throw new ActivitiIllegalArgumentException("variableName is null");
             }
-            if (variableValue == null)
+            if (variableValue is null)
             {
                 throw new ActivitiIllegalArgumentException("variableValue is null");
             }
@@ -206,7 +206,7 @@ namespace Sys.Workflow.Engine.Impl
 
         protected internal virtual void EnsureVariablesInitialized()
         {
-            if (this.queryVariableValue != null)
+            if (this.queryVariableValue is object)
             {
                 IVariableTypes variableTypes = Context.ProcessEngineConfiguration.VariableTypes;
                 queryVariableValue.Initialize(variableTypes);

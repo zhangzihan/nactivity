@@ -58,7 +58,7 @@ namespace Spring.Expressions.Parser.antlr
 			{
 				if (hideMask.member(LA(1).Type))
 				{
-					if (p == null)
+					if (p is null)
 					{
 						p = LA(1);
 					}
@@ -69,7 +69,7 @@ namespace Spring.Expressions.Parser.antlr
 						p = LA(1);
 					}
 					lastHiddenToken = p;
-					if (firstHidden == null)
+					if (firstHidden is null)
 					{
 						firstHidden = p; // record hidden token if first
 					}
@@ -132,7 +132,7 @@ namespace Spring.Expressions.Parser.antlr
 		{
 			// handle an initial condition; don't want to get lookahead
 			// token of this splitter until first call to nextToken
-			if (LA(1) == null)
+			if (LA(1) is null)
 			{
 				consumeFirst();
 			}

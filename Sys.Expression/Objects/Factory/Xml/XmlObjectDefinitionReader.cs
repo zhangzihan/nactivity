@@ -152,7 +152,7 @@ namespace Spring.Objects.Factory.Xml
         {
             set
             {
-                if (value == null || !typeof(IObjectDefinitionDocumentReader).IsAssignableFrom(value))
+                if (value is null || !typeof(IObjectDefinitionDocumentReader).IsAssignableFrom(value))
                 {
                     throw new ArgumentException(
                         "DocumentReaderType must be an implementation of the IObjectDefinitionReader interface.");
@@ -169,7 +169,7 @@ namespace Spring.Objects.Factory.Xml
         {
             get
             {
-                if (this.namespaceParserResolver == null)
+                if (this.namespaceParserResolver is null)
                 {
                     this.namespaceParserResolver = CreateDefaultNamespaceParserResolver();
                 }
@@ -177,7 +177,7 @@ namespace Spring.Objects.Factory.Xml
             }
             set
             {
-                if (this.namespaceParserResolver != null)
+                if (this.namespaceParserResolver is object)
                 {
                     throw new InvalidOperationException("NamespaceParserResolver is already set");
                 }
@@ -214,7 +214,7 @@ namespace Spring.Objects.Factory.Xml
         /// </exception>
         public override int LoadObjectDefinitions(IResource resource)
         {
-            if (resource == null)
+            if (resource is null)
             {
                 throw new ObjectDefinitionStoreException
                     ("Resource cannot be null: expected an XML resource.");
@@ -232,7 +232,7 @@ namespace Spring.Objects.Factory.Xml
             try
             {
                 Stream stream = resource.InputStream;
-                if (stream == null)
+                if (stream is null)
                 {
                     throw new ObjectDefinitionStoreException(
                         "InputStream is null from Resource = [" + resource + "]");
@@ -298,7 +298,7 @@ namespace Spring.Objects.Factory.Xml
                     }
                     catch (RetryParseException)
                     {
-                        if (reader != null)
+                        if (reader is object)
                             reader.Close();
                     }
                 }
@@ -422,7 +422,7 @@ namespace Spring.Objects.Factory.Xml
         /// <returns></returns>
         protected virtual IObjectDefinitionDocumentReader CreateObjectDefinitionDocumentReader()
         {
-            if (documentReaderType == null)
+            if (documentReaderType is null)
             {
                 return new DefaultObjectDefinitionDocumentReader();
             }

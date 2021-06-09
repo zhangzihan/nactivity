@@ -87,7 +87,7 @@ namespace Spring.Context.Support
 			string code, CultureInfo cultureInfo)
 		{
 			string message = null;
-			for (int i = 0; message == null & i < _resourceManagers.Count; i++)
+			for (int i = 0; message is null & i < _resourceManagers.Count; i++)
 			{
 				message = ResolveObject((ResourceManager) _resourceManagers[i], code, cultureInfo) as string;
 			}
@@ -106,7 +106,7 @@ namespace Spring.Context.Support
 		{
 			object obj = null;
 
-			for (int i = 0; obj == null & i < _resourceManagers.Count; i++)
+			for (int i = 0; obj is null & i < _resourceManagers.Count; i++)
 			{
 				obj = ResolveObject((ResourceManager) _resourceManagers[i], code, cultureInfo);
 			}
@@ -141,7 +141,7 @@ namespace Spring.Context.Support
 		/// </exception>
 		protected override void ApplyResourcesToObject(object value, string objectName, CultureInfo culture)
 		{
-		    if(value != null) 
+		    if(value is object) 
 		    {
 		        ComponentResourceManager crm = new(value.GetType());
 		        crm.ApplyResources(value, objectName, culture);
@@ -165,7 +165,7 @@ namespace Spring.Context.Support
             if (!_cachedResources.TryGetValue(cacheKey, out resource))
             {
                 resource = resourceManager.GetObject(code, cultureInfo);
-                if (resource != null)
+                if (resource is object)
                 {
                     lock (_cachedResources)
                     {

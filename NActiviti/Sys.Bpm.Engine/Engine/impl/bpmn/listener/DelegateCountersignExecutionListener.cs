@@ -23,6 +23,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Sys.Expressions;
 using Sys.Workflow.Engine.Impl.Identities;
+using Sys.Workflow.Engine.Delegate.Events;
+using Sys.Workflow.Engine.Impl.Util;
+using Sys.Workflow.Engine.Impl.Cfg;
 
 namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 {
@@ -40,9 +43,8 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
     /// 6.发起者部门领导,指组织人员行政上下级的归属关系,读取发起者的部门领导.策略名:GetDeptLeader.
     /// [{"ruleType":"GetUser","ruleName":"GetUser","queryCondition":[{"id":"用户1","name":"用户1"}]},{"ruleType":"GetDept","ruleName":"GetDept","queryCondition":[{"id":"部门1","name":"部门1"}]}{"ruleType":"GetDeptLeader","ruleName":"GetDeptLeader","queryCondition":[{"id":"部门1","name":"部门1"}]},{"ruleType":"GetDirectReporter","ruleName":"GetDirectReporter","queryCondition":[{"id":"部门1","name":"部门1"}]},{"ruleType":"GetDuty","ruleName":"GetDuty","queryCondition":[{"id":"岗位1","name":"岗位1"}]},{"ruleType":"GetUnderling","ruleName":"GetUnderling","queryCondition":[{"id":"领导1","name":"领导1"}]}]
     /// </summary>
-    public class DelegateCountersignExecutionListener : IExecutionListener
+    public class DelegateCountersignExecutionListener : IExecutionListener, IActivitiEventListener
     {
-        private static readonly IUserDelegateAssignProxy userDelegateAssignProxy = ProcessEngineServiceProvider.Resolve<IUserDelegateAssignProxy>();
         /// <summary>
         /// 
         /// </summary>
@@ -51,13 +53,32 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
         }
 
+        public bool FailOnException => true;
+
         /// <summary>
         /// 侦听接收通知处理
         /// </summary>
         /// <param name="execution"></param>
         public void Notify(IExecutionEntity execution)
         {
+            IUserDelegateAssignProxy userDelegateAssignProxy = ProcessEngineServiceProvider.Resolve<IUserDelegateAssignProxy>();
+
             userDelegateAssignProxy.Assign(execution);
+        }
+
+        public void OnEvent(IActivitiEvent @event)
+        {
+            if (@event is IActivitiSequenceFlowTakenEvent entity
+                && entity.ExecutionId is object)
+            {
+                var targetElement = ProcessDefinitionUtil.GetFlowElement(entity.ProcessDefinitionId, entity.TargetActivityId);
+                if (targetElement is UserTask)
+                {
+                    var pec = ProcessEngineServiceProvider.Resolve<ProcessEngineConfiguration>() as ProcessEngineConfigurationImpl;
+                    IExecutionEntity execution = pec.ExecutionEntityManager.FindById<IExecutionEntity>(entity.ExecutionId);
+                    Notify(execution);
+                }
+            }
         }
     }
 
@@ -74,11 +95,25 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Listeners
 
         public void Assign(IExecutionEntity execution)
         {
-            if (execution.CurrentFlowElement is UserTask userTask && userTask.HasMultiInstanceLoopCharacteristics())
+            UserTask userTask = null;
+            switch (execution.CurrentFlowElement)
+            {
+                case SequenceFlow flowNode:
+                    if (flowNode.TargetFlowElement is UserTask)
+                    {
+                        userTask = flowNode.TargetFlowElement as UserTask;
+                    }
+                    break;
+                case UserTask _:
+                    userTask = execution.CurrentFlowElement as UserTask;
+                    break;
+            }
+
+            if (userTask is object && userTask.HasMultiInstanceLoopCharacteristics())
             {
                 var varName = userTask.LoopCharacteristics.GetCollectionVarName();
 
-                if (execution.GetVariable(varName) == null)
+                if (execution.GetVariable(varName) is null)
                 {
                     List<IUserInfo> users = new List<IUserInfo>();
                     string getUserPolicy = userTask.GetUsersPolicy();

@@ -118,7 +118,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
 
         private void doResume(Transaction tx)
         {
-            if (tx != null)
+            if (tx is object)
             {
                 try
                 {
@@ -173,7 +173,7 @@ namespace Sys.Workflow.Engine.Impl.Interceptor
             }
             finally
             {
-                if (rollbackEx != null && originalException != null)
+                if (rollbackEx is object && originalException is object)
                 {
                     //LOGGER.error("Error when rolling back transaction, original exception was:", originalException);
                 }

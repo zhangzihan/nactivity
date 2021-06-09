@@ -61,7 +61,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             _ = taskService.GetVariables(taskId);
             IDictionary<string, IVariableInstance> variableInstancesMap = taskService.GetVariableInstances(taskId);
             IList<IVariableInstance> variableInstances = new List<IVariableInstance>();
-            if (variableInstancesMap != null)
+            if (variableInstancesMap is object)
             {
                 ((List<IVariableInstance>)variableInstances).AddRange(variableInstancesMap.Values);
             }
@@ -84,7 +84,7 @@ namespace Sys.Workflow.Cloud.Services.Rest.Controllers
             _ = taskService.GetVariablesLocal(taskId);
             IDictionary<string, IVariableInstance> variableInstancesMap = taskService.GetVariableInstancesLocal(taskId);
             IList<IVariableInstance> variableInstances = new List<IVariableInstance>();
-            if (variableInstancesMap != null)
+            if (variableInstancesMap is object)
             {
                 ((List<IVariableInstance>)variableInstances).AddRange(variableInstancesMap.Values);
             }

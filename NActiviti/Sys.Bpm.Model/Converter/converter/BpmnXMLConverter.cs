@@ -167,17 +167,17 @@ namespace Sys.Workflow.Bpmn.Converters
             throw new NotImplementedException();
             //SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             //Schema schema = null;
-            //if (classloader != null)
+            //if (classloader is object)
             //{
             //    schema = factory.newSchema(classloader.getResource(BPMN_XSD));
             //}
 
-            //if (schema == null)
+            //if (schema is null)
             //{
             //    schema = factory.newSchema(typeof(BpmnXMLConverter).ClassLoader.getResource(BPMN_XSD));
             //}
 
-            //if (schema == null)
+            //if (schema is null)
             //{
             //    throw new XMLException("BPMN XSD could not be found");
             //}
@@ -300,7 +300,7 @@ namespace Sys.Workflow.Bpmn.Converters
                     {
 
                         Process process = processParser.Parse(xtr, model);
-                        if (process != null)
+                        if (process is object)
                         {
                             activeProcess = process;
                         }
@@ -324,14 +324,14 @@ namespace Sys.Workflow.Bpmn.Converters
                         {
                             parentElement = activeSubProcessList[activeSubProcessList.Count - 1];
                         }
-                        else if (activeProcess != null)
+                        else if (activeProcess is object)
                         {
                             parentElement = activeProcess;
                         }
                         documentationParser.ParseChildElement(xtr, parentElement, model);
 
                     }
-                    else if (activeProcess == null && BpmnXMLConstants.ELEMENT_TEXT_ANNOTATION.Equals(xtr.LocalName))
+                    else if (activeProcess is null && BpmnXMLConstants.ELEMENT_TEXT_ANNOTATION.Equals(xtr.LocalName))
                     {
                         string elementId = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
                         TextAnnotation textAnnotation = (TextAnnotation)(new TextAnnotationXMLConverter()).ConvertXMLToElement(xtr, model);
@@ -339,7 +339,7 @@ namespace Sys.Workflow.Bpmn.Converters
                         model.GlobalArtifacts.Add(textAnnotation);
 
                     }
-                    else if (activeProcess == null && BpmnXMLConstants.ELEMENT_ASSOCIATION.Equals(xtr.LocalName))
+                    else if (activeProcess is null && BpmnXMLConstants.ELEMENT_ASSOCIATION.Equals(xtr.LocalName))
                     {
                         string elementId = xtr.GetAttributeValue(BpmnXMLConstants.ATTRIBUTE_ID);
                         Association association = (Association)(new AssociationXMLConverter()).ConvertXMLToElement(xtr, model);
@@ -390,7 +390,7 @@ namespace Sys.Workflow.Bpmn.Converters
                         }
                         else if (convertersToBpmnMap.ContainsKey(xtr.LocalName))
                         {
-                            if (activeProcess != null)
+                            if (activeProcess is object)
                             {
                                 BaseBpmnXMLConverter converter = convertersToBpmnMap[xtr.LocalName];
                                 converter.ConvertToBpmnModel(xtr, model, activeProcess, activeSubProcessList);
@@ -440,14 +440,14 @@ namespace Sys.Workflow.Bpmn.Converters
                 if (flowElement is SequenceFlow sequenceFlow)
                 {
                     FlowNode sourceNode = GetFlowNodeFromScope(sequenceFlow.SourceRef, parentScope);
-                    if (sourceNode != null)
+                    if (sourceNode is object)
                     {
                         sourceNode.OutgoingFlows.Add(sequenceFlow);
                         sequenceFlow.SourceFlowElement = sourceNode;
                     }
 
                     FlowNode targetNode = GetFlowNodeFromScope(sequenceFlow.TargetRef, parentScope);
-                    if (targetNode != null)
+                    if (targetNode is object)
                     {
                         targetNode.IncomingFlows.Add(sequenceFlow);
                         sequenceFlow.TargetFlowElement = targetNode;
@@ -668,7 +668,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
                 BaseBpmnXMLConverter converter = convertersToXMLMap[flowElement.GetType()];
 
-                if (converter == null)
+                if (converter is null)
                 {
                     throw new XMLException("No converter for " + flowElement.GetType() + " found");
                 }
@@ -682,7 +682,7 @@ namespace Sys.Workflow.Bpmn.Converters
 
             BaseBpmnXMLConverter converter = convertersToXMLMap[artifact.GetType()];
 
-            if (converter == null)
+            if (converter is null)
             {
                 throw new XMLException("No converter for " + artifact.GetType() + " found");
             }

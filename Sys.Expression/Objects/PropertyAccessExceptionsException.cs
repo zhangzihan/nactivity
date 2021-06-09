@@ -181,7 +181,7 @@ namespace Spring.Objects
 					sb.Append(pae.GetType().FullName);
 					sb.Append(": ");
 					sb.Append(pae.Message);
-					if (pae.InnerException != null) 
+					if (pae.InnerException is object) 
 					{
 						sb.Append(", Inner Exception: ");
 						sb.Append(pae.InnerException.ToString());

@@ -51,7 +51,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 		/// <param name="activityExecution"> </param>
 		protected internal virtual void DispatchJobCanceledEvents(IExecutionEntity activityExecution)
 		{
-			if (activityExecution != null)
+			if (activityExecution is object)
 			{
 				IList<IJobEntity> jobs = activityExecution.Jobs;
 				foreach (IJobEntity job in jobs)

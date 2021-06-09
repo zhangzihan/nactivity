@@ -119,7 +119,7 @@ namespace Spring.Util
         public static string[] Split(
             string s, string delimiters, bool trimTokens, bool ignoreEmptyTokens, string quoteChars)
         {
-            if (s == null)
+            if (s is null)
             {
                 return new string[0];
             }
@@ -127,7 +127,7 @@ namespace Spring.Util
             {
                 return new[] { s };
             }
-            if (quoteChars == null)
+            if (quoteChars is null)
             {
                 quoteChars = string.Empty;
             }
@@ -275,7 +275,7 @@ namespace Spring.Util
         /// </returns>
         public static string[] DelimitedListToStringArray(string input, string delimiter)
         {
-            if (input == null)
+            if (input is null)
             {
                 return new string[0];
             }
@@ -302,7 +302,7 @@ namespace Spring.Util
         public static string CollectionToDelimitedString<T>(
             IEnumerable<T> c, string delimiter)
         {
-            if (c == null)
+            if (c is null)
             {
                 return "null";
             }
@@ -361,7 +361,7 @@ namespace Spring.Util
         /// </param>
         public static string ArrayToDelimitedString<T>(IEnumerable<T> source, string delimiter)
         {
-            if (source == null)
+            if (source is null)
             {
                 return "null";
             }
@@ -478,7 +478,7 @@ namespace Spring.Util
         /// <returns>The stripped string.</returns>
         public static string StripFirstAndLastCharacter(string text)
         {
-            if (text != null
+            if (text is object
                 && text.Length > 2)
             {
                 return text.Substring(1, text.Length - 2);
@@ -560,7 +560,7 @@ namespace Spring.Util
             {
                 return String.Empty;
             }
-            if (expValue == null)
+            if (expValue is null)
             {
                 expValue = String.Empty;
             }
@@ -638,7 +638,7 @@ namespace Spring.Util
         /// <returns>The converted string.</returns>
         public static string ConvertEscapedCharacters(string inputString)
         {
-            if (inputString == null) return null;
+            if (inputString is null) return null;
             StringBuilder sb = new(inputString.Length);
             for (int i = 0; i < inputString.Length; i++)
             {

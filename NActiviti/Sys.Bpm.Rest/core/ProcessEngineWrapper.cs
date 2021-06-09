@@ -144,13 +144,13 @@ namespace Sys.Workflow.Cloud.Services.Core
         private void VerifyCanWriteToProcessInstance(string processInstanceId)
         {
             ProcessInstance processInstance = GetProcessInstanceById(processInstanceId);
-            if (processInstance == null)
+            if (processInstance is null)
             {
                 throw new ActivitiException("Unable to find process instance for the given id: " + processInstanceId);
             }
 
             IProcessDefinition processDefinition = repositoryService.GetProcessDefinition(processInstance.ProcessDefinitionId);
-            if (processDefinition == null)
+            if (processDefinition is null)
             {
                 throw new ActivitiException("Unable to find process definition for the given id: " + processInstance.ProcessDefinitionId);
             }
@@ -295,7 +295,7 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// <param name="cmd"></param>
         public void ReturnTo(ReturnToTaskCmd cmd)
         {
-            _ = (taskService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.ReturnToActivityCmd(cmd.TaskId, cmd.ActivityId, cmd.ReturnReason, cmd.TenantId, cmd.Variables));
+            _ = (taskService as ServiceImpl).CommandExecutor.Execute(new Engine.Impl.Cmd.ReturnToActivityCmd(cmd.TaskId, cmd.ActivityId, cmd.ReturnReason, cmd.Variables));
         }
 
         /// <summary>
@@ -315,10 +315,10 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// </summary>
         public virtual void CompleteTask(CompleteTaskCmd cmd)
         {
-            if (cmd != null)
+            if (cmd is object)
             {
                 IDictionary<string, object> variables = new Dictionary<string, object>(cmd.OutputVariables);
-                if (cmd.RuntimeAssigneeUser != null && (cmd.RuntimeAssigneeUser.Users?.Length).GetValueOrDefault() > 0)
+                if (cmd.RuntimeAssigneeUser is object && (cmd.RuntimeAssigneeUser.Users?.Length).GetValueOrDefault() > 0)
                 {
                     variables.Add(BpmnXMLConstants.RUNTIME_ASSIGNEE_USER_VARIABLE_NAME, cmd.RuntimeAssigneeUser);
                 }
@@ -397,7 +397,7 @@ namespace Sys.Workflow.Cloud.Services.Core
         public virtual void DeleteTask(string taskId, string reason, bool cascade = false)
         {
             TaskModel task = GetTaskById(taskId);
-            if (task == null)
+            if (task is null)
             {
                 throw new ActivitiObjectNotFoundException("Unable to find task for the given id: " + taskId);
             }
@@ -443,7 +443,7 @@ namespace Sys.Workflow.Cloud.Services.Core
         /// <param name="cmd">终止任务命令</param>
         public virtual void TerminateTask(TerminateTaskCmd cmd)
         {
-            taskService.TerminateTask(cmd.TaskId, cmd.TerminateReason, true, cmd.OutputVariables);
+            taskService.TerminateTask(cmd.TaskId, cmd.TerminateReason, true, cmd.OutputVariables, cmd.TransientVariables);
         }
 
         /// <summary>

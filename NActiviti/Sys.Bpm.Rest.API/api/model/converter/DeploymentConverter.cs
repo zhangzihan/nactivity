@@ -42,7 +42,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model.Converters
         public virtual Deployment From(IDeployment source)
         {
             Deployment deployment = null;
-            if (source != null)
+            if (source is object)
             {
                 deployment = new Deployment(source.Id,
                     source.Name,

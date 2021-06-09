@@ -43,7 +43,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             IHistoricProcessInstance processInstance = query.SingleResult();
 
-            if (processInstance != null)
+            if (processInstance is object)
             {
                 HistoricProcessInstanceEntityImpl.EnsureStarterInitialized(new HistoricProcessInstanceEntityImpl[]
                 {

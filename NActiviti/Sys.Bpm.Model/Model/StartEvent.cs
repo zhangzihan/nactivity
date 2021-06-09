@@ -96,7 +96,7 @@ namespace Sys.Workflow.Bpmn.Models
                 Interrupting = val.isInterrupting;
 
                 formProperties = new List<FormProperty>();
-                if (val.FormProperties != null && val.FormProperties.Count > 0)
+                if (val.FormProperties is object && val.FormProperties.Count > 0)
                 {
                     foreach (FormProperty property in val.FormProperties)
                     {

@@ -1,9 +1,9 @@
-/* Copyright © 2002-2011 by Aidant Systems, Inc., and by Jason Smith. */
+/* Copyright ?2002-2011 by Aidant Systems, Inc., and by Jason Smith. */
 
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ namespace Spring.Collections
 		{
 			_mBasisSet = basisSet;
 			_mSyncRoot = basisSet.SyncRoot;
-			if (_mSyncRoot == null)
+			if (_mSyncRoot is null)
 			{
 				throw new NullReferenceException(
 					"The Set you specified returned a null SyncRoot.");
@@ -98,7 +98,7 @@ namespace Spring.Collections
 		/// </returns>
 		public override sealed bool AddAll(ICollection collection)
 		{
-			if(collection == null) 
+			if(collection is null) 
 			{
 				return false;
 			}
@@ -152,7 +152,7 @@ namespace Spring.Collections
 		/// </returns>
 		public override sealed bool ContainsAll(ICollection collection)
 		{
-			if(collection == null) 
+			if(collection is null) 
 			{
 				return false;
 			}

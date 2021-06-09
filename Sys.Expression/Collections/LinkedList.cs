@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -159,7 +159,7 @@ namespace Spring.Collections
 		/// </returns>
 		public bool Contains(object value)
 		{
-			return GetNode(value) != null;
+			return GetNode(value) is object;
 		}
 
 		/// <summary>
@@ -184,7 +184,7 @@ namespace Spring.Collections
 		public int IndexOf(object value)
 		{
 			NodeHolder nh = GetNode(value);
-			if (nh == null)
+			if (nh is null)
 			{
 				return -1;
 			}
@@ -290,12 +290,12 @@ namespace Spring.Collections
 		private NodeHolder GetNode(object value)
 		{
             int i = 0;
-            if (value == null)
+            if (value is null)
             {
 
                 for (Node n = _rootNode.NextNode; n != _rootNode; n = n.NextNode)
                 {
-                    if (n.Value == null)
+                    if (n.Value is null)
                     {
                         return new NodeHolder(n, i);
                     }
@@ -389,7 +389,7 @@ namespace Spring.Collections
 		/// </exception>
 		public void CopyTo(Array array, int index)
 		{
-			if (array == null)
+			if (array is null)
 			{
 				throw new ArgumentNullException("array");
 			}

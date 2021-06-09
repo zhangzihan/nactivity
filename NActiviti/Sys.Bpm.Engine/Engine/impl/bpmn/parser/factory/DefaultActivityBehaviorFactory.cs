@@ -202,12 +202,12 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
                     }
                 }
 
-                if (behaviorExtension != null)
+                if (behaviorExtension is object)
                 {
                     fieldExtensions.Remove(behaviorExtension);
                 }
 
-                if (theClass == null)
+                if (theClass is null)
                 {
                     // Default Camel behavior class
                     theClass = Type.GetType("Sys.Workflow.Camel.Impl.CamelBehaviorDefaultImpl");
@@ -454,7 +454,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Parser.Factory
             bool terminateAll = false;
             bool terminateMultiInstance = false;
 
-            if (endEvent.EventDefinitions != null && endEvent.EventDefinitions.Count > 0 && endEvent.EventDefinitions[0] is TerminateEventDefinition)
+            if (endEvent.EventDefinitions is object && endEvent.EventDefinitions.Count > 0 && endEvent.EventDefinitions[0] is TerminateEventDefinition)
             {
                 terminateAll = ((TerminateEventDefinition)endEvent.EventDefinitions[0]).TerminateAll;
                 terminateMultiInstance = ((TerminateEventDefinition)endEvent.EventDefinitions[0]).TerminateMultiInstance;

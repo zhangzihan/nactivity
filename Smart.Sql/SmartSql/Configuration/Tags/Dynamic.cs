@@ -20,7 +20,7 @@ namespace SmartSql.Configuration.Tags
 
         public override void BuildChildSql(RequestContext context)
         {
-            if (ChildTags != null && ChildTags.Count > 0)
+            if (ChildTags is object && ChildTags.Count > 0)
             {
                 bool isFirstChild = true;
                 foreach (var childTag in ChildTags)

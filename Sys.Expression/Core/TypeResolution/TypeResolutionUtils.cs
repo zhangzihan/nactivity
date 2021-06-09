@@ -96,7 +96,7 @@ namespace Spring.Core.TypeResolution
         public static Type ResolveType(string typeName)
         {
             Type type = TypeRegistry.ResolveType(typeName);
-            if (type == null)
+            if (type is null)
             {
                 type = internalTypeResolver.Resolve(typeName);
             }

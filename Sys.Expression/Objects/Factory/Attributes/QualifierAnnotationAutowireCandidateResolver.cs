@@ -92,7 +92,7 @@ namespace Spring.Objects.Factory.Attributes
         {
             _objectFactory = (IObjectFactory) info.GetValue("objectFactory", typeof(IObjectFactory));
             var type = info.GetString("valueAttributeType");
-            _valueAttributeType = type != null ? Type.GetType(type) : null;
+            _valueAttributeType = type is object ? Type.GetType(type) : null;
 
             _qualifierTypes = new HashSet<Type>();
             var typeNames = (List<string>) info.GetValue("qualifierTypeNames", typeof(List<string>));
@@ -149,7 +149,7 @@ namespace Spring.Objects.Factory.Attributes
                 return false;
             }
 
-            if (descriptor == null)
+            if (descriptor is null)
             {
                 // no qualification necessaryodHolder
                 return true;
@@ -159,10 +159,10 @@ namespace Spring.Objects.Factory.Attributes
             if (match)
             {
                 MethodParameter methodParam = descriptor.MethodParameter;
-                if (methodParam != null)
+                if (methodParam is object)
                 {
                     var method = methodParam.MethodInfo;
-                    if (method == null || method.ReturnType == typeof(void))
+                    if (method is null || method.ReturnType == typeof(void))
                     {
                         match = CheckQualifiers(odHolder, methodParam.MethodAttributes);
                     }
@@ -177,7 +177,7 @@ namespace Spring.Objects.Factory.Attributes
         /// </summary>
         protected bool CheckQualifiers(ObjectDefinitionHolder odHolder, Attribute[] annotationsToSearch)
         {
-            if (annotationsToSearch == null || annotationsToSearch.Length == 0)
+            if (annotationsToSearch is null || annotationsToSearch.Length == 0)
             {
                 return true;
             }
@@ -231,44 +231,44 @@ namespace Spring.Objects.Factory.Attributes
             Type type = attribute.GetType();
             RootObjectDefinition od = (RootObjectDefinition) odHolder.ObjectDefinition;
             AutowireCandidateQualifier qualifier = od.GetQualifier(type.FullName);
-            if (qualifier == null)
+            if (qualifier is null)
             {
                 qualifier = od.GetQualifier(type.Name);
             }
 
-            if (qualifier == null)
+            if (qualifier is null)
             {
                 Attribute targetAttribute = null;
                 // TODO: Get the resolved factory method
-                //if (od.GetResolvedFactoryMethod() != null) {
+                //if (od.GetResolvedFactoryMethod() is object) {
                 //    targetAttribute = Attribute.GetCustomAttribute(od.GetResolvedFactoryMethod(), type);
                 //}
-                if (targetAttribute == null)
+                if (targetAttribute is null)
                 {
                     // look for matching attribute on the target class
-                    if (_objectFactory != null)
+                    if (_objectFactory is object)
                     {
                         Type objectType = od.ObjectType;
-                        if (objectType != null)
+                        if (objectType is object)
                         {
                             targetAttribute = Attribute.GetCustomAttribute(objectType, type);
                         }
                     }
 
-                    if (targetAttribute == null && od.ObjectType != null)
+                    if (targetAttribute is null && od.ObjectType is object)
                     {
                         targetAttribute = Attribute.GetCustomAttribute(od.ObjectType, type);
                     }
                 }
 
-                if (targetAttribute != null && targetAttribute.Equals(attribute))
+                if (targetAttribute is object && targetAttribute.Equals(attribute))
                 {
                     return true;
                 }
             }
 
             IDictionary<string, object> attributes = AttributeUtils.GetAttributeProperties(attribute);
-            if (attributes.Count == 0 && qualifier == null)
+            if (attributes.Count == 0 && qualifier is null)
             {
                 // if no attributes, the qualifier must be present
                 return false;
@@ -280,31 +280,31 @@ namespace Spring.Objects.Factory.Attributes
                 object expectedValue = entry.Value;
                 object actualValue = null;
                 // check qualifier first
-                if (qualifier != null)
+                if (qualifier is object)
                 {
                     actualValue = qualifier.GetAttribute(propertyName);
                 }
 
-                if (actualValue == null)
+                if (actualValue is null)
                 {
                     // fall back on bean definition attribute
                     actualValue = od.GetAttribute(propertyName);
                 }
 
-                if (actualValue == null && propertyName.Equals(AutowireCandidateQualifier.VALUE_KEY) &&
+                if (actualValue is null && propertyName.Equals(AutowireCandidateQualifier.VALUE_KEY) &&
                     expectedValue is string && odHolder.MatchesName((string) expectedValue))
                 {
                     // fall back on bean name (or alias) match
                     continue;
                 }
 
-                if (actualValue == null && qualifier != null)
+                if (actualValue is null && qualifier is object)
                 {
                     // fall back on default, but only if the qualifier is present
                     actualValue = AttributeUtils.GetDefaultValue(attribute, propertyName);
                 }
 
-                if (actualValue != null)
+                if (actualValue is object)
                 {
                     actualValue = TypeConversionUtils.ConvertValueIfNecessary(expectedValue.GetType(), actualValue, null);
                 }
@@ -324,10 +324,10 @@ namespace Spring.Objects.Factory.Attributes
         public Object GetSuggestedValue(DependencyDescriptor descriptor)
         {
             Object value = FindValue(descriptor.Attributes);
-            if (value == null)
+            if (value is null)
             {
                 MethodParameter methodParam = descriptor.MethodParameter;
-                if (methodParam != null)
+                if (methodParam is object)
                 {
                     value = FindValue(methodParam.MethodAttributes);
                 }
@@ -346,7 +346,7 @@ namespace Spring.Objects.Factory.Attributes
                 if (_valueAttributeType == attribute.GetType())
                 {
                     Object value = ((ValueAttribute) attribute).Expression;
-                    if (value == null)
+                    if (value is null)
                     {
                         throw new InvalidOperationException("Value attribute must have a value attribute");
                     }

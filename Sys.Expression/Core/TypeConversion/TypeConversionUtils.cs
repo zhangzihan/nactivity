@@ -52,7 +52,7 @@ namespace Spring.Core.TypeConversion
         /// <returns>The new value, possibly the result of type conversion.</returns>
         public static object ConvertValueIfNecessary(Type requiredType, object newValue, string propertyName)
         {
-            if (newValue != null)
+            if (newValue is object)
             {
                 // if it is assignable, return the value right away
                 if (IsAssignableFrom(newValue, requiredType))
@@ -61,7 +61,7 @@ namespace Spring.Core.TypeConversion
                 }
 
                 // if required type is an array, convert all the elements
-                if (requiredType != null && requiredType.IsArray)
+                if (requiredType is object && requiredType.IsArray)
                 {
                     // convert individual elements to array elements
                     Type componentType = requiredType.GetElementType();
@@ -92,7 +92,7 @@ namespace Spring.Core.TypeConversion
                     }
                 }
                 // if required type is some ISet<T>, convert all the elements
-                if (requiredType != null && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(Spring.Collections.Generic.ISet<>)))
+                if (requiredType is object && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(Spring.Collections.Generic.ISet<>)))
                 {
                     // convert individual elements to array elements
                     Type componentType = requiredType.GetGenericArguments()[0];
@@ -104,7 +104,7 @@ namespace Spring.Core.TypeConversion
                 }
 
                 // if required type is some IList<T>, convert all the elements
-                if (requiredType != null && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(IList<>)))
+                if (requiredType is object && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(IList<>)))
                 {
                     // convert individual elements to array elements
                     Type componentType = requiredType.GetGenericArguments()[0];
@@ -116,7 +116,7 @@ namespace Spring.Core.TypeConversion
                 }
 
                 // if required type is some IDictionary<K,V>, convert all the elements
-                if (requiredType != null && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(IDictionary<,>)))
+                if (requiredType is object && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(IDictionary<,>)))
                 {
                     Type[] typeParameters = requiredType.GetGenericArguments();
                     Type keyType = typeParameters[0];
@@ -143,7 +143,7 @@ namespace Spring.Core.TypeConversion
                 }
 
                 // if required type is some IEnumerable<T>, convert all the elements
-                if (requiredType != null && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(IEnumerable<>)))
+                if (requiredType is object && requiredType.IsGenericType && TypeImplementsGenericInterface(requiredType, typeof(IEnumerable<>)))
                 {
                     // convert individual elements to array elements
                     Type componentType = requiredType.GetGenericArguments()[0];
@@ -158,7 +158,7 @@ namespace Spring.Core.TypeConversion
                 try
                 {
                     TypeConverter typeConverter = TypeConverterRegistry.GetConverter(requiredType);
-                    if (typeConverter != null && typeConverter.CanConvertFrom(newValue.GetType()))
+                    if (typeConverter is object && typeConverter.CanConvertFrom(newValue.GetType()))
                     {
                         try
                         {
@@ -175,14 +175,14 @@ namespace Spring.Core.TypeConversion
                     else
                     {
                         typeConverter = TypeConverterRegistry.GetConverter(newValue.GetType());
-                        if (typeConverter != null && typeConverter.CanConvertTo(requiredType))
+                        if (typeConverter is object && typeConverter.CanConvertTo(requiredType))
                         {
                             newValue = typeConverter.ConvertTo(newValue, requiredType);
                         }
                         else
                         {
                             // look if it's an enum
-                            if (requiredType != null
+                            if (requiredType is object
                                 && requiredType.IsEnum
                                 && (!(newValue is float)
                                     && (!(newValue is double))))
@@ -219,7 +219,7 @@ namespace Spring.Core.TypeConversion
                     throw new TypeMismatchException(
                         CreatePropertyChangeEventArgs(propertyName, null, newValue), requiredType, ex);
                 }
-                if (newValue == null && (requiredType == null || !Type.GetType("System.Nullable`1").Equals(requiredType.GetGenericTypeDefinition())))
+                if (newValue is null && (requiredType is null || !Type.GetType("System.Nullable`1").Equals(requiredType.GetGenericTypeDefinition())))
                 {
                     throw new TypeMismatchException(
                         CreatePropertyChangeEventArgs(propertyName, null, newValue), requiredType);
@@ -265,7 +265,7 @@ namespace Spring.Core.TypeConversion
 
         private static string BuildIndexedPropertyName(string propertyName, int index)
         {
-            return (propertyName != null ?
+            return (propertyName is object ?
                     propertyName + "[" + index + "]" :
                     null);
         }
@@ -278,7 +278,7 @@ namespace Spring.Core.TypeConversion
                 //preserve information when proxy was created by SaoServiceExporter.
                 return true;
             }
-            if (requiredType == null)
+            if (requiredType is null)
             {
                 return false;
             }

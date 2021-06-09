@@ -52,7 +52,7 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
         /// <param name="listenerToAdd"></param>
         public virtual void AddEventListener(IActivitiEventListener listenerToAdd)
         {
-            if (listenerToAdd == null)
+            if (listenerToAdd is null)
             {
                 throw new ActivitiIllegalArgumentException("Listener cannot be null.");
             }
@@ -68,12 +68,12 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
         /// <param name="types"></param>
         public virtual void AddEventListener(IActivitiEventListener listenerToAdd, params ActivitiEventType[] types)
         {
-            if (listenerToAdd == null)
+            if (listenerToAdd is null)
             {
                 throw new ActivitiIllegalArgumentException("Listener cannot be null.");
             }
 
-            if (types == null || types.Length == 0)
+            if (types is null || types.Length == 0)
             {
                 AddEventListener(listenerToAdd);
 
@@ -105,12 +105,12 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
         /// <param name="event"></param>
         public virtual void DispatchEvent(IActivitiEvent @event)
         {
-            if (@event == null)
+            if (@event is null)
             {
                 throw new ActivitiIllegalArgumentException("Event cannot be null.");
             }
 
-            if (@event.Type == null)
+            if (@event.Type is null)
             {
                 throw new ActivitiIllegalArgumentException("Event type cannot be null.");
             }
@@ -170,7 +170,7 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
         protected internal virtual void AddTypedEventListener(IActivitiEventListener listener, ActivitiEventType type)
         {
             typedListeners.TryGetValue(type, out IList<IActivitiEventListener> listeners);
-            if (listeners == null)
+            if (listeners is null)
             {
                 // Add an empty list of listeners for this type
                 listeners = new List<IActivitiEventListener>(); // SynchronizedCollection<IActivitiEventListener>();

@@ -149,7 +149,7 @@ namespace Spring.Core.IO
 			CultureInfo culture, object value)
 		{
 			string resource = value as string;
-			if (resource != null)
+			if (resource is object)
 			{
 				return GetResourceLoader().GetResource(ResolvePath(resource));
 			}
@@ -175,7 +175,7 @@ namespace Spring.Core.IO
 			{
 				string environmentValue
 					= Environment.GetEnvironmentVariable(expression);
-				if (environmentValue != null)
+				if (environmentValue is object)
 				{
 					path = StringUtils.SetAntExpression(
 						path, expression, environmentValue);

@@ -261,7 +261,7 @@ namespace Sys.Workflow.Client.Tests.Expression
                 }
             };
 
-            var obj = ExpressionEvaluator.GetValue(context, "query.id != null");
+            var obj = ExpressionEvaluator.GetValue(context, "query.id is object");
         }
 
         [Fact]

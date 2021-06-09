@@ -79,7 +79,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             get
             {
-                if (bytes != null && bytes.Length > 0)
+                if (bytes is object && bytes.Length > 0)
                 {
                     return new UTF8Encoding(false).GetString(bytes);
                 }

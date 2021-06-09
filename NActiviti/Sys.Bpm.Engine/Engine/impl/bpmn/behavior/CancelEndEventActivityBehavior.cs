@@ -41,17 +41,17 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
             // find cancel boundary event:
             IExecutionEntity parentScopeExecution = null;
             IExecutionEntity currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(execution.ParentId);
-            while (currentlyExaminedExecution != null && parentScopeExecution == null)
+            while (currentlyExaminedExecution is object && parentScopeExecution is null)
             {
                 if (currentlyExaminedExecution.CurrentFlowElement is SubProcess)
                 {
                     parentScopeExecution = currentlyExaminedExecution;
                     SubProcess subProcess = (SubProcess)currentlyExaminedExecution.CurrentFlowElement;
-                    if (subProcess.LoopCharacteristics != null)
+                    if (subProcess.LoopCharacteristics is object)
                     {
                         IExecutionEntity miExecution = parentScopeExecution.Parent;
                         FlowElement miElement = miExecution.CurrentFlowElement;
-                        if (miElement != null && miElement.Id.Equals(subProcess.Id))
+                        if (miElement is object && miElement.Id.Equals(subProcess.Id))
                         {
                             parentScopeExecution = miExecution;
                         }
@@ -64,7 +64,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                 }
             }
 
-            if (parentScopeExecution == null)
+            if (parentScopeExecution is null)
             {
                 throw new ActivitiException("No sub process execution found for cancel end event " + execution.CurrentActivityId);
             }
@@ -85,14 +85,14 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
                     }
                 }
 
-                if (cancelBoundaryEvent == null)
+                if (cancelBoundaryEvent is null)
                 {
                     throw new ActivitiException("Could not find cancel boundary event for cancel end event " + execution.CurrentActivityId);
                 }
 
                 IExecutionEntity newParentScopeExecution = null;
                 currentlyExaminedExecution = executionEntityManager.FindById<IExecutionEntity>(parentScopeExecution.ParentId);
-                while (currentlyExaminedExecution != null && newParentScopeExecution == null)
+                while (currentlyExaminedExecution is object && newParentScopeExecution is null)
                 {
                     if (currentlyExaminedExecution.IsScope)
                     {
@@ -106,7 +106,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Behavior
 
                 ScopeUtil.CreateCopyOfSubProcessExecutionForCompensation(parentScopeExecution);
 
-                if (subProcess.LoopCharacteristics != null)
+                if (subProcess.LoopCharacteristics is object)
                 {
                     IList<IExecutionEntity> multiInstanceExecutions = parentScopeExecution.Executions;
                     IList<IExecutionEntity> executionsToDelete = new List<IExecutionEntity>();

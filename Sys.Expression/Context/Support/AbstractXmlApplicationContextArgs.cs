@@ -52,7 +52,7 @@ namespace Spring.Context.Support
         {
             get
             {
-                if (_configurationLocations == null)
+                if (_configurationLocations is null)
                     _configurationLocations = new string[0];
 
                 return _configurationLocations;
@@ -67,7 +67,7 @@ namespace Spring.Context.Support
         {
             get
             {
-                if (_configurationResources == null)
+                if (_configurationResources is null)
                     _configurationResources = new IResource[0];
 
                 return _configurationResources;

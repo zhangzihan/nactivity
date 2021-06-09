@@ -30,7 +30,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
                 IList<StartEvent> startEvents = process.FindFlowElementsInSubProcessOfType<StartEvent>(eventSubprocess);
                 foreach (StartEvent startEvent in startEvents)
                 {
-                    if (startEvent.EventDefinitions != null && startEvent.EventDefinitions.Count > 0)
+                    if (startEvent.EventDefinitions is object && startEvent.EventDefinitions.Count > 0)
                     {
                         EventDefinition eventDefinition = startEvent.EventDefinitions[0];
                         if (!(eventDefinition is ErrorEventDefinition) && !(eventDefinition is MessageEventDefinition) && !(eventDefinition is SignalEventDefinition))

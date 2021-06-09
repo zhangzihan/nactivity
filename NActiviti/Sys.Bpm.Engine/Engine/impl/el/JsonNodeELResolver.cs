@@ -86,7 +86,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         ///             available. </exception>
         public override Type GetType(ELContext context, object @base, object property)
         {
-            if (context == null)
+            if (context is null)
             {
                 throw new NullReferenceException("context is null");
             }
@@ -128,7 +128,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         ///             available. </exception>
         public override object GetValue(ELContext context, object @base, object property)
         {
-            if (context == null)
+            if (context is null)
             {
                 throw new NullReferenceException("context is null");
             }
@@ -137,7 +137,7 @@ namespace Sys.Workflow.Engine.Impl.EL
             {
                 string prop = property.ToString();
                 JToken resultNode = ((JToken)@base)[prop];
-                if (resultNode != null)
+                if (resultNode is object)
                 {
                     result = ToResult(resultNode);
                 }
@@ -227,7 +227,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         ///             available. </exception>
         public override bool IsReadOnly(ELContext context, object @base, object property)
         {
-            if (context == null)
+            if (context is null)
             {
                 throw new NullReferenceException("context is null");
             }
@@ -275,7 +275,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         ///             available. </exception>
         public override void SetValue(ELContext context, object @base, object property, object value)
         {
-            if (context == null)
+            if (context is null)
             {
                 throw new NullReferenceException("context is null");
             }
@@ -302,7 +302,7 @@ namespace Sys.Workflow.Engine.Impl.EL
                 {
                     token[prop] = @double;
                 }
-                else if (value != null)
+                else if (value is object)
                 {
                     token[prop] = value.ToString();
                 }
@@ -321,7 +321,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         ///            The bean to analyze. </param>
         /// <param name="property">
         ///            The name of the property to analyze. Will be coerced to a String. </param>
-        /// <returns> base != null </returns>
+        /// <returns> base is object </returns>
         private bool IsResolvable(object @base)
         {
             return @base is JToken;

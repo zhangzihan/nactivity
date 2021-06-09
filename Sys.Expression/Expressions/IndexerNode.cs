@@ -256,22 +256,22 @@ namespace Spring.Expressions
         {
             object[] indices = ResolveArguments(evalContext);
 
-            if (indexer == null)
+            if (indexer is null)
             {
                 lock (syncRoot)
                 {
-                    if (indexer == null)
+                    if (indexer is null)
                     {
                         Type contextType = context.GetType();
                         Type[] argTypes = ReflectionUtils.GetTypes(indices);
                         string defaultMember = "Item";
                         object[] atts = contextType.GetCustomAttributes(typeof(DefaultMemberAttribute), true);
-                        if (atts != null && atts.Length > 0)
+                        if (atts is object && atts.Length > 0)
                         {
                             defaultMember = ((DefaultMemberAttribute)atts[0]).MemberName;
                         }
                         PropertyInfo indexerProperty = contextType.GetProperty(defaultMember, BINDING_FLAGS, null, null, argTypes, null);
-                        if (indexerProperty == null)
+                        if (indexerProperty is null)
                         {
                             throw new ArgumentException("Indexer property with specified number and types of arguments does not exist.");
                         }

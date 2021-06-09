@@ -149,7 +149,7 @@ namespace Sys.Workflow.Bpmn.Models
         {
             if (searchRecurive)
             {
-                if (flowElementId == null)
+                if (flowElementId is null)
                 {
                     return null;
                 }
@@ -241,7 +241,7 @@ namespace Sys.Workflow.Bpmn.Models
                 else if (flowElement is IFlowElementsContainer)
                 {
                     IFlowElementsContainer result = GetFlowElementsContainer((IFlowElementsContainer)flowElement, flowElementId);
-                    if (result != null)
+                    if (result is object)
                     {
                         return result;
                     }
@@ -286,7 +286,7 @@ namespace Sys.Workflow.Bpmn.Models
 
         public virtual void AddFlowElementToMap(FlowElement element)
         {
-            if (element != null && !string.IsNullOrWhiteSpace(element.Id))
+            if (element is object && !string.IsNullOrWhiteSpace(element.Id))
             {
                 flowElementMap[element.Id] = element;
             }
@@ -295,7 +295,7 @@ namespace Sys.Workflow.Bpmn.Models
         public virtual void RemoveFlowElement(string elementId)
         {
             flowElementMap.TryGetValue(elementId, out var element);
-            if (element != null)
+            if (element is object)
             {
                 flowElementList.Remove(element);
                 flowElementMap.Remove(element.Id);
@@ -340,7 +340,7 @@ namespace Sys.Workflow.Bpmn.Models
         public virtual void RemoveArtifact(string artifactId)
         {
             Artifact artifact = GetArtifact(artifactId);
-            if (artifact != null)
+            if (artifact is object)
             {
                 artifactList.Remove(artifact);
             }
@@ -452,7 +452,7 @@ namespace Sys.Workflow.Bpmn.Models
                 if (flowElement is IFlowElementsContainer)
                 {
                     IFlowElementsContainer result = FindParent(childElement, (IFlowElementsContainer)flowElement);
-                    if (result != null)
+                    if (result is object)
                     {
                         return result;
                     }
@@ -482,13 +482,13 @@ namespace Sys.Workflow.Bpmn.Models
                 Name = val.Name;
                 Executable = val.Executable;
                 Documentation = val.Documentation;
-                if (val.IoSpecification != null)
+                if (val.IoSpecification is object)
                 {
                     IoSpecification = val.IoSpecification.Clone() as IOSpecification;
                 }
 
                 executionListeners = new List<ActivitiListener>();
-                if (val.ExecutionListeners != null && val.ExecutionListeners.Count > 0)
+                if (val.ExecutionListeners is object && val.ExecutionListeners.Count > 0)
                 {
                     foreach (ActivitiListener listener in val.ExecutionListeners)
                     {
@@ -497,19 +497,19 @@ namespace Sys.Workflow.Bpmn.Models
                 }
 
                 candidateStarterUsers = new List<string>();
-                if (val.CandidateStarterUsers != null && val.CandidateStarterUsers.Count > 0)
+                if (val.CandidateStarterUsers is object && val.CandidateStarterUsers.Count > 0)
                 {
                     ((List<string>)candidateStarterUsers).AddRange(val.CandidateStarterUsers);
                 }
 
                 candidateStarterGroups = new List<string>();
-                if (val.CandidateStarterGroups != null && val.CandidateStarterGroups.Count > 0)
+                if (val.CandidateStarterGroups is object && val.CandidateStarterGroups.Count > 0)
                 {
                     ((List<string>)candidateStarterGroups).AddRange(val.CandidateStarterGroups);
                 }
 
                 eventListeners = new List<EventListener>();
-                if (val.EventListeners != null && val.EventListeners.Count > 0)
+                if (val.EventListeners is object && val.EventListeners.Count > 0)
                 {
                     foreach (EventListener listener in val.EventListeners)
                     {
@@ -540,7 +540,7 @@ namespace Sys.Workflow.Bpmn.Models
                 }
 
                 dataObjects = new List<ValuedDataObject>();
-                if (val.DataObjects != null && val.DataObjects.Count > 0)
+                if (val.DataObjects is object && val.DataObjects.Count > 0)
                 {
                     foreach (ValuedDataObject dataObject in val.DataObjects)
                     {

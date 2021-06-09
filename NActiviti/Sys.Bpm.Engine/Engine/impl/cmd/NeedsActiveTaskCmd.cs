@@ -45,12 +45,12 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 throw new ActivitiIllegalArgumentException("taskId is null");
             }
 
-            ITaskEntity task = commandContext.TaskEntityManager.FindById<ITaskEntity>(taskId);
+            var task = commandContext.TaskEntityManager.FindById<ITaskEntity>(taskId);
 
-            if (task == null)
+            if (task is null)
             {
                 var hisTask = commandContext.HistoricTaskInstanceEntityManager.FindById<IHistoricTaskInstanceEntity>(new KeyValuePair<string, object>("historicTaskInstanceId", taskId));
-                if (hisTask == null)
+                if (hisTask is null)
                 {
                     throw new ActivitiObjectNotFoundException("Cannot find task with id " + taskId, typeof(ITask));
                 }

@@ -50,7 +50,7 @@ namespace Spring.Expressions.Processors
         /// </exception>
         public object Process(ICollection source, object[] args)
         {
-            if (source == null)
+            if (source is null)
             {
                 return null;
             }

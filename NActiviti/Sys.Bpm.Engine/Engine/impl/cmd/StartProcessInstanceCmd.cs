@@ -101,7 +101,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         /// <inheritdoc />
         public virtual IProcessInstance Execute(ICommandContext commandContext)
         {
-            if (this.startCmd != null)
+            if (this.startCmd is object)
             {
                 return this.StartFromCommand(commandContext);
             }
@@ -114,7 +114,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 if (!string.IsNullOrWhiteSpace(processDefinitionId))
                 {
                     processDefinition = deploymentCache.FindDeployedProcessDefinitionById(processDefinitionId);
-                    if (processDefinition == null)
+                    if (processDefinition is null)
                     {
                         throw new ActivitiObjectNotFoundException("No process definition found for id = '" + processDefinitionId + "'", typeof(IProcessDefinition));
                     }
@@ -123,7 +123,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 else if (processDefinitionKey is object && (tenantId is null || ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId)))
                 {
                     processDefinition = deploymentCache.FindDeployedLatestProcessDefinitionByKey(processDefinitionKey);
-                    if (processDefinition == null)
+                    if (processDefinition is null)
                     {
                         throw new ActivitiObjectNotFoundException("No process definition found for key '" + processDefinitionKey + "'", typeof(IProcessDefinition));
                     }
@@ -132,7 +132,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 else if (processDefinitionKey is object && tenantId is object && !ProcessEngineConfiguration.NO_TENANT_ID.Equals(tenantId))
                 {
                     processDefinition = deploymentCache.FindDeployedLatestProcessDefinitionByKeyAndTenantId(processDefinitionKey, tenantId);
-                    if (processDefinition == null)
+                    if (processDefinition is null)
                     {
                         throw new ActivitiObjectNotFoundException("No process definition found for key '" + processDefinitionKey + "' for tenant identifier " + tenantId, typeof(IProcessDefinition));
                     }
@@ -155,7 +155,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         {
             IDictionary<string, object> variablesMap = new Dictionary<string, object>();
             // convert data objects to process variables
-            if (dataObjects != null)
+            if (dataObjects is object)
             {
                 foreach (ValuedDataObject dataObject in dataObjects)
                 {
@@ -184,7 +184,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     .SetLatestVersion()
                     .SingleResult();
 
-                if (definition == null)
+                if (definition is null)
                 {
                     logger.LogError($"Unable to find process definition for the given start form key:'{startCmd.StartForm}' with tenantId:'{startCmd.TenantId}'");
 
@@ -200,7 +200,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     .SetLatestVersion()
                     .SingleResult();
 
-                if (definition == null)
+                if (definition is null)
                 {
                     logger.LogError($"Unable to find process definition for the given process name:'{startCmd.ProcessName}' with tenantid:'{tenantId}'");
 
@@ -216,7 +216,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     .SetLatestVersion()
                     .SingleResult();
 
-                if (definition == null)
+                if (definition is null)
                 {
                     logger.LogError($"Unable to find process definition for the given key:'{processDefinitionKey}'");
 
@@ -232,7 +232,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                     .SetLatestVersion()
                     .SingleResult();
 
-                if (definition == null)
+                if (definition is null)
                 {
                     logger.LogError($"Unable to find process definition for the given key:'{processDefinitionKey}'");
 
@@ -243,7 +243,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             else
             {
                 definition = repositoryService.GetProcessDefinition(id);
-                if (definition == null)
+                if (definition is null)
                 {
                     logger.LogError($"Unable to find process definition for the given id:'{id}'");
 

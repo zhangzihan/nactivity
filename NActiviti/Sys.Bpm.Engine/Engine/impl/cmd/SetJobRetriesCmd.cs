@@ -50,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         public virtual object Execute(ICommandContext commandContext)
         {
             IJobEntity job = commandContext.JobEntityManager.FindById<IJobEntity>(jobId);
-            if (job != null)
+            if (job is object)
             {
                 job.Retries = retries;
 

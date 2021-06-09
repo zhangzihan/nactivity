@@ -404,7 +404,7 @@ namespace Spring.Collections.Generic
         public void OnDeserialization(object sender)
         {
             IDeserializationCallback callback = dict as IDeserializationCallback;
-            if (callback != null)
+            if (callback is object)
             {
                 callback.OnDeserialization(sender);
             }
@@ -419,7 +419,7 @@ namespace Spring.Collections.Generic
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             ISerializable serializable = dict as ISerializable;
-            if (serializable != null)
+            if (serializable is object)
             {
                 serializable.GetObjectData(info, context);
             }

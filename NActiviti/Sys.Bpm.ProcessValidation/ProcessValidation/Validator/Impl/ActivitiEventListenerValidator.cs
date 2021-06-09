@@ -24,7 +24,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
         protected internal override void ExecuteValidation(BpmnModel bpmnModel, Process process, IList<ValidationError> errors)
         {
             IList<EventListener> eventListeners = process.EventListeners;
-            if (eventListeners != null)
+            if (eventListeners is object)
             {
                 foreach (EventListener eventListener in eventListeners)
                 {

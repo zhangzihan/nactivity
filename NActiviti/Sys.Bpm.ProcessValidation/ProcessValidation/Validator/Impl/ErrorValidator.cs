@@ -23,7 +23,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
 
         public override void Validate(BpmnModel bpmnModel, IList<ValidationError> errors)
         {
-            if (bpmnModel.Errors != null)
+            if (bpmnModel.Errors is object)
             {
                 foreach (string errorRef in bpmnModel.Errors.Keys)
                 {

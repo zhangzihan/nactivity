@@ -24,31 +24,31 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             bool changed = false;
 
-            foreach (XElement task in userTasks)
-            {
-                XElement extElem = task.GetOrAddExtensionElements();
+            //foreach (XElement task in userTasks)
+            //{
+            //    XElement extElem = task.GetOrAddExtensionElements();
 
-                Type taskListenerType = typeof(DelegateCountersignExecutionListener);
-                XElement startListener = (from x in extElem.Descendants(XName.Get(BpmnXMLConstants.ELEMENT_EXECUTION_LISTENER, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE))
-                                          where
-                     BpmnXMLConstants.ATTRIBUTE_EVENT_START_VALUE.Equals(x.Attribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_EVENT)?.Value, StringComparison.OrdinalIgnoreCase) &&
-                     (x.Attribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS)?.Value.Contains(taskListenerType.FullName)).GetValueOrDefault()
-                                          select x).FirstOrDefault();
+            //    Type taskListenerType = typeof(DelegateCountersignExecutionListener);
+            //    XElement startListener = (from x in extElem.Descendants(XName.Get(BpmnXMLConstants.ELEMENT_EXECUTION_LISTENER, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE))
+            //                              where
+            //         BpmnXMLConstants.ATTRIBUTE_EVENT_START_VALUE.Equals(x.Attribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_EVENT)?.Value, StringComparison.OrdinalIgnoreCase) &&
+            //         (x.Attribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS)?.Value.Contains(taskListenerType.FullName)).GetValueOrDefault()
+            //                              select x).FirstOrDefault();
 
-                if (startListener != null)
-                {
-                    continue;
-                }
+            //    if (startListener is object)
+            //    {
+            //        continue;
+            //    }
 
-                startListener = new XElement(XName.Get(BpmnXMLConstants.ELEMENT_EXECUTION_LISTENER, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE),
-                    /*添加 listener attribute */
-                    new XAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS, $"{taskListenerType.FullName},{taskListenerType.Assembly.GetName().Name}"),
-                    /*添加 listener 事件*/
-                    new XAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_EVENT, BpmnXMLConstants.ATTRIBUTE_EVENT_START_VALUE));
-                extElem.Add(startListener);
+            //    startListener = new XElement(XName.Get(BpmnXMLConstants.ELEMENT_EXECUTION_LISTENER, BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE),
+            //        /*添加 listener attribute */
+            //        new XAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_CLASS, $"{taskListenerType.FullName},{taskListenerType.Assembly.GetName().Name}"),
+            //        /*添加 listener 事件*/
+            //        new XAttribute(BpmnXMLConstants.ATTRIBUTE_LISTENER_EVENT, BpmnXMLConstants.ATTRIBUTE_EVENT_START_VALUE));
+            //    extElem.Add(startListener);
 
-                changed = true;
-            }
+            //    changed = true;
+            //}
 
             return changed;
         }

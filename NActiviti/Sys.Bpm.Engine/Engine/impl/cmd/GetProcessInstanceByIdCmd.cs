@@ -50,7 +50,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             IProcessInstance processInstance = query.SingleResult();
 
-            if (processInstance != null)
+            if (processInstance is object)
             {
                 ExecutionEntityImpl.EnsureStarterInitialized(new ExecutionEntityImpl[] { processInstance as ExecutionEntityImpl });
             }

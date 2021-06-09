@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ namespace Spring.Core.IO
 
             _content = content==null ? string.Empty : content;
             _encoding = encoding;
-            _description = description == null ? string.Empty : description;
+            _description = description is null ? string.Empty : description;
         }
 
         /// <summary>

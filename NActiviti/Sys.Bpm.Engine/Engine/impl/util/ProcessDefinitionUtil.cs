@@ -40,7 +40,7 @@ namespace Sys.Workflow.Engine.Impl.Util
             if (checkCacheOnly)
             {
                 ProcessDefinitionCacheEntry cacheEntry = processEngineConfiguration.ProcessDefinitionCache.Get(processDefinitionId);
-                if (cacheEntry != null)
+                if (cacheEntry is object)
                 {
                     return cacheEntry.ProcessDefinition;
                 }
@@ -90,7 +90,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         public static BpmnModel GetBpmnModelFromCache(string processDefinitionId)
         {
             ProcessDefinitionCacheEntry cacheEntry = Context.ProcessEngineConfiguration.ProcessDefinitionCache.Get(processDefinitionId);
-            if (cacheEntry != null)
+            if (cacheEntry is object)
             {
                 return cacheEntry.BpmnModel;
             }
@@ -107,7 +107,7 @@ namespace Sys.Workflow.Engine.Impl.Util
         {
             IProcessDefinitionEntityManager processDefinitionEntityManager = Context.ProcessEngineConfiguration.ProcessDefinitionEntityManager;
             IProcessDefinitionEntity processDefinition = processDefinitionEntityManager.FindById<IProcessDefinitionEntity>(new KeyValuePair<string, object>("processDefinitionId", processDefinitionId));
-            if (processDefinition == null)
+            if (processDefinition is null)
             {
                 throw new ActivitiException("No process definition found with id " + processDefinitionId);
             }

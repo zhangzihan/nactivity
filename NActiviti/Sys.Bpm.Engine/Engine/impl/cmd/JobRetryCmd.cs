@@ -44,7 +44,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         public virtual object Execute(ICommandContext commandContext)
         {
             IJobEntity job = commandContext.JobEntityManager.FindById<IJobEntity>(new KeyValuePair<string, object>("id", jobId));
-            if (job == null)
+            if (job is null)
             {
                 return null;
             }
@@ -52,7 +52,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             ProcessEngineConfiguration processEngineConfig = commandContext.ProcessEngineConfiguration;
 
             IExecutionEntity executionEntity = fetchExecutionEntity(commandContext, job.ExecutionId);
-            FlowElement currentFlowElement = executionEntity != null ? executionEntity.CurrentFlowElement : null;
+            FlowElement currentFlowElement = executionEntity is object ? executionEntity.CurrentFlowElement : null;
 
             string failedJobRetryTimeCycleValue = null;
             if (currentFlowElement is ServiceTask)
@@ -61,7 +61,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             }
 
             IAbstractJobEntity newJobEntity = null;
-            if (currentFlowElement == null || ReferenceEquals(failedJobRetryTimeCycleValue, null))
+            if (currentFlowElement is null || ReferenceEquals(failedJobRetryTimeCycleValue, null))
             {
 
                 log.LogDebug("activity or FailedJobRetryTimerCycleValue is null in job " + jobId + ". only decrementing retries.");
@@ -131,7 +131,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
                 }
             }
 
-            if (exception != null)
+            if (exception is object)
             {
                 newJobEntity.ExceptionMessage = exception.Message;
                 newJobEntity.ExceptionStacktrace = ExceptionStacktrace;
@@ -151,7 +151,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         protected internal virtual DateTime calculateDueDate(ICommandContext commandContext, int waitTimeInSeconds, DateTime? oldDate)
         {
             DateTime newDateCal = DateTime.Now;
-            if (oldDate != null)
+            if (oldDate is object)
             {
                 newDateCal = new DateTime(oldDate.Value.Ticks);
 

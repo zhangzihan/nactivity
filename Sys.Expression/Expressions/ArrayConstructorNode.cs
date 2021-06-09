@@ -77,7 +77,7 @@ namespace Spring.Expressions
             {
                 int i = 0;
                 AST rankNode = rankRoot.getFirstChild();
-                while (rankNode != null)
+                while (rankNode is object)
                 {
                     ranks[i++] = (int)GetValue((BaseNode)rankNode, context, evalContext);
                     rankNode = rankNode.getNextSibling();
@@ -87,7 +87,7 @@ namespace Spring.Expressions
             else
             {
                 AST valuesRoot = getFirstChild().getNextSibling();
-                if (valuesRoot != null)
+                if (valuesRoot is object)
                 {
                     ArrayList values = (ArrayList)GetValue(((BaseNode)valuesRoot), context, evalContext);
                     return values.ToArray(arrayType);

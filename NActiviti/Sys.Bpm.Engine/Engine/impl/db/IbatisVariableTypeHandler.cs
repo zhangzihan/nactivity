@@ -49,7 +49,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         {
             get
             {
-                if (variableTypes == null)
+                if (variableTypes is null)
                 {
                     variableTypes = Context.ProcessEngineConfiguration.VariableTypes;
                 }
@@ -67,7 +67,7 @@ namespace Sys.Workflow.Engine.Impl.DB
         {
             string typeName = rs.GetString(columnIndex);
             IVariableType type = VariableTypes.GetVariableType(typeName);
-            if (type == null)
+            if (type is null)
             {
                 throw new ActivitiException("unknown variable type name " + typeName);
             }

@@ -56,7 +56,7 @@ namespace Spring.Expressions
         {
             IDictionary entries = new Hashtable();
             AST entryNode = this.getFirstChild();
-            while (entryNode != null)
+            while (entryNode is object)
             {
                 DictionaryEntry entry = (DictionaryEntry) GetValue(((MapEntryNode)entryNode), evalContext.RootContext, evalContext );
                 entries[entry.Key] = entry.Value;

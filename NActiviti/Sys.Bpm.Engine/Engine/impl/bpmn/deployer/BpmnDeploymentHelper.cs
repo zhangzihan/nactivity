@@ -180,7 +180,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
 
             bool changed = false;
             var attr = doc.Root.Attribute(XName.Get(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.XMLNS_NAMESPACE));
-            if (attr == null)
+            if (attr is null)
             {
                 doc.Root.Add(new XAttribute(XName.Get(BpmnXMLConstants.ACTIVITI_EXTENSIONS_PREFIX, BpmnXMLConstants.XMLNS_NAMESPACE), BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE));
                 changed = true;
@@ -214,7 +214,7 @@ namespace Sys.Workflow.Engine.Impl.Bpmn.Deployers
 
         protected internal virtual void AddAuthorizationsFromIterator(ICommandContext commandContext, IList<string> expressions, IProcessDefinitionEntity processDefinition, ExpressionType expressionType)
         {
-            if (expressions != null)
+            if (expressions is object)
             {
                 foreach (string expression in expressions)
                 {

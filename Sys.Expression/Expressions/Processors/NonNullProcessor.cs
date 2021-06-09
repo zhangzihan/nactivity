@@ -42,7 +42,7 @@ namespace Spring.Expressions.Processors
         /// </returns>
         public object Process(ICollection source, object[] args)
         {
-            if (source == null)
+            if (source is null)
             {
                 return null;
             }
@@ -50,7 +50,7 @@ namespace Spring.Expressions.Processors
             ArrayList list = new();
             foreach (object item in source)
             {
-                if (item != null)
+                if (item is object)
                 {
                     list.Add(item);
                 }

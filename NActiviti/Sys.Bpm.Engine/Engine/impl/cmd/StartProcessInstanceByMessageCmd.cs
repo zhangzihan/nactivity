@@ -64,7 +64,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
 
             IMessageEventSubscriptionEntity messageEventSubscription = commandContext.EventSubscriptionEntityManager.FindMessageStartEventSubscriptionByName(messageName, tenantId);
 
-            if (messageEventSubscription == null)
+            if (messageEventSubscription is null)
             {
                 throw new ActivitiObjectNotFoundException("Cannot start process instance by message: no subscription to message with name '" + messageName + "' found.", typeof(IMessageEventSubscriptionEntity));
             }
@@ -78,7 +78,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
             DeploymentManager deploymentCache = commandContext.ProcessEngineConfiguration.DeploymentManager;
 
             IProcessDefinition processDefinition = deploymentCache.FindDeployedProcessDefinitionById(processDefinitionId);
-            if (processDefinition == null)
+            if (processDefinition is null)
             {
                 throw new ActivitiObjectNotFoundException("No process definition found for id '" + processDefinitionId + "'", typeof(IProcessDefinition));
             }

@@ -28,7 +28,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         /// <param name="elResolver"></param>
         public void Add(ELResolver elResolver)
         {
-            if (elResolver == null)
+            if (elResolver is null)
             {
                 throw new ArgumentNullException("resolver must not be null");
             }
@@ -52,9 +52,9 @@ namespace Sys.Workflow.Engine.Impl.EL
             for (int l = this.resolvers.Count; i < l; ++i)
             {
                 Type type = this.resolvers[i].GetCommonPropertyType(context, @base);
-                if (type != null)
+                if (type is object)
                 {
-                    if (result != null && !type.IsAssignableFrom(result))
+                    if (result is object && !type.IsAssignableFrom(result))
                     {
                         if (!result.IsAssignableFrom(type))
                         {

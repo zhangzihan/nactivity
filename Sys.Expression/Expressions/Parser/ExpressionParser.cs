@@ -3345,7 +3345,7 @@ namespace Spring.Expressions.Parser
 
         private void initializeFactory()
         {
-            if (astFactory == null)
+            if (astFactory is null)
             {
                 astFactory = new ASTFactory("Spring.Expressions.SpringAST");
             }

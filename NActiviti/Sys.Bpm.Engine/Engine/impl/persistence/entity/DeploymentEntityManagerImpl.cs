@@ -152,7 +152,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void removeRelatedJobs(IProcessDefinition processDefinition)
         {
             IList<IJobEntity> timerJobs = JobEntityManager.FindJobsByProcessDefinitionId(processDefinition.Id);
-            if (timerJobs != null && timerJobs.Count > 0)
+            if (timerJobs is object && timerJobs.Count > 0)
             {
                 foreach (IJobEntity timerJob in timerJobs)
                 {
@@ -169,7 +169,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void removeTimerSuspendProcesDefJobs(IProcessDefinition processDefinition)
         {
             IList<IJobEntity> timerJobs = JobEntityManager.FindJobsByTypeAndProcessDefinitionId(TimerSuspendProcessDefinitionHandler.TYPE, processDefinition.Id);
-            if (timerJobs != null && timerJobs.Count > 0)
+            if (timerJobs is object && timerJobs.Count > 0)
             {
                 foreach (IJobEntity timerJob in timerJobs)
                 {
@@ -186,7 +186,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         protected internal virtual void removeTimerStartJobs(IProcessDefinition processDefinition)
         {
             IList<ITimerJobEntity> timerStartJobs = TimerJobEntityManager.FindJobsByTypeAndProcessDefinitionId(TimerStartEventJobHandler.TYPE, processDefinition.Id);
-            if (timerStartJobs != null && timerStartJobs.Count > 0)
+            if (timerStartJobs is object && timerStartJobs.Count > 0)
             {
                 foreach (ITimerJobEntity timerStartJob in timerStartJobs)
                 {
@@ -208,7 +208,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
 
                 // Try to find a previous version (it could be some versions are missing due to deletions)
                 IProcessDefinition previousProcessDefinition = findNewLatestProcessDefinitionAfterRemovalOf(processDefinition);
-                if (previousProcessDefinition != null)
+                if (previousProcessDefinition is object)
                 {
 
                     BpmnModel bpmnModel = ProcessDefinitionUtil.GetBpmnModel(previousProcessDefinition.Id);
@@ -255,7 +255,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             TimerEventDefinition timerEventDefinition = (TimerEventDefinition)eventDefinition;
             ITimerJobEntity timer = TimerUtil.CreateTimerEntityForTimerEventDefinition((TimerEventDefinition)eventDefinition, false, null, TimerStartEventJobHandler.TYPE, TimerEventHandler.CreateConfiguration(startEvent.Id, timerEventDefinition.EndDate, timerEventDefinition.CalendarName));
 
-            if (timer != null)
+            if (timer is object)
             {
                 ITimerJobEntity timerJob = JobManager.CreateTimerJob((TimerEventDefinition)eventDefinition, false, null, TimerStartEventJobHandler.TYPE, TimerEventHandler.CreateConfiguration(startEvent.Id, timerEventDefinition.EndDate, timerEventDefinition.CalendarName));
 
@@ -275,7 +275,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             SignalEventDefinition signalEventDefinition = (SignalEventDefinition)eventDefinition;
             ISignalEventSubscriptionEntity subscriptionEntity = EventSubscriptionEntityManager.CreateSignalEventSubscription();
             Signal signal = bpmnModel.GetSignal(signalEventDefinition.SignalRef);
-            if (signal != null)
+            if (signal is object)
             {
                 subscriptionEntity.EventName = signal.Name;
             }
@@ -352,7 +352,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
             query.OrderByProcessDefinitionVersion().Desc();
 
             IList<IProcessDefinition> processDefinitions = ProcessDefinitionEntityManager.FindProcessDefinitionsByQueryCriteria(query, new Page(0, 1));
-            if (processDefinitions != null && processDefinitions.Count > 0)
+            if (processDefinitions is object && processDefinitions.Count > 0)
             {
                 return processDefinitions[0];
             }
@@ -393,14 +393,14 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Entity
         {
             IDeploymentEntity exist = this.FindLatestDeploymentByName(deployment.Name);
 
-            if (exist != null)
+            if (exist is object)
             {
                 IProcessDefinition process = new ProcessDefinitionQueryImpl()
                     .SetDeploymentId(exist.Id)
                     .SetLatestVersion()
                     .SingleResult();
 
-                if (process == null)
+                if (process is null)
                 {
                     this.DeleteDeployment(exist.Id, true);
                 }

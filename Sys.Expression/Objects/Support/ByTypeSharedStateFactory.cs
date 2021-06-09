@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,10 +71,10 @@ namespace Spring.Objects.Support
         /// </returns>
         public override bool CanProvideState( object instance, string name )
         {
-            if (instance == null)
+            if (instance is null)
                 return false;
 
-            if (typeFilter == null)
+            if (typeFilter is null)
                 return true;
 
             Type instanceType = instance.GetType();

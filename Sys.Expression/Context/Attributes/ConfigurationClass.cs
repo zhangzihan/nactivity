@@ -201,7 +201,7 @@ namespace Spring.Context.Attributes
                 }
             }
 
-            if (Attribute.GetCustomAttribute(_configurationClassType, typeof(ConfigurationAttribute)) != null)
+            if (Attribute.GetCustomAttribute(_configurationClassType, typeof(ConfigurationAttribute)) is object)
             {
 
                 if (ConfigurationClassType.IsSealed)

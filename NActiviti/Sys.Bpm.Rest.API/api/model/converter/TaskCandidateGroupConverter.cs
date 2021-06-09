@@ -29,7 +29,7 @@ namespace Sys.Workflow.Cloud.Services.Api.Model.Converters
         {
             TaskCandidateGroup taskCandidateGroup = null;
 
-            if (source != null)
+            if (source is object)
             {
                 taskCandidateGroup = new TaskCandidateGroup(source.GroupId, source.TaskId);
             }

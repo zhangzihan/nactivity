@@ -43,11 +43,11 @@ namespace Sys.Workflow.Bpmn.Converters
             string formKey = xtr.GetAttributeValue(BpmnXMLConstants.ACTIVITI_EXTENSIONS_NAMESPACE, BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY);
             StartEvent startEvent = null;
 
-            if (!string.IsNullOrWhiteSpace(formKey) && model.StartEventFormTypes != null && model.StartEventFormTypes.Contains(formKey))
+            if (!string.IsNullOrWhiteSpace(formKey) && model.StartEventFormTypes is object && model.StartEventFormTypes.Contains(formKey))
             {
                 startEvent = new AlfrescoStartEvent();
             }
-            if (startEvent == null)
+            if (startEvent is null)
             {
                 startEvent = new StartEvent();
             }
@@ -73,7 +73,7 @@ namespace Sys.Workflow.Bpmn.Converters
             WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_EVENT_START_INITIATOR, startEvent.Initiator, xtw);
             WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_FORM_FORMKEY, startEvent.FormKey, xtw);
 
-            if (startEvent.EventDefinitions != null && startEvent.EventDefinitions.Count > 0)
+            if (startEvent.EventDefinitions is object && startEvent.EventDefinitions.Count > 0)
             {
                 WriteQualifiedAttribute(BpmnXMLConstants.ATTRIBUTE_EVENT_START_INTERRUPTING, startEvent.Interrupting.ToString(), xtw);
             }

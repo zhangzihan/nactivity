@@ -41,7 +41,7 @@ namespace BpmnWebTest.Controllers
         public Task<JArray> PostAsync([FromBody]dynamic query)
         {
             JArray users;
-            if (query != null)
+            if (query is object)
             {
                 var idList = query.idList;
                 JArray ids = JArray.FromObject(idList);

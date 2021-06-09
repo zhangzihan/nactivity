@@ -54,7 +54,7 @@ namespace Spring.Util
         {
 	        ArgumentNotNull(method, "method");
 
-	        if (target == null)
+	        if (target is null)
 	        {
 		        if (method.IsStatic)
 		        {
@@ -86,7 +86,7 @@ namespace Spring.Util
         {
             ArgumentNotNull(requiredType, "requiredType");
 
-            if (target == null)
+            if (target is null)
             {
                 ThrowNotSupportedException($"Target '{targetName}' is null.");
             }
@@ -97,7 +97,7 @@ namespace Spring.Util
 #if !NETSTANDARD
                 System.Runtime.Remoting.Proxies.RealProxy rp = RemotingServices.GetRealProxy(target);
                 IRemotingTypeInfo rti = rp as IRemotingTypeInfo;
-                if (rti != null)
+                if (rti is object)
                 {
                     if (rti.CanCastTo(requiredType, target))
                     {
@@ -131,7 +131,7 @@ namespace Spring.Util
 		/// </exception>
 		public static void ArgumentNotNull(object argument, string name)
 		{
-			if (argument == null)
+			if (argument is null)
 			{
 				ThrowArgumentNullException(name);
 			}
@@ -152,7 +152,7 @@ namespace Spring.Util
 		/// </exception>
 		public static void ArgumentNotNull(object argument, string name, string message)
 		{
-			if (argument == null)
+			if (argument is null)
 			{
 				ThrowArgumentNullException(name, message);
 			}
@@ -280,7 +280,7 @@ namespace Spring.Util
         /// </param>
         public static void AssertArgumentType(object argument, string argumentName, Type requiredType, string message)
         {
-            if (argument != null && requiredType != null && !requiredType.IsInstanceOfType(argument))
+            if (argument is object && requiredType is object && !requiredType.IsInstanceOfType(argument))
             {
                 ThrowArgumentException(message, argumentName);
             }

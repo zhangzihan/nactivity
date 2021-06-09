@@ -35,7 +35,7 @@ namespace Sys.Workflow.Engine.Impl.Cmd
         public virtual IList<IVariableInstance> Execute(ICommandContext commandContext)
         {
             // Verify existence of executions
-            if (executionIds == null)
+            if (executionIds is null)
             {
                 throw new ActivitiIllegalArgumentException("executionIds is null");
             }

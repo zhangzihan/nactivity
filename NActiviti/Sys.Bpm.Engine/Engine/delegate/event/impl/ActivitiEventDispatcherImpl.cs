@@ -81,10 +81,10 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
 
             // Try getting hold of the Process definition, based on the process definition key, if a context is active
             ICommandContext commandContext = Context.CommandContext;
-            if (commandContext != null)
+            if (commandContext is object)
             {
                 BpmnModel bpmnModel = ExtractBpmnModelFromEvent(@event);
-                if (bpmnModel != null)
+                if (bpmnModel is object)
                 {
                     ((ActivitiEventSupport)bpmnModel.EventSupport).DispatchEvent(@event);
                 }
@@ -108,7 +108,7 @@ namespace Sys.Workflow.Engine.Delegate.Events.Impl
             if (@event.ProcessDefinitionId is object)
             {
                 IProcessDefinition processDefinition = ProcessDefinitionUtil.GetProcessDefinition(@event.ProcessDefinitionId, true);
-                if (processDefinition != null)
+                if (processDefinition is object)
                 {
                     result = Context.ProcessEngineConfiguration.DeploymentManager.ResolveProcessDefinition(processDefinition).BpmnModel;
                 }

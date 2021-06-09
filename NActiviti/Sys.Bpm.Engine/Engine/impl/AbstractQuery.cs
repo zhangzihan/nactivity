@@ -118,7 +118,7 @@ namespace Sys.Workflow.Engine.Impl
 
         public virtual T Direction(Direction direction)
         {
-            if (orderProperty == null)
+            if (orderProperty is null)
             {
                 throw new ActivitiIllegalArgumentException("You should call any of the orderBy methods first before specifying a direction");
             }
@@ -131,7 +131,7 @@ namespace Sys.Workflow.Engine.Impl
 
         protected internal virtual void CheckQueryOk()
         {
-            if (orderProperty != null)
+            if (orderProperty is object)
             {
                 throw new ActivitiIllegalArgumentException("Invalid query: call asc() or desc() after using orderByXX()");
             }
@@ -140,7 +140,7 @@ namespace Sys.Workflow.Engine.Impl
         public virtual U SingleResult()
         {
             this.resultType = ResultType.SINGLE_RESULT;
-            if (commandExecutor != null)
+            if (commandExecutor is object)
             {
                 return (U)commandExecutor.Execute(this);
             }
@@ -150,7 +150,7 @@ namespace Sys.Workflow.Engine.Impl
         public virtual IList<U> List()
         {
             this.resultType = ResultType.LIST;
-            if (commandExecutor != null)
+            if (commandExecutor is object)
             {
                 return (IList<U>)commandExecutor.Execute(this);
             }
@@ -162,7 +162,7 @@ namespace Sys.Workflow.Engine.Impl
             this.firstResult = firstResult;
             this.maxResults = maxResults;
             this.resultType = ResultType.LIST_PAGE;
-            if (commandExecutor != null)
+            if (commandExecutor is object)
             {
                 return (IList<U>)commandExecutor.Execute(this);
             }
@@ -172,7 +172,7 @@ namespace Sys.Workflow.Engine.Impl
         public virtual long Count()
         {
             this.resultType = ResultType.COUNT;
-            if (commandExecutor != null)
+            if (commandExecutor is object)
             {
                 return (long)commandExecutor.Execute(this);
             }

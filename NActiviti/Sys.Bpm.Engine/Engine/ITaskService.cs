@@ -57,7 +57,7 @@ namespace Sys.Workflow.Engine
         /// <param name="terminateReason"></param>
         /// <param name="terminateExecution"></param>
         /// <param name="variables"></param>
-        void TerminateTask(string taskId, string terminateReason, bool terminateExecution, IDictionary<string, object> variables);
+        void TerminateTask(string taskId, string terminateReason, bool terminateExecution, IDictionary<string, object> variables, IDictionary<string, object> transientVariables = null);
 
         /// <summary>
         /// Deletes the given task, not deleting historic information that is related to this task.

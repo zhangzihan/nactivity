@@ -237,7 +237,7 @@ namespace Spring.Objects.Factory.Config
                 string name = objectDefinitionNames[i];
                 IObjectDefinition definition = factory.GetObjectDefinition( name, includeAncestors );
                 
-                if (definition == null)
+                if (definition is null)
                     continue;
 
                 try
@@ -271,7 +271,7 @@ namespace Spring.Objects.Factory.Config
 
             private string ParseAndResolveVariables(string strVal, ISet visitedPlaceholders)
             {
-                if (strVal == null)
+                if (strVal is null)
                 {
                     return null;
                 }
@@ -307,14 +307,14 @@ namespace Spring.Objects.Factory.Config
                                                  "Resolving placeholder '{0}' to '{1}'.", placeholder, resolvedValue));
                             }
 
-                            if (resolvedValue == null
+                            if (resolvedValue is null
                                 && startIndex == 0
                                 && strVal.Length <= endIndex + owner.placeholderSuffix.Length)
                             {
                                 return null;
                             }
                             strVal = strVal.Substring(0, startIndex) + resolvedValue + strVal.Substring(endIndex + owner.placeholderSuffix.Length);
-                            startIndex = strVal.IndexOf(owner.placeholderPrefix, startIndex + (resolvedValue == null ? 0 : resolvedValue.Length));
+                            startIndex = strVal.IndexOf(owner.placeholderPrefix, startIndex + (resolvedValue is null ? 0 : resolvedValue.Length));
                         }
                         else if (owner.ignoreUnresolvablePlaceholders)
                         {

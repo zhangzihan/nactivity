@@ -167,13 +167,13 @@ namespace Spring.Objects.Factory.Config
         public static NameValueCollection Read(
             IResource resource, string configSection, NameValueCollection properties, bool overrideValues)
         {
-            if (properties == null)
+            if (properties is null)
             {
                 properties = new NameValueCollection();
             }
 
             NameValueCollection newProperties = (NameValueCollection)GetSection(resource, configSection, typeof(NameValueFileSectionHandler));
-            if (newProperties != null)
+            if (newProperties is object)
             {
                 PopulateProperties(overrideValues, properties, newProperties);
             }
@@ -257,7 +257,7 @@ namespace Spring.Objects.Factory.Config
         public static TResult GetSection<TResult>(IResource resource, string configSectionName, Type defaultConfigurationSectionHandlerType)
         {
             object result = GetSection(resource, configSectionName, defaultConfigurationSectionHandlerType);
-            if (result != null && !(result is TResult))
+            if (result is object && !(result is TResult))
             {
                 throw new ArgumentException(string.Format("evaluating configuration section {0} does not result in an instance of type {1}", configSectionName, typeof(TResult)));
             }
@@ -271,7 +271,7 @@ namespace Spring.Objects.Factory.Config
         public static TResult GetSectionFromXmlDocument<TResult>(XmlDocument configDocument, string configSectionName)
         {
             object result = GetSectionFromXmlDocument(configDocument, configSectionName);
-            if (result != null && !(result is TResult))
+            if (result is object && !(result is TResult))
             {
                 throw new ArgumentException(string.Format("evaluating configuration sectoin {0} does not result in an instance of type {1}", configSectionName, typeof(TResult)));
             }
@@ -302,7 +302,7 @@ namespace Spring.Objects.Factory.Config
 
             // obtain Xml node with section content
             XmlNode sectionContent = document.SelectSingleNode(string.Format("//{0}/{1}", ConfigurationElement, configSectionName));
-            if (sectionContent == null)
+            if (sectionContent is null)
             {
                 // TODO: review if we shouldn't better simply return null here to match the ConfigurationManager's behaviour?
                 throw ConfigurationUtils.CreateConfigurationException("Cannot read config section '" + configSectionName + "' - section not found.");
@@ -348,7 +348,7 @@ namespace Spring.Objects.Factory.Config
 
             // create appropriate configuration section handler...
             Type handlerType = null;
-            if (xmlConfig == null)
+            if (xmlConfig is null)
             {
                 // none specified, use machine inherited
                 try
@@ -356,7 +356,7 @@ namespace Spring.Objects.Factory.Config
                     XmlDocument machineConfig = new();
                     machineConfig.Load(RuntimeEnvironment.SystemConfigurationFile);
                     xmlConfig = machineConfig.SelectSingleNode(sectionHandlerPath);
-                    if (xmlConfig == null)
+                    if (xmlConfig is null)
                     {
                         // TOOD: better throw a sensible exception in case of a missing handler configuration?
                         handlerType = defaultConfigurationSectionHandlerType;
@@ -375,13 +375,13 @@ namespace Spring.Objects.Factory.Config
                 }
             }
 
-            if (xmlConfig != null)
+            if (xmlConfig is object)
             {
                 XmlAttribute xmlConfigType = xmlConfig.Attributes[ConfigSectionTypeAttribute];
                 handlerType = TypeResolutionUtils.ResolveType(xmlConfigType.Value);
             }
 
-            if (handlerType == null)
+            if (handlerType is null)
             {
                 throw new ConfigurationErrorsException(string.Format("missing handler-'type' attribute on configuration section definition for section '{0}'", configSectionName));
             }
@@ -447,7 +447,7 @@ namespace Spring.Objects.Factory.Config
             NameValueCollection newProperties
                 = ConfigurationUtils.GetSection(configSectionName) as NameValueCollection;
 
-            if (newProperties != null)
+            if (newProperties is object)
             {
                 sectionFound = true;
                 PopulateProperties(overrideValues, properties, newProperties);

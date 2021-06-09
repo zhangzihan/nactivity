@@ -27,7 +27,7 @@ namespace Sys.Workflow.Engine.Impl.EL
         /// <returns></returns>
         public object GetContext(Type key)
         {
-            if (key == null)
+            if (key is null)
             {
                 throw new ArgumentNullException("key is null");
             }
@@ -70,13 +70,13 @@ namespace Sys.Workflow.Engine.Impl.EL
         /// <param name="contextObject"></param>
         public void PutContext(Type key, object contextObject)
         {
-            if (key == null)
+            if (key is null)
             {
                 throw new ArgumentNullException("key is null");
             }
             else
             {
-                if (this.context == null)
+                if (this.context is null)
                 {
                     this.context = new Dictionary<Type, object>();
                 }

@@ -276,7 +276,7 @@ namespace Spring.Objects.Support
 			{
 				get
 				{
-					if (_handlerType == null)
+					if (_handlerType is null)
 					{
 						_handlerType = ReflectionUtils.TypeOfOrType(Handler);
 					}

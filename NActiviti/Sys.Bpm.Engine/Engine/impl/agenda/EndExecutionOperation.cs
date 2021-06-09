@@ -77,7 +77,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             ISubProcessActivityBehavior subProcessActivityBehavior = null;
 
             // copy variables before destroying the ended sub process instance (call activity)
-            if (superExecution != null)
+            if (superExecution is object)
             {
                 FlowNode superExecutionElement = (FlowNode)superExecution.CurrentFlowElement;
                 subProcessActivityBehavior = (ISubProcessActivityBehavior)superExecutionElement.Behavior;
@@ -119,7 +119,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             }
 
             // and trigger execution afterwards if doing a call activity
-            if (superExecution != null)
+            if (superExecution is object)
             {
                 superExecution.SubProcessInstance = null;
                 try
@@ -176,7 +176,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             {
                 IExecutionEntity executionToContinue = null;
 
-                if (subProcess != null)
+                if (subProcess is object)
                 {
 
                     // In case of ending a subprocess: go up in the scopes and continue via the parent scope
@@ -200,7 +200,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
                     executionToContinue = HandleRegularExecutionEnd(executionEntityManager, parentExecution);
                 }
 
-                if (executionToContinue != null)
+                if (executionToContinue is object)
                 {
                     // only continue with outgoing sequence flows if the execution is
                     // not the process instance root execution (otherwise the process instance is finished)
@@ -357,7 +357,7 @@ namespace Sys.Workflow.Engine.Impl.Agenda
             if (executionEntity.CurrentFlowElement is EndEvent)
             {
                 SubProcess subProcess = ((EndEvent)execution.CurrentFlowElement).SubProcess;
-                return !executionEntity.Parent.ProcessInstanceType && subProcess != null && subProcess.LoopCharacteristics != null && subProcess.Behavior is MultiInstanceActivityBehavior;
+                return !executionEntity.Parent.ProcessInstanceType && subProcess is object && subProcess.LoopCharacteristics is object && subProcess.Behavior is MultiInstanceActivityBehavior;
             }
             return false;
         }
@@ -467,13 +467,13 @@ namespace Sys.Workflow.Engine.Impl.Agenda
         {
             foreach (IExecutionEntity childExecutionEntity in parentExecutionEntity.Executions)
             {
-                if (executionEntityToIgnore == null || !executionEntityToIgnore.Id.Equals(childExecutionEntity.Id))
+                if (executionEntityToIgnore is null || !executionEntityToIgnore.Id.Equals(childExecutionEntity.Id))
                 {
                     if (!childExecutionEntity.Ended)
                     {
                         return false;
                     }
-                    if (childExecutionEntity.Executions != null && childExecutionEntity.Executions.Count > 0)
+                    if (childExecutionEntity.Executions is object && childExecutionEntity.Executions.Count > 0)
                     {
                         if (!AllChildExecutionsEnded(childExecutionEntity, executionEntityToIgnore))
                         {

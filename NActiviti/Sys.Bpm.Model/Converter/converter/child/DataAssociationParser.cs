@@ -72,7 +72,7 @@ namespace Sys.Workflow.Bpmn.Converters.Childs
                     else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_FROM.Equals(xtr.LocalName))
                     {
                         string from = xtr.ElementText;
-                        if (assignment != null && !string.IsNullOrWhiteSpace(from))
+                        if (assignment is object && !string.IsNullOrWhiteSpace(from))
                         {
                             assignment.From = from.Trim();
                         }
@@ -81,7 +81,7 @@ namespace Sys.Workflow.Bpmn.Converters.Childs
                     else if (xtr.IsStartElement() && BpmnXMLConstants.ELEMENT_TO.Equals(xtr.LocalName))
                     {
                         string to = xtr.ElementText;
-                        if (assignment != null && !string.IsNullOrWhiteSpace(to))
+                        if (assignment is object && !string.IsNullOrWhiteSpace(to))
                         {
                             assignment.To = to.Trim();
                         }

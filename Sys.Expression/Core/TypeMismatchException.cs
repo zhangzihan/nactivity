@@ -127,7 +127,7 @@ namespace Spring.Core
         {
             StringBuilder message = new();
             message.Append("Cannot convert property value of type [");
-            if (propertyChangeEventArgs != null && propertyChangeEventArgs.NewValue != null)
+            if (propertyChangeEventArgs is object && propertyChangeEventArgs.NewValue is object)
             {
                 message.Append(propertyChangeEventArgs.NewValue.GetType().FullName);
             }
@@ -136,7 +136,7 @@ namespace Spring.Core
                 message.Append("null");
             }
             message.Append("] to required type [");
-            if (requiredType != null)
+            if (requiredType is object)
             {
                 message.Append(requiredType.FullName);
             }
@@ -145,7 +145,7 @@ namespace Spring.Core
                 message.Append("null");
             }
             message.Append("] for property '");
-            if (propertyChangeEventArgs != null && propertyChangeEventArgs.PropertyName != null)
+            if (propertyChangeEventArgs is object && propertyChangeEventArgs.PropertyName is object)
             {
                 message.Append(propertyChangeEventArgs.PropertyName);
             }

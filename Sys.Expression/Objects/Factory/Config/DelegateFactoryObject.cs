@@ -1,7 +1,7 @@
 #region License
 
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ?2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ namespace Spring.Objects.Factory.Config
 		/// <seealso cref="Spring.Objects.Factory.IInitializingObject.AfterPropertiesSet"/> 
 		public override void AfterPropertiesSet()
 		{
-			if (DelegateType == null)
+			if (DelegateType is null)
 			{
 				throw new ArgumentException(
 					"The 'DelegateType' property is required.");
@@ -61,12 +61,12 @@ namespace Spring.Objects.Factory.Config
 				throw new ArgumentException(
 					"The 'DelegateType' property must (obviously) be a Type derived from [System.Delegate].");
 			}
-			if (TargetType == null && TargetObject == null)
+			if (TargetType is null && TargetObject is null)
 			{
 				throw new ArgumentException(
 					"Exactly one of either the 'TargetType' or 'TargetObject' properties is required.");
 			}
-			if (TargetType != null && TargetObject != null)
+			if (TargetType is object && TargetObject is object)
 			{
 				throw new ArgumentException(
 					"Exactly one of either the 'TargetType' or 'TargetObject' properties is required (not both).");
@@ -90,7 +90,7 @@ namespace Spring.Objects.Factory.Config
 		protected override object CreateInstance()
 		{
 			Delegate instance = null;
-			if (TargetType != null)
+			if (TargetType is object)
 			{
 				instance = Delegate.CreateDelegate(DelegateType, TargetType, MethodName);
 			}
@@ -118,7 +118,7 @@ namespace Spring.Objects.Factory.Config
 		{
 			get
 			{
-				return (DelegateType != null)
+				return (DelegateType is object)
 				       	? DelegateType
 				       	: typeof (Delegate);
 			}

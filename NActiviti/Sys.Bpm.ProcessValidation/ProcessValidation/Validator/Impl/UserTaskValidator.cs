@@ -26,7 +26,7 @@ namespace Sys.Workflow.Validation.Validators.Impl
             IList<UserTask> userTasks = process.FindFlowElementsOfType<UserTask>();
             foreach (UserTask userTask in userTasks)
             {
-                if (userTask.TaskListeners != null)
+                if (userTask.TaskListeners is object)
                 {
                     foreach (ActivitiListener listener in userTask.TaskListeners)
                     {

@@ -26,7 +26,7 @@ namespace Sys.Workflow.Engine.Impl.Events.Logger.Handlers
             PutInMapIfNotNull(data, FieldsFields.NAME, processInstanceEntity.Name);
             PutInMapIfNotNull(data, FieldsFields.CREATE_TIME, timeStamp);
 
-            if (eventWithVariables.Variables != null && eventWithVariables.Variables.Count > 0)
+            if (eventWithVariables.Variables is object && eventWithVariables.Variables.Count > 0)
             {
                 IDictionary<string, object> variableMap = new Dictionary<string, object>();
                 foreach (object variableName in eventWithVariables.Variables.Keys)
