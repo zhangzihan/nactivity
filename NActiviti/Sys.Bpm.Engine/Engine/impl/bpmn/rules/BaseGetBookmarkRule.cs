@@ -7,7 +7,7 @@ using Sys.Workflow.Engine.Impl.Persistence.Entity;
 namespace Sys.Workflow.Engine.Bpmn.Rules
 {
     /// <inheritdoc />
-    public abstract class BaseGetBookmarkRule : IGetBookmarkRule
+    public abstract class BaseGetBookmarkRule : IGetBookmarkRule, ICommand<IList<IUserInfo>>
     {
         /// <inheritdoc />
         public IExecutionEntity Execution { get; set; }

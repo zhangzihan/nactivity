@@ -57,5 +57,7 @@ namespace Spring.Core.TypeResolution
 		/// to a <see cref="System.Type"/>.
 		/// </exception>
 		Type Resolve(string typeName);
+
+		bool TryResolve(string typeName, out Type type);
 	}
 }

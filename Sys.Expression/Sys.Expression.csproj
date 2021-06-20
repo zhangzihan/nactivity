@@ -12,7 +12,7 @@
     <PackageId>Sys.Expression</PackageId>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>Sys.Expression</PackageReleaseNotes>
-    <Version>1.0.0.4</Version>
+    <Version>1.0.0.5</Version>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Company>Sys.Expression</Company>
     <Authors>Sys.Expression</Authors>

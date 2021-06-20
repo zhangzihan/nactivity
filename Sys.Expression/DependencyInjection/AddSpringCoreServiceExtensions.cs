@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spring.Core;
+using Spring.Core.TypeResolution;
+using System;
 
 namespace Spring.Extensions
 {
@@ -10,7 +12,7 @@ namespace Spring.Extensions
         {
             LogManager.Instance = new LogManager(loggerFactory);
             services.AddSingleton<LogManager>(LogManager.Instance);
-
+            
             return services;
         }
     }

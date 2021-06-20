@@ -25,49 +25,60 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
     /// <summary>
     /// 获取当前执行人的用户信息
     /// </summary>
-    [GetBookmarkDescriptor(RequestUserCategory.GETUSER_EXECUTOR)]
-    public class GetExecutorBookmarkRuleCmd : BaseGetBookmarkRule
+    [GetBookmarkDescriptor(RequestUserCategory.GETUSER_EXECUTOR_ASSIGNEE)]
+    public class GetExecutorAssigneeBookmarkRuleCmd : BaseGetBookmarkRule
     {
         private readonly ExternalConnectorProvider externalConnector;
         /// <inheritdoc />
-        public GetExecutorBookmarkRuleCmd()
+        public GetExecutorAssigneeBookmarkRuleCmd()
         {
             externalConnector = ProcessEngineServiceProvider.Resolve<ExternalConnectorProvider>();
         }
         /// <inheritdoc />
         public override IList<IUserInfo> Execute(ICommandContext commandContext)
         {
+            var cond = this.Condition.QueryCondition.FirstOrDefault();
+            if (cond is null)
+            {
+                return null;
+            }
+
             IList<IHistoricTaskInstance> hisTasks = commandContext.ProcessEngineConfiguration.HistoryService
                 .CreateHistoricTaskInstanceQuery()
-                .SetExecutionId(this.Execution.Id)
-                .List();
-
-            IList<IUserInfo> users = hisTasks.Where(x => Condition.QueryCondition.Any(y => y.Id == x.TaskDefinitionKey))
-               .Select(x => new UserInfo
-               {
-                   Id = x.Assignee
-               })
-               .ToList<IUserInfo>();
-
-            if (Condition.QueryCondition.Any(x => string.Equals("", x.Id)))
-            {
-                var hisInst = commandContext.ProcessEngineConfiguration.HistoryService
-                    .CreateHistoricProcessInstanceQuery()
-                    .SetProcessInstanceId(this.Execution.ProcessInstanceId)
-                    .SingleResult();
-
-                string uid = hisInst is null ? this.Execution.Parent.StartUserId : hisInst.StartUserId;
-                users.Add(new UserInfo
+                .SetTaskDefinitionKey(cond.Id)
+                .SetProcessDefinitionId(this.Execution.ProcessDefinitionId)
+                .OrderByHistoricTaskInstanceEndTime()
+                .Desc()
+                .List()
+                .Select(x =>
                 {
-                    Id = uid
-                });
+                    if (x is HistoricScopeInstanceEntityImpl his && his.EndTime is null)
+                    {
+                        his.EndTime = DateTime.MaxValue;
+                    }
+                    return x;
+                })
+                .OrderByDescending(x => x.EndTime).ToList();
+
+            List<string> users = new List<string>();
+            if (hisTasks.Any())
+            {
+                var procid = hisTasks[0].ProcessInstanceId;
+                foreach (var task in hisTasks)
+                {
+                    if (task.ProcessInstanceId != procid)
+                    {
+                        break;
+                    }
+                    users.Add(task.Assignee);
+                }
             }
 
             IUserServiceProxy proxy = ProcessEngineServiceProvider.Resolve<IUserServiceProxy>();
 
             return proxy.GetUsers(externalConnector.GetUser, new RequestUserParameter
             {
-                IdList = users.Select(x => x.Id).ToArray(),
+                IdList = users.ToArray(),
                 Category = RequestUserCategory.GETUSER_USER
             }).ConfigureAwait(false).GetAwaiter().GetResult();
         }

@@ -21,6 +21,7 @@
 #region Imports
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 using Spring.Util;
@@ -229,7 +230,7 @@ namespace Spring.Core.TypeResolution
         /// The alias around the 'DateTime' type.
         /// </summary>
         public const string DateTimeAlias = "DateTime";
-        
+
         /// <summary>
         /// The alias around the 'DateTime' type (C# style).
         /// </summary>
@@ -244,7 +245,7 @@ namespace Spring.Core.TypeResolution
         /// The alias around the 'DateTime[]' array type.
         /// </summary>
         public const string DateTimeArrayAlias = "DateTime[]";
-        
+
         /// <summary>
         /// The alias around the 'DateTime[]' array type.
         /// </summary>
@@ -431,8 +432,7 @@ namespace Spring.Core.TypeResolution
 
         #region Fields
 
-        private static readonly object syncRoot = new();
-        private static IDictionary<string, Type> types = new Dictionary<string, Type>();
+        private static readonly ConcurrentDictionary<string, Type> types = new();
 
         #endregion
 
@@ -443,118 +443,115 @@ namespace Spring.Core.TypeResolution
         /// </summary>
         static TypeRegistry()
         {
-            lock (syncRoot)
-            {
-                types["Int32"] = typeof(Int32);
-                types[Int32Alias] = typeof(Int32);
-                types[Int32AliasVB] = typeof(Int32);
-                types[Int32ArrayAlias] = typeof(Int32[]);
-                types[Int32ArrayAliasVB] = typeof(Int32[]);
+            types.TryAdd("Int32", typeof(Int32));
+            types.TryAdd(Int32Alias, typeof(Int32));
+            types.TryAdd(Int32AliasVB, typeof(Int32));
+            types.TryAdd(Int32ArrayAlias, typeof(Int32[]));
+            types.TryAdd(Int32ArrayAliasVB, typeof(Int32[]));
 
-                types["UInt32"] = typeof(UInt32);
-                types[UInt32Alias] = typeof(UInt32);
-                types[UInt32ArrayAlias] = typeof(UInt32[]);
+            types.TryAdd("UInt32", typeof(UInt32));
+            types.TryAdd(UInt32Alias, typeof(UInt32));
+            types.TryAdd(UInt32ArrayAlias, typeof(UInt32[]));
 
-                types["Int16"] = typeof(Int16);
-                types[Int16Alias] = typeof(Int16);
-                types[Int16AliasVB] = typeof(Int16);
-                types[Int16ArrayAlias] = typeof(Int16[]);
-                types[Int16ArrayAliasVB] = typeof(Int16[]);
+            types.TryAdd("Int16", typeof(Int16));
+            types.TryAdd(Int16Alias, typeof(Int16));
+            types.TryAdd(Int16AliasVB, typeof(Int16));
+            types.TryAdd(Int16ArrayAlias, typeof(Int16[]));
+            types.TryAdd(Int16ArrayAliasVB, typeof(Int16[]));
 
-                types["UInt16"] = typeof(UInt16);
-                types[UInt16Alias] = typeof(UInt16);
-                types[UInt16ArrayAlias] = typeof(UInt16[]);
+            types.TryAdd("UInt16", typeof(UInt16));
+            types.TryAdd(UInt16Alias, typeof(UInt16));
+            types.TryAdd(UInt16ArrayAlias, typeof(UInt16[]));
 
-                types["Int64"] = typeof(Int64);
-                types[Int64Alias] = typeof(Int64);
-                types[Int64AliasVB] = typeof(Int64);
-                types[Int64ArrayAlias] = typeof(Int64[]);
-                types[Int64ArrayAliasVB] = typeof(Int64[]);
+            types.TryAdd("Int64", typeof(Int64));
+            types.TryAdd(Int64Alias, typeof(Int64));
+            types.TryAdd(Int64AliasVB, typeof(Int64));
+            types.TryAdd(Int64ArrayAlias, typeof(Int64[]));
+            types.TryAdd(Int64ArrayAliasVB, typeof(Int64[]));
 
-                types["UInt64"] = typeof(UInt64);
-                types[UInt64Alias] = typeof(UInt64);
-                types[UInt64ArrayAlias] = typeof(UInt64[]);
+            types.TryAdd("UInt64", typeof(UInt64));
+            types.TryAdd(UInt64Alias, typeof(UInt64));
+            types.TryAdd(UInt64ArrayAlias, typeof(UInt64[]));
 
-                types[DoubleAlias] = typeof(double);
-                types[DoubleAliasVB] = typeof(double);
-                types[DoubleArrayAlias] = typeof(double[]);
-                types[DoubleArrayAliasVB] = typeof(double[]);
+            types.TryAdd(DoubleAlias, typeof(double));
+            types.TryAdd(DoubleAliasVB, typeof(double));
+            types.TryAdd(DoubleArrayAlias, typeof(double[]));
+            types.TryAdd(DoubleArrayAliasVB, typeof(double[]));
 
-                types[FloatAlias] = typeof(float);
-                types[SingleAlias] = typeof(float);
-                types[FloatArrayAlias] = typeof(float[]);
-                types[SingleArrayAliasVB] = typeof(float[]);
+            types.TryAdd(FloatAlias, typeof(float));
+            types.TryAdd(SingleAlias, typeof(float));
+            types.TryAdd(FloatArrayAlias, typeof(float[]));
+            types.TryAdd(SingleArrayAliasVB, typeof(float[]));
 
-                types[DateTimeAlias] = typeof(DateTime);
-                types[DateAlias] = typeof(DateTime);
-                types[DateAliasVB] = typeof(DateTime);
-                types[DateTimeArrayAlias] = typeof(DateTime[]);
-                types[DateTimeArrayAliasCSharp] = typeof(DateTime[]);
-                types[DateTimeArrayAliasVB] = typeof(DateTime[]);
+            types.TryAdd(DateTimeAlias, typeof(DateTime));
+            types.TryAdd(DateAlias, typeof(DateTime));
+            types.TryAdd(DateAliasVB, typeof(DateTime));
+            types.TryAdd(DateTimeArrayAlias, typeof(DateTime[]));
+            types.TryAdd(DateTimeArrayAliasCSharp, typeof(DateTime[]));
+            types.TryAdd(DateTimeArrayAliasVB, typeof(DateTime[]));
 
-                types[BoolAlias] = typeof(bool);
-                types[BoolAliasVB] = typeof(bool);
-                types[BoolArrayAlias] = typeof(bool[]);
-                types[BoolArrayAliasVB] = typeof(bool[]);
+            types.TryAdd(BoolAlias, typeof(bool));
+            types.TryAdd(BoolAliasVB, typeof(bool));
+            types.TryAdd(BoolArrayAlias, typeof(bool[]));
+            types.TryAdd(BoolArrayAliasVB, typeof(bool[]));
 
-                types[DecimalAlias] = typeof(decimal);
-                types[DecimalAliasVB] = typeof(decimal);
-                types[DecimalArrayAlias] = typeof(decimal[]);
-                types[DecimalArrayAliasVB] = typeof(decimal[]);
+            types.TryAdd(DecimalAlias, typeof(decimal));
+            types.TryAdd(DecimalAliasVB, typeof(decimal));
+            types.TryAdd(DecimalArrayAlias, typeof(decimal[]));
+            types.TryAdd(DecimalArrayAliasVB, typeof(decimal[]));
 
-                types[CharAlias] = typeof(char);
-                types[CharAliasVB] = typeof(char);
-                types[CharArrayAlias] = typeof(char[]);
-                types[CharArrayAliasVB] = typeof(char[]);
+            types.TryAdd(CharAlias, typeof(char));
+            types.TryAdd(CharAliasVB, typeof(char));
+            types.TryAdd(CharArrayAlias, typeof(char[]));
+            types.TryAdd(CharArrayAliasVB, typeof(char[]));
 
-                types[StringAlias] = typeof(string);
-                types[StringAliasVB] = typeof(string);
-                types[StringArrayAlias] = typeof(string[]);
-                types[StringArrayAliasVB] = typeof(string[]);
+            types.TryAdd(StringAlias, typeof(string));
+            types.TryAdd(StringAliasVB, typeof(string));
+            types.TryAdd(StringArrayAlias, typeof(string[]));
+            types.TryAdd(StringArrayAliasVB, typeof(string[]));
 
-                types[ObjectAlias] = typeof(object);
-                types[ObjectAliasVB] = typeof(object);
-                types[ObjectArrayAlias] = typeof(object[]);
-                types[ObjectArrayAliasVB] = typeof(object[]);
+            types.TryAdd(ObjectAlias, typeof(object));
+            types.TryAdd(ObjectAliasVB, typeof(object));
+            types.TryAdd(ObjectArrayAlias, typeof(object[]));
+            types.TryAdd(ObjectArrayAliasVB, typeof(object[]));
 
-                types[NullableInt32Alias] = typeof(int?);
-                types[NullableInt32ArrayAlias] = typeof(int?[]);
+            types.TryAdd(NullableInt32Alias, typeof(int?));
+            types.TryAdd(NullableInt32ArrayAlias, typeof(int?[]));
 
-                types[NullableDecimalAlias] = typeof(decimal?);
-                types[NullableDecimalArrayAlias] = typeof(decimal?[]);
+            types.TryAdd(NullableDecimalAlias, typeof(decimal?));
+            types.TryAdd(NullableDecimalArrayAlias, typeof(decimal?[]));
 
-                types[NullableCharAlias] = typeof(char?);
-                types[NullableCharArrayAlias] = typeof(char?[]);
+            types.TryAdd(NullableCharAlias, typeof(char?));
+            types.TryAdd(NullableCharArrayAlias, typeof(char?[]));
 
-                types[NullableInt64Alias] = typeof(long?);
-                types[NullableInt64ArrayAlias] = typeof(long?[]);
+            types.TryAdd(NullableInt64Alias, typeof(long?));
+            types.TryAdd(NullableInt64ArrayAlias, typeof(long?[]));
 
-                types[NullableInt16Alias] = typeof(short?);
-                types[NullableInt16ArrayAlias] = typeof(short?[]);
+            types.TryAdd(NullableInt16Alias, typeof(short?));
+            types.TryAdd(NullableInt16ArrayAlias, typeof(short?[]));
 
-                types[NullableUInt32Alias] = typeof(uint?);
-                types[NullableUInt32ArrayAlias] = typeof(uint?[]);
+            types.TryAdd(NullableUInt32Alias, typeof(uint?));
+            types.TryAdd(NullableUInt32ArrayAlias, typeof(uint?[]));
 
-                types[NullableUInt64Alias] = typeof(ulong?);
-                types[NullableUInt64ArrayAlias] = typeof(ulong?[]);
+            types.TryAdd(NullableUInt64Alias, typeof(ulong?));
+            types.TryAdd(NullableUInt64ArrayAlias, typeof(ulong?[]));
 
-                types[NullableUInt16Alias] = typeof(ushort?);
-                types[NullableUInt16ArrayAlias] = typeof(ushort?[]);
+            types.TryAdd(NullableUInt16Alias, typeof(ushort?));
+            types.TryAdd(NullableUInt16ArrayAlias, typeof(ushort?[]));
 
-                types[NullableDoubleAlias] = typeof(double?);
-                types[NullableDoubleArrayAlias] = typeof(double?[]);
+            types.TryAdd(NullableDoubleAlias, typeof(double?));
+            types.TryAdd(NullableDoubleArrayAlias, typeof(double?[]));
 
-                types[NullableFloatAlias] = typeof(float?);
-                types[NullableFloatArrayAlias] = typeof(float?[]);
+            types.TryAdd(NullableFloatAlias, typeof(float?));
+            types.TryAdd(NullableFloatArrayAlias, typeof(float?[]));
 
-                types[NullableBoolAlias] = typeof(bool?);
-                types[NullableBoolArrayAlias] = typeof(bool?[]);
+            types.TryAdd(NullableBoolAlias, typeof(bool?));
+            types.TryAdd(NullableBoolArrayAlias, typeof(bool?[]));
 
-                types[NumberUtils] = typeof(NumberUtils);
+            types.TryAdd(NumberUtils, typeof(NumberUtils));
 
-                // register user-configured type aliases
-                ConfigurationUtils.GetSection(TypeAliasesSectionName);
-            }
+            // register user-configured type aliases
+            ConfigurationUtils.GetSection(TypeAliasesSectionName);
         }
 
         #endregion
@@ -612,13 +609,9 @@ namespace Spring.Core.TypeResolution
         public static void RegisterType(Type type)
         {
             AssertUtils.ArgumentNotNull(type, "type");
-
-            lock (syncRoot)
-            {
-                types[type.Name] = type;
-            }
+            types.TryAdd(type.Name, type);
         }
-        
+
         /// <summary> 
         /// Registers an alias for the supplied <see cref="System.Type"/>. 
         /// </summary> 
@@ -637,11 +630,7 @@ namespace Spring.Core.TypeResolution
         {
             AssertUtils.ArgumentHasText(alias, "alias");
             AssertUtils.ArgumentNotNull(type, "type");
-
-            lock (syncRoot)
-            {
-                types[alias] = type;
-            }
+            types.TryAdd(alias, type);
         }
 
         /// <summary> 

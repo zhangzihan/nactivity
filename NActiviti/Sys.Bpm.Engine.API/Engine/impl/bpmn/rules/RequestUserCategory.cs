@@ -30,9 +30,13 @@ namespace Sys.Workflow.Engine.Bpmn.Rules
         /// </summary>
         public const string GETUSERS_FROM_PROCESS = "GetFromProcess";
         /// <summary>
-        /// 获取流程执行人信息
+        /// 获取流程启动人信息
         /// </summary>
         public const string GETUSER_EXECUTOR = "GetExecutor";
+        /// <summary>
+        /// 获取流程节点最后一次执行人信息
+        /// </summary>
+        public const string GETUSER_EXECUTOR_ASSIGNEE = "GetExecutorAssignee";
         /// <summary>
         /// 获取下属人员
         /// </summary>

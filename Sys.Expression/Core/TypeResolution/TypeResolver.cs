@@ -59,7 +59,7 @@ namespace Spring.Core.TypeResolution
                 throw BuildTypeLoadException(typeName);
             }
             TypeAssemblyHolder typeInfo = new(typeName);
-            Type type = null;
+            Type type;
             try
             {
                 type = (typeInfo.IsAssemblyQualified) ?
@@ -114,7 +114,7 @@ namespace Spring.Core.TypeResolution
 #if MONO_2_0
             Assembly assembly = Assembly.Load(typeInfo.AssemblyName);
 #else
-			Assembly assembly = Assembly.Load(typeInfo.AssemblyName);
+            Assembly assembly = Assembly.Load(typeInfo.AssemblyName);
 #endif
             if (assembly is object)
             {
@@ -165,6 +165,31 @@ namespace Spring.Core.TypeResolution
         protected static TypeLoadException BuildTypeLoadException(string typeName, Exception ex)
         {
             return new TypeLoadException("Could not load type from string value '" + typeName + "'.", ex);
+        }
+
+        public virtual bool TryResolve(string typeName, out Type type)
+        {
+            type = null;
+            if (StringUtils.IsNullOrEmpty(typeName))
+            {
+                return false;
+            }
+            try
+            {
+                TypeAssemblyHolder typeInfo = new(typeName);
+                type = typeInfo.IsAssemblyQualified ?
+                     LoadTypeDirectlyFromAssembly(typeInfo) :
+                     LoadTypeByIteratingOverAllLoadedAssemblies(typeInfo);
+            }
+            catch
+            {
+                return false;
+            }
+            if (type is null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

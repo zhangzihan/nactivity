@@ -34,5 +34,10 @@ namespace Sys.Net.Http
             }
             set => loginUserId = value;
         }
+
+        public override string ToString()
+        {
+            return FullName;
+        }
     }
 }

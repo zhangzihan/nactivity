@@ -980,7 +980,7 @@ namespace Sys.Workflow.Engine.Impl.DB
                 int updatedRecords = SqlMapper.Execute(dbSqlSessionFactory.CreateRequestContext(managedType.FullName, updateStatement, updatedObject));
                 if (updatedRecords == 0)
                 {
-                    log.LogWarning(updatedObject + " was updated by another transaction concurrently");
+                    log.LogWarning("【update】:" + updatedObject + " was updated by another transaction concurrently");
                     continue;
                     //throw new ActivitiOptimisticLockingException(updatedObject + " was updated by another transaction concurrently");
                 }
@@ -1070,7 +1070,7 @@ namespace Sys.Workflow.Engine.Impl.DB
 
                 if (entity is IHasRevision && nrOfRowsDeleted == 0)
                 {
-                    log.LogWarning(entity + " was updated by another transaction concurrently");
+                    log.LogWarning("【delete】: " + entity + " was updated by another transaction concurrently");
                     //throw new ActivitiOptimisticLockingException(entity + " was updated by another transaction concurrently");
                 }
             }

@@ -103,6 +103,20 @@ namespace Spring.Core.TypeResolution
             return type;
         }
 
+        public static bool TryResolveType(string typeName, out Type type)
+        {
+            try
+            {
+                type = TypeRegistry.ResolveType(typeName);
+                return type is object;
+            }
+            catch
+            {
+                type = null;
+                return false;
+            }
+        }
+
         /// <summary>
         /// Resolves a string array of interface names to
         /// a <see cref="System.Type"/> array.

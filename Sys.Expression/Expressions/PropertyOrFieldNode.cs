@@ -93,6 +93,10 @@ namespace Spring.Expressions
                 if (contextType is object && accessor is null)
                 {
                     accessor = ValueAccessorResolver.GetValueAccessor(contextType, memberName);
+                    if (accessor is object)
+                    {
+                        return;
+                    }
 
                     // try to initialize node as ExpandoObject value
                     if (contextType == typeof(ExpandoObject))
@@ -530,7 +534,7 @@ namespace Spring.Expressions
 
         #region BaseValueAccessor implementation
 
-        private abstract class BaseValueAccessor : IValueAccessor
+        internal abstract class BaseValueAccessor : IValueAccessor
         {
             public abstract object Get(object context);
 
@@ -790,7 +794,7 @@ namespace Spring.Expressions
 
         #region TypeValueAccessor implementation
 
-        private class TypeValueAccessor : BaseValueAccessor
+        internal class TypeValueAccessor : BaseValueAccessor
         {
             private readonly Type type;
 

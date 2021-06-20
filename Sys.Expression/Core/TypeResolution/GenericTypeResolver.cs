@@ -93,5 +93,48 @@ namespace Spring.Core.TypeResolution
 
             return type;
         }
+
+        public override bool TryResolve(string typeName, out Type type)
+        {
+            type = null;
+            if (StringUtils.IsNullOrEmpty(typeName))
+            {
+                return false;
+            }
+            GenericArgumentsHolder genericInfo = new(typeName);
+            try
+            {
+                if (genericInfo.ContainsGenericArguments)
+                {
+                    type = TypeResolutionUtils.ResolveType(genericInfo.GenericTypeName);
+                    if (!genericInfo.IsGenericDefinition)
+                    {
+                        string[] unresolvedGenericArgs = genericInfo.GetGenericArguments();
+                        Type[] genericArgs = new Type[unresolvedGenericArgs.Length];
+                        for (int i = 0; i < unresolvedGenericArgs.Length; i++)
+                        {
+                            genericArgs[i] = TypeResolutionUtils.ResolveType(unresolvedGenericArgs[i]);
+                        }
+                        type = type.MakeGenericType(genericArgs);
+                    }
+                    if (genericInfo.IsArrayDeclaration)
+                    {
+                        typeName = string.Format("{0}{1},{2}", type.FullName, genericInfo.GetArrayDeclaration(), type.Assembly.FullName);
+                        type = null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            if (type is null)
+            {
+                return base.TryResolve(typeName, out type);
+            }
+
+            return true;
+        }
     }
 }

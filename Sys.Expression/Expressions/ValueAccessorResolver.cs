@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Spring.Core.TypeResolution;
+using System;
 using System.Collections.Concurrent;
+using static Spring.Expressions.PropertyOrFieldNode;
 
 namespace Spring.Expressions
 {
@@ -17,6 +19,11 @@ namespace Spring.Expressions
             if (string.IsNullOrEmpty(memberName))
             {
                 throw new ArgumentException($"“{nameof(memberName)}”不能为 null 或空。", nameof(memberName));
+            }
+
+            if (TypeResolutionUtils.TryResolveType(memberName, out var type) && type is object)
+            {
+                return new TypeValueAccessor(type);
             }
 
             _ = items.TryGetValue(targetType, out var accessorType);
