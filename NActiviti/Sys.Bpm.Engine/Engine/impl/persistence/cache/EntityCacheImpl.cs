@@ -39,7 +39,7 @@ namespace Sys.Workflow.Engine.Impl.Persistence.Caches
         {
             ConcurrentDictionary<string, CachedEntity> classCache = cachedObjects.GetOrAdd(entity.GetType(), new ConcurrentDictionary<string, CachedEntity>()) as ConcurrentDictionary<string, CachedEntity>;
             CachedEntity cachedObject = new CachedEntity(entity, storeState);
-            classCache.AddOrUpdate(entity.Id, cachedObject, (id, cacheObject) => cachedObject);
+            classCache.AddOrUpdate(entity.Id, cachedObject, (id, v) => cachedObject);
             return cachedObject;
         }
         /// <summary>

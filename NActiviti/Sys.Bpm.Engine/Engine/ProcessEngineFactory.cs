@@ -122,7 +122,7 @@ namespace Sys.Workflow.Engine
                 processEngineName = processEngine.Name;
                 log.LogInformation($"initialised process engine {processEngineName}");
                 processEngineInfo = new ProcessEngineInfoImpl(processEngineName, null);
-                processEngines.AddOrUpdate(processEngineName, processEngine, (name, engine) => engine);
+                processEngines.AddOrUpdate(processEngineName, processEngine, (name, engine) => processEngine);
                 processEngineInfosByName[processEngineName] = processEngineInfo;
             }
             catch (Exception e)
